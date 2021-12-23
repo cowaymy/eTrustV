@@ -43,32 +43,32 @@ today = "${today}";
 
   function fn_openGenerate() {
     //if (fn_validation()) {
-      var V_WHERE = "";
-
+      var V_WHERESTATUS = "";
+      var V_WHEREPRODCAT = "";
+      var V_WHERESETTLEDTFR = "";
+      var V_WHERESETTLEDTTO = "";
+      var V_WHEREGNG = "";
 
       if ($("#ddlStatus").val() != '' && $("#ddlStatus").val() != null) {
     	  var V_STATUS = " AND TEST_RESULT_STUS IN ('" + $("#ddlStatus").val().toString().replace(/,/g, "','") + "') ";
-    	  V_WHERE += V_STATUS;
-    	  console.log(V_WHERE);
+    	  V_WHERESTATUS += V_STATUS;
       }
 
       if ($("#cmbProdCategory").val() != '' && $("#cmbProdCategory").val() != null) {
          var V_PRODCAT = " AND STK_CTGRY_ID IN ('" + $("#cmbProdCategory").val().toString().replace(/,/g, "','") + "') ";
-         V_WHERE += V_PRODCAT;
+         V_WHEREPRODCAT += V_PRODCAT;
       }
 
       if ($("#settleDateFrom").val() != '' && $("#settleDateFrom").val() != null && $("#settleDateTo").val() != '' && $("#settleDateTo").val() != null ) {
-    	  var settleDateFrom = $("#settleDateFrom").val().substring(6, 10) + "-"
-          + $("#settleDateFrom").val().substring(3, 5) + "-"
-          + $("#settleDateFrom").val().substring(0, 2);
 
-    	  V_WHERE += " AND ( TO_CHAR(TEST_SETTLE_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE(" + $("#settleDateFrom").val() + ",'dd/mm/yyyy'), 'YYYYMMDD'))";
+    	  V_WHERESETTLEDTFR += " AND (TO_CHAR(TEST_SETTLE_DT, 'DD/MM/YYYY')  >= TO_CHAR(TO_DATE('" + $("#settleDateFrom").val() + "','dd/mm/yyyy'), 'DD/MM/YYYY'))";
 
-    	  var settleDateTo = $("#settleDateTo").val().substring(6, 10) + "-"
-          + $("#settleDateTo").val().substring(3, 5) + "-"
-          + $("#settleDateTo").val().substring(0, 2);
+    	  V_WHERESETTLEDTTO += " AND (TO_CHAR(TEST_SETTLE_DT, 'DD/MM/YYYY')  <= TO_CHAR(TO_DATE('" + $("#settleDateTo").val() + "','dd/mm/yyyy'), 'DD/MM/YYYY'))";
+      }
 
-    	  V_WHERE += " AND ( TO_CHAR(TEST_SETTLE_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE(" + $("#settleDateTo").val() + ",'dd/mm/yyyy'), 'YYYYMMDD'))";
+      if ($("#ddlProdGenuine").val() != '' && $("#ddlProdGenuine").val() != null) {
+          var V_GNG = " AND PROD_GENUINE IN ('" + $("#ddlProdGenuine").val().toString().replace(/,/g, "','") + "') ";
+          V_WHEREGNG += V_GNG;
       }
 
          /*  var date = new Date();
@@ -79,13 +79,21 @@ today = "${today}";
           } */
 
           //SP_CR_GEN_PEX_TEST_RAW
-          $("#reportForm1").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESTATUS" name="V_WHERESTATUS"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHEREPRODCAT" name="V_WHEREPRODCAT"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESETTLEDTFR" name="V_WHERESETTLEDTFR"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESETTLEDTTO" name="V_WHERESETTLEDTTO"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHEREGNG" name="V_WHEREGNG"  /> ');
 
           var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
           };
 
-          $("#reportForm1 #V_WHERE").val(V_WHERE);
+          $("#reportForm1 #V_WHERESTATUS").val(V_WHERESTATUS);
+          $("#reportForm1 #V_WHEREPRODCAT").val(V_WHEREPRODCAT);
+          $("#reportForm1 #V_WHERESETTLEDTFR").val(V_WHERESETTLEDTFR);
+          $("#reportForm1 #V_WHERESETTLEDTTO").val(V_WHERESETTLEDTTO);
+          $("#reportForm1 #V_WHEREGNG").val(V_WHEREGNG);
           $("#reportForm1 #reportFileName").val('/ResearchDevelopment/PEXTestResultRawData.rpt');
           $("#reportForm1 #reportDownFileName").val("PEXTestResultRawData_" + today);
           $("#reportForm1 #viewType").val("EXCEL");
