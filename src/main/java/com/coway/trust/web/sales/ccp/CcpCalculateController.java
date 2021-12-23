@@ -33,6 +33,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -63,6 +64,9 @@ public class CcpCalculateController {
 
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+
+	@Resource(name = "orderListService")
+	private OrderListService orderListService;
 
 	@Autowired
 	private AdaptorService adaptorService;
@@ -602,6 +606,14 @@ public class CcpCalculateController {
 	@RequestMapping(value = "/ccpEresubmitNewConfirm" ,method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>>  ccpEresubmitNewConfirm(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
 
+		if(params.containsKey("SalesmanCode")) {
+            if(!"".equals(params.get("SalesmanCode").toString())) {
+            	params.put("salesmanCode", params.get("SalesmanCode"));
+                int memberID = ccpCalculateService.getMemberID(params);
+                params.put("memID", memberID);
+            }
+        }
+
 		List<EgovMap>  list = ccpCalculateService.ccpEresubmitNewConfirm(params);
 
 		return ResponseEntity.ok(list);
@@ -660,6 +672,10 @@ public class CcpCalculateController {
     	EgovMap ccpInfoMap = null;
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByOrderId(params);
 
+    	//eResubmit
+    	EgovMap ccpEresubmitMap = null;
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+
     	//Model
 //    	model.addAttribute("ccpId", ccpInfoMap.get("ccpId"));
 //    	model.addAttribute("orderDetail", orderDetail);
@@ -675,6 +691,7 @@ public class CcpCalculateController {
 		map.put("ccpId", ccpInfoMap.get("ccpId"));
 		map.put("orderDetail", orderDetail);
 		map.put("ccpInfoMap", ccpInfoMap);
+		map.put("ccpEresubmitMap", ccpEresubmitMap);
 
 		//logger.debug("srvconfig====>"+srvconfig.toString());
 
@@ -687,6 +704,14 @@ public class CcpCalculateController {
 	@RequestMapping(value = "/ccpEresubmitList")
 	public ResponseEntity<List<EgovMap>>  ccpEresubmitList(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
 		List<EgovMap> list = null;
+
+		if(params.containsKey("SalesmanCode")) {
+            if(!"".equals(params.get("SalesmanCode").toString())) {
+            	params.put("salesmanCode", params.get("SalesmanCode"));
+                int memberID = orderListService.getMemberID(params);
+                params.put("memID", memberID);
+            }
+        }
 
 		list = ccpCalculateService.ccpEresubmitList(params);
 
@@ -796,8 +821,58 @@ public class CcpCalculateController {
 
 	}
 
-	@RequestMapping(value = "/attachESvmFileUpdate.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> attachESvmFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+	@RequestMapping(value = "/attachResubmitFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachResubmitFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		LOGGER.debug("params =====================================>>  " + params);
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
+
+		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
+			 //int fileGroupId = params.get("atchFileGrpId") != null ? params.get("atchFileGrpId").toString().equals("") ? 0 : (Integer.parseInt(params.get("atchFileGrpId").toString())) : 0 ;
+
+			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "membership", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+			LOGGER.debug("list.size : {}", list.size());
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+			ccpCalculateService.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, seqs);
+
+			params.put("attachFiles", list);
+
+			/*if(fileGroupId == 0){
+				int fileGroupIdNew = params.get("atchFileGrpId") != null ? params.get("atchFileGrpId").toString().equals("") ? 0 : (Integer.parseInt(params.get("atchFileGrpId").toString())) : 0 ;
+				if(fileGroupIdNew != 0){
+					params.put("atchFileGrpIdNew", fileGroupIdNew);
+					ccpCalculateService.updateCcpEresubmitAttach(params);
+				}
+			}*/
+
+			code = AppConstants.SUCCESS;
+		}catch(ApplicationException e){
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setData(params);
+		message.setMessage(err);
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/attachResubmitFileUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachResubmitFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
 		LOGGER.debug("params =====================================>>  " + params);
 		String err = "";

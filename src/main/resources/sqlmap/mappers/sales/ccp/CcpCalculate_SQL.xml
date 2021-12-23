@@ -1402,6 +1402,7 @@ AND T1.CNT = 1
 		left join sal0304d c on c.sales_ord_id = b.sales_ord_id
 		where
 		b.sales_ord_no = #{ORD_NO} and a.CCP_REM is not null and a.ccp_stus_id = 1
+		and b.mem_id = #{memID}
 		and c.ref_no is null
     </select>
 
@@ -1552,17 +1553,6 @@ AND T1.CNT = 1
                              </foreach>
                           </if>
 
-                      <if test=" '' != calActPoint and null != calActPoint">
-                         AND UTILS.CONVERT_TO_NUMBER(0,18) = Extent1.CCP_TOT_SCRE_POINT
-                      </if>
-
-                      <if test=" '' != calReason and null != calReason">
-                         AND Extent1.CCP_RESN_ID IN
-                         <foreach collection="arryCalReason" item="value" open="(" separator="," close=")">
-                           #{value}
-                         </foreach>
-                      </if>
-
                       <if test=" '' != assignPic and null != assignPic">
                          AND Extent16.USER_NAME = #{assignPic}
                       </if>
@@ -1574,9 +1564,13 @@ AND T1.CNT = 1
 
                            and Filter1.CCP_STUS_ID = 1
 
-                          <if test=" '' != orderNo and null != orderNo">
+                          <if test=" '' != OrderNo and null != OrderNo">
                              <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
-                             AND  Filter1.SALES_ORD_NO = #{orderNo}
+                             AND  Filter1.SALES_ORD_NO = #{OrderNo}
+                          </if>
+                          <if test=" '' != memID and null != memID">
+                             <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
+                             AND  Filter1.memID = #{memID}
                           </if>
                            <if test=" '' != calBranch and null != calBranch">
                               AND Extent13.BRNCH_ID IN
@@ -1587,9 +1581,8 @@ AND T1.CNT = 1
                            <if test=" '' != calDscBranch and null != calDscBranch">
                              AND  Filter1.BRANCHID2 = #{calDscBranch}
                            </if>
-                           <if test=" '' != calOrdRefNo and null != calOrdRefNo">
-                            <!--  AND  UPPER(Filter1.REF_NO) LIKE '%'||UPPER(#{calOrdRefNo})||'%' -->
-                             AND  Filter1.REF_NO = #{calOrdRefNo}
+                           <if test=" '' != SofRefNo and null != SofRefNo">
+                             AND  Filter1.REF_NO = #{SofRefNo}
                            </if>
 
                           <if test=" '' != calRegion and null != calRegion">
@@ -1614,6 +1607,7 @@ AND T1.CNT = 1
 	            , CRT_USER_ID
 	            , UPD_DT
 	            , UPD_USER_ID
+	            , ATCH_FILE_GRP_ID
 	            )
 	            values
 	            (SAL0304D_ID_SEQ.nextval
@@ -1623,7 +1617,9 @@ AND T1.CNT = 1
 	            , SYSDATE
 	            , #{userId}
 	            , SYSDATE
-	            , #{userId})
+	            , #{userId}
+	            , #{atchFileGrpId}
+	            )
 	</insert>
 
 	<select id="selectNextFileId" resultType="int">
@@ -1670,4 +1666,11 @@ AND T1.CNT = 1
 <update id="updateCcpEresubmitStus" parameterType="Map">
             UPDATE SAL0304D set stus_id = #{eRstatusEdit} where sales_ord_id = #{saveOrdId} and ccp_id = #{saveCcpId}
 </update>
+
+    <select id="getMemberID" parameterType="Map" resultType="int">
+        select a.mem_id
+        from org0001d a
+		left join sys0047m b on b.hr_Code = a.mem_code
+		where b.user_name = #{salesmanCode}
+    </select>
 </mapper>

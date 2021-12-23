@@ -1072,4 +1072,9 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
 		return ccpCalculateMapper.selectCcpEresubmit(params);
 	}
+
+	@Override
+	  public int getMemberID(Map<String, Object> params) {
+	      return ccpCalculateMapper.getMemberID(params);
+	  }
 }

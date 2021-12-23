@@ -56,9 +56,6 @@ var option = {
          }
 
 $(document).ready(function(){
-    //$("#cPromo").prop("disabled", true);
-    //$("#cPromo").attr("class", "disabled");
-
     console.log('${ccpEresubmitMap.salesOrdId}');
     console.log('${ccpEresubmitMap.ccpId}');
     if('${ccpEresubmitMap.atchFileGrpId}' != 0){
@@ -72,21 +69,16 @@ $(document).ready(function(){
     $("#ORD_NO_RESULT").attr("style","display:inline");
     $("#resultcontens").attr("style","display:inline");
 
-    //$("#rbt").attr("style","display:none");
-    //$("#ORD_NO_RESULT").attr("style","display:none");
+    var salesmanCode = '${SESSION_INFO.userName}';
 
-    if('${ccpEresubmitMap.stusId}' != 6){
+    if('${ccpEresubmitMap.stusId}' != 6 || '${orderDetail.salesmanInfo.memCode}' != salesmanCode){
         var elements = document.getElementsByClassName("attach_mod");
         for(var i = 0; i < elements.length; i++) {
             elements[i].style.display="none";
         }
+
+        $("#saveBtn").attr("style","display:none");
     }
-
-    /* var elements = document.getElementsByName("uploadfiletest");
-    for(var i = 0; i < elements.length; i++) {
-        elements[i].className = "auto_file2";
-    } */
-
 });
 
 function fn_doReset() {
@@ -117,10 +109,7 @@ function fn_doClearPersion(){
      $("#newPop").remove();
 }
 
-function fn_save(){
-
-    //if(fn_validRequiredField_Save() ==false ) return ;
-    //fn_unconfirmSalesPerson();
+ function fn_save(){
 
     var formData = new FormData();
     formData.append("atchFileGrpId", '${ccpEresubmitMap.atchFileGrpId}');
@@ -134,7 +123,7 @@ function fn_save(){
         formData.append(n, v.file);
     });
 
-    Common.ajaxFile("/sales/ccp/attachESvmFileUpdate.do", formData, function(result) {
+    Common.ajaxFile("/sales/ccp/attachResubmitFileUpdate.do", formData, function(result) {
         if(result.code == 99){
             Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
         }else{
@@ -154,42 +143,7 @@ function fn_save(){
         Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
     });
 
-}
-
-    function fn_validRequiredField_Save() {
-
-        var rtnMsg = "";
-        var rtnValue = true;
-
-        if (FormUtil.checkReqValue($("#cTPackage"))) {
-            rtnMsg += "* Please select the type of package.<br />";
-            rtnValue = false;
-        }
-
-        if (!FormUtil.checkReqValue($("#SALES_PERSON"))) {
-            if ($("#hiddenSalesPersonID").val() == "") {
-                rtnMsg += "* You must confirm the sales person since you have key-in sales person code.<br />";
-                rtnValue = false;
-            }
-        }
-
-        //20190925 Vannie add checking on Cust Area ID
-        if (FormUtil.isNotEmpty(resultInstallationObject.areaId)) {
-
-            if ("DM" == resultInstallationObject.areaId.substring(0, 2)) {
-
-                rtnMsg += "<spring:message code="sal.alert.msg.customerAddrChange" /><br>";
-                rtnValue = false;
-
-            }
-        }
-
-        if (rtnValue == false) {
-            Common.alert("Save Quotation Summary" + DEFAULT_DELIMITER + rtnMsg);
-        }
-
-        return rtnValue;
-    }
+  }
 
     function fn_unconfirmSalesPerson() {
         var ordId = $("#ORD_ID").val();
@@ -477,29 +431,6 @@ function fn_save(){
 
 
 <section id="content"><!-- content start -->
-
-
-<!-- <section class="search_table">search_table start
-<form action="#"   id="sForm"  name="sForm" method="post">
-
-<table class="type1">table start
-<caption>table</caption>
-<colgroup>
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Order No</th>
-    <td>
-           <input type="text" title="" id="ORD_NO_P" name="ORD_NO_P" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()">Search</a></p>
-           <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()">Reselect</a></p>
-    </td>
-</tr>
-</tbody>
-</table>table end
-</form>
-</section>search_table end -->
 
 <section>
 <div  id="resultcontens"  style="display:none">
@@ -824,20 +755,10 @@ function fn_save(){
 
         </article><!-- tap_area end -->
 
-        <!-- <article class="tap_area">tap_area start
-        <article class="grid_wrap">grid_wrap start
-           <div id="oList_grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
-        </article>grid_wrap end
-
-        </article>tap_area end -->
-
-
         </section><!-- tap_wrap end -->
 
-
-
         <ul class="center_btns">
-            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
+            <li><p class="btn_blue2" id="saveBtn"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
         </ul>
 
 </div>

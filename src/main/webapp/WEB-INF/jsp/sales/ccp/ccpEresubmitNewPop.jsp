@@ -10,27 +10,28 @@
 </style>
 <script type="text/javascript">
 
+var update = new Array();
+var remove = new Array();
+var myFileCaches = {};
+var sofFrFileId = 0;
+var softcFrFileId = 0;
+var nricFrFileId = 0;
+var msofFrFileId = 0;
+var msoftcFrFileId = 0;
+var payFrFileId = 0;
+var govFrFileId = 0;
+var letFrFileId = 0;
+var docFrFileId = 0;
 
-function fn_uploadFile() {
-
-	if($("#uploadfile").val() == null || $("#uploadfile").val() == ""){
-		Common.alert("File not found. Please upload the file.");
-	} else {
-
-    var formData = new FormData();
-    //formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
-    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
-
-    Common.ajaxFile("/sales/ccp/csvUpload", formData, function (result) {
-
-        console.log(result);
-        Common.alert(result.message);
-
-        fn_closePop();
-
-    });
-	}
-}
+var sofFrFileName = "";
+var softcFrFileName = "";
+var nricFrFileName = "";
+var msofFrFileName = "";
+var msoftcFrFileName = "";
+var payFrFileName = "";
+var govFrFileName = "";
+var letFrFileName = "";
+var docFrFileName = "";
 
 function fn_closePop() {
     $("#chsFileUploadClose").click();
@@ -40,17 +41,6 @@ $(document).ready(function(){
 
 	$("#rbt").attr("style","display:none");
 	$("#ORD_NO_RESULT").attr("style","display:none");
-
-	//special for attachment area
-    /* var elements = document.getElementsByClassName("auto_file3");
-    for(var i = 0; i < elements.length; i++) {
-        elements[i].className = "auto_file3 auto_file2";
-    } */
-
-    var elements = document.getElementsByClassName("attach_mod");
-    for(var i = 0; i < elements.length; i++) {
-        elements[i].style.display="none";
-    }
 
     var elements = document.getElementsByName("uploadfiletest");
     for(var i = 0; i < elements.length; i++) {
@@ -62,11 +52,17 @@ $(document).ready(function(){
             fn_doConfirm();
         }
  });
+
+
+	var salesmanCode = '${SESSION_INFO.userName}';
+	console.log("salesmanCode " + salesmanCode);
 });
 
 function fn_doConfirm(){
 
-    Common.ajax("GET", "/sales/ccp/ccpEresubmitNewConfirm", {ORD_NO : $("#ORD_NO_P").val()}, function(result) {
+	var salesmanCode = '${SESSION_INFO.userName}';
+
+    Common.ajax("GET", "/sales/ccp/ccpEresubmitNewConfirm", {ORD_NO : $("#ORD_NO_P").val(),SalesmanCode : salesmanCode}, function(result) {
          console.log( result);
 
 
@@ -80,7 +76,7 @@ function fn_doConfirm(){
 
              //$("#resultcontens").attr("style","display:none");
 
-             Common.alert("No order found or this order had resubmitted.");
+             Common.alert("No order found / this order had resubmitted / this order not under own sales.");
              return ;
 
          }else{
@@ -193,28 +189,226 @@ function setText(result){
 
 function fn_save(){
 
-	Common.ajax("GET", "/sales/ccp/ccpEresubmitNewConfirm", {ORD_NO : $("#ORD_NO_P").val()}, function(result) {
+	var formData = new FormData();
+    formData.append("atchFileGrpId", '${result.ccpEresubmitMap.atchFileGrpId}');
+	formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    formData.append("salesOrdId",'${result.ccpEresubmitMap.salesOrdId}');
+    formData.append("ccpId",'${result.ccpEresubmitMap.ccpId}');
+
+    var salesmanCode = '${SESSION_INFO.userName}';
+
+	Common.ajax("GET", "/sales/ccp/ccpEresubmitNewConfirm", {ORD_NO : $("#ORD_NO_P").val(),SalesmanCode : salesmanCode}, function(result) {
         console.log( result);
         if(result.length == 0)  {
-            Common.alert("No order found or this order had resubmitted.");
+            Common.alert("No order found / this order had resubmitted / this order not under own sales.");
             return ;
 
         }else{
         	var ordId = $("#ORD_ID").val();
             var ccpId = $("#CCP_ID").val();
-            Common.ajax("POST", "/sales/ccp/ccpEresubmitSave", {ordId : ordId,ccpId : ccpId}, function(result) {
-                 console.log( result);
 
-                 if(result == null){
-                     Common.alert("No order found or this order had resubmitted.");
-                 }else{
-                     Common.alert("Order resubmitted");
-                     $('#ccpResubmitClose').click();
-                 }
+            $.each(myFileCaches, function(n, v) {
+                console.log(v.file);
+                formData.append(n, v.file);
             });
+
+            Common.ajaxFile("/sales/ccp/attachResubmitFileUpload.do", formData, function(result) {
+                if(result.code == 99){
+                    Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+                }else{
+                   // DO SAVE BUTTON ACTION
+                   var atchFileGrpId = result.data.fileGroupKey;
+                    Common.ajax("POST", "/sales/ccp/ccpEresubmitSave", {ordId : ordId,ccpId : ccpId, atchFileGrpId : atchFileGrpId}, function(result) {
+                        console.log( result);
+
+                        if(result == null){
+                            Common.alert("No order found or this order had resubmitted.");
+                        }else{
+                            Common.alert("Order resubmitted");
+                            $('#ccpResubmitClose').click();
+                        }
+                   });
+                }
+            },function(result){
+                Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
+            });
+
+
         }
   });
 
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+
+    console.log(data);
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result)
+        var fileSubPath = result.fileSubPath;
+        fileSubPath = fileSubPath.replace('\', '/'');
+
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
+
+$(function(){
+    $('#sofFrFile').change( function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(sofFrFileId);
+        }else if(file.name != sofFrFileName){
+             myFileCaches[1] = {file:file};
+             if(sofFrFileName != ""){
+                 update.push(sofFrFileId);
+             }
+         }
+    });
+    $('#softcFrFile').change( function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(softcFrFileId);
+        }else if(file.name != softcFrFileName){
+            myFileCaches[2] = {file:file};
+            if(softcFrFileName != ""){
+                update.push(softcFrFileId);
+            }
+        }
+    });
+    $('#nricFrFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(nricFrFileId);
+        }else if(file.name != nricFrFileName){
+            myFileCaches[3] = {file:file};
+            if(nricFrFileName != ""){
+                update.push(nricFrFileId);
+            }
+        }
+    });
+
+    $('#msofFrFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(msofFrFileId);
+        }else if(file.name != msofFrFileName){
+            myFileCaches[4] = {file:file};
+            if(msofFrFileName != ""){
+                update.push(msofFrFileId);
+           }
+        }
+    });
+
+    $('#msoftcFrFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(msoftcFrFileId);
+        }else if(file.name != msoftcFrFileName){
+            myFileCaches[5] = {file:file};
+            if(msoftcFrFileName != ""){
+                update.push(msoftcFrFileId);
+            }
+        }
+    });
+
+    $('#payFrFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(payFrFileId);
+        }else if(file.name != payFrFileName){
+            myFileCaches[6] = {file:file};
+            if(payFrFileName != ""){
+                update.push(payFrFileId);
+            }
+        }
+    });
+
+    $('#govFrFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(govFrFileId);
+        }else if(file.name != govFrFileName){
+            myFileCaches[7] = {file:file};
+            if(govFrFileName != ""){
+                update.push(govFrFileId);
+            }
+        }
+    });
+
+    $('#letFrFile').change( function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(letFrFileId);
+        }else if(file.name != letFrFileName){
+             myFileCaches[8] = {file:file};
+             if(letFrFileName != ""){
+                 update.push(letFrFileId);
+             }
+         }
+    });
+
+    $('#docFrFile').change( function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(docFrFileId);
+        }else if(file.name != docFrFileName){
+             myFileCaches[9] = {file:file};
+             if(docFrFileName != ""){
+                 update.push(docFrFileId);
+             }
+         }
+    });
+});
+
+function fn_removeFile(name){
+    if(name == "SOF") {
+        console.log("SOF in");
+         $("#sofFrFile").val("");
+         $(".input_text[id='sofFrFileTxt']").val("");
+         $('#sofFrFile').change();
+    }else if(name == "SOFTC"){
+        $("#softcFrFile").val("");
+        $(".input_text[id='softcFrFileTxt']").val("");
+        $('#softcFrFile').change();
+    }else if(name == "NRIC"){
+        $("#nricFrFile").val("");
+        $(".input_text[id='nricFrFileTxt']").val("");
+        $('#nricFrFile').change();
+    }else if(name == "MSOF"){
+        $("#msofFrFile").val("");
+        $(".input_text[id='msofFrFileTxt']").val("");
+        $('#msofFrFile').change();
+    }else if(name == "MSOFTC"){
+        $("#msoftcFrFile").val("");
+        $(".input_text[id='msoftcFrFileTxt']").val("");
+        $('#msoftcFrFile').change();
+    }else if(name == "PAY") {
+        $("#payFrFile").val("");
+        $(".input_text[id='payFrFileTxt']").val("");
+        $('#payFrFile').change();
+    }else if(name == "GOV") {
+        $("#govFrFile").val("");
+        $(".input_text[id='govFrFileTxt']").val("");
+        $('#govFrFile').change();
+    }else if(name == "LET") {
+        $("#letFrFile").val("");
+        $(".input_text[id='letFrFileTxt']").val("");
+        $('#letFrFile').change();
+    }else if(name == "DOC") {
+        $("#docFrFile").val("");
+        $(".input_text[id='docFrFileTxt']").val("");
+        $('#docFrFile').change();
+    }
 }
 </script>
 
