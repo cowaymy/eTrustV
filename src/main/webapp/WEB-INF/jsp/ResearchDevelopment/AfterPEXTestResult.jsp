@@ -746,7 +746,7 @@
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap_PEXTestResult" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-				<div id="grid_wrap2"></div>
+				<div id="grid_wrap2" style="display:none"></div>
 			</article>
 			<!-- grid_wrap end -->
 		</form>
