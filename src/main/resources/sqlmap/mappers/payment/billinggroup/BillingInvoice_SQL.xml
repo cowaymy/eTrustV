@@ -625,6 +625,98 @@
 		ORDER BY Filter1.OrderNo ASC
 	</select>
 
+	<select id="selectAdvancedRentalInvoiceList" parameterType="Map"
+        resultType="egovMap">
+      SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
+            Extent8.STK_DESC,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+            Extent4.NRIC,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
+            JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8   ON Extent8.STK_ID = Extent9.ITM_STK_ID
+            JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+        WHERE 1=1
+           AND Extent1.APP_TYPE_ID = 66
+        <if test="orderNo != '' ">
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="orderDateTo != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+            AND Extent1.BRNCH_ID  IN (
+            <foreach collection="keyInBranchList" index="index"
+                separator=",">
+                '${keyInBranchList[index]}'
+            </foreach>
+            )
+        </if>
+        <if test="custId != '' ">
+            AND Extent1.CUST_ID = #{custId}
+        </if>
+        <if test="custName != '' ">
+            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
+        </if>
+        <if test="custIC != '' ">
+            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
+        </if>
+        <if test="productId != '' ">
+            AND Extent6.ITM_STK_ID = #{productId}
+             </if>
+        <if test="memberCode != '' ">
+            AND Extent7.MEM_CODE = #{memberCode}
+        </if>
+         <if test="rentStatus != '' and rentStatus != null">
+            AND Extent3.STUS_CODE_ID  IN (
+            <foreach collection="rentStatus" index="index"
+                separator=",">
+                '${rentStatus[index]}'
+            </foreach>
+            )
+        </if>
+
+      ORDER BY Extent1.SALES_ORD_NO
+    </select>
+
 	<select id="selectPenaltyBillDate" parameterType="Map"
 		resultType="egovMap">
 		SELECT
