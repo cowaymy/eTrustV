@@ -14,9 +14,11 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
@@ -24,6 +26,8 @@ import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -31,13 +35,29 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import oracle.sql.DATE;
 
 /*********************************************************************************************
- * DATE PIC VERSION COMMENT ----------------------------------------------------------------------------- 01/04/2019 ONGHC 1.0.1 - Restructure File 08/05/2019 ONGHC 1.0.2 - Amend asResult_insert 23/05/2019 ONGHC 1.0.3 - Amend asResult_insert 26/07/2019 ONGHC 1.0.4 - Add Recall Status 26/07/2019 ONGHC 1.0.5 - Remove In House SMO 05/09/2019 ONGHC 1.0.6 - Create saveASEntryInHouse 05/09/2019 ONGHC 1.0.7 - Amend In House Call Log Result 17/09/2019 ONGHC 1.0.8 - Create getDftTyp 08/10/2019 ONGHC 1.0.9 - Amend asResultBasic_update 21/10/2019 ONGHC 1.0.10 - Amend chkPmtMap and Un-map Payment Function 17/12/2019 ONGHC 1.0.11 - Add AS Used Filter Feature 05/10/2020 FARUQ 1.0.12 - -Add getAsDefectEntry
+ * DATE          PIC        VERSION     COMMENT
+ *
+ * 01/04/2019 	 ONGHC 			1.0.1				- Restructure File
+ * 08/05/2019 	 ONGHC 			1.0.2 			- Amend asResult_insert
+ * 23/05/2019 	 ONGHC 			1.0.3 			- Amend asResult_insert
+ * 26/07/2019 	 ONGHC 			1.0.4 			- Add Recall Status
+ * 26/07/2019 	 ONGHC 			1.0.5 			- Remove In House SMO
+ * 05/09/2019 	 ONGHC 			1.0.6 			- Create saveASEntryInHouse
+ * 05/09/2019 	 ONGHC 			1.0.7 			- Amend In House Call Log Result
+ * 17/09/2019 	 ONGHC 			1.0.8 			- Create getDftTyp
+ * 08/10/2019 	 ONGHC 			1.0.9 			- Amend asResultBasic_update
+ * 21/10/2019 	 ONGHC 			1.0.10 			- Amend chkPmtMap and Un-map Payment Function
+ * 17/12/2019 	 ONGHC 			1.0.11 			- Add AS Used Filter Feature
+ * 05/10/2020 	 FARUQ 			1.0.12 			- -Add getAsDefectEntry
  *********************************************************************************************/
 
 @Service("ASManagementListService")
 public class ASManagementListServiceImpl extends EgovAbstractServiceImpl implements ASManagementListService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ASManagementListServiceImpl.class);
+
+  @Autowired
+  private AdaptorService adaptorService;
 
   @Resource(name = "ASManagementListMapper")
   private ASManagementListMapper ASManagementListMapper;
@@ -1913,6 +1933,23 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         this.saveASEntryInHouse(params);
       }
     }
+
+ // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
+    String smsMessage = "";
+    if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") &&
+      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001200")) ){
+      smsMessage = "COWAY:Dear Customer, Your After Service is completed by "+ svc0004dmap.get("AS_CT_CODE") +" on " + svc0004dmap.get("AS_SETL_DT").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
+    }else if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("10")){
+      smsMessage = "COWAY:Dear Customer, Your Appointment for After Service has failed due to "+ svc0004dmap.get("AS_FAIL_RESN_DESC").toString() +".Will call to set new appointment.";
+    }
+    Map<String, Object> smsList = new HashMap<>();
+    smsList.put("userId", String.valueOf(svc0004dmap.get("updator")));
+    smsList.put("smsType", 975);
+    smsList.put("smsMessage", smsMessage);
+    smsList.put("smsMobileNo", svc0004dmap.get("TEL_M").toString());
+
+    sendSms(smsList);
+
 
     LOGGER.debug("================asResult_insert - END ================");
     return em;
@@ -4133,5 +4170,16 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     // KR-OHK Barcode Save Start
 
     return returnemp;
+  }
+
+  @Override
+  public void sendSms(Map<String, Object> smsList){
+    int userId = (int) smsList.get("userId");
+    SmsVO sms = new SmsVO(userId, 975);
+
+    sms.setMessage(smsList.get("smsMessage").toString());
+    sms.setMobiles(smsList.get("smsMobileNo").toString());
+    //send SMS
+    SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 }

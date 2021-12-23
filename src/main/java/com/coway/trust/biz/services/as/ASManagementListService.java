@@ -215,4 +215,6 @@ public interface ASManagementListService {
 
   public Map<String, Object> setCCR000Data(Map<String, Object> params);
 
+  void sendSms(Map<String, Object> smsList);
+
 }
