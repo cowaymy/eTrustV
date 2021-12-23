@@ -557,12 +557,16 @@
     , TEST_RESULT_NO
     , TEST_RESULT_STUS
     , SO_EXCHG_ID
+    , CRT_USER_ID
+    , CRT_DT
     )
     VALUES
     ( SVC0125D_TEST_RESULT_ID_SEQ.NEXTVAL
     , #{PTRNo}
     , #{PTRStusId}
     , #{soExchgId}
+    , #{soExchgCrtUserId}
+    , SYSDATE
     )
   </insert>
 
