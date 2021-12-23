@@ -570,10 +570,14 @@
       url = "/services/addInstallation_2.do";
     }
 
+    $("#hiddenFailReasonCode").val( $("#failReasonCode option:selected").text() );
+
     var saveForm = {
   	      "installForm" : $("#addInstallForm").serializeJSON(),
   	      "add" : addedRowItems
     }
+
+    console.log(saveForm);
 
     //Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
     Common.ajax("POST", url, saveForm,
@@ -1772,14 +1776,60 @@
       <input id="pGubun" name="pGubun" type="hidden" value="RADIO" /> <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" /> <input id="pLocationType" name="pLocationType" type="hidden" value="" /> <input id="pLocationCode" name="pLocationCode" type="hidden" value="" /> <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" /> <input id="pStatus" name="pStatus" type="hidden" value="" /> <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
     </form>
     <form action="#" id="addInstallForm" method="post">
-      <input type="hidden" name="hidStkId" id=hidStkId " value="${installResult.installStkId}"><input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" /> <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" /> <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" /> <input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" /> <input type="hidden" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" /> <input type="hidden" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" /> <input type="hidden" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" /> <input type="hidden" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" />
-      <input type="hidden" value="${installResult.stkCtgryId}" id="hidSirimTypeId" name="hidSirimTypeId" /> <input type="hidden" value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" /> <input type="hidden" value="${installResult.installStkId}" id="hidProductId" name="hidProductId" /> <input type="hidden" value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" /> <input type="hidden" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" /> <input type="hidden" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" /> <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" /> <input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" /> <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" /> <input type="hidden" value="" id="hidActualCTId"
-        name="hidActualCTId"/> <input type="hidden" value="${installResult.ctWhLocId}" id="hidCtWhLocId" name="hidCtWhLocId" />
-        <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" /> <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" /> <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" /> <input type="hidden" value="" id="hidPriceId" name="hidPriceId" /> <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" /> <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" /> <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" /> <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" /> <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" /> <input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" /> <input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" /> <input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" /> <input type="hidden" value=""
-        id="hidPEPreviousStatus" name="hidPEPreviousStatus"
-      /> <input type="hidden" value="" id="hidDocId" name="hidDocId" /> <input type="hidden" value="" id="hidOldPrice" name="hidOldPrice" /> <input type="hidden" value="" id="hidExchangeAppTypeId" name="hidExchangeAppTypeId" /> <input type="hidden" value="" id="hiddenCustomerType" name="hiddenCustomerType" /> <input type="hidden" value="" id="hiddenPostCode" name="hiddenPostCode" /> <input type="hidden" value="" id="hiddenCountryName" name="hiddenCountryName" /> <input type="hidden" value="" id="hiddenStateName" name="hiddenStateName" /> <input type="hidden" value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" /> <input type="hidden" value="${promotionView.promoPrice}" id="hidPromoPrice" name="hidPromoPrice" /> <input type="hidden" value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" /> <input type="hidden" value="${promotionView.swapPromoId}" id="hidSwapPromoId" name="hidSwapPromoId" /> <input type="hidden"
-        value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice"
-      /> <input type="hidden" value="${promotionView.swapPromoPV}" id="hidSwapPromoPV" name="hidSwapPromoPV" /> <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" /> <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" /> <input type="hidden" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" /> <input type="hidden" value="${customerInfo.name}" id="hidCustomerName" name="hidCustomerName" /> <input type="hidden" value="${customerContractInfo.telM1}" id="hidCustomerContact" name="hidCustomerContact" /> <input type="hidden" value="${installResult.salesOrdNo}" id="hidTaxInvDSalesOrderNo" name="hidTaxInvDSalesOrderNo" /> <input type="hidden" value="${installResult.installEntryNo}" id="hidTradeLedger_InstallNo" name="hidTradeLedger_InstallNo" />
+      <input type="hidden" name="hidStkId" id=hidStkId " value="${installResult.installStkId}">
+      <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" />
+      <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" />
+      <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" />
+      <input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" />
+      <input type="hidden" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" />
+      <input type="hidden" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" />
+      <input type="hidden" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" />
+      <input type="hidden" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" />
+      <input type="hidden" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" />
+      <input type="hidden" value="${installResult.stkCtgryId}" id="hidSirimTypeId" name="hidSirimTypeId" />
+      <input type="hidden" value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" />
+      <input type="hidden" value="${installResult.installStkId}" id="hidProductId" name="hidProductId" />
+      <input type="hidden" value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" />
+      <input type="hidden" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" />
+      <input type="hidden" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" />
+      <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
+      <input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" />
+      <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
+      <input type="hidden" value="" id="hidActualCTId" name="hidActualCTId"/>
+      <input type="hidden" value="${installResult.ctWhLocId}" id="hidCtWhLocId" name="hidCtWhLocId" />
+      <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
+      <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
+      <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />
+      <input type="hidden" value="" id="hidPriceId" name="hidPriceId" />
+      <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
+      <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" />
+      <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" />
+      <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" />
+      <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" />
+      <input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" />
+      <input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" />
+      <input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" />
+      <input type="hidden" value="" id="hidPEPreviousStatus" name="hidPEPreviousStatus"/>
+      <input type="hidden" value="" id="hidDocId" name="hidDocId" />
+      <input type="hidden" value="" id="hidOldPrice" name="hidOldPrice" />
+      <input type="hidden" value="" id="hidExchangeAppTypeId" name="hidExchangeAppTypeId" />
+      <input type="hidden" value="" id="hiddenCustomerType" name="hiddenCustomerType" />
+      <input type="hidden" value="" id="hiddenPostCode" name="hiddenPostCode" />
+      <input type="hidden" value="" id="hiddenCountryName" name="hiddenCountryName" />
+      <input type="hidden" value="" id="hiddenStateName" name="hiddenStateName" />
+      <input type="hidden" value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" />
+      <input type="hidden" value="${promotionView.promoPrice}" id="hidPromoPrice" name="hidPromoPrice" />
+      <input type="hidden" value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" />
+      <input type="hidden" value="${promotionView.swapPromoId}" id="hidSwapPromoId" name="hidSwapPromoId" />
+      <input type="hidden" value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice"/>
+      <input type="hidden" value="${promotionView.swapPromoPV}" id="hidSwapPromoPV" name="hidSwapPromoPV" />
+      <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
+      <input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
+      <input type="hidden" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" />
+      <input type="hidden" value="${customerInfo.name}" id="hidCustomerName" name="hidCustomerName" />
+      <input type="hidden" value="${customerContractInfo.telM1}" id="hidCustomerContact" name="hidCustomerContact" />
+      <input type="hidden" value="${installResult.salesOrdNo}" id="hidTaxInvDSalesOrderNo" name="hidTaxInvDSalesOrderNo" />
+      <input type="hidden" value="${installResult.installEntryNo}" id="hidTradeLedger_InstallNo" name="hidTradeLedger_InstallNo" />
       <c:if test="${installResult.codeid1  == '257' }">
         <input type="hidden" value="${orderInfo.c5}" id="hidOutright_Price" name="hidOutright_Price" />
       </c:if>
@@ -2062,6 +2112,7 @@ Name: ${hpMember.name1}</textarea></td>
                 </c:forEach></td>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
+            <input type="hidden" value="" id="hiddenFailReasonCode" name="hiddenFailReasonCode" />
             <td><select class="w100p" id="failReasonCode" name="failReasonCode">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failChild}" varStatus="status">
