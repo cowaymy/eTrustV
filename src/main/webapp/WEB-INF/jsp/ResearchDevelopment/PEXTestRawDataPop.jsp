@@ -161,19 +161,17 @@ today = "${today}";
             <td><select class="w100p" id="cmbProdCategory" name="cmbProdCategory"></select></td>
       </tr>
       <tr>
-       <th scope="row">
+        <th scope="row">
             <spring:message code='service.grid.SettleDate' />
        </th>
        <td>
-	       <div class="date_set w100p">
-		       <p>
-		          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" />
-		       </p>
-		          <span><spring:message code='pay.text.to' /></span>
-		       <p>
-		          <input type="text" title="Create end Date"  placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" />
-		       </p>
-	       </div>
+          <div class="date_set w100p">
+             <p><input type="text" title="Create start Date" id='settleDateFrom' name='settleDateFrom'
+                     placeholder="DD/MM/YYYY" class="j_date" /></p>
+             <span><spring:message code='pay.text.to' /></span>
+            <p><input type="text" title="Create end Date" id='settleDateTo' name='settleDateTo'
+                     placeholder="DD/MM/YYYY" class="j_date" /></p>
+           </div>
        </td>
        <th scope="row">Product Genuine</th>
        <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">

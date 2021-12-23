@@ -12,6 +12,7 @@
 	};
 
 	var myGridID;
+	var myGridIDExcel;
 	var gridPros = {
 		usePaging : true,
 		pageRowCount : 20,
@@ -30,44 +31,15 @@
 	$(document).ready(
 		function() {
 			PEXTestResultGrid();
+			PEXTestResultExcelGrid();
 			doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
 			CommonCombo.make('cmbCategory', '/common/selectCodeList.do', {groupCode : 11,codeIn : 'WP,AP,BT,BB,MAT,FRM,POE'}, '', {type : 'M'});
-
 		});
 
 	function PEXTestResultGrid() {
-		var columnLayout = [
-				{
-				    dataField : "soExchgId",
-				    headerText : "SO Exchange ID",
-				    width : 110,
-				    visible : false
-				},
-				{
-				    dataField : "soId",
-				    headerText : "Sales Order ID",
-				    width : 110,
-				    visible : false
-				},
-				{
-				    dataField : "testResultStus",
-				    headerText : "PEX Test Result Status ID",
-				    width : 110,
-				    visible : false
-				},
-				{
-                    dataField : "testResultId",
-                    headerText : "PEX Test Result ID",
-                    width : 110,
-                    visible : false
-                },
-                {
-                    dataField : "rcdTms",
-                    headerText : "rcdTms",
-                    width : 100,
-                    visible : false
-                },
-				{
+
+		var columnLayout =[
+		        {
 					dataField : "productCategory",
 					headerText : "Product Category",
 					width : 110
@@ -210,21 +182,213 @@
                     dataField : "prodGenuine",
                     headerText : "G/NG",
                     width : 100
-                }
-		];
+                },
+                {
+		                         dataField : "soExchgId",
+		                         headerText : "SO Exchange ID",
+		                         width : 110,
+		                         visible : false
+		       },
+		       {
+		                         dataField : "soId",
+		                         headerText : "Sales Order ID",
+		                         width : 110,
+		                         visible : false
+		        },
+		       {
+		                         dataField : "testResultStus",
+		                         headerText : "PEX Test Result Status ID",
+		                         width : 110,
+		                         visible : false
+		       },
+		       {
+		                         dataField : "testResultId",
+		                         headerText : "PEX Test Result ID",
+		                         width : 110,
+		                         visible : false
+		       },
+		       {
+		                         dataField : "rcdTms",
+		                         headerText : "rcdTms",
+		                         width : 100,
+		                         visible : false
+		       }
+		 ];
 
 		var gridPros = {
 			showRowCheckColumn : true,
 			usePaging : true,
 			pageRowCount : 20,
 			showRowAllCheckBox : true,
-			//editable : false,
+			editable : false,
 			selectionMode : "multipleCells",
 			wordWrap : true
 		};
 
 		myGridID = AUIGrid.create("#grid_wrap_PEXTestResult", columnLayout, gridPros);
 	}
+
+	function PEXTestResultExcelGrid() {
+
+        var columnLayout =[
+                {
+                    dataField : "productCategory",
+                    headerText : "Product Category",
+                    width : 110
+                },
+                {
+                    dataField : "productCode",
+                    headerText : "Product Code",
+                    width : 100
+                },
+                {
+                    dataField : "productName",
+                    headerText : "Product Name",
+                    width : 180
+                },
+                {
+                    dataField : "prodSerialNo",
+                    headerText : "Product Serial Number",
+                    width : 150
+                },
+                {
+                    dataField : "pexTestResultStus",
+                    headerText : "<spring:message code='service.grid.Status'/>",
+                    width : 100
+                },
+                {
+                    dataField : "pexDate",
+                    headerText : "PEX Date",
+                    width : 100,
+                    dataType : "date",
+                    formatString : "dd/mm/yyyy"
+                },
+                {
+                    dataField : "asAging",
+                    headerText : "AS Aging",
+                    width : 100
+                },
+                {
+                    dataField : "orderNo",
+                    headerText : "<spring:message code='service.title.SalesOrder'/>",
+                    width : 100
+                },
+                {
+                    dataField : "ctCode",
+                    headerText : "<spring:message code='service.grid.CTCode'/>",
+                    width : 100
+                },
+                {
+                    dataField : "dscCode",
+                    headerText : "CT Branch",
+                    width : 100
+                },
+                {
+                    dataField : "problemSymptomLarge",
+                    headerText : "Problem Symptom Large",
+                    width : 100
+                },
+                {
+                    dataField : "problemSymptomSmall",
+                    headerText : "Problem Symptom Small",
+                    width : 100
+                },
+                {
+                    dataField : "defectPartLarge",
+                    headerText : "Defect Part Large",
+                    width : 100
+                },
+                {
+                    dataField : "defectPartSmall",
+                    headerText : "Defect Part Small",
+                    width : 100
+                },
+                {
+                    dataField : "pexReasonCode",
+                    headerText : "PEX Code",
+                    width : 100
+                },
+                {
+                    dataField : "pexReasonDesc",
+                    headerText : "PEX Desc",
+                    width : 150
+                },
+                {
+                    dataField : "retNo",
+                    headerText : "RET No",
+                    width : 100
+                },
+                {
+                    dataField : "pexInsNo",
+                    headerText : "PEX Installation No",
+                    width : 100
+                },
+                {
+                    dataField : "testResultNo",
+                    headerText : "Test Result No",
+                    width : 100
+                },
+                {
+                    dataField : "custName",
+                    headerText : "Customer Name",
+                    width : 200
+                },
+                {
+                    dataField : "testResultRem",
+                    headerText : "Test Result Remark",
+                    width : 400
+                },
+                {
+                    dataField : "testSettleDt",
+                    headerText : "Test Settle Date",
+                    width : 100,
+                    dataType : "date",
+                    formatString : "dd/mm/yyyy"
+                },
+                {
+                    dataField : "amp",
+                    headerText : "AMP",
+                    width : 100
+                },
+                {
+                    dataField : "voltage",
+                    headerText : "Voltage",
+                    width : 100
+                },
+                {
+                    dataField : "instState",
+                    headerText : "State",
+                    width : 100
+                },
+                {
+                    dataField : "instCity",
+                    headerText : "City",
+                    width : 100
+                },
+                {
+                    dataField : "instArea",
+                    headerText : "Area",
+                    width : 100
+                },
+                {
+                    dataField : "prodGenuine",
+                    headerText : "G/NG",
+                    width : 100
+                }
+         ];
+
+        var gridPros = {
+            showRowCheckColumn : true,
+            usePaging : true,
+            pageRowCount : 20,
+            showRowAllCheckBox : true,
+            editable : false,
+            selectionMode : "multipleCells",
+            wordWrap : true
+        };
+
+        myGridIDExcel = AUIGrid.create("#grid_wrap2", columnLayout, gridPros);
+    }
 
 	function fn_searchPEXTestResult() { // SEARCH PEX TEST RESULT
 
@@ -258,6 +422,7 @@
 			Common.ajax("GET", "/ResearchDevelopment/searchPEXTestResultList.do", $(
 					"#PEXTestForm").serialize(), function(result) {
 				AUIGrid.setGridData(myGridID, result);
+				AUIGrid.setGridData(myGridIDExcel, result);
 			});
 		} else {
 			Common.alert(msg);
@@ -395,9 +560,10 @@
 		});
 	}
 
-	function fn_excelDown() {
+	 function fn_excelDown() {
 		// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-		GridCommon.exportTo("grid_wrap_PEXTestResult", "xlsx", "After PEX Test Result");
+        GridCommon.exportTo("#grid_wrap2", "xlsx", "After PEX Test Result");
+
 	}
 
 	function f_multiCombo() {
@@ -572,7 +738,7 @@
 			<ul class="right_btns">
 				<c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
 					<li><p class="btn_grid">
-							<a href="#" onClick="fn_excelDown()">
+							<a href="#" onclick="fn_excelDown()">
 							<spring:message code='service.btn.Generate' /></a>
 					</p></li>
 				</c:if>
@@ -580,6 +746,7 @@
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap_PEXTestResult" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+				<div id="grid_wrap2"></div>
 			</article>
 			<!-- grid_wrap end -->
 		</form>
