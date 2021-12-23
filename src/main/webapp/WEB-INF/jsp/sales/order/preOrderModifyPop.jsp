@@ -549,12 +549,13 @@ var blockDtTo = "${hsBlockDtTo}";
         });
         $('#btnSave').click(function() {
 
+
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
             }
-
             if(!fn_validOrderInfo()) {
+
                 $('#aTabBD').click();
                 return false;
             }
@@ -635,6 +636,8 @@ var blockDtTo = "${hsBlockDtTo}";
                 }
             }
         });
+
+
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             var vCustNric = $('#thrdParty').is(":checked") ? "" : $('#nric').val();
@@ -1010,6 +1013,7 @@ var blockDtTo = "${hsBlockDtTo}";
     }
 
     function fn_validOrderInfo() {
+
         var isValid = true, msg = "";
 
         var appTypeIdx = $("#appType option:selected").index();
@@ -1017,13 +1021,19 @@ var blockDtTo = "${hsBlockDtTo}";
         var custType = $("#hiddenTypeId").val();
         var exTrade = $("#exTrade").val();
 
+
         if(appTypeIdx <= 0) {
+
+
+
             isValid = false;
             msg += "* Please select an application type.<br>";
         }
         else {
+
             if(appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#installDur'))) {
+
                     isValid = false;
                     msg += "* Please key in the installment duration.<br>";
                 }
@@ -1168,12 +1178,13 @@ var blockDtTo = "${hsBlockDtTo}";
         var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
 
         var orderVO = {
+
         		preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
                 sofNo                : $('#sofNo').val().trim(),
                 custPoNo             : $('#poNo').val().trim(),
                 appTypeId            : vAppType,
                 srvPacId             : $('#srvPacId').val(),
-//                instPriod            : $('#installDur').val().trim(),
+                //instPriod            : $('#installDur').val().trim(),
                 custId               : $('#hiddenCustId').val(),
                 empChk               : 0,
                 gstChk               : $('#gstChk').val(),
@@ -2646,10 +2657,10 @@ var blockDtTo = "${hsBlockDtTo}";
     <td><select id="ordPromo" name="ordPromo" class="w50p" disabled></select></td>
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
 </tr>
-<!-- <tr>
+<tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
     <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
-</tr> -->
+</tr>
 <tr>
     <th scope="row">Price / RPF (RM)</th>
     <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
