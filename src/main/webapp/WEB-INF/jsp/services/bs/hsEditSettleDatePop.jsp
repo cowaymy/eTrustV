@@ -154,7 +154,7 @@
             }
         	else if(tDay > 7) //ONLY ALLOWED TO EDIT HS DATE ON 1-7 EVERY MONTH
             {
-                Common.alert("* Settle Date is only allowed to be edited on 1th - 7th every month");
+                Common.alert("* Settle Date is only allowed to be edited on 1st - 7th every month");
                 $("input[name='settleDt']").attr('disabled', true);
                 $("#btnSave").hide();
                 return;
