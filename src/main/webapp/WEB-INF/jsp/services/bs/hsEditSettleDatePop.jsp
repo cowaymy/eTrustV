@@ -45,18 +45,6 @@
 
 	    selSchdulId = $("#hidschdulId").val(); // TypeId
 
-	    //OLD SETTLE DATE WITHIN 2 MONTHS
-	    var oldSetlDt = $("#hidSetlDt").val();
-	    oldSetlDt = oldSetlDt.split("/");
-	    var oMonth = parseInt(oldSetlDt[1]);
-	    var oYear =  parseInt(oldSetlDt[2]);
-
-	    var tDate = new Date();
-	    var tMth = tDate.getMonth() + 1; //1-12
-	    var tYear = tDate.getFullYear();
-
-
-
 	    fn_getHsViewfilterInfoAjax();
 	    //fn_getHsFilterListAjax();
 	    fn_viewInstallationChkViewSearch();
@@ -87,7 +75,6 @@
 	    }
 
 	    var instruction = "${basicinfo.instct}";
-
 	    $("#instruction").val(instruction);
 
 	    //Installation checklist - stock category
@@ -127,8 +114,8 @@
 	      $("#instChklstCheckBox").prop("checked", true);
 
 	      if ($("#cmbStatusType2").val() == 4) {    // Completed
-	          $("input[name='settleDate']").attr('disabled', false);
-	          $("select[name='failReason'] option").remove();
+	          //$("input[name='settleDate']").attr('disabled', false);
+	          //$("select[name='failReason'] option").remove();
 	           if(stkCtgry == 54){
 	                if (stkId1 == 1735 ){
 	              $("#txtInstChkLst").show();
@@ -145,19 +132,35 @@
 	        $("#btnSerialEdit").attr("style", "");
 	    }
 
-	    // Added for displaying instruction remarks. By Hui Ding, 2020-10-09
-	    document.getElementById("instruction").value = $("#srvRem").val();
+	    //OLD SETTLE DATE WITHIN 2 MONTHS
+        var hsPeriod = "${basicinfo.monthy}";
+        hsPeriod = hsPeriod.split("/");
+        var oMonth = parseInt(hsPeriod[0]);
+        var oYear =  parseInt(hsPeriod[1]);
 
-	    if(oYear == tYear) //OLD SETTLE DATE YEAR == CURRENT YEAR
+        var tDate = new Date();
+        var tDay = tDate.getDate();
+        var tMth = tDate.getMonth() + 1; //1-12
+        var tYear = tDate.getFullYear();
+
+        if(oYear == tYear) //HS PERIOD YEAR == CURRENT YEAR
         {
-            if((tMth-2) > oMonth) //SYSDATE MONTH - 2 > OLD SETTLE MONTH = NOT ALLOW
+        	if((tMth-2) > oMonth) //SYSDATE MONTH - 2 > HS PERIOD MONTH = NOT ALLOW
+	        {
+	            Common.alert("* Settle Date is only allowed to be edited within 2 months timeframe");
+                $("input[name='settleDt']").attr('disabled', true);
+                $("#btnSave").hide();
+                return;
+            }
+        	else if(tDay > 7) //ONLY ALLOWED TO EDIT HS DATE ON 1-7 EVERY MONTH
             {
-                Common.alert("* Settle Date is only allowed to be edited within 2 months timeframe");
+                Common.alert("* Settle Date is only allowed to be edited on 1th - 7th every month");
                 $("input[name='settleDt']").attr('disabled', true);
                 $("#btnSave").hide();
                 return;
             }
         }
+
 
    });
 
@@ -568,8 +571,7 @@
 	    form.resultId = $("#hrResultId").val();
 
 	    jsonObj.form = form;
-
-	    console.log(jsonObj.form);
+	    //console.log(jsonObj.form);
 
 	    var url = "";
 
