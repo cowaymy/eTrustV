@@ -601,6 +601,18 @@ function popup(location){
     <th scope="row">Assigned to CCP User</th>
     <td><input type="text" title="" placeholder="" class="w100p" name="assignPic" id="assignPic"/></td>
 </tr>
+<tr>
+    <th scope="row">eResubmit Reference</th>
+    <td><input type="text" title="" placeholder="" class="w100p" name="eRref"/></td>
+    <th scope="row">eResubmit Status</th>
+    <td>
+	    <select class="multy_select w100p" multiple="multiple" name="eRstatus">
+	        <option value="1"><spring:message code="sal.btn.active" /></option>
+	        <option value="5"><spring:message code="sal.combo.text.approv" /></option>
+	        <option value="6"><spring:message code="sal.combo.text.rej" /></option>
+	    </select>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

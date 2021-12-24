@@ -98,7 +98,9 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.ECOMM_ORD_ID,
 			       CASE
                     WHEN CCP_ASSIGN_USER_NAME IS NOT NULL THEN (TO_CHAR(FILTER1.CCP_ASSIGN_USER_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||FILTER1.CCP_ASSIGN_USER_NAME ||')')
-                   END AS ASSIGN_PIC
+                   END AS ASSIGN_PIC,
+		           filter1.eRref,
+		           filter1.eRstatus
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
@@ -142,7 +144,9 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent15.CHS_RSN,
 			          NVL(Extent3.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
 			          Extent16.USER_NAME CCP_ASSIGN_USER_NAME,
-			          Extent1.CCP_ASSIGN_USER_DT
+			          Extent1.CCP_ASSIGN_USER_DT,
+			          extent17.ref_no eRref,
+			          extent17.stus_id eRstatus
 			       FROM SAL0102D Extent1
 			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
 			                        MAX(Extent2.CCP_ID)  A1
@@ -168,7 +172,7 @@ ORDER BY Project1.CODE_NAME ASC
 			          <!-- Added to get assigned PIC by Hui Ding, 2021-06-16 -->
 			          LEFT JOIN SYS0047M Extent16 ON Extent1.CCP_ASSIGN_USER_ID = Extent16.USER_ID
 			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
-
+			          LEFT JOIN SAL0304D extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
 			          <!-- ## RENTAL  ONLY ## -->
 			          WHERE Extent3.APP_TYPE_ID IN (66,5764)
 
@@ -277,6 +281,22 @@ ORDER BY Project1.CODE_NAME ASC
                            <if test='isECommerce != null and isECommerce != ""'>
 				              AND Filter1.ECOMM_ORD_ID > 0
 				           </if>
+				           <if test='eRref != null and eRref != ""'>
+                              AND Filter1.eRref = #{eRref}
+                           </if>
+                           <if test=" '' != eRstatus and null != eRstatus ">
+                             AND  Filter1.eRstatus IN
+                             <foreach collection="arryERstatus" item="value" open="(" separator="," close=")">
+                                 <choose>
+                                     <when test="value ==  4 ">
+                                         #{value} , 6 , 10
+                                     </when>
+                                     <otherwise>
+                                         #{value}
+                                     </otherwise>
+                                 </choose>
+                             </foreach>
+                          </if>
 			              <!--End Condition  -->
 			  ORDER BY Filter1.CCP_ID ASC
 

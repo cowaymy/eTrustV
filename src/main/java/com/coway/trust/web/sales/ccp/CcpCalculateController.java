@@ -126,10 +126,12 @@ public class CcpCalculateController {
 		String arryCalCcpStatus[] = request.getParameterValues("calCcpStatus");
 		String arryCalBranch[] = request.getParameterValues("calBranch");
 		String arryCalReason[] = request.getParameterValues("calReason");
+		String arryERstatus[] = request.getParameterValues("eRstatus");
 
 		params.put("arryCalCcpStatus", arryCalCcpStatus);
 		params.put("arryCalBranch", arryCalBranch);
 		params.put("arryCalReason", arryCalReason);
+		params.put("arryERstatus", arryERstatus);
 
 		//Call Service
 		List<EgovMap> calList = null;
