@@ -1684,7 +1684,9 @@ AND T1.CNT = 1
 </select>
 
 <update id="updateCcpEresubmitStus" parameterType="Map">
-            UPDATE SAL0304D set stus_id = #{eRstatusEdit} where sales_ord_id = #{saveOrdId} and ccp_id = #{saveCcpId}
+            UPDATE SAL0304D set stus_id = #{eRstatusEdit},upd_dt = SYSDATE
+            ,UPD_USER_ID = #{userId}
+            where sales_ord_id = #{saveOrdId} and ccp_id = #{saveCcpId}
 </update>
 
     <select id="getMemberID" parameterType="Map" resultType="int">
