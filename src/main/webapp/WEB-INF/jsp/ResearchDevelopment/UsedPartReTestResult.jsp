@@ -56,19 +56,6 @@
                         doGetCombo('/ResearchDevelopment/getSpareFilterName.do', $(this).val(), '', 'spareFilterName', 'S', '');
                     });
 
-            AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
-
-                var asid = AUIGrid.getCellValue(myGridID, event.rowIndex,"asId");
-                var asNo = AUIGrid.getCellValue(myGridID, event.rowIndex,"asNo");
-                var asStusId = AUIGrid.getCellValue(myGridID,event.rowIndex, "asStusId");
-                var salesOrdNo = AUIGrid.getCellValue(myGridID,event.rowIndex, "salesOrdNo");
-                var salesOrdId = AUIGrid.getCellValue(myGridID,event.rowIndex, "asSoId");
-
-                var param = "?salesOrderId=" + salesOrdId + "&ord_Id=" + salesOrdId + "&ord_No="
-                        + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid + "&IND= 1";
-
-                Common.popupDiv("UsedPartReTestResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
-            });
         });
 
     function asManagementGrid() {
@@ -587,141 +574,6 @@
         });
     }
 
-
-    function fn_asResultEditBasicPop(ind) {
-        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-        if (selectedItems.length <= 0) {
-            Common.alert("<spring:message code='service.msg.NoRcd'/>");
-            return;
-        }
-
-        if (selectedItems.length > 1) {
-            Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-            return;
-        }
-
-        var asId = selectedItems[0].item.asId;
-        var asNo = selectedItems[0].item.asNo;
-        var asStusId = selectedItems[0].item.code1;
-        var salesOrdNo = selectedItems[0].item.salesOrdNo;
-        var salesOrdId = selectedItems[0].item.asSoId;
-        var asResultNo = selectedItems[0].item.c3;
-        var asResultId = selectedItems[0].item.asResultId;
-        var refReqst = selectedItems[0].item.refReqst;
-        var rcdTms = selectedItems[0].item.rcdTms;
-        var updDt = selectedItems[0].item.asSetlDt;
-        var lstUpdDt = selectedItems[0].item.asResultCrtDt;
-
-        // ONLY APPLICABLE TO COMPLETE AND CANCEL AS
-        if (asStusId != "CAN" && asStusId != "COM") {
-            Common.alert("<spring:message code='service.msg.asEdtBscChk' arguments='<b>"
-                            + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-            return;
-        }
-
-        if (asStusId == "ACT") { // STILL ACTIVE
-            if (refReqst == "") {
-                Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-                                + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-                return;
-            }
-        }
-
-        if (asResultNo == "") { // NO RESULT
-            Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-                            + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-            return;
-        }
-
-        // CHECKING 7 DAYS ONLY MOD LEVEL CAN HELP EDIT
-        if (ind == 0) {
-            if (asStusId != "RCL") {
-                if (updDt != "" && updDt != null) {
-                    var stat = true;
-                    var sDate = new Date(updDt);
-                    var tDate = new Date();
-                    tDate.setDate(tDate.getDate() - 7);
-
-                    var tMth = tDate.getMonth();
-                    var tYear = tDate.getFullYear();
-                    var tDay = tDate.getDate();
-                    var sMth = sDate.getMonth();
-                    var sYear = sDate.getFullYear();
-                    var sDay = sDate.getDate();
-
-                    if (sYear > tYear) {
-                        stat = true;
-                    } else {
-                        if (sMth > tMth) {
-                            stat = true;
-                        } else {
-                            if (sDay > tDay) {
-                                stat = true;
-                            } else {
-                                stat = false;
-                            }
-                        }
-                    }
-
-                    if (!stat) {
-                        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-                        return;
-                    }
-                } else if (lstUpdDt != "" && lstUpdDt != null) {
-                    var stat = true;
-                    var sDate = new Date(lstUpdDt);
-                    var tDate = new Date();
-                    tDate.setDate(tDate.getDate() - 7);
-
-                    var tMth = tDate.getMonth();
-                    var tYear = tDate.getFullYear();
-                    var tDay = tDate.getDate();
-                    var sMth = sDate.getMonth();
-                    var sYear = sDate.getFullYear();
-                    var sDay = sDate.getDate();
-
-                    if (tYear > sYear) {
-                        stat = false;
-                    } else {
-                        if (tMth > sMth) {
-                            stat = false;
-                        } else {
-                            if (tDay > sDay) {
-                                stat = false;
-                            } else {
-                                stat = true;
-                            }
-                        }
-                    }
-
-                    if (!stat) {
-                        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-                        return;
-                    }
-                }
-            }
-        }
-
-        Common.ajax("POST", "/services/as/selRcdTms.do", { // CHECK TIMESTAMP
-            asNo : asNo,
-            asId : asId,
-            salesOrdNo : salesOrdNo,
-            salesOrderId : salesOrdId,
-            rcdTms : rcdTms
-        }, function(result) {
-            if (result.code == "99") {
-                Common.alert(result.message);
-                return;
-            } else {
-                var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
-                        + "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
-
-                Common.popupDiv("/services/as/asResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
-            }
-        });
-    }
-
     function fn_excelDown() {
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
         GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
@@ -771,13 +623,6 @@
                                 code='service.btn.edtAs' /></a>
                     </p></li>
             </c:if>
-            <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
-             <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
-                <li><p class="btn_blue">
-                        <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message
-                                code='service.btn.edtBsAs' /></a>
-                    </p></li>
-           <%--  </c:if> --%>
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_asResultEditPop(1)"><spring:message
