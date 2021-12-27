@@ -580,6 +580,26 @@
 	 function fn_PEXTestRawData() {
 		    Common.popupDiv("/ResearchDevelopment/PEXTestRawDataPop.do", null, null, true, '');
 		  }
+
+	 $.fn.clearForm = function() {
+		    return this.each(function() {
+		      var type = this.type, tag = this.tagName.toLowerCase(); identifier = this.id;
+		      if (tag === 'form') {
+		        return $(':input', this).clearForm();
+		      }
+		      if (type === 'text' || type === 'password' || type === 'hidden'
+		          || tag === 'textarea') {
+		        this.value = '';
+		      } else if (type === 'checkbox' || type === 'radio') {
+		        this.checked = false;
+		      } else if (tag === 'select') {
+		        this.selectedIndex = 0;
+		      }
+
+		      $("#reportForm1 .tr_toggle_display").hide();
+
+		    });
+		  };
 </script>
 <section id="content">
 	<!-- content start -->
@@ -595,18 +615,20 @@
 		</p>
 		<h2>After PEX Test Result</h2>
 		<ul class="right_btns">
-			<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 				<li><p class="btn_blue">
 				    <a href="#" onclick="fn_newPEXTestResultPop()">
 				    Add PEX Test Result</a>
 				</p></li>
 			</c:if>
 			<!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
+			<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 			<li><p class="btn_blue">
 		      <a href="#" onclick="fn_PEXTestResultEditBasicPop(0)">
 				    Edit PEX Test Result</a>
 			</p></li>
-			<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+			</c:if>
+			<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 				<li><p class="btn_blue">
 				    <a href="#" onclick="fn_TestResultViewPop()">
 				    View PEX Test Result</a>
@@ -619,8 +641,9 @@
 				</p></li>
 			</c:if>
 			<li><p class="btn_blue">
-			    <a href="#"><span class="clear"></span>
-			    <spring:message code='service.btn.Clear' /></a>
+			   <!--  <a href="#"> -->
+			     <a href="#" onclick="$('#PEXTestForm').clearForm();"><span class="clear"></span>Clear</a>
+			  <%--   <spring:message code='service.btn.Clear' /></a> --%>
 			</p></li>
 		</ul>
 	</aside>
@@ -736,7 +759,7 @@
    </aside>
 
 			<ul class="right_btns">
-				<c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
+				<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 					<li><p class="btn_grid">
 							<a href="#" onclick="fn_excelDown()">
 							<spring:message code='service.btn.Generate' /></a>

@@ -1529,7 +1529,8 @@
 		SGN_DT,
 		HS_CHKLIST,
 		CODE_FAIL_REMARK,
-		VOUCHER_REDEMPTION
+		VOUCHER_REDEMPTION,
+		OLD_SETL_DT
 		) VALUES ( #{resultId},
 		#{docNo},
 		#{typeId},
@@ -1563,7 +1564,8 @@
 		#{sgnDt},
 		#{instChklstCheckBox},
 		#{codeFailRemark},
-		#{voucherRedemption}
+		#{voucherRedemption},
+		TO_DATE(#{setlDt},'DD-MM-YYYY')
 		)
 	</insert>
 
@@ -3889,6 +3891,7 @@
 		,RESULT_MTCH_ID
 		,RESULT_IS_ADJ
 		,HS_CHKLIST
+		,OLD_SETL_DT
 		)
 		values
 		(
@@ -3915,6 +3918,7 @@
 		,#{ResultMatchID}
 		,#{ResultIsAdjust}
 		,#{instChklstCheckBox}
+		,TO_DATE(#{SettleDate},'DD/MM/YYYY')
 		)
 	</insert>
 
@@ -5513,7 +5517,6 @@ SELECT DISTINCT A.ORD_ID FROM (
         UPDATE SVC0006D
         SET
         SETL_DT = TO_DATE(#{settleDt}, 'DD/MM/YY')
-        ,OLD_SETL_DT = TO_DATE(#{oldSetlDt}, 'DD/MM/YY')
         ,RESULT_UPD_USER_ID = #{updator}
         ,RESULT_UPD_DT = SYSDATE
         WHERE SCHDUL_ID = #{selSchdulId}
