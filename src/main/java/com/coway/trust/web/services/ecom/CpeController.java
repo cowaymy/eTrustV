@@ -358,4 +358,9 @@ public class CpeController {
 		List<EgovMap> issueTypeList = cpeService.getIssueTypeList(params);
 		return ResponseEntity.ok(issueTypeList);
 	}
+
+	@RequestMapping(value = "/cpeGenerateRawPop.do")
+	public String cpeGenerateRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+		return "services/ecom/cpeGenerateRawPop";
+	}
 }
