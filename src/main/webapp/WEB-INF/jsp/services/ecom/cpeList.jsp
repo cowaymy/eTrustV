@@ -241,27 +241,7 @@
   }
 
   function fn_generateCpeRaw() {
-	  var $reportForm = $("#reportForm")[0];
-
-      var reportDownFileName = "CPERawData"; //report name
-      var reportFileName = "/services/CPERawData_Excel.rpt"; //reportFileName
-      var reportViewType = "EXCEL"; //viewType
-
-      //default input setting
-      $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
-      $($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
-      $($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
-
-      //default setting
-      $("#reportForm #reportFileName").val(reportFileName);
-      $("#reportForm #reportDownFileName").val(reportDownFileName);
-      $("#reportForm #viewType").val(reportViewType);
-
-      //  report 호출
-      var option = {
-          isProcedure : false // procedure 로 구성된 리포트 인경우 필수.
-      };
-      Common.report("reportForm", option);
+	  Common.popupDiv("/services/ecom/cpeGenerateRawPop.do" , null, null , true, 'cpeGenerateRawPop');
   }
 
 
@@ -454,4 +434,3 @@
  <!-- search_result end -->
 </section>
 <!-- content end -->
-<form name="reportForm" id="reportForm" method="post"></form>
