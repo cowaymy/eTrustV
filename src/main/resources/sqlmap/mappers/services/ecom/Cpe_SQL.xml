@@ -238,7 +238,7 @@
 
      <select id="selectRequestType" resultType="egovMap">
      SELECT CODE_MASTER_ID AS CODE_ID, CODE_MASTER_NAME AS CODE_NAME FROM SYS0012M
-                WHERE CODE_MASTER_ID IN (462, 463, 464, 465)
+                WHERE CODE_MASTER_ID IN (462, 463, 464, 465,489)
      </select>
 
      <select id="getSubRequestTypeList" parameterType="Map" resultType="egovMap">
@@ -590,12 +590,10 @@
         AND ROWNUM = 1
   </select>
 
-  <select id="selectIssueTypeList" resultType="egovMap">
-        SELECT CODE CODE_ID
-        , CODE_NAME
-        FROM SYS0013M
-        WHERE CODE_MASTER_ID = 468
+  <select id="selectIssueTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME
+        FROM SYS0094M
+        WHERE CODE = #{groupCode} OR IND = 'Other' AND DISB = 0
         ORDER BY CODE
   </select>
-
 </mapper>

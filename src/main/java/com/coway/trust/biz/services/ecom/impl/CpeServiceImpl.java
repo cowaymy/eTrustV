@@ -65,7 +65,10 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 	public List<EgovMap> getSubRequestTypeList(Map<String, Object> params) {
 		return cpeMapper.getSubRequestTypeList(params);
 	}
-
+	@Override
+	public List<EgovMap> getIssueTypeList(Map<String, Object> params) {
+		return cpeMapper.selectIssueTypeList(params);
+	}
 	@Override
 	public void insertCpe(Map<String, Object> params) {
 
@@ -210,9 +213,7 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 		return cpeMapper.getOrderDscCode(orderDscCode);
 	}
 
-	@Override
-	public List<EgovMap> getIssueTypeList() {
-		return cpeMapper.selectIssueTypeList();
-	}
+
+
 
 }

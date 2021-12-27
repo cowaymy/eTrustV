@@ -51,5 +51,5 @@ public interface CpeMapper {
 
 	public EgovMap getOrderDscCode(String orderDscCode);
 
-	public List<EgovMap> selectIssueTypeList();
+	public List<EgovMap> selectIssueTypeList(Map<String, Object> params);
 }

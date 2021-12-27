@@ -43,5 +43,5 @@ public interface CpeService {
 
 	EgovMap getOrderDscCode(String orderDscCode);
 
-	List<EgovMap> getIssueTypeList();
+	List<EgovMap> getIssueTypeList(Map<String, Object> params);
 }

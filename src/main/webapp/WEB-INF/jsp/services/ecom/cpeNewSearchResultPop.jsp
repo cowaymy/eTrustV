@@ -59,7 +59,26 @@
                     $("#_inputSubReqTypeSelect").val('');
                     $("#_inputSubReqTypeSelect").find("option").remove();
                   } else {
+
                     doGetCombo('/services/ecom/selectSubRequestTypeJsonList', $("#_inputReqTypeSelect").val(), '', '_inputSubReqTypeSelect', 'S', '');
+                    console.log('val = '+ $("#_inputSubReqTypeSelect").val());
+                  }
+              });
+
+        //Populate Issue Type
+        //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
+        $("#_inputSubReqTypeSelect").change(
+                function() {
+                  if ($("#_inputSubReqTypeSelect").val() == '') {
+                    $("#_inputIssueSelect").val('');
+                    $("#_inputIssueSelect").find("option").remove();
+                  } else {
+                	var SubReq = $("#_inputSubReqTypeSelect").val();
+                	if(SubReq < 6500 && SubReq != 6210 && SubReq != 6211)
+                		SubReq = '468';
+                    doGetCombo('/services/ecom/selectIssueType', SubReq.toString(), '', '_inputIssueSelect', 'S', '');
+                    //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
+
                   }
               });
 
@@ -74,8 +93,6 @@
             doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '', '_inputSubDeptSelect', 'S' , '');
         });
 
-        //Populate Issue Type
-        doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
     });//Doc Ready End
 
@@ -433,10 +450,7 @@
                     <tr>
                         <th scope="row">Issue<span class="must">*</span></th>
                         <td colspan="5"><select class="w100p" name="inputIssueSelect" id="_inputIssueSelect">
-                            <option value="1">Entered wrong data</option>
-                            <option value="2">Customer provided wrong info</option>
-                            <option value="3">Others</option>
-                            </select></td>
+            </select></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code='cpe.attachment' /></th>
