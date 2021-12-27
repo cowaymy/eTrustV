@@ -58,10 +58,11 @@
                   if ($("#_inputReqTypeSelect").val() == '') {
                     $("#_inputSubReqTypeSelect").val('');
                     $("#_inputSubReqTypeSelect").find("option").remove();
+                    $("#_inputIssueSelect").find("option").remove();
                   } else {
 
+                      $("#_inputIssueSelect").find("option").remove();
                     doGetCombo('/services/ecom/selectSubRequestTypeJsonList', $("#_inputReqTypeSelect").val(), '', '_inputSubReqTypeSelect', 'S', '');
-                    console.log('val = '+ $("#_inputSubReqTypeSelect").val());
                   }
               });
 
