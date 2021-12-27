@@ -1173,7 +1173,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest' class='auto_file3'>
                     <input type='file' title='file add'  id='sofFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='sofFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='sofFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1184,7 +1184,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest1' class='auto_file3'>
                     <input type='file' title='file add'  id='softcFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='softcFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='softcFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1195,7 +1195,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest2' class='auto_file3'>
                     <input type='file' title='file add'  id='nricFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='nricFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='nricFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1206,7 +1206,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest3' class='auto_file3'>
                     <input type='file' title='file add'  id='msofFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='msofFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='msofFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1217,7 +1217,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest4' class='auto_file3'>
                     <input type='file' title='file add'  id='msoftcFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='msoftcFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='msoftcFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1228,7 +1228,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest5' class='auto_file3'>
                     <input type='file' title='file add'  id='payFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='payFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='payFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1239,7 +1239,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest6' class='auto_file3'>
                     <input type='file' title='file add'  id='govFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='govFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='govFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1250,7 +1250,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest7' class='auto_file3'>
                     <input type='file' title='file add'  id='letFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='letFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='letFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
@@ -1261,7 +1261,7 @@ function chgTab(tabNm) {
                 <div id='uploadfiletest8' class='auto_file3'>
                     <input type='file' title='file add'  id='docFrFile' accept='image/*''/>
                     <label style="width: 400px;">
-                        <input type='text' class='input_text' readonly='readonly' id='docFrFileTxt'  name='' disabled='disabled'/>
+                        <input type='text' class='input_text' readonly='readonly' id='docFrFileTxt'  name=''/>
                     </label>
                 </div>
             </td>
