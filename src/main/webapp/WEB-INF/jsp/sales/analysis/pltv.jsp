@@ -11,11 +11,12 @@ function fn_report() {
     }
 
     var stkId = $("#listProductId").val();
+    var stkDesc = $("#listProductId option:selected").text();
     var rentStus = $("#listRentStus").val();
 
     $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
     $("#dataForm #viewType").val("EXCEL");
-    $("#dataForm #reportDownFileName").val("PLTV_Raw_" + stkId);
+    $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
     $("#dataForm #V_STKID").val(stkId);
     $("#dataForm #V_RENTSTUS").val(rentStus);
 
