@@ -71,12 +71,12 @@ today = "${today}";
           V_WHEREGNG += V_GNG;
       }
 
-         /*  var date = new Date();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          if (date.getDate() < 10) {
-            day = "0" + date.getDate();
-          } */
+	      var date = new Date();
+	      var month = date.getMonth() + 1;
+	      var day = date.getDate();
+	      if (date.getDate() < 10) {
+	        day = "0" + date.getDate();
+	      }
 
           //SP_CR_GEN_PEX_TEST_RAW
           $("#reportForm1").append('<input type="hidden" id="V_WHERESTATUS" name="V_WHERESTATUS"  /> ');
@@ -95,11 +95,10 @@ today = "${today}";
           $("#reportForm1 #V_WHERESETTLEDTTO").val(V_WHERESETTLEDTTO);
           $("#reportForm1 #V_WHEREGNG").val(V_WHEREGNG);
           $("#reportForm1 #reportFileName").val('/ResearchDevelopment/PEXTestResultRawData.rpt');
-          $("#reportForm1 #reportDownFileName").val("PEXTestResultRawData_" + today);
+          $("#reportForm1 #reportDownFileName").val("PEXTestResultRawData_" + day + month + date.getFullYear());
           $("#reportForm1 #viewType").val("EXCEL");
 
           Common.report("reportForm1", option);
-      //}
   }
 
   $.fn.clearForm = function() {
