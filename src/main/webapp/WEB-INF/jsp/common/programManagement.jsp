@@ -18,7 +18,7 @@
 <script type="text/javaScript">
 
 var gAddRowCnt = 0;
-var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM","HCT"];
+var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM","HCT","RND"];
 var keyValueList = [];
 
 var TransColumnLayout =
@@ -1066,7 +1066,7 @@ function removeRow()
 //Make Use_yn ComboList, tooltip
 function getOrgDropList()
 {
-    var list =  ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS"];
+    var list =  ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM","HCT","RND"];
     return list;
 }
 
