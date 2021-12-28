@@ -62,13 +62,13 @@ public class AnalysisController {
 		return ResponseEntity.ok(rtnMap);
 	}
 
-	@RequestMapping(value = "/pltv.do")
+	@RequestMapping(value = "/predictiveLifetimeValue.do")
 	public String pltv(ModelMap model) throws Exception {
 
 		String maxAccYm = analysisService.selectMaxAccYm();
 		model.put("maxAccYm", maxAccYm);
 
-		return "sales/analysis/pltv";
+		return "sales/analysis/predictiveLifetimeValue";
 	}
 
 	@RequestMapping(value = "/selectPltvProductCodeList")
