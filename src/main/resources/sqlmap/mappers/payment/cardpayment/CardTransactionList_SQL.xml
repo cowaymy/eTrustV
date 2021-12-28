@@ -64,7 +64,7 @@
                               , L.F_TRNSC_ID
                           FROM PAY0075D A
                          INNER JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
-                          LEFT OUTER JOIN PAY0252T C ON B.CRC_TRNSC_ID = C.CRC_STATE_MAPPING_ID
+                          LEFT OUTER JOIN PAY0252T C ON B.CRC_TRNSC_ID = C.CRC_STATE_MAPPING_ID AND NVL(REV_STUS_ID,0) <![CDATA[<>]]> 5
                           LEFT OUTER JOIN PAY0064D D ON C.PAY_ID = D.PAY_ID
                           LEFT OUTER JOIN PAY0065D E ON C.PAY_ID = E.PAY_ID AND C.PAY_ITM_ID = E.PAY_ITM_ID
 
