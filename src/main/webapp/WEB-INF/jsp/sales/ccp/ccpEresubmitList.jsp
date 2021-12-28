@@ -118,7 +118,7 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>eResubmit (CCP)</h2>
+<h2>Ezy CCP</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_eResubmitNew()">New</a></p></li>

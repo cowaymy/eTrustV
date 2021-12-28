@@ -421,7 +421,7 @@ function fn_doClearPersion(){
 <div id="popup_wrap" class="popup_wrap "><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>eResubmit (CCP)</h1>
+<h1>Ezy CCP - View & Edit</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="nc_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
