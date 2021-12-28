@@ -2114,13 +2114,13 @@ function checkBankAccNo() {
                         <tr>
                             <th scope="row" >Address Detail<span class="must">*</span></th>
                             <td colspan="3">
-                               <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/>" />
+                               <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/>"  maxlength="50"/>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" >Street</th>
                             <td colspan="3">
-                               <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/>" />
+                               <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/>"  maxlength="50"/>
                             </td>
                         </tr>
                         <tr>
