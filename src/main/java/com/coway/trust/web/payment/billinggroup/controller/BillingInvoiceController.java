@@ -334,6 +334,32 @@ public class BillingInvoiceController {
 		return ResponseEntity.ok(list);
 	}
 
+	@RequestMapping(value = "/selectProductUsageMonth.do")
+	public ResponseEntity<List<EgovMap>> selectProductUsageMonth(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		List<EgovMap> list = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("salesOrderId", params.get("salesOrderId"));
+
+		list = invoiceService.selectProductUsageMonth(map);
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/selectProductBasicInfo.do")
+	public ResponseEntity<List<EgovMap>> selectProductAdvancedDisc(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		List<EgovMap> list = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("salesOrderId", params.get("salesOrderId"));
+
+		list = invoiceService.selectProductBasicInfo(map);
+
+		return ResponseEntity.ok(list);
+	}
+
 
 	/******************************************************
 	 *   Company Statement
