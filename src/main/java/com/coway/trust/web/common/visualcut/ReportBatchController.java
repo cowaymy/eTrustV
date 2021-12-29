@@ -822,7 +822,7 @@ public class ReportBatchController {
 
    */
 
-  @RequestMapping(value = "/RCM_Daily_Simplified_1.do")
+/*  @RequestMapping(value = "/RCM_Daily_Simplified_1.do")
   //@Scheduled(cron = "0 10 5 * * *")
   public void rcmDailySimplified_1() throws IOException {
     LOGGER.info("[START] RCM_Daily_Simplified...");
@@ -854,7 +854,90 @@ public class ReportBatchController {
 
     this.view(null, null, params);
     LOGGER.info("[END] RCM_Daily_Simplified...");
+  }*/
+
+
+  @RequestMapping(value = "/RCM_Daily_Simplified_3.do")
+  //@Scheduled(cron = "0 10 5 * * *")
+  public void rcmDailySimplified_3() throws IOException {
+	  LOGGER.info("[START] RCM_Daily_Simplified...");
+
+    Map<String, Object> params = new HashMap<>();
+    int startYear = 2006;
+    int endYear = 2016;
+
+
+      params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified_1.rpt");// visualcut
+                                                                // rpt
+                                                                // file
+                                                                // name.
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_STARTYEAR", startYear);// parameter
+      params.put("V_ENDYEAR", endYear);// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+
+    LOGGER.info("[END] RCM_Daily_Simplified...");
   }
+
+  @RequestMapping(value = "/RCM_Daily_Simplified_4.do")
+  //@Scheduled(cron = "0 10 5 * * *")
+  public void rcmDailySimplified_4() throws IOException {
+	  LOGGER.info("[START] RCM_Daily_Simplified...");
+
+    Map<String, Object> params = new HashMap<>();
+    int startYear = 2017;
+    int endYear = 2018;
+
+
+      params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified_1.rpt");// visualcut
+                                                                // rpt
+                                                                // file
+                                                                // name.
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_STARTYEAR", startYear);// parameter
+      params.put("V_ENDYEAR", endYear);// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+
+    LOGGER.info("[END] RCM_Daily_Simplified...");
+  }
+
+
+  @RequestMapping(value = "/RCM_Daily_Simplified_5.do")
+  //@Scheduled(cron = "0 10 5 * * *")
+  public void rcmDailySimplified_5() throws IOException {
+	  LOGGER.info("[START] RCM_Daily_Simplified...");
+
+    Map<String, Object> params = new HashMap<>();
+    int minYear = 2019;
+
+    for (int year = LocalDate.now().getYear(); year >= minYear; year--) {
+
+      params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified_1.rpt");// visualcut
+                                                                // rpt
+                                                                // file
+                                                                // name.
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_STARTYEAR", year);// parameter
+      params.put("V_ENDYEAR", year);// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + year + "_" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+
+    }
+
+    LOGGER.info("[END] RCM_Daily_Simplified...");
+  }
+
 
   @RequestMapping(value = "/MemberRawDate_Excel.do")
   //@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")
@@ -2008,7 +2091,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/HC_ColorGrid_Daily_2020_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 40 5 * * *")//Daily (5:20am)
+  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
   public void hcColorGridDaily2020JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -2462,6 +2545,7 @@ public class ReportBatchController {
    LOGGER.info("[END] magicAddress_raw...");
  }
 //GENERATION TIME : 23 45 END
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
