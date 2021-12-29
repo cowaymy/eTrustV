@@ -272,7 +272,7 @@ FROM (
                AND SRO_TO_WH_LOC_CODE =  (SELECT WH_LOC_CODE  FROM  SYS0028M WHERE WH_LOC_ID = #{tlocation})
         </if>
 
-         AND SRO_ITM_USE_YN ='Y'
+
         )
     ORDER BY   srorefsrono desc , osroNo
 
