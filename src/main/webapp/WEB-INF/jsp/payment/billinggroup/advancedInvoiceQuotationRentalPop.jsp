@@ -115,35 +115,83 @@ hideViewPopup=function(val){
 //Crystal Report Option Pop-UP
 function fn_openDivPop(){
 
-    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
-    if (selectedItem[0] > -1){
+    var salesOrderId = AUIGrid.getCellValue(myGridID, 0, "salesOrdId");
 
-//         $('input:checkbox[name=boosterPump]').eq(0).attr("checked", false);
-        $('input:radio[name=advance]').attr("checked", false);
-        $('input:radio[name=printMethod]').eq(0).attr("checked", false);
 
-        $('#popup_wrap2').show();
-    }else{
-        Common.alert("<spring:message code='pay.alert.noPrintType'/>");
-    }
+
+    Common.ajax("GET", "/payment/selectProductBasicInfo.do",  {salesOrderId: salesOrderId}, function(result) {
+
+    	if(result[0].rentalStus !="REG"){
+    	Common.alert("Only allow to generate the order with status in REG.");
+        }
+    	else {
+   	     Common.ajax("GET", "/payment/selectProductUsageMonth.do",  {salesOrderId: salesOrderId}, function(result1) {
+         if(result1[0].productUsageMonth > 49){
+             Common.alert("Cannot generate for order with the usage period more than 49 months (due to installment left less than 12months)");
+         }else{
+
+        	 if(result[0].advDisc ==0){
+                 document.getElementById("advance1").disabled = true;
+                 document.getElementById("advance2").disabled = true;
+             }
+        	 else{
+                  document.getElementById("advance1").disabled = false;
+                  document.getElementById("advance2").disabled = false;
+              }
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+             if (selectedItem[0] > -1){
+
+             $('input:radio[name=advance]').attr("checked", false);
+             $('input:radio[name=printMethod]').eq(0).attr("checked", false);
+
+             $('#popup_wrap2').show();
+              }
+             else{
+                        Common.alert("<spring:message code='pay.alert.noPrintType'/>");
+                    }
+                 }
+           });
+    	}
+   });
+
 }
 
 //크리스탈 레포트
 function fn_generateStatement(){
+
+
     //옵션 팝업 닫기
     $('#popup_wrap2').hide();
 
     //report form에 parameter 세팅
     //옵션 초기화
-//     console.log("test");
-    var salesOrderId = AUIGrid.getCellValue(myGridID, 0, "salesOrdId");
-//     console.log("test2");
 
-    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_AdvancedRentalInvoice_PDF.rpt');
+    var salesOrderId = AUIGrid.getCellValue(myGridID, 0, "salesOrdId");
+
+
+            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+             if (selectedItem[0] > -1){
+
+                 $('input:radio[name=advance]').attr("checked", false);
+                 $('input:radio[name=printMethod]').eq(0).attr("checked", false);
+
+                 $('#popup_wrap2').show();
+             }else{
+                 Common.alert("<spring:message code='pay.alert.noPrintType'/>");
+             }
+
+
+
+
+    $("#reportPDFForm #reportFileName").val('/statement/Rt');
 
     $("#reportPDFForm #v_adv1Boolean").val(0);
     $("#reportPDFForm #v_adv2Boolean").val(0);
+    $("#reportPDFForm #v_noadv1Boolean").val(0);
+    $("#reportPDFForm #v_noadv2Boolean").val(0);
 
     //옵션 세팅
     $("#reportPDFForm #v_orderId").val(salesOrderId);
@@ -151,6 +199,8 @@ function fn_generateStatement(){
 
     if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
     if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
+    if ($("#no_advance1").is(":checked")) $("#reportPDFForm #v_noadv1Boolean").val(1);
+    if ($("#no_advance2").is(":checked")) $("#reportPDFForm #v_noadv2Boolean").val(1);
 
     Common.report("reportPDFForm");
 
@@ -246,12 +296,12 @@ function fn_clear(){
                         <td>
                             <select id="rentalStatus" name="rentalStatus" class="multy_select w100p" multiple="multiple" >
                                 <option value="REG">Regular</option>
-                                <option value="INV">Investigate</option>
-                                <option value="SUS">Suspend</option>
-                                <option value="RET">Return</option>
-                                <option value="CAN">Cancel</option>
-                                <option value="TER">Terminate</option>
-                                <option value="WOF">Write Off</option>
+<!--                                 <option value="INV">Investigate</option> -->
+<!--                                 <option value="SUS">Suspend</option> -->
+<!--                                 <option value="RET">Return</option> -->
+<!--                                 <option value="CAN">Cancel</option> -->
+<!--                                 <option value="TER">Terminate</option> -->
+<!--                                 <option value="WOF">Write Off</option> -->
                             </select>
                         </td>
                     </tr>
@@ -311,8 +361,11 @@ function fn_clear(){
                             <th scope="row">Option</th>
                             <td>
 <!--                                 <label><input type="checkbox" id="boosterPump" name="boosterPump"/><span>Booster Pump</span></label> -->
+
                                 <label><input type="radio" id="advance1" name="advance" /><span>Advanced 1 Year</span></label>
                                 <label><input type="radio" id="advance2" name="advance" /><span>Advanced 2 Year</span></label>
+                                <label><input type="radio" id="no_advance1" name="advance" /><span>Without Discount (1 year adv)</span></label>
+                                <label><input type="radio" id="no_advance2" name="advance" /><span>Without Discount (2 years adv)</span></label>
                             </td>
                         </tr>
                        </tbody>
