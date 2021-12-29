@@ -324,6 +324,8 @@ function fn_clear(){
     <input type="hidden" id="v_orderId" name="v_orderId" />
     <input type="hidden" id="v_adv1Boolean" name="v_adv1Boolean" />
     <input type="hidden" id="v_adv2Boolean" name="v_adv2Boolean" />
+    <input type="hidden" id="v_noadv1Boolean" name="v_noadv1Boolean" />
+    <input type="hidden" id="v_noadv2Boolean" name="v_noadv2Boolean" />
 <!--     <input type="hidden" id="v_bustPump" name="v_bustPump" /> -->
     <!-- 이메일 전송인 경우 모두 필수-->
     <input type="hidden" id="emailSubject" name="emailSubject" value="" />
