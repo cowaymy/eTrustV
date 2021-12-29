@@ -56,8 +56,8 @@ function btnGenerate_Click(){
 
 	 var whereSql = '';
 	 var runNo = 0;
-
-	 if($("#reqStageIdPop").val() != null || $("#reqStageIdPop").val() != ''){
+console.log(reqBranchPop);
+	 if($("#reqStageIdPop").val() != null && $("#reqStageIdPop").val() != ''){
 		 whereSql += " AND T1.REQ_STAGE_ID IN (";
 	     $('#reqStageIdPop :selected').each(function(i, mul){
 	         if(runNo > 0){
@@ -72,7 +72,7 @@ function btnGenerate_Click(){
 	     runNo = 0;
 	 }
 
-	 if($("#reqBranchPop").val() != null || $("#reqBranchPop").val() != ''){
+	 if($("#reqBranchPop").val() != null && $("#reqBranchPop").val() != ''){
          whereSql += " AND T7.USER_BRNCH_ID IN (";
          $('#reqBranchPop :selected').each(function(i, mul){
              if(runNo > 0){
@@ -87,7 +87,7 @@ function btnGenerate_Click(){
          runNo = 0;
      }
 
-	 if($("#dscBranchPop").val() != null || $("#dscBranchPop").val() != ''){
+	 if($("#dscBranchPop").val() != null && $("#dscBranchPop").val() != ''){
          whereSql += " AND T11.BRNCH_ID IN (";
          $('#dscBranchPop :selected').each(function(i, mul){
              if(runNo > 0){
@@ -102,16 +102,16 @@ function btnGenerate_Click(){
          runNo = 0;
      }
 
-	 if($("#nricCompanyNo").val() != null || $("#nricCompanyNo").val() != ''){
-         whereSql += " AND T11.BRNCH_ID = '" + $('#nricCompanyNo') +" ' ";
+	 if($("#nricCompanyNo").val() != null &&  $("#nricCompanyNo").val() != ''){
+         whereSql += " AND T11.BRNCH_ID = '" + $('#nricCompanyNo').val() +" ' ";
      }
 
-     if($("#salesOrderNo").val() != null || $("#salesOrderNo").val() != ''){
-         whereSql += " AND T1.SALES_ORD_NO = '" + $('#salesOrderNo') +" ' ";
+     if($("#salesOrderNo").val() != null && $("#salesOrderNo").val() != ''){
+         whereSql += " AND T1.SALES_ORD_NO = '" + $('#salesOrderNo').val() +" ' ";
      }
 
-     if($("#custName").val() != null || $("#custName").val() != ''){
-         whereSql += " AND T3.NAME LIKE UPPER('%" + $('#custName') +" %') ";
+     if($("#custName").val().trim() != null && $("#custName").val() != ''){
+         whereSql += " AND T3.NAME LIKE UPPER('%" + $('#custName').val() +"%') ";
      }
 
      if($("#reqStartDtPop").val() == null || $("#reqStartDtPop").val() == ''){
@@ -123,7 +123,7 @@ function btnGenerate_Click(){
          return;
      }
 
-     if(($("#reqStartDtPop").val() != null || $("#reqStartDtPop").val() != '') &&  ($("#reqEndDtPop").val() != null || $("#reqEndDtPop").val() != '')){
+     if(($("#reqStartDtPop").val() != null && $("#reqStartDtPop").val() != '') &&  ($("#reqEndDtPop").val() != null || $("#reqEndDtPop").val().trim() != '')){
     	 var frArr = $("#reqStartDtPop").val().split("/");
          var toArr = $("#reqEndDtPop").val().split("/");
          var assignDtFrom = frArr[2]+"/"+frArr[1]+"/"+frArr[0]; // MM/dd/yyyy
@@ -132,7 +132,7 @@ function btnGenerate_Click(){
          whereSql += " AND (T1.CRT_DT BETWEEN TO_DATE('"+assignDtFrom+"', 'yyyy/mm/dd') AND TO_DATE('"+assignDtTo+"', 'yyyy/mm/dd')+1)";
      }
 
-     if(($("#apprStartDtPop").val() != null || $("#apprStartDtPop").val() != '') &&  ($("#apprEndDtPop").val() != null || $("#apprEndDtPop").val() != '')){
+     if(($("#apprStartDtPop").val() != null && $("#apprStartDtPop").val() != '') &&  ($("#apprEndDtPop").val() != null && $("#apprEndDtPop").val() != '')){
          var frArr = $("#apprStartDtPop").val().split("/");
          var toArr = $("#apprEndDtPop").val().split("/");
          var assignDtFromAppvr = frArr[2]+"/"+frArr[1]+"/"+frArr[0]; // MM/dd/yyyy

@@ -213,7 +213,10 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 		return cpeMapper.getOrderDscCode(orderDscCode);
 	}
 
-
+	  @Override
+	  public List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params) {
+	    return cpeMapper.selectCpeHistoryDetailPop(params);
+	  }
 
 
 }

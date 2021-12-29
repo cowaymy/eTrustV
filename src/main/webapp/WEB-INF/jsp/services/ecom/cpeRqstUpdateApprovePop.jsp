@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
 
     var gridID1;
@@ -48,6 +48,12 @@
             }
         });
 
+        $("#saveBtn1").click(function() {
+
+        	fn_openDivPop("VIEW");
+
+        });
+
         //file Delete
         $("#btnfileDel").click(function() {
             $("#reqAttchFile").val('');
@@ -57,6 +63,36 @@
 
     });//Doc Ready End
 
+
+    var gridProse = {
+            usePaging           : true,             //페이징 사용
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable                : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+            selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"],
+            groupingMessage     : gridMsg["sys.info.grid.groupingMessage"]
+        };
+
+    var cpeHistoryDetailsColumnLayout= [
+                                   {dataField : "requestType", headerText : "Request Type", width : '20%'},
+                                   {dataField : "subRequest", headerText : "Sub Request", width : '15%'},
+                                   {dataField : "requestor", headerText : "Requestor", width : '15%'},
+                                   {dataField : "requestDate", headerText : "Requestor Date", width : '10%'},
+                                   {dataField : "approval", headerText : "Approval", width : '20%'},
+                                   {dataField : "status", headerText : "Status", width : '20%'},
+                                   {dataField : "approvedDate", headerText : "Approval Date", width : '15%'},
+                                   ];
+
+    cpeHistoryDetailsId = GridCommon.createAUIGrid("#cpeHistoryDetails_grid_wrap", cpeHistoryDetailsColumnLayout,null,gridProse);
+    AUIGrid.resize(cpeHistoryDetailsId,945, $(".grid_wrap").innerHeight());
     ////////////////////////////////////////////////////////////////////////////////////
 
     function chgGridTab(tabNm) {
@@ -259,9 +295,31 @@
     	fn_search();
     }
 
+  //View Claim Pop-UP
+    function fn_openDivPop(val){
+        if(val == "VIEW"){
+
+        	 var formData = Common.getFormData("form_updReqst");
+             var obj = $("#form_updReqst").serializeJSON();
+
+                    Common.ajax("GET","/services/ecom/selectCpeHistoryDetailPop.do", obj, function(result){
+                        AUIGrid.setGridData(cpeHistoryDetailsId, result);
+                        AUIGrid.resize(cpeHistoryDetailsId,945, $(".grid_wrap").innerHeight());
+                    });
+                    $("#view_wrap").show();
+
+
+        }else{ $("#view_wrap").hide();}
+    }
+
+
+    function fn_pageBack() {
+    $("#view_wrap").remove();
+    }
+
 </script>
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap1" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="cpe.update.title.text" /></h1>
 <ul class="right_opt">
@@ -508,7 +566,10 @@
 </table><!-- table end -->
 
 <ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="javascript:fn_openDivPop('VIEW');">View History</a></p></li>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#" id="saveBtn">Save</a></p></li>
+    </c:if>
 </ul>
 
 </form>
@@ -519,3 +580,27 @@
 </section><!-- content end -->
 
 </div>
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="view_wrap" style="display: none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>Details</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2">
+                    <a href="#" onclick="javascript:fn_pageBack();">CLOSE</a>
+                </p></li>
+                  <!-- search_result start -->
+
+                <!-- grid_wrap start -->
+        </ul>
+    </header>
+<section class="pop_body"><!-- pop_body start -->
+    <article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="cpeHistoryDetails_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+
+     </section><!-- pop_body end -->
+    <!-- pop_header end -->
+</div>
+<!-- popup_wrap end -->

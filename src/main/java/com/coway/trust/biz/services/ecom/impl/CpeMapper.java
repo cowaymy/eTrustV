@@ -52,4 +52,6 @@ public interface CpeMapper {
 	public EgovMap getOrderDscCode(String orderDscCode);
 
 	public List<EgovMap> selectIssueTypeList(Map<String, Object> params);
+
+	public List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params);
 }
