@@ -717,6 +717,149 @@
       ORDER BY Extent1.SALES_ORD_NO
     </select>
 
+    <select id="selectProductUsageMonth" parameterType="Map" resultType="egovMap">
+  <![CDATA[
+   SELECT * FROM (
+        SELECT
+        A.SALES_ORD_ID
+        , A.INSTALL_ENTRY_ID
+        , ROUND(
+            CASE
+                WHEN B.SO_EXCHG_UPD_DT IS NULL THEN MONTHS_BETWEEN(SYSDATE, A.INSTALL_DT)
+                ELSE MONTHS_BETWEEN(SYSDATE, B.SO_EXCHG_UPD_DT)
+            END
+        ) AS PRODUCT_USAGE_MONTH
+        FROM SAL0046D A
+        LEFT JOIN (
+        SELECT * FROM SAL0004D WHERE SO_EXCHG_ID =
+            (   SELECT MAX(SO_EXCHG_ID)
+                FROM SAL0004D
+                WHERE SO_ID = #{salesOrderId} AND SO_EXCHG_TYPE_ID = 284 AND SO_EXCHG_STUS_ID = 4
+            )
+        ) B ON A.SALES_ORD_ID = B.SO_ID
+        WHERE A.SALES_ORD_ID = #{salesOrderId} AND A.STUS_CODE_ID = 4
+        ORDER BY A.INSTALL_ENTRY_ID ASC )
+    WHERE ROWNUM <= 1
+    ]]>
+  </select>
+
+    <select id="selectProductBasicInfo" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT V1.ORD_ID
+                           , V1.ORD_NO
+                           , V1.RENTAL_STUS
+                           , V1.ORD_STUS_ID
+                           , V1.ORD_STUS_CODE
+                           , V1.ORD_STUS_NAME
+                           , V1.ORD_DT
+                           , V1.INSTLMT_PRIOD
+                           , V1.ORD_AMT
+                           , V1.ORD_MTH_RENTAL
+                           , V1.ORD_PV
+                           , V1.ORD_PV_MONTH
+                           , V1.ORD_PV_YEAR
+                           , V1.ORD_REF_NO
+                           , V1.ORD_PO_NO
+                           , V1.ORD_DEPT_CODE
+                           , V1.ORD_GRP_CODE
+                           , V1.ORD_ORG_CODE
+                           , V1.ORD_CRT_USER_ID
+                           , V1.ORD_CRT_DT
+                           , V1.APP_TYPE_ID
+                           , V1.APP_TYPE_CODE
+                           , V1.APP_TYPE_DESC
+                           , V1.ITM_PRC_ID
+                           , V1.STOCK_ID
+                           , V1.STOCK_CODE
+                           , V1.STOCK_DESC
+                           , V1.MASTER_STK_ID
+                           , V1.CUST_ID
+                           , V1.CUST_TYPE
+                           , V1.CUST_NAME
+                           , V1.CUST_NRIC
+                           , V1.CUST_DOB
+                           , V1.CUST_NATION
+                           , V1.CUST_GENDER
+                           , V1.CUST_RACE
+                           , V1.CUST_EMAIL
+                           , V1.CUST_VA_NO
+                           , TO_CHAR(V1.CUST_PASSPORT_EXPR, 'DD/MM/YYYY') CUST_PASSPORT_EXPR
+                           , TO_CHAR(V1.CUST_VISA_EXPR, 'DD/MM/YYYY') CUST_VISA_EXPR
+                           , V1.ORD_PROMO_ID
+                           , V1.ORD_PROMO_CODE
+                           , V1.ORD_PROMO_DESC
+                           , V1.ORD_MEM_ID
+                           , V1.ORD_MEM_CODE
+                           , V1.ORD_MEM_NAME
+                           , V1.ORD_MEM_NRIC
+                           , V1.ORD_MEM_TYPE_ID
+                           , V1.ORD_MEM_TYPE_CODE
+                           , V1.ORD_MEM_TYPE_NAME
+                           , V1.COOL_OFF_PRIOD
+                           , V1.KEYIN_BRNCH_ID
+                           , V1.KEYIN_BRNCH_CODE
+                           , V1.KEYIN_BRNCH_NAME
+                           , V1.ORD_REM
+                           , V1.RENT_CHK_ID
+                           , V1.ORD_HM_ID
+                           , V1.ORD_SM_ID
+                           , V1.ORD_GM_ID
+                           , V1.ORD_ADDR_ID
+                           , V1.ORD_CNTC_ID
+                           , V1.CUST_CARE_CNT_ID
+                           , V1.ORD_PROMO_RELATED_NO
+                           , V1.UPD_DT
+                           , V1.UPD_USER_ID
+                           , V1.JOM_PAY_REF
+                           , V1.STK_CTGRY_ID
+                           , V1.STK_CTGRY_NAME
+                           , V1.CUST_TYPE_ID
+                           , V1.CUST_BILL_ID
+                           , V1.OBLIGT_YEAR
+                           , NVL(V1.EMP_CHK, 0) AS EMP_CHK
+                           , NVL(V1.EX_TRADE, 0) AS EX_TRADE
+                           , NVL(V1.GST_CHK, 0) AS GST_CHK
+                           , V1.CNVR_SCHEME_ID
+                           , V1.PROMO_DISC_PERIOD_TP
+                           , V1.PROMO_DISC_PERIOD_TP_NM
+                           , V1.PROMO_DISC_PERIOD
+                           , V1.NOR_AMT
+                           , V1.NOR_RNT_FEE
+                           , V1.DISC_RNT_FEE
+                           , V1.SRV_PAC_ID
+                           , V1.ADV_BILL
+                           , V1.CRT_DUR
+                           , V1.ADD_CMPT
+                           , V1.EKEY_CRT_USER
+                           , V1.EKEY_BRNCH_NAME
+                           , V4.CODE_ID CORP_CUST_TYPE_ID
+                           , V4.CODE_NAME CORP_CUST_TYPE
+                           , V5.CODE_ID AGREEMENT_TYPE_ID
+                           , V5.CODE_NAME AGREEMENT_TYPE
+                           , V3.TYPE_ID
+                           , EXTRACT(MONTH FROM V1.EKEY_CRT_DT) AS MONTH
+                           , EXTRACT(YEAR FROM V1.EKEY_CRT_DT) AS YEAR
+                           , CASE WHEN V6.SALES_ORD_NO IS NOT NULL THEN V6.SALES_ORD_NO ELSE V7.SALES_ORD_NO END AS PCKAGE_BINDING_ID
+                           , CASE WHEN V1.PCKAGE_BINDING_NO IS NOT NULL THEN V1.PCKAGE_BINDING_NO ELSE V7.SALES_ORD_ID END AS PCKAGE_BINDING_NO
+                           , FN_GET_ORDER_SERIAL(V1.ORD_ID, V1.STOCK_CODE) LAST_SERIAL_NO
+                           , FN_GET_ORDER_SERIAL(V1.ORD_ID, 'EXCH_RETURN') EXCH_RETURN_SERIAL_NO
+                           , V1.BNDL_ID
+                           , V8.VOUCHER
+                           , V8.REDEEM_HS
+                           , V8.REDEEM_MTH
+                           , V8.REDEEM_YEAR
+                           , V8.REDEEM_WARRANTY
+                           , V1.ADV_DISC
+         FROM SAL1006V V1
+        LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
+        LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
+        LEFT JOIN SYS0013M V4 ON V4.CODE_ID = V2.CORP_CUST_TYPE
+        LEFT JOIN SYS0013M V5 ON V5.CODE_ID = V2.AGREEMENT_TYPE
+        LEFT JOIN SAL0001D V6 ON V6.SALES_ORD_ID = V1.PCKAGE_BINDING_NO
+        LEFT JOIN SAL0001D V7 ON V7.PCKAGE_BINDING_NO = V1.ORD_ID
+        LEFT JOIN SAL0261D V8 ON V8.SALES_ORD_ID = V2.SALES_ORD_ID
+        WHERE V1.ORD_ID = #{salesOrderId}
+  </select>
+
 	<select id="selectPenaltyBillDate" parameterType="Map"
 		resultType="egovMap">
 		SELECT
