@@ -193,7 +193,7 @@
 																	                              )
 																	                        )
 														),0) +#{requestqty})                                                              AS SRO_ITM_REPL_FUL_QTY
-			            , (GBSLCVD.FN_GET_AVAILABLE_QTY(AA.SRO_STK_CODE,BB.SRO_FR_WH_LOC_CODE ) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
+			            , (FN_GET_AVAILABLE_QTY(BB.SRO_FR_WH_LOC_CODE  ,AA.SRO_STK_CODE) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
 			            , CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
 			            , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
 			            , CC.SRO_ITM_ADD_POT    /* SRO_MAK_ADD_POT*/
@@ -206,7 +206,7 @@
 				    AND AA.SRO_STK_CODE  = CC.SRO_STK_CODE
 				    AND AA.SRO_NO            =#{srono}
 				    AND AA.SRO_STK_CODE  =#{srostkcode}
-				    CC.SRO_ITM_USE_YN      ='Y'
+				    AND CC.SRO_ITM_USE_YN      ='Y'
 				    ]]>
     </insert>
 
@@ -291,7 +291,7 @@ FROM (
                 ,srosupqty
                 ,case when   (srofulqty >0 ) then (srofulqty )   else 0    end as srofulqty
                 ,case when   (sroitmstatecd ='A') then
-                         case when  (srofravailqtyorg > 0) then  srofravailqtyorg else 0 end
+                         case when  (to_number(srofravailqtyorg) > 0) then  to_number(srofravailqtyorg) else 0 end
                   else 0
                  end  as requestqty
                 ,srotoavlqty
@@ -334,8 +334,8 @@ FROM (
 			    ,srorefsrono
 			    ,srotype
 			    ,sroitmresultmsg
-			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
-			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) ) as srofravailqtyorg
+			    ,(FN_GET_AVAILABLE_QTY(srofrwhloccode ,srostkcode ) -sroconqty) as srofravailqty
+			    ,(FN_GET_AVAILABLE_QTY(srofrwhloccode ,srostkcode ) ) as srofravailqtyorg
 			    ,crtuserid
 			    ,crtdt
 			    ,srocalautoreplenqty
@@ -348,7 +348,7 @@ FROM (
 				    ,L112.SRO_ITM_REPL_CON_LEV    AS sroitmlev
 				    ,L112.SRO_ITM_STATE_CD          AS sroitmstatecd
 				    ,NVL(( SELECT SUM(SRO_ITM_REPL_CON_QTY) SRO_ITM_REPL_CON_QTY
-					            FROM GBSLCVD.LOG0112D  RB, GBSLCVD.LOG0111d RA , LOG0047M RC
+					            FROM LOG0112D  RB, GBSLCVD.LOG0111d RA , LOG0047M RC
 					         WHERE  RA.SRO_NO  = RB.SRO_NO
 					            AND RB.SRO_STK_CODE =L112.SRO_STK_CODE
 					            AND RA.SRO_REQST_NO  = RC.REQST_NO (+)
