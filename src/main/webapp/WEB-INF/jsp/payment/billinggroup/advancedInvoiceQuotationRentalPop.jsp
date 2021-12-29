@@ -186,7 +186,7 @@ function fn_generateStatement(){
 
 
 
-    $("#reportPDFForm #reportFileName").val('/statement/Rt');
+    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_AdvancedRentalInvoice_PDF.rpt');
 
     $("#reportPDFForm #v_adv1Boolean").val(0);
     $("#reportPDFForm #v_adv2Boolean").val(0);
