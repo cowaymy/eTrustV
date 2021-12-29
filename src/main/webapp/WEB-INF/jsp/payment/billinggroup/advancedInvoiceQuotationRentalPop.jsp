@@ -171,51 +171,52 @@ function fn_generateStatement(){
     var salesOrderId = AUIGrid.getCellValue(myGridID, 0, "salesOrdId");
 
 
-            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
-             if (selectedItem[0] > -1){
+	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
-                 $('input:radio[name=advance]').attr("checked", false);
-                 $('input:radio[name=printMethod]').eq(0).attr("checked", false);
+		if (selectedItem[0] > -1) {
 
-                 $('#popup_wrap2').show();
-             }else{
-                 Common.alert("<spring:message code='pay.alert.noPrintType'/>");
-             }
+// 			$('input:radio[name=advance]').attr("checked", false);
+			$('input:radio[name=printMethod]').eq(0).attr("checked", false);
 
+			$('#popup_wrap2').show();
+		} else {
+			Common.alert("<spring:message code='pay.alert.noPrintType'/>");
+		}
 
+		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_AdvancedRentalInvoice_PDF.rpt');
 
+		$("#reportPDFForm #v_adv1Boolean").val(0);
+		$("#reportPDFForm #v_adv2Boolean").val(0);
+		$("#reportPDFForm #v_noadv1Boolean").val(0);
+		$("#reportPDFForm #v_noadv2Boolean").val(0);
 
-    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_AdvancedRentalInvoice_PDF.rpt');
+		//옵션 세팅
+		$("#reportPDFForm #v_orderId").val(salesOrderId);
+		$("#reportPDFForm #viewType").val("PDF");
 
-    $("#reportPDFForm #v_adv1Boolean").val(0);
-    $("#reportPDFForm #v_adv2Boolean").val(0);
-    $("#reportPDFForm #v_noadv1Boolean").val(0);
-    $("#reportPDFForm #v_noadv2Boolean").val(0);
+		if ($("#advance1").is(":checked"))
+			$("#reportPDFForm #v_adv1Boolean").val(1);
+		if ($("#advance2").is(":checked"))
+			$("#reportPDFForm #v_adv2Boolean").val(1);
+		if ($("#no_advance1").is(":checked"))
+			$("#reportPDFForm #v_noadv1Boolean").val(1);
+		if ($("#no_advance2").is(":checked"))
+			$("#reportPDFForm #v_noadv2Boolean").val(1);
 
-    //옵션 세팅
-    $("#reportPDFForm #v_orderId").val(salesOrderId);
-    $("#reportPDFForm #viewType").val("PDF");
+		Common.report("reportPDFForm");
 
-    if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
-    if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
-    if ($("#no_advance1").is(":checked")) $("#reportPDFForm #v_noadv1Boolean").val(1);
-    if ($("#no_advance2").is(":checked")) $("#reportPDFForm #v_noadv2Boolean").val(1);
+	}
 
-    Common.report("reportPDFForm");
+	//Layer close
+	hideViewPopup = function(val) {
+		$(val).hide();
+	}
 
-}
-
-
-//Layer close
-hideViewPopup=function(val){
-    $(val).hide();
-}
-
-function fn_clear(){
-    $("#searchForm")[0].reset();
-    AUIGrid.clearGridData(myGridID);
-}
+	function fn_clear() {
+		$("#searchForm")[0].reset();
+		AUIGrid.clearGridData(myGridID);
+	}
 </script>
 
 
