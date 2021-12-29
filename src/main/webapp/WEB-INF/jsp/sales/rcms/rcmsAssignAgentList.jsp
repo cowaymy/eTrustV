@@ -451,7 +451,6 @@
 		}
 
 		$("#appType").prop("disabled", false);
-		console.log($("#searchForm").serialize())
 		Common.ajax("GET", "/sales/rcms/selectAssignAgentList",
 
 				$("#searchForm").serialize(), function(result) {
