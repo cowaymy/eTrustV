@@ -31,8 +31,11 @@
 	$(document).ready(
 		function() {
 			PEXTestResultGrid();
+
 			PEXTestResultExcelGrid();
+
 			doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
+
 			CommonCombo.make('cmbCategory', '/common/selectCodeList.do', {groupCode : 11,codeIn : 'WP,AP,BT,BB,MAT,FRM,POE'}, '', {type : 'M'});
 		});
 
