@@ -426,8 +426,12 @@ function fn_splitBarcode(){
 	                                                    if(!msIe){
 	                                                        if(failSound){
 	                                                            beep(999, 210, 800); beep(999, 500, 800);
+	                                                            $("#txtBarcode").val("");
+	                                                            $("#txtBarcode").focus();
 	                                                        }else{
 	                                                            beep(100, 520, 200);
+	                                                            $("#txtBarcode").val("");
+	                                                            $("#txtBarcode").focus();
 	                                                        }
 	                                                    }
 	                                                 }
@@ -446,11 +450,13 @@ function fn_splitBarcode(){
 	                                        // faile sound
 	                                        if(!msIe){
 	                                            beep(999, 210, 800); beep(999, 500, 800);
+	                                            $("#txtBarcode").val("");
+	                                            $("#txtBarcode").focus();
 	                                        }
 	                                    }
 
-	                                    $("#txtBarcode").val("");
-	                                    $("#txtBarcode").focus();
+	                                    //$("#txtBarcode").val("");
+	                                    //$("#txtBarcode").focus();
 	                                    }
 	                                }
 	                            }
@@ -540,8 +546,12 @@ function fn_splitBarcode(){
                         if(!msIe){
 	                        if(failSound){
 	                        	beep(999, 210, 800); beep(999, 500, 800);
+	                        	$("#txtBarcode").val("");
+                                $("#txtBarcode").focus();
 	                        }else{
 	                            beep(100, 520, 200);
+	                            $("#txtBarcode").val("");
+                                $("#txtBarcode").focus();
 	                        }
                         }
                      }
@@ -560,11 +570,13 @@ function fn_splitBarcode(){
         	// faile sound
         	if(!msIe){
         	    beep(999, 210, 800); beep(999, 500, 800);
+        	    $("#txtBarcode").val("");
+                $("#txtBarcode").focus();
         	}
         }
 
-        $("#txtBarcode").val("");
-        $("#txtBarcode").focus();
+        //$("#txtBarcode").val("");
+        //$("#txtBarcode").focus();
     }
 
 }
