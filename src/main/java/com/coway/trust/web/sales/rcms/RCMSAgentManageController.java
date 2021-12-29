@@ -170,7 +170,8 @@ public class RCMSAgentManageController {
 		String openMonth[] = request.getParameterValues("openMonth");
 		String rosCaller[] = request.getParameterValues("rosCaller");
 		String raceId[] = request.getParameterValues("raceId");
-
+		String payMode[] = request.getParameterValues("payMode");
+		String productCategory[] = request.getParameterValues("productCategory");
 		for (String str : openMonth){
 
 			if("7".equals(str)){
@@ -186,7 +187,8 @@ public class RCMSAgentManageController {
 		params.put("openMonth", openMonth);
 		params.put("rosCaller", rosCaller);
 		params.put("raceId", raceId);
-
+		params.put("payMode", payMode);
+		params.put("productCategory", productCategory);
 
 		List<EgovMap> assignAgentList = null;
 

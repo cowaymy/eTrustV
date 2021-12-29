@@ -207,6 +207,12 @@
         JOIN REP0010S cD ON a.SALES_ORD_ID = cD.ORD_ID AND cd.SRV_CNTRCT_ID = 0
         LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0 AND gstrb.stus_id = 1
         LEFT JOIN SYS0013M H ON H.CODE_ID = B.CORP_TYPE_ID
+        LEFT JOIN SVC0008D I ON I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month
+        LEFT JOIN PAY1009V J ON J.ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN SAL0002D K ON K.SALES_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN SYS0026M L ON L.STK_ID = K.ITM_STK_ID
+        LEFT JOIN SYS0013M M ON M.CODE_ID = L.STK_CTGRY_ID
+
 		WHERE 1=1
 		<choose>
             <when test="orderNo != null and orderNo !=''">
@@ -229,7 +235,23 @@
                   <if test="vaNo != null and vaNo !='' ">
                     AND B.CUST_VA_NO = #{vaNo}
                   </if>
+                  <if test="productCategory != null and productCategory !='' ">
+                        AND M.CODE_ID IN
+                   <foreach item="item" collection="productCategory" index="index" open="(" separator="," close=")">
+                       #{item}
+                    </foreach>
 
+                  </if>
+                  <if test="bsMonth != null and bsMonth !='' and bsMonth == 1">
+                        AND I.MONTH IS NOT NULL
+                    </if>
+                    <if test="payMode != null and payMode !='' ">
+                        AND J.PAY_MODE_ID IN
+                        <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
+                       #{item}
+                    </foreach>
+
+                    </if>
             </when>
             <when test="customerId != null and customerId !='' ">
                 AND A.CUST_ID = #{customerId}
@@ -263,9 +285,9 @@
             </when>
             <when test="vaNo != null and vaNo !='' ">
                     AND B.CUST_VA_NO = #{vaNo}
-                    <if test="rosCaller != null and rosCaller != ''">
+                    <if test="rosCaller1 != null and rosCaller1 != ''">
                     AND A.AGENT_ID IN
-                    <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+                    <foreach item="item" collection="rosCaller1" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
                   </if>
@@ -349,7 +371,23 @@
                     <if test="vaNo != null and vaNo !='' ">
                     AND B.CUST_VA_NO = #{vaNo}
                     </if>
+                    <if test="productCategory != null and productCategory !='' ">
+                        AND M.CODE_ID IN
+                   <foreach item="item" collection="productCategory" index="index" open="(" separator="," close=")">
+                       #{item}
+                    </foreach>
 
+                  </if>
+                  <if test="bsMonth != null and bsMonth !='' and bsMonth == 1">
+                        AND I.MONTH IS NOT NULL
+                    </if>
+                    <if test="payMode != null and payMode !='' ">
+                        AND J.PAY_MODE_ID IN
+                        <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
+                       #{item}
+                    </foreach>
+
+                    </if>
 
 	            </otherwise>
 	            </choose>
