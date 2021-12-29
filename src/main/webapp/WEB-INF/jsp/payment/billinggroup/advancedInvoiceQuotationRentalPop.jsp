@@ -86,13 +86,13 @@ function f_multiCombo() {
 
 function fn_getAdvancedRentalInvoiceListAjax() {
     var valid = ValidRequiredField();
-    if(!valid){
-        Common.alert("* Please key in Order No.");
-    }else{
+//     if(!valid){
+//         Common.alert("* Please key in Order No.");
+//     }else{
         Common.ajax("GET", "/payment/selectAdvancedRentalInvoiceList.do", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
-    }
+//     }
 }
 
 function ValidRequiredField(){
