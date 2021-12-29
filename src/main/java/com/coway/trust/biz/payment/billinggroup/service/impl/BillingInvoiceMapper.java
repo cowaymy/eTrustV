@@ -70,6 +70,9 @@ public interface BillingInvoiceMapper {
 	 * @return
 	 */
 	List<EgovMap> selectAdvancedRentalInvoiceList(Map<String, Object> params);
+	List<EgovMap> selectProductUsageMonth(Map<String, Object> params);
+	List<EgovMap> selectProductBasicInfo(Map<String, Object> params);
+
 
 	/**
 	 * Penalty Invoice Bill Date 조회
