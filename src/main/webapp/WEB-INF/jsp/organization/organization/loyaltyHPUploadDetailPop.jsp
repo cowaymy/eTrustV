@@ -97,7 +97,8 @@ var itemGridID;
 
              $("#txUploadId").text(result.info.lotyUploadId);
              $("#txStatusCode").text(result.info.lotyUploadStatusName);
-             $("#txUpdateBy").text(result.info.updateor+"( "+ result.info.lotyupdate +" )");             $("#txTotailItem").text(result.info.totCnt);
+             $("#txUpdateBy").text(result.info.updateor+"( "+ result.info.lotyupdate +" )");
+             $("#txTotailItem").text(result.info.totCnt);
              $("#txTotalValidTxt").text(result.info.valCnt);
              $("#tXTotalInvalidTxt").text(result.info.inValCnt);
 

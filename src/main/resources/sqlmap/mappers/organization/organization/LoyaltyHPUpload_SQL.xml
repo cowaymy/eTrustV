@@ -172,13 +172,13 @@
 					        ,sm.CRT_DT
 					        ,sm.CRT_USER_ID
 					        ,csy.USER_NAME  AS updateor
-					        ,TO_CHAR(LOTY_APPROVER_DATE,'dd/mm/yyyy hh:mm:ss') as lotyupdate
+					        ,NVL(TO_CHAR(LOTY_APPROVER_DATE,'dd/mm/yyyy hh:mm:ss'),'-') as lotyupdate
 					        ,(SELECT COUNT(*) FROM  SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= SM.LOTY_UPLOAD_ID  AND  NVL(SS.LOTY_VAILD_STATUS_CODE,0)  =0  ) AS IN_VAL_CNT
 					        ,(SELECT COUNT(*) FROM SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= SM.LOTY_UPLOAD_ID   AND  NVL(SS.LOTY_VAILD_STATUS_CODE,0)  =1 )  AS VAL_CNT
 				            ,(SELECT COUNT(*) FROM SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= SM.LOTY_UPLOAD_ID )  AS tot_Cnt
 					FROM  SAL0300M sm  ,   sys0047m csy
 					    WHERE 1=1
-					     AND  sm.UPD_USER_ID     =csy.USER_ID (+)
+					     AND  sm.CRT_USER_ID     =csy.USER_ID (+)
 					 <if test="uploadId != null and uploadId != ''">
                           AND sm.LOTY_UPLOAD_ID  = #{uploadId }
                      </if>
@@ -217,10 +217,12 @@
                                 ,LOTY_PERIOD
                                 ,LOTY_MEMBER_STATUS_CODE
                                 ,CSY.CODE_NAME
-                          FROM SAL0301D  , SYS0013M csy
-                           WHERE LOTY_MEMBER_CODE  =#{memberCode}
-                            AND CODE_MASTER_ID  ='487'
-                            AND LOTY_MEMBER_STATUS_CODE= CSY.CODE
+                          FROM SAL0301D D, SYS0013M csy , SAL0300M M
+                           WHERE D.LOTY_MEMBER_CODE  =#{memberCode}
+                            AND M.LOTY_UPLOAD_ID = D.LOTY_UPLOAD_ID
+                            AND csy.CODE_MASTER_ID  ='487'
+                             AND M.LOTY_APPROVAL_STATUS_CODE ='C'
+                            AND D.LOTY_MEMBER_STATUS_CODE= CSY.CODE
     </select>
 
     <select id="selectLoyaltyHPUploadMemberStatusList" parameterType="Map" resultType="egovMap">
