@@ -457,7 +457,6 @@
 
 					console.log("성공.");
 					console.log(result);
-				    console.log($("#searchForm").serialize())
 					AUIGrid.setGridData(assignGrid, result);
 					AUIGrid.setGridData(excelGrid, result);
 
