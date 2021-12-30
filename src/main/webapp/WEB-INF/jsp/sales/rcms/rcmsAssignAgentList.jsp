@@ -454,7 +454,6 @@
 		Common.ajax("GET", "/sales/rcms/selectAssignAgentList",
 
 				$("#searchForm").serialize(), function(result) {
-
 					console.log("성공.");
 					console.log(result);
 					AUIGrid.setGridData(assignGrid, result);

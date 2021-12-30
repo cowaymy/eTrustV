@@ -207,7 +207,7 @@
         JOIN REP0010S cD ON a.SALES_ORD_ID = cD.ORD_ID AND cd.SRV_CNTRCT_ID = 0
         LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0 AND gstrb.stus_id = 1
         LEFT JOIN SYS0013M H ON H.CODE_ID = B.CORP_TYPE_ID
-        LEFT JOIN SVC0008D I ON I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
+        LEFT JOIN SVC0008D I ON I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month
         LEFT JOIN PAY1009V J ON J.ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0002D K ON K.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SYS0026M L ON L.STK_ID = K.ITM_STK_ID
@@ -294,10 +294,10 @@
             </when>
             <otherwise>
 				  <if test="appType != null and appType !='' ">
-				    AND C.APP_TYPE_ID = #{appType}
+<!-- 				    AND C.APP_TYPE_ID = #{appType} -->
 				  </if>
 				  <if test="orderStatus != null and orderStatus !='' ">
-				    AND C.STUS_CODE_ID = #{orderStatus}
+<!-- 				    AND C.STUS_CODE_ID = #{orderStatus} -->
 				  </if>
 
 				  <if test="rentalStatus != null and rentalStatus != ''">
