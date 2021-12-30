@@ -591,10 +591,10 @@
   </select>
 
   <select id="selectIssueTypeList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME
-        FROM SYS0094M
-        WHERE CODE = #{groupCode} OR IND = 'Other' AND DISB = 0
-        ORDER BY CODE
+        SELECT CODE_ID,CODE_NAME
+        FROM SYS0013M
+        WHERE (CODE = #{groupCode} OR CODE = '0') AND CODE_MASTER_ID = 468 AND DISAB = 0
+        ORDER BY CODE DESC,CODE_ID
   </select>
 
     <select id="selectCpeHistoryDetailPop" parameterType="Map" resultType="egovMap">

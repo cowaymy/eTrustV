@@ -76,8 +76,8 @@
                   } else {
                 	var SubReq = $("#_inputSubReqTypeSelect").val();
                 	if(SubReq < 6500 && SubReq != 6210 && SubReq != 6211)
-                		SubReq = '468';
-                    doGetCombo('/services/ecom/selectIssueType', SubReq.toString(), '', '_inputIssueSelect', 'S', '');
+                		SubReq = '1';
+                    var check = doGetCombo('/services/ecom/selectIssueType.do', SubReq, '', '_inputIssueSelect', 'S', '');
                     //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
                   }
@@ -197,7 +197,7 @@
 
         var formData = Common.getFormData("form_newReqst");
         var obj = $("#form_newReqst").serializeJSON();
-
+        console.log(obj)
         $.each(obj, function(key, value) {
           formData.append(key, value);
         });
@@ -444,14 +444,14 @@
                     <tr>
                         <th scope="row">Sub Request<span class="must">*</span></th>
                         <td><select class="w100p" name="inputSubReqTypeSelect" id="_inputSubReqTypeSelect"></select></td>
+
                         <th scope="row">AS No.</th>
                         <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.grid.asNo'/>"
                             class="w100p" id="asNo" name="asNo" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Issue<span class="must">*</span></th>
-                        <td colspan="5"><select class="w100p" name="inputIssueSelect" id="_inputIssueSelect">
-            </select></td>
+                        <td colspan="5"><select class="w100p" name="inputIssueSelect" id="_inputIssueSelect"></select></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code='cpe.attachment' /></th>
