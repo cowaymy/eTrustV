@@ -1429,6 +1429,9 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 	@Override
 	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
+		resultValue.put("status", AppConstants.FAIL);
+		resultValue.put("message", "LMS Failed: Please contact Administrator.");
+
 		String respTm = null;
 		String lmsApiUserId = "3";
 		String auth = LMSApiUser + ":" + LMSApiPassword;
@@ -1499,8 +1502,9 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		}catch(Exception e){
 			LOGGER.error("Timeout:");
 			LOGGER.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
-			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
+			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
+			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
 			p.setMessage("Timeout " + e.toString());
 		}finally{
 			stopWatch.stop();

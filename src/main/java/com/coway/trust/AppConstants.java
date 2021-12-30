@@ -188,6 +188,7 @@ public class AppConstants {
 	public static final int RESPONSE_CODE_UNAUTHORIZED = 401;
 	public static final int RESPONSE_CODE_FORBIDDEN = 403;
 	public static final int RESPONSE_CODE_NOT_FOUND = 404;
+	public static final int RESPONSE_CODE_TIMEOUT = 405;
 
 	public static final String RESPONSE_DESC_SUCCESS = "Successful Operation";
 	public static final String RESPONSE_DESC_CREATED = "Successful Created";
