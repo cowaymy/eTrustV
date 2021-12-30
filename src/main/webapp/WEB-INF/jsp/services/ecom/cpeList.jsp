@@ -243,6 +243,9 @@
   function fn_generateCpeRaw() {
 	  Common.popupDiv("/services/ecom/cpeGenerateRawPop.do" , null, null , true, 'cpeGenerateRawPop');
   }
+  function fn_generateCpeEnquiryRaw() {
+      Common.popupDiv("/services/ecom/cpeGenerateEnquiryRawPop.do" , null, null , true, 'cpeEnquiryGenRawForm');
+  }
 
 
 </script>
@@ -403,6 +406,7 @@
      <ul class="btns">
       <c:if test="${PAGE_AUTH.funcView == 'Y'}">
        <li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li>
+       <li><p class="link_btn"> <a href="javascript:fn_generateCpeEnquiryRaw()" id="genCpeEnqRaw">Enquiry Raw Data</a> </p></li>
       </c:if>
      </ul>
      <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

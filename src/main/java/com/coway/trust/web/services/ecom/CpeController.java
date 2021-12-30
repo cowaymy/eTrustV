@@ -369,4 +369,10 @@ public class CpeController {
 	    List<EgovMap> resultList = cpeService.selectCpeHistoryDetailPop(params);
 	    return ResponseEntity.ok(resultList);
 	  }
+
+
+	  @RequestMapping(value = "/cpeGenerateEnquiryRawPop.do")
+	  public String cpeGenerateEnquiryRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+		return "services/ecom/cpeGenerateEnquiryRawPop";
+	}
 }
