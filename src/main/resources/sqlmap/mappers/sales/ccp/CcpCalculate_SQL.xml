@@ -1608,11 +1608,19 @@ AND T1.CNT = 1
                           <if test=" '' != calRegion and null != calRegion">
                              AND  Extent13.REGN_ID = #{calRegion}
                           </if>
-
-                           <if test='cmbResubmitStatus != null and cmbResubmitStatus != ""'>
-                              AND Filter1.R_STUS_ID = #{cmbResubmitStatus}
-                           </if>
-
+                           <if test=" '' != cmbResubmitStatus and null != cmbResubmitStatus ">
+                             AND  Filter1.R_STUS_ID IN
+                             <foreach collection="arryCmbResubmitStatus" item="value" open="(" separator="," close=")">
+                                 <choose>
+                                     <when test="value ==  4 ">
+                                         #{value} , 6 , 10
+                                     </when>
+                                     <otherwise>
+                                         #{value}
+                                     </otherwise>
+                                 </choose>
+                             </foreach>
+                          </if>
                           <!--End Condition  -->
               ORDER BY Filter1.CCP_ID ASC
     </select>
@@ -1630,7 +1638,7 @@ AND T1.CNT = 1
 	            , ATCH_FILE_GRP_ID
 	            )
 	            values
-	            (SAL0304D_ID_SEQ.nextval
+	            (#{ezyDocNo}
 	            ,#{ordId}
 	            , #{ccpId}
 	            , 1
@@ -1694,5 +1702,9 @@ AND T1.CNT = 1
         from org0001d a
 		left join sys0047m b on b.hr_Code = a.mem_code
 		where b.user_name = #{salesmanCode}
+    </select>
+
+   <select id="getEzyDocNo" resultType="String">
+        SELECT FN_GET_DOCNO('181') FROM DUAL
     </select>
 </mapper>

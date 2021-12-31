@@ -118,4 +118,6 @@ public interface CcpCalculateMapper {
 	void updateCcpEresubmitStus(Map<String, Object> params) throws Exception;
 
 	int getMemberID(Map<String, Object> params);
+
+	String getEzyDocNo();
 }

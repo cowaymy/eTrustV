@@ -973,6 +973,9 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
   	@Override
 	public void ccpEresubmitNewSave(Map<String, Object> params) throws Exception {
+  		String ezyDocNo = ccpCalculateMapper.getEzyDocNo();
+        params.put("ezyDocNo", ezyDocNo);
+
   		ccpCalculateMapper.insertCcpEresubmitNewSave(params);
   	}
 

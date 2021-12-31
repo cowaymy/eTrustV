@@ -155,10 +155,11 @@
                 </td>
                 <th scope="row">Resubmit status</th>
                 <td>
-                <select class="w100p" id="cmbResubmitStatus" name="cmbResubmitStatus" >
-                    <option value="1" selected><spring:message code="sal.combo.text.active" /></option>
-                    <option value="5" ><spring:message code="sal.combo.text.approv" /></option>
-                    <option value="6"><spring:message code="sal.combo.text.rej" /></option>
+                <!-- <select class="w100p" id="cmbResubmitStatus" name="cmbResubmitStatus" > -->
+                <select class="multy_select w100p" multiple="multiple" name="cmbResubmitStatus">
+                    <option value="1" selected="selected"><spring:message code="sal.combo.text.active" /></option>
+                    <option value="5" selected="selected"><spring:message code="sal.combo.text.approv" /></option>
+                    <option value="6" selected="selected"><spring:message code="sal.combo.text.rej" /></option>
                 </select>
                 </td>
             </tr>
