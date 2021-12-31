@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.logistics.stocks.impl.StockMapper;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
@@ -31,6 +33,7 @@ import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
@@ -2608,6 +2611,13 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     sendSms(smsList);
 
+
+    // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
+
+    this.sendEmail();
+
+
+
     return true;
   }
 
@@ -3536,5 +3546,41 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
+
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public void sendEmail() {
+    EmailVO email = new EmailVO();
+    /*String emailTitle = paymentApiMapper.getEmailTitle(params);*/
+    String emailTitle = "Hello World";
+    String text = "Hello World";
+
+    /*Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
+    params.putAll(additionalParams);*/
+
+ //   List<String> emailNo = new ArrayList<String>();
+
+    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my","jiahua.yong@coway.com.my");
+
+ /*   if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+      emailNo.add(CommonUtils.nvl(params.get("email1")));
+    }
+
+    if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
+      emailNo.add(CommonUtils.nvl(params.get("email2")));
+    }*/
+
+    email.setTo(emailNo);
+    email.setHtml(false);
+    email.setSubject(emailTitle);
+    email.setHasInlineImage(false);
+    email.setText(text);
+
+    boolean isResult = false;
+
+    isResult = adaptorService.sendEmail(email, false);
+  }
+
 
 }
