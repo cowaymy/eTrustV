@@ -149,4 +149,6 @@ public interface InstallationResultListService {
   EgovMap selectStkCatType (Map<String, Object> params);
 
   void sendSms(Map<String, Object> smsList);
+
+  void sendEmail();
 }
