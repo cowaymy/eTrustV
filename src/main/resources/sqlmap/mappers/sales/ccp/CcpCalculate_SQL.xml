@@ -1579,6 +1579,12 @@ AND T1.CNT = 1
 
                       ) Filter1
                  JOIN SYS0005M Extent13   ON Filter1.BRANCHID3 = Extent13.BRNCH_ID
+                 <if test=" '' != DeptCode and null != DeptCode">
+                 LEFT JOIN ORG1001V V ON V.mem_Code = Filter1.USERNAME2
+                 </if>
+                 <if test=" '' != GrpCode and null != GrpCode and '' == DeptCode">
+                 LEFT JOIN ORG1001V V ON V.mem_Code = Filter1.USERNAME2
+                 </if>
                  WHERE  1 = 1
                            <!--Start Condition  -->
 
@@ -1621,6 +1627,12 @@ AND T1.CNT = 1
                                  </choose>
                              </foreach>
                           </if>
+                          <if test=" '' != DeptCode and null != DeptCode">
+                             AND V.DEPT_CODE = #{DeptCode}
+                           </if>
+                           <if test=" '' != GrpCode and null != GrpCode">
+                             AND V.GRP_CODE = #{GrpCode}
+                           </if>
                           <!--End Condition  -->
               ORDER BY Filter1.CCP_ID ASC
     </select>
