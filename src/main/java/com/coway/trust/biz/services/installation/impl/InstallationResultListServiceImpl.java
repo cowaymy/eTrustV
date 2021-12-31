@@ -1,5 +1,14 @@
 package com.coway.trust.biz.services.installation.impl;
 
+import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
+import static com.coway.trust.AppConstants.EMAIL_TEXT;
+import static com.coway.trust.AppConstants.EMAIL_TO;
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,15 +22,20 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.apache.bcel.classfile.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.logistics.stocks.impl.StockMapper;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
@@ -32,6 +46,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -39,8 +54,18 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.ReportController;
+import com.coway.trust.web.common.visualcut.ReportBatchController;
 import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.installation.InstallationResultListController;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -3553,23 +3578,52 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   public void sendEmail() {
     EmailVO email = new EmailVO();
     /*String emailTitle = paymentApiMapper.getEmailTitle(params);*/
+    Map<String, Object> params = new HashMap<>();
     String emailTitle = "Hello World";
-    String text = "Hello World";
 
     /*Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
     params.putAll(additionalParams);*/
 
  //   List<String> emailNo = new ArrayList<String>();
 
-    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my","jiahua.yong@coway.com.my");
+    List<String> emailNo = Arrays.asList("alex.lau@coway.com.my","jiahua.yong@coway.com.my","keyi.por@coway.com.my");
 
- /*   if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+ /*if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
       emailNo.add(CommonUtils.nvl(params.get("email1")));
     }
 
     if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
       emailNo.add(CommonUtils.nvl(params.get("email2")));
     }*/
+
+    String text = "";
+    text += "Dear All,\r\n\r\n";
+    text += "Hereby is Hello World";
+    text +=  "Sincere Regards,\r\n";
+    text +=  "IT Department";
+
+    params.put(REPORT_FILE_NAME, "/services/mibile_email_test.rpt");// visualcut
+    params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (HP)");
+    params.put(EMAIL_TO, emailNo);
+    params.put(EMAIL_TEXT, email);
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    //params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    //params.put("v_Param", " ");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "HelloWorld" + CommonUtils.getNowDate() + ".pdf");
+
+    try {
+		this.view(null, null, params);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+    LOGGER.info("[END] HelloWorld...");
+
 
     email.setTo(emailNo);
     email.setHtml(false);
@@ -3581,6 +3635,114 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     isResult = adaptorService.sendEmail(email, false);
   }
+  //////////////////////////////EMAIL TESTING FROM MOBILE API
+
+  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
+	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
+	      throws ReportSDKExceptionBase, IOException {
+
+	    String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
+
+	    switch (viewType) {
+	      case MAIL_PDF:
+	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+	          break;
+
+	      default:
+	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+	    }
+	  }
+
+
+  @Autowired
+  private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private ReportBatchService reportBatchService;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReportBatchController.class);
+
+  @Value("${report.datasource.driver-class-name}")
+  private String reportDriverClass;
+
+  @Value("${report.datasource.url}")
+  private String reportUrl;
+
+  @Value("${report.datasource.username}")
+  private String reportUserName;
+
+  @Value("${report.datasource.password}")
+  private String reportPassword;
+
+  @Value("${report.file.path}")
+  private String reportFilePath;
+
+  private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
+	      throws IOException {
+
+	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
+		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+
+	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
+		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
+	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    Calendar startTime = Calendar.getInstance();
+	    Calendar endTime = null;
+
+	    String reportFile = (String) params.get(REPORT_FILE_NAME);
+	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    String reportName = reportFilePath + reportFile;
+	    String prodName = "view";
+	    int maxLength = 0;
+	    String msg = "Completed";
+
+	    try {
+
+	      ReportClientDocument clientDoc = new ReportClientDocument();
+
+	      clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
+	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+	      {
+	        String connectString = reportUrl;
+	        String driverName = reportDriverClass;
+	        String jndiName = "";
+	        String userName = reportUserName;
+	        String password = reportPassword;
+
+
+	        CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+	        CRJavaHelper.logonDataSource(clientDoc, userName, password);
+	      }
+
+	      Object reportSource = clientDoc.getReportSource();
+
+	      params.put("repProdName", prodName);
+
+	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+	      ReportUtils.setReportParameter(params, paramController, fields);
+	      {
+	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
+	            params);
+	      }
+	    } catch (Exception ex) {
+	      LOGGER.error(CommonUtils.printStackTraceToString(ex));
+	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
+	      throw new ApplicationException(ex);
+	    } finally{
+	      // Insert Log
+	      endTime = Calendar.getInstance();
+	      params.put("msg", msg);
+	      params.put("startTime", fmt.format(startTime.getTime()));
+	      params.put("endTime", fmt.format(endTime.getTime()));
+	      params.put("userId", 349);
+
+	      reportBatchService.insertLog(params);
+	    }
+	  }
 
 
 }
