@@ -118,43 +118,52 @@ function fn_openDivPop(){
 
     var salesOrderId = AUIGrid.getCellValue(myGridID, 0, "salesOrdId");
 
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
+    if (selectedItem[0] > -1){
 
-    Common.ajax("GET", "/payment/selectProductBasicInfo.do",  {salesOrderId: salesOrderId}, function(result) {
+     Common.ajax("GET", "/payment/selectProductBasicInfo.do",  {salesOrderId: salesOrderId}, function(result) {
 
-    	if(result[0].rentalStus !="REG"){
-    	Common.alert("Only allow to generate the order with status in REG.");
-        }
-    	else {
-   	     Common.ajax("GET", "/payment/selectProductUsageMonth.do",  {salesOrderId: salesOrderId}, function(result1) {
-         if(result1[0].productUsageMonth > 49){
-             Common.alert("Cannot generate for order with the usage period more than 49 months (due to installment left less than 12months)");
-         }else{
+     if(result[0].rentalStus !="REG"){
+    	   Common.alert("Only allow to generate the order with status in REG.");
+     }
+     else {
+    	   Common.ajax("GET", "/payment/selectProductUsageMonth.do",  {salesOrderId: salesOrderId}, function(result1) {
+    		   if(result1[0].productUsageMonth > 49){
+    			   Common.alert("Cannot generate for order with the usage period more than 49 months (due to installment left less than 12 months)");
+    			   }
+    		   else{
 
-        	 if(result[0].advDisc ==0){
-                 document.getElementById("advance1").disabled = true;
-                 document.getElementById("advance2").disabled = true;
-             }
-        	 else{
-                  document.getElementById("advance1").disabled = false;
-                  document.getElementById("advance2").disabled = false;
-              }
-             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    			   Common.ajax("GET", "/payment/getOderOutsInfo.do",  {ordId: salesOrderId}, function(result2) {
 
-             if (selectedItem[0] > -1){
+    				      if(result2[0].ordTotOtstnd > 0){
+    				    	   Common.alert("Order with outstanding balance not allow to generate the quotation");
+    				    	  }
+    				      else{
 
-             $('input:radio[name=advance]').attr("checked", false);
-             $('input:radio[name=printMethod]').eq(0).attr("checked", false);
+    				    	   if(result[0].advDisc ==0){
+    				    		   document.getElementById("advance1").disabled = true;
+    				    		   document.getElementById("advance2").disabled = true;
+    				    		     }
+    				    	   else{
+    				    		   document.getElementById("advance1").disabled = false;
+    				    		   document.getElementById("advance2").disabled = false;
+    				    		     }
 
-             $('#popup_wrap2').show();
-              }
-             else{
-                        Common.alert("<spring:message code='pay.alert.noPrintType'/>");
-                    }
-                 }
-           });
-    	}
-   });
+    				    	   $('input:radio[name=advance]').attr("checked", false);
+    				    	   $('input:radio[name=printMethod]').eq(0).attr("checked", false);
+
+    				    	   $('#popup_wrap2').show();
+    				    	}
+    				    });
+    			    }
+    		   });
+    	    }
+        });
+     }
+    else{
+    Common.alert("<spring:message code='pay.alert.noPrintType'/>");
+    }
 
 }
 
@@ -228,7 +237,9 @@ function fn_generateStatement(){
     <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
-
+  <form id="frmLedger" name="frmLedger" action="#" method="post">
+            <input id="ordId" name="ordId" type="hidden" value="" />
+        </form>
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
