@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
 import com.coway.trust.biz.payment.billinggroup.service.impl.ProformaSearchVO;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -32,6 +35,9 @@ public class BillingInvoiceController {
 
 	@Resource(name = "billingInvoiceService")
 	private BillingInvoiceService invoiceService;
+
+	@Resource(name = "orderLedgerService")
+	private OrderLedgerService orderLedgerService;
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -358,6 +364,64 @@ public class BillingInvoiceController {
 		list = invoiceService.selectProductBasicInfo(map);
 
 		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/getOderOutsInfo.do")
+	public ResponseEntity<List<EgovMap>>  getOderOutsInfo(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		LOGGER.debug("params ======================================>>> " + params);
+
+		if(CommonUtils.isEmpty(params.get("CutOffDate"))){
+			params.put("CutOffDate", "01/01/1900");
+		}
+
+		EgovMap orderInfo = orderLedgerService.selectOrderLedgerView(params);
+		model.addAttribute("orderInfo", orderInfo);
+
+		EgovMap insInfo = orderLedgerService.selectInsInfo(params);
+		model.addAttribute("insInfo", insInfo);
+
+		EgovMap mailInfo = orderLedgerService.selectMailInfo(params);
+		model.addAttribute("mailInfo", mailInfo);
+
+		EgovMap salesInfo = orderLedgerService.selectSalesInfo(params);
+		model.addAttribute("salesInfo", salesInfo);
+
+		List<EgovMap> orderLdgrList = orderLedgerService.getOderLdgr(params);
+
+		double balance = 0;
+		for(int i = 0; i < orderLdgrList.size(); i++){
+			EgovMap result = orderLdgrList.get(i);
+
+			 if (result.get("docType") == "B/F")
+             {
+					balance = Double.parseDouble(result.get("balanceamt").toString());
+             }
+             else
+             {
+                 balance = balance + Double.parseDouble(result.get("debitamt").toString()) + Double.parseDouble(result.get("creditamt").toString());
+             }
+
+			 result.put("balanceamt", balance);
+
+		}
+
+		model.addAttribute("orderLdgrList", new Gson().toJson(orderLdgrList));
+
+		List<EgovMap> agreList = orderLedgerService.selectAgreInfo(params);
+		model.addAttribute("agreList", new Gson().toJson(agreList));
+
+		List<EgovMap> ordOutInfoList = orderLedgerService.getOderOutsInfo(params);
+
+		EgovMap ordOutInfo = ordOutInfoList.get(0);
+
+		LOGGER.debug("ordOutInfo =====================>>> " + ordOutInfo);
+
+		model.addAttribute("ordOutInfo", ordOutInfo);
+		List<EgovMap> list = ordOutInfoList;
+
+		return ResponseEntity.ok(list);
+
 	}
 
 
