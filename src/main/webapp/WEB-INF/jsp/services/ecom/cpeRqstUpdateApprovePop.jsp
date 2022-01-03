@@ -25,6 +25,8 @@
 
     	if(funcChange == 'Y'){
     		$("#updateButt").show();
+    		$("#updateTable").show();
+    		$("#updateTitle").show();
     	}
         fn_setAutoFile2();
 
@@ -505,10 +507,10 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<aside class="title_line" style="display:none" id="updateTitle"><!-- title_line start -->
 <h3>Add Response</h3>
 </aside><!-- title_line end -->
-<table class="type1"><!-- table start -->
+<table class="type1" style="display:none" id="updateTable"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:140px" />
