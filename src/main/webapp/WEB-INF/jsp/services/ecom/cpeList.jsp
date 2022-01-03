@@ -4,6 +4,7 @@
   var gridID;
   var gridIDExcel;
   var cpeReqId;
+  var funcChange = '${PAGE_AUTH.funcChange}';
 
   function cpeGrid() {
 

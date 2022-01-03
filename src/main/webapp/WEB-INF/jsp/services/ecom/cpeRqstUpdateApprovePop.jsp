@@ -23,6 +23,9 @@
 
     $(document).ready(function() {
 
+    	if(funcChange == 'Y'){
+    		$("#updateButt").show();
+    	}
         fn_setAutoFile2();
 
         //Populate Sub Department in-charge
@@ -567,9 +570,7 @@
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="javascript:fn_openDivPop('VIEW');">View History</a></p></li>
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue2 big"><a href="#" id="saveBtn">Save</a></p></li>
-    </c:if>
+    <li id="updateButt" style="display:none"><p class="btn_blue2 big"><a href="#" id="saveBtn">Save</a></p></li>
 </ul>
 
 </form>
