@@ -2165,6 +2165,18 @@ public class ReportBatchController {
     LOGGER.info("[END] ColorGrid_Daily...");
   }
 
+  @RequestMapping(value = "/ColorGrid_Daily_Manual.do")
+  public void colorGridDailyManual(@RequestParam Map<String, Object> params) {
+      params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Daily_2021_Jan_Dec_S.rpt");
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_YEAR", params.get("V_YEAR").toString());// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "ColorGrid" + File.separator + "ColorGrid_Daily_"+ params.get("V_YEAR").toString() +"_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+  }
+
   @RequestMapping(value = "/HC_ColorGrid_Daily.do")
   //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
   public void colorGridHcDaily() {
@@ -2186,6 +2198,18 @@ public class ReportBatchController {
     }
 
     LOGGER.info("[END] HC_ColorGrid_Daily...");
+  }
+
+  @RequestMapping(value = "/HC_ColorGrid_Daily_Manual.do")
+  public void colorGridHcDailyManual(@RequestParam Map<String, Object> params) {
+      params.put(REPORT_FILE_NAME, "/visualcut/HC_ColorGrid_Daily_2021_Jan_Dec_S.rpt");
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_YEAR", params.get("V_YEAR").toString());// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "ColorGrid" + File.separator + "HC_ColorGrid_Daily_"+ params.get("V_YEAR").toString() +"_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
   }
 
 /*  @RequestMapping(value = "/Hand_Collection_vs_Autopay_Excel.do")
