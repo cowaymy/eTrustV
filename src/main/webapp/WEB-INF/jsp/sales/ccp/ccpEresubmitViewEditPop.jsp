@@ -69,9 +69,7 @@ $(document).ready(function(){
     $("#ORD_NO_RESULT").attr("style","display:inline");
     $("#resultcontens").attr("style","display:inline");
 
-    var salesmanCode = '${SESSION_INFO.userName}';
-
-    if('${ccpEresubmitMap.stusId}' != 6 || '${orderDetail.salesmanInfo.memCode}' != salesmanCode){
+    if('${ccpEresubmitMap.stusId}' != 6 || '${isModify}' == 'N'){
         var elements = document.getElementsByClassName("attach_mod");
         for(var i = 0; i < elements.length; i++) {
             elements[i].style.display="none";
@@ -128,8 +126,20 @@ function fn_doClearPersion(){
             Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
         }else{
 
-            Common.alert('eResubmit updated.');
-            $('#detailPop').remove();
+        	var ordId = '${ccpEresubmitMap.salesOrdId}';
+            var ccpId = '${ccpEresubmitMap.ccpId}';
+
+        	Common.ajax("POST", "/sales/ccp/ccpEresubmitUpdate", {saveOrdId : ordId,saveCcpId : ccpId, eRstatusEdit : 1}, function(result) {
+                console.log( result);
+
+                if(result == null){
+                	Common.alert('Failed to update eResubmit.');
+                }else{
+                	Common.alert('eResubmit updated.');
+                    $('#detailPop').remove();
+                }
+           });
+
            // DO SAVE BUTTON ACTION
            /* Common.popupDiv("/sales/membership/updateAction.do", data, function(result){
                if(result.code == 00)

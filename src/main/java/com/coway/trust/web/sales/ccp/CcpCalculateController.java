@@ -710,7 +710,7 @@ public class CcpCalculateController {
 		if(params.containsKey("SalesmanCode")) {
             if(!"".equals(params.get("SalesmanCode").toString())) {
             	params.put("salesmanCode", params.get("SalesmanCode"));
-                int memberID = orderListService.getMemberID(params);
+                int memberID = ccpCalculateService.getMemberID(params);
                 params.put("memID", memberID);
             }
         }
@@ -745,6 +745,28 @@ public class CcpCalculateController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/ccpEresubmitUpdate", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ccpEresubmitUpdate(@RequestBody Map<String, Object> params) throws Exception{
+		//Session
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+
+		//Service
+		ccpCalculateService.ccpEresubmitUpdate(params);
+
+		//Return MSG
+		ReturnMessage message = new ReturnMessage();
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("");
+
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/ccpEresubmitViewEditPop.do")
 	public String ccpEresubmitViewEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
@@ -752,6 +774,8 @@ public class CcpCalculateController {
 		LOGGER.info("############ ccpEresubmitViewPop Params : " + params.toString());
 		LOGGER.info("############################################################");
 
+		params.put("userId", sessionVO.getUserId());
+		params.put("userNm", sessionVO.getUserName());
 		//Log Service
 		EgovMap prgMap = null;
 		BigDecimal prgDecimal = null;
@@ -802,8 +826,22 @@ public class CcpCalculateController {
     	EgovMap ccpEresubmitMap = null;
     	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
 
+    	EgovMap tempMap1 = null;
+    	tempMap1 = (EgovMap)orderDetail.get("salesmanInfo");
+
+    	params.put("salesmanCode", params.get("userNm"));
+        int memberID = ccpCalculateService.getMemberID(params);
+        ccpInfoMap.put("memID", memberID);
+
+        if(tempMap1.get("memId").toString().equals(ccpInfoMap.get("memID").toString())){
+        	ccpInfoMap.put("isModify", "Y");
+        }else{
+        	ccpInfoMap.put("isModify", "N");
+        }
+
     	//Model
     	model.addAttribute("ccpId", ccpInfoMap.get("ccpId"));
+    	model.addAttribute("isModify", ccpInfoMap.get("isModify"));
     	model.addAttribute("orderDetail", orderDetail);
 //    	model.addAttribute("fieldMap", fieldMap);
 //    	model.addAttribute("incomMap", incomMap);

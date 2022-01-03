@@ -980,6 +980,11 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
   	}
 
   	@Override
+	public void ccpEresubmitUpdate(Map<String, Object> params) throws Exception {
+  		ccpCalculateMapper.updateCcpEresubmitStus(params);
+  	}
+
+  	@Override
 	public void updateCcpEresubmitAttach(Map<String, Object> params) throws Exception {
   		ccpCalculateMapper.updateCcpEresubmitAttach(params);
   	}

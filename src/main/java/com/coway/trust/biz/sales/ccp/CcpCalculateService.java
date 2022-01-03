@@ -54,6 +54,8 @@ public interface CcpCalculateService {
 
 	void ccpEresubmitNewSave(Map<String, Object> params) throws Exception;
 
+	void ccpEresubmitUpdate(Map<String, Object> params) throws Exception;
+
 	void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
 
 	void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs);
