@@ -242,8 +242,13 @@
                     </foreach>
 
                   </if>
-                  <if test="bsMonth != null and bsMonth !='' and bsMonth == 1">
+                  <if test="bsMonth != null and bsMonth !=''">
+                                    <if test="bsMonth == 1">
                         AND I.MONTH IS NOT NULL
+                    </if>
+                    <if test="bsMonth == 2">
+                        AND I.MONTH IS NULL
+                    </if>
                     </if>
                     <if test="payMode != null and payMode !='' ">
                         AND J.PAY_MODE_ID IN
@@ -378,9 +383,16 @@
                     </foreach>
 
                   </if>
-                  <if test="bsMonth != null and bsMonth !='' and bsMonth == 1">
-                        AND I.MONTH IS NOT NULL
-                    </if>
+
+                  <if test="bsMonth != null and bsMonth !=''">
+	                        <if test="bsMonth == 1">
+	                            AND I.MONTH IS NOT NULL
+		                    </if>
+		                    <if test="bsMonth == 2">
+		                        AND I.MONTH IS NULL
+		                    </if>
+
+                  </if>
                     <if test="payMode != null and payMode !='' ">
                         AND J.PAY_MODE_ID IN
                         <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
