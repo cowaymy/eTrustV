@@ -41,6 +41,8 @@
                     $("#inHouseRepair_div").attr("style", "display:none");
                 }
 
+                $("#dscCode").val("${DSC_CODE}");
+
     });
 
     function fn_inHouseAutoClose() {
