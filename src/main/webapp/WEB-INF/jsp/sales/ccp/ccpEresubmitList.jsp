@@ -16,9 +16,11 @@
         AUIGrid.bind(myGridResID, "cellDoubleClick", function(event){
             var ordId = event.item.salesOrdId;
             var ccpId = event.item.ccpId;
+            var funcChange = '${PAGE_AUTH.funcChange}';
+
             $("#ccpId").val(event.item.ccpId);
             $("#salesOrdId").val(event.item.salesOrdId);
-            Common.popupDiv("/sales/ccp/ccpEresubmitViewEditPop.do", {salesOrdId : ordId,ccpId : ccpId}, null, true, 'detailPop');
+            Common.popupDiv("/sales/ccp/ccpEresubmitViewEditPop.do", {salesOrdId : ordId,ccpId : ccpId,funcChange:funcChange}, null, true, 'detailPop');
         });
 
      // 셀 더블클릭 이벤트 바인딩

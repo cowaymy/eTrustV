@@ -70,7 +70,8 @@ $(document).ready(function(){
     $("#ORD_NO_RESULT").attr("style","display:inline");
     $("#resultcontens").attr("style","display:inline");
 
-    if('${ccpEresubmitMap.stusId}' != 6 || '${isModify}' == 'N'){
+    console.log('auth change ' + '${funcChange}');
+    if('${ccpEresubmitMap.stusId}' != 6 || '${isModify}' == 'N' || '${funcChange}' != 'Y'){
         var elements = document.getElementsByClassName("attach_mod");
         for(var i = 0; i < elements.length; i++) {
             elements[i].style.display="none";

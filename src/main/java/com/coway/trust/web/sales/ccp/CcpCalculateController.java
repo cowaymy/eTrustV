@@ -842,6 +842,7 @@ public class CcpCalculateController {
     	//Model
     	model.addAttribute("ccpId", ccpInfoMap.get("ccpId"));
     	model.addAttribute("isModify", ccpInfoMap.get("isModify"));
+    	model.addAttribute("funcChange", params.get("funcChange"));
     	model.addAttribute("orderDetail", orderDetail);
 //    	model.addAttribute("fieldMap", fieldMap);
 //    	model.addAttribute("incomMap", incomMap);
