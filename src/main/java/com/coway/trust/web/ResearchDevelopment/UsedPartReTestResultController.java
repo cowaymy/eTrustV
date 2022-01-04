@@ -259,6 +259,7 @@ public class UsedPartReTestResultController {
 	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
 	    model.put("RCD_TMS", (String) params.get("rcdTms"));
 	    model.put("DSC_CODE", (String) params.get("dsc_Code"));
+	    model.put("CT_CODE", (String) params.get("ct_Code"));
 	    params.put("testResultId", params.get("testResultId"));
 
 

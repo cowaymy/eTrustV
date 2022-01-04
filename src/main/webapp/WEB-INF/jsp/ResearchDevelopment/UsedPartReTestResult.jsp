@@ -397,7 +397,7 @@
      //     }
      //   });
 
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst + "&rcdTms=" + rcdTms */;
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode/* "&refReqst=" + refReqst +  "&as_Rst=" + asRst + "&rcdTms=" + rcdTms */;
         Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
       }
 

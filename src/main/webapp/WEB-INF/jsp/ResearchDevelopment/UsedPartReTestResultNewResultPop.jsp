@@ -42,6 +42,7 @@
                 }
 
                 $("#dscCode").val("${DSC_CODE}");
+                $("#ddlCTCodeText").val("${CT_CODE}");
 
     });
 
