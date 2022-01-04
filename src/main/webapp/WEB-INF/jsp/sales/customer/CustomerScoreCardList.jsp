@@ -218,6 +218,8 @@
 	    $("#form #V_NRIC").val(V_NRIC);
 	    $("#form #V_MEM_TYPE").val(V_MEM_TYPE);
 
+	    console.log($("#form").serializeJSON());
+
 	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 	    var option = {
 	            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -310,6 +312,7 @@
 	<input type="hidden" id="V_CUST_ID"	name="V_CUST_ID" value="" />
 	<input type="hidden" id="V_NRIC" name="V_NRIC" value="" />
 	<input type="hidden" id="v_WhereSQL" name="v_WhereSQL" value="" />
+	<input type="hidden" id="V_MEM_TYPE" name="V_MEM_TYPE" value="" />
 </form>
 	<section class="search_result">
 		<!-- search_result start -->
