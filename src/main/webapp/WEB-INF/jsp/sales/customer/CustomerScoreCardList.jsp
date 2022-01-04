@@ -189,7 +189,7 @@
 	    var v_WhereSQL = "";
 	    var V_CUST_ID = $("#custId").val().trim();
         var V_NRIC = $("#custIc").val().trim();
-
+        var V_MEM_TYPE = '${SESSION_INFO.userTypeId}';
         if(V_CUST_ID == null || V_CUST_ID.length == 0){
         	V_CUST_ID = 0;
         }
@@ -204,6 +204,7 @@
 	    console.log( "v_WhereSQL" + v_WhereSQL );
 	    console.log( "V_CUST_ID" + V_CUST_ID);
 	    console.log( "V_NRIC" + V_NRIC);
+	    console.log( "V_MEM_TYPE" + V_MEM_TYPE);
 	    var date = new Date().getDate();
 	    if(date.toString().length == 1){
 	        date = "0" + date;
@@ -215,6 +216,7 @@
 	    $("#form #v_WhereSQL").val(v_WhereSQL);
 	    $("#form #V_CUST_ID").val(V_CUST_ID);
 	    $("#form #V_NRIC").val(V_NRIC);
+	    $("#form #V_MEM_TYPE").val(V_MEM_TYPE);
 
 	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 	    var option = {
