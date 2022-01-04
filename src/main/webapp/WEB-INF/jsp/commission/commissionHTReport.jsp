@@ -96,9 +96,18 @@
                     return;
                 }
 
-                reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
-                reportDownFileName = "HTCommission_" + today; //report name
-                reportViewType = "PDF"; //viewType
+                if(year >= 2022)
+                {
+                	reportFileName = "/commission/HTCommission_PDF_2022.rpt"; //reportFileName
+                    reportDownFileName = "HTCommission_" + today; //report name
+                    reportViewType = "PDF"; //viewType
+                }
+                else
+                {
+                	reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
+                    reportDownFileName = "HTCommission_" + today; //report name
+                    reportViewType = "PDF"; //viewType
+                }
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');

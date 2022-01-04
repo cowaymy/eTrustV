@@ -588,6 +588,8 @@ public class CommissionCalculationController {
 			popName = "calculationData7002CDN_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P02)){
 			popName = "calculationData7002CDS_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDX_P02)){
+			popName = "calculationData7002CDX_Pop";
 		}
 		else if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P02)){
 			popName = "calculationData7002HPF_Pop";
@@ -601,6 +603,8 @@ public class CommissionCalculationController {
 			popName = "calculationData7002HPT_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02)){
 			popName = "calculationData7002HPB_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPX_P02)){
+			popName = "calculationData7002HPX_Pop";
 		}
 
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P01)){
@@ -614,6 +618,8 @@ public class CommissionCalculationController {
 			popName = "calculationData7001HTN_Pop";
 		}else if ((params.get("code")).equals(CommissionConstants.COMIS_HTN_P02)){
 			popName = "calculationData7002HTN_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTX_P02)){
+			popName = "calculationData7002HTX_Pop";
 		}
 
 
@@ -810,6 +816,9 @@ public class CommissionCalculationController {
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P02)){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
 		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_CDX_P02) ){
+			params.put("emplyLev", CommissionConstants.COMIS_CD_CD_LEV);
+		}
 
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
 
@@ -837,10 +846,14 @@ public class CommissionCalculationController {
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P02)){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
 		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_CDX_P02) ){
+			params.put("emplyLev", CommissionConstants.COMIS_CD_CD_LEV);
+		}
 
 		int cnt = commissionCalculationService.cntCMM0029D(params);
 		return ResponseEntity.ok(cnt);
 	}
+
 	/**
 	 * Search HP Data 7001
 	 *
@@ -923,6 +936,8 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SGM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
+		if((params.get("code")).equals(CommissionConstants.COMIS_HPX_P02))
+			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
 
 
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
@@ -1000,6 +1015,9 @@ public class CommissionCalculationController {
 		if((params.get("code")).equals(CommissionConstants.COMIS_HTN_P02) ){
 			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
 			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
+		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTX_P02) ){
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
 		}
 
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);

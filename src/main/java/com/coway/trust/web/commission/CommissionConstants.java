@@ -110,6 +110,7 @@ public class CommissionConstants {
 	public static final String COMIS_CDM_P02 = "CDM-P02";					//
 	public static final String COMIS_CDN_P02 = "CDN-P02";					//
 	public static final String COMIS_CDS_P02 = "CDS-P02";					//
+	public static final String COMIS_CDX_P02 = "CDX-P02";					//
 
 	public static final String COMIS_HPF_P01 = "HPF-P01";					//
 	public static final String COMIS_HPG_P01 = "HPG-P01";					//
@@ -123,6 +124,7 @@ public class CommissionConstants {
 	public static final String COMIS_HPT_P02 = "HPT-P02";					//
 	public static final String COMIS_HPB_P01 = "HPB-P01";					//
 	public static final String COMIS_HPB_P02 = "HPB-P02";					//
+	public static final String COMIS_HPX_P02 = "HPX-P02";					//
 
 	public static final String COMIS_BSD_P01 = "BSD-P01";					//CMM0006T
 	public static final String COMIS_BSD_P02 = "BSD-P02";					//CMM0007T
@@ -154,6 +156,7 @@ public class CommissionConstants {
 	// Added for HT commission by Hui Ding, 2020-12-08
 	public static final String COMIS_HTN_P01 = "HTN-P01"; 					//7001HT
 	public static final String COMIS_HTN_P02	 = "HTN-P02";						//7002HT
+	public static final String COMIS_HTX_P02	 = "HTX-P02";						//7002HT
 
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
 

@@ -121,7 +121,11 @@
                 }
 console.log(month);
 console.log(year);
-            if (month >= 9 && year >= 2020 || year > 2020){
+            if(year >= 2022)
+            {
+            	reportFileName = "/commission/CodyComm_PDF_2022.rpt"; //reportFileName
+            }
+            else if (month >= 9 && year >= 2020 || year > 2020){
 
             	console.log(1);
                reportFileName = "/commission/CodyComm_PDF_202010.rpt"; //reportFileName

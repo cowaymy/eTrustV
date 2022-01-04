@@ -131,12 +131,16 @@
 			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
 				}else{
-					 if (month >= 10 && year >= 2018 || year > 2018){
-		                    reportFileName = "/commission/HPComm_PDF_201810.rpt"; //reportFileName
-			            }
-			            else{
-		                    reportFileName = "/commission/HPComm_PDF.rpt"; //reportFileName
-			            }
+					if(year >= 2022)
+					{
+						reportFileName = "/commission/HPComm_PDF_2022.rpt"; //reportFileName
+					}
+					else if (month >= 10 && year >= 2018 || year > 2018){
+						reportFileName = "/commission/HPComm_PDF_201810.rpt"; //reportFileName
+					}
+					else{
+						reportFileName = "/commission/HPComm_PDF.rpt"; //reportFileName
+					}
 					 //set parameters
 			     $($reportForm).append('<input type="hidden" id="Memcode" name="Memcode" value="" /> ');
 			     $($reportForm).append('<input type="hidden" id="Month" name="Month" value="" /> ');
