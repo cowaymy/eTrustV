@@ -73,6 +73,7 @@
       // SP_CR_GEN_INS_RAWDATA_EXCEL
       $("#installationRawDataForm #V_WHERESQL").val(whereSql);
       $("#installationRawDataForm #V_SELECTSQL").val('');
+      $("#installationRawDataForm #V_WHERESQL_2").val('');
       $("#installationRawDataForm #reportFileName").val('/services/InstallationRawData_Excel.rpt');
       $("#installationRawDataForm #viewType").val("EXCEL");
       $("#installationRawDataForm #reportDownFileName").val("InstallationRawData_" + day + month + date.getFullYear());
@@ -125,6 +126,7 @@
    <form action="#" method="post" id="installationRawDataForm">
     <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> <input
      type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" />
+    <input type="hidden" id="V_WHERESQL_2" name="V_WHERESQL_2" />
     <!--reportFileName,  viewType 모든 레포트 필수값 -->
     <input type="hidden" id="reportFileName" name="reportFileName" /> <input
      type="hidden" id="viewType" name="viewType" /> <input
