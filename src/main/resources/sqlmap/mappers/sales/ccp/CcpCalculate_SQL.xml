@@ -1648,6 +1648,7 @@ AND T1.CNT = 1
 	            , UPD_DT
 	            , UPD_USER_ID
 	            , ATCH_FILE_GRP_ID
+	            , REMARKS
 	            )
 	            values
 	            (#{ezyDocNo}
@@ -1659,6 +1660,7 @@ AND T1.CNT = 1
 	            , SYSDATE
 	            , #{userId}
 	            , #{atchFileGrpId}
+	            , #{remarks}
 	            )
 	</insert>
 
@@ -1699,12 +1701,17 @@ AND T1.CNT = 1
    sales_ord_id,
    ccp_id,
    stus_id,
-   ATCH_FILE_GRP_ID
+   ATCH_FILE_GRP_ID,
+   remarks
    from SAL0304D where sales_ord_id = #{salesOrdId} and ccp_id = #{ccpId}
 </select>
 
 <update id="updateCcpEresubmitStus" parameterType="Map">
-            UPDATE SAL0304D set stus_id = #{eRstatusEdit},upd_dt = SYSDATE
+            UPDATE SAL0304D set stus_id = #{eRstatusEdit}
+            <if test="null != remarks">
+            ,remarks = #{remarks}
+            </if>
+            ,upd_dt = SYSDATE
             ,UPD_USER_ID = #{userId}
             where sales_ord_id = #{saveOrdId} and ccp_id = #{saveCcpId}
 </update>

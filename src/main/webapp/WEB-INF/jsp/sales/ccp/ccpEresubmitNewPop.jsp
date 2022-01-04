@@ -185,6 +185,7 @@ function setText(result){
     if(result.orderDetail.prodUsgMthInfo != null){
         $("#productUsageMonth").html(result.orderDetail.prodUsgMthInfo.productUsageMonth);
     }
+    $("#remarks").text('${ccpEresubmitMap.remarks}');
 }
 
 function fn_save(){
@@ -195,6 +196,7 @@ function fn_save(){
     formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
     formData.append("salesOrdId",'${result.ccpEresubmitMap.salesOrdId}');
     formData.append("ccpId",'${result.ccpEresubmitMap.ccpId}');
+    var remarks = $("#remarks").val();
 
     var salesmanCode = '${SESSION_INFO.userName}';
 
@@ -219,7 +221,7 @@ function fn_save(){
                 }else{
                    // DO SAVE BUTTON ACTION
                    var atchFileGrpId = result.data.fileGroupKey;
-                    Common.ajax("POST", "/sales/ccp/ccpEresubmitSave", {ordId : ordId,ccpId : ccpId, atchFileGrpId : atchFileGrpId}, function(result) {
+                    Common.ajax("POST", "/sales/ccp/ccpEresubmitSave", {ordId : ordId,ccpId : ccpId, atchFileGrpId : atchFileGrpId, remarks : remarks}, function(result) {
                         console.log( result);
 
                         if(result == null){
@@ -755,7 +757,12 @@ function fn_removeFile(name){
                 </div>
             </td>
         </tr>
-
+        <tr>
+		<th scope="row">Remarks :</th>
+			<td>
+			 <input type="text" title="Remarks" placeholder="" id="remarks" name="remarks"  maxlength="200"/>
+			</td>
+		</tr>
         <tr>
             <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
         </tr>

@@ -61,6 +61,7 @@ $(document).ready(function(){
     if('${ccpEresubmitMap.atchFileGrpId}' != 0){
         fn_loadAtchment('${ccpEresubmitMap.atchFileGrpId}');
     }
+    $("#remarks").text('${ccpEresubmitMap.remarks}');
 
     $("#cbt").attr("style","display:none");
     $("#ORD_NO_P").attr("style","display:none");
@@ -76,6 +77,7 @@ $(document).ready(function(){
         }
 
         $("#saveBtn").attr("style","display:none");
+        $("#remarks").attr({"disabled" : "disabled"});
     }
 });
 
@@ -128,8 +130,9 @@ function fn_doClearPersion(){
 
         	var ordId = '${ccpEresubmitMap.salesOrdId}';
             var ccpId = '${ccpEresubmitMap.ccpId}';
+            var remarks = $("#remarks").val();
 
-        	Common.ajax("POST", "/sales/ccp/ccpEresubmitUpdate", {saveOrdId : ordId,saveCcpId : ccpId, eRstatusEdit : 1}, function(result) {
+        	Common.ajax("POST", "/sales/ccp/ccpEresubmitUpdate", {saveOrdId : ordId,saveCcpId : ccpId, eRstatusEdit : 1, remarks : remarks}, function(result) {
                 console.log( result);
 
                 if(result == null){
@@ -756,7 +759,13 @@ function fn_doClearPersion(){
                 </div>
             </td>
         </tr>
-
+        <tr>
+        <th scope="row">Remarks :</th>
+            <td>
+             <!-- <input type="text" title="Remarks" placeholder="" id="remarks" name="remarks"  maxlength="200"/> -->
+             <textarea cols="20" name="" id="remarks" rows="5" placeholder="" style="width: 250px;height: 80px;" maxlength="200"></textarea>
+            </td>
+        </tr>
         <tr>
             <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
         </tr>
