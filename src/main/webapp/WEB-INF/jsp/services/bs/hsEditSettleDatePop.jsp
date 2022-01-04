@@ -667,7 +667,7 @@ function fn_chkDt(obj) {
         return;
     }
 
-    var sDate = (vdte).split("/");
+   /*  var sDate = (vdte).split("/");
     var tDate = new Date();
     var tMth = tDate.getMonth() + 1; //1-12
     var tYear = tDate.getFullYear();
@@ -684,9 +684,7 @@ function fn_chkDt(obj) {
             $(obj).val("");
             return;
         }
-    }
-
-
+    } */
 }
 
 </script>
