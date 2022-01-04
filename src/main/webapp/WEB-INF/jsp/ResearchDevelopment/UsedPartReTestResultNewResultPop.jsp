@@ -501,7 +501,7 @@
 
         $("#ddlCTCode").val(selectedItems[0].item.asMemId);
         $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-        $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+        $("#ddlCTCodeText").val(selectedItems[0].item.lastInstallCtCode);
         $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
 
         switch ($("#ddlStatus").val()) {
