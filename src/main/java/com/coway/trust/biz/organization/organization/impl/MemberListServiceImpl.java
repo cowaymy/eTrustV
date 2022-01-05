@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
 
@@ -37,7 +38,12 @@ import com.coway.trust.api.project.LMS.LMSApiRespForm;
 import com.coway.trust.api.project.LMS.LMSMemApiForm;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.LMSApiService;
+import com.coway.trust.biz.application.impl.FileApplicationImpl;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.FileGroupVO;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.impl.FileMapper;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
@@ -2746,4 +2752,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public List<EgovMap> selectTrApplByEmail(Map<String, Object> params) {
         return memberListMapper.selectTrApplByEmail(params);
     }
+
+	//added by keyi social media
+	public EgovMap  selectSocialMedia(Map<String, Object> params) {
+	    return memberListMapper.selectSocialMedia(params);
+	}
+
+	@Override
+	public void updateSocialMedia(Map<String, Object> params)  throws Exception {
+	    memberListMapper.updateSocialMedia(params);
+	}
 }

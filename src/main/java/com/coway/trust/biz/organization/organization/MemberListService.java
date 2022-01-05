@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
@@ -241,5 +243,9 @@ public interface MemberListService {
 	void updateVaccineDeclaration(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectTrApplByEmail(Map<String, Object> params);
+
+	EgovMap selectSocialMedia(Map<String, Object> params);
+
+	void updateSocialMedia(Map<String, Object> params) throws Exception;
 
 }

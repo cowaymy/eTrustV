@@ -345,5 +345,10 @@ public interface MemberListMapper {
 	void updateVaccineDeclaration(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectTrApplByEmail(Map<String, Object> params);
+
 	void updateMemberEmail(Map<String, Object> params);
+
+	EgovMap selectSocialMedia(Map<String, Object> params);
+
+	void updateSocialMedia(Map<String, Object> params) throws Exception;
 }

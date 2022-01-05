@@ -634,7 +634,9 @@
        Limit1.APLICNT_MEETPOINT,
        Limit1.MOBILE_USE_YN,
        Limit1.NO_TBB
-       ,Limit1.INC_TAX
+       ,Limit1.INC_TAX,
+       Limit1.FB_LINK,
+       Limit1.IG_LINK
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -979,7 +981,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 Extent1.MOBILE_USE_YN,
                 Extent1.NO_TBB
-                ,Extent1.INC_TAX
+                ,Extent1.INC_TAX,
+                Extent1.FB_LINK,
+                Extent1.IG_LINK
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -5590,7 +5594,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            WHERE  MEM_ID = #{memberID}
      </update>
 
-
      <!-- HLTANG - LMS project usage -->
     <select id="selectTrApplByEmail" parameterType="Map" resultType="egovMap">
         SELECT
@@ -5600,4 +5603,37 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
     <update id="updateMemberEmail" parameterType="Map">
      UPDATE ORG0001D SET EMAIL = #{email} WHERE MEM_ID = #{memberID}
     </update>
+
+     <select id="selectSocialMedia" parameterType="Map" resultType="egovMap">
+        SELECT
+			MEM_ID,
+			MEM_CODE,
+			MEM_TYPE,
+			STUS,
+			FB_LINK,
+			IG_LINK,
+			PHOTO_ID,
+	        B.ATCH_FILE_GRP_ID,
+	        C.ATCH_FILE_ID,
+	        C.ATCH_FILE_NAME,
+	        C.FILE_SUB_PATH,
+	        C.PHYSICL_FILE_NAME
+		FROM ORG0001D A
+            LEFT JOIN SYS0070M B ON B.ATCH_FILE_GRP_ID = A.PHOTO_ID
+            LEFT JOIN SYS0071D C ON C.ATCH_FILE_ID = B.ATCH_FILE_ID
+		WHERE
+	       MEM_ID = #{MemberID}
+    </select>
+
+     <update id="updateSocialMedia" parameterType="Map">
+	     UPDATE ORG0001D
+	     SET
+	        FB_LINK = #{fbLink},
+	        IG_LINK =  #{igLink},
+	        PHOTO_ID = #{photoId}
+	     WHERE
+	        MEM_ID = #{MemberID}
+    </update>
+
+
 </mapper>

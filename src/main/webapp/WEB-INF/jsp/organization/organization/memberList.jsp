@@ -449,10 +449,10 @@ $(document).ready(function() {
    // AUIGrid.setSelectionMode(myGridID, "singleRow");
 
  // 셀 더블클릭 이벤트 바인딩
-      AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
             Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-        });
+     });
 
      AUIGrid.bind(myGridID, "cellClick", function(event) {
         selRowIndex = event.rowIndex;
@@ -679,18 +679,14 @@ function createAUIGrid() {
         myGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
     }
 
-
-
-
-
 function fn_memberEditPop(){
-         Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
-
-       }
+    console.log("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+    Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+}
 
 function fn_branchEditPop(){
      Common.popupDiv("/organization/memberListBranchEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
-   }
+}
 
 function fn_searchPosition(selectedData){
     $("#position option").remove();
@@ -965,6 +961,32 @@ $(function() {
     }
 });
 
+function fn_socialMediaInfo(){
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+
+    var status = selectedItems[0].item.status;
+    var memberid = selectedItems[0].item.memberid;
+    var memberType = selectedItems[0].item.membertype;
+    var membercode = selectedItems[0].item.membercode;
+
+    if(selectedItems == null || selectedItems.length <= 0 ){
+        Common.alert('<spring:message code="service.msg.NoRcd"/>');
+        return;
+    }
+
+    if (memberType != 1) {
+        Common.alert("Social media info only allowed for HP. ");
+        return;
+    }
+
+    if (status != 1) {
+        Common.alert("Social media info only allowed for active HP. ");
+        return;
+    }
+
+ Common.popupDiv("/organization/memberSocialMediaPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+}
+
 </script>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -1009,6 +1031,9 @@ $(function() {
  <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpApproval()">HP Approval</a></p></li>
 </c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine16 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_socialMediaInfo()">Social Media Info</a></p></li>
+</c:if>
  <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_addMemberValidDate()">Member Valid date</a></p></li>
 </c:if>
@@ -1018,6 +1043,7 @@ $(function() {
  <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_genRawData()">Raw Data Download</a></p></li>
 </c:if>
+
 </ul>
 </aside><!-- title_line end -->
 

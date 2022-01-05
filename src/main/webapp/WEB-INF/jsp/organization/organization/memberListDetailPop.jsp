@@ -28,12 +28,19 @@ console.log("ter-res-pro-dem pop");
     fn_selectRenewalHistory();
     fn_selectTraining();
     fn_selectLoyaltyHPUploadDetailListForMember();
+    fn_selectMemberPhoto();
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
     //cody 를 제외하고 Pa Renewal History 와 Cody PA Expired 안보이기 숨긴다
     if($("#memtype").val() != 2){
     	$("#hideContent").hide();
     	$(".hideContent").hide();
+    }
+
+    //FB Link and IG Link for HP
+    if($("#memtype").val() != 1){
+    	$(".hideContent3").hide();
+        //$(".hideContent3").hide();
     }
 
     var bankId = $("#bank").val();
@@ -110,7 +117,6 @@ console.log("ter-res-pro-dem pop");
 
                 }
     		  // if(lvlTo == 3 && memberTypeID == 2) $("select[name=branchCode]").removeAttr('disabled')
-
 	   }
 	});
 
@@ -701,12 +707,6 @@ function fn_selectLoyaltyHPUploadDetailListForMember(){
     });
 }
 
-
-
-
-
-
-
 function fn_selectPromote(){
 
     var jsonObj = {
@@ -714,7 +714,6 @@ function fn_selectPromote(){
             MemberType : $("#memtype").val()
 
     };
-
 
     Common.ajax("GET", "/organization/selectPromote",jsonObj, function(result) {
         console.log("성공.");
@@ -762,7 +761,6 @@ function fn_requestTermiReSave(val){
             }
         }
 
-
         Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestProDeForm").serializeJSON(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
@@ -775,7 +773,49 @@ function fn_winClose(){
 
     this.close();
 }
+
+function fn_selectMemberPhoto(){
+	 var data = {
+			 memId : '${memberView.memId}'
+     };
+
+	Common.ajax("GET", "/organization/getAttachmentInfo.do?_cacheId=" + Math.random(), data, function(result) {
+		 var img = document.createElement("img");
+		 var src = document.getElementById("HP_img");
+		 var fileSubPath = result.fileSubPath;
+
+		if(fileSubPath != null){
+	        fileSubPath = fileSubPath.replace('\', '/'');
+
+	        img.src = DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName;
+	        img.style.height = '10%';
+	        img.style.width = '100px';
+	        src.appendChild(img);
+		}
+    });
+}
+
+$("#HP_img").dblclick(function(){
+    var data = {
+            memId : '${memberView.memId}'
+    };
+   Common.ajax("GET", "/organization/getAttachmentInfo.do", data, function(result) {
+       console.log(result);
+       var fileSubPath = result.fileSubPath;
+       fileSubPath = fileSubPath.replace('\', '/'');
+       window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+   });
+});
 </script>
+
+<style>
+.table_hpimg{
+        display:table;
+        width:90%;
+        table-layout: fixed;
+        border-spacing: 10px;
+}
+</style>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -788,9 +828,12 @@ function fn_winClose(){
 
 <section class="pop_body"><!-- pop_body start -->
 
-<aside class="title_line"><!-- title_line start -->
-<h4>Member Information</h4>
+<aside class="title_line table_hpimg"><!-- title_line start -->
+<h1 style="display: table-cell;width: 90%">Member Information</h1>
+<!-- HP Photo -->
+<div id="HP_img" class="hideContent3" style="display: table-cell; float: right; width: 10%;"></div>
 </aside><!-- title_line end -->
+
  <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue"/>
  <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
@@ -806,7 +849,7 @@ function fn_winClose(){
     <li><a href="#" >Promote/Demote History</a></li>
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
     <li><a href="#" >Training</a></li>
-        <li><a href="#" >HP Loyalty Status</a></li>
+    <li><a href="#" >HP Loyalty Status</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -819,7 +862,6 @@ function fn_winClose(){
     </div>
 </h2>
 </aside><!-- title_line end -->
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1080,14 +1122,10 @@ function fn_winClose(){
     <td>
     <span><span><c:out value="${memberView.subDept}"/></span></span>
     </td>
-
-
-
-
 </tr>
 <tr>
 <th scope="row" class="hideContent">Cody PA Expired</th>
-    <td class="hideContent">
+    <td class="hideContent" colspan="5">
     <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>
     </td>
 </tr>
@@ -1096,6 +1134,18 @@ function fn_winClose(){
     <td colspan="5">
     <span><span>emall.coway.com.my/?agentcode=<c:out value="${memberView.memCode}"/></span></span>
     <!--  <a href="https://coway-uat.ascentisecommerce.com/?agentcode=" +${memberView.memCode}>https://coway-uat.ascentisecommerce.com/?agentcode=<c:out value="${memberView.memCode}"/></a>-->
+    </td>
+</tr>
+<tr>
+<th scope="row"  class="hideContent3">FB Link</th>
+    <td class="hideContent3" colspan="5">
+    <span><c:out value="${memberView.fbLink}"/></span>
+    </td>
+</tr>
+<tr>
+<th scope="row" class="hideContent3">IG Link</th>
+    <td class="hideContent3" colspan="5">
+    <span><c:out value="${memberView.igLink}"/></span>
     </td>
 </tr>
 </tbody>
@@ -1450,7 +1500,6 @@ function fn_winClose(){
     <th scope="row">Remark</th>
     <td colspan="3">
     <textarea cols="20" rows="5" id="remark1" name="remark1" ></textarea>
-
 </tr>
 </tbody>
 </table><!-- table end -->

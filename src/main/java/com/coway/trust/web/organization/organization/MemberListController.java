@@ -1,12 +1,15 @@
 package com.coway.trust.web.organization.organization;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,9 +35,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.api.LMSApiService;
+import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.logistics.organization.LocationService;
 import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
@@ -42,6 +51,8 @@ import com.coway.trust.biz.organization.organization.eHPmemberListService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -50,12 +61,12 @@ import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-
 
 @Controller
 @RequestMapping(value = "/organization")
@@ -97,6 +108,16 @@ public class MemberListController {
 
     @Autowired
     private CsvReadComponent csvReadComponent;
+
+    //Added by keyi HP social media
+	@Value("${web.resource.upload.file}")
+	private String uploadDir;
+
+	@Autowired
+	private FileApplication fileApplication;
+
+	@Autowired
+	private WebInvoiceService webInvoiceService;
 
 	/**
 	 * Call commission rule book management Page
@@ -274,10 +295,8 @@ public class MemberListController {
 	@RequestMapping(value = "/selectMemberListDetailPop.do")
 	public String selectMemberListDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-
 		logger.debug("selCompensation in.............");
-		logger.debug("params : {}", params);
-
+		logger.debug("params: {}", params);
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
@@ -288,12 +307,13 @@ public class MemberListController {
 		}else {
 			selectMemberListView = memberListService.selectMemberListView(params);
 		}
+
 		//EgovMap selectMemberListView = memberListService.selectMemberListView(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
 		logger.debug("PAExpired : {}", PAExpired);
-		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("selectMemberListView111 : {}", selectMemberListView);
 		logger.debug("issuedBank : {}", selectIssuedBank);
 		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		model.addAttribute("PAExpired", PAExpired);
@@ -2514,5 +2534,96 @@ logger.debug("params : {}", params);
 
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/memberSocialMediaPop.do")
+	public String memberSocialMediaPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		params.put("MemberID", params.get("MemberID"));
+
+        model.addAttribute("userRoleId", sessionVO.getRoleId());
+		model.addAttribute("memType", params.get("memType"));
+		model.addAttribute("MemberID", params.get("MemberID"));
+
+		return "organization/organization/memberSocialMediaPop";
+	}
+
+    @RequestMapping(value = "/selectSocialMedia.do")
+	public ResponseEntity<Map<String, Object>> selectSocialMedia(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+    	logger.debug("==================== selectSocialMedia ====================");
+
+		params.put("memberID", params.get("memberid"));
+
+		EgovMap socialMedia = memberListService.selectSocialMedia(params);
+
+        model.addAttribute("memCode", socialMedia.get("memCode"));
+		model.addAttribute("memType", params.get("memType"));
+		model.addAttribute("fbLink", socialMedia.get("fbLink"));
+		model.addAttribute("igLink", socialMedia.get("igLink"));
+		model.addAttribute("photoId", socialMedia.get("photoId"));
+		model.addAttribute("fileSubPath", socialMedia.get("fileSubPath"));
+		model.addAttribute("physiclFileName", socialMedia.get("physiclFileName"));
+
+		return ResponseEntity.ok(model);
+	}
+
+    @RequestMapping(value = "/updateSocialMedia.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> updateSocialMedia(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO)
+	          throws Exception {
+
+  		logger.debug("==================== updateSocialMedia.do ====================");
+  		logger.debug("params1111" + params);
+
+  		String atchSubPath = generateAttchmtSubPath();
+
+	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, atchSubPath, AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+	    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+	    logger.debug("== REQUEST FILE LISTING {} ", list);
+	    logger.debug("== REQUEST FILE SIZE " + list.size());
+
+	    if (list.size() > 0) {
+	      params.put("fileName", list.get(0).getServerSubPath() + list.get(0).getFileName());
+	      int fileGroupKey = fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+	      params.put("photoId", fileGroupKey);
+	    }
+
+	    memberListService.updateSocialMedia(params);
+
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	    return ResponseEntity.ok(message);
+	}
+
+    public String generateAttchmtSubPath(){
+		Date today = new Date();
+		SimpleDateFormat formatAttchtDt = new SimpleDateFormat("yyyyMMdd");
+		String dt = formatAttchtDt.format(today);
+		String subPath = File.separator + "mem_HP" + File.separator  + dt.substring(0, 4) + File.separator + dt.substring(0, 6);
+		return subPath;
+	}
+
+
+
+    @RequestMapping(value = "/getAttachmentInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getAttachmentInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    	logger.debug("params =====================================>>  " + params);
+
+    	params.put("MemberID", params.get("memId"));
+
+    	EgovMap socialMedia = memberListService.selectSocialMedia(params);
+
+		Map<String, Object> attachInfo = new HashMap<String, Object>();
+		attachInfo.put("atchFileGrpId", socialMedia.get("atchFileGrpId"));
+		attachInfo.put("atchFileId", socialMedia.get("atchFileId"));
+
+		Map<String, Object> fileInfo = webInvoiceService.selectAttachmentInfo(attachInfo);
+
+		return ResponseEntity.ok(fileInfo);
+	}
 }
 
