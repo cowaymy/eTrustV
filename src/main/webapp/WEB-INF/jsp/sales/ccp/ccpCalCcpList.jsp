@@ -154,19 +154,28 @@ function fn_searchListAjax(){
 	var startDate = $('#calStartDate').val();
     var endDate = $('#calEndDate').val();
     var isValid = true , msg = "";
+    var nric = $('#calNric').val();
+    var ordNo = $('#calOrdNo').val();
+    var ordRefNo = $('#calOrdRefNo').val();
 
     console.log("startDate :" + startDate);
     console.log("endDate :" + endDate);
+    console.log("nric :" + nric);
+    console.log("ordNo :" + ordNo);
+    console.log("ordRefNo :" + ordRefNo);
 
-    if (startDate == '' || endDate == ''){
-        Common.alert("Order Date is required.");
-        return;
-    }
-
-    if( fn_getDateGap(startDate , endDate) > 6){
-        Common.alert("Start date can not be more than 6 months before the end date.");
-        return;
-    }
+    if (nric == '' && ordNo == '' && ordRefNo == '' ){
+        if (startDate == '' || endDate == ''){
+             Common.alert("Order Date is required.");
+             return;
+         }else if( fn_getDateGap(startDate , endDate) > 6){
+                 Common.alert("Start date can not be more than 6 months before the end date.");
+                 return;
+             }else if( fn_getDateGap(startDate , endDate) < 6){
+                 Common.alert("Start date can not be less than 6 months before the end date.");
+                 return;
+             }
+     }
 
     if(!FormUtil.isEmpty($('#calCustName').val())) {
         $('#calCustName').val($('#calCustName').val().toUpperCase());
@@ -515,7 +524,7 @@ function popup(location){
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.ordNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  name="calOrdNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  name="calOrdNo" id = "calOrdNo"/></td>
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
@@ -547,7 +556,7 @@ function popup(location){
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  name="calNric"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  name="calNric" id = "calNric"/></td>
     <th scope="row"><spring:message code="sal.title.text.actionPoint" /></th>
     <td>
     <select class="w100p" name="calActPoint">
@@ -570,7 +579,7 @@ function popup(location){
     <select class="w100p" name="calScheme" id="_calScheme"></select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.ordRefNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  name="calOrdRefNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  name="calOrdRefNo" id ="calOrdRefNo"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.region" /></th>
