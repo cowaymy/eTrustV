@@ -372,9 +372,9 @@ public class LoginController {
 					params.put("roleId", item1.get("roleType"));
 					params.put("popType", "A");
 
-					if("115".equals(item1.get("roleType")) ||
+					if(consentExist > 0 && ("115".equals(item1.get("roleType")) ||
 					   "121".equals(item1.get("roleType")) ||
-					   "352".equals(item1.get("roleType")) || "352".equals(item1.get("roleType"))
+					   "352".equals(item1.get("roleType")) || "351".equals(item1.get("roleType")))
 					  ) {
 					    params.put("consentFlg", "Y");
 					}
@@ -721,6 +721,7 @@ public class LoginController {
 
 	@RequestMapping(value = "/popAccept.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> popAccept(@RequestParam Map<String, Object> params, ModelMap model) {
+	    LOGGER.debug("========== popAccent.do ==========");
 	    LOGGER.debug("params : {}", params);
 
 	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
