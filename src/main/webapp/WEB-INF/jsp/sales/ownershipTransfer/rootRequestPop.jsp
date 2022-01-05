@@ -233,6 +233,7 @@
 			}, null, true);
 		});
 
+
 		$('#btnAddAddress').click(function() {
 			Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {
 				custId : $('#txtHiddenCustIDOwnt').val(),
@@ -492,6 +493,7 @@
 				callPrgm : "ORD_REGISTER_BILL_PRF"
 			}, null, true);
 		});
+
 
 		$('#billMthdPost').change(function() {
 			$('#hiddenBillMthdPost').val("0");
@@ -1372,7 +1374,6 @@
 					msg += '* <spring:message code="sal.alert.msg.plzSelBillGrp" /><br>';
 				}
 			} else {
-
 				console.log('billMthdSms  checked:'
 						+ $("#billMthdSms").is(":checked"));
 				console.log('billMthdPost checked:'
@@ -1917,6 +1918,8 @@
 						<ul class="tap_type1 num4">
 							<li id="tabCT"><a href="#" class="on"><spring:message
 										code="sal.title.text.customer" /></a></li>
+<%--                             <li id="tabRQ"><a href="#" ><spring:message --%>
+<%--                                         code="sal.text.requestor" /></a></li> --%>
 							<li id="tabMA"><a href="#"><spring:message
 										code="sal.title.text.mailingAddr" /></a></li>
 							<li id="tabCP"><a href="#"><spring:message
@@ -2039,6 +2042,11 @@
 						</article>
 
 						<!-- tap_area end -->
+
+
+
+
+
 						<article class="tap_area">
 							<!-- tap_area start -->
 							<section class="search_table">

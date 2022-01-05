@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 	var rotID, rotNo, rotOrdId, rotOrdNo, ccpID;
-	var rootGridID;
+	var search_rootGridID;
 	var ownershipTransferColumn = [ {
 		dataField : "rotId",
 		visible : false
@@ -53,7 +53,7 @@
 		width : 140
 	}, {
 		dataField : "ccpRem",
-		headerText : "Special Remark",
+		headerText : "ROT Remark",
 		width : 140
 	}, {
 		dataField : "rotUpdDt",
@@ -66,15 +66,17 @@
 		pageRowCount : 20,
 		editable : false,
 		showRowNumColumn : true,
-		showStateColumn : false
+		showStateColumn : false,
+		wordWrap :  true
 	};
 
 	$(document).ready(
 			function() {
 				console.log("ready :: rotList");
 				//rootGridID = GridCommon.createAUIGrid("grid_wrap", ownershipTransferColumn, '', ownershipTransferGridPros);
-				rootGridID = AUIGrid.create("#grid_wrap",
+				search_rootGridID = AUIGrid.create("#search_grid_wrap",
 						ownershipTransferColumn, ownershipTransferGridPros);
+
 
 				doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ',
 						'', 'rotReqBrnch', 'M', 'fn_multiCombo'); //Branch Code
@@ -95,17 +97,33 @@
 				fn_setGridEvent();
 			});
 
+
+
 	function fn_setGridEvent() {
-		AUIGrid.bind(rootGridID, "cellClick", function(e) {
-			console.log("rootList :: cellClick :: rowIndex :: " + e.rowIndex);
-			console.log("rootList :: cellClick :: rotId :: " + e.item.rotId);
-			console.log("rootList :: cellClick :: rotNo :: " + e.item.rotNo);
-			rotId = e.item.rotId;
-			rotNo = e.item.rotNo;
-			rotOrdId = e.item.rotOrdId;
-			rotOrdNo = e.item.rotOrdNo;
-			ccpID = e.item.ccpId;
+		AUIGrid.bind(search_rootGridID, "cellDoubleClick", function(e) {
+	        if (rotId != "" && rotId != null) {
+	            var data = {
+	                rotId : rotId,
+	                rotNo : rotNo,
+	                salesOrdId : rotOrdId,
+	                salesOrdNo : rotOrdNo,
+	                ccpId : ccpID
+	            };
+
+	            Common.popupDiv("/sales/ownershipTransfer/updateROT.do", data,
+	                    null, true, "fn_updateROT");
+	        }
 		});
+        AUIGrid.bind(search_rootGridID, "cellClick", function(e) {
+            console.log("rootList :: cellClick :: rowIndex :: " + e.rowIndex);
+            console.log("rootList :: cellClick :: rotId :: " + e.item.rotId);
+            console.log("rootList :: cellClick :: rotNo :: " + e.item.rotNo);
+            rotId = e.item.rotId;
+            rotNo = e.item.rotNo;
+            rotOrdId = e.item.rotOrdId;
+            rotOrdNo = e.item.rotOrdNo;
+            ccpID = e.item.ccpId;
+        });
 	}
 
 	function fn_multiCombo() {
@@ -157,8 +175,8 @@
 	function fn_searchROT() {
 		Common.ajax("GET", "/sales/ownershipTransfer/selectRootList.do", $(
 				"#searchForm").serialize(), function(result) {
-			console.log(result);
-			AUIGrid.setGridData(rootGridID, result);
+			AUIGrid.setGridData(search_rootGridID, result);
+
 		});
 	}
 
@@ -167,24 +185,24 @@
 		Common.popupDiv("/sales/ownershipTransfer/requestROT.do", {
 			salesOrderId : salesOrderId
 		}, null, true, "requestROTPop");
-		$("#ordSearch_popup").remove();
 	}
 
 	function fn_requestROTSearchOrder() {
-		console.log("fn_requestROT");
+		console.log("fn_requestROTSearchOrder");
 		Common.popupDiv("/sales/ownershipTransfer/requestROTSearchOrder.do",
 				null, null, true, "rotOrdNoSearchPop");
+
 	}
 
 	function fn_requestROT_d(salesOrderId) {
 		Common.popupDiv("/sales/ownershipTransfer/requestROT_d.do", {
 			salesOrderId : salesOrderId
 		}, null, true, "requestROT");
-		$("#ordSearch_popup").remove();
 	}
 
 	function fn_updateROT() {
 		console.log("fn_updateROT");
+		console.log(rotId);
 		if (rotId != "" && rotId != null) {
 			var data = {
 				rotId : rotId,
@@ -257,7 +275,7 @@
 
 	// Callback function for new AS
 	function fn_resultASPop(ordId, ordNo) {
-		var selectedItems = AUIGrid.getCheckedRowItems(rootGridID);
+		var selectedItems = AUIGrid.getCheckedRowItems(search_rootGridID);
 		var mafuncId = "";
 		var mafuncResnId = "";
 		var asId = "";
@@ -510,7 +528,7 @@
 	<section class="search_result">
 		<!-- grid_wrap start -->
 		<article class="grid_wrap">
-			<div id="grid_wrap"
+			<div id="search_grid_wrap"
 				style="width: 100%; height: 480px; margin: 0 auto;"></div>
 		</article>
 		<!-- grid_wrap end -->

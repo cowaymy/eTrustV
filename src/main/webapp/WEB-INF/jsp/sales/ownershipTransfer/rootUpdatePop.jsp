@@ -366,7 +366,7 @@
 							$("#agmReq").attr("disabled", "disabled");
 							$("#cowayTemplate").attr("disabled", "disabled");
 							$("#_onHoldCcp").attr("disabled", "disabled");
-							$("#rotCcpRem").attr("readonly", "readonly");
+							//$("#rotCcpRem").attr("readonly", "readonly");
 
 							$("#rotCallLogInput").hide();
 							$("#rotCL_add_btn").hide();
@@ -563,13 +563,15 @@
 
 		$("#_isPreVal").val("1");
 		//Fico
-		if ($("#_editCustTypeId").val() == '964'
-				&& $("#_editCustNation").val() == 'MALAYSIA') {
-			$("#_ficoScore").attr("disabled", false);
-		} else {
-			$("#_ficoScore").val("0");
-			$("#_ficoScore").attr("disabled", "disabled");
-		}
+
+// 		if (($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA') || $("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966') {
+
+		      $("#_ficoScore").attr("disabled", false);
+// 		} else {
+
+// 			$("#_ficoScore").val("0");
+// 			$("#_ficoScore").attr("disabled", "disabled");
+// 		}
 
 		//bind Feedback Code
 		$("#_reasonCodeEdit").val(ccpResnId);
@@ -693,13 +695,14 @@
 				$("#_spcialRem").attr("disabled", false);
 				$("#_pncRem").attr("disabled", false);
 
-				if ($("#_editCustTypeId").val() == '964'
-						&& $("#_editCustNation").val() == 'MALAYSIA') {
+// 				if (($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA') || $("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')
+// 				{
 					$("#_ficoScore").attr("disabled", false);
-				} else {
-					$("#_ficoScore").val("0");
-					$("#_ficoScore").attr("disabled", "disabled");
-				}
+// 				} else {
+
+// 					$("#_ficoScore").val("0");
+// 					$("#_ficoScore").attr("disabled", "disabled");
+// 				}
 
 				$("#_onHoldCcp").attr("disabled", false);
 				$("#_summon").attr("disabled", false);
@@ -1079,9 +1082,12 @@
 		console.log("fn_doSaveRotCCP");
 		console.log($("#ccpForm").serializeJSON());
 
-		Common.ajax("POST", "/sales/ownershipTransfer/saveRotCCP.do", $(
-				"#ccpForm").serializeJSON(), function(result) {
+		Common.ajax("POST", "/sales/ownershipTransfer/saveRotCCP.do", $("#ccpForm").serializeJSON(), function(result) {
+
+			Common.alert("<spring:message code='sal.alert.title.saveSuccsess'/>");
+			$('#popup_wrap').hide();
 			console.log(result);
+			fn_searchROT();
 		});
 	}
 	// CCP Functions - End
@@ -1238,10 +1244,11 @@
 		<section class="tap_wrap">
 			<!-- Tab Buttons -->
 			<ul class="tap_type1 num4">
-				<li id="tab_ccp"><a href="#">CCP</a></li>
+				<li id="tab_ccp" class="on"><a href="#">CCP</a></li>
 				<li id="tab_rot"><a href="#">ROT Details</a></li>
-				<li id="tab_rotCL" class="on"><a href="#">ROT Call-Log</a></li>
+				<li id="tab_rotCL" ><a href="#">ROT Call-Log</a></li>
 				<li id="tab_rotHist"><a href="#">ROT History</a></li>
+				<li id="tab_rotHist"><a href="#">Basic info</a></li>
 			</ul>
 
 			<!-- ********************************************************************************** -->
@@ -1555,7 +1562,7 @@
 							</tr>
 							<tr>
 								<th scope="row"><spring:message
-										code="sal.title.text.specialRem" /></th>
+										code="sal.title.text.ROTRem" /></th>
 								<td colspan="5"><textarea cols="20" rows="5"
 										id="_spcialRem" name="spcialRem" maxlength="4000">${ccpInfoMap.ccpRem}</textarea>
 								</td>
@@ -1583,12 +1590,12 @@
 								<td><span><input type="checkbox" id="_onHoldCcp"
 										name="onHoldCcp" /></span></td>
 							</tr>
-							<tr>
-								<th scope="row">ROT CCP Remark</th>
-								<td colspan="5"><textarea cols="20" rows="5" id="rotCcpRem"
-										name="rotCcpRem" maxlength="4000">${ccpInfoMap.ccpPncRem}</textarea>
-								</td>
-							</tr>
+<!-- 							<tr> -->
+<!-- 								<th scope="row">ROT CCP Remark</th> -->
+<!-- 								<td colspan="5"><textarea cols="20" rows="5" id="rotCcpRem" -->
+<%-- 										name="rotCcpRem" maxlength="4000">${ccpInfoMap.ccpPncRem}</textarea> --%>
+<!-- 								</td> -->
+<!-- 							</tr> -->
 						</tbody>
 					</table>
 
@@ -2517,7 +2524,10 @@
 			<!-- ********************************************************************************** -->
 			<!-- ROT History Tab - End -->
 			<!-- ********************************************************************************** -->
-
+			<!------------------------------------------------------------------------------
+			    Basic Info
+			------------------------------------------------------------------------------->
+			<%@ include file="/WEB-INF/jsp/sales/order/include/basicInfo.jsp" %>
 		</section>
 		<!-- tap_wrap - End -->
 		<!--
