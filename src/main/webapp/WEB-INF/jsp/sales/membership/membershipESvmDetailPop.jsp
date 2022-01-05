@@ -482,7 +482,7 @@
                            if(result1.data.docNo == null)
                                Common.alert('Membership successfully saved.' + "<b>");
                            else
-                               Common.alert('Membership successfully saved.' + "<b>" + result1.data.docNo);
+                               Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo);
                            fn_close();
 
                        } else {
@@ -758,12 +758,7 @@
         console.log("payMode: " + '${paymentInfo.payMode}');
         console.log("payMode: " + '${preSalesInfo.packageAmt}');
 
-        if('${preSalesInfo.packageAmt}' == '0') {
-            Common.alert('Please enter Package Amount.');
-            checkResult = false;
-            return checkResult;
-
-        } else if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
+        if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
             Common.alert('Please enter SA Reference No.');
             checkResult = false;
             return checkResult;
@@ -779,6 +774,12 @@
             return checkResult;
 
         } else if($("#action").val() == '5') { //rejected and active with instruction action no need to check transaction ID
+            if('${preSalesInfo.packageAmt}' == '0') {
+                Common.alert('Please enter Package Amount.');
+                checkResult = false;
+                return checkResult;
+            }
+
             if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
                 if(FormUtil.isEmpty($("#payment_transactionID").val())) {
                     Common.alert('Please enter Transaction ID.');

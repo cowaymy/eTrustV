@@ -1,5 +1,7 @@
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,10 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billing.service.impl.AdvRentalBillingMapper;
 import com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper;
+import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.sales.mambership.MembershipESvmService;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.DecimalFormat;
@@ -43,6 +48,9 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
     @Resource(name = "srvMembershipBillingMapper")
     private SrvMembershipBillingMapper srvMembershipBillingMapper;
+
+    @Resource(name = "commonPaymentService")
+    private CommonPaymentService commonPaymentService;
 
     private static Logger logger = LoggerFactory.getLogger(MembershipConvSaleServiceImpl.class);
 
@@ -112,14 +120,21 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     }
 
     @Override
-    public void updateAction(Map<String, Object> params) {
-        membershipESvmMapper.updateAction(params);
-        membershipESvmMapper.updateTR(params);
+    public int updateAction(Map<String, Object> params) {
+        int updSal298d = membershipESvmMapper.updateAction(params);
+        int updPay312d = membershipESvmMapper.updateTR(params);
 
         if("6".equals(params.get("action").toString())) {
             params.put("reject", "8");
             membershipESvmMapper.updSal93(params);
         }
+
+        int ret = 0;
+        if(updSal298d > 0 && updPay312d > 0) {
+            ret = 1;
+        }
+
+        return ret;
     }
 
     @Override
@@ -803,5 +818,161 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     @Override
     public String getPOSm(Map<String, Object> params) {
         return membershipESvmMapper.getPOSm(params);
+    }
+
+    @Override
+    public Map<String, Object> eSVMNormalPayment(Map<String, Object> params, SessionVO sessionVO) {
+        logger.debug("========== MembershipESVMServiceImpl.eSVMNormalPayment ==========");
+        logger.debug("params {} ::", params);
+
+        List<Object> formList = new ArrayList<Object>();
+        Map<String, Object> formInfo = null;
+
+        // Get PSM details
+        EgovMap psmInfo = membershipESvmMapper.selectESvmInfo(params);
+        EgovMap psmPayInfo = membershipESvmMapper.selectESvmPaymentInfo(params);
+
+        // Check bank statement by transaction ID
+        EgovMap bankStatementInfo = membershipESvmMapper.selectBankStatementInfo(params);
+        if(bankStatementInfo == null) {
+            throw new ApplicationException(AppConstants.FAIL, "Entered Transaction ID not found OR is mapped. Please check Transaction ID entered.");
+        }
+
+        // Get transaction ID's amount
+        BigDecimal DoubleCrdit = BigDecimal.ZERO;
+        if ("".equals(String.valueOf(bankStatementInfo.get("crdit")))) {
+            DoubleCrdit = BigDecimal.ZERO;
+        } else {
+            DoubleCrdit = new BigDecimal(String.valueOf(bankStatementInfo.get("crdit")));
+        }
+
+        // Compare statement amount to quotation amount
+        BigDecimal quotAmt = BigDecimal.ZERO;
+        if(psmInfo.get("quoTot") != null) {
+            quotAmt = quotAmt.add(new BigDecimal(String.valueOf(psmInfo.get("quoTot"))));
+        }
+
+        if(DoubleCrdit.compareTo(quotAmt) != 0) {
+            throw new ApplicationException(AppConstants.FAIL, "Total quotation payment amount of " +  quotAmt.toPlainString() + " does not match with transaction ID's amount of " + DoubleCrdit.toPlainString() + ".");
+        }
+
+        // Form Setting - Payment Type
+        String payMode = (String) bankStatementInfo.get("type");
+        String payType = "";
+
+        if("ONL".equals(payMode)) {
+            payType = "108";
+        } else if("CHQ".equals(payMode)) {
+            payType = "106";
+        } else {
+            payType = "105";
+        }
+
+        Map<String, Object> formMap = null;
+
+        EgovMap psmPay24Info = membershipESvmMapper.getPay0024D(params);
+
+        if(new BigDecimal(String.valueOf(psmInfo.get("srvMemPacAmt"))).compareTo(BigDecimal.ZERO) > 0) {
+            formMap = new HashMap<String, Object>();
+
+            formMap.put("procSeq","1");
+            formMap.put("appType","OUT_MEM");
+            formMap.put("advMonth","0");
+            formMap.put("billGrpId","0");
+            formMap.put("billId","0");
+            formMap.put("ordId",psmInfo.get("psmSalesOrdId"));
+            formMap.put("mstRpf","0");
+            formMap.put("mstRpfPaid","0");
+            formMap.put("billNo",psmInfo.get(""));
+            formMap.put("ordNo",psmPayInfo.get(""));
+            formMap.put("billTypeId","164");
+            formMap.put("billTypeNm","Membership Package");
+            formMap.put("installment","0");
+            formMap.put("billAmt",psmPay24Info.get("packageCharge"));
+            formMap.put("paidAmt",psmPay24Info.get("packagePaid"));
+            formMap.put("targetAmt",psmPay24Info.get("packageAmt"));
+            formMap.put("billDt","1900-01-01");
+            formMap.put("assignAmt","0");
+            formMap.put("billStatus","");
+            formMap.put("custNm",psmInfo.get("name"));
+            formMap.put("srvcContractID","0");
+            formMap.put("billAsId","0");
+            formMap.put("discountAmt","0");
+            formMap.put("srvMemId",psmInfo.get("cnvrMemId"));
+            formMap.put("trNo",psmPayInfo.get("trRefNo"));
+            formMap.put("trDt",psmPayInfo.get("trIssuedDt"));
+            formMap.put("collectorCode",psmPayInfo.get("memCode"));
+            formMap.put("collectorId",psmPayInfo.get("memId"));
+            formMap.put("allowComm",psmPayInfo.get("allowComm"));
+
+            formList.add(formMap);
+        }
+
+        if(new BigDecimal(String.valueOf(psmInfo.get("srvMemBsAmt"))).compareTo(BigDecimal.ZERO) > 0) {
+            formMap = new HashMap<String, Object>();
+
+            formMap.put("procSeq","2");
+            formMap.put("appType","OUT_MEM");
+            formMap.put("advMonth","0");
+            formMap.put("billGrpId","0");
+            formMap.put("billId","0");
+            formMap.put("ordId",psmInfo.get("psmSalesOrdId"));
+            formMap.put("mstRpf","0");
+            formMap.put("mstRpfPaid","0");
+            formMap.put("billNo",psmInfo.get(""));
+            formMap.put("ordNo",psmPayInfo.get(""));
+            formMap.put("billTypeId","542");
+            formMap.put("billTypeNm","Filter (1st BS)");
+            formMap.put("installment","0");
+            formMap.put("billAmt",psmPay24Info.get("filterCharge"));
+            formMap.put("paidAmt",psmPay24Info.get("filterPaid"));
+            formMap.put("targetAmt",psmPay24Info.get("filterAmt"));
+            formMap.put("billDt","1900-01-01");
+            formMap.put("assignAmt","0");
+            formMap.put("billStatus","");
+            formMap.put("custNm",psmInfo.get("name"));
+            formMap.put("srvcContractID","0");
+            formMap.put("billAsId","0");
+            formMap.put("discountAmt","0");
+            formMap.put("srvMemId",psmInfo.get("cnvrMemId"));
+            formMap.put("trNo",psmPayInfo.get("trRefNo"));
+            formMap.put("trDt",psmPayInfo.get("trIssuedDt"));
+            formMap.put("collectorCode",psmPayInfo.get("memCode"));
+            formMap.put("collectorId",psmPayInfo.get("memId"));
+            formMap.put("allowComm",psmPayInfo.get("allowComm"));
+
+            formList.add(formMap);
+        }
+
+        formInfo = new HashMap<String, Object>();
+        formInfo.put("chargeAmount", 0);
+        formInfo.put("slipNo", psmPayInfo.get("slipNo"));
+        formInfo.put("chqNo", psmPayInfo.get("chequeNo"));
+        formInfo.put("bankType", 2729);
+        formInfo.put("bankAcc", bankStatementInfo.get("bankAccId"));
+        formInfo.put("trDate", bankStatementInfo.get("trnscDt"));
+
+        formInfo.put("payItemIsLock", false);
+        formInfo.put("payItemIsThirdParty", false);
+        formInfo.put("payItemStatusId", 1);
+        formInfo.put("isFundTransfer", false);
+        formInfo.put("skipRecon", false);
+        formInfo.put("payItemCardTypeId", 0);
+
+        formInfo.put("keyInRoute", "WEB");
+        formInfo.put("keyInScrn", "NOR");
+        formInfo.put("amount", psmPayInfo.get("payAmt"));
+        formInfo.put("keyInPayDate", psmPayInfo.get("crtDt"));
+        formInfo.put("payType", payType);
+        formInfo.put("userid", sessionVO.getUserId());
+
+        // ************************************************************************************************
+
+        // INSERT TO PAY0240T AND PAY0241T AND LATER EXECUTE SP_INST_NORMAL_PAYMENT
+        Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, formList, Integer.parseInt(params.get("trxId").toString()));
+//        Map<String, Object> resultList = null;
+
+        // RETURN WOR NO.
+        return resultList;
     }
 }

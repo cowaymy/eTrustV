@@ -31,7 +31,7 @@ public interface MembershipESvmService {
 
 	EgovMap selectESvmPaymentInfo(Map<String, Object> params);
 
-	void updateAction(Map<String, Object> params);
+	int updateAction(Map<String, Object> params);
 
 	void updateTR(Map<String, Object> params);
 
@@ -46,4 +46,6 @@ public interface MembershipESvmService {
 	int genSrvMembershipBilling(Map<String, Object> params, SessionVO sessionVO);
 
 	String getPOSm(Map<String, Object> params);
+
+	Map<String, Object> eSVMNormalPayment(Map<String, Object> params, SessionVO sessionVO);
 }

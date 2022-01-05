@@ -213,7 +213,9 @@ public class MembershipESvmController {
         params.put("userId", sessionVO.getUserId());
         params.put("updator", sessionVO.getUserId());
 
+        ReturnMessage message = new ReturnMessage();
         String docNo = "";
+        String insSal95d_ret = "";
 
         // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
         int resultVal = 0;
@@ -228,7 +230,6 @@ public class MembershipESvmController {
             }
 
             String psmSrvMemNo = (String) params.get("psmSrvMemNo");
-
             if(psmSrvMemNo != null && !psmSrvMemNo.equals("")) {
                 docNo = psmSrvMemNo;
             } else {
@@ -237,11 +238,9 @@ public class MembershipESvmController {
             }
         }
 
-        // params.put("docNo", docNo);
         String statusRemark = "";
         if(params.get("action").equals("5")) {
             statusRemark = "Approved";
-
         } else if(params.get("action").equals("6")) {
             statusRemark = "Rejected";
         } else if(params.get("action").equals("1") && !params.get("specialInstruction").equals("")) {
@@ -255,62 +254,78 @@ public class MembershipESvmController {
             params.put("specialInstruction","");
             if(!"6506".equals(params.get("payment_mode").toString())) {
                 params.put("docNo", docNo);
+
             } else {
+                // Get PO SM number
                 String poSvm = membershipESvmService.getPOSm(params);
                 params.put("docNo", poSvm);
             }
             logger.debug("params =====================================>>  " + params);
-            membershipESvmService.updateAction(params);
+//            membershipESvmService.updateAction(params);
 
             //==== insert membership ====
             //membershipESvmService.SAL0095D_insert(params);
             if(!"6506".equals(params.get("payment_mode").toString())) {
-                membershipESvmService.SAL0095D_insert(params);
+                insSal95d_ret = membershipESvmService.SAL0095D_insert(params);
+
+                if("6507".equals(params.get("payment_mode").toString()) || "6508".equals(params.get("payment_mode").toString())) {
+                    Map<String, Object> resultList = membershipESvmService.eSVMNormalPayment(params, sessionVO);
+                }
             }
-        } else {
-            membershipESvmService.updateAction(params);
         }
 
         // Payment Mode :: PO, Status :: 1 (Active) set result value 2
         if("6506".equals(params.get("payment_mode").toString()) && !params.get("action").equals("5")) resultVal = 2;
 
-        //List<EgovMap> info = membershipESvmService.selectESvmInfo(params);
-        EgovMap result = membershipESvmService.selectESvmInfo(params);;
-        ReturnMessage message = new ReturnMessage();
-        message.setData(params);
-
-        if(!"6506".equals(params.get("payment_mode").toString())) {
-            message.setCode(AppConstants.SUCCESS);
-            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-            result.put("messageCode", message.getCode());
-        } else {
-            switch(resultVal) {
-            case 1:
-                message.setCode(AppConstants.SUCCESS);
-                message.setMessage("<b>Pre-Sales successfully converted to membership sales.");
-                break;
-            case 2:
-                message.setCode(AppConstants.SUCCESS);
-                message.setMessage("<b>Pre-Sales status successfully updated.");
-                break;
-            case 99:
-                message.setCode(AppConstants.FAIL);
-                message.setMessage("<b>Failed to generate invoice. Please try again later.</b>");
-                break;
-            case 98:
-                message.setCode(AppConstants.FAIL);
-                message.setMessage("<b>Failed to convert to sales. Please try again later.</b>");
-                break;
-            case 97:
-                message.setCode(AppConstants.FAIL);
-                message.setMessage("<b>Failed to save. Please try again later.</b>");
-                break;
-            default:
-                message.setCode(AppConstants.FAIL);
-                message.setMessage("<b>Failed to save. Please try again later.</b>");
-                break;
-            }
+        // if sal095, resultval > 0 then update
+        int updAct = 0;
+        if((!"6506".equals(params.get("payment_mode").toString()) && !insSal95d_ret.isEmpty()) ||
+           ("6506".equals(params.get("payment_mode").toString()) && (resultVal == 1 || resultVal == 2))) {
+            updAct = membershipESvmService.updateAction(params);
         }
+
+        if(updAct > 0) {
+            if(!"6506".equals(params.get("payment_mode").toString())) {
+                message.setCode(AppConstants.SUCCESS);
+                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+                message.setData(params);
+            } else {
+                switch(resultVal) {
+                case 0:
+                    message.setCode(AppConstants.FAIL);
+                    message.setMessage("<b>Failed to save. Duplicated PO.");
+                    break;
+                case 1:
+                    message.setCode(AppConstants.SUCCESS);
+                    message.setMessage("<b>Pre-Sales successfully converted to membership sales.");
+                    break;
+                case 2:
+                    message.setCode(AppConstants.SUCCESS);
+                    message.setMessage("<b>Pre-Sales status successfully updated.");
+                    break;
+                case 99:
+                    message.setCode(AppConstants.FAIL);
+                    message.setMessage("<b>Failed to generate invoice. Please try again later.</b>");
+                    break;
+                case 98:
+                    message.setCode(AppConstants.FAIL);
+                    message.setMessage("<b>Failed to convert to sales. Please try again later.</b>");
+                    break;
+                case 97:
+                    message.setCode(AppConstants.FAIL);
+                    message.setMessage("<b>Failed to save. Please try again later.</b>");
+                    break;
+                default:
+                    message.setCode(AppConstants.FAIL);
+                    message.setMessage("<b>Failed to save. Please try again later.</b>");
+                    break;
+                }
+            }
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
         return ResponseEntity.ok(message);
     }
 

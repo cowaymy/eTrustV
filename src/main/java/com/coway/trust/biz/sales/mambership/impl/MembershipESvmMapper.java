@@ -37,9 +37,8 @@ public interface MembershipESvmMapper {
 
 	String getDocNo(Map<String, Object> params);
 
-	void updateAction(Map<String, Object> params);
-
-	void updateTR(Map<String, Object> params);
+	int updateAction(Map<String, Object> params);
+	int updateTR(Map<String, Object> params);
 
 	EgovMap  getSAL0095D_SEQ(Map<String, Object> params);
 
@@ -82,4 +81,8 @@ public interface MembershipESvmMapper {
 	String getPOSm(Map<String, Object> params);
 
 	void updSal93(Map<String, Object> params);
+
+    EgovMap selectBankStatementInfo(Map<String, Object> params);
+
+    EgovMap getPay0024D(Map<String, Object> params);
 }

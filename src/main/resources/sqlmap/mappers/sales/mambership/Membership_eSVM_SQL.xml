@@ -3,100 +3,109 @@
 <mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipESvmMapper">
 
     <select id="selectESvmListAjax" parameterType="Map" resultType="egovMap">
-         SELECT ESVM.PSM_ID
-		, ESVM.PSM_NO
-		,COVQOU.REF_NO SA_REF_NO
-		,SAL.SALES_ORD_NO
-		,TO_CHAR(ESVM.CRT_DT, 'DD/MM/YYYY') CRT_DT
-		,TO_CHAR( ESVM.CRT_DT, 'HH24:MI:SS AM') CRT_TM
-		,ESVM.STUS
-		,STS.NAME STATUS
-		,CASE WHEN (ESVM.STUS = 1) THEN COVQOU.SRV_MEM_NO ELSE '' END SRV_MEM_NO
-		--,ESVM.PSM_SRV_MEM_NO
-		,CUST.NAME CUST_NAME
-		,CRTUSR.USER_NAME CRT_USER
-		,UPDUSR.USER_NAME UPD_USER
-		,TO_CHAR( ESVM.UPD_DT, 'dd/mm/yyyy HH24:MI:SS AM') || ' (' || UPDUSR.USER_NAME || ')' UPD_DT
-		,ESVM.STUS_REM
-		,ESVM.ATCH_FILE_GRP_ID
-		,ESVM.APPV_INSTRCT
-		,ESVM.SA_REF
-		,ESVM.PSM_SRV_MEM_NO
-		,DD.RESN_DESC
-		,ESVM.SVM_QUOT_ID
-		FROM SAL0298D ESVM
-		LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
-		LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
-		LEFT JOIN SAL0029D CUST ON CUST.CUST_ID = SAL.CUST_ID
-		LEFT JOIN SYS0047M CRTUSR ON CRTUSR.USER_ID = ESVM.CRT_USER_ID
-		LEFT JOIN SYS0038M STS ON STS.STUS_CODE_ID = ESVM.STUS
-		left join SYS0047M UPDUSR ON UPDUSR.USER_ID = ESVM.UPD_USER_ID
-		LEFT JOIN SAL0095D COVQOU ON COVQOU.SRV_MEM_QUOT_ID = QUO.SRV_MEM_QUOT_ID
-		LEFT JOIN ORG1001V T9 ON T9.MEM_CODE = CRTUSR.USER_NAME
-		LEFT JOIN SYS0032M DD ON DD.RESN_ID = ESVM.APPV_INSTRCT
-		WHERE 1 = 1
+        SELECT
+            ESVM.PSM_ID
+          , ESVM.PSM_NO
+          , COVQOU.REF_NO SA_REF_NO
+          , SAL.SALES_ORD_NO
+          , TO_CHAR(ESVM.CRT_DT, 'DD/MM/YYYY') CRT_DT
+          , TO_CHAR( ESVM.CRT_DT, 'HH24:MI:SS AM') CRT_TM
+          , ESVM.STUS
+          , STS.NAME STATUS
+          , CASE WHEN (ESVM.STUS = 1) THEN COVQOU.SRV_MEM_NO ELSE '' END SRV_MEM_NO
+          --,ESVM.PSM_SRV_MEM_NO
+          , CUST.NAME CUST_NAME
+          , CRTUSR.USER_NAME CRT_USER
+          , UPDUSR.USER_NAME UPD_USER
+          , TO_CHAR( ESVM.UPD_DT, 'dd/mm/yyyy HH24:MI:SS AM') || ' (' || UPDUSR.USER_NAME || ')' UPD_DT
+          , ESVM.STUS_REM
+          , ESVM.ATCH_FILE_GRP_ID
+          , ESVM.APPV_INSTRCT
+          , ESVM.SA_REF
+          , ESVM.PSM_SRV_MEM_NO
+          , DD.RESN_DESC
+          , ESVM.SVM_QUOT_ID
+        FROM SAL0298D ESVM
+        LEFT JOIN SAL0093D QUO
+            ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
+        LEFT JOIN SAL0001D SAL
+            ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
+        LEFT JOIN SAL0029D CUST
+            ON CUST.CUST_ID = SAL.CUST_ID
+        LEFT JOIN SYS0047M CRTUSR
+            ON CRTUSR.USER_ID = ESVM.CRT_USER_ID
+        LEFT JOIN SYS0038M STS
+            ON STS.STUS_CODE_ID = ESVM.STUS
+        LEFT JOIN SYS0047M UPDUSR
+            ON UPDUSR.USER_ID = ESVM.UPD_USER_ID
+        LEFT JOIN SAL0095D COVQOU
+            ON COVQOU.SRV_MEM_QUOT_ID = QUO.SRV_MEM_QUOT_ID
+        LEFT JOIN ORG1001V T9
+            ON T9.MEM_CODE = CRTUSR.USER_NAME
+        LEFT JOIN SYS0032M DD
+            ON DD.RESN_ID = ESVM.APPV_INSTRCT
+        WHERE 1 = 1
         <if test='_memCode != null and _memCode != ""'>
-           AND CRTUSR.user_name = #{_memCode}
-         </if>
-         <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
-           AND CRTUSR.user_brnch_id IN
-             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
-               #{item}
-             </foreach>
-         </if>
-         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
-           AND ESVM.CRT_DT BETWEEN TO_DATE(#{_reqstStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{_reqstEndDt}, 'DD/MM/YYYY')+1
-         </if>
-         <if test='arrESvmStusId != null and arrESvmStusId != ""'>
-           AND ESVM.STUS IN
-             <foreach item="item" collection="arrESvmStusId" index="index" open="(" separator="," close=")">
-               #{item, jdbcType=VARCHAR}
-             </foreach>
-         </if>
-         <if test='arrCustType != null and arrCustType != ""'>
-           AND CUST.TYPE_ID IN
-             <foreach item="item" collection="arrCustType" index="index" open="(" separator="," close=")">
-               #{item}
-             </foreach>
-         </if>
-         <if test='_nric != null and _nric != ""'>
-           AND UPPER(CUST.NRIC) = UPPER(#{_nric})
-         </if>
-         <if test='saRefNo != null and saRefNo != ""'>
-           AND UPPER(COVQOU.REF_NO) = UPPER(#{saRefNo})
-         </if>
-         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
-           AND ESVM.CRT_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
-         </if>
-
-         <if test='_name != null and _name != ""'>
-           AND UPPER(CUST.NAME) LIKE UPPER(#{custName})||'%'
-         </if>
-         <if test="ordNo != '' ">
-           AND SAL.SALES_ORD_NO = #{ordNo}
-         </if>
-         <if test="grpCode != '' ">
-           AND T9.GRP_CODE = #{grpCode}
-         </if>
-         <if test="preSalesNopsm != '' ">
-           AND ESVM.PSM_NO = #{preSalesNopsm}
-         </if>
-         <if test="orgCode != '' ">
-           AND T9.ORG_CODE = #{orgCode}
-         </if>
-         <if test="deptCode != '' ">
-           AND T9.DEPT_CODE = #{deptCode}
-         </if>
-         <if test="quotationNo != '' ">
-           AND QUO.SRV_MEM_QUOT_NO = #{quotationNo}
-         </if>
-         <if test='memType != null and memType != ""'>
+            AND CRTUSR.user_name = #{_memCode}
+        </if>
+        <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+            AND CRTUSR.user_brnch_id IN
+            <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
+            AND ESVM.CRT_DT BETWEEN TO_DATE(#{_reqstStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{_reqstEndDt}, 'DD/MM/YYYY')+1
+        </if>
+        <if test='arrESvmStusId != null and arrESvmStusId != ""'>
+            AND ESVM.STUS IN
+            <foreach item="item" collection="arrESvmStusId" index="index" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test='arrCustType != null and arrCustType != ""'>
+            AND CUST.TYPE_ID IN
+            <foreach item="item" collection="arrCustType" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test='_nric != null and _nric != ""'>
+            AND UPPER(CUST.NRIC) = UPPER(#{_nric})
+        </if>
+        <if test='saRefNo != null and saRefNo != ""'>
+            AND UPPER(COVQOU.REF_NO) = UPPER(#{saRefNo})
+        </if>
+        <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
+            AND ESVM.CRT_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
+        </if>
+        <if test='_name != null and _name != ""'>
+            AND UPPER(CUST.NAME) LIKE UPPER(#{custName})||'%'
+        </if>
+        <if test="ordNo != '' ">
+            AND SAL.SALES_ORD_NO = #{ordNo}
+        </if>
+        <if test="grpCode != '' ">
+            AND T9.GRP_CODE = #{grpCode}
+        </if>
+        <if test="preSalesNopsm != '' ">
+            AND ESVM.PSM_NO = #{preSalesNopsm}
+        </if>
+        <if test="orgCode != '' ">
+            AND T9.ORG_CODE = #{orgCode}
+        </if>
+        <if test="deptCode != '' ">
+            AND T9.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="quotationNo != '' ">
+            AND QUO.SRV_MEM_QUOT_NO = #{quotationNo}
+        </if>
+        <if test='memType != null and memType != ""'>
             AND CRTUSR.USER_TYPE_ID = #{memType}
-         </if>
-         <if test="membershipNo != '' ">
-           AND COVQOU.SRV_MEM_NO = #{membershipNo}
-         </if>
-         order by ESVM.PSM_NO
+        </if>
+        <if test="membershipNo != '' ">
+            AND COVQOU.SRV_MEM_NO = #{membershipNo}
+        </if>
+        ORDER BY ESVM.PSM_NO
     </select>
 
     <select id="selectMemberByMemberID" parameterType="Map" resultType="egovMap">
@@ -280,11 +289,24 @@
             DD.RESN_DESC,
             ESVM.SA_REF,
             ESVM.PO_NO,
-            ESVM.APPV_INSTRCT
-        from SAL0298D ESVM
-        LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
-        LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
-        LEFT JOIN SYS0032M DD ON DD.RESN_ID = ESVM.APPV_INSTRCT
+            ESVM.APPV_INSTRCT,
+            NVL(QUO.SRV_MEM_PAC_AMT, 0) SRV_MEM_PAC_AMT,
+            NVL(QUO.SRV_MEM_BS_AMT, 0) SRV_MEM_BS_AMT,
+            NVL(QUO.SRV_MEM_PAC_AMT, 0) + NVL(QUO.SRV_MEM_BS_AMT, 0) QUO_TOT,
+            CUST.NAME,
+            (CASE WHEN NVL(SM.SRV_MEM_ID, 0) = 0 THEN QUO.SRV_MEM_ID ELSE NVL(SM.SRV_MEM_ID, 0) END) CNVR_MEM_ID
+        FROM SAL0298D ESVM
+        LEFT JOIN SAL0093D QUO
+            ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
+        LEFT JOIN SAL0001D SAL
+            ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
+        LEFT JOIN SYS0032M DD
+            ON DD.RESN_ID = ESVM.APPV_INSTRCT
+        LEFT JOIN SAL0029D CUST
+            ON SAL.CUST_ID = CUST.CUST_ID
+        LEFT JOIN SAL0095D SM
+            ON ESVM.PSM_SRV_MEM_NO = SM.SRV_MEM_NO
+            AND ESVM.SVM_QUOT_ID = SM.SRV_MEM_QUOT_ID
         WHERE PSM_ID = #{psmId}
     </select>
 
@@ -588,16 +610,57 @@
     </select>
 
     <select id="selectESvmPaymentInfo" parameterType="Map" resultType="egovMap">
-        SELECT PAY.*, (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_DESC,
-			(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_CODE,
-			(SELECT NAME FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_DESC,
-			(SELECT BANK_ID FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_CODE,
-			(SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_DESC,
-			(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_CODE,
-			(SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_DESC,
-			(SELECT ACC_ID FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_CODE
-		FROM PAY0312D PAY
-		WHERE PAY.PSM_ID = #{psmId}
+        SELECT
+            PAY.SVM_PAY_ID,
+            PAY.SRV_MEM_QUOT_ID,
+            PAY.PSM_ID,
+            PAY.SALES_ORD_NO,
+            PAY.PAY_MODE,
+            PAY.PAY_STUS_ID,
+            PAY.OTSTND_AMT,
+            PAY.PAY_AMT,
+            PAY.SLIP_NO,
+            PAY.ISSU_BANK_ID,
+            PAY.CHEQUE_DT,
+            PAY.CHEQUE_NO,
+            PAY.SMS_1,
+            PAY.SMS_2,
+            PAY.EMAIL_1,
+            PAY.EMAIL_2,
+            PAY.PAY_REM,
+            PAY.FAIL_RESN_ID,
+            PAY.CARD_NO,
+            PAY.APPROVAL_NO,
+            PAY.CRC_NAME,
+            PAY.TRANSACTION_DATE,
+            PAY.EXPIRY_DATE,
+            PAY.CARD_MODE,
+            PAY.MERCHANT_BANK,
+            PAY.CARD_BRAND,
+            PAY.TRX_ID,
+            PAY.ALLOW_COMM,
+            PAY.TR_REF_NO,
+            PAY.TR_ISSUED_DT,
+            PAY.CRT_USER_ID,
+            TO_CHAR(PAY.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+            PAY.UPD_USER_ID,
+            TO_CHAR(PAY.UPD_DT, 'DD/MM/YYYY') UPD_DT,
+            (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_DESC,
+            (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_CODE,
+            (SELECT NAME FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_DESC,
+            (SELECT BANK_ID FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_CODE,
+            (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_DESC,
+            (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_CODE,
+            (SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_DESC,
+            (SELECT ACC_ID FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_CODE,
+            ORG.MEM_CODE,
+            ORG.MEM_ID
+        FROM PAY0312D PAY
+        JOIN SYS0047M USR
+            ON PAY.CRT_USER_ID = USR.USER_ID
+        JOIN ORG0001D ORG
+            ON USR.HR_CODE = ORG.MEM_CODE
+        WHERE PAY.PSM_ID = #{psmId}
     </select>
 
     <update id="updateAction" parameterType="Map">
@@ -1161,4 +1224,75 @@
         FROM SAL0095D
         WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
     </select>
+
+    <select id="selectBankStatementInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.F_TRNSC_ID id,
+            B.BANK_ID,
+            C.NAME BANK,
+            D.ACC_DESC BANK_ACC_NAME,
+            E.ACC_ID AS BANK_ACC_ID,
+            E.ACC_CODE BANK_ACC_CODE,
+            E.ACC_DESC BANK_ACC_DESC,
+            E.ACC_CODE || ' - ' ||  E.ACC_DESC AS CODE_NAME,
+            TO_CHAR(A.F_TRNSC_DT, 'DD/MM/YYYY') TRNSC_DT,
+            A.F_TRNSC_REF_CHQ_NO CHQ_NO,
+            A.F_TRNSC_REF_VA_NO,
+            A.F_TRNSC_REF3 REF3,
+            A.F_TRNSC_REF1 REF1,
+            A.F_TRNSC_REF4 REF4,
+            A.F_TRNSC_REF2 REF2,
+            A.F_TRNSC_REF6 REF6,
+            A.F_TRNSC_REM TYPE,
+            A.F_TRNSC_DEBT_AMT DEBT,
+            A.F_TRNSC_CRDIT_AMT CRDIT,
+            (CASE WHEN A.OTH_KEYIN_STUS_ID = 4 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
+            A.OTH_KEYIN_MAPPING_DT,
+            A.F_TRNSC_TELLER_ID,
+            A.F_TRNSC_NEW_CHQ_NO
+        FROM PAY0081D A
+        JOIN PAY0079D B
+            ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+        LEFT JOIN SYS0004M C
+            ON B.BANK_ID = C.BANK_ID
+        LEFT JOIN SYS0001M D
+            ON B.F_BANK_JRNL_ACC_ID = D.ACC_ID
+        LEFT JOIN SYS0001M E
+            ON D.ACC_DESC = E.ACC_DESC
+            AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CASH = 1
+        WHERE A.F_TRNSC_REM IN ('ONL','CSH','CHQ')
+            AND A.OTH_KEYIN_STUS_ID <![CDATA[ <> ]]> 4
+            AND A.F_TRNSC_ID = #{trxId}
+  </select>
+
+  <select id="getPay0024D" parameterType="Map" resultType="egovMap">
+    SELECT
+        A.*,
+        A.PACKAGE_CHARGE - A.PACKAGE_PAID PACKAGE_AMT,
+        A.FILTER_CHARGE - A.FILTER_PAID FILTER_AMT
+    FROM (
+        SELECT
+            SRV_MEM_ID,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END))
+            + SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 157 THEN SRV_MEM_AMT ELSE 0 END ))
+            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 155 THEN SRV_MEM_AMT ELSE 0 END ))AS PACKAGE_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID <![CDATA[ <> ]]> 542 THEN SRV_MEM_AMT ELSE 0 END)) AS PACKAGE_PAID,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_PAID
+        FROM PAY0024D
+        WHERE SRV_MEM_ID = (
+            SELECT
+                B.SRV_MEM_ID
+            FROM SAL0298D A
+            JOIN SAL0095D B
+                ON A.PSM_SRV_MEM_NO = B.SRV_MEM_NO
+                AND A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID
+            WHERE PSM_ID = #{psmId}
+        )
+        GROUP BY SRV_MEM_ID
+    ) A
+  </select>
+
 </mapper>
