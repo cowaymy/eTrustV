@@ -43,6 +43,7 @@
 
                 $("#dscCode").val("${DSC_CODE}");
                 $("#ddlCTCodeText").val("${CT_CODE}");
+                $("#PROD_CDE").val("${STK_CODE}");
 
     });
 
@@ -1124,7 +1125,17 @@
             } else {
                 ddCde = $("#def_def_id").val();
             }
+        } else if (dftTyp == "SC") {
+            if ($("#def_type_id").val() == ""
+                || $("#def_type_id").val() == null) {
+            var text = "<spring:message code='service.text.defTyp' />";
+            var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+            Common.alert(msg);
+            return false;
+        } else {
+            dtCde = $("#def_type_id").val();
         }
+    }
 
         Common.popupDiv("/services/as/dftTypPop.do", {
             callPrgm : dftTyp,
@@ -1150,6 +1161,212 @@
             theEvent.returnValue = false;
             if (theEvent.preventDefault)
                 theEvent.preventDefault();
+        }
+    }
+
+    function fn_loadDftCde(itm, prgmCde) {
+        if (itm != null) {
+            if (prgmCde == 'DT') {
+                $("#def_type").val(itm.code);
+                $("#def_type_id").val(itm.id);
+                $("#def_type_text").val(itm.descp);
+
+                //DEPENDENCY
+                $("#solut_code").val("");
+                $("#solut_code_id").val("");
+                $("#solut_code_text").val("");
+
+                var msg = "";
+
+                if (itm.id == "7059") {
+                    if ($("#def_part_id").val() == "5299"
+                            || $("#def_part_id").val() == "5300"
+                            || $("#def_part_id").val() == "5301"
+                            || $("#def_part_id").val() == "5302"
+                            || $("#def_part_id").val() == "5321"
+                            || $("#def_part_id").val() == "5332") {
+                        var text1 = "<spring:message code='service.text.defPrt' />";
+                        var text2 = $("#def_part_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defTyp' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_type").val("");
+                        $("#def_type_id").val("");
+                        $("#def_type_text").val("");
+                    }
+
+                    if ($("#def_def_id").val() == "6041"
+                            || $("#def_def_id").val() == "6042"
+                            || $("#def_def_id").val() == "6043"
+                            || $("#def_def_id").val() == "6044"
+                            || $("#def_def_id").val() == "6045"
+                            || $("#def_def_id").val() == "6046") {
+                        var text1 = "<spring:message code='service.text.dtlDef' />";
+                        var text2 = $("#def_def_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defTyp' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_type").val("");
+                        $("#def_type_id").val("");
+                        $("#def_type_text").val("");
+                    }
+
+                    if (msg != "") {
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+
+                if (itm.id == "7072") {
+                    if ($("#def_part_id").val() == "5299"
+                            || $("#def_part_id").val() == "5300"
+                            || $("#def_part_id").val() == "5301"
+                            || $("#def_part_id").val() == "5302"
+                            || $("#def_part_id").val() == "5321"
+                            || $("#def_part_id").val() == "5332") {
+                        var text1 = "<spring:message code='service.text.defPrt' />";
+                        var text2 = $("#def_part_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defTyp' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_type").val("");
+                        $("#def_type_id").val("");
+                        $("#def_type_text").val("");
+                    }
+
+                    if ($("#def_def_id").val() == "6041"
+                            || $("#def_def_id").val() == "6042"
+                            || $("#def_def_id").val() == "6043"
+                            || $("#def_def_id").val() == "6044"
+                            || $("#def_def_id").val() == "6045"
+                            || $("#def_def_id").val() == "6046"
+                            || $("#def_def_id").val() == "6008"
+                            || $("#def_def_id").val() == "6015"
+                            || $("#def_def_id").val() == "6023"
+                            || $("#def_def_id").val() == "6031") {
+                        var text1 = "<spring:message code='service.text.dtlDef' />";
+                        var text2 = $("#def_def_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defTyp' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_type").val("");
+                        $("#def_type_id").val("");
+                        $("#def_type_text").val("");
+                    }
+
+                    if (msg != "") {
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+            } else if (prgmCde == 'DC') {
+                $("#def_code").val(itm.code);
+                $("#def_code_id").val(itm.id);
+                $("#def_code_text").val(itm.descp);
+            } else if (prgmCde == 'DP') {
+                $("#def_part").val(itm.code);
+                $("#def_part_id").val(itm.id);
+                $("#def_part_text").val(itm.descp);
+
+                if (itm.id == "5299" || itm.id == "5300" || itm.id == "5301"
+                        || itm.id == "5302" || itm.id == "5321"
+                        || itm.id == "5332") {
+                    if ($("#def_type_id").val() == "7059") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defPrt' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_part").val("");
+                        $("#def_part_id").val("");
+                        $("#def_part_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+
+                    if ($("#def_type_id").val() == "7072") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defPrt' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_part").val("");
+                        $("#def_part_id").val("");
+                        $("#def_part_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+            } else if (prgmCde == 'DD') {
+                $("#def_def").val(itm.code);
+                $("#def_def_id").val(itm.id);
+                $("#def_def_text").val(itm.descp);
+
+                // DEPENDENCY
+                $("#def_code").val("");
+                $("#def_code_id").val("");
+                $("#def_code_text").val("");
+
+                if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043"
+                        || itm.id == "6044" || itm.id == "6045"
+                        || itm.id == "6046") {
+                    if ($("#def_type_id").val() == "7059") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.dtlDef' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_def").val("");
+                        $("#def_def_id").val("");
+                        $("#def_def_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+
+                if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043"
+                        || itm.id == "6044" || itm.id == "6045"
+                        || itm.id == "6046" || itm.id == "6008"
+                        || itm.id == "6015" || itm.id == "6023"
+                        || itm.id == "6031") {
+                    if ($("#def_type_id").val() == "7072") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.dtlDef' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_def").val("");
+                        $("#def_def_id").val("");
+                        $("#def_def_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+            } else if (prgmCde == 'SC') {
+                $("#solut_code").val(itm.code);
+                $("#solut_code_id").val(itm.id);
+                $("#solut_code_text").val(itm.descp);
+            }
         }
     }
 
@@ -1510,7 +1727,7 @@
                                             <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span></th>
                                         <td>
                                             <input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled"  class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();"/>
-                                            <a class="search_btn" id="HDT" onclick="fn_dftTyp('HDT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                            <a class="search_btn" id="HDT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                                             <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
                                             <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width:60%;"/>
                                         </td>
@@ -1520,7 +1737,7 @@
                                             <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span></th>
                                         <td>
                                             <input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();"/>
-                                            <a class="search_btn" id="HSC" onclick="fn_dftTyp('HSC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                            <a class="search_btn" id="HSC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                                             <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' />
                                             <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width:60%;"/>
                                         </td>

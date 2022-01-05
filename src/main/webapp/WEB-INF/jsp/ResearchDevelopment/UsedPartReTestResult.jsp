@@ -358,6 +358,7 @@
 
         var dscCode = selectedItems[0].item.dscCode;
         var ctCode = selectedItems[0].item.lastInstallCtCode;
+        var stkCode = selectedItems[0].item.stkCode;
 
         console.log ("asId :"+ asId );
         console.log ("asNo :"+ asNo );
@@ -367,6 +368,7 @@
         console.log ("rcdTms :"+ rcdTms );
         console.log ("dscCode :"+ dscCode );
         console.log ("ctCode :"+ ctCode );
+        console.log ("stkCode :"+ stkCode );
 
 
 
@@ -397,7 +399,7 @@
      //     }
      //   });
 
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode/* "&refReqst=" + refReqst +  "&as_Rst=" + asRst + "&rcdTms=" + rcdTms */;
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst + "&rcdTms=" + rcdTms */;
         Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
       }
 
