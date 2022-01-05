@@ -107,7 +107,8 @@ public class OwnershipTransferController {
 
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
-		return "sales/ownershipTransfer/rootRequestOrderSearch";
+		return "sales/ownershipTransfer/rootRequestOrderSearchPop";
+
 	}
 
 	@RequestMapping(value = "/getOrdId.do", method = RequestMethod.GET)

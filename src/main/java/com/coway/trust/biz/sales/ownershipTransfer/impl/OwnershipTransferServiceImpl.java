@@ -583,7 +583,7 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 			e.printStackTrace();
 		}
 
-		return 0;
+		return cnt;
 	}
 
 	@Transactional
@@ -607,6 +607,8 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 		String InsSeq = "";
 		String resultSeq = "";
 		String callSeq = "";
+
+		int cnt = 0;
 
 		// 1. Update ROT CCP Decision :: SAL0277D
 		LOGGER.info("==========================================");
@@ -640,7 +642,7 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 					// CCP_ITM_STUS_UPD = 8
 					desMap.put("ccpItmStusId", SalesConstants.CCP_ITM_STUS_UPD);
 					LOGGER.info("2. Update SAL0283D");
-					ownershipTransferMapper.updateCcpDecisionStatus(desMap);
+					cnt = ownershipTransferMapper.updateCcpDecisionStatus(desMap);
 				}
 			}
 		}
@@ -844,6 +846,6 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 			LOGGER.info("===================================");
 		}
 
-		return 0;
+		return cnt;
 	}
 }
