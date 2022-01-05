@@ -126,7 +126,7 @@ $(document).ready(function() {
         }
     });
 
-	var now = new Date();
+/* 	var now = new Date();
 	var dd = now.getDate();
 	var mm = now.getMonth() + 1;
 	var yy = now.getFullYear();
@@ -144,7 +144,7 @@ $(document).ready(function() {
 
 	$('#calEndDate').val(dd + "/" + mm + "/" + yy);
 
-	$('#calStartDate').val(dd_1 + "/" + mm_1 + "/" + yy_1);
+	$('#calStartDate').val(dd_1 + "/" + mm_1 + "/" + yy_1); */
 
 });//Doc Ready Func End
 
