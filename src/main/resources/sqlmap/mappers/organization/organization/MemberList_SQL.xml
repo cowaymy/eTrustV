@@ -1028,7 +1028,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 LEFT JOIN SYS0035M Extent31   ON Extent1.STATE = Extent31.STATE_ID
                 LEFT JOIN SYS0039M Extent32   ON Extent1.STATE = Extent32.AREA_STATE_ID
                     AND Extent1.AREA = Extent32.AREA_ID
-                LEFT JOIN SYS0064M Extent33   ON Extent1.POSTCODE = Extent33.POSTCODE
+                LEFT JOIN SYS0064M Extent33   ON TO_CHAR(Extent1.POSTCODE) = Extent33.POSTCODE
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
