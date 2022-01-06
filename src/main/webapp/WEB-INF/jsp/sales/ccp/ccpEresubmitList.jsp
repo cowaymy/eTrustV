@@ -205,7 +205,7 @@
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#eResubmitSearchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+    <%-- <li><p class="btn_blue"><a href="#" onclick="javascript:$('#eResubmitSearchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li> --%>
 </ul>
 </aside><!-- title_line end -->
 
