@@ -90,6 +90,13 @@
             Common.popupDiv("/sales/ccp/ccpEresubmitNew.do", $("#eResubmitSearchForm").serializeJSON(), null, true, '_newPop');
         });
 
+        $('#SalesmanCode').change(function(event) {
+            var memCd = $('#SalesmanCode').val().trim();
+
+            if(FormUtil.isNotEmpty(memCd)) {
+                fn_loadOrderSalesman(memCd);
+            }
+        });
 
     });
 
@@ -149,6 +156,20 @@
     }
 
 
+
+    function fn_loadOrderSalesman(memCode) {
+
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : memCode}, function(memInfo) {
+
+            if(memInfo == null) {
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                $('#SalesmanCode').val('');
+            }
+            /* else {
+                $('#_memCode').val(memInfo.memCode);
+                $('#_memName').val(memInfo.name);            } */
+        });
+    }
 
     $.fn.clearForm = function() {
         return this.each(function() {
