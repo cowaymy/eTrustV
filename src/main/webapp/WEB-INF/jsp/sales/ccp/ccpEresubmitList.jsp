@@ -4,11 +4,67 @@
 <script type="text/javaScript" language="javascript">
     //AUIGrid 생성 후 반환 ID
     var myGridResID;
+    var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 
     $(document).ready(function(){
 
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+
+        if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+
+            /* if("${SESSION_INFO.memberLevel}" =="1"){
+
+                $("#orgCode").val("${orgCode}");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
+
+            }else  */
+            	if("${SESSION_INFO.memberLevel}" =="2"){
+
+                //$("#orgCode").val("${orgCode}");
+                //$("#orgCode").attr("class", "w100p readonly");
+                //$("#orgCode").attr("readonly", "readonly");
+
+                $("#GrpCode").val("${grpCode}");
+                $("#GrpCode").attr("class", "w100p readonly");
+                $("#GrpCode").attr("readonly", "readonly");
+
+            }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            	//$("#orgCode").val("${orgCode}");
+                //$("#orgCode").attr("class", "w100p readonly");
+                //$("#orgCode").attr("readonly", "readonly");
+
+                $("#GrpCode").val("${grpCode}");
+                $("#GrpCode").attr("class", "w100p readonly");
+                $("#GrpCode").attr("readonly", "readonly");
+
+                $("#DeptCode").val("${deptCode}");
+                $("#DeptCode").attr("class", "w100p readonly");
+                $("#DeptCode").attr("readonly", "readonly");
+
+            }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            	//$("#orgCode").val("${orgCode}");
+                //$("#orgCode").attr("class", "w100p readonly");
+                //$("#orgCode").attr("readonly", "readonly");
+
+                $("#GrpCode").val("${grpCode}");
+                $("#GrpCode").attr("class", "w100p readonly");
+                $("#GrpCode").attr("readonly", "readonly");
+
+                $("#DeptCode").val("${deptCode}");
+                $("#DeptCode").attr("class", "w100p readonly");
+                $("#DeptCode").attr("readonly", "readonly");
+
+                $("#SalesmanCode").val("${SESSION_INFO.userName}");
+                $("#SalesmanCode").attr("class", "w100p readonly");
+                //$("#memCode").attr("readonly", "readonly");
+                //$("#memCode").hide();
+
+            }
+        }
 
       //AUIGrid.setSelectionMode(myGridResID, "singleRow");
 
@@ -135,6 +191,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="eResubmitSearchForm" name="eResubmitSearchForm" method="post">
+<input id="memCode" name="hiddenTotal" type="hidden"/>
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>

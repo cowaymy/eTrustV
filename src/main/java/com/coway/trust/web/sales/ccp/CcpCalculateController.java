@@ -32,6 +32,7 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -64,6 +65,9 @@ public class CcpCalculateController {
 
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
@@ -568,7 +572,17 @@ public class CcpCalculateController {
 	}
 
 	@RequestMapping(value = "/ccpEresubmit.do")
-	  public String ccpEresubmit(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	  public String ccpEresubmit(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception{
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+		}
 
 	      return "sales/ccp/ccpEresubmitList";
 	  }

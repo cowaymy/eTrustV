@@ -1463,6 +1463,7 @@ AND T1.CNT = 1
                    Filter1.USERNAME2 USER_NAME  ,
                    Filter1.USERNAME3 USERNAME1  ,
                    Filter1.MEM_CODE   ,
+                   Filter1.MEM_ID,
                    Filter1.RESN_DESC   ,
                    Filter1.NAME4 NAME2  ,
                    Filter1.CORPCUSTTYPE   ,
@@ -1500,6 +1501,7 @@ AND T1.CNT = 1
                       Extent3.STUS_CODE_ID STATUSCODEID1  ,
                       Extent3.CRT_DT CREATED1  ,
                       Extent3.STUS_CODE_ID,
+                      Extent3.MEM_ID,
                       Extent4.BRNCH_ID BRANCHID2  ,
                       Extent5.USER_NAME USERNAME2  ,
                       Extent6.USER_NAME USERNAME3  ,
@@ -1580,10 +1582,10 @@ AND T1.CNT = 1
                       ) Filter1
                  JOIN SYS0005M Extent13   ON Filter1.BRANCHID3 = Extent13.BRNCH_ID
                  <if test=" '' != DeptCode and null != DeptCode">
-                 LEFT JOIN ORG1001V V ON V.mem_Code = Filter1.USERNAME2
+                 LEFT JOIN ORG1001V V ON V.mem_Code = Filter1.MEM_CODE
                  </if>
                  <if test=" '' != GrpCode and null != GrpCode and '' == DeptCode">
-                 LEFT JOIN ORG1001V V ON V.mem_Code = Filter1.USERNAME2
+                 LEFT JOIN ORG1001V V ON V.mem_Code = Filter1.MEM_CODE
                  </if>
                  WHERE  1 = 1
                            <!--Start Condition  -->
@@ -1596,7 +1598,7 @@ AND T1.CNT = 1
                           </if>
                           <if test=" '' != memID and null != memID">
                              <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
-                             AND  Filter1.memID = #{memID}
+                             AND  Filter1.MEM_ID = #{memID}
                           </if>
                            <if test=" '' != calBranch and null != calBranch">
                               AND Extent13.BRNCH_ID IN

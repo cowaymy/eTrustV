@@ -372,6 +372,10 @@ $(function(){
     });
 });
 
+/* function fn_goCustSearch() {
+    Common.popupDiv('/homecare/sales/ccp/searchOrderNoPop.do', null, null, true, '_searchDiv');
+  } */
+
 function fn_removeFile(name){
     if(name == "SOF") {
         console.log("SOF in");
