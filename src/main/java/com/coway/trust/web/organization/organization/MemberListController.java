@@ -130,7 +130,7 @@ public class MemberListController {
 	@RequestMapping(value = "/memberList.do")
 	public String memberList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
-		logger.debug("sessionVO  getUserTypeId  {} " , sessionVO.getUserTypeId());
+		////logger.debug("sessionVO  getUserTypeId  {} " , sessionVO.getUserTypeId());
 
 		//화면에 공통코드값....가져와........
 		List<EgovMap> nationality = memberListService.nationality();
@@ -144,7 +144,7 @@ public class MemberListController {
 			params.put("userTypeId", sessionVO.getUserTypeId());
 		}
 
-		logger.debug("type : {}", type);
+		////logger.debug("type : {}", type);
 
 		if ( params.get("userTypeId" ) == "4"  && type == "42") {
 			params.put("userTypeId", "2");
@@ -163,13 +163,13 @@ public class MemberListController {
 		List<EgovMap> status = memberListService.selectStatus();
 		List<EgovMap> userBranch = memberListService.selectUserBranch();
 		List<EgovMap> user = memberListService.selectUser();
-		logger.debug("-------------controller------------");
+		/*logger.debug("-------------controller------------");
 		logger.debug("nationality    " + nationality);
 		logger.debug("memberType    " + memberType);
 		logger.debug("race    " + race);
 		logger.debug("status    " + status);
 		logger.debug("userBranch    " + userBranch);
-		logger.debug("user    " + user);
+		logger.debug("user    " + user);*/
 		model.addAttribute("nationality", nationality);
 		model.addAttribute("memberType", memberType);
 		model.addAttribute("race", race);
@@ -179,7 +179,7 @@ public class MemberListController {
 
 		params.put("userId", sessionVO.getUserId());
 		EgovMap userRole = memberListService.getUserRole(params);
-		logger.debug("userRole     " + userRole);
+		//logger.debug("userRole     " + userRole);
 		model.addAttribute("userRole", userRole.get("roleid"));
 
     if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
@@ -206,7 +206,7 @@ public class MemberListController {
 	/*By KV start - ReplacementCT - selection in requestvacation*/
 	@RequestMapping(value = "/selectReplaceCTList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectReplaceCTList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
-		   logger.debug("groupCode : {}", params);
+		   //logger.debug("groupCode : {}", params);
            params.put("brnch_id", params.get("brnch_id")  );
            params.put("mem_id",params.get("mem_id") );
            params.put("mem_code",params.get("mem_code") );
@@ -227,28 +227,28 @@ public class MemberListController {
 	public ResponseEntity<List<EgovMap>> selectmemberListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO,
 			@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		logger.debug("memTypeCom : {}", params.get("memTypeCom"));
-		logger.debug("code : {}", params.get("code"));
-		logger.debug("name : {}", params.get("name"));
-		logger.debug("icNum : {}", params.get("icNum"));
-		logger.debug("birth : {}", params.get("birth"));
-		logger.debug("nation : {}", params.get("nation"));
-		logger.debug("race : {}", params.get("race"));
-		logger.debug("status : {}", params.get("status"));
+//		logger.debug("memTypeCom : {}", params.get("memTypeCom"));
+//		logger.debug("code : {}", params.get("code"));
+//		logger.debug("name : {}", params.get("name"));
+//		logger.debug("icNum : {}", params.get("icNum"));
+//		logger.debug("birth : {}", params.get("birth"));
+//		logger.debug("nation : {}", params.get("nation"));
+//		logger.debug("race : {}", params.get("race"));
+//		logger.debug("status : {}", params.get("status"));
 
 		// By KV start - Do Search Button for Position Level
-		logger.debug("position : {}", params.get("position"));
+		//logger.debug("position : {}", params.get("position"));
 		// By KV end - Do Search Button for Position Level
 
-		logger.debug("contact : {}", params.get("contact"));
-		logger.debug("sponsor : {}", params.get("sponsor"));
-		logger.debug("keyUser : {}", params.get("keyUser"));
-		logger.debug("keyBranch : {}", params.get("keyBranch"));
-		logger.debug("createDate : {}", params.get("createDate"));
-		logger.debug("endDate : {}", params.get("endDate"));
+//		logger.debug("contact : {}", params.get("contact"));
+//		logger.debug("sponsor : {}", params.get("sponsor"));
+//		logger.debug("keyUser : {}", params.get("keyUser"));
+//		logger.debug("keyBranch : {}", params.get("keyBranch"));
+//		logger.debug("createDate : {}", params.get("createDate"));
+//		logger.debug("endDate : {}", params.get("endDate"));
 
-		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
-		logger.debug("userName : {}", sessionVO.getUserName());
+//		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
+//		logger.debug("userName : {}", sessionVO.getUserName());
 
 		params.put("memberLevel", sessionVO.getMemberLevel());
 		params.put("userName", sessionVO.getUserName());
@@ -295,8 +295,8 @@ public class MemberListController {
 	@RequestMapping(value = "/selectMemberListDetailPop.do")
 	public String selectMemberListDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		logger.debug("selCompensation in.............");
-		logger.debug("params: {}", params);
+//		logger.debug("selCompensation in.............");
+//		logger.debug("params: {}", params);
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
@@ -312,10 +312,10 @@ public class MemberListController {
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
-		logger.debug("PAExpired : {}", PAExpired);
-		logger.debug("selectMemberListView111 : {}", selectMemberListView);
-		logger.debug("issuedBank : {}", selectIssuedBank);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+//		logger.debug("PAExpired : {}", PAExpired);
+//		logger.debug("selectMemberListView111 : {}", selectMemberListView);
+//		logger.debug("issuedBank : {}", selectIssuedBank);
+//		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);
@@ -364,17 +364,17 @@ public class MemberListController {
 		List<EgovMap> DeptCdList = memberListService.getDeptCdListList(params);
 
 		List<EgovMap> list = memberListService.getSpouseInfoView(params);
-		logger.debug("return_Values: " + list.toString());
-
-		logger.debug("race : {} "+race);
-		logger.debug("marrital : {} "+marrital);
-		logger.debug("nationality : {} "+nationality);
-		logger.debug("state : {} "+state);
-		logger.debug("educationLvl : {} "+educationLvl);
-		logger.debug("language : {} "+language);
-		logger.debug("Religion : {} "+Religion);
-
-		logger.debug("DeptCdList : {} "+DeptCdList);
+//		logger.debug("return_Values: " + list.toString());
+//
+//		logger.debug("race : {} "+race);
+//		logger.debug("marrital : {} "+marrital);
+//		logger.debug("nationality : {} "+nationality);
+//		logger.debug("state : {} "+state);
+//		logger.debug("educationLvl : {} "+educationLvl);
+//		logger.debug("language : {} "+language);
+//		logger.debug("Religion : {} "+Religion);
+//
+//		logger.debug("DeptCdList : {} "+DeptCdList);
 
 		model.addAttribute("race", race);
 		model.addAttribute("marrital", marrital);
@@ -407,7 +407,7 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/selectDocSubmission", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDocSubmission(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug("MemberType : {} "+params.get("MemberType"));
+		//logger.debug("MemberType : {} "+params.get("MemberType"));
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 		List<EgovMap> selectDocSubmission;
@@ -418,7 +418,7 @@ public class MemberListController {
 			selectDocSubmission = memberListService.selectDocSubmission(params);
 		}
 
-		logger.debug("selectDocSubmission : {}", selectDocSubmission);
+		//logger.debug("selectDocSubmission : {}", selectDocSubmission);
 		return ResponseEntity.ok(selectDocSubmission);
 	}
 
@@ -434,7 +434,7 @@ public class MemberListController {
 	@RequestMapping(value = "/selectPromote", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPromote(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> selectPromote = memberListService.selectPromote(params);
-		logger.debug("selectPromote : {}", selectPromote);
+		//logger.debug("selectPromote : {}", selectPromote);
 		return ResponseEntity.ok(selectPromote);
 	}
 
@@ -450,7 +450,7 @@ public class MemberListController {
 	@RequestMapping(value = "/selectPaymentHistory", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPaymentHistory(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> selectPaymentHistory = memberListService.selectPaymentHistory(params);
-		logger.debug("selectPaymentHistory : {}", selectPaymentHistory);
+		//logger.debug("selectPaymentHistory : {}", selectPaymentHistory);
 		return ResponseEntity.ok(selectPaymentHistory);
 	}
 
@@ -465,7 +465,7 @@ public class MemberListController {
 	@RequestMapping(value = "/selectRenewalHistory", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectRenewalHistory(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> selectRenewalHistory = memberListService.selectRenewalHistory(params);
-		logger.debug("selectRenewalHistory : {}", selectRenewalHistory);
+		//logger.debug("selectRenewalHistory : {}", selectRenewalHistory);
 		return ResponseEntity.ok(selectRenewalHistory);
 	}
 
@@ -482,7 +482,7 @@ public class MemberListController {
 		params.put("groupCode","area");
 		params.put("codevalue",params.get("codevalue"));
 		List<EgovMap> area = commonService.selectAddrSelCode(params);
-		logger.debug("area : {}", area);
+		//logger.debug("area : {}", area);
 		return ResponseEntity.ok(area);
 	}
 
@@ -500,14 +500,14 @@ public class MemberListController {
 		ReturnMessage message = new ReturnMessage();
 		Boolean success = false;
 		String msg = "";
-		logger.debug("params : {}", params);
-		logger.debug("memberNm : {}", params.get("memberNm"));
-		logger.debug("memberType : {}", params.get("memberType"));
-		logger.debug("joinDate : {}", params.get("joinDate"));
-		logger.debug("gender : {}", params.get("gender"));
-		logger.debug("gender : {}", params.get("gender"));
-		logger.debug("update : {}", params.get("docType"));
-		logger.debug("myGridID : {}", params.get("params"));
+//		logger.debug("params : {}", params);
+//		logger.debug("memberNm : {}", params.get("memberNm"));
+//		logger.debug("memberType : {}", params.get("memberType"));
+//		logger.debug("joinDate : {}", params.get("joinDate"));
+//		logger.debug("gender : {}", params.get("gender"));
+//		logger.debug("gender : {}", params.get("gender"));
+//		logger.debug("update : {}", params.get("docType"));
+//		logger.debug("myGridID : {}", params.get("params"));
 
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -515,8 +515,8 @@ public class MemberListController {
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
-		logger.debug("udtList : {}", updList);
-		logger.debug("formMap : {}", formMap);
+		//logger.debug("udtList : {}", updList);
+		//logger.debug("formMap : {}", formMap);
 
 		try {
     		String memCode = "";
@@ -535,12 +535,12 @@ public class MemberListController {
     		String memberType =String.valueOf(formMap.get("memberType"));
     		String trainType =String.valueOf(formMap.get("traineeType1"));
 
-    		logger.debug(trainType + "train1111");
+    		//logger.debug(trainType + "train1111");
     		//doc 넣기
 
     		memberListService.insertDocSub(updList, memCode, userId, memberType, trainType);
 
-    		logger.debug("memCode : {}", memCode);
+    		//logger.debug("memCode : {}", memCode);
     		// 결과 만들기.
 
     //        	message.setCode(AppConstants.SUCCESS);
@@ -550,7 +550,7 @@ public class MemberListController {
            	}else{
            		message.setMessage("Compelete to Create a Member Code : " +memCode);
            	}
-           	logger.debug("message : {}", message);
+           	//logger.debug("message : {}", message);
 
 		} catch (Exception e){
 			message.setCode(AppConstants.FAIL);
@@ -569,12 +569,12 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/selectHpDocSubmission", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHpDocSubmission(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug("memberType : {}"+params.get("memType")+"11111111111111"); // member new detail edit 다쓰인다
-		logger.debug("params : {}"+params);
+		//logger.debug("memberType : {}"+params.get("memType")+"11111111111111"); // member new detail edit 다쓰인다
+		//logger.debug("params : {}"+params);
 		List<EgovMap> selectDocSubmission;
 
 		params.put("memType" , params.get("memType").toString().trim() );
-		logger.debug("params : {}"+params);
+		//logger.debug("params : {}"+params);
 		if("2".equals( params.get("memType").toString().trim() )|| "2".equals(String.valueOf(params.get("trainType")))){//type가 Coway Lady면 traniee 쿼리가 살짝다름.....
 			selectDocSubmission = memberListService.selectCodyDocSubmission(params);
 		}else if("5".equals( String.valueOf(params.get("memType")).trim() )){
@@ -591,7 +591,7 @@ public class MemberListController {
 			selectDocSubmission = memberListService.selectHpDocSubmission(params);
 		}
 
-		logger.debug("selectDocSubmission : {}", selectDocSubmission);
+		//logger.debug("selectDocSubmission : {}", selectDocSubmission);
 		return ResponseEntity.ok(selectDocSubmission);
 	}
 
@@ -608,16 +608,16 @@ public class MemberListController {
 	public String selectTerminateResign(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
-		logger.debug("codeValue : {}", params.get("codeValue"));
+		//logger.debug("codeValue : {}", params.get("codeValue"));
 
 		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
-		logger.debug("PAExpired : {}", PAExpired);
-		logger.debug("selectMemberListView : {}", selectMemberListView);
-		logger.debug("issuedBank : {}", selectIssuedBank);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+//		logger.debug("PAExpired : {}", PAExpired);
+//		logger.debug("selectMemberListView : {}", selectMemberListView);
+//		logger.debug("issuedBank : {}", selectIssuedBank);
+//		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);
@@ -641,8 +641,8 @@ public class MemberListController {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		try {
     		if(sessionVO != null){
-    			logger.debug("params : {}", params);
-    			logger.debug("sessionVO : {}", sessionVO.getUserId());
+    			//logger.debug("params : {}", params);
+    			//logger.debug("sessionVO : {}", sessionVO.getUserId());
     			boolean success = false;
     			if(params.get("codeValue").toString().equals("1")){
     	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
@@ -683,10 +683,10 @@ public class MemberListController {
 		List<EgovMap> vact_type_id = commonService.getDetailCommonCodeList(params);
 		/*EgovMap PAExpired = memberListService.selectCodyPAExpired(params);*/
 		/*logger.debug("PAExpired : {}", PAExpired);*/
-		logger.debug("selectMemberListView : {}", selectMemberListView);
-		logger.debug("issuedBank : {}", selectIssuedBank);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
-		logger.debug("vact_type_id    " + vact_type_id);
+//		logger.debug("selectMemberListView : {}", selectMemberListView);
+//		logger.debug("issuedBank : {}", selectIssuedBank);
+//		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+//		logger.debug("vact_type_id    " + vact_type_id);
 		/*model.addAttribute("PAExpired", PAExpired);*/
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);
@@ -710,8 +710,8 @@ public class MemberListController {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		if(sessionVO != null){
-			logger.debug("params : {}", params);
-			logger.debug("sessionVO : {}", sessionVO.getUserId());
+			//logger.debug("params : {}", params);
+			//logger.debug("sessionVO : {}", sessionVO.getUserId());
 			boolean success = false;
 
 	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
@@ -740,9 +740,9 @@ public class MemberListController {
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
 		/*EgovMap PAExpired = memberListService.selectCodyPAExpired(params);*/
 		/*logger.debug("PAExpired : {}", PAExpired);*/
-		logger.debug("selectMemberListView : {}", selectMemberListView);
-		logger.debug("issuedBank : {}", selectIssuedBank);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		//logger.debug("selectMemberListView : {}", selectMemberListView);
+		//logger.debug("issuedBank : {}", selectIssuedBank);
+		//logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		/*logger.debug("vact_type_id    " + vact_type_id);*/
 		/*model.addAttribute("PAExpired", PAExpired);*/
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
@@ -798,9 +798,9 @@ public class MemberListController {
 		params.put("memberLvl", params.get("groupCode[memberLvl]"));
 		params.put("memberType", params.get("groupCode[memberType]"));
 		params.put("memberID", params.get("groupCode[memberID]"));
-		logger.debug("params : {}", params);
+		//logger.debug("params : {}", params);
 		List<EgovMap> superiorTeam = memberListService.selectSuperiorTeam(params);
-		logger.debug("superiorTeam : {}", superiorTeam);
+		//logger.debug("superiorTeam : {}", superiorTeam);
 		return ResponseEntity.ok(superiorTeam);
 	}
 
@@ -814,12 +814,12 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/selectDeptCode", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDeptCode(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		logger.debug("params : {}", params);
+		//logger.debug("params : {}", params);
 		params.put("memberLvl", params.get("groupCode[memberLvl]"));
 		params.put("flag", params.get("groupCode[flag]"));
 		params.put("flag2", params.get("groupCode[flag2]"));
 		params.put("branchVal", params.get("groupCode[branchVal]"));
-		logger.debug("params : {}", params);
+		//logger.debug("params : {}", params);
 		List<EgovMap> deptCode = memberListService.selectDeptCode(params);
 		return ResponseEntity.ok(deptCode);
 	}
@@ -864,8 +864,8 @@ public class MemberListController {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		Map<String, Object> trInfo = new HashMap();
 
-		logger.debug("in...... traineeUpdate");
-		logger.debug("params : {}", params);
+		//logger.debug("in...... traineeUpdate");
+		//logger.debug("params : {}", params);
 
 		try {
     		resultValue = memberListService.traineeUpdate(params,sessionVO);
@@ -896,10 +896,10 @@ public class MemberListController {
 	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		List<EgovMap> branch = memberListService.branch();
-		logger.debug("branchList : {}", branch);
+		//logger.debug("branchList : {}", branch);
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
-		logger.debug("params123 : {}", params);
+		//logger.debug("params123 : {}", params);
 		EgovMap selectMemberListView = null;
 		if(!params.get("memType").toString().equals("2803")){ //hp가 아닐때
 			selectMemberListView = memberListService.selectMemberListView(params);
@@ -907,30 +907,30 @@ public class MemberListController {
 		else{
 			selectMemberListView = memberListService.selectOneHPMember(params);
 		}
-		logger.debug("selectMemberListView : {}", selectMemberListView);
+		//logger.debug("selectMemberListView : {}", selectMemberListView);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
-		logger.debug("issuedBank : {}", selectIssuedBank);
+		//logger.debug("issuedBank : {}", selectIssuedBank);
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		//logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
-		logger.debug("PAExpired : {}", PAExpired);
+		//logger.debug("PAExpired : {}", PAExpired);
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
-		logger.debug("mainDeptList : {}", mainDeptList);
+		//logger.debug("mainDeptList : {}", mainDeptList);
 
 		params.put("mstCdId",377);
 		List<EgovMap> Religion = commonService.getDetailCommonCodeList(params);
-		logger.debug("Religion : {} "+Religion);
+		//logger.debug("Religion : {} "+Religion);
 
 		if(selectMemberListView != null){
     		params.put("groupCode", selectMemberListView.get("mainDept"));
-    		logger.debug("params : {}", params);
-    		logger.debug("groupCode : {}", selectMemberListView.get("mainDept"));
+    		//logger.debug("params : {}", params);
+    		//logger.debug("groupCode : {}", selectMemberListView.get("mainDept"));
 		}
 		else{
 			params.put("groupCode", "");
 		}
     		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
-    		logger.debug("subDeptList : {}", subDeptList);
+    		//logger.debug("subDeptList : {}", subDeptList);
 
     	// 2020-02-04 - LaiKW - Added to block CDB Sales admin to self change branch
     	model.addAttribute("userRoleId", sessionVO.getRoleId());
@@ -953,7 +953,7 @@ public class MemberListController {
 	public String memberValidDateEdit(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		EgovMap memberValidDate = memberListService.selectMemberValidDate(params);
-		logger.debug("memValidDate : {}", memberValidDate);
+		//logger.debug("memValidDate : {}", memberValidDate);
 
 		//model.addAttribute("memType", params.get("memType"));
 		model.addAttribute("membercode", params.get("membercode"));
@@ -965,18 +965,18 @@ public class MemberListController {
 	@RequestMapping(value = "/getMemberListMemberView", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMemberListMemberView(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
-		logger.debug("in  getMemberListMemberView.....");
-		logger.debug("params555 : {}", params.toString());
+		//logger.debug("in  getMemberListMemberView.....");
+		//logger.debug("params555 : {}", params.toString());
 		List<EgovMap> list =null;
 		if(!params.get("memType").toString().equals("2803") ){ // hp 가아닐떄
     		 list = memberListService.getMemberListView(params);
-    		logger.debug("return_Values: " + list.toString());
+    		//logger.debug("return_Values: " + list.toString());
     		EgovMap map= list.get(0);
     		map.put("isHP", "NO");
 		}
 		else{// hp 일때
 			 list = memberListService.getHpMemberView(params);
-			 logger.debug("return_Values: " + list.toString());
+			 //logger.debug("return_Values: " + list.toString());
 				EgovMap map= list.get(0);
 				map.put("isHp", "YES");
 		}
@@ -1001,22 +1001,22 @@ public class MemberListController {
 
         //@AMEER INCOME TAX 2021-10-25
         formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
-        logger.debug("@@incomeTaxNo : {}", params.get("incomeTaxNo"));
+        //logger.debug("@@incomeTaxNo : {}", params.get("incomeTaxNo"));
 
 
         int userId = sessionVO.getUserId();
         formMap.put("user_id", userId);
-        logger.debug("udtparam11111 : {}", params);
-        logger.debug("udtList : {}", updList);
-        logger.debug("formMap : {}", formMap);
+        //logger.debug("udtparam11111 : {}", params);
+        //logger.debug("udtList : {}", updList);
+        //logger.debug("formMap : {}", formMap);
 
-        logger.debug("memberNm : {}", formMap.get("memberNm"));
-        logger.debug("memberType : {}", formMap.get("memberType"));
-        logger.debug("joinDate : {}", formMap.get("joinDate"));
-        logger.debug("gender : {}", formMap.get("gender"));
-        logger.debug("update : {}", formMap.get("docType"));
-        logger.debug("myGridID : {}", formMap.get("params"));
-        logger.debug("hsptlz : {}", params.get("hsptlz"));
+        //logger.debug("memberNm : {}", formMap.get("memberNm"));
+        //logger.debug("memberType : {}", formMap.get("memberType"));
+        //logger.debug("joinDate : {}", formMap.get("joinDate"));
+        //logger.debug("gender : {}", formMap.get("gender"));
+        //logger.debug("update : {}", formMap.get("docType"));
+        //logger.debug("myGridID : {}", formMap.get("params"));
+        //logger.debug("hsptlz : {}", params.get("hsptlz"));
 
         // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
         formMap.put("hsptlz",  params.get("hsptlz"));
@@ -1030,7 +1030,7 @@ public class MemberListController {
         String memberType = "";
         boolean update = false;
 
-        logger.debug("formMap : {}", formMap);
+        //logger.debug("formMap : {}", formMap);
 
         // update = memberListService.updateMember(formMap, updList,sessionVO);
         // memberListService.updateMemberBranch(formMap);
@@ -1124,12 +1124,12 @@ public class MemberListController {
                 }
             }
 
-            logger.debug("Non-HP Update :: Branch :: u1 = " + Integer.toString(u1) + ", u2 = " + Integer.toString(u2));
-            logger.debug("Non-HP Update :: Member :: u3 = " + Integer.toString(u3));
-            logger.debug("Non-HP Update :: Applicant :: u4 = " + Integer.toString(u4));
-            logger.debug("Non-HP Update :: Course :: u5 = " + Integer.toString(u5));
-            logger.debug("Non-HP Update :: Service capacity :: u6 = " + Integer.toString(u6));
-            logger.debug("Non-HP Update :: CD PA :: u7 = " + Integer.toString(u7));
+            //logger.debug("Non-HP Update :: Branch :: u1 = " + Integer.toString(u1) + ", u2 = " + Integer.toString(u2));
+            //logger.debug("Non-HP Update :: Member :: u3 = " + Integer.toString(u3));
+            //logger.debug("Non-HP Update :: Applicant :: u4 = " + Integer.toString(u4));
+            //logger.debug("Non-HP Update :: Course :: u5 = " + Integer.toString(u5));
+            //logger.debug("Non-HP Update :: Service capacity :: u6 = " + Integer.toString(u6));
+            //logger.debug("Non-HP Update :: CD PA :: u7 = " + Integer.toString(u7));
             // LaiKW - Comment ends here (New)
 
             // LaiKW - Comment starts here (Old)
@@ -1172,8 +1172,8 @@ public class MemberListController {
                 memberListService.updateAplctDtls(formMap);
             }*/
 
-            logger.debug("result UPC : " + Integer.toString(resultUpc1) + " , " + Integer.toString(resultUpc2) + " , "
-                    + Integer.toString(resultUpc3) + " , " + Integer.toString(resultUpc6) + " , " );
+            /*logger.debug("result UPC : " + Integer.toString(resultUpc1) + " , " + Integer.toString(resultUpc2) + " , "
+                    + Integer.toString(resultUpc3) + " , " + Integer.toString(resultUpc6) + " , " );*/
         }
 
         else {
@@ -1191,7 +1191,7 @@ public class MemberListController {
         } else {
             message.setMessage("Compelete to Edit a Member Code : " + memCode);
         }
-        logger.debug("message : {}", message + memCode);
+        //logger.debug("message : {}", message + memCode);
 
         System.out.println("msg   " + success + memCode);
         //
@@ -1227,17 +1227,17 @@ public class MemberListController {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
-		logger.debug("in...... hpMemRegister");
-		logger.debug("params : {}", params);
+		//logger.debug("in...... hpMemRegister");
+		//logger.debug("params : {}", params);
 
 		try {
     		params.put("MemberID", Integer.parseInt((String) params.get("memberId")));
 
     		resultValue = memberListService.hpMemRegister(params,sessionVO);
 
-    		logger.debug("in...... hpMemRegiste Result");
-    		logger.debug("params : {}", params);
-    		logger.debug("resultValue : {}", resultValue);
+    		//logger.debug("in...... hpMemRegiste Result");
+    		//logger.debug("params : {}", params);
+    		//logger.debug("resultValue : {}", resultValue);
 
     		if(resultValue.size() > 0){
     			if (resultValue.get("duplicMemCode") != null) {
@@ -1248,7 +1248,7 @@ public class MemberListController {
     				message.setMessage((String)resultValue.get("memCode"));
     				// doc UPdate
     				params.put("hpMemId",  resultValue.get("memId").toString());
-    				logger.debug("params {}" , params);
+    				//logger.debug("params {}" , params);
     				memberListService.updateDocSubWhenAppr(params , sessionVO);
 
     			}
@@ -1260,13 +1260,13 @@ public class MemberListController {
 			message.setMessage(e.getMessage());
 		}
 
-		logger.debug("message : {}", message);
+		//logger.debug("message : {}", message);
 		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/selectSubDept.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubDept( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		logger.debug("params {}", params);
+		//logger.debug("params {}", params);
 
 		params.put("groupCode",  params.get("groupCode"));
 
@@ -1285,7 +1285,7 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/selectCoureCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCoureCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		logger.debug("selectCoureCode params : {}", params);
+		//logger.debug("selectCoureCode params : {}", params);
 
 
 		Calendar Startcal = Calendar.getInstance();
@@ -1318,7 +1318,7 @@ public class MemberListController {
 	    //today3.append(String.format("%02d", Endcal.getActualMaximum(Endcal.DAY_OF_MONTH)));
 
 	    String endDay = today3.toString();
-		logger.debug("=====================todate2=========================" +startDay + " <>  " + endDay);
+		//logger.debug("=====================todate2=========================" +startDay + " <>  " + endDay);
 
 		params.put("startDay", startDay);
 		params.put("endDay", endDay);
@@ -1346,7 +1346,7 @@ public class MemberListController {
 
 //		logger.debug("nric : {} " + params.get("nric"));
 //		String nric = "";
-		logger.debug("nric_params : {} " + params);
+		//logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC1 = memberListService.checkNRIC1(params);
 
 		// 결과 만들기.
@@ -1357,7 +1357,7 @@ public class MemberListController {
 		} else {
 			message.setMessage("pass");
 		}
-		logger.debug("message : {}", message);
+		//logger.debug("message : {}", message);
 
     	return ResponseEntity.ok(message);
 	}
@@ -1365,7 +1365,7 @@ public class MemberListController {
 	@RequestMapping(value = "/checkNRIC2.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkNRIC2(@RequestParam Map<String, Object> params, Model model) {
 
-		logger.debug("nric_params : {} " + params);
+		//logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC2 = memberListService.checkNRIC2(params);
 		String memType = "";
 		String resignDt = "";
@@ -1379,12 +1379,12 @@ public class MemberListController {
 			memType = checkNRIC2.get(0).get("memType").toString();
 			status = checkNRIC2.get(0).get("stus").toString();
 
-			logger.debug("memType : " + memType);
-			logger.debug("status : " + status);
+			//logger.debug("memType : " + memType);
+			//logger.debug("status : " + status);
 
 			if(status.equals("51")) {
 			    resignDt = checkNRIC2.get(0).get("resignDt").toString();
-			    logger.debug("resignDt : " + resignDt);
+			    //logger.debug("resignDt : " + resignDt);
 
 			    // 2019-02-12 - LaiKW - Amend checking for 6 months resignation allow rejoin
 			    // 2020-08-38 - LaiKW - Amend checking for 3 months resignation allow rejoin
@@ -1397,13 +1397,13 @@ public class MemberListController {
 	                cCal.setTime(cDt);
 	                cCal.add(Calendar.MONTH, -3);
 
-	                logger.debug("M-6 :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
+	                //logger.debug("M-6 :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
 
 	                Date rDt = new SimpleDateFormat("yyyyMMdd").parse(resignDt);
 	                Calendar rCal = Calendar.getInstance();
 	                rCal.setTime(rDt);
 
-	                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
+	                //logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
 
 	                if(rCal.before(cCal)) {
 	                    // Resignation Date is before 3 months before current date
@@ -1435,7 +1435,7 @@ public class MemberListController {
 			message.setMessage("pass");
 		}
 
-		logger.debug("message : {}", message);
+		//logger.debug("message : {}", message);
 
     	return ResponseEntity.ok(message);
 	}
@@ -1443,7 +1443,7 @@ public class MemberListController {
 	@RequestMapping(value = "/checkNRIC3.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkNRIC3(@RequestParam Map<String, Object> params, Model model) {
 
-		logger.debug("nric_params : {} " + params);
+		//logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC3 = memberListService.checkNRIC3(params);
 
 		// 결과 만들기.
@@ -1454,7 +1454,7 @@ public class MemberListController {
 		} else {
 			message.setMessage("pass");
 		}
-		logger.debug("message : {}", message);
+		//logger.debug("message : {}", message);
 
     	return ResponseEntity.ok(message);
 	}
@@ -1462,7 +1462,7 @@ public class MemberListController {
 	@RequestMapping(value = "/checkSponsor.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 
-		logger.debug("checkSponsor_params : {} " + params);
+		//logger.debug("checkSponsor_params : {} " + params);
 		// modify jgkim
 
 		if (sessionVO.getUserTypeId() == 1) {
@@ -1501,7 +1501,7 @@ public class MemberListController {
 			message.setData(checkSponsor);
 			message.setMessage("ok");
 		}
-		logger.debug("message : {}", message);
+		//logger.debug("message : {}", message);
 
     	return ResponseEntity.ok(message);
 	}
@@ -1527,10 +1527,10 @@ public class MemberListController {
 	public String memberListBranchEditPop(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 
 		List<EgovMap> branch = memberListService.branch();
-		logger.debug("branchList : {}", branch);
+		//logger.debug("branchList : {}", branch);
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
-		logger.debug("params123 : {}", params);
+		//logger.debug("params123 : {}", params);
 		EgovMap selectMemberListView = null;
 		if(!params.get("memType").toString().equals("2803")){ //hp가 아닐때
 			selectMemberListView = memberListService.selectMemberListView(params);
@@ -1538,26 +1538,26 @@ public class MemberListController {
 		else{
 			selectMemberListView = memberListService.selectOneHPMember(params);
 		}
-		logger.debug("selectMemberListView : {}", selectMemberListView);
+		//logger.debug("selectMemberListView : {}", selectMemberListView);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
-		logger.debug("issuedBank : {}", selectIssuedBank);
+		//logger.debug("issuedBank : {}", selectIssuedBank);
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		//logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
-		logger.debug("PAExpired : {}", PAExpired);
+		//logger.debug("PAExpired : {}", PAExpired);
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
-		logger.debug("mainDeptList : {}", mainDeptList);
+		//logger.debug("mainDeptList : {}", mainDeptList);
 
 		if(selectMemberListView != null){
     		params.put("groupCode", selectMemberListView.get("mainDept"));
-    		logger.debug("params : {}", params);
-    		logger.debug("groupCode : {}", selectMemberListView.get("mainDept"));
+    		//logger.debug("params : {}", params);
+    		//logger.debug("groupCode : {}", selectMemberListView.get("mainDept"));
 		}
 		else{
 			params.put("groupCode", "");
 		}
     		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
-    		logger.debug("subDeptList : {}", subDeptList);
+    		//logger.debug("subDeptList : {}", subDeptList);
 
     	      // 2020-02-04 - LaiKW - Added to block CDB Sales admin to self change branch
             model.addAttribute("userRoleId", sessionVO.getRoleId());
@@ -1595,20 +1595,20 @@ public class MemberListController {
 		int userId = sessionVO.getUserId();
 		formMap.put("user_id", userId);
 
-		logger.debug("udtList : {}", updList);
-		logger.debug("formMap : {}", formMap);
+		//logger.debug("udtList : {}", updList);
+		//logger.debug("formMap : {}", formMap);
 
-		logger.debug("memberNm : {}", formMap.get("memberNm"));
-		logger.debug("memberType : {}", formMap.get("memberType"));
-		logger.debug("joinDate : {}", formMap.get("joinDate"));
-		logger.debug("gender : {}", formMap.get("gender"));
-		logger.debug("update : {}", formMap.get("docType"));
-		logger.debug("myGridID : {}", formMap.get("params"));
+		//logger.debug("memberNm : {}", formMap.get("memberNm"));
+		//logger.debug("memberType : {}", formMap.get("memberType"));
+		//logger.debug("joinDate : {}", formMap.get("joinDate"));
+		//logger.debug("gender : {}", formMap.get("gender"));
+		//logger.debug("update : {}", formMap.get("docType"));
+		//logger.debug("myGridID : {}", formMap.get("params"));
 
 		String memCode = "";
 		boolean update = false;
 
-		logger.debug("memCode : {}", formMap.get("memCode"));
+		//logger.debug("memCode : {}", formMap.get("memCode"));
 
 		//update
 
@@ -1636,7 +1636,7 @@ public class MemberListController {
    	}else{
    		message.setMessage("Compelete to Edit a Member Code : " +memCode);
    	}
-   	logger.debug("message : {}", message);
+   	//logger.debug("message : {}", message);
 
    	System.out.println("msg   " + success);
 //
@@ -1660,7 +1660,7 @@ public class MemberListController {
 		mp.put("user_id",userId);
 
 
-		logger.debug("Member Valid Result ===>"+mp.toString());
+		//logger.debug("Member Valid Result ===>"+mp.toString());
 
 		//formMap.put("user_id", userId);
 
@@ -1668,7 +1668,7 @@ public class MemberListController {
 		String memCode = "";
 		boolean update = false;
 
-		//logger.debug("memCode : {}", formMap.get("memCode"));
+		////logger.debug("memCode : {}", formMap.get("memCode"));
 
 		//update
 		memCode =  (String)mp.get("membercode");
@@ -1682,7 +1682,7 @@ public class MemberListController {
    	}else{
    		message.setMessage("Compelete to Edit a Member Code : " +memCode);
    	}
-   	logger.debug("message : {}", message);
+   	//logger.debug("message : {}", message);
 
    	System.out.println("msg   " + success);
 //
@@ -1694,7 +1694,7 @@ public class MemberListController {
 		ReturnMessage message = new ReturnMessage();
 		int userId = sessionVO.getUserId();
 		params.put("UpdUserId",userId);
-		logger.debug("params {}", params);
+		//logger.debug("params {}", params);
 		boolean isHPApprovalReject = memberListService.updateHpApprovalReject(params);
 
 		if(isHPApprovalReject){
@@ -1710,8 +1710,8 @@ public class MemberListController {
 	@RequestMapping(value = "/sponsorPop.do")
 	public String sponsorPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		logger.debug("sponsorPopUp.............");
-		logger.debug("params : {}", params);
+		//logger.debug("sponsorPopUp.............");
+		//logger.debug("params : {}", params);
 
 //		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
@@ -1735,7 +1735,7 @@ public class MemberListController {
 
 		@RequestMapping(value = "/selectMemberType.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectMemberType(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
-			   logger.debug("groupCode : {}", params);
+			   //logger.debug("groupCode : {}", params);
 //	           params.put("brnch_id", params.get("brnch_id")  );
 //	           params.put("mem_id",params.get("mem_id") );
 //	           params.put("mem_code",params.get("mem_code") );
@@ -1748,7 +1748,7 @@ public class MemberListController {
 
 		@RequestMapping(value = "/selectSponBrnchList.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectSponBrnchList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
-			   logger.debug("groupCode : {}", params);
+			   //logger.debug("groupCode : {}", params);
 //	           params.put("brnch_id", params.get("brnch_id")  );
 //	           params.put("mem_id",params.get("mem_id") );
 //	           params.put("mem_code",params.get("mem_code") );
@@ -1761,7 +1761,7 @@ public class MemberListController {
 
 		@RequestMapping(value = "/sponMemberSearch.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectSponMemberSearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-logger.debug("params : {}", params);
+//logger.debug("params : {}", params);
 			List<EgovMap> list =null;
 	    	list = memberListService.selectSponMemberSearch(params);
 			return ResponseEntity.ok(list);
@@ -1773,7 +1773,7 @@ logger.debug("params : {}", params);
 
 			EgovMap areaInfo =null;
 			areaInfo = memberListService.selectAreaInfo(params);
-			logger.debug("areaInfo : {}", areaInfo);
+			//logger.debug("areaInfo : {}", areaInfo);
 			return ResponseEntity.ok(areaInfo);
 		}
 
@@ -1789,7 +1789,7 @@ logger.debug("params : {}", params);
     public ResponseEntity<Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request,
             ModelMap model) {
 
-        logger.debug("==================== getApplicantInfo ====================");
+        //logger.debug("==================== getApplicantInfo ====================");
 
         EgovMap item = new EgovMap();
         item = (EgovMap) memberListService.validateHpStatus(params);
@@ -1811,7 +1811,7 @@ logger.debug("params : {}", params);
     @RequestMapping(value = "/agreementListing.do")
     public String agreementListing(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-        logger.debug("==================== agreementListing.do ====================");
+        //logger.debug("==================== agreementListing.do ====================");
 
         // Custom login checking based on URL input
 
@@ -1821,8 +1821,8 @@ logger.debug("params : {}", params);
         String idntfc = ((String) params.get("MemberID")).substring(0, 5);
         String memberID = ((String) params.get("MemberID")).substring(5);
 
-        logger.debug("Applicant ID : {}", memberID);
-        logger.debug("User Type : {}", idntfc);
+        //logger.debug("Applicant ID : {}", memberID);
+        //logger.debug("User Type : {}", idntfc);
 
         params.put("MemberID", memberID);
         params.put("Identification", idntfc);
@@ -1852,9 +1852,9 @@ logger.debug("params : {}", params);
     public ResponseEntity<ReturnMessage> updateAplicntInfo(@RequestParam Map<String, Object> params, ModelMap model)
             throws Exception {
 
-        logger.debug("==================== updateHpCfm.do ====================");
+        //logger.debug("==================== updateHpCfm.do ====================");
 
-        logger.debug("params {}", params);
+        //logger.debug("params {}", params);
 
         // Session
         SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -1881,9 +1881,9 @@ logger.debug("params : {}", params);
     public ResponseEntity<ReturnMessage> sendEmail(@RequestParam Map<String, Object> params, HttpServletRequest request,
             ModelMap model, SessionVO session) {
 
-        logger.debug("==================== sendEmail.do ====================");
+        //logger.debug("==================== sendEmail.do ====================");
 
-        logger.debug("params {}", params);
+        //logger.debug("params {}", params);
 
         // send email
         EmailVO email = new EmailVO();
@@ -1942,7 +1942,7 @@ logger.debug("params : {}", params);
         EgovMap item = new EgovMap();
         params.put("srcM", "1");
         item = (EgovMap) memberListService.checkIncomeTax(params);
-        logger.debug("@@: 0"+item);
+        //logger.debug("@@: 0"+item);
         incomeTaxCheck.put("cnt1", item.get("cnt"));
 
         params.remove("srcM");
@@ -1950,7 +1950,7 @@ logger.debug("params : {}", params);
         EgovMap item2 = new EgovMap();
         params.put("srcA", "1");
         item2 = (EgovMap) memberListService.checkIncomeTax(params);
-        logger.debug("@@: 0"+item2);
+        //logger.debug("@@: 0"+item2);
         incomeTaxCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(incomeTaxCheck);
@@ -1961,7 +1961,7 @@ logger.debug("params : {}", params);
     public ResponseEntity<Map> verifyAccess(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
         logger.debug("==================== verifyAccess ====================");
-        logger.debug("params{} " + params);
+        //logger.debug("params{} " + params);
 
         EgovMap item = new EgovMap();
         item = (EgovMap) memberListService.verifyAccess(params);
@@ -2042,7 +2042,7 @@ logger.debug("params : {}", params);
 
         logger.debug("==================== org-selectAccBank ====================");
 
-        logger.debug("groupCode : {}", params.get("groupCode"));
+        //logger.debug("groupCode : {}", params.get("groupCode"));
 
         List<EgovMap> codeList = memberListService.selectAccBank(params);
         return ResponseEntity.ok(codeList);
@@ -2055,7 +2055,7 @@ logger.debug("params : {}", params);
 
         logger.debug("==================== cdAgreement.do ====================");
 
-        logger.debug("params : {}", params);
+        //logger.debug("params : {}", params);
         model.put("loginUserId", (String) params.get("loginUserId"));
         model.put("os", (String) params.get("os"));
         model.put("browser", (String) params.get("browser"));
@@ -2070,7 +2070,7 @@ logger.debug("params : {}", params);
 
         logger.debug("==================== updateCodyCfm.do ====================");
 
-        logger.debug("params {}", params);
+        //logger.debug("params {}", params);
 
         // Session
         SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -2143,7 +2143,7 @@ logger.debug("params : {}", params);
 	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
 
 		List<EgovMap> meetList = memberListService.selectHpMeetPoint();
-		logger.debug("return_Values: " + meetList.toString());
+		//logger.debug("return_Values: " + meetList.toString());
 
 		return ResponseEntity.ok(meetList);
 	}
@@ -2184,7 +2184,7 @@ logger.debug("params : {}", params);
 	@RequestMapping(value = "/selectTraining", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectTraining(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
         List<EgovMap> selectTraining = memberListService.selectTraining(params);
-        logger.debug("selectPromote : {}", selectTraining);
+        //logger.debug("selectPromote : {}", selectTraining);
         return ResponseEntity.ok(selectTraining);
     }
 
@@ -2196,7 +2196,7 @@ logger.debug("params : {}", params);
     @RequestMapping(value = "/searchMP", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> searchMP(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
         List<EgovMap> searchMP = memberListService.searchMP(params);
-        logger.debug("selectPromote : {}", searchMP);
+        //logger.debug("selectPromote : {}", searchMP);
         return ResponseEntity.ok(searchMP);
     }
 
@@ -2302,7 +2302,7 @@ logger.debug("params : {}", params);
     @RequestMapping(value = "/updateOrgUserPW.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> updateOrgUserPW(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 
-        logger.debug("params {}", params);
+        //logger.debug("params {}", params);
 
         params.put("userID", sessionVO.getUserId());
         int cnt = memberListService.updateOrgUserPW(params);
@@ -2332,7 +2332,7 @@ logger.debug("params : {}", params);
             params.put("userTypeId", sessionVO.getUserTypeId());
         }
 
-        logger.debug("type : {}", type);
+        //logger.debug("type : {}", type);
 
         if ( params.get("userTypeId" ) == "4"  && type == "42") {
             params.put("userTypeId", "2");
@@ -2375,11 +2375,11 @@ logger.debug("params : {}", params);
     @RequestMapping(value = "/promoDisHistorySearch", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> promoDisHistorySearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
-        logger.debug("memTypeCom : {}", params.get("promoDisHisMemTypeCom"));
-        logger.debug("promoDisHistorySearch - params : " + params);
+        //logger.debug("memTypeCom : {}", params.get("promoDisHisMemTypeCom"));
+        //logger.debug("promoDisHistorySearch - params : " + params);
 
-        logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
-        logger.debug("userName : {}", sessionVO.getUserName());
+        //logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
+        //logger.debug("userName : {}", sessionVO.getUserName());
 
         params.put("memberLevel", sessionVO.getMemberLevel());
         params.put("userName", sessionVO.getUserName());
@@ -2406,7 +2406,7 @@ logger.debug("params : {}", params);
     @RequestMapping(value = "/vaccinationListing.do")
     public String vaccinationListing(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-        logger.debug("==================== vaccinationListing.do ====================");
+        //logger.debug("==================== vaccinationListing.do ====================");
 
         // Custom login checking based on URL input
         Precondition.checkNotNull(params.get("MemberID"),
@@ -2415,8 +2415,8 @@ logger.debug("params : {}", params);
         String memCode = ((String) params.get("MemberID")).substring(6);
         String memberID = ((String) params.get("MemberID")).substring(0, 6);
 
-        logger.debug("Applicant ID : {}", memberID);
-        logger.debug("User Type : {}", memCode);
+        //logger.debug("Applicant ID : {}", memberID);
+        //logger.debug("User Type : {}", memCode);
 
         params.put("MemberID", memberID);
         params.put("MemCode", memCode);
@@ -2446,7 +2446,7 @@ logger.debug("params : {}", params);
     public ResponseEntity<Map> getVaccineSubmitInfo(@RequestParam Map<String, Object> params, HttpServletRequest request,
             ModelMap model) {
 
-        logger.debug("==================== getVaccineSubmitInfo ====================");
+        //logger.debug("==================== getVaccineSubmitInfo ====================");
 
         EgovMap item = new EgovMap();
         item = (EgovMap) memberListService.validateVaccineDeclarationStatus(params);
@@ -2476,7 +2476,7 @@ logger.debug("params : {}", params);
 
     	logger.debug("==================== updateVaccineDeclaration.do ====================");
 
-    	        logger.debug("params {}", params);
+    	        //logger.debug("params {}", params);
 
     	        // Session
     	        sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -2502,8 +2502,8 @@ logger.debug("params : {}", params);
         String memCode = ((String) params.get("MemberID"));
         String memberID = null;
 
-        logger.debug("Applicant ID : {}", memberID);
-        logger.debug("User Type : {}", memCode);
+        //logger.debug("Applicant ID : {}", memberID);
+        //logger.debug("User Type : {}", memCode);
 
         Map<String, Object> details = new HashMap();
         //params.put("MemberID", memberID);
@@ -2572,7 +2572,7 @@ logger.debug("params : {}", params);
 	          throws Exception {
 
   		logger.debug("==================== updateSocialMedia.do ====================");
-  		logger.debug("params1111" + params);
+  		//logger.debug("params1111" + params);
 
   		String atchSubPath = generateAttchmtSubPath();
 
@@ -2580,8 +2580,8 @@ logger.debug("params : {}", params);
 
 	    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-	    logger.debug("== REQUEST FILE LISTING {} ", list);
-	    logger.debug("== REQUEST FILE SIZE " + list.size());
+	    //logger.debug("== REQUEST FILE LISTING {} ", list);
+	    //logger.debug("== REQUEST FILE SIZE " + list.size());
 
 	    if (list.size() > 0) {
 	      params.put("fileName", list.get(0).getServerSubPath() + list.get(0).getFileName());

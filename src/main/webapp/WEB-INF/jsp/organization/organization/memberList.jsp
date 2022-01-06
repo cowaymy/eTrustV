@@ -52,7 +52,7 @@ function fn_memberListSearch(){
 
     Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
-        console.log("data : " + result);
+        //console.log("data : " + result);
 
         var isTrainee = 0;
         for (var i=0; i<result.length; i++) {

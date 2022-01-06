@@ -779,12 +779,13 @@ function fn_selectMemberPhoto(){
 			 memId : '${memberView.memId}'
      };
 
-	Common.ajax("GET", "/organization/getAttachmentInfo.do?_cacheId=" + Math.random(), data, function(result) {
+	Common.ajax("GET", "/organization/getAttachmentInfo.do", data, function(result) {
 		 var img = document.createElement("img");
 		 var src = document.getElementById("HP_img");
-		 var fileSubPath = result.fileSubPath;
+		 console.log(result);
 
-		if(fileSubPath != null){
+		if(result != null){
+			var fileSubPath = result.fileSubPath;
 	        fileSubPath = fileSubPath.replace('\', '/'');
 
 	        img.src = DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName;
