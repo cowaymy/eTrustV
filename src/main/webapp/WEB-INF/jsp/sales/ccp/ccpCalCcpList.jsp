@@ -157,14 +157,16 @@ function fn_searchListAjax(){
     var nric = $('#calNric').val();
     var ordNo = $('#calOrdNo').val();
     var ordRefNo = $('#calOrdRefNo').val();
+    var eRstatus = $('#eRstatus').val();
 
     console.log("startDate :" + startDate);
     console.log("endDate :" + endDate);
     console.log("nric :" + nric);
     console.log("ordNo :" + ordNo);
     console.log("ordRefNo :" + ordRefNo);
+    console.log("eRstatus :" + eRstatus);
 
-    if (nric == '' && ordNo == '' && ordRefNo == '' ){
+    if (nric == '' && ordNo == '' && ordRefNo == '' && eRstatus == ''){
         if (startDate == '' || endDate == ''){
              Common.alert("Order Date is required.");
              return;
@@ -615,7 +617,7 @@ function popup(location){
     <td><input type="text" title="" placeholder="" class="w100p" name="eRref"/></td>
     <th scope="row">eResubmit Status</th>
     <td>
-	    <select class="multy_select w100p" multiple="multiple" name="eRstatus">
+	    <select class="multy_select w100p" multiple="multiple" name="eRstatus" id="eRstatus">
 	        <option value="1"><spring:message code="sal.btn.active" /></option>
 	        <option value="5"><spring:message code="sal.combo.text.approv" /></option>
 	        <option value="6"><spring:message code="sal.combo.text.rej" /></option>
