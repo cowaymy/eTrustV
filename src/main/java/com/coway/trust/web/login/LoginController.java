@@ -522,7 +522,7 @@ public class LoginController {
 						}
 					}
 					// HP, CD, HT
-                    else if(consentExist > 0 && itemConsent == null &&
+                    else if(consentExist > 0 && !itemConsent.isEmpty() &&
                             "4".equals(item1.get("memLvl").toString()) &&
                             ("0001".equals(userTypeId) || "0002".equals(userTypeId) || "0007".equals(userTypeId))) {
                         LOGGER.info("HP :: ORG0036D empty");
