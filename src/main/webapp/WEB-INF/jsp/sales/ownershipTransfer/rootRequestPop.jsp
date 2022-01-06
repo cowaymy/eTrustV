@@ -494,6 +494,12 @@
 			}, null, true);
 		});
 
+		$('#branchsearchbtn').click(function() {
+            Common.popupDiv("/common/customerPop.do", {
+                callPrgm : "ORD_REGISTER_CUST_CUST"
+            }, null, true);
+        });
+
 
 		$('#billMthdPost').change(function() {
 			$('#hiddenBillMthdPost').val("0");
@@ -1678,7 +1684,7 @@
 			</form>
 			<form id="frmReqOwnt" name="frmReqOwnt" action="#" method="post">
 				<input name="salesOrdId" type="hidden"
-					value="${orderDetail.basicInfo.ordId}" /> <input name="salesOrdNo"
+					value="${orderDetail.basicInfo.ordId}" /> <input name="salesOrdNo" id="salesOrdNo"
 					type="hidden" value="${orderDetail.basicInfo.ordNo}" /> <input
 					name="hiddenCurrentCustID" type="hidden"
 					value="${orderDetail.basicInfo.custId}" /> <input
@@ -1919,7 +1925,7 @@
 							<li id="tabCT"><a href="#" class="on"><spring:message
 										code="sal.title.text.customer" /></a></li>
 <%--                             <li id="tabRQ"><a href="#" ><spring:message --%>
-<%--                                         code="sal.text.requestor" /></a></li> --%>
+<%--                                          code="sal.text.requestor" /></a></li> --%>
 							<li id="tabMA"><a href="#"><spring:message
 										code="sal.title.text.mailingAddr" /></a></li>
 							<li id="tabCP"><a href="#"><spring:message
@@ -2044,7 +2050,110 @@
 						<!-- tap_area end -->
 
 
+                       <!-- tap_area start -->
+<!--                         <article class="tap_area"> -->
+<!--                             <section class="search_table"> -->
+<!--                                 search_table start -->
+<!--                                 <table class="type1"> -->
+<!--                                     table start -->
+<!--                                     <caption>table</caption> -->
+<!--                                     <colgroup> -->
+<!--                                         <col style="width: 140px" /> -->
+<!--                                         <col style="width: *" /> -->
+<!--                                         <col style="width: 170px" /> -->
+<!--                                         <col style="width: *" /> -->
+<!--                                     </colgroup> -->
 
+<!--                                     <tbody> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message code="sal.title.text.brnchCode" /><span class="must">*</span></th> --%>
+<!--                                             <td><input id="BranchCode" name="txtBranchCode" type="text" -->
+<!--                                                 title="" placeholder="Branch Code" class="" /> <a -->
+<!--                                                 class="search_btn" id="SearchBranch"><img -->
+<%--                                                     src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" --%>
+<!--                                                     alt="search" /></a></td> -->
+
+<%--                             <th scope="row"><spring:message code="sys.title.branch.name" /></th> --%>
+<!--                                                                         <td><input id="branchName" name="txtBrnchName" -->
+<!--                                                                             type="text" title="" placeholder="Branch Name" -->
+<!--                                                                             class="w100p" readonly /></td> -->
+<!--                                         </tr> -->
+
+<!--                                         <tr> -->
+<!--                                             <th scope="row">CM/HM Code<span class="must">*</span></th> -->
+<!--                                             <td><input id="CMHMCode" name="txtCMHMCode" type="text" -->
+<!--                                                 title="" placeholder="CM/HM Code" class="" /> <a -->
+<!--                                                 class="search_btn" id="SearchCMHM"><img -->
+<%--                                                     src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" --%>
+<!--                                                     alt="search" /></a></td> -->
+
+<%--                                             <th scope="row"><spring:message --%>
+<%--                                                     code="sal.title.text.groupCode" /></th> --%>
+<!--                                             <td><input id="nricOwnt" name="txtCustIC" type="text" -->
+<!--                                                 title="" placeholder="Group Code" class="w100p" -->
+<!--                                                 readonly /></td> -->
+<!--                                         </tr> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message --%>
+<%--                                                     code="sal.text.salManName" /></th> --%>
+<!--                                             <td><input id="nationNmOwnt" name="txtCustNationality" -->
+<!--                                                 type="text" title="" placeholder="Salesman Name" class="w100p" -->
+<!--                                                 readonly /></td> -->
+<%--                                             <th scope="row"><spring:message code="sal.title.text.brnchCode" /></th> --%>
+<!--                                             <td><input id="raceOwnt" name="txtCustRace" type="text" -->
+<!--                                                 title="" placeholder="Branch Code" class="w100p" readonly /> <input -->
+<!--                                                 id="raceIdOwnt" name="hiddenCustRaceID" type="hidden" /></td> -->
+<!--                                         </tr> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message code="sal.text.dob" /></th> --%>
+<!--                                             <td><input id="dobOwnt" name="txtCustDOB" type="text" -->
+<!--                                                 title="" placeholder="DOB" class="w100p" readonly /></td> -->
+<%--                                             <th scope="row"><spring:message code="sal.text.gender" /></th> --%>
+<!--                                             <td><input id="genderOwnt" name="txtCustGender" -->
+<!--                                                 type="text" title="" placeholder="Gender" class="w100p" -->
+<!--                                                 readonly /></td> -->
+<!--                                         </tr> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message --%>
+<%--                                                     code="sal.title.text.salesmanNric" /></th> --%>
+<!--                                             <td><input id="pasSportExprOwnt" -->
+<!--                                                 name="txtCustPassportExpiry" type="text" title="" -->
+<!--                                                 placeholder="Salesman NRIC" class="w100p" readonly /></td> -->
+<%--                                             <th scope="row"><spring:message --%>
+<%--                                                     code="sal.text.visaExpire" /></th> --%>
+<!--                                             <td><input id="visaExprOwnt" name="txtCustVisaExpiry" -->
+<!--                                                 type="text" title="" placeholder="Visa Expiry" class="w100p" -->
+<!--                                                 readonly /></td> -->
+<!--                                         </tr> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message code="sal.title.text.deptCode" /></th> --%>
+<!--                                             <td><input id="emailOwnt" name="txtCustEmail" -->
+<!--                                                 type="text" title="" placeholder="Department Code" -->
+<!--                                                 class="w100p" readonly /></td> -->
+<%--                                             <th scope="row"><spring:message --%>
+<%--                                                     code="sal.text.indutryCd" /></th> --%>
+<!--                                             <td><input id="corpTypeNmOwnt" name="corpTypeNm" -->
+<!--                                                 type="text" title="" placeholder="Industry Code" -->
+<!--                                                 class="w100p" readonly /></td> -->
+<!--                                         </tr> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message code="sal.text.employee" /><span --%>
+<!--                                                 class="must">*</span></th> -->
+<!--                                             <td colspan="3"><select id="empChkOwnt" name="empChk" -->
+<!--                                                 class="w100p"></select></td> -->
+<!--                                         </tr> -->
+<!--                                         <tr> -->
+<%--                                             <th scope="row"><spring:message code="sal.text.remark" /></th> --%>
+<!--                                             <td colspan="3"><textarea id="custRemOwnt" -->
+<!--                                                     name="txtCustRemark" cols="20" rows="5" -->
+<!--                                                     placeholder="Remark" readonly></textarea></td> -->
+<!--                                         </tr> -->
+<!--                                     </tbody> -->
+<!--                                 </table> -->
+<!--                                 table end -->
+<!--                             </section> -->
+<!--                             search_table end -->
+<!--                         </article> -->
 
 
 						<article class="tap_area">
