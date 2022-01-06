@@ -166,7 +166,7 @@ function fn_searchListAjax(){
     console.log("ordRefNo :" + ordRefNo);
     console.log("eRstatus :" + eRstatus);
 
-    if (nric == '' && nric == null && ordNo == '' && ordNo == null && ordRefNo == '' && ordRefNo == null && eRstatus == '' && eRstatus == null){
+    if ((nric == '' || nric == null) && (ordNo == '' || ordNo == null) && (ordRefNo == '' || ordRefNo == null) && (eRstatus == '' || eRstatus == null)){
         if (startDate == '' || endDate == ''){
              Common.alert("Order Date is required.");
              return;
