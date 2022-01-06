@@ -2639,7 +2639,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
 
-    this.sendEmail();
+    //this.sendEmail();
 
 
 
