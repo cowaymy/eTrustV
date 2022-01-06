@@ -41,7 +41,7 @@ function fn_makeStatementList(type){
 
 
         if ("${sessionRoleId}" == 130  || "${sessionRoleId}" == 193  || "${sessionRoleId}" == 192 || "${sessionRoleId}" == 191 || "${sessionRoleId}" == 89
-        	|| "${sessionRoleId}" == 87 || "${sessionRoleId}" == 85) ||  "${sessionRoleId}" == 252) {
+        	|| "${sessionRoleId}" == 87 || "${sessionRoleId}" == 85 || "${sessionRoleId}" == 252) {
 
 		$("#statementList").append("<option value='initSummaryOfInvoicePop.do'>Summary of Invoice</option>");
 		$("#statementList").append("<option value='initSummaryOfAccountPop.do'>Summary of Account</option>");
