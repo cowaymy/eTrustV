@@ -102,7 +102,8 @@ public class HsFilterDeliveryController {
 	public ResponseEntity<List<EgovMap>> selectHSFilterDeliveryList(@RequestParam Map<String, Object> params) throws Exception {
 
 
-		List<EgovMap> list = hsFilterDeliveryService.selectHSFilterDeliveryList(params);
+		hsFilterDeliveryService.selectHSFilterDeliveryList(params);
+		List<EgovMap> list =(List<EgovMap>) params.get("cv_1");
 
 
 		return ResponseEntity.ok(list);
@@ -115,9 +116,9 @@ public class HsFilterDeliveryController {
 	public ResponseEntity<List<EgovMap>> selectHSFilterDeliveryPickingList(@RequestParam Map<String, Object> params) throws Exception {
 
 
-		List<EgovMap> list = hsFilterDeliveryService.selectHSFilterDeliveryPickingList(params);
+		hsFilterDeliveryService.selectHSFilterDeliveryPickingList(params);
 
-
+		List<EgovMap> list =(List<EgovMap>) params.get("cv_1");
 		return ResponseEntity.ok(list);
 	}
 

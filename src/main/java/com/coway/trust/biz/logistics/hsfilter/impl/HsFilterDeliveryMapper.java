@@ -13,6 +13,12 @@ public interface HsFilterDeliveryMapper{
 	List<EgovMap> selectHSFilterDeliveryBranchList(Map<String, Object> params);
 	List<EgovMap> selectHSFilterDeliveryList(Map<String, Object> params);
 	List<EgovMap> selectHSFilterDeliveryPickingList(Map<String, Object> params);
+
+	List<EgovMap> selectHSFilterDeliveryPickingListCall(Map<String, Object> params);
+	List<EgovMap> selectHSFilterDeliveryListCall(Map<String, Object> params);
+
+
+
 	List<EgovMap> selectStockTransferRequestItem(Map<String, Object> params);
 	List<EgovMap> selectStockTransferList(Map<String, Object> params);
 	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
@@ -25,6 +31,8 @@ public interface HsFilterDeliveryMapper{
 	String  selectUomId (String prams);
 
 	int updateSTONo (Map<String, Object> params);
+	int updateLog109MSTONo (Map<String, Object> params);
+
 
 
 

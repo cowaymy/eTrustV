@@ -41,7 +41,7 @@
 var mstGridID;
 
 var columnLayout = [
-
+                    {dataField: "hsTableType",headerText :"hsTableType"          ,width:180   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseLoclCode",headerText :"Cody Branch"          ,width:180   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemCode",headerText :"Code"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemDesc",headerText :"Desc"          ,width:240   ,height:30 , visible:true ,editable : false},
@@ -50,7 +50,7 @@ var columnLayout = [
                     {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
                     {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
                     {dataField: "refStoNo",headerText :"STO No"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
-                    {dataField: "check",headerText :"Check"  ,width:80    ,height:30 , visible:true ,
+                    {dataField: "check",headerText :"Check"  ,width:80    ,height:30 , visible:false ,
 
                         renderer : {
                             type : "CheckBoxEditRenderer",
@@ -176,6 +176,9 @@ createAUIGrid =function(columnLayout ){
 	   $("#v_mm").val(myArr[0]);
 	   $("#v_yyyy").val(myArr[1]) ;
 
+
+
+
 	   var option = {
                isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
              };
@@ -204,11 +207,11 @@ createAUIGrid =function(columnLayout ){
                    return false;
                 }
 
-               var check =AUIGrid.getCellValue(mstGridID , i , 'check');
-               if(check != 1){
-                   Common.alert("Please It can be generate STO after picking");
-                   return ;
-               }
+               // var check =AUIGrid.getCellValue(mstGridID , i , 'check');
+               // if(check != 1){
+               //     Common.alert("Please It can be generate STO after picking");
+               //     return ;
+               // }
            }
 
            for (var i = 0 ; i < rowCount ; i++){
@@ -271,6 +274,7 @@ createAUIGrid =function(columnLayout ){
   <form action="#" method="post" id="hsFilterForm">
 	<input type="hidden" id="v_cdc_code" name="v_cdc_code"  />
 	<input type="hidden" id="v_rdc_code" name="v_rdc_code" />
+	<input type="hidden" id="v_rdc_code" name="v_sto_no" />
 	<input type="hidden" id="v_mm" name="v_mm"  />
 	<input type="hidden" id="v_yyyy" name="v_yyyy"  />
 
@@ -316,7 +320,7 @@ createAUIGrid =function(columnLayout ){
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="checkAll"  onclick="javascript:fn_checkAll();">Check All </a></p></li>
+            <!--  <li><p class="btn_grid"><a id="checkAll"  onclick="javascript:fn_checkAll();">Check All </a></p></li> -->
             <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_doSave();" >To Generate STO </a></p></li>
             <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_openReport();" >Generate PDF</a></p></li>
             <li><p class="btn_grid"><a id="exceldownload" onclick="javascript:fn_gridExport('xlsx');">Generate  EXCEL</a></p></li>

@@ -25,6 +25,15 @@
 
 
 
+
+    <resultMap id="selectHSFilterDeliveryListMap" type="egovMap" />
+    <select id="selectHSFilterDeliveryListCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+           call  SP_LOG_MOFILL_FOCST(#{yyyy} ,#{mm} ,  #{searchCDC}  ,'' ,#{searchBranchCb} , #{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=selectHSFilterDeliveryListMap})
+        }
+    </select>
+
+
 <select id="selectHSFilterDeliveryList" parameterType="Map"  resultType="EgovMap">
 
 <![CDATA[
@@ -379,6 +388,17 @@ SELECT
         SELECT  'DVR'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(DVL_SEQ.NEXTVAL, 5, '0') FROM  DUAL
     </select>
 
+
+
+
+
+      <resultMap id="selectHSFilterDeliveryPickingListMap" type="egovMap" />
+    <select id="selectHSFilterDeliveryPickingListCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+           call  SP_LOG_MOFILL_FOCST(#{yyyy} ,#{mm} ,  #{searchCDC}  ,'' ,#{searchBranchCb} , #{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=selectHSFilterDeliveryPickingListMap})
+        }
+    </select>
+
 <select id="selectHSFilterDeliveryPickingList" parameterType="Map"  resultType="EgovMap">
 
 
@@ -584,12 +604,31 @@ WHERE        FINAL_Qty > 0
 
       UPDATE LOG0108M
         SET REF_STO_NO  =#{refStoNo}
+            ,PICKING_DEVR_QTY =#{pickingDevrQty}
+			,PICKING_BOX=#{pickingBox}
+			,PICKING_LOOSE=#{pickingLoose}
             ,UPD_DT  =sysdate
             ,UPD_USER_ID =#{userId}
      WHERE HS_LOSE_YYYY =#{hsLoseYyyy}
       AND HS_LOSE_MM    =#{hsLoseMm}
       AND HS_LOSE_LOCL_CODE =#{hsLoseLoclCode}
       AND HS_LOSE_ITEM_CODE =#{hsLoseItemCode}
+
+ </update>
+
+
+
+ <update id="updateLog109MSTONo" parameterType="Map">
+
+      UPDATE LOG0109M
+        SET REF_STO_NO  =#{refStoNo}
+            ,PICKING_DEVR_QTY =#{pickingDevrQty}
+            ,PICKING_BOX=#{pickingBox}
+            ,PICKING_LOOSE=#{pickingLoose}
+            ,UPD_DT  =sysdate
+            ,UPD_USER_ID =#{userId}
+     WHERE   HS_LOSE_LOCL_CODE =#{hsLoseLoclCode}
+        AND   HS_LOSE_ITEM_CODE =#{hsLoseItemCode}
 
  </update>
 </mapper>

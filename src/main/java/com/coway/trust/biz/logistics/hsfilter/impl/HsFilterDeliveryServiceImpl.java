@@ -56,7 +56,10 @@ public  class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implem
 			params.put("yyyy", date[1]);
 			params.put("mm", date[0]);
 		}
-		return hsFilterDeliveryMapper.selectHSFilterDeliveryList(params);
+		//return hsFilterDeliveryMapper.selectHSFilterDeliveryList(params);
+		return hsFilterDeliveryMapper.selectHSFilterDeliveryListCall(params);
+
+
 	}
 
 
@@ -72,7 +75,11 @@ public  class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implem
 		}
 
 
-		return hsFilterDeliveryMapper.selectHSFilterDeliveryPickingList(params);
+		//return hsFilterDeliveryMapper.selectHSFilterDeliveryPickingList(params);
+
+		return hsFilterDeliveryMapper.selectHSFilterDeliveryPickingListCall(params);
+
+
 
 	}
 
@@ -246,7 +253,17 @@ public  class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implem
 
 						insMap.put("refStoNo", reqNo);
 						insMap.put("userId", params.get("userId"));
-						int iCnt = hsFilterDeliveryMapper.updateSTONo(insMap);
+						insMap.put("pickingDevrQty", insMap.get("finalQty"));
+						insMap.put("pickingBox", insMap.get("box"));
+						insMap.put("pickingLoose", insMap.get("loose"));
+
+
+						if((insMap.get("hsTableType")).toString().equals("L108M")){
+							hsFilterDeliveryMapper.updateSTONo(insMap);
+						}else{
+							hsFilterDeliveryMapper.updateLog109MSTONo(insMap);
+						}
+
 					}
 		}
 
