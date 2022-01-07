@@ -329,8 +329,10 @@ public class LoginController {
 
 		// check consent letter exist
 		int consentExist = loginService.checkConsent();
-		EgovMap itemConsent = new EgovMap();
-		itemConsent = (EgovMap) loginService.getConsentDtls(params); // To pull if exist
+		EgovMap itemConsent = null;
+		if(consentExist > 0) {
+		    itemConsent = loginService.getConsentDtls(params);
+		}
 
 		// Get User type, role/contract type, agreement status (if applicable)
 		EgovMap item1 = new EgovMap();
@@ -522,7 +524,8 @@ public class LoginController {
 						}
 					}
 					// HP, CD, HT
-                    else if(consentExist > 0 && !itemConsent.isEmpty() &&
+                    else if(consentExist > 0 &&
+                            itemConsent == null &&
                             "4".equals(item1.get("memLvl").toString()) &&
                             ("0001".equals(userTypeId) || "0002".equals(userTypeId) || "0007".equals(userTypeId))) {
                         LOGGER.info("HP :: ORG0036D empty");
