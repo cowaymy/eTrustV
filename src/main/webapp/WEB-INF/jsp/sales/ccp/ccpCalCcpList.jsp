@@ -173,9 +173,6 @@ function fn_searchListAjax(){
          }else if( fn_getDateGap(startDate , endDate) > 6){
                  Common.alert("Start date can not be more than 6 months before the end date.");
                  return;
-             }else if( fn_getDateGap(startDate , endDate) < 6){
-                 Common.alert("Start date can not be less than 6 months before the end date.");
-                 return;
              }
      }
 
