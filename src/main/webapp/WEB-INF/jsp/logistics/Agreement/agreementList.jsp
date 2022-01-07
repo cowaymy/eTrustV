@@ -889,7 +889,9 @@ function fn_consentRawDownload() {
         <h2>e-Agreement</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_searchMember();"><span class="search"></span>Search</a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_downloadAgreement();">Download</a></p></li>
+            </c:if>
         <!--
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_searchMember();"><span class="search"></span>Search</a></p></li>
