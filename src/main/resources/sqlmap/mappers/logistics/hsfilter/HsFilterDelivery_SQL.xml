@@ -29,7 +29,7 @@
     <resultMap id="selectHSFilterDeliveryListMap" type="egovMap" />
     <select id="selectHSFilterDeliveryListCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
         {
-           call  SP_LOG_MOFILL_FOCST(#{yyyy} ,#{mm} ,  #{searchCDC}  ,'' ,#{searchBranchCb} , #{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=selectHSFilterDeliveryListMap})
+           call  SP_LOG_MOFILL_FOCST(#{yyyy} ,#{mm} ,  #{searchCDC}  ,#{itemCd} ,#{searchBranchCb} , #{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=selectHSFilterDeliveryListMap})
         }
     </select>
 

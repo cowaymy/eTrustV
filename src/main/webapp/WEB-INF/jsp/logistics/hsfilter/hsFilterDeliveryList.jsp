@@ -241,7 +241,12 @@ createAUIGrid =function(columnLayout ){
         <select  id="searchBranchCb" name="searchBranchCb"  ></select>
     </td>
   </tr>
-
+<tr>
+    <th scope="row">ITEM_CODE</th>
+    <td>
+        <input type="text" title=""   id="itemCd" name="itemCd"/>
+    </td>
+  </tr>
  </tbody>
     </table>
 
