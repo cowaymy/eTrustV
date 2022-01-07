@@ -76,7 +76,13 @@
                   } else {
                 	var SubReq = $("#_inputSubReqTypeSelect").val();
                 	if(SubReq < 6500 && SubReq != 6210 && SubReq != 6211)
-                		SubReq = '1';
+                		if(SubReq == 6212 || SubReq == 6213 || SubReq == 6214 || SubReq == 6215){
+                			SubReq = 2;
+                		}
+                		else{
+                			SubReq = 1;
+                		}
+
                     var check = doGetCombo('/services/ecom/selectIssueType.do', SubReq, '', '_inputIssueSelect', 'S', '');
                     //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
