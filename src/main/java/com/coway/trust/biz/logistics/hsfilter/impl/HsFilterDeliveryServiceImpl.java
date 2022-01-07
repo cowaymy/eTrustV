@@ -56,7 +56,7 @@ public  class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implem
 			params.put("yyyy", date[1]);
 			params.put("mm", date[0]);
 		}
-		//return hsFilterDeliveryMapper.selectHSFilterDeliveryList(params);
+		//return hsFilterDeliveryMapper.selectHSFilterDeliveryList(params); chage
 		return hsFilterDeliveryMapper.selectHSFilterDeliveryListCall(params);
 
 

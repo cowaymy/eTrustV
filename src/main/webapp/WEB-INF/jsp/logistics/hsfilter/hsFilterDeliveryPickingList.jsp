@@ -41,7 +41,7 @@
 var mstGridID;
 
 var columnLayout = [
-                    {dataField: "hsTableType",headerText :"hsTableType"          ,width:180   ,height:30 , visible:true, editable : false},
+                    {dataField: "hsTableType",headerText :"hsTableType"          ,width:180   ,height:30 , visible:false, editable : false},
                     {dataField: "hsLoseLoclCode",headerText :"Cody Branch"          ,width:180   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemCode",headerText :"Code"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemDesc",headerText :"Desc"          ,width:240   ,height:30 , visible:true ,editable : false},

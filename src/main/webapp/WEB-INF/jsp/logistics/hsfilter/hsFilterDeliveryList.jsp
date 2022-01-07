@@ -76,7 +76,7 @@ createAUIGrid =function(columnLayout ){
 	            // 필터 사용
 	            enableFilter : true,
 
-	            // 차례로 country, product, name 순으로 그룹핑을 합니다.
+	            // 차례로 country, product, name 순으로 그룹핑을 합니다. chatge
 	            // 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
 	            groupingFields : ["hsLoseItemCode"],
 

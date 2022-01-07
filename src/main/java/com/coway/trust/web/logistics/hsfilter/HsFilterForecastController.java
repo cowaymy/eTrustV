@@ -49,7 +49,7 @@ public class HsFilterForecastController {
 
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
-    // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+    // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후) change
 
 
 
