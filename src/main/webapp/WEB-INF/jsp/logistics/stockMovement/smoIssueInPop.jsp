@@ -150,6 +150,7 @@ $(document).ready(function(){
         $("#zToLoc").val($("#zReqloc").val());
     }
 
+    fn_clearSerialFirst();
     fn_smoIssueInListAjax();
 
     $("#btnPopSearch").click(function(){
@@ -400,6 +401,29 @@ function fn_smoIssueInListAjax() {
     });
 
     $("#ingGrNo").val($("#zRstNo").val());
+}
+
+function fn_clearSerialFirst() {
+    console.log('ingGrNo ' + $("#ingGrNo").val());
+    console.log('ioType ' + $("#ioType").val());
+    var ingGrNo = $("#zRstNo").val();
+    var ioType =  $("#zIoType").val();
+    Common.ajaxSync("POST", "/logistics/stocktransfer/clearSerialNo.do"
+                    , {"grNo": ingGrNo, "ioType" : ioType}
+                    , function(result){
+
+                              }
+                             , function(jqXHR, textStatus, errorThrown){
+                                 try{
+                                     console.log("Fail Status : " + jqXHR.status);
+                                     console.log("code : "        + jqXHR.responseJSON.code);
+                                     console.log("message : "     + jqXHR.responseJSON.message);
+                                     console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                 }catch (e){
+                                     console.log(e);
+                                 }
+                                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+                     });
 }
 
 function fn_ClosePop(){

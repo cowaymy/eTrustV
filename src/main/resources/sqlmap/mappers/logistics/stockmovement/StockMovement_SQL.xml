@@ -420,7 +420,7 @@
              , nvl(l55.rcipt_qty , 0) rciptqty
              , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
              , NVL (L54.DELVRY_GI_CMPLT , 'N') gicmplt
-             , DECODE ((SELECT STK_TYPE_ID FROM SYS0026M WHERE STK_CODE = L48.ITM_CODE) , 61 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 62 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 63 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 'N') SERIALCHECK
+             , DECODE ((SELECT STK_TYPE_ID FROM SYS0026M WHERE STK_CODE = L48.ITM_CODE) , 61 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 62 , NVL(S28Q.SERIAL_FT_CHK , 'N') , 63 , NVL(S28Q.SERIAL_PT_CHK , 'N') , 'N') SERIALCHECK
              , L54.DEL_FLAG
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
              , H11.BNDL_NO
