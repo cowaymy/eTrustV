@@ -273,10 +273,15 @@
     </select>
 
     <select id="selectExistBankAccNo" parameterType="Map" resultType="String">
-        SELECT VENDOR_ACC_ID
-        FROM (SELECT VENDOR_REG_NO_NRIC, PAY_TYPE, BANK, BANK_ACC_NO, VENDOR_ACC_ID FROM FCM0029D
-        UNION SELECT VENDOR_REG_NO_NRIC, PAY_TYPE, BANK, BANK_ACC_NO, VENDOR_ACC_ID FROM FCM0031D)
-        WHERE VENDOR_REG_NO_NRIC = #{regCompNo} AND PAY_TYPE = #{paymentMethod} AND BANK = #{bankList} AND BANK_ACC_NO = #{bankAccNo}
+        SELECT A.VENDOR_ACC_ID
+        FROM FCM0029D A
+		LEFT JOIN FCM0031D B ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC
+		LEFT JOIN FCM0004M C on C.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+		WHERE A.VENDOR_REG_NO_NRIC = #{regCompNo}
+			AND A.PAY_TYPE = #{paymentMethod}
+			AND A.BANK = #{bankList}
+			AND A.BANK_ACC_NO = #{bankAccNo}
+			AND C.APPV_PRCSS_STUS = 'A'
     </select>
 
     <select id="checkReqNo" parameterType="Map" resultType="String">
