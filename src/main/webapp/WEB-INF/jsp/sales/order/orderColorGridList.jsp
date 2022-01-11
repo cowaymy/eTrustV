@@ -225,6 +225,12 @@
                 editable : false,
                 style: 'left_style'
             }, {
+                dataField : "chsStus",
+                headerText : "<spring:message code='sal.text.chsStus' />",
+                width : 120,
+                editable : false,
+                style: 'left_style'
+            }, {
                 dataField : "stkCode",
                 headerText : "<spring:message code='sal.title.text.product' />",
                 width : 150,
