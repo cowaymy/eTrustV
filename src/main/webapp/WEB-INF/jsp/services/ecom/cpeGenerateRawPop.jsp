@@ -73,7 +73,7 @@ console.log(reqBranchPop);
 	 }
 
 	 if($("#reqBranchPop").val() != null && $("#reqBranchPop").val() != ''){
-         whereSql += " AND T7.USER_BRNCH_ID IN (";
+         whereSql += " AND T7.BRNCH_ID IN (";
          $('#reqBranchPop :selected').each(function(i, mul){
              if(runNo > 0){
                  whereSql += ",'"+$(mul).val()+"'";
@@ -88,7 +88,7 @@ console.log(reqBranchPop);
      }
 
 	 if($("#dscBranchPop").val() != null && $("#dscBranchPop").val() != ''){
-         whereSql += " AND T11.BRNCH_ID IN (";
+         whereSql += " AND T12.BRNCH_ID IN (";
          $('#dscBranchPop :selected').each(function(i, mul){
              if(runNo > 0){
                  whereSql += ",'"+$(mul).val()+"'";
@@ -103,7 +103,7 @@ console.log(reqBranchPop);
      }
 
 	 if($("#nricCompanyNo").val() != null &&  $("#nricCompanyNo").val() != ''){
-         whereSql += " AND T11.BRNCH_ID = '" + $('#nricCompanyNo').val() +" ' ";
+         whereSql += " AND T1.NRIC_COMPANY_NO = '" + $('#nricCompanyNo').val() +" ' ";
      }
 
      if($("#salesOrderNo").val() != null && $("#salesOrderNo").val() != ''){
