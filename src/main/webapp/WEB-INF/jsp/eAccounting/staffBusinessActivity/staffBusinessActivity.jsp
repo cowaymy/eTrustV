@@ -935,10 +935,30 @@ var myGridPros = {
                      dd = "0" + dd;
                  }
 
-                 $("#refdDate").val(dd + "/" + mm + "/" + yyyy);
+                 // PERFORM CHECKING HERE BY PASSING YYYYMMDD
+                 fn_checkRefdDate(yyyy, mm, dd);
+
+                 //$("#refdDate").val(dd + "/" + mm + "/" + yyyy);
              }
          }
      }
+
+    function fn_checkRefdDate(yyyy, mm, dd) {
+        var data = {
+                yyyy : yyyy,
+                mm : mm,
+                dd : dd
+        };
+
+        Common.ajax("GET", "/eAccounting/staffBusinessActivity/checkRefdDate.do", data, function(result) {
+            console.log(result);
+
+            if(result.code == "00") {
+                var date = result.data;
+                $("#refdDate").val(date.substr(-2) + "/" + date.substr(4, 2) + "/" + date.substr(0, 4));
+            }
+        });
+    }
 
     // New Request Save
     function fn_newSaveReq(mode) {

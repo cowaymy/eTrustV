@@ -1,7 +1,11 @@
 package com.coway.trust.biz.eAccounting.staffBusinessActivity.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -236,5 +240,71 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     public void insertNotification(Map<String, Object> params) {
         webInvoiceMapper.insertNotification(params);
     }
+
+    @Override
+    public String checkRefdDate(Map<String, Object> params) {
+        LOGGER.debug("========== checkRefdDate ==========");
+        LOGGER.debug("param :: {}", params);
+
+        // params :: dd, mm, yyyy
+
+        int dayAdd = 0;
+        boolean flg = true;
+
+        // Check passed date is holiday
+        List<EgovMap> holidayList = staffBusinessActivityMapper.holiday_SYS81(params);
+
+        // Set Default values
+        String strDate = params.get("yyyy").toString() + params.get("mm").toString() + params.get("dd").toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar cal = Calendar.getInstance();
+        try {
+            cal.setTime(sdf.parse(strDate));
+        } catch (ParseException e) {
+            LOGGER.error(e.toString());
+            e.printStackTrace();
+        }
+
+        while(flg) {
+            // Initial date will not trigger to add, only subsequent
+            if(dayAdd > 0) {
+                cal.add(Calendar.DATE, 1);
+            }
+
+            // Get Day of week
+            int day = cal.get(Calendar.DAY_OF_WEEK);
+
+            String nDate = sdf.format(cal.getTime());
+            int holidayInt = 0;
+            for(int i = 0; i < holidayList.size(); i++) {
+                EgovMap map = holidayList.get(i);
+                String holiday = map.get("holiday").toString();
+
+                if(holiday.equals(nDate)) {
+                    holidayInt++;
+                    break;
+                }
+            }
+
+            // Is holiday or weekend
+            if(holidayInt > 0 || (day == Calendar.SATURDAY || day == Calendar.SUNDAY)) {
+                dayAdd += 1;
+
+            } else if(holidayInt == 0 && (day != Calendar.SATURDAY || day != Calendar.SUNDAY)) {
+                flg = false;
+            }
+        }
+
+        String rtn;
+        if(dayAdd > 0) {
+            rtn = sdf.format(cal.getTime());
+        } else {
+            rtn = strDate;
+        }
+
+        return rtn;
+    }
+
+
 
 }

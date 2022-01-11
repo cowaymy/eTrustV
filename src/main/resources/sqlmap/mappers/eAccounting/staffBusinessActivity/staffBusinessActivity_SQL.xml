@@ -991,4 +991,27 @@
 		    LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
 		    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo})x
     </select>
+
+    <select id="holiday_SYS81" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_CHAR(HOLIDAY, 'YYYYMMDD') HOLIDAY
+        FROM (
+            SELECT
+                HOLIDAY
+            FROM SYS0081M
+            WHERE (UPPER(STATE) = 'KUALA LUMPUR'
+                OR STATE IS NULL)
+                AND TO_CHAR(HOLIDAY, 'YYYY') = SUBSTR('20220111', 1, 4)
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0101', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0201', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0831', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0916', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '1225', 'YYYYMMDD') FROM DUAL
+        )
+    </select>
 </mapper>

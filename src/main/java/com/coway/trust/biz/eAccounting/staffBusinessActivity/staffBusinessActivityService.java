@@ -60,4 +60,6 @@ public interface staffBusinessActivityService {
     void updateClamUn(Map<String, Object> params);
 
     void insertNotification(Map<String, Object> params);
+
+    String checkRefdDate(Map<String, Object> params);
 }

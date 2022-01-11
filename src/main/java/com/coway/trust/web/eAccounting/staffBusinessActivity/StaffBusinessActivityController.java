@@ -643,4 +643,26 @@ public class StaffBusinessActivityController {
 
         return "eAccounting/staffBusinessActivity/staffBusActApproveViewPop";
     }
+
+    @RequestMapping(value = "/checkRefdDate.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> checkRefdDate(@RequestParam Map<String, Object> params, ModelMap model) {
+        LOGGER.debug("========== checkRefdDate ==========");
+        LOGGER.debug("params :: {}", params);
+
+        String chkRtn = "";
+        chkRtn = staffBusinessActivityService.checkRefdDate(params);
+
+        ReturnMessage rtn = new ReturnMessage();
+        if(chkRtn.isEmpty()) {
+            rtn.setCode(AppConstants.FAIL);
+            rtn.setData(chkRtn);
+            rtn.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        } else {
+            rtn.setCode(AppConstants.SUCCESS);
+            rtn.setData(chkRtn);
+            rtn.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        }
+
+        return ResponseEntity.ok(rtn);
+    }
 }

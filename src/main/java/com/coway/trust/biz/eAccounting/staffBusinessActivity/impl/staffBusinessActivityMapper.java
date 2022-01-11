@@ -60,4 +60,8 @@ public interface staffBusinessActivityMapper {
     EgovMap selectBalanceInfo(Map<String, Object> params);
 
     void insertBusinessActAdvInterface(Map<String, Object> params);
+
+    int refdDayChk(Map<String, Object> params);
+
+    List<EgovMap> holiday_SYS81(Map<String, Object> params);
 }
