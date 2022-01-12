@@ -263,8 +263,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     smsList.put("userId", params.get("userId"));
     smsList.put("smsType", 975);
     smsList.put("smsMessage", smsMessage);
-    smsList.put("smsMobileNo", "0175977998");
-    //smsList.put("smsMobileNo", params.get("hidCustomerContact").toString());
+    smsList.put("smsMobileNo", params.get("hidCustomerContact").toString());
 
     if(smsMessage != "")
     {
