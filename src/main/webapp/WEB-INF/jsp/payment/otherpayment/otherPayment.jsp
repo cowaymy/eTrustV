@@ -79,8 +79,69 @@ var targetGridPros = {
   softRemoveRowMode:false
 };
 
+var memType = "${SESSION_INFO.userTypeId}";
+var memLevel = "${SESSION_INFO.memberLevel}";
+
+
 $(document).ready(function(){
-	bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+
+	 if("${SESSION_INFO.userTypeId}" =="2"){
+		 if("${SESSION_INFO.memberLevel}" =="1"){
+
+		        /* $("#orgCode").val("${orgCode}");
+		        $("#orgCode").attr("class", "w100p readonly");
+		        $("#orgCode").attr("readonly", "readonly"); */
+
+		    }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+		        $("#orgCode").val("${orgCode}");
+		        $("#orgCode").attr("class", "w100p readonly");
+		        $("#orgCode").attr("readonly", "readonly");
+
+		        $("#grpCode").val("${grpCode}");
+		        $("#grpCode").attr("class", "w100p readonly");
+		        $("#grpCode").attr("readonly", "readonly");
+
+		    }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+		        $("#orgCode").val("${orgCode}");
+		        $("#orgCode").attr("class", "w100p readonly");
+		        $("#orgCode").attr("readonly", "readonly");
+
+		        $("#grpCode").val("${grpCode}");
+		        $("#grpCode").attr("class", "w100p readonly");
+		        $("#grpCode").attr("readonly", "readonly");
+
+		        $("#deptCode").val("${deptCode}");
+		        $("#deptCode").attr("class", "w100p readonly");
+		        $("#deptCode").attr("readonly", "readonly");
+
+		    }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+		        $("#orgCode").val("${orgCode}");
+		        $("#orgCode").attr("class", "w100p readonly");
+		        $("#orgCode").attr("readonly", "readonly");
+
+		        $("#grpCode").val("${grpCode}");
+		        $("#grpCode").attr("class", "w100p readonly");
+		        $("#grpCode").attr("readonly", "readonly");
+
+		        $("#deptCode").val("${deptCode}");
+		        $("#deptCode").attr("class", "w100p readonly");
+		        $("#deptCode").attr("readonly", "readonly");
+		        $("#searchVa").val("${memVaNo}");
+
+		    }
+	     $("#memType").val(memType);
+	     $("#memLevel").val(memLevel);
+
+	     bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayoutCody,null,gridPros);
+	 }
+	 else
+	 {
+		   bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+     }
+
 	pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);
 
 	//page2
@@ -157,7 +218,7 @@ $(document).ready(function(){
 	 //BankAccount와 VA Account disabled
      $("#searchBankAcc").find('option:first').attr('selected', 'selected');
      $('#searchBankAcc').prop("disabled", true);
-     $('#searchVa').prop("disabled", true);
+     $('#searchVa').prop("readonly", true);
 
      //화면init시에 cash라서 jompay 삭제
      $("#searchBankType option[value='2728']").remove();
@@ -498,6 +559,120 @@ var columnLayout = [
     },{
         dataField : "fTrnscRefVaNo",
         headerText : "<spring:message code='pay.head.vaNumber'/>",
+        editable : false
+    }
+    ];
+
+//AUIGrid 칼럼 설정
+var columnLayoutCody = [
+     {
+         dataField : "id",
+         headerText : "Transaction ID",
+         editable : false
+         //visible : false
+     },
+    {
+        dataField : "bank",
+        headerText : "<spring:message code='pay.head.bank'/>",
+        editable : false
+    }, {
+        dataField : "bankAccName",
+        headerText : "<spring:message code='pay.head.bankAccount'/>",
+        editable : false
+    }, {
+        dataField : "trnscDt",
+        headerText : "<spring:message code='pay.head.date'/>",
+        editable : false,
+        dataType:"date",
+        formatString:"yyyy-mm-dd"
+    },
+    {
+        dataField : "fTrnscTellerId",
+        headerText : "<spring:message code='pay.head.tellerId'/>",
+        editable : false
+    },
+    {
+        dataField : "ref3",
+        headerText : "<spring:message code='pay.head.transactionCode'/>",
+        editable : false
+    },
+    {
+        dataField : "chqNo",
+        headerText : "<spring:message code='pay.head.refChequeNo'/>",
+        editable : false
+    }, {
+        dataField : "ref1",
+        headerText : "<spring:message code='pay.head.description'/>",
+        editable : false
+    },  {
+        dataField : "ref2",
+        headerText : "<spring:message code='pay.head.ref6'/>",
+        editable : false
+    }, {
+        dataField : "ref6",
+        headerText : "<spring:message code='pay.head.ref7'/>",
+        editable : false
+    },{
+        dataField : "type",
+        headerText : "<spring:message code='pay.head.mode'/>",
+        editable : false
+    },{
+        dataField : "debt",
+        headerText : "<spring:message code='pay.head.debt'/>",
+        editable : false
+    },{
+        dataField : "crdit",
+        headerText : "<spring:message code='pay.head.crdit'/>",
+        editable : false
+    },
+    {
+        dataField : "stus",
+        headerText : "<spring:message code='pay.head.stus'/>",
+        editable : false,
+        visible : false
+    },
+    {
+        dataField : "status",
+        headerText : "<spring:message code='pay.head.status'/>",
+        editable : false,
+        width : 80,
+        renderer : {
+            type : "IconRenderer",
+            iconWidth : 15, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+            iconHeight : 15,
+            iconFunction : function(rowIndex, columnIndex, value, item) {
+                var selValue = AUIGrid.getCellValue(bankGridID, rowIndex, "stus");
+
+                switch(selValue){
+                case "Mapped":
+                    return "${pageContext.request.contextPath}/resources/images/common/status_on.gif";
+                default :
+                    return "${pageContext.request.contextPath}/resources/images/common/status_off.gif";
+                }
+            }
+        }
+    }
+    ,{
+        dataField : "othKeyinMappingDt",
+        headerText : "<spring:message code='pay.head.mappedDate'/>",
+        editable : false,
+        dataType:"date",
+        formatString:"yyyy-mm-dd"
+    },{
+        dataField : "ref4",
+        headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",
+        editable : false
+    },{
+        dataField : "fTrnscNewChqNo",
+        headerText : "<spring:message code='pay.head.chqNo'/>",
+        editable : false
+    },{
+        dataField : "fTrnscRefVaNo",
+        headerText : "<spring:message code='pay.head.vaNumber'/>",
+        editable : false
+    },{
+        dataField : "memCode",
+        headerText : "<spring:message code='pay.head.memberCode'/>",
         editable : false
     }
     ];
@@ -1969,10 +2144,12 @@ function isDupPOSToFinal(){
 
     		if(selBank != ''){
 	    		if(selBank == '2730'){
-	    			if($("#searchVa").val() == ''){
-	    				Common.alert("<spring:message code='pay.alert.vaAccount'/>");
-	    				return;
-	    			}
+	    			if("${SESSION_INFO.userTypeId}" !="2"){
+		    			if($("#searchVa").val() == ''){
+		    				Common.alert("<spring:message code='pay.alert.vaAccount'/>");
+		    				return;
+		    			}
+	    		    }
 	    		}else{
 	    			if($("#searchBankAcc").val() == ''){
 	    				Common.alert("<spring:message code='pay.alert.selectBankAccount'/>");
@@ -1982,6 +2159,7 @@ function isDupPOSToFinal(){
 	    	}else{
 	    		Common.alert("<spring:message code='pay.alert.selectBankType'/>");
 	    	}
+    		console.log($("#searchForm").serializeJSON());
 	    	Common.ajax("GET","/payment/selectBankStatementList.do",$("#searchForm").serializeJSON(), function(result){
 	            AUIGrid.setGridData(bankGridID, result);
 	            var selectedMode = $("#payMode").val();
@@ -3224,9 +3402,15 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 		  if(selected == '2730'){
 			  //console.log(selected);
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
-			  $('#searchVa').val("");
 			  $('#searchBankAcc').prop("disabled", false);
-			  $('#searchVa').prop("disabled", false);
+
+			  if("${SESSION_INFO.userTypeId}" !="2" || ("${SESSION_INFO.userTypeId}" =="2" && "${SESSION_INFO.memberLevel}" !="4")){
+				   $('#searchVa').val("");
+				   $('#searchVa').prop("readonly", false);
+
+				  }
+
+
 
 			  if($('#payMode').val() == '108'){
 		          $("#searchBankAcc option").remove();
@@ -3241,7 +3425,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
 			  $('#searchVa').val("");
 			  $('#searchBankAcc').prop("disabled", false);
-			  $('#searchVa').prop("disabled", true);
+			  $('#searchVa').prop("readonly", true);
 			  $('#searchBankAcc').val("");
 
 			  if($('#payMode').val() == '105'){
@@ -3276,7 +3460,7 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 		  }
 	  }else{
 		  $('#searchBankAcc').prop("disabled", true);
-          $('#searchVa').prop("disabled", true);
+          $('#searchVa').prop("readonly", true);
 	  }
   }
 
@@ -3636,6 +3820,8 @@ $.fn.clearForm = function() {
 	                                <option value="ONL">Online</option>
                                 </select>
                            </td>
+                         <th></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>Bank Type</th>
@@ -3648,6 +3834,8 @@ $.fn.clearForm = function() {
 		                        <option value="2731">Others</option>
 		                    </select>
                         </td>
+                         <th></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>Bank Account</th>
@@ -3656,8 +3844,10 @@ $.fn.clearForm = function() {
                         </td>
                         <th>VA Account</th>
                         <td>
-                            <input type="text" id="searchVa" name="searchVa" class="w100p"/>
+                            <input type="text" id="searchVa" name="searchVa" class="w100p" />
                         </td>
+                        <th></th>
+                        <td></td>
                     </tr>
 					<tr>
                         <th>Credit Amount</th>
@@ -3672,10 +3862,24 @@ $.fn.clearForm = function() {
                         </td>
                         <th></th>
                         <td></td>
+                        <th></th>
+                        <td></td>
                     </tr>
+                    <tr>
+
+                <th scope="row">Org Code</th>
+                <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" readonly/></td>
+                <th scope="row">Grp Code</th>
+                <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p" readonly/></td>
+                <th scope="row">Dept Code</th>
+                <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p" readonly/></td>
+		      </tr>
 				</tbody>
 			</table>
 			<!-- table end -->
+			<input type="hidden" id="memType" name="memType" />
+			<input type="hidden" id="memLevel" name="memLevel" />
+<!-- 			<input type="hidden" id="memLevel" name="memLevel" /> -->
 		</form>
 
         <!--
@@ -3708,7 +3912,7 @@ $.fn.clearForm = function() {
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
     </section>
-
+<c:if test="${SESSION_INFO.userTypeId != '2'}">
 <div id="online" style="display:none;">
     <form id="onlineForm" name="onlineForm">
     <input type="hidden" id="payType" name="payType" />
@@ -4007,6 +4211,7 @@ $.fn.clearForm = function() {
     </table>
     </form>
     </div>
+    </c:if>
 </div>
  <div id="page2" style="display:none;">
     <aside class="title_line">

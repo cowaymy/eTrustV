@@ -21,6 +21,11 @@ public class OtherPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectBankStatementList(Map<String, Object> params) {
 		return otherPaymentMapper.selectBankStatementList(params);
 	}
-	
-	
+
+	@Override
+	public EgovMap getMemVaNo(Map<String, Object> params) {
+
+		return otherPaymentMapper.getMemVaNo(params);
+	}
+
 }

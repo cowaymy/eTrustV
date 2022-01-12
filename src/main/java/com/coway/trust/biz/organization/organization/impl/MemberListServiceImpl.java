@@ -1653,7 +1653,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             paramM.put("userId", sessionVO.getUserId());
             memberListMapper.updateCodyAplCde(paramM);
 
+            if("2".equals(params.get("traineeType"))) {
+            	memberListMapper.updateCdAplCody(paramM);
+            }else{
             memberListMapper.updateCdApl(paramM);
+            }
         }
 
         params.put("src", "member");

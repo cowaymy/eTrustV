@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.payment.otherpayment.service.OtherPaymentService;
 import com.coway.trust.biz.payment.payment.service.CommDeductionService;
 import com.coway.trust.biz.payment.payment.service.CommDeductionVO;
@@ -33,6 +34,7 @@ import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.text.SimpleDateFormat;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -45,6 +47,12 @@ public class OtherPaymentController {
 	@Resource(name = "otherPaymentService")
 	private OtherPaymentService otherPaymentService;
 
+	  @Resource(name = "salesCommonService")
+	  private SalesCommonService salesCommonService;
+
+
+
+
 	/******************************************************
 	 * Other Payment
 	 *****************************************************/
@@ -55,10 +63,29 @@ public class OtherPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initOtherPayment.do")
-	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		  String currentDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
 		    model.put("currentDay", currentDay);
+			params.put("userTypeId", sessionVO.getUserTypeId());
+			params.put("userId", sessionVO.getUserId());
+			params.put("memId", sessionVO.getMemId());
+
+
+		    if( sessionVO.getUserTypeId() == 2 ){
+				//if( sessionVO.getUserTypeId() == 1){
+		      EgovMap result =  salesCommonService.getUserInfo(params);
+
+		      model.put("orgCode", result.get("orgCode"));
+		      model.put("grpCode", result.get("grpCode"));
+		      model.put("deptCode", result.get("deptCode"));
+		      model.put("memCode", result.get("memCode"));
+
+		       result =  otherPaymentService.getMemVaNo(params);
+
+		       model.put("memVaNo", result.get("memVaNo"));
+		    }
+
 		return "payment/otherpayment/otherPayment";
 	}
 
@@ -72,6 +99,7 @@ public class OtherPaymentController {
 	public ResponseEntity<List<EgovMap>> selectCommDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
 
         LOGGER.debug("params : {}", params);
+        LOGGER.info("params : {}", params);
 
         List<EgovMap> resultList = otherPaymentService.selectBankStatementList(params);
 

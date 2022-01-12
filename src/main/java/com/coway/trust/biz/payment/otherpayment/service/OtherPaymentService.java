@@ -10,11 +10,11 @@ public interface OtherPaymentService
 
 	/**
 	 * Bank Statement List  조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	List<EgovMap>selectBankStatementList(Map<String, Object> params);
-    
+	 EgovMap getMemVaNo(Map<String, Object> params);
 }

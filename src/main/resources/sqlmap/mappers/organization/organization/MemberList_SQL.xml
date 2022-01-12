@@ -4891,6 +4891,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
          WHERE MEM_CODE = #{memCode}
     </update>
 
+    <update id="updateCdAplCody" parameterType="Map">
+        UPDATE ORG0001D
+             SET APLICNT_ID = #{aplcntId},
+                   UPD_USER_ID = #{userId},
+                   MEM_VA_NO = '98 9929 00' || SUBSTR(#{memCode},3,2) || ' ' || SUBSTR(#{memCode},5)
+         WHERE MEM_CODE = #{memCode}
+    </update>
+
     <update id="updateMeetpoint" parameterType="Map">
         MERGE INTO ORG0003D A
         USING (
