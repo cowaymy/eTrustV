@@ -964,27 +964,30 @@ $(function() {
 function fn_socialMediaInfo(){
     var selectedItems = AUIGrid.getSelectedItems(myGridID);
 
-    var status = selectedItems[0].item.status;
-    var memberid = selectedItems[0].item.memberid;
-    var memberType = selectedItems[0].item.membertype;
-    var membercode = selectedItems[0].item.membercode;
-
     if(selectedItems == null || selectedItems.length <= 0 ){
         Common.alert('<spring:message code="service.msg.NoRcd"/>');
         return;
     }
+    else
+    {
+    	var status = selectedItems[0].item.status;
+        var memberid = selectedItems[0].item.memberid;
+        var memberType = selectedItems[0].item.membertype;
+        var membercode = selectedItems[0].item.membercode;
 
-    if (memberType != 1) {
-        Common.alert("Social media info only allowed for HP. ");
-        return;
+        if (memberType != 1) {
+            Common.alert("Social media info only allowed for HP. ");
+            return;
+        }
+
+        if (status != 1) {
+            Common.alert("Social media info only allowed for active HP. ");
+            return;
+        }
+
+        Common.popupDiv("/organization/memberSocialMediaPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+
     }
-
-    if (status != 1) {
-        Common.alert("Social media info only allowed for active HP. ");
-        return;
-    }
-
- Common.popupDiv("/organization/memberSocialMediaPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
 }
 
 </script>
