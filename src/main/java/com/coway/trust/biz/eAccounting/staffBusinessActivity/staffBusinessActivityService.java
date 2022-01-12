@@ -61,5 +61,9 @@ public interface staffBusinessActivityService {
 
     void insertNotification(Map<String, Object> params);
 
+ // Edit Rejected 27/12/2021
+    String selectNextReqNo(Map<String, Object> params);
+    void editRejected(Map<String, Object> params);
+
     String checkRefdDate(Map<String, Object> params);
 }

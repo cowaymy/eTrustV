@@ -992,6 +992,183 @@
 		    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo})x
     </select>
 
+    <select id="selectNextReqNo" resultType="String">
+
+         SELECT
+         <if test="reqType == 'R3'">
+        'R3' ||
+        TO_CHAR (SYSDATE, 'yymm') ||
+        MAX(CLM_NO) AS CLM_NO
+        </if>
+         <if test="reqType == 'A2'">
+        'A2' ||
+        TO_CHAR (SYSDATE, 'yymm') ||
+        MAX(CLM_NO) AS CLM_NO
+        </if>
+    FROM (
+        SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+        FROM FCM0027M
+        WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+    )
+    </select>
+
+    <select id="getAttachmenDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            ATCH_FILE_GRP_ID,
+            MAX(ATCH_FILE_ID) ATCH_FILE_ID
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = (
+            SELECT
+                FILE_ATCH_GRP_ID
+            FROM FCM0027M
+            WHERE CLM_NO = #{clmNo}
+        )
+        group by ATCH_FILE_GRP_ID
+    </select>
+
+    <select id="getFileAtchGrpId" resultType="int">
+        SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getFileAtchId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertSYS0070M_ER" parameterType="Map">
+        INSERT INTO SYS0070M
+        SELECT
+            #{newFileAtchGrpId},
+            #{newFileAtchId},
+            CHENAL_TYPE,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            SYSDATE
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{exFileAtchGrpId}
+        AND ATCH_FILE_ID = #{exFileAtchId}
+    </insert>
+
+    <insert id="insertSYS0071D_ER" parameterType="Map">
+        INSERT INTO SYS0071D
+        SELECT
+            #{newFileAtchId},
+            ATCH_FILE_NAME,
+            FILE_SUB_PATH,
+            PHYSICL_FILE_NAME,
+            FILE_EXTSN,
+            FILE_SIZE,
+            FILE_PASSWORD,
+            FILE_UNQ_KEY,
+            FILE_KEY_SEQ
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{exFileAtchId}
+    </insert>
+
+    <insert id="insertRejectM" parameterType="Map">
+        INSERT INTO FCM0027M (
+            CLM_NO,
+            ADV_TYPE,
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            GL_ACC_NO,
+            TOT_AMT,
+            FILE_ATCH_GRP_ID,
+            ADV_REM,
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            ADV_OCC,
+            ADV_REFD_MODE,
+            ADV_REFD_REF,
+            PREV_CLM_NO
+        )
+        SELECT
+            #{newClmNo} CLM_NO,
+            ADV_TYPE,
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            GL_ACC_NO,
+            TOT_AMT,
+            #{newFileAtchGrpId},
+            ADV_REM,
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            SYSDATE,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            ADV_OCC,
+            ADV_REFD_MODE,
+            ADV_REFD_REF,
+            CLM_NO
+        FROM FCM0027M
+        WHERE CLM_NO = #{clmNo}
+    </insert>
+
+    <insert id="insertRejectD" parameterType="Map">
+        INSERT INTO FCM0028D (
+            CLM_NO,
+            CLM_SEQ,
+            INVC_NO,
+            INVC_DT,
+            EXP_TYPE,
+            EXP_TYPE_NM,
+            GL_ACC_NO,
+            GL_ACC_NM,
+            BGT_CODE,
+            BGT_NM,
+            SUPPLIER,
+            MILEAGE,
+            AMT,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            CLAM_UN,
+            TAX_CODE,
+            INVC_CUR,
+            TAX_AMT,
+            NET_AMT
+        )
+        SELECT
+            #{newClmNo} CLM_NO,
+            CLM_SEQ,
+            INVC_NO,
+            INVC_DT,
+            EXP_TYPE,
+            EXP_TYPE_NM,
+            GL_ACC_NO,
+            GL_ACC_NM,
+            BGT_CODE,
+            BGT_NM,
+            SUPPLIER,
+            MILEAGE,
+            AMT,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            CLAM_UN,
+            TAX_CODE,
+            INVC_CUR,
+            TAX_AMT,
+            NET_AMT
+        FROM FCM0028D
+        WHERE CLM_NO = #{clmNo}
+    </insert>
+
     <select id="holiday_SYS81" parameterType="Map" resultType="egovMap">
         SELECT
             TO_CHAR(HOLIDAY, 'YYYYMMDD') HOLIDAY

@@ -61,6 +61,20 @@ public interface staffBusinessActivityMapper {
 
     void insertBusinessActAdvInterface(Map<String, Object> params);
 
+  //Edit Rejected - 27/12/2021 - Start
+    String selectNextReqNo(Map<String, Object> params);
+    EgovMap getAttachmenDetails(Map<String, Object> params);
+
+	int getFileAtchGrpId();
+	int getFileAtchId();
+
+	void insertSYS0070M_ER(Map<String, Object> params);
+	void insertSYS0071D_ER(Map<String, Object> params);
+
+	void insertRejectM(Map<String, Object> params);
+	void insertRejectD(Map<String, Object> params);
+	// Edit Rejected - 27/12/2021 - End
+
     int refdDayChk(Map<String, Object> params);
 
     List<EgovMap> holiday_SYS81(Map<String, Object> params);

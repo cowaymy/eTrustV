@@ -242,6 +242,41 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     }
 
     @Override
+	public String selectNextReqNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+    	LOGGER.debug("selectNextReqNo =====================================>>  " + params);
+		return staffBusinessActivityMapper.selectNextReqNo(params);
+	}
+
+    @Override
+    public void editRejected(Map<String, Object> params) {
+        // TODO Auto-generated method stub
+
+        LOGGER.debug("editRejected =====================================>>  " + params);
+
+        EgovMap attachmentDetails = new EgovMap();
+        attachmentDetails = (EgovMap) staffBusinessActivityMapper.getAttachmenDetails(params);
+        params.put("exFileAtchGrpId", attachmentDetails.get("atchFileGrpId"));
+        params.put("exFileAtchId", attachmentDetails.get("atchFileId"));
+
+        // Duplicate File ID
+        int newFileAtchGrpId = staffBusinessActivityMapper.getFileAtchGrpId();
+        int newFileAtchId = staffBusinessActivityMapper.getFileAtchId();
+        params.put("newFileAtchGrpId", newFileAtchGrpId);
+        params.put("newFileAtchId", newFileAtchId);
+
+        // Insert SYS0070M
+        staffBusinessActivityMapper.insertSYS0070M_ER(params);
+
+        staffBusinessActivityMapper.insertSYS0071D_ER(params);
+
+        // Insert FCM0027M
+        staffBusinessActivityMapper.insertRejectM(params);
+        // Insert FCM0028D
+        staffBusinessActivityMapper.insertRejectD(params);
+    }
+
+    @Override
     public String checkRefdDate(Map<String, Object> params) {
         LOGGER.debug("========== checkRefdDate ==========");
         LOGGER.debug("param :: {}", params);

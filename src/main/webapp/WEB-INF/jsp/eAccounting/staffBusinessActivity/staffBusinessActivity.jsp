@@ -347,6 +347,8 @@ var myGridPros = {
             }
         });
 
+    	$("#editRejBtn").click(fn_editRejected);
+
     	// 5 Working days
     	/* var holidays = {//휴일 세팅 하기
                 //"0809":{type:0, title:"신정", year:"2017"}
@@ -1553,7 +1555,7 @@ var myGridPros = {
 
     	                    var availableVar = {
     	                        costCentr : $("#refCostCenterCode").val(),
-    	                        stYearMonth : '01/2019', //$("#keyDate").val().substring(3),
+    	                        stYearMonth : $("#keyDate").val().substring(3),
     	                        stBudgetCode : event.item.budgetCode,
     	                        stGlAccCode : event.item.glAccCode
     	                    }
@@ -1793,6 +1795,46 @@ var myGridPros = {
          }
      }
 
+   //Edit Rejected
+     function fn_editRejected() {
+     console.log("fn_editRejected");
+
+     var gridObj = AUIGrid.getSelectedItems(busActGridId);
+     var list = AUIGrid.getCheckedRowItems(busActGridId);
+
+     if(gridObj != "" || list != "") {
+         var status;
+         var selClmNo;
+
+         if(list.length > 1) {
+             Common.alert("* Only 1 record is permitted. ");
+             return;
+         }
+
+         if(gridObj.length > 0) {
+             status = gridObj[0].item.appvPrcssStus;
+             selClmNo = gridObj[0].item.clmNo;
+         } else {
+             status = list[0].item.appvPrcssStus;
+             selClmNo = list[0].item.clmNo;
+         }
+
+         if(status == "J") {
+             Common.ajax("POST", "/eAccounting/staffBusinessActivity/editRejected.do", {clmNo : selClmNo}, function(result1) {
+                 console.log(result1);
+
+                 Common.alert("New claim number : " + result1.data.newClmNo);
+                 fn_searchAdv();
+             })
+         } else {
+             Common.alert("Only rejected claims are allowed to edit.");
+         }
+     } else {
+         Common.alert("* No Value Selected. ");
+         return;
+     }
+ }
+
 </script>
 
 <!-- ************************************************************* STYLE ************************************************************* -->
@@ -2004,10 +2046,27 @@ var myGridPros = {
 		</form>
 	</section>
 
-	<section class="search_result">
+	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+            <dt>Link</dt>
+        <dd>
+            <ul class="btns">
+                <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
+            </ul>
+            <ul class="btns">
+            </ul>
+            <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+	<!-- <section class="search_result">
 		<article id="grid_wrap"
-			style="width: 100%; height: 500px; margin: 0 auto;"></article>
-	</section>
+			style="width: 100%;"></article>
+	</section> -->
+	<section class="search_result"><!-- search_result start -->
+        <article class="grid_wrap" id="grid_wrap"></article><!-- grid_wrap end -->
+    </section>
 
 </section>
 <!-- content end -->

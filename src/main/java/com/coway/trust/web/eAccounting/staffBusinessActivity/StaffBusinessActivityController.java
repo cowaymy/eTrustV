@@ -424,8 +424,8 @@ public class StaffBusinessActivityController {
             hm.put("expType", params.get("refAdvType"));
             if("4".equals(advType)) {
                 hm.put("expTypeNm", "Staff Business Activity Expenses Repayment");
-                hm.put("glAccNo", "12510100");
-                hm.put("glAccNm", "CIMB Bhd 8000 58 6175");
+                hm.put("glAccNo", "12400200");
+                hm.put("glAccNm", "ADVANCES - STAFF (COMPANY EVENTS)");
                 hm.put("budgetCode", params.get("budgetCode"));
                 hm.put("budgetCodeName", params.get("budgetCodeName"));
             }
@@ -642,6 +642,31 @@ public class StaffBusinessActivityController {
         }
 
         return "eAccounting/staffBusinessActivity/staffBusActApproveViewPop";
+    }
+
+    @RequestMapping(value = "/editRejected.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> editRejected(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        if(params.get("clmNo") != null && !params.get("clmNo").equals(""))
+        {
+        	String reqType = (String)params.get("clmNo");
+        	reqType = reqType.substring(0, 2);
+        	params.put("reqType", reqType);
+        }
+        String reqNo = staffBusinessActivityService.selectNextReqNo(params);
+        params.put("newClmNo", reqNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+        staffBusinessActivityService.editRejected(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
     }
 
     @RequestMapping(value = "/checkRefdDate.do", method = RequestMethod.GET)
