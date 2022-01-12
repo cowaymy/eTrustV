@@ -153,7 +153,7 @@
             AND SOM.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
 		</if>
 		<if test="product != null and product != ''">
-            AND STK.STK_CODE = #{product}
+            AND STK.STK_ID = #{product}
         </if>
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}

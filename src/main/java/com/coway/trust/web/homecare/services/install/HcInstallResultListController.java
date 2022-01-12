@@ -109,13 +109,6 @@ public class HcInstallResultListController {
 		String[] appTypeList = request.getParameterValues("appType");
 		String[] dscCodeList = request.getParameterValues("dscCode"); /* dscCode- kv testing */
 
-		String product = "";
-		if (!"".equals(params.get("product"))) {
-			product = params.get("product").toString();
-			product = product.substring(0, product.indexOf(" - "));
-		}
-
-		params.put("product", product);
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
 		params.put("appTypeList", appTypeList);
