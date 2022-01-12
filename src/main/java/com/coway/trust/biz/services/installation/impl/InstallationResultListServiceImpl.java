@@ -2634,8 +2634,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     smsList.put("smsMessage", smsMessage);
     smsList.put("smsMobileNo", installResult.get("smsMobileNo").toString());
 
-    sendSms(smsList);
-
+    if(smsMessage != "")
+    {
+    	sendSms(smsList);
+    }
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
 

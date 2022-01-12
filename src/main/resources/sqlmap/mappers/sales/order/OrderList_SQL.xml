@@ -595,12 +595,16 @@
     and b.CALL_ENTRY_ID = #{callEntryId}-->
 
     SELECT a.SO_REQ_RESN_ID ,
-           b.RETN_NO
+           b.RETN_NO,
+           a.SO_REQ_CUR_STUS_ID,
+           b.CT_ID,
+           d.MEM_CODE
     FROM SAL0020D a
     JOIN LOG0038D b ON a.SO_REQ_CUR_CALL_ENTRY_ID = b.CALL_ENTRY_ID
                    AND STK_RETN_ID = (SELECT MAX(STK_RETN_ID) FROM LOG0038D WHERE a.SO_REQ_CUR_CALL_ENTRY_ID = CALL_ENTRY_ID)
+    LEFT JOIN ORG0001D d ON b.CT_ID = d.MEM_ID
     WHERE 1=1
-      AND STUS_CODE_ID = 1
+      AND b.STUS_CODE_ID = 1
       AND b.CALL_ENTRY_ID = #{callEntryId}
   </select>
 
@@ -1778,5 +1782,14 @@
         SYSDATE
       )
   </insert>
+
+  <select id="selectPRFailReason" parameterType="Map" resultType="egovMap">
+    SELECT RESN_ID,
+           CODE,
+           RESN_DESC
+    FROM  SYS0032M
+    WHERE 1=1
+      AND RESN_ID = #{failReasonCode}
+  </select>
 
 </mapper>

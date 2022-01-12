@@ -16,10 +16,13 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.order.OrderListController;
 
@@ -200,6 +203,25 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
         // DO NOTHING (IS NOT A COMBO PACKAGE)
       }
     }
+
+    String smsMessage = "";
+    if(String.valueOf(params.get("stkRetnStusId")).equals("4") &&
+      !(String.valueOf(params.get("appTypeId")).equals("144") || String.valueOf(params.get("appTypeId")).equals("145") || String.valueOf(params.get("appTypeId")).equals("5764"))
+      && !(String.valueOf(params.get("stkRetnResnId")).equals("1993"))
+    		){
+      smsMessage = "COWAY:Dear Customer, Your Product collection is completed by "+ params.get("memCode") +" on " + params.get("signRegDt").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
+    }
+
+    Map<String, Object> smsList = new HashMap<>();
+    smsList.put("userId", params.get("stkRetnCrtUserId"));
+    smsList.put("smsType", 975);
+    smsList.put("smsMessage", smsMessage);
+    smsList.put("smsMobileNo", params.get("resultIcmobileNo").toString());
+
+    if(smsMessage != "")
+    {
+    	sendSms(smsList);
+    }
     logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
 
     return rMp;
@@ -225,7 +247,29 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     int log39cnt = orderListMapper.insertFailed_LOG0039D(params);
     orderListMapper.updateFailed_SAL0020D(params);
 
+    logger.debug("log38cnt==>" + log38cnt);
     logger.debug("log39cnt==>" + log39cnt);
+
+    EgovMap  PRFailReason = orderListMapper.selectPRFailReason(params);
+	params.put("FailReasonCode", PRFailReason.get("code"));
+
+    String smsMessage = "";
+    if( !(String.valueOf(params.get("appTypeId")).equals("144") || String.valueOf(params.get("appTypeId")).equals("145") || String.valueOf(params.get("appTypeId")).equals("5764"))
+    		&& !(String.valueOf(params.get("stkRetnResnId")).equals("1993"))){
+        smsMessage = "COWAY:Dear Customer, Your Appointment for Product collection has failed due to "+ params.get("FailReasonCode").toString() +".Will call to set new appointment.";
+    }
+
+    Map<String, Object> smsList = new HashMap<>();
+    smsList.put("userId", params.get("userId"));
+    smsList.put("smsType", 975);
+    smsList.put("smsMessage", smsMessage);
+    smsList.put("smsMobileNo", "0175977998");
+    //smsList.put("smsMobileNo", params.get("hidCustomerContact").toString());
+
+    if(smsMessage != "")
+    {
+    	sendSms(smsList);
+    }
 
   }
 
@@ -533,5 +577,19 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
   @Override
   public int getMemberID(Map<String, Object> params) {
       return orderListMapper.getMemberID(params);
+  }
+
+  @Autowired
+  private AdaptorService adaptorService;
+
+  @Override
+  public void sendSms(Map<String, Object> smsList){
+    int userId = (int) smsList.get("userId");
+    SmsVO sms = new SmsVO(userId, 975);
+
+    sms.setMessage(smsList.get("smsMessage").toString());
+    sms.setMobiles(smsList.get("smsMobileNo").toString());
+    //send SMS
+    SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 }

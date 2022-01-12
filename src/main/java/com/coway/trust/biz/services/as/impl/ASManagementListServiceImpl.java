@@ -1948,8 +1948,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     smsList.put("smsMessage", smsMessage);
     smsList.put("smsMobileNo", svc0004dmap.get("TEL_M").toString());
 
-    sendSms(smsList);
-
+    if(smsMessage != "")
+    {
+    	sendSms(smsList);
+    }
 
     LOGGER.debug("================asResult_insert - END ================");
     return em;

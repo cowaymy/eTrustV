@@ -488,6 +488,10 @@ public class OrderListController {
           cvMp.put("categoryId",  params.get("hidCategoryId"));
           cvMp.put("brnchId",  sessionVO.getUserBranchId());
 
+          //INSERT SMS FOR APPOINTMENT - KEYI - 2022/01/12
+          cvMp.put("soReqCurStusId",  String.valueOf(pReturnParam.get("soReqCurStusId"))); //REQ_STAGE_ID
+          cvMp.put("memCode",  String.valueOf(pReturnParam.get("memCode"))); //CT CODE
+
         	logger.debug("cvMp : {}", cvMp);
 
         		EgovMap  rtnValue = orderListService.productReturnResult(cvMp);
@@ -512,6 +516,9 @@ public class OrderListController {
 			failParam.put("serviceNo",  pReturnParam.get("retnNo") );
 			failParam.put("failReasonCode",  params.get("failReason") );
 
+			//INSERT SMS FOR APPOINTMENT - KEYI - 2022/01/12
+			failParam.put("appTypeId",  params.get("hidAppTypeId"));
+			failParam.put("soReqCurStusId",  String.valueOf(pReturnParam.get("soReqCurStusId"))); //REQ_STAGE_ID
 
 			orderListService.setPRFailJobRequest(params);
 			message.setMessage("Success : Product Return is Fail");

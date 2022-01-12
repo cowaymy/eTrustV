@@ -69,4 +69,6 @@ public interface OrderListService {
 	int getSirimOrdID(Map<String, Object> params);
 	int getMemberID(Map<String, Object> params);
 
+	void sendSms(Map<String, Object> smsList);
+
 }
