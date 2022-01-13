@@ -113,6 +113,11 @@ console.log("customerCreditCardPop");
         return isExist;
     }
 
+    function pad (str, max) {
+    	  str = str.toString();
+    	  return str.length < max ? pad("0" + str, max) : str;
+    }
+
     function fn_tokenPop() {
         console.log("tokenizationBtn :: click :: fn_tokenPop");
 
@@ -125,11 +130,11 @@ console.log("customerCreditCardPop");
 
         var tokenPop, tokenTick;
 
-        var nric = ($("#nric").val()).toString();
+        var nric = ($("#nric").val()).toString().trim().substr(0,12);
         var custId = "000000000000";
         var crcId = "000000000000";
-        refId = (nric.length < 12 ? pad("0" + nric, 12) : nric) + (custId.length < 12 ? pad("0" + custId, 12) : nric) + crcId;
-
+        refId = (nric.length < 12 ? pad(nric, 12) : nric) + (custId.length < 12 ? pad(custId, 12) : nric) + crcId;
+        console.log(refId);
         Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
             if(r1.tknId != 0) {
                 $("#refNo").val(r1.tknRef);

@@ -90,10 +90,13 @@
 				$("#search").click(fn_searchROT);
 				$("#requestROT").click(fn_requestROTSearchOrder);
 				$("#updateROT").click(fn_updateROT);
-				$("#search_requestor_btn").click(fn_supplierSearchPop);
+				//$("#search_requestor_btn").click(fn_supplierSearchPop);
 				$("#newAS").click(fn_newAS);
 				$("#rootRawData").click(fn_rootRawData);
-
+			    $('#search_requestor_btn').click(function() {
+			        //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+			        Common.popupDiv("/common/memberPop.do", $("#root_searchForm").serializeJSON(), null, true);
+			    });
 				fn_setGridEvent();
 			});
 
@@ -130,9 +133,8 @@
 		$('#rotReqBrnch').change(function() {
 			//console.log($(this).val());
 		}).multipleSelect({
-			selectAll : true, // 전체선택
-			width : '100%'
-		});
+            selectAll : true, // 전체선택
+            width : '100%'});
 
 		$('#rotAppType').change(function() {
 			//console.log($(this).val());
@@ -157,24 +159,25 @@
 	    });
 	}
 
-	function fn_supplierSearchPop() {
-		Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {
-			accGrp : "VM10"
-		}, null, true, "supplierSearchPop");
-	}
+// 	function fn_supplierSearchPop() {
+// 		Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {
+// 			accGrp : "VM10"
+// 		}, null, true, "supplierSearchPop");
+// 	}
 
-	function fn_setSupplier() {
-		$("#requestorID").val($("#search_memAccId").val());
-		$("#requestorName").val($("#search_memAccName").val());
-		$("#requestorInfo").val(
-				$("#search_memAccId").val() + " - "
-						+ $("#search_memAccName").val());
-	}
+// 	function fn_setSupplier() {
+// 		$("#requestorID").val($("#search_memAccId").val());
+// 		$("#requestorName").val($("#search_memAccName").val());
+// 		$("#requestorInfo").val(
+// 				$("#search_memAccId").val() + " - "
+// 						+ $("#search_memAccName").val());
+// 	}
 
 	// Button functions - Start
 	function fn_searchROT() {
+// 		console.log($("#root_searchForm").serialize());
 		Common.ajax("GET", "/sales/ownershipTransfer/selectRootList.do", $(
-				"#searchForm").serialize(), function(result) {
+				"#root_searchForm").serialize(), function(result) {
 			AUIGrid.setGridData(search_rootGridID, result);
 
 		});
@@ -335,6 +338,55 @@
 	}
 
 
+
+    function fn_loadOrderSalesman(memId, memCode) {
+
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+
+        fn_clearOrderSalesman();
+
+        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
+            console.log("memRC checking");
+
+            if(memRc != null) {
+                if(memRc.rookie == 1) {
+                    if(memRc.rcPrct != null) {
+                        if(memRc.rcPrct < 30) {
+                            fn_clearOrderSalesman();
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
+                            return false;
+                        }
+                    }
+                } else {
+                    fn_clearOrderSalesman();
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
+                    return false;
+                }
+            }
+
+            Common.ajax("GET", "/sales/ownershipTransfer/selectMemberByMemberIDCode1.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+
+                console.log(memInfo)
+                if(memInfo == null) {
+                    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                    //Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+                }
+                else {
+                    $('#requestorInfo').val(memInfo.memCode);
+                }
+            });
+        });
+    }
+
+    function fn_clearOrderSalesman() {
+        $('#requestorInfo').val('');
+    }
+
+    function fn_clear() {
+    	document.getElementById("root_searchForm").reset();
+    }
+
 	// Button functions - End
 
 	/*
@@ -393,7 +445,7 @@
 					</p></li>
 			</c:if>
 			<li><p class="btn_blue type2">
-					<a href="#" onclick="javascript:$('#searchForm').clearForm();"><span
+					<a href="#" onclick="fn_clear();"><span
 						class="clear"></span>
 					<spring:message code="sal.btn.clear" /></a>
 				</p></li>
@@ -403,7 +455,7 @@
 
 	<!-- search_table start -->
 	<section class="search_table">
-		<form id="searchForm" name="searchForm" action="#" method="post">
+		<form id="root_searchForm" name="root_searchForm" action="#" method="post">
 			<input type="hidden" id="requestorName" name="requestorName">
 			<input type="hidden" id="requestorID" name="requestorID">
 

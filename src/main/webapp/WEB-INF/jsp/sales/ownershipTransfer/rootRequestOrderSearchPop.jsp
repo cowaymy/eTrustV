@@ -197,6 +197,8 @@
 						});
 	}
 
+
+
 	function fn_searchOrdNo() {
 		console.log("fn_searchOrdNo");
 		Common.popupDiv('/sales/ccp/searchOrderNoPop.do', $('#sForm')
@@ -219,7 +221,7 @@
 <!-- ==================== Design ==================== -->
 
 <!-- popup_wrap start -->
-<div id="ordSearch_popup" class="popup_wrap">
+<div id="popup_wrap" class="popup_wrap">
 	<!-- pop_header start -->
 	<header class="pop_header">
 		<h1>ROT Request</h1>

@@ -150,7 +150,12 @@ public class OwnershipTransferController {
 		// Retrieve order information
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
 
+		// Retrieve Requestor Branch
+		//List<EgovMap> RequestorBranch = ownershipTransferService.getRequestorBranch();
+
+
 		model.put("requestReasonList", requestCodeList);
+		//model.put("RequestorBranch", RequestorBranch);
 		model.put("orderDetail", orderDetail);
 		model.put("callCenterYn", callCenterYn);
 
@@ -294,6 +299,8 @@ public class OwnershipTransferController {
 		// Retrive ROOT Request reasons
 		params.put("typeId", "6242");
 		List<EgovMap> remarkList = ownershipTransferService.rootCodeList(params);
+		params.put("typeId", "6241");
+		List<EgovMap> rotReasonList = ownershipTransferService.rootCodeList(params);
 
 		// Retrieve order information
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
@@ -344,6 +351,15 @@ public class OwnershipTransferController {
 		rotInfoMap = ownershipTransferService.selectRootDetails(params);
 		// ROT Data Retrieve - End
 
+		System.out.print("HEREZ");
+		System.out.println(params);
+		// ROT Requestor Retrieve - Start
+		EgovMap rotRequestorInfoMap = null;
+		rotRequestorInfoMap = ownershipTransferService.selectRequestorInfo(params);
+		System.out.println(rotRequestorInfoMap);
+		// ROT Requestor Retrieve - End
+
+
 		// Get ROT CCP Attachment
 		if (ccpInfoMap.containsKey("ccpAtchGrpId")) {
 			params.put("attachId", ccpInfoMap.get("ccpAtchGrpId"));
@@ -360,8 +376,10 @@ public class OwnershipTransferController {
 		model.addAttribute("ccpInfoMap", ccpInfoMap);
 		model.addAttribute("salesMan", salesMan);
 		model.addAttribute("remarkList", remarkList);
+		model.addAttribute("rotReasonList", rotReasonList);
 		model.addAttribute("callCenterYn", callCenterYn);
 		model.addAttribute("rotInfoMap", rotInfoMap);
+		model.addAttribute("rotRequestorInfoMap", rotRequestorInfoMap);
 
 		return "sales/ownershipTransfer/rootUpdatePop";
 	}
@@ -427,6 +445,7 @@ public class OwnershipTransferController {
 		return ResponseEntity.ok(message);
 	}
 
+
 	@RequestMapping(value = "/getFicoScoreByAjax")
 	public ResponseEntity<EgovMap> getFicoScoreByAjax(@RequestParam Map<String, Object> params) throws Exception {
 		LOGGER.info("ownershipTransferController :: getFicoScoreByAjax");
@@ -462,4 +481,32 @@ public class OwnershipTransferController {
 
 		return ResponseEntity.ok(fileInfo);
 	}
+
+	@RequestMapping(value = "/selectMemberByMemberIDCode1.do", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> selectMemberByMemberIDCode(@RequestParam Map<String, Object> params) {
+	    EgovMap result = ownershipTransferService.selectMemberByMemberIDCode(params);
+	    return ResponseEntity.ok(result);
+	  }
+
+//	until here
+	@RequestMapping(value = "/saveRotDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveRotDetail(@RequestBody Map<String, Object> params, Model model, //for rot reason after validation
+			SessionVO sessionVO) {
+		LOGGER.info("ownershipTransferController :: saveRotCCP");
+		LOGGER.info("params : {}", params);
+
+		int cnt = ownershipTransferService.saveRotDetail(params, sessionVO);
+
+		ReturnMessage message = new ReturnMessage();
+		if (cnt != 1) {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		} else {
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+
+		return ResponseEntity.ok(message);
+	}
+
 }

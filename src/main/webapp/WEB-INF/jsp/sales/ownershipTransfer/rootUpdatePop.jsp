@@ -562,8 +562,8 @@
                 + " , bankrupt : " + bankrupt + ", ccpHold : " + ccpHold);
 
         $("#_isPreVal").val("1");
-        //Fico
 
+        //Fico Removed condition as for enhancement requested - Gen Liang (Jonathan)
 //      if (($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA') || $("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966') {
 
               $("#_ficoScore").attr("disabled", false);
@@ -575,6 +575,9 @@
 
         //bind Feedback Code
         $("#_reasonCodeEdit").val(ccpResnId);
+
+        //bind rot reason after validation
+        $("#_rotReasonAfter").val('${rotInfoMap.rotReasonAfter}');
 
         //bind and Setting by CcpStatus
         if (ccpStus == "1") {
@@ -891,6 +894,11 @@
         setSMSMessage(rtnstr, suggRem);
     }
 
+    function fn_chgFunFeedBack(val) {
+        var suggRem = fn_suggestRem($("#_reasonCodeEdit option:selected")
+                .text());
+    }
+
     function fn_saveRotCCPValidation() {
         console.log("fn_saveRotCCPValidation");
 
@@ -931,14 +939,14 @@
             Common
                     .alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
             return;
-        } else {
-            if ($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300
-                    && $("#_ficoScore").val() != 0) {
+        } else if (($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300) && $("#_ficoScore").val() != 0 && $("#_editCustTypeId").val() == '964') {
                 Common
                         .alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
-            }
-        }
+        } else if (($("#_ficoScore").val() > 400 || $("#_ficoScore").val() < 100) && $("#_ficoScore").val() != 0 && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
+            Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
+            return;
+    }
 
         //Validation (Call Entry Count)
         var ccpOrdEditId = $("#_editOrdId").val();
@@ -1080,17 +1088,29 @@
 
     function fn_doSaveRotCCP() {
         console.log("fn_doSaveRotCCP");
-        console.log($("#ccpForm").serializeJSON());
+        //console.log($("#ccpForm").serializeJSON());
 
         Common.ajax("POST", "/sales/ownershipTransfer/saveRotCCP.do", $("#ccpForm").serializeJSON(), function(result) {
-
-        	$("#btnCloseUdp").click();
             Common.alert("<spring:message code='sal.alert.title.saveSuccsess'/>");
             console.log(result);
             fn_searchROT();
         });
     }
     // CCP Functions - End
+
+    // ROT DETAIL Functions - Start
+        function fn_doSaveRotResn() {
+        var rotRsn = {"ccpRotId":$("#ccpRotId").val(),"rotReasonAfter":$("#_rotReasonAfter").val()}
+        console.log(rotRsn);
+        Common.ajax("POST", "/sales/ownershipTransfer/saveRotDetail.do", rotRsn, function(result) {
+            Common.alert("<spring:message code='sal.alert.title.saveSuccsess'/>");
+            console.log(result);
+        });
+    }
+
+
+    // ROT DETAIL Functions - End
+
 
     // ROT Call Log Functions - Start
     function fn_retrieveRotCallLog() {
@@ -1242,7 +1262,8 @@
         <section class="tap_wrap">
             <!-- Tab Buttons -->
             <ul class="tap_type1 num4">
-                <li id="tab_rotHist" class="on"><a href="#">Basic info</a></li>
+                <li id="tab_rotHist" ><a href="#" class="on">Basic info</a></li>
+                <li id="tab_Requestor" ><a href="#" >Requestor</a></li>
                 <li id="tab_ccp" ><a href="#">CCP</a></li>
                 <li id="tab_rot"><a href="#">ROT Details</a></li>
                 <li id="tab_rotCL" ><a href="#">ROT Call-Log</a></li>
@@ -1252,7 +1273,63 @@
 <!------------------------------------------------------------------------------
                 Basic Info
             ------------------------------------------------------------------------------->
+
             <%@ include file="/WEB-INF/jsp/sales/order/include/basicInfo.jsp" %>
+   <!------------------------------------------------------------------------------
+                Basic Info
+            ------------------------------------------------------------------------------->
+
+           <!-- ********************************************************************************** -->
+            <!-- ROT Requestor Tab - Start -->
+            <!-- ********************************************************************************** -->
+                    <article class="tap_area">
+                        <section class="search_table">
+                            <table class="type1">
+                                <caption>table</caption>
+                                <colgroup>
+                                    <col style="width: 140px" />
+                                    <col style="width: *" />
+                                    <col style="width: 170px" />
+                                    <col style="width: *" />
+                                </colgroup>
+
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Request Branch</th>
+                                        <td><span id="Requestor_Branch">${rotRequestorInfoMap.branchName}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Requestor Code</th>
+                                        <td><span id="nameOwnt">${rotRequestorInfoMap.memCode}</span>
+                                        </td>
+                                        <th scope="row">Requestor Name</th>
+                                        <td><span id="nricOwnt">${rotRequestorInfoMap.name}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Department Code</th>
+                                        <td><span id="nationNmOwnt">${rotRequestorInfoMap.deptCode}</span>
+                                        </td>
+                                        <th scope="row">Group Code</th>
+                                        <td><span id="raceOwnt">${rotRequestorInfoMap.grpCode}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Organization Code</th>
+                                        <td><span id="dobOwnt">${rotRequestorInfoMap.orgCode}</span></td>
+                                        <th scope="row">Requestor Branch</th>
+                                        <td><span id="genderOwnt">${rotRequestorInfoMap.branchName}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </article>
+            <!-- ********************************************************************************** -->
+            <!-- ROT Requestor Tab - END -->
+            <!-- ********************************************************************************** -->
+
+
+
             <!-- ********************************************************************************** -->
             <!-- CCP Tab - Start -->
             <!-- ********************************************************************************** -->
@@ -1674,8 +1751,18 @@
 
                         <tbody>
                             <tr>
-                                <th scope="row">ROT Reason</th>
-                                <td colspan="5"><span id="rotReason">${rotInfoMap.rotReason}</span>
+                                <th scope="row">ROT Reason(Before Verification)</th>
+                                <td colspan="2.5"><span id="rotReason">${rotInfoMap.rotReasonBefore}</span>
+                                </td>
+                                <th scope="row">ROT Reason(After Verification)</th>
+                                <td colspan="2.5"><select class="w100p"
+                                        name="rotReasonAfter" id="_rotReasonAfter" onchange="javascript:fn_doSaveRotResn(this.value);">
+                                        <option value="">Choose One</option>
+                                            <c:forEach var="list" items="${rotReasonList}"
+                                                varStatus="status">
+                                                <option value="${list.codeId}">${list.codeName}</option>
+                                            </c:forEach>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>

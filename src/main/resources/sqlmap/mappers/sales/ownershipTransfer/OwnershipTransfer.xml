@@ -88,13 +88,16 @@
 				#{item}
 			</foreach>
 		</if>
-		<if test="(rotReqBrnch != null and rotReqBrnch != '') ">
-			AND F.USER_BRNCH_ID IN
+		<if test="(rotReqBrnch != null and rotReqBrnch != '' ) ">
+			AND B.ROT_REQ_BRANCH_ID IN
 			<foreach item="item" collection="rotReqBrnch" index="index"
 				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
+        <if test="reqInfo != null and reqInfo != '' ">
+            AND B.ROT_REQUESTOR_CODE = #{reqInfo}
+        </if>
 		<if test="(rotFeedbackCode != null and rotFeedbackCode != '') ">
             AND H.CCP_RESN_ID IN
             <foreach item="item" collection="rotFeedbackCode" index="index"
@@ -208,7 +211,7 @@
 		ROT_NO,
 		ROT_ORD_ID,
 		ROT_ORD_NO,
-		ROT_REASON,
+		ROT_REASON_BEFORE,
 		ROT_REQ_AS,
 		ROT_REQ_REBILL,
 		ROT_REQ_INVC_GRP,
@@ -228,7 +231,9 @@
 		ROT_CRT_DT,
 		ROT_CRT_USER_ID,
 		ROT_UPD_DT,
-		ROT_UPD_USER_ID
+		ROT_UPD_USER_ID,
+		ROT_REQUESTOR_CODE,
+		ROT_REQ_BRANCH_ID
 		) VALUES (
 		#{rotID},
 		#{rotDocNo},
@@ -254,7 +259,9 @@
 		SYSDATE,
 		#{userID},
 		SYSDATE,
-		#{userID}
+		#{userID},
+        #{requestorCode},
+        #{rotReqBrnchID}
 		)
 	</insert>
 
@@ -697,7 +704,8 @@
             A.ROT_ORD_ID,
             A.ROT_ORD_NO,
             Z1.NAME,
-            Z23.CODE || ' - ' || Z23.RESN_DESC ROT_REASON,
+            Z23.CODE || ' - ' || Z23.RESN_DESC ROT_REASON_BEFORE,
+            Z24.RESN_ID  ROT_REASON_AFTER,
             TO_CHAR(A.ROT_REQ_DT, 'DD-MM-YYYY') ROT_REQ_DT,
             Z2.USER_NAME ROT_REQ_USER,
             TO_CHAR(A.ROT_APPV_DT, 'DD-MM-YYYY') ROT_APPV_DT,
@@ -860,8 +868,10 @@
         LEFT JOIN SYS0013M Z11 /* INSTALLATION CONTACT RACE */
             ON K.RACE_ID = Z11.CODE_ID
             AND Z11.CODE_MASTER_ID = 2
-        LEFT JOIN SYS0032M Z23 /* ROT REASON */
-            ON B.ROT_REASON = Z23.RESN_ID
+        LEFT JOIN SYS0032M Z23 /* ROT REASON BEFORE*/
+            ON B.ROT_REASON_BEFORE = Z23.RESN_ID
+        LEFT JOIN SYS0032M Z24 /* ROT REASON AFTER*/
+            ON B.ROT_REASON_AFTER = Z24.RESN_ID
         /* -------------------------------- */
         LEFT JOIN SYS0013M Z12 /* PAYMENT MODE */
             ON M.MODE_ID = Z12.CODE_ID
@@ -922,7 +932,8 @@
 		NEW_CUST_ID,
 		NEW_CUST_NAME,
 		STATUS,
-		ROT_REASON,
+		ROT_REASON_BEFORE,
+		ROT_REASON_AFTER,
 		ROUND(
 		CASE WHEN NEXT_REQ_DT IS NULL THEN MONTHS_BETWEEN(SYSDATE,
 		TO_DATE(ROT_REQ_DT, 'DD/MM/YYYY'))
@@ -938,7 +949,8 @@
 		NEW_CUST_ID,
 		NEW_CUST_NAME,
 		STATUS,
-		ROT_REASON,
+		ROT_REASON_BEFORE,
+		ROT_REASON_AFTER,
 		/* LAG(ROT_REQ_DT) OVER (ORDER BY REQ_DT) AS PREVIOUS_REQ_DT */
 		LAG(ROT_REQ_DT) OVER (ORDER BY REQ_DT DESC) AS NEXT_REQ_DT
 		FROM (
@@ -949,7 +961,8 @@
 		A.SO_EXCHG_NW_CUST_ID NEW_CUST_ID,
 		C.NAME NEW_CUST_NAME,
 		D.CODE STATUS,
-		'' ROT_REASON,
+		'' ROT_REASON_BEFORE,
+		'' ROT_REASON_AFTER,
 		A.SO_EXCHG_CRT_DT REQ_DT
 		FROM SAL0004D A
 		JOIN SAL0029D B
@@ -969,7 +982,11 @@
 		B.ROT_NEW_CUST_ID NEW_CUST_ID,
 		D.NAME NEW_CUST_NAME,
 		E.CODE STATUS,
-		F.CODE || ' - ' || F.RESN_DESC ROT_REASON,
+		F.CODE || ' - ' || F.RESN_DESC ROT_REASON_BEFORE,
+        CASE WHEN (G.CODE || ' - ' || G.RESN_DESC)= ' - ' THEN ''
+        ELSE
+            G.CODE || ' - ' || G.RESN_DESC
+        END AS ROT_REASON_AFTER,
 		A.ROT_REQ_DT REQ_DT
 		FROM SAL0275M A
 		JOIN SAL0276D B
@@ -981,7 +998,9 @@
 		JOIN SYS0038M E
 		ON A.ROT_STUS = E.STUS_CODE_ID
 		JOIN SYS0032M F
-		ON B.ROT_REASON = F.RESN_ID
+		ON B.ROT_REASON_BEFORE = F.RESN_ID
+		JOIN SYS0032M G
+		ON B.ROT_REASON_AFTER = G.RESN_ID
 		WHERE A.ROT_ID = #{rotId}
 		)
 		)
@@ -1472,4 +1491,291 @@
 		WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
 		AND T1.ATCH_FILE_ID = #{atchFileId}
 	</select>
+
+    <select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
+        select T.BRANCH_NAME
+, T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.BRNCH
+                  , BRANCH.CODE || ' - ' || BRANCH.NAME AS BRANCH_NAME
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               LEFT JOIN SYS0005M BRANCH ON BRANCH.brnch_id = T1.BRNCH
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
+              <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+              </if>
+              <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+              </if>
+              <if test='stus != null and stus !=""'>
+                AND T1.STUS = #{stus}
+              </if>
+                AND ROWNUM &lt;= 1 ) T
+    </select>
+    <update id="updateSAL0276D_rotReason" parameterType="Map">
+        /* ROT Detail */
+        UPDATE SAL0276D
+        set ROT_REASON_AFTER = #{rotReasonAfter}
+        where ROT_ID = #{ccpRotId}
+    </update>
+
+<select id="selectRequestorInfo" parameterType="Map" resultType="egovMap">
+        /* ROT Requestor Info */
+SELECT CASE WHEN (EXT2.CODE ||' - '|| EXT2.NAME  = ' - ')THEN '' ELSE (EXT2.CODE ||' - '|| EXT2.NAME ) END AS REQUEST_BRANCH,
+        EXT3.BRANCH_NAME,
+        EXT3.MEM_CODE,
+        EXT3.NAME,
+        EXT3.DEPT_CODE,
+        EXT3.GRP_CODE,
+        EXT3.ORG_CODE
+        FROM SAL0276D EXT1
+        LEFT JOIN SYS0005M EXT2 ON EXT2.BRNCH_ID = EXT1.ROT_REQ_BRANCH_ID
+        LEFT JOIN (select T.BRANCH_NAME, T.MEM_ID, T.MEM_CODE, T.NAME, T.NRIC, T.MEM_TYPE, T.CODE_NAME, T.DEPT_CODE, T.GRP_CODE, T.ORG_CODE, T.MEM_LVL, T.LVL3_UP_ID, T.LVL2_UP_ID, T.LVL1_UP_ID
+          FROM (SELECT T1.MEM_ID, T1.BRNCH, BRANCH.CODE || ' - ' || BRANCH.NAME AS BRANCH_NAME, T1.MEM_CODE, T1.MEM_TYPE, T1.NAME, T1.NRIC, T2.CODE_NAME, CASE WHEN (NOT((T3.MEM_ID IS NULL)AND (T3.MEM_CODE IS NULL)
+          AND (T3.MEM_LVL IS NULL) AND (T3.DEPT_CODE IS NULL) AND (T3.GRP_CODE IS NULL) AND (T3.ORG_CODE IS NULL) AND (T3.TOP_ORG_CODE IS NULL) AND (T3.MEM_UP_ID IS NULL) AND (T3.LVL3_UP_ID IS NULL) AND (T3.LVL2_UP_ID IS NULL)AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               LEFT JOIN SYS0005M BRANCH ON BRANCH.brnch_id = T1.BRNCH
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+        <![CDATA[
+                AND ROWNUM <= 1
+        ]]> ) T) EXT3 ON EXT3.MEM_CODE = EXT1.ROT_REQUESTOR_CODE
+              where ext1.rot_id = #{rotId}
+    </select>
+
 </mapper>

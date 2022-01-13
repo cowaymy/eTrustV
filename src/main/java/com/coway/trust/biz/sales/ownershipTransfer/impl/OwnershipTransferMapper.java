@@ -110,5 +110,9 @@ public interface OwnershipTransferMapper {
 
 	int mergeSAL0045D_ROT(Map<String, Object> params) throws Exception;
 
-	// ROT Update - End
+	EgovMap selectMemberByMemberIDCode(Map<String, Object> params) ;
+
+	int updateSAL0276D_rotReason(Map<String, Object> params);
+
+	EgovMap selectRequestorInfo(Map<String, Object> params);
 }

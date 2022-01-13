@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 import com.coway.trust.biz.payment.billinggroup.service.impl.BillingGroupMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
@@ -153,7 +154,8 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 			dParam.put("rotBillID", "0");
 		}
 		// Detail table data preparation - End
-
+		dParam.put("requestorCode", (String) params.get("Request_requestorInfo"));
+		dParam.put("rotReqBrnchID", (String) params.get("Request_rotReqBrnch"));
 		// Insert Detail Table
 		dCnt = ownershipTransferMapper.insertSAL0276D(dParam);
 		// ***************************************************************************************************
@@ -242,7 +244,6 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 		ccpParam.put("ccpIsHold", SalesConstants.IS_FALSE);
 		ccpParam.put("ccpAgmReq", SalesConstants.IS_FALSE);
 		ccpParam.put("ccpTemplate", SalesConstants.IS_FALSE);
-
 		ccpCnt = ownershipTransferMapper.insertSAL0277D(ccpParam);
 		// ROT CCP Data Preparation - End
 		// ***************************************************************************************************
@@ -574,6 +575,8 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 
 		params.put("hasGrnt", "0");
 
+
+
 		// Call CcpCalculateServiceImpl.calSave()
 		int cnt = 0;
 		try {
@@ -609,6 +612,10 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 		String callSeq = "";
 
 		int cnt = 0;
+
+		// save rot reason after validation into sal0276D
+//		ownershipTransferMapper.updateSAL0276D_rotReason(params);
+
 
 		// 1. Update ROT CCP Decision :: SAL0277D
 		LOGGER.info("==========================================");
@@ -848,4 +855,25 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 
 		return cnt;
 	}
+	  @Override
+	  public EgovMap selectMemberByMemberIDCode(Map<String, Object> params) {
+	    // TODO Auto-generated method stub
+	    return ownershipTransferMapper.selectMemberByMemberIDCode(params);
+	  }
+
+		@Override
+		public int saveRotDetail(Map<String, Object> params, SessionVO sessionVO) { //save rot reason after validation
+			LOGGER.debug("OwnershipTransferServiceImpl :: saveRotDetail");
+			LOGGER.info("params : {}", params);
+			int cnt = 0;
+			params.put("rotId", params.get("rotId"));
+			params.put("rotReasonAfter", params.get("rotReasonAfter"));
+			cnt = ownershipTransferMapper.updateSAL0276D_rotReason(params);
+			return cnt;
+		}
+
+		public EgovMap selectRequestorInfo(Map<String, Object> params) {
+			return ownershipTransferMapper.selectRequestorInfo(params);
+		}
+
 }

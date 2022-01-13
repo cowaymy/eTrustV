@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.ownershipTransfer;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.ui.ModelMap;
+
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -36,4 +38,10 @@ public interface OwnershipTransferService {
 	List<EgovMap> getAttachments(Map<String, Object> params);
 
 	EgovMap getAttachmentInfo(Map<String, Object> params);
+
+	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
+
+	int saveRotDetail(Map<String, Object> params, SessionVO sessionVO); //for rot reason after validation
+
+	EgovMap selectRequestorInfo(Map<String, Object> params);
 }
