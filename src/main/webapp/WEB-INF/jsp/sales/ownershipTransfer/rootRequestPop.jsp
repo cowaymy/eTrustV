@@ -1318,6 +1318,9 @@
             if (!fn_validReqOwntInstallation()) {
                 return false;
             }
+            if (!fn_validRequestor()) {
+                return false;
+            }
         }
         return true;
     }
@@ -1563,6 +1566,28 @@
 
         if (!isValid) {
             $('#tabCT').click();
+            Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />'
+                    + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+        }
+        return isValid;
+    }
+
+    function fn_validRequestor() {
+        var isValid = true, msg = "";
+
+        if (FormUtil.checkReqValue($('#Request_rotReqBrnch'))) {
+            isValid = false;
+            msg += '* Please Select Request Branch <br>';
+        }
+
+        if (FormUtil.checkReqValue($('#Request_requestorInfo'))) {
+            isValid = false;
+            msg += '* Please Select Requestor <br>';
+        }
+
+
+        if (!isValid) {
+            $('#tabRQ').click();
             Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />'
                     + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
         }
@@ -2151,12 +2176,12 @@
 
                                     <tbody>
                                         <tr>
-							                  <th scope="row">Request Branch</th>
+							                  <th scope="row">Request Branch<span class="must">*</span></th>
                                                     <td colspan="3"><select id="Request_rotReqBrnch" name="Request_rotReqBrnch" class="w100p"></select>
                                               </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row">ROT Requestor</th>
+                                            <th scope="row">ROT Requestor<span class="must">*</span></th>
                                                 <td><input type="text" title="" placeholder="Requestor ID"
                                                     class="" style="width: 90%" id="Request_requestorInfo" name="Request_requestorInfo"
                                                     readonly /> <a href="#" class="search_btn"
