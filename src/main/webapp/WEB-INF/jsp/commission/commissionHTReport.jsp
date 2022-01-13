@@ -96,7 +96,7 @@
                     return;
                 }
 
-                if(year >= 2022)
+                if(year >= 2021 && month >=12 || year > 2021)
                 {
                 	reportFileName = "/commission/HTCommission_PDF_2022.rpt"; //reportFileName
                     reportDownFileName = "HTCommission_" + today; //report name

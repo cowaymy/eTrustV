@@ -121,7 +121,7 @@
                 }
 console.log(month);
 console.log(year);
-            if(year >= 2022)
+            if(year >= 2021 && month >=12 || year > 2021)
             {
             	reportFileName = "/commission/CodyComm_PDF_2022.rpt"; //reportFileName
             }
