@@ -148,7 +148,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     }
 
     @Override
-    public String SAL0095D_insert(Map<String, Object> params) {
+    public String SAL0095D_insert(Map<String, Object> params, SessionVO sessionVO) {
 
         boolean hasBill = false;
         EgovMap sal0001dData = null;
@@ -257,6 +257,12 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         ///////////// processBills///////////////////
         this.processBills(hasBill, params, sal0093dData);
         ///////////// processBills///////////////////
+
+        this.updateAction(params);
+
+        if("6507".equals(params.get("payment_mode").toString()) || "6508".equals(params.get("payment_mode").toString())) {
+            this.eSVMNormalPayment(params, sessionVO);
+        }
 
         return memNo;
 

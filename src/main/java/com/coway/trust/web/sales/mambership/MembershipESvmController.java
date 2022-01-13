@@ -216,13 +216,10 @@ public class MembershipESvmController {
         ReturnMessage message = new ReturnMessage();
         String docNo = "";
         String insSal95d_ret = "";
-
-        // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
+        int updAct = 0;
         int resultVal = 0;
-        if("6506".equals(params.get("payment_mode").toString()) && params.get("action").equals("5")) {
-            resultVal = membershipESvmService.genSrvMembershipBilling(params, sessionVO);
 
-        } else {
+        if(!"6506".equals(params.get("payment_mode").toString())) {
             if(params.get("payment_transactionDt") != null && !params.get("payment_transactionDt").equals("")) {
                 String fmtTrxDt = (String) params.get("payment_transactionDt");
                 fmtTrxDt = fmtTrxDt.replace("/", "");
@@ -250,39 +247,62 @@ public class MembershipESvmController {
         params.put("statusRemark", statusRemark);
 
         if(params.get("action").equals("5")) {
+            // Approve Action
             //==== update SAL0298D eSVM ====
             params.put("specialInstruction","");
             if(!"6506".equals(params.get("payment_mode").toString())) {
                 params.put("docNo", docNo);
 
+                // SAL0095D_insert :: Returns SM no
+                // 1. SAL0095D_insert to perform SAL0298D status update (updateAction)
+                // 2. SAL0095D_insert to perform payment matching functions (inclusive of eSVMNormalPayment)
+                logger.debug("pre-SAL0095D_insert :: params :: {}", params);
+                insSal95d_ret = membershipESvmService.SAL0095D_insert(params, sessionVO);
+
             } else {
-                // Get PO SM number
+                // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
+                /* Returns
+                 * 1 :: Successfully converted
+                 * 0 :: Failed conversion, duplicated PO reference
+                 * 99, 98, 97 :: Failed conversion
+                 */
+                resultVal = membershipESvmService.genSrvMembershipBilling(params, sessionVO);
+
+                // Get PO's SM number
                 String poSvm = membershipESvmService.getPOSm(params);
                 params.put("docNo", poSvm);
-            }
-            logger.debug("params =====================================>>  " + params);
-//            membershipESvmService.updateAction(params);
 
-            //==== insert membership ====
-            //membershipESvmService.SAL0095D_insert(params);
-            if(!"6506".equals(params.get("payment_mode").toString())) {
-                insSal95d_ret = membershipESvmService.SAL0095D_insert(params);
-
-                if("6507".equals(params.get("payment_mode").toString()) || "6508".equals(params.get("payment_mode").toString())) {
-                    Map<String, Object> resultList = membershipESvmService.eSVMNormalPayment(params, sessionVO);
+                // To update SAL0298D status (updateAction) [Approved]
+                logger.debug("post-PO Billing - updateAction :: params :: {}", params);
+                if(resultVal == 1) {
+                    updAct = membershipESvmService.updateAction(params);
                 }
             }
+//            membershipESvmService.updateAction(params);
+        } else {
+            // Active/Reject Action
+            /* Action ::
+             * 1. Update SAL0298D
+             * 2. Update PAY0312D
+             * 3. Update SAL0093D (SMQ inactive)
+             */
+//            if(!"6506".equals(params.get("payment_mode").toString())) {
+//            }
+            // Set resultVal = 2, IF "Active" status action
+            if("6506".equals(params.get("payment_mode").toString()) && "1".equals(params.get("action").toString())) resultVal = 2;
+
+            updAct = membershipESvmService.updateAction(params);
         }
 
+/*
         // Payment Mode :: PO, Status :: 1 (Active) set result value 2
         if("6506".equals(params.get("payment_mode").toString()) && !params.get("action").equals("5")) resultVal = 2;
 
-        // if sal095, resultval > 0 then update
-        int updAct = 0;
         if((!"6506".equals(params.get("payment_mode").toString()) && !insSal95d_ret.isEmpty()) ||
            ("6506".equals(params.get("payment_mode").toString()) && (resultVal == 1 || resultVal == 2))) {
             updAct = membershipESvmService.updateAction(params);
         }
+*/
 
         if(updAct > 0) {
             if(!"6506".equals(params.get("payment_mode").toString())) {

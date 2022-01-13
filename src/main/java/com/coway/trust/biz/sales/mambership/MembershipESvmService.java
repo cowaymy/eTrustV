@@ -35,7 +35,7 @@ public interface MembershipESvmService {
 
 	void updateTR(Map<String, Object> params);
 
-	String SAL0095D_insert(Map<String, Object> params);
+	String SAL0095D_insert(Map<String, Object> params, SessionVO sessionVO);
 
 	String selectDocNo(Map<String, Object> params);
 
