@@ -143,7 +143,7 @@
                          Extent1.NO AS HSR_NO,
                          Extent1.AS_CRT_DT,
                          Extent11.STK_CODE || ' - ' || STK_DESC AS STK_DESC,
-                         Extent7.INST_CITY,
+                         NVL(ma1.CITY, '-') AS INST_CITY,
                          Extent16.DEFECT_DESC
                   FROM SVC0001D Extent1
                   JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
@@ -165,8 +165,7 @@
                                      AS_SETL_DT,
                                      AS_RESULT_CRT_DT,
                                      AS_CMMS,
-                                     NVL(USER_NAME, '-') as USER_NAME,
-                                     INST_CITY
+                                     NVL(USER_NAME, '-') as USER_NAME
                               FROM ( SELECT (ROW_NUMBER() OVER (PARTITION BY AS_ENTRY_ID ORDER BY AS_RESULT_ID DESC)) AS ranking,
                                              AS_RESULT_ID,
                                              AS_RESULT_NO,
@@ -180,14 +179,9 @@
                                              AS_SETL_DT,
                                              AS_RESULT_CRT_DT,
                                              AS_CMMS,
-                                             B.USER_NAME,
-                                             NVL(ma1.CITY, '-') AS INST_CITY
+                                             B.USER_NAME
                                      FROM SVC0004D A
                                      LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
-                                     JOIN sal0001d som on som.SALES_ORD_ID = A.AS_SO_ID
-                                     JOIN sal0045d SAL ON SAL.sales_ord_id = som.sales_ord_id
-                                     LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
-                                     LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
                                      WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
                   ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
                               AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
@@ -196,6 +190,10 @@
                  LEFT JOIN SYS0026M Extent11 ON Extent10.ITM_STK_ID = Extent11.STK_ID
                  JOIN SYS0100M Extent15 ON Extent15.DEFECT_GRP = Extent1.AS_MALFUNC_ID
                  JOIN SYS0100M Extent16 ON Extent16.DEFECT_ID = Extent1.AS_MALFUNC_RESN_ID and Extent15.DEFECT_GRP = Extent16.DEFECT_GRP
+
+                 JOIN sal0045d SAL ON SAL.sales_ord_id = Extent4.sales_ord_id
+                 LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
+                 LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
                  WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                    AND Extent4.BNDL_ID IS NULL       -- homecare Remove(except)
                  <if test="asStatusList != null and asStatusList != '' ">
