@@ -3,7 +3,9 @@ package com.coway.trust.web.eAccounting.vendorAdvance;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -279,12 +281,13 @@ public class VendorAdvanceController {
         details.put("attachList", atchInfo);
 
         // Not draft or empty approval status, retrieve from FCM0004M and FCM0005D
-        if("6".equals(params.get("advType").toString()) && (!"".equals(params.get("appvPrcssStus").toString()) && !"T".equals(params.get("appvPrcssStus").toString()))) {
+        //if("6".equals(params.get("advType").toString()) && (!"".equals(params.get("appvPrcssStus").toString()) && !"T".equals(params.get("appvPrcssStus").toString()))) {
+        if(!"".equals(params.get("appvPrcssStus").toString()) && !"T".equals(params.get("appvPrcssStus").toString())) {
             List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
             for(int i = 0; i < appvLineInfo.size(); i++) {
                 EgovMap info = appvLineInfo.get(i);
                 if("J".equals(info.get("appvStus"))) {
-                    String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(params);
+                    String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
                     details.put("rejctResn", rejctResn);
                 }
             }
@@ -312,6 +315,7 @@ public class VendorAdvanceController {
             details.put("appvPrcssStus", appvPrcss);
         }
 
+        LOGGER.debug("========== selectVendorAdvanceDetails:endingParams ==========" + details);
         ReturnMessage message = new ReturnMessage();
         if(details.size() > 0) {
             message.setCode(AppConstants.SUCCESS);
@@ -382,6 +386,87 @@ public class VendorAdvanceController {
             message.setData(updCnt);
             message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
         }
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/vendorAdvanceApproveViewPop.do")
+    public String vendorAdvanceApproveViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        int rejctSeq = 0;
+
+        EgovMap advType = vendorAdvanceService.getAdvType(params);
+        params.put("advType", advType.get("advType"));
+
+        List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
+        List<EgovMap> appvInfoAndItems = vendorAdvanceService.selectAppvInfoAndItems(params);
+
+        String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+        memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+        params.put("memCode", memCode);
+        EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+        List<String> appvLineUserId = new ArrayList<>();
+        for(int i = 0; i < appvLineInfo.size(); i++) {
+            EgovMap info = appvLineInfo.get(i);
+            appvLineUserId.add(info.get("appvLineUserId").toString());
+
+            String appvPrcssResult = String.valueOf(info.get("appvStus"));
+            model.addAttribute("appvPrcssResult", appvPrcssResult);
+
+            if("J".equals(info.get("appvStus"))) {
+                rejctSeq = Integer.parseInt(info.get("appvLineSeq").toString());
+            }
+        }
+
+        if(!appvLineUserId.contains(memCode) && apprDtls != null) {
+            model.addAttribute("appvPrcssResult", "R");
+        }
+
+        // TODO appvPrcssStus 생성
+        String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+
+        Map<String, Object> m1 = new HashMap<String, Object>();
+        m1.put("appvPrcssNo", params.get("appvPrcssNo"));
+        m1.put("appvLineSeq", rejctSeq);
+        if(rejctSeq != 0) {
+            String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(m1);
+            model.addAttribute("rejctResn", rejctResn);
+        }
+
+        model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
+        model.addAttribute("appvPrcssStus", appvPrcssStus);
+        model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
+        if(params.containsKey("type")) {
+            model.addAttribute("type", params.get("type"));
+        }
+
+        return "eAccounting/vendorAdvance/vendorAdvanceApproveViewPop";
+    }
+
+    @RequestMapping(value = "/editRejected.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> editRejected(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        if(params.get("clmNo") != null && !params.get("clmNo").equals(""))
+        {
+        	String reqType = (String)params.get("clmNo");
+        	reqType = reqType.substring(0, 2);
+        	params.put("reqType", reqType);
+        }
+        String reqNo = vendorAdvanceService.selectNextReqNo(params);
+        params.put("newClmNo", reqNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+        vendorAdvanceService.editRejected(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
         return ResponseEntity.ok(message);
     }
 }

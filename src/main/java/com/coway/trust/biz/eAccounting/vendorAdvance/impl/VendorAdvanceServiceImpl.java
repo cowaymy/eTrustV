@@ -122,6 +122,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
         params.put("amt", params.get("settlementTotAmt"));
         params.put("costCenterCode", params.get("settlementCostCenter"));
         params.put("atchFileGrpId", params.get("settlementAtchFileGrpId"));
+        params.put("memAccId", params.get("settlementMemAccId"));
 
         int mstIns = vendorAdvanceMapper.insertAdvMst_FCM27M(params);
 
@@ -140,6 +141,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
 
             item.put("amt", item.get("totalAmt"));
             item.put("netAmt", item.get("totalAmt"));
+            item.put("glAccNo", item.get("glAccCode"));
 //            item.put("rem", item.get("desc"));
 
             int ins = vendorAdvanceMapper.insertAdvDet_FCM28D(item);
@@ -229,7 +231,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 params.put("clmType", params.get("reqNewClmNo").toString().substring(0, 2));
                 params.put("clmNo", params.get("reqNewClmNo"));
             }
-            params.put("appvItmSeq", "1");
+            params.put("appvItmSeq", 1);
 
 
             if(params.containsKey("reqAdvType") && params.get("reqAdvType") != null && params.get("reqAdvType").equals("5"))
@@ -306,7 +308,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
     @Override
     public int updateVendorAdvSettlement(Map<String, Object> params, SessionVO sessionVO) {
         LOGGER.debug("========== vendorAdvance.updateVendorAdvSettlement ==========");
-        LOGGER.debug("vendorAdvance.updateVendorAdvSettlement :: params >>>>> ", params);
+        LOGGER.debug("vendorAdvance.updateVendorAdvSettlement :: params >>>>> "+ params);
 
         int rtn = 0;
 
@@ -394,4 +396,50 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
 
         return rtn;
     }
+
+    @Override
+	public String selectNextReqNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+    	LOGGER.debug("selectNextReqNo =====================================>>  " + params);
+		return vendorAdvanceMapper.selectNextReqNo();
+	}
+
+    @Override
+    public void editRejected(Map<String, Object> params) {
+        // TODO Auto-generated method stub
+
+        LOGGER.debug("editRejected =====================================>>  " + params);
+
+        EgovMap attachmentDetails = new EgovMap();
+        attachmentDetails = (EgovMap) vendorAdvanceMapper.getAttachmenDetails(params);
+        params.put("exFileAtchGrpId", attachmentDetails.get("atchFileGrpId"));
+        params.put("exFileAtchId", attachmentDetails.get("atchFileId"));
+
+        // Duplicate File ID
+        int newFileAtchGrpId = vendorAdvanceMapper.getFileAtchGrpId();
+        int newFileAtchId = vendorAdvanceMapper.getFileAtchId();
+        params.put("newFileAtchGrpId", newFileAtchGrpId);
+        params.put("newFileAtchId", newFileAtchId);
+
+        // Insert SYS0070M
+        vendorAdvanceMapper.insertSYS0070M_ER(params);
+
+        vendorAdvanceMapper.insertSYS0071D_ER(params);
+
+        // Insert FCM0027M
+        vendorAdvanceMapper.insertRejectM(params);
+        // Insert FCM0028D
+        vendorAdvanceMapper.insertRejectD(params);
+    }
+
+    @Override
+    public EgovMap getAdvType(Map<String, Object> params) {
+        return vendorAdvanceMapper.getAdvType(params);
+    }
+
+    @Override
+    public List<EgovMap> selectAppvInfoAndItems(Map<String, Object> params) {
+        return vendorAdvanceMapper.selectAppvInfoAndItems(params);
+    }
+
 }

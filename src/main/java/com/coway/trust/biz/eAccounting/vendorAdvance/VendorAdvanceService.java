@@ -41,4 +41,12 @@ public interface VendorAdvanceService {
 
     // FCM0027M update - Manual Settlement for Advance Vendor Request (R4) - Web invoice requested by invoice number + supplier matching
     int manualVendorAdvReqSettlement(Map<String, Object> params, SessionVO sessionVO);
+
+    // Edit Rejected 27/12/2021
+    String selectNextReqNo(Map<String, Object> params);
+    void editRejected(Map<String, Object> params);
+
+    // Approval View
+    EgovMap getAdvType(Map<String, Object> params);
+    List<EgovMap> selectAppvInfoAndItems(Map<String, Object> params);
 }

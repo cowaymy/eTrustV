@@ -1347,7 +1347,7 @@
 
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
-        <h2>Advance to Staff</h2>
+        <h2>Staff - Travel Advance</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" id="request_btn">New Request</a></p></li>
             <li><p class="btn_blue"><a href="#" id="refund_btn">Repayment</a></p></li>

@@ -32,7 +32,7 @@
         dataField : "advType",
         visible : false
     }, {
-        dataField : "payee",
+        dataField : "payeeName",
         headerText : "Payee"
     }, {
         dataField : "costCenter",
@@ -343,7 +343,7 @@
         console.log("vendorAdvance.jsp");
 
         // Vendor Advance Request Grid
-        advGridId = AUIGrid.create("#grid_wrap", advanceColumnLayout, advanceGridPros);
+        advGridId = GridCommon.createAUIGrid("#grid_wrap", advanceColumnLayout, null, advanceGridPros);
         // Vendor Advance Settlement Grid
         //settlementGridId = AUIGrid.create("#settlementGridWrap", settlementColLayout, settlementGridPros);
         settlementGridId = GridCommon.createAUIGrid("#settlement_grid_wrap", settlementColLayout, null, settlementGridPros);
@@ -357,7 +357,8 @@
         AUIGrid.resize(budgetGridID, 565, $(".budgetGrid").innerHeight());
         AUIGrid.resize(glAccGridID, 565, $(".glCodeGrid").innerHeight());
 
-        $("#settlementUpd_btn").click(fn_settlementUpdate); // Manual update settlement status - Finance use only
+        //$("#settlementUpd_btn").click(fn_settlementUpdate); // Manual update settlement status - Finance use only
+        $("#settlementUpd_btn").click(fn_settlementConfirm); // Manual update settlement status - Finance use only
         $("#request_btn").click(fn_advReqPop);
         $("#advList_btn").click(fn_searchAdv);
         $("#refund_btn").click(fn_repaymentPop);
@@ -377,6 +378,9 @@
 
         $("#reqDraft").click(fn_reqDraft);
         $("#reqSubmit").click(fn_reqSubmit);
+
+        $("#keyDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
+        $("#keyDate").attr("readOnly", true);
 
         // Attachment update
         $("#form_vendorAdvanceReq :file").change(function() {
@@ -431,6 +435,10 @@
         });
 
         $("#approvalLine_closeBtn").click(fn_closePop("S"));
+
+        $("#editRejBtn").click(fn_editRejected);
+
+
 
     });
 
@@ -529,7 +537,7 @@
     // Payee, Cost Center Search Button functions - Start
     // Main Menu
     function fn_popPayeeSearchPop() {
-        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop", accGrp:"VM10"}, null, true, "supplierSearchPop");
+        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop", accGrp:"VM12"}, null, true, "supplierSearchPop");
     }
 
     // Main Menu
@@ -640,7 +648,6 @@
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
                 console.log(result);
 
-                console.log("advGridAppvPrcssStus: " , advGridAppvPrcssStus);
                 if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J" || advGridAppvPrcssStus == "R" || advGridAppvPrcssStus == "P") {
                     // Approved, Rejected, Request, Pending
                     // Fields are not editable
@@ -648,6 +655,8 @@
 
                     $("#reqDraft").hide();
                     $("#reqSubmit").hide();
+                    $("#rejectReasonRow").hide();
+                    $("#finalAppvRow").hide();
 
                     $("#keyDate").addClass("readonly");
                     $("#reqCostCenter").addClass("readonly");
@@ -655,16 +664,33 @@
                     $("#totalAdv").addClass("readonly");
                     $("#advOccasion").addClass("readonly");
                     $("#advRem").addClass("readonly");
+                    $("#advCurr").addClass("readonly");
 
                     $("#keyDate").attr("readonly", "readonly");
                     $("#reqCostCenter").attr("readonly", "readonly");
                     $("#newMemAccId").attr("readonly", "readonly");
                     $("#totalAdv").attr("readonly", "readonly");
-                    $("#advOccasion").attr("readonly", "readonly");
+                    $("#advOccasion").attr("disabled", "true");
                     $("#advRem").attr("readonly", "readonly");
+                    $("#advCurr").attr("disabled", "true");
 
                     $("#supplier_search_btn").hide();
                     $("#costCenter_search_btn").hide();
+                    $("#reqCostCenter").val(result.data.costCenter + '/' + result.data.costCenterNm);
+                    $("#appvStusRow").show();
+                    $("#viewAppvStus").html(result.data.appvPrcssStus);
+
+                    if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J"){
+                    	Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: advAppvPrcssNo}, function(result1) {
+                    		$("#finalAppvRow").show();
+                    		$("#viewFinalApprover").html(result1.finalAppr);
+                    		if(advGridAppvPrcssStus == "J"){
+                                $("#rejectReasonRow").show();
+                                $("#viewRejectReason").html(result.data.rejctResn);
+
+                            }
+                        });
+                    }
 
                 } else if(advGridAppvPrcssStus == "T") {
                     // Draft
@@ -687,18 +713,24 @@
 
                     $("#supplier_search_btn").show();
                     $("#costCenter_search_btn").show();
-
+                    $("#reqCostCenter").val(result.data.costCenter);
                 }
-
+                console.log(result.data.advOcc);
                 // Set queried values
                 $("#keyDate").val(result.data.crtDt);
                 $("#newMemAccId").val(result.data.memAccId);
                 $("#newMemAccName").val(result.data.memAccName);
-                $("#reqCostCenter").val(result.data.costCenter);
-                $("#totalAdv").val(result.data.totAmt);
-                $("#advOccasion option[value='" + result.data.advOcc + "']").attr('selected', true);
+                //$("#reqCostCenter").val(result.data.costCenter);
+                //$("#totalAdv").val(result.data.totAmt);
+                $("#totalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
+                //$("#advOccasion option[value='" + result.data.advOcc + "']").attr("selected", "selected");
+                $("#advOccasion").val(result.data.advOcc).prop("selected", true);
+                console.log(result.data.advOcc);
+                console.log($("#advOccasion").val());
                 $("#advRem").val(result.data.rem);
                 $("#reqCrtUserName").val(result.data.userName);
+                $("#bankName").val(result.data.bankName);
+                $("#bankAccNo").val(result.data.bankAccNo);
 
                 // Request file selector
                 gAtchFileGrpId = result.data.attachList[0].atchFileGrpId;
@@ -802,6 +834,8 @@
                         $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
                         $("#settlementTotalExp").val(AUIGrid.formatNumber(0, "#,##0.00"));
                         $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.balAmt), "#,##0.00"));
+                        $("#settlementMemAccId").val(result.data.memAccId);
+                        $("#settlementMemAccName").val(result.data.memAccName);
 
                         $("#settlementPop").show();
 
@@ -831,6 +865,11 @@
                         if($("#bankRef").attr("readonly")) $("#bankRef").removeAttr("readonly");
                         if($("#settlementRem").attr("readonly")) $("#settlementRem").removeAttr("readonly");
 
+                        console.log("here",result);
+                        $("#settlementMemAccId").val(result.data.memAccId);
+                        $("#settlementMemAccName").val(result.data.memAccName);
+                        $("#settlementCostCenter").val(result.data.costCenter);
+                        $("#settlementCrtUserName").val(result.data.userName);
                     } else {
                         // Settlement Claim Type + Approved/Rejected/Pending Approval/Request = Allow view
                         //$("#h1_settlement").text("Vendor Advance Settlement - View");
@@ -859,12 +898,13 @@
                     }
 
                     //set queried values
-                    $("#settlementMemAccId").val();
-                    $("#settlementMemAccName").val();
+                    //$("#settlementMemAccId").val();
+                    //$("#settlementMemAccName").val();
                     $("#eventStartDt").val(result.data.advPrdFr);
                     $("#eventEndDt").val(result.data.advPrdTo);
-                    $("#settlementTotalAdv").val(result.data.totAmt);
-                    $("#settlementTotalExp").val(result.data.expAmt);
+                    //$("#settlementTotalAdv").val(result.data.totAmt);
+                    $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
+                    $("#settlementTotalExp").val(AUIGrid.formatNumber(Number(result.data.expAmt), "#,##0.00"));
                     $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.totAmt) - Number(result.data.expAmt), "#,##0.00"));
                     $("#settlementMode option[value=" + result.data.advRefMode + "]").attr('selected', true);
                     $("#bankRef").val(result.data.advRefdRef);
@@ -923,6 +963,7 @@
         } else {
             Common.ajax("POST", "/eAccounting/vendorAdvance/manualVendorAdvReqSettlement.do", {clmNo : advGridClmNo}, function(result) {
                 console.log(result);
+                $("#manualSettMsgPop").hide();
             });
         }
     }
@@ -950,6 +991,8 @@
     function fn_saveValidation() {
         console.log("fn_saveValidation");
         var flag = true;
+        var regExpSpecChar = /^[^*|\":<>[\]{}`\\()';@&$]+$/;
+        var regExpSpecCharFile = /^[^*|\"<>[\]{}`()';@&$]+$/;
 
         if($("#advReqPop").is(":visible")) {
             // Vendor Advance Request
@@ -976,11 +1019,21 @@
                 flag = false;
                 return flag;
             }
+            else if (regExpSpecChar.test($("#advRem").val()) == false) {
+            	Common.alert("Special characters is not allow in Remark.");
+                flag = false;
+                return flag;
+            }
 
             if(FormUtil.isEmpty($("#reqNewClmNo").val())) {
                 // New Request - Empty attachment check
                 if($("input[name=reqFileSelector]")[0].files[0] == "" || $("input[name=reqFileSelector]")[0].files[0] == null) {
                     Common.alert("Please attach supporting document in zipped format.");
+                    flag = false;
+                    return flag;
+                }
+                else if(regExpSpecCharFile.test($("input[name=reqFileSelector]").val()) == false) {
+                	Common.alert("Special characters is not allow as File Name.");
                     flag = false;
                     return flag;
                 }
@@ -992,6 +1045,13 @@
                 Common.alert("Event Start/End Date is required.");
                 flag = false;
                 return flag;
+            }
+            else{
+            	if($("#eventStartDt").val() > $("#eventEndDt").val()){
+            		Common.alert("Event Date invalid. Please choose again.");
+            		flag = false;
+            		return flag;
+            	}
             }
 
             if(FormUtil.isEmpty($("#settlementMode").val())) {
@@ -1016,9 +1076,78 @@
                     return flag;
                 }
             }
+
+            var newFlag = fn_saveSubmitCheckRowValidation();
+            console.log(newFlag);
+            if(!newFlag){
+            	flag = false;
+            }
+            return flag;
         }
 
         return flag;
+    }
+
+    //Check settlement submission details row has data
+    function fn_saveSubmitCheckRowValidation() {
+    	console.log("fn_saveSubmitCheckRowValidation");
+    	var checkRowFlg = true;
+    	var settlementRowCount = AUIGrid.getRowCount(settlementGridId);
+    	console.log(settlementRowCount);
+    	if(settlementRowCount > 0){
+    		for(var i=0; i < settlementRowCount; i++){
+    			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "budgetCode"))){
+    				Common.alert("Please choose a budget code.");
+    				checkRowFlg = false;
+    				return checkRowFlg;
+    			}
+    			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "glAccCode"))){
+    				Common.alert("Please choose a GL code.");
+    				checkRowFlg = false;
+    				return checkRowFlg;
+    			}
+    			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "totalAmt")) || AUIGrid.getCellValue(settlementGridId, i, "totalAmt") <= 0){
+    				Common.alert("Please enter an amount.");
+    				checkRowFlg = false;
+    				return checkRowFlg;
+    			}
+    			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "invcNo"))){
+    				Common.alert("Please enter an Invoice Number.");
+    				checkRowFlg = false;
+    				return checkRowFlg;
+    			}
+    			else{
+   	                checkRowFlg = fn_selectSameVender(i);
+   	                if(!checkRowFlg){
+   	                	checkRowFlg = false;
+   	                }
+    			}
+    		}
+    		return checkRowFlg;
+    	}
+    	else{
+    		Common.alert("Please enter at least 1 detail line.");
+    		checkRowFlg = false;
+    		return checkRowFlg;
+    	}
+    	return checkRowFlg;
+    }
+
+    function fn_selectSameVender(i){
+    	var checkRowFlg = true;
+    	var data = {
+                memAccId : $("#settlementMemAccId").val(),
+                invcNo : AUIGrid.getCellValue(settlementGridId, i, "invcNo")
+        }
+
+    	Common.ajaxSync("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result1) {
+    		console.log(result1.data);
+    		if(result1.data) {
+    			Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+    			checkRowFlg = false;
+    		}
+    	})
+    	return checkRowFlg;
     }
 
     function fn_attachmentUpload(type) {
@@ -1111,9 +1240,8 @@
                 if(type == "D") {
                     console.log("fn_insertVendorAdvReq :: D");
                     $("#advReqClose_btn").click();
-
+                    $("#approvalLine_closeBtn").click();
                     Common.alert("New Vendor Advance draft save has been completed.<br/>Claim Number : " + result.data);
-
                 } else if(type == "S") {
                     console.log("fn_insertVendorAdvReq :: S");
                     $("#reqNewClmNo").val(result.data);
@@ -1245,6 +1373,11 @@
         });
 
     }
+
+    function fn_setGridData(gridId, data) {
+        console.log(data);
+        AUIGrid.setGridData(gridId, data);
+    }
     // Common Functions - End
 
     // Advance Request Functions - Start
@@ -1285,29 +1418,52 @@
         $("#acknowledgement").show();
     }
 
+    function fn_settlementConfirm() {
+        console.log("fn_settlementConfirm");
+
+        // Display Acknowledgement Pop
+        $("#manualSettMsgPop").show();
+        $("#acknowledgementSett").show();
+    }
+
     function fn_advReqAck(mode) {
         console.log("fn_advReqAck :: " + mode);
 
         // Hide acknowledgement pop  up
-        $("#advReqMsgPop").hide();
-        $("#ack1Checkbox").prop('checked', false);
+        //$("#advReqMsgPop").hide();
+        //$("#ack1Checkbox").prop('checked', false);
 
         if(mode == "A") {
             // Acknowledgement Accepted
             // Check claim number exist (New/Edit)
-            if(FormUtil.isEmpty($("#reqNewClmNo").val())) {
-                // New
-                console.log("fn_advReqAck :: new advance request");
-                fn_attachmentUpload("S");
+            if($("#ack1Checkbox").is(":checked") == false) {
+                Common.alert("Acknowledgement required!");
+                return false;
+            }else{
+            	if(FormUtil.isEmpty($("#reqNewClmNo").val())) {
+                    // New
+                    console.log("fn_advReqAck :: new advance request");
+                    fn_attachmentUpload("S");
 
-            } else {
-                // Edit
-                console.log("fn_advReqAck :: update advance request");
-                fn_attachmentUpdate("S");
+                } else {
+                    // Edit
+                    console.log("fn_advReqAck :: update advance request");
+                    fn_attachmentUpdate("S");
+                }
             }
         } else if(mode == "J") {
             // Acknowledgement Rejected
             // Do nothing
+        }
+
+        // Acknowledgement for Manual Settlement
+        if(mode == "Y") {
+        	// Acknowledgement = YES
+        	fn_settlementUpdate();
+        }
+        else if(mode == "N") {
+        	// Acknowledgement = YES
+        	fn_closePop('S');
         }
     }
     // Advance Request Functions - End
@@ -1344,6 +1500,7 @@
         console.log("fn_settlementSubmit");
         var checkEmpty = fn_saveValidation();
 
+        console.log(checkEmpty);
         if(!checkEmpty) {
             return false;
         }
@@ -1374,7 +1531,7 @@
                 // Set Settlement's total expenses
                 var totAmt = fn_getTotalExpenses();
                 $("#settlementTotalExp").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                $("#settlementTotAmt").val(totAmt);
+                $("#settlementTotAmt").val(AUIGrid.fromatNumber(totAmt, "#,##0.00"));
 
                 // Check budget
                 var rowVar = {
@@ -1665,6 +1822,8 @@
     function fn_approvalLineSubmit() {
         console.log("fn_approvalLineSubmit");
         var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+        var gridData = AUIGrid.getOrgGridData(settlementGridId);
+
         var obj, msg;
 
         // Serialize form and set Object's value
@@ -1672,6 +1831,7 @@
             obj = $("#form_vendorAdvanceReq").serializeJSON();
             obj.clmNo = $("#reqNewClmNo").val();
             obj.apprGridList = apprGridList;
+            obj.gridData = gridData;
 
             msg = "Request";
 
@@ -1683,6 +1843,7 @@
             msg = "Settlement";
         }
 
+        console.log(obj);
         Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(result) {
             console.log(result);
 
@@ -1693,7 +1854,7 @@
                     console.log(sResult);
 
                     if(sResult.code == "00") {
-                        Common.alert("Registration of new Vendor Advance " + msg + " has been completed.");
+                        Common.alert("Registration of new Vendor Advance " + msg + " has been completed. Claim No: " + obj.clmNo);
                     } else {
                         Common.alert("Registration of new Vendor Advance " + msg + " failed.");
                     }
@@ -1705,6 +1866,46 @@
         });
     }
     // Approval Line Grid - End
+
+    //Edit Rejected
+    function fn_editRejected() {
+    console.log("fn_editRejected");
+
+    var gridObj = AUIGrid.getSelectedItems(advGridId);
+    var list = AUIGrid.getCheckedRowItems(advGridId);
+
+    if(gridObj != "" || list != "") {
+        var status;
+        var selClmNo;
+
+        if(list.length > 1) {
+            Common.alert("* Only 1 record is permitted. ");
+            return;
+        }
+
+        if(gridObj.length > 0) {
+            status = gridObj[0].item.appvPrcssStus;
+            selClmNo = gridObj[0].item.clmNo;
+        } else {
+            status = list[0].item.appvPrcssStus;
+            selClmNo = list[0].item.clmNo;
+        }
+
+        if(status == "J") {
+            Common.ajax("POST", "/eAccounting/vendorAdvance/editRejected.do", {clmNo : selClmNo}, function(result1) {
+                console.log(result1);
+
+                Common.alert("New claim number : " + result1.data.newClmNo);
+                fn_searchAdv();
+            })
+        } else {
+            Common.alert("Only rejected claims are allowed to edit.");
+        }
+    } else {
+        Common.alert("* No Value Selected. ");
+        return;
+    }
+}
 </script>
 
 <style>
@@ -1777,7 +1978,9 @@
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
         <h2>Vendor Advance</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" id="settlementUpd_btn">Manual Settlement</a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                <li><p class="btn_blue"><a href="#" id="settlementUpd_btn">Manual Settlement</a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="#" id="request_btn">New Request</a></p></li>
             <li><p class="btn_blue"><a href="#" id="refund_btn">Settlement</a></p></li>
             <li><p class="btn_blue"><a href="#" id="advList_btn"><span class="search"></span>Search</a></p></li>
@@ -1877,8 +2080,22 @@
         </form>
     </section>
 
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+            <dt>Link</dt>
+        <dd>
+            <ul class="btns">
+                <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
+            </ul>
+            <ul class="btns">
+            </ul>
+            <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
     <section class="search_result"><!-- search_result start -->
-        <article class="grid_wrap" id="grid_wrap"></article><!-- grid_wrap end -->
+        <article class="grid_wrap" id="grid_wrap" style="height:500px"></article><!-- grid_wrap end -->
     </section>
 </section>
 
@@ -1937,13 +2154,13 @@
                             </td>
                             <th scope="row">Entry Date</th>
                             <td>
-                                <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate"/>
+                                <input type="text" title="" placeholder="DD/MM/YYYY" class="w100p" id="keyDate" name="keyDate"/>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
                             <td>
-                                <input type="text" title="" placeholder="" class="" id="reqCostCenter" name="reqCostCentr" value="${costCentr}"/>
+                                <input type="text" title="" placeholder="" class="" id="reqCostCenter" name="reqCostCentr" value="${costCentr}" readonly/>
                                 <a href="#" class="search_btn" id="costCenter_search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
@@ -1956,7 +2173,7 @@
                         <tr>
                             <th scope="row">Payee Code</th>
                             <td>
-                                <input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId"/>
+                                <input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId"/ readonly>
                                 <a href="#" class="search_btn" id="supplier_search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
@@ -1996,11 +2213,22 @@
                                 <select id="advOccasion" name="advOccasion"></select>
                             </td>
                         </tr>
+                        <tr id="appvStusRow" style="display:none;">
+	                        <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+	                        <td colspan="3" style="height:60px" id="viewAppvStus" name="viewAppvStus"></td>
+	                    </tr>
+	                    <tr id="rejectReasonRow" style="display:none;">
+	                        <th scope="row">Reject Reason</th>
+	                        <td colspan="3" id="viewRejectReason" name="viewRejectReason"></td>
+	                    </tr>
+	                    <tr id=finalAppvRow style="display:none;">
+                            <th scope="row">Final Approver</th>
+                            <td colspan="2" style="height:60px" id="viewFinalApprover" name="viewFinalApprover"></td>
+                        </tr>
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
                             <td colspan="3">
-                                <textarea cols="20" rows="5" id="advRem" name="advRem" maxlength="200" placeholder="Enter up to 200 characters">
-                            </textarea></td>
+                                <textarea cols="20" rows="5" id="advRem" name="advRem" maxlength="200" placeholder="Enter up to 200 characters"></textarea></td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
@@ -2076,6 +2304,55 @@
 <!--
 *********************************************************************
 *************** ADVANCE REQUEST ACKNOWLEDGEMENT - END ***************
+*********************************************************************
+-->
+
+<!--
+***********************************************************************
+*************** MANUAL SETTLEMENT ACKNOWLEDGEMENT - START ***************
+***********************************************************************
+-->
+<div class="popup_wrap size_small" id="manualSettMsgPop" style="display: none;">
+    <header class="pop_header">
+        <h1 id="manualSettMsgPopHeader">Manual Settlement Confirmation</h1>
+        <ul class="right_opt">
+            <li>
+                <p class="btn_blue2">
+                    <a href="#" id="acknowledgementSett_closeBtn" onclick="javascript:fn_closePop('S')">
+                        <spring:message code="newWebInvoice.btn.close" />
+                    </a>
+                </p>
+            </li>
+        </ul>
+    </header>
+
+    <section class="pop_body">
+        <div id="acknowledgementSett" style="padding-top:1%; padding-left: 1%; padding-right: 1%">
+            <table class="type1" style="border: none">
+                <caption>Manual Settlement</caption>
+                <colgroup>
+                    <col style="width:30px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td colspan="2" style="font-size : 14px; font-weight : bold; padding-bottom : 2%">
+                            Are you sure you want to manual settle this advance request?
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ul class="center_btns" id="agreementButton">
+                <li><p class="btn_blue"><a href="javascript:fn_advReqAck('Y');">Yes</a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_advReqAck('N');">No</a></p></li>
+            </ul>
+        </div>
+    </section>
+</div>
+<!--
+*********************************************************************
+*************** MANUAL SETTLEMENT ACKNOWLEDGEMENT - END ***************
 *********************************************************************
 -->
 
@@ -2212,8 +2489,7 @@
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
                             <td colspan="3">
-                                <textarea cols="20" rows="5" id="settlementRem" name="settlementRem" maxlength="200" placeholder="Enter up to 200 characters">
-                            </textarea></td>
+                                <textarea cols="20" rows="5" id="settlementRem" name="settlementRem" maxlength="200" placeholder="Enter up to 200 characters"></textarea></td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>

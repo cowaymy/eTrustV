@@ -487,7 +487,7 @@ function fn_webInvoiceAppvViewPop() {
 
         $.extend(data, {reqNo : clmNo, viewType : "APPV"});
     } else if(clmType == "R4" || clmType == "A3") {
-        url = "/eAccounting/staffBusinessActivity/staffBusActApproveViewPop.do";
+        url = "/eAccounting/vendorAdvance/vendorAdvanceApproveViewPop.do";
 
         $.extend(data, {reqNo : clmNo, viewType : "APPV"});
     }else {
