@@ -310,9 +310,12 @@ function validation() {
 	if ($("#reqsdt").val() == '' ||$("#reqedt").val() == ''){
         Common.alert('Please enter Required Date.');
         return false;
-    } else {
-    	return true;
+    } if ($("#sttype").val() == ''){
+    	Common.alert('Please select Transfer Type.');
+        return false;
     }
+
+	return true;
 }
 function SearchListAjax() {
 
