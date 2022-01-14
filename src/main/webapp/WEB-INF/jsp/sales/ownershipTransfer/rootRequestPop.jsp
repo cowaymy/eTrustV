@@ -1671,71 +1671,71 @@
         });
     }
 
-    function fn_loadOrderSalesman(memId, memCode) {
+//     function fn_loadOrderSalesman(memId, memCode) {
 
-        console.log('fn_loadOrderSalesman memId:'+memId);
-        console.log('fn_loadOrderSalesman memCd:'+memCode);
+//         console.log('fn_loadOrderSalesman memId:'+memId);
+//         console.log('fn_loadOrderSalesman memCd:'+memCode);
 
-        fn_clearOrderSalesman();
+//         fn_clearOrderSalesman();
 
-        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
-            console.log("memRC checking");
+//         Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
+//             console.log("memRC checking");
 
-            if(memRc != null) {
-                if(memRc.rookie == 1) {
-                    if(memRc.rcPrct != null) {
-                        if(memRc.rcPrct < 30) {
-                            fn_clearOrderSalesman();
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-                            return false;
-                        }
-                    }
-                } else {
-                    fn_clearOrderSalesman();
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
-                    return false;
-                }
-            }
+//             if(memRc != null) {
+//                 if(memRc.rookie == 1) {
+//                     if(memRc.rcPrct != null) {
+//                         if(memRc.rcPrct < 30) {
+//                             fn_clearOrderSalesman();
+//                             Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
+//                             return false;
+//                         }
+//                     }
+//                 } else {
+//                     fn_clearOrderSalesman();
+//                     Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
+//                     return false;
+//                 }
+//             }
 
-            Common.ajax("GET", "/sales/ownershipTransfer/selectMemberByMemberIDCode1.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+//             Common.ajax("GET", "/sales/ownershipTransfer/selectMemberByMemberIDCode1.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
-                console.log(memInfo)
-                if(memInfo == null) {
-                    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-                    //Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
-                }
-                else {
-                    $('#Request_requestorInfo').val(memInfo.memCode);
-                    $('#salesmanType').val(memInfo.codeName);
-                    $('#salesmanTypeId').val(memInfo.memType);
-                    $('#salesmanNm').val(memInfo.name);
-                    $('#salesmanNric').val(memInfo.nric);
-                    $('#departCd').val(memInfo.deptCode);
-                    $('#departMemId').val(memInfo.lvl3UpId);
-                    $('#grpCd').val(memInfo.grpCode);
-                    $('#grpMemId').val(memInfo.lvl2UpId);
-                    $('#orgCd').val(memInfo.orgCode);
-                    $('#orgMemId').val(memInfo.lvl1UpId);
-                    $('#Requestor_Brnch').val(memInfo.branchName);
-                }
-            });
-        });
-    }
+//                 console.log(memInfo)
+//                 if(memInfo == null) {
+//                     Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+//                     //Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+//                 }
+//                 else {
+//                     $('#Request_requestorInfo').val(memInfo.memCode);
+//                     $('#salesmanType').val(memInfo.codeName);
+//                     $('#salesmanTypeId').val(memInfo.memType);
+//                     $('#salesmanNm').val(memInfo.name);
+//                     $('#salesmanNric').val(memInfo.nric);
+//                     $('#departCd').val(memInfo.deptCode);
+//                     $('#departMemId').val(memInfo.lvl3UpId);
+//                     $('#grpCd').val(memInfo.grpCode);
+//                     $('#grpMemId').val(memInfo.lvl2UpId);
+//                     $('#orgCd').val(memInfo.orgCode);
+//                     $('#orgMemId').val(memInfo.lvl1UpId);
+//                     $('#Requestor_Brnch').val(memInfo.branchName);
+//                 }
+//             });
+//         });
+//     }
 
-    function fn_clearOrderSalesman() {
-        $('#salesmanId').val('');
-        $('#salesmanCd').val('');
-        $('#salesmanType').val('');
-        $('#salesmanTypeId').val('');
-        $('#salesmanNm').val('');
-        $('#salesmanNric').val('');
-        $('#departCd').val('');
-        $('#departMemId').val('');
-        $('#grpCd').val('');
-        $('#grpMemId').val('');
-        $('#orgCd').val('');
-        $('#orgMemId').val('');
-    }
+//     function fn_clearOrderSalesman() {
+//         $('#salesmanId').val('');
+//         $('#salesmanCd').val('');
+//         $('#salesmanType').val('');
+//         $('#salesmanTypeId').val('');
+//         $('#salesmanNm').val('');
+//         $('#salesmanNric').val('');
+//         $('#departCd').val('');
+//         $('#departMemId').val('');
+//         $('#grpCd').val('');
+//         $('#grpMemId').val('');
+//         $('#orgCd').val('');
+//         $('#orgMemId').val('');
+//     }
 
 
     $('#request_search_requestor_btn').click(function() {

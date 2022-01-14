@@ -340,7 +340,7 @@
 
 
     function fn_loadOrderSalesman(memId, memCode) {
-
+        console.log($('#btnReqOwnTrans'))
         console.log('fn_loadOrderSalesman memId:'+memId);
         console.log('fn_loadOrderSalesman memCd:'+memCode);
 
@@ -366,21 +366,53 @@
             }
 
             Common.ajax("GET", "/sales/ownershipTransfer/selectMemberByMemberIDCode1.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
-
-                console.log(memInfo)
+                console.log("print meminfo")
+                console.log(memInfo.memCode)
                 if(memInfo == null) {
                     Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
                     //Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
                 }
                 else {
-                    $('#requestorInfo').val(memInfo.memCode);
+                	if (typeof($('#btnReqOwnTrans').val()) == "undefined"){
+                		$('#search_requestorInfo').val(memInfo.memCode);
+                	}else{
+	                     $('#Request_requestorInfo').val(memInfo.memCode);
+	                     $('#salesmanType').val(memInfo.codeName);
+	                     $('#salesmanTypeId').val(memInfo.memType);
+	                     $('#salesmanNm').val(memInfo.name);
+	                     $('#salesmanNric').val(memInfo.nric);
+	                     $('#departCd').val(memInfo.deptCode);
+	                     $('#departMemId').val(memInfo.lvl3UpId);
+	                     $('#grpCd').val(memInfo.grpCode);
+	                     $('#grpMemId').val(memInfo.lvl2UpId);
+	                     $('#orgCd').val(memInfo.orgCode);
+	                     $('#orgMemId').val(memInfo.lvl1UpId);
+	                     $('#Requestor_Brnch').val(memInfo.branchName);
+                	}
+
+
                 }
             });
         });
     }
 
     function fn_clearOrderSalesman() {
-        $('#requestorInfo').val('');
+    	if (typeof($('#btnReqOwnTrans').val()) == "undefined"){
+    	    $('#search_requestorInfo').val('');
+    	}else{
+         $('#salesmanId').val('');
+         $('#salesmanCd').val('');
+         $('#salesmanType').val('');
+         $('#salesmanTypeId').val('');
+         $('#salesmanNm').val('');
+         $('#salesmanNric').val('');
+         $('#departCd').val('');
+         $('#departMemId').val('');
+         $('#grpCd').val('');
+         $('#grpMemId').val('');
+         $('#orgCd').val('');
+         $('#orgMemId').val('');
+    	}
     }
 
     function fn_clear() {
@@ -521,7 +553,7 @@
 							placeholder="ROT No" class="w100p" /></td>
 						<th scope="row">ROT Requestor</th>
 						<td><input type="text" title="" placeholder="Requestor ID"
-							class="" style="width: 93%" id="requestorInfo" name="reqInfo"
+							class="" style="width: 93%" id="search_requestorInfo" name="reqInfo"
 							readonly /> <a href="#" class="search_btn"
 							id="search_requestor_btn"><img
 								src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
