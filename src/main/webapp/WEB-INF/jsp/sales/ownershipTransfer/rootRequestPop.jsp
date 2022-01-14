@@ -2209,13 +2209,6 @@
 											    <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
 											    <input id="grpMemId" name="grpMemId" type="hidden" /></td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row">Requestor Branch</th>
-                                                    <td colspan="3">
-                                                        <input id="Requestor_Brnch" name="Requestor_Brnch" type="text" title="" placeholder="Requestor Branch" class="w100p readonly" readonly />
-
-                                                    </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                                 <!-- table end -->

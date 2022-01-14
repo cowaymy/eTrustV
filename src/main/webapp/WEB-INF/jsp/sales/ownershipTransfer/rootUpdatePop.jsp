@@ -1296,7 +1296,7 @@
                                 <tbody>
                                     <tr>
                                         <th scope="row">Request Branch</th>
-                                        <td><span id="Requestor_Branch">${rotRequestorInfoMap.branchName}</span>
+                                        <td><span id="Requestor_Branch">${rotRequestorInfoMap.requestBranch}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -1316,9 +1316,6 @@
                                     <tr>
                                         <th scope="row">Organization Code</th>
                                         <td><span id="dobOwnt">${rotRequestorInfoMap.orgCode}</span></td>
-                                        <th scope="row">Requestor Branch</th>
-                                        <td><span id="genderOwnt">${rotRequestorInfoMap.branchName}</span>
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
