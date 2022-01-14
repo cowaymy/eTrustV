@@ -95,7 +95,8 @@
         doDefCombo(actData, '' ,'_action', 'S', '');
 
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
-        doDefCombo(branchCdList, '' ,'_brnchId', 'M', 'fn_multiCombo');
+//         doDefCombo(branchCdList, '' ,'_brnchId', 'M', 'fn_multiCombo');
+        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doDefCombo(codeList_8, '' ,'_typeId', 'M', 'fn_multiCombo');
         doDefCombo(memTypeData, '', 'memType', 'S', '');
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
