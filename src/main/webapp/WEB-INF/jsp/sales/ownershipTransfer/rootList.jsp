@@ -6,7 +6,7 @@
 	var search_rootGridID;
 	var ownershipTransferColumn = [ {
 		dataField : "rotId",
-		visible : false
+		visible : false,
 	}, {
 		dataField : "rotOrdId",
 		visible : false
@@ -15,60 +15,69 @@
 		visible : false
 	}, {
 		dataField : "rotNo",
-		headerText : "ROT No",
-		width : 140
+		headerText : "ROT<Br> No",
+		width : 90
 	}, {
 		dataField : "rotOrdNo",
-		headerText : "Order No",
-		width : 140
+		headerText : "Order<Br> No",
+		width : 90
 	}, {
 		dataField : "rotAppType",
-		headerText : "Application Type",
-		width : 150
+		headerText : "Application<br> Type",
+		width : 90
 	}, {
 		dataField : "rotOldCustId",
 		headerText : "Original CID",
-		width : 140
+		width : 110
 	}, {
 		dataField : "oldCustName",
-		headerText : "Original Customer Name"
+		headerText : "Original<Br> Customer Name",
+		width: 180
 	}, {
 		dataField : "rotNewCustId",
 		headerText : "New CID",
-		width : 140
+		width : 90
 	}, {
 		dataField : "newCustName",
-		headerText : "New Customer Name"
+		headerText : "New<Br> Customer Name",
+		width :150
 	}, {
 		dataField : "rotStus",
 		headerText : "Status",
-		width : 120
+		width : 70
 	}, {
 		dataField : "rotReqDt",
-		headerText : "Request Date (By)",
+		headerText : "Request<Br> Date (By)",
 		width : 140
 	}, {
 		dataField : "rotFeedbackCode",
-		headerText : "ROT FB Code",
+		headerText : "ROT<Br> FB Code",
 		width : 140
 	}, {
 		dataField : "ccpRem",
-		headerText : "ROT Remark",
+		headerText : "ROT<Br> Remark",
 		width : 140
 	}, {
 		dataField : "rotUpdDt",
-		headerText : "Last Update At (By)",
-		width : 220
+		headerText : "Last Update<Br> At (By)",
+		width : 140
 	} ];
 
 	var ownershipTransferGridPros = {
-		usePaging : true,
-		pageRowCount : 20,
-		editable : false,
-		showRowNumColumn : true,
-		showStateColumn : false,
-		wordWrap :  true
-	};
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+//            selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 60,
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            wordWrap :  true
+        };
 
 	$(document).ready(
 			function() {
@@ -397,22 +406,22 @@
     }
 
     function fn_clearOrderSalesman() {
-    	if (typeof($('#btnReqOwnTrans').val()) == "undefined"){
-    	    $('#search_requestorInfo').val('');
-    	}else{
-         $('#salesmanId').val('');
-         $('#salesmanCd').val('');
-         $('#salesmanType').val('');
-         $('#salesmanTypeId').val('');
-         $('#salesmanNm').val('');
-         $('#salesmanNric').val('');
-         $('#departCd').val('');
-         $('#departMemId').val('');
-         $('#grpCd').val('');
-         $('#grpMemId').val('');
-         $('#orgCd').val('');
-         $('#orgMemId').val('');
-    	}
+        if (typeof($('#btnReqOwnTrans').val()) == "undefined"){
+            $('#search_requestorInfo').val("");
+        }else{
+             $('#Request_requestorInfo').val("");
+             $('#salesmanType').val("");
+             $('#salesmanTypeId').val("");
+             $('#salesmanNm').val("");
+             $('#salesmanNric').val("");
+             $('#departCd').val("");
+             $('#departMemId').val("");
+             $('#grpCd').val("");
+             $('#grpMemId').val("");
+             $('#orgCd').val("");
+             $('#orgMemId').val("");
+             $('#Requestor_Brnch').val("");
+        }
     }
 
     function fn_clear() {
