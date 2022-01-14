@@ -100,7 +100,7 @@ console.log("preOrderList");
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
         doDefCombo(actData, '' ,'_action', 'S', '');
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
-        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
         doDefCombo(memTypeData, '', 'memType', 'S', '');
@@ -603,6 +603,7 @@ console.log("preOrderList");
     }
 
     function fn_getPreOrderList() {
+    	console.log($("#_frmPreOrdSrch").serialize());
         Common.ajax("GET", "/sales/order/selectPreOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
             AUIGrid.setGridData(excelListGridID, result);
