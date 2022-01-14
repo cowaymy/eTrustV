@@ -598,7 +598,7 @@
 									</p>
 								</li>
 							</c:if>
-							<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+							<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
 								<li>
 								    <p class="link_btn type2">
 										<a href="#" onClick="fn_productReturnNoteList()">Product Return Note</a>
