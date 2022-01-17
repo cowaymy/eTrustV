@@ -1935,7 +1935,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     }
 
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
-/*    String smsMessage = "";
+    String smsMessage = "";
     if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") &&
       ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001200")) ){
       smsMessage = "COWAY:Dear Customer, Your After Service is completed by "+ svc0004dmap.get("AS_CT_CODE") +" on " + svc0004dmap.get("AS_SETL_DT").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
@@ -1951,7 +1951,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     if(smsMessage != "")
     {
     	sendSms(smsList);
-    }*/
+    }
 
     LOGGER.debug("================asResult_insert - END ================");
     return em;
