@@ -50,7 +50,7 @@
 		LEFT JOIN SYS0032M I
 		ON H.CCP_RESN_ID = I.RESN_ID
 		JOIN SYS0047M J
-		ON A.ROT_UPD_USER_ID = J.USER_ID
+		ON H.CCP_UPD_USER_ID = J.USER_ID
 		WHERE 1=1
 		<if test="rotOrdNo != null and rotOrdNo != '' ">
 			AND A.ROT_ORD_NO = #{rotOrdNo}
@@ -63,12 +63,12 @@
 		</if>
 		<if test="reqStartDt != null and reqStartDt != '' ">
         <![CDATA[
-            AND A.ROT_REQ_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+            AND TO_DATE(A.ROT_REQ_DT,'DD/MM/YYYY') >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
         ]]>
 		</if>
 		<if test="reqEndDt != null and reqEndDt != '' ">
         <![CDATA[
-            AND A.ROT_REQ_DT <= TO_DATE(#{reqEndDt}, 'DD/MM/YYYY')
+            AND TO_DATE(A.ROT_REQ_DT,'DD/MM/YYYY') <= TO_DATE(#{reqEndDt}, 'DD/MM/YYYY')
         ]]>
 		</if>
 		<if test="rotNo != null and rotNo != '' ">
