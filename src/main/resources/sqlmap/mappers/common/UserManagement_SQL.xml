@@ -437,7 +437,7 @@ UPDATE SET
         USER_FULL_NAME,
         USER_FULL_NAME,
         USER_NRIC,
-        TO_DATE(SUBSTR(USER_NRIC, 1, 6), 'YYMMDD'),
+        TO_DATE(SUBSTR(USER_NRIC, 1, 6), 'RRMMDD'),
         CASE WHEN MOD(SUBSTR(USER_NRIC, -1), 2) = 0 THEN 'F' ELSE 'M' END,
         '1',
         USER_EMAIL,
