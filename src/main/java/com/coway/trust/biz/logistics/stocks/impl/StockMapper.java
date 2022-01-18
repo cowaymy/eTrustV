@@ -22,6 +22,10 @@ public interface StockMapper {
 
 	void updateStockInfo(Map<String, Object> params);
 
+	void updateStockPriceInfo(Map<String, Object> params);
+
+	String selectAppTypeId(Map<String, Object> params);
+
 	void modifyServicePoint(Map<String, Object> params);
 
 	void updateSalePriceUOM(Map<String, Object> params);
@@ -58,7 +62,7 @@ public interface StockMapper {
 	void nonvalueItemPriceins(Map<String, Object> params);
 
 	String nonvaluedItemCodeChk(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCodeList();
 
 
