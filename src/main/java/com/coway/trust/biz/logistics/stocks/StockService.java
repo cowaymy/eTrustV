@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -27,7 +27,11 @@ public interface StockService {
 	List<EgovMap> selectStockImgList(Map<String, Object> params);
 
 	void updateStockInfo(Map<String, Object> params);
-	
+
+	void updateStockPriceInfo(Map<String, Object> params);
+
+	String selectAppTypeId(Map<String, Object> params);
+
 	void modifyServicePoint(Map<String, Object> params);
 
 	void updatePriceInfo(Map<String, Object> params);
@@ -47,11 +51,11 @@ public interface StockService {
 	List<EgovMap> selectStockCommisionSetting(Map<String, Object> param);
 
 	void updateStockCommision(Map<String, Object> params);
-	
+
 	String nonvalueStockIns(Map<String, Object> params);
-	
+
 	EgovMap nonvaluedItemCodeChk(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCodeList();
 
 }
