@@ -113,6 +113,18 @@ public class StockListController {
 		smap.put("typeId", typeid);
 		smap.put("srvpacid", srvpacid);
 
+		if(!"".equals(String.valueOf(srvpacid)) && srvpacid!=null){
+			smap.put("srvPackageId", srvpacid);
+		}
+		else{
+			smap.put("srvPackageId", "0");
+		}
+
+		String AppTypeId =stock.selectAppTypeId(smap);
+		smap.put("appTypeId", AppTypeId);
+
+		stock.updateStockPriceInfo(smap);
+
 		List<EgovMap> info = stock.selectPriceInfo(smap);
 		List<EgovMap> infoHistory = stock.selectPriceHistoryInfo(smap);
 
@@ -223,6 +235,8 @@ public class StockListController {
 		map.put("stkid", params.get("stockId"));
 		map.put("msg", retMsg);
 
+
+		stock.updateStockPriceInfo(params);
 		stock.updatePriceInfo(params);
 
 		return ResponseEntity.ok(map);
