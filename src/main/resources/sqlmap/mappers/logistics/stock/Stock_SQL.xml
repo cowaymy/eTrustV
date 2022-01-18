@@ -287,8 +287,8 @@
     </if>
     <if test="typeId !=null and typeId != '61'">
       and op.STK_ID = #{stockId}
-      and op.APP_TYPE_ID = 67
-      and op.MEM_PAC_ID = 0
+      and op.APP_TYPE_ID = #{appTypeId}
+      and op.MEM_PAC_ID = #{srvpacid}
       and op.STUS_CODE_ID = 1
     </if>
   </select>
@@ -339,8 +339,8 @@
     </if>
     <if test="typeId !=null and typeId != '61'">
       AND op.STK_ID = #{stockId}
-      AND op.APP_TYPE_ID = 67
-      AND op.MEM_PAC_ID = 0
+      AND op.APP_TYPE_ID = #{appTypeId}
+      AND op.MEM_PAC_ID = #{srvpacid}
       AND op.STUS_CODE_ID = 1
     </if>
     ORDER BY ROW_NO DESC
@@ -455,6 +455,42 @@
             , UPD_USER_ID  = #{upd_user}
             WHERE STK_ID   = #{stockId}
         </update>
+
+        <update id="updateStockPriceInfo" parameterType="Map">
+           MERGE INTO SAL0016M A
+           USING (
+            SELECT * FROM SYS0026M WHERE STK_ID = #{stockId}
+            ) SRC
+            ON ( A.STK_ID = SRC.STK_ID AND A.MEM_PAC_ID = #{srvPackageId} and A.APP_TYPE_ID = #{appTypeId} )
+           WHEN NOT MATCHED THEN
+           INSERT(PRC_ID,MEM_PAC_ID,STK_ID,UOM_ID,UOM_CONV,START_DT,END_DT,CNTY_ID,
+           APP_TYPE_ID,CRT_USER_ID,CRT_DT,STUS_CODE_ID)
+            VALUES(
+            (SELECT MAX(PRC_ID)+1 FROM SAL0016M),
+            #{srvPackageId},
+            SRC.STK_ID,
+            SRC.UOM,
+            1,
+            sysdate,
+            to_date('209912312359','yyyymmddhh24miss'),
+            0,
+            #{appTypeId},
+            349 ,
+            sysdate,
+            1
+            )
+        </update>
+
+          <select id="selectAppTypeId" parameterType="Map" resultType="String">
+          SELECT
+          CASE WHEN CODE_MASTER_ID = 367 THEN '66'
+                  WHEN CODE_MASTER_ID = 368 THEN '67'
+                  WHEN CODE_MASTER_ID = 370 THEN '1412' END AS APPTYPEID
+          FROM SYS0013M
+          WHERE CODE = #{srvPackageId}
+          AND DISAB=0
+          AND CODE_MASTER_ID IN (367,368,370)
+        </select>
 
 
         <update id="updateSalePriceUOM" parameterType="Map">
