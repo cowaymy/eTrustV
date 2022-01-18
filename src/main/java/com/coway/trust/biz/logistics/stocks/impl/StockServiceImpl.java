@@ -86,6 +86,37 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 	}
 
 	@Override
+	public void updateStockPriceInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+
+		String appTypeId = stockMapper.selectAppTypeId(params);
+		System.out.print("Hello!");
+		System.out.print(appTypeId);
+
+		if(!"".equals(appTypeId) && appTypeId !=null){
+			params.put("appTypeId", appTypeId);
+		}
+		else{
+			params.put("appTypeId", 67);
+		}
+		stockMapper.updateStockPriceInfo(params);
+
+	}
+
+	@Override
+	public String selectAppTypeId(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		String appTypeId = stockMapper.selectAppTypeId(params);
+		if(!"".equals(appTypeId) && appTypeId !=null){
+		}
+		else{
+			appTypeId="67";
+		}
+		return appTypeId;
+	}
+
+	@Override
 	public void modifyServicePoint(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		stockMapper.modifyServicePoint(params);
@@ -112,6 +143,8 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 
     smap.put("upd_user", params.get("upd_user"));
     smap2.put("upd_user", params.get("upd_user"));
+
+
 
     if (params.get("priceTypeid") != null) {
 
@@ -177,7 +210,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
         smap.put("priceTypeid", params.get("priceTypeid"));
         smap.put("stockId", params.get("stockId"));
         smap.put("amt", params.get("dNormalPrice"));
-        smap.put("apptypeid", "67");
+        smap.put("apptypeid", params.get("appTypeId"));
         smap.put("pricecharges", params.get("dPenaltyCharge"));
         smap.put("pricecosting", params.get("dCost"));
         smap.put("statuscodeid", 1);
