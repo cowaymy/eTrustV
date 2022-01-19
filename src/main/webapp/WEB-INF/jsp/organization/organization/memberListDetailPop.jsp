@@ -781,7 +781,6 @@ function fn_selectMemberPhoto(){
 	Common.ajax("GET", "/organization/getAttachmentInfo.do", data, function(result) {
 		 var img = document.createElement("img");
 		 var src = document.getElementById("HP_img");
-		 console.log(result);
 
 		if(result != null){
 			var fileSubPath = result.fileSubPath;
