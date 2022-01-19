@@ -974,6 +974,7 @@ function fn_socialMediaInfo(){
         var memberid = selectedItems[0].item.memberid;
         var memberType = selectedItems[0].item.membertype;
         var membercode = selectedItems[0].item.membercode;
+        var LoginMemCode = "${memCode}";
 
         if (memberType != 1) {
             Common.alert("Social media info only allowed for HP. ");
@@ -982,6 +983,11 @@ function fn_socialMediaInfo(){
 
         if (status != 1) {
             Common.alert("Social media info only allowed for active HP. ");
+            return;
+        }
+
+        if (LoginMemCode != membercode) {
+            Common.alert("HP can only edit own social media info. ");
             return;
         }
 

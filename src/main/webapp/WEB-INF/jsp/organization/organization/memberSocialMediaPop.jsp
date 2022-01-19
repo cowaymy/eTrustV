@@ -109,7 +109,7 @@ function fn_memberSave(){
 
 	 Common.ajaxFile("/organization/updateSocialMedia.do", formData, function(result) {
          Common.alert(result.message, fn_close);
-         fn_memberListSearch()
+         fn_memberListSearch();
      });
 }
 

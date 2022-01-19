@@ -40,7 +40,6 @@ console.log("ter-res-pro-dem pop");
     //FB Link and IG Link for HP
     if($("#memtype").val() != 1){
     	$(".hideContent3").hide();
-        //$(".hideContent3").hide();
     }
 
     var bankId = $("#bank").val();
