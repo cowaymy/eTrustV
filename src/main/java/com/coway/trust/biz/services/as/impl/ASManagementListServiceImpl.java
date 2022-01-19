@@ -1935,7 +1935,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     }
 
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG ================");
-    LOGGER.debug("PARAMS:" + svc0004dmap.toString());
+    LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
+    LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
+    LOGGER.debug("CHECKPOINT BY YONG- get TEL_M:" + svc0004dmap.get("TEL_M").toString());
 
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
     String smsMessage = "";
