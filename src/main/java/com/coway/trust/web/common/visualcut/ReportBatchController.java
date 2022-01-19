@@ -1113,6 +1113,42 @@ public class ReportBatchController {
     LOGGER.info("[END] PreMonth_ProductReturn...");
   }
 
+  @RequestMapping(value = "/staffPurchaseRaw.do")
+  //@Scheduled(cron = " 0 6 15-24 * *")//Monthly (Day from 15-24) 6:00am
+  public void staffPurchaseRaw() throws IOException {
+    LOGGER.info("[START] staffPurchaseRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/StaffPurchaseRaw.rpt");// visualcut
+                                                                          // rpt
+                                                                          // file
+                                                                          // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "HR" + File.separator + "StaffPurchase_Raw" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] staffPurchaseRaw...");
+  }
+
+  @RequestMapping(value = "/staffPurchaseSVMRaw.do")
+  //@Scheduled(cron = " 0 6 15-24 * *")//Monthly (Day from 15-24) 6:00am
+  public void staffPurchaseSVMRaw() throws IOException {
+    LOGGER.info("[START] staffPurchaseSVMRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/StaffPurchaseSVMRaw.rpt");// visualcut
+                                                                          // rpt
+                                                                          // file
+                                                                          // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "HR" + File.separator + "StaffPurchase_SVM_Raw" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] staffPurchaseSVMRaw...");
+  }
+
   @RequestMapping(value = "/PreMonth_HS_Filter.do")
   //@Scheduled(cron = " 0 0 6 10 * ?")//Monthly (Day 10) 6:00am
   public void preMonthHsFilter() throws IOException {
