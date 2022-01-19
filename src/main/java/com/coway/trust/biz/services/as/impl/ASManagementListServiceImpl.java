@@ -1934,6 +1934,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       }
     }
 
+    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG ================");
+    LOGGER.debug("PARAMS:" + svc0004dmap.toString());
+
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
     String smsMessage = "";
     if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") &&
