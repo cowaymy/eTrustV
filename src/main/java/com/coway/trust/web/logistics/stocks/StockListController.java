@@ -107,11 +107,13 @@ public class StockListController {
 		String stkid = CommonUtils.nvl(request.getParameter("stkid"));
 		String typeid = CommonUtils.nvl(request.getParameter("typeid"));
 		String srvpacid = CommonUtils.nvl(request.getParameter("srvpacid"));
+		String appTypeId = CommonUtils.nvl(request.getParameter("appTypeId"));
 
 		Map<String, Object> smap = new HashMap();
 		smap.put("stockId", stkid);
 		smap.put("typeId", typeid);
 		smap.put("srvpacid", srvpacid);
+		smap.put("appTypeId", appTypeId);
 
 		if(!"".equals(String.valueOf(srvpacid)) && srvpacid!=null){
 			smap.put("srvPackageId", srvpacid);
@@ -120,8 +122,6 @@ public class StockListController {
 			smap.put("srvPackageId", "0");
 		}
 
-		String AppTypeId =stock.selectAppTypeId(smap);
-		smap.put("appTypeId", AppTypeId);
 
 		stock.updateStockPriceInfo(smap);
 
@@ -233,6 +233,7 @@ public class StockListController {
 		Map<String, Object> map = new HashMap();
 		map.put("revalue", params.get("revalue"));
 		map.put("stkid", params.get("stockId"));
+		map.put("appTypeId", params.get("appTypeId"));
 		map.put("msg", retMsg);
 
 
