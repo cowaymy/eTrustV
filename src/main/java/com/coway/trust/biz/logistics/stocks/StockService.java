@@ -30,8 +30,6 @@ public interface StockService {
 
 	void updateStockPriceInfo(Map<String, Object> params);
 
-	String selectAppTypeId(Map<String, Object> params);
-
 	void modifyServicePoint(Map<String, Object> params);
 
 	void updatePriceInfo(Map<String, Object> params);
