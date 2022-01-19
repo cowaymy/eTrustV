@@ -309,15 +309,28 @@
                 f_removeclass();
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 var srvPacId = $("#srvPacId :selected").val();
+                var obj = document.getElementById("srvPacId");
+                var srvPacVal = obj.options[obj.selectedIndex].text;
+                var appTypeId ="";
+               if(srvPacVal.includes("Rental")){
+                   appTypeId = "66";
+               }else if(srvPacVal.includes("Outright Plus")){
+                   appTypeId = "1412";
+               }else{
+                   appTypeId = "67";
+               }
+
+
                 for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
+                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&appTypeId="+appTypeId+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                 }
                 $("#price_info_div").show();
             }else{
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 var srvPacId = $("#srvPacId :selected").val();
+
                 for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
+                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&appTypeId="+appTypeId+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                 }
             }
             $(this).find("a").attr("class","on");
@@ -326,19 +339,30 @@
 
         $('#srvPacId').change(function() {
 			 var srvPacId = $("#srvPacId :selected").val();
+			 var obj = document.getElementById("srvPacId");
+			 var srvPacVal = obj.options[obj.selectedIndex].text;
+			 var appTypeId ="";
+            if(srvPacVal.includes("Rental")){
+            	appTypeId = "66";
+            }else if(srvPacVal.includes("Outright Plus")){
+            	appTypeId = "1412";
+            }else{
+            	appTypeId = "67";
+            }
+
         	 if($("#price_info_div").css("display") == "none"){
                  f_removeclass();
                  var selectedItems = AUIGrid.getSelectedItems(myGridID);
                  //var srvPacId = $("#srvPacId :selected").val();
                  for(i=0; i<selectedItems.length; i++) {
-                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
+                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&appTypeId="+appTypeId+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                  }
                  $("#price_info_div").show();
              }else{
                  var selectedItems = AUIGrid.getSelectedItems(myGridID);
                  //var srvPacId = $("#srvPacId :selected").val();
                  for(i=0; i<selectedItems.length; i++) {
-                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
+                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&appTypeId="+appTypeId+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                  }
              }
              $(this).find("a").attr("class","on");
@@ -461,16 +485,26 @@
 
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
 			var srvPacId = $("#srvPacId :selected").val();
+			 var obj = document.getElementById("srvPacId");
+             var srvPacVal = obj.options[obj.selectedIndex].text;
+             var appTypeId ="";
+             if(srvPacVal.includes("Rental")){
+                appTypeId = "66";
+                }else if(srvPacVal.includes("Outright Plus")){
+                appTypeId = "1412";
+                }else{
+                appTypeId = "67";
+                }
 
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#price_info_edit").text() == "EDIT"){
                   //  if (selectedItems[i].item.statuscodeid == '1'){
-                          f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "EP");
+                          f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&appTypeId="+appTypeId+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "EP");
                  //   }else{
                   //      alert(selectedItems[i].item.name + ' is a state that can not be changed.');
                   //  }
                 }else if ($("#price_info_edit").text() == "SAVE"){
-                    f_info_save("/stock/modifyPriceInfo.do?typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, selectedItems[i].item.stkid , "priceForm" ,"price_info");
+                    f_info_save("/stock/modifyPriceInfo.do?typeid="+selectedItems[i].item.stktypeid+"&appTypeId="+appTypeId +"&srvpacid="+srvPacId, selectedItems[i].item.stkid, "priceForm" ,"price_info");
                     //$("#stock_info_edit").text("EDIT");
                 }
             }
