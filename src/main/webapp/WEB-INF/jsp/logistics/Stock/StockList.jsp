@@ -1040,8 +1040,19 @@
                 typeid = selectedItems[i].item.stktypeid;
             }
             var srvPacId = $("#srvPacId :selected").val();
+            var obj = document.getElementById("srvPacId");
+            var srvPacVal = obj.options[obj.selectedIndex].text;
+            var appTypeId ="";
+           if(srvPacVal.includes("Rental")){
+               appTypeId = "66";
+           }else if(srvPacVal.includes("Outright Plus")){
+               appTypeId = "1412";
+           }else{
+               appTypeId = "67";
+           }
             $("#srvPackageId").val(srvPacId);
             $("#priceTypeid").val(typeid);
+            $("#appTypeId").val(appTypeId);
             if(0== data.length && typeid == '61' ){
                 $("#txtCost").text("");
                 $("#txtNormalPrice").text("");
@@ -1652,7 +1663,7 @@
                 <form id='priceForm' name='priceForm' method='post'>
                 <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/>
                 <input type="hidden" name="srvPackageId" id="srvPackageId" value=""/>
-                <input type="hidden" name="appTypeId" id="hdnAppTypeId"/>
+                <input type="hidden" name="appTypeId" id="appTypeId"/>
                 <table class="type1">
                     <caption>search table</caption>
                     <colgroup>
