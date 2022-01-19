@@ -445,8 +445,9 @@
             REQST_NO = #{reqstNo}
         </if>
         AND ITM_CODE = #{itmCode}
+        AND scan_stus_code = 'D'
         )x where x.rn =1
-        )
+        ) AND scan_stus_code = 'D'
     </update>
 
     <update id="updateDeliveryGrMain" parameterType="Map">

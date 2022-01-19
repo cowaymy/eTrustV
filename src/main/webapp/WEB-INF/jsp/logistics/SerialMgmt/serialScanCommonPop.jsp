@@ -356,7 +356,7 @@ function fn_splitBarcode(){
 	                                        console.log("BoxCodeArray.length " + BoxCodeArray.length);
 	                                        for (var j = 0 ; j < BoxCodeArray.length ; j++){
 	                                            //if(ExistingBarCodeArray.includes(BarCodeArray[j])){
-	                                            if(jQuery.inArray(BoxCodeArray[j], ExistingBarCodeArray) > 0){
+	                                            if(jQuery.inArray(BoxCodeArray[j], ExistingBarCodeArray) == 0){
 	                                                //BarCodeArray[j] = BarCodeArray[j];
 	                                                failSound = true;
 	                                                rowData = {
@@ -478,7 +478,7 @@ function fn_splitBarcode(){
 	              }
             }else{
             	//if(ExistingBarCodeArray.includes(BarCodeArray[i])){
-                if(jQuery.inArray(BarCodeArray[i], ExistingBarCodeArray) > 0){
+                if(jQuery.inArray(BarCodeArray[i], ExistingBarCodeArray) == 0){
                     //BarCodeArray[i] = BarCodeArray[i];
                     failSound = true;
                     rowData = {
