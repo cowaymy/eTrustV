@@ -89,32 +89,10 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 	public void updateStockPriceInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 
-
-		String appTypeId = stockMapper.selectAppTypeId(params);
-		System.out.print("Hello!");
-		System.out.print(appTypeId);
-
-		if(!"".equals(appTypeId) && appTypeId !=null){
-			params.put("appTypeId", appTypeId);
-		}
-		else{
-			params.put("appTypeId", 67);
-		}
 		stockMapper.updateStockPriceInfo(params);
 
 	}
 
-	@Override
-	public String selectAppTypeId(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		String appTypeId = stockMapper.selectAppTypeId(params);
-		if(!"".equals(appTypeId) && appTypeId !=null){
-		}
-		else{
-			appTypeId="67";
-		}
-		return appTypeId;
-	}
 
 	@Override
 	public void modifyServicePoint(Map<String, Object> params) {
