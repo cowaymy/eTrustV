@@ -189,7 +189,7 @@
                  JOIN SAL0002D Extent10 ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
                  LEFT JOIN SYS0026M Extent11 ON Extent10.ITM_STK_ID = Extent11.STK_ID
                  JOIN SYS0100M Extent15 ON Extent15.DEFECT_GRP = Extent1.AS_MALFUNC_ID
-                 JOIN SYS0100M Extent16 ON Extent16.DEFECT_ID = Extent1.AS_MALFUNC_RESN_ID and Extent15.DEFECT_GRP = Extent16.DEFECT_GRP
+                 JOIN SYS0100M Extent16 ON Extent16.DEFECT_ID = Extent1.AS_MALFUNC_RESN_ID and Extent15.DEFECT_GRP = Extent16.DEFECT_GRP and Extent16.DEFECT_STATUS = 1
 
                  JOIN sal0045d SAL ON SAL.sales_ord_id = Extent4.sales_ord_id
                  LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
