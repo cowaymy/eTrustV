@@ -122,8 +122,10 @@ public class StockListController {
 			smap.put("srvPackageId", "0");
 		}
 
+		if(!"".equals(appTypeId) && appTypeId!=null){
+			stock.updateStockPriceInfo(smap);
+		}
 
-		stock.updateStockPriceInfo(smap);
 
 		List<EgovMap> info = stock.selectPriceInfo(smap);
 		List<EgovMap> infoHistory = stock.selectPriceHistoryInfo(smap);
@@ -235,7 +237,6 @@ public class StockListController {
 		map.put("stkid", params.get("stockId"));
 		map.put("appTypeId", params.get("appTypeId"));
 		map.put("msg", retMsg);
-
 
 		stock.updateStockPriceInfo(params);
 		stock.updatePriceInfo(params);
