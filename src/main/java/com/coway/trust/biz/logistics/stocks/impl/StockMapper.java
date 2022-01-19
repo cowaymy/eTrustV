@@ -24,14 +24,12 @@ public interface StockMapper {
 
 	void updateStockPriceInfo(Map<String, Object> params);
 
-	String selectAppTypeId(Map<String, Object> params);
-
 	void modifyServicePoint(Map<String, Object> params);
 
 	void updateSalePriceUOM(Map<String, Object> params);
 
 	void updateSalePriceInfo(Map<String, Object> params);
-	
+
 	void insertSalePriceInfo(Map<String, Object> params);
 	List<EgovMap> srvMembershipList();
 
