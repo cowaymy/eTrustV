@@ -481,17 +481,6 @@
             )
         </update>
 
-          <select id="selectAppTypeId" parameterType="Map" resultType="String">
-          SELECT
-          CASE WHEN CODE_MASTER_ID = 367 THEN '66'
-                  WHEN CODE_MASTER_ID = 368 THEN '67'
-                  WHEN CODE_MASTER_ID = 370 THEN '1412' END AS APPTYPEID
-          FROM SYS0013M
-          WHERE CODE = #{srvPackageId}
-          AND DISAB=0
-          AND CODE_MASTER_ID IN (367,368,370)
-        </select>
-
 
         <update id="updateSalePriceUOM" parameterType="Map">
             UPDATE SAL0016M
