@@ -1935,14 +1935,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     }
 
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - START ================");
-    svc0004dmap.put("AS_CT_CODE", "CT100676");
-    svc0004dmap.put("TEL_M", "0165666878");
+//    svc0004dmap.put("AS_CT_CODE", "CT100676");
+//    svc0004dmap.put("TEL_M", "0163079636");
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - END ================");
 
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
-    LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
-    LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
-    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
+//    LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
+//    LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
+//    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
