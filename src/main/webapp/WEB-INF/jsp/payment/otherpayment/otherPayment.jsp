@@ -230,9 +230,16 @@ $(document).ready(function(){
 	 $("#cash").show();
 	 $("#cash").find("#payType").val($('#payMode').val());
 
+	 $('#searchVa').prop("readonly", true);
+
 	 if("${SESSION_INFO.userTypeId}" !="2"){
 		  doGetCombo('/common/getAccountList.do', 'CASH ||   ','', 'searchBankAcc', 'S', '' );
 	 } else{
+
+		 if("${SESSION_INFO.memberLevel}" !="4"){
+			 $('#searchVa').prop("readonly", false);
+		 }
+
 		 $("#searchBankAcc option").remove();
 		 $("#searchBankAcc").append("<option value='525'>2710/010B - CIMB VA</option>");
 		 $('#searchBankAcc').val("525");
@@ -241,7 +248,7 @@ $(document).ready(function(){
 	 //BankAccount와 VA Account disabled
      $("#searchBankAcc").find('option:first').attr('selected', 'selected');
      $('#searchBankAcc').prop("disabled", true);
-     $('#searchVa').prop("readonly", true);
+
 
      //화면init시에 cash라서 jompay 삭제
      $("#searchBankType option[value='2728']").remove();
