@@ -19,7 +19,7 @@ $(document).ready(function() {
 function createBatchGrid(){
 	var  columnLayout = [
                         {dataField : "batchId", headerText : "Batch No", width : "10%" , editable : false},
-                        {dataField : "remarks", headerText : "Assignment Batch", width : "10%" , editable : false},
+                        {dataField : "remarks", headerText : "Assignment Batch", width : "15%" , editable : false},
                         {dataField : "status", headerText : "Batch Status", width : "15%" , editable : false},
                         {dataField : "fileName", headerText : "File Name", width : "20%" , editable : false, visible : false},
                         {dataField : "qty", headerText : "Batch Quantity", width : "15%" , editable : false},
