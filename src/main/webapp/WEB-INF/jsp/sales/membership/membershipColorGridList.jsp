@@ -76,9 +76,9 @@
             $("#deptCode").attr("class", "w100p readonly");
             $("#deptCode").attr("readonly", "readonly");
 
-            $("#memCode").val("${memCode}");
-            $("#memCode").attr("class", "w100p readonly");
-            $("#memCode").attr("readonly", "readonly");
+            $("#salesmanCode").val("${memCode}");
+            $("#salesmanCode").attr("class", "w100p readonly");
+            $("#salesmanCode").attr("readonly", "readonly");
 
             $("#listSalesmanCode").val(salesmanCode);
             $("#listSalesmanCode").attr("readonly", true);
