@@ -21,7 +21,7 @@ var viewColumnLayout = [ {
     headerText : "Assign PIC"
 }, {
     dataField : "remarks",
-    headerText : "Remarks"
+    headerText : "Assignment Batch"
 }, {
     dataField : "result",
     headerText : "Result"

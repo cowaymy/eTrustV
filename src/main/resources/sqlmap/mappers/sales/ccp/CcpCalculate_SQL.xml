@@ -47,6 +47,11 @@ ORDER BY Project1.CODE_NAME ASC
 </resultMap>
 
 <select id="selectCalCcpListAjax" parameterType="Map" resultMap="calCcpListClobMap">
+WITH S291D AS
+( SELECT remarks, ORDER_NO FROM
+                        (SELECT REMARKS, ORDER_NO, RANK() OVER(PARTITION BY ORDER_NO ORDER BY UPLOAD_BATCH_ID DESC) RN FROM SAL0291D)
+  WHERE RN = 1
+)
 			SELECT Filter1.CCP_ID   ,
 			       Filter1.CCP_SCHEME_TYPE_ID   ,
 			       Filter1.CCP_TYPE_ID   ,
@@ -100,7 +105,8 @@ ORDER BY Project1.CODE_NAME ASC
                     WHEN CCP_ASSIGN_USER_NAME IS NOT NULL THEN (TO_CHAR(FILTER1.CCP_ASSIGN_USER_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||FILTER1.CCP_ASSIGN_USER_NAME ||')')
                    END AS ASSIGN_PIC,
 		           filter1.eRref,
-		           filter1.eRstatus
+		           filter1.eRstatus,
+		           filter1.ASSIGNMENT_BATCH
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
@@ -146,7 +152,8 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent16.USER_NAME CCP_ASSIGN_USER_NAME,
 			          Extent1.CCP_ASSIGN_USER_DT,
 			          extent17.ref_no eRref,
-			          extent17.stus_id eRstatus
+			          extent17.stus_id eRstatus,
+			          (SELECT REMARKS FROM S291D WHERE ORDER_NO = Extent3.SALES_ORD_NO)  ASSIGNMENT_BATCH
 			       FROM SAL0102D Extent1
 			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
 			                        MAX(Extent2.CCP_ID)  A1
@@ -197,10 +204,15 @@ ORDER BY Project1.CODE_NAME ASC
 			          <if test=" '' != calReason and null != calReason">
 			             AND Extent1.CCP_RESN_ID IN
 			             <foreach collection="arryCalReason" item="value" open="(" separator="," close=")">
-			               #{value}
+			                 <if test=" '3478' == value ">
+			                     '0'
+			                </if>
+			                 <if test=" '3478' != value ">
+                                  #{value}
+                            </if>
 			             </foreach>
-			          </if>
 
+			          </if>
 			          <if test=" '' != assignPic and null != assignPic">
 			             AND Extent16.USER_NAME = #{assignPic}
 			          </if>
@@ -297,6 +309,10 @@ ORDER BY Project1.CODE_NAME ASC
                                  </choose>
                              </foreach>
                           </if>
+
+	                      <if test=" '' != remarks and null != remarks">
+	                         AND filter1.ASSIGNMENT_BATCH = #{remarks}
+	                      </if>
 			              <!--End Condition  -->
 			  ORDER BY Filter1.CCP_ID ASC
 

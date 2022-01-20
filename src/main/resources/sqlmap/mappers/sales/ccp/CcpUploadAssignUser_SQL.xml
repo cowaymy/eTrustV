@@ -7,14 +7,15 @@
     </select>
 
     <select id="selectUploadAssignUserList" parameterType="Map" resultType="egovMap">
-        SELECT
-            UPLOAD_BATCH_ID BATCH_ID, FILE_NAME, S.NAME STATUS, QTY, U.USER_NAME CRT_USER, CRT_DT
+        SELECT DISTINCT
+            M.UPLOAD_BATCH_ID BATCH_ID, M.FILE_NAME, S.NAME STATUS, M.QTY, U.USER_NAME CRT_USER, M.CRT_DT, D.REMARKS
         FROM SAL0290M M
             JOIN SYS0038M S ON M.STUS_CODE_ID = S.STUS_CODE_ID
             JOIN SYS0047M U ON M.CRT_USER_ID = U.USER_ID
+            JOIN SAL0291D D ON D.UPLOAD_BATCH_ID = M.UPLOAD_BATCH_ID
         WHERE 1=1
         <if test="srBatchId != null and srBatchId != ''">
-            AND UPLOAD_BATCH_ID = #{srBatchId}
+            AND M.UPLOAD_BATCH_ID = #{srBatchId}
         </if>
         <if test="srCrtUserName != null and srCrtUserName != ''">
 		    AND U.USER_NAME LIKE '%'||#{srCrtUserName}||'%'

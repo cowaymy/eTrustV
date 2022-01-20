@@ -397,6 +397,7 @@ function createCalGrid(){
 	                     {dataField : "ccpRem", headerText : '<spring:message code="sal.title.text.ccpBrRem" />', width : "15%" , editable : false},
 	                     {dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialBrRem" />', width : "10%" , editable : false},
 	                     {dataField : "assignPic", headerText : 'Assigned to<br/> CCP User <br/>At (by)', width : "10%" , editable : false}, // Added assign PIC by Hui Ding, 2021-06-16
+	                     {dataField : "assignmentBatch", headerText : "Assignment <br/> Batch", width : "7%" , editable : false},
 	                     {dataField : "updAt", headerText : '<spring:message code="sal.title.text.lastBrUpdAtBrBy" />', width : "10%" , editable : false},
 	                     {dataField : "ccpId", visible : false},
 	                     {dataField : "salesOrdId", visible : false},
@@ -620,6 +621,8 @@ function popup(location){
 	        <option value="6"><spring:message code="sal.combo.text.rej" /></option>
 	    </select>
     </td>
+    <th scope="row">Assignment Batch</th>
+    <td><input type="text" title="" placeholder="" class="w100p"  name="remarks" id ="remarks"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
