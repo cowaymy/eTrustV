@@ -92,6 +92,10 @@ $(document).ready(function(){
 		        $("#orgCode").attr("class", "w100p readonly");
 		        $("#orgCode").attr("readonly", "readonly"); */
 
+		        $("#searchBankType").val("2730");
+		        $("#searchBankType").attr("disabled", "disabled");
+		        $("#searchBankAcc").attr("disabled", "disabled");
+
 		    }else if("${SESSION_INFO.memberLevel}" =="2"){
 
 		        $("#orgCode").val("${orgCode}");
@@ -101,6 +105,10 @@ $(document).ready(function(){
 		        $("#grpCode").val("${grpCode}");
 		        $("#grpCode").attr("class", "w100p readonly");
 		        $("#grpCode").attr("readonly", "readonly");
+
+	             $("#searchBankType").val("2730");
+	             $("#searchBankType").attr("disabled", "disabled");
+	             $("#searchBankAcc").attr("disabled", "disabled");
 
 		    }else if("${SESSION_INFO.memberLevel}" =="3"){
 
@@ -116,6 +124,10 @@ $(document).ready(function(){
 		        $("#deptCode").attr("class", "w100p readonly");
 		        $("#deptCode").attr("readonly", "readonly");
 
+	             $("#searchBankType").val("2730");
+	             $("#searchBankType").attr("disabled", "disabled");
+	             $("#searchBankAcc").attr("disabled", "disabled");
+
 		    }else if("${SESSION_INFO.memberLevel}" =="4"){
 
 		        $("#orgCode").val("${orgCode}");
@@ -130,6 +142,10 @@ $(document).ready(function(){
 		        $("#deptCode").attr("class", "w100p readonly");
 		        $("#deptCode").attr("readonly", "readonly");
 		        $("#searchVa").val("${memVaNo}");
+
+		        $("#searchBankType").val("2730");
+		        $("#searchBankType").attr("disabled", "disabled");
+		        $("#searchBankAcc").attr("disabled", "disabled");
 
 		    }
 	     $("#memType").val(memType);
@@ -213,7 +229,14 @@ $(document).ready(function(){
 
 	 $("#cash").show();
 	 $("#cash").find("#payType").val($('#payMode').val());
-	 doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
+
+	 if("${SESSION_INFO.userTypeId}" !="2"){
+		  doGetCombo('/common/getAccountList.do', 'CASH ||   ','', 'searchBankAcc', 'S', '' );
+	 } else{
+		 $("#searchBankAcc option").remove();
+		 $("#searchBankAcc").append("<option value='525'>2710/010B - CIMB VA</option>");
+		 $('#searchBankAcc').val("525");
+	 }
 
 	 //BankAccount와 VA Account disabled
      $("#searchBankAcc").find('option:first').attr('selected', 'selected');
@@ -3404,14 +3427,6 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
 			  $('#searchBankAcc').prop("disabled", false);
 
-			  if("${SESSION_INFO.userTypeId}" !="2" || ("${SESSION_INFO.userTypeId}" =="2" && "${SESSION_INFO.memberLevel}" !="4")){
-				   $('#searchVa').val("");
-				   $('#searchVa').prop("readonly", false);
-
-				  }
-
-
-
 			  if($('#payMode').val() == '108'){
 		          $("#searchBankAcc option").remove();
 
@@ -3454,14 +3469,19 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
 			          doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
 			        }
 			  }
-
-
-
 		  }
 	  }else{
 		  $('#searchBankAcc').prop("disabled", true);
           $('#searchVa').prop("readonly", true);
 	  }
+
+      if("${SESSION_INFO.userTypeId}" !="2" || ("${SESSION_INFO.userTypeId}" =="2" && "${SESSION_INFO.memberLevel}" !="4")){
+          $('#searchVa').val("");
+          $('#searchVa').prop("readonly", false);
+
+         }else{
+              $("#searchVa").val("${memVaNo}");
+         }
   }
 
   function fn_clearRequiredType(){
