@@ -1386,7 +1386,7 @@
               </when>
               <when test='groupCode == "10"'>
                  AND STUS_ID = 1
-                 AND TYPE_ID IN (42,43,45,5754)
+                 AND TYPE_ID IN (42,43,45,5754,48)
               </when>
               <otherwise>
                  <!-- AND STUS_ID = 1 -->
