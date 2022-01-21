@@ -744,7 +744,23 @@ WHERE 1=1
            OR B.COST_CENTR = #{costCentr2}
        </if>
        -->
-       <if test="costCentr != null and costCentr != '' and (costCentr2 == null or costCentr2 == '') " >
+       <if test="procFlg != null and procFlg != '' and procFlg == 1">
+               AND B.COST_CENTR IN (<![CDATA[
+		        SELECT
+		            COST_CENTER
+		        FROM FCM0107M
+		        WHERE USER_ID = #{userId}
+		          AND SYSDATE >= VALID_DT_FR
+		          AND SYSDATE <= VALID_DT_TO
+		          AND MAIN_MODULE = #{mainMod}
+		          AND SUB_MODULE = #{subMod}
+		        GROUP BY COST_CENTER
+		        ]]>)
+                <!-- <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")">
+                    #{costCenterList}
+                </foreach> -->
+       </if>
+       <!-- <if test="costCentr != null and costCentr != '' and (costCentr2 == null or costCentr2 == '') " >
            AND B.COST_CENTR = #{costCentr}
        </if>
        <if test="(costCentr2 != null and costCentr2 != '') and (costCentr3 == null or costCentr3 == '')" >
@@ -752,7 +768,7 @@ WHERE 1=1
        </if>
        <if test="costCentr3 != null and costCentr3 != '' " >
            AND B.COST_CENTR in (#{costCentr}, #{costCentr2}, #{costCentr3})
-       </if>
+       </if> -->
        <if test="budgetCode != null and budgetCode != ''">
            AND B.BUDGET_CODE  = #{budgetCode}
        </if>
@@ -1228,7 +1244,23 @@ WHERE 1=1
                 OR A.COST_CENTR = #{costCentr2}
             </if>
             -->
-            <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '')  and (costCentr3 == null or costCentr3 == '')" >
+            <if test="procFlg != null and procFlg != '' and procFlg == 1">
+                 AND A.COST_CENTR IN (<![CDATA[
+				        SELECT
+				            COST_CENTER
+				        FROM FCM0107M
+				        WHERE USER_ID = #{userId}
+				          AND SYSDATE >= VALID_DT_FR
+				          AND SYSDATE <= VALID_DT_TO
+				          AND MAIN_MODULE = #{mainMod}
+				          AND SUB_MODULE = #{subMod}
+				        GROUP BY COST_CENTER
+				    ]]>)
+                <!-- <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")">
+                    #{costCenterList}
+                </foreach> -->
+            </if>
+            <!-- <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '')  and (costCentr3 == null or costCentr3 == '')" >
                  AND A.COST_CENTR = #{costCentr}
             </if>
             <if test="(costCentr2 != null and costCentr2 != '') and (costCentr3 == null and costCentr3 == '')" >
@@ -1236,7 +1268,7 @@ WHERE 1=1
             </if>
             <if test="costCentr3 != null and costCentr3 != '' " >
                 AND A.COST_CENTR in (#{costCentr}, #{costCentr2}, #{costCentr3})
-            </if>
+            </if> -->
             <if test="stYearMonth != null and stYearMonth != '' " >
                 <if test="edYearMonth != null and edYearMonth != '' ">
                    AND BUDGET_PLAN_YEAR  || TO_CHAR(BUDGET_PLAN_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stYearMonth},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edYearMonth},'/',''), 'mmyyyy'), 'yyyymm')
