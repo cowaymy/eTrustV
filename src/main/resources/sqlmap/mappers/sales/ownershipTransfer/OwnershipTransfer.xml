@@ -63,12 +63,12 @@
 		</if>
 		<if test="reqStartDt != null and reqStartDt != '' ">
         <![CDATA[
-            AND TO_DATE(A.ROT_REQ_DT,'DD/MM/YYYY') >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+            AND A.ROT_REQ_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
         ]]>
 		</if>
 		<if test="reqEndDt != null and reqEndDt != '' ">
         <![CDATA[
-            AND TO_DATE(A.ROT_REQ_DT,'DD/MM/YYYY') <= TO_DATE(#{reqEndDt}, 'DD/MM/YYYY')
+            AND A.ROT_REQ_DT <= TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') +1
         ]]>
 		</if>
 		<if test="rotNo != null and rotNo != '' ">
