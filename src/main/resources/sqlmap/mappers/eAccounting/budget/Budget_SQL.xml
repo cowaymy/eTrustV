@@ -341,27 +341,34 @@ WHEN NOT MATCHED THEN
     <!-- Default cost center values with cost center disabled on screen -->
     <if test="stCostCentr == null or stCostCentr == '' ">
     /* stCostCentr == null or stCostCentr == '' */
-        <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '') and (costCentr3 == null or costCentr3 == '')" >
-	        AND A.COST_CENTR = #{costCentr}
-	    </if>
-	    <if test="(costCentr2 != null and costCentr2 != '') and (costCentr3 == null or costCentr3 == '')" >
-	        AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
-	    </if>
-	    <if test="costCentr3 != null and costCentr3 != '' " >
-            AND A.COST_CENTR in (#{costCentr}, #{costCentr2}, #{costCentr3})
-        </if>
+        <if test="procFlg != null and procFlg != '' and procFlg == 1">
+               AND A.COST_CENTR IN (<![CDATA[
+        SELECT
+            COST_CENTER
+        FROM FCM0107M
+        WHERE USER_ID = #{userId}
+          AND SYSDATE >= VALID_DT_FR
+          AND SYSDATE <= VALID_DT_TO
+          AND MAIN_MODULE = #{mainMod}
+          AND SUB_MODULE = #{subMod}
+        GROUP BY COST_CENTER
+    ]]>)
+                <!-- <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")">
+                    #{costCenterList}
+                </foreach> -->
+            </if>
     </if>
-    <if test="(costCentr == null or costCentr == '') and flg == 1 ">
+    <if test="(costCentr == null or costCentr == '') and flg == 1">
     /* (costCentr == null or costCentr == '') and flg == 1 */
-        <if test="stCostCentr != null and stCostCentr != '' " >
+        <if test="stCostCentr != null and stCostCentr != '' and procFlg == 0" >
 	        <if test="edCostCentr != null and edCostCentr != '' ">
 	            AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
 	        </if>
-	        <if test="edCostCentr == null or edCostCentr == '' ">
+	        <if test="edCostCentr == null or edCostCentr == '' and procFlg == 0">
 	            AND A.COST_CENTR = #{stCostCentr}
 	        </if>
 	    </if>
-	    <if test="stCostCentr == null or stCostCentr == '' ">
+	    <if test="(stCostCentr == null or stCostCentr == '') and procFlg == 0">
 	        AND A.COST_CENTR = ''
 	    </if>
     </if>
@@ -371,10 +378,10 @@ WHEN NOT MATCHED THEN
     </if>
      -->
     <if test="(stCostCentr != null and stCostCentr != '') and flg == 0 ">
-        <if test="(edCostCentr == null or edCostCentr == '') ">
+        <if test="(edCostCentr == null or edCostCentr == '') and procFlg == 0">
             AND A.COST_CENTR = #{stCostCentr}
         </if>
-        <if test="(edCostCentr != null and edCostCentr != '') ">
+        <if test="(edCostCentr != null and edCostCentr != '') and procFlg == 0">
             AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
         </if>
     </if>
@@ -1505,6 +1512,12 @@ WHERE 1=1
           AND MAIN_MODULE = #{mainMod}
           AND SUB_MODULE = #{subMod}
         GROUP BY COST_CENTER
+    ]]>
+    </select>
+
+    <select id="getListPermAppr" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT APPR_USER_ID FROM FCM0023M WHERE APPR_GRP = 'BUDGET' AND APPR_USER_ID =#{userId}
     ]]>
     </select>
 </mapper>

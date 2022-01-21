@@ -53,7 +53,7 @@ public interface BudgetService {
 
 	List<EgovMap> getPermRole();
 
-	EgovMap getListPerm(Map<String, Object> params);
+	List<EgovMap> getListPerm(Map<String, Object> params);
 
 	List<EgovMap> selectAvailableBudgetList(Map<String, Object> params) throws Exception;
 
@@ -64,4 +64,6 @@ public interface BudgetService {
 	EgovMap getAdjInfo(Map<String, Object> params);
 
 	EgovMap getBgtApprList(Map<String, Object> params);
+
+	List<EgovMap> getListPermAppr(Map<String, Object> params);
 }

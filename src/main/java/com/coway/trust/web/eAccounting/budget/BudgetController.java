@@ -3,6 +3,7 @@ package com.coway.trust.web.eAccounting.budget;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +147,7 @@ public class BudgetController {
 		return "eAccounting/budget/monthlyBudgetList";
 	}
 
-	@RequestMapping(value = "/selectMonthlyBudgetList", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/selectMonthlyBudgetList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectMonthlyBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{
 
 		List<EgovMap> budgetList = null;
@@ -229,6 +230,71 @@ public class BudgetController {
         }
 
         LOGGER.debug("budgetController :: selectMonthlyBudgetList");
+		LOGGER.debug("params =====================================>>  " + params);
+
+		budgetList = budgetService.selectMonthlyBudgetList(params);
+
+		return ResponseEntity.ok(budgetList);
+
+	}*/
+
+	@RequestMapping(value = "/selectMonthlyBudgetList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMonthlyBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		List<EgovMap> budgetList = null;
+
+		params.put("mainMod", "E-ACCOUNTING");
+		params.put("subMod", "BUDGET");
+		params.put("userId", sessionVO.getUserId());
+
+		//List<EgovMap> aRoleId = budgetService.getPermRole();
+		List<EgovMap> permissions = null;
+		permissions = budgetService.getListPermAppr(params);
+		int procFlg = 0;
+
+		/*if(permissions.size() == 0)
+		{
+			permissions = budgetService.getListPerm(params);
+			ArrayList<String> costCenterList = new ArrayList<String>();
+			for(EgovMap item : permissions){
+				costCenterList.add(item.get("costCenter").toString());
+			}
+
+			//String[] costCenter = userList.stream().toArray(String[]::new);
+			//String[] costCenter = costCenterList.toArray(new String[0]);
+			String[] costCenter = Arrays.copyOf(costCenterList.toArray(), costCenterList.size(), String[].class);
+
+		    params.put("costCenterList", costCenter);
+		    LOGGER.debug("costCenter" + costCenter);
+		}*/
+
+		if(permissions.size() == 0)
+		{
+			/*permissions = budgetService.getListPerm(params);
+			List<String> permissionsCostCenter = new ArrayList<>();
+			for(int i = 0; i < permissions.size(); i++) {
+	            EgovMap info = permissions.get(i);
+	            permissionsCostCenter.add(info.get("costCenter").toString());
+			}
+			params.put("costCenterList", permissionsCostCenter);
+			LOGGER.debug("costCenter" + permissionsCostCenter);*/
+			procFlg = 1;
+			params.put("procFlg", procFlg);
+		}
+
+
+		LOGGER.debug(sessionVO.getCostCentr());
+		if(!"A1101".equals(sessionVO.getCostCentr())) {
+			params.put("flg", "1");
+		} else {
+			if(sessionVO.getUserId() == 140139) {
+				params.put("flg", "1");
+			} else {
+				params.put("flg", "0");
+			}
+		}
+
+		LOGGER.debug("budgetController :: selectMonthlyBudgetList");
 		LOGGER.debug("params =====================================>>  " + params);
 
 		budgetList = budgetService.selectMonthlyBudgetList(params);
@@ -371,10 +437,10 @@ public class BudgetController {
 		params.put("subMod", "BUDGET");
 		params.put("userId", sessionVO.getUserId());
 
-		List<EgovMap> aRoleId = budgetService.getPermRole();
-		EgovMap permissions = budgetService.getListPerm(params);
+		/*List<EgovMap> aRoleId = budgetService.getPermRole();*/
+		/*EgovMap permissions = budgetService.getListPerm(params);*/
 
-		if(!aRoleId.isEmpty()) {
+		/*if(!aRoleId.isEmpty()) {
 		    for(int i = 0; i < aRoleId.size(); i++) {
 		        EgovMap role = aRoleId.get(i);
 		        int roleid1 = Integer.parseInt(role.get("roleId").toString());
@@ -384,43 +450,25 @@ public class BudgetController {
 		            params.put("costCentr", sessionVO.getCostCentr());
 		        }
 		    }
-		}
+		}*/
 
-		if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
+		/*if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
 		    if(permissions != null) {
 		        if(!"A1101".equals(permissions.get("costCenter"))) {
 	                params.put("costCentr", permissions.get("costCenter"));
 	            }
 		    }
+		}*/
+
+		List<EgovMap> permissions = null;
+		permissions = budgetService.getListPermAppr(params);
+		int procFlg = 0;
+
+		if(permissions.size() == 0)
+		{
+			procFlg = 1;
+			params.put("procFlg", procFlg);
 		}
-
-        if(sessionVO.getUserId() == 141938) {
-            params.put("costCentr2", "A1904");
-        }
-
-        if(sessionVO.getUserId() == 567) {
-            params.put("costCentr2", "D1001");
-        }
-
-        // Hardcode for rachel as Role is administrator but not allowed to view all budget
-        if(sessionVO.getUserId() == 374) {
-            params.put("costCentr", "A1301");
-        }
-
-        // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
-        if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
-            params.put("costCentr2", "D1201");
-
-            // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
-            if(sessionVO.getUserId() == 22141) {
-                params.put("costCentr3", "F1001");
-            }
-        }
-
-        // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
-        if(sessionVO.getUserId() == 18748 || sessionVO.getUserId() == 14384) {
-            params.put("costCentr2", "D1303");
-        }
 
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
 		    String yyyyMM = "";
@@ -954,10 +1002,10 @@ public class BudgetController {
         params.put("subMod", "BUDGET");
         params.put("userId", sessionVO.getUserId());
 
-        List<EgovMap> aRoleId = budgetService.getPermRole();
-        EgovMap permissions = budgetService.getListPerm(params);
+        /*List<EgovMap> aRoleId = budgetService.getPermRole();*/
+        /*EgovMap permissions = budgetService.getListPerm(params);*/
 
-        if(!aRoleId.isEmpty()) {
+        /*if(!aRoleId.isEmpty()) {
             for(int i = 0; i < aRoleId.size(); i++) {
                 EgovMap role = aRoleId.get(i);
                 int roleid1 = Integer.parseInt(role.get("roleId").toString());
@@ -967,51 +1015,25 @@ public class BudgetController {
                     params.put("costCentr", sessionVO.getCostCentr());
                 }
             }
-        }
+        }*/
 
-        if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
+        /*if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
             if(permissions != null) {
                 if(!"A1101".equals(permissions.get("costCenter"))) {
                     params.put("costCentr", permissions.get("costCenter"));
                 }
             }
-        }
+        }*/
 
-        if(sessionVO.getUserId() == 141938) {
-            params.put("costCentr2", "A1904");
-        }
+        List<EgovMap> permissions = null;
+		permissions = budgetService.getListPermAppr(params);
+		int procFlg = 0;
 
-        if(sessionVO.getUserId() == 567) {
-            params.put("costCentr2", "D1001");
-        }
-
-        // Hardcode for rachel as Role is administrator but not allowed to view all budget
-        if(sessionVO.getUserId() == 374) {
-            params.put("costCentr", "A1301");
-        }
-
-        // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
-        if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
-            params.put("costCentr2", "D1201");
-
-            // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
-            if(sessionVO.getUserId() == 22141) {
-                params.put("costCentr3", "F1001");
-            }
-        }
-
-        // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
-        if(sessionVO.getUserId() == 18748 || sessionVO.getUserId() == 14384) {
-            params.put("costCentr2", "D1303");
-        }
-
-        if(!params.containsKey("costCentr2")) {
-            params.put("costCentr2", "");
-        }
-
-        if(!params.containsKey("costCentr3")) {
-            params.put("costCentr3", "");
-        }
+		if(permissions.size() == 0)
+		{
+			procFlg = 1;
+			params.put("procFlg", procFlg);
+		}
 
 		LOGGER.debug("params =====================================>>  " + params);
 

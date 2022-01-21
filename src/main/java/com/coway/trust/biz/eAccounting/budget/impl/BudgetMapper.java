@@ -83,5 +83,7 @@ public interface BudgetMapper {
 
 	List<EgovMap> getPermRole();
 
-	EgovMap getListPerm(Map<String, Object> params);
+	List<EgovMap> getListPerm(Map<String, Object> params);
+
+	List<EgovMap> getListPermAppr(Map<String, Object> params);
 }
