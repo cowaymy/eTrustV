@@ -1935,20 +1935,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     }
 
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - START ================");
-//    svc0004dmap.put("AS_CT_CODE", "CT100676");
-//    svc0004dmap.put("TEL_M", "0163079636");
+    svc0004dmap.put("AS_CT_CODE", "CT100676");
+    svc0004dmap.put("TEL_M", "0165666878");
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - END ================");
 
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
-//    LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
-//    LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
-//    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
+    LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
+    LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
+    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
     String smsMessage = "";
     if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") &&
-      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001200")) ){
+      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001200") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001800")) ){
       smsMessage = "COWAY:Dear Customer, Your After Service is completed by "+ svc0004dmap.get("AS_CT_CODE") +" on " + svc0004dmap.get("AS_SETL_DT").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("10")){
       smsMessage = "COWAY:Dear Customer, Your Appointment for After Service has failed due to "+ svc0004dmap.get("AS_FAIL_RESN_DESC").toString() +".Will call to set new appointment.";
