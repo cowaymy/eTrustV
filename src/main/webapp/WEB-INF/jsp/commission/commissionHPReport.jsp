@@ -125,7 +125,15 @@
 	                    };
 
 				if(salesPersonCd=="503581"){//GCM
-					reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName
+
+					if(year >= 2021 && month >=12 || year > 2021)
+                    {
+                        reportFileName = "/commission/SGMComm_PDF_2022.rpt"; //reportFileName
+                    }
+					else
+					{
+						reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName
+					}
 				 	$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
