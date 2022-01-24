@@ -1948,7 +1948,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
     String smsMessage = "";
     if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") &&
-      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500")) ){
+      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001200")) ){
       smsMessage = "COWAY:Dear Customer, Your After Service is completed by "+ svc0004dmap.get("AS_CT_CODE") +" on " + svc0004dmap.get("AS_SETL_DT").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("10")){
       smsMessage = "COWAY:Dear Customer, Your Appointment for After Service has failed due to "+ svc0004dmap.get("AS_FAIL_RESN_DESC").toString() +".Will call to set new appointment.";
