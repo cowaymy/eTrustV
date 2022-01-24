@@ -4187,8 +4187,10 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
 
   @Override
   public void sendSms(Map<String, Object> smsList){
-    int userId = (int) smsList.get("userId");
-    SmsVO sms = new SmsVO(userId, 975);
+    //int userId = (int) smsList.get("userId");    //TEMP COMMENTED OUT BY YONG
+
+    //SmsVO sms = new SmsVO(userId, 975);   //TEMP COMMENTED OUT BY YONG
+	SmsVO sms = new SmsVO(Integer.parseInt(smsList.get("userId").toString()), 975); //TEMP ADDED BY YONG
 
     sms.setMessage(smsList.get("smsMessage").toString());
     sms.setMobiles(smsList.get("smsMobileNo").toString());
