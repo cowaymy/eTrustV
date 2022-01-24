@@ -1934,21 +1934,21 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       }
     }
 
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - START ================");
-    svc0004dmap.put("AS_CT_CODE", "CT100676");
-    svc0004dmap.put("TEL_M", "0165666878");
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - END ================");
+    //LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - START ================");
+    //svc0004dmap.put("AS_CT_CODE", "CT100676");
+    //svc0004dmap.put("TEL_M", "0165666878");
+    //LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG HARDCODE - END ================");
 
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
-    LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
-    LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
-    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
+    //LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
+    //LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
+    //LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
+    //LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
+    //LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
  // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/29 -- 674,2703
     String smsMessage = "";
     if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") &&
-      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001200") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001800")) ){
+      ( String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001600") || String.valueOf(svc0004dmap.get("AS_MALFUNC_ID")).equals("9001500")) ){
       smsMessage = "COWAY:Dear Customer, Your After Service is completed by "+ svc0004dmap.get("AS_CT_CODE") +" on " + svc0004dmap.get("AS_SETL_DT").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("10")){
       smsMessage = "COWAY:Dear Customer, Your Appointment for After Service has failed due to "+ svc0004dmap.get("AS_FAIL_RESN_DESC").toString() +".Will call to set new appointment.";
@@ -4187,19 +4187,12 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
 
   @Override
   public void sendSms(Map<String, Object> smsList){
-	LOGGER.debug("CHECKPOINT A BY YONG - in sendSMS");
-    //int userId = (int) smsList.get("userId");    //TEMP COMMENTED OUT BY YONG
-
-    //SmsVO sms = new SmsVO(userId, 975);   //TEMP COMMENTED OUT BY YONG
-	SmsVO sms = new SmsVO(Integer.parseInt(smsList.get("userId").toString()), 975); //TEMP ADDED BY YONG
-
-	LOGGER.debug("CHECKPOINT B BY YONG - in sendSMS");
+	int userId = (int) smsList.get("userId");
+    SmsVO sms = new SmsVO(userId, 975);
 
     sms.setMessage(smsList.get("smsMessage").toString());
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
-
-	LOGGER.debug("CHECKPOINT C BY YONG - in sendSMS");
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 }
