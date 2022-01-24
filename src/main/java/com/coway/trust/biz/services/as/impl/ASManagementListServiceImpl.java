@@ -4187,14 +4187,19 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
 
   @Override
   public void sendSms(Map<String, Object> smsList){
+	LOGGER.debug("CHECKPOINT A BY YONG - in sendSMS");
     //int userId = (int) smsList.get("userId");    //TEMP COMMENTED OUT BY YONG
 
     //SmsVO sms = new SmsVO(userId, 975);   //TEMP COMMENTED OUT BY YONG
 	SmsVO sms = new SmsVO(Integer.parseInt(smsList.get("userId").toString()), 975); //TEMP ADDED BY YONG
 
+	LOGGER.debug("CHECKPOINT B BY YONG - in sendSMS");
+
     sms.setMessage(smsList.get("smsMessage").toString());
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
+
+	LOGGER.debug("CHECKPOINT C BY YONG - in sendSMS");
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 }
