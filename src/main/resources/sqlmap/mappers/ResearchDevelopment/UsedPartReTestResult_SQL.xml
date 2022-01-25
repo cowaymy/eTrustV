@@ -2543,11 +2543,11 @@ SELECT
     </if>
   </select>
 
-  <select id="isAsAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
+  <select id="isReTestAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
     <![CDATA[
-      SELECT COUNT(AS_ID)
-      FROM SVC0001D
-      WHERE  AS_NO =#{serviceNo} AND AS_STUS_ID NOT IN ('1', '19')
+      SELECT COUNT(TEST_UP_ID)
+      FROM SVC0122D
+      WHERE  AS_NO =#{serviceNo} AND TEST_UP_STUS NOT IN ('1')
     ]]>
   </select>
 

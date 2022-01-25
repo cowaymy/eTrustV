@@ -97,6 +97,7 @@
         $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
         $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
         $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
+        $("#ddlProdGenuine").removeAttr("disabled").removeClass("readonly");
         $('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
 
     }
@@ -174,13 +175,13 @@
             Common.ajax("POST", "/ResearchDevelopment/newUsedPartReTestResultAdd.do", saveForm,
                 function(result) {
                    if (result.data != "" && result.data != null && result.data != "null") {
-                      Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
+                      Common.alert("<b>AS result save successfully.</b></br> New Used Part Return Test Result Number : <b>" + result.data + " </b>");
                           $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
                           fn_DisablePageControl();
                           $("#_newASResultDiv1").remove();
                           fn_searchUsedPart();
                     } else {
-                          Common.alert("<b>AS result save successfully.</b>");
+                          Common.alert("<b>Used Part Return Test Result save successfully.</b>");
                           $("#txtResultNo").html( "<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
                           fn_DisablePageControl();
                           $("#_newASResultDiv1").remove();

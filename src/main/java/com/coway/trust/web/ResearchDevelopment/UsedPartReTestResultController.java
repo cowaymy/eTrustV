@@ -56,21 +56,8 @@ public class UsedPartReTestResultController {
 	  @Resource(name = "orderDetailService")
 	  private OrderDetailService orderDetailService;
 
-	  @Resource(name = "hsManualService")
-	  private HsManualService hsManualService;
-
-	  @Resource(name = "InHouseRepairService")
-	  private InHouseRepairService inHouseRepairService;
-
-	  @Resource(name = "servicesLogisticsPFCService")
-	  private ServicesLogisticsPFCService servicesLogisticsPFCService;
-
-	  @Autowired
-	  private AdaptorService adaptorService;
-
 	  @Autowired
 	  private MessageSourceAccessor messageAccessor;
-
 
 
 
@@ -84,41 +71,6 @@ public class UsedPartReTestResultController {
 		return ResponseEntity.ok(list);
 	}
 
-
-	  /*	 @RequestMapping(value = "/selectGroupMstList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectGroupMstList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-	    LOGGER.debug("params =====================================>>  " + params);
-
-	    List<EgovMap> list = groupService.selectGroupMstList(params);
-
-	    LOGGER.debug("list =====================================>>  " + list.toString());
-	    return ResponseEntity.ok(list);
-		}*/
-
-/*	  @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/searchASManagementList.do===============================");
-	    logger.debug("== params heres" + params.toString());
-
-	    String[] asTypeList = request.getParameterValues("asType");
-	    String[] asProductList = request.getParameterValues("asProduct");
-	    String[] asStatusList = request.getParameterValues("asStatus");
-	    String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
-
-	    // String cmbctId = request.getParameter("cmbctId");
-
-	    params.put("asTypeList", asTypeList);
-	    params.put("asStatusList", asStatusList);
-	    params.put("cmbbranchIdList", cmbbranchIdList);
-	    params.put("asProductList", asProductList);
-
-	    List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
-
-	    // logger.debug("== ASMList : {}", ASMList);
-	    logger.debug("===========================/searchASManagementList.do===============================");
-	    return ResponseEntity.ok(ASMList);
-	  }*/
 
 	  @RequestMapping(value = "/UsedPartReTestResult.do")
 	  public String usedPartReTestResultList(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -215,24 +167,9 @@ public class UsedPartReTestResultController {
 	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
 
-	    /*List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
-	    model.addAttribute("lbrFeeChr", lbrFeeChr);
-
-	    List<EgovMap> fltQty = ASManagementListService.selectFltQty();
-	    model.addAttribute("fltQty", fltQty);
-
-	    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
-	    model.addAttribute("fltPmtTyp", fltPmtTyp);*/
-
 	    return "ResearchDevelopment/inc_UsedPartReTestResultEditPop";
 	  }
 
-	  @RequestMapping(value = "/getSpareFilterName.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getSpareFilterName(@RequestParam Map<String, Object> params, HttpServletRequest request,
-	      ModelMap model) {
-	    List<EgovMap> spareFilterList = UsedPartReTestResultService.getSpareFilterList(params);
-	    return ResponseEntity.ok(spareFilterList);
-	  }
 
 	  @RequestMapping(value = "/getASRulstSVC0004DInfo1", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASRulstSVC0004DInfo(@RequestParam Map<String, Object> params,
@@ -283,6 +220,43 @@ public class UsedPartReTestResultController {
 	    List<EgovMap> list = UsedPartReTestResultService.getTestResultInfo(params);
 
 	    return ResponseEntity.ok(list);
+	  }
+
+	  @RequestMapping(value = "/newUsedPartReTestResultAdd.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> newUsedPartReTestResultAdd(@RequestBody Map<String, Object> params, Model model,
+	      HttpServletRequest request, SessionVO sessionVO) {
+	    logger.debug("===========================/newUsedPartReTestResultAdd.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/newUsedPartReTestResultAdd.do===============================");
+
+	    params.put("updator", sessionVO.getUserId());
+	    ReturnMessage message = new ReturnMessage();
+
+	    HashMap<String, Object> mp = new HashMap<String, Object>();
+	    Map<?, ?> svc0004dmap = (Map<?, ?>) params.get("asResultM");
+	    mp.put("serviceNo", svc0004dmap.get("AS_NO"));
+
+	    params.put("asNo", svc0004dmap.get("AS_NO"));
+	    params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
+	    params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
+
+	    int isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(mp);
+	    logger.debug("== isReTestCnt " + isReTestCnt);
+
+	    if (isReTestCnt == 0) {
+	      EgovMap rtnValue = UsedPartReTestResultService.usedPartReTestResult_insert(params);
+
+	      message.setCode(AppConstants.SUCCESS);
+	      message.setData(rtnValue.get("testResultNo"));
+	      message.setMessage("");
+
+	    } else {
+	      message.setCode("98");
+	      message.setData(svc0004dmap.get("AS_NO"));
+	      message.setMessage("Used Part Return Test Result already exists with Complete Status.");
+	    }
+
+	    return ResponseEntity.ok(message);
 	  }
 
 }
