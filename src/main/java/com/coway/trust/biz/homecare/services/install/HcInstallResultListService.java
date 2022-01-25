@@ -96,4 +96,6 @@ public interface HcInstallResultListService {
 	 */
 	public String selectFrmSerial(Map<String, Object> params) throws Exception;
 
+	//Added by keyi HC Fail INS 20220120
+	int hcFailInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException, Exception;
 }

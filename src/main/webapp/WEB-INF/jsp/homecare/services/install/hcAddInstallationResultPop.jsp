@@ -69,6 +69,7 @@ var serialGubun = "1";
         } else {
             $("#addInstallForm #m6").hide();
             $("#addInstallForm #m7").hide();
+            $("#addInstallForm #m8").hide();
         }
 
         $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -98,6 +99,7 @@ var serialGubun = "1";
                 $("#addInstallForm #checkCommission").prop("checked", true);
                 $("#addInstallForm #m6").hide();
                 $("#addInstallForm #m7").hide();
+                $("#addInstallForm #m8").hide();
                 $("#addInstallForm #m2").show();
                 $("#addInstallForm #m4").show();
                 $("#addInstallForm #m5").show();
@@ -109,6 +111,7 @@ var serialGubun = "1";
                 $("#addInstallForm #m5").hide();
                 $("#addInstallForm #m6").show();
                 $("#addInstallForm #m7").show();
+                $("#addInstallForm #m8").show();
             }
 
             $("#addInstallForm #installDate").val("");
@@ -119,6 +122,7 @@ var serialGubun = "1";
             $("#addInstallForm #checkTrade").prop("checked", false);
             $("#addInstallForm #checkSms").prop("checked", false);
             $("#addInstallForm #msgRemark").val("Remark:");
+            $("#addInstallForm #failLocCde").val("");
             $("#addInstallForm #failReason").val("0");
             $("#addInstallForm #nextCallDate").val("");
             $("#addInstallForm #remark").val("");
@@ -142,10 +146,15 @@ var serialGubun = "1";
     function fn_saveInstall() {
 	    var msg = "";
 	    if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
-	      if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
-	        Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
+
+	     if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
+	    	  Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
+	    	  return;
+	     }
+	     /*  if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
+	    	        Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 	        return;
-	      }
+	      } */
 
 	      if ($("#addInstallForm #installDate").val() == '') {
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Actual Install Date' htmlEscape='false'/> </br>";
@@ -177,6 +186,9 @@ var serialGubun = "1";
 	    }
 
 	    if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
+	      if ($("#failLocCde").val() == '') {
+	            msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Location' htmlEscape='false'/> </br>";
+	      }
 	      if ($("#failReason").val() == 0) {
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
 	      }
@@ -313,6 +325,13 @@ var serialGubun = "1";
 
        Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
    }
+
+   function fn_openFailChild(selectedData){
+	    if(selectedData == "8000" || selectedData == "8100"){
+	    	   $("#failReasonCode").attr("disabled",false);
+	    	   doGetCombo('/services/selectFailChild.do', selectedData, '','failReasonCode', 'S' , '');
+	    }
+	  }
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -968,16 +987,28 @@ var serialGubun = "1";
     </colgroup>
     <tbody>
      <tr>
+     <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m8" id="m8" class="must">*</span></th>
+     <td><select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
+        <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+            <c:forEach var="list" items="${failParent}" varStatus="status">
+                <option value="${list.codeId}">${list.codeName}</option>
+        </c:forEach>
+      </select></td>
       <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m6" id="m6" class="must">*</span></th>
-      <td><select class="w100p" id="failReason" name="failReason">
+      <input type="hidden" value="" id="hiddenFailReasonCode" name="hiddenFailReasonCode" />
+      <td><select class="w100p" id=failReasonCode name="failReasonCode">
         <option value="0">Failed Reason</option>
         <c:forEach var="list" items="${failReason }" varStatus="status">
          <option value="${list.resnId}">${list.c1}</option>
         </c:forEach>
       </select></td>
+       <tr>
+      <tr>
       <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
       <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="nextCallDate" name="nextCallDate" /></td>
-     </tr>
+      <th scope="row"></th>
+      <td></td>
+      </tr>
      <tr>
 </tr>
     </tbody>

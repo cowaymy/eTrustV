@@ -352,6 +352,46 @@
 		$("#product").val("");
     }
 
+    function fn_failInstallation() {//active 일때만 열림
+
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+        if (selectedItems.length <= 0) {
+          Common.alert("<spring:message code='service.msg.NoRcd'/>");
+          return;
+        }
+
+        if (selectedItems.length > 1) {
+          Common.alert("<b><spring:message code='service.msg.onlyPlz'/></b>");
+          return;
+        }
+
+        var installEntryId = selectedItems[0].item.installEntryId;
+        var codeid1 = selectedItems[0].item.codeid1;
+        var orderId = selectedItems[0].item.salesOrdId;
+        var docId = selectedItems[0].item.c1;
+        var statusCode = selectedItems[0].item.code1;
+        var salesOrderId = selectedItems[0].item.salesOrdId;
+        var rcdTms = selectedItems[0].item.rcdTms;
+
+        Common.ajax("POST", "/services/selRcdTms.do", {
+            installEntryId : installEntryId,
+            orderId : orderId,
+            rcdTms : rcdTms
+          }, function(result) {
+            if (result.code == "99") {
+              Common.alert(result.message);
+            } else {
+              if (statusCode == "FAL") {
+                Common.popupDiv("/homecare/services/install/hcFailInstallationPopup.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1 + "&salesOrderId=" + orderId);
+
+              } else {
+
+                Common.alert("Only Fail installation result is allowed to edit.");
+              }
+            }
+          });
+      }
 </script>
 <section id="content">
  <!-- content start -->
@@ -560,6 +600,12 @@
         <li><p class="link_btn">
           <a href="javascript:fn_editInstallation()"
            id="editInstallation"><spring:message code='service.btn.EditInstallationResult' /></a>
+         </p></li>
+       </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+        <li><p class="link_btn">
+          <a href="javascript:fn_failInstallation()" id="failInstallation">
+          <spring:message code='service.btn.FailInstallationResult' /></a>
          </p></li>
        </c:if>
       </ul>

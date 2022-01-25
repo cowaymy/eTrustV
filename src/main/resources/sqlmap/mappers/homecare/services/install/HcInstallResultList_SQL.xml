@@ -316,4 +316,28 @@
 				   AND ROWNUM <![CDATA[<=]]> 1
                ) A
     </select>
+
+    <update id="updateInstallResultFail" parameterType="Map">
+    UPDATE SAL0047D SET REM = #{remark}
+                      , ALLOW_COMM = #{allowCom}
+                      , IS_TRADE_IN = #{istrade}
+                      , REQUIRE_SMS = #{isreqsms}
+                      , SIRIM_NO = UPPER(#{sirimNo})
+                      , SERIAL_NO = #{serialNo}
+                      , DOC_REF_NO1 = #{refNo1}
+                      , DOC_REF_NO2 = #{refNo1}
+                      , UPD_DT = SYSDATE
+                      , UPD_USER_ID = #{user_id}
+                      , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
+                      ,FAIL_LOC = #{failLoc}
+                      ,FAIL_ID = #{failReason}
+    WHERE ( RESULT_ID = #{resultId} )
+  </update>
+
+  <update id="updateInstallEntryEdit" parameterType="Map">
+    UPDATE SAL0046D SET UPD_DT = SYSDATE
+                      , UPD_USER_ID = #{user_id}
+                      , INSTALL_DT = TO_DATE(#{installdt},'DD-MM-YYYY')
+    WHERE ( INSTALL_ENTRY_ID = #{entryId} )
+  </update>
 </mapper>

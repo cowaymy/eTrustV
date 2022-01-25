@@ -179,6 +179,7 @@ public class HcInstallResultListController {
 		params.put("reasonTypeId", 172);
 
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+		List<EgovMap> failParent = installationResultListService.failParent(); //Added by keyi HC Fail INS 20220120
         List<EgovMap> failReason = installationResultListService.selectFailReason(params);
         EgovMap callType = installationResultListService.selectCallType(params);
         EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
@@ -240,6 +241,7 @@ public class HcInstallResultListController {
         model.addAttribute("salseOrder", salseOrder);
         model.addAttribute("hpMember", hpMember);
         model.addAttribute("callType", callType);
+        model.addAttribute("failParent", failParent); //Added by keyi HC Fail INS 20220120
         model.addAttribute("failReason", failReason);
         model.addAttribute("installStatus", installStatus);
         model.addAttribute("stock", stock);
@@ -573,5 +575,64 @@ public class HcInstallResultListController {
       return ResponseEntity.ok(message);
     }
 
+    //Added by keyi HC Fail INS 20220120
+    @RequestMapping(value = "/hcFailInstallationPopup.do")
+    public String failInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) throws Exception {
 
+      List<EgovMap> failParent = installationResultListService.failParent();
+      params.put("reasonTypeId", 172);
+      params.put("ststusCodeId", 1);
+      List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+
+      EgovMap installInfo = installationResultListService.selectInstallInfo(params);
+      model.addAttribute("installInfo", installInfo);
+
+      EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
+      model.put("orderDetail", orderDetail);
+      model.put("codeId", params.get("codeId"));
+
+      //AUX serial info
+      String ordNo = ((EgovMap)orderDetail.get("basicInfo")).get("ordNo").toString();
+      params.put("salesOrdNo", ordNo);
+
+      params.put("stusCodeId", 21);		// status : FAL
+      EgovMap hcFrmOrder = hcInstallResultListService.selectFrmInfo(params);
+
+      if(hcFrmOrder != null){
+    	  String frmSerial = hcInstallResultListService.selectFrmSerial(hcFrmOrder);
+    	  hcFrmOrder.put("frmSerial", frmSerial);
+      }
+      model.addAttribute("frameInfo", hcFrmOrder);
+      model.addAttribute("failParent", failParent);
+      model.addAttribute("failReason", failReason);
+
+      EgovMap orderInfo = null;
+      if (params.get("codeId").toString().equals("258")) {
+        orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
+      } else {
+        orderInfo = installationResultListService.getOrderInfo(params);
+      }
+      model.put("orderInfo", orderInfo);
+
+      return "homecare/services/install/hcFailInstallationResultPop";
+    }
+
+    @RequestMapping(value = "/hcFailInstallation.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> failInstallationResult(@RequestBody Map<String, Object> params,
+        SessionVO sessionVO) throws Exception {
+      ReturnMessage message = new ReturnMessage();
+      int resultValue = 0;
+
+      int userId = sessionVO.getUserId();
+      params.put("user_id", userId);
+
+      resultValue = hcInstallResultListService.hcFailInstallationResult(params, sessionVO);
+      if (resultValue > 0) {
+        message.setMessage("Installation result successfully updated.");
+      } else {
+        message.setMessage("Failed to update installation result. Please try again later.");
+      }
+
+      return ResponseEntity.ok(message);
+    }
 }

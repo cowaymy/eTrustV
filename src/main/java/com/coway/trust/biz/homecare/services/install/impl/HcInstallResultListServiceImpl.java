@@ -756,4 +756,44 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     String str = hcInstallResultListMapper.selectFrmSerial(params);
     return StringUtils.isBlank(str) ? "" : str;
   }
+
+  //Added by keyi HC Fail INS 20220120
+  @Override
+  public int hcFailInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+    int resultValue = hcInstallResultListMapper.updateInstallResultFail(params);
+
+ // check AUX
+    if (resultValue > 0) {
+      Map<String, Object> oMap = new HashMap<String, Object>();
+      oMap.put("salesOrdNo", params.get("hidSalesOrderNo"));
+      EgovMap sMap = hcInstallResultListMapper.selectFrmOrdNo(oMap);
+
+      // one more AUX
+      if (sMap != null && StringUtils.isNotBlank((String) sMap.get("salesOrdNo"))) {
+        sMap.put("stusCodeId", 21); // Failed
+        EgovMap eMap = hcInstallResultListMapper.selectFrmInstNO(sMap);
+        params.put("entryId", eMap.get("installEntryId"));
+        params.put("hidSalesOrderId", eMap.get("salesOrdId"));
+        params.put("hidSalesOrderNo", eMap.get("salesOrdNo"));
+        params.put("hidInstallEntryNo", eMap.get("installEntryNo"));
+        // frame serial use.
+        params.put("serialNo", CommonUtils.nvl(params.get("frmSerialNo")));
+        params.put("hidSerialNo", CommonUtils.nvl(params.get("hidFrmSerialNo")));
+        params.put("hidSerialRequireChkYn", CommonUtils.nvl(params.get("hidFrmSerialChkYn")));
+
+        // SAL0047D.RESULT_ID
+        EgovMap rMap = hcInstallResultListMapper.selectResultId(eMap);
+        params.put("resultId", rMap.get("resultId"));
+
+      }
+    } else {
+      throw new ApplicationException(AppConstants.FAIL,
+          "Failed to update installation result. Please try again later.");
+    }
+
+    hcInstallResultListMapper.updateInstallResultFail(params);
+    hcInstallResultListMapper.updateInstallEntryEdit(params);
+
+    return resultValue;
+  }
 }
