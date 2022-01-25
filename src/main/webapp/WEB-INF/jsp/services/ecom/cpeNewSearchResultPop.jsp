@@ -75,7 +75,7 @@
                     $("#_inputIssueSelect").find("option").remove();
                   } else {
                 	var SubReq = $("#_inputSubReqTypeSelect").val();
-                	if(SubReq < 6500 && SubReq != 6210 && SubReq != 6211)
+                	if(SubReq < 6300 && SubReq != 6210 && SubReq != 6211)
                 		if(SubReq == 6212 || SubReq == 6213 || SubReq == 6214 || SubReq == 6215){
                 			SubReq = 2;
                 		}
