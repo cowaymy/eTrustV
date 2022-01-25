@@ -381,7 +381,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 			  params.put("txtLabourCharge", 0.00); // temporary set foc
 
 
-    		  installationResultListService.saveInsAsEntry(newPartList, params, installResult, user_id_47);
+    		  installationResultListService.saveInsAsEntry(newPartList, params, installResult, user_id_47 );
     	  }
           // End of inserting charge out filters and spare parts at AS
 
