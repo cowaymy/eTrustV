@@ -167,7 +167,7 @@ $(document).ready(function(){
 		$("#stockDesc").html(result.basic.stockDesc);
 		$("#custId").html(result.basic.custId);
 		$("#custName").html(result.basic.custName);
-		$("#custNric").html(result.basic.custNric);
+// 		$("#custNric").html(result.basic.custNric);
 		$("#custType").html(result.basic.custType);
 
 		$("#CUST_ID").val(result.basic.custId);
@@ -1764,7 +1764,7 @@ $(document).ready(function(){
         <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
             <li><a href="#" class="on"  ><spring:message code="sal.tap.title.ordInfo" /></a></li>
-            <li><a href="#"><spring:message code="sal.tap.title.contactPerson" /></a></li>
+<%--             <li><a href="#"><spring:message code="sal.tap.title.contactPerson" /></a></li> --%>
             <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 950,380);"><spring:message code="sal.tap.title.bsHis" /></a></li>
             <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 950,380);"><spring:message code="sal.tap.title.orderProductFilter" /></a></li>
         </ul>
@@ -1845,10 +1845,10 @@ $(document).ready(function(){
             <th scope="row"><spring:message code="sal.text.custName" /></th>
             <td colspan="5" id='custName'><span></span></td>
         </tr>
-        <tr>
-            <th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" /></th>
-            <td colspan="5" id='custNric' ><span></span></td>
-        </tr>
+<!--         <tr> -->
+<%--             <th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" /></th> --%>
+<!--             <td colspan="5" id='custNric' ><span></span></td> -->
+<!--         </tr> -->
         </tbody>
         </table><!-- table end -->
         <p class="brown_text mt10">(<spring:message code="sal.text.isChargeFilter" />)</p>
