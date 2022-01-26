@@ -117,7 +117,7 @@ function  fn_isActiveMembershipQuotationInfoByOrderNo(){
 function fn_getDataInfo (_ordid){
     Common.ajax("GET", "/sales/membership/selectMembershipFreeDataInfo",    {ORD_ID : _ordid }, function(result) {
         console.log( result);
-        
+
         resultInstallationObject = result.installation;
         resultBasicObject = result.basic;
         var billMonth = getOrderCurrentBillMonth();
@@ -179,7 +179,7 @@ function setText(result){
     $("#stockDesc").html(result.basic.stockDesc);
     $("#custId").html(result.basic.custId);
     $("#custName").html(result.basic.custName);
-    $("#custNric").html(result.basic.custNric);
+//     $("#custNric").html(result.basic.custNric);
     $("#custType").html(result.basic.custType);
 
     $("#CUST_ID").val( result.basic.custId);
@@ -1391,7 +1391,7 @@ function fn_save(){
         <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
             <li><a href="#" class="on"  >Order Info</a></li>
-            <li><a href="#">Contact Person</a></li>
+<!--             <li><a href="#">Contact Person</a></li> -->
             <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 950,380);">BS History</a></li>
             <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 950,380);">Order Product Filter</a></li>
         </ul>
@@ -1549,10 +1549,10 @@ function fn_save(){
             <th scope="row">Customer Name</th>
             <td colspan="5"><span id='custName'></span></td>
         </tr>
-        <tr>
-            <th scope="row">NRIC/Company No</th>
-            <td colspan="5"><span id='custNric'> </span></td>
-        </tr>
+<!--         <tr> -->
+<!--             <th scope="row">NRIC/Company No</th> -->
+<!--             <td colspan="5"><span id='custNric'> </span></td> -->
+<!--         </tr> -->
         </tbody>
         </table><!-- table end -->
 
