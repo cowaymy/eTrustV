@@ -4,10 +4,10 @@
 <%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp" %>
 
 <script type="text/javaScript" language="javascript">
-var TODAY_DD      = "${toDay}";
-var BEFORE_DD = "${bfDay}";
-var blockDtFrom = "${hsBlockDtFrom}";
-var blockDtTo = "${hsBlockDtTo}";
+	var TODAY_DD      = "${toDay}";
+	var BEFORE_DD = "${bfDay}";
+	var blockDtFrom = "${hsBlockDtFrom}";
+	var blockDtTo = "${hsBlockDtTo}";
 
     doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
     var convToOrdYn  = "${CONV_TO_ORD_YN}";
@@ -16,6 +16,7 @@ var blockDtTo = "${hsBlockDtTo}";
     var preOrdId = '${preOrdId}';
     var rcdTms  = "${preOrderInfo.updDt}";
 
+    var LoginRoleID = "${SESSION_INFO.roleId}"; //Added by Keyi bypass HOR & Supervisor Key In restriction
     var docGridID;
     var docDefaultChk = false;
     var GST_CHK = '';
@@ -2379,55 +2380,58 @@ console.log("vBindingNo" + vBindingNo);
 
         fn_clearOrderSalesman();
 
-        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
-            console.log("memRC checking");
+        if(LoginRoleID != "105" && LoginRoleID != "97")//Modified by Keyi bypass HOR & Supervisor Key In restriction
+        {
+	        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
+	            console.log("memRC checking");
 
-            if(memRc != null) {
-                if(memRc.rookie == 1) {
-                    if(memRc.rcPrct != null) {
-                        if(memRc.rcPrct < 30) {
-                            fn_clearOrderSalesman();
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-                            return false;
-                        }
-                    }
-                } else {
-                    fn_clearOrderSalesman();
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
-                    return false;
-                }
-            }
+	            if(memRc != null) {
+	                if(memRc.rookie == 1) {
+	                    if(memRc.rcPrct != null) {
+	                        if(memRc.rcPrct < 30) {
+	                            fn_clearOrderSalesman();
+	                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
+	                            return false;
+	                        }
+	                    }
+	                } else {
+	                    fn_clearOrderSalesman();
+	                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
+	                    return false;
+	                }
+	            }
+	        });
+        }
 
-            Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+	    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
-                if(memInfo == null) {
-                    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-                    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
-                }
-                else {
-                    $('#hiddenSalesmanId').val(memInfo.memId);
-                    $('#salesmanCd').val(memInfo.memCode);
-                    $('#salesmanType').val(memInfo.codeName);
-                    $('#salesmanTypeId').val(memInfo.memType);
-                    $('#salesmanNm').val(memInfo.name);
-                    $('#salesmanNric').val(memInfo.nric);
-                    $('#departCd').val(memInfo.deptCode);
-                    $('#departMemId').val(memInfo.lvl3UpId);
-                    $('#grpCd').val(memInfo.grpCode);
-                    $('#grpMemId').val(memInfo.lvl2UpId);
-                    $('#orgCd').val(memInfo.orgCode);
-                    $('#orgMemId').val(memInfo.lvl1UpId);
+	    	   if(memInfo == null) {
+	    		    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+	    		    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+	           }
+	           else {
+	        	    $('#hiddenSalesmanId').val(memInfo.memId);
+	                $('#salesmanCd').val(memInfo.memCode);
+	                $('#salesmanType').val(memInfo.codeName);
+	                $('#salesmanTypeId').val(memInfo.memType);
+	                $('#salesmanNm').val(memInfo.name);
+	                $('#salesmanNric').val(memInfo.nric);
+	                $('#departCd').val(memInfo.deptCode);
+	                $('#departMemId').val(memInfo.lvl3UpId);
+	                $('#grpCd').val(memInfo.grpCode);
+	                $('#grpMemId').val(memInfo.lvl2UpId);
+	                $('#orgCd').val(memInfo.orgCode);
+	                $('#orgMemId').val(memInfo.lvl1UpId);
 
-                    $('#salesmanCd').removeClass("readonly");
-                    //$('#salesmanType').removeClass("readonly");
-                    //$('#salesmanNm').removeClass("readonly");
-                    //$('#salesmanNric').removeClass("readonly");
-                    $('#departCd').removeClass("readonly");
-                    $('#grpCd').removeClass("readonly");
-                    $('#orgCd').removeClass("readonly");
-                }
-            });
-        });
+	                $('#salesmanCd').removeClass("readonly");
+	                //$('#salesmanType').removeClass("readonly");
+	                //$('#salesmanNm').removeClass("readonly");
+	                //$('#salesmanNric').removeClass("readonly");
+	                $('#departCd').removeClass("readonly");
+	                $('#grpCd').removeClass("readonly");
+	                $('#orgCd').removeClass("readonly");
+	            }
+	     });
     }
 
     function fn_loadTrialNo(trialNo) {
