@@ -20,18 +20,18 @@ $.fn.clearForm = function() {
     });
 };
 
-function ValidRequiredField(){  
+function ValidRequiredField(){
     var valid = true;
     var message = "";
     var cmbTypeVal = $("#cmbType :selected").val();
-    
-    
+
+
     if($("#cmbType option:selected").index() < 1){
     	valid = false;
     	message += '<spring:message code="sal.alert.msg.plzSelReportType" />';
     }else{
     	if(cmbTypeVal == '1' || cmbTypeVal == '2' || cmbTypeVal == '3' || cmbTypeVal == '4'){
-    		if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){	
+    		if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
     			valid = false;
                 message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
     		}
@@ -51,7 +51,7 @@ function ValidRequiredField(){
                 message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
             }
         }else if(cmbTypeVal == "9" || cmbTypeVal == "10" || cmbTypeVal == "11" || cmbTypeVal == "12" || cmbTypeVal == "13"){
-        	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){   
+        	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
                 valid = false;
                 message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
             }
@@ -71,14 +71,14 @@ function ValidRequiredField(){
 
 
 function fn_report(){
-	
+
 	var cmbTypeVal = $("#cmbType :selected").val();
-	
+
 	if(cmbTypeVal == "1" || cmbTypeVal == "2"){
 		fn_report_1();
-	}else if(cmbTypeVal == "3" || cmbTypeVal == "4"){
+	}else if(cmbTypeVal == "4"){
 		fn_report_2();
-	}else if(cmbTypeVal == "5" || cmbTypeVal == "6"){
+	}else if(cmbTypeVal == "3" || cmbTypeVal == "5" || cmbTypeVal == "6"){
 		fn_report_3();
 	}else if(cmbTypeVal == "7"){
 		fn_report_4();
@@ -90,29 +90,29 @@ function fn_report(){
 }
 
 function fn_report_1(){
-	
+
 	$("#reportFileName").val("");
 	$("#reportDownFileName").val("");
-	
+
 	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATEFROM" name="V_ORDERDATEFROM" value="" />');
-    $("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />'); 
+    $("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />');
     $("#reportParameter").append('<input type="hidden" id="V_BRANCHREGION" name="V_BRANCHREGION" value="" />');
     $("#reportParameter").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />');
-    $("#reportParameter").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />'); 
+    $("#reportParameter").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />');
     $("#reportParameter").append('<input type="hidden" id="V_REGIONWHERESQL" name="V_REGIONWHERESQL" value="" />');
     $("#reportParameter").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />');
-    $("#reportParameter").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />'); 
+    $("#reportParameter").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />');
 
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    
+
     var dpDateFr = $("#dpDateFr").val();
     var dpDateTo = $("#dpDateTo").val();
     var frArr = dpDateFr.split("/");
     var toArr = dpDateTo.split("/");
-    
+
     var orderDateFrom = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
     var orderDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
     var branchRegion = "-";
@@ -122,25 +122,25 @@ function fn_report_1(){
     var extraWhereSQL = "";
     var orderSQL = "";
     var fullSQL = "";
-    
+
 	if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
-		
+
 		orderDateFrom = frArr[0]+"/"+frArr[1]+"/"+frArr[2]; // dd/MM/yyyy
 		orderDateTo = toArr[0]+"/"+toArr[1]+"/"+toArr[2];
 
 		whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS'))";
     }
-	
+
 	if($("#cmbType :selected").val() == "1"){
 		$("#reportDownFileName").val("CCPPerformance_KeyInBranch_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPPerformanceReportByBranch_PDF.rpt");
-        
+
 	}else if($("#cmbType :selected").val() == "2"){
 		$("#reportDownFileName").val("CCPPerformance_ServiceBranch_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPPerformanceReportByServiceBranch.rpt");
-        
+
 	}
-	
+
 	$("#viewType").val("PDF");
 
 	$("#V_ORDERDATEFROM").val(orderDateFrom);
@@ -151,33 +151,33 @@ function fn_report_1(){
     $("#V_REGIONWHERESQL").val("");
     $("#V_ORDERBYSQL").val("");
     $("#V_FULLSQL").val("");
-    
-   
+
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-            isProcedure : true // procedure 로 구성된 리포트 인경우 필수. 
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
     };
-    
+
     Common.report("form", option);
-    
+
 }
 
-function fn_report_2(){ 
-	
+function fn_report_2(){
+
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
-    
+
 	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATEFR" name="V_ORDERDATEFR" value="" />');
-	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />'); 
+	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATETO" name="V_ORDERDATETO" value="" />');
 	$("#reportParameter").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />');
-	
+
 	var whereSQL = "";
-	
+
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    
+
     var dpDateFr = $("#dpDateFr").val();
     var frArr = dpDateFr.split("/");
     var yyyy = frArr[2];
@@ -187,7 +187,7 @@ function fn_report_2(){
     var dpDateTo = $("#dpDateTo").val();
     var toArr = dpDateTo.split("/");
     dpDateTo = toArr[2]+"-"+toArr[1]+"-"+toArr[0]+" 00:00:00";
-    
+
     // "yyyy-mm-dd hh:mm:ss" 형식
     if(!(dpDateFr == null || dpDateFr.length == 0)){
     	whereSQL += " AND som.SALES_DT >= TO_DATE('"+dpDateFr+"', 'yyyy-MM-DD HH24:MI:SS')";
@@ -195,81 +195,85 @@ function fn_report_2(){
     if(!(dpDateTo == null || dpDateTo.length == 0)){
     	whereSQL += " AND som.SALES_DT <= TO_DATE('"+dpDateTo+"', 'yyyy-MM-DD HH24:MI:SS')";
     }
-    if($("#cmbType :selected").val() == "3"){
-    	$("#reportDownFileName").val("CCPDailyProductivity_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-        $("#reportFileName").val("/sales/CCPSummary_CcpAdminProductivity.rpt");
-        
-    }else if($("#cmbType :selected").val() == "4"){
+    if($("#cmbType :selected").val() == "4"){
     	$("#reportDownFileName").val("CCPSummary_ByRegion_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPSummary_ByRegion.rpt");
-        
+
     }
-    
+
     $("#viewType").val("PDF");
 
     $("#V_ORDERDATEFR").val(dpDateFr);
     $("#V_ORDERDATETO").val(dpDateTo);
     $("#V_WHERESQL").val(whereSQL);
-	
-   
+
+
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 	var option = {
 	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
 	};
-	
+
     Common.report("form", option);
 }
 
 
-function fn_report_3(){  
-	
+function fn_report_3(){
+
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
-	
+
 	$("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
-    //YYYY-MM-DD"형식 
+    //YYYY-MM-DD"형식
     var passDate = "";
-    
+
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    
-	if($("#cmbType :selected").val() == "5"){
-	   
+
+    if($("#cmbType :selected").val() == "3"){
+
+    	passDate = $("#dpDateFr").val();
+        passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
+
+        $("#reportDownFileName").val("CCPDailyProductivity_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/CCPSummary_CcpAdminProductivity.rpt");
+
+    }else if($("#cmbType :selected").val() == "5"){
+
 	    passDate = $("#dpOrderMonth").val();
 	    passDate = passDate.substring(3, 7)+"-"+passDate.substring(0,2)+"-01";
-	
+
         $("#reportDownFileName").val("CCPSummary_ByNationwide_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPSummary_ByNationwide.rpt");
     }else if($("#cmbType :selected").val() == "6"){
-        
+
         passDate = $("#dpDateFr").val();
         passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
-    
+
         $("#reportDownFileName").val("CCPSummary_ByKeyInTime_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPSummary_ByDayTime.rpt");
     }
-    
+
 	$("#viewType").val("PDF");
-	
+
 	$("#V_PASSDATE").val(passDate);
-	
+
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수. 
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
     };
 
     Common.report("form", option);
 }
 
 
-function fn_report_4(){ 
-	
+function fn_report_4(){
+
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
     var passDate = "";
-    
+
     $("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
 
     var date = new Date().getDate();
@@ -285,26 +289,26 @@ function fn_report_4(){
     $("#V_PASSDATE").val(passDate);
     $("#reportDownFileName").val("CCPSummary_ByStandardRemark_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#reportFileName").val("/sales/CCPSummary_ByStandardRemark.rpt");
-    
-    
+
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
     };
 
     Common.report("form", option);
-	
-	
+
+
 }
 
-function fn_report_5(){ 
-	
+function fn_report_5(){
+
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
     var passDate = "";
-    
+
     $("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
-    
+
     passDate = $("#dpDateTo").val();
     passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
 
@@ -313,28 +317,28 @@ function fn_report_5(){
         date = "0" + date;
     }
     $("#viewType").val("PDF");
-    
+
     $("#V_PASSDATE").val(passDate);
     $("#reportDownFileName").val("CCP3_Days_Summary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#reportFileName").val("/sales/RptCCPCurrentStatus.rpt");
-	
+
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수
     };
 
     Common.report("form", option);
-    
+
 }
 
-function fn_report_6(){ 
-	
+function fn_report_6(){
+
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
-    
+
     var dpDateTo = $("#dpDateTo").val();
     var cmbTypeVal = $("#cmbType :selected").val();
-    
+
     var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var strdate = dpDateTo.substring(6,10)+"-"+month[parseInt(dpDateTo.substring(3,5))-1]+"-"+dpDateTo.substring(0,2);
 	var date1 = dpDateTo.substring(6,10)+"-"+dpDateTo.substring(3,5)+"-"+dpDateTo.substring(0,2);
@@ -343,48 +347,48 @@ function fn_report_6(){
     if(date.toString().length == 1){
         date = "0" + date;
     }
-	
+
     console.log("date1 : " + date1 + ", strdate  : " + strdate );
-    
+
 	if(cmbTypeVal == "9"){
-		
+
 		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
 		$("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
 
 		$("#V_INPUTDATE").val(date1);
 		$("#V_DATESTRING").val(strdate);
-		
+
 		$("#reportDownFileName").val("CCP_Turn_Around_Time_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	    $("#reportFileName").val("/sales/RptCCPPerformance_ByHours.rpt");
-		
+
 	}else if(cmbTypeVal == "10"){
-		
-		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
-        $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
-        
-        $("#V_INPUTDATE").val(date1);
-        $("#V_DATESTRING").val(strdate);
-		
-		$("#reportDownFileName").val("CCP_DailyRentalSales_Summary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-	    $("#reportFileName").val("/sales/RptCCPSummary_ByMonth.rpt");
-		
-	}else if(cmbTypeVal == "11"){
-        
+
 		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
         $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
 
         $("#V_INPUTDATE").val(date1);
         $("#V_DATESTRING").val(strdate);
-		
+
+		$("#reportDownFileName").val("CCP_DailyRentalSales_Summary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#reportFileName").val("/sales/RptCCPSummary_ByMonth.rpt");
+
+	}else if(cmbTypeVal == "11"){
+
+		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
+        $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
+
+        $("#V_INPUTDATE").val(date1);
+        $("#V_DATESTRING").val(strdate);
+
 		$("#reportDownFileName").val("CCP_ScoringPerformance_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	    $("#reportFileName").val("/sales/RptCCPSummary_ByDay.rpt");
-		
-    }else if(cmbTypeVal == "12"){ 
-        
+
+    }else if(cmbTypeVal == "12"){
+
     	var dpDateFr = $("#dpDateFr").val();
     	var strdate2 = dpDateFr.substring(6,10)+"-"+month[parseInt(dpDateFr.substring(3,5))-1]+"-"+dpDateFr.substring(0,2);
     	var date2 = dpDateFr.substring(6,10)+"-"+dpDateFr.substring(3,5)+"-"+dpDateFr.substring(0,2);
-    	
+
     	$("#reportParameter").append('<input type="hidden" id="V_ORDERDATEFROMSQL" name="V_ORDERDATEFROMSQL" value="" />');
         $("#reportParameter").append('<input type="hidden" id="V_ORDERDATETOSQL" name="V_ORDERDATETOSQL" value="" />');
         $("#reportParameter").append('<input type="hidden" id="V_STRFROMDATE" name="V_STRFROMDATE" value="" />');
@@ -394,33 +398,33 @@ function fn_report_6(){
         $("#V_ORDERDATETOSQL").val(date1);
         $("#V_STRFROMDATE").val(strdate2);
         $("#V_STRTODATE").val(strdate);
-    	
+
     	$("#reportDownFileName").val("CCP_Active_Installation_Status_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/RptCCPDSCAchiveStatus_ByProduct.rpt");
-    	
+
     }else if(cmbTypeVal == "13"){
-        
+
     	$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
         $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
 
         $("#V_INPUTDATE").val(date1);
         $("#V_DATESTRING").val(strdate);
-    	
+
     	$("#reportDownFileName").val("Monthly_CCP_Active_by_DSC_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/RptCCPDSCDailyUpdate.rpt");
-    	
+
     }
-	
+
 	$("#viewType").val("PDF");
-	
+
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수
     };
 
     Common.report("form", option);
-    
-	
+
+
 }
 
 </script>
@@ -506,7 +510,7 @@ function fn_report_6(){
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
