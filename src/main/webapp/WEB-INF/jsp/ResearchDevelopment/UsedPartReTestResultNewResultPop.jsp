@@ -137,15 +137,19 @@
 
     function fn_setSaveFormData() {
 
-        var _AS_DEFECT_ID = 0;
-        var _AS_DEFECT_PART_ID = 0;
-        var _AS_DEFECT_DTL_RESN_ID = 0;
+    	var _TEST_AS_DEFECT_TYPE_ID = 0;
+        var _TEST_AS_DEFECT_ID = 0;
+        var _TEST_AS_DEFECT_PART_ID = 0;
+        var _TEST_AS_DEFECT_DTL_RESN_ID = 0;
+        var _TEST_AS_SLUTN_RESN_ID = 0;
 
         // DEFECT ENTRY
         if ($('#ddlStatus').val() == '4' || $('#ddlStatus').val() == '1') {
-        	_AS_DEFECT_ID = $('#def_code_id').val();
-            _AS_DEFECT_PART_ID = $('#def_part_id').val();
-            _AS_DEFECT_DTL_RESN_ID = $('#def_def_id').val();
+            _TEST_AS_DEFECT_TYPE_ID = $('#def_type_id').val();
+        	_TEST_AS_DEFECT_ID = $('#def_code_id').val();
+            _TEST_AS_DEFECT_PART_ID = $('#def_part_id').val();
+            _TEST_AS_DEFECT_DTL_RESN_ID = $('#def_def_id').val();
+            _TEST_AS_SLUTN_RESN_ID = $('#solut_code_id').val();
         }
 
         var asResultM = {
@@ -155,16 +159,18 @@
             AS_SO_ID : $("#ORD_ID").val(),
             AS_ORD_NO : $("#ORD_NO").val(),
             AS_CT_ID : $('#ddlCTCode').val(),
-            AS_SETL_DT : $('#dpSettleDate').val(),
-            AS_SETL_TM : $('#tpSettleTime').val(),
-            AS_RESULT_STUS_ID : $('#ddlStatus').val(),
+            TEST_UP_SETL_DT : $('#dpSettleDate').val(),
+            TEST_UP_SETL_TM : $('#tpSettleTime').val(),
+            TEST_UP_STUS : $('#ddlStatus').val(),
             AS_BRNCH_ID : $('#ddlDSCCode').val(),
-            AS_RESULT_REM : $('#txtTestResultRemark').val(),
+            TEST_UP_RESULT_REM : $('#txtTestResultRemark').val(),
 
             // AS DEFECT ENTRY
-            AS_DEFECT_ID : _AS_DEFECT_ID,
-            AS_DEFECT_PART_ID : _AS_DEFECT_PART_ID,
-            AS_DEFECT_DTL_RESN_ID : _AS_DEFECT_DTL_RESN_ID
+            TEST_AS_DEFECT_TYPE_ID : _TEST_AS_DEFECT_TYPE_ID,
+            TEST_AS_DEFECT_ID : _TEST_AS_DEFECT_ID,
+            TEST_AS_DEFECT_PART_ID : _TEST_AS_DEFECT_PART_ID,
+            TEST_AS_DEFECT_DTL_RESN_ID : _TEST_AS_DEFECT_DTL_RESN_ID,
+            TEST_AS_SLUTN_RESN_ID : _TEST_AS_SLUTN_RESN_ID
         }
 
         var saveForm = {
@@ -696,9 +702,9 @@
                                         <th scope="row">Product Genuine
                                             <span id='m17' name='m17' class="must" style="display: none">*</span></th>
                                         <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
-                                            <option value="">Choose One</option>
-                                            <option value="">Genuine</option>
-                                            <option value="">Non-Genuine</option>
+                                            <option value="0">Choose One</option>
+                                            <option value="1">Genuine</option>
+                                            <option value="2">Non-Genuine</option>
                                         </select></td>
 
 
