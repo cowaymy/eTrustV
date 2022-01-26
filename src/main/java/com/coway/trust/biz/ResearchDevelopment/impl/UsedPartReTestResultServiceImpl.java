@@ -119,41 +119,44 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    LOGGER.debug("================usedPartReTestResult_insert - START ================");
 
 	    String m = "";
-	    Map svc0004dmap = (Map) params.get("asResultM");
-	    svc0004dmap.put("updator", params.get("updator"));
+	    Map svc0122dmap = (Map) params.get("asResultM");
+	    svc0122dmap.put("updator", params.get("updator"));
 
 	    Map tm = new HashMap();
-	    tm.put("srvSalesOrderId", svc0004dmap.get("AS_SO_ID"));
+	    tm.put("srvSalesOrderId", svc0122dmap.get("AS_SO_ID"));
 
-	    //params.put("DOCNO", "21"); -- //confirm prefix and doc_no to use
-	    //EgovMap eMap = UsedPartReTestResultMapper.getASEntryDocNo(params);
-	    //EgovMap seqMap = UsedPartReTestResultMapper.getResultASEntryId(params); // GET NEXT SEQ FOR SVC0122D RESULT ID
+	    params.put("DOCNO", "182");
+	    EgovMap eMap = UsedPartReTestResultMapper.getUsedPartReTestResultDocNo(params);
+	    EgovMap seqMap = UsedPartReTestResultMapper.getUsedPartReTestResultId(params); // GET NEXT SEQ FOR SVC0122D RESULT ID
 
-	    //String AS_RESULT_ID = String.valueOf(seqMap.get("seq"));
+	    String TEST_UP_ID = String.valueOf(seqMap.get("seq"));
 
-	    //LOGGER.debug("== NEW USED PART RETURN TEST RESULT ID = " + AS_RESULT_ID);
-	    //LOGGER.debug("== NEW USED PART RETURN TEST RESULT NO = " + eMap.get("asno"));
+	    LOGGER.debug("== NEW USED PART RETURN TEST RESULT ID = " + TEST_UP_ID);
+	    LOGGER.debug("== NEW USED PART RETURN TEST RESULT NO = " + eMap.get("uprno"));
 
-	    //svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
-	    //svc0004dmap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
+	    svc0122dmap.put("TEST_UP_ID", TEST_UP_ID);
+	    svc0122dmap.put("TEST_UP_NO", String.valueOf(eMap.get("uprno")));
 
 	    // INSERT SVC0122D RESULT
-	    int c = this.insertSVC0122D(svc0004dmap);
-
-	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID"));
-	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")));
+	    int c = this.insertSVC0122D(svc0122dmap);
 
 	    LOGGER.debug("================usedPartReTestResult_insert - END ================");
 
 	    EgovMap em = new EgovMap();
-	    //em.put("AS_NO", String.valueOf(eMap.get("asno")));
+	    em.put("TEST_UP_NO", String.valueOf(eMap.get("uprno")));
 
 	    return em;
 	}
 
-	private int insertSVC0122D(Map svc0004dmap) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertSVC0122D(Map params) {
+	    LOGGER.debug("== insertSVC0122D - START");
+	    LOGGER.debug("== PARAMS {} ", params);
+
+	    int a = UsedPartReTestResultMapper.insertSVC0122D(params);
+
+	    LOGGER.debug("== insertSVC0122D - END");
+
+	    return a;
 	}
 
 }

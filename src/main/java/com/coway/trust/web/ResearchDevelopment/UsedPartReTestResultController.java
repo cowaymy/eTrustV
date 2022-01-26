@@ -1,7 +1,6 @@
 package com.coway.trust.web.ResearchDevelopment;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,23 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.ResearchDevelopment.AfterPEXTestResultListService;
 import com.coway.trust.biz.ResearchDevelopment.UsedPartReTestResultService;
-import com.coway.trust.biz.ResearchDevelopment.impl.AfterPEXTestResultListMapper;
-import com.coway.trust.biz.ResearchDevelopment.impl.UsedPartReTestResultMapper;
-import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
-import com.coway.trust.biz.services.as.InHouseRepairService;
-import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
-import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.cmmn.model.SmsResult;
-import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
-/*import com.coway.trust.web.services.as.ASManagementListController;*/
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -147,27 +136,6 @@ public class UsedPartReTestResultController {
 	    model.addAttribute("orderDetail", orderDetail);
 
 	    return "ResearchDevelopment/UsedPartReTestResultViewPop";
-	  }
-
-	  @RequestMapping(value = "/asResultInfoEdit2.do")
-	  public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	    logger.debug("===========================/asResultInfoEdit.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/asResultInfoEdit.do===============================");
-
-	    model.put("USER_ID", sessionVO.getMemId());
-	    model.put("USER_NAME", sessionVO.getUserName());
-	    model.put("BRANCH_NAME", sessionVO.getBranchName());
-	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
-	    model.put("ORD_NO", params.get("ord_No"));
-
-	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
-	    model.addAttribute("asCrtStat", asCrtStat);
-
-	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
-	    model.addAttribute("timePick", timePick);
-
-	    return "ResearchDevelopment/inc_UsedPartReTestResultEditPop";
 	  }
 
 

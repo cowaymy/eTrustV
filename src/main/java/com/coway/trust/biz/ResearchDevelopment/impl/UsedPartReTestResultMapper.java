@@ -32,4 +32,10 @@ public interface UsedPartReTestResultMapper {
 
 	  int isReTestAlreadyResult(HashMap<String, Object> mp);
 
+	  EgovMap getUsedPartReTestResultDocNo(Map<String, Object> params);
+
+	  EgovMap getUsedPartReTestResultId(Map<String, Object> params);
+
+	  int insertSVC0122D(Map<String, Object> params);
+
 }
