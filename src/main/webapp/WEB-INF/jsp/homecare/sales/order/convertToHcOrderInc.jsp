@@ -133,6 +133,7 @@
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                         , stkId:'${preFrmOrderInfo.itmStkId}'
                         , empChk:'${preFrmOrderInfo.empChk}'
+                        , promoCustType:$("#typeId").val()
                         , exTrade:'${preFrmOrderInfo.exTrade}'
                         , srvPacId:'${preFrmOrderInfo.srvPacId}'
                         , promoId:'${preFrmOrderInfo.promoId}'}
