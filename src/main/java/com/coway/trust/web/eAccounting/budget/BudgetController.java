@@ -282,7 +282,7 @@ public class BudgetController {
 			params.put("procFlg", procFlg);
 		}
 
-
+		params.put("procFlg", procFlg);
 		LOGGER.debug(sessionVO.getCostCentr());
 		if(!"A1101".equals(sessionVO.getCostCentr())) {
 			params.put("flg", "1");
@@ -470,6 +470,7 @@ public class BudgetController {
 			params.put("procFlg", procFlg);
 		}
 
+		params.put("procFlg", procFlg);
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
 		    String yyyyMM = "";
 
@@ -1035,6 +1036,7 @@ public class BudgetController {
 			params.put("procFlg", procFlg);
 		}
 
+		params.put("procFlg", procFlg);
 		LOGGER.debug("params =====================================>>  " + params);
 
 		budgetList = budgetService.selectAvailableBudgetList(params);
