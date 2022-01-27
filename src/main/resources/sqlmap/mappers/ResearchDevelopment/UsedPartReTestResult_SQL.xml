@@ -31,7 +31,6 @@ D.ASR_ITM_PART_DESC,
 C.PSI,
 C.LPM,
 C.AS_RESULT_REM,
-C.AS_SETL_DT,
 M.RESN_DESC AS AS_Error_Code,
 N.RESN_DESC AS AS_Description,
 H.DEFECT_CODE,
@@ -46,12 +45,12 @@ E.INST_AREA,
 R.TEST_UP_NO AS TEST_RESULT_NO,
 R.TEST_UP_REM AS TEST_RESULT_REMARK,
 R.TEST_UP_GNE,
-R.TEST_UP_SETL_DT,
+TO_CHAR(R.TEST_UP_SETL_DT, 'DD/MM/YYYY') AS TEST_UP_SETL_DT,
 R.TEST_YN,
 S.CMPLT_YN,
 R.RCD_TMS,
 CASE WHEN R.TEST_UP_STUS = 0 THEN CASE WHEN R.TEST_UP_NO IS NULL THEN 'Active' END
-ELSE TO_CHAR(R.TEST_UP_STUS) END AS TEST_STUS
+ELSE T.NAME END AS TEST_STUS
 
 FROM SVC0001D A
 JOIN SAL0001D B ON B.SALES_ORD_ID = A.AS_SO_ID
@@ -73,6 +72,7 @@ JOIN SAL0002D O ON O.SALES_ORD_ID = B.SALES_ORD_ID
 LEFT JOIN SYS0026M P ON P.STK_ID = O.ITM_STK_ID
 LEFT JOIN SYS0013M Q ON Q.CODE_ID = P.STK_CTGRY_ID
 LEFT JOIN LOG0103M S ON S.SVC_ORD_ID = A.AS_NO
+LEFT JOIN SYS0038M T ON T.STUS_CODE_ID = R.TEST_UP_STUS
 
 where H1.DEFECT_CODE in ('1800', '1500')
 and S.CMPLT_YN = 'Y'
@@ -712,7 +712,6 @@ order by B.SALES_ORD_NO
                            TEST_UP_SETL_DT,
                            TEST_UP_SETL_TM,
                            TEST_YN,
-                           TEST_UP_DSC,
                            TEST_UP_CT,
                            TEST_AS_DEFECT_PART_ID,
                            TEST_AS_DEFECT_DTL_RESN_ID,
@@ -729,12 +728,11 @@ order by B.SALES_ORD_NO
                #{TEST_UP_STUS},
                #{TEST_UP_REM},
                #{TEST_UP_GNE},
-               TO_DATE(#{TEST_MNF_DT},'dd/mm/yyyy'),
+               #{TEST_MNF_DT},
                #{TEST_UP_SETL_DT},
                #{TEST_UP_SETL_TM},
                #{TEST_YN},
-               #{TEST_UP_RESULT_REM},
-               #{TEST_UP_CT},
+               #{updator},
                #{TEST_AS_DEFECT_PART_ID},
                #{TEST_AS_DEFECT_DTL_RESN_ID},
                #{TEST_AS_DEFECT_ID},

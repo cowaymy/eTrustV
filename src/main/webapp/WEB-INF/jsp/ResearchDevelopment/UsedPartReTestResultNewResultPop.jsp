@@ -163,7 +163,10 @@
             TEST_UP_SETL_TM : $('#tpSettleTime').val(),
             TEST_UP_STUS : $('#ddlStatus').val(),
             AS_BRNCH_ID : $('#ddlDSCCode').val(),
-            TEST_UP_RESULT_REM : $('#txtTestResultRemark').val(),
+            TEST_MNF_DT : $('#manufacDate').val(),
+            TEST_UP_GNE : $('#ddlProdGenuine').val(),
+            TEST_UP_REM : $('#txtTestResultRemark').val(),
+            TEST_YN : $('#ddlStatus').val() == 4 ? "Y" : "",
 
             // AS DEFECT ENTRY
             TEST_AS_DEFECT_TYPE_ID : _TEST_AS_DEFECT_TYPE_ID,
@@ -702,16 +705,16 @@
                                         <th scope="row">Product Genuine
                                             <span id='m17' name='m17' class="must" style="display: none">*</span></th>
                                         <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
-                                            <option value="0">Choose One</option>
-                                            <option value="1">Genuine</option>
-                                            <option value="2">Non-Genuine</option>
+                                            <option value="">Choose One</option>
+                                            <option value="G">Genuine</option>
+                                            <option value="NG">Non-Genuine</option>
                                         </select></td>
 
 
                                         <th scope="row">Manufacturing Date
                                         <span id='m18' name='m18' class="must" style="display: none">*</span></th>
                                         <td><input type="text" title="Manufacturing Date" id='manufacDate' name='manufacDate'
-                                            placeholder="DD/MM/YYYY" class="readonly j_date" onChange="fn_chkDt('#manufacDate')" /></td>
+                                            placeholder="DD/MM/YYYY" class="readonly j_date" /></td>
 
                                     </tr>
                                     <tr>

@@ -198,7 +198,7 @@
                 },
 
                 {
-                    dataField : "testUpStleDt",
+                    dataField : "testUpSetlDt",
                     headerText : "Test Settle Date",
                     width : 100,
                     visible : true
