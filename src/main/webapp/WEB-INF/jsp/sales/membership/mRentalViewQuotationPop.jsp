@@ -27,25 +27,25 @@ function fn_doBack(){
 <ul class="tap_type1">
     <li><a href="#" class="on"><spring:message code="sal.tap.title.packInfo" /></a></li>
     <li><a href="#"><spring:message code="sal.tap.title.ordInfo" /></a></li>
-    <li><a href="#"><spring:message code="sal.tap.title.contactInfo" /></a></li>
+    <!-- <li><a href="#"><spring:message code="sal.tap.title.contactInfo" /></a></li>-->
     <li><a href="#"><spring:message code="sal.tap.title.filterChargeInfo" /></a></li>
 </ul>
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRQuotInfo.do'/> 
-<!-- oder info tab  end...--> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRQuotInfo.do'/>
+<!-- oder info tab  end...-->
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mROrderInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mROrderInfo.do'/>
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRConPerInfo.do'/> 
+  <!--   <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRConPerInfo.do'/>
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRQFilterInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRQFilterInfo.do'/>
 <!-- oder info tab  end...-->
 
 
@@ -62,19 +62,19 @@ function fn_doBack(){
 
 
 
-<script> 
-		 
+<script>
+
 		var ord_id;
 		var qoption = {
 			      QOTAT_ID :'${QUOT_ID}' ,
                   callbackFun : 'fn_setMRentalOrderInfoData(vQResult.qotatOrdId , "B")'
-        };                     
-		
+        };
+
 		ord_id = fn_setMRentalQuotationInfoData(qoption);
 		console.log("======>ord_id========>"+ord_id);
 		fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
-		
-	
+
+
 </script>
 
 
