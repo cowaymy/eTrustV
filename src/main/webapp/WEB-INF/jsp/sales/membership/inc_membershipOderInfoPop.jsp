@@ -9,7 +9,7 @@
     <col style="width:180px" />
     <col style="width:*" />
     <col style="width:180px" />
-    <col style="width:*" /> 
+    <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
 </colgroup>
@@ -36,9 +36,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.customerId" /></th>
-    <td><span>${orderInfoTab.custId}</span></td>
-    <th scope="row"><spring:message code="sales.NRIC" />/<spring:message code="sales.CompanyNo" /></th>
-    <td colspan="3"><span>${orderInfoTab.custNric}</span></td>
+    <td colspan="5"><span>${orderInfoTab.custId}</span></td>
+<!--    <th scope="row"><spring:message code="sales.NRIC" />/<spring:message code="sales.CompanyNo" /></th>-->
+  <!--    <td colspan="3"><span>${orderInfoTab.custNric}</span></td> -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.cusName" /></th>
@@ -48,7 +48,7 @@
 
 <tr id="last_div" >
     <th scope="row"><spring:message code="sales.lastMem" /></th>
-    <td colspan="3"><span id='last_membership_text'>&nbsp;</span></td> 
+    <td colspan="3"><span id='last_membership_text'>&nbsp;</span></td>
     <th scope="row"><spring:message code="sales.ExpireDate" /></th>
     <td><span id='expire_date_text'></span></td>
 </tr>
