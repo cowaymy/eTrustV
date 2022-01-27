@@ -35,9 +35,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.customerId" /></th>
-    <td><span id='rO_txtCustID'></span></td>
-    <th scope="row"><spring:message code="sales.NRIC" />/<spring:message code="sales.CompanyNo" /></th>
-    <td colspan="3"><span id='rO_txtCustIC'></span></td>
+    <td colspan="5"><span id='rO_txtCustID'></span></td>
+   <!--   <th scope="row"><spring:message code="sales.NRIC" />/<spring:message code="sales.CompanyNo" /></th>
+    <td colspan="3"><span id='rO_txtCustIC'></span></td>-->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.cusName" /></th>
@@ -69,24 +69,24 @@ function fn_setMRentalOrderInfoData(_pram ,V){
 
 	Common.ajax("GET", "/sales/membershipRental/inc_mROrderInfoData",{ORD_ID:_pram }, function(result) {
         console.log(result);
-        
+
         if(result.orderInfo !="" ){
         	vmrOrderResultObj = result;
             fn_setMRentalOrderInfoSet();
-            
+
             if(V=="B"){
-                
-            	fn_getDataCPerson(vmrOrderResultObj.orderInfo.custId);   // custId inc_mRContactPersonPop.jsp 조회 호출 
+
+            	fn_getDataCPerson(vmrOrderResultObj.orderInfo.custId);   // custId inc_mRContactPersonPop.jsp 조회 호출
             }
         }
  });
-    
+
 }
 
 
 
 function fn_setMRentalOrderInfoSet(){
-    
+
 
     $("#rO_txtOrderNo").html(vmrOrderResultObj.orderInfo.ordNo);
     $("#rO_txtOrderDate").html(vmrOrderResultObj.orderInfo.ordDt);
@@ -99,18 +99,18 @@ function fn_setMRentalOrderInfoSet(){
     $("#rO_txtCustName").html(vmrOrderResultObj.orderInfo.custName);
     $("#rO_txtLastMembership").html(vmrOrderResultObj.configInfo.c1);
     $("#rO_txtLastExpireDate").html(vmrOrderResultObj.configInfo.srvPrdExprDt);
-    
+
     $("#rO_txtInstAddress").html(vmrOrderResultObj.addressInfo.fullAddr);
     $("#rO_txtProductCategory").html(vmrOrderResultObj.orderInfo.stkCtgryName );
-    
+
 }
 
 
 
 function fn_setMRentalOrderInfoInit(){
-	
+
 	vmrOrderResultObj ={};
-	
+
 	$("#rO_txtOrderNo").html("");
 	$("#rO_txtOrderDate").html("");
 	$("#rO_txtOrderStatus").html("");
@@ -124,7 +124,7 @@ function fn_setMRentalOrderInfoInit(){
 	$("#rO_txtLastMembership").html("");
 	$("#rO_txtLastExpireDate").html("");
 	$("#rO_txtInstAddress").html("");
-	
+
 }
 
 
