@@ -17,8 +17,6 @@ public interface UsedPartReTestResultService {
 
 	  EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
-	  List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params);
-
 	  EgovMap getAsEventInfo(Map<String, Object> params);
 
 	  String getSearchDtRange();

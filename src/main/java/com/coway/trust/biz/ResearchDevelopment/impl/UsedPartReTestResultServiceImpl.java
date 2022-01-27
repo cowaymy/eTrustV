@@ -52,11 +52,6 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	  }
 
 	  @Override
-	  public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) {
-	    return UsedPartReTestResultMapper.getASRulstSVC0004DInfo(params);
-	  }
-
-	  @Override
 	  public List<EgovMap> getTestResultInfo(Map<String, Object> params) {
 	    return UsedPartReTestResultMapper.getTestResultInfo(params);
 	  }

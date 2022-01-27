@@ -16,8 +16,6 @@ public interface UsedPartReTestResultMapper {
 
 	  EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
-	  List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params);
-
 	  List<EgovMap> getTestResultInfo(Map<String, Object> params);
 
 	  EgovMap getAsEventInfo(Map<String, Object> params);

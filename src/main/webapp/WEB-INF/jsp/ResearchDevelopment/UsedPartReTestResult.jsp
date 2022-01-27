@@ -150,13 +150,13 @@
                     width : 200
                 },
                 {
-                    dataField : "asMalfuncId",
+                    dataField : "asErrorCode",
                     headerText : "<spring:message code='service.grid.ErrCde'/>",
                     editable : false,
                     width : 100
                 },
                 {
-                    dataField : "asMalfuncResnId",
+                    dataField : "asDescription",
                     headerText : "<spring:message code='service.grid.ErrDesc'/>",
                     width : 200
                 },

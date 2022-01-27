@@ -139,20 +139,6 @@ public class UsedPartReTestResultController {
 	  }
 
 
-	  @RequestMapping(value = "/getASRulstSVC0004DInfo1", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getASRulstSVC0004DInfo(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
-
-	    //List<EgovMap> list = ASManagementListService.getASRulstSVC0004DInfo(params);
-	    List<EgovMap> list = UsedPartReTestResultService.getASRulstSVC0004DInfo(params);
-
-	    return ResponseEntity.ok(list);
-	  }
-
-
 	  @RequestMapping(value = "/UsedPartReTestResultNewResultPop.do")
 	  public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	    logger.debug("===========================/UsedPartReTestResultNewResultPop.do===============================");
