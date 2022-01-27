@@ -53,7 +53,13 @@ public interface OrderConversionMapper {
 
 	void updSAL0001D(Map<String, Object> params);
 
+	void updRegSAL0001D(Map<String, Object> params);
+
 	void updSalesCRCSAL0074D(Map<String, Object> params);
+
+	void updSalesRegCrcSAL0074D(Map<String, Object> params);
+
+	void updSalesRegDdSAL0074D(Map<String, Object> params);
 
 	void updSalesDDSAL0074D(Map<String, Object> params);
 
@@ -64,6 +70,8 @@ public interface OrderConversionMapper {
 	void updSrvCntrctDDSAL0074D(Map<String, Object> params);
 
 	void insertDeductSalesCRCSAL0236D(Map<String, Object> params);
+
+	void insertDeductSalesREGSAL0236D(Map<String, Object> params);
 
 	void insertDeductSalesDDSAL0236D(Map<String, Object> params);
 
@@ -76,7 +84,7 @@ public interface OrderConversionMapper {
 	List<EgovMap> paymodeConversionList(Map<String, Object> params);
 
 	EgovMap paymodeConversionView(Map<String, Object> params);
-	
+
 	List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params);
 
 }

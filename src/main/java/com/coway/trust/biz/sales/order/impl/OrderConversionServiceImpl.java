@@ -191,9 +191,11 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 
 			logger.debug(" OrderNo : {}", ((Map<String, Object>) obj).get("0"));
 			logger.debug(" Remark : {}", ((Map<String, Object>) obj).get("1"));
+			logger.debug(" TokenId : {}", ((Map<String, Object>) obj).get("2"));
 
 			params.put("ordNo", ((Map<String, Object>) obj).get("0"));
 			params.put("remark", ((Map<String, Object>) obj).get("1"));
+			params.put("tokenId", ((Map<String, Object>) obj).get("2"));
 
             if(convertType == 1){
 			if(!StringUtils.isEmpty(params.get("ordNo"))){
@@ -206,9 +208,11 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 				((Map<String, Object>) obj).put("reason", ((Map<String, Object>) obj).get("1"));
 				((Map<String, Object>) obj).put("payModeId", info.get("code"));
 				((Map<String, Object>) obj).put("payModeName", info.get("codeName"));
+				((Map<String, Object>) obj).put("tokenId", ((Map<String, Object>) obj).get("2"));
 				logger.debug("info ================>>  " + info.get("ordNo"));
 				logger.debug("info ================>>  " + info.get("ordId"));
 				logger.debug("info ================>>  " + ((Map<String, Object>) obj).get("1"));
+				logger.debug("info ================>>  " + ((Map<String, Object>) obj).get("2"));
 				checkList.add(obj);
 				continue;
 			}
@@ -247,6 +251,7 @@ public void savePayConvertList(Map<String, Object> params) {
 		int convertType = Integer.parseInt(String.valueOf(formData.get("cnvrType")));
 		int total = Integer.parseInt(String.valueOf(formData.get("hiddenTotal")));
 		String convertFrom = String.valueOf(formData.get("payCnvrStusFrom"));
+		String convertTo = String.valueOf(formData.get("payCnvrStusTo"));
 
 		params.put("docNoId", 167);
 		String convertNo = membershipRSMapper.getDocNo(params);
@@ -266,6 +271,7 @@ public void savePayConvertList(Map<String, Object> params) {
 
 		for (Object obj : list)
 		{
+			params.put("tknId",  ((Map<String, Object>) obj).get("tokenId"));
 			params.put("ordId",  ((Map<String, Object>) obj).get("orderId"));
 			params.put("ordNo",  ((Map<String, Object>) obj).get("orderNo"));
 			params.put("cntrctId",  ((Map<String, Object>) obj).get("srvCntrctId"));
@@ -279,14 +285,25 @@ public void savePayConvertList(Map<String, Object> params) {
 			params.put("deductId", crtSeqSAL0236D);
 
 			if(convertType == 1){
-				orderConversionMapper.updSAL0001D(params);
-				if("CRC".equals(convertFrom)){
 
+				if("CRC".equals(convertFrom)){
+					orderConversionMapper.updSAL0001D(params);
 					orderConversionMapper.insertDeductSalesCRCSAL0236D(params);
 					orderConversionMapper.updSalesCRCSAL0074D(params);
 
 				}
+				else if("REG".equals(convertFrom) && "CRC".equals(convertTo)){
+					orderConversionMapper.updRegSAL0001D(params);
+					orderConversionMapper.insertDeductSalesREGSAL0236D(params);
+					orderConversionMapper.updSalesRegCrcSAL0074D(params);
+				}
+				else if("REG".equals(convertFrom) && "DD".equals(convertTo)){
+					orderConversionMapper.updRegSAL0001D(params);
+					orderConversionMapper.insertDeductSalesREGSAL0236D(params);
+					orderConversionMapper.updSalesRegDdSAL0074D(params);
+				}
 				else{
+					orderConversionMapper.updSAL0001D(params);
 					orderConversionMapper.insertDeductSalesDDSAL0236D(params);
 					orderConversionMapper.updSalesDDSAL0074D(params);
 				}

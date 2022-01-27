@@ -498,6 +498,16 @@
          WHERE SALES_ORD_ID = #{ordId}
     </update>
 
+    <update id="updRegSAL0001D">
+        UPDATE SAL0001D
+             SET UPD_DT  = SYSDATE,
+                   UPD_USER_ID  = 349,
+                   SYNC_CHK  = 1
+
+         WHERE SALES_ORD_ID = #{ordId}
+    </update>
+
+
     <update id="updSalesCRCSAL0074D">
         UPDATE SAL0074D
              SET MODE_ID  = 130,
@@ -516,6 +526,126 @@
 
          WHERE SALES_ORD_ID = #{ordId}
          AND MODE_ID = 131
+    </update>
+
+     <update id="updSalesRegCrcSAL0074D">
+        MERGE INTO SAL0074D A
+        USING (
+            SELECT
+                EXT1.CUST_CRC_ID CUST_CRC_ID,
+                EXT1.CUST_CRC_TOKEN,
+                EXT2.SALES_ORD_ID,
+                EXT1.CUST_CRC_BANK_ID CUST_ACC_BANK_ID
+
+            FROM SAL0028D EXT1
+            JOIN SAL0001D EXT2 ON EXT2.CUST_ID = EXT1.CUST_ID
+            JOIN SAL0074D EXT3 ON EXT3.SALES_ORD_ID = EXT2.SALES_ORD_ID AND EXT3.MODE_ID = '130'
+            WHERE 1=1
+            and EXT1.CUST_CRC_TOKEN  = #{tknId}
+            and EXT3.SALES_ORD_ID = #{ordId}
+            and EXT3.IS_3RD_PARTY = '0'
+
+            UNION
+
+             SELECT
+               EXT4.CRC_ID CUST_CRC_ID,
+               EXT5.CUST_CRC_TOKEN,
+               EXT2.SALES_ORD_ID,
+               EXT4.BANK_ID CUST_ACC_BANK_ID
+
+            FROM SAL0074D EXT1
+            JOIN SAL0001D EXT2 ON EXT2.SALES_ORD_ID = EXT1.SALES_ORD_ID
+            JOIN SAL0236D EXT4 ON EXT4.DEDUCTION_ACC_ID = EXT1.DEDUCT_ACC_ID AND EXT4.STUS_ID = '1' and EXT1.MODE_ID = '130'
+            JOIN SAL0028D EXT5 ON EXT5.CUST_CRC_ID = EXT4.CRC_ID
+
+            WHERE 1= 1
+            and EXT5.CUST_CRC_TOKEN  = #{tknId}
+            and EXT1.SALES_ORD_ID = #{ordId}
+            and EXT1.IS_3RD_PARTY = '1'
+
+        ) SRC
+        ON (A.SALES_ORD_ID = SRC.SALES_ORD_ID)
+        WHEN MATCHED THEN
+        UPDATE  SET MODE_ID  = 131,
+                   CUST_CRC_ID  = SRC.CUST_CRC_ID,
+                   BANK_ID = SRC.CUST_ACC_BANK_ID,
+                   FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
+                   DD_APPLY_DT = SYSDATE,
+                   GRACE_PERIOD = 1
+    </update>
+
+     <update id="updSalesRegDdSAL0074D">
+			MERGE INTO SAL0074D A
+			USING (
+			WITH HIST_RPS AS
+            (
+            SELECT MAX(HIST_REN_PAY_ID) HIST_REN_PAY_ID, RENT_PAY_ID, SALES_ORD_ID
+            FROM SAL0076D
+            WHERE MODE_ID = '132' AND STUS_CODE_ID = '1'
+            GROUP BY SALES_ORD_ID, RENT_PAY_ID
+            )
+            SELECT
+
+            EXT2.CUST_ID,
+            EXT2.CUST_ACC_ID,
+            EXT2.CUST_ACC_NO,
+            EXT1.SALES_ORD_ID,
+            EXT2.CUST_ACC_BANK_ID,
+            EXT6.DD_APPLY_DT,
+            EXT6.DD_SUBMIT_DT,
+            EXT6.DD_START_DT,
+            EXT6.DD_REJCT_DT
+
+            FROM SAL0001D EXT1
+            JOIN SAL0074D EXT3 ON EXT3.SALES_ORD_ID = EXT1.SALES_ORD_ID AND EXT3.MODE_ID = '130'
+            JOIN SAL0022D EXT2 ON EXT2.CUST_ID = EXT1.CUST_ID and EXT2.CUST_ACC_STUS_ID = '1'
+            JOIN HIST_RPS EXT4 ON EXT4.SALES_ORD_ID = EXT3.SALES_ORD_ID AND EXT4.RENT_PAY_ID = EXT3.RENT_PAY_ID
+            JOIN SAL0076D EXT6 ON EXT6.HIST_REN_PAY_ID  = EXT4.HIST_REN_PAY_ID
+            WHERE 1=1
+            AND EXT1.SALES_ORD_ID = #{ordId}
+            AND EXT3.IS_3RD_PARTY = '0'
+
+            UNION
+
+            SELECT
+
+            EXT2.CUST_ID,
+            EXT2.CUST_ACC_ID,
+            EXT2.CUST_ACC_NO,
+            EXT1.SALES_ORD_ID,
+            EXT2.CUST_ACC_BANK_ID,
+            EXT6.DD_APPLY_DT,
+            EXT6.DD_SUBMIT_DT,
+            EXT6.DD_START_DT,
+            EXT6.DD_REJCT_DT
+
+            FROM SAL0001D EXT1
+            JOIN SAL0074D EXT3 ON EXT3.SALES_ORD_ID = EXT1.SALES_ORD_ID AND EXT3.MODE_ID = '130'
+            JOIN HIST_RPS EXT4 ON EXT4.SALES_ORD_ID = EXT3.SALES_ORD_ID AND EXT4.RENT_PAY_ID = EXT3.RENT_PAY_ID
+            JOIN SAL0076D EXT6 ON EXT6.HIST_REN_PAY_ID  = EXT4.HIST_REN_PAY_ID
+            JOIN SAL0236D EXT7 ON EXT7.DEDUCTION_ACC_ID = EXT3.DEDUCT_ACC_ID
+            JOIN SAL0022D EXT2 ON EXT2.CUST_ACC_ID = EXT7.ACC_ID and EXT2.CUST_ACC_STUS_ID = '1'
+
+            WHERE 1=1
+            AND EXT1.SALES_ORD_ID = #{ordId}
+            AND EXT3.IS_3RD_PARTY = '1'
+            )SRC
+        ON (A.SALES_ORD_ID = SRC.SALES_ORD_ID)
+        WHEN MATCHED THEN
+        UPDATE SET MODE_ID  = 132,
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = SRC.CUST_ACC_ID,
+                   BANK_ID = SRC.CUST_ACC_BANK_ID,
+                   DD_APPLY_DT = SRC.DD_APPLY_DT,
+                   DD_SUBMIT_DT = SRC.DD_SUBMIT_DT,
+                   DD_START_DT = SRC.DD_START_DT,
+                   DD_REJCT_DT = SRC.DD_REJCT_DT,
+                   FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
+                   GRACE_PERIOD = 1
     </update>
 
     <update id="updSalesDDSAL0074D">
@@ -608,6 +738,32 @@
         FROM SAL0074D
         WHERE SALES_ORD_ID = #{ordId}
         AND MODE_ID = 131
+
+
+    </insert>
+
+        <insert id="insertDeductSalesREGSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE SALES_ORD_ID = #{ordId}
+        AND MODE_ID = 130
 
 
     </insert>

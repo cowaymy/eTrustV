@@ -66,6 +66,10 @@ var cnvrListGrid;
             dataField : "1",
             headerText : "remark",
             width : 100
+        },{
+            dataField : "2",
+            headerText : "tokenId",
+            width : 100
         }];
 
         var cnvrColLayout = [{
@@ -111,6 +115,11 @@ var cnvrListGrid;
            }
        },{
            dataField : "chkSaveRow",
+           visible : false
+       },{
+           dataField : "2",
+           headerText : "tokenId",
+           width : 100,
            visible : false
        }];
 
@@ -288,11 +297,14 @@ var cnvrListGrid;
     <select class="w100p" id="payCnvrStusFrom" name="payCnvrStusFrom" >
         <option value="CRC">CRC</option>
         <option value="DD">DD</option>
+        <option value="REG">REG</option>
     </select>
     </p>
     <span><spring:message code="sal.text.to" /></span>
     <p>
     <select class="w100p" id="payCnvrStusTo" name="payCnvrStusTo">
+        <option value="CRC">CRC</option>
+        <option value="DD">DD</option>
         <option value="REG">REG</option>
     </select>
     </p>
