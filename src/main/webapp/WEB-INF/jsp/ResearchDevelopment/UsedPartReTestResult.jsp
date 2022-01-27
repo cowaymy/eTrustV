@@ -334,7 +334,7 @@
                 '_viewEntryPopDiv1');
     }
 
-    function fn_newASResultPop() {
+    function fn_newUPTestResultPop() {
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
         if (selectedItems.length <= 0) {
@@ -454,7 +454,7 @@
         Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
     }
 
-    function fn_asResultEditPop(ind) {
+    function fn_upTestResultEditPop() {
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
         if (selectedItems.length <= 0) {
@@ -471,109 +471,35 @@
         var asNo = selectedItems[0].item.asNo;
         var asStusId = selectedItems[0].item.code1;
         var salesOrdNo = selectedItems[0].item.salesOrdNo;
-        var salesOrdId = selectedItems[0].item.asSoId;
+        var salesOrdId = selectedItems[0].item.salesOrdId;
         var asResultNo = selectedItems[0].item.c3;
         var asResultId = selectedItems[0].item.asResultId;
         var rcdTms = selectedItems[0].item.rcdTms;
         var updDt = selectedItems[0].item.asSetlDt;
         var lstUpdDt = selectedItems[0].item.asResultCrtDt;
 
+        console.log ("asid : " + asId);
+        console.log ("asNo : " + asNo);
+        console.log ("asStusId : " + asStusId);
+        console.log ("salesOrdNo : " + salesOrdNo);
+        console.log ("salesOrdId : " + salesOrdId);
+        console.log ("asResultNo : " + asResultNo);
+
         if (asResultNo == "-") {
-            Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
+            Common.alert("<spring:message code='rnd.msg.usedPartTestEdtNoRst' arguments='<b>"
                             + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
             return;
         }
 
-        if (ind == 0) {
-            if (asStusId != "RCL") {
-                if (updDt != "" && updDt != null) {
-                    var stat = true;
-                    var sDate = new Date(updDt);
-                    var tDate = new Date();
-                    tDate.setDate(tDate.getDate() - 7);
-
-                    var tMth = tDate.getMonth();
-                    var tYear = tDate.getFullYear();
-                    var tDay = tDate.getDate();
-                    var sMth = sDate.getMonth();
-                    var sYear = sDate.getFullYear();
-                    var sDay = sDate.getDate();
-
-                    if (sYear > tYear) {
-                        stat = true;
-                    } else {
-                        if (sMth > tMth) {
-                            stat = true;
-                        } else {
-                            if (sDay > tDay) {
-                                stat = true;
-                            } else {
-                                stat = false;
-                            }
-                        }
-                    }
-
-                    if (!stat) {
-                        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-                        return;
-                    }
-                } else if (lstUpdDt != "" && lstUpdDt != null) {
-                    var stat = true;
-                    var sDate = new Date(lstUpdDt);
-                    var tDate = new Date();
-                    tDate.setDate(tDate.getDate() - 7);
-
-                    var tMth = tDate.getMonth();
-                    var tYear = tDate.getFullYear();
-                    var tDay = tDate.getDate();
-                    var sMth = sDate.getMonth();
-                    var sYear = sDate.getFullYear();
-                    var sDay = sDate.getDate();
-
-                    if (sYear > tYear) {
-                        stat = true;
-                    } else {
-                        if (sMth > tMth) {
-                            stat = true;
-                        } else {
-                            if (sDay > tDay) {
-                                stat = true;
-                            } else {
-                                stat = false;
-                            }
-                        }
-                    }
-
-                    if (!stat) {
-                        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-                        return;
-                    }
-                }
-            }
-        }
-
         if (asResultNo == "") {
-            Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+            Common.alert("<spring:message code='rnd.msg.usedPartTestEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
             return;
         }
 
-        Common.ajax("POST", "/services/as/selRcdTms.do", {
-            asNo : asNo,
-            asId : asId,
-            salesOrdNo : salesOrdNo,
-            salesOrderId : salesOrdId,
-            rcdTms : rcdTms
-        }, function(result) {
-            if (result.code == "99") {
-                Common.alert(result.message);
-                return;
-            } else {
-                var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
                     + "&mod=RESULTEDIT&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
 
-                Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
-            }
-        });
+        Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
     }
 
     function fn_excelDown() {
@@ -608,7 +534,7 @@
         <ul class="right_btns">
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> --%>
                 <li><p class="btn_blue">
-                        <a href="#" onclick="fn_newASResultPop()"><spring:message
+                        <a href="#" onclick="fn_newUPTestResultPop()"><spring:message
                                 code='service.btn.addtAs' /></a>
                     </p></li>
             <%-- </c:if> --%>
@@ -627,7 +553,7 @@
             </c:if>
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                 <li><p class="btn_blue">
-                        <a href="#" onclick="fn_asResultEditPop(1)"><spring:message
+                        <a href="#" onclick="fn_upTestResultEditPop()"><spring:message
                                 code='service.btn.edtAs' /></a>
                     </p></li>
             <%-- </c:if>  --%>
