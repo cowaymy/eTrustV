@@ -66,4 +66,6 @@ public interface staffBusinessActivityService {
     void editRejected(Map<String, Object> params);
 
     String checkRefdDate(Map<String, Object> params);
+
+    List<EgovMap> selectAttachList(String atchFileGrpId);
 }

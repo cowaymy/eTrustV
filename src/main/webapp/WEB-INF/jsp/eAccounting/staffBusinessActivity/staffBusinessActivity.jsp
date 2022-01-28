@@ -9,6 +9,10 @@
     var selectRowIdx;
     var currList = ["MYR", "USD"];
     var newGridID;
+    var update = new Array();
+    var remove = new Array();
+    var attachmentList = new Array();
+    var gAtchFileGrpId;
 
     // Main Menu Grid Listing Grid -- Start
     var busActColumnLayout = [{
@@ -24,7 +28,7 @@
         dataField : "advType",
         visible : false
     }, {
-        dataField : "payee",
+        dataField : "payeeName",
         headerText : "Payee"
     }, {
         dataField : "costCenter",
@@ -349,73 +353,53 @@ var myGridPros = {
 
         $("#editRejBtn").click(fn_editRejected);
 
-        // 5 Working days
-        /* var holidays = {//휴일 세팅 하기
-                //"0809":{type:0, title:"신정", year:"2017"}
-            };
-        console.log("holiday");
-            var isLoadHoliday = false;
-            var pickerOpts = {//일반년월일달력 세팅
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: "dd/mm/yyyy",
-                beforeShowDay: function (day) {
+    	// Attachment update
+        $("#busActReqForm :file").change(function() {
+            var div = $(this).parents(".auto_file2");
+            var oriFileName = div.find(":text").val();
 
-                    if (!isLoadHoliday) {
-                        isLoadHoliday = true;
-                        try{
-                            // get holiday list
-                            Common.ajaxSync("GET", "/common/getPublicHolidayList.do", {}, function (result) {
-                                for (var idx = 0; idx < result.length; idx++) {
-                                    holidays[result[idx].mmdd] = {
-                                        type: 0,
-                                        title: result[idx].holidayDesc,
-                                        year: result[idx].yyyy
-                                    };
-                                }
-                            });
-                        }catch(e){
-                            Common.removeLoader();
-                            console.log("common_pub.js => getHolidays fail : " + e);
-                        }
-                    }
-
-                    var result;
-                    // 포맷에 대해선 다음 참조(http://docs.jquery.com/UI/Datepicker/formatDate)
-                    var holiday = holidays[$.datepicker.formatDate("mmdd", day)];
-                    var thisYear = $.datepicker.formatDate("yyyy", day);
-
-                    // exist holiday?
-                    if (holiday) {
-                        if (thisYear == holiday.year || holiday.year == "") {
-                            result = [true, "date-holiday", holiday.title];
-                        }
-                    }
-
-                    if (!result) {
-                        switch (day.getDay()) {
-                            case 0: // is sunday?
-                                result = [true, "date-sunday"];
-                                break;
-                            case 6: // is saturday?
-                                result = [true, "date-saturday"];
-                                break;
-                            default:
-                                result = [true, ""];
-                                break;
-                        }
-                    }
-
-                    return result;
-                    console.log(result);
+            for(var i = 0; i < attachmentList.length; i++) {
+                if(attachmentList[i].atchFileName == oriFileName) {
+                    update.push(attachmentList[i].atchFileId);
                 }
-            };
-            $(document).on(//일반년월일달력 실행
-                    "focus", ".j_date", function(){
-                    $("#eventEndDt").datepicker(pickerOpts);
-                }); */
+            }
+        });
 
+        $(".auto_file2 a:contains('Delete')").click(function() {
+            var div = $(this).parents(".auto_file2");
+            var oriFileName = div.find(":text").val();
+
+            for(var i = 0; i < attachmentList.length; i++) {
+                if(attachmentList[i].atchFileName == oriFileName) {
+                    remove.push(attachmentList[i].atchFileId);
+                }
+            }
+        });
+
+        $("#advRepayForm :file").change(function() {
+            var div = $(this).parents(".auto_file");
+            var oriFileName = div.find(":text").val();
+
+            for(var i = 0; i < attachmentList.length; i++) {
+                if(attachmentList[i].atchFileName == oriFileName) {
+                    update.push(attachmentList[i].atchFileId);
+                }
+            }
+        });
+
+        $(".auto_file a:contains('Delete')").click(function() {
+            var div = $(this).parents(".auto_file");
+            var oriFileName = div.find(":text").val();
+
+            for(var i = 0; i < attachmentList.length; i++) {
+                if(attachmentList[i].atchFileName == oriFileName) {
+                    remove.push(attachmentList[i].atchFileId);
+                }
+            }
+        });
     });
+
+
 
     /************************************************
      ********** MAIN MENU SEARCH ICONS *****************
@@ -465,9 +449,9 @@ var myGridPros = {
      }
 
      function fn_repaymentPop() {
-         AUIGrid.clearGridData(newGridID); // To clear the previous data
-         fn_setNewGridEvent();
-         console.log("fn_repaymentPop");
+    	 AUIGrid.clearGridData(newGridID); // To clear the previous data
+    	 fn_setNewGridEvent();
+    	 console.log("fn_repaymentPop");
          menu = "REF";
 
          if(claimNo == null || claimNo == "") {
@@ -537,10 +521,13 @@ var myGridPros = {
                  $("#refEventStartDt").val(result.advPrdFr);
                  $("#refEventEndDt").val(result.advPrdTo);
                  //$("#trvAdvRepayAmt").val(result.totAmt.toFixed(2));
-                 $("#refAdvAmt").val(result.totAmt.toFixed(2));
+                 var refAdvAmt = result.totAmt;
+                 $("#refAdvAmt").val(AUIGrid.formatNumber(result.totAmt, "#,##0.00"));
                  $("#refTotExp").val();
-                 var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
-                 $("#refBalAmt").val(balanceAmt.toFixed(2));
+                 var balanceAmt = refAdvAmt - $("#refTotExp").val();
+                 //$("#refBalAmt").val(AUIGrid.formatNumber(balanceAmt, "#,##0.00"));
+                 balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
+                 $("#refBalAmt").val(balanceAmt);
                  $("#expTypeNm").val(result.expTypeNm);
                  $("#expType").val(result.expType);
                  $("#refAdvRepayDate").val(result.advRefdDt);
@@ -579,22 +566,37 @@ var myGridPros = {
                  $("#bankId").val(results.bankCode);
                  $("#refBankName").val(results.bankName);
                  $("#refBankAccNo").val(results.bankAccNo);
-                 $("#refAdvAmt").val(results.reqAdvTotAmt.toFixed(2));
+                 $("#refAdvAmt").val(AUIGrid.formatNumber(results.reqAdvTotAmt,"#,##0.00"));
                  $("#refAdvRepayDate").val(results.advRefdDt);
                  $("#trvBankRefNo").val(results.invcNo);
                  $("#trvRepayRem").val(results.advRem);
+                 $("#expType").val(results.othExp);
+                 $("#expTypeNm").val(results.othNm);
 
                  $("#refEventStartDt").val(results.advPrdFr);
                  $("#refEventEndDt").val(results.advPrdTo);
+                 $("#refAtchFileGrpId").val(results.fileAtchGrpId);
 
                  $("#refTotExp").val(results.totAmt.toFixed(2));
                  $("#refBankRef").val(results.advRefdRef);
-                 var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
-                 $("#refBalAmt").val(balanceAmt.toFixed(2));
+                 var balanceAmt = results.reqAdvTotAmt - results.totAmt;
+                 balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
+                 $("#refBalAmt").val(balanceAmt);
                  $("#refMode option[value=" + results.advRefdMode + "]").attr('selected', true);
                  Common.ajax("GET", "/eAccounting/staffBusinessActivity/getRefDtlsGrid.do", data, function(results1) {
-                     AUIGrid.setGridData(newGridID, results1);
+                	 AUIGrid.setGridData(newGridID, results1);
                  });
+
+               // Request file selector
+                 gAtchFileGrpId = results.attachmentList[0].atchFileGrpId;
+                 var atchObj = {
+                         atchFileGrpId : results.attachmentList[0].atchFileGrpId,
+                         atchFileId : results.attachmentList[0].atchFileId,
+                         atchFileName : results.attachmentList[0].atchFileName
+                 };
+                 attachmentList.push(atchObj);
+
+
                  $("#trvAdvFileSelector").html("");
                  $("#trvAdvFileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
                  $(".input_text").val(results.atchFileName);
@@ -610,10 +612,10 @@ var myGridPros = {
                          console.log(flResult);
                          if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
                              // TODO View
-                             var fileSubPath = result.fileSubPath;
+                             var fileSubPath = flResult.fileSubPath;
                              fileSubPath = fileSubPath.replace('\', '/'');
-                             console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                             window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                             console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
+                             window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
                          } else {
                              var fileSubPath = flResult.fileSubPath;
                              fileSubPath = fileSubPath.replace('\', '/'');
@@ -637,6 +639,7 @@ var myGridPros = {
 
         $("#bankName").val("CIMB BANK BHD");
         $("#bankId").val("3");
+        $("#costCenterCode").val("${costCentr}");
 
         $("#reqAdvType").attr("disabled", true);
 
@@ -684,6 +687,7 @@ var myGridPros = {
             $("#keyDate").val(today);
             $("#createUserId").val(results.userId);
             $("#createUsername").val(results.userName);
+            $("#costCenterCode").val("${costCentr}");
 
             $("#payeeCode").val(results.rqstCode);
             $("#payeeName").val(results.rqstName);
@@ -710,7 +714,7 @@ var myGridPros = {
                 advRetMth2 = parseInt(rDate[1]);
 
                 var defaultAmt = 0;
-                $("#reqTotAmt").val(defaultAmt.toFixed(2));
+                $("#reqTotAmt").val(AUIGrid.formatNumber(defaultAmt, "#,##0.00"));
 
             }
 
@@ -724,69 +728,81 @@ var myGridPros = {
 
                 console.log(data);
                 Common.ajax("GET", "/eAccounting/staffBusinessActivity/getAdvClmInfo.do", data, function(results) {
-                    //Common.ajax("GET", "/eAccounting/staffBusinessActivity/getRefDtlsGrid.do", data, function(results1) {
-                        console.log("getAdvClmInfo.do");
-                        //console.log("getRefDtlsGrid.do");
-                        console.log(results);
+                	//Common.ajax("GET", "/eAccounting/staffBusinessActivity/getRefDtlsGrid.do", data, function(results1) {
+	                    console.log("getAdvClmInfo.do");
+	                    //console.log("getRefDtlsGrid.do");
+	                    console.log(results);
 
-                        $("#reqEditClmNo").show();
+	                    $("#reqEditClmNo").show();
+	                    $("#advHeader").text("Edit Vendor Advance");
+	                    $("#createUserId").val(results.crtUserId);
+	                    $("#costCenterName").val(results.costCenterNm);
+	                    $("#bankId").val(results.bankCode);
+	                    $("#atchFileGrpId").val(results.fileAtchGrpId);
+	                    $("#clmNo").val(claimNo);
 
-                        $("#createUserId").val(results.crtUserId);
-                        $("#costCenterName").val(results.costCenterNm);
-                        $("#bankId").val(results.bankCode);
-                        $("#atchFileGrpId").val(results.fileAtchGrpId);
-                        $("#clmNo").val(claimNo);
+	                    $("#reqDraftClaimNo").text(claimNo);
+	                    $("#reqAdvType option[value=" + results.advType + "]").attr('selected', 'selected');
+	                    $("#reqAdvType").val(results.advType);
+	                    $("#reqAdvType").attr("readonly", true);
+	                    $("#keyDate").attr("disabled", "disabled");
+	                    $("#keyDate").val(results.entryDt);
+	                    $("#costCenterCode").val(results.costCenter);
+	                    $("#createUsername").val(results.crtUserName);
+	                    $("#payeeCode").val(results.payee);
+	                    $("#payeeName").val(results.payeeName);
+	                    $("#bankName").val(results.bankName);
+	                    $("#bankAccNo").val(results.bankAccNo);
+	                    $("#advOcc option[value=" + results.othExp + "]").attr('selected', true);
 
-                        $("#reqDraftClaimNo").text(claimNo);
-                        $("#reqAdvType option[value=" + results.advType + "]").attr('selected', 'selected');
-                        $("#reqAdvType").val(results.advType);
-                        $("#reqAdvType").attr("readonly", true);
-                        $("#keyDate").val(results.entryDt);
-                        $("#costCenterCode").val(results.costCenter);
-                        $("#createUsername").val(results.crtUserName);
-                        $("#payeeCode").val(results.payee);
-                        $("#payeeName").val(results.payeeName);
-                        $("#bankName").val(results.bankName);
-                        $("#bankAccNo").val(results.bankAccNo);
-                        $("#advOcc option[value=" + results.othExp + "]").attr('selected', true);
+	                    $("#eventStartDt").val(results.advPrdFr);
+	                    $("#eventEndDt").val(results.advPrdTo);
+	                    $("#busActReqRem").val(results.advRem);
 
-                        $("#eventStartDt").val(results.advPrdFr);
-                        $("#eventEndDt").val(results.advPrdTo);
-                        $("#busActReqRem").val(results.advRem);
+	                    $("#reqTotAmt").val(AUIGrid.formatNumber(parseFloat(results.totAmt), "#,##0.00"));
 
-                        $("#reqTotAmt").val(parseFloat(results.totAmt));
 
-                        $("#fileSelector").html("");
-                        $("#fileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
-                        $(".input_text").val(results.atchFileName);
-                        $(".input_text").dblclick(function() {
-                            var data = {
-                                    atchFileGrpId : results.fileAtchGrpId,
-                                    atchFileId : results.atchFileId
-                            };
+ 	                 // Request file selector
+	                    gAtchFileGrpId = results.attachmentList[0].atchFileGrpId;
+	                    var atchObj = {
+	                            atchFileGrpId : results.attachmentList[0].atchFileGrpId,
+	                            atchFileId : results.attachmentList[0].atchFileId,
+	                            atchFileName : results.attachmentList[0].atchFileName
+	                    };
+	                    attachmentList.push(atchObj);
 
-                            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(flResult) {
-                                console.log(flResult);
-                                if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
-                                    // TODO View
-                                    var fileSubPath = result.fileSubPath;
-                                    fileSubPath = fileSubPath.replace('\', '/'');
-                                    console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                                    window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                                } else {
-                                    var fileSubPath = flResult.fileSubPath;
-                                    fileSubPath = fileSubPath.replace('\', '/'');
-                                    console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                            + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
-                                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                        + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
-                                }
-                            });
-                        });
-                        $("#refdDate").val(results.advRefdDt);
+	                    $("#fileSelector").html("");
+	                    $("#fileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
+	                    //$(".input_text").val(results.atchFileName);
+	                    $(".input_text").val(results.attachmentList[0].atchFileName);
+	                    $(".input_text").dblclick(function() {
+	                        var data = {
+	                                atchFileGrpId : results.fileAtchGrpId,
+	                                atchFileId : results.atchFileId
+	                        };
 
-                        fn_eventPeriod("F");
-                    });
+	                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(flResult) {
+	                            console.log(flResult);
+	                            if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
+	                                // TODO View
+	                                var fileSubPath = flResult.fileSubPath;
+	                                fileSubPath = fileSubPath.replace('\', '/'');
+	                                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
+	                                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
+	                            } else {
+	                                var fileSubPath = flResult.fileSubPath;
+	                                fileSubPath = fileSubPath.replace('\', '/'');
+	                                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+	                                        + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
+	                                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+	                                    + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
+	                            }
+	                        });
+	                    });
+	                    $("#refdDate").val(results.advRefdDt);
+
+	                    fn_eventPeriod("F");
+	                });
                 //});
             }
         });
@@ -799,7 +815,8 @@ var myGridPros = {
      function fn_eventPeriod(mode) {
          console.log("fn_eventPeriod :: onChange");
 
-         var errMsg = "Travel advance can only be applied for outstation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights.";
+         //var errMsg = "Travel advance can only be applied for outstation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights.";
+         var errMsg = "Selected dates need to be future date";
          var arrDt, fDate, tDate, dateDiff, rDate;
          var dd, mm, yyyy;
 
@@ -906,24 +923,24 @@ var myGridPros = {
                  $("#refdDate").val("");
                  return false;
              } else {
-                 if($("#advOcc :selected").val() == '6531' || $("#advOcc :selected").val() == '6532' || $("#advOcc :selected").val() == '6533')
-                 {
-                     arrDt = $("#eventEndDt").val().split("/");
+            	 if($("#advOcc :selected").val() == '6531' || $("#advOcc :selected").val() == '6532' || $("#advOcc :selected").val() == '6533')
+            	 {
+            		 arrDt = $("#eventEndDt").val().split("/");
                      if(arrDt[0] <= advReqDate1) {
                          rDate = new Date(arrDt[2], parseInt(arrDt[1]) - 1, parseInt(arrDt[0]) + maxPeriod1);
                      } else if (arrDt[0] >= advReqDate1) {
                          rDate = new Date(arrDt[2], parseInt(arrDt[1]) - 1, parseInt(arrDt[0]) + maxPeriod1);
                      }
-                 }
-                 else
-                 {
-                     arrDt = $("#eventEndDt").val().split("/");
+            	 }
+            	 else
+            	 {
+            		 arrDt = $("#eventEndDt").val().split("/");
                      if(arrDt[0] <= advReqDate1) {
                          rDate = new Date(arrDt[2], parseInt(arrDt[1]) - 1, parseInt(arrDt[0]) + maxPeriod2);
                      } else if (arrDt[0] >= advReqDate1) {
                          rDate = new Date(arrDt[2], parseInt(arrDt[1]) - 1, parseInt(arrDt[0]) + maxPeriod2);
                      }
-                 }
+            	 }
 
 
                  dd = rDate.getDate();
@@ -1018,9 +1035,15 @@ var myGridPros = {
 
     //Request edit save
     function fn_editSaveReq(mode) {
-        var formData = Common.getFormData("busActReqForm");
+        console.log("fn_editSaveReq");
+    	var formData = Common.getFormData("busActReqForm");
         formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         //formData.append("advOccDesc", $("#advOcc option:selected").text());
+        console.log(formData);
         Common.ajaxFile("/eAccounting/staffBusinessActivity/attachmentUpdate.do", formData, function(result) {
            console.log(result);
 
@@ -1109,7 +1132,12 @@ var myGridPros = {
                  });
              } else {
                  var formData = Common.getFormData("advRepayForm");
-                 formData.append("atchFileGrp", $("refATchFileGrpId").val());
+                 console.log($("#refAtchFileGrpId").val())
+                 formData.append("atchFileGrpId", $("#refAtchFileGrpId").val());
+                 formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+                 console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+                 formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+                 console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
                  Common.ajaxFile("/eAccounting/staffBusinessActivity/attachmentUpdate.do", formData, function(result) {
                      console.log(result);
 
@@ -1230,8 +1258,8 @@ var myGridPros = {
             }
 
             if(FormUtil.isEmpty($("#advOcc").val())){
-                Common.alert("Please select the advance occasions.");
-                return false;
+            	Common.alert("Please select the advance occasions.");
+            	return false;
             }
 
             if(FormUtil.isEmpty($("#eventStartDt").val()) && FormUtil.isEmpty($("#eventStartDt").val())) {
@@ -1265,19 +1293,19 @@ var myGridPros = {
 
             if(FormUtil.isEmpty($("#reqTotAmt").val()) || $("#reqTotAmt").val() == '0.00')
             {
-                Common.alert("Please enter Total Advanced Amount.");
+            	Common.alert("Please enter Total Advanced Amount.");
                 return false;
             }
             else
             {
-                if(parseFloat($("#reqTotAmt").val()) < minAmt) {
+            	if(parseFloat($("#reqTotAmt").val()) < minAmt) {
                     Common.alert(errMsg);
                     return false;
                 }
             }
         }
         if(advType == 4) {
-            if(FormUtil.isEmpty($("#refMode").val())) {
+        	if(FormUtil.isEmpty($("#refMode").val())) {
                 Common.alert("Please select a refund mode.");
                 return false;
             }
@@ -1321,7 +1349,7 @@ var myGridPros = {
             $("#advReqMsgPop").hide();
             $("#acknowledgement").hide();
 
-            $("#advType").val('');
+            //$("#advType").val('');
             fn_closePop();
             fn_alertClmNo(result.data.clmNo);
             fn_searchAdv();
@@ -1367,26 +1395,26 @@ var myGridPros = {
      ********************************************/
 
      function fn_setAutoFile2() {
-        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnfileDel'>Delete</a></span>");
+    	$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnfileDel'>Delete</a></span>");
      }
 
      function fn_setKeyInDate() {
-            var today = new Date();
+    	    var today = new Date();
 
-            var dd = today.getDate();
-            var mm = today.getMonth() + 1;
-            var yyyy = today.getFullYear();
+    	    var dd = today.getDate();
+    	    var mm = today.getMonth() + 1;
+    	    var yyyy = today.getFullYear();
 
-            if(dd < 10) {
-                dd = "0" + dd;
-            }
-            if(mm < 10){
-                mm = "0" + mm
-            }
+    	    if(dd < 10) {
+    	        dd = "0" + dd;
+    	    }
+    	    if(mm < 10){
+    	        mm = "0" + mm
+    	    }
 
-            today = dd + "/" + mm + "/" + yyyy;
-            $("#keyDate").val(today)
-        }
+    	    today = dd + "/" + mm + "/" + yyyy;
+    	    $("#keyDate").val(today)
+    	}
 
    //file Delete
      $("#btnfileDel").click(function() {
@@ -1399,18 +1427,19 @@ var myGridPros = {
          console.log("fn_alertClmNo");
 
          Common.alert("Claim number : <b>" + clmNo + "</b><br>Registration of new advance request has completed.");
+         fn_closePop
      }
 
      function fn_setGridData(gridId, data) {
-            console.log(data);
-            AUIGrid.setGridData(gridId, data);
-        }
+    	    console.log(data);
+    	    AUIGrid.setGridData(gridId, data);
+    	}
 
      function fn_closePop() {
          console.log("fn_closePop");
          appvStus = null;
          mdoe = null;
-         advType = null;
+         //advType = null;
 
          if(menu == "REQ") {
              $("#busActReqForm").clearForm();
@@ -1437,6 +1466,7 @@ var myGridPros = {
              $("#ack1Checkbox").prop("checked", false);
          }
 
+         $("#ack1Checkbox").prop("checked", false);
          AUIGrid.destroy("#approveLine_grid_wrap");
          approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
@@ -1446,279 +1476,296 @@ var myGridPros = {
      }
 
      function fn_addRow() {
-           /*  if(AUIGrid.getRowCount(newGridID) > 0) {
-                console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
-                AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:AUIGrid.getCellValue(newGridID, 0, "cur"),totAmt:0}, "last");
-            } else { */
-                Common.ajax("GET", "/eAccounting/staffBusinessActivity/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"A2"}, function(result) {
-                    console.log(result);
-                    AUIGrid.addRow(newGridID, {clamUn:result.clamUn,taxName:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
-                });
-            //}
-        }
+    	   /*  if(AUIGrid.getRowCount(newGridID) > 0) {
+    	        console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
+    	        AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:AUIGrid.getCellValue(newGridID, 0, "cur"),totAmt:0}, "last");
+    	    } else { */
+    	        Common.ajax("GET", "/eAccounting/staffBusinessActivity/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"A2"}, function(result) {
+    	            console.log(result);
+    	            AUIGrid.addRow(newGridID, {clamUn:result.clamUn,taxName:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
+    	        });
+    	    //}
+    	}
 
-        function fn_removeRow() {
-            console.log("fn_removeRow");
-            var total = Number($("#refTotExp").text().replace(',', ''));
-            var value = fn_getValue(selectRowIdx);
-            value = Number(value.replace(',', ''));
-            total -= value;
-            $("#refTotExp").text(AUIGrid.formatNumber(total, "#,##0.00"));
-            $("#refTotExp").val(total);
-            var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
-            $("#refBalAmt").val(balanceAmt.toFixed(2));
-            AUIGrid.removeRow(newGridID, selectRowIdx);
-        }
+    	function fn_removeRow() {
+    	    console.log("fn_removeRow");
+    		var total = Number($("#refTotExp").text().replace(',', ''));
+    	    var value = fn_getValue(selectRowIdx);
+    	    value = Number(value.replace(',', ''));
+    	    total -= value;
+    	    $("#refTotExp").text(AUIGrid.formatNumber(total, "#,##0.00"));
+    	    $("#refTotExp").val(total);
+    	    var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
+    	    balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
+            $("#refBalAmt").val(balanceAmt);
+            console.log(selectRowIdx)
+    	    AUIGrid.removeRow(newGridID, selectRowIdx);
+    	}
 
-        function fn_setNewGridEvent() {
-            AUIGrid.bind(newGridID, "cellClick", function( event )
-                    {
-                        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                        selectRowIdx = event.rowIndex;
-                    });
+    	function fn_setNewGridEvent() {
+    	    AUIGrid.bind(newGridID, "cellClick", function( event )
+    	            {
+    	                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+    	                selectRowIdx = event.rowIndex;
+    	            });
 
-                    AUIGrid.bind(newGridID, "cellEditBegin", function( event ) {
-                        // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
-                        if($("#invcType").val() == "S") {
-                            if(event.dataField == "taxNonClmAmt") {
-                                if(event.item.taxAmt <= 30) {
-                                    Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
-                                    AUIGrid.forceEditingComplete(newGridID, null, true);
-                                }
-                            }
-                        } else {
-                            if(event.dataField == "taxNonClmAmt") {
-                                Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
-                                AUIGrid.forceEditingComplete(newGridID, null, true);
-                            }
-                        }
-                  });
+    	            AUIGrid.bind(newGridID, "cellEditBegin", function( event ) {
+    	                // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
+    	                if($("#invcType").val() == "S") {
+    	                    if(event.dataField == "taxNonClmAmt") {
+    	                        if(event.item.taxAmt <= 30) {
+    	                            Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
+    	                            AUIGrid.forceEditingComplete(newGridID, null, true);
+    	                        }
+    	                    }
+    	                } else {
+    	                    if(event.dataField == "taxNonClmAmt") {
+    	                        Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
+    	                        AUIGrid.forceEditingComplete(newGridID, null, true);
+    	                    }
+    	                }
+    	          });
 
-                    AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
-                        if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt" || event.dataField == "totAmt") {
-                            var taxAmt = 0;
-                            var taxNonClmAmt = 0;
-                            if($("#invcType").val() == "S") {
-                                if(event.dataField == "netAmt") {
-                                    var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
-                                    if(taxAmtCnt >= 30) {
-                                        taxNonClmAmt = event.item.oriTaxAmt;
-                                    } else {
-                                        if(taxAmtCnt == 0) {
-                                            if(event.item.oriTaxAmt > 30) {
-                                                taxAmt = 30;
-                                                taxNonClmAmt = event.item.oriTaxAmt - 30;
-                                            } else {
-                                                taxAmt = event.item.oriTaxAmt;
-                                            }
-                                        } else {
-                                            if((taxAmtCnt + event.item.oriTaxAmt) > 30) {
-                                                taxAmt = 30 - taxAmtCnt;
-                                                if(event.item.oriTaxAmt > taxAmt) {
-                                                    taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
-                                                } else {
-                                                    taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
-                                                }
-                                            } else {
-                                                taxAmt = event.item.oriTaxAmt;
-                                                taxNonClmAmt = 0;
-                                            }
-                                        }
-                                    }
-                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
-                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
-                                }
-                                if(event.dataField == "taxAmt") {
-                                    if(event.value > 30) {
-                                        Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
-                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
-                                    } else {
-                                        var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
-                                        if((taxAmtCnt + event.value) > 30) {
-                                            Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
-                                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
-                                        }
-                                    }
-                                }
-                            } else {
-                                if(event.dataField == "netAmt") {
-                                    taxAmt = event.item.oriTaxAmt;
-                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
-                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
-                                }
-                            }
+    	            AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
+    	                if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt" || event.dataField == "totAmt") {
+    	                    var taxAmt = 0;
+    	                    var taxNonClmAmt = 0;
+    	                    if($("#invcType").val() == "S") {
+    	                        if(event.dataField == "netAmt") {
+    	                            var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+    	                            if(taxAmtCnt >= 30) {
+    	                                taxNonClmAmt = event.item.oriTaxAmt;
+    	                            } else {
+    	                                if(taxAmtCnt == 0) {
+    	                                    if(event.item.oriTaxAmt > 30) {
+    	                                        taxAmt = 30;
+    	                                        taxNonClmAmt = event.item.oriTaxAmt - 30;
+    	                                    } else {
+    	                                        taxAmt = event.item.oriTaxAmt;
+    	                                    }
+    	                                } else {
+    	                                    if((taxAmtCnt + event.item.oriTaxAmt) > 30) {
+    	                                        taxAmt = 30 - taxAmtCnt;
+    	                                        if(event.item.oriTaxAmt > taxAmt) {
+    	                                            taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
+    	                                        } else {
+    	                                            taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
+    	                                        }
+    	                                    } else {
+    	                                        taxAmt = event.item.oriTaxAmt;
+    	                                        taxNonClmAmt = 0;
+    	                                    }
+    	                                }
+    	                            }
+    	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+    	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+    	                        }
+    	                        if(event.dataField == "taxAmt") {
+    	                            if(event.value > 30) {
+    	                                Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+    	                                AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
+    	                            } else {
+    	                                var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+    	                                if((taxAmtCnt + event.value) > 30) {
+    	                                    Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+    	                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
+    	                                }
+    	                            }
+    	                        }
+    	                    } else {
+    	                        if(event.dataField == "netAmt") {
+    	                            taxAmt = event.item.oriTaxAmt;
+    	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+    	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+    	                        }
+    	                    }
 
-                            var totAmt = fn_getTotalAmount();
-                            $("#refTotExp").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                            console.log(totAmt);
-                            $("#refTotExp").val(totAmt.toFixed(2));
-                            var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
-                            $("#refBalAmt").val(balanceAmt.toFixed(2)); //Celeste
+    	                    var totAmt = fn_getTotalAmount();
+    	                    $("#refTotExp").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
 
-                            var availableVar = {
-                                costCentr : $("#refCostCenterCode").val(),
-                                stYearMonth : $("#keyDate").val().substring(3),
-                                stBudgetCode : event.item.budgetCode,
-                                stGlAccCode : event.item.glAccCode
-                            }
+    	                    $("#refTotExp").val(totAmt.toFixed(2));
+    	                    var refAdvAmt = $("#refAdvAmt").val();
+    	                    totAmt = $("#refTotExp").val();
+    	                    refAdvAmt = Number(refAdvAmt.replace(/[^0-9.-]+/g,""));
+    	                    var balanceAmt = (parseFloat(refAdvAmt)-parseFloat(totAmt)).toFixed(2);
+    	                    //var balanceAmt = 567.00 -1234.00;
+    	                    //balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
+    	                    /* $("#refBalAmt").text(AUIGrid.formatNumber(balanceAmt, "#,##0.00")); //Celeste */
+    	                    $("#refBalAmt").val(balanceAmt);
 
-                            var availableAmtCp = 0;
-                            Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
-                                console.log(result1.ctrlType);
+    	                    var availableVar = {
+    	                        costCentr : $("#refCostCenterCode").val(),
+    	                        stYearMonth : $("#keyDate").val().substring(3),
+    	                        stBudgetCode : event.item.budgetCode,
+    	                        stGlAccCode : event.item.glAccCode
+    	                    }
 
-                                if(result1.ctrlType == "Y") {
-                                    Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
-                                        console.log("availableAmtCp");
-                                        console.log(result.totalAvailable);
+    	                    var availableAmtCp = 0;
+    	                    Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
+    	                        console.log(result1.ctrlType);
 
-                                        var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
+    	                        if(result1.ctrlType == "Y") {
+    	                            Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
+    	                                console.log("availableAmtCp");
+    	                                console.log(result.totalAvailable);
 
-                                        if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
-                                            console.log("else if :: result.totalAvailable < event.item.totAmt");
-                                            Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-                                            console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-                                            AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
-                                            AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+    	                                var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
 
-                                            var totAmt = fn_getTotalAmount();
-                                            $("#refBalAmt").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                                            console.log(totAmt);
-                                            $("#refBalAmt").val(totAmt);
-                                            var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
-                                            $("#refBalAmt").val(balanceAmt.toFixed(2)); //Celeste
-                                        } else {
-                                            var idx = AUIGrid.getRowCount(newGridID);
+    	                                if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
+    	                                    console.log("else if :: result.totalAvailable < event.item.totAmt");
+    	                                    Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+    	                                    console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+    	                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+    	                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
 
-                                            console.log("Details count :: " + idx);
+    	                                    var totAmt = fn_getTotalAmount();
+    	                                    //$("#refBalAmt").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+    	                                    console.log(totAmt);
+    	                                    $("#refBalAmt").val(totAmt);
+    	                                    var refAdvAmt = $("#refAdvAmt").val();
+    	                                    var refTotExp = $("#refTotExp").val();
+    	                                    var balanceAmt = refAdvAmt - refTotExp;
+    	                                    $("#refBalAmt").val(balanceAmt.toFixed(2)); //Celeste
+    	                                    //var finalRefBalAmt = AUIGrid.formatNumber($("#refBalAmt").val(), "#,##0.00");
+    	                                    //$("#refBalAmt").val(finalRefBalAmt);
+    	                                } else {
+    	                                    var idx = AUIGrid.getRowCount(newGridID);
 
-                                            for(var a = 0; a < idx; a++) {
-                                                console.log("for a :: " + a);
+    	                                    console.log("Details count :: " + idx);
 
-                                                if(event.item.budgetCode == AUIGrid.getCellValue(newGridID, a, "budgetCode") && event.item.glAccCode == AUIGrid.getCellValue(newGridID, a, "glAccCode")) {
-                                                    availableAmtCp += AUIGrid.getCellValue(newGridID, a, "totAmt");
-                                                    console.log(availableAmtCp);
-                                                }
-                                            }
+    	                                    for(var a = 0; a < idx; a++) {
+    	                                        console.log("for a :: " + a);
 
-                                            if(result.totalAvailable < availableAmtCp) {
-                                                console.log("else :: result.totalAvailable < availableAmtCp");
+    	                                        if(event.item.budgetCode == AUIGrid.getCellValue(newGridID, a, "budgetCode") && event.item.glAccCode == AUIGrid.getCellValue(newGridID, a, "glAccCode")) {
+    	                                            availableAmtCp += AUIGrid.getCellValue(newGridID, a, "totAmt");
+    	                                            console.log(availableAmtCp);
+    	                                        }
+    	                                    }
 
-                                                Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-                                                console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-                                                AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
-                                                AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+    	                                    if(result.totalAvailable < availableAmtCp) {
+    	                                        console.log("else :: result.totalAvailable < availableAmtCp");
 
-                                                var totAmt = fn_getTotalAmount();
-                                                $("#refBalAmt").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                                                console.log(totAmt);
-                                                $("#refBalAmt").val(totAmt);
-                                                var balanceAmt = $("#refAdvAmt").val() - $("#refTotExp").val();
-                                                $("#refBalAmt").val(balanceAmt.toFixed(2)); //Celeste
+    	                                        Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+    	                                        console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+    	                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+    	                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+
+    	                                        var totAmt = fn_getTotalAmount();
+    	                                        totAmt = AUIGrid.formatNumber(totAmt, "#,##0.00");
+    	                                        $("#refBalAmt").val(totAmt);
+    	                                        console.log(totAmt);
+    	                                        $("#refBalAmt").val(totAmt);
+    	                                        var refAdvAmt = $("#refAdvAmt").val();
+    	                                        var refTotExp = $("#refTotExp").val();
+    	                                        var balanceAmt = refAdvAmt - refTotExp;
+    	                                        $("#refBalAmt").text(AUIGrid.formatNumber(balanceAmt, "#,##0.00"));
+    	                                        //balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
+    	                                        //$("#refBalAmt").val(balanceAmt); //Celeste
 
 
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
+    	                                    }
+    	                                }
+    	                            });
+    	                        }
+    	                    });
+    	                }
 
-                        if(event.dataField == "taxCode") {
-                            console.log("taxCode Choice Action");
-                            console.log(event.item.taxCode);
-                            var data = {
-                                    taxCode : event.item.taxCode
-                            };
-                            Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
-                                console.log(result);
-                                AUIGrid.setCellValue(newGridID, event.rowIndex, "taxRate", result.taxRate);
-                            });
-                        }
+    	                if(event.dataField == "taxCode") {
+    	                    console.log("taxCode Choice Action");
+    	                    console.log(event.item.taxCode);
+    	                    var data = {
+    	                            taxCode : event.item.taxCode
+    	                    };
+    	                    Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
+    	                        console.log(result);
+    	                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxRate", result.taxRate);
+    	                    });
+    	                }
 
-                        if(event.dataField == "cur") {
-                            console.log("currency change");
+    	                if(event.dataField == "cur") {
+    	                    console.log("currency change");
 
-                            var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
+    	                    var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
 
-                            if(event.rowIndex != 0) {
-                                if(AUIGrid.getRowCount(newGridID) > 1) {
-                                    var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
+    	                    if(event.rowIndex != 0) {
+    	                        if(AUIGrid.getRowCount(newGridID) > 1) {
+    	                            var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
 
-                                    if(cCur != fCur) {
-                                        Common.alert("Different currency selected!");
-                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "cur", fCur);
-                                    }
-                                }
-                            } else {
-                                for(var i = 1; i < AUIGrid.getRowCount(newGridID); i++) {
-                                    AUIGrid.setCellValue(newGridID, i, "cur", fCur);
-                                }
-                            }
-                        }
-                  });
+    	                            if(cCur != fCur) {
+    	                                Common.alert("Different currency selected!");
+    	                                AUIGrid.setCellValue(newGridID, event.rowIndex, "cur", fCur);
+    	                            }
+    	                        }
+    	                    } else {
+    	                        for(var i = 1; i < AUIGrid.getRowCount(newGridID); i++) {
+    	                            AUIGrid.setCellValue(newGridID, i, "cur", fCur);
+    	                        }
+    	                    }
+    	                }
+    	          });
 
-            AUIGrid.bind(newGridID, "selectionChange", function(event) {
-                if(event.dataField == "cur") {
-                    if(AUIGrid.getRowCount(newGridID > 1)) {
-                        var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
-                        var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
+    	    AUIGrid.bind(newGridID, "selectionChange", function(event) {
+    	        if(event.dataField == "cur") {
+    	            if(AUIGrid.getRowCount(newGridID > 1)) {
+    	                var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
+    	                var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
 
-                        if(cCur != fCur) {
-                            Common.alert("Different currency selected.");
-                        }
-                    }
-                }
-            });
-        }
+    	                if(cCur != fCur) {
+    	                    Common.alert("Different currency selected.");
+    	                }
+    	            }
+    	        }
+    	    });
+    	}
 
-        function fn_getValue(index) {
-            return AUIGrid.getCellFormatValue(newGridID, index, "totAmt");
-        }
+    	function fn_getValue(index) {
+    	    return AUIGrid.getCellFormatValue(newGridID, index, "totAmt");
+    	}
 
-        function fn_budgetCodePop(rowIndex){
-            if(!FormUtil.isEmpty($("#refCostCenterCode").val())){
-                var data = {
-                        rowIndex : rowIndex
-                        ,costCentr : $("#refCostCenterCode").val()
-                        ,costCentrName : $("#newCostCenterText").val()
-                };
-                Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do", data, null, true, "budgetCodeSearchPop");
-            } else {
-                Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
-            }
-        }
+    	function fn_budgetCodePop(rowIndex){
+    	    if(!FormUtil.isEmpty($("#refCostCenterCode").val())){
+    	        var data = {
+    	                rowIndex : rowIndex
+    	                ,costCentr : $("#refCostCenterCode").val()
+    	                ,costCentrName : $("#newCostCenterText").val()
+    	        };
+    	        Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do", data, null, true, "budgetCodeSearchPop");
+    	    } else {
+    	        Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+    	    }
+    	}
 
-        function fn_getTotalAmount() {
+    	function fn_getTotalAmount() {
 
-            sum = 0;
+    		sum = 0;
 
-            var totAmtList = AUIGrid.getColumnValues(newGridID, "totAmt");
-            if(totAmtList.length > 0) {
-                for(var i in totAmtList) {
-                    sum += totAmtList[i];
-                }
-            }
-            return sum;
-        }
+    	    var totAmtList = AUIGrid.getColumnValues(newGridID, "totAmt");
+    	    if(totAmtList.length > 0) {
+    	        for(var i in totAmtList) {
+    	            sum += totAmtList[i];
+    	        }
+    	    }
+    	    return sum;
+    	}
 
-        //Gl Account Pop 호출
-        function fn_glAccountSearchPop(rowIndex){
+    	//Gl Account Pop 호출
+    	function fn_glAccountSearchPop(rowIndex){
 
-            var myValue = AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode");
+    	    var myValue = AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode");
 
-            if(!FormUtil.isEmpty(myValue)){
-                var data = {
-                        rowIndex : rowIndex
-                        ,costCentr : $("#refCostCenterCode").val()
-                        ,costCentrName : $("#newCostCenterText").val()
-                        ,budgetCode : AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode")
-                        ,budgetCodeName : AUIGrid.getCellValue(newGridID, rowIndex, "budgetCodeName")
-                };
-                   Common.popupDiv("/eAccounting/webInvoice/glAccountSearchPop.do", data, null, true, "glAccountSearchPop");
-            } else {
-                Common.alert('<spring:message code="webInvoice.budgetCode.msg" />');
-            }
-        }
+    	    if(!FormUtil.isEmpty(myValue)){
+    	        var data = {
+    	                rowIndex : rowIndex
+    	                ,costCentr : $("#refCostCenterCode").val()
+    	                ,costCentrName : $("#newCostCenterText").val()
+    	                ,budgetCode : AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode")
+    	                ,budgetCodeName : AUIGrid.getCellValue(newGridID, rowIndex, "budgetCodeName")
+    	        };
+    	           Common.popupDiv("/eAccounting/webInvoice/glAccountSearchPop.do", data, null, true, "glAccountSearchPop");
+    	    } else {
+    	        Common.alert('<spring:message code="webInvoice.budgetCode.msg" />');
+    	    }
+    	}
 
      $.fn.clearForm = function() {
          return this.each(function() {
@@ -1735,7 +1782,7 @@ var myGridPros = {
              }
          });
 
-         advType = "";
+         //advType = "";
      };
 
      /*******************************
@@ -1843,47 +1890,47 @@ var myGridPros = {
 
 <style>
 .popup_wrap2 {
-    height: 625px;
-    max-height: 625px;
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    z-index: 1001;
-    margin-left: -500px;
-    width: 1000px;
-    background: #fff;
-    border: 1px solid #ccc;
+	height: 625px;
+	max-height: 625px;
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	z-index: 1001;
+	margin-left: -500px;
+	width: 1000px;
+	background: #fff;
+	border: 1px solid #ccc;
 }
 
 .popup_wrap2:after {
-    content: "";
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+	content: "";
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
 }
 
 .pop_body2 {
-    height: 620px;
-    padding: 10px;
-    background: #fff;
-    overflow-y: scroll;
+	height: 620px;
+	padding: 10px;
+	background: #fff;
+	overflow-y: scroll;
 }
 
 .tap_block {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 3px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 3px;
 }
 
 .aui-grid-user-custom-right {
-    text-align: right;
+	text-align: right;
 }
 </style>
 
@@ -1894,161 +1941,161 @@ var myGridPros = {
 <!-- ************************************************************************************************************************************* -->
 
 <form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName"
-        value="/e-accounting/Web_Invoice.rpt" />
-    <!-- Report Name  -->
-    <input type="hidden" id="viewType" name="viewType" value="PDF" />
-    <!-- View Type  -->
-    <input type="hidden" id="reportDownFileName" name="reportDownFileName"
-        value="" /> <input type="hidden" id="_clmNo" name="V_CLMNO" />
+	<input type="hidden" id="reportFileName" name="reportFileName"
+		value="/e-accounting/Web_Invoice.rpt" />
+	<!-- Report Name  -->
+	<input type="hidden" id="viewType" name="viewType" value="PDF" />
+	<!-- View Type  -->
+	<input type="hidden" id="reportDownFileName" name="reportDownFileName"
+		value="" /> <input type="hidden" id="_clmNo" name="V_CLMNO" />
 </form>
 
 <section id="content">
-    <ul class="path">
-        <li><img
-            src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
-            alt="Home" /></li>
-        <li>e-Accounting</li>
-        <li>Staff - Business Activity</li>
-    </ul>
+	<ul class="path">
+		<li><img
+			src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
+			alt="Home" /></li>
+		<li>e-Accounting</li>
+		<li>Staff - Business Activity</li>
+	</ul>
 
-    <aside class="title_line">
-        <p class="fav">
-            <a href="#" class="click_add_on"><spring:message
-                    code="webInvoice.fav" /></a>
-        </p>
-        <h2>Staff - Business Activity</h2>
-        <ul class="right_btns">
-            <li><p class="btn_blue">
-                    <a href="#" id="request_btn">New Request</a>
-                </p></li>
-            <li><p class="btn_blue">
-                    <a href="#" id="refund_btn">Settlement</a>
-                </p></li>
-            <li><p class="btn_blue">
-                    <a href="#" id="advList_btn"><span class="search"></span>Search</a>
-                </p></li>
-        </ul>
-    </aside>
+	<aside class="title_line">
+		<p class="fav">
+			<a href="#" class="click_add_on"><spring:message
+					code="webInvoice.fav" /></a>
+		</p>
+		<h2>Staff - Business Activity</h2>
+		<ul class="right_btns">
+			<li><p class="btn_blue">
+					<a href="#" id="request_btn">New Request</a>
+				</p></li>
+			<li><p class="btn_blue">
+					<a href="#" id="refund_btn">Settlement</a>
+				</p></li>
+			<li><p class="btn_blue">
+					<a href="#" id="advList_btn"><span class="search"></span>Search</a>
+				</p></li>
+		</ul>
+	</aside>
 
 
-    <section class="search_table">
-        <form id="searchForm" name="searchForm" method="post">
-            <input type="hidden" id="memAccName" name="memAccName"> <input
-                type="hidden" id="costCenterText" name="costCenterText">
+	<section class="search_table">
+		<form id="searchForm" name="searchForm" method="post">
+			<input type="hidden" id="memAccName" name="memAccName"> <input
+				type="hidden" id="costCenterText" name="costCenterText">
 
-            <table class="type1">
-                <caption>table</caption>
-                <colgroup>
-                    <col style="width: 200px" />
-                    <col style="width: *" />
-                    <col style="width: 200px" />
-                    <col style="width: *" />
-                </colgroup>
+			<table class="type1">
+				<caption>table</caption>
+				<colgroup>
+					<col style="width: 200px" />
+					<col style="width: *" />
+					<col style="width: 200px" />
+					<col style="width: *" />
+				</colgroup>
 
-                <tbody>
-                    <tr>
-                        <th scope="row">Advance Type</th>
-                        <td><select class="multy_select w100p" multiple="multiple"
-                            id="advType" name="advType">
-                                <option value="3">Staff Business Activity</option>
-                                <option value="4">Staff Business Activity - Settlement</option>
+				<tbody>
+					<tr>
+						<th scope="row">Advance Type</th>
+						<td><select class="multy_select w100p" multiple="multiple"
+							id="advType" name="advType">
+								<option value="3">Staff Business Activity</option>
+								<option value="4">Staff Business Activity - Settlement</option>
 
-                        </select></td>
-                        <th scope="row">Cost Center Code</th>
-                        <td><input type="text" title="" placeholder="" class=""
-                            style="width: 200px" id="listCostCenter" name="listCostCenter" />
-                            <a href="#" class="search_btn" id="search_costCenter_btn"><img
-                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                alt="search" /></a></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Member Code</th>
-                        <td><input type="text" title="" placeholder="" class=""
-                            style="width: 200px" id="memAccCode" name="memAccCode" /> <a
-                            href="#" class="search_btn" id="search_payee_btn"><img
-                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                alt="search" /></a></td>
-                        <th scope="row">Approval Status</th>
-                        <td><select class="multy_select w100p" multiple="multiple"
-                            id="appvPrcssStus" name="appvPrcssStus">
-                                <option value="T"><spring:message
-                                        code="webInvoice.select.tempSave" /></option>
-                                <option value="R"><spring:message
-                                        code="webInvoice.select.request" /></option>
-                                <option value="P"><spring:message
-                                        code="webInvoice.select.progress" /></option>
-                                <option value="A"><spring:message
-                                        code="webInvoice.select.approved" /></option>
-                                <option value="J"><spring:message
-                                        code="pettyCashRqst.rejected" /></option>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Claim No</th>
-                        <td>
-                            <div class="date_set w100p">
-                                <p>
-                                    <input type="text" title="Claim No Start" id="clmNoStart"
-                                        name="clmNoStart" class="w100p" />
-                                </p>
-                                <span><spring:message code="webInvoice.to" /></span>
-                                <p>
-                                    <input type="text" title="Claim No End" id="clmNoEnd"
-                                        name="clmNoEnd" class="w100p" />
-                                </p>
-                            </div>
-                        </td>
-                        <th scope="row">Repayment Status</th>
-                        <td><select class="multy_select w100p" multiple="multiple"
-                            id="refundStus" name="refundStus">
-                                <option value="1">Not due</option>
-                                <option value="2">Due but not repaid yet</option>
-                                <option value="3">Repaid</option>
-                                <option value="4">Pending Approval</option>
-                                <option value="5">Draft</option>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Request Date</th>
-                        <td>
-                            <div class="date_set w100p">
-                                <p>
-                                    <input type="text" title="Request Start Date"
-                                        placeholder="DD/MM/YYYY" class="j_date" id="reqStartDt"
-                                        name="reqStartDt" />
-                                </p>
-                                <span><spring:message code="webInvoice.to" /></span>
-                                <p>
-                                    <input type="text" title="Request End Date"
-                                        placeholder="DD/MM/YYYY" class="j_date" id="reqEndDt"
-                                        name="reqEndDt" />
-                                </p>
-                            </div>
-                        </td>
-                        <th scope="row">Approval Date</th>
-                        <td>
-                            <div class="date_set w100p">
-                                <p>
-                                    <input type="text" title="Approval Start Date"
-                                        placeholder="DD/MM/YYYY" class="j_date" id="appStartDt"
-                                        name="appStartDt" />
-                                </p>
-                                <span><spring:message code="webInvoice.to" /></span>
-                                <p>
-                                    <input type="text" title="Approval End Date"
-                                        placeholder="DD/MM/YYYY" class="j_date" id="appEndDt"
-                                        name="appEndDt" />
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </section>
+						</select></td>
+						<th scope="row">Cost Center Code</th>
+						<td><input type="text" title="" placeholder="" class=""
+							style="width: 200px" id="listCostCenter" name="listCostCenter" />
+							<a href="#" class="search_btn" id="search_costCenter_btn"><img
+								src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+								alt="search" /></a></td>
+					</tr>
+					<tr>
+						<th scope="row">Member Code</th>
+						<td><input type="text" title="" placeholder="" class=""
+							style="width: 200px" id="memAccCode" name="memAccCode" /> <a
+							href="#" class="search_btn" id="search_payee_btn"><img
+								src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+								alt="search" /></a></td>
+						<th scope="row">Approval Status</th>
+						<td><select class="multy_select w100p" multiple="multiple"
+							id="appvPrcssStus" name="appvPrcssStus">
+								<option value="T"><spring:message
+										code="webInvoice.select.tempSave" /></option>
+								<option value="R"><spring:message
+										code="webInvoice.select.request" /></option>
+								<option value="P"><spring:message
+										code="webInvoice.select.progress" /></option>
+								<option value="A"><spring:message
+										code="webInvoice.select.approved" /></option>
+								<option value="J"><spring:message
+										code="pettyCashRqst.rejected" /></option>
+						</select></td>
+					</tr>
+					<tr>
+						<th scope="row">Claim No</th>
+						<td>
+							<div class="date_set w100p">
+								<p>
+									<input type="text" title="Claim No Start" id="clmNoStart"
+										name="clmNoStart" class="w100p" />
+								</p>
+								<span><spring:message code="webInvoice.to" /></span>
+								<p>
+									<input type="text" title="Claim No End" id="clmNoEnd"
+										name="clmNoEnd" class="w100p" />
+								</p>
+							</div>
+						</td>
+						<th scope="row">Repayment Status</th>
+						<td><select class="multy_select w100p" multiple="multiple"
+							id="refundStus" name="refundStus">
+								<option value="1">Not due</option>
+								<option value="2">Due but not repaid yet</option>
+								<option value="3">Repaid</option>
+								<option value="4">Pending Approval</option>
+								<option value="5">Draft</option>
+						</select></td>
+					</tr>
+					<tr>
+						<th scope="row">Request Date</th>
+						<td>
+							<div class="date_set w100p">
+								<p>
+									<input type="text" title="Request Start Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="reqStartDt"
+										name="reqStartDt" />
+								</p>
+								<span><spring:message code="webInvoice.to" /></span>
+								<p>
+									<input type="text" title="Request End Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="reqEndDt"
+										name="reqEndDt" />
+								</p>
+							</div>
+						</td>
+						<th scope="row">Approval Date</th>
+						<td>
+							<div class="date_set w100p">
+								<p>
+									<input type="text" title="Approval Start Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="appStartDt"
+										name="appStartDt" />
+								</p>
+								<span><spring:message code="webInvoice.to" /></span>
+								<p>
+									<input type="text" title="Approval End Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="appEndDt"
+										name="appEndDt" />
+								</p>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</section>
 
-    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
         <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
             <dt>Link</dt>
@@ -2062,11 +2109,11 @@ var myGridPros = {
         </dd>
     </dl>
     </aside><!-- link_btns_wrap end -->
-    <!-- <section class="search_result">
-        <article id="grid_wrap"
-            style="width: 100%;"></article>
-    </section> -->
-    <section class="search_result"><!-- search_result start -->
+	<!-- <section class="search_result">
+		<article id="grid_wrap"
+			style="width: 100%;"></article>
+	</section> -->
+	<section class="search_result"><!-- search_result start -->
         <article class="grid_wrap" id="grid_wrap"></article><!-- grid_wrap end -->
     </section>
 
@@ -2079,109 +2126,109 @@ var myGridPros = {
 
 <div class="popup_wrap2" id="busActReqPop" style="display: none;">
 
-    <header class="pop_header">
-        <h1>New Advance Request</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2">
-                    <a href="#" id="busActReqClose_btn"><spring:message
-                            code="newWebInvoice.btn.close" /></a>
-                </p></li>
-        </ul>
-    </header>
+	<header class="pop_header">
+		<h1 id="advHeader">New Advance Request</h1>
+		<ul class="right_opt">
+			<li><p class="btn_blue2">
+					<a href="#" id="busActReqClose_btn"><spring:message
+							code="newWebInvoice.btn.close" /></a>
+				</p></li>
+		</ul>
+	</header>
 
-    <section class="pop_body2">
-        <section class="search_table">
-            <form action="#" method="post" enctype="multipart/form-data"
-                id="busActReqForm">
-                <input type="hidden" id="createUserId" name="createUserId" />
-                <input type="hidden" id="costCenterName" name="costCenterName" />
-                <input type="hidden" id="bankId" name="bankId" value="3" />
-                <input type="hidden" id="clmNo" name="clmNo" />
-                <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
-                <input type="hidden" id="advOccDesc" name="advOccDesc" />
+	<section class="pop_body2">
+		<section class="search_table">
+			<form action="#" method="post" enctype="multipart/form-data"
+				id="busActReqForm">
+				<input type="hidden" id="createUserId" name="createUserId" />
+				<input type="hidden" id="costCenterName" name="costCenterName" />
+				<input type="hidden" id="bankId" name="bankId" value="3" />
+				<input type="hidden" id="clmNo" name="clmNo" />
+				<input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
+				<input type="hidden" id="advOccDesc" name="advOccDesc" />
 
-                <ul class="right_btns mb10">
-                    <!--
+				<ul class="right_btns mb10">
+					<!--
                     <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('D');" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
                     <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('S');" id="requestSubmit_btn"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
                     -->
-                    <li><p class="btn_blue2">
-                            <a href="javascript:fn_saveRequest('D');" id="tempSave_btn"><spring:message
-                                    code="newWebInvoice.btn.tempSave" /></a>
-                        </p></li>
-                    <li><p class="btn_blue2">
-                            <a href="javascript:fn_saveRequest('A');" id="requestSubmit_btn"><spring:message
-                                    code="newWebInvoice.btn.submit" /></a>
-                        </p></li>
-                </ul>
+					<li><p class="btn_blue2">
+							<a href="javascript:fn_saveRequest('D');" id="tempSave_btn"><spring:message
+									code="newWebInvoice.btn.tempSave" /></a>
+						</p></li>
+					<li><p class="btn_blue2">
+							<a href="javascript:fn_saveRequest('A');" id="requestSubmit_btn"><spring:message
+									code="newWebInvoice.btn.submit" /></a>
+						</p></li>
+				</ul>
 
-                <table class="type1">
-                    <caption>Advance Request General Details</caption>
-                    <colgroup>
-                        <col style="width: 200px" />
-                        <col style="width: *" />
-                        <col style="width: 200px" />
-                        <col style="width: *" />
-                    </colgroup>
+				<table class="type1">
+					<caption>Advance Request General Details</caption>
+					<colgroup>
+						<col style="width: 200px" />
+						<col style="width: *" />
+						<col style="width: 200px" />
+						<col style="width: *" />
+					</colgroup>
 
-                    <tbody>
-                        <tr id="reqEditClmNo" style="display: none;">
-                            <th scope="row">Claim No</th>
-                            <td colspan="3"><span id="reqDraftClaimNo"></span></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Advance Type</th>
-                            <td><select class="readonly w100p" id="reqAdvType"
-                                name="reqAdvType">
-                                    <option value="3">Staff Business Activity</option>
-                                    <option value="4">Staff Business Activity - Repayment</option>
-                            </select></td>
-                            <th scope="row">Entry Date</th>
-                            <td><input type="text" title="" placeholder="DD/MM/YYYY"
-                                class="j_date w100p" id="keyDate" name="keyDate" readonly /></td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><spring:message code="webInvoice.costCenter" /><span
-                                class="must">*</span></th>
-                            <td><input type="text" title=""
-                                placeholder="Cost Center Code" class="" id="costCenterCode"
-                                name="costCenterCode" value="${costCentr}" readonly /> <a
-                                href="#" class="search_btn" id="reqCostCenter_search_btn"> <img
-                                    src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                    alt="search" />
-                            </a></td>
-                            <th scope="row">Create User ID</th>
-                            <td><input type="text" title="" placeholder="Requestor ID"
-                                class="w100p" id="createUsername" name="createUsername" readonly />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Payee Code<span class="must">*</span></th>
-                            <td><input type="text" title="" placeholder="" class="w100p"
-                                id="payeeCode" name="payeeCode" readonly /> <!--
+					<tbody>
+						<tr id="reqEditClmNo" style="display: none;">
+							<th scope="row">Claim No</th>
+							<td colspan="3"><span id="reqDraftClaimNo"></span></td>
+						</tr>
+						<tr>
+							<th scope="row">Advance Type</th>
+							<td><select class="readonly w100p" id="reqAdvType"
+								name="reqAdvType">
+									<option value="3">Staff Business Activity</option>
+									<option value="4">Staff Business Activity - Repayment</option>
+							</select></td>
+							<th scope="row">Entry Date</th>
+							<td><input type="text" title="" placeholder="DD/MM/YYYY"
+								class="j_date w100p" id="keyDate" name="keyDate" readonly /></td>
+						</tr>
+						<tr>
+							<th scope="row"><spring:message code="webInvoice.costCenter" /><span
+								class="must">*</span></th>
+							<td><input type="text" title=""
+								placeholder="Cost Center Code" class="" id="costCenterCode"
+								name="costCenterCode" value="${costCentr}" readonly /> <a
+								href="#" class="search_btn" id="reqCostCenter_search_btn"> <img
+									src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+									alt="search" />
+							</a></td>
+							<th scope="row">Create User ID</th>
+							<td><input type="text" title="" placeholder="Requestor ID"
+								class="w100p" id="createUsername" name="createUsername" readonly />
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">Payee Code<span class="must">*</span></th>
+							<td><input type="text" title="" placeholder="" class="w100p"
+								id="payeeCode" name="payeeCode" readonly /> <!--
                                 <a href="#" class="search_btn" id="reqPayee_search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
                                 --></td>
-                            <th scope="row">Payee Name</th>
-                            <td><input type="text" title="" placeholder="" class="w100p"
-                                id="payeeName" name="payeeName" value="${name}" readonly /></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Bank</th>
-                            <td><input type="text" title="Bank Name"
-                                placeholder="Bank Name" class="w100p" id="bankName"
-                                name="bankName" value="CIMB BANK BHD" readonly /> <!-- <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/> -->
-                            </td>
-                            <th scope="row">Bank Account</th>
-                            <td><input type="text" title="Bank Account No"
-                                placeholder="Bank Account No" class="w100p" id="bankAccNo"
-                                name="bankAccNo" maxlength="10"
-                                onKeypress="return event.charCode >= 48 && event.charCode <= 57" />
-                                <!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
-                            </td>
-                        </tr>
-                        <tr>
+							<th scope="row">Payee Name</th>
+							<td><input type="text" title="" placeholder="" class="w100p"
+								id="payeeName" name="payeeName" value="${name}" readonly /></td>
+						</tr>
+						<tr>
+							<th scope="row">Bank</th>
+							<td><input type="text" title="Bank Name"
+								placeholder="Bank Name" class="w100p" id="bankName"
+								name="bankName" value="CIMB BANK BHD" readonly /> <!-- <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/> -->
+							</td>
+							<th scope="row">Bank Account</th>
+							<td><input type="text" title="Bank Account No"
+								placeholder="Bank Account No" class="w100p" id="bankAccNo"
+								name="bankAccNo" maxlength="10"
+								onKeypress="return event.charCode >= 48 && event.charCode <= 57" />
+								<!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
+							</td>
+						</tr>
+						<tr>
                             <th scope="row">Advanced Occasions<span class="must">*</span></th>
                             <td><select id="advOcc" name="advOcc"
                                 class="w100p">
@@ -2193,68 +2240,68 @@ var myGridPros = {
                             <th scope="row">Total Advanced (RM)<span class="must">*</span></th>
                             <td colspan=1><input type="text" title="" placeholder="" class="w100p"
                                 id="reqTotAmt" name="reqTotAmt" />
-                    </tbody>
-                </table>
+					</tbody>
+				</table>
 
-                <!-- Business Activity Advance Division Start-->
+				<!-- Business Activity Advance Division Start-->
 
-                <div id="busActAdv" style="display: none;">
-                    <table class="type1">
-                        <caption>New Advance Request</caption>
-                        <colgroup>
-                            <col style="width: 200px" />
-                            <col style="width: *" />
-                            <col style="width: 200px" />
-                        </colgroup>
+				<div id="busActAdv" style="display: none;">
+					<table class="type1">
+						<caption>New Advance Request</caption>
+						<colgroup>
+							<col style="width: 200px" />
+							<col style="width: *" />
+							<col style="width: 200px" />
+						</colgroup>
 
 
-                        <tr>
-                            <th scope="row">Event Date<span class="must">*</span></th>
-                            <td>
-                                <div class="date_set w100p">
-                                    <p>
-                                        <input style="colspan=2" type="text" title="Create start Date"
-                                            placeholder="DD/MM/YYYY" class="j_date" id="eventStartDt"
-                                            name="eventStartDt" onChange="fn_eventPeriod('F')" />
-                                    </p>
-                                    <span><spring:message code="webInvoice.to" /></span>
-                                    <p>
-                                        <input type="text" title="Create end Date"
-                                            placeholder="DD/MM/YYYY" class="j_date" id="eventEndDt"
-                                            name="eventEndDt" onChange="fn_eventPeriod('T')" />
-                                    </p>
-                                </div>
-                            </td>
-                            <td><input type="text" placeholder="No. of Days"
-                                style="width: 150px" id="daysCount" name="daysCount" readonly />
-                                <span style="line-height: 20px; text-align: center;">Days</span>
-                            </td>
-                        </tr>
-<!--                         <tr>
-                             <th scope="row">Total Advanced (RM)<span class="must">*</span></th>
+						<tr>
+							<th scope="row">Event Date<span class="must">*</span></th>
+							<td>
+								<div class="date_set w100p">
+									<p>
+										<input style="colspan=2" type="text" title="Create start Date"
+											placeholder="DD/MM/YYYY" class="j_date" id="eventStartDt"
+											name="eventStartDt" onChange="fn_eventPeriod('F')" />
+									</p>
+									<span><spring:message code="webInvoice.to" /></span>
+									<p>
+										<input type="text" title="Create end Date"
+											placeholder="DD/MM/YYYY" class="j_date" id="eventEndDt"
+											name="eventEndDt" onChange="fn_eventPeriod('T')" />
+									</p>
+								</div>
+							</td>
+							<td><input type="text" placeholder="No. of Days"
+								style="width: 150px" id="daysCount" name="daysCount" readonly />
+								<span style="line-height: 20px; text-align: center;">Days</span>
+							</td>
+						</tr>
+<!-- 						<tr>
+						     <th scope="row">Total Advanced (RM)<span class="must">*</span></th>
                             <td colspan=1><input type="text" title="" placeholder="" class="w100p"
                                 id="reqTotAmt" name="reqTotAmt" />
-                        </tr> -->
+						</tr> -->
 
-                        <tr>
-                            <th scope="row">Remarks<span class="must">*</span></th>
-                            <td colspan="2"><textarea id="busActReqRem"
-                                    name="busActReqRem" placeholder="Enter up to 200 characters"
-                                    maxlength="200" style="resize: none"></textarea></td>
-                        </tr>
-                    </table>
-                </div>
+						<tr>
+							<th scope="row">Remarks<span class="must">*</span></th>
+							<td colspan="2"><textarea id="busActReqRem"
+									name="busActReqRem" placeholder="Enter up to 200 characters"
+									maxlength="200" style="resize: none"></textarea></td>
+						</tr>
+					</table>
+				</div>
 
-                <!-- Business Activity Advance Division End -->
+				<!-- Business Activity Advance Division End -->
 
-                <table class="type1">
-                    <caption>New Advance Request</caption>
-                    <colgroup>
-                        <col style="width: 200px" />
-                        <col style="width: *" />
-                        <col style="width: 100px" />
-                    </colgroup>
-                    <!--  <tr>
+				<table class="type1">
+					<caption>New Advance Request</caption>
+					<colgroup>
+						<col style="width: 200px" />
+						<col style="width: *" />
+						<col style="width: 100px" />
+					</colgroup>
+					<!--  <tr>
                         <th scope="row">Attachment<span class="must">*</span></th>
                         <td>
                             <div class="auto_file">
@@ -2263,35 +2310,34 @@ var myGridPros = {
                         </td>
 
                     </tr>-->
-                    <!--  <tr>
-                        <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-                        <td colspan="3" id="attachTd">
-                        <div class="auto_file2 attachment_file w100p">
-                        <input type="file" title="file" style="width:300px" />
-                        </div>
-                        </td>
-                    </tr> -->
-                    <tr>
-                        <th scope="row">Attachment</th>
-                        <td colspan=2>
-                            <div class="auto_file2">
-                                <!-- auto_file2 start -->
-                                <input id="fileSelector" name="fileSelector" type="file"
-                                    title="file add" accept=".rar, .zip"  />
-                            </div>
-                            <!-- auto_file2 end -->
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Settlement Due Date</th>
-                        <td colspan="2"><input type="text" title="Refund Date"
-                            placeholder="Refund Date" id="refdDate" name="refdDate" style=""
-                            readonly /></td>
-                    </tr>
-                </table>
-            </form>
-        </section>
-    </section>
+					<!--  <tr>
+					    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+					    <td colspan="3" id="attachTd">
+					    <div class="auto_file2 attachment_file w100p">
+					    <input type="file" title="file" style="width:300px" />
+					    </div>
+					    </td>
+					</tr> -->
+					<tr>
+						<th scope="row">Attachment</th>
+						<td colspan=2>
+							<div class="auto_file2">
+								<!-- auto_file2 start -->
+								<input id="fileSelector" name="fileSelector" type="file" title="file add" accept=".rar, .zip"  />
+							</div>
+							<!-- auto_file2 end -->
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Settlement Due Date</th>
+						<td colspan="2"><input type="text" title="Refund Date"
+							placeholder="Refund Date" id="refdDate" name="refdDate" style=""
+							readonly /></td>
+					</tr>
+				</table>
+			</form>
+		</section>
+	</section>
 </div>
 
 <!-- ******************************************************************************************************************************** -->
@@ -2300,100 +2346,100 @@ var myGridPros = {
 
 <div class="popup_wrap2" id="advRepayPop" style="display: none;">
 
-    <header class="pop_header">
-        <h1>Settlement</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2">
-                    <a href="#;" id="advRefClose_btn"><spring:message
-                            code="newWebInvoice.btn.close" /></a>
-                </p></li>
-        </ul>
-    </header>
+	<header class="pop_header">
+		<h1>Settlement</h1>
+		<ul class="right_opt">
+			<li><p class="btn_blue2">
+					<a href="#;" id="advRefClose_btn"><spring:message
+							code="newWebInvoice.btn.close" /></a>
+				</p></li>
+		</ul>
+	</header>
 
-    <section class="pop_body">
-        <section class="search_table">
-            <form action="#" method="post" enctype="multipart/form-data"
-                id="advRepayForm">
-                <input type="hidden" id="createUserId" name="createUserId" />
-                <input type="hidden" id="costCenterName" name="costCenterName" />
-                <input type="hidden" id="bankId" name="bankId" />
-                <input type="hidden" id="refClmNo" name="refClmNo" />
-                <input type="hidden" id="refAtchFileGrpId" name="refAtchFileGrpId" />
-                <input type="hidden" id="refAdvType_h" name="refAdvType_h" />
-                <input type="hidden" id="expType" name="expType" />
-                <input type="hidden" id="expTypeNm" name="expTypeNm" />
-                <input type="hidden" id="refAdvRepayDate" name="refAdvRepayDate" />
-                <input type="hidden" id="refSubmitFlg" name="refSubmitFlg" />
+	<section class="pop_body">
+		<section class="search_table">
+			<form action="#" method="post" enctype="multipart/form-data"
+				id="advRepayForm">
+				<input type="hidden" id="createUserId" name="createUserId" />
+				<input type="hidden" id="costCenterName" name="costCenterName" />
+				<input type="hidden" id="bankId" name="bankId" />
+				<input type="hidden" id="refClmNo" name="refClmNo" />
+				<input type="hidden" id="refAtchFileGrpId" name="refAtchFileGrpId" />
+				<input type="hidden" id="refAdvType_h" name="refAdvType_h" />
+				<input type="hidden" id="expType" name="expType" />
+				<input type="hidden" id="expTypeNm" name="expTypeNm" />
+				<input type="hidden" id="refAdvRepayDate" name="refAdvRepayDate" />
+				<input type="hidden" id="refSubmitFlg" name="refSubmitFlg" />
 
-                <ul class="right_btns mb10">
-                    <li><p class="btn_blue2">
-                            <a href="javascript:fn_saveRefund('D');" id="tempSave_btn"><spring:message
-                                    code="newWebInvoice.btn.tempSave" /></a>
-                        </p></li>
-                    <li><p class="btn_blue2">
-                            <a href="javascript:fn_saveRefund('S');" id="repaySubmit_btn"><spring:message
-                                    code="newWebInvoice.btn.submit" /></a>
-                        </p></li>
-                </ul>
+				<ul class="right_btns mb10">
+					<li><p class="btn_blue2">
+							<a href="javascript:fn_saveRefund('D');" id="tempSave_btn"><spring:message
+									code="newWebInvoice.btn.tempSave" /></a>
+						</p></li>
+					<li><p class="btn_blue2">
+							<a href="javascript:fn_saveRefund('S');" id="repaySubmit_btn"><spring:message
+									code="newWebInvoice.btn.submit" /></a>
+						</p></li>
+				</ul>
 
-                <table class="type1">
-                    <caption>Advance Repayment General Details</caption>
-                    <colgroup>
-                        <col style="width: 200px" />
-                        <col style="width: *" />
-                        <col style="width: 200px" />
-                        <col style="width: *" />
-                    </colgroup>
+				<table class="type1">
+					<caption>Advance Repayment General Details</caption>
+					<colgroup>
+						<col style="width: 200px" />
+						<col style="width: *" />
+						<col style="width: 200px" />
+						<col style="width: *" />
+					</colgroup>
 
-                    <tbody>
-                        <tr id="repayEditClmNo">
-                            <th scope="row">Claim No</th>
-                            <td colspan="3"><span id="repayDraftClaimNo"></span></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Advance Type</th>
-                            <td><select class="readonly w100p" id="refAdvType"
-                                name="refAdvType" readonly disabled="disabled">
-                                    <option value="3">Staff Business Activity</option>
+					<tbody>
+						<tr id="repayEditClmNo">
+							<th scope="row">Claim No</th>
+							<td colspan="3"><span id="repayDraftClaimNo"></span></td>
+						</tr>
+						<tr>
+							<th scope="row">Advance Type</th>
+							<td><select class="readonly w100p" id="refAdvType"
+								name="refAdvType" readonly disabled="disabled">
+									<option value="3">Staff Business Activity</option>
                                     <option value="4">Staff Business Activity - Repayment</option>
-                            </select></td>
-                            <th scope="row">Entry Date</th>
-                            <td><input type="text" title="" placeholder="DD/MM/YYYY"
-                                class="j_date w100p" id="refKeyDate" name="refKeyDate" readonly/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><spring:message code="webInvoice.costCenter" /><span
-                                class="must">*</span></th>
-                            <td><input type="text" title=""
-                                placeholder="Cost Center Code" class="w100p"
-                                id="refCostCenterCode" name="refCostCenterCode"
-                                value="${costCentr}" readonly /></td>
-                            <th scope="row">Create User ID</th>
-                            <td><input type="text" title="" placeholder="Requestor ID"
-                                class="w100p" id="refCreateUsername" name="refCreateUsername"
-                                readonly /></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Payee Code<span class="must">*</span></th>
-                            <td><input type="text" title="" placeholder="" class="w100p"
-                                id="refPayeeCode" name="refPayeeCode" readonly /></td>
-                            <th scope="row">Payee Name</th>
-                            <td><input type="text" title="" placeholder="" class="w100p"
-                                id="refPayeeName" name="refPayeeName" value="${name}" readonly />
-                            </td>
-                        </tr>
-                        <tr id="repayBank">
-                            <th scope="row">Bank</th>
-                            <td><input type="text" title="Bank Name"
-                                placeholder="Bank Name" class="w100p" id="refBankName"
-                                name="refBankName" value="${bankId}" readonly /></td>
-                            <th scope="row">Bank Account</th>
-                            <td><input type="text" title="Bank Account No"
-                                placeholder="Bank Account No" class="w100p" id="refBankAccNo"
-                                name="refBankAccNo" value="${bankAccNo}" readonly /></td>
-                        </tr>
-                        <tr>
+							</select></td>
+							<th scope="row">Entry Date</th>
+							<td><input type="text" title="" placeholder="DD/MM/YYYY"
+								class="j_date w100p" id="refKeyDate" name="refKeyDate" readonly/>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><spring:message code="webInvoice.costCenter" /><span
+								class="must">*</span></th>
+							<td><input type="text" title=""
+								placeholder="Cost Center Code" class="w100p"
+								id="refCostCenterCode" name="refCostCenterCode"
+								value="${costCentr}" readonly /></td>
+							<th scope="row">Create User ID</th>
+							<td><input type="text" title="" placeholder="Requestor ID"
+								class="w100p" id="refCreateUsername" name="refCreateUsername"
+								readonly /></td>
+						</tr>
+						<tr>
+							<th scope="row">Payee Code<span class="must">*</span></th>
+							<td><input type="text" title="" placeholder="" class="w100p"
+								id="refPayeeCode" name="refPayeeCode" readonly /></td>
+							<th scope="row">Payee Name</th>
+							<td><input type="text" title="" placeholder="" class="w100p"
+								id="refPayeeName" name="refPayeeName" value="${name}" readonly />
+							</td>
+						</tr>
+						<tr id="repayBank">
+							<th scope="row">Bank</th>
+							<td><input type="text" title="Bank Name"
+								placeholder="Bank Name" class="w100p" id="refBankName"
+								name="refBankName" value="${bankId}" readonly /></td>
+							<th scope="row">Bank Account</th>
+							<td><input type="text" title="Bank Account No"
+								placeholder="Bank Account No" class="w100p" id="refBankAccNo"
+								name="refBankAccNo" value="${bankAccNo}" readonly /></td>
+						</tr>
+						<tr>
                             <th scope="row">Event Date<span class="must">*</span></th>
                             <td colspan=3>
                                 <div class="date_set w100p">
@@ -2411,7 +2457,7 @@ var myGridPros = {
                                 </div>
                             </td>
                         </tr>
-                        <tr>
+						<tr>
                         <th scope="row">Claim No for Advance Request</th>
                         <td colspan=3><input class="readonly w100p" type="text"
                             title="Advance Request Claim No"
@@ -2453,31 +2499,31 @@ var myGridPros = {
                             <td><input type="text" title="Bank Reference" placeholder="Bank Reference" class="w100p"
                                 id="refBankRef" name="refBankRef" value="${name}" /></td>
                     </tr>
-                    </tbody>
-                </table>
+					</tbody>
+				</table>
 
-                <table class="type1" id="trvAdvRepay" style="display: none;">
-                    <caption>Advance Repayment</caption>
-                    <colgroup>
-                        <col style="width: 200px" />
-                        <col style="width: *" />
-                        <col style="width: 100px" />
-                    </colgroup>
+				<table class="type1" id="trvAdvRepay" style="display: none;">
+					<caption>Advance Repayment</caption>
+					<colgroup>
+						<col style="width: 200px" />
+						<col style="width: *" />
+						<col style="width: 100px" />
+					</colgroup>
 
-                    <!-- <tr>
-                        <th scope="row">Amount Repaid (RM)</th>
-                        <td colspan="2"><input type="text" title="Amount Repaid (RM)"
-                            placeholder="Amount Repaid (RM)" id="trvAdvRepayAmt"
-                            name="trvAdvRepayAmt" style="" readonly /></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Repayment Due Date</th>
-                        <td colspan="2"><input type="text" title="Repayment Date"
-                            placeholder="Repayment Date" id="trvAdvRepayDate"
-                            name="trvAdvRepayDate" class="j_date" style="" /></td>
-                    </tr> -->
+					<!-- <tr>
+						<th scope="row">Amount Repaid (RM)</th>
+						<td colspan="2"><input type="text" title="Amount Repaid (RM)"
+							placeholder="Amount Repaid (RM)" id="trvAdvRepayAmt"
+							name="trvAdvRepayAmt" style="" readonly /></td>
+					</tr>
+					<tr>
+						<th scope="row">Repayment Due Date</th>
+						<td colspan="2"><input type="text" title="Repayment Date"
+							placeholder="Repayment Date" id="trvAdvRepayDate"
+							name="trvAdvRepayDate" class="j_date" style="" /></td>
+					</tr> -->
 
-                    <!--
+					<!--
                     <tr>
                         <th scope="row">Bank-In Advice Ref No</th>
                         <td colspan="2">
@@ -2504,7 +2550,7 @@ var myGridPros = {
         </form>
     </section><!-- search_result end -->
 
-    <section class="search_result">
+<section class="search_result"><!-- search_result start -->
 
         <aside class="title_line"><!-- title_line start -->
             <ul class="right_btns">
@@ -2527,58 +2573,58 @@ var myGridPros = {
 <!-- ********************************************************************************************************************************************* -->
 
 <div class="popup_wrap size_small" id="advReqMsgPop"
-    style="display: none;">
-    <header class="pop_header">
-        <h1 id="advReqMsgPopHeader">Submission of Request</h1>
-        <ul class="right_opt">
-            <li>
-                <p class="btn_blue2">
-                    <a href="#"> <spring:message code="newWebInvoice.btn.close" />
-                    </a>
-                </p>
-            </li>
-        </ul>
-    </header>
+	style="display: none;">
+	<header class="pop_header">
+		<h1 id="advReqMsgPopHeader">Submission of Request</h1>
+		<ul class="right_opt">
+			<li>
+				<p class="btn_blue2">
+					<a href="#"> <spring:message code="newWebInvoice.btn.close" />
+					</a>
+				</p>
+			</li>
+		</ul>
+	</header>
 
-    <section class="pop_body">
-        <div id="acknowledgement"
-            style="padding-top: 1%; padding-left: 1%; padding-right: 1%">
-            <table class="type1" style="border: none">
-                <caption>New Advance Request</caption>
-                <colgroup>
-                    <col style="width: 30px" />
-                    <col style="width: *" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <td colspan="2"
-                            style="font-size: 14px; font-weight: bold; padding-bottom: 2%">
-                            Are you sure you want to submit this advance request?</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" id="ack1Checkbox"
-                            name="ack1Checkbox" value="1" /></td>
-                        <td
-                            style="padding-top: 2%; padding-bottom: 2%; text-align: justify;">
-                            By checking this box, you acknowledge that you have read and
-                            understand all the policies and rules with respect to advance to
-                            staff, and agree to abide by all the policies and rules.</td>
-                    </tr>
-                </tbody>
-            </table>
+	<section class="pop_body">
+		<div id="acknowledgement"
+			style="padding-top: 1%; padding-left: 1%; padding-right: 1%">
+			<table class="type1" style="border: none">
+				<caption>New Advance Request</caption>
+				<colgroup>
+					<col style="width: 30px" />
+					<col style="width: *" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td colspan="2"
+							style="font-size: 14px; font-weight: bold; padding-bottom: 2%">
+							Are you sure you want to submit this advance request?</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="ack1Checkbox"
+							name="ack1Checkbox" value="1" /></td>
+						<td
+							style="padding-top: 2%; padding-bottom: 2%; text-align: justify;">
+							By checking this box, you acknowledge that you have read and
+							understand all the policies and rules with respect to advance to
+							staff, and agree to abide by all the policies and rules.</td>
+					</tr>
+				</tbody>
+			</table>
 
-            <ul class="center_btns" id="agreementButton">
-                <li><p class="btn_blue">
-                        <a href="javascript:fn_advReqAck('A');">Yes</a>
-                    </p></li>
-                <li><p class="btn_blue">
-                        <a href="javascript:fn_advReqAck('J');">No</a>
-                    </p></li>
-            </ul>
+			<ul class="center_btns" id="agreementButton">
+				<li><p class="btn_blue">
+						<a href="javascript:fn_advReqAck('A');">Yes</a>
+					</p></li>
+				<li><p class="btn_blue">
+						<a href="javascript:fn_advReqAck('J');">No</a>
+					</p></li>
+			</ul>
 
-        </div>
+		</div>
 
-    </section>
+	</section>
 </div>
 
 <!-- ********************************************************************************************************************************************** -->
@@ -2586,43 +2632,43 @@ var myGridPros = {
 <!-- ********************************************************************************************************************************************** -->
 
 <div class="popup_wrap size_mid2" id="appvLinePop"
-    style="display: none;">
-    <header class="pop_header">
-        <h1>
-            <spring:message code="approveLine.title" />
-        </h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2">
-                    <a href="#"><spring:message code="newWebInvoice.btn.close" /></a>
-                </p></li>
-        </ul>
-    </header>
+	style="display: none;">
+	<header class="pop_header">
+		<h1>
+			<spring:message code="approveLine.title" />
+		</h1>
+		<ul class="right_opt">
+			<li><p class="btn_blue2">
+					<a href="#"><spring:message code="newWebInvoice.btn.close" /></a>
+				</p></li>
+		</ul>
+	</header>
 
-    <section class="pop_body">
-        <section class="search_result">
-            <ul class="right_btns">
-                <li><p class="btn_grid">
-                        <a href="javascript:fn_appvLineGridDeleteRow()" id="lineDel_btn"><spring:message
-                                code="newWebInvoice.btn.delete" /></a>
-                    </p></li>
-            </ul>
+	<section class="pop_body">
+		<section class="search_result">
+			<ul class="right_btns">
+				<li><p class="btn_grid">
+						<a href="javascript:fn_appvLineGridDeleteRow()" id="lineDel_btn"><spring:message
+								code="newWebInvoice.btn.delete" /></a>
+					</p></li>
+			</ul>
 
-            <article class="grid_wrap" id="approveLine_grid_wrap"></article>
+			<article class="grid_wrap" id="approveLine_grid_wrap"></article>
 
-            <ul class="center_btns" id="requestAppvLine" style="display: none;">
-                <li><p class="btn_blue2">
-                        <a href="javascript:fn_saveRequest('S')" id="submit"><spring:message
-                                code="newWebInvoice.btn.submit" /></a>
-                    </p></li>
-            </ul>
+			<ul class="center_btns" id="requestAppvLine" style="display: none;">
+				<li><p class="btn_blue2">
+						<a href="javascript:fn_saveRequest('S')" id="submit"><spring:message
+								code="newWebInvoice.btn.submit" /></a>
+					</p></li>
+			</ul>
 
-            <ul class="center_btns" id="repaymentAppvLine" style="display: none;">
-                <li><p class="btn_blue2">
-                        <a href="javascript:fn_submitRef()" id="submit"><spring:message
-                                code="newWebInvoice.btn.submit" /></a>
-                    </p></li>
-            </ul>
+			<ul class="center_btns" id="repaymentAppvLine" style="display: none;">
+				<li><p class="btn_blue2">
+						<a href="javascript:fn_submitRef()" id="submit"><spring:message
+								code="newWebInvoice.btn.submit" /></a>
+					</p></li>
+			</ul>
 
-        </section>
-    </section>
+		</section>
+	</section>
 </div>

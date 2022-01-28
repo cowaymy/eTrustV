@@ -8,6 +8,7 @@
             CLM_NO,
             ADV_TYPE,
             PAYEE,
+            PAYEE_NAME,
             COST_CENTER,
             COST_CENTER_NM,
             AMT,
@@ -37,6 +38,7 @@
                 A.CLM_NO,
                 A.ADV_TYPE,
                 A.MEM_ACC_ID PAYEE,
+                F.MEM_ACC_NAME PAYEE_NAME,
                 A.COST_CENTER,
                 A.COST_CENTER_NM,
                 A.TOT_AMT AMT,
@@ -86,6 +88,7 @@
             LEFT JOIN FCM0004M D
                 ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
             LEFT JOIN SYS0013M E ON E.CODE_ID = A.ADV_OCC
+            LEFT JOIN FCM0006M F ON F.MEM_ACC_ID = A.MEM_ACC_ID
             WHERE 1=1
             <if test="advType != null and advType != ''">
                 AND A.ADV_TYPE IN
@@ -126,7 +129,7 @@
             </if>
             <if test="appEndDt != null and appEndDt != ''">
                 <![CDATA[
-                    AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
+                    AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
                 ]]>
             </if>
             <if test="loginUserId != null and loginUserId != ''">
@@ -221,7 +224,8 @@
             </if>
             A.FILE_ATCH_GRP_ID,
             C.ATCH_FILE_ID,
-            C.ATCH_FILE_NAME
+            C.ATCH_FILE_NAME,
+            A.APPV_PRCSS_NO
         FROM FCM0027M A
         LEFT JOIN SYS0070M B
             ON A.FILE_ATCH_GRP_ID = B.ATCH_FILE_GRP_ID
@@ -317,7 +321,7 @@
             #{clmNo},
             #{reqAdvType},
             #{costCenterCode},
-            #{costCenterName},
+            (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCenterCode}),
             #{payeeCode},
             #{bankId},
             #{bankAccNo},
@@ -424,6 +428,7 @@
                 ADV_REFD_MODE = #{refMode},
                 ADV_REFD_REF = #{refBankRef},
                 ADV_REM = #{trvRepayRem},
+                TOT_AMT = #{totAmt},
             </if>
             ADV_REFD_DT = TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
             UPD_DT = SYSDATE
@@ -434,10 +439,11 @@
         MERGE INTO FCM0028D TRGT
         USING (
             SELECT #{clmNo} CLM_NO,
-                   #{expType} EXP_TYPE
+                   #{expType} EXP_TYPE,
+                   #{clamUn} CLAM_UN
             FROM DUAL
         ) SRC
-        ON (TRGT.CLM_NO = SRC.CLM_NO)
+        ON (TRGT.CLM_NO = SRC.CLM_NO  AND TRGT.CLAM_UN = SRC.CLAM_UN)
         <if test="advType == 3">
         WHEN MATCHED THEN
             UPDATE SET
@@ -491,8 +497,17 @@
             UPDATE SET
                 INVC_NO = #{invcNo},
                 INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
-                AMT = #{dAmt},
-                UPD_DT = SYSDATE
+                EXP_TYPE = #{expType},
+                EXP_TYPE_NM = #{expTypeNm},
+                GL_ACC_NO = #{glAccCode},
+                GL_ACC_NM = (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
+                BGT_CODE = #{budgetCode},
+                BGT_NM = (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
+                AMT = #{totAmt},
+                REM = #{expDesc},
+                UPD_DT = SYSDATE,
+                TAX_CODE = 'VB',
+                NET_AMT = #{totAmt}
          WHEN NOT MATCHED THEN
             INSERT (
                 CLM_NO,
@@ -501,8 +516,12 @@
                 INVC_DT,
                 EXP_TYPE,
                 EXP_TYPE_NM,
-                MILEAGE,
+                GL_ACC_NO,
+                GL_ACC_NM,
+                BGT_CODE,
+                BGT_NM,
                 AMT,
+                REM,
                 CRT_DT,
                 CRT_USER_ID,
                 UPD_DT,
@@ -519,17 +538,21 @@
                 TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
                 #{expType},
                 #{expTypeNm},
-                #{mileage},
-                #{dAmt},
+                #{glAccCode},
+                (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
+                #{budgetCode},
+                (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
+                #{totAmt},
+                #{expDesc},
                 SYSDATE,
                 #{userId},
                 SYSDATE,
                 #{userId},
                 #{clamUn},
-                #{taxCode},
+                'VB',
                 #{cur},
                 #{taxAmt},
-                #{dAmt}
+                #{totAmt}
             )
         </if>
     </update>
@@ -638,8 +661,8 @@
     </select>
 
     <update id="updateAdvRequest" parameterType="Map">
-        UPDATE FCM0027M
-        SET ADV_REFD_NO = #{clmNo}
+        UPDATE FCM0027M SET
+        ADV_REFD_NO = #{clmNo}
         WHERE CLM_NO = #{advReqClmNo}
     </update>
 
@@ -699,7 +722,11 @@
             J.NET_AMT,
             NVL(J.INVC_CUR, 'MYR') CUR,
             NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
-            C.ADV_REM REM
+            C.ADV_REM REM,
+            C.ADV_OCC,
+            I.TOT_AMT ADV_AMT,
+            C.ADV_REFD_MODE REFUND_MODE,
+            C.ADV_REFD_REF BANK_REF
         FROM FCM0004M A
         LEFT JOIN FCM0015D B
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
@@ -1191,4 +1218,25 @@
             SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '1225', 'YYYYMMDD') FROM DUAL
         )
     </select>
+
+    <select id="selectAttachList" parameterType="String" resultType="egovMap">
+
+         SELECT T1.ATCH_FILE_GRP_ID
+                ,T1.ATCH_FILE_ID
+                ,T2.ATCH_FILE_NAME
+                ,T2.FILE_SUB_PATH
+                ,T2.PHYSICL_FILE_NAME
+                ,T2.FILE_EXTSN
+                ,T2.FILE_SIZE
+         FROM SYS0070M T1
+         LEFT JOIN SYS0071D T2
+         ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+         WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+         ORDER BY T1.ATCH_FILE_ID
+    </select>
+
+    <delete id="deleteDraftRequestD">
+        DELETE FROM FCM0028D
+        WHERE CLM_NO=#{clmNo} AND CLAM_UN=#{clamUn}
+    </delete>
 </mapper>

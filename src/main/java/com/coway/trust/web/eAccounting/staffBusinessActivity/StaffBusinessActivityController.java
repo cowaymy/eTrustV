@@ -74,9 +74,10 @@ public class StaffBusinessActivityController {
     private SessionHandler sessionHandler;
 
     @RequestMapping(value = "/staffBusinessActivity.do")
-    public String staffBusinessActivity(@RequestParam Map<String, Object> params, ModelMap model) {
+    public String staffBusinessActivity(@RequestParam Map<String, Object> params, ModelMap model,  SessionVO sessionVO) {
 
     	List<EgovMap> advOcc = staffBusinessActivityService.selectAdvOccasions(params);
+    	model.addAttribute("costCentr", sessionVO.getCostCentr());
 
     	model.put("advOcc", advOcc);
         return "eAccounting/staffBusinessActivity/staffBusinessActivity";
@@ -132,6 +133,13 @@ public class StaffBusinessActivityController {
         LOGGER.debug("params ==============================>> " + params);
 
         EgovMap advClmInfo = staffBusinessActivityService.getAdvClmInfo(params);
+        String atchFileGrpId = String.valueOf(advClmInfo.get("fileAtchGrpId"));
+        LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+        if (atchFileGrpId != "null") {
+            List<EgovMap> clmAttachList = staffBusinessActivityService.selectAttachList(atchFileGrpId);
+            advClmInfo.put("attachmentList", clmAttachList);
+            LOGGER.debug("attachmentList =====================================>>  " + clmAttachList);
+        }
 
         LOGGER.debug("advClmInfo ==============================>>" + advClmInfo);
         return ResponseEntity.ok(advClmInfo);
@@ -558,6 +566,7 @@ public class StaffBusinessActivityController {
         	params.put("refdDate", params.get("refAdvRepayDate"));
         	params.put("refBankRef", params.get("refBankRef"));
         	params.put("bankId", params.get("bankId"));
+        	params.put("totAmt", params.get("refTotExp"));
         	staffBusinessActivityService.editDraftRequestM(params);
 
             Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
@@ -565,13 +574,14 @@ public class StaffBusinessActivityController {
 
             if("4".equals(params.get("refAdvType"))) {
                 // Advance Refund for Staff Travelling Advance
-            	params.put("invcNo", params.get("invcNo"));
-            	params.put("invcDt", params.get("invcDt"));
+//            	params.put("invcNo", params.get("invcNo"));
+//            	params.put("invcDt", params.get("invcDt"));
             	params.put("expType", params.get("expType"));
             	params.put("expTypeNm", params.get("expTypeNm"));
             	params.put("dAmt", params.get("refTotExp"));
             	params.put("userId", sessionVO.getUserId());
             	params.put("advType", params.get("refAdvType_h"));
+            	LOGGER.debug("params ==============================>> " + params);
                 staffBusinessActivityService.editDraftRequestD(params);
 
             }
@@ -640,6 +650,9 @@ public class StaffBusinessActivityController {
         if(params.containsKey("type")) {
             model.addAttribute("type", params.get("type"));
         }
+
+        List<EgovMap> advOcc = staffBusinessActivityService.selectAdvOccasions(params);
+        model.put("advOcc", advOcc);
 
         return "eAccounting/staffBusinessActivity/staffBusActApproveViewPop";
     }

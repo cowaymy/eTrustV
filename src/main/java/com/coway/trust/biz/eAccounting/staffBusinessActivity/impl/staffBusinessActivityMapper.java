@@ -78,4 +78,8 @@ public interface staffBusinessActivityMapper {
     int refdDayChk(Map<String, Object> params);
 
     List<EgovMap> holiday_SYS81(Map<String, Object> params);
+
+    List<EgovMap> selectAttachList(String atchFileGrpId);
+
+    void deleteDraftRequestD(Map<String, Object> params);
 }

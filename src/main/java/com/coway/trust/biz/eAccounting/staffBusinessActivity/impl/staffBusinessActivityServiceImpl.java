@@ -149,7 +149,7 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
 
     @Override
     public void editDraftRequestD(Map<String, Object> params) {
-    	LOGGER.debug("editDraftRequestDetails=====================================>>  " + params);
+    	LOGGER.debug("editDraftRequestD Before =====================================>>  " + params);
 
     	if(params.get("advType").equals("4"))
 		{
@@ -164,9 +164,56 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     				hm.put("userId", params.get("userId"));
     				hm.put("advType", params.get("advType"));
     				hm.put("dAmt", params.get("refTotExp"));
-    				LOGGER.debug("editDraftRequestDetails =====================================>>  " + hm);
+    				hm.put("expType", params.get("expType"));
+    				hm.put("expTypeNm", params.get("expTypeNm"));
+    				LOGGER.debug("editDraftRequestD After =====================================>>  " + hm);
     				// TODO biz처리 (clmNo, clmSeq 값으로 update 처리)
     				staffBusinessActivityMapper.editDraftRequestD(hm);
+    			}
+    		}
+
+        	List<Object> addList = (List<Object>) gridData.get("add"); // 추가 리스트 얻기
+    		LOGGER.debug("gridData AddList: =====================================>> " + addList);
+
+    		if (addList.size() > 0) {
+    			Map hm = null;
+    			// biz처리
+    			for (Object map : addList) {
+    				hm = (HashMap<String, Object>) map;
+    				hm.put("clmNo", (String) params.get("clmNo"));
+    				int clmSeq = staffBusinessActivityMapper.selectNextClmSeq((String) params.get("clmNo"));
+    				hm.put("clmSeq", clmSeq);
+    				hm.put("clmType", "A2");
+    				hm.put("userId", params.get("userId"));
+    				hm.put("expType", params.get("expType"));
+    				hm.put("expTypeNm", params.get("expTypeNm"));
+    				hm.put("advType", params.get("advType"));
+    				hm.put("dAmt", params.get("totAmt"));
+    				String clmNo = (String) params.get("clmNo");
+    				if(clmNo.substring(0, 2).equals("A2"))
+    				{
+    					hm.put("glAccCode", params.get("glAccCode"));
+        				hm.put("glAccNm", params.get("glAccCodeName"));
+        				hm.put("budgetCode", params.get("budgetCode"));
+        				hm.put("budgetCodeNm", params.get("budgetCodeName"));
+    				}
+    				LOGGER.debug("editDraftRequestD =====================================>>  " + hm);
+    				staffBusinessActivityMapper.editDraftRequestD(hm);
+    			}
+    		}
+
+    		List<Object> removeList = (List<Object>) gridData.get("remove"); // 추가 리스트 얻기
+    		LOGGER.debug("gridData RemoveList: =====================================>> " + removeList);
+
+    		if (removeList.size() > 0) {
+    			Map hm = null;
+    			// biz처리
+    			for (Object map : removeList) {
+    				hm = (HashMap<String, Object>) map;
+    				hm.put("clmNo", (String) params.get("clmNo"));
+    				hm.put("clmaUn", params.get("clamUn"));
+    				LOGGER.debug("deleteDraftRequestD =====================================>>  " + hm);
+    				staffBusinessActivityMapper.deleteDraftRequestD(hm);
     			}
     		}
 		}
@@ -340,6 +387,11 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
         return rtn;
     }
 
+    @Override
+	public List<EgovMap> selectAttachList(String atchFileGrpId) {
+		// TODO Auto-generated method stub
+		return staffBusinessActivityMapper.selectAttachList(atchFileGrpId);
+	}
 
 
 }

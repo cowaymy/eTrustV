@@ -12,7 +12,7 @@
 }
 </style>
 <script type="text/javascript">
-    console.log("staffBusinessActivityApproveViewPop");
+    console.log("staffBusActApproveViewPop");
     var myGridID;
     var myGridData = $.parseJSON('${appvInfoAndItems}');
     var attachList = null;
@@ -142,7 +142,22 @@
     	}, {
     	    dataField : "cnt",
     	    visible : false
-    	}
+    	}, {
+    	    dataField : "advOcc",
+    	    visible : false
+    	}, {
+            dataField : "advRefdClmNo",
+            visible: false
+    	}, {
+            dataField : "advAmt",
+            visible: false
+    	}, {
+            dataField : "refundMode",
+            visible: false
+    	}, {
+            dataField : "bankRef",
+            visible: false
+        }
     	];
 
     $(document).ready(function () {
@@ -158,14 +173,21 @@
         $("#viewAdvPayeeNm").text(myGridData[0].memAccName);
         $("#viewAdvBankNm").text(myGridData[0].bank);
         $("#viewAdvBankAccNo").text(myGridData[0].bankAccNo);
+        $("#viewAdvOcc option[value=" + myGridData[0].advOcc + "]").attr('selected', true);
 
         if(myGridData[0].advType == 3 || myGridData[0].advType == 5) {
-            $("#advanceRefDiv").css("display", "none");
+        	$("#approveView_grid_wrap").css("display","none");
+        	$("#advanceRefDiv").css("display", "none");
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewTrvRem").text(myGridData[0].rem);
-            $("#viewTrvTotAmt").text("RM " + myGridData[0].repayAmt.toFixed(2));
+            $("#viewTrvTotAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].repayAmt, "#,##0.00"));
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
+            $("#settViewReq").hide();
+            $("#settViewReqTotAmt").hide();
+            $("#settViewBalAmt").hide();
+            $("#settViewRefundMode").hide();
+            $("#settViewBankRef").hide();
             if(myGridData[0].advType == 5)
             {
             	$("#trvPeriod").hide();
@@ -179,20 +201,35 @@
 
 	                $("#finApprAct").show();
 	                $("#viewFinAppr").text(result.finalAppr);
+	                if("${type}" == "view"){
+	                	$("#viewHeader").text("View Submit");
+	                }
 	            });
             }
         } else if(myGridData[0].advType == 4 || myGridData[0].advType == 6) {
 
-            $("#refTrvPeriod").text(myGridData[0].refTrvPrdFr + " To " + myGridData[0].refTrvPrdTo);
+        	$("#advAmtHeader").text("Total Expenses");
+        	$("#settViewReqTotAmt").show();
+        	$("#settViewBalAmt").show();
+        	$("#refTrvPeriod").text(myGridData[0].refTrvPrdFr + " To " + myGridData[0].refTrvPrdTo);
             $("#refAdvReqClmNo").text(myGridData[0].advRefdClmNo);
             $("#refRepayDate").text(myGridData[0].advRefdDt);
             $("#refBankInRefNo").text(myGridData[0].invcNo);
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
-            $("#viewTrvTotAmt").text("RM " + myGridData[0].repayAmt.toFixed(2));
+            $("#viewTrvTotAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].repayAmt, "#,##0.00"));
             $("#viewTrvRem").text(myGridData[0].rem);
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
+            $("#viewAdvReqClmNo").text(myGridData[0].advRefdClmNo);
+            $("#viewAdvReqTotAmt").text("RM " + myGridData[0].advAmt.toFixed(2));
+            $("#viewAdvSettBalAmt").text("RM " + (myGridData[0].advAmt - myGridData[0].repayAmt).toFixed(2));
+            $("#viewBankRef").text(myGridData[0].bankRef);
+            $("#advOcc option[value=" + myGridData[0].advOcc + "]").attr('selected', true);
+            $("#viewRefundMode option[value=" + myGridData[0].refundMode + "]").attr('selected', true);
 
+            if("${type}" == "view"){
+                $("#viewHeader").text("View Submit");
+            }
             fn_setGridData(myGridID, myGridData);
         }
 
@@ -240,6 +277,9 @@
         $("#pReject_btn").click(fn_RejectSubmit);
 
 
+        if(myGridData[0].appvPrcssStus != "J") {
+            $("#rejectReasonRow").css("display", "none");
+        }
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
             $("#appvBtns").hide();
             $("#pApprove_btn").hide();
@@ -247,19 +287,17 @@
 
             $("#finApprAct").show();
 
-            if(myGridData[0].appvPrcssStus == "A") {
-                $("#rejectReasonRow").css("display", "none");
-            }
-
             Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
                 console.log(result);
 
                 $("#viewFinAppr").text(result.finalAppr);
+                $("#viewRejctResn").text(result.rejctResn);
             });
         } else {
             $("#finApprAct").hide();
             if("${type}" == "view") {
                 $("#appvBtns").hide();
+                $("#viewHeader").text("View Submit");
             }
         }
     });
@@ -307,7 +345,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-    <h1><spring:message code="approveView.title" /></h1>
+    <h1 id="viewHeader"><spring:message code="approveView.title" /></h1>
     <ul class="right_opt">
         <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
     </ul>
@@ -411,12 +449,46 @@
                                 <span id="viewTrvRem"></span>
                             </td>
                         </tr>
-                        <tr>
-                                <th scope="row">Advance Amount</th>
-                                <td colspan="4">
-                                    <span id="viewTrvTotAmt"></span>
-                                </td>
-                            </tr>
+                        <tr id=settViewReq>
+                        <th scope="row">Claim No for Advance Request</th>
+                        <td colspan=4><span id="viewAdvReqClmNo"> </span></td>
+                    </tr>
+                    <tr id=settViewReqTotAmt>
+	                    <th scope="row">Advance Amount</th>
+	                        <td colspan=4><span id="viewAdvReqTotAmt"> </span></td>
+                    </tr>
+                    <tr>
+                            <th id=advAmtHeader scope="row">Advance Amount</th>
+                            <td colspan="4">
+                                <span id="viewTrvTotAmt"></span>
+                            </td>
+                    </tr>
+                    <tr id=settViewBalAmt>
+                        <th scope="row">Balance Amount</th>
+                            <td colspan=4><span id="viewAdvSettBalAmt"></span></td>
+                    </tr>
+                    <tr>
+                         <th scope="row">Advance Occassion</th>
+                         <td colspan=4><select id="viewAdvOcc" name="viewAdvOcc"
+                             class="w100p" disabled="disabled">
+                                 <c:forEach var="list" items="${advOcc}" varStatus="status">
+                                     <option value="${list.code}">${list.codeName}</option>
+                                 </c:forEach>
+                         </select></td>
+                    </tr>
+                    <tr id="settViewRefundMode">
+                        <th scope="row">Refund Mode</th>
+                            <td colspan=4><select id="viewRefundMode" name="viewRefundMode"
+                             class="w100p" disabled="disabled">
+                                <option value="CASH">Cash</option>
+                                <option value="OTRX">Online</option>
+                             </select>
+                             </td>
+                    </tr>
+                    <tr id="settViewBankRef">
+                        <th scope="row">Bank Reference</th>
+                            <td colspan=4><span id="viewBankRef"></span></td>
+                    </tr>
                     </table>
 
                 <!-- Travel Advance Division -->
@@ -449,9 +521,9 @@
                         <th scope="row"><spring:message code="approveView.approveStatus" /></th>
                         <td colspan="4" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
                     </tr>
-                    <tr id="rejectReasonRow" style=display:none>
+                    <tr id="rejectReasonRow">
                         <th scope="row">Reject Reason</th>
-                        <td colspan="4">${rejctResn}</td>
+                        <td colspan="4" id="viewRejctResn">${rejctResn}</td>
                     </tr>
                     <tr id="finApprAct">
                         <th scope="row">Final Approver</th>
