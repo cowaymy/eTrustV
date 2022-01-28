@@ -1560,55 +1560,55 @@ function fn_save(){
         <p class="brown_text mt10">(Is Charge = Yes : Filter service charges is depends on the filter expiration date)</p>
         </article><!-- tap_area end -->
 
-        <article class="tap_area"><!-- tap_area start -->
-        <!--
-        <ul class="left_btns mb10">
-            <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
-           <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
-        </ul>
-         -->
-        <table class="type1"><!-- table start -->
-        <caption>table</caption>
-        <colgroup>
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:*" />
-        </colgroup>
-        <tbody>
-                 <tr>
-                    <th scope="row">Name</th>
-                    <td colspan="5" id="name"><span></span></td>
-                    <th scope="row"></th>
-                    <td><span id="gender"></span></td>
-                </tr>
-                <tr>
-                    <th scope="row">NRIC</th>
-                    <td colspan="5" id="nric"><span></span></td>
-                    <th scope="row">Race</th>
-                    <td><span id="codename1"></span></td>
-                </tr>
-                <tr>
-                    <th scope="row">Mobile No</th>
-                    <td><span id="telM1"></span></td>
-                    <th scope="row">Office No</th>
-                    <td><span id="telO"></span></td>
-                    <th scope="row">Residence No</th>
-                    <td><span id="telR" ></span></td>
-                    <th scope="row">Fax No</th>
-                    <td><span id="telf"></span></td>
-                </tr>
-                <tr>
-                    <th scope="row">Email</th>
-                    <td colspan="7" id="email"><span></span></td>
-                </tr>
-        </tbody>
-        </table><!-- table end -->
-        </article><!-- tap_area end -->
+<!--         <article class="tap_area">tap_area start -->
+<!--
+<!--         <ul class="left_btns mb10"> -->
+<!--             <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li> -->
+<!--            <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li> -->
+<!--         </ul> -->
+<!--          -->
+<!--         <table class="type1">table start -->
+<!--         <caption>table</caption> -->
+<!--         <colgroup> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--         </colgroup> -->
+<!--         <tbody> -->
+<!--                  <tr> -->
+<!--                     <th scope="row">Name</th> -->
+<!--                     <td colspan="5" id="name"><span></span></td> -->
+<!--                     <th scope="row"></th> -->
+<!--                     <td><span id="gender"></span></td> -->
+<!--                 </tr> -->
+<!--                 <tr> -->
+<!--                     <th scope="row">NRIC</th> -->
+<!--                     <td colspan="5" id="nric"><span></span></td> -->
+<!--                     <th scope="row">Race</th> -->
+<!--                     <td><span id="codename1"></span></td> -->
+<!--                 </tr> -->
+<!--                 <tr> -->
+<!--                     <th scope="row">Mobile No</th> -->
+<!--                     <td><span id="telM1"></span></td> -->
+<!--                     <th scope="row">Office No</th> -->
+<!--                     <td><span id="telO"></span></td> -->
+<!--                     <th scope="row">Residence No</th> -->
+<!--                     <td><span id="telR" ></span></td> -->
+<!--                     <th scope="row">Fax No</th> -->
+<!--                     <td><span id="telf"></span></td> -->
+<!--                 </tr> -->
+<!--                 <tr> -->
+<!--                     <th scope="row">Email</th> -->
+<!--                     <td colspan="7" id="email"><span></span></td> -->
+<!--                 </tr> -->
+<!--         </tbody> -->
+<!--         </table>table end -->
+<!--         </article>tap_area end -->
 
 
 
