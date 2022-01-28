@@ -1946,11 +1946,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     //LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
     if (String.valueOf(svc0004dmap.get("AS_CT_CODE")).equals("") || String.valueOf(svc0004dmap.get("AS_CT_CODE")) == null) { // This is to capture userId from Apps
-    	params.put("AS_CT_CODE", String.valueOf(svc0004dmap.get("userId")));
+    	svc0004dmap.put("AS_CT_CODE", String.valueOf(svc0004dmap.get("userId")));
     }
 
     if (String.valueOf(svc0004dmap.get("TEL_M")).equals("") || String.valueOf(svc0004dmap.get("TEL_M")) == null) { // This is to capture resultIcMobileNo from Apps
-    	params.put("TEL_M", String.valueOf(svc0004dmap.get("resultIcMobileNo")));
+    	svc0004dmap.put("TEL_M", String.valueOf(svc0004dmap.get("resultIcMobileNo")));
     }
 
 
