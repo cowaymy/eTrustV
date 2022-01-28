@@ -1945,12 +1945,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     //LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
     //LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
-    if (String.valueOf(svc0004dmap.get("AS_CT_CODE")).equals("") || String.valueOf(svc0004dmap.get("AS_CT_CODE")) == null) { // This is to capture userId from Apps
-    	svc0004dmap.put("AS_CT_CODE", (svc0004dmap.get("userId")).toString());
+    if (String.valueOf(svc0004dmap.get("AS_CT_CODE")).equals("") || String.valueOf(svc0004dmap.get("AS_CT_CODE")) == null || String.valueOf(svc0004dmap.get("AS_CT_CODE")).equals("null")) { // This is to capture userId from Apps
+    	svc0004dmap.put("AS_CT_CODE", String.valueOf(svc0004dmap.get("userId")));
     }
 
-    if (String.valueOf(svc0004dmap.get("TEL_M")).equals("") || String.valueOf(svc0004dmap.get("TEL_M")) == null) { // This is to capture resultIcMobileNo from Apps
-    	svc0004dmap.put("TEL_M", (svc0004dmap.get("resultIcMobileNo")).toString());
+    if (String.valueOf(svc0004dmap.get("TEL_M")).equals("") || String.valueOf(svc0004dmap.get("TEL_M")) == null || String.valueOf(svc0004dmap.get("AS_CT_CODE")).equals("null")) { // This is to capture resultIcMobileNo from Apps
+    	svc0004dmap.put("TEL_M", String.valueOf(svc0004dmap.get("resultIcMobileNo")));
     }
 
 
