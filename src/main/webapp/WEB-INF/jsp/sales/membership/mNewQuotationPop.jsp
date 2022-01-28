@@ -1764,7 +1764,7 @@ $(document).ready(function(){
         <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
             <li><a href="#" class="on"  ><spring:message code="sal.tap.title.ordInfo" /></a></li>
-<%--             <li><a href="#"><spring:message code="sal.tap.title.contactPerson" /></a></li> --%>
+            <!-- <li><a href="#"><spring:message code="sal.tap.title.contactPerson" /></a></li>-->
             <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 950,380);"><spring:message code="sal.tap.title.bsHis" /></a></li>
             <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 950,380);"><spring:message code="sal.tap.title.orderProductFilter" /></a></li>
         </ul>
@@ -1854,55 +1854,56 @@ $(document).ready(function(){
         <p class="brown_text mt10">(<spring:message code="sal.text.isChargeFilter" />)</p>
         </article><!-- tap_area end -->
 
-        <article class="tap_area"><!-- tap_area start -->
 
-        <ul class="left_btns mb10">
-            <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()"><spring:message code="sal.btn.otherContactPerson" /></a></p></li>
-           <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()"><spring:message code="sal.btn.newContactPerson" /></a></p></li>
-        </ul>
+<!--      <article class="tap_area">tap_area start -->
 
-        <table class="type1"><!-- table start -->
-        <caption>table</caption>
-        <colgroup>
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:*" />
-        </colgroup>
-        <tbody>
-                 <tr>
-                    <th scope="row"><spring:message code="sal.text.name" /></th>
-                    <td colspan="5" id="name"><span></span></td>
-                    <th scope="row"></th>
-                    <td><span id="gender"></span></td>
-                </tr>
-                <tr>
-                    <th scope="row"><spring:message code="sal.text.nric" /></th>
-                    <td colspan="5" id="nric"><span></span></td>
-                    <th scope="row"><spring:message code="sal.text.race" /></th>
-                    <td><span id="codename1"></span></td>
-                </tr>
-                <tr>
-                    <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
-                    <td><span id="telM1"></span></td>
-                    <th scope="row"><spring:message code="sal.text.officeNo" /></th>
-                    <td><span id="telO"></span></td>
-                    <th scope="row"><spring:message code="sal.text.residenceNo" /></th>
-                    <td><span id="telR" ></span></td>
-                    <th scope="row"><spring:message code="sal.text.faxNo" /></th>
-                    <td><span id="telf"></span></td>
-                </tr>
-                <tr>
-                    <th scope="row"><spring:message code="sal.text.email" /></th>
-                    <td colspan="7" id="email"><span></span></td>
-                </tr>
-        </tbody>
-        </table><!-- table end -->
-        </article><!-- tap_area end -->
+<!--         <ul class="left_btns mb10"> -->
+<%--             <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()"><spring:message code="sal.btn.otherContactPerson" /></a></p></li> --%>
+<%--            <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()"><spring:message code="sal.btn.newContactPerson" /></a></p></li> --%>
+<!--         </ul> -->
+
+<!--         <table class="type1">table start -->
+<!--         <caption>table</caption> -->
+<!--         <colgroup> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--             <col style="width:130px" /> -->
+<!--             <col style="width:*" /> -->
+<!--         </colgroup> -->
+<!--         <tbody> -->
+<!--                  <tr> -->
+<%--                     <th scope="row"><spring:message code="sal.text.name" /></th> --%>
+<!--                     <td colspan="5" id="name"><span></span></td> -->
+<!--                     <th scope="row"></th> -->
+<!--                     <td><span id="gender"></span></td> -->
+<!--                 </tr> -->
+<!--                 <tr> -->
+<%--                     <th scope="row"><spring:message code="sal.text.nric" /></th> --%>
+<!--                     <td colspan="5" id="nric"><span></span></td> -->
+<%--                     <th scope="row"><spring:message code="sal.text.race" /></th> --%>
+<!--                     <td><span id="codename1"></span></td> -->
+<!--                 </tr> -->
+<!--                 <tr> -->
+<%--                     <th scope="row"><spring:message code="sal.text.mobileNo" /></th> --%>
+<!--                     <td><span id="telM1"></span></td> -->
+<%--                     <th scope="row"><spring:message code="sal.text.officeNo" /></th> --%>
+<!--                     <td><span id="telO"></span></td> -->
+<%--                     <th scope="row"><spring:message code="sal.text.residenceNo" /></th> --%>
+<!--                     <td><span id="telR" ></span></td> -->
+<%--                     <th scope="row"><spring:message code="sal.text.faxNo" /></th> --%>
+<!--                     <td><span id="telf"></span></td> -->
+<!--                 </tr> -->
+<!--                 <tr> -->
+<%--                     <th scope="row"><spring:message code="sal.text.email" /></th> --%>
+<!--                     <td colspan="7" id="email"><span></span></td> -->
+<!--                 </tr> -->
+<!--         </tbody> -->
+<!--         </table>table end -->
+<!--         </article>tap_area end -->
 
 
 
