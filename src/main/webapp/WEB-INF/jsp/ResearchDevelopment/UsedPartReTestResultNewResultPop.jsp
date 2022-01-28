@@ -99,6 +99,7 @@
         $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
         $("#ddlProdGenuine").removeAttr("disabled").removeClass("readonly");
         $('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
+        $('#manufacDate').removeAttr("disabled").removeClass("readonly");
 
     }
 
@@ -210,6 +211,7 @@
         $("#ddlCTCode").attr("disabled", true);
         $("#ddlProdGenuine").attr("disabled", true);
         $("#txtTestResultRemark").attr("disabled", true);
+        $("#manufacDate").attr("disabled", true);
 
         $("#def_code").attr("disabled", true);
         $("#def_def").attr("disabled", true);
