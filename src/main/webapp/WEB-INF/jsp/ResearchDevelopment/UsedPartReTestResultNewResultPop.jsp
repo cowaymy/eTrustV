@@ -2,7 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-    var asMalfuncResnId;
 
     $(document).ready(
     	    function() {
