@@ -10,8 +10,12 @@ function fn_report(type) {
 		return;
 	}
 
-	$("#V_INPUTDATE").val("01/"+$("#yyyymmDate").val());
+ 	$("#V_INPUTDATE").val("01/"+$("#yyyymmDate").val());
+ 	
+    var  yyyymm = $("#yyyymmDate").val();
+    $("#v_GenYearMonth").val(yyyymm.substring(3, 7) + yyyymm.substring(0, 2));
 
+    /* alert($("#v_GenYearMonth").val()); */
 	if(type == "PDF"){
 		$("#viewType").val('PDF');
 	}else if(type == "EXCEL"){
@@ -22,7 +26,7 @@ function fn_report(type) {
 
 	if(dataForm.reportType.value=="0"){
 		$("#reportFileName").val('/sales/AccumulatedAccReport_PDF_ver2.rpt');
-		$("#reportDownFileName").val("AccumulatedAccReport_" + $("#V_INPUTDATE").val());
+	    $("#reportDownFileName").val("AccumulatedAccReport_" + $("#V_INPUTDATE").val());
 	}else if(dataForm.reportType.value=="1"){
 		$("#reportFileName").val('/sales/AccumulatedAccReport_REN_Opt_Details_PDF.rpt');
         $("#reportDownFileName").val("AccumulatedAccReportRenOperationLeaseDetails_" + $("#V_INPUTDATE").val());
@@ -32,9 +36,13 @@ function fn_report(type) {
 	}else if(dataForm.reportType.value=="3"){
 		$("#reportFileName").val('/sales/AccMembershipDetail_PDF.rpt');
         $("#reportDownFileName").val("AccumulatedMembershipReportDetails_" + $("#V_INPUTDATE").val());
-	}
 
-//	alert($("#V_INPUTDATE").val());
+	}else if(dataForm.reportType.value=="4"){
+        $("#reportFileName").val('/sales/AccumulatedAccReport_KR_PDF.rpt');
+        $("#reportDownFileName").val("AccumulatedAccReportKR_" + $("#V_INPUTDATE").val());
+    }
+
+/* 	alert($("#V_INPUTDATE").val()); */
 
 	var option = {
         isProcedure : true
@@ -174,6 +182,7 @@ function fn_report9() {
     <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/AccumulatedAccReport_PDF.rpt" />
     <input type="hidden" id="viewType" name="viewType" />
     <input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" />
+    <input type="hidden" id="v_GenYearMonth" name="v_GenYearMonth" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -190,6 +199,7 @@ function fn_report9() {
         <option value="1">Report Rental Operating Lease Details Account</option>
         <option value="2">Report Rental Finance Lease Details Account</option>
         <option value="3"><spring:message code="sal.combo.text.rptMemDetAcc" /></option>
+        <option value="4"><spring:message code="sal.combo.text.rptAccumulatedAccKR" /></option>
     </select>
     </td>
 </tr>
