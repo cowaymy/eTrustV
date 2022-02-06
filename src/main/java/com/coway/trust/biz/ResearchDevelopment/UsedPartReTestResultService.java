@@ -11,9 +11,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface UsedPartReTestResultService {
 
-	List<EgovMap> selectUsedPartReList(Map<String, Object> params);
+	  List<EgovMap> selectUsedPartReList(Map<String, Object> params);
 
-	List<EgovMap> getTestResultInfo(Map<String, Object> params);
+	  List<EgovMap> getTestResultInfo(Map<String, Object> params);
 
 	  EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
@@ -30,5 +30,7 @@ public interface UsedPartReTestResultService {
 	  int isReTestAlreadyResult(HashMap<String, Object> mp);
 
 	  EgovMap usedPartReTestResult_insert(Map<String, Object> params);
+
+	  EgovMap usedPartReTestResult_update(Map<String, Object> params);
 
 }

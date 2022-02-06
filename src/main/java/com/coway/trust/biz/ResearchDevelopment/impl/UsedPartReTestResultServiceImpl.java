@@ -113,12 +113,8 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	public EgovMap usedPartReTestResult_insert(Map<String, Object> params) {
 	    LOGGER.debug("================usedPartReTestResult_insert - START ================");
 
-	    String m = "";
 	    Map svc0122dmap = (Map) params.get("asResultM");
 	    svc0122dmap.put("updator", params.get("updator"));
-
-	    Map tm = new HashMap();
-	    tm.put("srvSalesOrderId", svc0122dmap.get("AS_SO_ID"));
 
 	    params.put("DOCNO", "182");
 	    EgovMap eMap = UsedPartReTestResultMapper.getUsedPartReTestResultDocNo(params);
@@ -138,7 +134,7 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    LOGGER.debug("================usedPartReTestResult_insert - END ================");
 
 	    EgovMap em = new EgovMap();
-	    em.put("TEST_UP_NO", String.valueOf(eMap.get("uprno")));
+	    em.put("testResultNo", String.valueOf(eMap.get("uprno")));
 
 	    return em;
 	}
@@ -150,6 +146,37 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    int a = UsedPartReTestResultMapper.insertSVC0122D(params);
 
 	    LOGGER.debug("== insertSVC0122D - END");
+
+	    return a;
+	}
+
+	@Override
+	public EgovMap usedPartReTestResult_update(Map<String, Object> params) {
+	    LOGGER.debug("================usedPartReTestResult_update - START ================");
+
+	    Map svc0122dmap = (Map) params.get("upResultM");
+	    svc0122dmap.put("updator", params.get("updator"));
+
+	    LOGGER.debug("== EDIT USED PART RETURN TEST RESULT = " + svc0122dmap.get("TEST_RESULT_NO"));
+
+	    // UPDATE SVC0122D RESULT
+	    int c = this.updateSVC0122D(svc0122dmap);
+
+	    LOGGER.debug("================usedPartReTestResult_update - END ================");
+
+	    EgovMap em = new EgovMap();
+	    em.put("testResultNo", String.valueOf(svc0122dmap.get("TEST_RESULT_NO")));
+
+	    return em;
+	}
+
+	public int updateSVC0122D(Map params) {
+	    LOGGER.debug("== updateSVC0122D - START");
+	    LOGGER.debug("== PARAMS {} ", params);
+
+	    int a = UsedPartReTestResultMapper.updateSVC0122D(params);
+
+	    LOGGER.debug("== updateSVC0122D - END");
 
 	    return a;
 	}

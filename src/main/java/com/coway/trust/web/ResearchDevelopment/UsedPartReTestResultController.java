@@ -86,34 +86,30 @@ public class UsedPartReTestResultController {
 	    return "ResearchDevelopment/UsedPartReTestResult";
 	  }
 
-	  @RequestMapping(value = "/UsedPartReTestResultEditViewPop.do")
+	  @RequestMapping(value = "/UsedPartReTestResultEditPop.do")
 	  public String UsedPartReTestResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
 	      throws Exception {
-	    logger.debug("===========================/UsedPartReTestResultEditViewPop.do===============================");
+	    logger.debug("===========================/UsedPartReTestResultEditPop.do===============================");
 	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/UsedPartReTestResultEditViewPop.do===============================");
+	    logger.debug("===========================/UsedPartReTestResultEditPop.do===============================");
 
-	    model.put("ORD_ID", (String) params.get("ord_Id"));
-	    model.put("ORD_NO", (String) params.get("ord_No"));
-	    model.put("AS_NO", (String) params.get("as_No"));
-	    model.put("AS_ID", (String) params.get("as_Id"));
-	    model.put("AS_RESULT_NO", (String) params.get("as_Result_No"));
-	    model.put("AS_RESULT_ID", (String) params.get("as_Result_Id"));
-	    model.put("MOD", (String) params.get("mod"));
+	    model.put("TEST_RESULT_ID", (String) params.get("testResultId"));
+	    model.put("TEST_RESULT_NO", (String) params.get("testResultNo"));
+	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
+	    model.put("RCD_TMS", (String) params.get("rcdTms"));
+	    model.put("AS_NO", params.get("as_No"));
+	    model.put("DSC_CODE", (String) params.get("dsc_Code"));
+	    model.put("CT_CODE", (String) params.get("ct_Code"));
+	    model.put("STK_CODE", params.get("stk_Code"));
+	    params.put("testResultId", params.get("testResultId"));
 
-	    model.put("USER_ID", sessionVO.getMemId());
-	    model.put("USER_NAME", sessionVO.getUserName());
+	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
+	    model.addAttribute("asCrtStat", asCrtStat);
 
-	    model.put("BRANCH_NAME", sessionVO.getBranchName());
-	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
+	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();
+	    model.addAttribute("timePick", timePick);
 
-	    params.put("salesOrderId", (String) params.get("ord_Id"));
-	    EgovMap orderDetail = null;
-	    // basicinfo = hsManualService.selectHsViewBasicInfo(params);
-	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    model.addAttribute("orderDetail", orderDetail);
-
-	    return "ResearchDevelopment/UsedPartReTestResultEditViewPop";
+	    return "ResearchDevelopment/UsedPartReTestResultEditPop";
 	  }
 
 	  @RequestMapping(value = "/UsedPartReTestResultViewPop.do")
@@ -123,17 +119,22 @@ public class UsedPartReTestResultController {
 	    logger.debug("== params " + params.toString());
 	    logger.debug("===========================/UsedPartReTestResultViewPop.do===============================");
 
-	    model.put("ORD_ID", (String) params.get("ord_Id"));
-	    model.put("ORD_NO", (String) params.get("ord_No"));
-	    model.put("AS_ID", (String) params.get("as_Id"));
-	    model.put("AS_NO", (String) params.get("as_No"));
+	    model.put("TEST_RESULT_ID", (String) params.get("testResultId"));
+	    model.put("TEST_RESULT_NO", (String) params.get("testResultNo"));
+	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
+	    model.put("RCD_TMS", (String) params.get("rcdTms"));
+	    model.put("AS_NO", params.get("as_No"));
+	    model.put("DSC_CODE", (String) params.get("dsc_Code"));
+	    model.put("CT_CODE", (String) params.get("ct_Code"));
+	    model.put("STK_CODE", params.get("stk_Code"));
+	    params.put("testResultId", params.get("testResultId"));
 
-	    EgovMap AsEventInfo = ASManagementListService.getAsEventInfo(params);
-	    model.put("AsEventInfo", AsEventInfo);
 
-	    EgovMap orderDetail = null;
-	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    model.addAttribute("orderDetail", orderDetail);
+	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
+	    model.addAttribute("asCrtStat", asCrtStat);
+
+	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();
+	    model.addAttribute("timePick", timePick);
 
 	    return "ResearchDevelopment/UsedPartReTestResultViewPop";
 	  }
@@ -212,6 +213,25 @@ public class UsedPartReTestResultController {
 	    }
 
 	    return ResponseEntity.ok(message);
+	  }
+
+
+	  @RequestMapping(value = "/editUsedPartReTestResult.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> editUsedPartReTestResult(@RequestBody Map<String, Object> params, Model model,
+		      HttpServletRequest request, SessionVO sessionVO) {
+		    logger.debug("===========================/editUsedPartReTestResult.do===============================");
+		    logger.debug("== params " + params.toString());
+		    logger.debug("===========================/editUsedPartReTestResult.do===============================");
+
+		    params.put("updator", sessionVO.getUserId());
+		    ReturnMessage message = new ReturnMessage();
+
+		    EgovMap rtnValue = UsedPartReTestResultService.usedPartReTestResult_update(params);
+
+		    message.setCode(AppConstants.SUCCESS);
+		    message.setMessage("");
+
+		    return ResponseEntity.ok(message);
 	  }
 
 }

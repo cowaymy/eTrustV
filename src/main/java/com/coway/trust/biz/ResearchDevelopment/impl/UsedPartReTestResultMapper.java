@@ -11,29 +11,30 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("UsedPartReTestResultMapper")
 public interface UsedPartReTestResultMapper {
 
+	List<EgovMap> selectUsedPartReList(Map<String, Object> params);
 
-	 List<EgovMap> selectUsedPartReList(Map<String, Object> params);
+	EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
-	  EgovMap selectOrderBasicInfo(Map<String, Object> params);
+	List<EgovMap> getTestResultInfo(Map<String, Object> params);
 
-	  List<EgovMap> getTestResultInfo(Map<String, Object> params);
+	EgovMap getAsEventInfo(Map<String, Object> params);
 
-	  EgovMap getAsEventInfo(Map<String, Object> params);
+	String getSearchDtRange();
 
-	  String getSearchDtRange();
+	List<EgovMap> asProd();
 
-	  List<EgovMap> asProd();
+	List<EgovMap> selectAsCrtStat();
 
-	  List<EgovMap> selectAsCrtStat();
+	List<EgovMap> selectTimePick();
 
-	  List<EgovMap> selectTimePick();
+	int isReTestAlreadyResult(HashMap<String, Object> mp);
 
-	  int isReTestAlreadyResult(HashMap<String, Object> mp);
+	EgovMap getUsedPartReTestResultDocNo(Map<String, Object> params);
 
-	  EgovMap getUsedPartReTestResultDocNo(Map<String, Object> params);
+	EgovMap getUsedPartReTestResultId(Map<String, Object> params);
 
-	  EgovMap getUsedPartReTestResultId(Map<String, Object> params);
+	int insertSVC0122D(Map<String, Object> params);
 
-	  int insertSVC0122D(Map<String, Object> params);
+	int updateSVC0122D(Map<String, Object> params);
 
 }

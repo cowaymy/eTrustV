@@ -4,14 +4,16 @@
 <script type="text/javaScript">
 
     $(document).ready(
-    	    function() {
+            function() {
 
-                fn_DisablePageControl(); // DISABLE ALL THE FIELD
+                //fn_DisablePageControl(); // DISABLE ALL THE FIELD
                 $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
 
                 $("#dscCode").val("${DSC_CODE}");
                 $("#ddlCTCodeText").val("${CT_CODE}");
                 $("#PROD_CDE").val("${STK_CODE}");
+
+                fn_getTestResultInfo();
 
     });
 
@@ -137,7 +139,7 @@
 
     function fn_setSaveFormData() {
 
-    	var _TEST_AS_DEFECT_TYPE_ID = 0;
+        var _TEST_AS_DEFECT_TYPE_ID = 0;
         var _TEST_AS_DEFECT_ID = 0;
         var _TEST_AS_DEFECT_PART_ID = 0;
         var _TEST_AS_DEFECT_DTL_RESN_ID = 0;
@@ -146,23 +148,19 @@
         // DEFECT ENTRY
         if ($('#ddlStatus').val() == '4' || $('#ddlStatus').val() == '1') {
             _TEST_AS_DEFECT_TYPE_ID = $('#def_type_id').val();
-        	_TEST_AS_DEFECT_ID = $('#def_code_id').val();
+            _TEST_AS_DEFECT_ID = $('#def_code_id').val();
             _TEST_AS_DEFECT_PART_ID = $('#def_part_id').val();
             _TEST_AS_DEFECT_DTL_RESN_ID = $('#def_def_id').val();
             _TEST_AS_SLUTN_RESN_ID = $('#solut_code_id').val();
         }
 
-        var asResultM = {
+        var upResultM = {
             // GENERAL DATA
-            AS_NO : "${AS_NO}",
-            AS_ENTRY_ID : "${AS_ID}",
-            AS_SO_ID : $("#ORD_ID").val(),
-            AS_ORD_NO : $("#ORD_NO").val(),
-            AS_CT_ID : $('#ddlCTCode').val(),
+            TEST_UP_ID : "${TEST_RESULT_ID}",
+            TEST_UP_NO : "${TEST_RESULT_NO}",
             TEST_UP_SETL_DT : $('#dpSettleDate').val(),
             TEST_UP_SETL_TM : $('#tpSettleTime').val(),
             TEST_UP_STUS : $('#ddlStatus').val(),
-            AS_BRNCH_ID : $('#ddlDSCCode').val(),
             TEST_MNF_DT : $('#manufacDate').val(),
             TEST_UP_GNE : $('#ddlProdGenuine').val(),
             TEST_UP_REM : $('#txtTestResultRemark').val(),
@@ -177,27 +175,27 @@
         }
 
         var saveForm = {
-            "asResultM" : asResultM
+            "upResultM" : upResultM
         }
 
         // SAVE RESULT
-            Common.ajax("POST", "/ResearchDevelopment/newUsedPartReTestResultAdd.do", saveForm,
+            Common.ajax("POST", "/ResearchDevelopment/editUsedPartReTestResult.do", saveForm,
                 function(result) {
                    if (result.data != "" && result.data != null && result.data != "null") {
-                      Common.alert("<b>Test result save successfully.</b></br> New Used Part Return Test Result Number : <b>" + result.data + " </b>");
+                      Common.alert("<b>AS result save successfully.</b></br> New Used Part Return Test Result Number : <b>" + result.data + " </b>");
                           $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
                           fn_DisablePageControl();
-                          $("#_newASResultDiv1").remove();
+                          $("#_editUPResultDiv1").remove();
                           fn_searchUsedPart();
                     } else {
                           Common.alert("<b>Used Part Return Test Result save successfully.</b>");
                           $("#txtResultNo").html( "<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
                           fn_DisablePageControl();
-                          $("#_newASResultDiv1").remove();
+                          $("#_editUPResultDiv1").remove();
                           fn_searchUsedPart();
                     }
                  }, function() {
-                     $("#_newASResultDiv1").remove();
+                     $("#_editUPResultDiv1").remove();
                      fn_searchUsedPart();
                  });
     }
@@ -576,29 +574,56 @@
         }
     }
 
+    function fn_getTestResultInfo() {
+        Common.ajax("GET", "/ResearchDevelopment/getTestResultInfo.do", $("#resultUPForm").serialize(), function(result) {
+
+            $("#txtResultNo").text(result[0].testResultNo);
+            $("#ddlStatus").val(result[0].testUpStus);
+            $("#dpSettleDate").val(result[0].testUpSetlDt);
+            $("#tpSettleTime").val(result[0].testUpSetlTm);
+            $("#ddlProdGenuine").val(result[0].testUpGne);
+            $("#manufacDate").val(result[0].testMnfDt);
+            $("#txtTestResultRemark").val(result[0].testUpRem);
+
+            $("#def_part").val(result[0].defectCodeB2);
+            $("#def_part_id").val(result[0].defectIdB2);
+            $("#def_part_text").val(result[0].defectDescB2);
+
+            $("#def_def").val(result[0].defectCodeB3);
+            $("#def_def_id").val(result[0].defectIDB3);
+            $("#def_def_text").val(result[0].defectDescB3);
+
+            $("#def_code").val(result[0].defectCodeB1);
+            $("#def_code_id").val(result[0].defectIDB1);
+            $("#def_code_text").val(result[0].defectDescB1);
+
+            $("#def_type").val(result[0].defectCodeB0);
+            //$("#def_type_id").val(result[0].defectIDB0);
+            $("#def_type_text").val(result[0].defectDescB0);
+
+            $("#solut_code").val(result[0].defectCodeB4);
+            $("#solut_code_id").val(result[0].defectIDB4);
+            $("#solut_code_text").val(result[0].defectDescB4);
+
+          });
+    };
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
     <!-- popup_wrap start -->
     <section id="content">
         <!-- content start -->
-        <form id="resultASForm" method="post">
+        <form id="resultUPForm" method="post">
             <div style="display: none">
-                <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
-                <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
-                <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
-                <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
-                <input type="text" name="REF_REQST" id="REF_REQST" value="${REF_REQST}" />
-                <input type="text" name="AS_RESULT_NO" id="RCD_TMS"  value="${AS_RESULT_NO}" />
                 <input type="text" name="PROD_CDE" id="PROD_CDE" />
-                <input type="text" name="PROD_CAT" id="PROD_CAT" />
+                <input type="text" name="TEST_RESULT_NO" id="TEST_RESULT_NO" value="${TEST_RESULT_NO}" />
                 <input type="text" name="DSC_CODE" id="DSC_CODE" value="${DSC_CODE}" />
+                <input type="text" name="TEST_RESULT_ID" id="TEST_RESULT_ID" value="${TEST_RESULT_ID}" />
             </div>
         </form>
         <header class="pop_header">
             <!-- pop_header start -->
-            <h1>
-                Add Used Part Return Result
-            </h1>
+            <h1><spring:message code='rnd.title.editUsedPartTestRst' /></h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2">
                         <a href="#"><spring:message code='sys.btn.close' /></a>
@@ -606,7 +631,7 @@
             </ul>
         </header>
         <!-- pop_header end -->
-        <form id="resultASAllForm" method="post">
+        <form id="resultUPAllForm" method="post">
             <section class="pop_body">
                 <!-- pop_body start -->
                 <aside class="title_line">
@@ -713,7 +738,7 @@
                         <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
                             <a href="#"><spring:message code='service.title.asDefEnt' /></a>
                         </dt>
-                        <dd id='defEvt_div' style="display: none">
+                        <dd id='defEvt_div'>
                             <table class="type1">
                                 <!-- table start -->
                                 <caption>table</caption>
@@ -787,7 +812,7 @@
                     <li>
                         <p class="btn_blue2 big">
                             <a href="#"
-                                onclick="javascript:$('#resultASAllForm').clearForm();"><spring:message
+                                onclick="javascript:$('#resultUPAllForm').clearForm();"><spring:message
                                     code='sys.btn.clear' /></a>
                         </p>
                     </li>
@@ -797,6 +822,3 @@
         </form>
     </section>
 </div>
-<script type="text/javaScript">
-
-</script>

@@ -178,6 +178,12 @@
                     width : 100
                 },
                 {
+                	dataField : "testResultId",
+                	headerText : "Test Result Id",
+                	editable : false,
+                	visible : false
+                },
+                {
                 	dataField : "testResultNo",
                     headerText : "Test Result No.",
                     editable : false,
@@ -472,34 +478,32 @@
         var asStusId = selectedItems[0].item.code1;
         var salesOrdNo = selectedItems[0].item.salesOrdNo;
         var salesOrdId = selectedItems[0].item.salesOrdId;
-        var asResultNo = selectedItems[0].item.c3;
-        var asResultId = selectedItems[0].item.asResultId;
+        //var refReqst = selectedItems[0].item.refReqst;
         var rcdTms = selectedItems[0].item.rcdTms;
-        var updDt = selectedItems[0].item.asSetlDt;
-        var lstUpdDt = selectedItems[0].item.asResultCrtDt;
+        //var asRst = selectedItems[0].item.c3;
+        var testResultId = selectedItems[0].item.testResultId;
+        var testResultNo = selectedItems[0].item.testResultNo;
 
-        console.log ("asid : " + asId);
-        console.log ("asNo : " + asNo);
-        console.log ("asStusId : " + asStusId);
-        console.log ("salesOrdNo : " + salesOrdNo);
-        console.log ("salesOrdId : " + salesOrdId);
-        console.log ("asResultNo : " + asResultNo);
+        var dscCode = selectedItems[0].item.dscCode;
+        var ctCode = selectedItems[0].item.lastInstallCtCode;
+        var stkCode = selectedItems[0].item.stkCode;
 
-        if (asResultNo == "-") {
-            Common.alert("<spring:message code='rnd.msg.usedPartTestEdtNoRst' arguments='<b>"
-                            + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-            return;
-        }
+        console.log ("asId :"+ asId );
+        console.log ("asNo :"+ asNo );
+        console.log ("asStusId :"+ asStusId );
+        console.log ("salesOrdNo :"+ salesOrdNo );
+        console.log ("salesOrdId :"+ salesOrdId );
+        console.log ("rcdTms :"+ rcdTms );
+        console.log ("dscCode :"+ dscCode );
+        console.log ("ctCode :"+ ctCode );
+        console.log ("stkCode :"+ stkCode );
+        console.log ("testResultId :"+ testResultId);
+        console.log ("testResultNo :"+ testResultNo);
 
-        if (asResultNo == "") {
-            Common.alert("<spring:message code='rnd.msg.usedPartTestEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-            return;
-        }
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode
+                    + "&testResultId=" + testResultId + "&testResultNo=" + testResultNo;
 
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
-                    + "&mod=RESULTEDIT&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
-
-        Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+        Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultEditPop.do" + param, null, null, true, '_editUPResultDiv1');
     }
 
     function fn_excelDown() {
