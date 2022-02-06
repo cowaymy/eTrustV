@@ -87,7 +87,7 @@ public class UsedPartReTestResultController {
 	  }
 
 	  @RequestMapping(value = "/UsedPartReTestResultEditPop.do")
-	  public String UsedPartReTestResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+	  public String UsedPartReTestResultEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
 	      throws Exception {
 	    logger.debug("===========================/UsedPartReTestResultEditPop.do===============================");
 	    logger.debug("== params " + params.toString());
@@ -113,7 +113,7 @@ public class UsedPartReTestResultController {
 	  }
 
 	  @RequestMapping(value = "/UsedPartReTestResultViewPop.do")
-	  public String TestResultViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+	  public String UsedPartReTestResultViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
 	      throws Exception {
 	    logger.debug("===========================/UsedPartReTestResultViewPop.do===============================");
 	    logger.debug("== params " + params.toString());
@@ -129,7 +129,6 @@ public class UsedPartReTestResultController {
 	    model.put("STK_CODE", params.get("stk_Code"));
 	    params.put("testResultId", params.get("testResultId"));
 
-
 	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
 	    model.addAttribute("asCrtStat", asCrtStat);
 
@@ -141,7 +140,7 @@ public class UsedPartReTestResultController {
 
 
 	  @RequestMapping(value = "/UsedPartReTestResultNewResultPop.do")
-	  public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	  public String insertUPResult(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	    logger.debug("===========================/UsedPartReTestResultNewResultPop.do===============================");
 	    logger.debug("== params " + params.toString());
 	    logger.debug("===========================/UsedPartReTestResultNewResultPop.do===============================");

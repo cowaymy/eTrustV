@@ -598,7 +598,7 @@
             $("#def_code_text").val(result[0].defectDescB1);
 
             $("#def_type").val(result[0].defectCodeB0);
-            //$("#def_type_id").val(result[0].defectIDB0);
+            $("#def_type_id").val(result[0].defectIDB0);
             $("#def_type_text").val(result[0].defectDescB0);
 
             $("#solut_code").val(result[0].defectCodeB4);
