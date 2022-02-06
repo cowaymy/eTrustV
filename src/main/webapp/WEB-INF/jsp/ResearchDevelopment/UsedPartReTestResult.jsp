@@ -534,7 +534,7 @@
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_newUPTestResultPop()"><spring:message
-                                code='service.btn.addtAs' /></a>
+                                code='service.btn.addUptResult' /></a>
                     </p></li>
             <%-- </c:if> --%>
             <!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
@@ -553,13 +553,13 @@
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_upTestResultEditPop()"><spring:message
-                                code='service.btn.edtAs' /></a>
+                                code='service.btn.edtUptResult' /></a>
                     </p></li>
             <%-- </c:if>  --%>
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_upTestResultViewPop()"><spring:message
-                                code='service.btn.viewAS' /></a>
+                                code='service.btn.viewUptResult' /></a>
                     </p></li>
             <%-- </c:if> --%>
             <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
