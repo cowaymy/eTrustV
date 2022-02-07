@@ -49,7 +49,7 @@
 		ON A.ROT_ID = H.ROT_ID
 		LEFT JOIN SYS0032M I
 		ON H.CCP_RESN_ID = I.RESN_ID
-		JOIN SYS0047M J
+		LEFT JOIN SYS0047M J
 		ON H.CCP_UPD_USER_ID = J.USER_ID
 		WHERE 1=1
 		<if test="rotOrdNo != null and rotOrdNo != '' ">
@@ -303,7 +303,7 @@
 		#{ccpResnId},
 		#{ccpRem},
 		#{ccpRjStusId},
-		#{ccpUpdUserId},
+		#{userID},
 		SYSDATE,
 		#{ccpIsLou},
 		#{ccpIsSaman},
