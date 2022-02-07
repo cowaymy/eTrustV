@@ -968,7 +968,7 @@
     </select>
 
     <select id="checkRC" parameterType="Map" resultType="egovMap">
-        SELECT distinct
+        SELECT
             ORG0001D.MEM_ID,
             ORG0001D.MEM_CODE,
             ORG0001D.NAME,
@@ -982,8 +982,8 @@
         FROM ORG0001D
         LEFT JOIN SAL0248M
             ON ORG0001D.MEM_CODE = SAL0248M.MEM_CODE
-            --AND SAL0248M.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
-            --AND SAL0248M.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
+            AND SAL0248M.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
+            AND SAL0248M.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
         LEFT JOIN (
             SELECT
                 MEM_ID,
@@ -1020,7 +1020,7 @@
         ) OP
             ON ORG0001D.MEM_ID = OP.MEM_ID
         WHERE ORG0001D.MEM_CODE = #{memCode}
-            AND ORG0001D.MEM_TYPE = '1' and rownum =1
+            AND ORG0001D.MEM_TYPE = '1'
     </select>
 
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
