@@ -182,6 +182,13 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
         params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
         params.put("hidCallType", String.valueOf(installResult.get("typeId")));
+
+
+        params.put("resultIcMobileNo", String.valueOf(insApiresult.get("resultIcMobileNo")));
+        // ctCode
+        // failId
+        // failLct
+
         params.put("installDate", installDate);
         params.put("CTID", String.valueOf(userId));
         params.put("updator", String.valueOf(userId));
