@@ -1819,7 +1819,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
 
+    // mobile trigger SMS - ALEX
     installResult.put("resultIcMobileNo", CommonUtils.nvl(params.get("resultIcMobileNo")).toString());
+    installResult.put("userId", CommonUtils.nvl(params.get("userId")).toString());
 
 
     installResult.put("smsMobileNo", CommonUtils.nvl(params.get("hidCustomerContact")).toString());
@@ -2628,9 +2630,14 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     	installResult.put("smsMobileNo", String.valueOf(installResult.get("resultIcMobileNo")));
     }
 
+    if (String.valueOf(installResult.get("ctCode")).equals("") || String.valueOf(installResult.get("ctCode")) == null || String.valueOf(installResult.get("ctCode")).equals("null")) { // This is to capture resultIcMobileNo from Apps
+    	installResult.put("ctCode", String.valueOf(installResult.get("userId")));
+    }
+
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
-    LOGGER.debug("PARAMS BY YONG:" + installResult.toString());
-    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + installResult.get("resultIcMobileNo").toString());
+    LOGGER.debug("PARAMS :" + installResult.toString());
+    LOGGER.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
+    LOGGER.debug("CHECKPOINT  - get userId:" + installResult.get("userId").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
@@ -2638,6 +2645,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     if(installResult.get("statusCodeId").toString().equals("4")){
       smsMessage = "COWAY:Dear Customer, Your Installation/Product collection is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else{
+
+
+
       smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/Product collection has failed due to "+ installResult.get("failId").toString() +".Will call to set new appointment.";
     }
     Map<String, Object> smsList = new HashMap<>();
