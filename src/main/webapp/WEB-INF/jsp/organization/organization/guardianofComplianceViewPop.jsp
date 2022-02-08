@@ -5,6 +5,8 @@
 var myGridID_order;
 var myGridID_remark;
 var complianceList;
+var file1ID = 0;
+var file1Name = "";
 $(document).ready(function(){
 
     fn_GuardianRemarkGrid();
@@ -67,6 +69,18 @@ function fn_GuardianRemarkGrid() {
         headerText : "Respond At",
         editable : false,
         width : 130
+    },{
+        dataField : "",
+        headerText : "Attachment",
+        width : 130,
+        renderer : {
+            type : "ButtonRenderer",
+            labelText : "Download",
+            onclick : function(rowIndex, columnIndex, value, item) {
+              fileDown(rowIndex,"PB");
+            }
+        }
+    , editable : false
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -85,8 +99,6 @@ function fn_GuardianRemarkGrid() {
              showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
           // 워드랩 적용
              wordWrap : true
-
-
     };
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -131,6 +143,24 @@ function fn_validation(){
             Common.alert("Please select a status");
             return false;
     }
+    if($("#changePerson").val() == ""){
+        Common.alert("Please select a person in charge");
+        return false;
+    }
+
+    var input = document.getElementById('file1');
+    if (input.files.length < 1) {
+    	Common.alert("Please choose a file to upload");
+        return false;
+    }
+
+    var FileExt = $("#file1Txt").val().split('.').pop().toUpperCase();
+    if( FileExt != 'ZIP')
+    {
+    	Common.alert("Please upload .zip file only");
+        return false;
+    }
+
     if($("#cmbreqStatus").val() == "60" || $("#cmbreqStatus").val() == "10"){
         if($("#complianceContent").val() == ""){
             Common.alert("Remark field is empty");
@@ -143,7 +173,13 @@ function fn_validation(){
 
 function fn_save(){
     if(fn_validation()){
-        Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
+    	var formData = Common.getFormData("saveForm");
+    	var obj = $("#saveForm").serializeJSON();
+	    $.each(obj, function(key, value) {
+	        formData.append(key, value);
+	      });
+
+        Common.ajaxFile("/organization/compliance/saveGuardianCompliance2.do",formData , function(result) {
             console.log("성공.");
             Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
         });
@@ -166,6 +202,7 @@ function fn_save(){
     	}
         */
     }
+    fn_complianceSearch();
 }
 
 function fn_guardianViewPopClose() {
@@ -195,6 +232,42 @@ function fn_memberListNew(){
 
 function fn_setOptGrpClass() {
     $("optgroup").attr("class" , "optgroup_text")
+}
+
+$("#file1Txt").dblclick(function(){
+	var data = {
+	        reqstId : '${guardianofCompliance.reqstId}'
+	};
+	Common.ajax("GET", "/organization/compliance/getAttachmentInfo.do", data, function(result) {
+	   if(result != null){
+	       var fileSubPath = result.fileSubPath;
+	       fileSubPath = fileSubPath.replace('\', '/'');
+	       window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+	   }
+	});
+});
+
+function fileDown(rowIndex){
+
+    var gridObj = AUIGrid.getSelectedItems(myGridID_remark);
+    console.log("grid here");
+    console.log(gridObj);
+    console.log("///");
+    var reqst_id = gridObj[0].item.paparazReqstId;
+    var atchFileGrpId = gridObj[0].item.atchFileGrpId;
+    var atchFileId = gridObj[0].item.atchFileId;
+	var data = {
+			   reqstId : reqst_id,
+			   atchFileGrpId : atchFileGrpId,
+			   atchFileId : atchFileId
+	};
+  Common.ajax("GET", "/organization/compliance/getAttachmentInfo.do", data, function(result) {
+     if(result != null){
+         var fileSubPath = result.fileSubPath;
+         fileSubPath = fileSubPath.replace('\', '/'');
+         window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+     }
+  });
 }
 
 </script>
@@ -366,6 +439,18 @@ function fn_setOptGrpClass() {
     <th scope="row">Person In Charge</th>
     <td colspan="3">
         <select id="changePerson" name="changePerson" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Attachment</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="file1" accept=".rar, .zip"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id='file1Txt'/>
+                <span class='label_text'><a href='#'>File</a></span>
+            </label>
+        </div>
     </td>
 </tr>
 <tr id = "ccontent">

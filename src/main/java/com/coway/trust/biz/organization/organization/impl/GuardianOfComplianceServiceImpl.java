@@ -166,9 +166,9 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
     		guar.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
     		guar.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
     		guar.put("guardianCreateBy", sessionVo.getUserId());
-
+    		//guar.put("fileId", params.get("fileId"));
     		 //insert
-    		guardianOfComplianceMapper.updateGuar(guar);
+    		guardianOfComplianceMapper.updateGuar(guar);//Update MSC0043M
 
 
             Map<String, Object> guar_sub =new HashMap<String, Object>();
@@ -180,9 +180,9 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
             guar_sub.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
     		guar_sub.put("guardianCreateBy", sessionVo.getUserId());
     		guar_sub.put("guardianUpdatedBy", sessionVo.getUserId());
-
+    		guar_sub.put("fileId", Integer.parseInt(params.get("fileId").toString()));
     		 //insert
-    		guardianOfComplianceMapper.insertGuarSub(guar_sub);
+    		guardianOfComplianceMapper.insertGuarSub(guar_sub); //Insert to MSC0044M
 
 
 
@@ -211,7 +211,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		com.put("complianceUpdateAt", "");
 		com.put("complianceUpdateBy", sessionVo.getUserId());
 		 //insert
-		guardianOfComplianceMapper.insertCom(com);
+		guardianOfComplianceMapper.insertCom(com); //INSERT TO MSC0005D
 
 		int complianceId = guardianOfComplianceMapper.selectComplianceId();
 
@@ -222,7 +222,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
     	co.put("complianceStatusId", 1);
     	co.put("complianceRemark", "");
 
-    	guardianOfComplianceMapper.insertComplianceOrder(co);
+    	guardianOfComplianceMapper.insertComplianceOrder(co); //INSERT TO MSC0006D
 
 
 		Map<String, Object> com_sub =new HashMap<String, Object>();
@@ -249,9 +249,8 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		com_sub.put("complianceCreateBy", sessionVo.getUserId());
 		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
 		com_sub.put("complianceGroupId", Integer.parseInt(params.get("groupId").toString()));
-
 		//insert
-		guardianOfComplianceMapper.insertComSub(com_sub);
+		guardianOfComplianceMapper.insertComSub(com_sub);//INSERT TO MSC0007D
 		}
 		return complianceNo;
 

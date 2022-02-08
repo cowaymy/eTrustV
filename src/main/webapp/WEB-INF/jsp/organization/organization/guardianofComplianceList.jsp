@@ -257,16 +257,16 @@ function fn_complianceSearch(){
     if("${PAGE_AUTH.funcUserDefine1}" != 'Y'){
         Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
             console.log("성공.");
-            //console.log("data : " + JSON.stringify(result));
             AUIGrid.setGridData(myGridID, result);
         });
     } else {
-        Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
-            console.log("성공.");
-            console.log("data : " + JSON.stringify(result));
+    	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
+        });
+        Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
             AUIGrid.setGridData(excelGridID, result);
         });
+
     }
 }
 

@@ -181,7 +181,7 @@
 
     <select id="selectGuardianofComplianceListCodyHP" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        SELECT
+        SELECT DISTINCT
             Project1.REQUESTID REQUESTID  ,
             ( SELECT TT.CODE_NAME
               FROM (
@@ -358,7 +358,7 @@
 		 </select>
 
 		 <select id="selectGuardianofComplianceInfo" parameterType="Map" resultType="egovMap">
-			SELECT Extent1.REQST_ID REQST_ID,
+			SELECT DISTINCT Extent1.REQST_ID REQST_ID,
 			           Extent1.REQST_NO REQST_NO,
 			           Extent1.REQST_CTGRY REQST_CTGRY,
 			           Extent6.RESN_DESC RESN_DESC,
@@ -411,9 +411,8 @@
                           AND D.HR_CODE = E.MEM_CODE
                     ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
                                                 AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
-
 			 WHERE 1 = 1
-			   AND Extent1.REQST_ID  = #{reqstId}
+			   AND Extent1.REQST_ID  = #{reqstId} AND ROWNUM = 1
 		</select>
 
 		<select id="selectGuardianRemark" parameterType="Map" resultType="egovMap">
@@ -427,13 +426,21 @@
                        TO_CHAR(Extent1.RESPNS_CREATED, 'DD/MM/YYYY') RESPNS_CREATED  ,
                        Extent1.RESPNS_UPDATOR RESPNS_UPDATOR  ,
                        Extent5.USER_NAME USER_NAME1  ,
-                       TO_CHAR(Extent1.RESPNS_UPDATED, 'DD/MM/YYYY') RESPNS_UPDATED
+                       TO_CHAR(Extent1.RESPNS_UPDATED, 'DD/MM/YYYY') RESPNS_UPDATED,
+                       Extent1.FILE_ID,
+                       Extent12.ATCH_FILE_GRP_ID,
+                       Extent13.ATCH_FILE_ID,
+                       Extent13.ATCH_FILE_NAME,
+                       Extent13.FILE_SUB_PATH,
+                       Extent13.PHYSICL_FILE_NAME
 
                   FROM MSC0044M Extent1
                          LEFT JOIN MSC0043M Extent2   ON Extent2.REQST_ID = Extent1.PAPARAZ_REQST_ID
                          LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RESPNS_STUS_ID
                          LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.RESPNS_CREATOR
                          LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.RESPNS_UPDATOR
+                         LEFT JOIN SYS0070M Extent12 ON Extent12.ATCH_FILE_GRP_ID = Extent1.FILE_ID
+                         LEFT JOIN SYS0071D Extent13 ON Extent13.ATCH_FILE_ID = Extent12.ATCH_FILE_ID
                  WHERE  Extent1.PAPARAZ_REQST_ID = #{reqstId}
                   order by Extent1.RESPNS_ID
 
@@ -488,6 +495,7 @@
          , RESPNS_CREATED
          , RESPNS_UPDATOR
          , RESPNS_UPDATED
+         , FILE_ID
           )
          VALUES (
           #{respnsId}
@@ -498,6 +506,7 @@
          , sysdate
          , #{guardianUpdatedBy}
          , sysdate
+         , #{fileId}
          )
   </insert>
 
