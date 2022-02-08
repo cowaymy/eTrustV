@@ -1819,6 +1819,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
 
+    installResult.put("resultIcMobileNo", CommonUtils.nvl(params.get("resultIcMobileNo")).toString());
+
+
     installResult.put("smsMobileNo", CommonUtils.nvl(params.get("hidCustomerContact")).toString());
     installResult.put("ctCode", CommonUtils.nvl(params.get("ctCode")).toString());
 
@@ -2620,9 +2623,18 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     // INSERT HAPPY CALL CCR0001D
     installationResultListMapper.insertHappyCall(happyCall);
 
+
+    if (String.valueOf(installResult.get("smsMobileNo")).equals("") || String.valueOf(installResult.get("smsMobileNo")) == null || String.valueOf(installResult.get("smsMobileNo")).equals("null")) { // This is to capture resultIcMobileNo from Apps
+    	installResult.put("smsMobileNo", String.valueOf(installResult.get("resultIcMobileNo")));
+    }
+
+    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
+    LOGGER.debug("PARAMS BY YONG:" + installResult.toString());
+    LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + installResult.get("resultIcMobileNo").toString());
+    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
+
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
     String smsMessage = "";
-
     if(installResult.get("statusCodeId").toString().equals("4")){
       smsMessage = "COWAY:Dear Customer, Your Installation/Product collection is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else{
