@@ -47,6 +47,11 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 	}
 
 	@Override
+	public List<EgovMap> selectGuardianofComplianceListSearch(Map<String, Object> params) {
+		return guardianOfComplianceMapper.selectGuardianofComplianceListSearch(params);
+	}
+
+	@Override
 	public EgovMap  saveGuardian(Map<String, Object> params, SessionVO sessionVo) {
 
 		EgovMap saveView = new EgovMap();

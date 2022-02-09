@@ -50,5 +50,7 @@ public interface GuardianOfComplianceMapper {
 
 	void updateDocNo(Map<String, Object> params);
 
+	List<EgovMap> selectGuardianofComplianceListSearch(Map<String, Object> params);
+
 }
 

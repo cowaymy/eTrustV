@@ -36,4 +36,6 @@ public interface GuardianOfComplianceService {
 
 	List<EgovMap> selectReasonCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectGuardianofComplianceListSearch(Map<String, Object> params);
+
 }

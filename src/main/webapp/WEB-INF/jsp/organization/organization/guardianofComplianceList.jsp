@@ -260,7 +260,7 @@ function fn_complianceSearch(){
             AUIGrid.setGridData(myGridID, result);
         });
     } else {
-    	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
+    	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListSearch.do", $("#complianceSearch").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
         Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {

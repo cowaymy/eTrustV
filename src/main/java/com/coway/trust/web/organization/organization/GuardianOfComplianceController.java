@@ -126,13 +126,13 @@ public class GuardianOfComplianceController {
 		params.put("requestStatusIdList", requestStatusIdList);
 
 
-		logger.debug("selectGuardianofComplianceList in.............");
-		logger.debug("params : {}", params);
+		//logger.debug("selectGuardianofComplianceList in.............");
+		//logger.debug("params : {}", params);
 
 		List<EgovMap> mList = guardianOfComplianceService.selectGuardianofComplianceList(params);
 
 
-		logger.debug("mList : {}", mList);
+		//logger.debug("mList : {}", mList);
 		return ResponseEntity.ok(mList);
 	}
 
@@ -153,6 +153,20 @@ public class GuardianOfComplianceController {
 
 
 		logger.debug("mList : {}", mList);
+		return ResponseEntity.ok(mList);
+	}
+
+	@RequestMapping(value = "/selectGuardianofComplianceListSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectGuardianofComplianceListSearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		String[] caseCategoryList = request.getParameterValues("caseCategory");
+		params.put("caseCategoryList", caseCategoryList);
+
+		String[] requestStatusIdList = request.getParameterValues("requestStatusId");
+		params.put("requestStatusIdList", requestStatusIdList);
+
+		List<EgovMap> mList = guardianOfComplianceService.selectGuardianofComplianceListSearch(params);
+
 		return ResponseEntity.ok(mList);
 	}
 
