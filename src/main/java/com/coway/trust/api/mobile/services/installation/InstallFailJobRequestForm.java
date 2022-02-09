@@ -56,6 +56,8 @@ public class InstallFailJobRequestForm {
 
   private String failBfDepWH;
 
+  private String resultIcMobileNo;
+
   private String failDeptChk;
 
 
@@ -203,7 +205,15 @@ public String getFailDeptChk() {
     this.failBfDepWH = failBfDepWH;
   }
 
-  public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
+  public String getResultIcMobileNo() {
+	return resultIcMobileNo;
+  }
+
+  public void setResultIcMobileNo(String resultIcMobileNo) {
+	this.resultIcMobileNo = resultIcMobileNo;
+  }
+
+public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
 
     List<Map<String, Object>> list = new ArrayList<>();
 
