@@ -10,15 +10,27 @@ function fn_report() {
        return;
     }
 
+    var reportType = $("#listPltvReportType").val();
     var stkId = $("#listProductId").val();
     var stkDesc = $("#listProductId option:selected").text();
     var rentStus = $("#listRentStus").val();
 
-    $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
-    $("#dataForm #viewType").val("EXCEL");
-    $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+    if (reportType == 'RAW') {
+
+      $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
+      $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+      $("#dataForm #V_RENTSTUS").val(rentStus);
+
+    } else if (reportType == 'SUS_COUNT') {
+
+        $("#dataForm #reportFileName").val("/sales/PLTV_SUS_Count.rpt");
+        $("#dataForm #viewType").val("EXCEL");
+        $("#dataForm #reportDownFileName").val("PLTV_SUS_Count_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+
+    }
+
     $("#dataForm #V_STKID").val(stkId);
-    $("#dataForm #V_RENTSTUS").val(rentStus);
+    $("#dataForm #viewType").val("EXCEL");
 
     var option = {
         isProcedure : true
@@ -77,6 +89,15 @@ function fn_setOptGrpClass() {
         <select class="w100p" id="listRentStus" name="listRentStus" >
             <option value="SUS">SUS</option>
             <option value="RET_TER">RET, TER</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sales.pltv.ReportType" /></th>
+    <td>
+        <select class="w100p" id="listPltvReportType" name="listPltvReportType" >
+            <option value="RAW">RAW</option>
+            <option value="SUS_COUNT">SUS COUNT</option>
         </select>
     </td>
 </tr>
