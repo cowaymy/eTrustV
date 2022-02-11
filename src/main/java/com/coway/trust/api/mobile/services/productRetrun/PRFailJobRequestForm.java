@@ -24,6 +24,10 @@ public class PRFailJobRequestForm {
 
   private String failReasonCode;
 
+  private String handphoneTel;
+
+  private String appTypeId;
+
   private String transactionId;
 
   private String failDeptChk;
@@ -44,7 +48,23 @@ public class PRFailJobRequestForm {
     this.userId = userId;
   }
 
-  public String getSalesOrderNo() {
+  public String getHandphoneTel() {
+	return handphoneTel;
+}
+
+public void setHandphoneTel(String handphoneTel) {
+	this.handphoneTel = handphoneTel;
+}
+
+public String getAppTypeId() {
+	return appTypeId;
+}
+
+public void setAppTypeId(String appTypeId) {
+	this.appTypeId = appTypeId;
+}
+
+public String getSalesOrderNo() {
     return salesOrderNo;
   }
 
