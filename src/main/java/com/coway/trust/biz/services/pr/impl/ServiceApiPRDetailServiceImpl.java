@@ -163,8 +163,15 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	public ResponseEntity<PRFailJobRequestDto> prReAppointmentRequestProc(Map<String, Object> params) throws Exception {
 		String serviceNo = String.valueOf(params.get("serviceNo"));
 
+		logger.debug("### P1 PARAM : " + params.toString());
+
 		MSvcLogApiService.savePrFailServiceLogs(params);
+
+		logger.debug("### P2 PARAM : " + params.toString());
+
 	    MSvcLogApiService.setPRFailJobRequest(params);
+
+	    logger.debug("### P3 PARAM : " + params.toString());
 
 	    return ResponseEntity.ok(PRFailJobRequestDto.create(serviceNo));
 	}
