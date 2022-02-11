@@ -573,7 +573,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     }
 
     Map<String, Object> smsList = new HashMap<>();
-    smsList.put("userId", params.get("userId").toString());
+    //smsList.put("userId", params.get("userId").toString());
+    smsList.put("userId", String.valueOf(params.get("userId")));
     smsList.put("smsType", 975);
     smsList.put("smsMessage", smsMessage);
     smsList.put("smsMobileNo", params.get("handphoneTel").toString());
