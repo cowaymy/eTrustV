@@ -83,6 +83,12 @@
                     width : 100
                 },
                 {
+                    dataField : "testYn",
+                    headerText : "Testable",
+                    width : 100,
+                    visible : true
+                },
+                {
                     dataField : "testStus",
                     headerText : "Status",
                     editable : false,
@@ -246,11 +252,6 @@
                     width : 100,
                     visible : true
                 }, {
-                    dataField : "testYn",
-                    headerText : "Testable",
-                    width : 100,
-                    visible : true
-                }, {
                     dataField : "rcdTms",
                     headerText : "",
                     width : 100,
@@ -304,41 +305,6 @@
         }
     }
 
-    function fn_viewASResultPop() { // VIEW RESULT
-        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-        if (selectedItems.length <= 0) {
-            Common.alert("<spring:message code='service.msg.NoRcd'/>");
-            return;
-        }
-
-        if (selectedItems.length > 1) {
-            Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-            return;
-        }
-
-        var AS_ID = selectedItems[0].item.asId;
-        var AS_NO = selectedItems[0].item.asNo;
-        var asStusId = selectedItems[0].item.code1;
-        var ordno = selectedItems[0].item.salesOrdNo;
-        var ordId = selectedItems[0].item.asSoId;
-
-        if (asStusId != "ACT") {
-            Common
-                    .alert("AS Info Edit Restrict</br>"
-                            + DEFAULT_DELIMITER
-                            + "<b>["
-                            + AS_NO
-                            + "]  is not in active status.</br> AS information edit is disallowed.</b>");
-            return;
-        }
-
-        Common.popupDiv(
-                "/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="
-                        + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO
-                        + '&AS_ID=' + AS_ID, null, null, true,
-                '_viewEntryPopDiv1');
-    }
 
     function fn_newUPTestResultPop() {
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -353,6 +319,11 @@
           return;
         }
 
+        if (selectedItems[0].item.testStus == 'Completed') {
+            Common.alert("<spring:message code='service.msg.alreadyCompleteCannotAdd'/>");
+            return;
+          }
+
         var asId = selectedItems[0].item.asId;
         var asNo = selectedItems[0].item.asNo;
         var asStusId = selectedItems[0].item.code1;
@@ -365,48 +336,12 @@
         var dscCode = selectedItems[0].item.dscCode;
         var ctCode = selectedItems[0].item.lastInstallCtCode;
         var stkCode = selectedItems[0].item.stkCode;
+        var asrItmId = selectedItems[0].item.asrItmId;
 
-        console.log ("asId :"+ asId );
-        console.log ("asNo :"+ asNo );
-        console.log ("asStusId :"+ asStusId );
-        console.log ("salesOrdNo :"+ salesOrdNo );
-        console.log ("salesOrdId :"+ salesOrdId );
-        console.log ("rcdTms :"+ rcdTms );
-        console.log ("dscCode :"+ dscCode );
-        console.log ("ctCode :"+ ctCode );
-        console.log ("stkCode :"+ stkCode );
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
+        		+ "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode + "&asr_Itm_Id=" + asrItmId;
 
-
-
-
-        //if (asRst != '-') {
-          //Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-          //return;
-        //}
-
-        /*  if (asStusId != "ACT") {
-          Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-          return;
-        } */
-
-      /*    Common.ajax("POST", "/services/as/selRcdTms.do", {
-            asNo : asNo,
-            asId : asId,
-            salesOrdNo : salesOrdNo,
-            salesOrderId : salesOrdId,
-            rcdTms : rcdTms
-        }, function(result) {
-           if (result.code == "99") {
-            Common.alert(result.message);
-            return;
-          } else { */
-     //       var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst +*/ "&rcdTms=" + rcdTms;
-     //       Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
-     //     }
-     //   });
-
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst + "&rcdTms=" + rcdTms */;
-        Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+        Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newUPResultDiv1');
       }
 
     function fn_upTestResultViewPop() {
@@ -436,18 +371,6 @@
         var dscCode = selectedItems[0].item.dscCode;
         var ctCode = selectedItems[0].item.lastInstallCtCode;
         var stkCode = selectedItems[0].item.stkCode;
-
-        console.log ("asId :"+ asId );
-        console.log ("asNo :"+ asNo );
-        console.log ("asStusId :"+ asStusId );
-        console.log ("salesOrdNo :"+ salesOrdNo );
-        console.log ("salesOrdId :"+ salesOrdId );
-        console.log ("rcdTms :"+ rcdTms );
-        console.log ("dscCode :"+ dscCode );
-        console.log ("ctCode :"+ ctCode );
-        console.log ("stkCode :"+ stkCode );
-        console.log ("testResultId :"+ testResultId);
-        console.log ("testResultNo :"+ testResultNo);
 
         var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode
                     + "&testResultId=" + testResultId + "&testResultNo=" + testResultNo;
@@ -501,6 +424,50 @@
         Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultEditPop.do" + param, null, null, true, '_editUPResultDiv1');
     }
 
+    function fn_validateNotTested() {
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+        if (selectedItems.length <= 0) {
+            Common.alert("<spring:message code='service.msg.NoRcd'/>");
+            return;
+        }
+
+        if (selectedItems.length > 1) {
+            Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+            return;
+        }
+
+        if (selectedItems[0].item.testStus == 'Completed' || selectedItems[0].item.testYn == 'Completed') {
+            Common.alert("<spring:message code='service.msg.alreadyComplete'/>"); //Item already Completed. Cannot be set to Not Tested.
+            return;
+        }
+
+        if (selectedItems[0].item.testYn == 'N') {
+            Common.alert("<spring:message code='service.msg.alreadySetNotTested'/>"); //Item already set to Not Tested.
+            return;
+        }
+
+        var confirmNotTestedMsg =  "Do you want to set this item to <b>Not Tested</b>?";
+        Common.confirm(confirmNotTestedMsg, fn_setNotTested);
+
+    }
+
+    function fn_setNotTested() {
+    	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    	var asNo = selectedItems[0].item.asNo;
+    	var asrItmId = selectedItems[0].item.asrItmId;
+    	var notTestedObj = {serviceNo:asNo, asrItmId:asrItmId};
+
+        Common.ajax("POST", "/ResearchDevelopment/usedPartNotTestedAdd.do", notTestedObj,
+                function(result) {
+                    if(result.code == '00') {     //successful update to Not Tested
+                        Common.alert("Item updated to <b>Not Tested</b>", fn_searchUsedPart);
+                    } else {
+                        Common.alert("Failed to update item to <b>Not Tested</b>. There is already an existing entry.", fn_searchUsedPart);
+                    }
+                });
+    }
+
     function fn_excelDown() {
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
         GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
@@ -531,25 +498,16 @@
         </p>
         <h2>Used Part Return Test Result</h2>
         <ul class="right_btns">
+                <li><p class="btn_blue">
+                        <a href="#" onclick="fn_validateNotTested()"><spring:message
+                                code='service.btn.setUsedPartNotTested' /></a>
+                    </p></li>
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_newUPTestResultPop()"><spring:message
                                 code='service.btn.addUptResult' /></a>
                     </p></li>
             <%-- </c:if> --%>
-            <!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
-            <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
-                <li><p class="btn_blue">
-                        <a href="#" onclick="fn_asResultEditBasicPop(0)"><spring:message
-                                code='service.btn.edtBsAs' /></a>
-                    </p></li>
-            </c:if>
-            <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
-                <li><p class="btn_blue">
-                        <a href="#" onclick="fn_asResultEditPop(0)"><spring:message
-                                code='service.btn.edtAs' /></a>
-                    </p></li>
-            </c:if>
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_upTestResultEditPop()"><spring:message

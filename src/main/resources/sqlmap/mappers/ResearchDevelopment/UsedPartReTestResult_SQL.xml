@@ -33,6 +33,7 @@ E.LAST_INSTALL_CT_CODE,
 E.LAST_INSTALL_CT_NAME,
 E.DSC_CODE,
 E.DSC_NAME,
+D.ASR_ITM_ID,
 D.ASR_ITM_PART_ID,
 D.ASR_ITM_PART_DESC,
 C.PSI,
@@ -67,7 +68,7 @@ LEFT JOIN SVC0005D D ON C.AS_RESULT_ID = D.AS_RESULT_ID
 LEFT JOIN SAL1010V E ON E.ORD_ID = A.AS_SO_ID
 LEFT JOIN SAL0002D F ON F.SALES_ORD_ID = B.SALES_ORD_ID
 LEFT JOIN SAL0029D G ON G.CUST_ID = B.CUST_ID
-LEFT JOIN SVC0122D R ON R.AS_NO = A.AS_NO
+LEFT JOIN SVC0122D R ON R.ASR_ITM_ID = D.ASR_ITM_ID
 LEFT JOIN SYS0100M H1 ON H1.DEFECT_ID = C.AS_DEFECT_TYPE_ID AND H1.DEFECT_TYP = 'DT'
 LEFT JOIN SYS0100M H ON H.DEFECT_ID = R.TEST_AS_DEFECT_TYPE_ID AND H.DEFECT_TYP = 'DT'
 LEFT JOIN SYS0100M I ON I.DEFECT_ID = R.TEST_AS_SLUTN_RESN_ID AND I.DEFECT_TYP = 'SC'
@@ -344,8 +345,9 @@ order by B.SALES_ORD_NO
   <select id="isReTestAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
     <![CDATA[
       SELECT COUNT(TEST_UP_ID)
-      FROM SVC0122D
-      WHERE  AS_NO =#{serviceNo} AND TEST_UP_STUS NOT IN ('1')
+        FROM SVC0122D
+      WHERE  AS_NO =#{serviceNo}
+        AND ASR_ITM_ID = #{asrItmId}
     ]]>
   </select>
 
@@ -430,6 +432,7 @@ order by B.SALES_ORD_NO
                            TEST_UP_SETL_TM,
                            TEST_YN,
                            TEST_UP_CT,
+                           ASR_ITM_ID,
                            TEST_AS_DEFECT_PART_ID,
                            TEST_AS_DEFECT_DTL_RESN_ID,
                            TEST_AS_DEFECT_ID,
@@ -450,6 +453,7 @@ order by B.SALES_ORD_NO
                #{TEST_UP_SETL_TM},
                #{TEST_YN},
                #{updator},
+               #{ASR_ITM_ID},
                #{TEST_AS_DEFECT_PART_ID},
                #{TEST_AS_DEFECT_DTL_RESN_ID},
                #{TEST_AS_DEFECT_ID},
@@ -482,5 +486,26 @@ order by B.SALES_ORD_NO
               UPD_DT = SYSDATE
         WHERE TEST_UP_ID = #{TEST_UP_ID}
     </update>
+
+    <insert id="insertSVC0122D_notTested"  parameterType="Map">
+        INSERT INTO SVC0122D ( TEST_UP_ID,
+                           TEST_UP_NO,
+                           TEST_YN,
+                           AS_NO,
+                           ASR_ITM_ID,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           UPD_USER_ID,
+                           UPD_DT
+    ) VALUES ( #{TEST_UP_ID},
+               #{TEST_UP_NO},
+               'N',
+               #{asNo},
+               #{asrItmId},
+               #{updator},
+               SYSDATE,
+               #{updator},
+               SYSDATE )
+    </insert>
 
   </mapper>

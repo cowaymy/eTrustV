@@ -105,7 +105,7 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	  }
 
 	@Override
-	public int isReTestAlreadyResult(HashMap<String, Object> mp) {
+	public int isReTestAlreadyResult(Map<String, Object> mp) {
 		return UsedPartReTestResultMapper.isReTestAlreadyResult(mp);
 	}
 
@@ -113,7 +113,7 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	public EgovMap usedPartReTestResult_insert(Map<String, Object> params) {
 	    LOGGER.debug("================usedPartReTestResult_insert - START ================");
 
-	    Map svc0122dmap = (Map) params.get("asResultM");
+	    Map svc0122dmap = (Map) params.get("upResultM");
 	    svc0122dmap.put("updator", params.get("updator"));
 
 	    params.put("DOCNO", "182");
@@ -177,6 +177,30 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    int a = UsedPartReTestResultMapper.updateSVC0122D(params);
 
 	    LOGGER.debug("== updateSVC0122D - END");
+
+	    return a;
+	}
+
+	@Override
+	public int usedPartNotTestedAdd(Map<String, Object> params) {
+	    LOGGER.debug("== insertSVC0122D set to Not Tested - START");
+	    LOGGER.debug("== PARAMS {} ", params);
+
+	    params.put("DOCNO", "182");
+	    EgovMap eMap = UsedPartReTestResultMapper.getUsedPartReTestResultDocNo(params);
+	    EgovMap seqMap = UsedPartReTestResultMapper.getUsedPartReTestResultId(params); // GET NEXT SEQ FOR SVC0122D RESULT ID
+
+	    String TEST_UP_ID = String.valueOf(seqMap.get("seq"));
+
+	    LOGGER.debug("== NEW USED PART RETURN TEST RESULT ID (Set to Not Tested) = " + TEST_UP_ID);
+	    LOGGER.debug("== NEW USED PART RETURN TEST RESULT NO (Set to Not Tested)  = " + eMap.get("uprno"));
+
+	    params.put("TEST_UP_ID", TEST_UP_ID);
+	    params.put("TEST_UP_NO", String.valueOf(eMap.get("uprno")));
+
+	    int a = UsedPartReTestResultMapper.insertSVC0122D_notTested(params);
+
+	    LOGGER.debug("== insertSVC0122D set to Not Tested - END");
 
 	    return a;
 	}

@@ -27,10 +27,12 @@ public interface UsedPartReTestResultService {
 
 	  List<EgovMap> selectTimePick();
 
-	  int isReTestAlreadyResult(HashMap<String, Object> mp);
+	  int isReTestAlreadyResult(Map<String, Object> mp);
 
 	  EgovMap usedPartReTestResult_insert(Map<String, Object> params);
 
 	  EgovMap usedPartReTestResult_update(Map<String, Object> params);
+
+	  int usedPartNotTestedAdd(Map<String, Object> params);
 
 }

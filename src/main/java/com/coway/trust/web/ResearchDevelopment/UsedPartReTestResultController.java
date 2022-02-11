@@ -150,9 +150,11 @@ public class UsedPartReTestResultController {
 	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
 	    model.put("RCD_TMS", (String) params.get("rcdTms"));
 	    model.put("AS_NO", params.get("as_No"));
+	    model.put("AS_RESULT_NO", params.get("as_Result_No"));
 	    model.put("DSC_CODE", (String) params.get("dsc_Code"));
 	    model.put("CT_CODE", (String) params.get("ct_Code"));
 	    model.put("STK_CODE", params.get("stk_Code"));
+	    model.put("ASR_ITM_ID", (String) params.get("asr_Itm_Id"));
 	    params.put("testResultId", params.get("testResultId"));
 
 
@@ -188,26 +190,26 @@ public class UsedPartReTestResultController {
 	    ReturnMessage message = new ReturnMessage();
 
 	    HashMap<String, Object> mp = new HashMap<String, Object>();
-	    Map<?, ?> svc0004dmap = (Map<?, ?>) params.get("asResultM");
-	    mp.put("serviceNo", svc0004dmap.get("AS_NO"));
+	    Map<?, ?> upMap = (Map<?, ?>) params.get("upResultM");
+	    mp.put("serviceNo", upMap.get("AS_NO"));
+	    mp.put("asrItmId", upMap.get("ASR_ITM_ID"));
 
-	    params.put("asNo", svc0004dmap.get("AS_NO"));
-	    params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
-	    params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
+	    params.put("asNo", upMap.get("AS_NO"));
+	    params.put("asEntryId", upMap.get("AS_ENTRY_ID"));
+	    params.put("asSoId", upMap.get("AS_SO_ID"));
 
 	    int isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(mp);
 	    logger.debug("== isReTestCnt " + isReTestCnt);
 
 	    if (isReTestCnt == 0) {
-	      EgovMap rtnValue = UsedPartReTestResultService.usedPartReTestResult_insert(params);
+	      EgovMap rtnMap = UsedPartReTestResultService.usedPartReTestResult_insert(params);
 
 	      message.setCode(AppConstants.SUCCESS);
-	      message.setData(rtnValue.get("testResultNo"));
+	      message.setData(rtnMap.get("testResultNo"));
 	      message.setMessage("");
 
 	    } else {
-	      message.setCode("98");
-	      message.setData(svc0004dmap.get("AS_NO"));
+	      message.setCode(AppConstants.FAIL);
 	      message.setMessage("Used Part Return Test Result already exists with Complete Status.");
 	    }
 
@@ -225,12 +227,46 @@ public class UsedPartReTestResultController {
 		    params.put("updator", sessionVO.getUserId());
 		    ReturnMessage message = new ReturnMessage();
 
-		    EgovMap rtnValue = UsedPartReTestResultService.usedPartReTestResult_update(params);
+		    EgovMap rtnMap = UsedPartReTestResultService.usedPartReTestResult_update(params);
 
 		    message.setCode(AppConstants.SUCCESS);
 		    message.setMessage("");
 
 		    return ResponseEntity.ok(message);
 	  }
+
+	  @RequestMapping(value = "/usedPartNotTestedAdd.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> usedPartNotTestedAdd(@RequestBody Map<String, Object> params, Model model,
+		      HttpServletRequest request, SessionVO sessionVO) {
+		    logger.debug("===========================/usedPartNotTestedAdd.do===============================");
+		    logger.debug("== params " + params.toString());
+		    logger.debug("===========================/usedPartNotTestedAdd.do===============================");
+
+		    params.put("updator", sessionVO.getUserId());
+		    ReturnMessage message = new ReturnMessage();
+
+		    int isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(params);
+		    logger.debug("== isReTestCnt " + isReTestCnt);
+
+		    if (isReTestCnt == 0) {
+		      int rtnValue = UsedPartReTestResultService.usedPartNotTestedAdd(params);
+
+		      if (rtnValue == 1) {
+			    	message.setCode(AppConstants.SUCCESS);
+			    	message.setMessage("");
+			  } else {
+			  		message.setCode(AppConstants.FAIL);
+			  		message.setMessage("");
+			  }
+
+		    } else {
+		      message.setCode(AppConstants.FAIL);
+		      message.setMessage("Used Part Return Test Result already exists.");
+		    }
+
+		    return ResponseEntity.ok(message);
+	  }
+
+
 
 }

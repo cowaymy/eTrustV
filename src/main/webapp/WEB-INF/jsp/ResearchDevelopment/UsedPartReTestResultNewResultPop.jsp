@@ -152,13 +152,14 @@
             _TEST_AS_SLUTN_RESN_ID = $('#solut_code_id').val();
         }
 
-        var asResultM = {
+        var upResultM = {
             // GENERAL DATA
             AS_NO : "${AS_NO}",
             AS_ENTRY_ID : "${AS_ID}",
             AS_SO_ID : $("#ORD_ID").val(),
             AS_ORD_NO : $("#ORD_NO").val(),
             AS_CT_ID : $('#ddlCTCode').val(),
+            ASR_ITM_ID : $('#ASR_ITM_ID').val(),
             TEST_UP_SETL_DT : $('#dpSettleDate').val(),
             TEST_UP_SETL_TM : $('#tpSettleTime').val(),
             TEST_UP_STUS : $('#ddlStatus').val(),
@@ -177,27 +178,26 @@
         }
 
         var saveForm = {
-            "asResultM" : asResultM
+            "upResultM" : upResultM
         }
 
         // SAVE RESULT
             Common.ajax("POST", "/ResearchDevelopment/newUsedPartReTestResultAdd.do", saveForm,
                 function(result) {
-                   if (result.data != "" && result.data != null && result.data != "null") {
+                   if (result.data != "" && result.data != null && result.data != "null" && result.code == "00") {
                       Common.alert("<b>Test result save successfully.</b></br> New Used Part Return Test Result Number : <b>" + result.data + " </b>");
                           $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
                           fn_DisablePageControl();
-                          $("#_newASResultDiv1").remove();
+                          $("#_newUPResultDiv1").remove();
                           fn_searchUsedPart();
                     } else {
-                          Common.alert("<b>Used Part Return Test Result save successfully.</b>");
-                          $("#txtResultNo").html( "<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
+                          Common.alert("<b>" + result.message + "</b>");
                           fn_DisablePageControl();
-                          $("#_newASResultDiv1").remove();
+                          $("#_newUPResultDiv1").remove();
                           fn_searchUsedPart();
                     }
                  }, function() {
-                     $("#_newASResultDiv1").remove();
+                     $("#_newUPResultDiv1").remove();
                      fn_searchUsedPart();
                  });
     }
@@ -592,6 +592,7 @@
                 <input type="text" name="PROD_CDE" id="PROD_CDE" />
                 <input type="text" name="PROD_CAT" id="PROD_CAT" />
                 <input type="text" name="DSC_CODE" id="DSC_CODE" value="${DSC_CODE}" />
+                <input type="text" name="ASR_ITM_ID" id="ASR_ITM_ID" value="${ASR_ITM_ID}"/>
             </div>
         </form>
         <header class="pop_header">

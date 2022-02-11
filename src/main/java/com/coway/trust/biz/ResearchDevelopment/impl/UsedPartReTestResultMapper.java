@@ -27,7 +27,7 @@ public interface UsedPartReTestResultMapper {
 
 	List<EgovMap> selectTimePick();
 
-	int isReTestAlreadyResult(HashMap<String, Object> mp);
+	int isReTestAlreadyResult(Map<String, Object> mp);
 
 	EgovMap getUsedPartReTestResultDocNo(Map<String, Object> params);
 
@@ -36,5 +36,7 @@ public interface UsedPartReTestResultMapper {
 	int insertSVC0122D(Map<String, Object> params);
 
 	int updateSVC0122D(Map<String, Object> params);
+
+	int insertSVC0122D_notTested(Map<String, Object> params);
 
 }
