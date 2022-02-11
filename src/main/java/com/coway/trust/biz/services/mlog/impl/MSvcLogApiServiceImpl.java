@@ -566,11 +566,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	logger.debug("CHECKPOINT  - get appTypeId:" + params.get("appTypeId").toString());
 	logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
     String smsMessage = "";
-    if( !(String.valueOf(params.get("appTypeId")).equals("Education") || String.valueOf(params.get("appTypeId")).equals("Free Trial") || String.valueOf(params.get("appTypeId")).equals("Auxiliary"))
+/*    if( !(String.valueOf(params.get("appTypeId")).equals("Education") || String.valueOf(params.get("appTypeId")).equals("Free Trial") || String.valueOf(params.get("appTypeId")).equals("Auxiliary"))
     		//&& !(String.valueOf(params.get("stkRetnResnId")).equals("1993"))
     		){
         smsMessage = "COWAY:Dear Customer, Your Appointment for Product collection has failed due to "+ params.get("FailReasonCode").toString() +".Will call to set new appointment.";
-    }
+    }*/
+
+    smsMessage = "COWAY:Dear Customer";
 
     Map<String, Object> smsList = new HashMap<>();
     //smsList.put("userId", params.get("userId").toString());
