@@ -554,6 +554,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     EgovMap  PRFailReason = MSvcLogApiMapper.selectPRFailReason(params);
 	params.put("FailReasonCode", PRFailReason.get("code"));
 
+
+	params.put("userId", "CT100676");
+	params.put("handphoneTel", "0165666878");
+
 	logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG PR - START ================");
 	logger.debug("PARAMS :" + params.toString());
 	logger.debug("CHECKPOINT  - get handphoneTel:" + params.get("handphoneTel").toString());
@@ -561,7 +565,6 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	logger.debug("CHECKPOINT  - get FailReasonCode:" + params.get("FailReasonCode").toString());
 	logger.debug("CHECKPOINT  - get appTypeId:" + params.get("appTypeId").toString());
 	logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
-
     String smsMessage = "";
     if( !(String.valueOf(params.get("appTypeId")).equals("Education") || String.valueOf(params.get("appTypeId")).equals("Free Trial") || String.valueOf(params.get("appTypeId")).equals("Auxiliary"))
     		//&& !(String.valueOf(params.get("stkRetnResnId")).equals("1993"))
@@ -569,10 +572,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
         smsMessage = "COWAY:Dear Customer, Your Appointment for Product collection has failed due to "+ params.get("FailReasonCode").toString() +".Will call to set new appointment.";
     }
 
-    smsMessage = "COWAY:Dear Customer...";
-
     Map<String, Object> smsList = new HashMap<>();
-    smsList.put("userId", params.get("userId"));
+    smsList.put("userId", params.get("userId").toString());
     smsList.put("smsType", 975);
     smsList.put("smsMessage", smsMessage);
     smsList.put("smsMobileNo", params.get("handphoneTel").toString());
