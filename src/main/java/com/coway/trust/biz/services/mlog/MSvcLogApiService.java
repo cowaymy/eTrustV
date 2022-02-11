@@ -229,4 +229,6 @@ public interface MSvcLogApiService {
   List<EgovMap> getOrdDetail(Map<String, Object> params);
 
   void insertSVC0115D(Map<String, Object> params);
+
+  void sendSms(Map<String, Object> smsList);
 }
