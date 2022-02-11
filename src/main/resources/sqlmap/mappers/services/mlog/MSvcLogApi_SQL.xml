@@ -4000,6 +4000,15 @@ SELECT MST.*
     )
   </insert>
 
+  <select id="selectPRFailReason" parameterType="Map" resultType="egovMap">
+    SELECT RESN_ID,
+           CODE,
+           RESN_DESC
+    FROM  SYS0032M
+    WHERE 1=1
+      AND RESN_ID = #{failReasonCode}
+  </select>
+
   <update id="updateFailed_LOG0038D" parameterType="Map">
     UPDATE LOG0038D SET STUS_CODE_ID   = '21',
                         UPD_DT  = sysdate,
