@@ -51,7 +51,6 @@ public class SROController {
 	private SROService srosver;
 
 
-
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
@@ -140,7 +139,7 @@ public class SROController {
 
 
 
-		logger.debug("reqNo!!!!! : {}", reqNo);
+		logger.debug("reqNo !!!!! : {}", reqNo);
 		ReturnMessage message = new ReturnMessage();
 
 		if (reqNo != null && !"".equals(reqNo)){

@@ -22,6 +22,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.replenishment.impl.SROMapper;
 import com.coway.trust.biz.logistics.serialmgmt.ScanSearchPopService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
@@ -44,6 +45,10 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Resource(name = "ScanSearchPopService")
 	private ScanSearchPopService scanSearchPopService;
+
+	@Resource(name = "SROMapper")
+	private SROMapper sROMapper;
+
 
 
 	@Autowired
@@ -345,6 +350,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 					String reqstNo = (String) insMap.get("reqstno");
 					logger.info(" reqstNo ??? : {}", reqstNo);
 					stocktran.updateRequestTransfer(reqstNo);
+
 				}
 			}
 		} else {
@@ -398,6 +404,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 
+
 		if (serialList != null && serialList.size() > 0) {
 
 			for (int j = 0; j < serialList.size(); j++) {
@@ -411,6 +418,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 				insSerial.put("userId", params.get("userId"));
 
 				stocktran.insertTransferSerial(insSerial);
+
+
 			}
 		}
 
@@ -430,6 +439,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 			// STO - new Serial scan Cancel.
 			stockSerialReverse(params);
+
 
 		} else {
 			stocktran.StockTransferiSsue(formMap);
@@ -481,6 +491,25 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 					stocktran.deliveryDelete55(dmap);
 					stocktran.deliveryDelete61(dmap);
 					logger.debug("329Line :::: " + delno);
+
+
+				     /**************************
+				       * delete sro  by leo.ham
+				       **************************/
+				       Map<String, Object> sroMap = new HashMap<String, Object>();
+				       sroMap.put("refno", delno);
+				       sroMap.put("userId", "");
+				       sroMap.put("type", "STO");
+				       sroMap.put("result", "D");
+				       sroMap.put("item", dmap.get("item"));
+
+				       logger.debug("=====>",sroMap.toString());
+				       sROMapper.SP_LOGITIC_SRO_UPDATE(sroMap);
+
+				       /**************************
+				        * delete sro  by leo.ham
+				        **************************/
+
 				}
 				stocktran.updateRequestTransfer(dmap);
 

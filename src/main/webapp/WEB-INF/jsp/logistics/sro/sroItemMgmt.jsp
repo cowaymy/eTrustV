@@ -510,11 +510,14 @@ function to_json(workbook) {
 	    </td>
 	</tr>
 	<tr>
-	   <th scope="row">Material Code</th>
+       <th scope="row">Material Code</th>
 	    <td colspan="3">
 	    <input type="text" class="w100p" id="materialCode" name="materialCode" />
 	    </td>
-	    <td colspan="4">
+
+	    <th scope="row">Use YN</th>
+	    <td colspan="3">
+	         <input type="checkbox"  id="materialUseYn" name="materialUseYn" />
         </td>
 
 	</tr>

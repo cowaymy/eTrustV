@@ -43,6 +43,10 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 	private StockMovementService stockMovementService;
 
 
+	@Resource(name = "SROMapper")
+	private SROMapper sROMapper;
+
+
 	@Override
 	public List<EgovMap> sroItemMgntList(Map<String, Object> params) {
 		return replenishment.sroItemMgntList(params);
@@ -144,9 +148,9 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 		else stoNo = callStockMovementAdd(params,  sessionVO);
 
 
-		logger.debug(" stoNo =========> {}" ,stoNo);
+		logger.debug(" stoNo  재고 없음 ========> {}" ,stoNo);
 		if(CommonUtils.isEmpty(stoNo)) {
-			throw new ApplicationException(AppConstants.FAIL, "STO/SMO No  is 	Required. ");
+			throw new ApplicationException(AppConstants.FAIL, "Check the stock of CDC ");
 		}
 
 
@@ -178,14 +182,37 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 
 
 
+
+
 		//update  LOG0112D
 		if(r12>0){
+
+			 /**************************
+		       * delete sro  by leo.ham
+		       **************************/
+		       Map<String, Object> sroMap = new HashMap<String, Object>();
+		       sroMap.put("refno", seq);
+		       sroMap.put("userId", sessionVO.getUserId());
+		       sroMap.put("type", "STO");
+		       sroMap.put("result", "CM");
+		       sroMap.put("item",params.get("srostkcode"));
+
+		       logger.debug("=====>",sroMap.toString());
+		       sROMapper.SP_LOGITIC_SRO_UPDATE(sroMap);
+
+		       /**************************
+		        * delete sro  by leo.ham
+		        **************************/
+
+
+
+
 			// int  upr12 =  replenishment.updateLOG0112D(params);
 
 			 				  //replenishment.updateStateLOG0112D(params);
 
-			 				   params.put("reqno", stoNo);
-			 				   replenishment.updateReqNoLOG0111D(params);
+			 				  // params.put("reqno", stoNo);
+			 				  // replenishment.updateReqNoLOG0111D(params);
 		}
 
 
@@ -208,11 +235,29 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 
 				for (Object list : params){
 
-					Map<String, Object> map = (Map<String, Object>) list;
+					 Map<String, Object> map = (Map<String, Object>) list;
 
-        			logger.debug(map.get("item").toString());
-        			map.put("updUserId", loginId);
-        			replenishment.deleteUpdateLOG0112D((Map)map.get("item"));
+        			 logger.debug(map.get("item").toString());
+        		 	 map.put("updUserId", loginId);
+        			//replenishment.deleteUpdateLOG0112D((Map)map.get("item"));
+
+				     /**************************
+				       * delete sro  by leo.ham
+				       **************************/
+				       Map<String, Object> sroMap = new HashMap<String, Object>();
+				       sroMap.put("refno", ((Map)map.get("item")).get("srono").toString() );
+				       sroMap.put("userId", loginId);
+				       sroMap.put("type", "STO");
+				       sroMap.put("result", "DW");
+				       sroMap.put("item", ((Map)map.get("item")).get("srostkcode").toString());
+
+				       logger.debug("=====>",sroMap.toString());
+				       sROMapper.SP_LOGITIC_SRO_UPDATE(sroMap);
+
+				       /**************************
+				        * delete sro  by leo.ham
+				        **************************/
+
 
 				}
 			}
@@ -276,6 +321,8 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
     	params.put("form", fMap);
 
     	stoNo = stock.insertStockTransferInfo(params);
+
+
 
 		return stoNo;
 	}

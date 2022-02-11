@@ -23,6 +23,9 @@
 
 
     <select id="sroItemMgntList" parameterType="Map" resultType="egovMap">
+
+
+        select * from (
                       SELECT
                            s28.WH_LOC_ID ,
                            s28.WH_LOC_CODE  as loccd ,
@@ -72,6 +75,11 @@
 	                        </foreach>
                         </if>
                         ORDER BY WH_LOC_CODE asc
+                    )
+                    where  1=1
+                     <if test="materialUseYn != null and materialUseYn !=''">
+                         AND  useyn ='Y'  /*자동보충 것만 처리 한다. */
+                     </if>
     </select>
 
 
@@ -158,46 +166,32 @@
     <insert id="insertLOG0112D"   parameterType="Map"  >
        <![CDATA[
 			INSERT INTO LOG0112D (
-			            SRO_NO
-			            ,SRO_STK_CODE
-			            ,SRO_ITM_REPL_CON_LEV
-			            ,SRO_ITM_STATE_CD
-			            ,SRO_ITM_REPL_CON_QTY
-			            ,SRO_ITM_REPL_SUP_QTY
-			            ,SRO_ITM_REPL_DIV_SUP_QTY
-			            ,SRO_ITM_REPL_FUL_QTY
-			            ,SRO_MAK_FR_AVL_QTY
-			            ,SRO_MAK_BAS_QTY
-			            ,SRO_MAK_RORD_POT
-			            ,SRO_MAK_ADD_POT
-			            , SRO_ITM_RESULT_MSG
-			            ,CRT_USER_ID
-			            ,CRT_DT
+					             SRO_NO
+		                        ,SRO_STK_CODE
+		                        ,SRO_ITM_STATE_CD
+		                        ,SRO_ITM_REPL_CON_QTY
+		                        ,SRO_ITM_REPL_SUP_QTY
+		                        ,SRO_MAK_TO_AVL_QTY
+		                        ,SRO_MAK_FR_AVL_QTY
+		                        ,SRO_MAK_BAS_QTY
+		                        ,SRO_MAK_RORD_POT
+		                        ,SRO_ITM_RESULT_MSG
+		                        ,REF_SRO_NO
+		                        ,CRT_USER_ID
+		                        ,CRT_DT
 			)
 			SELECT
 			            #{newsrono}                                                                                                      AS SRO_NO
-			            ,AA.SRO_STK_CODE                                                                                             AS SRO_STK_CODE
-			            ,(SELECT  NVL(MAX(SRO_ITM_REPL_CON_LEV),0)+1   FROM GBSLCVD.LOG0112d  WHERE sro_no  = #{srono}  AND SRO_STK_CODE =#{srostkcode})
-				        ,'C'
+			            , AA.SRO_STK_CODE                                                                                             AS SRO_STK_CODE
+				        , 'C'
 			            , #{requestqty}                                                                                                   AS SRO_ITM_REPL_CON_QTY
 			            , SRO_ITM_REPL_SUP_QTY
-			            , SRO_ITM_REPL_SUP_QTY                                                                                    AS SRO_ITM_REPL_DIV_SUP_QTY
-			            , (SRO_ITM_REPL_SUP_QTY - NVL((SELECT SUM(SRO_ITM_REPL_CON_QTY)
-																	        FROM GBSLCVD.LOG0112D
-																	     WHERE SRO_STK_CODE =#{srostkcode}
-																	        AND SRO_NO IN (
-																	                        SELECT SRO_NO
-																	                        FROM GBSLCVD.LOG0111d
-																	                        WHERE (SRO_NO = #{srono}
-																	                                        OR SRO_REF_SRO_NO = (   SELECT  SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d    WHERE   SRO_NO = #{srono})
-																	                              )
-																	                        )
-														),0) +#{requestqty})                                                              AS SRO_ITM_REPL_FUL_QTY
-			            , (FN_GET_AVAILABLE_QTY(BB.SRO_FR_WH_LOC_CODE  ,AA.SRO_STK_CODE) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
-			            , CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
+                        ,  FN_GET_SRO_AVAILABLE_QTY( BB.SRO_TO_WH_LOC_CODE, AA.SRO_STK_CODE)                                    AS SRO_MAK_TO_AVL_QTY
+                        ,  (FN_GET_AVAILABLE_QTY(BB.SRO_FR_WH_LOC_CODE  ,AA.SRO_STK_CODE) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
+			            ,  CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
 			            , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
-			            , CC.SRO_ITM_ADD_POT    /* SRO_MAK_ADD_POT*/
 			            , 'Generation Complete'
+			            , #{srono}                                                                                                               AS REF_SRO_NO
 			            , #{updUserId}
 			             , SYSDATE
 			        FROM LOG0112D  AA ,  LOG0111D BB , LOG0110M CC
@@ -227,7 +221,7 @@ FROM (
 	            SRO_REQST_NO AS sroreqno ,
 	            (SELECT B.CODE_NAME   FROM LOG0047M  A ,  SYS0013M B WHERE A.REQST_NO =  SRO_REQST_NO  AND A.REQST_STUS = B.CODE AND B.CODE_MASTER_ID=309    ) AS reqstus,
 	            (SELECT REQST_DEL   FROM LOG0047M  A  WHERE A.REQST_NO =  SRO_REQST_NO  ) AS  reqstdelyn,
-	            decode (SRO_STATE_CD,'A', 'Active' ,'C' ,'Complete' ,'T' ,'Terminated')  AS srostacd ,
+	            decode (SRO_STATE_CD,'A', 'Active' ,'C' ,'Complete' ,'D' ,'Deleted')  AS srostacd ,
 	            SRO_MATRL_DOC_NO AS sromatdocno ,
 	            SRO_RESUT_MSG AS sromsg ,
 	            SRO_REF_SRO_NO AS srorefsrono,
@@ -286,12 +280,13 @@ FROM (
                 , srono
                 ,srostkcode
                 ,sroitmlev
-                ,decode (sroitmstatecd, 'A', 'Active' ,'C' ,'Complete', 'T' ,'Terminated') sroitmstatecd
+                ,decode (sroitmstatecd, 'I', 'Active' ,'C' ,'Complete', 'D' ,'Deleted') sroitmstatecd
                 ,case when  reqstdel = 'Y' THEN  (sroconqty) ELSE sroconqty END sroconqty
                 ,srosupqty
                 ,case when   (srofulqty >0 ) then (srofulqty )   else 0    end as srofulqty
-                ,case when   (sroitmstatecd ='A') then
-                         case when  (to_number(srofravailqtyorg) > 0) then  to_number(srofravailqtyorg) else 0 end
+                ,case when   (sroitmstatecd ='I') then
+                              case when  (to_number(srofravailqtyorg) > srofulqty) then  to_number(srofulqty)
+                                     WHEN  (to_number(srofravailqtyorg) < srofulqty) AND   srofulqty >0  THEN to_number(srofravailqtyorg) ELSE  0 END
                   else 0
                  end  as requestqty
                 ,srotoavlqty
@@ -301,8 +296,8 @@ FROM (
                 ,srofravlqty
                 ,stkdesc
                 ,srofrnowavlqty
-                ,case when   (sroitmstatecd ='A') then
-                         case when  ( srofravailqtyorg > 0) then   'generate'  else '' end
+                ,case when   (sroitmstatecd ='I') then
+                         case when  ( srofravailqtyorg > 0   AND srofulqty >0) then   'generate'  else '' end
                   else ''
                  end generate
                 ,srorefsrono
@@ -430,7 +425,7 @@ FROM (
      		    A.SRO_NO AS srono ,
 			    C.STK_CODE AS srostkcode ,
 			    C.STK_DESC AS stkdesc ,
-			    decode (SRO_ITM_STATE_CD, 'A', 'Active' , 'C' , 'Complete' ,'T' ,'Terminated') AS sroitmstatecd ,
+			    decode (SRO_ITM_STATE_CD, 'I', 'Active' , 'C' , 'Complete' ,'D' ,'Deleted') AS sroitmstatecd ,
 			    SRO_CRT_DT AS crtdt ,
 			    nvl(SRO_REQST_NO,0) AS srorefsrono ,
 			    nvl(SRO_MAK_BAS_QTY,0) AS srobasqty ,
@@ -438,14 +433,16 @@ FROM (
 			    nvl(SRO_MAK_BAS_QTY,0)/ (100/nvl(SRO_MAK_RORD_POT,0))  sroreordrangeqty,
 			    nvl(SRO_MAK_BAS_QTY,0)-(nvl(SRO_MAK_BAS_QTY,0)/ (100/nvl(SRO_MAK_RORD_POT,0)))   srominnumqty,
 			    nvl(SRO_MAK_TO_AVL_QTY,0) AS srotoavailqty ,
-			    nvl(SRO_MAK_FR_AVL_QTY,0) AS srofravlqty ,
+			    nvl(SRO_MAK_CDC_ITEM_TOTAL_QTY,0) AS srofravlqty ,
 			    nvl(SRO_ITM_REPL_SUP_QTY,0)    AS srosupqty,
 			    nvl(SRO_ITM_REPL_DIV_SUP_QTY,0)    AS srodivsupqty,
                 CASE WHEN D.REQST_DEL ='Y' THEN 'STO has been deleted.' ELSE   SRO_ITM_RESULT_MSG    END  sroitmresultmsg,
 			    CASE WHEN D.REQST_DEL ='Y'  THEN  0 ELSE  nvl(SRO_ITM_REPL_CON_QTY ,0)  END  sroautoreplenqty ,
 			    CASE WHEN D.REQST_DEL ='Y'  THEN  nvl(SRO_ITM_REPL_CON_QTY *-1,0) ELSE  0  END  srocenautoreplenqty ,
 			    D.REQST_DEL  reqstdel,
-			     nvl(SRO_ITM_REPL_DIV_TOL_CNT,0) AS srodivtolcnt
+			     nvl(SRO_ITM_REPL_DIV_TOL_CNT,0) AS srodivtolcnt,
+			     nvl(SRO_MAK_ITEM_DIV_RATE,0) rate,
+			     B.REF_SRO_NO
 		   FROM  LOG0111D A , LOG0112D B ,SYS0026M C , LOG0047M D
 		WHERE A.SRO_NO =B.SRO_NO
 		 AND  B.SRO_STK_CODE  = C.STK_CODE
@@ -466,6 +463,10 @@ FROM (
 	     AND   A.SRO_STK_CODE  = #{srostkcode}
     </select>
 
+
+     <select id="SP_LOGITIC_SRO_UPDATE"  statementType="CALLABLE" parameterType="Map">
+             { call SP_LOGITIC_SRO_UPDATE ( #{refno} , #{userId},#{type} ,#{result},#{item})  }
+     </select>
 
 
     <update id="updateLOG0112D">
@@ -518,8 +519,8 @@ FROM (
 
      <update id="deleteUpdateLOG0112D">
 		UPDATE  LOG0112D
-		 SET SRO_ITM_STATE_CD ='T'
-		      ,SRO_ITM_RESULT_MSG  ='it was terminated by manual'
+		 SET SRO_ITM_STATE_CD ='D'
+		      ,SRO_ITM_RESULT_MSG  ='it was deleted by manual'
 		      ,UPD_DT  =sysdate
 		      ,UPD_USER_ID      =#{updUserId}
 		WHERE SRO_NO          =#{srono}

@@ -92,9 +92,9 @@ var rescolumnLayout=[
                                          return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
                                      }
 			                     },
-			                     {dataField: "srostacd",headerText :"<spring:message code='log.head.status'/>",width:100    ,height:30      ,visible:false           },
+			                     {dataField: "srostacd",headerText :"<spring:message code='log.head.status'/>",width:100    ,height:30      ,visible:true           },
 			                     {dataField: "sromsg",headerText :"Remark",width:250    ,height:30                },
-			                     {dataField: "sromatdocno",headerText :"Mat. Doc. No ",width:150    ,height:30                },
+			                     {dataField: "sromatdocno",headerText :"Mat. Doc. No ",width:150    ,height:30             ,visible:false             },
 			                     {dataField: "srofrwlcd",headerText :"From Location <br> code"                  ,width:120    ,height:30                },
 			                     {dataField: "srofrwldesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:150    ,height:30                },
 			                     {dataField: "srotowlcd",headerText :"To Location <br>code"                  ,width:100    ,height:30                },
@@ -113,11 +113,11 @@ var reqcolumnLayout=[
 			                     {dataField: "stkdesc",headerText :"Mat.Name"                      ,width:220    ,height:30             ,editable : false   },
                               //   {dataField: "srofravlqty",headerText :"(Fr) Old</br>Available Qty"         ,width:120    ,height:30            ,editable : false  },
                                  {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false  ,dataType : "numeric"  },
-                                 {dataField: "srodivsupqty",headerText :"Avg.FillQty"                  ,width:120    ,height:30               ,editable : false  ,visible:true},
+                                 {dataField: "srodivsupqty",headerText :"Avg.FillQty"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
 
                                  {dataField: "sroconqty",headerText :"Confirm </br>Supply Qty"       ,width:120    ,height:30 ,style  :"my-inactive-style"        ,editable : false,dataType : "numeric"  },
                                  {dataField: "srofulqty" ,headerText :"Unfulfilled </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric"   },
-                                 {dataField: "srofravailqtyorg" ,headerText :"(Fr)Current Available </br>Qty"         ,       width:120    ,height:30       ,     editable : false,formatString : "#,###,###",
+                                 {dataField: "srofravailqtyorg" ,headerText :"CDC Available </br>Qty"         ,       width:120    ,height:30       ,     editable : false,formatString : "#,###,###",
 
                                 	 renderer : { // HTML 템플릿 렌더러 사용
                                          type : "TemplateRenderer"
@@ -185,20 +185,22 @@ var reqcolumnLayout=[
 													{dataField: "srostkcode",headerText :"Mat.Code"                  ,width:80    ,height:30               ,editable : false  },
 													{dataField: "stkdesc",headerText :"Mat.Name"                  ,width:170    ,height:30               ,editable : false   },
 					                                {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:100    ,height:30         ,editable : false  ,dataType : "numeric" },
-					                                {dataField: "srodivsupqty",headerText :"Avg.FillQty"                  ,width:120    ,height:30               ,editable : false  ,visible:true},
-                                                    {dataField: "srodivtolcnt",headerText :"Target Count"                  ,width:120    ,height:30               ,editable : false  ,visible:true},
+					                                {dataField: "srodivsupqty",headerText :"Avg.FillQty"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
+                                                    {dataField: "srodivtolcnt",headerText :"Target Count"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
 
 													{dataField: "sroitmstatecd",headerText :"<spring:message code='log.head.status'/>",width:80    ,height:30   ,editable : false                },
-					                                {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
+	                                                {dataField: "refSroNo",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
+					                                {dataField: "srorefsrono",headerText :"Ref.STO No"                  ,width:120    ,height:30               ,editable : false },
 					                                {dataField: "srobasqty",headerText :"Basic Qty"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric"  },
 													{dataField: "sroreordpot",headerText :"ReOder <br>Point(%)"                  ,width:100    ,height:30               ,editable : false  ,dataType : "numeric" },
-													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty <br> (Basic Qty / (100/ReOrder Point ) )"                  ,width:120    ,height:30        ,dataType : "numeric"        ,editable : false  },
-                                                    {dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:120    ,height:30           ,dataType : "numeric"     ,editable : false },
-                                                    {dataField: "srotoavailqty",headerText :"To Ware House <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
-													{dataField: "srofravlqty",headerText :"Fr Ware House <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
+													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty)"                  ,width:120    ,height:30        ,dataType : "numeric"        ,editable : false  },
+                                                    //{dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:120    ,height:30           ,dataType : "numeric"     ,editable : false },
+                                                    {dataField: "srotoavailqty",headerText :"RDC <br> Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
+													{dataField: "srofravlqty",headerText :"CDC <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
 	                                                {dataField: "sroautoreplenqty",headerText :"Auto Replenishment <br> Qty"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
-	                                                {dataField: "srocenautoreplenqty",headerText :"Auto Replenishment <br> Cencal Qty"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
+	                                                {dataField: "rate",headerText :"Replenishment <br> Rate(%)"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
 
+	                                                {dataField: "srocenautoreplenqty",headerText :"Auto Replenishment <br> Cencal Qty"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
 	                                                {dataField: "crtdt",headerText :"Create Date"       , dataType : "date",           width:120    ,height:30     ,    formatString : "dd/mm/yyyy"     },
 	                                                {dataField: "sroitmresultmsg",headerText :"Result Massage"                  ,width:270    ,height:30               ,editable : false },
 	                                                {dataField: "reqstdel",headerText :"reqstdel"                  ,width:50    ,height:30               ,editable : false  ,visible:false},

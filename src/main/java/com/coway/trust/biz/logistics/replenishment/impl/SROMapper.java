@@ -38,9 +38,12 @@ public interface SROMapper {
 
 	List<EgovMap> selectSMODataInfo(Map<String, Object> params);
 
-	int updateReqNoLOG0111D (Map<String, Object> params);
 
+	int updateReqNoLOG0111D (Map<String, Object> params);
 	int deleteUpdateLOG0112D (Map<String, Object> params);
+
+	void  SP_LOGITIC_SRO_UPDATE (Map<String, Object> params);
+
 
 
 
