@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.SmsMapper;
 import com.coway.trust.biz.common.type.SMSTemplateType;
@@ -28,6 +29,7 @@ import com.coway.trust.biz.services.installation.impl.InstallationResultListMapp
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -548,6 +550,36 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
     logger.debug(" TOTAL UPDATE RECORD LOG0038D : " + log38cnt);
     logger.debug(" TOTAL INSERT RECORD LOG0039D : " + log39cnt);
+
+    EgovMap  PRFailReason = MSvcLogApiMapper.selectPRFailReason(params);
+	params.put("FailReasonCode", PRFailReason.get("code"));
+
+	logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG PR - START ================");
+	logger.debug("PARAMS :" + params.toString());
+	logger.debug("CHECKPOINT  - get handphoneTel:" + params.get("handphoneTel").toString());
+	logger.debug("CHECKPOINT  - get userId:" + params.get("userId").toString());
+	logger.debug("CHECKPOINT  - get FailReasonCode:" + params.get("FailReasonCode").toString());
+	logger.debug("CHECKPOINT  - get appTypeId:" + params.get("appTypeId").toString());
+	logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
+
+    String smsMessage = "";
+    if( !(String.valueOf(params.get("appTypeId")).equals("Education") || String.valueOf(params.get("appTypeId")).equals("Free Trial") || String.valueOf(params.get("appTypeId")).equals("Auxiliary"))
+    		//&& !(String.valueOf(params.get("stkRetnResnId")).equals("1993"))
+    		){
+        smsMessage = "COWAY:Dear Customer, Your Appointment for Product collection has failed due to "+ params.get("FailReasonCode").toString() +".Will call to set new appointment.";
+    }
+
+    Map<String, Object> smsList = new HashMap<>();
+    smsList.put("userId", params.get("userId"));
+    smsList.put("smsType", 975);
+    smsList.put("smsMessage", smsMessage);
+    smsList.put("smsMobileNo", params.get("handphoneTel").toString());
+
+    if(smsMessage != "")
+    {
+    	sendSms(smsList);
+    }
+
     logger.debug("====================setPRFailJobRequest=====================");
   }
 
@@ -983,5 +1015,19 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   public void insertSVC0115D(Map<String, Object> params) {
     MSvcLogApiMapper.insertSVC0115D(params);
+  }
+
+  @Autowired
+  private AdaptorService adaptorService;
+
+  @Override
+  public void sendSms(Map<String, Object> smsList){
+    int userId = (int) smsList.get("userId");
+    SmsVO sms = new SmsVO(userId, 975);
+
+    sms.setMessage(smsList.get("smsMessage").toString());
+    sms.setMobiles(smsList.get("smsMobileNo").toString());
+    //send SMS
+    SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 }
