@@ -569,6 +569,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
         smsMessage = "COWAY:Dear Customer, Your Appointment for Product collection has failed due to "+ params.get("FailReasonCode").toString() +".Will call to set new appointment.";
     }
 
+    smsMessage = "COWAY:Dear Customer...";
+
     Map<String, Object> smsList = new HashMap<>();
     smsList.put("userId", params.get("userId"));
     smsList.put("smsType", 975);
