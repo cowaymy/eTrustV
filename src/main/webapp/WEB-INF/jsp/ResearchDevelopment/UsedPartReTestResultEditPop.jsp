@@ -55,20 +55,6 @@
             $("#defEvt_div").attr("style", "display:block");
             break;
 
-        default:
-            $("#m2").hide();
-            $("#m4").hide();
-            $("#m5").hide();
-            $("#m7").hide();
-            $("#m9").hide();
-            $("#m10").hide();
-            $("#m11").hide();
-            $("#m12").hide();
-            $("#m13").hide();
-            $("#m14").hide();
-            $("#m17").hide();
-            $("#m18").hide();
-            break;
         }
     }
 
