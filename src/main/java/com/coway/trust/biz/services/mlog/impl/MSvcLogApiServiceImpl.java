@@ -583,13 +583,15 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logger.debug("TEST003");
 
     smsList.put("smsMessage", smsMessage);
-    logger.debug("TEST004");
+    logger.debug("TEST004 " + smsMessage);
 
     smsList.put("smsMobileNo", params.get("handphoneTel").toString());
-    logger.debug("TEST005" + params.get("handphoneTel").toString());
+    logger.debug("TEST005 :" + params.get("handphoneTel").toString());
 
     if(smsMessage != "")
     {
+
+    	logger.debug("Into  sendSms");
     	sendSms(smsList);
     }
 
