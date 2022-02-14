@@ -259,6 +259,8 @@ public class MembershipESvmController {
                 logger.debug("pre-SAL0095D_insert :: params :: {}", params);
                 insSal95d_ret = membershipESvmService.SAL0095D_insert(params, sessionVO);
 
+                updAct = !"".equals(insSal95d_ret) ? 1 : 0;
+
             } else {
                 // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
                 /* Returns
@@ -278,7 +280,6 @@ public class MembershipESvmController {
                     updAct = membershipESvmService.updateAction(params);
                 }
             }
-//            membershipESvmService.updateAction(params);
         } else {
             // Active/Reject Action
             /* Action ::
@@ -286,8 +287,6 @@ public class MembershipESvmController {
              * 2. Update PAY0312D
              * 3. Update SAL0093D (SMQ inactive)
              */
-//            if(!"6506".equals(params.get("payment_mode").toString())) {
-//            }
             // Set resultVal = 2, IF "Active" status action
             if("6506".equals(params.get("payment_mode").toString()) && "1".equals(params.get("action").toString())) resultVal = 2;
 

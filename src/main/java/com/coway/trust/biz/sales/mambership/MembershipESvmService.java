@@ -48,4 +48,6 @@ public interface MembershipESvmService {
 	String getPOSm(Map<String, Object> params);
 
 	Map<String, Object> eSVMNormalPayment(Map<String, Object> params, SessionVO sessionVO);
+
+    List<EgovMap> eSVMCardPayment(Map<String, Object> params, SessionVO sessionVO);
 }

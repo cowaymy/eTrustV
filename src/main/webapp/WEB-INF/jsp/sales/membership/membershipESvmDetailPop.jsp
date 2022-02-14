@@ -415,6 +415,7 @@
                 mnlBill_refNo : $("#SARefNo").val(),
                 mnlBill_remark : $("#advBilRemRemark").val(),
                 mnlBill_invcRemark : $("#advBilRemInvcRemark").val(),
+                payment_cardCrDb : $("#payment_cardCrDb").val(),
 
                 // Insert SAL0095D Data
                 srvMemQuotId :   '${eSvmInfo.srvMemQuotId}'  ,

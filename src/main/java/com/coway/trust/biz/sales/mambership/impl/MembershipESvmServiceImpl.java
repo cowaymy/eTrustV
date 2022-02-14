@@ -181,7 +181,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
         if (hasBill == false) {
 
-            logger.debug("params========>" + params);
+            logger.debug("hasBill == false :: params :: {} ", params);
             if (!params.get("docNo").equals("")) {
                 memNo = (String) params.get("docNo");
 
@@ -255,6 +255,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         }
 
         ///////////// processBills///////////////////
+        logger.debug("hasBill :: " + hasBill);
         this.processBills(hasBill, params, sal0093dData);
         ///////////// processBills///////////////////
 
@@ -262,6 +263,8 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
         if("6507".equals(params.get("payment_mode").toString()) || "6508".equals(params.get("payment_mode").toString())) {
             this.eSVMNormalPayment(params, sessionVO);
+        } else if("6509".equals(params.get("payment_mode").toString()) || "6528".equals(params.get("payment_mode").toString())) {
+            this.eSVMCardPayment(params, sessionVO);
         }
 
         return memNo;
@@ -979,6 +982,141 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 //        Map<String, Object> resultList = null;
 
         // RETURN WOR NO.
+        return resultList;
+    }
+
+    @Override
+    public List<EgovMap> eSVMCardPayment(Map<String, Object> params, SessionVO sessionVO) {
+        logger.debug("========== MembershipESVMServiceImpl.eSVMCardPayment ==========");
+        logger.debug("params {} ::", params);
+
+        List<Object> formList = new ArrayList<Object>();
+        Map<String, Object> formInfo = null;
+
+        // Get PSM details
+        EgovMap psmInfo = membershipESvmMapper.selectESvmInfo(params);
+        EgovMap psmPayInfo = membershipESvmMapper.selectESvmPaymentInfo(params);
+
+        EgovMap psmPay24Info = membershipESvmMapper.getPay0024D(params);
+
+        // Mimic CommonPaymentController - savePayment
+        Map<String, Object> formMap = null;
+        if(new BigDecimal(String.valueOf(psmInfo.get("srvMemPacAmt"))).compareTo(BigDecimal.ZERO) > 0) {
+            formMap = new HashMap<String, Object>();
+
+            formMap.put("procSeq","2");
+            formMap.put("appType","OUT_MEM");
+            formMap.put("advMonth","0");
+            formMap.put("billGrpId","0");
+            formMap.put("billId","0");
+            formMap.put("ordId",psmInfo.get("psmSalesOrdId"));
+            formMap.put("mstRpf","0");
+            formMap.put("mstRpfPaid","0");
+            formMap.put("billNo",psmInfo.get(""));
+            formMap.put("ordNo",psmPayInfo.get(""));
+            formMap.put("billTypeId","164");
+            formMap.put("billTypeNm","Membership Package");
+            formMap.put("installment","0");
+            formMap.put("billAmt",psmPay24Info.get("packageCharge"));
+            formMap.put("paidAmt",psmPay24Info.get("packagePaid"));
+            formMap.put("targetAmt",psmPay24Info.get("packageAmt"));
+            formMap.put("billDt","1900-01-01");
+            formMap.put("assignAmt","0");
+            formMap.put("billStatus","");
+            formMap.put("custNm",psmInfo.get("name"));
+            formMap.put("srvcContractID","0");
+            formMap.put("billAsId","0");
+            formMap.put("discountAmt","0");
+            formMap.put("srvMemId",psmInfo.get("cnvrMemId"));
+            formMap.put("trNo",psmPayInfo.get("trRefNo"));
+            formMap.put("trDt",psmPayInfo.get("trIssuedDt"));
+            formMap.put("collectorCode",psmPayInfo.get("memCode"));
+            formMap.put("collectorId",psmPayInfo.get("memId"));
+            formMap.put("allowComm",psmPayInfo.get("allowComm"));
+
+            formList.add(formMap);
+        }
+
+        if(new BigDecimal(String.valueOf(psmInfo.get("srvMemBsAmt"))).compareTo(BigDecimal.ZERO) > 0) {
+            formMap = new HashMap<String, Object>();
+
+            formMap.put("procSeq","1");
+            formMap.put("appType","OUT_MEM");
+            formMap.put("advMonth","0");
+            formMap.put("billGrpId","0");
+            formMap.put("billId","0");
+            formMap.put("ordId",psmInfo.get("psmSalesOrdId"));
+            formMap.put("mstRpf","0");
+            formMap.put("mstRpfPaid","0");
+            formMap.put("billNo",psmInfo.get(""));
+            formMap.put("ordNo",psmPayInfo.get(""));
+            formMap.put("billTypeId","542");
+            formMap.put("billTypeNm","Filter (1st BS)");
+            formMap.put("installment","0");
+            formMap.put("billAmt",psmPay24Info.get("packageCharge"));
+            formMap.put("paidAmt",psmPay24Info.get("packagePaid"));
+            formMap.put("targetAmt",psmPay24Info.get("packageAmt"));
+            formMap.put("billDt","1900-01-01");
+            formMap.put("assignAmt","0");
+            formMap.put("billStatus","");
+            formMap.put("custNm",psmInfo.get("name"));
+            formMap.put("srvcContractID","0");
+            formMap.put("billAsId","0");
+            formMap.put("discountAmt","0");
+            formMap.put("srvMemId",psmInfo.get("cnvrMemId"));
+            formMap.put("trNo",psmPayInfo.get("trRefNo"));
+            formMap.put("trDt",psmPayInfo.get("trIssuedDt"));
+            formMap.put("collectorCode",psmPayInfo.get("memCode"));
+            formMap.put("collectorId",psmPayInfo.get("memId"));
+            formMap.put("allowComm",psmPayInfo.get("allowComm"));
+
+            formList.add(formMap);
+        }
+
+        formInfo = new HashMap<String, Object>();
+
+        formInfo.put("userid", sessionVO.getUserId());
+
+        formInfo.put("keyInPayRoute", "WEB");
+        formInfo.put("keyInScrn", "CRC");
+
+        formInfo.put("keyInCardMode", psmPayInfo.get("cardMode"));
+        formInfo.put("keyInIssueBank", psmPayInfo.get("issuBankId"));
+        formInfo.put("keyInTrDate", psmPayInfo.get("transactionDate"));
+
+        String[] cardNo = psmPayInfo.get("cardNo").toString().split("-");
+        formInfo.put("keyInCardNo1", cardNo[0]);
+        formInfo.put("keyInCardNo2", cardNo[1]);
+        formInfo.put("keyInCardNo3", cardNo[2]);
+        formInfo.put("keyInCardNo4", cardNo[3]);
+
+        formInfo.put("keyCrcCardType", params.get("payment_cardCrDb"));
+        formInfo.put("keyInCrcType", psmPayInfo.get("cardBrand"));
+        formInfo.put("keyInAmount", psmPayInfo.get("payAmt"));
+        formInfo.put("keyInApprovalNo", psmPayInfo.get("approvalNo"));
+        formInfo.put("keyInExpiryMonth", psmPayInfo.get("expiryDate").toString().substring(0, 2));
+        formInfo.put("keyInExpiryYear", psmPayInfo.get("expiryDate").toString().substring(2));
+        formInfo.put("keyInTenure", 0);
+        formInfo.put("keyInHolderNm", psmPayInfo.get("crcName"));
+        formInfo.put("keyInMerchantBank", psmPayInfo.get("merchantBank"));
+        formInfo.put("keyInTrNo", psmPayInfo.get("trRefNo"));
+        formInfo.put("keyInTrIssueDate", psmPayInfo.get("trIssuedDate"));
+        formInfo.put("keyInCollMemId", psmPayInfo.get("memId"));
+
+        // Mobile Payment Key-In - SavePayment
+        formInfo.put("keyInIsOnline", "1299".equals(String.valueOf(psmPayInfo.get("cardMode"))) ? 0 : 1);
+        formInfo.put("keyInIsLock", 0);
+        formInfo.put("keyInIsThirdParty", 0);
+        formInfo.put("keyInStatusId", 1);
+        formInfo.put("keyInIsFundTransfer", 0);
+        formInfo.put("keyInSkipRecon", 0);
+        formInfo.put("keyInPayItmCardType", psmPayInfo.get("cardBrand"));
+        formInfo.put("keyInPayItmCardMode", psmPayInfo.get("cardMode"));
+        formInfo.put("keyInPayType", "107");
+        formInfo.put("keyInPayDate", psmPayInfo.get("transactionDate"));
+
+        List<EgovMap> resultList = commonPaymentService.savePayment(formInfo, formList);
+
         return resultList;
     }
 }

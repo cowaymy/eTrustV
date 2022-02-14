@@ -632,7 +632,8 @@
             PAY.CARD_NO,
             PAY.APPROVAL_NO,
             PAY.CRC_NAME,
-            PAY.TRANSACTION_DATE,
+            TO_CHAR(TO_DATE(PAY.TRANSACTION_DATE, 'DD/MM/YYYY'), 'DD/MM/YYYY') TRANSACTION_DATE,
+            /* PAY.TRANSACTION_DATE, */
             PAY.EXPIRY_DATE,
             PAY.CARD_MODE,
             PAY.MERCHANT_BANK,

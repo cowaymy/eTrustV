@@ -34,6 +34,19 @@
     <td colspan=1><input id=payment_transactionID name="payment_transactionID" type="text" title="" placeholder="" class="w100p" /></td>
     <td colspan=2><input id=payment_allowCommFlg name="payment_allowCommFlg" type="checkBox" checked/>Allow commission for this payment</td>
 </tr>
+</c:if>
+<c:if test="${paymentInfo.payMode eq '6509'}" >
+<tr>
+    <th scope="row">Card Type</th>
+    <td colspan=3>
+        <select id="payment_cardCrDb" name="payment_cardCrDb" class="w100p" >
+            <option value="1241" selected="selected">Credit Card</option>
+            <option value="1240">Debit Card</option>
+        </select>
+    </td>
+</tr>
+</c:if>
+<c:if test="${paymentInfo.payMode eq '6507' or paymentInfo.payMode eq '6508' or paymentInfo.payMode eq '6509'}" >
 <tr>
     <th scope="row">TR Ref No</th>
     <td colspan=3><input id=payment_trRefNo name="payment_trRefNo" type="text" title="" placeholder="" class="w100p" /></td>
@@ -168,7 +181,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Card Type<span class="must">*</span></th>
+    <th scope="row">Type<span class="must">*</span></th>
     <!-- <td colspan=3><input id=payment_cardType name="payment_cardType" type="text" title="" placeholder="" class="w100p" /></td> -->
     <td colspan=3>
         <select id="payment_cardType" name="payment_cardType" class="w100p" >
