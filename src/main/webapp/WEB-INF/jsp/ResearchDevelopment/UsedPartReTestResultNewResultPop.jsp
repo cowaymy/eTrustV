@@ -53,12 +53,6 @@
             $("#defEvt_div").attr("style", "display:block");
             break;
 
-         case "1":
-            // INHOUSE ACTIVE
-            fn_openField_Complete();
-            $("#defEvt_div").attr("style", "display:block");
-            break;
-
         default:
             $("#m2").hide();
             $("#m4").hide();
@@ -144,7 +138,7 @@
         var _TEST_AS_SLUTN_RESN_ID = 0;
 
         // DEFECT ENTRY
-        if ($('#ddlStatus').val() == '4' || $('#ddlStatus').val() == '1') {
+        if ($('#ddlStatus').val() == '4') {
             _TEST_AS_DEFECT_TYPE_ID = $('#def_type_id').val();
         	_TEST_AS_DEFECT_ID = $('#def_code_id').val();
             _TEST_AS_DEFECT_PART_ID = $('#def_part_id').val();
@@ -248,15 +242,6 @@
             rtnValue = false;
         }
 
-        if ($("#ddlStatus").val() == 4) { // IN HOUSE REPAIR
-            if ($("input[name='replacement'][value='1']").prop("checked")) {
-                if (FormUtil.checkReqValue($("#serialNo"))) {
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Loan Product Serial Nuber' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-            }
-        }
-
         if (rtnValue == false) {
             Common.alert(rtnMsg);
         }
@@ -274,8 +259,8 @@
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
             rtnValue = false;
         } else {
-            if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) { // COMPLETE OR ACTIVE
-                if (FormUtil.checkReqValue($("#dpSettleDate"))) { // IF SATTLE DATE IS EMPTY
+            if ($("#ddlStatus").val() == 4) { // COMPLETE
+                if (FormUtil.checkReqValue($("#dpSettleDate"))) { // IF SETTLE DATE IS EMPTY
                     text = "<spring:message code='service.grid.SettleDate'/>";
                     rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
                     rtnValue = false;
