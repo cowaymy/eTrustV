@@ -1038,9 +1038,18 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     int userId = (int) smsList.get("userId");
     SmsVO sms = new SmsVO(userId, 975);
 
+    logger.debug("Trobleshooting >> userId ::" + userId);
+    logger.debug("Trobleshooting >> sms ::" + sms);
+
     sms.setMessage(smsList.get("smsMessage").toString());
     sms.setMobiles(smsList.get("smsMobileNo").toString());
+
+    logger.debug("Trobleshooting >> smsMessage ::" + smsList.get("smsMessage").toString());
+    logger.debug("Trobleshooting >> smsMobileNo ::" + smsList.get("smsMobileNo").toString());
+
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
+
+    logger.debug("Trobleshooting 0099");
   }
 }
