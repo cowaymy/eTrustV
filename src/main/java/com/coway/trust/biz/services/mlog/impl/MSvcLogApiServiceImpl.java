@@ -574,19 +574,20 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logger.debug("TEST001");
 
     Map<String, Object> smsList = new HashMap<>();
-    //smsList.put("userId", params.get("userId").toString());
-    smsList.put("userId", String.valueOf(params.get("userId")));
-    logger.debug("TEST002");
+    /*smsList.put("userId", params.get("userId").toString());
+    smsList.put("userId", String.valueOf(params.get("userId")));*/
+    smsList.put("userId", params.get("userId"));
+    logger.debug("TEST002" + params.get("userId"));
 
     smsList.put("smsType", 975);
-
     logger.debug("TEST003");
+
     smsList.put("smsMessage", smsMessage);
-
     logger.debug("TEST004");
-    smsList.put("smsMobileNo", params.get("handphoneTel").toString());
 
-    logger.debug("TEST005");
+    smsList.put("smsMobileNo", params.get("handphoneTel").toString());
+    logger.debug("TEST005" + params.get("handphoneTel").toString());
+
     if(smsMessage != "")
     {
     	sendSms(smsList);
