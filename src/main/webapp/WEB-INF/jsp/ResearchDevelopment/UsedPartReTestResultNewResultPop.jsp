@@ -103,12 +103,12 @@
     }
 
     function fn_doSave() {
-        // AS RESULT INFORMATION
+        // TEST RESULT INFORMATION
         if (!fn_validRequiredField_Save_ResultInfo()) {
             return;
         }
 
-        if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) { // COMPLETE OR ACTIVE
+        if ($("#ddlStatus").val() == 4) { // COMPLETE
             // AS DEFECTIVE EVENT
             if (!fn_validRequiredField_Save_DefectiveInfo()) {
                 return;
@@ -292,6 +292,11 @@
                 }
 
             }
+        }
+
+        if ($("#ddlStatus").val() != 4) {
+        	rtnMsg = "<spring:message code='service.msg.onlyAllowSaveCompleted' />";
+        	rtnValue = false;
         }
 
         if (rtnValue == false) {
@@ -638,16 +643,7 @@
                                         <td><select class="w100p" id="ddlStatus" name="ddlStatus"
                                             onChange="fn_ddlStatus_SelectedIndexChanged()">
                                                 <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-                                                <c:forEach var="list" items="${asCrtStat}" varStatus="status">
-                                                    <c:choose>
-                                                        <c:when test="${list.codeId!='4'}">
-                                                              <option value="${list.codeId}">${list.codeName}</option>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <option value="${list.codeId}">${list.codeName}</option>
-                                                       </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
+                                                <option value="4">Complete</option>
                                         </select></td>
                                     </tr>
                                     <tr>

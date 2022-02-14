@@ -103,9 +103,6 @@ public class UsedPartReTestResultController {
 	    model.put("STK_CODE", params.get("stk_Code"));
 	    params.put("testResultId", params.get("testResultId"));
 
-	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
-	    model.addAttribute("asCrtStat", asCrtStat);
-
 	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
 
@@ -128,9 +125,6 @@ public class UsedPartReTestResultController {
 	    model.put("CT_CODE", (String) params.get("ct_Code"));
 	    model.put("STK_CODE", params.get("stk_Code"));
 	    params.put("testResultId", params.get("testResultId"));
-
-	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
-	    model.addAttribute("asCrtStat", asCrtStat);
 
 	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
@@ -156,10 +150,6 @@ public class UsedPartReTestResultController {
 	    model.put("STK_CODE", params.get("stk_Code"));
 	    model.put("ASR_ITM_ID", (String) params.get("asr_Itm_Id"));
 	    params.put("testResultId", params.get("testResultId"));
-
-
-	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
-	    model.addAttribute("asCrtStat", asCrtStat);
 
 	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();
 	    model.addAttribute("timePick", timePick);

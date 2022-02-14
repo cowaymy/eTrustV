@@ -35,11 +35,7 @@
             /* doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH */
             CommonCombo.make('cmbCategory', '/common/selectCodeList.do', {groupCode : 11,codeIn : 'WP,AP,BT,SOF,POE'}, '', '');
 
-
-            //doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'spareFilterName', 'S', '');
-
-         // FILTER NAME & SPARE PART NAME
-         //   doDefCombo(emptyData, '', 'asProduct', 'S', '');
+            doGetCombo('/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
 
             $("#asProduct").change(
                     function() {
@@ -322,7 +318,12 @@
         if (selectedItems[0].item.testStus == 'Completed') {
             Common.alert("<spring:message code='service.msg.alreadyCompleteCannotAdd'/>");
             return;
-          }
+        }
+
+        if (selectedItems[0].item.testYn == 'N') {
+            Common.alert("<spring:message code='service.msg.setNotTestedCannotAdd'/>");
+            return;
+        }
 
         var asId = selectedItems[0].item.asId;
         var asNo = selectedItems[0].item.asNo;
@@ -354,6 +355,16 @@
 
         if (selectedItems.length > 1) {
             Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+            return;
+        }
+
+        if (selectedItems[0].item.testYn == 'N') {
+            Common.alert("<spring:message code='service.msg.setNotTestedCannotView'/>");
+            return;
+        }
+
+        if (selectedItems[0].item.testStus != 'Completed') {
+            Common.alert("<spring:message code='service.msg.noTestResultToView'/>");
             return;
         }
 
@@ -391,6 +402,16 @@
             return;
         }
 
+        if (selectedItems[0].item.testYn == 'N') {
+            Common.alert("<spring:message code='service.msg.setNotTestedCannotEdit'/>");
+            return;
+        }
+
+        if (selectedItems[0].item.testStus != 'Completed') {
+            Common.alert("<spring:message code='service.msg.noTestResultToEdit'/>");
+            return;
+        }
+
         var asId = selectedItems[0].item.asId;
         var asNo = selectedItems[0].item.asNo;
         var asStusId = selectedItems[0].item.code1;
@@ -405,18 +426,6 @@
         var dscCode = selectedItems[0].item.dscCode;
         var ctCode = selectedItems[0].item.lastInstallCtCode;
         var stkCode = selectedItems[0].item.stkCode;
-
-        console.log ("asId :"+ asId );
-        console.log ("asNo :"+ asNo );
-        console.log ("asStusId :"+ asStusId );
-        console.log ("salesOrdNo :"+ salesOrdNo );
-        console.log ("salesOrdId :"+ salesOrdId );
-        console.log ("rcdTms :"+ rcdTms );
-        console.log ("dscCode :"+ dscCode );
-        console.log ("ctCode :"+ ctCode );
-        console.log ("stkCode :"+ stkCode );
-        console.log ("testResultId :"+ testResultId);
-        console.log ("testResultNo :"+ testResultNo);
 
         var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode
                     + "&testResultId=" + testResultId + "&testResultNo=" + testResultNo;

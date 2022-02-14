@@ -131,16 +131,7 @@
                                         <th scope="row"><spring:message code='sys.title.status' /></th>
                                         <td><select class="w100p" id="ddlStatus" name="ddlStatus">
                                                 <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-                                                <c:forEach var="list" items="${asCrtStat}" varStatus="status">
-                                                    <c:choose>
-                                                        <c:when test="${list.codeId!='4'}">
-                                                              <option value="${list.codeId}">${list.codeName}</option>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <option value="${list.codeId}">${list.codeName}</option>
-                                                       </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
+                                                <option value="4">Complete</option>
                                         </select></td>
                                     </tr>
                                     <tr>
