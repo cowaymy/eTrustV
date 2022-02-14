@@ -7,13 +7,14 @@
             function() {
 
                 //fn_DisablePageControl(); // DISABLE ALL THE FIELD
-                $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
+                //$("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
+                fn_getTestResultInfo();
+                fn_ddlStatus_SelectedIndexChanged();
 
                 $("#dscCode").val("${DSC_CODE}");
                 $("#ddlCTCodeText").val("${CT_CODE}");
                 $("#PROD_CDE").val("${STK_CODE}");
 
-                fn_getTestResultInfo();
 
     });
 
@@ -39,7 +40,7 @@
         });
     }
 
-    function fn_ddlStatus_SelectedIndexChanged(ind) {
+    function fn_ddlStatus_SelectedIndexChanged() {
 
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
@@ -48,14 +49,14 @@
         $("#ddlCTCodeText").val(selectedItems[0].item.lastInstallCtCode);
         $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
 
-        switch ($("#ddlStatus").val()) {
-        case "4":
+//         switch ($("#ddlStatus").val()) {
+//         case "4":
             // COMPLETE
             fn_openField_Complete();
             $("#defEvt_div").attr("style", "display:block");
-            break;
+//             break;
 
-        }
+//         }
     }
 
     function fn_openField_Complete() {
@@ -85,7 +86,7 @@
     }
 
     function fn_doSave() {
-        // AS RESULT INFORMATION
+        // TEST RESULT INFORMATION
         if (!fn_validRequiredField_Save_ResultInfo()) {
             return;
         }
@@ -119,7 +120,7 @@
 
     function fn_setSaveFormData() {
 
-        var _TEST_AS_DEFECT_TYPE_ID = 0;
+    	var _TEST_AS_DEFECT_TYPE_ID = 0;
         var _TEST_AS_DEFECT_ID = 0;
         var _TEST_AS_DEFECT_PART_ID = 0;
         var _TEST_AS_DEFECT_DTL_RESN_ID = 0;
@@ -164,13 +165,13 @@
                    if (result.data != "" && result.data != null && result.data != "null") {
                       Common.alert("<b>AS result save successfully.</b></br> New Used Part Return Test Result Number : <b>" + result.data + " </b>");
                           $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
-                          fn_DisablePageControl();
+                          //fn_DisablePageControl();
                           $("#_editUPResultDiv1").remove();
                           fn_searchUsedPart();
                     } else {
                           Common.alert("<b>Used Part Return Test Result save successfully.</b>");
                           $("#txtResultNo").html( "<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
-                          fn_DisablePageControl();
+                          //fn_DisablePageControl();
                           $("#_editUPResultDiv1").remove();
                           fn_searchUsedPart();
                     }
@@ -211,11 +212,6 @@
         var rtnMsg = "";
         var rtnValue = true;
 
-        if (FormUtil.checkReqValue($("#def_code_id"))) {
-            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Code' htmlEscape='false'/> </br>";
-            rtnValue = false;
-        }
-
         if (FormUtil.checkReqValue($("#def_part_id"))) {
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Part' htmlEscape='false'/> </br>";
             rtnValue = false;
@@ -223,6 +219,21 @@
 
         if (FormUtil.checkReqValue($("#def_def"))) {
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Detail of Defect' htmlEscape='false'/> </br>";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#def_code_id"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Code' htmlEscape='false'/> </br>";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#def_type_id"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Detail of Defect' htmlEscape='false'/> </br>";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#solut_code_id"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Solution Code' htmlEscape='false'/> </br>";
             rtnValue = false;
         }
 
@@ -561,25 +572,25 @@
             $("#manufacDate").val(result[0].testMnfDt);
             $("#txtTestResultRemark").val(result[0].testUpRem);
 
-            $("#def_part").val(result[0].defectCodeB2);
-            $("#def_part_id").val(result[0].defectIdB2);
-            $("#def_part_text").val(result[0].defectDescB2);
+            $("#def_part").val(result[0].defectCodeDp);
+            $("#def_part_id").val(result[0].defectIdDp);
+            $("#def_part_text").val(result[0].defectDescDp);
 
-            $("#def_def").val(result[0].defectCodeB3);
-            $("#def_def_id").val(result[0].defectIDB3);
-            $("#def_def_text").val(result[0].defectDescB3);
+            $("#def_def").val(result[0].defectCodeDd);
+            $("#def_def_id").val(result[0].defectIdDd);
+            $("#def_def_text").val(result[0].defectDescDd);
 
-            $("#def_code").val(result[0].defectCodeB1);
-            $("#def_code_id").val(result[0].defectIDB1);
-            $("#def_code_text").val(result[0].defectDescB1);
+            $("#def_code").val(result[0].defectCodeDc);
+            $("#def_code_id").val(result[0].defectIdDc);
+            $("#def_code_text").val(result[0].defectDescDc);
 
-            $("#def_type").val(result[0].defectCodeB0);
-            $("#def_type_id").val(result[0].defectIDB0);
-            $("#def_type_text").val(result[0].defectDescB0);
+            $("#def_type").val(result[0].defectCodeDt);
+            $("#def_type_id").val(result[0].defectIdDt);
+            $("#def_type_text").val(result[0].defectDescDt);
 
-            $("#solut_code").val(result[0].defectCodeB4);
-            $("#solut_code_id").val(result[0].defectIDB4);
-            $("#solut_code_text").val(result[0].defectDescB4);
+            $("#solut_code").val(result[0].defectCodeSc);
+            $("#solut_code_id").val(result[0].defectIdSc);
+            $("#solut_code_text").val(result[0].defectDescSc);
 
           });
     };

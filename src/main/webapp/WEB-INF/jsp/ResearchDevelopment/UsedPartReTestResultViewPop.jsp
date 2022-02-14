@@ -6,6 +6,8 @@
     $(document).ready(
             function() {
 
+            	$("#defEvt_div").attr("style", "display:block");
+
                 fn_DisablePageControl(); // DISABLE ALL THE FIELD
 
                 $("#dscCode").val("${DSC_CODE}");
@@ -55,25 +57,25 @@
             $("#manufacDate").val(result[0].testMnfDt);
             $("#txtTestResultRemark").val(result[0].testUpRem);
 
-            $("#def_part").val(result[0].defectCodeB2);
-            $("#def_part_id").val(result[0].defectIdB2);
-            $("#def_part_text").val(result[0].defectDescB2);
+            $("#def_part").val(result[0].defectCodeDp);
+            $("#def_part_id").val(result[0].defectIdDp);
+            $("#def_part_text").val(result[0].defectDescDp);
 
-            $("#def_def").val(result[0].defectCodeB3);
-            $("#def_def_id").val(result[0].defectIDB3);
-            $("#def_def_text").val(result[0].defectDescB3);
+            $("#def_def").val(result[0].defectCodeDd);
+            $("#def_def_id").val(result[0].defectIdDd);
+            $("#def_def_text").val(result[0].defectDescDd);
 
-            $("#def_code").val(result[0].defectCodeB1);
-            $("#def_code_id").val(result[0].defectIDB1);
-            $("#def_code_text").val(result[0].defectDescB1);
+            $("#def_code").val(result[0].defectCodeDc);
+            $("#def_code_id").val(result[0].defectIdDc);
+            $("#def_code_text").val(result[0].defectDescDc);
 
-            $("#def_type").val(result[0].defectCodeB0);
-            $("#def_type_id").val(result[0].defectIDB0);
-            $("#def_type_text").val(result[0].defectDescB0);
+            $("#def_type").val(result[0].defectCodeDt);
+            $("#def_type_id").val(result[0].defectIdDt);
+            $("#def_type_text").val(result[0].defectDescDt);
 
-            $("#solut_code").val(result[0].defectCodeB4);
-            $("#solut_code_id").val(result[0].defectIDB4);
-            $("#solut_code_text").val(result[0].defectDescB4);
+            $("#solut_code").val(result[0].defectCodeSc);
+            $("#solut_code_id").val(result[0].defectIdSc);
+            $("#solut_code_text").val(result[0].defectDescSc);
 
           });
     };
@@ -93,7 +95,7 @@
         </form>
         <header class="pop_header">
             <!-- pop_header start -->
-            <h1><spring:message code='rnd.title.editUsedPartTestRst' /></h1>
+            <h1><spring:message code='rnd.title.viewUsedPartTestRst' /></h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2">
                         <a href="#"><spring:message code='sys.btn.close' /></a>

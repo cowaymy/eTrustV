@@ -212,11 +212,6 @@
         var rtnMsg = "";
         var rtnValue = true;
 
-        if (FormUtil.checkReqValue($("#def_code_id"))) {
-            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Code' htmlEscape='false'/> </br>";
-            rtnValue = false;
-        }
-
         if (FormUtil.checkReqValue($("#def_part_id"))) {
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Part' htmlEscape='false'/> </br>";
             rtnValue = false;
@@ -224,6 +219,21 @@
 
         if (FormUtil.checkReqValue($("#def_def"))) {
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Detail of Defect' htmlEscape='false'/> </br>";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#def_code_id"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Code' htmlEscape='false'/> </br>";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#def_type_id"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Detail of Defect' htmlEscape='false'/> </br>";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#solut_code_id"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Solution Code' htmlEscape='false'/> </br>";
             rtnValue = false;
         }
 
@@ -764,6 +774,3 @@
         </form>
     </section>
 </div>
-<script type="text/javaScript">
-
-</script>
