@@ -67,10 +67,10 @@
 	        var crt_day = (yearc * 12 * 30) +  (monc * 30) + (dayc * 1) ;
 	        var sys_day = (yyyy * 12 * 30) +  (mm * 30) + ( dd * 1) ;
 
-	       /*  if ( (sys_day - crt_day) > 10 ) {
+	         if ( (sys_day - crt_day) > 10 ) {
 	            Common.alert('Fail installation Result only allow within 7 days to edit');
 	            return;
-	        } */
+	        }
 
 	      // KR-OHK Serial Check add
 	      Common.ajax("POST", "/homecare/services/install/hcFailInstallation.do", $("#editInstallForm").serializeJSON(), function(result) {
