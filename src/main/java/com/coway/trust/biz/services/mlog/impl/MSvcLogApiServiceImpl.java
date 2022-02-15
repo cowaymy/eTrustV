@@ -1037,7 +1037,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
   @Override
   public void sendSms(Map<String, Object> smsList){
-    int userId = (int) smsList.get("userId");
+    //int userId = (int) smsList.get("userId");
+
+    int userId = 1234;
     SmsVO sms = new SmsVO(userId, 975);
 
     logger.debug("Trobleshooting >> userId ::" + userId);
