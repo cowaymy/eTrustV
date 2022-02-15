@@ -10,8 +10,9 @@
                 $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
 
                 $("#dscCode").val("${DSC_CODE}");
-                $("#ddlCTCodeText").val("${CT_CODE}");
                 $("#PROD_CDE").val("${STK_CODE}");
+
+                doGetCombo('/ResearchDevelopment/selectCTList.do', '', '', 'cmbCtList', 'S', '');
 
     });
 
@@ -41,9 +42,7 @@
 
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
-        $("#ddlCTCode").val(selectedItems[0].item.asMemId);
         $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-        $("#ddlCTCodeText").val(selectedItems[0].item.lastInstallCtCode);
         $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
 
         switch ($("#ddlStatus").val()) {
@@ -74,7 +73,7 @@
         $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
         $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
         $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
-        $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
+        $('#cmbCtList').removeAttr("disabled").removeClass("readonly");
         $("#ddlProdGenuine").removeAttr("disabled").removeClass("readonly");
         $('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
         $('#manufacDate').removeAttr("disabled").removeClass("readonly");
@@ -88,7 +87,7 @@
         }
 
         if ($("#ddlStatus").val() == 4) { // COMPLETE
-            // AS DEFECTIVE EVENT
+            // USED PART DEFECTIVE EVENT
             if (!fn_validRequiredField_Save_DefectiveInfo()) {
                 return;
             }
@@ -137,7 +136,7 @@
             AS_ENTRY_ID : "${AS_ID}",
             AS_SO_ID : $("#ORD_ID").val(),
             AS_ORD_NO : $("#ORD_NO").val(),
-            AS_CT_ID : $('#ddlCTCode').val(),
+            TEST_UP_CT : $('#cmbCtList').val(),
             ASR_ITM_ID : $('#ASR_ITM_ID').val(),
             TEST_UP_SETL_DT : $('#dpSettleDate').val(),
             TEST_UP_SETL_TM : $('#tpSettleTime').val(),
@@ -148,7 +147,7 @@
             TEST_UP_REM : $('#txtTestResultRemark').val(),
             TEST_YN : $('#ddlStatus').val() == 4 ? "Y" : "",
 
-            // AS DEFECT ENTRY
+            // USED PART DEFECT ENTRY
             TEST_AS_DEFECT_TYPE_ID : _TEST_AS_DEFECT_TYPE_ID,
             TEST_AS_DEFECT_ID : _TEST_AS_DEFECT_ID,
             TEST_AS_DEFECT_PART_ID : _TEST_AS_DEFECT_PART_ID,
@@ -185,8 +184,8 @@
         $("#ddlStatus").attr("disabled", true);
         $("#dpSettleDate").attr("disabled", true);
         $("#tpSettleTime").attr("disabled", true);
+        $("#cmbCtList").attr("disabled", true);
         $("#ddlDSCCode").attr("disabled", true);
-        $("#ddlCTCode").attr("disabled", true);
         $("#ddlProdGenuine").attr("disabled", true);
         $("#txtTestResultRemark").attr("disabled", true);
         $("#manufacDate").attr("disabled", true);
@@ -267,7 +266,12 @@
                 }
 
                 if (FormUtil.checkReqValue($("#txtTestResultRemark"))) {
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[Test Result Remark]' htmlEscape='false'/> </br>";
+                    rtnValue = false;
+                }
+
+                if (FormUtil.checkReqValue($("#cmbCtList"))) {
+                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[CT Code]' htmlEscape='false'/> </br>";
                     rtnValue = false;
                 }
 
@@ -654,11 +658,9 @@
                                           <input type="text" title="" placeholder="" class="readonly"
                                             disabled="disabled" id='dscCode' name='dscCode' />
                                         </td>
-                                        <th scope="row"><spring:message code='service.grid.CTCode' />
+                                        <th scope="row"><spring:message code='service.grid.RCTCode' />
                                             <span id='m7' name='m7' class="must" style="display: none">*</span></th>
-                                        <td>
-                                            <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
-                                            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' /></td>
+                                            <td><select class="w100p" id="cmbCtList" name="cmbCtList" disabled="disabled"></select></td>
                                    </tr>
 
                                     <tr>
@@ -700,7 +702,7 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th scope="row"><spring:message code='service.text.defPrt' />
+                                        <th scope="row"><spring:message code='service.text.uprDefPrt' />
                                         <span id='m11' name='m11' class="must" >*</span></th>
                                         <td>
                                         <input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class=""
@@ -711,7 +713,7 @@
                                         <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width: 60%;" /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message code='service.text.dtlDef' />
+                                        <th scope="row"><spring:message code='service.text.uprDtlDef' />
                                         <span id='m12' name='m12' class="must">*</span></th>
                                         <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def' name='def_def' class=""
                                             onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();" />
@@ -721,7 +723,7 @@
                                         <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width: 60%;" /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message  code='service.text.defCde' />
+                                        <th scope="row"><spring:message  code='service.text.uprDefCde' />
                                         <span id='m10' name='m10' class="must">*</span></th>
                                         <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code' name='def_code' class=""
                                             onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();" />
@@ -732,7 +734,7 @@
                                     </tr>
 
                                     <tr>
-                                            <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span></th>
+                                            <th scope="row"><spring:message code='service.text.uprDefTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span></th>
                                         <td>
                                             <input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled"  class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();"/>
                                             <a class="search_btn" id="HDT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
@@ -742,7 +744,7 @@
                                     </tr>
 
                                     <tr>
-                                            <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span></th>
+                                            <th scope="row"><spring:message code='service.text.uprSltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span></th>
                                         <td>
                                             <input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();"/>
                                             <a class="search_btn" id="HSC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

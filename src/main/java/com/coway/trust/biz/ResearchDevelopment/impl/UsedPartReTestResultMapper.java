@@ -39,4 +39,6 @@ public interface UsedPartReTestResultMapper {
 
 	int insertSVC0122D_notTested(Map<String, Object> params);
 
+	List<EgovMap> selectCTList(Map<String, Object> params);
+
 }

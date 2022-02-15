@@ -205,4 +205,9 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    return a;
 	}
 
+	@Override
+	public List<EgovMap> selectCTList(Map<String, Object> params) {
+		return UsedPartReTestResultMapper.selectCTList(params);
+	}
+
 }

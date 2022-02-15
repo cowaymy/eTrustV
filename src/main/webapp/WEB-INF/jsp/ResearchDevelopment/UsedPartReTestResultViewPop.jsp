@@ -8,13 +8,14 @@
 
             	$("#defEvt_div").attr("style", "display:block");
 
-                fn_DisablePageControl(); // DISABLE ALL THE FIELD
-
                 $("#dscCode").val("${DSC_CODE}");
                 $("#ddlCTCodeText").val("${CT_CODE}");
                 $("#PROD_CDE").val("${STK_CODE}");
 
+                doGetCombo('/ResearchDevelopment/selectCTList.do', '', $("#TEST_UP_CT").val(), 'cmbCtList', 'S', '');
                 fn_getTestResultInfo();
+
+                fn_DisablePageControl(); // DISABLE ALL THE FIELD
 
     });
 
@@ -24,6 +25,7 @@
         $("#tpSettleTime").attr("disabled", true);
         $("#ddlDSCCode").attr("disabled", true);
         $("#ddlCTCode").attr("disabled", true);
+        $("#cmbCtList").attr("disabled", true);
         $("#ddlProdGenuine").attr("disabled", true);
         $("#txtTestResultRemark").attr("disabled", true);
         $("#manufacDate").attr("disabled", true);
@@ -91,6 +93,7 @@
                 <input type="text" name="TEST_RESULT_NO" id="TEST_RESULT_NO" value="${TEST_RESULT_NO}" />
                 <input type="text" name="DSC_CODE" id="DSC_CODE" value="${DSC_CODE}" />
                 <input type="text" name="TEST_RESULT_ID" id="TEST_RESULT_ID" value="${TEST_RESULT_ID}" />
+                <input type="text" name="TEST_UP_CT" id="TEST_UP_CT" value="${CT_CODE}" />
             </div>
         </form>
         <header class="pop_header">
@@ -166,9 +169,7 @@
                                         </td>
                                         <th scope="row"><spring:message code='service.grid.CTCode' />
                                             <span id='m7' name='m7' class="must" style="display: none">*</span></th>
-                                        <td>
-                                            <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
-                                            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' /></td>
+                                            <td><select class="w100p" id="cmbCtList" name="cmbCtList"></select></td>
                                    </tr>
 
                                     <tr>

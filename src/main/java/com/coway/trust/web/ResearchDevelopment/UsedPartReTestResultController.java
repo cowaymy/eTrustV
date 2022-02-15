@@ -146,7 +146,6 @@ public class UsedPartReTestResultController {
 	    model.put("AS_NO", params.get("as_No"));
 	    model.put("AS_RESULT_NO", params.get("as_Result_No"));
 	    model.put("DSC_CODE", (String) params.get("dsc_Code"));
-	    model.put("CT_CODE", (String) params.get("ct_Code"));
 	    model.put("STK_CODE", params.get("stk_Code"));
 	    model.put("ASR_ITM_ID", (String) params.get("asr_Itm_Id"));
 	    params.put("testResultId", params.get("testResultId"));
@@ -255,6 +254,18 @@ public class UsedPartReTestResultController {
 		    }
 
 		    return ResponseEntity.ok(message);
+	  }
+
+	  @RequestMapping(value = "/selectCTList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCTList(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/selectCTList.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/selectCTList.do===============================");
+
+	    List<EgovMap> selectCTList = UsedPartReTestResultService.selectCTList(params);
+	    logger.debug("selectCTList {}", selectCTList);
+	    return ResponseEntity.ok(selectCTList);
 	  }
 
 

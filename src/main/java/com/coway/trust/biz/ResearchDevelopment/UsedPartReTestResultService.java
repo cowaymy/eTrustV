@@ -35,4 +35,6 @@ public interface UsedPartReTestResultService {
 
 	  int usedPartNotTestedAdd(Map<String, Object> params);
 
+	  List<EgovMap> selectCTList(Map<String, Object> params);
+
 }

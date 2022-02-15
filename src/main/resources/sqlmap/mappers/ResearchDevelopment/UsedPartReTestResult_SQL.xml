@@ -29,8 +29,7 @@ A.AS_ID,
 C.AS_RESULT_NO,
 G.NAME AS CUST_NAME,
 E.LAST_INSTALL_SERIAL_NO,
-E.LAST_INSTALL_CT_CODE,
-E.LAST_INSTALL_CT_NAME,
+R.TEST_UP_CT,
 E.DSC_CODE,
 E.DSC_NAME,
 D.ASR_ITM_ID,
@@ -41,7 +40,6 @@ C.LPM,
 C.AS_RESULT_REM,
 M.DEFECT_DESC AS AS_Error_Code,
 N.DEFECT_DESC AS AS_Description,
-H.DEFECT_CODE,
 H.DEFECT_DESC AS Solution_Large ,
 I.DEFECT_DESC AS Solution_Small ,
 J.DEFECT_DESC AS Problem_Symptom_Large ,
@@ -151,6 +149,7 @@ order by B.SALES_ORD_NO
         TEST_AS_DEFECT_ID,
         TEST_AS_DEFECT_TYPE_ID,
         TEST_AS_SLUTN_RESN_ID,
+        TEST_UP_CT,
         B0.DEFECT_ID AS DEFECT_ID_DT,
         B0.DEFECT_CODE AS DEFECT_CODE_DT,
         B0.DEFECT_DESC AS DEFECT_DESC_DT,
@@ -452,7 +451,7 @@ order by B.SALES_ORD_NO
                #{TEST_UP_SETL_DT},
                #{TEST_UP_SETL_TM},
                #{TEST_YN},
-               #{updator},
+               #{TEST_UP_CT},
                #{ASR_ITM_ID},
                #{TEST_AS_DEFECT_PART_ID},
                #{TEST_AS_DEFECT_DTL_RESN_ID},
@@ -476,7 +475,7 @@ order by B.SALES_ORD_NO
               TEST_UP_SETL_DT = #{TEST_UP_SETL_DT},
               TEST_UP_SETL_TM = #{TEST_UP_SETL_TM},
               TEST_YN = #{TEST_YN},
-              TEST_UP_CT = #{updator},
+              TEST_UP_CT = #{TEST_UP_CT},
               TEST_AS_DEFECT_PART_ID = #{TEST_AS_DEFECT_PART_ID},
               TEST_AS_DEFECT_DTL_RESN_ID = #{TEST_AS_DEFECT_DTL_RESN_ID},
               TEST_AS_DEFECT_ID = #{TEST_AS_DEFECT_ID},
@@ -507,5 +506,17 @@ order by B.SALES_ORD_NO
                #{updator},
                SYSDATE )
     </insert>
+
+    <select id="selectCTList" parameterType="Map" resultType="egovMap">
+        SELECT A.MEM_CODE CODE_ID,
+           A.MEM_CODE || '-' || A.NAME CODE_NAME
+        FROM ORG0001D A,
+         SYS0005M B
+        WHERE A.BRNCH = B.BRNCH_ID
+            AND B.TYPE_ID = '43'
+            AND A.STUS = '1'
+            AND A.MEM_TYPE = '3'
+        ORDER BY CODE_ID
+    </select>
 
   </mapper>

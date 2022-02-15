@@ -111,8 +111,8 @@
                     width : 100
                 },
                 {
-                    dataField : "lastInstallCtCode",
-                    headerText : "<spring:message code='service.grid.CTCode'/>",
+                    dataField : "testUpCt",
+                    headerText : "<spring:message code='service.grid.RCTCode'/>",
                     width : 100
                 },
                 {
@@ -123,31 +123,31 @@
                 },
                 {
                     dataField : "solutionLarge",
-                    headerText : "<spring:message code='service.text.defTyp'/>",
+                    headerText : "<spring:message code='service.text.uprDefTyp'/>",
                     editable : false,
                     width : 200
                 },
                 {
                     dataField : "solutionSmall",
-                    headerText : "<spring:message code='service.text.sltCde'/>",
+                    headerText : "<spring:message code='service.text.uprSltCde'/>",
                     editable : false,
                     width : 200
                 },
                 {
                     dataField : "problemSymptomLarge",
-                    headerText : "<spring:message code='service.text.dtlDef'/>",
+                    headerText : "<spring:message code='service.text.uprDtlDef'/>",
                     editable : false,
                     width : 200
                 },
                 {
                     dataField : "problemSymptomSmall",
-                    headerText : "<spring:message code='service.text.defCde'/>",
+                    headerText : "<spring:message code='service.text.uprDefCde'/>",
                     editable : false,
                     width : 200
                 },
                 {
                     dataField : "defectPart",
-                    headerText : "<spring:message code='service.text.defPrt'/>",
+                    headerText : "<spring:message code='service.text.uprDefPrt'/>",
                     editable : false,
                     width : 200
                 },
@@ -335,12 +335,11 @@
         //var asRst = selectedItems[0].item.c3;
 
         var dscCode = selectedItems[0].item.dscCode;
-        var ctCode = selectedItems[0].item.lastInstallCtCode;
         var stkCode = selectedItems[0].item.stkCode;
         var asrItmId = selectedItems[0].item.asrItmId;
 
         var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
-        		+ "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode + "&asr_Itm_Id=" + asrItmId;
+        		+ "&dsc_Code=" + dscCode + "&stk_Code=" + stkCode + "&asr_Itm_Id=" + asrItmId;
 
         Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newUPResultDiv1');
       }
@@ -380,7 +379,7 @@
         var testResultNo = selectedItems[0].item.testResultNo;
 
         var dscCode = selectedItems[0].item.dscCode;
-        var ctCode = selectedItems[0].item.lastInstallCtCode;
+        var ctCode = selectedItems[0].item.testUpCt;
         var stkCode = selectedItems[0].item.stkCode;
 
         var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode
@@ -424,7 +423,7 @@
         var testResultNo = selectedItems[0].item.testResultNo;
 
         var dscCode = selectedItems[0].item.dscCode;
-        var ctCode = selectedItems[0].item.lastInstallCtCode;
+        var ctCode = selectedItems[0].item.testUpCt;
         var stkCode = selectedItems[0].item.stkCode;
 
         var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode + "&ct_Code=" + ctCode + "&stk_Code=" + stkCode
