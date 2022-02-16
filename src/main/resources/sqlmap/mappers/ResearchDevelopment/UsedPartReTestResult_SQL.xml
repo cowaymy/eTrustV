@@ -35,8 +35,8 @@ E.DSC_NAME,
 D.ASR_ITM_ID,
 D.ASR_ITM_PART_ID,
 D.ASR_ITM_PART_DESC,
-C.PSI,
-C.LPM,
+V.PSI,
+V.LPM,
 C.AS_RESULT_REM,
 M.DEFECT_DESC AS AS_Error_Code,
 N.DEFECT_DESC AS AS_Description,
@@ -62,6 +62,8 @@ ELSE T.NAME END AS TEST_STUS
 
 FROM SVC0001D A
 JOIN SAL0001D B ON B.SALES_ORD_ID = A.AS_SO_ID
+JOIN SAL0046D U ON U.SALES_ORD_ID = B.SALES_ORD_ID
+JOIN SAL0047D V ON V.ENTRY_ID = U.INSTALL_ENTRY_ID
 LEFT JOIN SVC0004D C ON A.AS_ID = C.AS_ENTRY_ID
 LEFT JOIN SVC0005D D ON C.AS_RESULT_ID = D.AS_RESULT_ID
 LEFT JOIN SAL1010V E ON E.ORD_ID = A.AS_SO_ID
@@ -448,8 +450,8 @@ order by B.SALES_ORD_NO
                #{TEST_UP_STUS},
                #{TEST_UP_REM},
                #{TEST_UP_GNE},
-               #{TEST_MNF_DT},
-               #{TEST_UP_SETL_DT},
+               TO_DATE(#{TEST_MNF_DT}, 'DD/MM/YYYY'),
+               TO_DATE(#{TEST_UP_SETL_DT}, 'DD/MM/YYYY'),
                #{TEST_UP_SETL_TM},
                #{TEST_YN},
                #{TEST_UP_CT},
@@ -472,8 +474,8 @@ order by B.SALES_ORD_NO
         SET TEST_UP_STUS = #{TEST_UP_STUS},
               TEST_UP_REM = #{TEST_UP_REM},
               TEST_UP_GNE = #{TEST_UP_GNE},
-              TEST_MNF_DT = #{TEST_MNF_DT},
-              TEST_UP_SETL_DT = #{TEST_UP_SETL_DT},
+              TEST_MNF_DT = TO_DATE(#{TEST_MNF_DT}, 'DD/MM/YYYY'),
+              TEST_UP_SETL_DT = TO_DATE(#{TEST_UP_SETL_DT}, 'DD/MM/YYYY'),
               TEST_UP_SETL_TM = #{TEST_UP_SETL_TM},
               TEST_YN = #{TEST_YN},
               TEST_UP_CT = #{TEST_UP_CT},
