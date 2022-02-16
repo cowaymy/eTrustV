@@ -308,7 +308,7 @@
                 if(memRc != null) {
                     if(memRc.rookie == 1) {
                         if(memRc.rcPrct < 50) {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%.");
                             return false;
                         }
                     } else {

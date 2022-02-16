@@ -976,7 +976,7 @@
             SAL0248M.COLLECT_TOT,
             SAL0248M.RC_PRCT,
             NVL(SAL0001D.CNT, 0) CNT,
-            NVL(OP.FLG_6_MONTH, 0) FLG_6_MONTH,
+            NVL(OP.FLG_12_MONTH, 0) FLG_12_MONTH,
             NVL(OP.OP_CNT, 0) OP_CNT,
             NVL(ORG0001D.ROOKIE, 0) ROOKIE
         FROM ORG0001D
@@ -997,7 +997,7 @@
         LEFT JOIN (
             SELECT
                 A.MEM_ID,
-                CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END AS FLG_6_MONTH,
+                CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END AS FLG_12_MONTH,
                 COUNT(*) OP_CNT
             FROM (
                 SELECT MEM_ID, NRIC, JOIN_DT
@@ -1016,7 +1016,7 @@
                 </if>
             ) B
             ON A.NRIC = B.NRIC
-            GROUP BY A.MEM_ID, CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END
+            GROUP BY A.MEM_ID, CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END
         ) OP
             ON ORG0001D.MEM_ID = OP.MEM_ID
         WHERE ORG0001D.MEM_CODE = #{memCode}

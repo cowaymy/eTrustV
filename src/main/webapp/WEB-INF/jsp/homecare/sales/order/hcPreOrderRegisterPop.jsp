@@ -1545,20 +1545,19 @@
     function fn_checkRc(nric) {
         Common.ajax("GET", "/sales/order/checkRC.do", {nric : nric}, function(result) {
             console.log("checkRc");
-
             if(result != null) {
                 if(result.rookie == 1) {
+                	console.log(result);
                     if(result.rcPrct != null) {
-                        if(result.opCnt == 0 && result.rcPrct <= 50) {
-                            Common.alert(result.memCode + " (" + result.memCode + ") is not allowed to key in due to Individual SHI below 50%");
+                        if(result.opCnt == 0 && result.rcPrct <= 55) {
+                            Common.alert(result.memCode + " (" + result.memCode + ") is not allowed to key in due to Individual SHI below 55%");
                             return false;
                         } else if(result.opCnt > 0) {
                             // Own Purchase
-                            if(result.flg6Month == 0) {
-                                Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase due member join less than 6 months.");
+                            if(result.flg12Month == 0) {
+                                Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase due member join less than 12 months.");
                                 return false;
                             }
-
                             if(result.rcPrct <= 55) {
                                 Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
                                 return false;
