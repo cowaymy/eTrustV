@@ -3006,10 +3006,10 @@ var blockDtTo = "${hsBlockDtTo}";
 <h3>Billing Address</h3>
 </aside><!-- title_line end -->
 
-<!-- <ul class="right_btns mb10">
+<ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
     <li><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
-</ul> -->
+</ul>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
