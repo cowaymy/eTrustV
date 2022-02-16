@@ -146,8 +146,14 @@
                     width : 200
                 },
                 {
-                    dataField : "defectPart",
-                    headerText : "<spring:message code='service.text.uprDefPrt'/>",
+                    dataField : "defectPartLarge",
+                    headerText : "<spring:message code='service.text.uprDefPrtLarge'/>",
+                    editable : false,
+                    width : 200
+                },
+                {
+                    dataField : "defectPartSmall",
+                    headerText : "<spring:message code='service.text.uprDefPrtSmall'/>",
                     editable : false,
                     width : 200
                 },
@@ -212,7 +218,7 @@
                     visible : true
                 },
                 {
-                    dataField : "asrItmPartId",
+                    dataField : "stkCode",
                     headerText : "<spring:message code='log.head.materialcode'/>",
                     width : 100,
                     visible : true
@@ -260,7 +266,8 @@
             pageRowCount : 20,
             showRowAllCheckBox : true,
             editable : false,
-            selectionMode : "multipleCells"
+            selectionMode : "multipleCells",
+            showRowNumColumn : false
         };
 
         myGridID = AUIGrid.create("#grid_wrap_asList", columnLayout, gridPros);
@@ -478,7 +485,7 @@
 
     function fn_excelDown() {
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-        GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
+        GridCommon.exportTo("grid_wrap_asList", "xlsx", "Used Part Return");
     }
 
     function f_multiCombo() {

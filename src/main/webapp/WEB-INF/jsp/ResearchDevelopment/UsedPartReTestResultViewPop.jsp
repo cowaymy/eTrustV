@@ -9,7 +9,6 @@
             	$("#defEvt_div").attr("style", "display:block");
 
                 $("#dscCode").val("${DSC_CODE}");
-                $("#ddlCTCodeText").val("${CT_CODE}");
                 $("#PROD_CDE").val("${STK_CODE}");
 
                 doGetCombo('/ResearchDevelopment/selectCTList.do', '', $("#TEST_UP_CT").val(), 'cmbCtList', 'S', '');
@@ -24,7 +23,6 @@
         $("#dpSettleDate").attr("disabled", true);
         $("#tpSettleTime").attr("disabled", true);
         $("#ddlDSCCode").attr("disabled", true);
-        $("#ddlCTCode").attr("disabled", true);
         $("#cmbCtList").attr("disabled", true);
         $("#ddlProdGenuine").attr("disabled", true);
         $("#txtTestResultRemark").attr("disabled", true);
