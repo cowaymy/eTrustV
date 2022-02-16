@@ -41,4 +41,6 @@ public interface UsedPartReTestResultMapper {
 
 	List<EgovMap> selectCTList(Map<String, Object> params);
 
+	List<EgovMap> getSpareFilterList(Map<String, Object> params);
+
 }

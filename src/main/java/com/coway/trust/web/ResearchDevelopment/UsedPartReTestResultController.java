@@ -268,6 +268,13 @@ public class UsedPartReTestResultController {
 	    return ResponseEntity.ok(selectCTList);
 	  }
 
+	  @RequestMapping(value = "/getSpareFilterName.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getSpareFilterName(@RequestParam Map<String, Object> params, HttpServletRequest request,
+	      ModelMap model) {
+	    List<EgovMap> spareFilterList = UsedPartReTestResultService.getSpareFilterList(params);
+	    return ResponseEntity.ok(spareFilterList);
+	  }
+
 
 
 }

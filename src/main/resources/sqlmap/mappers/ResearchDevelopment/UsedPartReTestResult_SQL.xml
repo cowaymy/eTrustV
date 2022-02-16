@@ -524,4 +524,17 @@ order by B.SALES_ORD_NO
         ORDER BY CODE_ID
     </select>
 
+    <select id="getSpareFilterList" parameterType="Map" resultType="egovMap">
+        SELECT
+             m2.STK_ID AS CODE_ID,
+             INITCAP(TRIM(STK_DESC)) || ' - ' || TRIM(sm.CODE_NAME)  as CODE_NAME
+        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
+              WHERE m.BOM  = d.BOM
+              AND d.BOM_COMPNT = m2.STK_CODE
+              AND sm.CODE_ID = m2.STK_TYPE_ID
+              AND NVL(d.DEL_INDICT , 'N')  <![CDATA[<>]]> 'Y'
+              AND UPPER(m.MATRL_NO) = UPPER(#{groupCode})
+        ORDER BY m.BOM, d.BOM_ITM_NODE_NO
+    </select>
+
   </mapper>

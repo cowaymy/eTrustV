@@ -210,4 +210,9 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 		return UsedPartReTestResultMapper.selectCTList(params);
 	}
 
+	@Override
+	public List<EgovMap> getSpareFilterList(Map<String, Object> params) {
+	    return UsedPartReTestResultMapper.getSpareFilterList(params);
+	}
+
 }
