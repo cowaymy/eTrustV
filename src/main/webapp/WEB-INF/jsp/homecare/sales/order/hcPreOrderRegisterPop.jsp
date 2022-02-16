@@ -1544,10 +1544,8 @@
 
     function fn_checkRc(nric) {
         Common.ajax("GET", "/sales/order/checkRC.do", {nric : nric}, function(result) {
-            console.log("checkRc");
             if(result != null) {
                 if(result.rookie == 1) {
-                	console.log(result);
                     if(result.rcPrct != null) {
                         if(result.opCnt == 0 && result.rcPrct <= 55) {
                             Common.alert(result.memCode + " (" + result.memCode + ") is not allowed to key in due to Individual SHI below 55%");
