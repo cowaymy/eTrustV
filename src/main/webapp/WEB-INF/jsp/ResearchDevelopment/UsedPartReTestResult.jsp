@@ -218,7 +218,7 @@
                     visible : true
                 },
                 {
-                    dataField : "stkCode",
+                    dataField : "asrItmPartCode",
                     headerText : "<spring:message code='log.head.materialcode'/>",
                     width : 100,
                     visible : true
