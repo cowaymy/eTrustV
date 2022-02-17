@@ -148,6 +148,8 @@ public class UsedPartReTestResultController {
 	    model.put("DSC_CODE", (String) params.get("dsc_Code"));
 	    model.put("STK_CODE", params.get("stk_Code"));
 	    model.put("ASR_ITM_ID", (String) params.get("asr_Itm_Id"));
+	    model.put("ASR_ITM_CODE", (String) params.get("asr_Itm_Code"));
+	    model.put("ASR_ITM_DESC", (String) params.get("asr_Itm_Desc"));
 	    params.put("testResultId", params.get("testResultId"));
 
 	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();

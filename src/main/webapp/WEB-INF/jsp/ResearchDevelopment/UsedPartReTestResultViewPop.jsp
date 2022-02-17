@@ -56,6 +56,8 @@
             $("#ddlProdGenuine").val(result[0].testUpGne);
             $("#manufacDate").val(result[0].testMnfDt);
             $("#txtTestResultRemark").val(result[0].testUpRem);
+            $("#asrItmCode").val(result[0].asrItmCode);
+            $("#asrItmDesc").val(result[0].asrItmDesc);
 
             $("#def_part").val(result[0].defectCodeDp);
             $("#def_part_id").val(result[0].defectIdDp);
@@ -165,9 +167,23 @@
                                           <input type="text" title="" placeholder="" class="readonly"
                                             disabled="disabled" id='dscCode' name='dscCode' />
                                         </td>
-                                        <th scope="row"><spring:message code='service.grid.CTCode' />
+                                        <th scope="row"><spring:message code='service.grid.RCTCode' />
                                             <span id='m7' name='m7' class="must" style="display: none">*</span></th>
                                             <td><select class="w100p" id="cmbCtList" name="cmbCtList"></select></td>
+                                   </tr>
+                                   <tr>
+                                        <th scope="row"><spring:message code='service.title.asrItmCode' />
+                                        <span id='m19' name='m19' class="must" style="display: none">*</span></th>
+                                        <td>
+                                          <input type="text" title="" placeholder="" class="readonly"
+                                            disabled="disabled" id='asrItmCode' name='asrItmCode' />
+                                        </td>
+                                        <th scope="row"><spring:message code='service.title.asrItmDesc' />
+                                        <span id='m20' name='m20' class="must" style="display: none">*</span></th>
+                                        <td>
+                                           <input type="text" title="" placeholder="" class="readonly"
+                                            disabled="disabled" id='asrItmDesc' name='asrItmDesc' />
+                                        </td>
                                    </tr>
 
                                     <tr>
