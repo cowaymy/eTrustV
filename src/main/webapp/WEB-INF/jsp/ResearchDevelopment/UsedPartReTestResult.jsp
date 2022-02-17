@@ -111,6 +111,18 @@
                     width : 100
                 },
                 {
+                    dataField : "asProblemSymptomLarge",
+                    headerText : "AS Problem Symptom Large",
+                    editable : false,
+                    width : 100
+                },
+                {
+                    dataField : "asProblemSymptomSmall",
+                    headerText : "AS Problem Symptom Small",
+                    editable : false,
+                    width : 100
+                },
+                {
                     dataField : "testUpCt",
                     headerText : "<spring:message code='service.grid.RCTCode'/>",
                     width : 100
@@ -186,12 +198,6 @@
                     width : 100
                 },
                 {
-                	dataField : "testResultId",
-                	headerText : "Test Result Id",
-                	editable : false,
-                	visible : false
-                },
-                {
                 	dataField : "testResultNo",
                     headerText : "Test Result No.",
                     editable : false,
@@ -226,6 +232,11 @@
                 {
                     dataField : "asrItmPartDesc",
                     headerText : "<spring:message code='log.head.materialname'/>",
+                    width : 100,
+                    visible : true
+                }, {
+                    dataField : "testMnfDt",
+                    headerText : "Manufacturing Date",
                     width : 100,
                     visible : true
                 }, {
