@@ -618,8 +618,8 @@
                         <td><select id="Genuinity" name="Genuinity"
                             class="w100p">
                                 <option value="">--SELECT--</option>
-                                <option value="Genuine">Genuine</option>
-                                <option value="Non-Genuine">Non-Genuine</option>
+                                <option value="G">Genuine</option>
+                                <option value="NG">Non-Genuine</option>
                         </select></td>
 
                         <th scope="row"><spring:message code='sal.text.type' /></th>

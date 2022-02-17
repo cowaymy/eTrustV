@@ -191,8 +191,8 @@
                                             <span id='m17' name='m17' class="must" style="display: none">*</span></th>
                                         <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
                                             <option value="">Choose One</option>
-                                            <option value="Genuine">Genuine</option>
-                                            <option value="Non Genuine">Non Genuine</option>
+                                            <option value="G">Genuine</option>
+                                            <option value="NG">Non-Genuine</option>
                                         </select></td>
 
 

@@ -131,9 +131,9 @@ AND D.ASR_ITM_PART_ID = #{spareFilterName}
 AND R.TEST_UP_GNE = #{Genuinity}
 </if>
 
-<!-- <if test="Type != null and Type != '' ">
-AND P.STK_TYPE_ID = #{Type}
-</if> -->
+<if test="Type != null and Type != '' ">
+AND W.STK_TYPE_ID = #{Type}
+</if>
 
  <if test="TestResultNo != null and TestResultNo != '' ">
 AND R.TEST_UP_NO = #{TestResultNo}
