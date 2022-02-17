@@ -139,7 +139,11 @@
 			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
 				}else{
-					if(year >= 2021 && month >=12 || year > 2021)
+					if(year >= 2022 && month >=01 || year > 2022)
+					{
+						reportFileName = "/commission/HPComm_PDF_202201.rpt"; //reportFileName
+					}
+					else if(year >= 2021 && month >=12 || year > 2021)
 					{
 						reportFileName = "/commission/HPComm_PDF_2022.rpt"; //reportFileName
 					}

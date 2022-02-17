@@ -96,7 +96,13 @@
                     return;
                 }
 
-                if(year >= 2021 && month >=12 || year > 2021)
+                if(year >= 2022 && month >=01 || year > 2022)
+                {
+                	reportFileName = "/commission/HTCommission_PDF_202201.rpt"; //reportFileName
+                    reportDownFileName = "HTCommission_" + today; //report name
+                    reportViewType = "PDF"; //viewType
+                }
+                else if(year >= 2021 && month >=12 || year > 2021)
                 {
                 	reportFileName = "/commission/HTCommission_PDF_2022.rpt"; //reportFileName
                     reportDownFileName = "HTCommission_" + today; //report name
