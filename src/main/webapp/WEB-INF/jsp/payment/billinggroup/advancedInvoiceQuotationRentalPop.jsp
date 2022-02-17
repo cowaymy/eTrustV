@@ -179,6 +179,14 @@ function fn_generateStatement(){
 
     var salesOrderId = AUIGrid.getCellValue(myGridID, 0, "salesOrdId");
 
+    var userId;
+
+    Common.ajaxSync("GET", "/login/getLoginDtls.do", {}, function (result) {
+
+        userId = result.userId;
+
+    });
+
 
 
 	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -202,6 +210,7 @@ function fn_generateStatement(){
 
 		//옵션 세팅
 		$("#reportPDFForm #v_orderId").val(salesOrderId);
+		$("#reportPDFForm #v_creatorId").val(userId);
 		$("#reportPDFForm #viewType").val("PDF");
 
 		if ($("#advance1").is(":checked"))
@@ -334,6 +343,7 @@ function fn_generateStatement(){
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="" />
     <input type="hidden" id="v_orderId" name="v_orderId" />
+    <input type="hidden" id="v_creatorId" name="v_creatorId" />
     <input type="hidden" id="v_adv1Boolean" name="v_adv1Boolean" />
     <input type="hidden" id="v_adv2Boolean" name="v_adv2Boolean" />
     <input type="hidden" id="v_noadv1Boolean" name="v_noadv1Boolean" />
