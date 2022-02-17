@@ -333,7 +333,7 @@
 			, #{cowayCustId}
 			<choose><when test="picName != null and picName !=''">,#{picName}</when><otherwise>,NULL</otherwise></choose>
             <choose><when test="picIcNric != null and picIcNric !=''">,#{picIcNric}</when><otherwise>,NULL</otherwise></choose>
-            <choose><when test="picMobile != null and picMobile !=''">,#{picMobile}</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picMobile != null and picMobile !=''">,REPLACE(#{picMobile},' 60', '0')</when><otherwise>,NULL</otherwise></choose>
             <choose><when test="picEmail != null and picEmail !=''">,#{picEmail}</when><otherwise>,NULL</otherwise></choose>
 			, 1
 			, 100910
@@ -450,7 +450,7 @@
 	      SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL
 	    , #{custId}
 	    , #{name}
-	    , #{custMobile}
+	    , REPLACE(#{custMobile},' 60', '0')
 	    , #{email}
 	    , #{stus}
 	    , SYSDATE
