@@ -110,7 +110,7 @@
 <!--            AS RMDN   -->
 <!--       FROM LOG0059M -->
 <!--      WHERE SUBSTR (MATRL_DOC_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD') -->
-    SELECT  'MDN'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(MDN_SEQ.NEXTVAL, 6, '0') FROM  DUAL
+    SELECT  'MDN'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(MDN_SEQ.NEXTVAL, 8, '0') FROM  DUAL
  </select>
  <select id="selectRequestData" parameterType="String" resultType="Map">
     SELECT L47.TRNSC_TYPE trnstype,

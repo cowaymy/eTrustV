@@ -239,20 +239,28 @@
     WHERE 1=1
         AND SCAN_STUS_CODE != 'D'
         AND IO_TYPE = #{ioType}
+
         <if test="delvryNo != null and delvryNo !='' and trnscTypeCode != 'HP'">
             AND DELVRY_NO = #{delvryNo}
             AND DELVRY_NO_ITM = #{delvryNoItm}
         </if>
         <if test="reqstNo != null and trnscTypeCode = 'HP'">
             AND REQST_NO =  #{reqstNo}
+        </if>
+        <if test="reqstNoItm != null and restNoItm !=  '' ">
             AND REQST_NO_ITM = #{reqstNoItm}
         </if>
+
+        <if test="stkCode != null ">
+            AND ITM_CODE = #{stkCode}
+        </if>
+
      ORDER BY SERIAL_NO
      </if>
     </select>
 
     <select id="getNextMdnNo" parameterType="Map" resultType="egovMap">
-        SELECT 'MDN' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (MDN_SEQ.NEXTVAL, 6, '0') mdnno
+        SELECT 'MDN' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (MDN_SEQ.NEXTVAL, 8, '0') mdnno
               FROM DUAL
     </select>
 
