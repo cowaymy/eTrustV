@@ -1675,12 +1675,12 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
-  //@Scheduled(cron = "0 0 4 * * *")//Daily (3:30am)
+  //@Scheduled(cron = "0  4 * * *")//Daily (3:30am)
   public void CSP_Raw_Data_Excel() {
     LOGGER.info("[START] CSP_Raw_Data_Excel...");
 
     Map<String, Object> params = new HashMap<>();
-    int minYear = 2018;
+    int minYear = 2020;
 
     for (int year = LocalDate.now().getYear(); year >= minYear; year--) {
 
