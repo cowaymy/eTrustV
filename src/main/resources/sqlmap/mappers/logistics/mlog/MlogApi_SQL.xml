@@ -2133,14 +2133,14 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
 
     <select id="getHiCareInventory" parameterType="Map" resultType="egovMap">
 	    select
-        A.SERIAL_NO serialNo
+        A.SERIAL_NO serial_no
         , G.CODE_DESC model
         , D.NAME status
         , E.NAME condition
-        , A.FILTER_SN filterSn
-        , '12' filterChgPeriod
-        , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') filterChgDt
-        , TO_CHAR(A.FILTER_CHG_DT+365, 'DD/MM/YYYY') filterNextChgPeriod
+        , A.FILTER_SN filter_Sn
+        , '12' filter_Chg_Period
+        , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') filter_Chg_Dt
+        , TO_CHAR(A.FILTER_CHG_DT+365, 'DD/MM/YYYY') filter_Next_Chg_Period
         from SVC0126M a
         left join SYS0038M d on d.stus_code_id = a.STATUS
         left join SYS0038M e on e.stus_code_id = a.CONDITION
