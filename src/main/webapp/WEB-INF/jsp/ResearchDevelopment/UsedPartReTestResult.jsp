@@ -264,12 +264,7 @@
                     headerText : "<spring:message code='service.title.Area'/>",
                     width : 100,
                     visible : true
-                }, {
-                    dataField : "rcdTms",
-                    headerText : "",
-                    width : 100,
-                    visible : false
-                } ];
+                }];
 
         var gridPros = {
             showRowCheckColumn : true,
