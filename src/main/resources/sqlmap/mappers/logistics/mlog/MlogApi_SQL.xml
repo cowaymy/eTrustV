@@ -2141,6 +2141,12 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
         , '12' filter_Chg_Period
         , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') filter_Chg_Dt
         , TO_CHAR(A.FILTER_CHG_DT+365, 'DD/MM/YYYY') filter_Next_Chg_Period
+        ,case when ((A.FILTER_CHG_DT+365) <![CDATA[ <= ]]> SYSDATE) then
+        'Y'
+        else
+        'N'
+        end
+        red_flag
         from SVC0126M a
         left join SYS0038M d on d.stus_code_id = a.STATUS
         left join SYS0038M e on e.stus_code_id = a.CONDITION
