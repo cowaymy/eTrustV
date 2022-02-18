@@ -983,4 +983,11 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			}
 		}
 	}
+
+
+	@Override
+	public List<EgovMap> getHiCareInventory(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getHiCareInventory(params);
+	}
 }

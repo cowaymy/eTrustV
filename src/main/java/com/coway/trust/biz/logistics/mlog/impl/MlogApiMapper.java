@@ -163,7 +163,7 @@ public interface MlogApiMapper {
 	/* Woongjin Jun */
 	List<EgovMap> getStockHCPriceList(Map<String, Object> params);
 	/* Woongjin Jun */
-	
+
 	/* Woongjin Han */
 	List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params);
 	/* Woongjin Han */
@@ -174,4 +174,6 @@ public interface MlogApiMapper {
 	public void updateDeliveryGrMain(Map<String, Object> obj);
 	public List<EgovMap> selectDeliveryGrHist(Map<String, Object> obj);
 	public void updateDeliveryGrHist(Map<String, Object> obj);
+
+	public List<EgovMap> getHiCareInventory(Map<String, Object> params);
 }

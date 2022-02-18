@@ -44,6 +44,8 @@ import com.coway.trust.api.mobile.logistics.filterinventorydisplay.FilterNotChan
 import com.coway.trust.api.mobile.logistics.filterinventorydisplay.FilterNotChangeListForm;
 import com.coway.trust.api.mobile.logistics.filterinventorydisplay.UserFilterDListDto;
 import com.coway.trust.api.mobile.logistics.filterinventorydisplay.UserFilterListForm;
+import com.coway.trust.api.mobile.logistics.hiCare.HiCareInventoryDto;
+import com.coway.trust.api.mobile.logistics.hiCare.HiCareInventoryForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOnHandStockDto;
@@ -1355,4 +1357,24 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(hList);
 	}
 	/* Woongjin Han */
+
+	@ApiOperation(value = "Hi Care Inventory Control", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/hiCareInventory", method = RequestMethod.GET)
+	public ResponseEntity<List<HiCareInventoryDto>> getHiCareInventory(
+			@ModelAttribute HiCareInventoryForm hiCareInventoryForm) throws Exception {
+
+		Map<String, Object> params = hiCareInventoryForm.createMap(hiCareInventoryForm);
+
+		List<EgovMap> StockHolder = MlogApiService.getHiCareInventory(params);
+
+		for (int i = 0; i < StockHolder.size(); i++) {
+			LOGGER.debug("StockHolder 값 : {}", StockHolder.get(i));
+
+		}
+
+		List<HiCareInventoryDto> list = StockHolder.stream().map(r -> HiCareInventoryDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 }

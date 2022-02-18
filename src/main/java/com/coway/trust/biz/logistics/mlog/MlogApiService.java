@@ -136,4 +136,5 @@ public interface MlogApiService {
 	List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params);
 	/* Woongjin Han */
 
+	List<EgovMap> getHiCareInventory(Map<String, Object> params);
 }
