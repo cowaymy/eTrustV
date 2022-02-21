@@ -33,8 +33,13 @@ function fn_report() {
         $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_Last_SUS_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
-    }
+    } else if (reportType == 'SUS_SUM_YM') {
 
+        $("#dataForm #reportFileName").val("/sales/PLTV_SUS_SumYM.rpt");
+        $("#dataForm #viewType").val("EXCEL");
+        $("#dataForm #reportDownFileName").val("PLTV_SUS_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+
+    }
 
 
     $("#dataForm #V_STKID").val(stkId);
@@ -104,9 +109,10 @@ function fn_setOptGrpClass() {
     <th scope="row"><spring:message code="sales.pltv.ReportType" /></th>
     <td>
         <select class="w100p" id="listPltvReportType" name="listPltvReportType" >
-            <option value="RAW">RAW</option>
-            <option value="SUS_COUNT">SUS COUNT</option>
-            <option value="LAST_SUS">LAST SUS</option>
+            <option value="RAW">Raw</option>
+            <option value="SUS_COUNT">SUS Count</option>
+            <option value="LAST_SUS">Last SUS</option>
+            <option value="SUS_SUM_YM">Sum of Last SUS by Year and Month</option>
         </select>
     </td>
 </tr>
