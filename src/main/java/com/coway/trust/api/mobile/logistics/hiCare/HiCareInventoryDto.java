@@ -36,6 +36,9 @@ public class HiCareInventoryDto {
 	@ApiModelProperty(value = "부품코드")
 	String filterNextChgPeriod;
 
+	@ApiModelProperty(value = "부품코드")
+	String redFlag;
+
 	public String getSerialNo() {
 		return serialNo;
 	}
@@ -100,6 +103,13 @@ public class HiCareInventoryDto {
 		this.filterNextChgPeriod = filterNextChgPeriod;
 	}
 
+	public String getRedFlag() {
+		return redFlag;
+	}
+
+	public void setRedFlag(String redFlag) {
+		this.redFlag = redFlag;
+	}
 
 	public static HiCareInventoryDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, HiCareInventoryDto.class);
