@@ -27,7 +27,15 @@ function fn_report() {
         $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_SUS_Count_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
+    } else if (reportType == 'LAST_SUS') {
+
+        $("#dataForm #reportFileName").val("/sales/PLTV_Last_SUS.rpt");
+        $("#dataForm #viewType").val("EXCEL");
+        $("#dataForm #reportDownFileName").val("PLTV_Last_SUS_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+
     }
+
+
 
     $("#dataForm #V_STKID").val(stkId);
     $("#dataForm #viewType").val("EXCEL");
@@ -98,6 +106,7 @@ function fn_setOptGrpClass() {
         <select class="w100p" id="listPltvReportType" name="listPltvReportType" >
             <option value="RAW">RAW</option>
             <option value="SUS_COUNT">SUS COUNT</option>
+            <option value="LAST_SUS">LAST SUS</option>
         </select>
     </td>
 </tr>
