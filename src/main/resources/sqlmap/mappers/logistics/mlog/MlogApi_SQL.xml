@@ -2146,7 +2146,7 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
         else
         'N'
         end
-        red_flag
+        red_Flag
         from SVC0126M a
         left join SYS0038M d on d.stus_code_id = a.STATUS
         left join SYS0038M e on e.stus_code_id = a.CONDITION
