@@ -433,4 +433,14 @@ public class CommonPaymentController {
     return ResponseEntity.ok(RESULT);
   }
 
+  @RequestMapping(value = "/checkBatchPaymentExist.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkBatchPaymentExist(@RequestParam Map<String, Object> params, ModelMap model)
+      throws Exception {
+    EgovMap result = commonPaymentService.checkBatchPaymentExist(params);
+
+    return ResponseEntity.ok(result);
+  }
+
+
+
 }

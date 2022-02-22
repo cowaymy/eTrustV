@@ -860,12 +860,18 @@ function savePayment(){
     return;
   }
 
+   if(formList.length > 0) data.form = formList;
+   else data.form = [];
 
-    if(formList.length > 0) data.form = formList;
-    else data.form = [];
+   Common.ajaxSync("GET", "/payment/common/checkBatchPaymentExist.do", data.form, function(result) {
+    	if(result != null){
+    		Common.alert("Payment has been uploaded.");
+    		return;
+    	}
+   });
 
     //Bill Payment : Order 정보 조회
-    Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
+     Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
 
       var message = "<spring:message code='pay.alert.successProc'/>";
       var orNo = "";
@@ -1129,7 +1135,7 @@ function rentalDiscountValue(){
   var megaDeal = $("#rentalMegaDeal").val();
   var advDisc = $("#rentalAdvDisc").val();
 
-
+console.log('megaDeal:' + megaDeal + 'advDisc:' + advDisc);
   if(megaDeal == 0  && advDisc == 1 ){
       if (advMonth >= 6 && advMonth < 12){
           discountValue = mthRentAmt * advMonth * 0.97;
@@ -1163,7 +1169,7 @@ function rentalDiscountValue(){
         }
     discountrate = 0;
   }
-
+console.log(discountrate);
     //선납금 할인을 적용한 금액 표시
     recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
 }

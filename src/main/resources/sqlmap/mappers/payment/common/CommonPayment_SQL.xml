@@ -1632,4 +1632,16 @@ ORDER BY a.or_no
         SELECT STUS_CODE_ID FROM SAL0071D WHERE SALES_ORD_ID = #{orderId}
     </select>
 
+    <select id="checkBatchPaymentExist" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM PAY0043D
+          WHERE VALID_STUS_ID = 4
+                  AND APPROVAL_CODE = #{keyInApprovalNo}
+                  AND SYS_AMT = #{keyInAmount}
+                  AND TO_CHAR(SYS_REF_DT,'DD/MM/YYYY') = #{keyInTrDate}
+                  AND SYS_BANK_ACC_ID = #{keyInMerchantBank}
+                  AND CARD_NO = #{keyInCardNo1} || #{keyInCardNo2} || #{keyInCardNo3} || #{keyInCardNo4}
+    </select>
+
 </mapper>

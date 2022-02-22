@@ -131,5 +131,6 @@ public interface CommonPaymentService{
 
 	EgovMap checkHTOrderOutstanding(Map<String, Object> params);
 
+	EgovMap checkBatchPaymentExist(Map<String, Object> params);
 
 }

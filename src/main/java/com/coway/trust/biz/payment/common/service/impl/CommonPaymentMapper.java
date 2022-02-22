@@ -546,4 +546,6 @@ public interface CommonPaymentMapper {
 
 	String selectOrderRentalAccntStatus(Map<String, Object> params);
 
+	EgovMap checkBatchPaymentExist(Map<String, Object> params);
+
 }

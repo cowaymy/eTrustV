@@ -1538,4 +1538,9 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     return result;
   }
 
+  public EgovMap checkBatchPaymentExist(Map<String, Object> params) {
+    EgovMap result = commonPaymentMapper.checkBatchPaymentExist(params);
+    return result;
+  }
+
 }
