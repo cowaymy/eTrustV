@@ -39,6 +39,12 @@ function fn_report() {
         $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_SUS_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
+    } else if (rentStus == 'RET_TER' && reportType == 'LAST_TER') {
+
+        $("#dataForm #reportFileName").val("/sales/PLTV_Last_TER.rpt");
+        $("#dataForm #viewType").val("EXCEL");
+        $("#dataForm #reportDownFileName").val("PLTV_Last_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+
     }
 
 
@@ -112,6 +118,7 @@ function fn_setOptGrpClass() {
             <option value="RAW">Raw</option>
             <option value="SUS_COUNT">SUS Count</option>
             <option value="LAST_SUS">Last SUS</option>
+            <option value="LAST_TER">Last TER</option>
             <option value="SUS_SUM_YM">Sum of Last SUS by Year and Month</option>
         </select>
     </td>
