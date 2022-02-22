@@ -867,35 +867,37 @@ function savePayment(){
     	if(result != null){
     		Common.alert("Payment has been uploaded.");
     		return;
+    	}else{
+    		//Bill Payment : Order 정보 조회
+    	    Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
+
+    	      var message = "<spring:message code='pay.alert.successProc'/>";
+    	      var orNo = "";
+    	      var orderNo = ""
+
+    	      if(result != null && result.length > 0){
+    	        for(i=0 ; i < result.length ; i++){
+    	          orNo = result[i].orNo;
+    	          if ((typeof(result[i].salesOrdNo) == "undefined")) {
+    	            orderNo = "-";
+    	          } else {
+    	            orderNo = result[i].salesOrdNo;
+    	          }
+    	          message += "<font color='red'>" + result[i].orNo + " (Order No: " + orderNo +  ")</font><br>";
+    	        }
+    	      }
+
+    	      fn_clearCrcDtls();
+
+    	      Common.alert(message, function(){
+    	            document.location.href = '/payment/initCardKeyInPayment.do';
+    	      });
+
+    	    });
     	}
    });
 
-    //Bill Payment : Order 정보 조회
-     Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
 
-      var message = "<spring:message code='pay.alert.successProc'/>";
-      var orNo = "";
-      var orderNo = ""
-
-      if(result != null && result.length > 0){
-        for(i=0 ; i < result.length ; i++){
-          orNo = result[i].orNo;
-          if ((typeof(result[i].salesOrdNo) == "undefined")) {
-            orderNo = "-";
-          } else {
-            orderNo = result[i].salesOrdNo;
-          }
-          message += "<font color='red'>" + result[i].orNo + " (Order No: " + orderNo +  ")</font><br>";
-        }
-      }
-
-      fn_clearCrcDtls();
-
-      Common.alert(message, function(){
-            document.location.href = '/payment/initCardKeyInPayment.do';
-      });
-
-    });
 }
 
 
