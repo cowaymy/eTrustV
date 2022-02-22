@@ -77,10 +77,13 @@ function fn_GuardianRemarkGrid() {
             type : "ButtonRenderer",
             labelText : "Download",
             onclick : function(rowIndex, columnIndex, value, item) {
-              fileDown(rowIndex,"PB");
+              console.log(item.fileId);
+              console.log(item);
+              fileDown(rowIndex);
+              //$('.aui-grid-button-renderer').hide();
             }
         }
-    , editable : false
+        , editable : false
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -103,13 +106,28 @@ function fn_GuardianRemarkGrid() {
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_remark = AUIGrid.create("#grid_wrap_remark", columnLayout, gridPros);
+
+}
+
+function fn_removeDownload(res) {
+	$("#grid_wrap_remark tr.aui-grid-row-background, #grid_wrap_remark tr.aui-grid-alternative-row-background").each(function(i, item) {
+        console.log(res);
+        if (i < res.length && !res[i].fileId) {
+            $(item).find('td:last-child div').remove();
+        }
+    });
 }
 
 function fn_guardianRemark(){
     Common.ajax("GET", "/organization/compliance/guardianRemark.do", {reqstId : "${guardianofCompliance.reqstId }"}, function(result) {
         console.log("성공.");
         AUIGrid.setGridData(myGridID_remark, result);
-
+        fn_removeDownload(result);
+        AUIGrid.bind(myGridID_remark, 'sorting', function() {
+            AUIGrid.refresh(myGridID_remark);
+            const download = AUIGrid.getGridData(myGridID_remark);
+            fn_removeDownload(download);
+        })
     });
 }
 
@@ -148,18 +166,18 @@ function fn_validation(){
         return false;
     }
 
-    var input = document.getElementById('file1');
+    /* var input = document.getElementById('file1');
     if (input.files.length < 1) {
     	Common.alert("Please choose a file to upload");
         return false;
-    }
+    } */
 
-    var FileExt = $("#file1Txt").val().split('.').pop().toUpperCase();
+   /*  var FileExt = $("#file1Txt").val().split('.').pop().toUpperCase();
     if( FileExt != 'ZIP')
     {
     	Common.alert("Please upload .zip file only");
         return false;
-    }
+    } */
 
     if($("#cmbreqStatus").val() == "60" || $("#cmbreqStatus").val() == "10"){
         if($("#complianceContent").val() == ""){
@@ -250,9 +268,6 @@ $("#file1Txt").dblclick(function(){
 function fileDown(rowIndex){
 
     var gridObj = AUIGrid.getSelectedItems(myGridID_remark);
-    console.log("grid here");
-    console.log(gridObj);
-    console.log("///");
     var reqst_id = gridObj[0].item.paparazReqstId;
     var atchFileGrpId = gridObj[0].item.atchFileGrpId;
     var atchFileId = gridObj[0].item.atchFileId;
@@ -261,13 +276,14 @@ function fileDown(rowIndex){
 			   atchFileGrpId : atchFileGrpId,
 			   atchFileId : atchFileId
 	};
-  Common.ajax("GET", "/organization/compliance/getAttachmentInfo.do", data, function(result) {
-     if(result != null){
-         var fileSubPath = result.fileSubPath;
-         fileSubPath = fileSubPath.replace('\', '/'');
-         window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-     }
-  });
+
+	Common.ajax("GET", "/organization/compliance/getAttachmentInfo.do", data, function(result) {
+		if(result != null){
+		         var fileSubPath = result.fileSubPath;
+		         fileSubPath = fileSubPath.replace('\', '/'');
+		         window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+		}
+	});
 }
 
 </script>
