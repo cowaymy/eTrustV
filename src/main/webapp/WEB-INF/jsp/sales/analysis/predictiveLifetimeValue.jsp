@@ -21,19 +21,19 @@ function fn_report() {
       $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
       $("#dataForm #V_RENTSTUS").val(rentStus);
 
-    } else if (reportType == 'SUS_COUNT') {
+    } else if (rentStus == 'SUS' && reportType == 'SUS_COUNT') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_SUS_Count.rpt");
         $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_SUS_Count_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
-    } else if (reportType == 'LAST_SUS') {
+    } else if (rentStus == 'SUS' && reportType == 'LAST_SUS') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_SUS.rpt");
         $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_Last_SUS_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
-    } else if (reportType == 'SUS_SUM_YM') {
+    } else if (rentStus == 'SUS' && reportType == 'SUS_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_SUS_SumYM.rpt");
         $("#dataForm #viewType").val("EXCEL");
