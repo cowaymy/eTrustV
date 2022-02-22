@@ -2141,7 +2141,7 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
         , '12' filter_Chg_Period
         , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') filter_Chg_Dt
         , TO_CHAR(A.FILTER_CHG_DT+365, 'DD/MM/YYYY') filter_Next_Chg_Period
-        ,case when ((A.FILTER_CHG_DT+365) <![CDATA[ <= ]]> SYSDATE) then
+        ,case when (FN_GET_FIRST_DAY_MONTH(A.FILTER_CHG_DT+365) <![CDATA[ <= ]]> FN_GET_FIRST_DAY_MONTH(SYSDATE)) then
         'Y'
         else
         'N'
