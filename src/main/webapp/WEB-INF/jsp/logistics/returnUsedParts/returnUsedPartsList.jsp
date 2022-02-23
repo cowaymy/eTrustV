@@ -55,6 +55,7 @@ if(dd<10) { dd='0'+dd; }
 if(mm<10) { mm='0'+mm; }
 
 today = (dd + '/' + mm + '/' + yyyy);
+console.log("Hi...");
 
 // var nextDate = new Date();
 // nextDate.setDate(nextDate.getDate() +6);
