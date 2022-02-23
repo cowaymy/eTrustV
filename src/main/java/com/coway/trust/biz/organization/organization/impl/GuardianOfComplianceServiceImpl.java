@@ -185,7 +185,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
             guar_sub.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
     		guar_sub.put("guardianCreateBy", sessionVo.getUserId());
     		guar_sub.put("guardianUpdatedBy", sessionVo.getUserId());
-    		guar_sub.put("fileId", Integer.parseInt(params.get("fileId").toString()));
+    		guar_sub.put("fileId", params.get("fileId") != null && params.get("fileId") !=""  ? Integer.parseInt(params.get("fileId").toString()) : 0);
     		 //insert
     		guardianOfComplianceMapper.insertGuarSub(guar_sub); //Insert to MSC0044M
 
