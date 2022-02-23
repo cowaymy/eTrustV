@@ -392,7 +392,7 @@ $(document).ready(function(){
         }
 
         var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val() , searchBranch:searchBranch     }
-        doGetComboData('/common/selectStockLocationList3.do', param , '', 'searchLoc', 'M','f_multiComboType');
+        doGetComboData('/common/selectStockLocationList3.do', param , '', 'sc', 'M','f_multiComboType');
     	}
 
     });
@@ -549,7 +549,7 @@ $(document).ready(function(){
 
 	function f_multiComboType() {
 		$(function() {
-			$('#searchLoc').change(function() {
+			$('#sc').change(function() {
 			}).multipleSelect({
 				selectAll : true
 			});
@@ -565,7 +565,7 @@ $(document).ready(function(){
 			Common.alert('Please select Branch.');
 			return false;
 		}
-		else if ($("#searchLoc").val() == '' || $("#searchLoc").val() == undefined) {
+		else if ($("#sc").val() == '' || $("#sc").val() == undefined) {
 			Common.alert('Please select Location.');
 			return false;
 		}
@@ -651,7 +651,7 @@ $(document).ready(function(){
                    <th scope="row">Location<span class="must">*</span></th>
                    <td>
 <!--                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select> -->
-                       <select class="w100p" id="searchLoc" name="searchLoc"></select>
+                       <select class="w100p" id="sc" name="sc"></select>
                    </td>
                 </tr>
                 <tr>
