@@ -55,7 +55,7 @@ if(dd<10) { dd='0'+dd; }
 if(mm<10) { mm='0'+mm; }
 
 today = (dd + '/' + mm + '/' + yyyy);
-console.log("Hi...");
+
 
 // var nextDate = new Date();
 // nextDate.setDate(nextDate.getDate() +6);
@@ -160,10 +160,8 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     doDefCombo(comboData1, '' ,'searchMaterialType', 'S', '');
-    doDefCombo(comboData, '' ,'searchCompleted', 'S', '');
+    doDefCombo(comboData, '' ,'searchComplete', 'S', '');
     doDefCombo(comboData2, '' ,'searchlocgb', 'S', '');
-
-    console.log(comboData);
 
 
     var ROLE_ID = "${SESSION_INFO.roleId}";
@@ -702,7 +700,7 @@ $(document).ready(function(){
                    </td>
                    <th scope="row">Return Complete</th>
                    <td>
-                       <select class="w100p" id="searchCompleted" name="searchCompleted"></select>
+                       <select class="w100p" id="searchComplete" name="searchComplete"></select>
                    </td>
                 </tr>
 
