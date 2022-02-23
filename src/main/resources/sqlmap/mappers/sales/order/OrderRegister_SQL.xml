@@ -2664,7 +2664,7 @@ FROM
       1 = 1
       AND EXTENT1.STUS_ID IN (1, 4, 21, 104)
       AND (
-        (EXTENT2.STUS_CODE_ID IN (1, 4))
+        (EXTENT2.STUS_CODE_ID IN (1, 4, 10))
         OR (EXTENT2.STUS_CODE_ID IS NULL)
       )
       AND EXTENT1.SOF_NO = #{sofNo}
@@ -2686,7 +2686,7 @@ FROM
     WHERE
       1 = 1
       AND (
-        (EXTENT1.STUS_CODE_ID IN (1, 4))
+        (EXTENT1.STUS_CODE_ID IN (1, 4, 10))
         OR (EXTENT1.STUS_CODE_ID IS NULL)
       )
       AND EXTENT1.REF_NO = #{sofNo}
