@@ -80,7 +80,6 @@ function btnGenerate_Click(){
         $("#reportFileName").val("");
         $("#reportDownFileName").val("");
         $("#viewType").val("");
-debugger;
 
         if($('#sBranchCode :selected').length > 0){
             whereSQL += " a.branch_id in (";
@@ -101,7 +100,7 @@ debugger;
         if($('#sHolder :selected').length == 2){
         	holderType += 'Branch, Member';
         }
-        if($('#sHolder :selected').length == 0){
+        if($('#sHolder :selected').length == 1){
         	if($('#sHolder').val() == '278'){
         		whereSQL += " AND b.wh_loc_type_id in (278) ";
         		holderType += 'Member';
@@ -159,7 +158,7 @@ debugger;
             whereSQL += ") ";
         }
         console.log("whereSQL" + whereSQL);
-
+        console.log("holderType" + holderType);
 
         var date = new Date().getDate();
         if(date.toString().length == 1){

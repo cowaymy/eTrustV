@@ -240,7 +240,6 @@
         }
 
         if(action == '3'){
-        	debugger;
         	var formData = new FormData();
             //formData.append("atchFileGrpId", '${eSvmInfo.atchFileGrpId}');
             formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));

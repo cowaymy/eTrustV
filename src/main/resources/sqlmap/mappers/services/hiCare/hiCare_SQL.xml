@@ -781,7 +781,7 @@
         <if test=" '' != cmbToBranch and null != cmbToBranch">
           and A.TO_LOC = #{cmbToBranch}
         </if>
-		ORDER BY A.TRANSIT_NO DESC
+		ORDER BY A.TRANSIT_NO
     </select>
 
     <select id="selectHiCareDeliveryDetail" parameterType="Map" resultType="egovMap">

@@ -304,6 +304,6 @@
        <input type="hidden" id="viewType" name="viewType" value="PDF" />
        <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
        <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/HiCare_Delivery_Note.rpt" /><br />
-    </form>/
+    </form>
 </section>
 <!-- content end -->

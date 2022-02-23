@@ -124,7 +124,7 @@ public class HiCareController {
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmdBranchCode").toString();
  		if(userType != 4 && branchId.equals("")){
- 			branchList[0] = "0";
+ 			branchList = new String[]{"0"};
  			branchId = "0";
  		}else if(userType == 4 && branchId.equals("")){
  			request.setAttribute("cmdBranchCode", null);

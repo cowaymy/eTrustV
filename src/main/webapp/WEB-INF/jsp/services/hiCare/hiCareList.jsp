@@ -123,11 +123,11 @@
                   $("#cmdMemberCode").find('option').each(function() {
                       $(this).remove();
                       });
-                  if ($(this).val().trim() == "") {
+                  /* if ($(this).val().trim() == "") {
                       return;
-                  }
+                  } */
                   var param = {searchlocgb:'04' ,
-                          searchBranch: ($('#cmdBranchCode').val()!="" ? $('#cmdBranchCode').val() : "" )}
+                          searchBranch: ($('#cmdBranchCode').val()!="" ? $('#cmdBranchCode').val() : "00" )}
                   doGetComboData('/common/selectStockLocationList2.do', param , '', 'cmdMemberCode', 'M','f_multiComboType');
         });
 
