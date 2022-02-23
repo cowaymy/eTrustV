@@ -111,7 +111,6 @@ function fn_GuardianRemarkGrid() {
 
 function fn_removeDownload(res) {
 	$("#grid_wrap_remark tr.aui-grid-row-background, #grid_wrap_remark tr.aui-grid-alternative-row-background").each(function(i, item) {
-        console.log(res);
         if (i < res.length && !res[i].fileId) {
             $(item).find('td:last-child div').remove();
         }
@@ -166,26 +165,12 @@ function fn_validation(){
         return false;
     }
 
-    /* var input = document.getElementById('file1');
-    if (input.files.length < 1) {
-    	Common.alert("Please choose a file to upload");
-        return false;
-    } */
-
-   /*  var FileExt = $("#file1Txt").val().split('.').pop().toUpperCase();
-    if( FileExt != 'ZIP')
-    {
-    	Common.alert("Please upload .zip file only");
-        return false;
-    } */
-
     if($("#cmbreqStatus").val() == "60" || $("#cmbreqStatus").val() == "10"){
         if($("#complianceContent").val() == ""){
             Common.alert("Remark field is empty");
             return false;
         }
     }
-
     return true;
 }
 
