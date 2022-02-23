@@ -160,8 +160,10 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     doDefCombo(comboData1, '' ,'searchMaterialType', 'S', '');
-    doDefCombo(comboData, '' ,'searchComplete', 'S', '');
+    doDefCombo(comboData, '' ,'searchCompleted', 'S', '');
     doDefCombo(comboData2, '' ,'searchlocgb', 'S', '');
+
+    console.log(comboData);
 
 
     var ROLE_ID = "${SESSION_INFO.roleId}";
@@ -700,7 +702,7 @@ $(document).ready(function(){
                    </td>
                    <th scope="row">Return Complete</th>
                    <td>
-                       <select class="w100p" id="searchComplete" name="searchComplete"></select>
+                       <select class="w100p" id="searchCompleted" name="searchCompleted"></select>
                    </td>
                 </tr>
 
