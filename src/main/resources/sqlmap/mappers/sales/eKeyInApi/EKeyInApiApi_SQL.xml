@@ -1578,7 +1578,7 @@
       AND A.ITM_CPNT_ID = #{cpntCode}
       AND B.EMP_CHK = #{empChk}
       AND B.EX_TRADE = #{exTrade}
-      <if test="srvPacId != null and srvPacId != '' ">
+      <if test="appTypeId == 66 and srvPacId != null and srvPacId != '' ">
       AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       </if>
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
@@ -1594,7 +1594,7 @@
       AND A.ITM_CPNT_ID = #{cpntCode}
       AND B.EMP_CHK = #{empChk}
       AND B.EX_TRADE = #{exTrade}
-      <if test="srvPacId != null and srvPacId != '' ">
+      <if test="appTypeId == 66 and srvPacId != null and srvPacId != '' ">
       AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       </if>
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
