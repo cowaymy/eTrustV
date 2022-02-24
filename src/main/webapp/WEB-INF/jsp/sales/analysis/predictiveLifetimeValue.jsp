@@ -61,6 +61,11 @@ function fn_report() {
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_RET_TER.rpt");
         $("#dataForm #reportDownFileName").val("PLTV_Last_RET_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
+    } else if (rentStus == 'RET_TER' && reportType == 'RET_TER_SUM_YM') {
+
+        $("#dataForm #reportFileName").val("/sales/PLTV_RET_TER_SumYM.rpt");
+        $("#dataForm #reportDownFileName").val("PLTV_RET_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+
     }
 
     $("#dataForm #V_STKID").val(stkId);
@@ -138,8 +143,8 @@ function fn_setOptGrpClass() {
             <option value="SUS_SUM_YM">SUS : Sum of Last SUS by Year and Month</option>
             <option value="LAST_TER">TER : Last TER</option>
             <option value="TER_SUM_YM">TER : Sum of Last TER by Year and Month</option>
-            <option value="LAST_RET_TER" disabled>RET to TER : Last RET to TER</option>
-            <option value="RET_TER_SUM_YM" disabled>RET to TER : Sum of Last RET to TER by Year and Month</option>
+            <option value="LAST_RET_TER" disabled>RET to TER : Last RET to TER</option> <%--temporary disabled due to long query time --%>
+            <option value="RET_TER_SUM_YM" disabled>RET to TER : Sum of Last RET to TER by Year and Month</option> <%--temporary disabled due to long query time --%>
         </select>
     </td>
 </tr>
