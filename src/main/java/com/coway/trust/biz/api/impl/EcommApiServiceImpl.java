@@ -149,7 +149,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
         // Non Rental Order - SRV_PAC_ID = 0
         // Added AUX type to exclude
-        if(!ordInfo.get("appTypeId").toString().equals("66") && !ordInfo.get("appTypeId").toString().equals("5764")){
+        if(!ordInfo.get("appTypeId").toString().equals("66") || ordInfo.get("appTypeId").toString().equals("5764")){
           ordInfo.put("srvPacId",0);
         }
 
