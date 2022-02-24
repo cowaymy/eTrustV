@@ -17,8 +17,6 @@
                     #{item}
                 </foreach>
         </if>
-        order by
-        webcrawl_no desc
         </select>
 
     <update id="updateLinkStatus" parameterType="Map">

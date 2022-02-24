@@ -11,11 +11,6 @@ $(document).ready(function() {
 
     ComplianceListGrid();
     fn_search()
-    //doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'cmdchangePerson', 'S', 'fn_setOptGrpClass');//product 생성
-
-    // AUIGrid.bind(myGridID, "cellClick", function(event) {
-     //   requestid = AUIGrid.getCellValue(myGridID, event.rowIndex, "requestid");
-    //});
 
 });
 var myGridID;
@@ -86,10 +81,9 @@ function ComplianceListGrid() {
        wrapSelectionMove : true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
        showRowNumColumn : true, // 줄번호 칼럼 렌더러 출력
        wordWrap :  true
-       //exportURL : "/common/exportGrid.do"
    };
 
-    myGridID = AUIGrid.create("#grid_wrap_complianceList", columnLayout, gridPros);
+    myGridID = GridCommon.createAUIGrid("#grid_wrap_complianceList", columnLayout,'', gridPros);
 }
 
 
@@ -120,7 +114,6 @@ function fn_save(){
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax("POST", "/organization/compliance/SaveLinkStatus.do", param, function(result) {
-             // Common.alert(result.message);
 
         }, function(jqXHR, textStatus, errorThrown) {
         });
@@ -142,25 +135,12 @@ function fn_save(){
 <h2>Web Crawl Log</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_search()"><span class="search"></span>Search</a></p></li>
-     <%-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
-    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceView()"><span class="view"></span>Compliance View</a></p></li>
-    </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceViewLimit()"><span class="view"></span>Requester View</a></p></li>
-    </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>--%>
-    <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li> -->
-</ul>
+   </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="WebCrawlSearch">
-<%-- <input type="hidden" name="memType" id="memType" value="${memType}"/> --%>
-<%-- <input type="text" name="funcUserDefine1" id="funcUserDefine1" value="${PAGE_AUTH.funcUserDefine1}"/>
-<input type="text" name="funcUserDefine2" id="funcUserDefine2" value="${PAGE_AUTH.funcUserDefine2}"/>
-<input type="text" name="funcUserDefine3" id="funcUserDefine3" value="${PAGE_AUTH.funcUserDefine3}"/> --%>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -197,12 +177,10 @@ function fn_save(){
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a onclick="javascript:fn_save()">Save</a></p></li>
 </c:if>
-<!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_complianceList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-<!-- <div id="grid_wrap_excelList" style="width: 100%; height: 500px; margin: 0 auto;display:none;"></div> -->
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
