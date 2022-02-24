@@ -204,6 +204,7 @@ public class LocationController {
 		String haChk		= (String) params.get("ihaChk");
 		String hcChk		= (String) params.get("ihcChk");
 
+
 		if (haChk != null && "on".equals(haChk)){
 			haChk = "Y";
     	}
@@ -225,6 +226,11 @@ public class LocationController {
 		if (iptchk != null && "on".equals(iptchk)){
 				iptchk = "Y";
 		}
+
+		// Added to insert RFD doc no when creating CDC, RDC, CDC&RDC location
+		String docNo = params.get("inDocNo") != null ? params.get("inDocNo").toString().trim() : null;
+
+
 		Map<String, Object> insmap = new HashMap();
 
 		insmap.put("inwarecd"    , inwarecd);
@@ -267,6 +273,9 @@ public class LocationController {
 		// Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07
 		insmap.put("haChk"       , haChk);
 		insmap.put("hcChk"       , hcChk);
+
+		// Added RFD doc no when creating CDC, RDC, CDC&RDC new location. Hui Ding, 24/02/2022
+		insmap.put("docNo", 	docNo);
 
 		int inlocid =loc.insertLocationInfo(insmap);
 		//System.out.println("inlocid 값!!!  : " + inlocid);

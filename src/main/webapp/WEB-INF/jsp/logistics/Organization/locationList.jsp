@@ -435,6 +435,8 @@ $(document).ready(function(){
 	   var hcChk;
 	   var haChk;
 
+	   var docNo;
+
 	   if (action == "i"){
 		   warecd = $("#inwarecd").val().trim();
 		   warenm = $("#inwarenm").val().trim();
@@ -453,6 +455,7 @@ $(document).ready(function(){
 		   addrDtl = $("#iaddrdtl").val().trim();
 		   hcChk = $("#ihcChk").is(":checked");
 		   haChk = $("#ihaChk").is(":checked");
+		   docNo = $("#inDocNo").val().trim();
 
 		   fn_locchk(warecd);
 
@@ -481,6 +484,7 @@ $(document).ready(function(){
            addrDtl = $("#maddr1").val().trim();
            hcChk = $("#hcChk").is(":checked");
            haChk = $("#haChk").is(":checked");
+
 
            if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
                Common.alert("Please enter Plant in ECC.");
@@ -512,12 +516,25 @@ $(document).ready(function(){
            Common.alert('Contact number is invalid. Please key in only number in contact field.');
            return false;
      } else if (locType != null && locType != "") {
-    	 if (locType == '01' || locType == '02') {
+    	 if (locType == '01' || locType == '02') { // CDC, RDC
     	   if ((country == null || country == "") || (city == null || city == "") || (state == null || state == "") ||
     			  (postcode == null || postcode == "") || (area == null || area == "") || (addrDtl == null || addrDtl == "")){
     		   Common.alert('Please complete the address.');
     		   return false;
     	   }
+
+    	 // Added for validating RFD doc no during creation of RDC, CDC, CDC&RDC. Hui Ding. 24/02/2022
+    	   if (docNo == null || docNo == ""){
+    		   Common.alert('Supporting doc no. is required for creating location Type CDC/ RDC.');
+               return false;
+    	   } else {
+    		   var pattern = /^[A-Za-z]+\-\d{4}\-\d{4}$/;
+               if (!pattern.test(docNo)) {
+                   Common.alert("Invalid Doc No.");
+                 return false;
+               }
+    	   }
+
     	 } else if (locType == '05') { // CDC&RDC type
     		 console.log("hcChk: " + hcChk  + " \nhaChk: " + haChk);
 
@@ -527,6 +544,20 @@ $(document).ready(function(){
     			  Common.alert('Please select Business Type for CDC&RDC type of location.');
                   return false;
     		  }
+
+    		  console.log("docNo:  " + docNo);
+    		// Added for validating RFD doc no during creation of RDC, CDC, CDC&RDC. Hui Ding. 24/02/2022
+              if (docNo == null || docNo == ""){
+                  Common.alert('Supporting doc no. is required for creating location Type CDC&RDC.');
+                  return false;
+              } else {
+            	  var pattern = /^[A-Za-z]+\-\d{4}\-\d{4}$/;
+                  //var pattern = /^\d{6}\-\d{2}\-\d{4}$/;
+                  if (!pattern.test(docNo)) {
+                	  Common.alert("Invalid Doc No.");
+                    return false;
+                  }
+              }
     	 }
 
      } else {
@@ -932,7 +963,7 @@ $(document).ready(function(){
     <th scope="row">Business Type</th>
     <td >
         <label><input type="checkbox" id="hcChk" name="hcChk"/><span>Home Care</span></label>
-        <label><input type="checkbox" id="haChk" name="hcChk"/><span>Home Appliance </span></label>
+        <label><input type="checkbox" id="haChk" name="haChk"/><span>Home Appliance </span></label>
     </td>
     <th scope="row">&nbsp;</th>
     <td></td>
@@ -991,6 +1022,15 @@ $(document).ready(function(){
 	<input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
 	</td>
 </tr>
+
+<br/><br/>
+<tr>
+    <th scope="row">Doc. No.</th>
+    <td><input type="text" name="mDocNo" id="mDocNo" class="w100p readonly"  placeholder="Report For Decision Doc. No."/></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 <ul class="center_btns">
@@ -1081,7 +1121,7 @@ $(document).ready(function(){
     <th scope="row">Business Type</th>
     <td >
         <label><input type="checkbox" id="ihcChk" name="ihcChk"/><span>Home Care</span></label>
-        <label><input type="checkbox" id="ihaChk" name="ihcChk"/><span>Home Appliance </span></label>
+        <label><input type="checkbox" id="ihaChk" name="ihaChk"/><span>Home Appliance </span></label>
     </td>
     <th scope="row">&nbsp;</th>
     <td></td>
@@ -1130,8 +1170,17 @@ $(document).ready(function(){
     <th scope="row">Contact No (2)</th>
     <td><input type="text" name="incontact2" id="incontact2" class="w100p" /></td>
 </tr>
+<br/><br/>
+<tr>
+    <th scope="row">Doc. No.<span class="must" display="none">*</span></th>
+    <td><input type="text" name="inDocNo" id="inDocNo" class="w100p"  placeholder="Report For Decision Doc. No."/></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+
 </tbody>
 </table>
+
 
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
