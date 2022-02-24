@@ -234,68 +234,99 @@ $(document).ready(function() {
 
                 var jDate = new Date(jYear, jMth - 1, jDay);
 
+                // Confirm Date | Contract Renewal Date
+                var cnfmDay = $("#cnfmDt").val().substring(0, 2);
+                var cnfmMth = $("#cnfmDt").val().substring(3, 5);
+                var cnfmYear = $("#cnfmDt").val().substring(6);
+                var cnfmDate = new Date(cnfmYear, cnfmMth - 1, cnfmDay);
+
+                // start Date spliting
+                var startDay = $("#startDt").val().substring(0, 2);
+                var startMth = $("#startDt").val().substring(3, 5);
+                var startYear = $("#startDt").val().substring(6);
+
+                //Todays year and +1 year
                 var cDate = new Date();
                 var cStartYear = cDate.getFullYear();
                 var cStartDate = new Date(cStartYear, psMonth - 1, psDay);
                 var cEndYear = cDate.getFullYear() + 1;
                 var cEndDate = new Date(cEndYear, expMth - 1, expDay);
 
-                if(sDate < jDate) {
+                // moving error checking on top to catch exception
+                if(sDate < eDate || sDate >= cEndDate) {
+                	 // to select the correct date to display for user
+                	 if(cnfmDate > eDate && jDate < cnfmDate) {
+                		 $("#startDt").val($("#cnfmDt").val());
+                	 } else if(jDate > cnfmDate) {
+                		 $("#startDt").val($("#joinDt").val());
+                	 } else {
+                		 $("#startDt").val("");
+                	 };
+
+                	 // to select the correct respond to prompt
+                	 if(sDate < eDate) {
+                		 //Selected Date earlier then earliest version (2017/05/01)
+                		 Common.alert("For earlier versions, kindly refer to Cody Operation for scanned copy.");
+                	 } else {
+                		 //Selected Date later than (31 March, current year +1)
+                		 Common.alert("Current period has not ended");
+                	 };
+                	 return false;
+                 } else if(sDate < jDate) {
                     /*
                      * Selected date earlier than join date
-                     * Default to join date
-                     * Join month 1,2,3 = same year
-                     * Join Month 4 - 12 = +1 year
+                     * Default to Confirm Date else Join Date
+                     * Confirm/Join month 1,2,3 = same year
+                     * Confirm/Join Month 4 - 12 = +1 year
                      */
-
                     periodFlg = 1;
-                    $("#startDt").val($("#joinDt").val());
-                    pStartDt = jYear + jMth + jDay;
-
-                    if(jMth == "01" || jMth == "02" || jMth == "03") {
-                        pYear = jYear;
-                        pEndDt = jYear + expMth + expDay;
+                    // to determine to use join or confirm date
+                    if(jDate < cnfmDate) {
+                    	$("#startDt").val($("#cnfmDt").val());
                     } else {
-                        pYear = (Number(jYear) + 1);
-                        pEndDt = (Number(jYear) + 1) + expMth + expDay;
-                    }
+                    	$("#startDt").val($("#joinDt").val());
+                    };
 
-                } else if(sDate < eDate) {
-                    /*
-                     * Selected date earlier than earliest e-Agreement date (2017/05/01)
-                     * Not available for download
-                     */
-                    Common.alert("For earlier versions, kindly refer to Cody Operation for scanned copy.");
-                    return false;
+                    pStartDt = startYear + startMth + startDay;
 
+                    if(startMth == "01" || startMth == "02" || startMth == "03") {
+                        pYear = startYear;
+                        pEndDt = startYear + expMth + expDay;
+                    } else {
+                        pYear = (Number(startYear) + 1);
+                        pEndDt = (Number(startYear) + 1) + expMth + expDay;
+                    };
                 } else if(sDate >= jDate) {
                     /*
                      * Selected Date later than earliest version (2017/05/01)
                      * Selected Date later than join date
                      */
-                    if(sDate >= cEndDate) {
-                        Common.alert("Current period has not ended.");
-                        $("#startDt").val();
-                        return false;
-                    } else if((sDate >= cStartDate && sDate <= cEndDate) && (jDate >= cStartDate && jDate <= cEndDate)) {
+                    if((sDate >= cStartDate && sDate <= cEndDate) && (jDate >= cStartDate && jDate <= cEndDate)) {
                         /*
                          * Selected and join date in current period
-                         * Default to join date
+                         * Default to confirm/join date
                          */
                         periodFlg = 0;
-                        $("#startDt").val(jDay + "/" + jMth + "/" + jYear);
 
+                        if(jDate < cnfmDate) {
+                            $("#startDt").val(cnfmDay + "/" + cnfmMth + "/" + cnfmYear);
+                        } else {
+                            $("#startDt").val(jDay + "/" + jMth + "/" + jYear);
+                        };
                     } else if(sDate >= cStartDate) {
                         /*
                          * Selected earlier than current period
                          * Default to selected year's period start date
                          */
                         $("#startDt").val(psDay + "/" + psMonth + "/" + year);
-
                     } else if(sDate < cStartDate) {
                         if(sDate >= jDate) {
-                            $("#startDt").val(jDay + "/" + jMth + "/" + jYear);
-
+                            // to determine to use join or confirm date
+                            if(jDate < cnfmDate) {
+                            	$("#startDt").val(cnfmDay + "/" + cnfmMth + "/" + cnfmYear);
+                            } else {
+                            	$("#startDt").val(jDay + "/" + jMth + "/" + jYear);
+                            };
                             /*
                             if(jMth == "01" || jMth == "02" || jMth == "03") {
                                 pYear = jYear;
@@ -307,8 +338,14 @@ $(document).ready(function() {
                             */
                         }
                     }
-                    year = Number(year) + 1;
-
+                    //to determine which year to use
+                    if($("#startDt").val() == $("#cnfmDt").val()) {
+                    	year = Number(cnfmYear) + 1;
+                    } else if($("#startDt").val() == $("#joinDt").val()) {
+                    	year = Number(jYear) + 1;
+                    } else {
+                    	 year = Number(year) + 1;
+                    }
                     pStartDt = $("#startDt").val().substring(6) + $("#startDt").val().substring(3, 5) + $("#startDt").val().substring(0, 2);
                 }
             }
