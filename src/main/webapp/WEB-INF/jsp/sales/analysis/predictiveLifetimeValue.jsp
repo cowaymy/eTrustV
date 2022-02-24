@@ -10,6 +10,16 @@ function fn_report() {
        return;
     }
 
+    if($("#listRentStus").val() == null || $("#listRentStus").val() == ''){
+        Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStus" />');
+        return;
+     }
+
+    if($("#listPltvReportType").val() == null || $("#listPltvReportType").val() == ''){
+        Common.alert('<spring:message code="sal.alert.msg.plzSelReportType" />');
+        return;
+     }
+
     var reportType = $("#listPltvReportType").val();
     var stkId = $("#listProductId").val();
     var stkDesc = $("#listProductId option:selected").text();
@@ -24,35 +34,34 @@ function fn_report() {
     } else if (rentStus == 'SUS' && reportType == 'SUS_COUNT') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_SUS_Count.rpt");
-        $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_SUS_Count_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'SUS' && reportType == 'LAST_SUS') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_SUS.rpt");
-        $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_Last_SUS_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'SUS' && reportType == 'SUS_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_SUS_SumYM.rpt");
-        $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_SUS_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'RET_TER' && reportType == 'LAST_TER') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_TER.rpt");
-        $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_Last_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'RET_TER' && reportType == 'TER_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_TER_SumYM.rpt");
-        $("#dataForm #viewType").val("EXCEL");
         $("#dataForm #reportDownFileName").val("PLTV_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
-    }
+    } else if (rentStus == 'RET_TER' && reportType == 'LAST_RET_TER') {
 
+        $("#dataForm #reportFileName").val("/sales/PLTV_Last_RET_TER.rpt");
+        $("#dataForm #reportDownFileName").val("PLTV_Last_RET_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+
+    }
 
     $("#dataForm #V_STKID").val(stkId);
     $("#dataForm #viewType").val("EXCEL");
@@ -112,6 +121,7 @@ function fn_setOptGrpClass() {
     <th scope="row"><spring:message code="sales.RentalStatus" /></th>
     <td>
         <select class="w100p" id="listRentStus" name="listRentStus" >
+            <option value="">Choose One</option>
             <option value="SUS">SUS</option>
             <option value="RET_TER">RET, TER</option>
         </select>
@@ -121,12 +131,15 @@ function fn_setOptGrpClass() {
     <th scope="row"><spring:message code="sales.pltv.ReportType" /></th>
     <td>
         <select class="w100p" id="listPltvReportType" name="listPltvReportType" >
+            <option value="">Choose One</option>
             <option value="RAW">Raw</option>
-            <option value="SUS_COUNT">SUS Count</option>
-            <option value="LAST_SUS">Last SUS</option>
-            <option value="LAST_TER">Last TER</option>
-            <option value="SUS_SUM_YM">Sum of Last SUS by Year and Month</option>
-            <option value="TER_SUM_YM">Sum of Last TER by Year and Month</option>
+            <option value="SUS_COUNT">SUS : SUS Count</option>
+            <option value="LAST_SUS">SUS : Last SUS</option>
+            <option value="SUS_SUM_YM">SUS : Sum of Last SUS by Year and Month</option>
+            <option value="LAST_TER">TER : Last TER</option>
+            <option value="TER_SUM_YM">TER : Sum of Last TER by Year and Month</option>
+            <option value="LAST_RET_TER" disabled>RET to TER : Last RET to TER</option>
+            <option value="RET_TER_SUM_YM" disabled>RET to TER : Sum of Last RET to TER by Year and Month</option>
         </select>
     </td>
 </tr>
