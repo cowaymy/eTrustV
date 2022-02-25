@@ -298,7 +298,7 @@
                                 .attr('selected', 'selected');
                         $(
                                 "#rotReqInvoiceGrp option[value='"
-                                        + "${rotInfoMap.rptReqInvcGrp}" + "']")
+                                        + "${rotInfoMap.rotReqInvcGrp}" + "']")
                                 .attr('selected', 'selected');
 
                         // RPS Tab
