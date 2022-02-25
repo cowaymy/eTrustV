@@ -2634,7 +2634,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     	installResult.put("ctCode", String.valueOf(installResult.get("userId")));
     }
 
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
+    LOGGER.debug("================TEMP ALEX FOR DEV/LOCAL DEBUG - START ================");
     LOGGER.debug("PARAMS :" + installResult.toString());
     LOGGER.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
     LOGGER.debug("CHECKPOINT  - get userId:" + installResult.get("userId").toString());
@@ -2645,9 +2645,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     if(installResult.get("statusCodeId").toString().equals("4")){
       smsMessage = "COWAY:Dear Customer, Your Installation/Product collection is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else{
-
-
-
       smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/Product collection has failed due to "+ installResult.get("failId").toString() +".Will call to set new appointment.";
     }
     Map<String, Object> smsList = new HashMap<>();
@@ -2658,7 +2655,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     if(smsMessage != "")
     {
-    	sendSms(smsList);
+    	//sendSms(smsList); // rollback for SMS triggering due to UAT not completely buyoff
     }
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
