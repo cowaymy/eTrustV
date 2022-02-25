@@ -2653,10 +2653,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     smsList.put("smsMessage", smsMessage);
     smsList.put("smsMobileNo", installResult.get("smsMobileNo").toString());
 
-    if(smsMessage != "")
-    {
+    //if(smsMessage != "")
+    //{
     	//sendSms(smsList); // rollback for SMS triggering due to UAT not completely buyoff
-    }
+    //}
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
 
