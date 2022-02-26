@@ -64,5 +64,7 @@ public interface InvoicePOMapper {
 
     List<EgovMap>selectInvoiceStatementEnd(Map<String, Object> params);
 
+    String selectCustBillId(Map<String, Object> params);
 
+    List<EgovMap> selectInvoiceBillGroupList(Map<String, Object> params);
 }

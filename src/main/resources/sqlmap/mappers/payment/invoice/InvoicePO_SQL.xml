@@ -290,13 +290,21 @@
 		       Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
 		       Extent2.USER_NAME USERNAME1  ,
 		       Extent1.PO_STUS_ID PO_STUS_ID  ,
-		       Extent6.NAME NAME1
+		       Extent6.NAME NAME1,
+		       Extent1.FILE_ID,
+               Extent7.ATCH_FILE_GRP_ID,
+               Extent8.ATCH_FILE_ID,
+               Extent8.ATCH_FILE_NAME,
+               Extent8.FILE_SUB_PATH || '.' || Extent8.FILE_EXTSN AS FILE_SUB_PATH,
+               Extent8.PHYSICL_FILE_NAME
 	  FROM PAY0015D Extent1
 	         LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.PO_UPD_USER_ID
 	         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.PO_CRT_USER_ID
 	         LEFT JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.PO_ORD_ID
 	         LEFT JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
 	         JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PO_STUS_ID
+	         LEFT JOIN SYS0070M Extent7 ON Extent7.ATCH_FILE_GRP_ID = Extent1.FILE_ID
+             LEFT JOIN SYS0071D Extent8 ON Extent8.ATCH_FILE_ID = Extent7.ATCH_FILE_ID
 	 WHERE  Extent1.PO_ORD_ID = #{orderId}
 	</select>
 
@@ -342,22 +350,24 @@
 			  PO_CRT_DT,
 			  PO_UPD_USER_ID,
 			  PO_UPD_DT,
-			  PO_CNTRCT_ID
+			  PO_CNTRCT_ID,
+			  FILE_ID
 			)
 			VALUES
 			(
 			  PAY0015D_ID_SEQ.NEXTVAL,
 			  #{poOrderId},
-			  #{poReferenceNo},
-			  #{poStartInstallment},
-			  #{poEndInstallment},
-			  #{poRemark},
+			  #{referenceNo},
+			  #{startPeriod},
+			  #{endPeriod},
+			  #{remark},
 			  #{poStatusId},
 			  #{userId},
 			  sysdate,
 			  NULL,
 			  NULL,
-			  0
+			  0,
+			  #{fileId}
 			)
 	</insert>
 
@@ -399,5 +409,46 @@
               AND ( 1 = Extent1.PO_STUS_ID )
               AND ( TO_NUMBER(Extent1.PO_START_INSTLMT) <![CDATA[<=]]> #{endPeriod} )
               AND ( TO_NUMBER(Extent1.PO_END_INSTLMT) <![CDATA[>=]]> #{endPeriod} )
+    </select>
+
+    <select id="selectCustBillId" parameterType="Map" resultType="java.lang.String">
+       SELECT
+            Extent1.CUST_BILL_ID CUST_BILL_ID
+        FROM SAL0001D Extent1
+        WHERE  Extent1.SALES_ORD_ID = #{orderId}
+        AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+
+    <select id="selectInvoiceBillGroupList" parameterType="Map" resultType="egovMap">
+       SELECT
+        Limit1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+        Limit1.SALES_ORD_NO SALES_ORD_NO  ,
+        Limit1.REF_NO REF_NO,
+        Limit1.ORDER_DATE ORDER_DATE,
+        Limit1.STATUS STATUS,
+        Limit1.APP_TYPE APP_TYPE,
+        Limit1.PRODUCT PRODUCT,
+        Limit1.NAME NAME  ,
+        Limit1.CUST_BILL_ID CUST_BILL_ID
+FROM ( SELECT
+    Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+    Extent2.NAME NAME  ,
+    Extent1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+    Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+    Extent3.REF_NO,
+    Extent3.SALES_DT ORDER_DATE,
+    Extent6.CODE_NAME APP_TYPE,
+    Extent7.NAME STATUS,
+    Extent9.STK_CODE || ' - ' || Extent9.STK_DESC PRODUCT
+FROM SAL0024D Extent1
+    JOIN SAL0029D Extent2   ON Extent2.CUST_ID = Extent1.CUST_BILL_CUST_ID
+    JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.CUST_BILL_SO_ID
+    JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent2.TYPE_ID
+    LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CUST_BILL_CRT_USER_ID
+    JOIN SYS0013M Extent6 ON Extent3.APP_TYPE_ID = Extent6.CODE_ID
+    LEFT JOIN SYS0038M Extent7 ON Extent3.STUS_CODE_ID = Extent7.STUS_CODE_ID
+    JOIN SAL0002D Extent8   ON Extent8.SALES_ORD_ID = Extent3.SALES_ORD_ID
+    JOIN SYS0026M Extent9   ON Extent9.STK_ID = Extent8.ITM_STK_ID
+WHERE  Extent1.CUST_BILL_ID = #{custBillId}  ) Limit1
     </select>
 </mapper>

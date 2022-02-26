@@ -3,13 +3,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var myGridID;
+var myGridIDBillGroup;
 var selectedEntryId;
 
 $(document).ready(function(){
-   // myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
    myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+   myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
    AUIGrid.setSelectionMode(myGridID, "singleRow");
-
+   AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
  // 에디팅 시작 이벤트 바인딩
    /*  AUIGrid.bind(myGridID, ["cellEditBegin"], function(event) {
        if(event.item.name1 == 'Inactive'){
@@ -46,13 +47,15 @@ $(document).ready(function(){
         if($(this).val() < 1 ) $("#endPeriod").val(1);
         else if($(this).val() > 60) $("#endPeriod").val(60);
     });
+
+    $('.billingPO > .label_text').remove()
 });
 
 var gridPros = {
         editable: false,
         showStateColumn: false,
         pageRowCount : 10,
-        rowButtonDisabledFunction : function(rowIndex, item) {
+         rowButtonDisabledFunction : function(rowIndex, item) {
             if(item.name1 == "Inactive") { // 제품이 LG G3 인 경우 체크박스 disabeld 처리함
                 return false; // false 반환하면 disabled 처리됨
             }
@@ -61,7 +64,7 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"id", headerText:"<spring:message code='pay.head.poEntryId'/>", visible:true},
+    {dataField:"id", headerText:"<spring:message code='pay.head.poEntryId'/>", visible:false},
     {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
     {dataField:"name", headerText:"<spring:message code='pay.head.customerName'/>"},
     {dataField:"poRefNo", headerText:"<spring:message code='pay.head.poReference'/>"},
@@ -71,6 +74,19 @@ var columnLayout=[
     {dataField:"username1", headerText:"<spring:message code='pay.head.updatedBy'/>"},
     {dataField:"poUpdDt", headerText:"<spring:message code='pay.head.lastUpdate'/>", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
     {dataField:"name1", headerText:"<spring:message code='pay.head.status'/>"},
+    {
+           dataField : "fileSubPath",
+           headerText :"Attachment",
+           style : "aui-grid-link-renderer",
+           renderer : {
+            type:"LinkRenderer",
+            baseUrl : "javascript",
+            jsCallback : function(rowIndex, columnIndex, value, item)
+            {
+                fn_view(item);
+            }
+        }
+    },
     {
     	dataField : "disable",
     	headerText :"<spring:message code='pay.head.disable'/>",
@@ -91,6 +107,43 @@ var columnLayout=[
     }
 ];
 
+var gridProsBill = {
+        editable: false,
+        showStateColumn: false,
+        pageRowCount : 5
+        /* rowButtonDisabledFunction : function(rowIndex, item) {
+            if(item.name1 == "Inactive") { // 제품이 LG G3 인 경우 체크박스 disabeld 처리함
+                return false; // false 반환하면 disabled 처리됨
+            }
+            return true;
+        } */
+};
+
+var columnLayoutBill =[
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"refNo", headerText:"Ref No."},
+    {dataField:"orderDate", headerText:"Order Date", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+    {dataField:"status", headerText:"Status"},
+    {dataField:"appType", headerText:"App Type"},
+    {dataField:"product", headerText:"Product"},
+    {dataField:"name", headerText:"Customer"},
+    {dataField:"custBillId", headerText:"Bill ID"}
+];
+
+function fn_view(item) {
+    var atchFileGrpId = item.atchFileGrpId;
+    var atchFileId = item.atchFileId;
+    var data = {
+               atchFileGrpId : atchFileGrpId,
+               atchFileId : atchFileId
+    };
+   Common.ajax("GET", "/payment/getAttachmentInfo.do", data, function(result) {
+       var fileSubPath = result.fileSubPath;
+       fileSubPath = fileSubPath.replace('\', '/'');
+       window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+   });
+}
+
 function fn_doDisable(){
 	console.log("selectedEntryID : " + selectedEntryId);
 	if(selectedEntryId != undefined && selectedEntryId != ''){
@@ -109,22 +162,28 @@ function fn_orderInfo(){
 }
 
 function fn_callbackOrder(orderId){
-    console.log("orderId : " + orderId);
     fn_loadOrderPO(orderId);
 }
 
 function fn_loadOrderPO(orderId){
+
 	Common.ajax("GET", "/payment/selectOrderBasicInfoByOrderId.do", {"orderId" : orderId}, function(result) {
         $("#orderId").val(result.ordId);
         $("#orderNo").val(result.ordNo);
         $("#custName").val(result.custName);
         selectedEntryId = undefined;
-
     });
 
 	Common.ajax("GET", "/payment/selectOrderDataByOrderId.do", {"orderId" : orderId}, function(result) {
 		 AUIGrid.setGridData(myGridID, result);
     });
+
+	Common.ajax("GET","/payment/selectInvoiceBillGroupList.do", {"orderId": orderId}, function(result){
+        if(result != null){
+        	$("#billGroupNo").val(result[0].custBillGrpNo);
+        	AUIGrid.setGridData(myGridIDBillGroup, result);
+        }
+	 });
 }
 
 function fn_createEvent(objId, eventType){
@@ -179,17 +238,22 @@ function fn_doSave(){
 		    		return;
 		    	}
 
-		    	var po = {
-		    			"poOrderId" : orderId,
-		    			"poReferenceNo" : $("#referenceNo").val(),
-		    			"poStartInstallment" : startPeriod,
-		    			"poEndInstallment" : endPeriod,
-		    			"poRemark" : $("#remark").val(),
-		    			"poStatusId" : 1
-		    	};
+		        var input = document.getElementById('file1');
+		        if (input.files.length < 1) {
+		            Common.alert("Please choose a file to upload");
+		            return false;
+		        }
 
-		    	Common.ajax("GET", "/payment/insertInvoiceStatement.do", po, function(result) {
-		    		console.log(result);
+		        var formData = Common.getFormData("newEntryForm");
+		        var obj = $("#newEntryForm").serializeJSON();
+		        formData.append("poOrderId", orderId);
+		        formData.append("poStatusId", 1);
+
+		        $.each(obj, function(key, value) {
+		            formData.append(key, value);
+		          });
+
+		    	Common.ajaxFile("/payment/insertInvoiceStatement.do", formData, function(result) {
 		    		fn_loadOrderPO(result.poOrderId);
 		    	});
 		    }
@@ -243,6 +307,13 @@ function fn_doSave(){
 			    <input type="text" id="custName" name="custName" title="" placeholder="" class="w100p readonly" readonly/>
 			    </td>
 			</tr>
+			<tr>
+                <th scope="row">Billing Group No.</th>
+                <td>
+                <input type="text" id="billGroupNo" name="billGroupNo" title="" placeholder="" class="w100p readonly" readonly/>
+                </td>
+                <th> <td></td>
+            </tr>
 			</tbody>
 		</table><!-- table end -->
      </form>
@@ -263,10 +334,10 @@ function fn_doSave(){
      </c:if>
      <!-- link_btns_wrap end -->
     </section>
-
     <!-- search_result start -->
     <section class="search_result">
   <!-- grid_wrap start -->
+  <article id="grid_wrap_billGroup" class="grid_wrap"></article>
   <article id="grid_wrap" class="grid_wrap"></article>
   <!-- grid_wrap end -->
     </section>
@@ -314,6 +385,14 @@ function fn_doSave(){
 		            <input type="text" id="remark" name="remark" title="" placeholder="" class="w100p" />
 		        </td>
 		    </tr>
+		    <tr>
+			     <th scope="row">Attachment</th>
+                 <td colspan="3">
+                    <div class="auto_file2 billingPO">
+                        <input type="file" title="file add" id="file1"/>
+                    </div>
+                 </td>
+			</tr>
 		</tbody>
 	</table><!-- table end -->
          </form>
