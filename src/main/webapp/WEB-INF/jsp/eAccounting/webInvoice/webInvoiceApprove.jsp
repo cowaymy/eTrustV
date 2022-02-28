@@ -461,7 +461,7 @@ function fn_fileListOfAppvPrcssNoPop() {
     Common.popupDiv("/eAccounting/webInvoice/fileListOfAppvPrcssNoPop.do", data, null, true, "fileListPop");
 }
 
-function fn_fileListPop() {
+function fn_fileListPop(atchFileGrpId) {
     var data = {
     		atchFileGrpId : atchFileGrpId
     };
