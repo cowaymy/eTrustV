@@ -443,7 +443,12 @@
          , sys0028m s28q
          , sys0028m s28r
          , sys0047m s47
-         , (select distinct l48.reqst_no ,l55.delvry_no,(select sum(reqst_qty) from log0048d where reqst_no = l48.reqst_no and reqst_del <![CDATA[<>]]> 'Y') SCAN_QTY
+         , (select distinct l48.reqst_no ,l55.delvry_no,(
+         select sum(a.reqst_qty) from log0048d a , sys0026m b
+               where
+               a.itm_Code = b.stk_code and
+               reqst_no = l55.reqst_no and reqst_del <![CDATA[<>]]> 'Y' and b.serial_chk = 'Y'
+         ) SCAN_QTY
              from log0048d l48 , log0055d l55
              where L48.REQST_NO = l55.reqst_no
                and l48.itm_code= l55.itm_code
