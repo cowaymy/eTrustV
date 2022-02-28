@@ -3092,6 +3092,14 @@ WHERE
           </if>
     </select>
 
+    <select id="selectPrevMatOrderAppTypeId" parameterType="Map" resultType="egovMap">
+        SELECT APP_TYPE FROM
+		(
+		    SELECT APP_TYPE FROM API0005D WHERE BNDL_ID = #{bndlId} ORDER BY ECOMM_ORD_ID DESC
+		)
+		WHERE ROWNUM = 1
+    </select>
+
   <insert id="insertPexDefectEntry" parameterType="Map">
     <selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
       SELECT SAL0265D_SEQ.NEXTVAL FROM DUAL
