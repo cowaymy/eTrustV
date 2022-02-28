@@ -1633,9 +1633,32 @@ ORDER BY a.or_no
     </select>
 
     <select id="checkBatchPaymentExist" parameterType="Map" resultType="egovMap">
+        WITH PAY AS
+        (SELECT distinct SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) FIELD1,
+                          B.PAY_ITM_APPV_NO,
+                          B.PAY_ITM_REF_DT,
+                          A.PAY_ITM_AMT,
+                          B.PAY_ITM_BANK_ACC_ID
+                            FROM PAY0252T A
+                            JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+                            JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.CODE_MASTER_ID = '130'
+                            JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                            JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                            WHERE
+                            A.PAY_ITM_MODE_ID = 107
+                            AND CRC_STATE_MAPPING_STUS_ID = 1
+                            AND B.PAY_ITM_BANK_ACC_ID = #{keyInMerchantBank}
+                            AND A.REV_STUS_ID <> 5
+                            AND B.PAY_ITM_APPV_NO =#{keyInApprovalNo})
+
         SELECT
             *
-        FROM PAY0043D
+        FROM PAY0043D EXT1
+        JOIN PAY P ON P.PAY_ITM_APPV_NO = EXT1.APPROVAL_CODE
+                  AND P.PAY_ITM_REF_DT = EXT1.SYS_REF_DT
+                  AND P.PAY_ITM_AMT = EXT1.SYS_AMT
+                  AND P.PAY_ITM_BANK_ACC_ID = EXT1.SYS_BANK_ACC_ID
+                  AND P.FIELD1 = SUBSTR(EXT1.CARD_NO, 1, 6) || SUBSTR(EXT1.CARD_NO, -4)
           WHERE VALID_STUS_ID = 4
                   AND APPROVAL_CODE = #{keyInApprovalNo}
                   AND SYS_AMT = #{keyInAmount}
