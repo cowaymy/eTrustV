@@ -137,6 +137,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         ordInfo.put("promoId"   , reqPrm.get("promo").toString());
         ordInfo.put("stkId"     , reqPrm.get("product").toString());
         ordInfo.put("srvPacId"  , reqPrm.get("srvPac").toString());
+        ordInfo.put("bndlId"  , reqPrm.get("bndlId").toString());
 
         Map<String, Object> memberCode = new HashMap<String, Object>();
         memberCode.put("memCode", salesMenCode);
@@ -147,11 +148,30 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         custAdd.put("custAddId", Integer.valueOf(custInfo.get("custaddid").toString()));
 
         EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
-        // Non Rental Order - SRV_PAC_ID = 0
-        // Added AUX type to exclude
-        if(!ordInfo.get("appTypeId").toString().equals("66") || ordInfo.get("appTypeId").toString().equals("5764")){
-          ordInfo.put("srvPacId",0);
+        // Retrieve back the main product's appTyeId for Frame
+
+        if(ordInfo.get("appTypeId").toString().equals("5764"))
+        {
+        	EgovMap appTypeId = orderRegisterService.selectPrevMatOrderAppTypeId(ordInfo);
+
+        	if(!appTypeId.equals("66"))
+            {
+            	ordInfo.put("srvPacId",0);
+            }
+            else
+            {
+            	ordInfo.put("srvPacId", reqPrm.get("srvPac").toString());
+            }
         }
+        else if(!ordInfo.get("appTypeId").toString().equals("66"))
+        {
+        	ordInfo.put("srvPacId",0);
+        }
+
+        /*// Non Rental Order - SRV_PAC_ID = 0
+        if(!ordInfo.get("appTypeId").toString().equals("66")){
+          ordInfo.put("srvPacId",0);
+        }*/
 
         EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
         EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
