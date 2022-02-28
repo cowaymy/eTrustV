@@ -544,7 +544,7 @@
             and EXT1.CUST_CRC_TOKEN  = #{tknId}
             and EXT3.SALES_ORD_ID = #{ordId}
             and EXT3.IS_3RD_PARTY = '0'
-
+             and EXT1.CUST_CRC_STUS_ID = '1'
             UNION
 
              SELECT
@@ -562,7 +562,7 @@
             and EXT5.CUST_CRC_TOKEN  = #{tknId}
             and EXT1.SALES_ORD_ID = #{ordId}
             and EXT1.IS_3RD_PARTY = '1'
-
+            and EXT5.CUST_CRC_STUS_ID = '1'
         ) SRC
         ON (A.SALES_ORD_ID = SRC.SALES_ORD_ID)
         WHEN MATCHED THEN
