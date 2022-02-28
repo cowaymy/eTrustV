@@ -1275,28 +1275,34 @@
 
     //Bill Payment : Order 정보 조회
     /* Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) { */
-    Common.ajax("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInPayment.do", data, function(result) {
+    Common.ajaxSync("GET", "/payment/common/checkBatchPaymentExist.do", data.form, function(result) {
+        if(result != null){
+            Common.alert("Payment has been uploaded.");
+            return;
+        }else{
+            Common.ajax("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInPayment.do", data, function(result) {
 
-      var message = "<spring:message code='pay.alert.successProc'/>";
+              var message = "<spring:message code='pay.alert.successProc'/>";
 
-      if (result != null && result.length > 0) {
-        for (i = 0; i < result.length; i++) {
-          message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo + ")</font><br>";
+              if (result != null && result.length > 0) {
+                for (i = 0; i < result.length; i++) {
+                  message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo + ")</font><br>";
+                }
+              }
+
+              fn_clearCrcDtls();
+
+              Common.alert(message, function() {
+                //document.location.href = '/payment/initCardKeyInPayment.do';
+                fn_selectPstRequestDOListAjax();
+
+                $("#PopUp2_wrap").hide(); // Update [ Card ] Key-in
+                $("#PopUp1_wrap").hide(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
+
+              });
+            });
         }
-      }
-
-      fn_clearCrcDtls();
-
-      Common.alert(message, function() {
-        //document.location.href = '/payment/initCardKeyInPayment.do';
-        fn_selectPstRequestDOListAjax();
-
-        $("#PopUp2_wrap").hide(); // Update [ Card ] Key-in
-        $("#PopUp1_wrap").hide(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
-
-      });
     });
-  }
 
   function fn_clearCrcDtls() {
     $("#keyCrcCardType").val("");
