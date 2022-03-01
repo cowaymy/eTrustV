@@ -240,6 +240,8 @@ public class HeartServiceJobDto {
 
   private String isVoucher;
 
+  private String switchChkLst;
+
 public String getSerialChk() {
     return serialChk;
   }
@@ -898,6 +900,14 @@ public String getIsVoucher() {
 
 public void setIsVoucher(String isVoucher) {
 	this.isVoucher = isVoucher;
+}
+
+public String getSwitchChkLst() {
+	return switchChkLst;
+}
+
+public void setSwitchChkLst(String switchChkLst) {
+	this.switchChkLst = switchChkLst;
 }
 
 }
