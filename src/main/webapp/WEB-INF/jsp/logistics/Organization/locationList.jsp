@@ -340,6 +340,9 @@ $(document).ready(function(){
             $("#hcChk").prop("checked" , false);
         }
 
+    	// Added RFD doc no. when create new CDC, RDC, CDC&RDC location. not allow to edit. Hui Ding, 01/03/2022
+    	$("#docNo").val(AUIGrid.getCellValue(myGridID, rowid, 'docNo'));
+
     	/*
     	doGetComboData('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
     	doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
@@ -464,6 +467,21 @@ $(document).ready(function(){
 	           return false;
 		   }
 
+		   if (locType == '01' || locType == '02' || locType == '05') { // CDC, RDC, CDC&RDC type
+
+			// Added for validating RFD doc no during creation of RDC, CDC, CDC&RDC. Hui Ding. 24/02/2022
+	           if (docNo == null || docNo == ""){
+	               Common.alert('Supporting doc no. is required for creating location with type CDC, RDC and CDC&RDC.');
+	               return false;
+	           } else {
+	               var pattern = /^[A-Za-z]+\-\d{4}\-\d{4}$/;
+	               if (!pattern.test(docNo)) {
+	                   Common.alert("Invalid Doc No.");
+	                 return false;
+	               }
+	           }
+		   }
+
 	   } else if (action == "m"){
 		   warecd = $("#mwarecd").val().trim();
            warenm = $("#mwarenm").val().trim();
@@ -523,18 +541,6 @@ $(document).ready(function(){
     		   return false;
     	   }
 
-    	 // Added for validating RFD doc no during creation of RDC, CDC, CDC&RDC. Hui Ding. 24/02/2022
-    	   if (docNo == null || docNo == ""){
-    		   Common.alert('Supporting doc no. is required for creating location Type CDC/ RDC.');
-               return false;
-    	   } else {
-    		   var pattern = /^[A-Za-z]+\-\d{4}\-\d{4}$/;
-               if (!pattern.test(docNo)) {
-                   Common.alert("Invalid Doc No.");
-                 return false;
-               }
-    	   }
-
     	 } else if (locType == '05') { // CDC&RDC type
     		 console.log("hcChk: " + hcChk  + " \nhaChk: " + haChk);
 
@@ -544,20 +550,6 @@ $(document).ready(function(){
     			  Common.alert('Please select Business Type for CDC&RDC type of location.');
                   return false;
     		  }
-
-    		  console.log("docNo:  " + docNo);
-    		// Added for validating RFD doc no during creation of RDC, CDC, CDC&RDC. Hui Ding. 24/02/2022
-              if (docNo == null || docNo == ""){
-                  Common.alert('Supporting doc no. is required for creating location Type CDC&RDC.');
-                  return false;
-              } else {
-            	  var pattern = /^[A-Za-z]+\-\d{4}\-\d{4}$/;
-                  //var pattern = /^\d{6}\-\d{2}\-\d{4}$/;
-                  if (!pattern.test(docNo)) {
-                	  Common.alert("Invalid Doc No.");
-                    return false;
-                  }
-              }
     	 }
 
      } else {
@@ -1026,7 +1018,7 @@ $(document).ready(function(){
 <br/><br/>
 <tr>
     <th scope="row">Doc. No.</th>
-    <td><input type="text" name="mDocNo" id="mDocNo" class="w100p readonly"  placeholder="Report For Decision Doc. No."/></td>
+    <td><input type="text" name="docNo" id="docNo" class="w100p readonly"  placeholder="Report For Decision Doc. No." readonly/></td>
     <th scope="row"></th>
     <td></td>
 </tr>

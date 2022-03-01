@@ -194,6 +194,10 @@ public class LocationController {
 		String iptchk        = (String) params.get("iptchk");
 
 		String cdccode       = (String) params.get("icdccode");
+		if (ilocationtype.equalsIgnoreCase("01")) { // CDC type, auto assign CDC code = location code
+			cdccode = 	inwarecd;
+		}
+
 		String rdccode       = (String) params.get("irdccode");
 
 		String plant         = (String) params.get("iplant");
