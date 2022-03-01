@@ -1520,7 +1520,7 @@
                   S90A.SRV_CODY_ID,
                   S08A.SCHDUL_ID,
                   S87A.SRV_FILTER_STK_ID,
-                  S87A.SRV_FILTER_PREV_SERIAL AS srv_filter_prev_serial, /* Hui Ding - Added previous used filter serial 2021-11-24 */
+                  S87A.SRV_FILTER_LAST_SERIAL AS srv_filter_last_serial, /* Hui Ding - Added previous used filter serial 2021-11-24 */
                   NULL AS filter_srl_unmatch_rsn,  /* Hui Ding - Added previous used filter serial 2021-11-24 */
                   S08A.CODY_ID,
                   S26B.STK_CODE
