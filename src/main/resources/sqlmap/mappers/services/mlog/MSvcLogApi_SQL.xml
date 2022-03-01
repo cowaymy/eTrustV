@@ -59,6 +59,7 @@
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
            A.SERIAL_CHK,
            A.HS_CHK_LST,
+           A.SWITCH_CHK_LST,
            A.VOUCHER ,
            A.REDEEM_DT,
            A.REDEEM_WARRANTY,
@@ -125,6 +126,7 @@
                   srv_mem_cntrct_id,
                   SERIAL_CHK,
                   HS_CHKLIST AS HS_CHK_LST,
+                  SWITCH_CHK_LST AS SWITCH_CHK_LST,
                   VOUCHER ,
                   REDEEM_DT,
                   REDEEM_WARRANTY,
@@ -195,6 +197,7 @@
                                    R.SRV_MEM_CNTRCT_ID,
                                    NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK,
                                    B.HS_CHKLIST,
+                                   B.SWITCH_CHK_LST,
                                    B.CODE_FAIL_REMARK,
                                    B.VOUCHER_REDEMPTION,
                                    A.IS_VOUCHER,
@@ -403,6 +406,7 @@
           , TO_CHAR(SRV_PAC_ID) AS SRV_PAC_ID
           , TO_CHAR(DISINF_SRV) AS DISINFEC_SERV
           , TO_CHAR(HS_CHK_LST) AS HS_CHK_LST
+          , TO_CHAR(SWITCH_CHK_LST) AS SWITCH_CHK_LST
           , TO_CHAR(VOUCHER) AS VOUCHER
           , TO_CHAR(REDEEM_DT) AS REDEEM_DT
           , TO_CHAR(REDEEM_WARRANTY) AS REDEEM_WARRANTY
