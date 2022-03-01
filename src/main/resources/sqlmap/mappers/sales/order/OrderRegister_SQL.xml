@@ -3092,10 +3092,10 @@ WHERE
           </if>
     </select>
 
-    <select id="selectPrevMatOrderAppTypeId" parameterType="Map" resultType="egovMap">
+    <select id="selectPrevMatOrderAppTypeId" parameterType="Map" resultType="string">
         SELECT APP_TYPE FROM
 		(
-		    SELECT APP_TYPE FROM API0005D WHERE BNDL_ID = #{bndlId} ORDER BY ECOMM_ORD_ID DESC
+		    SELECT APP_TYPE FROM API0005D WHERE BNDL_ID = #{bndlId} AND APP_TYPE != '5764' ORDER BY ECOMM_ORD_ID DESC
 		)
 		WHERE ROWNUM = 1
     </select>

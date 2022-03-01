@@ -2294,7 +2294,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   }
 
   @Override
-  public EgovMap selectPrevMatOrderAppTypeId(Map<String, Object> params) {
-    return orderRegisterMapper.selectPrevMatOrderAppTypeId(params);
+  public String selectPrevMatOrderAppTypeId(Map<String, Object> params) {
+	  return orderRegisterMapper.selectPrevMatOrderAppTypeId(params);
   }
 }

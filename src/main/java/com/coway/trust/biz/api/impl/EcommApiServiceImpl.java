@@ -152,9 +152,9 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         if(ordInfo.get("appTypeId").toString().equals("5764"))
         {
-        	EgovMap appTypeId = orderRegisterService.selectPrevMatOrderAppTypeId(ordInfo);
+        	String selectAppTypeId = orderRegisterService.selectPrevMatOrderAppTypeId(ordInfo);
 
-        	if(!appTypeId.equals("66"))
+        	if(!selectAppTypeId.equals("66"))
             {
             	ordInfo.put("srvPacId",0);
             }
