@@ -100,6 +100,8 @@ public class HeartServiceResultForm {
 	private String codeFailRemark;
 	private String voucherRedemption;
 
+	private String switchChkLst;
+
 	public String getCheckInDate() {
 		return checkInDate;
 	}
@@ -349,6 +351,14 @@ public class HeartServiceResultForm {
 
 	public void setInstruction(String instruction) {
 		this.instruction = instruction;
+	}
+
+	public String getSwitchChkLst() {
+		return switchChkLst;
+	}
+
+	public void setSwitchChkLst(String switchChkLst) {
+		this.switchChkLst = switchChkLst;
 	}
 
 	public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
