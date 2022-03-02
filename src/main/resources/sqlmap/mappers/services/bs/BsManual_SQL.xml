@@ -1528,6 +1528,7 @@
 		RESULT_ACEPT_NAME,
 		SGN_DT,
 		HS_CHKLIST,
+        SWITCH_CHK_LST,
 		CODE_FAIL_REMARK,
 		VOUCHER_REDEMPTION,
 		OLD_SETL_DT
@@ -1563,6 +1564,7 @@
 		#{resultAceptName},
 		#{sgnDt},
 		#{instChklstCheckBox},
+        #{switchChkLst},
 		#{codeFailRemark},
 		#{voucherRedemption},
 		TO_DATE(#{setlDt},'DD-MM-YYYY')
@@ -2658,7 +2660,6 @@
 		Extent1.SRV_CODY_ID SRV_CODY_ID ,
 		Extent1.SRV_PREV_DT
 		SRV_PREV_DT ,
-		Extent1.SRV_REM SRV_REM ,
 		Extent1.SRV_BS_GEN SRV_BS_GEN ,
 		Extent1.SRV_CRT_DT SRV_CRT_DT ,
 		Extent1.SRV_CRT_USER_ID SRV_CRT_USER_ID
