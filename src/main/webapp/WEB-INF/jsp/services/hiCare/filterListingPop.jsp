@@ -90,7 +90,7 @@ function btnGenerate_Click(){
         $("#viewType").val("");
 
         if($("#fcrtsdt").val() != '' && $("#fcrtsdt").val() != null && $("#fcrtedt").val() != '' && $("#fcrtedt").val() != null){
-        	whereSQL += " a.FILTER_CHG_DT+365 between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
+        	whereSQL += " utils.DATEADD('YEAR', 1, a.FILTER_CHG_DT) between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
         }
 
         if($('#sBranchCode :selected').val() > 0){
@@ -491,7 +491,7 @@ CommonCombo.make('sOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Hi-Care Stock Listing</h1>
+<h1>Hi-Care Filter Listing</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
