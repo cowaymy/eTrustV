@@ -2145,6 +2145,11 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
         where reqst_no = #{reqno} and itm_Code = #{partsCode}
      </update>
 
+     <update id="updateDeliveryMovementQty" parameterType="String">
+        update LOG0055D set DELVRY_QTY = DELVRY_QTY + #{requestQty}
+        where delvry_no = #{delno} and itm_Code = #{partsCode}
+     </update>
+
     <select id="getHiCareInventory" parameterType="Map" resultType="egovMap">
 	    select
         A.SERIAL_NO serial_no

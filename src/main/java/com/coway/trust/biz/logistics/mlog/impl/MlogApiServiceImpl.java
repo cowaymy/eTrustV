@@ -819,6 +819,9 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				itmMap.put("requestQty", String.valueOf(form.getRequestQty()));
 				MlogApiMapper.updateRequestMovementQty(itmMap);
 
+				itmMap.put("delno", deliSeq);
+				MlogApiMapper.updateDeliveryMovementQty(itmMap);
+
 				insMap.put("reqno", seq);
 				insMap.put("partsCode", form.getPartsCode());
 				insMap.put("partsId", form.getPartsId());

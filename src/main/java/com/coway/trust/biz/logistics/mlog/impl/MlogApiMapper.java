@@ -176,6 +176,7 @@ public interface MlogApiMapper {
 	public void updateDeliveryGrHist(Map<String, Object> obj);
 	int selectSMDitmExist(Map<String, Object> obj);
 	void updateRequestMovementQty(Map<String, Object> tmpMap);
+	void updateDeliveryMovementQty(Map<String, Object> tmpMap);
 
 	public List<EgovMap> getHiCareInventory(Map<String, Object> params);
 }
