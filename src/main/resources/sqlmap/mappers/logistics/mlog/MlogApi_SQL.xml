@@ -2141,7 +2141,7 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
     </select>
 
     <update id="updateRequestMovementQty" parameterType="String">
-        update LOG0048D set reqst_qty = reqst_qty +#{requestQty}
+        update LOG0048D set reqst_qty = reqst_qty + CAST(#{requestQty} AS int)
         where reqst_no = #{reqno} and itm_Code = #{partsCode}
      </update>
 
