@@ -994,7 +994,7 @@
             GROUP BY MEM_ID
         ) SAL0001D
             ON ORG0001D.MEM_ID = SAL0001D.MEM_ID
-        LEFT JOIN (
+         JOIN (
             SELECT
                 A.MEM_ID,
                 CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END AS FLG_12_MONTH,
