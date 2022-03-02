@@ -2136,6 +2136,15 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
         AND SEQ = #{seq}
     </update>
 
+    <select id="selectSMDitmExist" parameterType="Map" resultType="integer">
+        select count(*) from LOG0048D where reqst_no = #{reqno} and itm_Code = #{partsCode}
+    </select>
+
+    <update id="updateRequestMovementQty" parameterType="String">
+        update LOG0048D set reqst_qty = reqst_qty +#{requestQty}
+        where reqst_no = #{reqno} and itm_Code = #{partsCode}
+     </update>
+
     <select id="getHiCareInventory" parameterType="Map" resultType="egovMap">
 	    select
         A.SERIAL_NO serial_no
