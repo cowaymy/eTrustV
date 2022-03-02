@@ -4,6 +4,7 @@
 <script type="text/javascript">
 
 var instDtMM = new Date().getMonth()+1;
+var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 
 instDtMM = FormUtil.lpad(instDtMM, 2, "0");
 
@@ -53,7 +54,7 @@ function validRequiredField(){
     var message = "";
 
     if(
-            ($("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
+            ( !(MEM_TYPE == 4 || MEM_TYPE ==6) && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
             || ($("#sHolder :selected").val() == '' || $("#sHolder :selected").val() == null || $("#sHolder :selected").length == 0 )
             || ($("#sStatus :selected").val() == '' || $("#sStatus :selected").val() == null || $("#sStatus :selected").length == 0 )
             || ($("#sCondition :selected").val() == '' || $("#sCondition :selected").val() == null || $("#sCondition :selected").length == 0)
@@ -92,7 +93,7 @@ function btnGenerate_Click(){
         	whereSQL += " a.FILTER_CHG_DT+365 between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
         }
 
-        if($('#sBranchCode :selected').length > 0){
+        if($('#sBranchCode :selected').val() > 0){
             whereSQL += " and a.branch_id in (";
             var runNo = 0;
 

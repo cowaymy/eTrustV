@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
 var instDtMM = new Date().getMonth()+1;
-
+var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 instDtMM = FormUtil.lpad(instDtMM, 2, "0");
 
 $("#dataForm").empty();
@@ -53,7 +53,7 @@ function validRequiredField(){
     var message = "";
 
     if(
-            ($("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
+            ( !(MEM_TYPE == 4 || MEM_TYPE ==6) && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
             || ($("#sHolder :selected").val() == '' || $("#sHolder :selected").val() == null || $("#sHolder :selected").length == 0 )
             || ($("#sStatus :selected").val() == '' || $("#sStatus :selected").val() == null || $("#sStatus :selected").length == 0 )
             || ($("#sCondition :selected").val() == '' || $("#sCondition :selected").val() == null || $("#sCondition :selected").length == 0)
@@ -81,7 +81,7 @@ function btnGenerate_Click(){
         $("#reportDownFileName").val("");
         $("#viewType").val("");
 
-        if($('#sBranchCode :selected').length > 0){
+        if($('#sBranchCode :selected').val() > 0){
             whereSQL += " a.branch_id in (";
             var runNo = 0;
 
@@ -111,7 +111,12 @@ function btnGenerate_Click(){
         }
 
         if($('#sStatus :selected').length > 0){
-            whereSQL += " AND a.status in (";
+        	if(whereSQL == ""){
+        		whereSQL += " a.status in (";
+        	}else{
+        		whereSQL += " AND a.status in (";
+        	}
+
             var runNo = 0;
 
             $('#sStatus :selected').each(function(i, mul){

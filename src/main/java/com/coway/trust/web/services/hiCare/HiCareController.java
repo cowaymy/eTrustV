@@ -123,10 +123,10 @@ public class HiCareController {
  		String branchList[] = null ;
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmdBranchCode").toString();
- 		if(userType != 4 && branchId.equals("")){
+ 		if(!(userType == 4 || userType == 6) && branchId.equals("")){
  			branchList = new String[]{"0"};
  			branchId = "0";
- 		}else if(userType == 4 && branchId.equals("")){
+ 		}else if((userType == 4 || userType == 6) && branchId.equals("")){
  			request.setAttribute("cmdBranchCode", null);
  		}else{
  			branchList= request.getParameterValues("cmdBranchCode");
@@ -486,7 +486,7 @@ public class HiCareController {
 
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmbToBranch").toString();
- 		if(userType != 4 && branchId.equals("")){
+ 		if(!(userType == 4 || userType == 6) && branchId.equals("")){
  			params.put("cmbToBranch", "0");
  		}
 
