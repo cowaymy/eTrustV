@@ -813,7 +813,8 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			itmMap.put("reqno", seq);
 			itmMap.put("partsCode", form.getPartsCode());
 			int itmChk = MlogApiMapper.selectSMDitmExist(itmMap);
-
+			System.out.println("++++ form.getSerialNo() ::" + String.valueOf(form.getSerialNo()) );
+			System.out.println("++++ itmChk ::" + String.valueOf(itmChk) );
 			if(itmChk > 0){
 				itmMap.put("requestQty", String.valueOf(form.getRequestQty()));
 				MlogApiMapper.updateRequestMovementQty(itmMap);
