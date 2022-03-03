@@ -204,8 +204,6 @@ function fn_loadOrderPO(orderId){
 function fn_SelectPO(orderId)
 {
 	 Common.ajax("GET", "/payment/selectOrderDataByOrderId.do", {"orderId" : orderId}, function(result) {
-		 console.log("HENLO")
-		 console.log(result)
          AUIGrid.setGridData(myGridID, result);
     });
 }
@@ -280,7 +278,6 @@ function fn_doSave(){
 		    	Common.ajaxFile("/payment/insertInvoiceStatement.do", formData, function(result) {
 		    		fn_loadOrderPO(result.poOrderId);
 		    	    fn_SelectPO(result.poOrderId);
-		    	    console.log("here2222");
 		    	});
 		    }
 		    fn_hidePopup();
