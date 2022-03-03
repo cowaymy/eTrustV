@@ -25,6 +25,7 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.payment.mobilePaymentKeyIn.controller.MobilePaymentKeyInController;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -528,7 +529,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         formInfo.put("keyInPayItmCardType", formInfo.get("keyCrcCardType"));
         formInfo.put("keyInPayItmCardMode", formInfo.get("keyInCardMode"));
         formInfo.put("keyInPayType", "107");
-        formInfo.put("keyInPayDate", formInfo.get("keyInTrDate")); // 임시
+        formInfo.put("keyInPayDate", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1)); // 임시
       }
 
       gridListMap.put("userId", sUserId);
