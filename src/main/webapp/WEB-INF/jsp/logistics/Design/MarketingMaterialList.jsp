@@ -59,7 +59,7 @@ $(function(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Marketing Material</h2>
+<!-- <h2>Marketing Material</h2> -->
 </aside><!-- title_line end -->
 
     <section class="search_result"><!-- search_result start -->
