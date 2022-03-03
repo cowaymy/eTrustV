@@ -100,4 +100,9 @@ public class ArtworkRequestController {
 		return ResponseEntity.ok(list);
 	}
 
+	@RequestMapping(value = "/ArtworkDownloadNav.do")
+	public String ArtworkDownloadNav(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/Design/ArtworkDownloadNav";
+	}
 }
