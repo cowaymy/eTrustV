@@ -293,16 +293,19 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
         }
 
-        smsMessage = "COWAY:Dear Customer, Ur Appt for  *Installation/After Service/Product collection is set on "+ installMaster.get("appDate") +". For Enquiry 1-800-1000.";
+        smsMessage = "COWAY:Dear Customer, Ur Appt for  *Installation/After Service/Product collection is set on "+ installMaster.get("appDate") +". For Enquiry 1800-888-111.";
 
-        Map<String, Object> smsList = new HashMap<>();
-        smsList.put("userId", sessionVO.getUserId());
-        smsList.put("smsType", 975);
-        smsList.put("smsMessage", smsMessage);
-        smsList.put("smsMobileNo", params.get("telM").toString());
+        //IF APP TYPE != AUX,TRL,EDU, IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READT TO DO
+        if((params.get("appType") != "AUX" || params.get("appType") != "TRL" || params.get("appType") != "EDU")
+        		&& params.get("callStatus") == "20" && params.get("feedBackCode") == "225"){
+        	Map<String, Object> smsList = new HashMap<>();
+            smsList.put("userId", sessionVO.getUserId());
+            smsList.put("smsType", 975);
+            smsList.put("smsMessage", smsMessage);
+            smsList.put("smsMobileNo", params.get("telM").toString());
 
-        sendSms(smsList);
-
+            sendSms(smsList);
+        }
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL
       }
@@ -714,17 +717,18 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
             	  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(logPram);
               }
 
-              if(params.get("appType").toString() != "EDU" && params.get("appType").toString() != "TRL" && params.get("appType").toString() != "AUX"){
+              /*if(params.get("appType").toString() != "EDU" && params.get("appType").toString() != "TRL" && params.get("appType").toString() != "AUX"){
                 smsMessage = "COWAY:Dear Customer, Ur Appt for Installation is set on "+ installMaster.get("appDate") +".For Enquiry 1-800-1000.";
 
                 Map<String, Object> smsList = new HashMap<>();
                 smsList.put("userId", sessionVO.getUserId());
                 smsList.put("smsType", 975);
                 smsList.put("smsMessage", smsMessage);
-                smsList.put("smsMobileNo", params.get("telM").toString());
+                smsList.put("smsMobileNo", "0175977998");
+                //smsList.put("smsMobileNo", params.get("telM").toString());
 
                 sendSms(smsList);
-              }
+              }*/
           } else {
         	  stat = true; // RECALL / WAITING FOR CANCEL
           }

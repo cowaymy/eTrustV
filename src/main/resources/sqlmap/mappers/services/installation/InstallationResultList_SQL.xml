@@ -5434,4 +5434,13 @@ AND J.CODE IN ('COM','FAL','CAN')
 <select id="selectUserByMemId" parameterType="Map" resultType="egovMap">
     SELECT U.USER_ID, U.USER_NAME FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME WHERE M.MEM_ID = #{memId} AND M.STUS = 1 AND ROWNUM = 1
 </select>
+
+<select id="selectFailReasonCode" parameterType="Map" resultType="egovMap">
+     SELECT  EXTENT1.DEFECT_CODE
+    FROM SYS0100M EXTENT1
+    WHERE 1=1
+        AND DEFECT_STATUS = 1
+        AND DEFECT_TYP in( 'IFA', 'IFB')
+        AND EXTENT1.DEFECT_ID = #{failId}
+  </select>
 </mapper>

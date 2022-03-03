@@ -318,4 +318,7 @@ public interface InstallationResultListMapper {
 
   EgovMap selectUserByMemId (Map<String, Object> params);
 
+  EgovMap selectFailReasonCode(Map<String, Object> params);
+
+
 }

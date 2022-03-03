@@ -300,7 +300,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
       param.put("productId", productId);
       EgovMap defaultView = installationResultListMapper.getPromoPriceAndPV(param);
-
+      logger.debug("22222" + swapView);
       resultView.put("swapPormoPrice", CommonUtils.nvl(swapView.get("promoItmPrc")));
       resultView.put("swapPromoPV", CommonUtils.nvl(swapView.get("promoItmPv")));
 
@@ -2640,12 +2640,14 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     LOGGER.debug("CHECKPOINT  - get userId:" + installResult.get("userId").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
+
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
     String smsMessage = "";
+    EgovMap failReasonCode = installationResultListMapper.selectFailReasonCode(installResult);
     if(installResult.get("statusCodeId").toString().equals("4")){
-      smsMessage = "COWAY:Dear Customer, Your Installation/Product collection is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
+      smsMessage = "COWAY:Dear Customer, Your Installation/After Service is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
     }else{
-      smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/Product collection has failed due to "+ installResult.get("failId").toString() +".Will call to set new appointment.";
+      smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/After Service has failed due to "+ failReasonCode.get("defectCode").toString() +".Will call to set new appointment.";
     }
     Map<String, Object> smsList = new HashMap<>();
     smsList.put("userId", installResult.get("creator"));
@@ -2661,8 +2663,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
 
     //this.sendEmail();
-
-
 
     return true;
   }
