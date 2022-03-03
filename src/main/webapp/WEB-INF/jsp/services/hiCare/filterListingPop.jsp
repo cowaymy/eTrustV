@@ -90,7 +90,7 @@ function btnGenerate_Click(){
         $("#viewType").val("");
 
         if($("#fcrtsdt").val() != '' && $("#fcrtsdt").val() != null && $("#fcrtedt").val() != '' && $("#fcrtedt").val() != null){
-        	whereSQL += " and utils.DATEADD('YEAR', 1, a.FILTER_CHG_DT) between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
+        	whereSQL += " and utils.DATEADD('YEAR', 1, a.FILTER_CHG_DT) between to_date('" + $("#fcrtsdt").val() + "','YYYY/MM/DD') and to_date('" + $("#fcrtedt").val() + "','YYYY/MM/DD') ";
         }
 
         if($('#sBranchCode :selected').val() > 0){
@@ -187,6 +187,8 @@ function btnGenerate_Click(){
         $("#form #viewType").val(reportType);
         $("#form #V_WHERESQL").val(whereSQL);
         $("#form #holderType").val(holderType);
+
+        console.log($("#V_WHERESQL").val());
         // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
         var option = {
                 isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
