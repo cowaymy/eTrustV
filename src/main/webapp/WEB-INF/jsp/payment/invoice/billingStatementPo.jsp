@@ -7,7 +7,8 @@ var myGridIDBillGroup;
 var selectedEntryId;
 
 $(document).ready(function(){
-   myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+   myGridID = AUIGrid.create("#grid_wrapPO", columnLayout, gridPros);
+   $("#grid_wrapPO").hide();
    myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
    AUIGrid.setSelectionMode(myGridID, "singleRow");
    AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
@@ -94,13 +95,14 @@ var columnLayout=[
     		type:"ButtonRenderer",
     		labelText : "<spring:message code='pay.head.disable'/>",
     		onclick : function(rowIndex, columnIndex, value, item){
+    			console.log(item.name1);
+    			console.log("///");
     			if(item.name1 == 'Inactive'){
     				return false;
     			}else{
     				console.log("entryId : " +item.id);
                     selectedEntryId = item.id;
     				Common.confirm("<spring:message code='pay.alert.invoiceDisable'/>", fn_doDisable);
-
     			}
     		}
     	}
@@ -121,13 +123,27 @@ var gridProsBill = {
 
 var columnLayoutBill =[
     {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"salesOrdId", headerText:"Sales Ord Id", visible:false },
     {dataField:"refNo", headerText:"Ref No."},
     {dataField:"orderDate", headerText:"Order Date", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
     {dataField:"status", headerText:"Status"},
     {dataField:"appType", headerText:"App Type"},
     {dataField:"product", headerText:"Product"},
-    {dataField:"name", headerText:"Customer"},
-    {dataField:"custBillId", headerText:"Bill ID"}
+    {dataField:"custName", headerText:"Customer"},
+    {dataField:"custBillId", headerText:"Bill ID"},
+    {
+        dataField : "undefined",
+        headerText : " ",
+        width : '10%',
+        renderer : {
+                 type : "ButtonRenderer",
+                 labelText : "Select",
+                 onclick : function(rowIndex, columnIndex, value, item) {
+                	 $("#grid_wrapPO").show();
+                	 fn_SelectPO(item.salesOrdId);
+               }
+        }
+    }
 ];
 
 function fn_view(item) {
@@ -150,6 +166,7 @@ function fn_doDisable(){
 		Common.ajax("GET", "/payment/disablePOEntry.do", {"poEntryId" : selectedEntryId}, function(result) {
 	        if(result.message == '') {
 	        	fn_loadOrderPO($("#orderId").val());
+	        	fn_SelectPO($("#orderId").val());
 	        	Common.alert("<spring:message code='pay.alert.disableSuccess'/>");
 	        }
 	        else Common.alert("<spring:message code='pay.alert.error' arguments='"+result.message+"' htmlEscape='false'/>");
@@ -174,9 +191,7 @@ function fn_loadOrderPO(orderId){
         selectedEntryId = undefined;
     });
 
-	Common.ajax("GET", "/payment/selectOrderDataByOrderId.do", {"orderId" : orderId}, function(result) {
-		 AUIGrid.setGridData(myGridID, result);
-    });
+
 
 	Common.ajax("GET","/payment/selectInvoiceBillGroupList.do", {"orderId": orderId}, function(result){
         if(result != null){
@@ -184,6 +199,15 @@ function fn_loadOrderPO(orderId){
         	AUIGrid.setGridData(myGridIDBillGroup, result);
         }
 	 });
+}
+
+function fn_SelectPO(orderId)
+{
+	 Common.ajax("GET", "/payment/selectOrderDataByOrderId.do", {"orderId" : orderId}, function(result) {
+		 console.log("HENLO")
+		 console.log(result)
+         AUIGrid.setGridData(myGridID, result);
+    });
 }
 
 function fn_createEvent(objId, eventType){
@@ -255,12 +279,14 @@ function fn_doSave(){
 
 		    	Common.ajaxFile("/payment/insertInvoiceStatement.do", formData, function(result) {
 		    		fn_loadOrderPO(result.poOrderId);
+		    	    fn_SelectPO(result.poOrderId);
+		    	    console.log("here2222");
 		    	});
 		    }
 		    fn_hidePopup();
+
 	    });
 	}
-
 }
 </script>
 
@@ -338,7 +364,7 @@ function fn_doSave(){
     <section class="search_result">
   <!-- grid_wrap start -->
   <article id="grid_wrap_billGroup" class="grid_wrap"></article>
-  <article id="grid_wrap" class="grid_wrap"></article>
+  <article id="grid_wrapPO" class="grid_wrap"></article>
   <!-- grid_wrap end -->
     </section>
 </section>

@@ -276,36 +276,36 @@
     </select>
 
 	<select id="selectOrderDataByOrderId" parameterType="Map" resultType="egovMap">
-	   SELECT Extent1.ID ID  ,
-		       Extent1.PO_ORD_ID PO_ORD_ID  ,
-		       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-		       Extent5.CUST_ID CUST_ID  ,
-		       Extent5.NAME NAME  ,
-		       Extent1.PO_REF_NO PO_REF_NO  ,
-		       Extent1.PO_START_INSTLMT || '~' ||Extent1.PO_END_INSTLMT period ,
-		       TO_CHAR(Extent1.PO_CRT_DT, 'YYYY-MM-DD HH24:MI:SS') PO_CRT_DT,
-		       Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
-		       Extent3.USER_NAME USER_NAME  ,
-		       Extent1.PO_UPD_DT PO_UPD_DT  ,
-		       Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
-		       Extent2.USER_NAME USERNAME1  ,
-		       Extent1.PO_STUS_ID PO_STUS_ID  ,
-		       Extent6.NAME NAME1,
-		       Extent1.FILE_ID,
-               Extent7.ATCH_FILE_GRP_ID,
-               Extent8.ATCH_FILE_ID,
-               Extent8.ATCH_FILE_NAME,
-               Extent8.FILE_SUB_PATH || '.' || Extent8.FILE_EXTSN AS FILE_SUB_PATH,
-               Extent8.PHYSICL_FILE_NAME
-	  FROM PAY0015D Extent1
-	         LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.PO_UPD_USER_ID
-	         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.PO_CRT_USER_ID
-	         LEFT JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.PO_ORD_ID
-	         LEFT JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
-	         JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PO_STUS_ID
-	         LEFT JOIN SYS0070M Extent7 ON Extent7.ATCH_FILE_GRP_ID = Extent1.FILE_ID
-             LEFT JOIN SYS0071D Extent8 ON Extent8.ATCH_FILE_ID = Extent7.ATCH_FILE_ID
-	 WHERE  Extent1.PO_ORD_ID = #{orderId}
+		   SELECT Extent1.ID ID  ,
+			       Extent1.PO_ORD_ID PO_ORD_ID  ,
+			       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent5.CUST_ID CUST_ID  ,
+			       Extent5.NAME NAME  ,
+			       Extent1.PO_REF_NO PO_REF_NO  ,
+			       Extent1.PO_START_INSTLMT || '~' ||Extent1.PO_END_INSTLMT period ,
+			       TO_CHAR(Extent1.PO_CRT_DT, 'YYYY-MM-DD HH24:MI:SS') PO_CRT_DT,
+			       Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+			       Extent3.USER_NAME USER_NAME  ,
+			       Extent1.PO_UPD_DT PO_UPD_DT  ,
+			       Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+			       Extent2.USER_NAME USERNAME1  ,
+			       Extent1.PO_STUS_ID PO_STUS_ID  ,
+			       Extent6.NAME NAME1,
+			       Extent1.FILE_ID,
+	               Extent7.ATCH_FILE_GRP_ID,
+	               Extent8.ATCH_FILE_ID,
+	               Extent8.ATCH_FILE_NAME,
+	               Extent8.FILE_SUB_PATH || '.' || Extent8.FILE_EXTSN AS FILE_SUB_PATH,
+	               Extent8.PHYSICL_FILE_NAME
+		  FROM PAY0015D Extent1
+		         LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.PO_UPD_USER_ID
+		         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.PO_CRT_USER_ID
+		         LEFT JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.PO_ORD_ID
+		         LEFT JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+		         JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PO_STUS_ID
+		         LEFT JOIN SYS0070M Extent7 ON Extent7.ATCH_FILE_GRP_ID = Extent1.FILE_ID
+	             LEFT JOIN SYS0071D Extent8 ON Extent8.ATCH_FILE_ID = Extent7.ATCH_FILE_ID
+		 WHERE  Extent1.PO_ORD_ID = #{orderId}
 	</select>
 
 	<update id="updateInvoiceStatement" parameterType="Map">
@@ -421,34 +421,70 @@
 
     <select id="selectInvoiceBillGroupList" parameterType="Map" resultType="egovMap">
        SELECT
-        Limit1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
-        Limit1.SALES_ORD_NO SALES_ORD_NO  ,
-        Limit1.REF_NO REF_NO,
-        Limit1.ORDER_DATE ORDER_DATE,
-        Limit1.STATUS STATUS,
-        Limit1.APP_TYPE APP_TYPE,
-        Limit1.PRODUCT PRODUCT,
-        Limit1.NAME NAME  ,
-        Limit1.CUST_BILL_ID CUST_BILL_ID
-FROM ( SELECT
-    Extent1.CUST_BILL_ID CUST_BILL_ID  ,
-    Extent2.NAME NAME  ,
-    Extent1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
-    Extent3.SALES_ORD_NO SALES_ORD_NO  ,
-    Extent3.REF_NO,
-    Extent3.SALES_DT ORDER_DATE,
-    Extent6.CODE_NAME APP_TYPE,
-    Extent7.NAME STATUS,
-    Extent9.STK_CODE || ' - ' || Extent9.STK_DESC PRODUCT
-FROM SAL0024D Extent1
-    JOIN SAL0029D Extent2   ON Extent2.CUST_ID = Extent1.CUST_BILL_CUST_ID
-    JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.CUST_BILL_SO_ID
-    JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent2.TYPE_ID
-    LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CUST_BILL_CRT_USER_ID
-    JOIN SYS0013M Extent6 ON Extent3.APP_TYPE_ID = Extent6.CODE_ID
-    LEFT JOIN SYS0038M Extent7 ON Extent3.STUS_CODE_ID = Extent7.STUS_CODE_ID
-    JOIN SAL0002D Extent8   ON Extent8.SALES_ORD_ID = Extent3.SALES_ORD_ID
-    JOIN SYS0026M Extent9   ON Extent9.STK_ID = Extent8.ITM_STK_ID
-WHERE  Extent1.CUST_BILL_ID = #{custBillId}  ) Limit1
+            CUST_BILL_GRP_NO,
+            SALES_ORD_ID,
+            SALES_ORD_NO,
+            REF_NO,
+            TO_CHAR(SALES_DT, 'DD/MM/YY') ORDER_DATE,
+            CODE STATUS,
+            APP_TYPE,
+            PRODUCT,
+            CUST_NAME,
+            CUST_BILL_ID
+          FROM ( SELECT Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                        Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                        Project2.SALES_DT SALES_DT  ,
+                        Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Project2.REF_NO,
+                        Project2.PRODUCT PRODUCT  ,
+                        Project2.CODE CODE  ,
+                        Project2.APP_TYPE,
+                        Project2.CUST_NAME,
+                        Project2.CUST_BILL_ID
+          FROM ( SELECT Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                        Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Project2.REF_NO,
+                        Project2.CODE CODE  ,
+                        Project2.APP_TYPE,
+                        Project2.CUST_NAME,
+                        Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                        Project2.SALES_DT SALES_DT  ,
+                        Project2.PRODUCT PRODUCT  ,
+                        Project2.CUST_BILL_ID,
+                        ROW_NUMBER() OVER ( ORDER BY Project2.SALES_ORD_NO ASC  ) ROW_NUMBER
+                 FROM ( SELECT Distinct1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                               Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+                               Distinct1.REF_NO,
+                               Distinct1.CODE CODE  ,
+                               Distinct1.APP_TYPE,
+                               Distinct1.CUST_NAME,
+                               Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+                               Distinct1.SALES_DT SALES_DT  ,
+                               Distinct1.PRODUCT PRODUCT  ,
+                               Distinct1.CUST_BILL_ID
+                        FROM ( SELECT DISTINCT Extent1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                                            Extent2.SALES_ORD_ID SALES_ORD_ID  ,
+                                               Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+                                               Extent2.REF_NO REF_NO,
+                                               Extent5.NAME CODE  ,
+                                               Extent6.CODE_NAME APP_TYPE,
+                                               Extent7.NAME CUST_NAME,
+                                               Extent1.CUST_BILL_ID CUST_BILL_ID,
+                                               CASE
+                                                    WHEN ( Extent2.SALES_DT IS NOT NULL ) THEN Extent2.SALES_DT
+                                               ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')
+                                                  END SALES_DT  ,
+                                               Extent4.STK_CODE || ' - ' || Extent4.STK_DESC PRODUCT
+                               FROM SAL0024D Extent1
+                                      JOIN SAL0001D Extent2   ON ( Extent2.CUST_BILL_ID = Extent1.CUST_BILL_ID )
+                                      AND ( 8 <![CDATA[<> ]]>   Extent2.STUS_CODE_ID )
+                                      JOIN SAL0002D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
+                                      JOIN SYS0026M Extent4   ON Extent4.STK_ID = Extent3.ITM_STK_ID
+                                      JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent2.STUS_CODE_ID
+                                      JOIN SYS0013M Extent6 ON Extent2.APP_TYPE_ID = Extent6.CODE_ID
+                                      JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_BILL_CUST_ID
+                                WHERE  Extent1.CUST_BILL_ID = #{custBillId} ) Distinct1 ) Project2 ) Project2
+         WHERE  Project2.ROW_NUMBER > 0
+          ORDER BY Project2.SALES_ORD_NO ASC )
     </select>
 </mapper>
