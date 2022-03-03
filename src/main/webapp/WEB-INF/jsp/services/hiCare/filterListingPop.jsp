@@ -90,7 +90,7 @@ function btnGenerate_Click(){
         $("#viewType").val("");
 
         if($("#fcrtsdt").val() != '' && $("#fcrtsdt").val() != null && $("#fcrtedt").val() != '' && $("#fcrtedt").val() != null){
-        	whereSQL += " utils.DATEADD('YEAR', 1, a.FILTER_CHG_DT) between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
+        	whereSQL += " and utils.DATEADD('YEAR', 1, a.FILTER_CHG_DT) between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
         }
 
         if($('#sBranchCode :selected').val() > 0){
