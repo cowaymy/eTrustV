@@ -28,6 +28,11 @@ public class MemorandumServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
+	public List<EgovMap> selectDeptSearchList() {
+		return memo.selectDeptSearchList();
+	}
+
+	@Override
 	public Map<String, Object> memoSave(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		Map<String, Object> data = new HashMap();

@@ -10,6 +10,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface MemorandumMapper {
 	List<EgovMap> selectMemoRandumList(Map<String, Object> params);
 
+	List<EgovMap> selectDeptSearchList();
+
 	void memoSave(Map<String, Object> params);
 
 	void memoUpdate(Map<String, Object> params);

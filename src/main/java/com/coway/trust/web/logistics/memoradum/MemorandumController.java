@@ -74,6 +74,11 @@ public class MemorandumController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/selectDeptSearchList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDeptSearchList() throws Exception {
+		return ResponseEntity.ok(memo.selectDeptSearchList());
+	}
+
 	@RequestMapping(value = "/memoDelete.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> memoDelete(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {

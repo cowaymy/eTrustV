@@ -8,29 +8,36 @@
     <select id="selectMemoRandumList" parameterType="Map" resultMap="clobMap">
         <![CDATA[
             SELECT M10.MEMO_ID MEMOID
-			     , M10.STUS_CODE_ID STUSID
-			     , S38.CODE STUSCODE
-			     , S38.NAME STUSNAME
-			     , M10.MEMO_TITLE MEMOTITLE
-			     , M10.MEMO_CNTNT MEMOCNTNT
-			     , M10.CRT_USER_ID CRTUSERID
-			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM
-			     , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
-			     , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24:MI:SS') FCRTDT
-			     , M10.UPD_USER_ID UPDUSERID
-			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM
-			     , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
+                 , M10.STUS_CODE_ID STUSID
+                 , S38.CODE STUSCODE
+                 , S38.NAME STUSNAME
+                 , M10.MEMO_TITLE MEMOTITLE
+                 , M10.MEMO_CNTNT MEMOCNTNT
+                 , M10.CRT_USER_ID CRTUSERID
+                 , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM
+                 , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
+                 , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24:MI:SS') FCRTDT
+                 , M10.UPD_USER_ID UPDUSERID
+                 , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM
+                 , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
                  , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY HH24:MI:SS') FUPDDT
                  , M10.IS_STAFF_MEMO STAFFMEMO
-			     , M10.IS_CODY_MEMO CODYMEMO
-			     , M10.IS_HP_MEMO HPMEMO
-			     , M10.IS_HT_MEMO HTMEMO
-			     , M10.CRT_DEPT_ID
-			     , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) as DEPARTMENT
-			  FROM MSC0010D M10 , SYS0038M S38
-			 WHERE 1 = 1
-			   AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
-			   AND M10.STUS_CODE_ID = 1
+                 , M10.IS_CODY_MEMO CODYMEMO
+                 , M10.IS_HP_MEMO HPMEMO
+                 , M10.IS_HT_MEMO HTMEMO
+                 , M10.CRT_DEPT_ID
+                 , CASE WHEN TO_CHAR(M10.CRT_DT,'YYYYMMDD') < '20211101' THEN
+                    TO_CHAR(CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) )
+                   ELSE FN_DEPT_CODE_TO_NM(O01.MAIN_DEPT)
+                    END
+                    as DEPARTMENT
+              FROM MSC0010D M10 , SYS0038M S38 ,
+              SYS0047M S47 , ORG0001D O01
+             WHERE 1 = 1
+               AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
+               AND S47.USER_ID = M10.CRT_USER_ID
+               AND O01.MEM_CODE = S47.HR_CODE
+               AND M10.STUS_CODE_ID = 1
         ]]>
             <if test="stitle != null and stitle != ''">
             AND UPPER(M10.MEMO_TITLE) like UPPER('%'||#{stitle}||'%')
@@ -39,7 +46,7 @@
             AND M10.CRT_USER_ID like '%'|| #{screator} || '%'
             </if>
             <if test="listDept != null and listDept != '' ">
-            AND M10.CRT_DEPT_ID = #{listDept}
+            AND FN_DEPT_CODE_TO_NM(O01.MAIN_DEPT) = #{listDept}
             </if>
             <if test="crtsdt !=null and crtsdt != ''">
             AND M10.CRT_DT BETWEEN TO_DATE(#{crtsdt}||'000000' , 'DD/MM/YYYYHH24MISS') AND TO_DATE(#{crtedt}||'235959' , 'DD/MM/YYYYHH24MISS')
@@ -54,6 +61,15 @@
             AND M10.IS_HT_MEMO = 1
             </if>
         ORDER BY MEMO_ID DESC
+    </select>
+
+    <select id="selectDeptSearchList" resultType="egovMap">
+        SELECT
+            NAME CODE_NAME,
+            NAME CODE_ID
+	    FROM SYS0105M
+	    WHERE SUB_DEPT_CODE = '-'
+	    ORDER BY ID
     </select>
 
     <insert id="memoSave" parameterType="Map">

@@ -121,7 +121,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     	HTMLArea.init();
         HTMLArea.onload = initEditor;
 
-        doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'listDept' , 'S', '');
+        doGetCombo('/logistics/memorandum/selectDeptSearchList.do', '' , '', 'listDept' , 'S', '');
 
      	$("#editwindow").hide();
 
