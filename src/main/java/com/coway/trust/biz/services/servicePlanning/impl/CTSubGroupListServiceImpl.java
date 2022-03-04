@@ -266,6 +266,7 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 			    	paramMap.put("disab", HomecareConstants.TB_ORG0029H_DISAB.ADD);  // 추가
 			    	paramMap.put("crtUserId", logInUserId);
 			    	paramMap.put("updUserId", logInUserId);
+			    	paramMap.put("paramSubGrpType", CommonUtils.nvl(params.get("paramSubGrpType")));
 
 			    	// ORG0029H - history table insert
 			    	rtnCnt = insert_ORG0029H(paramMap);
@@ -290,6 +291,7 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		    	paramMap.put("disab", HomecareConstants.TB_ORG0029H_DISAB.DELETE);  // 삭제
 		    	paramMap.put("crtUserId", logInUserId);
 		    	paramMap.put("updUserId", logInUserId);
+		    	paramMap.put("paramSubGrpType", CommonUtils.nvl(params.get("paramSubGrpType")));
 
 		    	// ORG0029H - history table insert
 		    	rtnCnt = insert_ORG0029H(paramMap);
