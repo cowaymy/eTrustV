@@ -321,7 +321,7 @@ createAUIGrid =function(columnLayout ){
 
         <ul class="right_btns">
             <!--  <li><p class="btn_grid"><a id="checkAll"  onclick="javascript:fn_checkAll();">Check All </a></p></li> -->
-            <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_doSave();" >To Generate STO </a></p></li>
+            <!--  <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_doSave();" >To Generate STO </a></p></li>  -->
             <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_openReport();" >Generate PDF</a></p></li>
             <li><p class="btn_grid"><a id="exceldownload" onclick="javascript:fn_gridExport('xlsx');">Generate  EXCEL</a></p></li>
         </ul>
