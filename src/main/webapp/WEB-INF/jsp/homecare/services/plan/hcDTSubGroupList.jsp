@@ -134,7 +134,8 @@
 		var jsonObj=  {
             "area" : AUIGrid.getCellValue(myGridID2, rowIndex, "area"),
             "areaID" : AUIGrid.getCellValue(myGridID2, rowIndex, "areaId"),
-            "ctSubGrp" : AUIGrid.getCellValue(myGridID2, rowIndex, "ctSubGrp")
+            "ctSubGrp" : AUIGrid.getCellValue(myGridID2, rowIndex, "ctSubGrp"),
+            "subGrpType" : 6666
         };
 
         // 년 달력 팝업 창 호출
