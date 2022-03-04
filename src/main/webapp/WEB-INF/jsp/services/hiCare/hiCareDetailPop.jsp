@@ -19,6 +19,7 @@
 
     $(document).ready(function(){
 
+    	$("#temp3").hide();
     	hiCareGrid();
 
     	setText();
@@ -446,6 +447,7 @@
 	                    <td colspan="2"><span id='remarks' ></span></td>
                     </tr>
                     <tr>
+                    <input type="text" id="temp3" name="temp3" placeholder="" class="w100p" />
                     <th scope="row">Attachment</th>
 			            <td colspan="2">
 			                <div name='uploadfiletest' class='auto_file2'>

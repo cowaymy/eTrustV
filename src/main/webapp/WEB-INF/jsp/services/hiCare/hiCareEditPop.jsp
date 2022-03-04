@@ -18,6 +18,7 @@
 
     $(document).ready(function(){
 
+    	$("#temp4").hide();
     	setText();
 
     	var action = '${movementType}';
@@ -440,6 +441,7 @@
     </td>
 </tr>
 <tr>
+<input type="text" id="temp4" name="temp4" placeholder="" class="w100p" />
             <th scope="row">Attachment</th>
             <td>
                 <div name='uploadfiletest' class='auto_file2'>

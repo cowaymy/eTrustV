@@ -81,7 +81,7 @@ public class HiCareController {
 	private FileApplication fileApplication;
 
  	@RequestMapping(value = "/hiCareList.do")
-	public String hiCareList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception{
+	public String hiCareList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO,HttpServletRequest request) throws Exception{
     //model.addAttribute("params", params);
 
     List<EgovMap> modelList = hiCareService.selectModelCode();
@@ -428,21 +428,15 @@ public class HiCareController {
  		logger.debug("############# params : " + params.toString());
  		logger.debug("#############################################");
 
- 		String modelList[] = request.getParameterValues("cmbModel");
- 		String statusList[] = request.getParameterValues("cmbStatus");
- 		String conditionList[] = request.getParameterValues("cmbCondition");
+ 		String modelList[] = request.getParameterValues("tcmbModel");
+ 		String statusList[] = request.getParameterValues("tstatus");
+ 		String conditionList[] = request.getParameterValues("tcondition");
  		String branchList[]= request.getParameterValues("sLocation");
- 		String memberList[] = request.getParameterValues("cmdMemberCode");
- 		String holderList[] = request.getParameterValues("cmbHolder");
 
  	    params.put("modelList", modelList);
  	    params.put("statusList", statusList);
  	    params.put("conditionList", conditionList);
  	    params.put("branchList", branchList);
- 	    if(memberList != null){
- 	    	params.put("memberList", memberList);
- 	    }
- 	    params.put("holderList", holderList);
 
  	    List<EgovMap> hiCareList = hiCareService.selectHiCareItemList(params);
  	    return ResponseEntity.ok(hiCareList);

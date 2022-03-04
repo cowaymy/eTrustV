@@ -117,6 +117,8 @@
 
       console.log('branch ' +brnch);
 
+      $("#temp").hide();
+
       $("#cmdBranchCode").click(
 
               function() {
@@ -326,6 +328,7 @@
     <col style="width: *" />
     </colgroup>
     <tbody>
+    <input type="text" id="temp" name="temp" placeholder="" class="w100p" />
 		<tr>
             <th scope="row"><spring:message code='service.title.SerialNo'/></th>
                 <td><input type="text" id="serialNo" name="serialNo" placeholder="<spring:message code='service.title.SerialNo'/>" class="w100p" /></td>

@@ -1,50 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
-
-<style type="text/css">
-
-    /* 커스텀 스타일 정의 */
-    /*
-    .auto_file2 {
-        width:100%!important;
-    }
-    .auto_file2 > label {
-        width:100%!important;
-    }
-   .auto_file2 label input[type=text]{width:40%!important; float:left}
-   */
-
-   /* 커스텀 칼럼 스타일 정의 */
-   .my-column {
-        text-align: center;
-        margin-top: -20px;
-    }
-
-    .aui-grid-button-renderer {
-        color: rgb(0, 0, 0);
-        display: inline-block;
-        line-height: 1em;
-        -webkit-appearance: none;
-        font-weight: bold;
-        text-align: center;
-        cursor: pointer;
-        background: padding-box rgb(238, 238, 238);
-        border-width: 1px;
-        border-style: solid;
-        border-color: rgb(170, 170, 170);
-        border-image: initial;
-        border-radius: 0px;
-        padding: 2px !important;
-        width : 80% !important;
-    }
-
-   .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; }
-
-</style>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 
 <script type="text/javaScript">
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
@@ -144,15 +101,22 @@ var reqop = {
 resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout, "", resop);
 reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout, "", reqop);
 
-var conditionOption = [{"codeId": "33","codeName": "New"},{"codeId": "111","codeName": "Used"},{"codeId": "112","codeName": "Defect"}];
+var conditionOption = [{"codeId": "33","codeName": "New"},{"codeId": "111","codeName": "Used"}];
+var statusOption = [{"codeId": "1","codeName": "Active"}];
 
 $(document).ready(function(){
 
+	$("#temp2").hide();
+
+	doDefCombo(conditionOption, '' ,'tcondition', 'M', 'f_multiCombo');
+	doDefCombo(statusOption, '' ,'tstatus', 'M', 'f_multiCombo');
+	doGetCombo('/common/selectCodeList.do', '490', '', 'tcmbModel', 'M', 'f_multiCombo');
 	doGetComboOrder('/common/selectCodeList.do', '498', 'CODE_ID', '', 'courier', 'S', ''); //Common Code
-	/* doDefCombo(statusOption, '' ,'status1', 'M', 'status_multiCombo');
-    doDefCombo(conditionOption, '' ,'condition1', 'M', 'condition_multiCombo');
-    doDefCombo(conditionOption, '' ,'cmbCondition', 'M', 'condition_multiCombo');*/
     $("#fromLoc option:eq(1)", '#hiCareTrfHeadForm').attr("selected", true);
+
+    if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){
+        $('#fromLoc', '#hiCareTrfHeadForm').attr("disabled", true);
+    }
 
 	$("#rightbtn").click(function() {
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
@@ -236,33 +200,23 @@ $(document).ready(function(){
     });
 });
 
-function status_multiCombo() {
+function f_multiCombo() {
     $(function() {
-    	$('#cmbStatus').change(function() {
+        $('#tcmbModel').change(function() {
         }).multipleSelect({
             selectAll : true, // 전체선택
             width : '80%'
         }).multipleSelect("checkAll");
-        /* $('#status1').change(function() {
-        }).multipleSelect({
-            selectAll : true, // 전체선택
-            width : '80%'
-        }).multipleSelect("checkAll"); */
-    });
-}
-
-function condition_multiCombo() {
-    $(function() {
-    	$('#cmbCondition').change(function() {
+        $('#tcondition').change(function() {
         }).multipleSelect({
             selectAll : true, // 전체선택
             width : '80%'
         }).multipleSelect("checkAll");
-        /* $('#condition1').change(function() {
+        $('#tstatus').change(function() {
         }).multipleSelect({
             selectAll : true, // 전체선택
             width : '80%'
-        }).multipleSelect("checkAll"); */
+        }).multipleSelect("checkAll");
     });
 }
 
@@ -288,27 +242,6 @@ $(function(){
 function SearchListAjax(param) {
 
     var url = "/services/hiCare/selectHiCareItemList";
-    //var param = $('#hiCareTrfItmForm').serialize();
-    /* var param = {
-    	"serialNo":	$("#txtBarcode").val()
-    	,"cmbModel": $("#cmbModel1").val()
-    	,"cmbStatus": $("#status1").val()
-    	,"cmbCondition": $("#condition1").val()
-    };
-
-    console.log(param); */
-
-    //     Common.ajax("GET" , url , param , function(result){
-    //         AUIGrid.setGridData(resGrid, result.data);
-    //     });
-    /* $.extend(param,
-                    {
-                "cmbBranchCode":$("#fromLoc").val()
-                    }
-                    ); */
-    /* Common.ajax("GET", "/services/hiCare/selectHiCareItemList", param, function(result) {
-    	AUIGrid.setGridData(resGrid, result);
-           }); */
 
     $.ajax({
         type : "POST",
@@ -438,51 +371,25 @@ function f_validatation(){
                     <col style="width: *" />
         </colgroup>
         <tbody>
+        <input type="text" id="temp2" name="temp2" placeholder="" class="w100p" />
         <tr>
                 <th scope="row">Serial No.</th>
                 <td colspan="2"><input type="text"  id="serialNo" name="serialNo" text-transform:uppercase;" class="w100p"/></td>
                 <th scope="row">Model</th>
                 <td colspan="2">
-                    <select class="multy_select w100p" multiple="multiple" id="cmbModel" name="cmbModel">
-                        <c:forEach var="list" items="${modelList}" varStatus="status">
-                          <option value="${list.codeId}" selected>${list.codeDesc}</option>
-                        </c:forEach>
-                    </select>
+                    <select class="w100p" id="tcmbModel" name="tcmbModel"></select>
                 </td>
             </tr>
             <tr>
                 <th scope="row">Status</th>
                 <td colspan="2">
-	                <select class="multy_select w100p" multiple="multiple" name="cmbStatus">
-	                    <option value="1" selected="selected"><spring:message code="sal.combo.text.active" /></option>
-	                </select>
+	                <select class="w100p" id="tstatus" name="tstatus"></select>
                 </td>
                 <th scope="row">Condition</th>
                 <td colspan="2">
-	                <select class="multy_select w100p" multiple="multiple" name="cmbCondition">
-	                    <option value="33" selected="selected"><spring:message code="sal.combo.text.new" /></option>
-	                    <option value="111" selected="selected"><spring:message code="sal.combo.text.used" /></option>
-	                </select>
+	                <select class="w100p" id="tcondition" name="tcondition"></select>
                 </td>
             </tr>
-            <%-- <tr>
-                <th scope="row">Serial No.</th>
-                <td colspan="2"><input type="text"  id="txtBarcode" name="txtBarcode" text-transform:uppercase;" class="w100p"/></td>
-                <th scope="row">Model</th>
-                <td colspan="2">
-                    <select class="multy_select w100p" multiple="multiple" id="cmbModel1" name="cmbModel1">
-                        <c:forEach var="list" items="${modelList}" varStatus="status">
-                          <option value="${list.codeId}" selected>${list.codeDesc}</option>
-                        </c:forEach>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Status</th>
-                <td colspan="2"><select class="w100p" id="status1" name="status1"></select></td>
-                <th scope="row">Condition</th>
-                <td colspan="2"><select class="w100p" id="condition1" name="condition1"></select></td>
-            </tr> --%>
             <input type="hidden" id="serialNoChg" />
             <input type="hidden" id="cmbBranchCode" />
         </tbody>

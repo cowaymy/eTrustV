@@ -162,7 +162,7 @@
         SELECT COUNT(1) AS CNT
         FROM SVC0126M
         WHERE SERIAL_NO = #{serialNo}
-        AND STATUS <![CDATA[<>]]> 'N'
+        AND STATUS <![CDATA[<>]]> '113'
     </select>
 
   <select id="selectHiCareMasterSeq" resultType="String">
@@ -176,7 +176,7 @@
 		        #{scanNo} AS SCAN_NO         --scan no
 		        , #{serialNo} AS SERIAL_NO         --serial number
 		        , #{model} AS MODEL            --6586 SPS 2.0
-		        , 'N' AS STATUS                  --1 active, 36 closed ,D delete, N temporary
+		        , '113' AS STATUS                  --1 active, 36 closed ,D delete, 113 temporary
 		        , '33' AS CONDITION                 --33 new, 111 used, 112 defect
 		        , #{transactionType} AS TRNSC_TYPE   --Transaction Type
 		        , #{branchCode} AS BRANCH_ID        --branchId sys0005m
@@ -215,7 +215,7 @@
 				B.SCAN_NO,      --scan number
 				B.SERIAL_NO,    --serial number
 				B.MODEL,        --6586 SPS 2.0
-				B.STATUS,       --1 active, 36 closed ,D delete, N temporary
+				B.STATUS,       --1 active, 36 closed ,D delete, 113 temporary
 				B.CONDITION,    --33 new, 111 used, 112 defect
 				B.TRNSC_TYPE,   --Transaction Type
 				B.BRANCH_ID,    --branchId sys0005m
@@ -243,7 +243,7 @@
         ,UPD_USER_ID = #{userId}
         WHERE
         SCAN_NO = #{scanNo}
-        AND STATUS = 'N'
+        AND STATUS = '113'
     </update>
 
     <insert id="insertHiCareSerialHistory" parameterType="Map">
@@ -261,6 +261,7 @@
                 TO_LOC,
                 FILTER_CHG_DT,
                 FILTER_SN,
+                FILTER_NXT_CHG_DT,
                 REASON,
                 REMARKS,
                 ATCH_FILE_GRP_ID,
@@ -284,6 +285,7 @@
              , TO_LOC
              , FILTER_CHG_DT
              , FILTER_SN
+             , FILTER_NXT_CHG_DT
              , REASON
              , REMARKS
              , ATCH_FILE_GRP_ID
@@ -304,7 +306,7 @@
         ,UPD_USER_ID = #{userId}
         WHERE
         SERIAL_NO IN (SELECT SERIAL_NO FROM SVC0126M WHERE SCAN_NO = #{scanNo})
-        AND STATUS = 'N'
+        AND STATUS = '113'
         AND TRNSC_TYPE = 'H1'
     </update>
 
@@ -326,7 +328,7 @@
         , TO_CHAR(A.CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') CRT_DT
         , A.CRT_USER_ID
         , TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT
-        , TO_CHAR(add_months(A.FILTER_CHG_DT, 12), 'DD/MM/YYYY') FILTER_NXT_CHG_DT
+        , TO_CHAR(A.FILTER_NXT_CHG_DT, 'DD/MM/YYYY')  FILTER_NXT_CHG_DT
         , A.UPD_USER_ID
         , A.REMARKS
         , A.DELVRY_NO
@@ -393,6 +395,7 @@
         </if>
         <if test="filterChgDt !=null and filterChgDt !=''">
              , FILTER_CHG_DT = #{filterChgDt}
+             , FILTER_NXT_CHG_DT = utils.DATEADD('YEAR', 1, #{filterChgDt})
         </if>
         <if test="filterSn !=null and filterSn !=''">
              , FILTER_SN = #{filterSn}
@@ -411,7 +414,7 @@
         </if>
         WHERE
         serial_no = #{serialNo}
-        AND STATUS != 'N'
+        AND STATUS != '113'
     </update>
 
     <select id="selectHiCareMemberCheck" parameterType="Map" resultType="int">
@@ -661,7 +664,7 @@
         from SVC0126M a
         left join SYS0028M b on b.wh_loc_code = a.loc_id
         left join SYS0005M c on c.brnch_id = a.BRANCH_ID
-        left join SYS0038M d on d.stus_code_id = replace(a.STATUS,'D',10)
+        left join SYS0038M d on d.stus_code_id = a.STATUS
         left join SYS0038M e on e.stus_code_id = a.CONDITION
         left join SYS0047m f on f.user_id = A.CRT_USER_ID
         left join SYS0013m g on g.code_id = A.model
@@ -672,10 +675,11 @@
         left join SVC0128D bb on bb.transit_no = aa.transit_no
         where nvl(aa.DELVRY_GR_CMPLT,'N') = 'N'
         )
+        and A.LOC_ID is null
         <if test=" '' != serialNo and null != serialNo">
           and a.serial_no = #{serialNo}
         </if>
-        <if test=" '' != cmbModel and null != cmbModel ">
+        <if test=" '' != tcmbModel and null != tcmbModel ">
            and a.model in
            <foreach collection="modelList" item="value" open="(" separator="," close=")">
                <choose>
@@ -688,7 +692,7 @@
                </choose>
            </foreach>
         </if>
-        <if test=" '' != cmbStatus and null != cmbStatus ">
+        <if test=" '' != tstatus and null != tstatus ">
            and a.status in
            <foreach collection="statusList" item="value" open="(" separator="," close=")">
                <choose>
@@ -701,7 +705,7 @@
                </choose>
            </foreach>
         </if>
-        <if test=" '' != cmbCondition and null != cmbCondition ">
+        <if test=" '' != tcondition and null != tcondition ">
            and a.condition in
            <foreach collection="conditionList" item="value" open="(" separator="," close=")">
                <choose>

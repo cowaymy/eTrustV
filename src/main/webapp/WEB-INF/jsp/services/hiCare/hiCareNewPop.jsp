@@ -144,11 +144,13 @@ var serialGridPros = {
 
 $(document).ready(function(){
 
+	$("#temp1").hide();
+
 	$("#cmdBranchCode1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
 	$("#cmbModel1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
 
 	console.log("MEM_TYPE" + MEM_TYPE);
-	if(MEM_TYPE != "4"){
+	if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){
 		$('#cmdBranchCode1', '#hiCareNewForm').attr("disabled", true);
 		$('#cmbModel1', '#hiCareNewForm').attr("disabled", true);
 	}
@@ -487,6 +489,7 @@ function saveFunc(){
                 <col style="width:150px" />
             </colgroup>
             <tbody>
+            <input type="text" id="temp1" name="temp1" placeholder="" class="w100p" />
                 <tr>
                     <th scope="row"><span style="color:red">*</span><b>BARCODE</b></th>
                     <td>
