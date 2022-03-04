@@ -160,10 +160,11 @@ function fn_validation(){
             Common.alert("Please select a status");
             return false;
     }
-    if($("#changePerson").val() == ""){
+
+   /*  if($("#changePerson").val() == ""){
         Common.alert("Please select a person in charge");
         return false;
-    }
+    } */
 
     if($("#cmbreqStatus").val() == "60" || $("#cmbreqStatus").val() == "10"){
         if($("#complianceContent").val() == ""){
