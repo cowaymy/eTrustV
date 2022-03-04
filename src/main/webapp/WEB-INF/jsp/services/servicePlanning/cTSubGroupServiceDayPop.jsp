@@ -228,7 +228,7 @@
             AUIGrid.setGridData(calGridID12, result.MON_12);
 
             // Select Service DayList
-            Common.ajax("GET", "/services/serviceGroup/selectSubGroupServiceDayList.do?paramYear="+ calYear +"&paramAreaId=${params.areaID}", '', function(result) {
+            Common.ajax("GET", "/services/serviceGroup/selectSubGroupServiceDayList.do?paramYear="+ calYear +"&paramAreaId=${params.areaID}"+"&paramSubGrpType=${params.subGrpType}", '', function(result) {
                 for(var i=0; i<result.length; ++i) {
                     var rowIdx = AUIGrid.getRowIndexesByValue(eval('calGridID'+result[i].noscvMm), chkArray[result[i].noscvDay-1], result[i].noscvDt);
                     // 해당내역 체크
@@ -304,7 +304,7 @@
                     }
                 }
             }
-    		Common.ajax("POST", "/services/serviceGroup/saveSubGroupServiceDayList.do", {"paramSaveDate": saveDate, "paramAreaId" : '${params.areaID}', "paramYear" : $("#calYear").text()}, function(result) {
+    		Common.ajax("POST", "/services/serviceGroup/saveSubGroupServiceDayList.do", {"paramSaveDate": saveDate, "paramAreaId" : '${params.areaID}', "paramYear" : $("#calYear").text(),"paramSubGrpType" : '${params.subGrpType}'}, function(result) {
     			if(result.code == "99"){
                     Common.alert(" Service Date Upload "+DEFAULT_DELIMITER + result.message);
                  }else{
@@ -320,7 +320,7 @@
     // DSC기준으로 전체 SubGroup에 update 한다.
     function fn_saveSubGroupCopy() {
     	Common.confirm("Do you want to all assign about Sub Group '${params.ctSubGrp}' ?" , function(){
-            Common.ajax("POST", "/services/serviceGroup/saveAllSubGroupServiceDayList.do", {"paramCtSubGrp": '${params.ctSubGrp}', "paramAreaId" : '${params.areaID}', "paramYear" : $("#calYear").text()}, function(result) {
+            Common.ajax("POST", "/services/serviceGroup/saveAllSubGroupServiceDayList.do", {"paramCtSubGrp": '${params.ctSubGrp}', "paramAreaId" : '${params.areaID}', "paramYear" : $("#calYear").text(),"paramSubGrpType" : '${params.subGrpType}'}, function(result) {
                 if(result.code == "000"){ // 성공
                     // 성공시에 부모창 재조회
                     fn_CTSubGroupSearch();
