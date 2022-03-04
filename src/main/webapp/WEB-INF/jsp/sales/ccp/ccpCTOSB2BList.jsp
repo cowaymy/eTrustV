@@ -206,7 +206,8 @@ function createCtosDetailGrid(){
                          {dataField : "ficoScre", headerText : '<spring:message code="sal.title.text.score" />', width : "7%" , editable : false},
                          {dataField : "codeName", headerText : '<spring:message code="sal.title.text.bankrupt" />', width : "8%" , editable : false},
                          {dataField : "ctosDt", headerText : '<spring:message code="sal.title.text.updateTime" />', width : "9%" , editable : false},
-                         {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.updateUser" />', width : "9%" , editable : false},
+                         {dataField : "confirmEntity", headerText : '<spring:message code="sal.text.confirmEntity" />', width : "9%" , editable : false},
+                         {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.updateUser" />', width : "9%" , editable : false, visible : false},
                          {
                              dataField : "undefined",
                              headerText : '<spring:message code="sal.title.text.ficoReport" />',
