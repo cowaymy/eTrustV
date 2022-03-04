@@ -62,7 +62,7 @@
          END LOC_TYPE,
          A.SVC_WEEK,
          A.CT_SUB_GRP,
-         (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID) AS NO_SVC_CNT
+         (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 6665) AS NO_SVC_CNT
 
 	   FROM ORG0019M A
 		INNER JOIN  SYS0064M B ON A.AREA_ID = B.AREA_ID AND A.AVAIL_FLAG = 'Y'
@@ -330,6 +330,7 @@ ORDER BY CT_SUB_GRP ASC
          FROM ORG0028M
         WHERE TO_CHAR(NOSCV_DT, 'YYYY') = #{paramYear}
            AND AREA_ID = #{paramAreaId}
+           AND TYPE = #{paramSubGrpType}
     </select>
 
     <!-- Insert Sub Group Service Day - History Table -->
@@ -344,6 +345,7 @@ ORDER BY CT_SUB_GRP ASC
             , CRT_DT               /* Create Date */
             , UPD_USER_ID       /* Update User ID */
             , UPD_DT              /* update Date */
+            , TYPE
 
         ) VALUES (
              ORG0029H_SEQ.NEXTVAL
@@ -354,6 +356,7 @@ ORDER BY CT_SUB_GRP ASC
            , SYSDATE
            , #{updUserId}
            , SYSDATE
+           , #{paramSubGrpType}
         )
     </insert>
 
@@ -367,6 +370,7 @@ ORDER BY CT_SUB_GRP ASC
             , CRT_DT               /* Create Date */
             , UPD_USER_ID       /* Update User ID */
             , UPD_DT              /* update Date */
+            , TYPE
 
         ) VALUES (
              #{areaId}
@@ -375,6 +379,7 @@ ORDER BY CT_SUB_GRP ASC
            , SYSDATE
            , #{updUserId}
            , SYSDATE
+           , #{paramSubGrpType}
         )
     </insert>
 
@@ -389,7 +394,7 @@ ORDER BY CT_SUB_GRP ASC
     <!-- proceduar call (SP_SVC_NOSERVICE_DATE_UPD) -->
     <select id="saveAllSubGroupServiceDayList" parameterType="Map"  statementType="CALLABLE">
         {
-            CALL SP_SVC_NOSERVICE_DATE_UPD(#{paramCtSubGrp}, #{paramAreaId}, #{updUserId}, #{pErrcode, mode=OUT, jdbcType=VARCHAR}, #{pErrmsg, mode=OUT, jdbcType=VARCHAR})
+            CALL SP_SVC_NOSERVICE_DATE_UPD(#{paramCtSubGrp}, #{paramAreaId}, #{updUserId}, #{paramSubGrpType}, #{pErrcode, mode=OUT, jdbcType=VARCHAR}, #{pErrmsg, mode=OUT, jdbcType=VARCHAR})
         }
     </select>
 
