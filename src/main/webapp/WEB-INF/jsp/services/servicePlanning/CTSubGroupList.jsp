@@ -277,7 +277,8 @@ $(document).ready(function() {
             var jsonObj=  {
                 "area" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "area"),
                 "areaID" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "areaId"),
-                "ctSubGrp" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "ctSubGrp")
+                "ctSubGrp" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "ctSubGrp"),
+                "subGrpType" : 6665
             };
 
             // 년 달력 팝업 창 호출
