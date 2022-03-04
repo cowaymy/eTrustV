@@ -279,7 +279,6 @@
            FROM SAL1013V  V1
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
              JOIN sal0001d s1 ON v1.ORD_NO = s1.SALES_ORD_NO
-
             /*
              INNER JOIN ( SELECT IE.SALES_ORD_ID
                           FROM SAL0047D IR
@@ -391,6 +390,9 @@
                #{item}
              </foreach>
            </if>
+            <if test='billGroupNo != null and billGroupNo != ""'>
+             AND V1.BILLING_GRP_ID = #{billGroupNo}
+           </if>
     ) T
      WHERE 1=1
 
@@ -447,6 +449,8 @@
                #{item}
              </foreach>
            </if>
+
+
     ORDER BY T.ORD_NO ASC
   </select>
 
@@ -1791,5 +1795,12 @@
     WHERE 1=1
       AND RESN_ID = #{failReasonCode}
   </select>
+
+  <select id="selectCustBillId" parameterType="Map" resultType="int">
+       SELECT
+            Extent1.CUST_BILL_ID CUST_BILL_ID
+        FROM SAL0024D Extent1
+        WHERE  Extent1.CUST_BILL_GRP_NO = #{billGroupNo}
+    </select>
 
 </mapper>

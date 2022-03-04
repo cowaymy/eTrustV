@@ -71,4 +71,6 @@ public interface OrderListService {
 
 	void sendSms(Map<String, Object> smsList);
 
+	int selectCustBillId(Map<String, Object> params);
+
 }

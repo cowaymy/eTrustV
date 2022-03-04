@@ -156,6 +156,13 @@ public class OrderListController {
             }
         }
 
+        if(params.containsKey("billGroupNo")) {
+            if(!"".equals(params.get("billGroupNo").toString())) {
+                int billGroupNo = orderListService.selectCustBillId(params);
+                params.put("billGroupNo", billGroupNo);
+            }
+        }
+
 		//if  Customer  (NRIC / VANo / ContactNo/ NAME / CrtUserId )   not empty
 		if( ! StringUtils.isEmpty(params.get("vaNo"))
 					 ||! StringUtils.isEmpty(params.get("contactNo"))

@@ -15,18 +15,18 @@
             fn_setData(AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordNo"), AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordId"))
             $('#custPopCloseBtn').click();
         });
-        
+
         var selVal = '';
-        
+
         if('SearchTrialNo' == '${indicator}') {
             selVal = '145';
         }
 
         doGetCombo('/common/selectCodeList.do', '10', selVal, 'popAppType', 'S'); //Common Code
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'popKeyinBrnchId', 'S'); //Branch Code
-        
+
     });
-    
+
 	function fn_setData(ordNo , ordId) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_SALE_ORD') {
 	        fn_loadTrialNo(ordNo);
@@ -58,11 +58,11 @@
         }else if($('#callPrgm').val() == 'SERIAL') {
         	fn_orderInfo(ordNo);
 	    }
-        
+
 	}
-	
+
     function createAUIGrid() {
-        
+
     	//AUIGrid 칼럼 설정
         var columnLayout = [{
                 dataField   : "ordNo",          headerText  : "<spring:message code='sales.OrderNo'/>",
@@ -89,26 +89,28 @@
                 editable    : false,            style       : 'left_style'
             }, {
                 dataField   : "ordId",          visible     : false //salesOrderId
+            }, {
+                dataField   : "custBillGrpNo" ,          visible     : false //salesOrderId
             }];
 
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-          //selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+          //selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         popOrderGridID = GridCommon.createAUIGrid("pop_ord_grid_wrap", columnLayout, "", gridPros);
     }
 
@@ -116,17 +118,17 @@
         $('#btnOrdSearch').click(function() {
         	fn_selectListAjax();
         });
-        
+
         $('#btnOrdClear').click(function() {
-            $("#popSearchForm")[0].reset();  
+            $("#popSearchForm")[0].reset();
             AUIGrid.clearGridData(popOrderGridID);
         });
     });
-    
-    
-    
+
+
+
 	    // 리스트 조회.
-    function fn_selectListAjax() {        
+    function fn_selectListAjax() {
     	if($('#callPrgm').val() == 'SERIAL') {
     		$('#isSelectAll').val('Y');
     	}
@@ -134,7 +136,7 @@
             AUIGrid.setGridData(popOrderGridID, result);
         });
     }
-  
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -225,6 +227,16 @@
 	<td colspan="5">
 	<select id="popKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p"></select>
 	</td>
+</tr>
+<tr>
+    <th scope="row">Billing Group No.</th>
+    <td>
+        <input id="billGroupNo" name="billGroupNo" type="text" title="" placeholder="Billing Group No." class="w100p" />
+    </td>
+    <th></th>
+    <td></td>
+    <th></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->

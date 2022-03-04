@@ -118,5 +118,7 @@ public interface OrderListMapper {
 
   int insert_SAL0299D(Map<String, Object> params);
 
-EgovMap selectPRFailReason(Map<String, Object> params);
+	EgovMap selectPRFailReason(Map<String, Object> params);
+
+	int selectCustBillId(Map<String, Object> params);
 }

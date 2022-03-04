@@ -578,6 +578,11 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
       return orderListMapper.getMemberID(params);
   }
 
+  @Override
+  public int selectCustBillId(Map<String, Object> params) {
+      return orderListMapper.selectCustBillId(params);
+  }
+
   @Autowired
   private AdaptorService adaptorService;
 
