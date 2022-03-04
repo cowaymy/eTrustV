@@ -389,6 +389,7 @@ ORDER BY CT_SUB_GRP ASC
         DELETE FROM ORG0028M
         WHERE AREA_ID = #{areaId}
            AND TO_CHAR(NOSCV_DT, 'YYYYMMDD') = #{noscvDt}
+           AND TYPE = #{paramSubGrpType}
     </delete>
 
     <!-- proceduar call (SP_SVC_NOSERVICE_DATE_UPD) -->
