@@ -385,7 +385,7 @@
              , LOC_ID = #{locId}
         </if>
         <if test="consignDt !=null and consignDt !=''">
-             , CONSIGN_DT = #{consignDt}
+             , CONSIGN_DT = TO_DATE(#{consignDt} , 'YYYY/MM/DD')
         </if>
         <if test="fromLoc !=null and fromLoc !=''">
              , FROM_LOC = #{fromLoc}
