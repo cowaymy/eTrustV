@@ -394,10 +394,10 @@
              , TO_LOC = #{toLoc}
         </if>
         <if test="filterChgDt !=null and filterChgDt !=''">
-             , FILTER_CHG_DT = #{filterChgDt}
+             , FILTER_CHG_DT = TO_DATE(#{filterChgDt} , 'YYYY/MM/DD')
         </if>
         <if test="filterNxtChgDt !=null and filterNxtChgDt !=''">
-             , FILTER_NXT_CHG_DT = #{filterNxtChgDt}
+             , FILTER_NXT_CHG_DT = TO_DATE(#{filterNxtChgDt} , 'YYYY/MM/DD')
         </if>
         <if test="filterSn !=null and filterSn !=''">
              , FILTER_SN = #{filterSn}
