@@ -1833,7 +1833,7 @@ public class ReportBatchController {
 
 
   @RequestMapping(value = "/CustomerHealthScoreRaw_Excel_Manual.do")
-  public void CustomerHealthScoreRaw_Excel_Manual(Map<String, Object> params) {
+  public void CustomerHealthScoreRaw_Excel_Manual(@RequestParam Map<String, Object> params) {
     LOGGER.info("[START] CustomerHealthScoreRaw_Excel_Manual...");
 
     String startYear = params.get("V_STARTYEAR").toString();
@@ -1882,7 +1882,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CompanyCustomerHealthScoreRaw_Excel_Manual.do")
-  public void CompanyCustomerHealthScoreRaw_Excel_Manual(Map<String, Object> params) {
+  public void CompanyCustomerHealthScoreRaw_Excel_Manual(@RequestParam Map<String, Object> params) {
     LOGGER.info("[START] CompanyCustomerHealthScoreRaw_Excel_Manual...");
 
     String startYear = params.get("V_STARTYEAR").toString();
@@ -2275,6 +2275,7 @@ public class ReportBatchController {
                                                                            // file name.
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_TYPE", "SALES_GROUP");
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Rental Collection" + File.separator + "Monthly_Ren_Coll_" + CommonUtils.getNowDate() + ".pdf");
 
@@ -2292,6 +2293,7 @@ public class ReportBatchController {
                                                                            // file name.
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_TYPE", "SALES_GROUP_HA");
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Rental Collection" + File.separator + "Monthly_Ren_Coll_HA_" + CommonUtils.getNowDate() + ".pdf");
 
@@ -2308,7 +2310,8 @@ public class ReportBatchController {
                                                                            // rpt
                                                                            // file name.
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_TEMP", "TEMP");
+    params.put("V_TYPE", "SALES_GROUP_HC");
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Rental Collection" + File.separator + "Monthly_Ren_Coll_HC_" + CommonUtils.getNowDate() + ".pdf");
 
