@@ -161,10 +161,11 @@ function fn_validation(){
             return false;
     }
 
-   /*  if($("#changePerson").val() == ""){
-        Common.alert("Please select a person in charge");
-        return false;
-    } */
+     if($("#changePerson").val() == ""){
+    	 $("#changePerson").val('0');
+        /* Common.alert("Please select a person in charge");
+        return false; */
+    }
 
     if($("#cmbreqStatus").val() == "60" || $("#cmbreqStatus").val() == "10"){
         if($("#complianceContent").val() == ""){

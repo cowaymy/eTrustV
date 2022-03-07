@@ -159,11 +159,11 @@ public class GuardianOfComplianceController {
 	@RequestMapping(value = "/selectGuardianofComplianceListSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectGuardianofComplianceListSearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
-		String[] caseCategoryList = request.getParameterValues("caseCategory");
-		params.put("caseCategoryList", caseCategoryList);
+		//String[] caseCategoryList = request.getParameterValues("caseCategory");
+		params.put("caseCategoryList", request.getParameterValues("caseCategory"));
 
-		String[] requestStatusIdList = request.getParameterValues("requestStatusId");
-		params.put("requestStatusIdList", requestStatusIdList);
+		//String[] requestStatusIdList = request.getParameterValues("requestStatusId");
+		params.put("requestStatusIdList", request.getParameterValues("requestStatusId"));
 
 		List<EgovMap> mList = guardianOfComplianceService.selectGuardianofComplianceListSearch(params);
 
