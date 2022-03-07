@@ -184,19 +184,18 @@ public class HiCareServiceImpl implements HiCareService {
  			params.put("transType", "H2");
  			params.put("locId", params.get("cmdMemberCode1"));
  			params.put("consignDt", dateFormat.format(date));
- 			params.put("filterChgDt", dateFormat.format(date));
 
- 			/*String filterChgDt = details.get("filterChgDt") == null ? "" : details.get("filterChgDt").toString();
- 			if(filterChgDt.equals("")){
- 				params.put("filterChgDtYn", "Y");
+ 			if(details.get("filterChgDt") == null || details.get("filterChgDt") == ""){
+ 				params.put("filterChgDt", dateFormat.format(date));
+
  				// Convert Date to Calendar
  		        Calendar c = Calendar.getInstance();
  		        c.setTime(date);
  		        c.add(Calendar.YEAR, 1);
 
  		        Date currentDatePlusOneYear = c.getTime();
- 		        params.put("filterChgDt", dateFormat.format(currentDatePlusOneYear));
- 			}*/
+ 		        params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+ 			}
  		}else if(movementType.equals("2")){
  			if(params.get("returnStatus").equals("494")){
  				params.put("transType", "H3");
@@ -299,6 +298,14 @@ public class HiCareServiceImpl implements HiCareService {
 		}
 		params.put("filterSn", params.get("newFilterTxtBarcode"));
 		params.put("filterChgDt", dateFormat.format(date));
+		// Convert Date to Calendar
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, 1);
+
+        Date currentDatePlusOneYear = c.getTime();
+        params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+
 		String isReturn = params.get("isReturn").toString() == "true" ? "1" : "0";
 		params.put("isReturn", isReturn);
 		params.put("reason", params.get("filterReason"));

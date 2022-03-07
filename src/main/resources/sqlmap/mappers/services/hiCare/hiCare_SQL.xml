@@ -395,7 +395,9 @@
         </if>
         <if test="filterChgDt !=null and filterChgDt !=''">
              , FILTER_CHG_DT = #{filterChgDt}
-             , FILTER_NXT_CHG_DT = utils.DATEADD('YEAR', 1, #{filterChgDt})
+        </if>
+        <if test="filterNxtChgDt !=null and filterNxtChgDt !=''">
+             , FILTER_NXT_CHG_DT = #{filterNxtChgDt}
         </if>
         <if test="filterSn !=null and filterSn !=''">
              , FILTER_SN = #{filterSn}
@@ -420,8 +422,8 @@
     <select id="selectHiCareMemberCheck" parameterType="Map" resultType="int">
         SELECT COUNT(1) AS CNT
         FROM SVC0126M
-        WHERE lOC_ID = #{locId}
-        AND STATUS = 'A'
+        WHERE lOC_ID = #{cmdMemberCode1}
+        AND STATUS = '1'
     </select>
 
     <select id="selectNextFileId" resultType="int">
