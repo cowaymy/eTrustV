@@ -46,6 +46,11 @@
     			doGetComboOrder('/common/selectCodeList.do', returnStatus, 'CODE_ID', '', 'returnReason', 'S', ''); //Common Code
     		}
         });
+
+    	$("#filterTxtBarcode").change(function() {
+            event.preventDefault();
+            fn_splitUsedBarcode();
+        });
     });
 
     function setText(result){
@@ -62,6 +67,43 @@
     	 $("#consignDt").html(date.toLocaleString('en-GB', { hour12:false }));
     	 $("#updateDt").html(date.toLocaleString('en-GB', { hour12:false }));
     }
+
+    function fn_splitUsedBarcode(){
+        if($("#filterTxtBarcode").val() != null || js.String.strNvl($("#filterTxtBarcode").val()) != ""){
+               var BarCodeArray = $("#filterTxtBarcode").val().toUpperCase().match(/.{1,18}/g);
+
+               var unitType = "EA";
+               var failSound = false;
+               var rowData = {};
+               var barInfo = [];
+               var boxInfo = [];
+               var stockCode = "";
+
+               console.log("BarCodeArray " + BarCodeArray);
+               console.log("BarCodeArray.length " + BarCodeArray.length);
+               for (var i = 0 ; i < BarCodeArray.length ; i++){
+                   console.log("BarCodeArray[i] " + BarCodeArray[i]);
+
+                   if( BarCodeArray[i].length < 18 ){
+                       failSound = true;
+                       Common.alert("Serial No. less than 18 characters.");
+                       $("#filterTxtBarcode").val("");
+                       $("#filterTxtBarcode").focus();
+                       continue;
+                   }
+
+                   stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
+
+                   if(stockCode == "0"){
+                       failSound = true;
+                       Common.alert("Serial No. Does Not Exist.");
+                       $("#filterTxtBarcode").val("");
+                       $("#filterTxtBarcode").focus();
+                       continue;
+                   }
+               }
+           }
+   }
 
     function fn_loadAtchment(atchFileGrpId) {
         Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
@@ -152,6 +194,14 @@
         if(action == '1'){
             if(FormUtil.isEmpty($("#cmdMemberCode1").val()) ) {
                 Common.alert('Please select a Cody to proceed.');
+                checkResult = false;
+                return checkResult;
+            }else if(FormUtil.isEmpty($("#filterTxtBarcode").val()) ) {
+                Common.alert('Please fill in Filter Serial No.');
+                checkResult = false;
+                return checkResult;
+            }else if(FormUtil.isEmpty($("#chgdt").val()) ) {
+                Common.alert('Please select Filter Last Changed Date.');
                 checkResult = false;
                 return checkResult;
             }
@@ -371,10 +421,28 @@
 </colgroup>
 <tbody>
 <tr>
+	<th scope="row">Sediment Filter Serial No.</th>
+        <td>
+            <!-- <select id="usedFilter" name="usedFilter" class="w100p"> -->
+            <input type="text"  id="filterTxtBarcode" name="filterTxtBarcode" placeholder="Please select here before scanning." style="height:40px;width:99%; text-transform:uppercase;" />
+        </td>
+    <th scope="row">Filter Last Change Date</th>
+            <td>
+               <div class="date_set w100p">
+                <p>
+                 <input id="chgdt" name="chgdt" type="text"
+                  title="Filter Last Change Date" placeholder="DD/MM/YYYY"
+                  class="j_date">
+                </p>
+               </div>
+           <!-- date_set end -->
+          </td>
+</tr>
+<tr>
     <th scope="row"><spring:message code='service.grid.memberCode'/></th>
-	    <td>
-	        <select id="cmdMemberCode1" name="cmdMemberCode1" class="w100p">
-	    </td>
+        <td>
+            <select id="cmdMemberCode1" name="cmdMemberCode1" class="w100p">
+        </td>
 </tr>
 </tbody>
 </table><!-- table end -->

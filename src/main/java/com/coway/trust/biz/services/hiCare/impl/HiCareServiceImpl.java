@@ -179,16 +179,28 @@ public class HiCareServiceImpl implements HiCareService {
  				throw new PreconditionException(AppConstants.FAIL, "This Cody already have one stock on hand.");
  			}
 
- 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
+ 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = new Date();
  			params.put("transType", "H2");
  			params.put("locId", params.get("cmdMemberCode1"));
  			params.put("consignDt", dateFormat.format(date));
 
- 			if(details.get("filterChgDt") == null || details.get("filterChgDt") == ""){
+ 			if(params.get("chgdt") == null || params.get("chgdt") == ""){
  				params.put("filterChgDt", dateFormat.format(date));
 
  				// Convert Date to Calendar
+ 		        Calendar c = Calendar.getInstance();
+ 		        c.setTime(date);
+ 		        c.add(Calendar.YEAR, 1);
+
+ 		        Date currentDatePlusOneYear = c.getTime();
+ 		        params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+ 			}else{
+ 				params.put("filterSn", params.get("filterTxtBarcode"));
+ 	 			params.put("filterChgDt", params.get("chgdt"));
+
+ 	 			// Convert Date to Calendar
+ 	 			date = dateFormat.parse(params.get("chgdt").toString());
  		        Calendar c = Calendar.getInstance();
  		        c.setTime(date);
  		        c.add(Calendar.YEAR, 1);
