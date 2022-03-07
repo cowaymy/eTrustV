@@ -385,7 +385,7 @@
              , LOC_ID = #{locId}
         </if>
         <if test="consignDt !=null and consignDt !=''">
-             , CONSIGN_DT = TO_DATE(#{consignDt} , 'YYYY/MM/DD')
+             , CONSIGN_DT = SYSDATE
         </if>
         <if test="fromLoc !=null and fromLoc !=''">
              , FROM_LOC = #{fromLoc}
@@ -394,10 +394,10 @@
              , TO_LOC = #{toLoc}
         </if>
         <if test="filterChgDt !=null and filterChgDt !=''">
-             , FILTER_CHG_DT = TO_DATE(#{filterChgDt} , 'YYYY/MM/DD')
+             , FILTER_CHG_DT = SYSDATE
         </if>
         <if test="filterNxtChgDt !=null and filterNxtChgDt !=''">
-             , FILTER_NXT_CHG_DT = TO_DATE(#{filterNxtChgDt} , 'YYYY/MM/DD')
+             , FILTER_NXT_CHG_DT = SYSDATE + 365
         </if>
         <if test="filterSn !=null and filterSn !=''">
              , FILTER_SN = #{filterSn}
