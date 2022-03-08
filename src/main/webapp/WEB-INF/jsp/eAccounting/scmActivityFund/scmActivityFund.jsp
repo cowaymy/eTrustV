@@ -1017,7 +1017,7 @@ function fn_editRejected() {
         <dd>
         <ul class="btns">
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-            <li><p class="link_btn"><a href="#" id="_staffClaimBtn">SCM Activity Fund</a></p></li>
+            <li><p class="link_btn"><a href="#" id="_staffClaimBtn">SCM/GCM Activity Fund</a></p></li>
             </c:if>
             <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
         </ul>
