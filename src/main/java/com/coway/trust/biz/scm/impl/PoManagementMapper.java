@@ -29,7 +29,8 @@ public interface PoManagementMapper
 	void updatePoMaster(Map<String, Object> params);
 	void updatePoDetail(Map<String, Object> params);
 	void updatePoDetailDel(Map<String, Object> params);
-	
+	void updateSupplyPlan(Map<String, Object> params);
+
 	//	PO Approval
 	List<EgovMap> selectPoSummary(Map<String, Object> params);
 	List<EgovMap> selectPoApprList(Map<String, Object> params);
