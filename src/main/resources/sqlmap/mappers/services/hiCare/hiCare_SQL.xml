@@ -330,6 +330,12 @@
         , TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT
         , TO_CHAR(A.FILTER_NXT_CHG_DT, 'DD/MM/YYYY')  FILTER_NXT_CHG_DT
         , A.UPD_USER_ID
+        ,CASE WHEN A.UPD_USER_ID IS NOT NULL
+        THEN
+        A.UPD_USER_ID || '(' || TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') || ')'
+        ELSE ' '
+        END
+        UPD_BY
         , A.REMARKS
         , A.DELVRY_NO
         , NVL(A.ATCH_FILE_GRP_ID,'0') ATCH_FILE_GRP_ID

@@ -66,6 +66,9 @@
     	 $("#holderLoc").html('${headerDetail.holderLoc}');
     	 $("#consignDt").html(date.toLocaleString('en-GB', { hour12:false }));
     	 $("#updateDt").html(date.toLocaleString('en-GB', { hour12:false }));
+
+    	 $("#filterTxtBarcode").val('${headerDetail.filterSn}');
+    	 $("#chgdt").val('${headerDetail.filterChgDt}');
     }
 
     function fn_splitUsedBarcode(){
