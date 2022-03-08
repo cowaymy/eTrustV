@@ -188,6 +188,7 @@ function btnGeneratePDF_Click(){
         if($("#cmbListingType :selected").val() == 2){
             $("#form #reportFileName").val("/logistics/HSUsedFilterSummaryListing_PDF.rpt");
             $("#reportDownFileName").val("HSUsedFilterSummaryListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+            orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC";
         }
 
 
