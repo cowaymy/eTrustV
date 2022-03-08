@@ -60,6 +60,12 @@
 		, E.NAME condition
 		, F.USER_NAME creator
 		, G.CODE_DESC model
+		, Case when A.DELVRY_NO is not null
+        then nvl(h.DELVRY_CMPLT,'N')
+        else
+        'Y'
+        end
+        delv_status
 		from SVC0126M a
 		left join SYS0028M b on b.wh_loc_code = a.loc_id
 		left join SYS0005M c on c.brnch_id = a.BRANCH_ID
@@ -67,6 +73,7 @@
 		left join SYS0038M e on e.stus_code_id = a.CONDITION
 		left join SYS0047m f on f.user_id = A.CRT_USER_ID
 		left join SYS0013m g on g.code_id = A.model
+		left join SVC0127M h on h.transit_no = a.delvry_no
 		where 1=1
 		<if test=" '' != serialNo and null != serialNo">
 		  and a.serial_no = #{serialNo}
@@ -176,7 +183,7 @@
 		        #{scanNo} AS SCAN_NO         --scan no
 		        , #{serialNo} AS SERIAL_NO         --serial number
 		        , #{model} AS MODEL            --6586 SPS 2.0
-		        , '113' AS STATUS                  --1 active, 36 closed ,D delete, 113 temporary
+		        , '113' AS STATUS                  --1 active, 36 closed ,10 delete, 113 temporary
 		        , '33' AS CONDITION                 --33 new, 111 used, 112 defect
 		        , #{transactionType} AS TRNSC_TYPE   --Transaction Type
 		        , #{branchCode} AS BRANCH_ID        --branchId sys0005m
@@ -215,7 +222,7 @@
 				B.SCAN_NO,      --scan number
 				B.SERIAL_NO,    --serial number
 				B.MODEL,        --6586 SPS 2.0
-				B.STATUS,       --1 active, 36 closed ,D delete, 113 temporary
+				B.STATUS,       --1 active, 36 closed ,10 delete, 113 temporary
 				B.CONDITION,    --33 new, 111 used, 112 defect
 				B.TRNSC_TYPE,   --Transaction Type
 				B.BRANCH_ID,    --branchId sys0005m
@@ -297,6 +304,62 @@
              , DELVRY_NO
             FROM SVC0126M
             WHERE SERIAL_NO = #{serialNo}
+    </insert>
+
+    <insert id="insertHiCareSerialHistory1" parameterType="Map">
+        MERGE INTO SVC0129H A
+            USING(
+            SELECT
+                (SELECT NVL(MAX(SEQ), 0)+1 AS SEQ FROM SVC0129H WHERE SERIAL_NO = #{serialNo}) as SEQ
+                , #{serialNo} AS SERIAL_NO         --serial number
+                , #{model} AS MODEL            --6586 SPS 2.0
+                , '113' AS STATUS                  --1 active, 36 closed ,10 delete, 113 temporary
+                , '33' AS CONDITION                 --33 new, 111 used, 112 defect
+                , #{transactionType} AS TRNSC_TYPE   --Transaction Type
+                , #{branchCode} AS BRANCH_ID        --branchId sys0005m
+                , #{crtUserId} AS CRT_USER_ID         --name of person who created the object
+                , SYSDATE AS CRT_DT              --date on which record was created
+                , #{updUserId} AS UPD_USER_ID        --update User id
+                , SYSDATE AS UPD_DT          --update date
+            FROM DUAL) B
+            ON(A.SERIAL_NO = B.SERIAL_NO)
+            WHEN MATCHED THEN
+            UPDATE SET
+                A.MODEL       = B.MODEL
+                ,A.STATUS      = B.STATUS
+                ,A.CONDITION   = B.CONDITION
+                ,A.TRNSC_TYPE  = B.TRNSC_TYPE
+                ,A.BRANCH_ID   = B.BRANCH_ID
+                ,A.CRT_DT      = B.CRT_DT
+                ,A.CRT_USER_ID = B.CRT_USER_ID
+                ,A.UPD_DT      = B.UPD_DT
+                ,A.UPD_USER_ID = B.UPD_USER_ID
+            WHEN NOT MATCHED THEN
+            INSERT(
+                A.SEQ,
+                A.SERIAL_NO,
+                A.MODEL,
+                A.STATUS,
+                A.CONDITION,
+                A.TRNSC_TYPE,
+                A.BRANCH_ID,
+                A.CRT_DT,
+                A.CRT_USER_ID,
+                A.UPD_DT,
+                A.UPD_USER_ID
+            )VALUES(
+                B.SEQ, --sequence
+                B.SERIAL_NO,    --serial number
+                B.MODEL,        --6586 SPS 2.0
+                B.STATUS,       --1 active, 36 closed ,10 delete, 113 temporary
+                B.CONDITION,    --33 new, 111 used, 112 defect
+                B.TRNSC_TYPE,   --Transaction Type
+                B.BRANCH_ID,    --branchId sys0005m
+                B.CRT_DT,       --name of person who created the object
+                B.CRT_USER_ID,  --date on which record was created
+                B.UPD_DT,       --update User id
+                B.UPD_USER_ID   --update date
+        )
     </insert>
 
     <update id="updateHiCareSerialHistory" parameterType="Map">

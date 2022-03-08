@@ -42,7 +42,10 @@
       headerText : "<spring:message code='service.title.Creator'/>",
       width : "10%"
     },{
-    	dataField : "transType", visible : false}
+    	dataField : "transType", visible : false
+    },{
+        dataField : "delvStatus", visible : false
+    }
     ];
 
     var excelLayout = [ {
@@ -199,6 +202,8 @@
 
 	  var isAssignMem = selectedItem[0].item.holderLoc;
 	  var status = selectedItem[0].item.status;
+	  var delvStatus = selectedItem[0].item.delvStatus;
+	  console.log("delvStatus " + delvStatus);
 	  if(item == '1'){ //consign
 		  if(status != 'Active'){
               Common.alert("Only ACTIVE record able to assign to Cody");
@@ -208,6 +213,10 @@
 	          Common.alert("This record has been assign to Cody");
 	          return;
 	      }
+		  if(delvStatus == "N"){
+			  Common.alert("This record is under transfer.");
+              return;
+		  }
 
 	  }
 	  if(item == '2'){ //return
@@ -227,6 +236,10 @@
           }
 		  if(!(isAssignMem == " "|| isAssignMem == "-")){
               Common.alert("This record is under Cody, Kindly return to warehouse before deactivate");
+              return;
+          }
+		  if(delvStatus == "N"){
+              Common.alert("This record is under transfer.");
               return;
           }
       }

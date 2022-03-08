@@ -115,7 +115,7 @@ public class HiCareServiceImpl implements HiCareService {
 				}
 				mainMap.put("scanNo", scanNo);
 				hiCareMapper.insertHiCareSerialMaster(mainMap);
-				hiCareMapper.insertHiCareSerialHistory(mainMap);
+				hiCareMapper.insertHiCareSerialHistory1(mainMap);
 				mainMap.put("errCode", "000");
 			}
 

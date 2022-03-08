@@ -35,6 +35,8 @@ public interface HiCareMapper {
 
 	public int insertHiCareSerialHistory(Map<String, Object> obj) throws Exception;
 
+	public int insertHiCareSerialHistory1(Map<String, Object> obj) throws Exception;
+
 	public void updateHiCareSerialHistory(Map<String, Object> obj) throws Exception;
 
 	public EgovMap selectHiCareDetail(Map<String, Object> obj) throws Exception;

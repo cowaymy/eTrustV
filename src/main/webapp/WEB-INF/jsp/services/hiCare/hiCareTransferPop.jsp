@@ -192,10 +192,6 @@ $(document).ready(function(){
                 }
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
             });
-        }else{
-        	if(dat.add.length == 0){
-        		   Common.alert("No record select for change.");
-        	}
         }
     });
 });
@@ -288,6 +284,12 @@ function f_validatation(){
 
 	if ($("#courier").val() == null || $("#courier").val() == undefined || $("#courier").val() == "") {
         Common.alert("Please select a Courier.");
+        return false;
+    }
+
+	var dat = GridCommon.getEditData(reqGrid);
+    if(dat.add.length == 0){
+        Common.alert("No record select for change.");
         return false;
     }
 	return true;
