@@ -43,7 +43,8 @@
            D1.C8 ,
            D1.C9,
            D1.STATE,
-           D1.CHS_STUS
+           D1.CHS_STUS,
+           D1.NEO_PRO_STATUS
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
                            F1.ORD_NO ,
                            F1.APP_TYPE_CODE ,
@@ -94,7 +95,8 @@
                            F1.PV_YEAR C8 ,
                            F1.TOT_OTSTND C9,
                            F1.STATE,
-                           F1.CHS_STUS
+                           F1.CHS_STUS,
+                           F1.NEO_PRO_STATUS
            FROM ( SELECT E1.ORD_ID OrderID1 ,
                          E1.ORD_NO  ,
                          E1.ORD_DT  ,
@@ -126,7 +128,8 @@
                          E1.PROMO_DESC ,
                          1,
                          E1.STATE,
-                         E1.CHS_STUS
+                         E1.CHS_STUS,
+                         E1.NEO_PRO_STATUS
                     <!-- E2.MAIL_CNT_TEL_M  ,
                          E2.MAIL_CNT_TEL_O  ,
                          E2.MAIL_CNT_TEL_R  ,
@@ -199,7 +202,8 @@
                              ,
                           stk.STK_CTGRY_ID
                             ,adr.NAME STATE
-                            , NVL(CHS.CHS_STUS,'-') CHS_STUS
+                            , NVL(CHS.CHS_STUS,'-') CHS_STUS,
+                             CASE WHEN ORG11.HP_CODE IS NOT NULL THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS
                          FROM SAL0001D som
                               JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                               JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
@@ -220,8 +224,10 @@
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
                               JOIN SAL0045D ins ON ins.sales_ord_id = som.sales_ord_id
                               JOIN SAL0023D cust ON cust.CUST_ADD_ID = ins.ADD_ID
-                              LEFT JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
+                              LEFT　JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
                               LEFT JOIN SAL0262D chs ON CHS_MONTH = EXTRACT(MONTH FROM SYSDATE) AND CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)  AND chs.CUST_ID = som.CUST_ID
+                              LEFT JOIN ORG0011D ORG11 ON mem.MEM_CODE = ORG11.HP_CODE AND ORG11.PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND ORG11.PV_MONTH = TO_CHAR(SYSDATE,'MM') AND NVL(ORG11.IS_NW,0)=0
+
                               WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
                               AND som.APP_TYPE_ID <![CDATA[<>]]> 5764
 
@@ -449,6 +455,10 @@
                             OR B.TEL_R = #{contactNum}
                             OR B.TELF = #{contactNum}
                         ) E3 ON E3.SALES_ORD_ID = E1.ORD_ID
+                        </if>
+
+                        <if test="neoProStus != null and neoProStus != ''">
+                          WHERE E1.NEO_PRO_STATUS = #{neoProStus}
                         </if>
 
                         <!-- JOIN ( SELECT vM.ORD_ID ,

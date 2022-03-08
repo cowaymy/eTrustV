@@ -242,6 +242,13 @@
                 width : 100,
                 editable : false,
                 style: 'left_style'
+            },
+            {
+                dataField : "neoProStatus",
+                headerText : "Neo Pro",
+                width : 100,
+                editable : false,
+                style: 'left_style'
             }, {
                 dataField : "installStus",
                 headerText : "<spring:message code='sal.title.text.installStatus' />",
@@ -807,6 +814,13 @@ console.log("searchColorGrid");
     <td>
     <select class="w100p" id="cmbState" name="cmbState">
      </select>
+    </td>
+    <th scope="row">Neo Pro Status</th>
+    <td>
+    <select class="w100p" id="neoPro" name="neoPro">
+        <option value="0">Choose One</option>
+        <option value="1">Yes</option>
+        <option value="2">No</option>
     </td>
 </tr>
 <tr>

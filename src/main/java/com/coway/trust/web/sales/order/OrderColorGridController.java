@@ -103,6 +103,19 @@ public class OrderColorGridController {
 			params.put("cmbCustomerType", "");
 		}
 
+		int neoPro = Integer.parseInt(params.get("neoPro").toString());
+
+		if(neoPro == 1)
+		{
+			params.put("neoProStus", "Yes");
+		}
+		else if (neoPro == 2){
+			params.put("neoProStus", "No");
+		}
+		else{
+			params.put("neoProStus", "");
+		}
+
 		params.put("cmbAppTypeList", cmbAppTypeList);
 		params.put("cmbCorpTypeId", cmbCorpTypeId);
 		params.put("cmbSalesType", cmbSalesType);
