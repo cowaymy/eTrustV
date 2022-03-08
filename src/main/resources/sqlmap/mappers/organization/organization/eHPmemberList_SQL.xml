@@ -450,7 +450,7 @@
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
-                    INNER JOIN ORG0005D Extent4 ON Extent1.DEPT_CODE = Extent4.DEPT_CODE AND Extent4.MEM_LVL = '3'
+                    LEFT JOIN ORG0005D Extent4 ON Extent1.DEPT_CODE = Extent4.DEPT_CODE AND Extent4.MEM_LVL = '3'
                     /*LEFT JOIN ORG0031D Extent5 ON Extent1.APLCTN_ID = Extent5.MEM_ID*/
 
                         LEFT JOIN (SELECT * FROM (
