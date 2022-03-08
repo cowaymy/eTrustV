@@ -17,6 +17,7 @@
                     #{item}
                 </foreach>
         </if>
+        order by webcrawl_no
         </select>
 
     <update id="updateLinkStatus" parameterType="Map">
@@ -41,6 +42,7 @@
         WEBCRAWL_UDP_DT = sysdate
         WHERE
         webcrawl_no = #{webcrawlNo}
+        order by webcrawl_no
     </update>
 
 </mapper>
