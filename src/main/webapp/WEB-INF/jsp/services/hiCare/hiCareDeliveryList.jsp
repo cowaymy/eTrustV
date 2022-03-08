@@ -18,13 +18,13 @@
         headerText : "Status",
         width : "13%"
     },{
-      dataField : "fromLoc",
+      dataField : "fromLocation",
       headerText : "From",
-      width : "13%"
+      width : "20%"
     }, {
-      dataField : "toLoc",
+      dataField : "toLocation",
       headerText : "To",
-      width : "8%"
+      width : "20%"
     }, {
       dataField : "crtDt",
       headerText : "Create Date",

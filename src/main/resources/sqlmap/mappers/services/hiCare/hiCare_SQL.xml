@@ -836,7 +836,7 @@
           and A.TRANSIT_NO = #{transitNo}
         </if>
         <if test=" '' != serialNo and null != serialNo">
-          and b.SERIAL_NO = #{serialNo}
+          and a.transit_no = (select transit_no from SVC0128D where serial_no = #{serialNo})
         </if>
         <if test="crtsdt !=null and crtsdt !=''">
            and to_char(A.CRT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
