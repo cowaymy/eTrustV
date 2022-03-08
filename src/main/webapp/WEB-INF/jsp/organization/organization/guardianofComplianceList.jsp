@@ -227,13 +227,13 @@ function ExcelListGrid() {
         headerText : "Case No",
         editable : false,
         width : 150
-    },
+    }/* ,
     {
         dataField : "picName",
         headerText : "PIC",
         editable : false,
         width : 250
-    }
+    } */
     ];
 
     // 그리드 속성 설정
@@ -262,10 +262,11 @@ function fn_complianceSearch(){
     } else {
     	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListSearch.do", $("#complianceSearch").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
-        });
-        Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
             AUIGrid.setGridData(excelGridID, result);
         });
+       /*  Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
+        	AUIGrid.setGridData(excelGridID, result);
+        }); */
 
     }
 }
