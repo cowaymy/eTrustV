@@ -404,4 +404,26 @@ UPDATE SCM0053D
    AND USE_YN = 'Y'
 </update>
 
+<!-- Delete -->
+<update id="updateSupplyPlan" parameterType="Map">
+UPDATE SCM0005m
+   SET PLAN_STUS_ID = 1
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+ WHERE PLAN_YEAR = #{poYear}
+   AND PLAN_MONTH = #{poMonth}
+   AND PLAN_WEEK = #{poWeek}
+   AND CDC = #{cdc}
+</update>
+
+<update id="updatePoDetailDel" parameterType="Map">
+UPDATE SCM0053D
+   SET PO_ITEM_STUS_ID = 10
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+ WHERE PO_NO = #{poNo}
+   AND STOCK_CODE = #{stockCode}
+   AND PO_ITEM_NO = #{poItemNo}
+</update>
+
 </mapper>
