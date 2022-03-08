@@ -38,10 +38,10 @@ public class PoManagementServiceImpl implements PoManagementService {
 	
 	@Autowired
 	private PoManagementMapper	poManagementMapper;
-	
+
 	@Autowired
 	private ScmInterfaceManagementMapper	scmInterfaceManagementMapper;
-	
+
 	//	PO Issue
 	@Override
 	public List<EgovMap> selectPoStatus(Map<String, Object> params) {
@@ -93,12 +93,12 @@ public class PoManagementServiceImpl implements PoManagementService {
 	}
 	@Override
 	public int insertPoMaster(Map<String, Object> params, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("insertPoMaster : {}", params);
-		
+
 		int saveCnt	= 0;
 		params.put("crtUserId", sessionVO.getUserId());
-		
+
 		try {
 			LOGGER.debug("params : {}", params);
 			poManagementMapper.insertPoMaster(params);
@@ -106,14 +106,14 @@ public class PoManagementServiceImpl implements PoManagementService {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
 	@Override
 	public int insertPoDetail(List<Map<String, Object>> addList, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("insertPoDetail : {}", addList);
-		
+
 		int saveCnt		= 0;
 		int poItemNo	= 1;
 		int crtUserId	= sessionVO.getUserId();
@@ -123,13 +123,13 @@ public class PoManagementServiceImpl implements PoManagementService {
 		String poNo		= "";
 		Map<String, Object> params	= new HashMap<>();
 		Map<String, Object> grParam	= new HashMap<>();
-		
+
 		List<EgovMap> selectGetPoNo	= poManagementMapper.selectGetPoNo(addList.get(0));
 		poNo	= selectGetPoNo.get(0).get("poNo").toString();
-		
+
 		grParam.put("poYear", addList.get(0).get("poYear"));
 		grParam.put("poWeek", addList.get(0).get("poWeek"));
-		
+
 		try {
 			for ( Map<String, Object> list : addList ) {
 				params.put("poId", list.get("poId"));
@@ -154,7 +154,7 @@ public class PoManagementServiceImpl implements PoManagementService {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
 	@Override
@@ -163,14 +163,14 @@ public class PoManagementServiceImpl implements PoManagementService {
 	}
 	@Override
 	public int updatePoMaster(Map<String, Object> params, SessionVO sessionVO) {
-		
+
 		int saveCnt	= 0;
-		
+
 		return	saveCnt;
 	}
 	@Override
 	public int updatePoDetail(List<Map<String, Object>> updList, SessionVO sessionVO) {
-		
+
 		int saveCnt	= 0;
 		int updUserId	= sessionVO.getUserId();
 		Map<String, Object> params = new HashMap<>();
@@ -182,7 +182,7 @@ public class PoManagementServiceImpl implements PoManagementService {
 				params.put("poItemNo", list.get("poItemNo"));
 				params.put("stockCode", list.get("stockCode"));
 				LOGGER.debug("params : {}", params);
-				
+
 				poManagementMapper.updatePoDetailDel(params);
 				saveCnt++;
 			}
@@ -191,31 +191,36 @@ public class PoManagementServiceImpl implements PoManagementService {
 		}
 		return	saveCnt;
 	}
+
 	@Override
 	public int updatePoDetailDel(List<Map<String, Object>> delList, SessionVO sessionVO) {
-		
+
 		int saveCnt	= 0;
 		int updUserId	= sessionVO.getUserId();
 		Map<String, Object> params = new HashMap<>();
-		
+
 		try {
 			for ( Map<String, Object> list : delList ) {
 				params.put("updUserId", updUserId);
 				params.put("poNo", list.get("poNo"));
 				params.put("poItemNo", list.get("poItemNo"));
 				params.put("stockCode", list.get("stockCode"));
-				LOGGER.debug("params : {}", params);
-				
+				params.put("poYear", list.get("poYear"));
+				params.put("poMonth", list.get("poMonth"));
+				params.put("poWeek", list.get("poWeek"));
+				params.put("cdc", list.get("cdc"));
+
+				poManagementMapper.updateSupplyPlan(params);
 				poManagementMapper.updatePoDetailDel(params);
 				saveCnt++;
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	//	PO Approval
 	@Override
 	public List<EgovMap> selectPoSummary(Map<String, Object> params) {
@@ -227,12 +232,12 @@ public class PoManagementServiceImpl implements PoManagementService {
 	}
 	@Override
 	public int updatePoApprove(List<Map<String, Object>> updList, SessionVO sessionVO) {
-		
+
 		int saveCnt	= 0;
 		int updUserId	= sessionVO.getUserId();
 		Map<String, Object> params		= new HashMap<>();
 		//Map<String, Object> ifParams	= new HashMap<>();
-		
+
 		//	po approve
 		try {
 			for ( Map<String, Object> list : updList ) {
@@ -240,14 +245,14 @@ public class PoManagementServiceImpl implements PoManagementService {
 				params.put("poNo", list.get("poNo"));
 				params.put("poItemStusId", 5);
 				LOGGER.debug("params : {}", params);
-				
+
 				poManagementMapper.updatePoApprove(params);
 				saveCnt++;
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
 }
