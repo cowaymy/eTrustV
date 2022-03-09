@@ -274,9 +274,11 @@
      <dt>Link</dt>
      <dd>
       <ul class="btns">
+      <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2">
           <a href="#" onClick="fn_rawData()">Listing</a>
          </p></li>
+      </c:if>
       </ul>
       <p class="hide_btn">
        <a href="#"><img
