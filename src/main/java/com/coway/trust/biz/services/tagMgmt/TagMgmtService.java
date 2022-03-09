@@ -31,6 +31,8 @@ public interface TagMgmtService {
 
   List<EgovMap> getSubDeptList(Map<String, Object> params);
 
+  List<EgovMap> getSubDeptListCodySupport(Map<String, Object> params, SessionVO sessionVO);
+
   List<EgovMap> getMainInquiryList();
 
   List<EgovMap> getSubInquiryList(Map<String, Object> params);

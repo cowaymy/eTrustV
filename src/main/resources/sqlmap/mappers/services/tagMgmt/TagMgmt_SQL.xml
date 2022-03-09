@@ -124,9 +124,12 @@
     </if>
 
     <if test="sub_department != null and sub_department != '' ">
-      AND Z.SUB_DEPT_CDE IN (#{sub_department})
+        AND Z.SUB_DEPT_CDE IN
+        <foreach item="item" collection="sub_department" index="index"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </if>
-
     <if test="cmGroup != null and cmGroup !='' ">
         AND Z.CMGROUP IN (#{cmGroup})
     </if>
@@ -397,6 +400,53 @@
 
     ORDER BY CODE_NAME
   </select>
+
+   <select id="selectSubDeptCodySupport"  parameterType="Map" resultType="egovMap">
+	SELECT DISTINCT SYSD.CODE CODE_ID
+	,SYSD.CODE_NAME CODE_NAME
+	FROM (
+	SELECT DISTINCT OD1.BRNCH
+	,OD2.MEM_ID
+	,OD2.MEM_LVL
+	,OD2.ORG_CODE
+	,OD2.GRP_CODE
+	,OD2.DEPT_CODE
+	,OD3.ORG_CODE MEMORG
+	,OD3.GRP_CODE MEMGRP
+	,OD3.DEPT_CODE MEMDEPT
+	FROM ORG0001D OD1
+	JOIN ORG1001V OD2 ON OD2.ORG_CODE  = (SELECT ORG_CODE FROM ORG1001V WHERE MEM_ID = #{memId}) AND OD1.MEM_ID = OD2.MEM_ID
+	JOIN ORG1001V OD3 ON OD3.MEM_ID = #{memId}
+	WHERE 1 = 1
+
+    <if test = "memLvl == 1">
+      AND OD2.ORG_CODE = OD3.ORG_CODE
+    </if>
+
+    <if test = "memLvl == 2">
+      AND OD2.ORG_CODE =  OD3.ORG_CODE
+      AND OD2.GRP_CODE =  OD3.GRP_CODE
+    </if>
+
+    <if test = "memLvl == 3">
+      AND OD2.ORG_CODE =  OD3.ORG_CODE
+      AND OD2.GRP_CODE =  OD3.GRP_CODE
+      AND OD2.DEPT_CODE = OD3.DEPT_CODE
+    </if>
+
+     <if test = "memLvl == 4">
+      AND OD2.ORG_CODE =  OD3.ORG_CODE
+      AND OD2.GRP_CODE =  OD3.GRP_CODE
+      AND OD2.DEPT_CODE = OD3.DEPT_CODE
+      AND OD2.MEM_ID = #{memId}
+    </if>
+
+	AND OD1.MEM_TYPE = '2'
+	ORDER BY OD2.MEM_LVL,OD2.MEM_ID
+	) T
+	JOIN SYS0005M SYSC ON SYSC.BRNCH_ID = T.BRNCH
+	JOIN SYS0013M SYSD ON SYSD.CODE_NAME = SYSC.CODE ||'-'||SYSC.NAME AND SYSD.CODE_MASTER_ID = '360'
+	  </select>
 
   <select id="selectMainInquiryList"  resultType="egovMap">
 

@@ -118,7 +118,9 @@ public class TagMgmtController {
   @RequestMapping(value = "/selectTagStatus")
   ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params, HttpServletRequest request) {
     String[] statusList = request.getParameterValues("statusList");
+    String[] sub_department = request.getParameterValues("sub_department");
     params.put("listStatus", statusList);
+    params.put("sub_department", sub_department);
     List<EgovMap> notice = tagMgmtService.getTagStatus(params);
     return ResponseEntity.ok(notice);
   }
@@ -176,6 +178,15 @@ public class TagMgmtController {
       ModelMap model) {
     List<EgovMap> subDeptList = tagMgmtService.getSubDeptList(params);
     return ResponseEntity.ok(subDeptList);
+  }
+
+  @RequestMapping(value = "/selectSubDeptCodySupport.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getSubDeptCodySupport(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model, SessionVO sessionVO) {
+	  params.put("memId", sessionVO.getMemId());
+	  params.put("memLvl", sessionVO.getMemberLevel());
+    List<EgovMap> subDeptListCodySupport = tagMgmtService.getSubDeptListCodySupport(params, sessionVO);
+    return ResponseEntity.ok(subDeptListCodySupport);
   }
 
   /**

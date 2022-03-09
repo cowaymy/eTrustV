@@ -188,8 +188,12 @@
               if ($("#main_department").val() == '') {
                 $("#sub_department").val('');
                 $("#sub_department").find("option").remove();
-              } else {
-                doGetCombo('/services/tagMgmt/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', '');
+              } else if ($("#main_department").val() == 'MD08' && "${SESSION_INFO.userTypeId}" == '2'){
+            	   doGetCombo('/services/tagMgmt/selectSubDeptCodySupport.do', '', '', 'sub_department', 'M', 'f_multiComboType');
+              }
+              else{
+                /* doGetCombo('/services/tagMgmt/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', ''); */
+                doGetCombo('/services/tagMgmt/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', 'f_multiComboType');
               }
           });
 
@@ -213,7 +217,8 @@
   });
 
   function fn_search() {
-    Common.ajax("GET", "/services/tagMgmt/selectTagStatus", $("#tagMgmtForm").serialize(),
+	  console.log('tag form',$("#tagMgmtForm").serialize())
+	  Common.ajax("GET", "/services/tagMgmt/selectTagStatus", $("#tagMgmtForm").serialize(),
       function(result) {
         AUIGrid.setGridData(gridID, result);
         AUIGrid.setGridData(gridIDExcelHide, result);
@@ -289,6 +294,16 @@
           }
       });
   }
+
+  function f_multiComboType() {
+	    $(function() {
+	        $('#sub_department').change(function() {
+	        }).multipleSelect({
+	            selectAll : true
+	        });  /* .multipleSelect("checkAll"); */
+
+	    });
+	}
 
 </script>
 <section id="content">
@@ -374,9 +389,8 @@
       <td><select class="w100p" id="main_department"
        name="main_department"></select></td>
       <th scope="row"><spring:message code='service.grid.subDept'/></th>
-      <td><select class="w100p" id="sub_department"
-       name="sub_department">
-       <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+      <td><select id="sub_department"
+       name="sub_department" class="multy_select w100p" multiple="multiple">
        </select></td>
      </tr>
      <tr>

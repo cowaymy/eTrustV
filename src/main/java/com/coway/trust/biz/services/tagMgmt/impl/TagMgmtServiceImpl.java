@@ -91,6 +91,11 @@ public class TagMgmtServiceImpl implements TagMgmtService {
   }
 
   @Override
+  public List<EgovMap> getSubDeptListCodySupport(Map<String, Object> params, SessionVO sessionVO) {
+    return tagMgmtMapper.selectSubDeptCodySupport(params);
+  }
+
+  @Override
   public List<EgovMap> getMainInquiryList() {
     return tagMgmtMapper.selectMainInquiryList();
   }

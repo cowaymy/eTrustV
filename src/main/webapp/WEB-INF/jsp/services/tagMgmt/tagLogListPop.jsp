@@ -172,10 +172,10 @@
       text = "<spring:message code='service.grid.mainDept'/>"
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>"
     }
-    if ($("#inputSubDept").val() == "") {
+/*     if ($("#inputSubDept").val() == "") {
       text = "<spring:message code='service.grid.subDept'/>"
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>"
-    }
+    } */
     if ($("#status").val() == "") {
       text = "<spring:message code='service.grid.Status'/>"
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>"
@@ -646,7 +646,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.grid.subDept'/> <span class='must'>*</span></th>
+       <th scope="row"><spring:message code='service.grid.subDept'/> </th>
        <td>
        <c:choose>
        <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
