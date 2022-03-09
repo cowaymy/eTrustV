@@ -2394,6 +2394,7 @@
                     FROM SVC0056M  A
                     WHERE 1=1
                     AND PRODUCT_CTGRY_CODE IN ('999')
+                    AND STUS_CODE_ID <> 8
              ) ORDER BY PRODUCT_CTGRY_CODE DESC
     ]]>
   </select>
