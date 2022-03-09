@@ -604,6 +604,13 @@
 			AND TRNSC_TYPE = 'H7')
     </select>
 
+    <select id="selectOverallPreviousFilter" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+        FROM SVC0129H
+        WHERE filter_SN = #{newFilterTxtBarcode}
+        --AND STATUS = '1'
+    </select>
+
     <select id="selectHiCareFilterHistory" parameterType="Map" resultType="egovMap">
         SELECT
 		A.SERIAL_NO
@@ -836,7 +843,7 @@
           and A.TRANSIT_NO = #{transitNo}
         </if>
         <if test=" '' != serialNo and null != serialNo">
-          and a.transit_no = (select transit_no from SVC0128D where serial_no = #{serialNo})
+          and a.transit_no in (select transit_no from SVC0128D where serial_no = #{serialNo})
         </if>
         <if test="crtsdt !=null and crtsdt !=''">
            and to_char(A.CRT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')

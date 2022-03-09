@@ -196,7 +196,60 @@ public class HiCareServiceImpl implements HiCareService {
  		        Date currentDatePlusOneYear = c.getTime();
  		        params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
  			}else{
- 				params.put("filterSn", params.get("filterTxtBarcode"));
+ 				Map<String, Object> filterParam = new HashMap<String, Object>();
+ 				if((details.get("filterChgDt") == null || details.get("filterChgDt").toString().equals(""))
+ 						&&
+ 						details.get("filterSn") == null || details.get("filterSn").toString().equals("")
+ 						){
+ 					filterParam.put("transType", "H7");
+ 					filterParam.put("userId", params.get("userId"));
+ 					filterParam.put("serialNo", params.get("serialNo"));
+ 					filterParam.put("filterSn", params.get("filterTxtBarcode"));
+ 	 				filterParam.put("filterChgDt", params.get("chgdt"));
+ 	 				// Convert Date to Calendar
+ 	 		        Calendar c = Calendar.getInstance();
+ 	 		        date = dateFormat.parse(params.get("chgdt").toString());
+ 	 		        c.setTime(date);
+ 	 		        c.add(Calendar.YEAR, 1);
+
+ 	 		        Date currentDatePlusOneYear = c.getTime();
+ 	 		        filterParam.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+ 	 		        filterParam.put("isReturn", "0");
+ 				}else{
+ 					if(!(details.get("filterChgDt").equals(params.get("chgdt"))
+ 		 					&& details.get("filterSn").equals(params.get("filterTxtBarcode"))
+ 		 					)){
+
+ 		 					filterParam.put("transType", "H7");
+ 		 					filterParam.put("userId", params.get("userId"));
+ 		 					filterParam.put("serialNo", params.get("serialNo"));
+ 		 	 				String newFilterSn = params.get("filterTxtBarcode") == null ? "" : params.get("filterTxtBarcode").toString();
+ 		 	 				if(!(newFilterSn == null && newFilterSn.equals(""))){
+ 		 	 					Integer cnt = hiCareMapper.selectOverallPreviousFilter(params);
+ 		 	 					if(cnt > 0){
+ 		 	 						throw new PreconditionException(AppConstants.FAIL, "Filter Serial No. has been Used Before.");
+ 		 	 					}
+ 		 	 				}else{
+ 		 	 					throw new PreconditionException(AppConstants.FAIL, "New Filter Serial No. is Not inserted.");
+ 		 	 				}
+ 		 	 				filterParam.put("filterSn", params.get("filterTxtBarcode"));
+ 		 	 				filterParam.put("filterChgDt", params.get("chgdt"));
+ 		 	 				// Convert Date to Calendar
+ 		 	 		        Calendar c = Calendar.getInstance();
+ 		 	 		        date = dateFormat.parse(params.get("chgdt").toString());
+ 		 	 		        c.setTime(date);
+ 		 	 		        c.add(Calendar.YEAR, 1);
+
+ 		 	 		        Date currentDatePlusOneYear = c.getTime();
+ 		 	 		        filterParam.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+ 		 	 		        filterParam.put("isReturn", "0");
+ 		 				}
+ 				}
+
+ 				hiCareMapper.updateHiCareDetail(filterParam);
+	 			hiCareMapper.insertHiCareSerialHistory(filterParam);
+
+ 				/*params.put("filterSn", params.get("filterTxtBarcode"));
  	 			params.put("filterChgDt", params.get("chgdt"));
 
  	 			// Convert Date to Calendar
@@ -206,7 +259,7 @@ public class HiCareServiceImpl implements HiCareService {
  		        c.add(Calendar.YEAR, 1);
 
  		        Date currentDatePlusOneYear = c.getTime();
- 		        params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+ 		        params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));*/
  			}
  		}else if(movementType.equals("2")){
  			if(params.get("returnStatus").equals("494")){
@@ -300,13 +353,50 @@ public class HiCareServiceImpl implements HiCareService {
 		Date date = new Date();
 		params.put("transType", "H7");
 		params.put("usedFilterSn", params.get("usedFilterTxtBarcode"));
+		String isReturn = params.get("isReturn").toString() == "true" ? "1" : "0";
+
 		String usedFilterSn = params.get("usedFilterSn") == null ? "" : params.get("usedFilterSn").toString();
-		if(!(usedFilterSn == null && usedFilterSn.equals(""))){
+		if(isReturn.equals("1") && !(usedFilterSn == null && usedFilterSn.equals(""))){
 			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
 			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
 			if(!usedFilterSelect.equals(usedFilterSn)){
  				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is not tally.");
  			}
+		}else if(isReturn.equals("0") && !(usedFilterSn == null && usedFilterSn.equals(""))){
+			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
+			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
+			if(usedFilterSelect.equals(usedFilterSn)){
+ 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is same as previous Filter Serial No. Kindly check the Return field.");
+ 			}else{
+ 				Map<String, Object> filterParam = new HashMap<String, Object>();
+ 				filterParam.put("transType", "H7");
+				filterParam.put("userId", params.get("userId"));
+				filterParam.put("serialNo", params.get("serialNo"));
+				filterParam.put("filterSn", params.get("usedFilterTxtBarcode"));
+				filterParam.put("filterChgDt", dateFormat.format(date));
+				// Convert Date to Calendar
+		        Calendar c = Calendar.getInstance();
+		        c.setTime(date);
+		        c.add(Calendar.YEAR, 1);
+
+		        Date currentDatePlusOneYear = c.getTime();
+		        filterParam.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
+ 		        filterParam.put("isReturn", "0");
+ 		        filterParam.put("reason", params.get("filterReason"));
+ 		        filterParam.put("remarks", params.get("filterRemark"));
+
+ 		        hiCareMapper.updateHiCareDetail(filterParam);
+ 				hiCareMapper.insertHiCareSerialHistory(filterParam);
+ 			}
+		}
+		String newFilterSn = params.get("newFilterTxtBarcode") == null ? "" : params.get("newFilterTxtBarcode").toString();
+		if(!(newFilterSn == null && newFilterSn.equals(""))){
+			Integer cnt = hiCareMapper.selectOverallPreviousFilter(params);
+			if(cnt > 0){
+				throw new PreconditionException(AppConstants.FAIL, "New Filter Serial No. has been Used Before.");
+			}
+		}else{
+			throw new PreconditionException(AppConstants.FAIL, "No new Filter Serial No. inserted.");
 		}
 		params.put("filterSn", params.get("newFilterTxtBarcode"));
 		params.put("filterChgDt", dateFormat.format(date));
@@ -318,7 +408,7 @@ public class HiCareServiceImpl implements HiCareService {
         Date currentDatePlusOneYear = c.getTime();
         params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
 
-		String isReturn = params.get("isReturn").toString() == "true" ? "1" : "0";
+
 		params.put("isReturn", isReturn);
 		params.put("reason", params.get("filterReason"));
 		params.put("remarks", params.get("filterRemark"));

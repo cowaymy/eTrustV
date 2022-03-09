@@ -57,6 +57,8 @@ public interface HiCareMapper {
 
 	public String selectHiCarePreviousFilter(Map<String, Object> params);
 
+	public int selectOverallPreviousFilter(Map<String, Object> params);
+
 	public List<EgovMap> selectHiCareFilterHistory(Map<String, Object> obj) throws Exception;
 
 	String selectTransitNo();
