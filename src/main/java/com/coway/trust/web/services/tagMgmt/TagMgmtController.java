@@ -204,6 +204,19 @@ public class TagMgmtController {
 
 	  /*String groupCode = null;
 	  String deptCode = null;*/
+/*	System.out.println(params.get("subDept"));
+	String[] sub_department = request.getParameterValues("subDept");
+	System.out.println("check point2");
+	System.out.println(sub_department);
+	params.put("subDept", sub_department);*/
+
+	  	logger.info("selectStockLocationList: {}", params);
+
+		String searchgb = (String) params.get("sub_dept");
+		String[] searchgbvalue = searchgb.split("∈");
+		logger.debug(" :::: {}", searchgbvalue.length);
+
+		params.put("sub_dept", searchgbvalue);
 
 	  List<EgovMap> cmGroupList = tagMgmtService.selectCmGroup(params);
 	  return ResponseEntity.ok(cmGroupList);

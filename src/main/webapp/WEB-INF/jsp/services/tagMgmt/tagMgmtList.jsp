@@ -207,8 +207,19 @@
           // Added department code by Hui Ding, 2020-12-17
           $("#sub_department").change(function() {
         	  if ($("#main_department").val() == 'MD08'){ // only for CODY support
-        		  $("#cmGroup").attr("disabled", false);
-        		  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), subDept : $("#sub_department").val()}, 'cmGroup', 'cmGroup', 'S', 'fn_setDefaultToSelection');
+        	        var subDeptCodySupport = $('#sub_department').val();
+
+        	        var tempSubDeptCodySupport = "";
+        	        for (var i = 0 ; i < subDeptCodySupport.length ; i++){
+        	            if (tempSubDeptCodySupport == ""){
+        	                tempSubDeptCodySupport = subDeptCodySupport[i];
+        	            }else{
+        	                tempSubDeptCodySupport = tempSubDeptCodySupport +"∈"+subDeptCodySupport[i];
+        	            }
+        	        }
+
+        	        var param = tempSubDeptCodySupport;
+        		  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), sub_dept : param }, 'cmGroup', 'cmGroup', 'S', 'fn_setDefaultToSelection');
         	  } else {
         		  $("#cmGroup").val('');
         		  $("#cmGroup").attr("disabled", true);

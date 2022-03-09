@@ -79,6 +79,16 @@
               }
            });
 
+          $("#inputSubDept").change(
+                  function() {
+                    if ($("#inputSubDept").val() == '') {
+                      $("#inputcmGroup").val('');
+                      $("#inputcmGroup").find("option").remove();
+                    } else {
+                      doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#inputMainDept").val(), sub_dept : $("#inputSubDept").val() }, 'inputcmGroup', 'inputcmGroup', 'S', '');
+                    }
+                 });
+
           $('#btnLedger1').click(function() {
             if ("${orderDetail.basicInfo.ordId}" == "") {
               var text = "<spring:message code='service.title.OrderNo'/>";
@@ -172,10 +182,10 @@
       text = "<spring:message code='service.grid.mainDept'/>"
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>"
     }
-/*     if ($("#inputSubDept").val() == "") {
+    if ($("#inputSubDept").val() == "") {
       text = "<spring:message code='service.grid.subDept'/>"
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>"
-    } */
+    }
     if ($("#status").val() == "") {
       text = "<spring:message code='service.grid.Status'/>"
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>"
@@ -646,7 +656,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.grid.subDept'/> </th>
+       <th scope="row"><spring:message code='service.grid.subDept'/> <span class='must'>*</span></th>
        <td>
        <c:choose>
        <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
@@ -654,6 +664,20 @@
        </c:when>
        <c:otherwise>
        <select class="w100p" id="inputSubDept"name="inputSubDept"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option></select>
+       </c:otherwise>
+       </c:choose>
+       </td>
+      </tr>
+      <tr>
+       <tr>
+       <th scope="row"><spring:message code='Department Code'/></th>
+       <td>
+       <c:choose>
+       <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
+       <select class="w100p" id="inputcmGroup"name="inputcmGroup" disabled="disabled"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option></select></td>
+       </c:when>
+       <c:otherwise>
+       <select class="w100p" id="inputcmGroup"name="inputcmGroup"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option></select>
        </c:otherwise>
        </c:choose>
        </td>

@@ -302,7 +302,8 @@
                           CALL_SMS,
                           CALL_SMS_REM,
                           MAIN_DEPT,
-                          SUB_DEPT
+                          SUB_DEPT,
+                          DEPT_CODE
     ) VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL,
                #{callEntryId},
                #{status},
@@ -332,6 +333,14 @@
                  </when>
                  <otherwise>
                    ,#{subDept}
+                 </otherwise>
+               </choose>
+               <choose>
+                 <when test="inputcmGroup != null and inputcmGroup != ''">
+                   , #{inputcmGroup}
+                 </when>
+                 <otherwise>
+                   , ''
                  </otherwise>
                </choose>
     )
@@ -670,7 +679,12 @@
 	JOIN SYS0005M B ON M.BRANCH_CODE = B.CODE
 	JOIN ORG0005D C ON C.BRNCH_ID = B.BRNCH_ID
 	WHERE TRIM(' ' FROM C.LAST_DEPT_CODE) IS NOT NULL
-	AND M.CODE = #{subDept}
+	AND M.CODE IN
+	        <foreach item="item" collection="sub_dept" index="index"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
 	AND ORG_STUS_CODE_ID = 1
 	ORDER BY C.LAST_DEPT_CODE
   </select>
