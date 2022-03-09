@@ -442,6 +442,7 @@ function fn_tempSave() {
 <input type="hidden" id="budgetCode" name="budgetCode">
 <input type="hidden" id="budgetCodeName" name="budgetCodeName">
 <input type="hidden" id="taxRate">
+<input type="hidden" id="sCardSeq" name="sCardSeq">
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>

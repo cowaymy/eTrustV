@@ -21,7 +21,10 @@
 			       T.CRDIT_CARD_STUS_CODE,
 			       T.CRDIT_CARD_STUS,
 			       T.CRT_DT,
-			       T.UPD_DT
+			       T.UPD_DT,
+			       T.PLAN_AMT,
+                   T.CRC_LIMIT_YYYY,
+                   T.CRC_LIMIT_MM
 			FROM   (SELECT T1.CRDIT_CARD_SEQ,
 			               T1.CRDIT_CARD_USER_ID,
 			               T1.CRDIT_CARD_USER_NAME,
@@ -43,8 +46,12 @@
 			                   WHEN 'R' THEN 'Removed'
 			                 END )                             AS CRDIT_CARD_STUS,
 			               T1.CRT_DT,
-			               T1.UPD_DT
+			               T1.UPD_DT,
+			               T4.PLAN_AMT,
+                           T4.CRC_LIMIT_YYYY,
+                           T4.CRC_LIMIT_MM
 			        FROM   FCM0016M T1
+			        LEFT JOIN FCM0032D T4 ON T1.CRDIT_CARD_NO = T4.CRDIT_CARD_NO AND T1.CRDIT_CARD_USER_ID = T4.CRDIT_CARD_USER_ID
 			               LEFT JOIN ORG0001D T2
 			                      ON T1.CHRG_USER_ID = T2.MEM_CODE
 			               LEFT JOIN (SELECT *
@@ -101,6 +108,7 @@
 				#{item}
 				</foreach>
 			</if>
+			AND T.CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') AND T.CRC_LIMIT_MM = TO_CHAR(SYSDATE, 'MM')
 			ORDER BY T.CRT_DT, T.UPD_DT
 </select>
 
@@ -373,6 +381,7 @@ SELECT T1.CRDIT_CARD_USER_ID
         ,T1.COST_CENTR_NAME
         ,T1.BANK_CODE
         ,T1.BANK_NAME
+        ,T1.CRDIT_CARD_SEQ
 FROM   FCM0016M T1 LEFT JOIN ORG0001D T2
                       ON T1.CHRG_USER_ID = T2.MEM_CODE
 WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
@@ -843,7 +852,8 @@ SELECT CRDIT_CARD_NO AS CARD_NO,
          || ' '
          || '('
          || CRDIT_CARD_USER_NAME
-         || ')' )    AS CARD_NAME
+         || ')' )    AS CARD_NAME,
+         CRDIT_CARD_SEQ
 FROM   FCM0016M
 WHERE CRDIT_CARD_STUS = 'A'
 </select>
@@ -972,4 +982,265 @@ WHERE CRDIT_CARD_STUS = 'A'
     WHERE
         CLM_NO = #{clmNo}
 </insert>
+
+<select id="selectExcelList" parameterType="Map" resultType="egovMap">
+
+	SELECT T.CLM_NO,
+                   T.CRDIT_CARD_USER_ID,
+                   T.CRDIT_CARD_USER_NAME,
+                   T.CRDIT_CARD_NO,
+                   T.CHRG_USER_ID,
+                   T.CHRG_USER_NAME,
+                   T.COST_CENTR,
+                   T.COST_CENTR_NAME,
+                   T.CLM_MONTH,
+                   'MYR' AS CUR,
+                   T.ALL_TOT_AMT,
+                   T.REQST_DT,
+                   T.APPV_PRCSS_NO,
+                   T.APPV_PRCSS_STUS_CODE,
+                   T.APPV_PRCSS_STUS,
+                   T.APPV_PRCSS_DT,
+                   T.CRT_DT,
+                   T.BANK_NAME,
+                   T.CLM_SEQ,
+                   T.INVC_DT,
+                   T.SUPPLY_NAME,
+                   T.EXP_TYPE,
+                   T.EXP_TYPE_NAME,
+                   T.GL_ACC_CODE,
+                   T.GL_ACC_CODE_NAME,
+                   T.BUDGET_CODE,
+                   T.BUDGET_CODE_NAME,
+                   T.TOT_AMT,
+                   T.EXP_DESC,
+                   T.CNTRL_EXP
+            FROM   (
+                             SELECT    T1.CLM_NO,
+                                       T1.CRDIT_CARD_USER_ID,
+                                       T1.CRDIT_CARD_USER_NAME,
+                                       ( SUBSTR(T1.CRDIT_CARD_NO, 1, 4)|| '********'|| SUBSTR(T1.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO,
+                                       T1.CHRG_USER_ID,
+                                       T2.NAME AS CHRG_USER_NAME,
+                                       T1.COST_CENTR,
+                                       T1.COST_CENTR_NAME,
+                                       TO_DATE(T1.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
+                                       T1.TOT_AMT                      AS ALL_TOT_AMT,
+                                       T3.REQST_DT,
+                                       T1.APPV_PRCSS_NO,
+                                       NVL (T3.APPV_PRCSS_STUS, 'T') AS APPV_PRCSS_STUS_CODE,
+                                       NVL ((
+                                       CASE T3.APPV_PRCSS_STUS
+                                                 WHEN 'R' THEN 'Request'
+                                                 WHEN 'P' THEN 'Approve In-Progress'
+                                                 WHEN 'A' THEN 'Approved'
+                                                 WHEN 'J' THEN 'Rejected'
+                                       END ), 'Temporary Save') AS APPV_PRCSS_STUS,
+                                       T3.APPV_PRCSS_DT,
+                                       T1.CRT_DT,
+                                       T4.CLM_SEQ,
+                                       TO_CHAR(T4.INVC_DT, 'YYYY-MM-DD') INVC_DT,
+                                       T4.SUPPLY_NAME,
+                                       T4.EXP_TYPE,
+                                       T4.EXP_TYPE_NAME,
+                                       T4.GL_ACC_CODE,
+                                       T4.GL_ACC_CODE_NAME,
+                                       T4.BUDGET_CODE,
+                                       T4.BUDGET_CODE_NAME,
+                                       T4.TOT_AMT,
+                                       T4.EXP_DESC,
+                                       T5.CNTRL_EXP,
+                                       T6.BANK_NAME
+                             FROM      FCM0017M T1
+                             LEFT JOIN FCM0018D T4
+                             ON        T4.CLM_NO = T1.CLM_NO
+                             jOIN FCM0001M T5
+                             ON        T5.CLM_TYPE = SUBSTR(T1.CLM_NO, 1, 2) AND T5.EXP_TYPE = T4.EXP_TYPE
+                             LEFT JOIN ORG0001D T2
+                             ON        T1.CHRG_USER_ID = T2.MEM_CODE
+                             LEFT JOIN FCM0004M T3
+                             ON        T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+                             LEFT JOIN FCM0016M T6
+                             ON        T6.CRDIT_CARD_NO = T1.CRDIT_CARD_NO AND T6.CRDIT_CARD_USER_ID = T1.CRDIT_CARD_USER_ID
+                       ) T
+            WHERE 1=1
+                     <if test="startDt != null and startDt != ''">
+        <![CDATA[
+             AND T.CRT_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="endDt != null and endDt != ''">
+        <![CDATA[
+             AND T.CRT_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+        ]]>
+        </if>
+        <if test="crditCardUserId != null and crditCardUserId != ''">
+             AND T.CRDIT_CARD_USER_ID LIKE '%' || #{crditCardUserId} || '%'
+        </if>
+        <if test="costCenter != null and costCenter != ''">
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
+        </if>
+        <if test="chrgUserId != null and chrgUserId != ''">
+             AND T.CHRG_USER_ID LIKE '%' || #{chrgUserId} || '%'
+        </if>
+        <if test="crditCardNo != null and crditCardNo != ''">
+             AND T.CRDIT_CARD_NO LIKE '%' || #{crditCardNo} || '%'
+        </if>
+        <if test="clmNo != null and clmNo != ''">
+             AND UPPER(T.CLM_NO) = UPPER(#{clmNo})
+        </if>
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND T.APPV_PRCSS_STUS_CODE IN
+         <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+        </if>
+             ORDER BY T.CLM_NO, T.CLM_SEQ
+
+</select>
+
+<select id="selectTotalSpentAmt" parameterType="Map" resultType="egovMap">
+    SELECT NVL(SUM(TOT_AMT),0) SPENT_AMT
+    FROM FCM0017M
+    WHERE CRDIT_CARD_NO = #{cardNo} AND
+    CRDIT_CARD_USER_ID = #{userid} AND CLM_MONTH = #{clmDt}
+</select>
+
+<select id="selectAvailableAllowanceAmt" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.CRDIT_CARD_SEQ,
+            A.CRDIT_CARD_USER_ID,
+            D.CRDIT_CARDHOLDER_NM,
+            A.CRDIT_CARD_NO,
+            D.COST_CENTER,
+            D.COST_CENTER_TEXT COST_CENTER_NAME,
+            A.CREDIT_LIMIT + B.PLUS_ADJ_AMT - B.MINUS_ADJ_AMT CREDIT_LIMIT,
+            B.TOTAL_ADJ_AMT ADJ_AMT,
+            NVL(C.PENDING_AMT, 0) PENDING_AMT,
+            NVL(C.UTILIZED_AMT, 0) UTILIZED_AMT,
+            NVL((A.CREDIT_LIMIT + B.PLUS_ADJ_AMT - B.MINUS_ADJ_AMT) - C.UTILIZED_AMT, (A.CREDIT_LIMIT + B.PLUS_ADJ_AMT - B.MINUS_ADJ_AMT)) AVAILABLE_AMT
+        FROM (
+            SELECT
+                B.CRDIT_CARD_SEQ,
+                A.CRDIT_CARD_USER_ID,
+                A.CRDIT_CARD_NO,
+                (A.PLAN_AMT + A.CHNG_AMT) CREDIT_LIMIT
+            FROM FCM0032D A, FCM0016M B
+            WHERE A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
+                AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+                /* passed value */
+                <if test="year != null and year != '' ">
+                    /* AND A.CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') */
+                    AND A.CRC_LIMIT_YYYY = #{year}
+                </if>
+                <if test="month != null and month != '' ">
+                    /* AND A.CRC_LIMIT_MM = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM') */
+                    AND A.CRC_LIMIT_MM = #{month}
+                </if>
+        ) A
+        LEFT JOIN (
+            SELECT
+                SUM(CASE WHEN B.SIGNAL = '+' THEN B.ADJ_AMT ELSE 0 END) PLUS_ADJ_AMT,
+                SUM(CASE WHEN B.SIGNAL = '-' THEN B.ADJ_AMT ELSE 0 END) MINUS_ADJ_AMT,
+                SUM(CASE WHEN B.SIGNAL = '+' THEN B.ADJ_AMT ELSE 0 END) - SUM(CASE WHEN B.SIGNAL = '-' THEN B.ADJ_AMT ELSE 0 END) TOTAL_ADJ_AMT,
+                A.CRDIT_CARD_NO,
+                A.CRDIT_CARD_USER_ID,
+                B.CRC_LIMIT_ADJ_YYYY,
+                B.CRC_LIMIT_ADJ_MM
+            FROM FCM0016M A
+            LEFT JOIN FCM0033D B
+                ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
+                AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+                <if test="year != null and year != '' ">
+                    AND B.CRC_LIMIT_ADJ_YYYY = #{year}
+                </if>
+                <if test="month != null and month != '' ">
+                    AND B.CRC_LIMIT_ADJ_MM = #{month}
+                </if>
+            LEFT JOIN FCM0034D C
+                ON B.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
+                AND C.APPV_PRCSS_STUS = 'A'
+            WHERE A.CRDIT_CARD_NO IN (
+                SELECT DISTINCT CRDIT_CARD_NO
+                FROM FCM0032D
+                WHERE 1=1
+                <if test="year != null and year != '' ">
+                    /* CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') */
+                    AND CRC_LIMIT_YYYY = #{year}
+                </if>
+            )
+            GROUP BY
+                A.CRDIT_CARD_NO,
+                A.CRDIT_CARD_USER_ID,
+                B.CRC_LIMIT_ADJ_YYYY,
+                B.CRC_LIMIT_ADJ_MM
+        ) B
+            ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
+            AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+        LEFT JOIN (
+            SELECT
+                CRDIT_CARD_SEQ,
+                CRDIT_CARD_USER_ID,
+                CRDIT_CARD_NO,
+                SUM(PENDING_AMT) PENDING_AMT,
+                SUM(UTILIZED_AMT) UTILIZED_AMT
+            FROM (
+                SELECT
+                    A.CRDIT_CARD_SEQ,
+                    A.CRDIT_CARD_USER_ID,
+                    A.CRDIT_CARD_NO,
+                    CASE WHEN (C.APPV_PRCSS_STUS = 'R' OR C.APPV_PRCSS_STUS = 'P') THEN SUM(D.APPV_AMT) ELSE 0 END PENDING_AMT,
+                    CASE WHEN C.APPV_PRCSS_STUS = 'A' THEN SUM(D.APPV_AMT) ELSE 0 END UTILIZED_AMT
+                FROM FCM0016M A
+                JOIN FCM0017M B
+                    ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+                JOIN FCM0004M C
+                    ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+                    AND C.APPV_PRCSS_STUS IN ('A','R','P')
+                JOIN FCM0015D D
+                    ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+                    AND D.EXP_TYPE IN (
+                        SELECT EXP_TYPE
+                        FROM FCM0001M
+                        WHERE CNTRL_EXP = 'Y'
+                        AND CLM_TYPE = 'J3'
+                    )
+                WHERE A.CRDIT_CARD_NO IN (
+                    SELECT DISTINCT CRDIT_CARD_NO
+                    FROM FCM0032D
+                    WHERE 1=1
+                    <if test="year != null and year != '' ">
+                        /* CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') */
+                        AND CRC_LIMIT_YYYY = #{year}
+                    </if>
+                )
+                <if test="clmMonth != null and clmMonth != '' ">
+                    /* AND B.CLM_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYYMM') */
+                    AND B.CLM_MONTH = #{clmMonth}
+                </if>
+                GROUP BY
+                    A.CRDIT_CARD_SEQ,
+                    A.CRDIT_CARD_USER_ID,
+                    A.CRDIT_CARD_NO,
+                    C.APPV_PRCSS_STUS
+            )
+            GROUP BY
+                CRDIT_CARD_SEQ,
+                CRDIT_CARD_USER_ID,
+                CRDIT_CARD_NO
+        ) C
+            ON A.CRDIT_CARD_SEQ = C.CRDIT_CARD_SEQ
+            AND A.CRDIT_CARD_USER_ID = C.CRDIT_CARD_USER_ID
+        JOIN (
+            SELECT
+                A.CRDIT_CARD_SEQ,
+                A.CRDIT_CARD_USER_NAME CRDIT_CARDHOLDER_NM,
+                B.COST_CENTER,
+                B.COST_CENTER_TEXT
+            FROM FCM0016M A, FCM0008M b
+            WHERE A.COST_CENTR = b.COST_CENTER
+        ) D
+            ON A.CRDIT_CARD_SEQ = D.CRDIT_CARD_SEQ
+        WHERE A.CRDIT_CARD_SEQ = #{crcId}
+    </select>
 </mapper>

@@ -75,7 +75,7 @@ var mgmtColumnLayout = [ {
             myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
         }
         return myString;
-     }, 
+     },
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -128,12 +128,16 @@ var mgmtColumnLayout = [ {
     dataField : "crditCardStus",
     headerText : '<spring:message code="webInvoice.status" />',
     style : "aui-grid-user-custom-left"
+}, {
+    dataField : "planAmt",
+    headerText : 'Credit Limit',
+    style : "aui-grid-user-custom-left"
 }
 ];
 
 //그리드 속성 설정
 var mgmtGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -147,7 +151,7 @@ var mgmtGridID;
 
 $(document).ready(function () {
 	mgmtGridID = AUIGrid.create("#mgmt_grid_wrap", mgmtColumnLayout, mgmtGridPros);
-    
+
     $("#search_holder_btn").click(function() {
     	clickType = "holder";
     	fn_searchUserIdPop();
@@ -160,8 +164,8 @@ $(document).ready(function () {
     $("#registration_btn").click(fn_newMgmtPop);
     $("#edit_btn").click(fn_viewMgmtPop);
     $("#delete_btn").click(fn_removeRegistMsgPop);
-    
-    AUIGrid.bind(mgmtGridID, "cellClick", function( event ) 
+
+    AUIGrid.bind(mgmtGridID, "cellClick", function( event )
             {
                 console.log("cellClick rowIndex : " + event.rowIndex + ", cellClick : " + event.columnIndex + " clicked");
                 console.log("cellClick crditCardSeq : " + event.item.crditCardSeq);
@@ -172,26 +176,26 @@ $(document).ready(function () {
                 	checkRemoved = false;
                 }
             });
-    
+
     $("#crditCardStus").multipleSelect("checkAll");
-    
+
     fn_setToDay();
 });
 
 function fn_setToDay() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#startDt").val(today)
     $("#endDt").val(today)
@@ -335,7 +339,7 @@ function fn_setCostCenterEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 </script>
 

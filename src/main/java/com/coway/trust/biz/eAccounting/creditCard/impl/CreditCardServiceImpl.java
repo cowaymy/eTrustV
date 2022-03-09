@@ -370,4 +370,22 @@ public class CreditCardServiceImpl implements CreditCardService {
     public String selectNextClmNo() {
         return creditCardMapper.selectNextClmNo();
     }
+
+    @Override
+	public List<EgovMap> selectAvailableAllowanceAmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectAvailableAllowanceAmt(params);
+	}
+
+    @Override
+    public List<EgovMap> selectTotalSpentAmt(Map<String, Object> params) {
+    	// TODO Auto-generated method stub
+    	return creditCardMapper.selectTotalSpentAmt(params);
+    }
+
+    @Override
+    public List<EgovMap> selectExcelList(Map<String, Object> params) {
+    	// TODO Auto-generated method stub
+    	return creditCardMapper.selectExcelList(params);
+    }
 }

@@ -78,6 +78,79 @@ var reimbursementColumnLayout = [ {
 }
 ];
 
+var excelColumnLayout = [ {
+	dataField : "clmMonth",
+    headerText : 'CLM_MONTH',
+    dataType : "date",
+    formatString : "mm/yyyy"
+}, {
+    dataField : "clmNo",
+    headerText : 'CLM_NO'
+}, {
+    dataField : "crditCardUserId",
+    headerText : 'CRDIT_CARD_USER_ID'
+}, {
+    dataField : "crditCardUserName",
+    headerText : 'CRDIT_CARD_USER_NAME'
+}, {
+    dataField : "costCentr",
+    headerText : 'COST_CENTR'
+}, {
+    dataField : "costCentrName",
+    headerText : 'COST_CENTR_NAME'
+}, {
+    dataField : "bankName",
+    headerText : 'BANK_NAME'
+}, {
+    dataField : "allTotAmt",
+    headerText : 'CLM_TOTAL_AMT',
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    style : "aui-grid-user-custom-right"
+}, {
+    dataField : "clmSeq",
+    headerText : 'CLM_SEQ',
+}, {
+    dataField : "invcDt",
+    headerText : 'INVC_DT',
+}, {
+    dataField : "supplyName",
+    headerText : 'SUPPLIER_NAME'
+}, {
+    dataField : "expType",
+    headerText : 'EXP_TYPE'
+}, {
+    dataField : "expTypeName",
+    headerText : 'EXP_TYPE_NAME'
+}, {
+    dataField : "glAccCode",
+    headerText : 'GL_ACC_CODE'
+}, {
+    dataField : "glAccCodeName",
+    headerText : 'GL_ACC_CODE_NAME'
+}, {
+    dataField : "budgetCode",
+    headerText : 'BUDGET_CODE'
+}, {
+    dataField : "budgetCodeName",
+    headerText : 'BUDGET_CODE_NAME'
+}, {
+    dataField : "totAmt",
+    headerText : 'TOT_AMT',
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    style : "aui-grid-user-custom-right"
+}, {
+    dataField : "expDesc",
+    headerText : 'EXP_DESC'
+}, {
+    dataField : "appvPrcssStus",
+    headerText : 'Status'
+}, {
+    dataField : "cntrlExp",
+    headerText : 'Controlled Expense Type'
+}];
+
 //그리드 속성 설정
 var reimbursementGridPros = {
     // 페이징 사용
@@ -88,10 +161,21 @@ var reimbursementGridPros = {
     selectionMode : "multipleCells"
 };
 
+var excelGridPros = {
+    // 페이징 사용
+    usePaging : true,
+    // 한 화면에 출력되는 행 개수 20(기본값:20)
+    pageRowCount : 20,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
+};
+
 var reimbursementGridID;
+var excelGridID;
 
 $(document).ready(function () {
 	reimbursementGridID = AUIGrid.create("#reimbursement_grid_wrap", reimbursementColumnLayout, reimbursementGridPros);
+	excelGridID = AUIGrid.create("#excel_grid_wrap", excelColumnLayout, excelGridPros);
 
     $("#search_holder_btn").click(function() {
         clickType = "holder";
@@ -216,8 +300,11 @@ function fn_setCostCenter() {
 
 function fn_selectReimbursementList() {
     Common.ajax("GET", "/eAccounting/creditCard/selectReimbursementList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result) {
-        console.log(result);
-        AUIGrid.setGridData(reimbursementGridID, result);
+            Common.ajax("GET", "/eAccounting/creditCard/selectExcelList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result2) {
+		        console.log(result);
+		        AUIGrid.setGridData(reimbursementGridID, result);
+		        AUIGrid.setGridData(excelGridID, result2);
+            });
     });
 }
 
@@ -369,6 +456,7 @@ function fn_creditCardNoChange() {
 	            $("#newCostCenterText").val(result.data.costCentrName);
 	            $("#bankCode").val(result.data.bankCode);
 	            $("#bankName").val(result.data.bankName);
+	            $("#sCardSeq").val(result.data.crditCardSeq);
 	        } else {
 	            Common.alert('<spring:message code="crditCardReim.noData.msg" />');
 	            $("#newCrditCardUserId").val("");
@@ -484,6 +572,7 @@ function fn_addRow() {
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
     if(fn_checkEmpty()) {
         var formData = Common.getFormData("form_newReimbursement");
+        console.log("c1: " + c1);
 
         if(c1 != 0 || c2 != 0 || c3 != 0 || c4 != 0 || c5 != 0 || c6 != 0) {
             var data = {
@@ -508,7 +597,7 @@ function fn_addRow() {
                     ,invcTypeName : $("#invcType option:selected").text()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
-                    ,gridData : AUIGrid.getGridData(myGridID)
+                    ,gridData : GridCommon.getEditData(myGridID)//AUIGrid.getGridData(myGridID)
             };
         } else {
             var data = {
@@ -570,8 +659,13 @@ function fn_addRow() {
                         data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
                         data.gridData.add[i].taxCode = "VB";
                         data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
-                        AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                        if(fn_checkCreditLimit())
+                        {
+                            AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                            fn_clearData();
+                        }
                     }
+                    //fn_clearData();
                 }
 
                 fn_getAllTotAmt();
@@ -614,8 +708,12 @@ function fn_addRow() {
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = atchFileGrpId;
-                        AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                        if(fn_checkCreditLimit())
+                        {
+                        	AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                        }
                     }
+                    fn_clearData();
                 }
 
                 if(data.gridData.update.length > 0) {
@@ -643,6 +741,7 @@ function fn_addRow() {
                         data.gridData.update[i].expDesc = data.expDesc;
                         AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                     }
+                    fn_clearData();
                 }
 
                 if(data.gridData.remove.length > 0) {
@@ -678,6 +777,7 @@ function fn_addRow() {
                             AUIGrid.updateRow(newGridID, data.gridData[i], AUIGrid.rowIdToIndex(newGridID, data.gridData[i].clmSeq));
                         }
                     }
+                    fn_clearData();
                 }
 
                 fn_getAllTotAmt();
@@ -686,7 +786,13 @@ function fn_addRow() {
             });
         }
 
-        fn_clearData();
+/*         var newFlg = fn_checkCreditLimit();
+        console.log(newFlg);
+        if(!newFlg) {
+            Common.alert('Insufficient Credit Limit');
+            return false;
+        } */
+        //fn_clearData();
     }
 }
 
@@ -709,28 +815,104 @@ function fn_getAllTotAmt() {
     $("#allTotAmt_text").text(allTotAmt);
 }
 
+function fn_getItemTotal() {
+    // allTotAmt GET, SET
+    var allTotAmt = 0.00;
+    var totAmtList = AUIGrid.getColumnValues (myGridID, "totAmt", true);
+    var totAmtList2 = AUIGrid.getColumnValues (newGridID, "totAmt", true);
+    console.log(totAmtList);
+    console.log(totAmtList.length);
+    console.log(totAmtList2);
+    console.log(totAmtList2.length);
+    var clmDt = $("#clmMonth").val();
+    var month = clmDt.substring(0, 2);
+    var year = clmDt.substring(3);
+
+    clmDt = year + month;
+    var data = {
+            userid : $("#newCrditCardUserId").val(),
+            cardNo : $("#newCrditCardNo").val(),
+            clmDt : clmDt
+    };
+    Common.ajaxSync("GET", "/eAccounting/creditCard/selectTotalSpentAmt.do", data, function(results) {
+	    for(var i = 0; i < totAmtList.length; i++) {
+	        allTotAmt += totAmtList[i];
+	    }
+	    for(var i = 0; i < totAmtList2.length; i++) {
+	        allTotAmt += totAmtList2[i];
+	    }
+	    allTotAmt += results[0].spentAmt;
+	    console.log(results[0].spentAmt);
+	    //allTotAmt = allTotAmt.toFixed(2);
+	    //console.log($.number(allTotAmt,2,'.',''));
+	    //allTotAmt = $.number(allTotAmt,2,'.',',');
+	    console.log(allTotAmt);
+    });
+    return allTotAmt
+}
+
+function fn_checkCreditLimit() {
+    // To check if limit exceeded
+	var allTotAmt = fn_getItemTotal();
+    console.log(allTotAmt);
+    var limitFlg = true;
+    var clmDt = $("#clmMonth").val(); //claim date
+    var month = Number(clmDt.substring(0, 2));
+    var year = Number(clmDt.substring(3));
+    var data = {
+    		userid : $("#newCrditCardUserId").val(),
+    		cardNo : $("#newCrditCardNo").val(),
+    		clmMonth : clmDt,
+    		month : month,
+    		year : year,
+    		crcId : $("#sCardSeq").val()
+    };
+    console.log(data);
+	Common.ajaxSync("GET", "/eAccounting/creditCard/selectAvailableAllowanceAmt.do", data, function(result) {
+		console.log("123");
+		console.log(result);
+		var planAmt = result[0].availableAmt;
+		console.log(result[0].planAmt);
+		if(allTotAmt > planAmt)
+		{
+			Common.alert('Insufficient Credit Limit');
+			limitFlg = false;
+		}
+	});
+	return limitFlg;
+}
+
+/* function fn_checkExceedLimit() {
+    var newFlg = fn_checkCreditLimit();
+    console.log(newFlg);
+    if(!newFlg) {
+        Common.alert('Insufficient Credit Limit');
+        return false;
+    }
+} */
+
 function fn_insertReimbursement(st) {
     // row의 수가 0개 이상일때만 insert
-    var gridDataList = AUIGrid.getOrgGridData(newGridID);
-    if(gridDataList.length > 0){
-        var data = {
-                gridDataList : gridDataList
-                ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
-        }
-        console.log(data);
-        Common.ajax("POST", "/eAccounting/creditCard/insertReimbursement.do", data, function(result) {
-            console.log(result);
-            clmNo = result.data.clmNo;
-            fn_selectReimbursementItemList();
-            if(st == "new"){
-                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-                $("#newReimbursementPop").remove();
+    	var gridDataList = AUIGrid.getOrgGridData(newGridID);
+        if(gridDataList.length > 0){
+            var data = {
+                    gridDataList : gridDataList
+                    ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
             }
-            fn_selectReimbursementList();
-        });
-    } else {
-        Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
-    }
+            console.log(data);
+            Common.ajax("POST", "/eAccounting/creditCard/insertReimbursement.do", data, function(result) {
+                console.log(result);
+                clmNo = result.data.clmNo;
+                fn_selectReimbursementItemList();
+                if(st == "new"){
+                    Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
+                    $("#newReimbursementPop").remove();
+                }
+                fn_selectReimbursementList();
+            });
+        } else {
+            Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
+        }
 }
 
 function fn_selectReimbursementItemList() {
@@ -1113,6 +1295,11 @@ function fn_editRejected() {
     }
 }
 
+function fn_excelDown(){
+	// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("excel_grid_wrap", "xlsx", "Credit Card Expense");
+}
+
 </script>
 
 <form id="dataForm">
@@ -1219,6 +1406,9 @@ function fn_editRejected() {
     </aside><!-- link_btns_wrap end -->
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_excelDown()">Excel Download</a></p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="crditCardReim.newExpClm" /></a></p></li>
 	</c:if>
@@ -1226,7 +1416,8 @@ function fn_editRejected() {
 
 <article class="grid_wrap" id="reimbursement_grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
-
+<article class="grid_wrap" id="excel_grid_wrap" style="display:none;"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
 </section><!-- search_result end -->
 
 </section><!-- content end -->

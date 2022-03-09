@@ -76,4 +76,10 @@ public interface CreditCardMapper {
 	List<EgovMap> getOldDisClamUn(Map<String, Object> params);
 
 	void updateExistingClamUn(Map<String, Object> params);
+
+	List<EgovMap> selectAvailableAllowanceAmt(Map<String, Object> params);
+
+	List<EgovMap> selectTotalSpentAmt(Map<String, Object> params);
+
+	List<EgovMap> selectExcelList(Map<String, Object> params);
 }

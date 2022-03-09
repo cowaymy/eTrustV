@@ -286,6 +286,26 @@ public class CreditCardController {
 		return ResponseEntity.ok(taxCodeFlagList);
 	}
 
+	@RequestMapping(value = "/selectAvailableAllowanceAmt.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAvailableAllowanceAmt(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		List<EgovMap> creditCardLimitList = creditCardService.selectAvailableAllowanceAmt(params);
+		LOGGER.debug("creditCardLimitList =====================================>>  " + creditCardLimitList);
+		return ResponseEntity.ok(creditCardLimitList);
+	}
+
+	@RequestMapping(value = "/selectTotalSpentAmt.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTotalSpentAmt(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		List<EgovMap> totalSpendAmt = creditCardService.selectTotalSpentAmt(params);
+		LOGGER.debug("creditCardLimitList =====================================>>  " + totalSpendAmt);
+		return ResponseEntity.ok(totalSpendAmt);
+	}
+
 	@RequestMapping(value = "/selectCrditCardInfoByNo.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectCrditCardInfoByNo(@RequestParam Map<String, Object> params, Model model) {
 
@@ -552,5 +572,24 @@ public class CreditCardController {
 
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/selectExcelList.do")
+	public ResponseEntity<List<EgovMap>> selectExcelList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
+		if(!"A1101".equals(costCentr)) {
+			params.put("loginUserId", sessionVO.getUserId());
+		}
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+
+		params.put("appvPrcssStus", appvPrcssStus);
+
+		List<EgovMap> excelList = creditCardService.selectExcelList(params);
+
+		return ResponseEntity.ok(excelList);
+	}
 
 }

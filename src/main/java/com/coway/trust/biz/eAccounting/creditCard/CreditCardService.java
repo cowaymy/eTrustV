@@ -60,4 +60,10 @@ public interface CreditCardService {
 	void editRejected(Map<String, Object> params);
 
 	String selectNextClmNo();
+
+	List<EgovMap> selectAvailableAllowanceAmt(Map<String, Object> params);
+
+	List<EgovMap> selectTotalSpentAmt(Map<String, Object> params);
+
+	List<EgovMap> selectExcelList(Map<String, Object> params);
 }
