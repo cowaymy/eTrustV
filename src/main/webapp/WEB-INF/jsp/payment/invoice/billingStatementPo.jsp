@@ -140,6 +140,9 @@ var columnLayoutBill =[
                  labelText : "Select",
                  onclick : function(rowIndex, columnIndex, value, item) {
                 	 $("#grid_wrapPO").show();
+                	 console.log("ordID old///" +  $("#orderId").val());
+                	 $("#orderId").val(item.salesOrdId);
+                	 console.log("ordID new///" +  $("#orderId").val());
                 	 fn_SelectPO(item.salesOrdId);
                }
         }
@@ -191,8 +194,6 @@ function fn_loadOrderPO(orderId){
         selectedEntryId = undefined;
     });
 
-
-
 	Common.ajax("GET","/payment/selectInvoiceBillGroupList.do", {"orderId": orderId}, function(result){
         if(result != null){
         	$("#billGroupNo").val(result[0].custBillGrpNo);
@@ -233,6 +234,7 @@ function fn_doSave(){
 		Common.alert("<spring:message code='pay.alert.selectAnOrderFirst'/>");
 	}else{
 		var orderId = $("#orderId").val();
+		var orderNo = $("#orderNo").val();
 		var startPeriod = $("#startPeriod").val();
 		var endPeriod=$("#endPeriod").val();
 		console.log("orderId :" + orderId +", startPeriod : " + startPeriod +", endPeriod : " + endPeriod);
