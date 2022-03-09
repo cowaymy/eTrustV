@@ -66,6 +66,9 @@ public class PosStockMgmtController {
   @Value("${com.file.upload.path}")
   private String uploadDir;
 
+  @Value("${web.resource.upload.file}")
+  private String uploadDirWeb;
+
 
 
   @RequestMapping(value = "/selectPosStockList.do")
@@ -415,6 +418,16 @@ public class PosStockMgmtController {
     return ResponseEntity.ok(detailList);
   }
 
+//  @RequestMapping(value = "/selectPosStockMgmtDetailsList")
+//  public ResponseEntity<List<EgovMap>> selectPosStockMgmtDetailsList(@RequestParam Map<String, Object> params)
+//      throws Exception {
+//
+//    List<EgovMap> detailList = null;
+//
+//    detailList = posStockService.selectPosStockMgmtDetailsList(params);
+//
+//    return ResponseEntity.ok(detailList);
+//  }
 
 
 
@@ -531,7 +544,7 @@ public class PosStockMgmtController {
 	@RequestMapping(value = "/rejectFilleUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<FileDto> rejectFilleUpload(MultipartHttpServletRequest request,	@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDirWeb,
 				File.separator + "PST" + File.separator + "PST", 1024 * 1024 * 6);
 
 		String param01 = (String) params.get("param01");
