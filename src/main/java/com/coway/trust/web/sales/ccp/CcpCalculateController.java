@@ -978,5 +978,11 @@ public class CcpCalculateController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	  @RequestMapping(value = "/ezyCcpRawDataPop.do")
+	  public String ccpRawDataPop() {
+
+	    return "sales/ccp/ezyCcpRawDataPop";
+	  }
 }
 
