@@ -10,6 +10,7 @@ public interface PosStockMapper {
 
 
 	List<EgovMap> selectPosStockMgmtList(Map<String, Object> params);
+	List<EgovMap> selectPosStockMgmtDetailsList(Map<String, Object> params);
 	List<EgovMap> selectPosStockMgmtViewList(Map<String, Object> params);
 
 	List<EgovMap> selectPosItmList(Map<String, Object> params);
