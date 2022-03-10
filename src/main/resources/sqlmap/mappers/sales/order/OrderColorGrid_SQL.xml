@@ -224,11 +224,10 @@
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
                               JOIN SAL0045D ins ON ins.sales_ord_id = som.sales_ord_id
                               JOIN SAL0023D cust ON cust.CUST_ADD_ID = ins.ADD_ID
-                              LEFT　JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
+                              LEFT JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
                               LEFT JOIN SAL0262D chs ON CHS_MONTH = EXTRACT(MONTH FROM SYSDATE) AND CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)  AND chs.CUST_ID = som.CUST_ID
-                              LEFT JOIN ORG0011D ORG11 ON mem.MEM_CODE = ORG11.HP_CODE AND ORG11.PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND ORG11.PV_MONTH = TO_CHAR(SYSDATE,'MM') AND NVL(ORG11.IS_NW,0)=0
-
-                              WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
+                              LEFT JOIN ORG0011D ORG11 ON mem.MEM_CODE = ORG11.HP_CODE  AND ORG11.PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND ORG11.PV_MONTH = (TO_CHAR(SYSDATE,'MM')-1) AND NVL(ORG11.IS_NW,0)=0
+                             WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
                               AND som.APP_TYPE_ID <![CDATA[<>]]> 5764
 
                         <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
