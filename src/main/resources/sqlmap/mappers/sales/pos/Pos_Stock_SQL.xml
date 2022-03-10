@@ -84,14 +84,14 @@
 
 
    <select id="selectPosStockMgmtList" parameterType="Map" resultType="egovMap">
-			SELECT
+			SELECT DISTINCT
 			  SCN_NO,
 			  SCN_MOVE_TYPE_CODE,
 			  SCN_MOVE_STAT_CODE,
-			  CODE_NAME,
+<!-- 			  CODE_NAME, -->
 			  SCN_MOVE_TYPE,
-			  ITEM_DESC,
-			  ITEM_INVT_QTY,
+<!-- 			  ITEM_DESC, -->
+<!-- 			  ITEM_INVT_QTY, -->
 			  SCN_FROM_LOC_DESC,
 			  SCN_TO_LOC_DESC,
 			  CRT_DT,
@@ -163,7 +163,7 @@
 			      SYS0047M Y,
                   ORG0001D O,
                   SYS0005M V,
-                  SYS0047M U, 
+                  SYS0047M U,
                   SYS0047M C
 			    WHERE
 			      A.SCN_NO = B.SCN_NO
@@ -222,6 +222,148 @@
 			  ITEM_REJ_REMARK,
 			  KEY_IN_BRANCH
 			  ORDER BY SCN_NO DESC
+</select>
+
+ <select id="selectPosStockMgmtDetailsList" parameterType="Map" resultType="egovMap">
+            SELECT
+                SCN_NO,
+                SCN_MOVE_TYPE_CODE,
+                SCN_MOVE_STAT_CODE,
+                CODE_NAME,
+                SCN_MOVE_TYPE,
+                ITEM_DESC,
+                ITEM_INVT_QTY,
+                SCN_FROM_LOC_DESC,
+                SCN_TO_LOC_DESC,
+                CRT_DT,
+                CRT_USER_ID,
+                UPD_DATE,
+                UPD_USER_ID,
+                ITEM_REASON,
+                ITEM_REJ_REMARK,
+                SCN_MOVE_DATE,
+                SCN_FROM_LOC_ID,
+                SCN_TO_LOC_ID,
+                SCN_MOVE_STAT,
+                KEY_IN_BRANCH,
+                UPD_NAME,
+                CRD_NAME,
+                'Item Bank' ITEM_TYPE
+            FROM
+              (
+                SELECT
+                  S.STK_CODE,
+                  A.SCN_NO,
+                  B.ITEM_CODE,
+                  B.ITEM_DESC,
+                  DECODE (
+                    A.SCN_MOVE_TYPE, 'I', 'STOCK IN',
+                    'T', 'STOCK TRANSFER', 'A', 'ADJUSTMENT',
+                    'R', 'RETURN'
+                  ) AS SCN_MOVE_TYPE_CODE,
+                  A.SCN_FROM_LOC_ID,
+                  (
+                    SELECT
+                      CODE || '-' || NAME
+                    FROM
+                      SYS0005M
+                    WHERE
+                      BRNCH_ID = A.SCN_FROM_LOC_ID
+                  ) AS SCN_FROM_LOC_DESC,
+                  A.SCN_TO_LOC_ID,
+                  (
+                    SELECT
+                      CODE || '-' || NAME
+                    FROM
+                      SYS0005M
+                    WHERE
+                      BRNCH_ID = A.SCN_TO_LOC_ID
+                  ) AS SCN_TO_LOC_DESC,
+                  DECODE (
+                    A.SCN_MOVE_STAT, 'A', 'ACT', 'C', 'COM',
+                    'R', 'REJECT'
+                  ) AS SCN_MOVE_STAT_CODE,
+                  TO_CHAR(A.SCN_MOVE_DATE, 'dd-mm-yyyy') AS SCN_MOVE_DATE,
+                  TO_CHAR(A.UPD_DT, 'dd-mm-yyyy') AS UPD_DATE,
+                   U.USER_NAME AS UPD_NAME ,
+                   C.USER_NAME AS CRD_NAME,
+                  A.UPD_USER_ID,
+                  A.SCN_MOVE_TYPE,
+                  A.SCN_MOVE_STAT,
+                  T.CODE_NAME,
+                  ITEM_INVT_QTY,
+                  TO_CHAR(A.CRT_DT, 'dd-mm-yyyy') AS CRT_DT,
+                  A.CRT_USER_ID,
+                  B.ITEM_REASON,
+                  B.ITEM_REJ_REMARK,
+                  V.CODE || '-' || V.NAME AS KEY_IN_BRANCH
+                FROM
+                  SAL0293M A,
+                  SAL0294D B,
+                  SYS0026M S,
+                  SYS0013M T,
+                  SYS0047M Y,
+                  ORG0001D O,
+                  SYS0005M V,
+                  SYS0047M U,
+                  SYS0047M C
+                WHERE
+                  A.SCN_NO = B.SCN_NO
+                  AND B.ITEM_CODE = S.STK_ID
+                  AND T.CODE_ID = B.ITEM_CTGRY_ID
+                  AND A.CRT_USER_ID = Y.USER_ID
+                  AND O.MEM_CODE = Y.HR_CODE
+                  AND O.BRNCH = V.BRNCH_ID
+                  AND A.UPD_USER_ID =U.USER_ID (+)
+                 AND A.CRT_USER_ID  =C.USER_ID (+)
+           <if test="scnNo != nul and scnNo != '' ">
+                    AND A.SCN_NO = #{scnNo}
+          </if>
+
+           <if test="scnMoveType != nul and scnMoveType != '' ">
+                   AND A.SCN_MOVE_TYPE = #{scnMoveType}
+          </if>
+
+          <if test="scnFromLocId != nul and scnFromLocId != '' ">
+                  AND  A.SCN_FROM_LOC_ID = #{scnFromLocId}
+          </if>
+
+          <if test="scnToLocId != nul and scnToLocId != '' ">
+                  AND  A.SCN_TO_LOC_ID = #{scnToLocId}
+          </if>
+
+          <if test="scnMoveStat != nul and scnMoveStat != '' ">
+                  AND  A.SCN_MOVE_STAT = #{scnMoveStat}
+          </if>
+
+          <if test="scnMoveSdate != nul and scnMoveEdate != '' ">
+                   AND to_char (A.SCN_MOVE_DATE,'yyyymmdd')   BETWEEN  to_char(TO_DATE(#{scnMoveSdate}, 'dd/mm/yyyy'),'yyyymmdd') AND to_char(TO_DATE (#{scnMoveEdate}, 'dd/mm/yyyy'),'yyyymmdd')
+          </if>
+              )
+            GROUP BY
+              SCN_NO,
+              SCN_MOVE_TYPE_CODE,
+              SCN_FROM_LOC_ID,
+              SCN_FROM_LOC_DESC,
+              SCN_TO_LOC_ID,
+              SCN_TO_LOC_DESC,
+              SCN_MOVE_STAT_CODE,
+              SCN_MOVE_DATE,
+              SCN_MOVE_TYPE,
+              SCN_MOVE_STAT,
+              UPD_DATE,
+              UPD_USER_ID,
+              UPD_NAME,
+              CRD_NAME,
+              CODE_NAME,
+              ITEM_DESC,
+              ITEM_INVT_QTY,
+              CRT_DT,
+              CRT_USER_ID,
+              ITEM_REASON,
+              ITEM_REJ_REMARK,
+              KEY_IN_BRANCH
+              ORDER BY SCN_NO DESC
 </select>
 
 
