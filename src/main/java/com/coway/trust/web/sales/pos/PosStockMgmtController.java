@@ -418,16 +418,16 @@ public class PosStockMgmtController {
     return ResponseEntity.ok(detailList);
   }
 
-//  @RequestMapping(value = "/selectPosStockMgmtDetailsList")
-//  public ResponseEntity<List<EgovMap>> selectPosStockMgmtDetailsList(@RequestParam Map<String, Object> params)
-//      throws Exception {
-//
-//    List<EgovMap> detailList = null;
-//
-//    detailList = posStockService.selectPosStockMgmtDetailsList(params);
-//
-//    return ResponseEntity.ok(detailList);
-//  }
+  @RequestMapping(value = "/selectPosStockMgmtDetailsList")
+  public ResponseEntity<List<EgovMap>> selectPosStockMgmtDetailsList(@RequestParam Map<String, Object> params)
+      throws Exception {
+
+    List<EgovMap> detailList = null;
+
+    detailList = posStockService.selectPosStockMgmtDetailsList(params);
+
+    return ResponseEntity.ok(detailList);
+  }
 
 
 
