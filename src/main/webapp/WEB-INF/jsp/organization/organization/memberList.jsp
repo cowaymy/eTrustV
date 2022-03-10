@@ -1189,7 +1189,7 @@ function fn_socialMediaInfo(){
     <td>
     <select class="w100p" id="keyBranch" name="keyBranch">
     <option value="" selected>Select Account</option>
-        <c:forEach var="list" items="${userBranch }" varStatus="status">
+        <c:forEach var="list" items="${userBranch}" varStatus="status">
            <option value="${list.branchid}">${list.c1}</option>
         </c:forEach>
     </select>

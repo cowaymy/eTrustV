@@ -161,7 +161,9 @@ public class MemberListController {
 		params.put("dtailDisabled",0);
 		List<EgovMap> race = commonService.getDetailCommonCodeList(params);
 		List<EgovMap> status = memberListService.selectStatus();
+
 		List<EgovMap> userBranch = memberListService.selectUserBranch();
+
 		List<EgovMap> user = memberListService.selectUser();
 		/*logger.debug("-------------controller------------");
 		logger.debug("nationality    " + nationality);
@@ -1403,7 +1405,8 @@ public class MemberListController {
 	                Calendar rCal = Calendar.getInstance();
 	                rCal.setTime(rDt);
 
-	                //logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
+	                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
+	                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
 
 	                if(rCal.before(cCal)) {
 	                    // Resignation Date is before 3 months before current date
@@ -1991,16 +1994,8 @@ public class MemberListController {
         Map<String, Object> bankAccCheck = new HashMap();
 
         EgovMap item = new EgovMap();
-        params.put("srcM", "1");
         item = (EgovMap) memberListService.checkBankAcc(params);
         bankAccCheck.put("cnt1", item.get("cnt"));
-
-        params.remove("srcM");
-
-        EgovMap item2 = new EgovMap();
-        params.put("srcA", "1");
-        item2 = (EgovMap) memberListService.checkBankAcc(params);
-        bankAccCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(bankAccCheck);
     }
