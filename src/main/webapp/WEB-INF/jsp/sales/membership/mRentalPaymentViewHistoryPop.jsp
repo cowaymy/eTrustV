@@ -11,13 +11,18 @@
 <script type="text/javascript">
 	//AUIGrid 생성 후 반환 ID
 	var viewHistGridID;
-
+    var tokenId = '';
+    var payMode = '';
 	$(document).ready(function() {
 
 		// AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
         fn_paymentViewHistAjax();
+        console.log("h3",payMode);
+        if (payMode == "CRC") {
+        	 $("#histTrace").attr("style","display:true;");
+        }
 	});
 
 	function createAUIGrid() {
@@ -139,8 +144,12 @@
 
 	//Get address by Ajax
     function fn_paymentViewHistAjax(){
-       Common.ajax("GET", "/sales/membershipRental/paymentViewHistoryAjax",$("#historyForm").serialize(), function(result) {
+       Common.ajaxSync("GET", "/sales/membershipRental/paymentViewHistoryAjax",$("#historyForm").serialize(), function(result) {
            AUIGrid.setGridData(viewHistGridID, result);
+           tokenId = result[0].tokenId;
+           payMode = result[0].code;
+           console.log("hi",payMode);
+           console.log("hi2",'${payMode}');
        });
    }
 
@@ -182,13 +191,19 @@
             }
         });
     }
+
+    $('#histTrace').click(function() {
+    	 Common.popupDiv("/sales/membershipRental/paymentTraceBankCardOrdersPop.do" , {tokenId : tokenId}, null, null, true, '');
+      });
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.renPaySetHis" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="histClose"><spring:message code="sal.btn.close" /></a></p></li>
+	   <li><p class="btn_blue2" id="histTrace" style="display:none;"><a href="#" ><spring:message code="sal.btn.trace" /></a></p></li>
+	   <li><p class="btn_blue2"><a href="#" id="histClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->

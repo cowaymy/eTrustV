@@ -56,6 +56,7 @@ public interface MembershipService {
 	 */
 	EgovMap selectInstallAddr(Map<String, Object> params);
 
+	List<EgovMap> selectTraceOrders(Map<String, Object> params);
 
 	List<EgovMap>   selectMembershipQuotInfo(Map<String, Object> params);
 

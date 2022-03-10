@@ -79,6 +79,11 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 		return membershipMapper.selectInstallAddr(params);
 	}
 
+	@Override
+	public List<EgovMap> selectTraceOrders(Map<String, Object> params) {
+		return membershipMapper.selectTraceOrders(params);
+	}
+
 
     /*
      * (non-Javadoc)

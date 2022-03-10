@@ -615,7 +615,26 @@ public class  MembershipRentalController {
 
 		return "sales/membership/mRentalPaymentViewHistoryPop";
 	}
+	@RequestMapping(value = "/paymentTraceBankCardOrdersPop.do")
+	public String paymentTraceBankCardOrdersPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		model.addAttribute("tokenId", params.get("tokenId"));
+		return "sales/membership/mRentalTraceBankCardOrdersPop";
+	}
+
+	@RequestMapping(value = "/traceBankCardOrderList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> traceBankCardOrderList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+	logger.debug("			check pram setio  log");
+	logger.debug("					" + params.toString());
+	logger.debug("			pram set end  ");
+
+	List<EgovMap> list = membershipService.selectTraceOrders(params);
+
+	return ResponseEntity.ok(list);
+
+	}
 	@RequestMapping(value = "/paymentViewHistoryAjax", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> paymentViewHistoryAjax(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
