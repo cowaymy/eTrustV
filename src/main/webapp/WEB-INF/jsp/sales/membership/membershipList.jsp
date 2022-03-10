@@ -79,12 +79,11 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
         	   // fn_setDetail(listMyGridID, event.rowIndex);
+
         	$("#ORD_ID").val(event.item.ordId);
             $("#MBRSH_ID").val(event.item.mbrshId);
         	 Common.popupDiv("/sales/membership/selMembershipView.do", {ORD_ID :event.item.ordId ,MBRSH_ID: event.item.mbrshId, ACTION: "VIEW" },"membershipDtlDiv" );
         });
-
-        debugger;
 
         f_multiCombo();
 
@@ -200,17 +199,13 @@
 	  function fn_doViewLegder(){
 
 		  var selectedItems = AUIGrid.getSelectedItems(gridID);
-		  console.log("konichawaseaw :" + selectedItems[0].item.mbrshId);
 		  console.log(selectedItems);
-
 
 		  if(selectedItems.length <= 0) {
 		      Common.alert("<spring:message code="sal.alert.noMembershipSelect" /> ");
 			  return;
 		  }
 		  Common.popupDiv("/sales/membership/selMembershipViewLeader.do?MBRSH_ID="+selectedItems[0].item.mbrshId, null, null , true, '_ViewLegder');
-		  console.log("sasasayuyu");
-
 	  }
 
 	  // Added Edit function by Hui Ding, 2021-02-17
