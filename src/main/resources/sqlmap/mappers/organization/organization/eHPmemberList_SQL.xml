@@ -470,7 +470,7 @@
                     LEFT JOIN SYS0047M Extent22 ON Extent20.CRT_USER_ID = Extent22.USER_ID
     ]]>
                     WHERE 1=1
-                        AND Extent1.APLICNT_TYPE IN ('2803')
+                        AND Extent1.APLICNT_TYPE IN ('1','2803')
                         <if test="eHPcode != null and eHPcode != ''">
                             AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{eHPcode} || '%')
                         </if>
