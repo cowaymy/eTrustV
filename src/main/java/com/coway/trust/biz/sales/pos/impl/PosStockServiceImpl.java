@@ -108,6 +108,11 @@ public List<EgovMap> selectPosStockMgmtList(Map<String, Object> params) throws E
 	 return posMapper.selectPosStockMgmtList(params);
  }
 
+@Override
+public List<EgovMap> selectPosStockMgmtDetailsList(Map<String, Object> params) throws Exception {
+	 return posMapper.selectPosStockMgmtDetailsList(params);
+ }
+
 
 
 @Override
