@@ -30,6 +30,8 @@ public interface PosStockService {
 
 	List<EgovMap> selectPosStockMgmtList(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectPosStockMgmtDetailsList(Map<String, Object> params) throws Exception;
+
 	List<EgovMap>  selectPosStockMgmtViewList(Map<String, Object> params)throws Exception;
 
 	List<EgovMap>  selectPosItmList(Map<String, Object> params)throws Exception;
