@@ -183,7 +183,8 @@
           </if>
 
           <if test="scnFromLocId != nul and scnFromLocId != '' ">
-                  AND  A.SCN_FROM_LOC_ID = #{scnFromLocId}
+                  AND  (A.SCN_FROM_LOC_ID = #{scnFromLocId}
+                   OR A.SCN_TO_LOC_ID = #{scnFromLocId} )
           </if>
 
           <if test="scnToLocId != nul and scnToLocId != '' ">
@@ -325,7 +326,8 @@
           </if>
 
           <if test="scnFromLocId != nul and scnFromLocId != '' ">
-                  AND  A.SCN_FROM_LOC_ID = #{scnFromLocId}
+                  AND  (A.SCN_FROM_LOC_ID = #{scnFromLocId}
+                   OR A.SCN_TO_LOC_ID = #{scnFromLocId} )
           </if>
 
           <if test="scnToLocId != nul and scnToLocId != '' ">
