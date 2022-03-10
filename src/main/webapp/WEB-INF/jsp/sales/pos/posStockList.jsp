@@ -85,23 +85,24 @@ var columnLayout = [
            ];
 
 var excelLayout = [
-                    {dataField: "no",headerText :"No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
+//                     {dataField: "no",headerText :"No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
                     {dataField: "scnNo",headerText :"SCN No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
                     {dataField: "scnMoveTypeCode",headerText :"Movement Type"       ,width: 180    ,height:30 , visible:true, editable : false},
                     {dataField: "scnMoveStatCode",headerText :"Movement Status"       ,width: 180    ,height:30 , visible:true, editable : false},
                     {dataField: "codeName",headerText :"Category"       ,width: 180    ,height:30 , visible:true, editable : false},
-                    {dataField: "scnMoveType",headerText :"Item Type"          ,width:120   ,height:30 , visible:false,editable : false},
-                    {dataField: "itemDesc",headerText :"Item"          ,width:120   ,height:30 , visible:false,editable : false},
-                    {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:false,editable : false},
-                    {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:false,editable : false},
-                    {dataField: "scnFromLocDesc",headerText :"From Location"          ,width:220   ,height:30 , visible:true, editable : false},
-                    {dataField: "scnToLocDesc",headerText :"To Location"          ,width:220   ,height:30 , visible:true, editable : false},
+                    {dataField: "itemType",headerText :"Item Type"          ,width:120   ,height:30 , visible:true,editable : false},
+                    {dataField: "itemDesc",headerText :"Item"          ,width:250   ,height:30 , visible:true,editable : false},
+                    {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:true,editable : false},
+                    {dataField: "scnFromLocDesc",headerText :"From Location"          ,width:250   ,height:30 , visible:true, editable : false},
+                    {dataField: "scnToLocDesc",headerText :"To Location"          ,width:250   ,height:30 , visible:true, editable : false},
                     {dataField: "crtDt",headerText :"Create Date"          ,width:140   ,height:30 , visible:true ,editable : false},
-                    {dataField: "crtUserId",headerText :"Create ID"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "crdName",headerText :"Create ID"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "updDate",headerText :"Update Date"          ,width:140   ,height:30 , visible:true ,editable : false},
-                    {dataField: "updUserId",headerText :"Update ID"          ,width:140   ,height:30 , visible:true ,editable : false},
-                    {dataField: "itemReason",headerText :"Reason"          ,width:120   ,height:30 , visible:true, editable : false},
+                    {dataField: "updName",headerText :"Update ID"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "itemReason",headerText :"Reason"          ,width:140   ,height:30 , visible:true, editable : false},
                     {dataField: "itemRejRemark",headerText :"Remark"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "scnMoveDate",headerText :"Move Date"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "keyInBranch",headerText :"Key In Branch"          ,width:250   ,height:30 , visible:true ,editable : false},
 
 
            ];
@@ -196,8 +197,12 @@ fn_getDataListAjax  = function () {
         console.log("data : " + result);
        // console.log(result);
         AUIGrid.setGridData(mstGridID, result);
-        AUIGrid.setGridData(myGrid, result);
+
     });
+
+     Common.ajax("GET", "/sales/posstock/selectPosStockMgmtDetailsList.do", $("#searchForm").serialize(), function(result) {
+         AUIGrid.setGridData(myGrid, result);
+     });
 }
 
 
