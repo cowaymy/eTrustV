@@ -77,7 +77,7 @@ public interface MembershipMapper {
 	 EgovMap selectQuotInfo(Map<String, Object> params);
 
 
-
+	 List<EgovMap>  selectTraceOrders(Map<String, Object> params);
 
 
 	/**
