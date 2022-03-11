@@ -166,7 +166,12 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		// 홈케어 주문관리 테이블 insert - HMC0011D
 		HcOrderVO hcOrderVO = new HcOrderVO();
 
-		String ecommBndlId = orderVO.getSalesOrderMVO().geteCommBndlId().toString();
+		//String ecommBndlId = null;
+		String ecommBndlId = orderVO.getSalesOrderMVO().geteCommBndlId() != null ? orderVO.getSalesOrderMVO().geteCommBndlId().toString() : null;
+		/*if(orderVO.getSalesOrderMVO().geteCommBndlId() != null)
+		{
+			ecommBndlId = orderVO.getSalesOrderMVO().geteCommBndlId().toString();
+		}*/
 		int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
 		int cntHcExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
 		String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
