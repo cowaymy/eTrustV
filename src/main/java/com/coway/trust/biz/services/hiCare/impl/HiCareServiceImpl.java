@@ -366,7 +366,7 @@ public class HiCareServiceImpl implements HiCareService {
 			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
 			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
 			if(usedFilterSelect.equals(usedFilterSn)){
- 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is same as previous Filter Serial No. Kindly check the Return field.");
+ 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is same as previous Filter Serial No. Kindly check the 'Used Has Return' field");
  			}else{
  				Map<String, Object> filterParam = new HashMap<String, Object>();
  				filterParam.put("transType", "H7");

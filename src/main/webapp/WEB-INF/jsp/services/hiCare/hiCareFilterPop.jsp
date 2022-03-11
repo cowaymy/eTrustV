@@ -76,6 +76,13 @@
     	                $("#usedFilterTxtBarcode").focus();
     	                continue;
     	            }
+    	            else if(!(stockCode == "02F5V" || stockCode == "04KNH")){
+                        failSound = true;
+                        Common.alert("Serial No. is not valid.");
+                        $("#usedFilterTxtBarcode").val("");
+                        $("#usedFilterTxtBarcode").focus();
+                        continue;
+    	            }
 
     	             /* barInfo.push({   "serialNo":BarCodeArray[i]
     	                           , "branchCode":$('#cmdBranchCode1').val()
@@ -139,7 +146,7 @@
         var checkResult = true;
 
         var isCheck = document.getElementById("checkReturn").checked;
-        if(isCheck && FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) ) {
+        if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) ) {
             Common.alert('Please key in Used Filter Serial No.');
             checkResult = false;
             return checkResult;

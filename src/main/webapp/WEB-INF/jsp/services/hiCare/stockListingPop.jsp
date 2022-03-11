@@ -101,11 +101,14 @@ function btnGenerate_Click(){
         	holderType += 'Branch, Member';
         }
         if($('#sHolder :selected').length == 1){
+        	if(whereSQL != ""){
+                whereSQL += " AND ";
+            }
         	if($('#sHolder').val() == '278'){
-        		whereSQL += " AND b.wh_loc_type_id in (278) ";
+        		whereSQL += "  b.wh_loc_type_id in (278) ";
         		holderType += 'Member';
         	}else if($('#sHolder').val() == '277'){
-        		whereSQL += " AND a.loc_id is null and a.branch_id is not null ";
+        		whereSQL += " a.loc_id is null and a.branch_id is not null ";
         		holderType += 'Branch';
         	}
         }

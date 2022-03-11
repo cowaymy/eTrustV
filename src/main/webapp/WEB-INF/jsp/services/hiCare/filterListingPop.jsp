@@ -90,10 +90,14 @@ function btnGenerate_Click(){
         $("#viewType").val("");
 
         if($("#fcrtsdt").val() != '' && $("#fcrtsdt").val() != null && $("#fcrtedt").val() != '' && $("#fcrtedt").val() != null){
+        	if(listingType == '1'){
         	//whereSQL += " and a.FILTER_NXT_CHG_DT between '" + $("#fcrtsdt").val() + "' and '" + $("#fcrtedt").val() + "'";
         	whereSQL += " and a.FILTER_NXT_CHG_DT between TO_DATE( '" + $("#fcrtsdt").val() + "','DD/MM/YYYY') and TO_DATE( '" + $("#fcrtedt").val() + "','DD/MM/YYYY') ";
         	//whereSQL += " and a.FILTER_NXT_CHG_DT >= TO_DATE( '" + $("#fcrtsdt").val() + "','DD/MM/YYYY') and a.FILTER_NXT_CHG_DT <= TO_DATE( '" + $("#fcrtedt").val() + "','DD/MM/YYYY') ";
         	//whereSQL += " and utils.DATEADD('YEAR', 1, a.FILTER_CHG_DT) between to_date('" + $("#fcrtsdt").val() + "','YYYY/MM/DD') and to_date('" + $("#fcrtedt").val() + "','YYYY/MM/DD') ";
+        	}else if(listingType == '2'){
+        		whereSQL += " and a.FILTER_CHG_DT between TO_DATE( '" + $("#fcrtsdt").val() + "','DD/MM/YYYY') and TO_DATE( '" + $("#fcrtedt").val() + "','DD/MM/YYYY') ";
+            }
         }
 
         if($('#sBranchCode :selected').val() > 0){
