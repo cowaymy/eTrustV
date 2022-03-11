@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
+
 <script type="text/javaScript" language="javascript">
 
     //AUIGrid 생성 후 반환 ID
@@ -95,11 +97,17 @@
                        continue;
                    }
 
-                   stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
+                   stockCode = BarCodeArray[i].substr(3,5);
 
                    if(stockCode == "0"){
                        failSound = true;
                        Common.alert("Serial No. Does Not Exist.");
+                       $("#filterTxtBarcode").val("");
+                       $("#filterTxtBarcode").focus();
+                       continue;
+                   }else if(!(stockCode == "02F5V" || stockCode == "04KNH")){
+                       failSound = true;
+                       Common.alert("Serial No. is not valid.");
                        $("#filterTxtBarcode").val("");
                        $("#filterTxtBarcode").focus();
                        continue;

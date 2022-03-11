@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
+
 <script type="text/javaScript" language="javascript">
 
     //AUIGrid 생성 후 반환 ID
@@ -67,8 +69,8 @@
     	                continue;
     	            }
 
-    	            stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
-
+    	            stockCode = BarCodeArray[i].substr(3,5);
+    	            console.log("stockCode" + stockCode);
     	            if(stockCode == "0"){
     	                failSound = true;
     	                Common.alert("Serial No. Does Not Exist.");
@@ -141,6 +143,51 @@
     	        } */
     	    }
     }
+
+    function fn_splitBarcode(){
+        if($("#newFilterTxtBarcode").val() != null || js.String.strNvl($("#newFilterTxtBarcode").val()) != ""){
+               var BarCodeArray = $("#newFilterTxtBarcode").val().toUpperCase().match(/.{1,18}/g);
+
+               var unitType = "EA";
+               var failSound = false;
+               var rowData = {};
+               var barInfo = [];
+               var boxInfo = [];
+               var stockCode = "";
+
+               console.log("BarCodeArray " + BarCodeArray);
+               console.log("BarCodeArray.length " + BarCodeArray.length);
+               for (var i = 0 ; i < BarCodeArray.length ; i++){
+                   console.log("BarCodeArray[i] " + BarCodeArray[i]);
+
+                   if( BarCodeArray[i].length < 18 ){
+                       failSound = true;
+                       Common.alert("Serial No. less than 18 characters.");
+                       $("#newFilterTxtBarcode").val("");
+                       $("#newFilterTxtBarcode").focus();
+                       continue;
+                   }
+
+                   stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
+                   console.log("stockCode" + stockCode);
+                   if(stockCode == "0"){
+                       failSound = true;
+                       Common.alert("Serial No. Does Not Exist.");
+                       $("#newFilterTxtBarcode").val("");
+                       $("#newFilterTxtBarcode").focus();
+                       continue;
+                   }
+                   else if(!(stockCode == "02F5V" || stockCode == "04KNH")){
+                       failSound = true;
+                       Common.alert("Serial No. is not valid.");
+                       $("#newFilterTxtBarcode").val("");
+                       $("#newFilterTxtBarcode").focus();
+                       continue;
+                   }
+
+               }
+           }
+   }
 
     function fn_checkEmpty(){
         var checkResult = true;
