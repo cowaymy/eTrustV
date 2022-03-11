@@ -150,7 +150,7 @@
 			      A.SCN_MOVE_STAT,
 			      T.CODE_NAME,
 			      ITEM_INVT_QTY,
-			      A.CRT_DT,
+			      TO_CHAR(A.CRT_DT, 'dd-mm-yyyy') AS CRT_DT,
 			      A.CRT_USER_ID,
 			      B.ITEM_REASON,
 			      B.ITEM_REJ_REMARK,
