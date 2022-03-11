@@ -168,7 +168,7 @@
                        continue;
                    }
 
-                   stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
+                   stockCode = BarCodeArray[i].substr(3,5);
                    console.log("stockCode" + stockCode);
                    if(stockCode == "0"){
                        failSound = true;
