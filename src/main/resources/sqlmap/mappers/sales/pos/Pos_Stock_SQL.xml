@@ -234,6 +234,7 @@
                 SCN_MOVE_TYPE,
                 ITEM_DESC,
                 ITEM_INVT_QTY,
+                SCN_MOVE_QTY,
                 SCN_FROM_LOC_DESC,
                 SCN_TO_LOC_DESC,
                 CRT_DT,
@@ -262,6 +263,12 @@
                     'T', 'STOCK TRANSFER', 'A', 'ADJUSTMENT',
                     'R', 'RETURN'
                   ) AS SCN_MOVE_TYPE_CODE,
+                  DECODE (
+                    A.SCN_MOVE_TYPE, 'I',  B.ITEM_RECV_QTY,
+                    'T',  B.ITEM_TRAN_QTY,
+                    'A',  B.ITEM_ADJ_QTY,
+                    'R',  B.ITEM_RTN_QTY
+                  ) AS SCN_MOVE_QTY,
                   A.SCN_FROM_LOC_ID,
                   (
                     SELECT
@@ -364,7 +371,8 @@
               CRT_USER_ID,
               ITEM_REASON,
               ITEM_REJ_REMARK,
-              KEY_IN_BRANCH
+              KEY_IN_BRANCH,
+              SCN_MOVE_QTY
               ORDER BY SCN_NO DESC
 </select>
 
