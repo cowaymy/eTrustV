@@ -97,6 +97,7 @@ var excelLayout = [
                     {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:true,editable : false},
                     {dataField: "scnFromLocDesc",headerText :"From Location"          ,width:250   ,height:30 , visible:true, editable : false},
                     {dataField: "scnToLocDesc",headerText :"To Location"          ,width:250   ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveQty",headerText :"Movement Quantity"          ,width:250   ,height:30 , visible:true, editable : false},
                     {dataField: "crtDt",headerText :"Create Date"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "crdName",headerText :"Create ID"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "updDate",headerText :"Update Date"          ,width:140   ,height:30 , visible:true ,editable : false},
@@ -305,10 +306,6 @@ fn_selectPosStockMgmtReceivedPop=function (){
      Common.popupDiv("/sales/posstock/selectPosStockMgmtReceivedList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
 }
 
-fn_stockCard = function (){
-	Common.popupDiv("/sales/posstock/posStockCardRawPop.do", '' , null , true , "_insDiv");
-}
-
 </script>
 
 <section id="content"><!-- content start -->
@@ -381,20 +378,15 @@ fn_stockCard = function (){
                 </tr>
 
              <tr>
-                   <th scope="row">From Location</th>
+                   <th scope="row">Branch / Warehouse</th>
                    <td>
                      <select class="w100p" id="scnFromLocId" name="scnFromLocId"  ></select>
                    </td>
-                   <th scope="row">To Location</th>
-                   <td>
+                   <th scope="row" style="display:none;">To Location</th>
+                   <td  style="display:none;">
                         <select class="w100p" id="scnToLocId"name="scnToLocId" ></select>
                    </td>
-                   <th scope="row"></th>
-                   <td> </td>
-                </tr>
-
-                <tr>
-                  <th scope="row">Movement Date</th>
+                    <th scope="row">Movement Date</th>
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="scnMoveSdate" name="scnMoveSdate" type="text" title="Create start Date" value="${bfDay}" placeholder="DD/MM/YYYY" class="j_date"></p>
@@ -403,8 +395,8 @@ fn_stockCard = function (){
                         </div><!-- date_set end -->
                     </td>
 
-                    <th scope="row"></th>
-                    <td colspan="3">  </td>
+                   <th scope="row"></th>
+                   <td> </td>
                 </tr>
                 </tr>
              </tbody>
@@ -413,32 +405,6 @@ fn_stockCard = function (){
 
 
   </form>
-
-<aside class="link_btns_wrap">
-    <!-- link_btns_wrap start -->
-    <p class="show_btn">
-     <a href="#"><img
-      src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
-      alt="link show" /></a>
-    </p>
-    <dl class="link_list">
-     <dt>Link</dt>
-     <dd>
-      <ul class="btns">
-       <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
-        <li><p class="link_btn type2">
-          <a href="#" onClick="fn_stockCard()">Stock Card</a>
-         </p></li>
-       </c:if>
-      </ul>
-      <p class="hide_btn">
-       <a href="#"><img
-        src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
-        alt="hide" /></a>
-      </p>
-     </dd>
-    </dl>
-   </aside>
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
