@@ -1354,7 +1354,7 @@ function checkBankAccNo() {
             } else if(resultM.message == "S") {
                 Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
                     console.log(result);
-                    if(result.cnt1 == "0" && result.cnt2 == "0") {
+                    if(result.cnt1 == 0) {
                         return true;
                     } else {
                         Common.alert("Bank account number has been registered.");
@@ -1368,7 +1368,7 @@ function checkBankAccNo() {
     } else {
             Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
                 console.log(result);
-                if(result.cnt1 == "0" && result.cnt2 == "0") {
+                if(result.cnt1 == "0") {
                     return true;
                 } else {
                     Common.alert("Bank account number has been registered.");
