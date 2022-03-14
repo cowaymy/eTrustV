@@ -272,6 +272,19 @@ function fn_splitBarcode(){
                     };
                 AUIGrid.addRow(scanGridId, rowData, "first");
                 continue;
+            }else{
+            	var stockCode1 = BarCodeArray[i].substr(3,5);
+                if(stockCode1 != "02F5U"){
+                	failSound = true;
+                    rowData = {
+                            "serialNo":BarCodeArray[i]
+                          , "status":0
+                          , "desc":"Serial No. is not valid.",
+                        };
+                    AUIGrid.addRow(scanGridId, rowData, "first");
+                    continue;
+                }
+
             }
 
              barInfo.push({   "serialNo":BarCodeArray[i]
