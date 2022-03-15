@@ -275,6 +275,12 @@
         var data;
 
         if(action == '1'){
+        	if($("#_filterTxtBarcode").val() != "undefined" ){
+        		$("#filterTxtBarcode").val($("#_filterTxtBarcode").val());
+        	}
+        	if($("#_chgdt").val() != "undefined" ){
+                $("#chgdt").val($("#_chgdt").val());
+            }
         	var data = $("#editArea1Form").serializeJSON();
         	$.extend(data,
                     {
@@ -463,8 +469,8 @@
         </td>
 </tr>
 </tbody>
-<%-- <input type="hidden" name="filterTxtBarcode" id="_filterTxtBarcode" value="${headerDetail.filterSn}">
-<input type="hidden" name="chgdt" id="_chgdt" value="${headerDetail.filterChgDt}"> --%>
+<input type="hidden" name="filterTxtBarcode" id="filterTxtBarcode" value="">
+<input type="hidden" name="chgdt" id="chgdt" value="">
 </table><!-- table end -->
 </form>
 
