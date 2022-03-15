@@ -2100,6 +2100,8 @@
   }
 
   function fn_doAllaction(obj) {
+	  console.log("DO ALLOCATION");
+
     var ord_id = $("#ORD_ID").val();
 
     var vdte = obj.value;
@@ -2159,7 +2161,7 @@
     }
 
     // /organization/allocation/allocation.do
-    Common.popupDiv("/homecare/services/install/selectHcAllocation.do", {
+    Common.popupDiv("/homecare/services/install/hcAllocation.do", {
       ORD_ID : ord_id,
       S_DATE : vdte,
       OPTIONS : options,
@@ -2291,7 +2293,7 @@
     }
   }
 
-  setPopData();
+
 
   function fn_serialModifyPop(){
       $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
@@ -2823,5 +2825,5 @@
  <!-- acodi_wrap end -->
 </form>
 <script type="text/javascript">
-
+setPopData();
 </script>
