@@ -387,7 +387,7 @@
         , A.FROM_LOC
         , A.TO_LOC
         , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') FILTER_CHG_DT
-        , A.FILTER_SN
+        , NVL(A.FILTER_SN,'') FILTER_SN
         , TO_CHAR(A.CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') CRT_DT
         , A.CRT_USER_ID
         , TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT

@@ -21,6 +21,7 @@
     $(document).ready(function(){
 
     	$("#temp4").hide();
+
     	setText();
 
     	var action = '${movementType}';
@@ -69,13 +70,18 @@
     	 $("#consignDt").html(date.toLocaleString('en-GB', { hour12:false }));
     	 $("#updateDt").html(date.toLocaleString('en-GB', { hour12:false }));
 
-    	 $("#filterTxtBarcode").val('${headerDetail.filterSn}');
-    	 $("#chgdt").val('${headerDetail.filterChgDt}');
+
+    	 $("#_filterTxtBarcode").val('${headerDetail.filterSn}');
+         $("#_chgdt").val('${headerDetail.filterChgDt}');
+    	 if(!($("#_filterTxtBarcode").val() == null || $("#_filterTxtBarcode").val()== "")){
+    		 $("#_filterTxtBarcode").attr("disabled" , "disabled");
+    		 $("#_chgdt").attr("disabled" , "disabled");
+    	 }
     }
 
     function fn_splitUsedBarcode(){
-        if($("#filterTxtBarcode").val() != null || js.String.strNvl($("#filterTxtBarcode").val()) != ""){
-               var BarCodeArray = $("#filterTxtBarcode").val().toUpperCase().match(/.{1,18}/g);
+        if($("#_filterTxtBarcode").val() != null || js.String.strNvl($("#_filterTxtBarcode").val()) != ""){
+               var BarCodeArray = $("#_filterTxtBarcode").val().toUpperCase().match(/.{1,18}/g);
 
                var unitType = "EA";
                var failSound = false;
@@ -92,8 +98,8 @@
                    if( BarCodeArray[i].length < 18 ){
                        failSound = true;
                        Common.alert("Serial No. less than 18 characters.");
-                       $("#filterTxtBarcode").val("");
-                       $("#filterTxtBarcode").focus();
+                       $("#_filterTxtBarcode").val("");
+                       $("#_filterTxtBarcode").focus();
                        continue;
                    }
 
@@ -102,14 +108,14 @@
                    if(stockCode == "0"){
                        failSound = true;
                        Common.alert("Serial No. Does Not Exist.");
-                       $("#filterTxtBarcode").val("");
-                       $("#filterTxtBarcode").focus();
+                       $("#_filterTxtBarcode").val("");
+                       $("#_filterTxtBarcode").focus();
                        continue;
                    }else if(!(stockCode == "02F5V" || stockCode == "04KNH")){
                        failSound = true;
                        Common.alert("Serial No. is not valid.");
-                       $("#filterTxtBarcode").val("");
-                       $("#filterTxtBarcode").focus();
+                       $("#_filterTxtBarcode").val("");
+                       $("#_filterTxtBarcode").focus();
                        continue;
                    }
                }
@@ -207,11 +213,11 @@
                 Common.alert('Please select a Cody to proceed.');
                 checkResult = false;
                 return checkResult;
-            }else if(FormUtil.isEmpty($("#filterTxtBarcode").val()) ) {
+            }else if(FormUtil.isEmpty($("#_filterTxtBarcode").val()) ) {
                 Common.alert('Please fill in Filter Serial No.');
                 checkResult = false;
                 return checkResult;
-            }else if(FormUtil.isEmpty($("#chgdt").val()) ) {
+            }else if(FormUtil.isEmpty($("#_chgdt").val()) ) {
                 Common.alert('Please select Filter Last Changed Date.');
                 checkResult = false;
                 return checkResult;
@@ -256,6 +262,7 @@
             if(!checkResult) {
                 return false;
             }
+
 
             fn_doSaveHiCareEdit();
 
@@ -435,13 +442,13 @@
 	<th scope="row">Sediment Filter Serial No.</th>
         <td>
             <!-- <select id="usedFilter" name="usedFilter" class="w100p"> -->
-            <input type="text"  id="filterTxtBarcode" name="filterTxtBarcode" placeholder="Please select here before scanning." style="height:40px;width:99%; text-transform:uppercase;" />
+            <input type="text"  id="_filterTxtBarcode" name="filterTxtBarcode" placeholder="Please select here before scanning." style="height:40px;width:99%; text-transform:uppercase;" />
         </td>
     <th scope="row">Filter Last Change Date</th>
             <td>
                <div class="date_set w100p">
                 <p>
-                 <input id="chgdt" name="chgdt" type="text"
+                 <input id="_chgdt" name="chgdt" type="text"
                   title="Filter Last Change Date" placeholder="DD/MM/YYYY"
                   class="j_date">
                 </p>
@@ -456,6 +463,8 @@
         </td>
 </tr>
 </tbody>
+<%-- <input type="hidden" name="filterTxtBarcode" id="_filterTxtBarcode" value="${headerDetail.filterSn}">
+<input type="hidden" name="chgdt" id="_chgdt" value="${headerDetail.filterChgDt}"> --%>
 </table><!-- table end -->
 </form>
 

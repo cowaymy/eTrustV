@@ -179,14 +179,11 @@ public class HiCareServiceImpl implements HiCareService {
  				throw new PreconditionException(AppConstants.FAIL, "This Cody already have one stock on hand.");
  			}
 
- 			params.put("newFilterTxtBarcode", params.get("filterTxtBarcode"));
- 			Integer cnt = hiCareMapper.selectOverallPreviousFilter(params);
-			if(cnt > 0){
-				throw new PreconditionException(AppConstants.FAIL, "Filter Serial No. has been Used Before.");
-			}
-
  			String existFilterSn = details.get("filterSn") == null ? "" : details.get("filterSn").toString();
  			String existFilterChgDt = details.get("filterChgDt") == null ? "" : details.get("filterChgDt").toString();
+
+
+
 
  			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = new Date();
@@ -194,11 +191,21 @@ public class HiCareServiceImpl implements HiCareService {
  			params.put("locId", params.get("cmdMemberCode1"));
  			params.put("consignDt", dateFormat.format(date));
 
-		/*if(!(existFilterSn.equals("") && existFilterChgDt.equals(""))){ //not first time consign, check existing serial
-			if(!existFilterSn.equals(params.get("filterTxtBarcode"))){
-
- 			}
-		}*/
+    		if(existFilterSn.equals("") && existFilterChgDt.equals("")){ //first time consign, check existing serial
+    			params.put("newFilterTxtBarcode", params.get("filterTxtBarcode"));
+     			Integer cnt = hiCareMapper.selectOverallPreviousFilter(params);
+    			if(cnt > 0){
+    				throw new PreconditionException(AppConstants.FAIL, "Filter Serial No. has been Used Before.");
+    			}
+    		}else{//not first time consign, check existing serial
+    			if(!existFilterSn.equals(params.get("filterTxtBarcode"))){//diff with previous record filter
+    				params.put("newFilterTxtBarcode", params.get("filterTxtBarcode"));
+    	 			Integer cnt = hiCareMapper.selectOverallPreviousFilter(params);
+    				if(cnt > 0){
+    					throw new PreconditionException(AppConstants.FAIL, "Filter Serial No. has been Used Before.");
+    				}
+     			}
+    		}
 
  			if(!(existFilterChgDt.equals(params.get("chgdt"))
  					&& existFilterSn.equals(params.get("filterTxtBarcode"))
