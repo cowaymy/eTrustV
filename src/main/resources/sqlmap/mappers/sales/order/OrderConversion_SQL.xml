@@ -531,6 +531,8 @@
      <update id="updSalesRegCrcSAL0074D">
         MERGE INTO SAL0074D A
         USING (
+         SELECT * FROM
+         (
             SELECT
                 EXT1.CUST_CRC_ID CUST_CRC_ID,
                 EXT1.CUST_CRC_TOKEN,
@@ -563,6 +565,8 @@
             and EXT1.SALES_ORD_ID = #{ordId}
             and EXT1.IS_3RD_PARTY = '1'
             and EXT5.CUST_CRC_STUS_ID = '1'
+             )
+            WHERE ROWNUM = 1
         ) SRC
         ON (A.SALES_ORD_ID = SRC.SALES_ORD_ID)
         WHEN MATCHED THEN
@@ -586,8 +590,9 @@
             WHERE MODE_ID = '132' AND STUS_CODE_ID = '1'
             GROUP BY SALES_ORD_ID, RENT_PAY_ID
             )
+            SELECT * FROM
+            (
             SELECT
-
             EXT2.CUST_ID,
             EXT2.CUST_ACC_ID,
             EXT2.CUST_ACC_NO,
@@ -631,6 +636,8 @@
             WHERE 1=1
             AND EXT1.SALES_ORD_ID = #{ordId}
             AND EXT3.IS_3RD_PARTY = '1'
+            )
+            WHERE ROWNUM = 1
             )SRC
         ON (A.SALES_ORD_ID = SRC.SALES_ORD_ID)
         WHEN MATCHED THEN
