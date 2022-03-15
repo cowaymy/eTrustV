@@ -193,8 +193,12 @@
         var checkResult = true;
 
         var isCheck = document.getElementById("checkReturn").checked;
-        if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) ) {
-            Common.alert('Please key in Used Filter Serial No.');
+        if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && isCheck) {
+            Common.alert("Please key in Used Filter Serial No. As 'Used Has Return' field is checked");
+            checkResult = false;
+            return checkResult;
+        }else if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() != '6641') {
+            Common.alert("Please key in Used Filter Serial No.");
             checkResult = false;
             return checkResult;
         }else if(FormUtil.isEmpty($("#newFilterTxtBarcode").val()) ) {

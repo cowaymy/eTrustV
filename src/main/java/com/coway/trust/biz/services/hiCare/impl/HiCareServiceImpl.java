@@ -327,9 +327,9 @@ public class HiCareServiceImpl implements HiCareService {
 	 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is not tally.");
 	 			}
 			}else{
-				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. cannot be empty .");
+				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. cannot be empty. As 'Used Has Return' field is checked");
 			}
-		}else if(isReturn.equals("0") && !(usedFilterSn == null && usedFilterSn.equals(""))){
+		}else if(isReturn.equals("0") && !usedFilterSn.equals("")){
 			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
 			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
 			if(usedFilterSelect.equals(usedFilterSn)){
