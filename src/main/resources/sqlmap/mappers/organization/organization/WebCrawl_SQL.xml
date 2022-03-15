@@ -42,7 +42,6 @@
         WEBCRAWL_UDP_DT = sysdate
         WHERE
         webcrawl_no = #{webcrawlNo}
-        order by webcrawl_no
     </update>
 
 </mapper>
