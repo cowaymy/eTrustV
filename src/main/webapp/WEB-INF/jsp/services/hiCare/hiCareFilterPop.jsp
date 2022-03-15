@@ -222,6 +222,11 @@
                 return false;
             }
 
+            if($("#usedFilterTxtBarcode").val() == $("#newFilterTxtBarcode").val()){
+            	Common.alert('Used Filter Barcode Serial No. should not same as New Filter Serial No.');
+            	return false;
+            }
+
             fn_doSaveHiCareEdit();
 
         });

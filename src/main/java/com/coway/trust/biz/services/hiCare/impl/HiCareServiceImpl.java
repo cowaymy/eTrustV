@@ -319,12 +319,16 @@ public class HiCareServiceImpl implements HiCareService {
 		String isReturn = params.get("isReturn").toString() == "true" ? "1" : "0";
 
 		String usedFilterSn = params.get("usedFilterSn") == null ? "" : params.get("usedFilterSn").toString();
-		if(isReturn.equals("1") && !(usedFilterSn == null && usedFilterSn.equals(""))){
-			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
-			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
-			if(!usedFilterSelect.equals(usedFilterSn)){
- 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is not tally.");
- 			}
+		if(isReturn.equals("1")){
+			if(!(usedFilterSn == null && usedFilterSn.equals(""))){
+				String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
+				usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
+				if(!usedFilterSelect.equals(usedFilterSn)){
+	 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. is not tally.");
+	 			}
+			}else{
+				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. cannot be empty .");
+			}
 		}else if(isReturn.equals("0") && !(usedFilterSn == null && usedFilterSn.equals(""))){
 			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
 			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;

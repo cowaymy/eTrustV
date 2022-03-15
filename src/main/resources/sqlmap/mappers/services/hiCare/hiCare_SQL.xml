@@ -625,7 +625,7 @@
 		LEFT JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
 		WHERE A.TRNSC_TYPE = 'H7'
 		AND SERIAL_NO = #{serialNo}
-        order by a.seq
+        order by a.FILTER_CHG_DT,a.seq
     </select>
 
     <select id="selectTransitNo" resultType="String">
