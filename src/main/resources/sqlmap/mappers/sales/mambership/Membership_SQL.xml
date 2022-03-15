@@ -1570,6 +1570,6 @@
 		AND EXT3.APP_TYPE_ID = 66
 		AND EXT3.STUS_CODE_ID = 4
 
-		ORDER BY ORDER_NO ASC;
+        ORDER BY EXT3.SALES_ORD_NO ASC
     </select>
 </mapper>
