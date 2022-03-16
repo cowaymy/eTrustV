@@ -77,7 +77,15 @@
           dataField : "transTypeDesc",
           headerText : "Transaction Type",
           width : "18%"
-        }
+        }, {
+            dataField : "reasonDesc1",
+            headerText : "Reason",
+            width : "18%"
+          }, {
+              dataField : "remark1",
+              headerText : "Remarks",
+              width : "20%"
+            }
         ];
 
         var trfLayout = [ {

@@ -223,8 +223,15 @@
                 return checkResult;
             }
         }else if(action == '2'){
+
+        	var holderLoc = $("#holderLocChg").val().trim();
+
             if(FormUtil.isEmpty($("#returnStatus").val()) ) {
                 Common.alert('Please select status.');
+                checkResult = false;
+                return checkResult;
+            }else if(holderLoc == '' &&  $("#returnStatus").val() =='494'){
+            	Common.alert("This record haven't assign to Cody. Not allow to Stock Return.");
                 checkResult = false;
                 return checkResult;
             }else if(FormUtil.isEmpty($("#returnReason").val()) ) {
@@ -505,7 +512,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td>
-        <textarea cols="20" id="returnRemark" name="returnRemark" placeholder="Remark"></textarea>
+        <textarea cols="20" id="returnRemark" name="returnRemark" placeholder="Remark" maxlength="100"></textarea>
     </td>
 </tr>
 </tbody>
@@ -531,7 +538,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td>
-        <textarea cols="20" id="deactRemark" name="deactRemark" placeholder="Remark"></textarea>
+        <textarea cols="20" id="deactRemark" name="deactRemark" placeholder="Remark" maxlength="100"></textarea>
     </td>
 </tr>
 <tr>
@@ -554,6 +561,7 @@
 
 <input type="hidden" name="movementType" id="movementType" value="${movementType}"/>
 <input type="hidden" name="serialNoChg" id="serialNoChg" value="${headerDetail.serialNo}"/>
+<input type="hidden" name="holderLocChg" id="holderLocChg" value="${headerDetail.holderLoc}"/>
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>

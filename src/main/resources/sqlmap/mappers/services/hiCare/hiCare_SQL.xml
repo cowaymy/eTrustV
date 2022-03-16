@@ -566,6 +566,9 @@
         , G.CODE_DESC model
         , H.CODE_DESC reason_desc
         , i.code_name trans_type_desc
+        ,a.remarks
+        ,case when A.TRNSC_TYPE in ('H2','H4','H8') then '' else H.CODE_DESC end reason_desc_1
+        ,case when A.TRNSC_TYPE in ('H2','H4','H8') then '' else a.remarks end remark1
         from SVC0129H a
         left join SYS0028M b on b.wh_loc_code = a.loc_id
         left join SYS0005M c on c.brnch_id = a.BRANCH_ID

@@ -224,8 +224,12 @@
               Common.alert("Only ACTIVE record able to update");
               return;
           }
-          if(isAssignMem == " " || isAssignMem == "-"){
+          /* if(isAssignMem == " " || isAssignMem == "-"){
               Common.alert("This record haven't assign to Cody");
+              return;
+          } */
+		  if(delvStatus == "N"){
+              Common.alert("This record is under transfer.");
               return;
           }
       }

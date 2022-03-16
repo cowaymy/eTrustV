@@ -373,7 +373,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td>
-        <textarea cols="20" id="filterRemark" name="filterRemark" placeholder="Remark"></textarea>
+        <textarea cols="20" id="filterRemark" name="filterRemark" placeholder="Remark" maxlength="100"></textarea>
     </td>
 </tr>
 </tbody>
