@@ -201,6 +201,10 @@
             Common.alert("No allow have Used Filter Serial No. when choosing Filter Lost reason.");
             checkResult = false;
             return checkResult;
+        }else if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() != '6641') {
+            Common.alert("Please key in Used Filter Serial No.");
+            checkResult = false;
+            return checkResult;
         }else if(FormUtil.isEmpty($("#newFilterTxtBarcode").val()) ) {
             Common.alert('Please key in New Filter Serial No.');
             checkResult = false;
