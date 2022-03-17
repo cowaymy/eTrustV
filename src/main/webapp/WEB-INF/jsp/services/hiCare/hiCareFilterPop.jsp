@@ -221,7 +221,7 @@
             Common.alert('Please select reason.');
             checkResult = false;
             return checkResult;
-        }else if(FormUtil.isEmpty($("#filterRemarks").val()) && $("#filterReason").val() == '6642') {
+        }else if(FormUtil.isEmpty($("#filterRemark").val()) && $("#filterReason").val() == '6642') {
             Common.alert('Please fill in remark.');
             checkResult = false;
             return checkResult;
