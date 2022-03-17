@@ -210,13 +210,15 @@
         	        var subDeptCodySupport = $('#sub_department').val();
 
         	        var tempSubDeptCodySupport = "";
-        	        for (var i = 0 ; i < subDeptCodySupport.length ; i++){
+        	        if (subDeptCodySupport != null ){
+        	        for (var i = 0 ; i < subDeptCodySupport.length; i++){
         	            if (tempSubDeptCodySupport == ""){
         	                tempSubDeptCodySupport = subDeptCodySupport[i];
         	            }else{
         	                tempSubDeptCodySupport = tempSubDeptCodySupport +"∈"+subDeptCodySupport[i];
         	            }
         	        }
+        	         }
 
         	        var param = tempSubDeptCodySupport;
         		  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), sub_dept : param }, 'cmGroup', 'cmGroup', 'S', 'fn_setDefaultToSelection');
