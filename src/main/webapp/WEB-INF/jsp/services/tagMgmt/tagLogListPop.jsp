@@ -670,7 +670,7 @@
       </tr>
       <tr>
        <tr>
-       <th scope="row"><spring:message code='Department Code'/></th>
+       <th scope="row"><spring:message code='service.title.DepartmentCode'/></th>
        <td>
        <c:choose>
        <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
