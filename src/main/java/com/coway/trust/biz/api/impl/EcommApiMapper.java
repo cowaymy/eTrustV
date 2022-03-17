@@ -29,4 +29,6 @@ public interface EcommApiMapper {
 
   void updateEcommOrderStatus(SalesOrderMVO salesOrderMVO);
 
+  int checkDuplicateOrder(Map<String, Object> params);
+
 }

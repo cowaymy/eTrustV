@@ -203,4 +203,10 @@
 </update>
 
 
+<select id="checkDuplicateOrder" parameterType="Map" resultType="int">
+      SELECT count(*) FROM API0005D
+	  WHERE ref_no = #{refNo}
+	  AND BNDL_ID = #{bndlId}
+</select>
+
 </mapper>
