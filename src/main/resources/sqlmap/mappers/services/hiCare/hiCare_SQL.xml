@@ -273,6 +273,7 @@
                 REMARKS,
                 ATCH_FILE_GRP_ID,
                 IS_RETURN,
+                OLD_FILTER_SN,
                 CRT_DT,
                 CRT_USER_ID,
                 UPD_DT,
@@ -297,6 +298,7 @@
              , REMARKS
              , ATCH_FILE_GRP_ID
              , IS_RETURN
+             , OLD_FILTER_SN
              , CRT_DT
              , CRT_USER_ID
              , UPD_DT
@@ -470,6 +472,9 @@
         </if>
         <if test="filterSn !=null and filterSn !=''">
              , FILTER_SN = #{filterSn}
+        </if>
+        <if test="oldFilterSn !=null">
+             , OLD_FILTER_SN = #{oldFilterSn}
         </if>
         <if test="reason !=null and reason !=''">
              , REASON = #{reason}

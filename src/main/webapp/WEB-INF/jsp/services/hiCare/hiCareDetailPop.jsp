@@ -152,8 +152,8 @@
     	 $("#crtUserId").html('${headerDetail.crtUserId}');
     	 $("#crtDt").html('${headerDetail.crtDt}');
     	 $("#updBy").html('${headerDetail.updBy}');
-    	 var condition = '${headerDetail.condition}';
-    	 if(condition == 'Closed'){
+    	 var status = '${headerDetail.status}';
+    	 if(status == 'Closed'){
     		 $("#reason").html('${headerDetail.reasonDesc}');
              $("#remarks").html('${headerDetail.remarks}');
              console.log("atchgrp" + '${headerDetail.atchFileGrpId}');

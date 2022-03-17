@@ -390,7 +390,7 @@ public class HiCareServiceImpl implements HiCareService {
         Date currentDatePlusOneYear = c.getTime();
         params.put("filterNxtChgDt", dateFormat.format(currentDatePlusOneYear));
 
-
+        params.put("oldFilterSn", usedFilterSn);
 		params.put("isReturn", isReturn);
 		params.put("reason", params.get("filterReason"));
 		params.put("remarks", params.get("filterRemark"));
