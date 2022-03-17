@@ -193,16 +193,24 @@
         var checkResult = true;
 
         var isCheck = document.getElementById("checkReturn").checked;
-        if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && isCheck) {
-            Common.alert("Please key in Used Filter Serial No. As 'Used Has Return' field is checked");
+        if(!FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() == '6641') {
+            Common.alert("No allow have Used Filter Serial No. when choosing Filter Lost reason.");
             checkResult = false;
             return checkResult;
-        }else if(!FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() == '6641') {
-            Common.alert("No allow have Used Filter Serial No. when choosing Filter Lost reason.");
+        }else if(isCheck && FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() == '6641') {
+            Common.alert("No allow to check Used Has Return when choosing Filter Lost reason.");
             checkResult = false;
             return checkResult;
         }else if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() != '6641') {
             Common.alert("Please key in Used Filter Serial No.");
+            checkResult = false;
+            return checkResult;
+        }else if(!isCheck && !FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && $("#filterReason").val() != '6641') {
+            Common.alert("Please tick the Used Has Return.");
+            checkResult = false;
+            return checkResult;
+        }else if(FormUtil.isEmpty($("#usedFilterTxtBarcode").val()) && isCheck) {
+            Common.alert("Please key in Used Filter Serial No. As 'Used Has Return' field is tick");
             checkResult = false;
             return checkResult;
         }else if(FormUtil.isEmpty($("#newFilterTxtBarcode").val()) ) {
