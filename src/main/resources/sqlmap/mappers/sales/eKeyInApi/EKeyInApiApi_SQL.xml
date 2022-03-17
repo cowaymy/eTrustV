@@ -15,8 +15,8 @@
                , A.STUS_ID AS STUS_ID
                , D.NAME AS STUS_NAME
                , C.STK_DESC AS STK_DESC
-               , A.REM1 AS REM1
-               , A.REM2 AS REM2
+               , CASE WHEN A.REM1 IS NULL THEN F.REM1 ELSE A.REM1 END AS REM1
+               , CASE WHEN A.REM2 IS NULL THEN F.REM2 ELSE F.REM2 END AS REM2
                , A.PRE_ORD_ID AS PRE_ORD_ID
       FROM SAL0213M A
       INNER JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
@@ -26,6 +26,7 @@
                                         AND D.STUS_CODE_ID IN (1, 4, 10, 21, 104) --1(Active), 4(Completed), 10(Cancelled), 21(Failed), 104(Processing)
       INNER JOIN SYS0005M E ON A.KEYIN_BRNCH_ID = E.BRNCH_ID
                                        AND E.STUS_ID = 1
+      LEFT JOIN SAL0302D F ON A.PRE_ORD_ID = F.PRE_ORD_ID
       WHERE A.APP_TYPE_ID IN ('66', '67', '68', '5764')  --SYS0013M : 66(Rental), 67(Outright), 68(Instalment), 5764(Auxiliary)
           AND A.MEM_CODE = ( SELECT A.HR_CODE
                                          FROM SYS0047M A
