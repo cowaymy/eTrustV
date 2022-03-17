@@ -109,244 +109,254 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         String salesMenCode = CommonUtils.nvl(reqPrm.get("salesmanCode")) == "" ? "100334" : reqPrm.get("salesmanCode").toString();
 
         LOGGER.debug("reqPrm=======================>" + reqPrm);
-        ecommApiMapper.registerOrd(reqPrm);
-        ecommApiMapper.getCustomerInfo(reqPrm);
-
-        custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
-
-        OrderVO orderVO = new OrderVO();
-        SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
-        SalesOrderDVO salesOrderDVO = new SalesOrderDVO();
-        InstallationVO installationVO = new InstallationVO();
-        RentPaySetVO rentPaySetVO = new RentPaySetVO();
-        CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
-        AccClaimAdtVO accClaimAdtVO = new AccClaimAdtVO();
-        EStatementReqVO eStatementReqVO = new EStatementReqVO();
-        DocSubmissionVO docSubmissionVO = new DocSubmissionVO();
-        GridDataSet<DocSubmissionVO> documentList = new GridDataSet<DocSubmissionVO>();
-        List<DocSubmissionVO> docList = new ArrayList<DocSubmissionVO>();
-        RentalSchemeVO rentalSchemeVO = new RentalSchemeVO();
-
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
-        String nowDate = df.format(date);
-
-        // Get Promotion Price Info
-        Map<String, Object> ordInfo = new HashMap<String, Object>();
-        ordInfo.put("appTypeId" , reqPrm.get("appType").toString());
-        ordInfo.put("promoId"   , reqPrm.get("promo").toString());
-        ordInfo.put("stkId"     , reqPrm.get("product").toString());
-        ordInfo.put("srvPacId"  , reqPrm.get("srvPac").toString());
-        ordInfo.put("bndlId"  , reqPrm.get("bndlId").toString());
-
-        Map<String, Object> memberCode = new HashMap<String, Object>();
-        memberCode.put("memCode", salesMenCode);
-        memberCode.put("stus", 1);
-        memberCode.put("salesMen", 1);
-
-        Map<String, Object> custAdd = new HashMap<String, Object>();
-        custAdd.put("custAddId", Integer.valueOf(custInfo.get("custaddid").toString()));
-
-        EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
-        // Retrieve back the main product's appTyeId for Frame
-
-        if(ordInfo.get("appTypeId").toString().equals("5764"))
+        // To check duplicate order coming in from Ascentis
+        int duplicateOrdCount = ecommApiMapper.checkDuplicateOrder(reqPrm);
+        if(duplicateOrdCount > 1)
         {
-        	String selectAppTypeId = orderRegisterService.selectPrevMatOrderAppTypeId(ordInfo);
+        	code = String.valueOf(AppConstants.RESPONSE_CODE_FORBIDDEN);
+            message = AppConstants.RESPONSE_DESC_DUP;
+        }
+        else
+        {
+        	ecommApiMapper.registerOrd(reqPrm);
+            ecommApiMapper.getCustomerInfo(reqPrm);
 
-        	if(!selectAppTypeId.equals("66"))
+            custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
+
+            OrderVO orderVO = new OrderVO();
+            SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
+            SalesOrderDVO salesOrderDVO = new SalesOrderDVO();
+            InstallationVO installationVO = new InstallationVO();
+            RentPaySetVO rentPaySetVO = new RentPaySetVO();
+            CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
+            AccClaimAdtVO accClaimAdtVO = new AccClaimAdtVO();
+            EStatementReqVO eStatementReqVO = new EStatementReqVO();
+            DocSubmissionVO docSubmissionVO = new DocSubmissionVO();
+            GridDataSet<DocSubmissionVO> documentList = new GridDataSet<DocSubmissionVO>();
+            List<DocSubmissionVO> docList = new ArrayList<DocSubmissionVO>();
+            RentalSchemeVO rentalSchemeVO = new RentalSchemeVO();
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
+            String nowDate = df.format(date);
+
+            // Get Promotion Price Info
+            Map<String, Object> ordInfo = new HashMap<String, Object>();
+            ordInfo.put("appTypeId" , reqPrm.get("appType").toString());
+            ordInfo.put("promoId"   , reqPrm.get("promo").toString());
+            ordInfo.put("stkId"     , reqPrm.get("product").toString());
+            ordInfo.put("srvPacId"  , reqPrm.get("srvPac").toString());
+            ordInfo.put("bndlId"  , reqPrm.get("bndlId").toString());
+
+            Map<String, Object> memberCode = new HashMap<String, Object>();
+            memberCode.put("memCode", salesMenCode);
+            memberCode.put("stus", 1);
+            memberCode.put("salesMen", 1);
+
+            Map<String, Object> custAdd = new HashMap<String, Object>();
+            custAdd.put("custAddId", Integer.valueOf(custInfo.get("custaddid").toString()));
+
+            EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
+            // Retrieve back the main product's appTyeId for Frame
+
+            if(ordInfo.get("appTypeId").toString().equals("5764"))
+            {
+            	String selectAppTypeId = orderRegisterService.selectPrevMatOrderAppTypeId(ordInfo);
+
+            	if(!selectAppTypeId.equals("66"))
+                {
+                	ordInfo.put("srvPacId",0);
+                }
+                else
+                {
+                	ordInfo.put("srvPacId", reqPrm.get("srvPac").toString());
+                }
+            }
+            else if(!ordInfo.get("appTypeId").toString().equals("66"))
             {
             	ordInfo.put("srvPacId",0);
             }
-            else
-            {
-            	ordInfo.put("srvPacId", reqPrm.get("srvPac").toString());
-            }
-        }
-        else if(!ordInfo.get("appTypeId").toString().equals("66"))
-        {
-        	ordInfo.put("srvPacId",0);
-        }
 
-        /*// Non Rental Order - SRV_PAC_ID = 0
-        if(!ordInfo.get("appTypeId").toString().equals("66")){
-          ordInfo.put("srvPacId",0);
-        }*/
+            /*// Non Rental Order - SRV_PAC_ID = 0
+            if(!ordInfo.get("appTypeId").toString().equals("66")){
+              ordInfo.put("srvPacId",0);
+            }*/
 
-        EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
-        EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
-        EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(custAdd);
+            EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
+            EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
+            EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(custAdd);
 
-        SessionVO sessionVO = new SessionVO();
-        sessionVO.setUserId(Integer.parseInt(sysUserId));
-        sessionVO.setUserBranchId(42);
+            SessionVO sessionVO = new SessionVO();
+            sessionVO.setUserId(Integer.parseInt(sysUserId));
+            sessionVO.setUserBranchId(42);
 
-        orderVO.setCustTypeId(964);
-        orderVO.setRaceId( Integer.valueOf(reqPrm.get("race").toString()) );
-        orderVO.setBillGrp("new");
+            orderVO.setCustTypeId(964);
+            orderVO.setRaceId( Integer.valueOf(reqPrm.get("race").toString()) );
+            orderVO.setBillGrp("new");
 
-        //SAL0001D
-        salesOrderMVO.setEcommOrdId(Integer.valueOf(reqPrm.get("ecommOrdId").toString()));
-        salesOrderMVO.setAdvBill(0);
-        salesOrderMVO.setAppTypeId( Integer.valueOf(reqPrm.get("appType").toString()) );
-        salesOrderMVO.setSrvPacId( Integer.valueOf(reqPrm.get("srvPac").toString()) );
-        salesOrderMVO.setCustAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        //salesOrderMVO.setCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
-        salesOrderMVO.setCustCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
-        salesOrderMVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
-        salesOrderMVO.setInstPriod(0);
-        salesOrderMVO.setPvMonth(0);
-        salesOrderMVO.setPvYear(0);
+            //SAL0001D
+            salesOrderMVO.setEcommOrdId(Integer.valueOf(reqPrm.get("ecommOrdId").toString()));
+            salesOrderMVO.setAdvBill(0);
+            salesOrderMVO.setAppTypeId( Integer.valueOf(reqPrm.get("appType").toString()) );
+            salesOrderMVO.setSrvPacId( Integer.valueOf(reqPrm.get("srvPac").toString()) );
+            salesOrderMVO.setCustAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
+            //salesOrderMVO.setCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+            salesOrderMVO.setCustCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
+            salesOrderMVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
+            salesOrderMVO.setInstPriod(0);
+            salesOrderMVO.setPvMonth(0);
+            salesOrderMVO.setPvYear(0);
 
-        salesOrderMVO.setDefRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-        salesOrderMVO.setMthRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()) );
-        salesOrderMVO.setPromoDiscPeriod(Integer.valueOf(promoPrice.get("promoDiscPeriod").toString()));
-        salesOrderMVO.setPromoDiscPeriodTp(Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
-        salesOrderMVO.setTotPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
-        salesOrderMVO.setNorAmt(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-        salesOrderMVO.setNorRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-        salesOrderMVO.setDiscRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setDefRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setMthRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()) );
+            salesOrderMVO.setPromoDiscPeriod(Integer.valueOf(promoPrice.get("promoDiscPeriod").toString()));
+            salesOrderMVO.setPromoDiscPeriodTp(Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
+            salesOrderMVO.setTotPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+            salesOrderMVO.setNorAmt(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setNorRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setDiscRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
 
-        salesOrderMVO.setPromoId( Integer.valueOf(reqPrm.get("promo").toString()) );
-        salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
-        salesOrderMVO.setRem("Ecommerce Order");
+            salesOrderMVO.setPromoId( Integer.valueOf(reqPrm.get("promo").toString()) );
+            salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
+            salesOrderMVO.setRem("Ecommerce Order");
 
-        salesOrderMVO.setMemId(Integer.valueOf(memInfo.get("memId").toString()));
-        salesOrderMVO.setDeptCode(memInfo.get("deptCode").toString());
-        salesOrderMVO.setGrpCode(memInfo.get("grpCode").toString());
-        salesOrderMVO.setOrgCode(memInfo.get("orgCode").toString());
-        salesOrderMVO.setSalesGmId(Integer.valueOf(memInfo.get("lvl1UpId").toString()));
-        salesOrderMVO.setSalesSmId(Integer.valueOf(memInfo.get("lvl2UpId").toString()));
-        salesOrderMVO.setSalesHmId(Integer.valueOf(memInfo.get("lvl3UpId").toString()));
-        orderVO.setSalesOrderMVO(salesOrderMVO);
-
-        // SAL0002D
-        salesOrderDVO.setItmPrc(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-        salesOrderDVO.setItmPrcId(Integer.valueOf(productPrice.get("priceId").toString()));
-        salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
-        salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
-        salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
-        orderVO.setSalesOrderDVO(salesOrderDVO);
-
-        // SAL0045D
-        installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        installationVO.setBrnchId(CommonUtils.nvl(Integer.valueOf(custAddInfo.get("brnchId").toString()),42));
-        installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
-        installationVO.setInstct(null);
-        installationVO.setPreDt(nowDate);
-        installationVO.setPreTm("12:00");
-        orderVO.setInstallationVO(installationVO);
-
-        // SAL0074D
-        rentPaySetVO.setBankId(Integer.valueOf(reqPrm.get("issueBank").toString()));
-        rentPaySetVO.setCustAccId(0);
-        rentPaySetVO.setCustCrcId(Integer.valueOf(custInfo.get("custcrcid").toString()));
-        rentPaySetVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
-        //rentPaySetVO.setIs3rdParty(Integer.valueOf(reqPrm.get("thrdParty").toString()));
-        rentPaySetVO.setModeId(131);
-        rentPaySetVO.setIssuNric(null);
-        rentPaySetVO.setNricOld(null);
-        orderVO.setRentPaySetVO(rentPaySetVO);
-
-        // SAL0024D
-        custBillMasterVO.setCustBillAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
-        //custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
-        custBillMasterVO.setCustBillCustId(Integer.valueOf(custInfo.get("custid").toString()));
-        custBillMasterVO.setCustBillIsEstm(0);
-        custBillMasterVO.setCustBillEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
-        custBillMasterVO.setCustBillIsPost(0);
-        custBillMasterVO.setCustBillIsSms(1);
-        custBillMasterVO.setCustBillIsSms2(0);
-        custBillMasterVO.setCustBillIsWebPortal(0);
-        custBillMasterVO.setCustBillRem(null);
-        custBillMasterVO.setCustBillWebPortalUrl(null);
-        orderVO.setCustBillMasterVO(custBillMasterVO);
-
-        // PAY0008M
-        accClaimAdtVO.setAccClBillClmAmt(BigDecimal.valueOf(0));
-        accClaimAdtVO.setAccClClmAmt(BigDecimal.valueOf(0));
-        accClaimAdtVO.setAccClAccTName(reqPrm.get("cardName").toString());
-        accClaimAdtVO.setAccClAccNric(reqPrm.get("nric").toString());
-        accClaimAdtVO.setAccClPayMode("CRC");
-        accClaimAdtVO.setAccClPayModeId(131);
-        orderVO.setAccClaimAdtVO(accClaimAdtVO);
-
-        eStatementReqVO.setEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
-        orderVO.seteStatementReqVO(eStatementReqVO);
-
-        // ORG0010D
-        docSubmissionVO.setChkfield(1);
-        docSubmissionVO.setDocTypeId(3198);
-        docSubmissionVO.setTypeDesc("Sales Order Form");
-        docList.add(0, docSubmissionVO);
-        documentList.setUpdate((ArrayList<DocSubmissionVO>) docList);
-        orderVO.setDocSubmissionVOList(documentList);
-        orderVO.setRentalSchemeVO(rentalSchemeVO);
-
-
-        // Celeste: when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
-        String prdCat = reqPrm.get("prodCat").toString();
-        String stkCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
-        if(prdCat != null && (prdCat.equals("Mattress")))
-		{
-            HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
-            //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
-            SalesOrderMVO salesOrderMVO1 = new SalesOrderMVO();
-            SalesOrderMVO salesOrderMVO2 = new SalesOrderMVO();
-            SalesOrderDVO salesOrderDVO1 = new SalesOrderDVO(); //MATTRESS
-            SalesOrderDVO salesOrderDVO2 = new SalesOrderDVO(); //FRAME
-            AccClaimAdtVO accClaimAdtVO1 = new AccClaimAdtVO(); //MATTRESS
-            AccClaimAdtVO accClaimAdtVO2 = new AccClaimAdtVO(); //FRAME
-            if(stkCat.equals("5706"))
-            {
-            	salesOrderDVO1 = orderVO.getSalesOrderDVO();
-            	accClaimAdtVO1 = orderVO.getAccClaimAdtVO();
-            }
-            if(stkCat.equals("5707"))
-            {
-            	salesOrderDVO2 = orderVO.getSalesOrderDVO();
-            	accClaimAdtVO2 = orderVO.getAccClaimAdtVO();
-            }
-            salesOrderMVO.seteCommBndlId(reqPrm.get("bndlId").toString());
+            salesOrderMVO.setMemId(Integer.valueOf(memInfo.get("memId").toString()));
+            salesOrderMVO.setDeptCode(memInfo.get("deptCode").toString());
+            salesOrderMVO.setGrpCode(memInfo.get("grpCode").toString());
+            salesOrderMVO.setOrgCode(memInfo.get("orgCode").toString());
+            salesOrderMVO.setSalesGmId(Integer.valueOf(memInfo.get("lvl1UpId").toString()));
+            salesOrderMVO.setSalesSmId(Integer.valueOf(memInfo.get("lvl2UpId").toString()));
+            salesOrderMVO.setSalesHmId(Integer.valueOf(memInfo.get("lvl3UpId").toString()));
             orderVO.setSalesOrderMVO(salesOrderMVO);
-        	orderVO.setSalesOrderDVO1(salesOrderDVO1);
-            orderVO.setSalesOrderDVO2(salesOrderDVO2);
-            salesOrderMVO1 = orderVO.getSalesOrderMVO();
-            salesOrderMVO2 = orderVO.getSalesOrderMVO();
-            orderVO.setSalesOrderMVO1(salesOrderMVO1);
-            orderVO.setSalesOrderMVO2(salesOrderMVO2);
-            orderVO.setAccClaimAdtVO1(accClaimAdtVO1);
-            orderVO.setAccClaimAdtVO2(accClaimAdtVO2);
 
-            hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
-		}else{
-			//check if bundleId in API0005D existed before
+            // SAL0002D
+            salesOrderDVO.setItmPrc(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderDVO.setItmPrcId(Integer.valueOf(productPrice.get("priceId").toString()));
+            salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+            salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
+            salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
+            orderVO.setSalesOrderDVO(salesOrderDVO);
 
-			String ecommBndlId = reqPrm.get("bndlId").toString();
-			int ecommOrdId = salesOrderMVO.getEcommOrdId();
-			int cntHAExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
-			if(cntHAExisted > 1)
-			{
-				Map<String, Object> HAObj = new HashMap<String, Object>();
-				HAObj.put("ecommBndlId", ecommBndlId);
-				HAObj.put("ecommOrdId", ecommOrdId);
-				int prevHAOrderId =  hcOrderRegisterMapper.getPrevOrdId(HAObj);
-				salesOrderMVO.setComboOrdBind(prevHAOrderId);
-				orderVO.setSalesOrderMVO(salesOrderMVO);
-			}
+            // SAL0045D
+            installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
+            installationVO.setBrnchId(CommonUtils.nvl(Integer.valueOf(custAddInfo.get("brnchId").toString()),42));
+            installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
+            installationVO.setInstct(null);
+            installationVO.setPreDt(nowDate);
+            installationVO.setPreTm("12:00");
+            orderVO.setInstallationVO(installationVO);
 
-			orderRegisterService.registerOrder(orderVO, sessionVO);
-		}
-        created = 1;
+            // SAL0074D
+            rentPaySetVO.setBankId(Integer.valueOf(reqPrm.get("issueBank").toString()));
+            rentPaySetVO.setCustAccId(0);
+            rentPaySetVO.setCustCrcId(Integer.valueOf(custInfo.get("custcrcid").toString()));
+            rentPaySetVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
+            //rentPaySetVO.setIs3rdParty(Integer.valueOf(reqPrm.get("thrdParty").toString()));
+            rentPaySetVO.setModeId(131);
+            rentPaySetVO.setIssuNric(null);
+            rentPaySetVO.setNricOld(null);
+            orderVO.setRentPaySetVO(rentPaySetVO);
+
+            // SAL0024D
+            custBillMasterVO.setCustBillAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
+            custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+            //custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+            custBillMasterVO.setCustBillCustId(Integer.valueOf(custInfo.get("custid").toString()));
+            custBillMasterVO.setCustBillIsEstm(0);
+            custBillMasterVO.setCustBillEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
+            custBillMasterVO.setCustBillIsPost(0);
+            custBillMasterVO.setCustBillIsSms(1);
+            custBillMasterVO.setCustBillIsSms2(0);
+            custBillMasterVO.setCustBillIsWebPortal(0);
+            custBillMasterVO.setCustBillRem(null);
+            custBillMasterVO.setCustBillWebPortalUrl(null);
+            orderVO.setCustBillMasterVO(custBillMasterVO);
+
+            // PAY0008M
+            accClaimAdtVO.setAccClBillClmAmt(BigDecimal.valueOf(0));
+            accClaimAdtVO.setAccClClmAmt(BigDecimal.valueOf(0));
+            accClaimAdtVO.setAccClAccTName(reqPrm.get("cardName").toString());
+            accClaimAdtVO.setAccClAccNric(reqPrm.get("nric").toString());
+            accClaimAdtVO.setAccClPayMode("CRC");
+            accClaimAdtVO.setAccClPayModeId(131);
+            orderVO.setAccClaimAdtVO(accClaimAdtVO);
+
+            eStatementReqVO.setEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
+            orderVO.seteStatementReqVO(eStatementReqVO);
+
+            // ORG0010D
+            docSubmissionVO.setChkfield(1);
+            docSubmissionVO.setDocTypeId(3198);
+            docSubmissionVO.setTypeDesc("Sales Order Form");
+            docList.add(0, docSubmissionVO);
+            documentList.setUpdate((ArrayList<DocSubmissionVO>) docList);
+            orderVO.setDocSubmissionVOList(documentList);
+            orderVO.setRentalSchemeVO(rentalSchemeVO);
 
 
-        if(created > 0){
-          code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
-          message = AppConstants.RESPONSE_DESC_CREATED;
-        }else{
-          code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
-          message = AppConstants.RESPONSE_DESC_INVALID;
+            // Celeste: when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
+            String prdCat = reqPrm.get("prodCat").toString();
+            String stkCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
+            if(prdCat != null && (prdCat.equals("Mattress")))
+    		{
+                HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
+                //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
+                SalesOrderMVO salesOrderMVO1 = new SalesOrderMVO();
+                SalesOrderMVO salesOrderMVO2 = new SalesOrderMVO();
+                SalesOrderDVO salesOrderDVO1 = new SalesOrderDVO(); //MATTRESS
+                SalesOrderDVO salesOrderDVO2 = new SalesOrderDVO(); //FRAME
+                AccClaimAdtVO accClaimAdtVO1 = new AccClaimAdtVO(); //MATTRESS
+                AccClaimAdtVO accClaimAdtVO2 = new AccClaimAdtVO(); //FRAME
+                if(stkCat.equals("5706"))
+                {
+                	salesOrderDVO1 = orderVO.getSalesOrderDVO();
+                	accClaimAdtVO1 = orderVO.getAccClaimAdtVO();
+                }
+                if(stkCat.equals("5707"))
+                {
+                	salesOrderDVO2 = orderVO.getSalesOrderDVO();
+                	accClaimAdtVO2 = orderVO.getAccClaimAdtVO();
+                }
+                salesOrderMVO.seteCommBndlId(reqPrm.get("bndlId").toString());
+                orderVO.setSalesOrderMVO(salesOrderMVO);
+            	orderVO.setSalesOrderDVO1(salesOrderDVO1);
+                orderVO.setSalesOrderDVO2(salesOrderDVO2);
+                salesOrderMVO1 = orderVO.getSalesOrderMVO();
+                salesOrderMVO2 = orderVO.getSalesOrderMVO();
+                orderVO.setSalesOrderMVO1(salesOrderMVO1);
+                orderVO.setSalesOrderMVO2(salesOrderMVO2);
+                orderVO.setAccClaimAdtVO1(accClaimAdtVO1);
+                orderVO.setAccClaimAdtVO2(accClaimAdtVO2);
+
+                hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
+    		}else{
+    			//check if bundleId in API0005D existed before
+
+    			String ecommBndlId = reqPrm.get("bndlId").toString();
+    			int ecommOrdId = salesOrderMVO.getEcommOrdId();
+    			int cntHAExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
+    			if(cntHAExisted > 1)
+    			{
+    				Map<String, Object> HAObj = new HashMap<String, Object>();
+    				HAObj.put("ecommBndlId", ecommBndlId);
+    				HAObj.put("ecommOrdId", ecommOrdId);
+    				int prevHAOrderId =  hcOrderRegisterMapper.getPrevOrdId(HAObj);
+    				salesOrderMVO.setComboOrdBind(prevHAOrderId);
+    				orderVO.setSalesOrderMVO(salesOrderMVO);
+    			}
+
+    			orderRegisterService.registerOrder(orderVO, sessionVO);
+    		}
+            created = 1;
+
+
+            if(created > 0){
+              code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
+              message = AppConstants.RESPONSE_DESC_CREATED;
+            }else{
+              code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+              message = AppConstants.RESPONSE_DESC_INVALID;
+            }
         }
       }
 
