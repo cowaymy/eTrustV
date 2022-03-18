@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.UserManagementService;
+import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -22,6 +23,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 	@Autowired
 	private UserManagementMapper userManagementMapper;
+	@Autowired
+	private LoginMapper loginMapper;
 
 	@Override
 	public List<EgovMap> selectUserList(Map<String, Object> params) {
@@ -103,6 +106,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 		params.put("userUpdUserId", loginId);
 
 		userManagementMapper.saveUserManagementList(params);
+		// Added to reset fail login attempt. Hui Ding, 18/03/2022
+		loginMapper.resetLoginFailAttempt(Integer.valueOf(params.get("userId").toString()));
 	}
 
 	@Override

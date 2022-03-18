@@ -59,4 +59,10 @@ public interface LoginService {
 	public EgovMap getVaccineInfo (String memId);
 
 	LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params);
+
+	public int checkNewPassword (Map<String, Object> params);
+	public void updateLoginFailAttempt(Map<String, Object> params);
+	public void resetLoginFailAttempt(int userId);
+	public int getLoginFailedMaxAttempt();
+	public EgovMap selectUserByUserName(String username);
 }

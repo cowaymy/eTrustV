@@ -69,4 +69,10 @@ public interface LoginMapper {
 	EgovMap getVaccineInfo(Map<String, Object> params);
 
 	LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params);
+
+	// Added for blocking login access after N times of failed attempt
+	int checkUserAndPass(Map<String, Object> params);
+	void updateLoginFailAttempt(Map<String, Object> params);
+	void resetLoginFailAttempt(int userId);
+	int getLoginFailedMaxAttempt();
 }

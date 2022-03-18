@@ -98,8 +98,29 @@ public class LoginController {
 		ReturnMessage message = new ReturnMessage();
 
 		if (loginVO == null || loginVO.getUserId() == 0) {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "ID/Password" }));
+
+			if (loginVO == null && params.get("userId") != null) {
+
+				EgovMap userMap = loginService.selectUserByUserName(params.get("userId").toString());
+
+				if (userMap != null){
+					int maxAttempt = loginService.getLoginFailedMaxAttempt();
+
+					if (maxAttempt > 0 ) {
+						if (Integer.valueOf(userMap.get("loginFailAttempt").toString()) >= maxAttempt) {
+							message.setCode(AppConstants.FAIL);
+							message.setMessage("You have reached the maximum login attempts (" + maxAttempt + " attempts). <br/>Please contact administrator. ");
+						} else {
+							// update login fail attempt. Hui Ding, 18/03/2022
+							loginService.updateLoginFailAttempt(params);
+
+							message.setCode(AppConstants.FAIL);
+							message.setMessage(messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "ID/Password" }));
+						}
+					}
+				}
+			}
+
 		} else {
 
 			String clientIp = CommonUtils.getClientIp(request);
@@ -138,6 +159,9 @@ public class LoginController {
 					session.setAttribute("vaccinationPop", "Y");
 				}
 			}*/
+
+			// Added for resetting login attempt limit after successfully logged in. Hui Ding, 18/03/2022.
+			loginService.resetLoginFailAttempt(loginVO.getUserId());
 		}
 
 		return ResponseEntity.ok(message);
@@ -832,6 +856,35 @@ public class LoginController {
 		}
 
 	    return ResponseEntity.ok(message);
+
+	}
+
+	/**
+	 * To validate password
+	 *
+	 * @Date Mar 17, 2022
+	 * @Author HQIT-HUIDING
+	 * @param params
+	 * @param request
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/checkPassword.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkPassword(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
+
+		LOGGER.info("###params: " + params.toString());
+		params.put("password", params.get("newPassword"));
+
+		// to check if new password same like previous password
+		int result =  loginService.checkNewPassword(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(result);
+
+		return ResponseEntity.ok(message);
 
 	}
 }

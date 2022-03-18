@@ -2302,6 +2302,9 @@ public class MemberListController {
         params.put("userID", sessionVO.getUserId());
         int cnt = memberListService.updateOrgUserPW(params);
 
+        // add to reset login fail attempt. Hui Ding, 18/03/2022
+        loginService.resetLoginFailAttempt(Integer.valueOf(params.get("updUserId").toString()));
+
         ReturnMessage message = new ReturnMessage();
         if(cnt > 0) {
             message.setCode(AppConstants.SUCCESS);

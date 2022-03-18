@@ -479,4 +479,29 @@ public class LoginServiceImpl implements LoginService {
 
         return loginVO;
     }
+
+	@Override
+	public int checkNewPassword (Map<String, Object> params) {
+		return loginMapper.checkUserAndPass(params);
+	}
+
+	@Override
+	public void updateLoginFailAttempt(Map<String, Object> params){
+		 loginMapper.updateLoginFailAttempt(params);
+	}
+
+	@Override
+	public void resetLoginFailAttempt(int userId){
+		 loginMapper.resetLoginFailAttempt(userId);
+	}
+
+	@Override
+	public int getLoginFailedMaxAttempt() {
+		return loginMapper.getLoginFailedMaxAttempt();
+	}
+
+	@Override
+	public EgovMap selectUserByUserName(String username){
+		return loginMapper.selectUserByUserName(username);
+	}
 }

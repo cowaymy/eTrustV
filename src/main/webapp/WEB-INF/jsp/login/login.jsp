@@ -184,10 +184,22 @@
                 return false;
             }
 
-            if (returnSearchUserInfo.userPassWord == $("#newPasswordConfirmTxt").val()) {
-                Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
-                return false;
-            }
+            var same = true;
+            /* move validate new password cannot match with current password to backend. Hui Ding 17/03/2022. */
+            Common.ajaxSync("GET", "/login/checkPassword.do" , {"newPassword" : $("#newPasswordConfirmTxt").val(), "username" : $("#userId").val()}
+            	    , function (resultCheck) {
+            	console.log("check password result data : " + resultCheck.data);
+            	if (resultCheck != null && resultCheck.data != null){
+            		if (resultCheck.data >= 1){
+            			  Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
+            			  same = false;
+            		}
+            	}
+
+            });
+
+            if (!same)
+            	return false;
 
             if (returnSearchUserInfo.userSecQuesAns != $("#securityAnswerTxt").val()) {
                 Common.alert("<spring:message code='sys.login.securityAnswer.Incorrect'/>");
@@ -201,11 +213,11 @@
     }
 
     function fnSaveResetPassWordPop(flag) {
-        if (fnValidationCheck(flag) == false) {
+        if (!fnValidationCheck(flag)) {
             return false;
         }
 
-        Common.ajax("POST"
+        Common.ajaxSync("POST"
             , "/login/savePassWordReset.do"
             , $(gVarForm).serializeJSON()
             , function (result) {
