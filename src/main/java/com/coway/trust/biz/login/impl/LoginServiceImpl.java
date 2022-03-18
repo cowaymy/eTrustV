@@ -254,7 +254,7 @@ public class LoginServiceImpl implements LoginService {
                 if(userTypeId == 1) {
                 	msg = "Dear HP, request limit reached, kindly email to hpresetpassword@coway.com.my for further assistance";
                 } else if (userTypeId == 2) {
-                	msg = "Dear Cody / ST, request limit reached, kindly refer to your manager to email to Service Innovation Department";
+                	msg = "Dear Cody / ST, request limit reached, kindly refer to your manager to email to Cody Operation Department";
                 } else {
                 	msg = "Request limit reached";
                 }
