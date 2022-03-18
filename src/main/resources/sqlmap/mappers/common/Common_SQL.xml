@@ -1494,6 +1494,7 @@
         FROM SYS0001M A
         JOIN SYS0013M B ON A.ACC_CODE = B.CODE
         WHERE CODE_MASTER_ID = 384
+        AND DISAB = '0'
     </select>
 
     <select id="selectCountryList" parameterType="Map" resultType="egovMap">
