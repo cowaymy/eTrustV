@@ -111,6 +111,19 @@ public class  MembershipQuotationController {
 		return "sales/membership/mNewQuotationPop";
 	}
 
+	@RequestMapping(value = "/mQuotationRawData.do")
+	public String mQuotationRawData(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("in  mNewQuotation.do ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+
+		return "sales/membership/mQuotationRawDataPop";
+	}
+
 	@RequestMapping(value = "/mNewQuotationSavePop.do")
 	public String mNewQuotationSavePop(@RequestParam Map<String, Object> params, ModelMap model) {
 
