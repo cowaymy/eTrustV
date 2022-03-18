@@ -76,7 +76,7 @@
 		        ) B2
 		        ON B1.VENDOR_REQ_NO = B2.REQ_NO
 		    ) B
-		        ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC
+		        ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC AND A.VENDOR_ACC_ID = B.VENDOR_ACC_ID
 		    WHERE 1=1
 		    /* Vendor related where clause */
 
@@ -275,7 +275,7 @@
     <select id="selectExistBankAccNo" parameterType="Map" resultType="String">
         SELECT A.VENDOR_ACC_ID
         FROM FCM0029D A
-		LEFT JOIN FCM0031D B ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC
+		LEFT JOIN FCM0031D B ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC AND A.VENDOR_ACC_ID = B.VENDOR_ACC_ID
 		LEFT JOIN FCM0004M C on C.APPV_PRCSS_NO = A.APPV_PRCSS_NO
 		WHERE A.VENDOR_REG_NO_NRIC = #{regCompNo}
 			AND A.PAY_TYPE = #{paymentMethod}
