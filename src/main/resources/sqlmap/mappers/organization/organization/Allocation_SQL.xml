@@ -387,6 +387,7 @@
 		                    WHERE ORD_ID = #{ordId}
 		                      AND ROWNUM <![CDATA[<=]]> 1
 		                 )
+		   AND TYPE = #{prdType} /* HA/HC */
     </select>
 
 </mapper>

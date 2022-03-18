@@ -176,6 +176,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
                     noSvcListMap.put("isVact", CommonUtils.nvl(e.get("isVact")));
                     noSvcListMap.put("vactReplCt", CommonUtils.nvl(e.get("vactReplCt")));
                     noSvcListMap.put("ordId", params.get("ORD_ID"));
+                    noSvcListMap.put("prdType", 6665); // Home Appliance
 
     				try {
     					int vm = allocationMapper.isMergeNosvcDay(noSvcListMap);
