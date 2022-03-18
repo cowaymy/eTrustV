@@ -30,7 +30,6 @@
                var configBsGen = ${configBasicInfo.configBsGen}
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 
-
                //var checkProduct = ${configBasicInfo.stockCode}
                if('${configBasicInfo.stockCode}' != "112789"){  // PRODUCT - OMBAK THEN DISPLAY FAUCET CHECKBOX
             	   $('#faucetTitle').hide();
@@ -38,8 +37,13 @@
 
                }
 
-               var checked = ${configBasicInfo.faucetExch}
-               if(checked == 1){ // DISABLE EDIT CHECKBOX IF CHECKED = 1
+             //if('${configBasicInfo.faucetExch}' != ''){
+
+            	 var checked = '${configBasicInfo.faucetExch}';
+
+
+               if(checked == '1'){ // DISABLE EDIT CHECKBOX IF CHECKED = 1
+            	   console.log('checked = 1')
             	   $("#faucet_exch").prop("disabled",true);
                }
 
