@@ -241,7 +241,7 @@ public class HiCareServiceImpl implements HiCareService {
 
  			params.put("reason", params.get("returnReason"));
  			params.put("condition", params.get("returnCondition"));
- 			params.put("remark", params.get("returnRemark"));
+ 			params.put("remarks", params.get("returnRemark"));
 
  		}else if(movementType.equals("3")){
  			params.put("transType", "H6");
@@ -336,7 +336,8 @@ public class HiCareServiceImpl implements HiCareService {
 			}else{
 				throw new PreconditionException(AppConstants.FAIL, "The Used Filter Serial No. cannot be empty. As 'Used Has Return' field is checked");
 			}
-		}else if(isReturn.equals("0") && !usedFilterSn.equals("")){
+		}
+		/*else if(isReturn.equals("0") && !usedFilterSn.equals("")){
 			String usedFilterSelect = hiCareMapper.selectHiCarePreviousFilter(params);
 			usedFilterSelect = usedFilterSelect == null ? "" : usedFilterSelect;
 			if(usedFilterSelect.equals(usedFilterSn)){
@@ -370,7 +371,7 @@ public class HiCareServiceImpl implements HiCareService {
  		        hiCareMapper.updateHiCareDetail(filterParam);
  				hiCareMapper.insertHiCareSerialHistory(filterParam);
  			}
-		}
+		}*/
 		String newFilterSn = params.get("newFilterTxtBarcode") == null ? "" : params.get("newFilterTxtBarcode").toString();
 		if(!(newFilterSn == null && newFilterSn.equals(""))){
 			Integer cnt = hiCareMapper.selectOverallPreviousFilter(params);

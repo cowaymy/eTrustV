@@ -288,6 +288,7 @@
         	if($("#_chgdt").val() != "undefined" ){
                 $("#chgdt").val($("#_chgdt").val());
             }
+
         	var data = $("#editArea1Form").serializeJSON();
         	$.extend(data,
                     {
@@ -296,6 +297,7 @@
                     }
                     );
         }else if(action == '2'){
+        	$("#returnRemark").val($("#returnRemark").val().replace(/(?:\r\n|\r|\n)/g, ' '));
         	var data = $("#editArea2Form").serializeJSON();
         	$.extend(data,
                     {
@@ -304,6 +306,7 @@
                     }
                     );
         }else if(action == '3'){
+        	$("#deactRemark").val($("#deactRemark").val().replace(/(?:\r\n|\r|\n)/g, ' '));
         	var data = $("#editArea3Form").serializeJSON();
         	$.extend(data,
                     {

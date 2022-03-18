@@ -252,6 +252,7 @@
         var data;
 
         //document.getElementById("checkReturn").checked
+        $("#filterRemark").val($("#filterRemark").val().replace(/(?:\r\n|\r|\n)/g, ' '));
 		data = $("#editArea1Form").serializeJSON();
 		$.extend(data,
         {
