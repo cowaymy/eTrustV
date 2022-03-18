@@ -97,6 +97,8 @@ public class LoginController {
 		//LOGGER.info("###loginVO: " + loginVO.toString());
 		ReturnMessage message = new ReturnMessage();
 
+		int maxAttempt = loginService.getLoginFailedMaxAttempt();
+
 		if (loginVO == null || loginVO.getUserId() == 0) {
 
 			if (loginVO == null && params.get("userId") != null) {
@@ -104,7 +106,6 @@ public class LoginController {
 				EgovMap userMap = loginService.selectUserByUserName(params.get("userId").toString());
 
 				if (userMap != null){
-					int maxAttempt = loginService.getLoginFailedMaxAttempt();
 
 					if (maxAttempt > 0 ) {
 						if (Integer.valueOf(userMap.get("loginFailAttempt").toString()) >= maxAttempt) {
@@ -122,6 +123,19 @@ public class LoginController {
 			}
 
 		} else {
+
+			EgovMap userMap2 = loginService.selectUserByUserName(loginVO.getUserName().toString());
+
+			if (userMap2 != null){
+				if (maxAttempt > 0 ) {
+					if (Integer.valueOf(userMap2.get("loginFailAttempt").toString()) >= maxAttempt) {
+						message.setCode(AppConstants.FAIL);
+						message.setMessage("You have reached the maximum login attempts (" + maxAttempt + " attempts). <br/>Please contact administrator. ");
+
+						return ResponseEntity.ok(message);
+					}
+				}
+			}
 
 			String clientIp = CommonUtils.getClientIp(request);
 
