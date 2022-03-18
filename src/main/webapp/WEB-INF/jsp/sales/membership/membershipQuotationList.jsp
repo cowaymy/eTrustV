@@ -198,6 +198,12 @@
 	    Common.popupDiv("/sales/membership/mNewQuotation.do" ,$("#listSForm").serialize(), null , true , '_NewQuotDiv1');
  }
 
+ function  fn_goQuotationRawData(){
+	  Common.popupDiv("/sales/membership/mQuotationRawData.do");
+// 	  Common.popupDiv("/homecare/services/install/report/installationRawDataPop.do", null, null, true, '');
+}
+
+
  function fn_editQuotation() {
 	 var selectedItems = AUIGrid.getSelectedItems(gridID);
 
@@ -480,6 +486,9 @@ function fn_doPrint(){
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a href="#"  onclick="javascript:fn_doViewQuotation()"><spring:message code="sal.btn.link.viewQuotation" /></a></p></li>
 		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+         <li><p class="link_btn"><a href="#" onclick="javascript:fn_goQuotationRawData()">Quotation Raw Data</a></p></li>
+        </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
