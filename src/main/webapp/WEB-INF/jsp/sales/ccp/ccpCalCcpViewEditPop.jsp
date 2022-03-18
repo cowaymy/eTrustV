@@ -192,7 +192,7 @@ $(document).ready(function() {
             return;
         }else{
             //if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
-            if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 0){
+            if( $("#_ficoScore").val() > 9999 || $("#_ficoScore").val() < 0){
                 Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
             }
