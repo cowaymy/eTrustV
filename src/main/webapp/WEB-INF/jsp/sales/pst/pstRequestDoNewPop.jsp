@@ -26,16 +26,16 @@ isShowChoose: true,
         });//Incharge Person
         doGetCombo('/common/selectCodeList.do', '357', '','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
         doGetCombo('/common/selectCodeList.do', '441', '','invoiceType', 'S' , '');
-
+        var param = {searchlocgb:'01∈05' , grade:'A'};
         if(insertForm.dealerTypeFlag.value == "REQ"){
-        	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'361'}, "", {
-                id: "code",
+        	CommonCombo.make("cmbLocation", "/common/selectStockLocationList2.do",param , "", {
+                id: "codeId",
                 name: "codeName",
                 type:"S"
             });     // WH LOC Combo Box
         }else{
-        	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'362'}, "", {
-                id: "code",
+        	CommonCombo.make("cmbLocation", "/common/selectStockLocationList2.do", param, "", {
+                id: "codeId",
                 name: "codeName",
                 type:"S"
             });     // WH LOC Combo Box
