@@ -46,6 +46,30 @@
         headerText : '<spring:message code="approveView.budgetName" />',
         style : "aui-grid-user-custom-left"
     },{
+        dataField : "invcDt",
+        headerText : "Invoice Date",
+        dataType : "date",
+        formatString : "dd/mm/yyyy",
+        editRenderer : {
+            type : "CalendarRenderer",
+            openDirectly : true,
+            onlyCalendar : true,
+            shwoExtraDays : true,
+            titles : [gridMsg["sys.info.grid.calendar.titles.sun"], gridMsg["sys.info.grid.calendar.titles.mon"], gridMsg["sys.info.grid.calendar.titles.tue"], gridMsg["sys.info.grid.calendar.titles.wed"], gridMsg["sys.info.grid.calendar.titles.thur"], gridMsg["sys.info.grid.calendar.titles.fri"], gridMsg["sys.info.grid.calendar.titles.sat"]],
+            formatYearString : gridMsg["sys.info.grid.calendar.formatYearString"],
+            formatMonthString : gridMsg["sys.info.grid.calendar.formatMonthString"],
+            monthTitleString : gridMsg["sys.info.grid.calendar.monthTitleString"]
+        },
+        width : "10%"
+    }, {
+        dataField : "invcNo",
+        headerText : "Invoice No.",
+        width : "13%"
+    }, {
+        dataField : "memAccName",
+        headerText : "Supplier Name",
+        width : "15%"
+    },{
         dataField : "taxName",
         visible : false // Color 칼럼은 숨긴채 출력시킴
     }, {
@@ -142,6 +166,12 @@
     	}, {
     	    dataField : "cnt",
     	    visible : false
+    	}, {
+    	    dataField : "advRefdMode",
+    	    visible : false
+    	}, {
+    		dataField : "advRefdRef",
+            visible : false
     	}
     	];
 
@@ -164,7 +194,10 @@
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewTrvRem").text(myGridData[0].rem);
-            $("#viewTrvTotAmt").text("RM " + myGridData[0].repayAmt.toFixed(2));
+            $("#viewTrvTotAmt").text(myGridData[0].cur + " "+ AUIGrid.formatNumber(myGridData[0].repayAmt, "#,##0.00"));
+            $("#viewTrvTotExp").text(myGridData[0].cur + " "+ AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
+            $("#viewTrvBalAmt").val(myGridData[0].repayAmt - AUIGrid.formatNumber(myGridData[0].totAmt));
+            $("#viewTrvBalAmt").text(myGridData[0].cur + " "+ AUIGrid.formatNumber($("#viewTrvBalAmt").val(), "#,##0.00"));
             if(myGridData[0].advType == 5)
             {
             	$("#trvPeriod").hide();
@@ -186,11 +219,16 @@
             $("#refAdvReqClmNo").text(myGridData[0].advRefdClmNo);
             $("#refRepayDate").text(myGridData[0].advRefdDt);
             $("#refBankInRefNo").text(myGridData[0].invcNo);
-            $("#viewTrvTotAmt").text("RM " + myGridData[0].repayAmt.toFixed(2));
+            $("#viewTrvTotAmt").text(myGridData[0].cur + " " + AUIGrid.formatNumber(myGridData[0].repayAmt, "#,##0.00"));
             $("#viewTrvRem").text(myGridData[0].rem);
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
-
+            $("#viewTrvTotExp").text(myGridData[0].cur + " "+ AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
+            $("#viewTrvBalAmt").val(myGridData[0].repayAmt - AUIGrid.formatNumber(myGridData[0].totAmt));
+            $("#viewTrvBalAmt").text(myGridData[0].cur + " "+ AUIGrid.formatNumber($("#viewTrvBalAmt").val(), "#,##0.00"));
+            $("#viewTrvRefundMode option[value=" + myGridData[0].advRefdMode + "]").attr('selected', true);
+            $("#viewTrvRefundMode").attr("disabled", true);
+            $("#viewTrvBankRef").text(myGridData[0].advRefdRef);
             fn_setGridData(myGridID, myGridData);
         }
 
@@ -214,10 +252,8 @@
                 } else {
                     var fileSubPath = result.fileSubPath;
                     fileSubPath = fileSubPath.replace('\', '/'');
-                    console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                        + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                    console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                 }
             });
         });
@@ -387,8 +423,8 @@
                         <caption>New Advance Request</caption>
                         <colgroup>
                             <col style="width:200px" />
-                            <col style="width:*" />
-                            <col style="width:100px" />
+	                        <col style="width:*" />
+	                        <col style="width:200px" />
                         </colgroup>
 
                         <tr id="trvPeriod">
@@ -414,7 +450,34 @@
                                 <td colspan="4">
                                     <span id="viewTrvTotAmt"></span>
                                 </td>
-                            </tr>
+                        </tr>
+                        <tr>
+                                <th scope="row">Total Expenses</th>
+                                <td colspan="4">
+                                    <span id="viewTrvTotExp"></span>
+                                </td>
+                        </tr>
+                        <tr>
+                                <th scope="row">Balance Amount</th>
+                                <td colspan="4">
+                                    <span id="viewTrvBalAmt"></span>
+                                </td>
+                        </tr>
+                        <tr>
+                                <th scope="row">Refund Mode</th>
+                                <td colspan="4">
+                                    <select class="readonly w100p" id="viewTrvRefundMode">
+	                                    <option value="CASH">Cash</option>
+	                                    <option value="OTRX">Online</option>
+                                    </select>
+                                </td>
+                        </tr>
+                        <tr>
+                                <th scope="row">Bank Reference</th>
+                                <td colspan="4">
+                                    <span id="viewTrvBankRef"></span>
+                                </td>
+                        </tr>
                     </table>
 
                 <!-- Travel Advance Division -->

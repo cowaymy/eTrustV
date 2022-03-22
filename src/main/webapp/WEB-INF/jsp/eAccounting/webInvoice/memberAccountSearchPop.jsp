@@ -89,6 +89,16 @@ $(document).ready(function () {
 	        $("#accGrp option[value=VM03]").remove();
 	    }
 	}
+
+	if("${accGrp}" == "VM13") {
+	    if("${entry}" != "appv") {
+	    	 $("#accGrp option[value=VM10]").remove();
+	         $("#accGrp option[value=VM07]").remove();
+	         $("#accGrp option[value=VM08]").remove();
+	         $("#accGrp option[value=VM09]").remove();
+	         $("#accGrp option[value=VM12]").remove();
+	    }
+	}
 });
 
 function fn_selectMember() {

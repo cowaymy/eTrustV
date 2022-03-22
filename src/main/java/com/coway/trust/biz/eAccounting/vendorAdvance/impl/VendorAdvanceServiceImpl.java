@@ -368,8 +368,9 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             for(Object map : updList) {
                 hm = (HashMap<String, Object>) map;
                 hm.put("clmNo", params.get("settlementNewClmNo"));
+                hm.put("advType", "6");
                 hm.put("userId", sessionVO.getUserId());
-
+                LOGGER.debug("hm----->" + hm);
                 updCnt += vendorAdvanceMapper.updateAdvDet_FCM28D(hm);
             }
         }
@@ -401,7 +402,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
 	public String selectNextReqNo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
     	LOGGER.debug("selectNextReqNo =====================================>>  " + params);
-		return vendorAdvanceMapper.selectNextReqNo();
+		return vendorAdvanceMapper.selectNextReqNo(params);
 	}
 
     @Override

@@ -17,6 +17,7 @@
     var update = new Array();
     var remove = new Array();
     var attachmentList = new Array();
+    var settlementTotalAdv;
 
     //Main Menu Grid Listing Grid -- Start
     var advanceColumnLayout = [{
@@ -160,6 +161,13 @@
         formatString : "dd/mm/yyyy",
         editRenderer : {
             type : "CalendarRenderer",
+            defaultFormat : "dd/mm/yyyy",
+            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+            onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+            showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+          },
+   /*      editRenderer : {
+            type : "CalendarRenderer",
             openDirectly : true,
             onlyCalendar : true,
             shwoExtraDays : true,
@@ -167,7 +175,7 @@
             formatYearString : gridMsg["sys.info.grid.calendar.formatYearString"],
             formatMonthString : gridMsg["sys.info.grid.calendar.formatMonthString"],
             monthTitleString : gridMsg["sys.info.grid.calendar.monthTitleString"]
-        },
+        }, */
         width : "10%"
     }, {
         dataField : "invcNo",
@@ -537,7 +545,7 @@
     // Payee, Cost Center Search Button functions - Start
     // Main Menu
     function fn_popPayeeSearchPop() {
-        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop", accGrp:"VM12"}, null, true, "supplierSearchPop");
+        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop", accGrp:"VM13"}, null, true, "supplierSearchPop");
     }
 
     // Main Menu
@@ -700,13 +708,13 @@
                     $("#reqSubmit").show();
 
                     if($("#reqCostCenter").hasClass("readonly")) $("#reqCostCenter").removeClass("readonly");
-                    if($("#newMemAccId").hasClass("readonly")) $("#newMemAccId").removeClass("readonly");
+                    //if($("#newMemAccId").hasClass("readonly")) $("#newMemAccId").removeClass("readonly");
                     if($("#totalAdv").hasClass("readonly")) $("#totalAdv").removeClass("readonly");
                     if($("#advOccasion").hasClass("readonly")) $("#advOccasion").removeClass("readonly");
                     if($("#advRem").hasClass("readonly")) $("#advRem").removeClass("readonly");
 
                     if($("#reqCostCenter").attr("readonly")) $("#reqCostCenter").removeAttr("readonly");
-                    if($("#newMemAccId").attr("readonly")) $("#newMemAccId").removeAttr("readonly");
+                    //if($("#newMemAccId").attr("readonly")) $("#newMemAccId").removeAttr("readonly");
                     if($("#totalAdv").attr("readonly")) $("#totalAdv").removeAttr("readonly");
                     if($("#advOccasion").attr("readonly")) $("#advOccasion").removeAttr("readonly");
                     if($("#advRem").attr("readonly")) $("#advRem").removeAttr("readonly");
@@ -722,6 +730,8 @@
                 $("#newMemAccName").val(result.data.memAccName);
                 //$("#reqCostCenter").val(result.data.costCenter);
                 //$("#totalAdv").val(result.data.totAmt);
+                $("#totalAdvHeader").text("Total Advance (" + result.data.cur + ")");
+                //$("#totalAdv").val(result.data.totAmt);
                 $("#totalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
                 //$("#advOccasion option[value='" + result.data.advOcc + "']").attr("selected", "selected");
                 $("#advOccasion").val(result.data.advOcc).prop("selected", true);
@@ -731,6 +741,7 @@
                 $("#reqCrtUserName").val(result.data.userName);
                 $("#bankName").val(result.data.bankName);
                 $("#bankAccNo").val(result.data.bankAccNo);
+                $("#advCurr").val(result.data.cur).prop("selected", true);
 
                 // Request file selector
                 gAtchFileGrpId = result.data.attachList[0].atchFileGrpId;
@@ -754,9 +765,9 @@
                         console.log(flResult);
                         if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
                             // TODO View
-                            var fileSubPath = result.fileSubPath;
+                            var fileSubPath = flResult.fileSubPath;
                             fileSubPath = fileSubPath.replace('\', '/'');
-                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + flResult.physiclFileName);
 
                         } else {
                             var fileSubPath = flResult.fileSubPath;
@@ -831,8 +842,14 @@
                         }
 
                         $("#settlementAdvRefdNo").val(advGridClmNo);
+
+                        $("#settlementTotalAdv").val(result.data.totAmt);
                         $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
+                        $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.cur + ")");
+                        $("#settlementTotalExp").val(0);
                         $("#settlementTotalExp").val(AUIGrid.formatNumber(0, "#,##0.00"));
+                        $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.cur + ")");
+                        $("#settlementTotalBalance").val(result.data.balAmt);
                         $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.balAmt), "#,##0.00"));
                         $("#settlementMemAccId").val(result.data.memAccId);
                         $("#settlementMemAccName").val(result.data.memAccName);
@@ -895,6 +912,25 @@
                         $("#settlementSubmit").hide();
                         $("#settlement_add_row").hide();
                         $("#settlement_remove_row").hide();
+                        $("#appvStusRowSett").show();
+
+                        if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J"){
+                            Common.ajaxSync("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: advAppvPrcssNo}, function(result1) {
+                                $("#finApprActRowSett").show();
+                                $("#viewFinAppr").html(result1.finalAppr);
+                                if(advGridAppvPrcssStus == "J"){
+                                    $("#rejectReasonRowSett").show();
+                                    $("#viewRejctResn").html(result.data.rejctResn);
+
+                                }
+                            });
+                        }
+
+                        $("#settlementMemAccId").val(result.data.memAccId);
+                        $("#settlementMemAccName").val(result.data.memAccName);
+                        $("#settlementCostCenter").val(result.data.costCenter);
+                        $("#settlementCrtUserName").val(result.data.userName);
+                        $("#viewAppvStusSett").html(result.data.appvPrcssStus);
                     }
 
                     //set queried values
@@ -902,11 +938,17 @@
                     //$("#settlementMemAccName").val();
                     $("#eventStartDt").val(result.data.advPrdFr);
                     $("#eventEndDt").val(result.data.advPrdTo);
-                    //$("#settlementTotalAdv").val(result.data.totAmt);
-                    $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
+                    settlementTotalAdv = result.data.totAmt;
+                    $("#settlementTotalAdv").val(AUIGrid.formatNumber(result.data.totAmt, "#,##0.00"));
+                    //$("#settlementTotalAdv").val(AUIGrid.formatNumber(result.data.totAmt), "#,##0.00");
+                    $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.cur + ")");
+                    $("#settlementTotalExp").val(result.data.expAmt);
                     $("#settlementTotalExp").val(AUIGrid.formatNumber(Number(result.data.expAmt), "#,##0.00"));
-                    $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.totAmt) - Number(result.data.expAmt), "#,##0.00"));
+                    $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.cur + ")");
+                    $("#settlementTotalBalance").val(Number(result.data.totAmt) - Number(result.data.expAmt));
+                    $("#settlementTotalBalance").val(AUIGrid.formatNumber((result.data.totAmt) - (result.data.expAmt), "#,##0.00"));
                     $("#settlementMode option[value=" + result.data.advRefMode + "]").attr('selected', true);
+                    $("#settlementMode").attr('disabled', true);
                     $("#bankRef").val(result.data.advRefdRef);
                     // $("#settlementFileSelector").val(); // Settlement file
                     $("#settlementRem").val(result.data.rem);
@@ -1415,7 +1457,7 @@
 
         // Display Acknowledgement Pop
         $("#advReqMsgPop").show();
-        $("#acknowledgement").show();
+        //$("#acknowledgement").show();
     }
 
     function fn_settlementConfirm() {
@@ -1530,8 +1572,12 @@
             if(event.dataField == "totalAmt" || event.dataField == "netAmt" || event.dataField == "taxAmt") {
                 // Set Settlement's total expenses
                 var totAmt = fn_getTotalExpenses();
+                console.log("totAmt: " + totAmt);
                 $("#settlementTotalExp").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                $("#settlementTotAmt").val(AUIGrid.fromatNumber(totAmt, "#,##0.00"));
+                $("#settlementTotAmt").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+                console.log("settlementTotalAdv: " +settlementTotalAdv)
+                $("#settlementTotalBalance").val(settlementTotalAdv - totAmt);
+                $("#settlementTotalBalance").val(AUIGrid.formatNumber($("#settlementTotalBalance").val(), "#,##0.00"));
 
                 // Check budget
                 var rowVar = {
@@ -1576,6 +1622,27 @@
                         Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
                     }
                 });
+            }
+
+            if(event.dataField == "currency") {
+                console.log("currency change");
+
+                var fCur = AUIGrid.getCellValue(settlementGridId, 0, "currency");
+
+                if(event.rowIndex != 0) {
+                    if(AUIGrid.getRowCount(settlementGridId) > 1) {
+                        var cCur = AUIGrid.getCellValue(settlementGridId, event.rowIndex, "currency");
+
+                        if(cCur != fCur) {
+                            Common.alert("Different currency selected!");
+                            AUIGrid.setCellValue(settlementGridId, event.rowIndex, "currency", fCur);
+                        }
+                    }
+                } else {
+                    for(var i = 1; i < AUIGrid.getRowCount(settlementGridId); i++) {
+                        AUIGrid.setCellValue(settlementGridId, i, "currency", fCur);
+                    }
+                }
             }
         });
         // cellEditEnd - End
@@ -2173,7 +2240,7 @@
                         <tr>
                             <th scope="row">Payee Code</th>
                             <td>
-                                <input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId"/ readonly>
+                                <input type="text" title="" placeholder="" class="readonly" id="newMemAccId" name="memAccId" readonly="readonly" />
                                 <a href="#" class="search_btn" id="supplier_search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
@@ -2202,7 +2269,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Total Advance (RM)</th>
+                            <th scope="row" id="totalAdvHeader">Total Advance (RM)</th>
                             <td colspan="3">
                                 <input type="text" title="Total Advance (RM)" placeholder="Total Advance (RM)" id="totalAdv" name="totalAdv" />
                             </td>
@@ -2228,7 +2295,7 @@
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
                             <td colspan="3">
-                                <textarea cols="20" rows="5" id="advRem" name="advRem" maxlength="200" placeholder="Enter up to 200 characters"></textarea></td>
+                                <textarea cols="20" rows="5" id="advRem" name="advRem" maxlength="100" placeholder="Enter up to 100 characters"></textarea></td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
@@ -2453,13 +2520,13 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <th scope="row">Advance Amount (RM)</th>
+                            <th scope="row" id="settlementTotalAdvHeader">Advance Amount (RM)</th>
                             <td colspan="3">
                                 <input type="text" title="Total Advance (RM)" placeholder="Total Advance (RM)" id="settlementTotalAdv" name="settlementTotalAdv" class="readonly" readonly="readonly" />
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Total Expenses (RM)</th>
+                            <th scope="row" id="settlementTotalExpHeader">Total Expenses (RM)</th>
                             <td colspan="3">
                                 <input type="text" title="Total Expenses (RM)" placeholder="Total Expenses (RM)" id="settlementTotalExp" name="settlementTotalExp" class="readonly" readonly="readonly" />
                             </td>
@@ -2498,6 +2565,18 @@
                                     <input type="file" id="settlementFileSelector" name="settlementFileSelector" title="file add" style="width:300px" />
                                 </div><!-- auto_file end -->
                             </td>
+                        </tr>
+                        <tr id="appvStusRowSett" style="display:none;">
+                            <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+                            <td colspan="3" style="height:60px" id="viewAppvStusSett"></td>
+                        </tr>
+                        <tr id="rejectReasonRowSett" style="display:none;">
+                            <th scope="row">Reject Reason</th>
+                            <td colspan="3" id="viewRejctResn"></td>
+                        </tr>
+                        <tr id="finApprActRowSett" style="display:none;">
+                            <th scope="row">Final Approver</th>
+                            <td colspan="3" id="viewFinAppr"></td>
                         </tr>
                     </tbody>
                 </table><!-- table end -->

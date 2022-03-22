@@ -71,7 +71,7 @@ public interface VendorAdvanceMapper {
     EgovMap selectBalanceInfo(Map<String, Object> params);
 
     //Edit Rejected - 27/12/2021 - Start
-    String selectNextReqNo();
+    String selectNextReqNo(Map<String, Object> params);
     EgovMap getAttachmenDetails(Map<String, Object> params);
 
 	int getFileAtchGrpId();

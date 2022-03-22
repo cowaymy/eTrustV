@@ -107,12 +107,12 @@
             </if>
             <if test="reqStartDt != null and reqStartDt != ''">
                 <![CDATA[
-                    AND A.REQST_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+                    AND A.CRT_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
                 ]]>
             </if>
             <if test="reqEndDt != null and reqEndDt != ''">
                 <![CDATA[
-                    AND A.REQST_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
+                    AND A.CRT_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
                 ]]>
             </if>
             <if test="clmNoStart != null and clmNoStart != ''">
@@ -132,7 +132,7 @@
             </if>
             <if test="appEndDt != null and appEndDt != ''">
                 <![CDATA[
-                    AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
+                    AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY') +1
                 ]]>
             </if>
             <if test="loginUserId != null and loginUserId != ''">
@@ -214,7 +214,8 @@
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') CRT_DT,
             A.CRT_USER_ID,
             B.USER_NAME,
-            D.APPV_PRCSS_DT
+            D.APPV_PRCSS_DT,
+            E.INVC_CUR CUR
         FROM FCM0027M A
         JOIN SYS0047M B
             ON A.CRT_USER_ID = B.USER_ID
@@ -222,6 +223,8 @@
             ON A.MEM_ACC_ID = C.MEM_ACC_ID
         LEFT JOIN FCM0004M D
             ON D.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+        LEFT JOIN FCM0028D E
+            ON E.CLM_NO = A.CLM_NO
         WHERE A.CLM_NO = #{clmNo}
     </select>
 
@@ -350,7 +353,7 @@
                 TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
                 #{expType},
                 #{expTypeNm},
-                #{glAccNo},
+                #{glAccCode},
                 #{glAccCodeName},
                 #{budgetCode},
                 #{budgetCodeName},
@@ -522,7 +525,7 @@
 
     <update id="updateAdvMst_FCM27M" parameterType="Map">
         UPDATE FCM0027M
-        SET TOT_AMT = #{totAmt},
+        SET TOT_AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
             COST_CENTER = #{costCenterCode},
             <if test="costCenterName != null and costCenterName != '' ">
                 COST_CENTER_NM = #{costCenterName},
@@ -550,13 +553,14 @@
 
     <update id="updateAdvDet_FCM28D" parameterType="Map">
         UPDATE FCM0028D
-        SET AMT = #{totAmt},
+        SET
             NET_AMT = #{netAmt},
             <if test="advType == 6">
+                AMT = #{totalAmt},
                 INVC_NO = #{invcNo},
-                INVC_DT = TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
+                INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
                 EXP_TYPE = #{expType},
-                EXP_TYPE_NAME = #{expTypeNm},
+                EXP_TYPE_NM = #{expTypeNm},
                 GL_ACC_NO = #{glAccCode},
                 GL_ACC_NM = #{glAccCodeName},
                 BGT_CODE = #{budgetCode},
@@ -846,10 +850,10 @@
     <select id="selectNextReqNo" resultType="String">
 
          SELECT
-         <if test="reqType == R4">
+         <if test="reqType == 'R4'">
         'R4'
         </if>
-         <if test="reqType == A3">
+         <if test="reqType == 'A3'">
         'A3'
         </if>
         ||
@@ -1078,7 +1082,7 @@
             I.CLM_NO ADV_REFD_CLM_NO,
             TO_CHAR(I.ADV_PRD_FR, 'DD/MM/YYYY') REF_TRV_PRD_FR,
             TO_CHAR(I.ADV_PRD_TO, 'DD/MM/YYYY') REF_TRV_PRD_TO,
-            B.ATCH_FILE_GRP_ID,
+            C.FILE_ATCH_GRP_ID ATCH_FILE_GRP_ID,
             H.ATCH_FILE_ID,
             H.ATCH_FILE_NAME,
             B.APPV_ITM_SEQ,
@@ -1091,7 +1095,9 @@
             J.NET_AMT,
             NVL(J.INVC_CUR, 'MYR') CUR,
             NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
-            C.ADV_REM REM
+            C.ADV_REM REM,
+            C.ADV_REFD_MODE,
+            C.ADV_REFD_REF
         FROM FCM0004M A
         LEFT JOIN FCM0015D B
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
