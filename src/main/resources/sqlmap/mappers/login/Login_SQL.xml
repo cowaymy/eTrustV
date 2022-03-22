@@ -453,7 +453,8 @@
     <update id="updateSYS47M_req" parameterType="Map">
         UPDATE SYS0047M
         SET USER_PASSWD = #{tempPw},
-            USER_PASSWD_LAST_UPD_DT = TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -3), 'DD/MM/YYYY'), 'DD/MM/YYYY')
+            USER_PASSWD_LAST_UPD_DT = TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -3), 'DD/MM/YYYY'), 'DD/MM/YYYY'),
+            LOGIN_FAIL_ATTEMPT = 0
         WHERE USER_ID = #{userId}
     </update>
 
