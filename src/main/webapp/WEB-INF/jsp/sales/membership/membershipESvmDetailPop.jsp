@@ -35,7 +35,7 @@
     var SpecInstr =  0; //0:No need to check
     var POFlg = 0; //0: No need to check
 
-    $(document).ready(function(){
+    $(document).ready(function() {
         console.log("esvmDetailPop");
         if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
             var elements = document.getElementsByClassName("attach_mod");
@@ -458,6 +458,13 @@
                 trIssuedDt : $("#payment_trIssuedDt").val()
         };
 
+        // LaiKW - Added unmatch payment handling for non PO
+        if($("#unmatchPayment").is(":checked") == true) {
+            $.extend(data, {'unmatchPayment' : '1'});
+        } else {
+            $.extend(data, {'unmatchPayment' : '0'});
+        }
+
         console.log(data);
 
         var formData = new FormData();
@@ -782,7 +789,7 @@
             }
 
             if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
-                if(FormUtil.isEmpty($("#payment_transactionID").val())) {
+                if(FormUtil.isEmpty($("#payment_transactionID").val()) && $("#unmatchPayment").is(":checked") != true) {
                     Common.alert('Please enter Transaction ID.');
                     checkResult = false;
                     return checkResult;
@@ -887,7 +894,7 @@
     <th scope="row">Order No</th>
     <td><input id="salesOrdNo" name="salesOrdNo" type="text" value="${eSvmInfo.salesOrdNo}" title="" placeholder="" class="w100p readonly" readonly /></td>
     <th scope="row">Order Date</th>
-    <td><input id="ordCrtDt" name=""ordCrtDt"" type="text" value="${eSvmInfo.ordCrtDt}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td><input id="ordCrtDt" name="ordCrtDt" type="text" value="${eSvmInfo.ordCrtDt}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">SMQ No</th>

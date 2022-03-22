@@ -261,10 +261,13 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 
         this.updateAction(params);
 
-        if("6507".equals(params.get("payment_mode").toString()) || "6508".equals(params.get("payment_mode").toString())) {
-            this.eSVMNormalPayment(params, sessionVO);
-        } else if("6509".equals(params.get("payment_mode").toString()) || "6528".equals(params.get("payment_mode").toString())) {
-            this.eSVMCardPayment(params, sessionVO);
+        // 20210321 - LaiKW - Different payment amount handling - Admin required to manual key in (1: ticked; 0: unticked)
+        if(!"1".equals(params.get("unmatchPayment").toString())) {
+            if("6507".equals(params.get("payment_mode").toString()) || "6508".equals(params.get("payment_mode").toString())) {
+                this.eSVMNormalPayment(params, sessionVO);
+            } else if("6509".equals(params.get("payment_mode").toString()) || "6528".equals(params.get("payment_mode").toString())) {
+                this.eSVMCardPayment(params, sessionVO);
+            }
         }
 
         return memNo;

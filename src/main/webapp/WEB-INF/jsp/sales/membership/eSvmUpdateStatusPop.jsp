@@ -35,7 +35,15 @@
         </select>
     </td>
 </tr>
-
+<!-- 20210321 - LaiKW - Checkbox bypass payment matching for unmatch amount -->
+<c:if test="${paymentInfo.payMode eq '6507' or paymentInfo.payMode eq '6508' or paymentInfo.payMode eq '6509'}" >
+<tr>
+    <th scope="row">Unmatch Payment</th>
+    <td colspan="3">
+        <input type="checkbox" id="unmatchPayment" name="unmatchPayment" />
+    </td>
+</tr>
+</c:if>
 <tr id="specInst">
     <th scope="row" id="specialInst_header"><span>Special Instruction</span></th>
     <td colspan='3'>
