@@ -139,6 +139,8 @@
     var salesOrdNo1 = selectedItems[0].item.salesOrdNo;
     var rcdTms = selectedItems[0].item.rcdTms;
 
+    console.log ("hello " + codeid1);
+
     Common.ajax("POST", "/services/selRcdTms.do", {
         installEntryId : installEntryId,
         orderId : orderId,
@@ -213,6 +215,19 @@
       headerText : '<spring:message code="service.grid.CTCode" />',
       editable : false,
       width : 100
+    },{
+        dataField : "",
+        headerText : "Installation Note",
+        width : 150,
+        renderer : {
+            type : "ButtonRenderer",
+            labelText : "View",
+            onclick : function(rowIndex, columnIndex, value, item) {
+              //console.log(item);
+              fileDown(item);
+            }
+        }
+        , editable : false
     },
     /*{
         dataField : "name",
@@ -575,6 +590,41 @@
     $("#product").val("");
   }
 
+  function fileDown(item){
+	  var V_WHERE = "";
+
+	  var date = new Date();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      if(item.code1 != "COM"){
+    	  Common.alert("Installation Note only allowed for COMPLETED installation.");
+          return;
+      }
+
+      V_WHERE += item.installEntryId;
+
+      console.log("///V_WHERE");
+      console.log(V_WHERE);
+      console.log("/////");
+
+	  //SP_CR_GEN_INST_NOTES
+      $("#reportFormInstLst").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+
+      var option = {
+              isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+      };
+
+      $("#reportFormInstLst #V_WHERE").val(V_WHERE);
+      $("#reportFormInstLst #reportFileName").val("/services/InstallationNoteDigitalization.rpt");
+      $("#reportFormInstLst #reportDownFileName").val("InstallationNoteDigitalization" + day + month + date.getFullYear());
+      $("#reportFormInstLst #viewType").val("PDF");
+
+      Common.report("reportFormInstLst", option);
+  }
 </script>
 <section id="content">
  <!-- content start -->
