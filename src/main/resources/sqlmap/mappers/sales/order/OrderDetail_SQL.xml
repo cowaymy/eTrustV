@@ -35,8 +35,8 @@
                            , V1.CUST_TYPE
                            , V1.CUST_NAME
                            <!-- Added for display customer age beside CUST_NRIC. By Keyi, 18-03-2022 -->
-                           , CASE WHEN V1.CUST_NATION = 'MALAYSIA' AND V1.CUST_TYPE = 'Individual' THEN V1.CUST_NRIC || ' (' || (EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM V1.CUST_DOB)) || ')' ELSE V1.CUST_NRIC END AS CUST_NRIC
-                           <!--, V1.CUST_NRIC-->
+                           , CASE WHEN V1.CUST_NATION = 'MALAYSIA' AND V1.CUST_TYPE = 'Individual' THEN V1.CUST_NRIC || ' (' || (EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM V1.CUST_DOB)) || ')' ELSE V1.CUST_NRIC END AS CUST_NRIC_AGE
+                           , V1.CUST_NRIC
                            , V1.CUST_DOB
                            , V1.CUST_NATION
                            , V1.CUST_GENDER

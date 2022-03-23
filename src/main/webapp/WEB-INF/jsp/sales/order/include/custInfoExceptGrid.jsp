@@ -27,7 +27,7 @@
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><span>${orderDetail.basicInfo.custNric}</span></td>
+    <td><span>${orderDetail.basicInfo.custNricAge}</span></td>
     <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
 </tr>
