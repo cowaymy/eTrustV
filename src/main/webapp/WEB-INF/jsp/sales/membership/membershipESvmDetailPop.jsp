@@ -489,8 +489,13 @@
                        if(result1.code == 00){
                            if(result1.data.docNo == null)
                                Common.alert('Membership successfully saved.' + "<b>");
-                           else
-                               Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo);
+                           else {
+                               if($("#unmatchPayment").is(":checked") == true) {
+                                   Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo + ". Please proceed manual key in payment.");
+                               } else {
+                                   Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo);
+                               }
+                           }
                            fn_close();
 
                        } else {
