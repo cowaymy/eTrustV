@@ -124,6 +124,6 @@
     <plugins>
         <plugin interceptor="com.coway.trust.config.mybatis.ExcecutorInterceptor"></plugin>
         <plugin interceptor="com.coway.trust.config.mybatis.ResultsetInterceptor"></plugin>
-		<plugin interceptor="com.coway.trust.config.mybatis.SqlDebugLogInterceptor"></plugin> 
+<!-- 		<plugin interceptor="com.coway.trust.config.mybatis.SqlDebugLogInterceptor"></plugin>  -->
     </plugins>
 </configuration>
