@@ -112,11 +112,18 @@
 
         <!-- SMS  -->
         <typeAlias alias="smsVO" type="com.coway.trust.cmmn.model.SmsVO"/>
+
+        <!-- Added for On-Loan module, by Hui Ding, 20-02-2020 -->
+        <!-- On-Loan -->
+        <typeAlias alias="loanOrderDVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderDVO"/>
+        <typeAlias alias="loanOrderMVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderMVO"/>
+
     </typeAliases>
 
 
     <plugins>
         <plugin interceptor="com.coway.trust.config.mybatis.ExcecutorInterceptor"></plugin>
         <plugin interceptor="com.coway.trust.config.mybatis.ResultsetInterceptor"></plugin>
+		<plugin interceptor="com.coway.trust.config.mybatis.SqlDebugLogInterceptor"></plugin> 
     </plugins>
 </configuration>
