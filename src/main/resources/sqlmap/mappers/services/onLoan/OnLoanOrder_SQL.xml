@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.onLoan.impl.OnLoanOrderMapper">
+        <select id="selectLoanOrdList" parameterType="Map" resultType="egovMap">
+            SELECT
+		          T.CRT_USER_ID
+		         , T.CUST_IC
+		         , T.CUST_NAME
+		         , T.CUST_VA_NO
+		         , T.DSC_BRNCH_ID
+		         , T.KEYIN_BRNCH_ID
+		         , T.ORD_ID
+		         , T.LOAN_ORD_ID
+		         , T.LOAN_ORD_NO LOAN_NO
+		         , T.LOAN_STUS_CODE
+		         , T.PO_NO
+		         , T.PRODUCT_CODE
+		         , T.PRODUCT_NAME
+		         , T.REF_NO
+		         , T.SALESMAN_MEM_ID
+		         , T.SALESMAN_CODE
+		         , T.SALESMAN_MEM_TYPE_ID
+		         , T.BILLING_GRP_ID
+		         , T.MAIL_TEL_MOB
+		         , T.MAIL_TEL_FAX
+		         , T.MAIL_TEL_OFF
+		         , T.MAIL_TEL_RES
+		         , T.INST_TEL_FAX
+		         , T.INST_TEL_MOB
+		         , T.INST_TEL_OFF
+		         , T.INST_TEL_RES
+		         , T.SIRIM_NO
+		         , T.SERIAL_NO
+		         , 1 C1
+		         , NVL(T.CUST_ID, 0) AS CUST_ID
+		         , TO_CHAR(T.LOAN_DT, 'DD/MM/YYYY') AS LOAN_DT
+		         , NVL(T.LOAN_STUS_ID, 0) AS LOAN_STUS_ID
+		         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+
+		    FROM ( SELECT
+		                  V1.LOAN_ORD_NO
+		                , V1.CRT_USER_ID
+		                , V1.CUST_IC
+		                , V1.CUST_NAME
+		                , V1.CUST_ID
+		                , V1.CUST_VA_NO
+		                , V1.DSC_BRNCH_ID
+		                , V1.KEYIN_BRNCH_ID
+		                , V1.LOAN_DT
+		                , V1.ORD_ID
+		                , V1.LOAN_ORD_ID
+		                , V1.LOAN_STUS_CODE
+		                , V1.LOAN_STUS_ID
+		                , V1.PO_NO
+		                , V1.PRODUCT_ID
+		                , V1.PRODUCT_CODE
+		                , V1.PRODUCT_NAME
+		                , V1.REF_NO
+		                , V1.SALESMAN_MEM_ID
+		                , V1.SALESMAN_CODE
+		                , V1.SALESMAN_MEM_TYPE_ID
+		                , V1.BILLING_GRP_ID
+		                , V1.MAIL_TEL_MOB
+		                , V1.MAIL_TEL_FAX
+		                , V1.MAIL_TEL_OFF
+		                , V1.MAIL_TEL_RES
+		                , V1.INST_TEL_FAX
+		                , V1.INST_TEL_MOB
+		                , V1.INST_TEL_OFF
+		                , V1.INST_TEL_RES
+		                , V1.SIRIM_NO
+		                , V1.SERIAL_NO
+		                , V1.ITM_PRC_ID
+		                , V1.INSTALL_ENTRY_ID
+		           FROM SVC0001V  V1
+		             JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
+
+		           WHERE 1 = 1
+		           <if test='loanDt == null || loanDt == ""'>
+		             AND V1.LOAN_DT BETWEEN TO_DATE(#{loanOrdStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{loanOrdEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		           </if>
+		           <if test='loanDt != null and loanDt != ""'>
+		             AND V1.LOAN_DT BETWEEN TO_DATE(#{loanDt}, 'DD/MM/YYYY') AND TO_DATE(#{loanDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+		           </if>
+		           <if test='loanNo != null and loanNo != ""'>
+		             AND V1.LOAN_ORD_NO = #{loanNo}
+		           </if>
+		           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+		             AND V1.KEYIN_BRNCH_ID IN
+		             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+		           </if>
+		           <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+		             AND V1.DSC_BRNCH_ID IN
+		             <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+		           </if>
+		           <if test='custId != null and custId != ""'>
+		             AND V1.CUST_ID = #{custId}
+		           </if>
+		           <if test='custName != null and custName != ""'>
+		             AND V1.CUST_NAME LIKE '%'||UPPER(#{custName})||'%'
+		           </if>
+		           <if test='custIc != null and custIc != ""'>
+		             AND V1.CUST_IC LIKE '%'||UPPER(#{custIc})||'%'
+		           </if>
+		           <if test='productId != null and productId != ""'>
+		             AND V1.PRODUCT_ID = #{productId}
+		           </if>
+		           <if test='salesmanCode != null and salesmanCode != ""'>
+		             AND V1.SALESMAN_CODE = UPPER(#{salesmanCode})
+		           </if>
+		           <if test='refNo != null and refNo != ""'>
+		             AND V1.REF_NO = UPPER(#{refNo})
+		           </if>
+		           <if test='poNo != null and poNo != ""'>
+		             AND V1.PO_NO = UPPER(#{poNo})
+		           </if>
+		           <if test='contactNo != null and contactNo != ""'>
+		             AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
+		           </if>
+		           <if test='vaNo != null and vaNo != ""'>
+		             AND V1.CUST_VA_NO = UPPER(#{vaNo})
+		           </if>
+		           <if test='crtUserId != null and crtUserId != ""'>
+		             AND V1.CRT_USER_ID = UPPER(#{crtUserId})
+		           </if>
+		           <if test='invoicePoNo != null and invoicePoNo != ""'>
+		             AND V1.LOAN_ORD_ID IN (SELECT DISTINCT PO_ORD_ID
+		                         FROM PAY0015D
+		                         WHERE PO_REF_NO = #{invoicePoNo})
+		           </if>
+		           <if test='isSelectAll == null or isSelectAll == ""'>
+		            AND M1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+		                                                          WHERE AA.CODE = BB.CODE
+		                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
+		           </if>
+		    ) T
+		    ORDER BY T.LOAN_ORD_NO ASC
+        </select>
+
+        <select id="getUserCodeList" resultType="egovMap">
+		    SELECT USER_ID CODE_ID,
+		           USER_NAME CODE_NAME
+		    FROM SYS0047M
+		    WHERE USER_STUS_ID = 1
+		      AND USER_TYPE_ID != 1
+		      AND USER_TYPE_ID != 2
+		      AND USER_TYPE_ID != 3
+		    ORDER BY USER_NAME
+		  </select>
+
+        <select id="getOrgCodeList" parameterType="Map" resultType="egovMap">
+		    SELECT Extent1.MEM_ID CODE_ID ,
+		           Extent1.MEM_CODE || ' - '  || Extent1.NAME CODE_NAME
+		    FROM ORG0001D Extent1
+		    JOIN (SELECT vMemberOrg.MEM_ID MEM_ID ,
+		                 vMemberOrg.MEM_CODE MEM_CODE ,
+		                 vMemberOrg.MEM_LVL MEM_LVL ,
+		                 vMemberOrg.DEPT_CODE DEPT_CODE ,
+		                 vMemberOrg.GRP_CODE GRP_CODE ,
+		                 vMemberOrg.ORG_CODE ORG_CODE ,
+		                 vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+		                 vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+		                 vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+		                 vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+		                 vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+		                 vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+		          FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+		          AND ( Extent2.MEM_LVL  = #{memLvl} )
+		    WHERE ( 1 = Extent1.STUS )
+		      AND ( Extent1.MEM_TYPE = #{memType} )
+		  </select>
+
+		  <select id="getGrpCodeList" parameterType="Map" resultType="egovMap">
+		    SELECT Extent1.MEM_ID CODE_ID ,
+		           Extent1.MEM_CODE MEM_CODE ,
+		           Extent1.NAME NAME ,
+		           Extent1.MEM_CODE || ' - '  || Extent1.NAME CODE_NAME ,
+		           Extent2.DEPT_CODE DEPT_CODE ,
+		           Extent2.GRP_CODE GRP_CODE ,
+		           Extent2.ORG_CODE ORG_CODE
+		    FROM ORG0001D Extent1
+		    JOIN (SELECT vMemberOrg.MEM_ID MEM_ID ,
+		                 vMemberOrg.MEM_CODE MEM_CODE ,
+		                 vMemberOrg.MEM_LVL MEM_LVL ,
+		                 vMemberOrg.DEPT_CODE DEPT_CODE ,
+		                 vMemberOrg.GRP_CODE GRP_CODE ,
+		                 vMemberOrg.ORG_CODE ORG_CODE ,
+		                 vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+		                 vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+		                 vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+		                 vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+		                 vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+		                 vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+		          FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID    = Extent1.MEM_ID )
+		                                            AND ( Extent2.MEM_LVL  = #{memLvl} )
+		          WHERE ( 1 = Extent1.STUS )
+		            AND ( Extent1.MEM_TYPE = #{memType} )
+		            AND ( Extent2.MEM_UP_ID = #{upperLineMemberID} )
+		  </select>
+
+		  <select id="getBankCodeList" parameterType="Map" resultType="egovMap">
+		    SELECT BANK_ID CODE_ID,
+		           CODE||' : '||NAME CODE_NAME
+		    FROM SYS0004M
+		    WHERE STUS_CODE_ID = 1
+		    ORDER BY CODE
+		  </select>
+
+		  <select id="select_SeqCCR0007D" parameterType="Map" resultType="java.lang.String">
+			    SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL
+			    FROM DUAL
+		  </select>
+
+		  <insert id="insert_CCR0006D" parameterType="Map">
+		         INSERT INTO CCR0006D ( CALL_ENTRY_ID ,
+		                            SALES_ORD_ID ,
+		                            TYPE_ID,
+		                            STUS_CODE_ID ,
+		                            RESULT_ID ,
+		                            DOC_ID,
+		                            CRT_USER_ID ,
+		                            CRT_DT ,
+		                            CALL_DT,
+		                            IS_WAIT_FOR_CANCL ,
+		                            HAPY_CALLER_ID,
+		                            UPD_DT ,
+		                            UPD_USER_ID ,
+		                            ORI_CALL_DT
+		     ) VALUES ( #{callEntryID} ,
+		                (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo}) ,
+		                 259 ,
+		                 19 ,
+		                 #{callResultID} ,
+		                 0 ,
+		                 #{userId} ,
+		                 SYSDATE ,
+		                 TO_DATE (#{nextCallDate} , 'DD/MM/YYYY'),
+		                 0 ,
+		                 0 ,
+		                 SYSDATE ,
+		                 #{userId} ,
+		                 TO_DATE (#{nextCallDate} , 'DD/MM/YYYY')
+		      )
+		  </insert>
+
+		  <insert id="insert_CCR0007D" parameterType="Map">
+			    INSERT INTO CCR0007D ( CALL_RESULT_ID ,
+			                           CALL_ENTRY_ID ,
+			                           CALL_STUS_ID ,
+			                           CALL_DT ,
+			                           CALL_ACTN_DT ,
+			                           CALL_FDBCK_ID ,
+			                           CALL_CT_ID ,
+			                           CALL_REM ,
+			                           CALL_CRT_USER_ID ,
+			                           CALL_CRT_DT ,
+			                           CALL_CRT_USER_ID_DEPT ,
+			                           CALL_HC_ID ,
+			                           CALL_ROS_AMT ,
+			                           CALL_SMS ,
+			                           CALL_SMS_REM
+			    ) VALUES ( #{callResultID},
+			               #{callEntryID} ,
+			               19 ,
+			               TO_DATE (#{nextCallDate} , 'DD/MM/YYYY') ,
+			               TO_DATE('1900/01/01', 'YYYY/MM/DD' ) ,
+			               0 ,
+			               0 ,
+			               ' ' ,
+			               #{userId} ,
+			               SYSDATE ,
+			               0 ,
+			               0 ,
+			               0 ,
+			               0 ,
+			               ' '
+			    )
+		  </insert>
+
+		  <select id="selectLoanAppType" parameterType="Map" resultType="java.lang.Integer">
+		      SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = 10 AND CODE IN (SELECT CODE FROM SYS0094M WHERE IND = 'LOAN_APP_T')
+		  </select>
+
+		  <select id="chkCrtAS" parameterType="salesOrderDVO" resultType="int">
+			    SELECT COUNT(*) AS cnt
+			    FROM SAL0223M
+			    WHERE ITM_STK_ID = #{itmStkId}
+			      AND ITM_CPNT_ID = #{itmCompId}
+			      AND AS_CRT = 'Y'
+			      AND DISAB = '0'
+			      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY'))
+		  </select>
+
+		  <select id="selectDocNo" parameterType="Integer" resultType="String">
+		        SELECT FN_GET_DOCNO(#{value}) from dual
+		    </select>
+
+
+		    <!-- INSERT SVC0116M -->
+		    <insert id="insertLoanOrderMaster" parameterType="loanOrderMVO">
+		           <selectKey keyProperty="loanOrdId,salesOrdId" resultType="loanOrderMVO" order="BEFORE">
+				      SELECT SVC0116M_LOAN_ORD_ID_SEQ.NEXTVAL as loanOrdId, SAL0001D_SALES_ORD_ID_SEQ.NEXTVAL as salesOrdId FROM DUAL
+				    </selectKey>
+
+                    INSERT INTO SVC0116M (
+                        LOAN_ORD_ID,
+                        LOAN_ORD_NO,
+                        SALES_ORD_ID,
+                        REF_NO,
+                        LOAN_DT,
+                        CUST_ID,
+                        CUST_CNT_ID,
+                        CUST_ADD_ID,
+                        MEM_ID,
+                        BRNCH_ID,
+                        APP_TYPE_ID,
+                        TOT_AMT,
+                        REM,
+                        RELATE_ORD_NO,
+                        SMO_NO,
+                        STUS_CODE_ID,
+                        SYNC_CHK,
+                        EMP_CHK,
+                        CUST_PO_NO,
+                        CUST_BILL_ID,
+                        CUST_CARE_CNT_ID,
+                        SALES_HM_ID,
+                        SALES_SM_ID,
+                        SALES_GM_ID,
+                        SRV_PAC_ID,
+                        UPD_USER_ID,
+                        UPD_DT,
+                        CRT_USER_ID,
+                        CRT_DT,
+                        EDIT_TYPE_ID)
+            VALUES (
+                    #{loanOrdId},
+                    #{loanOrdNo},
+                    #{salesOrdId},
+                    #{refNo},
+                    SYSDATE,
+                    #{custId},
+                    #{custCntId},
+                    #{custAddId},
+                    #{memId},
+                    #{brnchId},
+                    #{appTypeId},
+                    #{totAmt},
+                    #{rem},
+                    #{relateOrdNo},
+                    #{smoNo},
+                    #{stusCodeId},
+                    #{syncChk},
+                    #{empChk},
+                    UPPER(#{custPoNo}),
+                    #{custBillId},
+                    #{custCareCntId},
+                    #{salesHmId},
+                    #{salesSmId},
+                    #{salesGmId},
+                    #{srvPacId},
+                    #{updUserId},
+                    #{updDt},
+                    #{crtUserId},
+                    #{crtDt},
+                    #{editTypeId})
+		    </insert>
+
+		    <insert id="insertLoanOrderDetails" parameterType="loanOrderDVO">
+		          insert into SVC0114D (LOAN_ORD_ID,
+			                    ITM_NO,
+			                    ITM_STK_ID,
+			                    ITM_PRC_ID,
+			                    ITM_QTY,
+			                    STUS_CODE_ID,
+			                    UPD_DT,
+			                    UPD_USER_ID,
+			                    ITM_ID,
+			                    ITM_CALL_ENTRY_ID,
+			                    CPNT_ID,
+			                    EDIT_TYPE_ID)
+			        values (#{loanOrdId},
+			                #{itmNo},
+			                #{itmStkId},
+			                #{itmPrcId},
+			                #{itmQty},
+			                #{stusCodeId},
+			                SYSDATE,
+			                #{updUserId},
+			                #{itmId},
+			                #{itmCallEntryId},
+			                #{itmCompId},
+			                #{editTypeId})
+		    </insert>
+
+		    <update id="updateCustBillId" parameterType="loanOrderMVO">
+		        UPDATE SVC0116M
+		           SET CUST_BILL_ID = #{custBillId}
+		         WHERE SALES_ORD_ID = #{salesOrdId}
+		         AND LOAN_ORD_ID = #{loanOrdId}
+		    </update>
+
+		    <select id="selectCallLogCodeLoan" parameterType="String" resultType="Integer">
+		          SELECT CODE_ID FROM SYS0013M
+		              WHERE CODE = #{loanCode}
+		              AND ROWNUM = 1
+		    </select>
+
+		    <!-- Select Salesman info-->
+		    <select id="selectOrderSalesmanViewByOrderID" parameterType="Map" resultType="egovMap">
+		        SELECT T1.SALES_ORD_ID SALES_ORD_ID
+		        , T1.DEPT_CODE DEPT_CODE
+		        , T1.GRP_CODE GRP_CODE
+		        , T1.ORG_CODE ORG_CODE
+		        , T2.MEM_ID MEM_ID
+		        , T2.MEM_CODE MEM_CODE
+		        , T2.MEM_TYPE MEM_TYPE
+		        , T2.NAME NAME
+		        , T2.NRIC NRIC
+		        , T2.TEL_OFFICE TEL_OFFICE
+		        , T2.TEL_HUSE TEL_HUSE
+		        , T2.TEL_MOBILE TEL_MOBILE
+		        , T3.MEM_ID MEM_ID1
+		        , T3.MEM_CODE MEM_CODE1
+		        , T3.NAME NAME1
+		        , T3.TEL_MOBILE TEL_MOBILE1
+		        , T4.MEM_ID MEM_ID2
+		        , T4.MEM_CODE MEM_CODE2
+		        , T4.NAME NAME2
+		        , T4.TEL_MOBILE TEL_MOBILE2
+		        , T5.MEM_ID MEM_ID3
+		        , T5.MEM_CODE MEM_CODE3
+		        , T5.NAME NAME3
+		        , T5.TEL_MOBILE TEL_MOBILE3
+		        FROM SVC0116M T1
+		        LEFT
+		        JOIN ORG0001D T2
+		        ON T2.MEM_ID = T1.MEM_ID
+		        LEFT
+		        JOIN ORG0001D T3
+		        ON T3.MEM_ID = T1.SALES_GM_ID
+		        LEFT
+		        JOIN ORG0001D T4
+		        ON T4.MEM_ID = T1.SALES_SM_ID
+		        LEFT
+		        JOIN ORG0001D T5
+		        ON T5.MEM_ID = T1.SALES_HM_ID
+		        WHERE T1.SALES_ORD_ID = #{salesOrderId}
+		    </select>
+            <!-- end of select salesman info -->
+
+		    <!--Loan Order Details -->
+		    <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
+		          SELECT DISTINCT
+                  V1.ORD_ID
+                    , V1.LOAN_ORD_ID LOAN_ID
+                    , V1.LOAN_STUS_ID ORD_STUS_ID
+                    , V1.LOAN_ORD_NO LOAN_ORD_NO
+                    , S.CODE ORD_STUS_CODE
+                    , S.NAME ORD_STUS_NAME
+                    , V1.LOAN_DT
+                    , V2.TOT_AMT
+                    , V2.REF_NO
+                    , V2.CUST_PO_NO
+                    , V2.DEPT_CODE
+                    , V2.GRP_CODE
+                    , V2.ORG_CODE
+                    , V2.CRT_USER_ID
+                    , U.USER_NAME CRT_USER_NAME
+                    , V2.CRT_DT
+                    , V2.APP_TYPE_ID
+                    , APP.CODE APP_TYPE_CODE
+                    , APP.CODE_NAME APP_TYPE_DESC
+                    , V1.ITM_PRC_ID
+                    , V1.PRODUCT_ID
+                    , V1.PRODUCT_CODE
+                    , V1.PRODUCT_NAME
+                    , C.CUST_ID CUST_ID
+                    , (
+                        CASE WHEN C.TYPE_ID != 964
+                                 AND C.CORP_TYPE_ID > 0 THEN ( NVL(CUSTTYPE.CODE_NAME,' ')
+                            || ' ('
+                            || NVL(CORPTYPE.CODE_NAME,' ')
+                            || ')' )
+                            ELSE NVL(CUSTTYPE.CODE_NAME,' ')
+                        END
+                    ) CUST_TYPE
+                    , C.NAME CUST_NAME
+                    , C.NRIC CUST_NRIC
+                    , (
+                        CASE
+                            WHEN NVL(C.TYPE_ID,0) = '964' THEN NVL(C.DOB,TO_DATE('19000101','YYYYMMDD') )
+                            ELSE TO_DATE('19000101','YYYYMMDD')
+                        END
+                    ) AS CUST_DOB
+                    , NVL(CO.NAME,' ') CUST_NATION
+                    , (
+                        CASE
+                            WHEN NVL(C.TYPE_ID,0) = '964' THEN NVL(C.GENDER,' ')
+                            ELSE ' '
+                        END
+                    ) CUST_GENDER
+                    , NVL(RC.CODE_NAME,' ') CUST_RACE
+                    , NVL(C.EMAIL,' ') CUST_EMAIL
+                    , NVL(C.CUST_VA_NO,' ') CUST_VA_NO
+                    , TO_CHAR(C.PAS_SPORT_EXPR, 'DD/MM/YYYY') CUST_PASSPORT_EXPR
+                    , TO_CHAR(C.VISA_EXPR, 'DD/MM/YYYY') CUST_VISA_EXPR
+                    , NVL(MEM.MEM_ID,0) ORD_MEM_ID
+                    , NVL(MEM.MEM_CODE,' ') ORD_MEM_CODE
+                    , NVL(MEM.NAME,' ') ORD_MEM_NAME
+                    , NVL(MEM.NRIC,' ') ORD_MEM_NRIC
+                    , NVL(MEM.MEM_TYPE,0) ORD_MEM_TYPE_ID
+                    , NVL(MT.CODE,' ') ORD_MEM_TYPE_CODE
+                    , NVL(MT.CODE_NAME,' ') ORD_MEM_TYPE_NAME
+                    , NVL(V1.DSC_BRNCH_ID, 0) KEYIN_BRNCH_ID
+                    , WH.WH_LOC_CODE KEYIN_BRNCH_CODE
+                    , WH.WH_LOC_DESC KEYIN_BRNCH_NAME
+                    , V2.REM
+                    , V2.RELATE_ORD_NO
+                    , V2.SALES_HM_ID
+                    , V2.SALES_SM_ID
+                    , V2.SALES_GM_ID
+                    , V2.CUST_ADD_ID
+                    , V2.CUST_CNT_ID
+                    , V2.CUST_CARE_CNT_ID
+                    , V2.UPD_DT
+                    , V2.UPD_USER_ID
+                    , UPD_U.USER_NAME UPD_USER_NAME
+                    , CAT.CODE_ID STK_CTGRY_ID
+                    , CAT.CODE_NAME STK_CTGRY_NAME
+                    , V2.CUST_BILL_ID
+                    , NVL(V1.EMP_CHK, 0) AS EMP_CHK
+                    , C.TYPE_ID
+                    , EXTRACT(MONTH FROM V1.LOAN_DT) AS MONTH
+                    , EXTRACT(YEAR FROM V1.LOAN_DT) AS YEAR
+                    , FN_GET_ORDER_SERIAL(V1.ORD_ID, V1.PRODUCT_CODE) LAST_SERIAL_NO
+                    FROM SVC0001V V1
+                    JOIN SVC0116M V2 ON V2.LOAN_ORD_ID = V1.LOAN_ORD_ID
+                    JOIN SYS0026M STK ON STK.STK_ID = V1.PRODUCT_ID
+                    JOIN SYS0038M S ON S.STUS_CODE_ID = V1.LOAN_STUS_ID
+                    JOIN SYS0047M U ON U.USER_ID = V2.CRT_USER_ID
+                    LEFT JOIN SYS0047M UPD_U ON UPD_U.USER_ID = V2.UPD_USER_ID
+                    LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = V2.MEM_ID
+                    LEFT JOIN SYS0028M WH ON WH.WH_LOC_ID = V1.DSC_BRNCH_ID
+                    LEFT JOIN SYS0013M CAT ON CAT.CODE_ID = STK.STK_CTGRY_ID
+                    LEFT JOIN SAL0029D C ON C.CUST_ID = V1.CUST_ID
+                    LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
+                    LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID != 964 AND C.CORP_TYPE_ID > 0
+                    LEFT JOIN SYS0015M CO ON CO.CNTY_ID = C.NATION AND NVL(C.TYPE_ID,0) = '964'
+                    LEFT JOIN SYS0013M RC ON RC.CODE_ID = C.RACE_ID AND NVL(C.TYPE_ID,0) = '964'
+                    LEFT JOIN SYS0013M MT ON MEM.MEM_TYPE = MT.CODE_ID
+                    JOIN SYS0013M APP ON APP.CODE_ID = V2.APP_TYPE_ID
+			        WHERE V1.LOAN_ORD_ID = #{loanOrdId}
+		    </select>
+
+		    <select id="selectOrderMailingInfoByOrderID" parameterType="Map" resultType="egovMap" >
+		          SELECT
+				    LOM.SALES_ORD_ID ORD_ID,
+				    CA2.ADDR_DTL,
+				    CA2.STREET,
+				    MA2.AREA,
+				    MA2.POSTCODE,
+				    MA2.CITY MAIL_CITY,
+				    MA2.STATE MAIL_STATE,
+				    MA2.COUNTRY MAIL_CNTY,
+				    CP2.NAME MAIL_CNT_NAME,
+				    CP2.NRIC MAIL_CNT_NRIC,
+				    CP2.EMAIL MAIL_CNT_EMAIL,
+				    CP2.TEL_M1 MAIL_CNT_TEL_M,
+				    CP2.TEL_O MAIL_CNT_TEL_O,
+				    CP2.TEL_R MAIL_CNT_TEL_R,
+				    CP2.TELF MAIL_CNT_TEL_F,
+				        CASE
+				            WHEN NVL(
+				                CP2.GENDER,
+				                ' '
+				            ) = 'M'THEN 'MALE'
+				            WHEN NVL(
+				                CP2.GENDER,
+				                ' '
+				            ) = 'F'THEN 'FEMALE'
+				            ELSE ' '
+				        END
+				    MAIL_CNT_GENDER,
+				    CP2.CUST_CNTC_ID MAIL_CNTC_ID,
+				    CA2.CUST_ADD_ID MAIL_ADDR_ID,
+				    CP2.DEPT MAIL_CNT_DEPT,
+				    CP2.POS MAIL_CNT_POST
+				FROM
+				    SVC0116M LOM
+				    LEFT JOIN SAL0023D CA2 ON CA2.CUST_ADD_ID = LOM.CUST_ADD_ID
+				    LEFT JOIN SYS0064M MA2 ON MA2.AREA_ID = CA2.AREA_ID
+				    LEFT JOIN SAL0027D CP2 ON CP2.CUST_CNTC_ID = LOM.CUST_CNT_ID
+				WHERE
+				    LOM.STUS_CODE_ID != 8
+				    AND LOM.SALES_ORD_ID = #{salesOrderId}
+		    </select>
+
+
+        <select id="selectOrderInstallationInfoByOrderID" parameterType="Map" resultType="egovMap">
+	        SELECT V1.INSTALL_ID
+	        , V1.ORD_ID
+	        , V1.INST_ADDR_DTL
+	        , V1.INST_STREET
+	        , V1.INST_AREA
+	        , V1.INST_POSTCODE
+	        , V1.INST_CITY
+	        , V1.INST_STATE
+	        , V1.INST_COUNTRY
+	        , V1.INST_CNT_NAME
+	        , V1.INST_CNT_NRIC
+	        , V1.INST_CNT_EMAIL
+	        , V1.INST_CNT_TEL_M
+	        , V1.INST_CNT_TEL_O
+	        , V1.INST_CNT_TEL_R
+	        , V1.INST_CNT_TEL_F
+	        , V1.INST_CNT_GENDER
+	        , V1.FIRST_INSTALL_NO
+	        , V1.FIRST_INSTALL_CT_CODE
+	        , V1.FIRST_INSTALL_CT_NAME
+	        , V1.FIRST_INSTALL_DT
+	        , V1.FIRST_INSTALL_REM
+	        , V1.FIRST_INSTALL_SIRIM_NO
+	        , V1.FIRST_INSTALL_SERIAL_NO
+	        , V1.LAST_INSTALL_NO
+	        , V1.LAST_INSTALL_CT_CODE
+	        , V1.LAST_INSTALL_CT_NAME
+	        , V1.LAST_INSTALL_DT
+	        , V1.LAST_INSTALL_REM
+	        , V1.LAST_INSTALL_SIRIM_NO
+	        , FN_GET_ORDER_SERIAL(V1.ORD_ID, null) LAST_INSTALL_SERIAL_NO
+	        , V1.DSC_ID
+	        , V1.DSC_CODE
+	        , V1.DSC_NAME
+	        , V1.INSTCT
+	        , V1.PREFER_INST_DT
+	        , V1.PREFER_INST_TM
+	        , V1.INSTALL_ADDR_ID
+	        , V1.INSTALL_CNTC_ID
+	        , V1.INST_CNT_DEPT
+	        , V1.INST_CNT_POST
+	        , V1.VRIFY_REM
+	        , V1.VRIFY_FLG
+	        FROM SVC0002V V1
+	        WHERE V1.ORD_ID = #{salesOrderId}
+	        AND ROWNUM &lt;= 1
+	    </select>
+
+	    <select id="selectLoanOrdDetail" parameterType="Map" resultType="egovMap">
+	       SELECT EDIT_TYPE_ID
+	         , T1.ITM_CALL_ENTRY_ID
+	         , T1.ITM_ID
+	         , T1.ITM_NO
+	         , T1.ITM_PRC_ID
+	         , T1.ITM_QTY
+	         , T1.ITM_STK_ID
+	         , T1.loan_ord_id
+	         , T1.STK_LOC
+	         , T1.STUS_CODE_ID
+	         , T1.UPD_DT
+	         , T1.UPD_USER_ID
+		    FROM SVC0114D T1
+		    WHERE T1.LOAN_ORD_ID = #{loanOrdId}
+	    </select>
+
+	    <select id="selectLoanOrdM" parameterType="Map" resultType="egovMap">
+		       SELECT T1.SALES_ORD_ID
+	             , T1.LOAN_ORD_ID
+	             , T1.LOAN_ORD_NO
+	             , T1.REF_NO
+	             , T1.LOAN_DT
+	             , T1.CUST_ID
+	             , T1.CUST_CNT_ID
+	             , T1.CUST_ADD_ID
+	             , T1.MEM_ID
+	             , T1.BRNCH_ID
+	             , T1.TOT_AMT
+	             , T1.REM
+	             , T1.STUS_CODE_ID
+	             , T1.UPD_DT
+	             , T1.UPD_USER_ID
+	             , T1.SYNC_CHK
+	             , T1.CUST_PO_NO
+	             , T1.RELATE_ORD_NO
+	             , T1.SMO_NO
+	             , T1.DEPT_CODE
+	             , T1.GRP_CODE
+	             , T1.ORG_CODE
+	             , T1.EDIT_TYPE_ID
+	             , T1.CUST_BILL_ID
+	             , T1.CRT_USER_ID
+	             , T1.CRT_DT
+	             , T1.SALES_HM_ID
+	             , T1.SALES_SM_ID
+	             , T1.SALES_GM_ID
+	             , T1.CUST_CARE_CNT_ID
+	             , T1.EMP_CHK
+	             , T4.NAME ORDER_STATUS
+	          FROM SVC0116M T1
+	          LEFT JOIN SAL0029D T2 ON T2.CUST_ID = T1.CUST_ID
+	          LEFT JOIN SYS0038M T4 ON T4.STUS_CODE_ID = T1.STUS_CODE_ID
+	          LEFT JOIN SAL0003D T6 ON T6.CNTRCT_SALES_ORD_ID = T1.SALES_ORD_ID
+	         WHERE T1.loan_ord_id = #{loanOrdId}
+	           AND ROWNUM &lt;= 1
+	    </select>
+
+</mapper>

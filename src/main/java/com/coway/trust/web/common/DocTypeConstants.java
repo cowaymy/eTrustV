@@ -57,4 +57,7 @@ public class DocTypeConstants {
 	public static final int CASE_NO                     = 148;
 	public static final int COD_NO                      = 151;
 	public static final int PTR_NO                      = 180;
+	// Added for On-Loan Order module, by Hui Ding, 18-02-2020
+	public static final int ON_LOAN_REPAIR_NO		= 175;
+
 }
