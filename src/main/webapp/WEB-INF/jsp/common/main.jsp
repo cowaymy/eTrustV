@@ -101,6 +101,31 @@
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
         width : "15%"
+    }, {
+        dataField: "indRc",
+        headerText: "Ind SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "comRc",
+        headerText: "Com SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "haRc",
+        headerText: "HA SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "hcRc",
+        headerText: "HC SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "opc",
+        headerText: "Own<br/>Purchase<br/>Collection",
+        formatString : "#,##0.00",
+        width : "12.5%"
     }];
 
     var salesManagerDashboard = [{
@@ -152,6 +177,31 @@
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
         width : "12.5%"
+    }, {
+        dataField: "indRc",
+        headerText: "Ind SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "comRc",
+        headerText: "Com SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "haRc",
+        headerText: "HA SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "hcRc",
+        headerText: "HC SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "opc",
+        headerText: "Own<br/>Purchase<br/>Collection",
+        formatString : "#,##0.00",
+        width : "12.5%"
     }];
 
     var sgmDashboard = [{
@@ -197,6 +247,31 @@
     }, {
         dataField: "rc",
         headerText: "SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "indRc",
+        headerText: "Ind SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "comRc",
+        headerText: "Com SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "haRc",
+        headerText: "HA SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "hcRc",
+        headerText: "HC SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "12.5%"
+    }, {
+        dataField: "opc",
+        headerText: "Own<br/>Purchase<br/>Collection",
         formatString : "#,##0.00",
         width : "12.5%"
     }];
@@ -865,7 +940,7 @@
         Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
             AUIGrid.setGridData(salesOrgPerfM, result);
             AUIGrid.setGridData(salesOrgPerfD, result);
-
+console.log(result);
             AUIGrid.setProp(salesOrgPerfM, "rowStyleFunction", function(rowIndex, item) {;
                 if(item.period == "CURRENT") {
                     return "my-row-style";
