@@ -14,10 +14,10 @@ var glAccCode;
 var glAccDesc;
 
 $(document).ready(function(){
-	
+
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
-    
+
     AUIGrid.setSelectionMode(myGridID, "singleRow");
           $('#claimType').on("change", function () {
 
@@ -32,7 +32,7 @@ $(document).ready(function(){
                      type:"M"
                  });
 
-             } 
+             }
          });
 
         CommonCombo.make("expType", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), "", {
@@ -40,7 +40,7 @@ $(document).ready(function(){
             name: "expTypeName",
             type:"M"
         });
-        
+
         CommonCombo.make("claimType", "/eAccounting/expense/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
             id: "code",
             name: "codeName",
@@ -48,7 +48,7 @@ $(document).ready(function(){
         }
         //, calback
         );
-        
+
         fn_selectListAjax();
 
 });
@@ -57,11 +57,11 @@ $(document).ready(function(){
 function f_multiCombo(){
     $(function() {
         $('#claimType').change(function() {
-        
+
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '80%'
-        });       
+        });
     });
 }
 
@@ -71,20 +71,20 @@ function fn_reload(){
 }
 
 // 리스트 조회.
-function fn_selectListAjax() {        
-	
+function fn_selectListAjax() {
+
     Common.ajax("GET", "/eAccounting/expense/selectExpenseList?_cacheId=" + Math.random(), $("#listSForm").serialize(), function(result) {
-        
+
          console.log("성공.");
          console.log( result);
-         
+
         AUIGrid.setGridData(myGridID, result);
     });
 }
 
 //Expense Type Pop 호출
 function fn_expenseTypePop(){
-	
+
    Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, null, true, "addExpenseTypePop");
 }
 
@@ -92,14 +92,14 @@ function fn_expenseTypePop(){
 function fn_expenseEdit(){
 
     var selectedItems = AUIGrid.getSelectedItems(myGridID);
-    
+
     if(selectedItems.length <= 0) {
     	Common.alert("<spring:message code='expense.msg.NoData'/> ");
     	return;
     }
     // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
     var first = selectedItems[0];
-    
+
     $("#popClaimType").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "clmType"));
     $("#popExpType").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "expType"));
     $("#popGlAccCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCode"));
@@ -107,14 +107,14 @@ function fn_expenseEdit(){
     $("#popBudgetCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCodeName"));
     $("#popGlAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
     $("#popTaxCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "taxCode"));
-	
-    
+
+
    Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");
-} 
+}
 
 function createAUIGrid() {
     // AUIGrid 칼럼 설정
-    
+
     // 데이터 형태는 다음과 같은 형태임,
     //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
     var columnLayout = [ {
@@ -182,32 +182,37 @@ function createAUIGrid() {
         }, {
             dataField : "taxCode",
             visible : false // Color 칼럼은 숨긴채 출력시킴
+        }, {
+            dataField : "cntrlExp",
+            headerText : 'Controllable',
+            width : 100,
+            editable : false
         }];
-   
+
     //그리드 속성 설정
     var gridPros = {
         usePaging           : true,             //페이징 사용
-        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-        editable                : false,            
-        fixedColumnCount    : 1,            
-        showStateColumn     : true,             
-        displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
-        headerHeight        : 30,       
+        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+        editable                : false,
+        fixedColumnCount    : 1,
+        showStateColumn     : true,
+        displayTreeOpen     : false,
+        selectionMode       : "singleRow",  //"multipleCells",
+        headerHeight        : 30,
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
         noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"],
         groupingMessage     : gridMsg["sys.info.grid.groupingMessage"]
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 }
 
 </script>
-		
+
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>

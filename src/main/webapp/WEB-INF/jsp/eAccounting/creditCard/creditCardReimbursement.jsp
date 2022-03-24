@@ -457,6 +457,7 @@ function fn_creditCardNoChange() {
 	            $("#bankCode").val(result.data.bankCode);
 	            $("#bankName").val(result.data.bankName);
 	            $("#sCardSeq").val(result.data.crditCardSeq);
+	            $("#cardControlYN").val(result.data.cntrlCard);
 	        } else {
 	            Common.alert('<spring:message code="crditCardReim.noData.msg" />');
 	            $("#newCrditCardUserId").val("");
@@ -853,7 +854,7 @@ function fn_getItemTotal() {
 
 function fn_checkCreditLimit() {
     // To check if limit exceeded
-	var allTotAmt = fn_getItemTotal();
+    var allTotAmt = fn_getItemTotal();
     console.log(allTotAmt);
     var limitFlg = true;
     var clmDt = $("#clmMonth").val(); //claim date
@@ -871,13 +872,19 @@ function fn_checkCreditLimit() {
 	Common.ajaxSync("GET", "/eAccounting/creditCard/selectAvailableAllowanceAmt.do", data, function(result) {
 		console.log("123");
 		console.log(result);
-		var planAmt = result[0].availableAmt;
-		console.log(result[0].planAmt);
-		if(allTotAmt > planAmt)
+		var planAmt = 0;
+		if(result.length > 0)
 		{
-			Common.alert('Insufficient Credit Limit');
-			limitFlg = false;
+			planAmt = result[0].availableAmt;
 		}
+		if($("#cardControlYN").val() == "Y")
+	    {
+			if(allTotAmt > planAmt)
+	        {
+	            Common.alert('Insufficient Allowance Limit');
+	            limitFlg = false;
+	        }
+	    }
 	});
 	return limitFlg;
 }

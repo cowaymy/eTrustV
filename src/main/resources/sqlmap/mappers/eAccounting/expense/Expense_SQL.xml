@@ -18,8 +18,9 @@
 		           ,(SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = CRT_USER_ID) AS CRT_USER_ID
 		           ,TO_CHAR(UPD_DT, 'dd-mm-yyyy') UPD_DT
 		           ,(SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = UPD_USER_ID) AS UPD_USER_ID
+		           ,CNTRL_EXP
 		  FROM FCM0001M
-		 WHERE DISAB_FLAG is null		
+		 WHERE DISAB_FLAG is null
 		 <if test="claimType != null and claimType != ''">
            AND CLM_TYPE IN
          <foreach item="item" collection="claimType" index="index" open="(" separator="," close=")">
@@ -40,13 +41,13 @@
          </if>
          ORDER BY CLM_TYPE, EXP_TYPE
   </select>
-  
+
   <select id="selectMaxExpType" parameterType="Map" resultType="String">
-     SELECT #{clmType} || NVL(TO_CHAR(MAX(REPLACE(EXP_TYPE, #{clmType}, '')) + 1, 'FM000'), '001') EXP_TYPE 
+     SELECT #{clmType} || NVL(TO_CHAR(MAX(REPLACE(EXP_TYPE, #{clmType}, '')) + 1, 'FM000'), '001') EXP_TYPE
       FROM FCM0001M
-    WHERE CLM_TYPE = #{clmType}  
+    WHERE CLM_TYPE = #{clmType}
   </select>
-  
+
   <insert id="insertExpenseInfo" parameterType="Map">
 
    INSERT INTO FCM0001M
@@ -80,8 +81,8 @@
     </insert>
 
   <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
-		SELECT BUDGET_CODE    
-		        ,TO_CHAR(START_DT, 'dd-mm-yyyy')   START_DT  
+		SELECT BUDGET_CODE
+		        ,TO_CHAR(START_DT, 'dd-mm-yyyy')   START_DT
 		        ,TO_CHAR(END_DT, 'dd-mm-yyyy')         END_DT
 		        ,BUDGET_CODE_TEXT
 		        ,CRT_USER_ID
@@ -90,18 +91,18 @@
 		        ,UPD_DT
 		 FROM FCM0010M
 		 WHERE 1=1
-        <![CDATA[ 
+        <![CDATA[
 		     AND START_DT <= SYSDATE
 		     AND END_DT  >= SYSDATE
         ]]>
         <if test="budgetCode != null and budgetCode != ''">
 	       AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
-        </if>  
+        </if>
         <if test="budgetCodeText != null and budgetCodeText != ''">
            AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
         </if>
   </select>
-  
+
   <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
 	  SELECT GL_ACC_CODE
 	            ,GL_ACC_DESC
@@ -114,17 +115,17 @@
 		 WHERE 1=1
         <if test="glAccCode != null and glAccCode != ''">
 	       AND GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
-        </if>  
+        </if>
         <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
            AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
         </if>
   </select>
-  
+
   <update id="updateExpenseInfo" parameterType="Map">
    UPDATE FCM0001M
-      SET  
+      SET
       <if test ="disabFlag != nul and disabFlag !=''">
-            DISAB_FLAG = #{disabFlag}            
+            DISAB_FLAG = #{disabFlag}
             ,DISAB_USER_ID   = #{userId}
             ,DISAB_DT        = SYSDATE
       </if>
@@ -133,7 +134,7 @@
             ,GL_ACC_CODE_NAME = #{glAccCodeName}
             ,BUDGET_CODE = #{budgetCode}
             ,BUDGET_CODE_NAME = #{budgetCodeName}
-    </if>    
+    </if>
             ,UPD_USER_ID   = #{userId}
             ,UPD_DT        = SYSDATE
     WHERE  CLM_TYPE     = #{clmType}

@@ -130,7 +130,7 @@ var mgmtColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "planAmt",
-    headerText : 'Credit Limit',
+    headerText : 'Allowance Limit',
     style : "aui-grid-user-custom-left"
 }
 ];
