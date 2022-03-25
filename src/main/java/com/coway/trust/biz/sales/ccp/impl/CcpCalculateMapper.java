@@ -120,4 +120,6 @@ public interface CcpCalculateMapper {
 	int getMemberID(Map<String, Object> params);
 
 	String getEzyDocNo();
+
+	EgovMap getExisitngOrderId(Map<String, Object> params) throws Exception;
 }

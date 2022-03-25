@@ -114,4 +114,6 @@ public interface OrderDetailMapper {
 
   List<EgovMap> selectFmcoEvoucherList(Map<String, Object> params);
 
+  EgovMap selectRenAgrList(Map<String, Object> params);
+
 }

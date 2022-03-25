@@ -69,6 +69,16 @@ $(document).ready(function() {
         $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
     }
 
+     $("#man1").hide();
+     $("#man2").hide();
+     $("#man3").hide();
+     var custType =  $('#_editCustTypeId').val();
+     if(custType == "965"){
+         $("#man1").show();
+         $("#man2").show();
+         $("#man3").show();
+     }
+
      $('#eResubmitAtch').hide();
      $('#eResubmitTh').hide();
      $('#eResubmitTd').hide();
@@ -181,6 +191,22 @@ $(document).ready(function() {
                 }
             }
         }
+
+        var custType =  $('#_editCustTypeId').val();
+        if(custType == "965"){
+            if($('#cowayTemplate').val() == "" && $("#agmReq").is(":checked") == true){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Coway Template'/>");
+                return;
+            }
+            if($('#cntPeriodValue').val() == "0" && $("#agmReq").is(":checked") == true){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Contract Period'/>");
+                return;
+            }
+        }else{
+            if($('#cowayTemplate').val() == ""){
+                $('#cowayTemplate').val("0");
+            }
+        }
         /*
         if( null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
@@ -264,11 +290,11 @@ $(document).ready(function() {
            $("#agmReq").val("0");
        }
        //_summon
-       if($("#cowayTemplate").is(":checked") == true){
+       /* if($("#cowayTemplate").is(":checked") == true){
            $("#cowayTemplate").val("1");
        }else{
            $("#cowayTemplate").val("0");
-       }
+       } */
        calSave();
 
     });//Save End
@@ -1281,6 +1307,10 @@ function chgTab(tabNm) {
 <input type="hidden" id="_saveCustTypeId" name="saveCustTypeId" value="${orderDetail.basicInfo.custTypeId}">
 <input type="hidden"  name="saveOrdId" id="_saveOrdId" value="${orderDetail.basicInfo.ordId}">
 <input type="hidden"  name="bndlId" id="_bndlId" value="${orderDetail.basicInfo.bndlId}">
+<input type="hidden"  name="saveCustId" id="saveCustId" value="${orderDetail.basicInfo.custId}">
+<input type="hidden"  name="saveSalesOrgCode" id="saveOrgCode" value="${orderDetail.salesmanInfo.orgCode}">
+<input type="hidden"  name="saveSalesMemType" id="saveSalesMemType" value="${orderDetail.salesmanInfo.memType}">
+<input type="hidden"  name="saveSalesManId" id="saveSalesManId" value="${orderDetail.salesmanInfo.memId}">
 
 <!-- Ord Unit  -->
 <input type="hidden" name="saveOrdUnit"  id="_saveOrdUnit">
@@ -1365,12 +1395,32 @@ function chgTab(tabNm) {
     <td><span><input type="checkbox"  id="_summon"  name="summon"/></span></td>
     -->
     <!-- 20201023 - LaiKW - Amend checkbox -->
-    <th scope="row">Need Agreement</th>
+    <th scope="row">Agreement Required<span class="must" id="man1" >*</span></th>
     <td><span><input type="checkbox"  id="agmReq"  name="agmReq"/></span></td>
-    <th scope="row">Coway Template</th>
-    <td><span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate"/></span></td>
+    <th scope="row">Coway Template<span class="must" id="man2">*</span></th>
+    <td>
+    <!-- <span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate"/></span> -->
+    <select class="w100p" id="cowayTemplate" name="cowayTemplate">
+        <option value="" selected>Choose One</option>
+        <option value="1">YES</option>
+        <option value="0">NO</option>
+    </select>
+    </td>
     <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
     <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.cntcAgrPeriod" /><span class="must" id="man3">*</span></th>
+    <td>
+    <select class="w100p" id="cntPeriodValue" name="cntPeriodValue">
+        <option value="0" selected>Choose One</option>
+        <option value="12">12</option>
+        <option value="24">24</option>
+        <option value="36">36</option>
+        <option value="48">48</option>
+        <option value="60">60</option>
+    </select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

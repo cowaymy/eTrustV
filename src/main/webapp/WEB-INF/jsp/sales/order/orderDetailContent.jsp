@@ -93,6 +93,9 @@
                 	fn_selectMCORemarkList();
                 }
                 break;
+            case 'renAgr' :
+                AUIGrid.resize(fmcoEvoucherGridID, 942, 380);
+                break;
         };
     }
 </script>
@@ -121,6 +124,7 @@
 	<li><a href="#" onClick="javascript:chgTab('gstRebateInfo');"><spring:message code="sal.title.text.gstRebate" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('mcoRemark');">MCO Remark</a></li>
 	<li><a href="#" onClick="javascript:chgTab('fmcoEvoucher');">FMCO E-Voucher</a></li>
+	<li><a href="#" onClick="javascript:chgTab('renAgr');">Rental Agreement</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -203,5 +207,9 @@
     MCO Remark
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/fmcoEvoucher.jsp" %>
+<!------------------------------------------------------------------------------
+    CCP Rental Agreement
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/rentalAgrInfo.jsp" %>
 </section><!-- tap_wrap end -->
 

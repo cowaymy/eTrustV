@@ -1744,4 +1744,19 @@ AND T1.CNT = 1
    <select id="getEzyDocNo" resultType="String">
         SELECT FN_GET_DOCNO('181') FROM DUAL
     </select>
+
+<select id="getExisitngOrderId" parameterType="Map" resultType="egovMap">
+    SELECT
+        Extent1.GOV_AG_ID
+        ,Extent6.cust_id
+        ,Extent1.GOV_AG_CRT_DT
+        ,Extent6.ORD_ORG_CODE
+        ,Extent1.GOV_AG_QTY
+    FROM SAL0305D Extent1
+    JOIN SAL1006V Extent6 ON Extent6.ord_id = Extent1.GOV_AG_SALES_ORD_ID
+    WHERE  1 = Extent1.GOV_AG_STUS_ID
+    and Extent6.cust_id = #{saveCustId}
+    and to_char(Extent1.GOV_AG_CRT_DT,'dd/MM/yyyy') = to_char(SYSDATE,'dd/MM/yyyy')
+    and Extent6.ORD_ORG_CODE = #{saveSalesOrgCode}
+</select>
 </mapper>
