@@ -141,6 +141,7 @@
             });
             // Attachment Related Setting & Functionalities - End
         } else {
+            $("#appBtns").hide();
             $("#reqBtns").show();
         }
         // View/Approval/Edit Mode :: View Set - End
@@ -177,6 +178,7 @@
             $("#rPeriod").prop("disabled", true);
             $("#rCrcHolder").prop("disabled", false);
             $("#rAmt").prop("disabled", false);
+            $("#rAmt").attr("readonly", true);
 
             $("#adjRem").prop("disabled", false);
 
@@ -199,6 +201,7 @@
             $("#rPeriod").prop("disabled", false);
             $("#rCrcHolder").prop("disabled", true);
             $("#rAmt").prop("disabled", true);
+            $("#rAmt").attr("readonly", true);
 
             $("#adjRem").prop("disabled", false);
 
@@ -219,6 +222,7 @@
             $("#rPeriod").prop("disabled", false);
             $("#rCrcHolder").prop("disabled", false);
             $("#rAmt").prop("disabled", false);
+            $("#rAmt").attr("readonly", false);
 
             $("#adjRem").prop("disabled", false);
 
@@ -242,6 +246,7 @@
             $("#rPeriod").prop("disabled", true);
             $("#rCrcHolder").prop("disabled", true);
             $("#rAmt").prop("disabled", true);
+            $("#rAmt").attr("readonly", true);
 
             $("#adjRem").prop("disabled", false);
 
@@ -295,6 +300,7 @@
 
         Common.ajax("GET", "/eAccounting/creditCard/getCardInfo.do", {crcId : val}, function(result) {
             console.log(result);
+            console.log("adjType :: " + $("#adjType").val());
 
             if($("#adjType").val() == "2") {
                 // Transfer between Card Holder
@@ -793,7 +799,7 @@
 
                         <tbody>
                             <tr>
-                                <th scope="row">Adjustment Type</th>
+                                <th scope="row">Remarks</th>
                                 <td>
                                     <textarea class="w100p" rows="2" style="height:auto" id="adjRem" name="adjRem"></textarea>
                                 </td>
@@ -802,7 +808,7 @@
                                 <th scope="row">Attachment</th>
                                 <td id="attachTd">
                                     <div class="auto_file2">
-                                        <input type="file" id="attachment" name="attachment" title="file add" accept=".rar, .zip" />
+                                        <input type="file" id="attachment" name="attachment" title="file add" />
                                     </div>
                                 </td>
                             </tr>

@@ -37,7 +37,7 @@
             width : 200
         }, {
             dataField : "crcPic",
-            headerText : "Card No.",
+            headerText : "Person-In-Charge Name",
             width : 200
         }, {
             dataField : "crcCostCenter",
@@ -100,8 +100,7 @@
 
     var allowancePlanGridPros = {
             usePaging : false,
-            showStateColumn : false,
-            showRowNumColumn : false
+            showStateColumn : false
     };
 
     $(document).ready(function () {
@@ -156,58 +155,13 @@
 
     function fn_adjustmentPop() {
         console.log("crcAllowancePlan :: fn_adjustmentPop");
-
         Common.popupDiv("/eAccounting/creditCard/crcAdjustmentPop.do", {mode : "N"}, null, true, "crcAdjustmentPop");
     }
 
-function fn_checkEmpty() {
-    var checkResult = true;
-    if(FormUtil.isEmpty($("#newCrditCardUserName").val())) {
-        Common.alert('<spring:message code="crditCardMgmt.cardholder.msg" />');
-        checkResult = false;
-        return checkResult;
+    function fn_excelDown() {
+        console.log("fn_excelDown");
+        GridCommon.exportTo("allowancePlan_grid_wrap", "xlsx", "AllowancePlan");
     }
-    if(FormUtil.isEmpty($("#newChrgUserName").val())) {
-        Common.alert('<spring:message code="crditCardMgmt.chargeName.msg" />');
-        checkResult = false;
-        return checkResult;
-    }
-    if(FormUtil.isEmpty($("#newCostCenter").val())) {
-        Common.alert('<spring:message code="crditCardMgmt.chargeDepart.msg" />');
-        checkResult = false;
-        return checkResult;
-    }
-    if(FormUtil.isEmpty($("#crditCardNo1").val()) || FormUtil.isEmpty($("#crditCardNo2").val()) || FormUtil.isEmpty($("#crditCardNo3").val()) || FormUtil.isEmpty($("#crditCardNo4").val())) {
-        Common.alert('<spring:message code="crditCardMgmt.crditCardNo.msg" />');
-        checkResult = false;
-        return checkResult;
-    }
-    return checkResult;
-}
-
-function fn_viewMgmtPop() {
-    if(crditCardSeq == 0) {
-        Common.alert('<spring:message code="crditCardMgmt.selectData.msg" />');
-    } else {
-        var data = {
-                crditCardSeq : crditCardSeq,
-                callType : "view"
-        };
-        Common.popupDiv("/eAccounting/creditCard/viewMgmtPop.do", data, null, true, "viewMgmtPop");
-    }
-}
-
-function fn_removeRegistMsgPop() {
-    if(crditCardSeq == 0) {
-        Common.alert('<spring:message code="crditCardMgmt.selectData.msg" />');
-    } else {
-        if(checkRemoved) {
-            Common.alert('<spring:message code="crditCardMgmt.alreadyDel.msg" />');
-        } else {
-            Common.popupDiv("/eAccounting/creditCard/removeRegistMsgPop.do", null, null, true, "registMsgPop");
-        }
-    }
-}
 </script>
 
 <section id="content">
@@ -219,7 +173,7 @@ function fn_removeRegistMsgPop() {
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
         <h2>Allowance Limit Plan</h2>
         <ul class="right_btns">
-<li><p class="btn_blue"><a href="#" onclick="javascript:fn_adjustmentPop()"><span class="search"></span>New Adjustment</a></p></li>
+        <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_adjustmentPop()"><span class="search"></span>New Adjustment</a></p></li> -->
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_listAllowancePln()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
         </ul>
     </aside>
@@ -274,6 +228,10 @@ function fn_removeRegistMsgPop() {
             </table>
         </form>
     </section>
+
+    <ul class="right_btns">
+        <li><p class="btn_grid"><a href="javascript:fn_excelDown();">GENERATE</a></p></li>
+    </ul>
 
     <section class="search_result">
         <article class="grid_wrap" id="allowancePlan_grid_wrap"></article>

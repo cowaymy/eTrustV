@@ -140,6 +140,15 @@
 
         Common.popupDiv("/eAccounting/creditCard/crcAdjustmentPop.do", v, null, true, "crcAdjustmentPop");
     }
+
+    function fn_costCenterSearchPop() {
+        Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+    }
+
+    function fn_setCostCenter() {
+        $("#costCenter").val($("#search_costCentr").val());
+        /* $("#costCenterText").val($("#search_costCentrName").val()); */
+    }
 </script>
 
 <section id="content">
@@ -173,18 +182,15 @@
 
                 <tbody>
                     <tr>
-                        <th scope="row">Adjustment Number</th>
+                        <th scope="row">Month/Year</th>
                         <td>
-                            <div class="date_set w100p">
-                                <p><input type="text" title="From Adjustment Number" placeholder="From Adjustment Number" class="w100p" id="frAdjNo" name="frAdjNo" /></p>
-                                <span>To</span>
-                                <p><input type="text" title="To Adjustment Number" placeholder="To Adjustment Number" class="w100p" id="toAdjNo" name="toAdjNo" /></p>
-                            </div>
+                            <p><input type="text" id="frAdjPeriod" name="frAdjPeriod" title="" placeholder="" class="j_date2 w100p" /></p>
+                            <span>~</span>
+                            <p><input type="text" id="toAdjPeriod" name="toAdjPeriod" title="" placeholder="" class="j_date2 w100p" /></p>
                         </td>
                         <th scope="row">Adjustment Type</th>
                         <td>
-                            <select class="w100p multy_select" multiple="multiple" id="adjType" name="adjType">
-                                <option value="">Choose One</option>
+                            <select class="w100p multy_select" multiple="multiple" id="selAdjType" name="selAdjType">
                                 <option value="1">Transfer between Credit Card Holder</option>
                                 <option value="2">Transfer between Period</option>
                                 <option value="3">Addition</option>
@@ -193,11 +199,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Month/Year</th>
+                        <th scope="row">Adjustment Number</th>
                         <td>
-                            <p><input type="text" id="frAdjPeriod" name="frAdjPeriod" title="" placeholder="" class="w100p" value="1" /></p>
-                            <span>~</span>
-                            <p><input type="text" id="toAdjPeriod" name="toAdjPeriod" title="" placeholder="" class="w100p" value="12" /></p>
+                            <div class="date_set w100p">
+                                <p><input type="text" title="From Adjustment Number" placeholder="From Adjustment Number" class="w100p" id="frAdjNo" name="frAdjNo" /></p>
+                                <span>To</span>
+                                <p><input type="text" title="To Adjustment Number" placeholder="To Adjustment Number" class="w100p" id="toAdjNo" name="toAdjNo" /></p>
+                            </div>
                         </td>
                         <th scope="row">Credit Cardholder Name/Number</th>
                         <td>
@@ -212,12 +220,11 @@
                         <th scope="row">Cost Center</th>
                         <td>
                             <input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" />
-                            <a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                            <a href="#" class="search_btn" id="search_costCenter_btn" onclick="javascript:fn_costCenterSearchPop()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                         <th scope="row">Status</th>
                         <td>
                             <select class="w100p multy_select" multiple="multiple" id="status" name="status">
-                                <option value="">Choose One</option>
                                 <option value="D">Draft</option>
                                 <option value="R">Request</option>
                                 <option value="A">Approved</option>

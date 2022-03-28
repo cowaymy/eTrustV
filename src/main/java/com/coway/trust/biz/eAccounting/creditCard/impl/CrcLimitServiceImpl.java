@@ -193,7 +193,7 @@ public class CrcLimitServiceImpl implements CrcLimitService {
         String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
         if(!"A1101".equals(costCentr)) params.put("loginUserId", sessionVO.getUserId());
 
-        String[] adjType = request.getParameterValues("adjType");
+        String[] adjType = request.getParameterValues("selAdjType");
         params.put("adjType", adjType);
 
         String[] crcId = request.getParameterValues("crcDropdown");

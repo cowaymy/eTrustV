@@ -41,7 +41,8 @@
             UPPER(B.CRDIT_CARD_USER_NAME) CRC_HOLDER_NM,
             B.COST_CENTR CRC_COST_CENTER,
             B.COST_CENTR_NAME CRC_COST_CENTER_DESC,
-            B.CHRG_USER_ID || ' - ' || C.NAME CRC_PIC,
+            /* B.CHRG_USER_ID || ' - ' || C.NAME CRC_PIC, */
+            C.NAME CRC_PIC,
             SUBSTR(A.CRDIT_CARD_NO, 1, 6) || '******' || SUBSTR(A.CRDIT_CARD_NO, -4) CRC_NO,
             A.CRC_LIMIT_ADJ_YYYY,
             SUM(M1) M1,
@@ -186,7 +187,8 @@
             B.CRDIT_CARD_USER_NAME,
             B.COST_CENTR,
             B.COST_CENTR_NAME,
-            B.CHRG_USER_ID || ' - ' || C.NAME,
+            /* B.CHRG_USER_ID || ' - ' || C.NAME, */
+            C.NAME,
             SUBSTR(A.CRDIT_CARD_NO, 1, 6) || '******' || SUBSTR(A.CRDIT_CARD_NO, -4),
             A.CRC_LIMIT_ADJ_YYYY
     </select>
@@ -329,6 +331,7 @@
             ON A.CRDIT_CARD_SEQ = D.CRDIT_CARD_SEQ
         WHERE A.CRDIT_CARD_SEQ = #{crcId}
     </select>
+    -->
 
     <select id="getCardInfo" parameterType="Map" resultType="egovMap">
         SELECT
@@ -357,7 +360,6 @@
         )
         ORDER BY A.ATCH_FILE_ID
     </select>
-     -->
 
     <select id="selectAdjItems" parameterType="Map" resultType="egovMap">
         SELECT
@@ -573,13 +575,30 @@
                         #{item}
                     </foreach>
                 </if>
+                <if test="costCenter != null and costCenter != '' ">
+                    AND B.COST_CENTR = #{costCenter}
+                </if>
             )
         WHERE 1=1
             <if test="status != null and status != '' ">
-                AND B.APPV_STUS IN
+                AND APPV_STUS IN
                 <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+            <!--
+            <if test="frAdjPeriod != null and frAdjPeriod != '' ">
+                AND PERIOD <![CDATA[ >= ]]> #{frAdjPeriod}
+            </if>
+            <if test="toAdjPeriod != null and toAdjPeriod != '' ">
+                AND PERIOD <![CDATA[ <= ]]> #{toAdjPeriod}
+            </if>
+             -->
+            <if test="frAdjNo != null and frAdjNo != '' ">
+                AND ADJ_NO <![CDATA[ >= ]]> #{frAdjNo}
+            </if>
+            <if test="toAdjNo != null and toAdjNo != '' ">
+                AND ADJ_NO <![CDATA[ <= ]]> #{toAdjNo}
             </if>
         ORDER BY CRT_DT DESC
     </select>

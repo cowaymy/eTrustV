@@ -231,7 +231,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
-        <h2>Allowance Limit Adjustment</h2>
+        <h2>Allowance Limit Adjustment Approval</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_listAdjApp()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
         </ul>
