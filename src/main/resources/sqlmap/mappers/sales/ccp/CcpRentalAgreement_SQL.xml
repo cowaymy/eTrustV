@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpRentalAgreementMapper">
 
     <select id="selectContactAgreementList" parameterType="Map" resultType="egovMap">
-			 <![CDATA[
+
 			  SELECT
 			       Project2.GOV_AG_ID   ,
 			       Project2.GOV_AG_BATCH_NO   ,
@@ -26,7 +26,8 @@
                     ,Project2.dept_code
                     ,Project2.grp_code
                     ,Project2.main_dept
-
+                    ,Project2.mem_type
+                    ,Project2.corp_type_id
 			  FROM ( SELECT Extent1.GOV_AG_ID GOV_AG_ID  ,
 			                Extent1.GOV_AG_SALES_ORD_ID GOV_AG_SALES_ORD_ID  ,
 			                Extent1.GOV_AG_BATCH_NO GOV_AG_BATCH_NO  ,
@@ -53,12 +54,12 @@
 			                    Extent12.GOV_AG_ID = Extent1.GOV_AG_ID
 			                AND ROWNUM = 1
 			                ) C1
-			                ,V.org_code
-                            ,v.dept_code
-                            ,v.grp_code
-                            ,Extent12.main_dept
-
-
+			                ,Extent4.org_code
+                            ,Extent4.dept_code
+                            ,Extent4.grp_code
+                            ,Extent13.main_dept
+                            ,Extent13.mem_type
+                            ,Extent5.corp_type_id
 			         FROM SAL0305D Extent1
 			                LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.GOV_AG_MEM_ID
 			                LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.GOV_AG_STUS_ID
@@ -76,13 +77,12 @@
 			                            FROM SAL0040D GovAgreementUserRole ) Extent9   ON Extent9.GOV_AG_USER_ID = Extent8.GOV_AG_MSG_CRT_USER_ID
 			                LEFT JOIN SAL0039M Extent10   ON Extent10.GOV_AG_ROLE_ID = Extent9.GOV_AG_ROLE_ID
 			                LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = Extent1.GOV_AG_TYPE_ID
-			                 LEFT JOIN ORG1001V V ON V.MEM_ID = Extent2.MEM_ID
-                            LEFT JOIN ORG0001D Extent12   ON Extent12.MEM_ID = Extent4.MEM_ID ) Project2
+                            LEFT JOIN ORG0001D Extent13   ON Extent13.MEM_ID = Extent4.MEM_ID ) Project2
 
-			 WHERE   0 <> Project2.GOV_AG_STUS_ID
+			 WHERE   0 <![CDATA[<> ]]> Project2.GOV_AG_STUS_ID
 			 AND Project2.GOV_AG_MSG_ID = Project2.C1
 
-			   ]]>
+
 
 		        <!--   Agreement No.  -->
 		        <if test="null != govAgBatchNo and '' !=  govAgBatchNo ">
@@ -182,8 +182,14 @@
                   <if test=" '' != GrpCode and null != GrpCode">
                     AND Project2.grp_code = #{GrpCode}
                   </if>
-                  <if test=" '' != mainDept and null != mainDept">
+                  <!-- <if test=" '' != mainDept and null != mainDept">
                     AND Project2.main_dept = #{mainDept}
+                  </if> -->
+                  <if test=" '' != memType and null != memType">
+                    AND Project2.mem_type = #{memType}
+                  </if>
+                  <if test=" '' != corpType and null != corpType">
+                    AND Project2.CORP_TYPE_ID = #{corpType}
                   </if>
 
 			  ORDER BY Project2.GOV_AG_ID DESC

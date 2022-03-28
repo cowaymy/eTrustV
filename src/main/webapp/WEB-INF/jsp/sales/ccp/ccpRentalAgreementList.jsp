@@ -7,7 +7,7 @@ var ccpGridID;
 var ordGridID;
 var timerId = null;
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
-var MAIN_DEPT = '${SESSION_INFO.userMainDeptId}';
+var ROLE_ID = '${SESSION_INFO.roleId}';
 
 $(document).ready(function() {
 
@@ -65,9 +65,25 @@ $(document).ready(function() {
 
         }
     }else{
-        if("${mainDept}" == "MD15" || "${mainDept}" == "MD16" || "${mainDept}" == "MD102"
-        		|| "${mainDept}" == "MD15" || "${mainDept}" == "MD08"){
-        	$("#mainDept").val("${mainDept}");
+        /* if("${mainDept}" == "MD15" || "${mainDept}" == "MD16" || "${mainDept}" == "MD102"
+        		|| "${mainDept}" == "MD07" || "${mainDept}" == "MD08"){
+        	if("${mainDept}" == "MD15" || "${mainDept}" == "MD16"){
+        		$("#_memType").val("1");
+        	}else if("${mainDept}" == "MD102"){
+        		$("#_memType").val("7");
+            }else if("${mainDept}" == "MD07" || "${mainDept}" == "MD08"){
+            	$("#_memType").val("2");
+            }
+        	$("#_mainDept").val("${mainDept}");
+        } */
+        if(ROLE_ID == '200' || ROLE_ID == '252' || ROLE_ID == '253'){ //cody planning
+        	$("#_memType").val("2");
+        }else if(ROLE_ID == '342' || ROLE_ID == '343' || ROLE_ID == '344'){ //homecare planning
+        	$("#_memType").val("7");
+        }else if(ROLE_ID == '335' || ROLE_ID == '336' || ROLE_ID == '337' || ROLE_ID == '111'){ //sales care , SSGM
+        	$("#_memType").val("1");
+        }else if(ROLE_ID == '191' || ROLE_ID == '192' || ROLE_ID == '193'){ //CCD
+        	$("#_corpType").val("1333");
         }
     }
 
@@ -359,13 +375,13 @@ function popup(location){
     <td >
     <input type="text" title="" id="OrgCode" name="OrgCode" placeholder="Org Code" class="w100p" />
     </td>
-    <th scope="row">Dept. Code</th>
-    <td >
-    <input type="text" title="" id="DeptCode" name="DeptCode" placeholder="Dept Code" class="w100p" />
-    </td>
     <th scope="row">Grp. code</th>
     <td >
     <input type="text" title="" id="GrpCode" name="GrpCode" placeholder="Grp Code" class="w100p" />
+    </td>
+    <th scope="row">Dept. Code</th>
+    <td >
+    <input type="text" title="" id="DeptCode" name="DeptCode" placeholder="Dept Code" class="w100p" />
     </td>
 </tr>
 </tbody>
@@ -398,6 +414,8 @@ function popup(location){
 </aside><!-- link_btns_wrap end -->
 
 <input type="hidden" id="_mainDept" name="mainDept">
+<input type="hidden" id="_memType" name="memType">
+<input type="hidden" id="_corpType" name="corpType">
 
 </form>
 </section><!-- search_table end -->

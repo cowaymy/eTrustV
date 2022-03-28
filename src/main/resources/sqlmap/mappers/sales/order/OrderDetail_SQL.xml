@@ -1794,6 +1794,7 @@ SELECT T.BANK_DTL_ID
                                         Extent1.GOV_AG_REC_STAMP_DT,
                                         Extent1.GOV_AG_COURIER_DT
                                 FROM SAL0305D Extent1
+                                left join SAL0306D Extent14 on Extent14.gov_ag_id = Extent1.gov_ag_id
                                        LEFT JOIN SYS0013M Extent2   ON Extent1.GOV_AG_TYPE_ID = Extent2.CODE_ID
                                        LEFT JOIN ORG0001D Extent3   ON Extent1.GOV_AG_MEM_ID = Extent3.MEM_ID
                                        LEFT JOIN SYS0038M Extent4   ON Extent1.GOV_AG_STUS_ID = Extent4.STUS_CODE_ID
@@ -1811,9 +1812,11 @@ SELECT T.BANK_DTL_ID
                                                    FROM SAL0040D GovAgreementUserRole ) Extent10   ON Extent9.GOV_AG_MSG_CRT_USER_ID = Extent10.GOV_AG_USER_ID
                                         LEFT JOIN SYS0013M Extent12  ON Extent12.CODE_ID = Extent5.CORP_CUST_TYPE
                                         LEFT JOIN SYS0013M Extent13  ON Extent13.CODE_ID = Extent5.AGREEMENT_TYPE
-                                 WHERE  0 <![CDATA[<> ]]> Extent1.GOV_AG_STUS_ID ) Filter1
+                                 WHERE  0 <![CDATA[<> ]]> Extent1.GOV_AG_STUS_ID
+                                 and Extent14.GOV_AG_itm_SALES_ORD_ID = #{salesOrderId}
+                                 ) Filter1
                                 LEFT JOIN SAL0039M Extent11   ON Filter1.GOV_AG_ROLE_ID = Extent11.GOV_AG_ROLE_ID
-                          WHERE  Filter1.GOV_AG_SALES_ORD_ID = #{salesOrderId}) Project1
+                          ) Project1
                   ORDER BY Project1.GOV_AG_ID DESC
 
 
