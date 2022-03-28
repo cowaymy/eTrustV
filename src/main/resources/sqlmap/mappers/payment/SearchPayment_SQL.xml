@@ -507,7 +507,8 @@
             Extent1.PAY_ITM_APPV_NO,
 --          Extent1.PAY_ITM_REM ,
 --          extent10.FT_APPV_REM AS PAY_ITM_REM,
-            CASE WHEN extent10.FT_APPV_REM IS NULL THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
+            CASE WHEN extent10.FT_APPV_REM IS NULL or  EX11.FT_STUS_ID = 5
+            THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
             Extent1.PAY_ITM_STUS_ID,
             Extent6.NAME AS NAME1,
             Extent1.PAY_ITM_IS_LOK,
@@ -541,7 +542,7 @@
             LEFT JOIN PAY0064D extent8 ON extent1.PAY_ID = extent8.PAY_ID
             LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
             LEFT JOIN PAY0252T EX11 ON EX11.PAY_ID = EXTENT8.PAY_ID
-            LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ AND extent10.FT_STUS_ID = 5
+            LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
         WHERE
             Extent1.PAY_ITM_STUS_ID = 1
             <if test="payItemAmt != '' and payItemAmt != null">
@@ -551,13 +552,19 @@
 
     </select>
 
-      <select id="selectPayItmAmt" parameterType="String" resultType="String">
+      <select id="selectPayItmAmt" parameterType="Map" resultType="String">
        SELECT
             CASE WHEN C.SRC_GRP_SEQ IS NULL THEN NULL ELSE SUM(B.PAY_ITM_AMT) END AS PAY_ITM_AMT
        FROM PAY0064D A
        JOIN PAY0252T B ON A.TRX_ID = B.TRX_ID
        LEFT JOIN PAY0260D C ON B.GROUP_SEQ = C.SRC_GRP_SEQ
-       WHERE A.PAY_ID = #{payId}
+       WHERE 1=1
+       <if test="payId != '' and payId != null">
+        AND A.PAY_ID = #{payId}
+        </if>
+        <if test="payItemId != '' and payItemId != null">
+        AND B.PAY_ITM_ID = #{payItemId}
+        </if>
        GROUP BY B.TRX_ID,C.SRC_GRP_SEQ
     </select>
 
@@ -863,7 +870,8 @@
 		       Extent5.ACC_DESC ACC_DESC  ,
 		       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
 		       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
-		       CASE WHEN extent10.FT_APPV_REM IS NULL THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
+		       CASE WHEN extent10.FT_APPV_REM IS NULL or  EX11.FT_STUS_ID = 5
+               THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
 		       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
 		       Extent6.NAME NAME1  ,
 		       Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
@@ -911,7 +919,7 @@
 		         LEFT JOIN PAY0064D Extent8   ON Extent1.PAY_ID = Extent8.PAY_ID
 		         LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
                  LEFT JOIN PAY0252T EX11 ON EX11.PAY_ID = EXTENT8.PAY_ID
-                 LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ AND extent10.FT_STUS_ID = 5
+                 LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
 		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 		          AND ( Extent1.PAY_ID = #{payId} )
 		          <if test="payItemAmt != '' and payItemAmt != null">
@@ -1346,7 +1354,7 @@
 	 WHERE  Extent1.GL_RECIPT_ITM_ID = #{value} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
 
-	<select id="selectPaymentItem" parameterType="java.lang.Integer" resultType="egovMap">
+	<select id="selectPaymentItem" parameterType="Map" resultType="egovMap">
 	   SELECT
 	       Limit1.PAY_ITM_ID PAY_ITM_ID  ,
 	       Limit1.PAY_ID PAY_ID  ,
@@ -1401,7 +1409,8 @@
 	                Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
 	                Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
 	                Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
-	                Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+	                CASE WHEN extent10.FT_APPV_REM IS NULL or  EX11.FT_STUS_ID = 5
+                    THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
 	                Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
 	                Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
 	                Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
@@ -1434,8 +1443,13 @@
 		                LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
 		                LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		                LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.PAY_ITM_CARD_MODE_ID
+		                LEFT JOIN PAY0252T EX11 ON EX11.PAY_ID = Extent1.PAY_ID
+                        LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
 	               WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
-	                   AND ( Extent1.PAY_ITM_ID = #{value} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
+	                  <if test="payItemAmt != '' and payItemAmt != null">
+                       AND extent10.SRC_AMT = #{payItemAmt}
+                      </if>
+	                   AND ( Extent1.PAY_ITM_ID = #{payItemId} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
 	</select>
 
 	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultType="egovMap">

@@ -131,7 +131,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public String selectPayItmAmt(String params) {
+	public String selectPayItmAmt(Map<String, Object> params) {
 		return searchPaymentMapper.selectPayItmAmt(params);
 	}
 
@@ -236,8 +236,8 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public List<EgovMap> selectPaymentItem(int payItemId) {
-		return searchPaymentMapper.selectPaymentItem(payItemId);
+	public List<EgovMap> selectPaymentItem(Map<String, Object> params) {
+		return searchPaymentMapper.selectPaymentItem(params);
 	}
 
 	/**

@@ -56,7 +56,7 @@ public interface SearchPaymentMapper {
 	 */
 	List<EgovMap> selectPaymentList(Map<String, Object> params);
 
-	String selectPayItmAmt(String params);
+	String selectPayItmAmt(Map<String, Object> params);
 
 	List<EgovMap> selectPayId(Map<String, Object> params);
 
@@ -185,7 +185,7 @@ public interface SearchPaymentMapper {
 	 * @param payItemId
 	 * @return
 	 */
-	List<EgovMap> selectPaymentItem(int payItemId);
+	List<EgovMap> selectPaymentItem(Map<String, Object> params);
 
 	/**
 	 * PaymentDetail 조회
