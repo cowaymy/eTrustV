@@ -245,6 +245,12 @@ public class SearchPaymentController {
 		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("payId22 : {}", params);
 
+        String payItemAmt = searchPaymentService.selectPayItmAmt(String.valueOf(params.get("payId")));
+
+        LOGGER.debug("payItemAmt : {}", payItemAmt);
+
+        params.put("payItemAmt", payItemAmt);
+
         // 조회.
         List<EgovMap> resultList = searchPaymentService.selectPaymentList(params);
 
