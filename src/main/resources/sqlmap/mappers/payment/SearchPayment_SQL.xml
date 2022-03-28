@@ -544,9 +544,21 @@
             LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ AND extent10.FT_STUS_ID = 5
         WHERE
             Extent1.PAY_ITM_STUS_ID = 1
-            AND extent10.SRC_AMT = (SELECT SUM(PAY_ITM_AMT) FROM PAY0252T WHERE TRX_ID =extent8.TRX_ID GROUP BY TRX_ID)
+            <if test="payItemAmt != '' and payItemAmt != null">
+            AND extent10.SRC_AMT = #{payItemAmt}
+            </if>
             AND Extent1.PAY_ID = #{payId}
 
+    </select>
+
+      <select id="selectPayItmAmt" parameterType="String" resultType="String">
+       SELECT
+            CASE WHEN C.SRC_GRP_SEQ IS NULL THEN NULL ELSE SUM(B.PAY_ITM_AMT) END AS PAY_ITM_AMT
+       FROM PAY0064D A
+       JOIN PAY0252T B ON A.TRX_ID = B.TRX_ID
+       LEFT JOIN PAY0260D C ON B.GROUP_SEQ = C.SRC_GRP_SEQ
+       WHERE A.PAY_ID = #{payId}
+       GROUP BY B.TRX_ID,C.SRC_GRP_SEQ
     </select>
 
       <select id="selectPayId" parameterType="Map" resultType="egovMap">
