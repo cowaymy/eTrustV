@@ -1618,61 +1618,61 @@ SET RESULT_ID = #{resultId},
             , GOV_AG_PERIOD = #{cntPeriodValue}
        </if>
        <if test=" draftRcvd != null and '' != draftRcvd">
-            , GOV_AG_DRAFT_DT = #{draftRcvd}
+            , GOV_AG_DRAFT_DT = TO_DATE(#{draftRcvd}, 'DD/MM/YYYY')
        </if>
        <if test=" firstReview != null and '' != firstReview">
-            , GOV_AG_FIRST_REV_DT = #{firstReview}
+            , GOV_AG_FIRST_REV_DT = TO_DATE(#{firstReview}, 'DD/MM/YYYY')
        </if>
        <if test=" isSecReview != null and '' != isSecReview">
             , IS_GOV_AG_SEC_REV = #{isSecReview}
        </if>
        <if test=" secReview != null and '' != secReview">
-            , GOV_AG_SEC_REV_DT = #{secReview}
+            , GOV_AG_SEC_REV_DT = TO_DATE(#{secReview}, 'DD/MM/YYYY')
        </if>
        <if test=" isThirdReview != null and '' != isThirdReview">
             , IS_GOV_AG_THIRD_REV = #{isThirdReview}
        </if>
        <if test=" thirdReview != null and '' != thirdReview">
-            , GOV_AG_THIRD_REV_DT = #{thirdReview}
+            , GOV_AG_THIRD_REV_DT = TO_DATE(#{thirdReview}, 'DD/MM/YYYY')
        </if>
        <if test=" isFirstFeedback != null and '' != isFirstFeedback">
             , IS_GOV_AG_FIRST_FEED = #{isFirstFeedback}
        </if>
        <if test=" firstFeedback != null and '' != firstFeedback">
-            , GOV_AG_FIRST_FEED_DT = #{firstFeedback}
+            , GOV_AG_FIRST_FEED_DT = TO_DATE(#{firstFeedback}, 'DD/MM/YYYY')
        </if>
        <if test=" isSecFeedback != null and '' != isSecFeedback">
             , IS_GOV_AG_SEC_FEED = #{isSecFeedback}
        </if>
        <if test=" secFeedback != null and '' != secFeedback">
-            , GOV_AG_SEC_FEED_DT = #{secFeedback}
+            , GOV_AG_SEC_FEED_DT = TO_DATE(#{secFeedback}, 'DD/MM/YYYY')
        </if>
        <if test=" isLatestFwd != null and '' != isLatestFwd">
             , IS_GOV_AG_OTH_DEPT = #{isLatestFwd}
        </if>
        <if test=" latestFwd != null and '' != latestFwd">
-            , GOV_AG_OTH_DEPT_DT = #{latestFwd}
+            , GOV_AG_OTH_DEPT_DT = TO_DATE(#{latestFwd}, 'DD/MM/YYYY')
        </if>
        <if test=" isRfd != null and '' != latestFwd">
             , IS_GOV_AG_RFD = #{isRfd}
        </if>
        <if test=" rfd != null and '' != rfd">
-            , GOV_AG_RFD_DT = #{rfd}
+            , GOV_AG_RFD_DT = TO_DATE(#{rfd}, 'DD/MM/YYYY')
        </if>
        <if test=" agrExecution != null and '' != agrExecution">
-            , GOV_AG_EXE_DT = #{agrExecution}
+            , GOV_AG_EXE_DT = TO_DATE(#{agrExecution}, 'DD/MM/YYYY')
        </if>
        <if test=" agrFinal != null and '' != agrFinal">
-            , GOV_AG_FINAL_DT = #{agrFinal}
+            , GOV_AG_FINAL_DT = TO_DATE(#{agrFinal}, 'DD/MM/YYYY')
        </if>
        <if test=" sendStamping != null and '' != sendStamping">
-            , GOV_AG_SENT_STAMP_DT = #{sendStamping}
+            , GOV_AG_SENT_STAMP_DT = TO_DATE(#{sendStamping}, 'DD/MM/YYYY')
        </if>
        <if test=" receiveStamp != null and '' != receiveStamp">
-            , GOV_AG_REC_STAMP_DT = #{receiveStamp}
+            , GOV_AG_REC_STAMP_DT = TO_DATE(#{receiveStamp}, 'DD/MM/YYYY')
        </if>
        <if test=" courier != null and '' != courier">
-            , GOV_AG_COURIER_DT = #{courier}
+            , GOV_AG_COURIER_DT = TO_DATE(#{courier}, 'DD/MM/YYYY')
        </if>
        <if test=" erlTerNonCrisisChk != null and '' != erlTerNonCrisisChk">
             ,ERL_TER_NON_CRISIS = #{erlTerNonCrisisChk}
