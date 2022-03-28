@@ -245,7 +245,7 @@ public class SearchPaymentController {
 		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("payId22 : {}", params);
 
-        String payItemAmt = searchPaymentService.selectPayItmAmt(String.valueOf(params.get("payId")));
+        String payItemAmt = searchPaymentService.selectPayItmAmt(params);
 
         LOGGER.debug("payItemAmt : {}", payItemAmt);
 
@@ -269,7 +269,12 @@ public class SearchPaymentController {
 		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("payItemId : {}", params.get("payItemId"));
 
-		List<EgovMap> resultList = searchPaymentService.selectPaymentItem(Integer.parseInt(params.get("payItemId").toString()));
+        String payItemAmt = searchPaymentService.selectPayItmAmt(params);
+
+	    params.put("payItemAmt", payItemAmt);
+
+
+		List<EgovMap> resultList = searchPaymentService.selectPaymentItem(params);
 		LOGGER.debug("result : {}", resultList.get(0));
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
@@ -438,9 +443,9 @@ public class SearchPaymentController {
 		//주문진행상태 조회
 		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
 
-		 String payItemAmt = searchPaymentService.selectPayItmAmt(String.valueOf(params.get("payId")));
+		String payItemAmt = searchPaymentService.selectPayItmAmt(params);
 
-	     params.put("payItemAmt", payItemAmt);
+	    params.put("payItemAmt", payItemAmt);
 
 		//selectPaymentDetailView
 		List<EgovMap> selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
