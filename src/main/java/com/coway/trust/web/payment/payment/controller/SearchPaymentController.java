@@ -267,7 +267,12 @@ public class SearchPaymentController {
 	@RequestMapping(value = "/selectPaymentItem", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPaymentItem( @RequestParam Map<String, Object> params, ModelMap model) {
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        LOGGER.debug("payItemId : {}", params.get("payItemId"));
+
+
+        List<EgovMap> result = searchPaymentService.selectPayIdFromPayItemId(params);
+        params.put("payId", String.valueOf(result.get(0).get("payId")));
+        LOGGER.debug("payItemId : {}", params);
+        LOGGER.debug("payId : {}", result);
 
         String payItemAmt = searchPaymentService.selectPayItmAmt(params);
 

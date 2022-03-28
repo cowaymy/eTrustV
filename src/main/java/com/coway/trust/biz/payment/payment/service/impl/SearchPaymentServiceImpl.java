@@ -136,6 +136,11 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
+	public List<EgovMap> selectPayIdFromPayItemId(Map<String, Object> params) {
+		return searchPaymentMapper.selectPayIdFromPayItemId(params);
+	}
+
+	@Override
 	public List<EgovMap> selectPayId(Map<String, Object> params) {
 		return searchPaymentMapper.selectPayId(params);
 	}

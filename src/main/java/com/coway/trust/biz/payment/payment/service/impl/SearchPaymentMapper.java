@@ -58,6 +58,8 @@ public interface SearchPaymentMapper {
 
 	String selectPayItmAmt(Map<String, Object> params);
 
+
+	List<EgovMap> selectPayIdFromPayItemId(Map<String, Object> params);
 	List<EgovMap> selectPayId(Map<String, Object> params);
 
 	/**
