@@ -438,6 +438,10 @@ public class SearchPaymentController {
 		//주문진행상태 조회
 		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
 
+		 String payItemAmt = searchPaymentService.selectPayItmAmt(String.valueOf(params.get("payId")));
+
+	     params.put("payItemAmt", payItemAmt);
+
 		//selectPaymentDetailView
 		List<EgovMap> selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
 
