@@ -15,16 +15,16 @@ $(document).ready(function() {
 
         if("${SESSION_INFO.memberLevel}" =="1"){
 
-            $("#orgCode").val("${orgCode}");
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+            $("#OrgCode").val("${orgCode}");
+            $("#OrgCode").attr("class", "w100p readonly");
+            $("#OrgCode").attr("readonly", "readonly");
 
         }else
             if("${SESSION_INFO.memberLevel}" =="2"){
 
-            $("#orgCode").val("${orgCode}");
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+            $("#OrgCode").val("${orgCode}");
+            $("#OrgCode").attr("class", "w100p readonly");
+            $("#OrgCode").attr("readonly", "readonly");
 
             $("#GrpCode").val("${grpCode}");
             $("#GrpCode").attr("class", "w100p readonly");
@@ -32,9 +32,9 @@ $(document).ready(function() {
 
         }else if("${SESSION_INFO.memberLevel}" =="3"){
 
-            $("#orgCode").val("${orgCode}");
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+            $("#OrgCode").val("${orgCode}");
+            $("#OrgCode").attr("class", "w100p readonly");
+            $("#OrgCode").attr("readonly", "readonly");
 
             $("#GrpCode").val("${grpCode}");
             $("#GrpCode").attr("class", "w100p readonly");
@@ -46,9 +46,9 @@ $(document).ready(function() {
 
         }else if("${SESSION_INFO.memberLevel}" =="4"){
 
-            $("#orgCode").val("${orgCode}");
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+            $("#OrgCode").val("${orgCode}");
+            $("#OrgCode").attr("class", "w100p readonly");
+            $("#OrgCode").attr("readonly", "readonly");
 
             $("#GrpCode").val("${grpCode}");
             $("#GrpCode").attr("class", "w100p readonly");

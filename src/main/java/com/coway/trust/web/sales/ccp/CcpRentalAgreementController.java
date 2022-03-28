@@ -86,9 +86,12 @@ public class CcpRentalAgreementController {
 		EgovMap result =  salesCommonService.getUserInfo(params);
 
 		model.put("mainDept", sessionVO.getUserMainDeptId());
-		model.put("orgCode", result.get("orgCode"));
-		model.put("grpCode", result.get("grpCode"));
-		model.put("deptCode", result.get("deptCode"));
+		if(result != null){
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+		}
+
 
 		return "sales/ccp/ccpRentalAgreementList";
 	}
