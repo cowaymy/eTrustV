@@ -74,6 +74,9 @@
 		left join SYS0047m f on f.user_id = A.CRT_USER_ID
 		left join SYS0013m g on g.code_id = A.model
 		left join SVC0127M h on h.transit_no = a.delvry_no
+		<if test=" '' != filterSN and null != filterSN">
+		  join (select distinct(serial_no) from svc0129h where filter_sn = #{filterSN}) i on i.serial_no = a.serial_no
+		</if>
 		where 1=1
 		<if test=" '' != serialNo and null != serialNo">
 		  and a.serial_no = #{serialNo}

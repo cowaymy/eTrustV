@@ -398,6 +398,9 @@
                     <option value="278" selected="selected">Member</option>
                 </select>
             </td>
+            <th scope="row">Filter Serial No</th>
+                <td><input type="text" id="filterSN" name="filterSN" placeholder="Filter Serial No" class="w100p" /></td>
+
         </tr>
     </tbody>
     </table>
