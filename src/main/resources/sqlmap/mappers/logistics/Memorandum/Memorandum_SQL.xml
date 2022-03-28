@@ -28,15 +28,12 @@
                  , M10.CRT_DEPT_ID
                  , CASE WHEN TO_CHAR(M10.CRT_DT,'YYYYMMDD') < '20211101' THEN
                     TO_CHAR(CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) )
-                   ELSE FN_DEPT_CODE_TO_NM(O01.MAIN_DEPT)
+                   ELSE FN_DEPT_CODE_TO_NM(M10.CRT_DEPT_ID)
                     END
                     as DEPARTMENT
-              FROM MSC0010D M10 , SYS0038M S38 ,
-              SYS0047M S47 , ORG0001D O01
+              FROM MSC0010D M10 , SYS0038M S38
              WHERE 1 = 1
                AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
-               AND S47.USER_ID = M10.CRT_USER_ID
-               AND O01.MEM_CODE = S47.HR_CODE
                AND M10.STUS_CODE_ID = 1
         ]]>
             <if test="stitle != null and stitle != ''">
