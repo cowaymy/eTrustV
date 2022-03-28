@@ -7,7 +7,7 @@
 			       Extent1.SALES_DT SALES_DT  ,
 			       Extent1.SALES_PRC SALES_PRC  ,
 			       Extent1.BILL_MONTH BILL_MONTH  ,
-			       Extent1.PNALTY PNALTY  ,
+			       CASE WHEN Extent1.PNALTY >= 0 THEN PNALTY ELSE 0 END PNALTY ,
 			       Extent1.CUST_NAME CUST_NAME  ,
 			       Extent1.CONTACTNAME CNTC_NAME  ,
 			       Extent1.ADD1 ADD1  ,
