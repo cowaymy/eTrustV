@@ -903,7 +903,7 @@
                     Project6.code2 CODE2  ,
                     Project6.bankCode BANK_CODE  ,
                     TO_CHAR(Project6.rentAmt, 'FM9999999999990.00') AS RENT_AMT,
-                    (SELECT CUST_BILL_GRP_NO  FROM SAL0024D WHERE   CUST_BILL_SO_ID = Project6.SALES_ORD_ID  AND ROWNUM <= 1 ) AS CUST_BILL_GRP_NO
+                    (SELECT CUST_BILL_GRP_NO  FROM SAL0024D WHERE   CUST_BILL_ID = Project6.CUST_BILL_ID  AND ROWNUM <= 1 ) AS CUST_BILL_GRP_NO
              FROM ( SELECT  Project6.C1 C1  ,
                             Project6.SALES_ORD_ID SALES_ORD_ID  ,
                             Project6.SALES_ORD_NO SALES_ORD_NO  ,
@@ -919,7 +919,8 @@
                             Project6.modeId modeId  ,
                             Project6.code2 code2  ,
                             Project6.bankCode bankCode  ,
-                            Project6.rentAmt rentAmt
+                            Project6.rentAmt rentAmt,
+                            Project6.CUST_BILL_ID CUST_BILL_ID
                      FROM ( SELECT Distinct1.C1 C1  ,
                                    Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
                                    Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
@@ -935,7 +936,8 @@
                                    Distinct1.modeId modeId  ,
                                    Distinct1.code2 code2  ,
                                    Distinct1.bankCode bankCode  ,
-                                   Distinct1.rentAmt rentAmt
+                                   Distinct1.rentAmt rentAmt,
+                                   Distinct1.CUST_BILL_ID CUST_BILL_ID
                             FROM ( SELECT DISTINCT UnionAll1.C1 C1  ,
                                                    UnionAll1.SALES_ORD_ID SALES_ORD_ID  ,
                                                    UnionAll1.SALES_ORD_NO SALES_ORD_NO  ,
@@ -951,7 +953,8 @@
                                                    UnionAll1.modeId modeId  ,
                                                    UnionAll1.code2 code2  ,
                                                    UnionAll1.bankCode bankCode  ,
-                                                   UnionAll1.rentAmt rentAmt
+                                                   UnionAll1.rentAmt rentAmt,
+                                                   UnionAll1.CUST_BILL_ID CUST_BILL_ID
                                    FROM (
                                         SELECT 1 C1  ,
                                                  GroupBy1.salesOrdId SALES_ORD_ID  ,
@@ -968,6 +971,7 @@
                                                  GroupBy1.modeId modeId  ,
                                                  GroupBy1.code2 code2  ,
                                                  GroupBy1.bankCode bankCode  ,
+                                                 GroupBy1.CUST_BILL_ID CUST_BILL_ID,
                                                  CASE WHEN ( GroupBy1.rentAmt1 IS NOT NULL ) THEN GroupBy1.rentAmt2 ELSE UTILS.CONVERT_TO_FLOAT(0,53) END rentAmt
                                           FROM ( SELECT Project1.SALES_ORD_ID salesOrdId  ,
                                                         Project1.SALES_ORD_NO saleOrdNo  ,
@@ -984,7 +988,8 @@
                                                         Project1.modeId modeId  ,
                                                         Project1.bankCode bankCode  ,
                                                         SUM(Project1.RENT_AMT)  rentAmt1  ,
-                                                        SUM(Project1.RENT_AMT)  rentAmt2
+                                                        SUM(Project1.RENT_AMT)  rentAmt2,
+                                                        Project1.CUST_BILL_ID CUST_BILL_ID
                                                  FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
                                                                Extent1.SALES_ORD_NO SALES_ORD_NO  ,
                                                                Extent3.STK_CODE STK_CODE  ,
@@ -999,7 +1004,8 @@
                                                                CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  ,
                                                                CASE  WHEN ( Extent2.ITM_STK_ID IS NOT NULL ) THEN Extent2.ITM_STK_ID ELSE 0 END itmStkId  ,
                                                                CASE  WHEN ( Extent6.MODE_ID IS NOT NULL ) THEN Extent6.MODE_ID ELSE 0 END modeId  ,
-                                                               CASE  WHEN ( Extent8.BANK_ID IS NOT NULL ) THEN Extent8.CODE ELSE '' END bankCode
+                                                               CASE  WHEN ( Extent8.BANK_ID IS NOT NULL ) THEN Extent8.CODE ELSE '' END bankCode,
+                                                               Extent1.CUST_BILL_ID CUST_BILL_ID
                                                         FROM SAL0001D Extent1
                                                                JOIN SAL0002D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
                                                                JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.ITM_STK_ID
@@ -1012,7 +1018,7 @@
                                                          WHERE  ( 8 <> Extent1.STUS_CODE_ID )
                                                                   AND ( Extent1.CUST_ID = #{custId} )
                                                                   AND ( 66 = Extent1.APP_TYPE_ID ) ) Project1
-                                                   GROUP BY Project1.SALES_ORD_ID,Project1.SALES_ORD_NO,Project1.STK_CODE,Project1.STK_DESC,Project1.CODE,Project1.CODE_NAME,Project1.CODE1,Project1.CODE2,Project1.salesDt,Project1.appTypeId,Project1.stusCodeId,Project1.itmStkId,Project1.modeId,Project1.bankCode ) GroupBy1
+                                                   GROUP BY Project1.SALES_ORD_ID,Project1.SALES_ORD_NO,Project1.STK_CODE,Project1.STK_DESC,Project1.CODE,Project1.CODE_NAME,Project1.CODE1,Project1.CODE2,Project1.salesDt,Project1.appTypeId,Project1.stusCodeId,Project1.itmStkId,Project1.modeId,Project1.bankCode,Project1.CUST_BILL_ID ) GroupBy1
             UNION ALL
                             SELECT 1 C1  ,
                                      GroupBy2.salesOrdId salesOrdId  ,
@@ -1029,7 +1035,8 @@
                                      GroupBy2.modeId modeId  ,
                                      GroupBy2.code2 code2  ,
                                      GroupBy2.bankCode bankCode  ,
-                                     CASE  WHEN ( GroupBy2.tradeAmt1 IS NOT NULL ) THEN GroupBy2.tradeAmt2 ELSE UTILS.CONVERT_TO_FLOAT(0,53) END tradeAmt
+                                     CASE  WHEN ( GroupBy2.tradeAmt1 IS NOT NULL ) THEN GroupBy2.tradeAmt2 ELSE UTILS.CONVERT_TO_FLOAT(0,53) END tradeAmt,
+                                     GroupBy2.CUST_BILL_ID CUST_BILL_ID
                               FROM ( SELECT Project3.SALES_ORD_ID salesOrdId  ,
                                             Project3.SALES_ORD_NO salesOrdNo  ,
                                             Project3.STK_CODE stkCode  ,
@@ -1045,7 +1052,8 @@
                                             Project3.code2 code2  ,
                                             Project3.bankCode bankCode  ,
                                             SUM(Project3.TRADE_AMT)  tradeAmt1  ,
-                                            SUM(Project3.TRADE_AMT)  tradeAmt2
+                                            SUM(Project3.TRADE_AMT)  tradeAmt2,
+                                            Project3.CUST_BILL_ID CUST_BILL_ID
                                      FROM ( SELECT Extent10.SALES_ORD_ID SALES_ORD_ID  ,
                                                    Extent10.SALES_ORD_NO SALES_ORD_NO  ,
                                                    Extent12.STK_CODE STK_CODE  ,
@@ -1060,7 +1068,8 @@
                                                    CASE WHEN ( Extent11.ITM_STK_ID IS NOT NULL ) THEN Extent11.ITM_STK_ID ELSE 0 END itmStkId  ,
                                                    0 modeId,
                                                    ''code2,
-                                                   ''bankCode
+                                                   ''bankCode,
+                                                   Extent10.CUST_BILL_ID CUST_BILL_ID
                                             FROM SAL0001D Extent10
                                                    JOIN SAL0002D Extent11   ON Extent11.SALES_ORD_ID = Extent10.SALES_ORD_ID
                                                    JOIN SYS0026M Extent12   ON Extent12.STK_ID = Extent11.ITM_STK_ID
@@ -1071,7 +1080,7 @@
                                                       AND ( Extent10.CUST_ID =#{custId} )
                                                       AND ( 66 <> Extent10.APP_TYPE_ID )
                                             ) Project3
-                                            GROUP BY Project3.SALES_ORD_ID,Project3.SALES_ORD_NO,Project3.STK_CODE,Project3.STK_DESC,Project3.CODE,Project3.CODE_NAME,Project3.CODE1,Project3.salesDt,Project3.appTypeId,Project3.stusCodeId,Project3.itmStkId,Project3.modeId,Project3.code2,Project3.bankCode )
+                                            GROUP BY Project3.SALES_ORD_ID,Project3.SALES_ORD_NO,Project3.STK_CODE,Project3.STK_DESC,Project3.CODE,Project3.CODE_NAME,Project3.CODE1,Project3.salesDt,Project3.appTypeId,Project3.stusCodeId,Project3.itmStkId,Project3.modeId,Project3.code2,Project3.bankCode,Project3.CUST_BILL_ID )
                                                      GroupBy2 ) UnionAll1 ) Distinct1 ) Project6 ) Project6
                      ORDER BY Project6.SALES_ORD_NO ASC
 	     ]]>
