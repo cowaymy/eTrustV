@@ -507,7 +507,8 @@
             Extent1.PAY_ITM_APPV_NO,
 --          Extent1.PAY_ITM_REM ,
 --          extent10.FT_APPV_REM AS PAY_ITM_REM,
-            CASE WHEN extent10.src_pay_id = #{payId} THEN extent10.FT_APPV_REM
+            CASE WHEN extent12.sales_ord_no = extent10.SRC_ORD_NO THEN Extent1.PAY_ITM_REM
+                    WHEN extent12.sales_ord_no = extent10.FT_ORD_NO THEN extent10.FT_APPV_REM
             ELSE  Extent1.PAY_ITM_REM  END PAY_ITM_REM,
             Extent1.PAY_ITM_STUS_ID,
             Extent6.NAME AS NAME1,
@@ -542,7 +543,8 @@
             LEFT JOIN PAY0064D extent8 ON extent1.PAY_ID = extent8.PAY_ID
             LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
             LEFT JOIN PAY0252T EX11 ON EX11.PAY_ID = EXTENT8.PAY_ID
-            LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ AND  extent10.SRC_PAY_ID =#{payId}
+            LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
+            LEFT JOIN SAL0001D extent12 ON extent8.SALES_ORD_ID = extent12.SALES_ORD_ID
         WHERE
             Extent1.PAY_ITM_STUS_ID = 1
             <if test="payItemAmt != '' and payItemAmt != null">
@@ -875,7 +877,8 @@
 		       Extent5.ACC_DESC ACC_DESC  ,
 		       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
 		       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
-		       CASE WHEN extent10.src_pay_id = #{payId} THEN extent10.FT_APPV_REM
+		       CASE WHEN extent12.sales_ord_no = extent10.SRC_ORD_NO THEN Extent1.PAY_ITM_REM
+                       WHEN extent12.sales_ord_no = extent10.FT_ORD_NO THEN extent10.FT_APPV_REM
                ELSE  Extent1.PAY_ITM_REM  END PAY_ITM_REM,
 		       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
 		       Extent6.NAME NAME1  ,
@@ -924,7 +927,8 @@
 		         LEFT JOIN PAY0064D Extent8   ON Extent1.PAY_ID = Extent8.PAY_ID
 		         LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
                  LEFT JOIN PAY0252T EX11 ON EX11.PAY_ID = EXTENT8.PAY_ID
-                 LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ  AND  extent10.SRC_PAY_ID =#{payId}
+                 LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
+                 LEFT JOIN SAL0001D extent12 ON extent8.SALES_ORD_ID = extent12.SALES_ORD_ID
 		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 		          AND ( Extent1.PAY_ID = #{payId} )
 		          <if test="payItemAmt != '' and payItemAmt != null">
@@ -1414,7 +1418,8 @@
 	                Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
 	                Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
 	                Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
-	                CASE WHEN extent10.src_pay_id = #{payId} THEN extent10.FT_APPV_REM
+                    CASE WHEN extent12.sales_ord_no = extent10.SRC_ORD_NO THEN Extent1.PAY_ITM_REM
+                            WHEN extent12.sales_ord_no = extent10.FT_ORD_NO THEN extent10.FT_APPV_REM
                     ELSE  Extent1.PAY_ITM_REM  END PAY_ITM_REM,
 	                Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
 	                Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
@@ -1449,7 +1454,9 @@
 		                LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		                LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.PAY_ITM_CARD_MODE_ID
 		                LEFT JOIN PAY0252T EX11 ON EX11.PAY_ID = Extent1.PAY_ID
-                        LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ AND  extent10.SRC_PAY_ID =#{payId}
+                        LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
+                        LEFT JOIN PAY0064D extent13 ON extent13.PAY_ID = Extent1.PAY_ID
+                        LEFT JOIN SAL0001D extent12 ON extent13.SALES_ORD_ID = extent12.SALES_ORD_ID
 	               WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 	                  <if test="payItemAmt != '' and payItemAmt != null">
                        AND extent10.SRC_AMT = #{payItemAmt}
