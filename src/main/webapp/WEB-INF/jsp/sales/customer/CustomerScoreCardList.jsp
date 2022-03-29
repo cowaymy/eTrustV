@@ -109,7 +109,9 @@
 			wrapSelectionMove : true,
 
 			// 줄번호 칼럼 렌더러 출력
-			showRowNumColumn : true
+			showRowNumColumn : true,
+
+			wordWrap :  true
 		};
 
 		//custGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
