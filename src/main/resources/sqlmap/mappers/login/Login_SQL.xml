@@ -188,7 +188,7 @@
          ,SYS47M.USER_ID      userId
          --,SYS47M.USER_PASSWD  userPassWord
          ,SYS47M.USER_SEC_QUES_ID  userSecQuesId
-         ,SYS47M.USER_SEC_QUES_ANS userSecQuesAns
+         --,SYS47M.USER_SEC_QUES_ANS userSecQuesAns
          ,SYS32M.RESN_DESC         securityQuestion
          ,SYS47M.USER_TYPE_ID   userTypeId
          ,ORG01D.RANK           hpStus
@@ -671,6 +671,10 @@
 
     <select id="getLoginFailedMaxAttempt" resultType ="int">
         select TO_NUMBER(code, 0) as ATTEMPT from SYS0094M where IND = 'LOGIN' and DISB <![CDATA[<>]]> 1
+    </select>
+
+    <select id="checkSecurityAnswer" parameterType="Map" resultType="int">
+        select count(1) from sys0047M where user_name = #{username} and USER_SEC_QUES_ANS = #{secAns}
     </select>
 
 </mapper>
