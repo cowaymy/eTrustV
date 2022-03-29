@@ -901,4 +901,32 @@ public class LoginController {
 		return ResponseEntity.ok(message);
 
 	}
+
+	/**
+	 * To validate security answer
+	 *
+	 * @Date Mar 29, 2022
+	 * @Author HQIT-HLTANG
+	 * @param params
+	 * @param request
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/checkSecAns.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> checkSecAns(@RequestBody Map<String, Object> params, ModelMap model) {
+
+		int result = loginService.checkSecurityAnswer(params);
+
+		ReturnMessage message = new ReturnMessage();
+
+		if (result == 0) {
+			message.setCode(AppConstants.FAIL);
+		} else {
+			message.setCode(AppConstants.SUCCESS);
+		}
+
+		return ResponseEntity.ok(message);
+	}
 }

@@ -201,10 +201,11 @@
             if (!same)
             	return false;
 
-            if (returnSearchUserInfo.userSecQuesAns != $("#securityAnswerTxt").val()) {
+            fnSecurityChkPop(); //20220329 hltang - check sec ans in server instead jsp
+            /* if (returnSearchUserInfo.userSecQuesAns != $("#securityAnswerTxt").val()) {
                 Common.alert("<spring:message code='sys.login.securityAnswer.Incorrect'/>");
                 return false;
-            }
+            } */
 
             gVarForm = "#findIpPopUpForm";
         }
@@ -449,8 +450,39 @@
         $("#step1").click();
     }
 
-    function fnSecurityChkPop() {
-        if (returnSearchUserInfo.userSecQuesAns != $("#securityAnswerTxt").val()) {
+    function fnSecurityChkPop() { //20220329 hltang - check sec ans in server instead jsp
+
+    	Common.ajax("POST"
+                , "/login/checkSecAns.do"
+                , {secAns : $("#securityAnswerTxt").val(),"username" : $("#searchLoginName").val()}
+                , function (result) {
+                    if (result.code == 99) {
+                        Common.alert("<spring:message code='sys.login.securityAnswer.Incorrect'/>");
+                        return false;
+                    }else{
+                    	$("#backBtn").hide();
+                        $("#step3").show();
+                        $("#step3").click();
+                        $("#newPasswordTxt").focus();
+                    }
+                }
+                , function (jqXHR, textStatus, errorThrown) {
+                    console.log("fail.");
+                    console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+                    if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+                        Common.alert(jqXHR.responseJSON.message);
+                        console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+
+                        console.log("status : " + jqXHR.status);
+                        console.log("code : " + jqXHR.responseJSON.code);
+                        console.log("message : " + jqXHR.responseJSON.message);
+                        console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                    }
+
+                });
+
+        /* f (returnSearchUserInfo.userSecQuesAns != $("#securityAnswerTxt").val()) {
             Common.alert("<spring:message code='sys.login.securityAnswer.Incorrect'/>");
             return false;
         }
@@ -460,7 +492,7 @@
             $("#step3").show();
             $("#step3").click();
             $("#newPasswordTxt").focus();
-        }
+        } */
     }
 
     function fnSearchIdPop() {

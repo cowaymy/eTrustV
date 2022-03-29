@@ -75,4 +75,6 @@ public interface LoginMapper {
 	void updateLoginFailAttempt(Map<String, Object> params);
 	void resetLoginFailAttempt(int userId);
 	int getLoginFailedMaxAttempt();
+
+	int checkSecurityAnswer(Map<String, Object> params);
 }

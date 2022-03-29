@@ -65,4 +65,6 @@ public interface LoginService {
 	public void resetLoginFailAttempt(int userId);
 	public int getLoginFailedMaxAttempt();
 	public EgovMap selectUserByUserName(String username);
+
+	public int checkSecurityAnswer (Map<String, Object> params);
 }

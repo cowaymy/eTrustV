@@ -504,4 +504,9 @@ public class LoginServiceImpl implements LoginService {
 	public EgovMap selectUserByUserName(String username){
 		return loginMapper.selectUserByUserName(username);
 	}
+
+	@Override
+	public int checkSecurityAnswer (Map<String, Object> params) {
+		return loginMapper.checkSecurityAnswer(params);
+	}
 }
