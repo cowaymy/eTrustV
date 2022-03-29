@@ -40,7 +40,7 @@
 <tr>
     <th scope="row">Unmatch Payment</th>
     <td colspan="3">
-        <input type="checkbox" id="unmatchPayment" name="unmatchPayment" />
+        <input type="checkbox" id="unmatchPayment" name="unmatchPayment" /><span class="must">Please proceed manual key in payment</span>
     </td>
 </tr>
 </c:if>
