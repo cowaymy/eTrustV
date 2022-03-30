@@ -182,6 +182,12 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
               ordInfo.put("srvPacId",0);
             }*/
 
+            String prdCat = reqPrm.get("prodCat").toString();
+            if((prdCat != null && (prdCat.equals("Mattress"))) || prdCat.equals("Frame"))
+            {
+            	custAdd.put("isHomecare", "Y");
+            }
+
             EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
             EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
             EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(custAdd);
@@ -295,9 +301,13 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
 
             // Celeste: when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
-            String prdCat = reqPrm.get("prodCat").toString();
             String stkCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
-            if(prdCat != null && (prdCat.equals("Mattress")))
+
+            String ecommBndlId = reqPrm.get("bndlId").toString();
+			int ecommOrdId = salesOrderMVO.getEcommOrdId();
+            int cntExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
+
+            if((prdCat != null && (prdCat.equals("Mattress"))) || prdCat.equals("Frame"))
     		{
                 HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
                 //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
@@ -328,14 +338,24 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
                 orderVO.setAccClaimAdtVO1(accClaimAdtVO1);
                 orderVO.setAccClaimAdtVO2(accClaimAdtVO2);
 
+                if(cntExisted > 1)
+                {
+                	Map<String, Object> HCObj = new HashMap<String, Object>();
+                    HCObj.put("ecommBndlId", ecommBndlId);
+    				HCObj.put("ecommOrdId", ecommOrdId);
+    				int prevHCOrderId =  hcOrderRegisterMapper.getPrevOrdId(HCObj);
+    				String bndlId = ecommBndlId;
+    				int prevOrdSeqNo = hcOrderRegisterMapper.getPrevOrdSeq(bndlId);
+    				orderVO.setOrdSeqNo(prevOrdSeqNo);
+    				salesOrderMVO.setBndlId(prevHCOrderId);
+    				orderVO.setSalesOrderMVO(salesOrderMVO);
+                }
+
                 hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
     		}else{
     			//check if bundleId in API0005D existed before
 
-    			String ecommBndlId = reqPrm.get("bndlId").toString();
-    			int ecommOrdId = salesOrderMVO.getEcommOrdId();
-    			int cntHAExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
-    			if(cntHAExisted > 1)
+    			if(cntExisted > 1)
     			{
     				Map<String, Object> HAObj = new HashMap<String, Object>();
     				HAObj.put("ecommBndlId", ecommBndlId);
