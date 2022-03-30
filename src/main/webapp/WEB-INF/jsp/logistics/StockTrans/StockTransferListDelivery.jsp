@@ -183,7 +183,8 @@ $(document).ready(function(){
     });
 
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
-
+    	var checked = AUIGrid.getCheckedRowItems(listGrid);
+        var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
         if (event.dataField != "delyqty"){
             return false;
         }else{
@@ -203,6 +204,18 @@ $(document).ready(function(){
         		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
         		AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
         	}
+        }
+        for (var i = 0; i < checked.length; i++) {
+            if (checked[i].item.reqloc != event.item.reqloc) {
+                Common.alert("Request To Location is different.");
+
+                var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno", reqno);
+
+                for (var i = 0; i < rown.length; i++) {
+                    AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                }
+                return false;
+            }
         }
     });
 

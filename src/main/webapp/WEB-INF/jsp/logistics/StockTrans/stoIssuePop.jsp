@@ -325,38 +325,32 @@ $(document).ready(function(){
         }
     });
 
-    var ingGrNo = $("#zDelvryNo").val();
-    var ioType =  $("#zIoType").val();
-    Common.ajax("POST", "/logistics/stocktransfer/clearSerialNo.do"
-            , {"grNo": ingGrNo, "ioType" : ioType}
-            , function(result){
-             //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-             // Moblie Popup Setting
-             if(Common.checkPlatformType() == "mobile") {
-                 if( typeof(opener.fn_PopClose) != "undefined" ){
-                     opener.fn_PopClose();
-                 }else{
-                     window.close();
-                 }
-             } else {
-                 //$("#btnSearch").click();
-                 $('#_divStoIssuePop').remove();
-             }
-                      }
-                     , function(jqXHR, textStatus, errorThrown){
-                         try{
-                             console.log("Fail Status : " + jqXHR.status);
-                             console.log("code : "        + jqXHR.responseJSON.code);
-                             console.log("message : "     + jqXHR.responseJSON.message);
-                             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                         }catch (e){
-                             console.log(e);
-                         }
-                         Common.alert("Fail : " + jqXHR.responseJSON.message);
-             });
+    fn_clearSerialFirst();
     $("#btnPopSearch").click();
 });
 
+function fn_clearSerialFirst() {
+    console.log('ingGrNo ' + $("#zDelvryNo").val());
+    console.log('ioType ' + $("#zIoType").val());
+    var ingGrNo = $("#zDelvryNo").val();
+    var ioType =  $("#zIoType").val();
+    Common.ajaxSync("POST", "/logistics/stocktransfer/clearSerialNo.do"
+                    , {"grNo": ingGrNo, "ioType" : ioType}
+                    , function(result){
+
+                              }
+                             , function(jqXHR, textStatus, errorThrown){
+                                 try{
+                                     console.log("Fail Status : " + jqXHR.status);
+                                     console.log("code : "        + jqXHR.responseJSON.code);
+                                     console.log("message : "     + jqXHR.responseJSON.message);
+                                     console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                 }catch (e){
+                                     console.log(e);
+                                 }
+                                 //Common.alert("Fail : " + jqXHR.responseJSON.message);
+                     });
+}
 
 // Serial Search Pop
 function fn_scanSearchPop(item){
