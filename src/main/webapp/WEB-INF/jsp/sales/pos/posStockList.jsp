@@ -331,25 +331,23 @@ fn_stockCard = function (){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
-</c:if>
+<%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+</c:if> --%>
 
 
-
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
        <li><p class="btn_blue"><a id="addItemBtn"  onclick="javascript:fn_selectPosStockMgmtAddPop();" ><span class="add"></span>ADD</a></p></li>
-
-
-      <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtNewAdjPop();" ><span class="edit"></span> ADJUST</a></p></li>
-
-    <!--   <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtAdjPop();" ><span class="edit"></span>ADJUST</a></p></li> -->
-
-            <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtRetrunPop();" ><span class="edit"></span>RETRUN</a></p></li>
-
-      <li><p class="btn_blue"><a id="transItemBtn"  onclick="javascript:fn_selectPosStockMgmtTransPop();" ><span class="edit"></span>TRANSFER</a></p></li>
-
-      <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APPROVAL</a></p></li>
-      <li><p class="btn_blue"><a id="search" onclick="javascript:fn_getDataListAjax();"  ><span class="search"   ></span>Search</a></p></li>
-      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+       <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtNewAdjPop();" ><span class="edit"></span> ADJUST</a></p></li>
+</c:if>
+      
+       <!--   <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtAdjPop();" ><span class="edit"></span>ADJUST</a></p></li> -->
+       <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtRetrunPop();" ><span class="edit"></span>RETRUN</a></p></li>
+       <li><p class="btn_blue"><a id="transItemBtn"  onclick="javascript:fn_selectPosStockMgmtTransPop();" ><span class="edit"></span>TRANSFER</a></p></li>
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+       <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APPROVAL</a></p></li>
+</c:if>       
+       <li><p class="btn_blue"><a id="search" onclick="javascript:fn_getDataListAjax();"  ><span class="search"   ></span>Search</a></p></li>
+       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
