@@ -72,7 +72,7 @@
                 $("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
                 $("#payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
                 //$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
-                $("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
+                $("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" <c:out value="${paymentInfo.crcName}"/> placeholder="" class="w100p readonly" readyonly  />');
                 $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
 
