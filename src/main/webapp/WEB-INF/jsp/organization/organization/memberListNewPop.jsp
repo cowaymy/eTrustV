@@ -388,7 +388,38 @@ function fn_departmentCode(value){
                          }
                      }); */
 
+               } else if( traineeType == '6669'){ // LT - ADDED BY KEYI
+                    doGetComboSepa("/common/selectBranchCodeList.do",'6669' , '-',''   , 'branch' , 'S', '');
+
+                   $("#branch").change(function(){
+                       var jsonObj = {
+                               memberLvl : 3,
+                               flag :  "%DTS%",
+                               branchVal : $("#branch").val()
+                       };
+
+                       doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+                   });
+
+                   //Training Course ajax콜 위치 20-10-2021 - HLTANG - close for LMS project
+                   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+                   /* var groupCode  = {groupCode : traineeType};
+                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+
+                        $("#course").find('option').each(function() {
+                            $(this).remove();
+                        });
+                         console.log("-------------------------" + JSON.stringify(result));
+                         if (result!= null) {
+                         $("#course").append("<option value=''>Choose One</option>");
+                            for( var i=0; i< result.length; i++) {
+                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                            }
+                         }
+                     }); */
+
                }
+
            });
 
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
@@ -1702,6 +1733,7 @@ function checkBankAccNo() {
         <option value = "3">CT</option>
         <option value = "7">HT</option>
         <option value = "5758">DT</option>
+        <option value = "6669">LT</option>
     </select>
     </td>
     <th scope="row"></th>
