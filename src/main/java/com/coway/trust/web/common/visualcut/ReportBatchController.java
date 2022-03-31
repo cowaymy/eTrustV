@@ -2158,6 +2158,23 @@ public class ReportBatchController {
     LOGGER.info("[END] AutoDebitDuductionSummary...");
   }
 
+  @RequestMapping(value = "/CreditCardClaimListDetails.do")
+  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+ public void CreditCardClaimListDetails() {
+   LOGGER.info("[START] CreditCardClaimListDetails...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/M1_M2_OrderDetails.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "AD Summary Report" + File.separator + "CreditCardClaimListDetails_" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] CreditCardClaimListDetails...");
+ }
+
   @RequestMapping(value = "/FilterStockLogHSRuturnUsedFilterData.do")
   //@Scheduled(cron = "0 0 5 ? * MON")//5:00 a.m. every monday of the month
  public void FilterStockLogHSRuturnUsedFilterData() {
