@@ -866,7 +866,6 @@ function fn_uploadFileM2(){
     var formData = new FormData();
 
     formData.append("csvFile", $("input[name=uploadfileM2]")[0].files[0]);
-    console.log("here: " + formData);
 
     Common.ajaxFile("/payment/creditCardClaimMonth2Uploads.do", formData, function(result){
 
