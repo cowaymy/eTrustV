@@ -143,8 +143,8 @@ function fn_setOptGrpClass() {
             <option value="SUS_SUM_YM">SUS : Sum of Last SUS by Year and Month</option>
             <option value="LAST_TER">TER : Last TER</option>
             <option value="TER_SUM_YM">TER : Sum of Last TER by Year and Month</option>
-            <option value="LAST_RET_TER" disabled>RET to TER : Last RET to TER</option> <%--temporary disabled due to long query time --%>
-            <option value="RET_TER_SUM_YM" disabled>RET to TER : Sum of Last RET to TER by Year and Month</option> <%--temporary disabled due to long query time --%>
+            <option value="LAST_RET_TER">RET to TER : Last RET to TER</option> <%--temporary disabled due to long query time --%>
+            <option value="RET_TER_SUM_YM">RET to TER : Sum of Last RET to TER by Year and Month</option> <%--temporary disabled due to long query time --%>
         </select>
     </td>
 </tr>
