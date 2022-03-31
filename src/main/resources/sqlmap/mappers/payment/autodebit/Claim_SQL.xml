@@ -823,7 +823,7 @@
     call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
     #{new_merchantBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
-    #{new_issueBankId},#{mayBank},#{installMonth}, #{custType},
+    #{new_issueBankId},#{mayBank},#{installMonth}, #{custType},#{monthType},
     #{p1, mode=OUT, jdbcType=CURSOR,
     javaType=ResultSet,
     resultMap=resultClaimMap})
@@ -1364,4 +1364,37 @@
 
             WHERE  RENT_PAY_ID         = #{rentPayId}
 </update>
+
+  <insert id="saveM2UploadBulk" parameterType="java.util.List">
+   INSERT INTO PAY0330T (ORDER_NO,ORDER_ID )
+    <foreach item="item" collection="list" index="index" separator= " UNION ALL ">
+    SELECT ORDER_NO
+    , EXT1.SALES_ORD_ID ORDER_ID FROM (
+        SELECT
+       #{item.orderNo} ORDER_NO
+       FROM DUAL
+       ) JOIN SAL0001D EXT1 ON EXT1.SALES_ORD_NO = ORDER_NO
+
+       </foreach>
+    </insert>
+
+     <delete id="clearM2UploadBulk"  parameterType="Map">
+    DELETE FROM PAY0330T WHERE 1 = 1
+
+    </delete>
+
+	  <select id="orderListMonthViewPop" parameterType="Map" resultType="egovMap">
+	   SELECT
+	   CTRL_ID,
+	   MONTH_TYPE,
+	   CTRL_TOT_ITM,
+	   TO_CHAR(CRT_DT,'DD-MM-YYYY') AS CRT_DT
+    FROM PAY0041D
+	    WHERE 1 = 1
+	    AND CTRL_IS_CRC = 1
+	    AND CTRL_GROUP = 1
+	    AND VRESCUE = 0
+	    AND MONTH_TYPE IN ('M1/M2','M2')
+	    ORDER BY 1 DESC
+	  </select>
 </mapper>

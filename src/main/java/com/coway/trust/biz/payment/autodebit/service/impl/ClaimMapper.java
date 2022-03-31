@@ -278,8 +278,11 @@ public interface ClaimMapper {
 
   Map<String, Object> createVResClaim(Map<String, Object> param);
 
-  //void saveVRescueUpdate(Map<String, Object> params);	
-  
+  //void saveVRescueUpdate(Map<String, Object> params);
+
   int  saveVRescueUpdate(Map<String, Object> params);
+  int clearM2UploadBulk(Map<String, Object> params);
+  int saveM2UploadBulk(Map<String, Object> params);
+  List<EgovMap> orderListMonthViewPop(Map<String, Object> params);
 
 }

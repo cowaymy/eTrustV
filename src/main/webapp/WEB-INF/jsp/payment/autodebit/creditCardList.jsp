@@ -42,6 +42,8 @@ var claimDayData = [{"codeId": "5","codeName": "5"},{"codeId": "10","codeName": 
 
 var subPath = "/resources/WebShare/CRT";
 
+var orderListId;
+
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 
@@ -79,7 +81,40 @@ $(document).ready(function(){
         return isCompatible;
     };
 
+       var gridProse = {
+            usePaging           : true,             //페이징 사용
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable                : false,
+            fixedColumnCount    : 1,
+            displayTreeOpen     : false,
+            selectionMode       : "multipleCells",  //"singleRow",
+            headerHeight        : 30,
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            showStateColumn : false,
+            noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"],
+            groupingMessage     : gridMsg["sys.info.grid.groupingMessage"]
+        };
+
+       orderListId = GridCommon.createAUIGrid("orderListId_grid_wrap", orderListColumnLayout,null,gridProse);
+       AUIGrid.resize(orderListId,945, $("orderListId_grid_wrap").innerHeight());
+
+       orderListIdDetails = GridCommon.createAUIGrid("orderListIdDetails_grid_wrap", orderListDetailsColumnLayout,null,gridProse);
+       AUIGrid.resize(orderListId,945, $("orderListIdDetails_grid_wrap").innerHeight());
 });
+
+var orderListColumnLayout= [
+                               {dataField : "ctrlId", headerText : "CTRL ID", width : '15%'},
+                               {dataField : "crtDt", headerText : "Date", width : '15%'},
+                               {dataField : "monthType", headerText : "Category", width : '15%'},
+                               {dataField : "ctrlTotItm", headerText : "TotalOrders", width : '15%'}
+                               ];
+
+var orderListDetailsColumnLayout= [
+                            {dataField : "bankDtlCtrlId", headerText : "CTRL ID", width : '15%'},
+                            {dataField : "bankDtlCtrlId", headerText : "Date", width : '15%'},
+                            {dataField : "bankDtlCtrlId", headerText : "Category", width : '15%'},
+                            {dataField : "bankDtlCtrlId", headerText : "TotalOrders", width : '15%'}
+                            ];
 
 
 // AUIGrid 칼럼 설정
@@ -819,6 +854,64 @@ function fn_report(){
 
 }
 
+function fn_uploadM2Pop(){
+
+	$("#view_wrap").hide();
+    $("#uploadMonth2_wrap").show();
+
+}
+
+function fn_uploadFileM2(){
+
+    var formData = new FormData();
+
+    formData.append("csvFile", $("input[name=uploadfileM2]")[0].files[0]);
+    console.log("here: " + formData);
+
+    Common.ajaxFile("/payment/creditCardClaimMonth2Uploads.do", formData, function(result){
+
+        Common.alert(result.message);
+    });
+}
+
+function fn_ordersListPop(){
+
+    Common.ajaxFile("/payment/orderListMonthViewPop.do", '', function(result){
+    	AUIGrid.setGridData(orderListId, result);
+    });
+
+    $("#orderList_wrap").show();
+
+    /* fn_setAUIEvent() */
+}
+/* function fn_setAUIEvent(){
+	console.log('AUIGrid Binded');
+	AUIGrid.bind(orderListId, "cellDoubleClick", function(event) {
+		  console.log('AUIGrid double click');
+		fn_setDetail(orderListId, event.rowIndex);
+	});
+}; */
+
+/* function fn_setDetail(gridID, rowIdx){
+
+    $("#reportFileName").val("");
+    $("#reportDownFileName").val("");
+
+		 var date = new Date().getDate();
+		    if(date.toString().length == 1){
+		        date = "0" + date;
+		    }
+            $("#excelForm #v_CTRL_ID").val(AUIGrid.getCellValue(gridID, rowIdx, "ctrlId"));
+    	    $("#excelForm #reportDownFileName").val("M1_M2_OrderDetails.rpt"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    	    $("#excelForm #reportFileName").val("/payment/M1_M2_OrderDetails.rpt");
+
+    	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    	    var option = {
+    	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
+    	    };
+
+    	    Common.report("excelForm", option);
+} */
 </script>
 
 <!-- content start -->
@@ -931,6 +1024,8 @@ function fn_report(){
                     </ul>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.newClaim'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_uploadM2Pop();"><spring:message code='pay.btn.uploadMonth2'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_ordersListPop();"><spring:message code='pay.btn.listOrderMonth'/></a></p></li>
 <%-- 						<li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleSettingPop();"><spring:message code='pay.btn.scheduleSetting'/></a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleBatchPop();"><spring:message code='pay.btn.scheduleClaimBatch'/></a></p></li> --%>
                     </ul>
@@ -958,6 +1053,7 @@ function fn_report(){
 <!-- content end -->
 
 
+
 <!-------------------------------------------------------------------------------------
     POP-UP (VIEW CLAIM / RESULT (Live) / RESULT (NEXT DAY) / FILE GENERATOR
 -------------------------------------------------------------------------------------->
@@ -976,7 +1072,10 @@ function fn_report(){
 <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/AutoDebitCreditCardDetails.rpt" />
 <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+<input type="hidden" id="v_CTRL_ID" name="v_CTRL_ID"/>
 <input type="hidden" id="v_BANK_DTL_CTRL_ID" name="v_BANK_DTL_CTRL_ID" value='$("#view_batchId").text()' />
+
+
 </form>
     <!-- pop_body start -->
     <section class="pop_body">
@@ -1069,6 +1168,7 @@ function fn_report(){
 <!-- popup_wrap end -->
 
 
+
 <!---------------------------------------------------------------
     POP-UP (NEW CLAIM)
 ---------------------------------------------------------------->
@@ -1143,23 +1243,13 @@ function fn_report(){
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Install Month<span class="must">*</span></th>
+                        <th scope="row">M1 & M2 Type<span class="must">*</span></th>
                         <td>
-                            <select id="_month" name="_month" class="multy_select w100p" multiple="multiple">
-                                <option value="01">JANUARY</option>
-                                <option value="02">FEBUARY</option>
-                                <option value="03">MARCH</option>
-                                <option value="04">APRIL</option>
-                                <option value="05">MAY</option>
-                                <option value="06">JUNE</option>
-                                <option value="07">JULY</option>
-                                <option value="08">AUGUST</option>
-                                <option value="09">SEPTEMBER</option>
-                                <option value="10">OCTOBER</option>
-                                <option value="11">NOVEMBER</option>
-                                <option value="12">DECEMBER</option>
+                            <select id="monthType" name="monthType" class="w100p">
+                                <option value="M1/M2">All</option>
+                                <option value="M1">M1</option>
+                                <option value="M2">M2</option>
                             </select>
-                            <input type="hidden"  id="hiddenMonth" name="hiddenMonth"/>
                         </td>
                         <th scope="row">Customer Type<span class="must">*</span></th>
                         <td>
@@ -1169,6 +1259,26 @@ function fn_report(){
                                 <option value="2">Even</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr>
+                    <th scope="row">Install Month<span class="must">*</span></th>
+                    <td>
+                        <select id="_month" name="_month" class="multy_select w100p" multiple="multiple">
+                            <option value="01">JANUARY</option>
+                            <option value="02">FEBUARY</option>
+                            <option value="03">MARCH</option>
+                            <option value="04">APRIL</option>
+                            <option value="05">MAY</option>
+                            <option value="06">JUNE</option>
+                            <option value="07">JULY</option>
+                            <option value="08">AUGUST</option>
+                            <option value="09">SEPTEMBER</option>
+                            <option value="10">OCTOBER</option>
+                            <option value="11">NOVEMBER</option>
+                            <option value="12">DECEMBER</option>
+                        </select>
+                        <input type="hidden"  id="hiddenMonth" name="hiddenMonth"/>
+                    </td>
                     </tr>
                    </tbody>
             </table>
@@ -1250,3 +1360,73 @@ function fn_report(){
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
+
+
+
+<!---------------------------------------------------------------
+    POP-UP (UPLOAD MONTH 2 ORDERS)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="uploadMonth2_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="new_pop_header">
+        <h1>Upload M2</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#uploadMonth2_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <section class="pop_body"><!-- pop_body start -->
+        <form action="#" method="post">
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                      <th scope="row">File</th>
+                      <td>
+                      <div class="auto_file"><!-- auto_file start -->
+                          <input type="file" title="file add" id="uploadfileM2" name="uploadfileM2" />
+                      </div><!-- auto_file end -->
+                      </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
+        </form>
+        <ul class="center_btns mt20">
+            <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFileM2();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
+            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/Month2UploadOrders_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
+        </ul>
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="orderList_wrap" style="display: none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>M1/M2 Order</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2">
+                    <a href="#" >CLOSE</a>
+                </p></li>
+                  <!-- search_result start -->
+
+                <!-- grid_wrap start -->
+        </ul>
+    </header>
+<section class="pop_body"><!-- pop_body start -->
+    <article class="orderList_wrap"><!-- grid_wrap start -->
+    <div id="orderListId_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+
+     </section><!-- pop_body end -->
+    <!-- pop_header end -->
+</div>
+<!-- popup_wrap end -->
+

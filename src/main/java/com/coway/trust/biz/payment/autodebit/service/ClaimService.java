@@ -250,8 +250,11 @@ public interface ClaimService {
   Map<String, Object> createVResClaim(Map<String, Object> param);
 
   //void saveVRescueUpdate(Map<String, Object> params);
-  
+
   int  saveVRescueUpdate(Map<String, Object> params);
 
+  int saveM2Upload(Map<String, Object> params,List<Map<String, Object>> list);
+
+  List<EgovMap> orderListMonthViewPop(Map<String, Object> params);
 
 }

@@ -606,4 +606,33 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 
 		return o ;
 	}
+
+      @Override
+      public int saveM2Upload(Map<String, Object> params, List<Map<String, Object>> list) {
+
+        int sizeM2 = 1000;
+        int pageM2 = list.size() / sizeM2;
+        int startM2;
+        int endM2;
+        claimMapper.clearM2UploadBulk(params);
+        Map<String, Object> bulkMap = new HashMap<>();
+        for (int i = 0; i <= pageM2; i++) {
+        	startM2 = i * sizeM2;
+          endM2 = sizeM2;
+          if (i == pageM2) {
+        	  endM2 = list.size();
+          }
+          bulkMap.put("list", list.stream().skip(startM2).limit(endM2).collect(Collectors.toCollection(ArrayList::new)));
+          claimMapper.saveM2UploadBulk(bulkMap);
+        }
+        return list.size();
+
+  }
+
+      @Override
+      public List<EgovMap> orderListMonthViewPop(Map<String, Object> params) {
+        return claimMapper.orderListMonthViewPop(params);
+      }
+
+
 }

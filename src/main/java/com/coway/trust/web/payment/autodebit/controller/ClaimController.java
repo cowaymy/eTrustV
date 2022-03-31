@@ -46,6 +46,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
+import com.coway.trust.biz.payment.autodebit.service.M2UploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultScbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultCimbUploadVO;
@@ -921,6 +922,7 @@ public class ClaimController {
       String mayBank = CommonUtils.nvl(String.valueOf(claim.get("_mayBank")));
       String installMonth = CommonUtils.nvl(String.valueOf(claim.get("hiddenMonth")));
       String custType = CommonUtils.nvl(String.valueOf(claim.get("custType")));
+      String monthType = CommonUtils.nvl(String.valueOf(claim.get("monthType")));
 
       claim.put("new_claimType", isCRC);
       claim.put("new_debitDate", inputDate);
@@ -932,6 +934,7 @@ public class ClaimController {
       claim.put("installMonth", installMonth);
       claim.put("userId", sessionVO.getUserId());
       claim.put("custType", custType);
+      claim.put("monthType", monthType);
 
       claimService.createClaimCreditCard(claim); // 프로시저 함수 호출
       List<EgovMap> resultMapList = (List<EgovMap>) claim.get("p1"); // 결과 뿌려보기
@@ -2978,5 +2981,45 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 			throw new FileDownException(AppConstants.FAIL, "Could not get file : " + filename);
 		}
 	}
+
+	  @RequestMapping(value = "/creditCardClaimMonth2Uploads.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> creditCardClaimMonth2Uploads(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
+	    ReturnMessage message = new ReturnMessage();
+
+	    Map<String, MultipartFile> fileMap = request.getFileMap();
+	    MultipartFile multipartFile = fileMap.get("csvFile");
+	    List<M2UploadVO> vos = csvReadComponent.readCsvToList(multipartFile, true, M2UploadVO::create);
+
+	    List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	    for (M2UploadVO vo : vos) {
+	      HashMap<String, Object> hm = new HashMap<String, Object>();
+
+	      hm.put("orderNo", vo.getOrderNo());
+
+	      list.add(hm);
+	    }
+
+	    Map<String, Object> params = new HashMap<String, Object>();
+
+	    params.put("userId", sessionVO.getUserId());
+
+	    int result = 0;
+
+	    	result = claimService.saveM2Upload(params,list);
+
+	    if(result > 0){
+	        message.setMessage("M2 orders successfully uploaded.<br />Item(s) uploaded : "+result);
+	    }else{
+	    		 message.setMessage("Failed to upload M2 item(s). Please try again later.");
+	    }
+
+	    return ResponseEntity.ok(message);
+	  }
+
+	  @RequestMapping(value = "/orderListMonthViewPop.do")
+	  public ResponseEntity<List<EgovMap>> orderListMonthViewPop(@RequestParam Map<String, Object> params) {
+	    List<EgovMap> resultList = claimService.orderListMonthViewPop(params);
+	    return ResponseEntity.ok(resultList);
+	  }
 
 }
