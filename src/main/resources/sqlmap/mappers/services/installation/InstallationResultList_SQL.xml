@@ -4693,6 +4693,7 @@
                       , INSTALL_RESULT_ID = #{installResultId}
                       , UPD_DT = SYSDATE
                       , UPD_USER_ID = #{creator}
+                      , OWNER_CODE = #{ownerCode}
 
    <if test="installDate != null and installDate != ''">
       , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')

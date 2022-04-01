@@ -1837,6 +1837,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
     installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
+    //Added by keyi installation note phase1
+    installResult.put("ownerCode", CommonUtils.nvl(params.get("ownerCode")).toString());
+
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
     logger.debug("========================INSTALLATION RESULT PRM===========================");
@@ -2453,6 +2456,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("salesOrdId", installResult.get("salesOrdId"));
         s46dup.put("creator", installResult.get("creator"));
 
+        s46dup.put("ownerCode", installResult.get("ownerCode"));
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
       }
