@@ -2457,6 +2457,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("creator", installResult.get("creator"));
 
         s46dup.put("ownerCode", installResult.get("ownerCode"));
+
+
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
       }
@@ -2492,6 +2494,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       entry.put("salesOrdId", installResult.get("salesOrdId"));
       entry.put("creator", installResult.get("creator"));
 
+      entry.put("ownerCode", installResult.get("ownerCode"));
+
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
     }
@@ -2519,7 +2523,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         svc0125DStus.put("updator", installResult.get("creator"));
         //Object so_id = orderLog.get("salesOrderId");
         svc0125DStus.put("salesOrderId", orderLog.get("salesOrderId"));//installationResultListMapper.checkOrderID(orderLog));
-        //logger.debug("hello soexchgid : /////", orderLog.get("salesOrderId"));
         installationResultListMapper.updatePEXTestResultStatus(svc0125DStus);
         logger.debug("updateSVC0125DStatus : /////", svc0125DStus);
 
