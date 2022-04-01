@@ -4694,6 +4694,10 @@
                       , UPD_DT = SYSDATE
                       , UPD_USER_ID = #{creator}
                       , OWNER_CODE = #{ownerCode}
+                      , RESULT_CUST_NAME = #{resultCustName}
+                      , RESULT_ICMOBILE_NO = #{resultIcMobileNo}
+                      , RESULT_RPT_EMAIL_NO = #{resultReportEmailNo}
+                      , RESULT_ACEPT_NAME = #{resultAcceptanceName}
 
    <if test="installDate != null and installDate != ''">
       , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')

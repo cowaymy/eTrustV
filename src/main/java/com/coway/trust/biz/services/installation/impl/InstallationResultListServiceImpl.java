@@ -1837,8 +1837,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
     installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
-    //Added by keyi installation note phase1
+    //Added by keyi installation note phase1 20220401
     installResult.put("ownerCode", CommonUtils.nvl(params.get("ownerCode")).toString());
+    installResult.put("resultCustName", CommonUtils.nvl(params.get("resultCustName")).toString());
+    installResult.put("resultIcMobileNo", CommonUtils.nvl(params.get("resultIcMobileNo")).toString());
+    installResult.put("resultReportEmailNo", CommonUtils.nvl(params.get("resultReportEmailNo")).toString());
+    installResult.put("resultAcceptanceName", CommonUtils.nvl(params.get("resultAcceptanceName")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
@@ -2430,6 +2434,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
     logger.debug("===========================INSTALLATION ENTRY================================");
     logger.debug("INSTALLATION ENTRY : {}", entry);
+    logger.debug("======OWNERCODE : {}", installResult);
     logger.debug("===========================INSTALLATION ENTRY================================");
 
     maxIdValue.put("value", "resultId");
@@ -2457,7 +2462,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("creator", installResult.get("creator"));
 
         s46dup.put("ownerCode", installResult.get("ownerCode"));
-
+        s46dup.put("resultCustName", installResult.get("resultCustName"));
+        s46dup.put("resultIcMobileNo", installResult.get("resultIcMobileNo"));
+        s46dup.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
+        s46dup.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
 
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
@@ -2495,6 +2503,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       entry.put("creator", installResult.get("creator"));
 
       entry.put("ownerCode", installResult.get("ownerCode"));
+      entry.put("resultCustName", installResult.get("resultCustName"));
+      entry.put("resultIcMobileNo", installResult.get("resultIcMobileNo"));
+      entry.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
+      entry.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
 
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
