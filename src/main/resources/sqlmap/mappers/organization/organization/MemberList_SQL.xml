@@ -2541,7 +2541,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     <insert id="traineeUpdate" parameterType="Map" >
 
          UPDATE ORG0001D
-          SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ,'5758' , FN_GET_DOCNO(171) ) ,
+          SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ,'5758' , FN_GET_DOCNO(171),'6669' , FN_GET_DOCNO(184) ) ,
                   MEM_TYPE = TRAINEE_TYPE,
                   TRAINEE_CODE = MEM_CODE,
                   UPD_DT     = SYSDATE
