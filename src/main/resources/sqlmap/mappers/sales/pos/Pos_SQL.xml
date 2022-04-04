@@ -314,12 +314,15 @@
                         Project1.STK_TYPE_ID,
                         Project1.STK_CTGRY_ID,
                         <!-- NVL(Project1.QTY, 0 ) QTY, -->
-                        CASE WHEN Project1.STK_CODE IN ('M500140','M500139','M500167','M500188','M500225') THEN
+                        <!-- CASE WHEN Project1.STK_CODE IN ('M500140','M500139','M500167','M500188','M500225') THEN
                               25000
-                        ELSE
-                             <!-- editing  by leo  14.07.2021-->
+                        ELSE 999
+                        END AS QTY -->
+                        <!-- editing  by leo  14.07.2021-->
+                        CASE WHEN STK_CTGRY_ID IN (1346,1347,1348) THEN
                             NVL((SELECT ITEM_INV_QTY FROM LOG0106M WHERE ITEM_CODE =Project1.STK_ID  AND LOC_ID =(SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_ID= #{locId}) ),0 )
-                        END AS QTY,
+                        ELSE 999 END
+                        QTY,
                         Project1.MOV_QTY,
                         NVL(Project1.AMT , 0) AMT,
                         (AMT * 100) / 100 SUB_CHANGES,
