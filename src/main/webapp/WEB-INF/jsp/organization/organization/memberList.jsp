@@ -155,7 +155,7 @@ function fn_requestVacationPop(){
 
     console.log(memberid + " :: " + memberType + " :: " + traineeType)
 
-    if ( memberType == 5 && (traineeType == 2 || traineeType == 3 || traineeType == 7 || traineeType == 5758 )) { // ADDED HOMECARE -- BY TOMMY
+    if ( memberType == 5 && (traineeType == 2 || traineeType == 3 || traineeType == 7 || traineeType == 5758|| traineeType == 6669 )) { // ADDED LT BY KEYI
 
         //alert(testResult);
 
@@ -171,7 +171,7 @@ function fn_requestVacationPop(){
 
      Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
          console.log("성공.");
-         console.log( result);
+         console.log("result1111.");
 
          if(result !="" ){
 
@@ -196,6 +196,11 @@ function fn_requestVacationPop(){
                 if ( traineeType == 5758) { // ADDED HOMECARE DELIVERY TECHNICIAN -- BY TOMMY
                     Common.alert(" DT  registration has been completed. "+membercode+" to "+ result.memCode);
                     sms = 'Your DT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                }
+
+                if ( traineeType == 6669) { // ADDED LOGISTIC TECHNICIAN - BY KEYI
+                    Common.alert(" LT  registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your LT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
                 }
 
                 if(telMobile != "") {
