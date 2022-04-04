@@ -58,8 +58,8 @@ function fn_report(){
         date = "0" + date;
     }
     $("#form #viewType").val("EXCEL");
-    $("#form #reportFileName").val("/sales/GovContratAgrRaw.rpt");
-    $("#form #reportDownFileName").val("AgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#form #reportFileName").val("/sales/RentalAgrRaw.rpt");
+    $("#form #reportDownFileName").val("RentalAgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#V_WHERESQL").val(whereSQL);
 
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
@@ -140,6 +140,7 @@ function ValidRequiredField(){
         <option value="" hidden><spring:message code="sal.title.text.prgss" /></option>
         <option value="7"><spring:message code="sal.title.agrSubmission" /></option>
         <option value="8"><spring:message code="sal.title.agrVerifying" /></option>
+        <option value="11"><spring:message code="sal.title.text.executionPrgss" /></option>
         <option value="9"><spring:message code="sal.title.argStmpAndConfirm" /></option>
         <option value="10"><spring:message code="sal.title.text.agrFilling" /></option>
     </select>
@@ -168,7 +169,7 @@ function ValidRequiredField(){
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
-<input type="hidden" id="reportFileName" name="reportFileName" value="/sales/GovContratAgrRaw.rpt" />
+<input type="hidden" id="reportFileName" name="reportFileName" value="/sales/RentalAgrRaw.rpt" />
 <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
