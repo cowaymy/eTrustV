@@ -971,8 +971,8 @@
                                                  GroupBy1.modeId modeId  ,
                                                  GroupBy1.code2 code2  ,
                                                  GroupBy1.bankCode bankCode  ,
-                                                 GroupBy1.CUST_BILL_ID CUST_BILL_ID,
-                                                 CASE WHEN ( GroupBy1.rentAmt1 IS NOT NULL ) THEN GroupBy1.rentAmt2 ELSE UTILS.CONVERT_TO_FLOAT(0,53) END rentAmt
+                                                 CASE WHEN ( GroupBy1.rentAmt1 IS NOT NULL ) THEN GroupBy1.rentAmt2 ELSE UTILS.CONVERT_TO_FLOAT(0,53) END rentAmt,
+                                                 GroupBy1.CUST_BILL_ID CUST_BILL_ID
                                           FROM ( SELECT Project1.SALES_ORD_ID salesOrdId  ,
                                                         Project1.SALES_ORD_NO saleOrdNo  ,
                                                         Project1.STK_CODE stkCode  ,
