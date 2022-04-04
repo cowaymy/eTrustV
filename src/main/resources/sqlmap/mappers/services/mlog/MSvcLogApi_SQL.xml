@@ -1012,6 +1012,12 @@
                    , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
                    , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
                    , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
+
+                   , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
+				   , TO_CHAR (SAL0046D.RESULT_CUST_NAME)
+				   , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO)
+				   , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO)
+				   , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME)
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
