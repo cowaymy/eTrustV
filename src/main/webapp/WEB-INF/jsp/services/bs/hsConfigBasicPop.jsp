@@ -81,9 +81,9 @@
                   return;
               }
 
-             var checkSuccess = {code: "00", message: "fail"};
+             var checkSuccess = {message: "fail"};
 
-              if(JSON.stringify(result) === JSON.stringify(checkSuccess) ) {
+              if(result.message === checkSuccess.message) {
             	  Common.alert("Not Available to entry in the statue of the cody");
             	  return;
 
