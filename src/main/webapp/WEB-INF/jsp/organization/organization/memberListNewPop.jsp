@@ -388,7 +388,7 @@ function fn_departmentCode(value){
                          }
                      }); */
 
-               } else if( traineeType == '6669'){ // LT - ADDED BY KEYI
+               } else if( traineeType == '6672'){ // LT - ADDED BY KEYI
                     doGetComboSepa("/common/selectBranchCodeList.do",'6669' , '-',''   , 'branch' , 'S', '');
 
                    $("#branch").change(function(){
@@ -1733,7 +1733,7 @@ function checkBankAccNo() {
         <option value = "3">CT</option>
         <option value = "7">HT</option>
         <option value = "5758">DT</option>
-        <option value = "6669">LT</option>
+        <option value = "6672">LT</option>
     </select>
     </td>
     <th scope="row"></th>

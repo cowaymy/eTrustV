@@ -1388,7 +1388,7 @@
                  AND STUS_ID = 1
                  AND TYPE_ID IN (42,43,45,5754,48)
               </when>
-              <when test='groupCode == "6669"'><!-- ADDED BY KEYI - ADD LT MEM TYPE -->
+              <when test='groupCode == "6672"'><!-- ADDED BY KEYI - ADD LT MEM TYPE -->
                  AND STUS_ID = 1
                  AND TYPE_ID IN (5754)
               </when>
