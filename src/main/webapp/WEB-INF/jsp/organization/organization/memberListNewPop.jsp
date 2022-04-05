@@ -389,7 +389,7 @@ function fn_departmentCode(value){
                      }); */
 
                } else if( traineeType == '6672'){ // LT - ADDED BY KEYI
-                    doGetComboSepa("/common/selectBranchCodeList.do",'6669' , '-',''   , 'branch' , 'S', '');
+                    doGetComboSepa("/common/selectBranchCodeList.do",'6672' , '-',''   , 'branch' , 'S', '');
 
                    $("#branch").change(function(){
                        var jsonObj = {
