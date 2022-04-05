@@ -460,6 +460,12 @@ function fn_downloadAgreement() {
     //var version = $("#agreementVersion").val();
     //console.log(version);
 
+     if($("#startDt").val() == '' || $("#startDt").val() == null || $("#endDt").val() == '' || $("#endDt").val() == null )
+    {
+    	Common.alert("Contract period start date is required.");
+        return false;
+    }
+
     var option = {
         isProcedure : true
     };
