@@ -1,0 +1,20 @@
+package com.coway.trust.biz.organization.organization.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Mapper("SalesMonitoringFileMapper")
+public interface SalesMonitoringFileMapper {
+
+	List<EgovMap> selectSummarySalesListing(Map<String, Object> params);
+
+	List<EgovMap> selectWeekSalesListing(Map<String, Object> params);
+
+	List<EgovMap> selectPerformanceView(Map<String, Object> params);
+
+
+
+}
