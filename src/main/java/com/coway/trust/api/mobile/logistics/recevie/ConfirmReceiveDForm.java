@@ -21,8 +21,8 @@ public class ConfirmReceiveDForm {
 	@ApiModelProperty(value = "시리얼체크여부")
 	private String serialChk;
 
-	@ApiModelProperty(value = "scan Qty")
-	private String scanQty;
+	/*@ApiModelProperty(value = "scan Qty")
+	private String scanQty;*/
 
 	public int getSmoNoItem() {
 		return smoNoItem;
@@ -64,12 +64,12 @@ public class ConfirmReceiveDForm {
 		this.serialChk = serialChk;
 	}
 
-	public String getScanQty() {
+	/*public String getScanQty() {
 		return scanQty;
 	}
 
 	public void setScanQty(String scanQty) {
 		this.scanQty = scanQty;
-	}
+	}*/
 
 }

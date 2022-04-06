@@ -48,8 +48,8 @@ public class LogStockReceiveDto {
 	private String toLocId;
 	private List<LogStockPartsReceiveDto> partsList = null;
 
-	@ApiModelProperty(value = "Scan Qty")
-	private int scanQty;
+	/*@ApiModelProperty(value = "Scan Qty")
+	private int scanQty;*/
 
 	public static LogStockReceiveDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, LogStockReceiveDto.class);
@@ -159,12 +159,12 @@ public class LogStockReceiveDto {
 		this.toLocId = toLocId;
 	}
 
-	public int getScanQty() {
+	/*public int getScanQty() {
 		return scanQty;
 	}
 
 	public void setScanQty(int scanQty) {
 		this.scanQty = scanQty;
-	}
+	}*/
 
 }

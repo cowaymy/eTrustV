@@ -35,8 +35,8 @@ public class StockTransferReqStatusMListDto {
 	@ApiModelProperty(value = "To Loc Id")
 	private String toLocId;
 
-	@ApiModelProperty(value = "Scan Qty")
-	private int scanQty;
+	/*@ApiModelProperty(value = "Scan Qty")
+	private int scanQty;*/
 
 	public List<StockTransferReqStatusDListDto> getPartsList() {
 		return partsList;
@@ -116,12 +116,12 @@ public class StockTransferReqStatusMListDto {
 		this.toLocId = toLocId;
 	}
 
-	public int getScanQty() {
+	/*public int getScanQty() {
 		return scanQty;
 	}
 
 	public void setScanQty(int scanQty) {
 		this.scanQty = scanQty;
-	}
+	}*/
 
 }
