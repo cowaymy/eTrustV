@@ -455,7 +455,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		receiveMapBarcode.put("ioType", "O");
 
 		//HLTANG 202111 - filter scan barcode
-		receiveMapBarcode.put("reqstNo", stockTransferConfirmGiMForm.get(0).getSmoNo());
+		/*receiveMapBarcode.put("reqstNo", stockTransferConfirmGiMForm.get(0).getSmoNo());
 		receiveMapBarcode.put("zIoType", "O");
         //update status 'D' to 'C'
         SessionVO sessionVo = new SessionVO();
@@ -466,7 +466,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
             } catch (Exception e) {
             	// TODO Auto-generated catch block
             	e.printStackTrace();
-            }
+            }*/
 		//HLTANG 202111 - filter scan barcode end
 
 		MlogApiMapper.LogisticBarcodeSave(receiveMapBarcode);
@@ -559,7 +559,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		logger.debug("stockMovementConfirmReceiveScan receiveMap : {}", receiveMap);
 
 		//HLTANG 202111 - filter scan barcode
-		receiveMap.put("reqstNo", confirmReceiveMForm.getSmoNo());
+		/*receiveMap.put("reqstNo", confirmReceiveMForm.getSmoNo());
 		receiveMap.put("zIoType", "I");
         //update status 'D' to 'C'
         SessionVO sessionVo = new SessionVO();
@@ -570,7 +570,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
             } catch (Exception e) {
             	// TODO Auto-generated catch block
             	e.printStackTrace();
-            }
+            }*/
 		//HLTANG 202111 - filter scan barcode end
 
 		MlogApiMapper.StockMovementIssueScan(receiveMap);
@@ -892,7 +892,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 				//HLTANG 202111 - filter scan barcode
 				//outScanMap.put("reqstNo", stockTransferConfirmGiMForm.get(0).getSmoNo());
-				outScanMap.put("zIoType", "O");
+				/*outScanMap.put("zIoType", "O");
 		        //update status 'D' to 'C'
 		        SessionVO sessionVo = new SessionVO();
 		        sessionVo.setUserId(Integer.valueOf(userLoc));
@@ -902,7 +902,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		            } catch (Exception e) {
 		            	// TODO Auto-generated catch block
 		            	e.printStackTrace();
-		            }
+		            }*/
 				//HLTANG 202111 - filter scan barcode end
 
 				String errcodeScan = (String)outScanMap.get("errcode");
@@ -986,7 +986,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	}
 	/* Woongjin Han */
 
-	public void saveSerialNo(Map<String, Object> params, SessionVO sessionVo) throws Exception{ // HLTANG 202111 - filter barcode scan
+	/*public void saveSerialNo(Map<String, Object> params, SessionVO sessionVo) throws Exception{ // HLTANG 202111 - filter barcode scan
 		List<EgovMap> grListmain = MlogApiMapper.selectSerialInfo(params);
 
 		Map<String, Object> mainMap = null;
@@ -1009,7 +1009,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				MlogApiMapper.updateDeliveryGrHist(oMap);//log0101h
 			}
 		}
-	}
+	}*/
 
 
 	@Override
