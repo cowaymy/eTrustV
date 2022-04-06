@@ -44,6 +44,7 @@ public class SalesMonitoringFileController {
 
     @RequestMapping(value = "/salesMonitoringFile.do")
 	public String salesMonitoringListing(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "organization/organization/salesMonitoringListing";
 	}
 
@@ -91,5 +92,124 @@ public class SalesMonitoringFileController {
         List<EgovMap> notice = salesMonitoringFileService.selectPerformanceView(params);
         return ResponseEntity.ok(notice);
     }
+
+	@RequestMapping(value="/smfDailyInfoPop.do")
+	public String smfDailyInfoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+		}
+
+		return "organization/organization/smfDailyInfoPop";
+	}
+
+	@RequestMapping(value = "/selectSmfDailyListing.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSmfDailyListing(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
+
+        List<EgovMap> notice = salesMonitoringFileService.selectSmfDailyListing(params);
+        return ResponseEntity.ok(notice);
+    }
+
+	@RequestMapping(value="/smfActHpPop.do")
+	public String smfActHpPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+		}
+		return "organization/organization/smfActHpPop";
+	}
+
+
+	@RequestMapping(value = "/selectSmfActHp.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSmfActHp(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
+
+	    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry_actHP");
+	    String[] cmbProduct = request.getParameterValues("cmbProduct_actHP");
+
+		params.put("cmbProduct_actHP", cmbProduct);
+		params.put("cmbProductCtgry_actHP",cmbProductCtgry);
+
+        List<EgovMap> notice = salesMonitoringFileService.selectSmfActHp(params);
+        return ResponseEntity.ok(notice);
+    }
+
+
+	@RequestMapping(value="/smfHAPop.do")
+	public String smfHAPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+		}
+
+		return "organization/organization/smfHAPop";
+	}
+
+	@RequestMapping(value = "/selectSmfHA.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSmfHA(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
+
+	    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry_HA");
+	    String[] cmbProduct = request.getParameterValues("cmbProduct_HA");
+
+		params.put("cmbProduct_HA", cmbProduct);
+		params.put("cmbProductCtgry_HA",cmbProductCtgry);
+
+        List<EgovMap> notice = salesMonitoringFileService.selectSmfHA(params);
+        return ResponseEntity.ok(notice);
+    }
+
+	@RequestMapping(value="/smfHCPop.do")
+	public String smfHCPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+		}
+		return "organization/organization/smfHCPop";
+	}
+
+	@RequestMapping(value = "/selectSmfHC.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSmfHC(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
+
+	    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry_HC");
+	    String[] cmbProduct = request.getParameterValues("cmbProduct_HC");
+
+		params.put("cmbProduct_HC", cmbProduct);
+		params.put("cmbProductCtgry_HC",cmbProductCtgry);
+
+        List<EgovMap> notice = salesMonitoringFileService.selectSmfHC(params);
+        return ResponseEntity.ok(notice);
+    }
+
 
 }

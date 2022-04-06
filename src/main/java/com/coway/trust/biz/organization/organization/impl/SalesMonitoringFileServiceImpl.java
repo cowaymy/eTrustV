@@ -32,5 +32,28 @@ public class SalesMonitoringFileServiceImpl implements SalesMonitoringFileServic
         return salesMonitoringFileMapper.selectPerformanceView(params);
     }
 
+	@Override
+    public List<EgovMap> selectSmfHA(Map<String, Object> params) {
+        return salesMonitoringFileMapper.selectSmfHA(params);
+    }
+
+	@Override
+    public List<EgovMap> selectSmfHC(Map<String, Object> params) {
+        return salesMonitoringFileMapper.selectSmfHC(params);
+    }
+
+
+	@Override
+    public List<EgovMap> selectSmfActHp(Map<String, Object> params) {
+        return salesMonitoringFileMapper.selectSmfActHp(params);
+    }
+
+	@Override
+    public List<EgovMap> selectSmfDailyListing(Map<String, Object> params) {
+        return salesMonitoringFileMapper.selectSmfDailyListing(params);
+    }
+
+
+
 
 }

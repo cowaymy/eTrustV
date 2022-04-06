@@ -15,6 +15,14 @@ public interface SalesMonitoringFileMapper {
 
 	List<EgovMap> selectPerformanceView(Map<String, Object> params);
 
+	List<EgovMap> selectSmfHA(Map<String, Object> params);
+
+	List<EgovMap> selectSmfHC(Map<String, Object> params);
+
+	List<EgovMap> selectSmfActHp(Map<String, Object> params);
+
+	List<EgovMap> selectSmfDailyListing(Map<String, Object> params);
+
 
 
 }

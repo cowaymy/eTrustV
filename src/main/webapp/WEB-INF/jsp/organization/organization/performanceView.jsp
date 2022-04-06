@@ -104,8 +104,8 @@ function createAUIGrid() {
       , { headerText : "Accumulated Net", dataField : "netsalesTotalAmt",   editable : false, width : 100 }
       , { headerText : "Net Rate",  dataField : "netRate", editable : false, width : 60  }
       , { headerText : "Active HP",   dataField : "acthp", editable : false, width : 60  }
-      , { headerText : "Newly Recruit",  dataField : "recruitTotalAmt", editable  : false }
-      , { headerText : "DR", dataField : "recruitTotalAmt", editable  : false }
+      , { headerText : "Newly Recruit",  dataField : "recruit", editable  : false }
+      , { headerText : "DR", dataField : "recruit", editable  : false }
       , { headerText : "Active New Neo", dataField : "newNeoAct", editable  : false }
       , { headerText : "Part time", dataField : "parttime", editable  : false }
       , { headerText : "New Neo Active Rate", dataField : "newNeoActRate", editable  : false }
@@ -141,12 +141,30 @@ $(function(){
 	  $('#btnSrch').click(function() {
          fn_selectListAjax();
       });
+
+	   $("#download").click(function() {
+	        GridCommon.exportTo("list_grid_wrap", 'xlsx', "Performance View List");
+	    });
+
+	   $('#btnDailyInfo').click(function() {
+           Common.popupDiv("/organization/smfDailyInfoPop.do", null, null, true);
+       });
+
+	   $('#btnActHP').click(function() {
+           Common.popupDiv("/organization/smfActHpPop.do", null, null, true);
+       });
+
+	   $('#btnHA').click(function() {
+           Common.popupDiv("/organization/smfHAPop.do", null, null, true);
+       });
+
+	   $('#btnHC').click(function() {
+           Common.popupDiv("/organization/smfHCPop.do", null, null, true);
+       });
 });
 
 function fn_selectListAjax() {
-console.log( $("#listSearchForm").serialize());
     Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serialize(), function(result) {
-//     	console.log(result);
         AUIGrid.setGridData(listMyGridID, result);
     });
 
@@ -271,6 +289,27 @@ $.fn.clearForm = function() {
 </table><!-- table end -->
 </form>
 
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+  <dt>Link</dt>
+  <dd>
+  <ul class="btns">
+      <li><p class="link_btn"><a href="#" id="btnDailyInfo">Daily Info</a></p></li>
+      <li><p class="link_btn"><a href="#" id="btnActHP">Active HP</a></p></li>
+      <li><p class="link_btn"><a href="#" id="btnHA">HA</a></p></li>
+      <li><p class="link_btn"><a href="#" id="btnHC">HC</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+
+  <section class="search_result"><!-- search_result start -->
+   <ul class="right_btns">
+   <li><p class="btn_grid"><a id="download">GENERATE</a></p></li>
+   </section><!-- search_result end -->
 
 <section class="search_result"><!-- search_result start -->
 
