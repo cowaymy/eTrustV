@@ -54,6 +54,9 @@ public class UsedPartReTestResultController {
 		public ResponseEntity<List<EgovMap>> selectUsedPartReturnList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 				logger.debug("params =====================================>>  " + params);
 
+		    	params.put("asStartDt", CommonUtils.changeFormat(String.valueOf(params.get("asStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+		    	params.put("asEndDt", CommonUtils.changeFormat(String.valueOf(params.get("asEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+
 			    List<EgovMap> list = UsedPartReTestResultService.selectUsedPartReList(params);
 
 			    logger.debug("list =====================================>>  " + list.toString());

@@ -284,7 +284,7 @@
         var valid = true;
         var msg = "";
 /*
-        console.log($("#asNum").val()); */
+        console.log($("#asNum").val());
 
         if ($("#asNum").val() == '' && $("#resultNum").val() == ''
                 && $("#orderNum").val() == '') {
@@ -303,6 +303,20 @@
                     valid = false;
             }
         }
+   */
+
+   if(FormUtil.isEmpty($('#listAsSettleStartDt').val()) || FormUtil.isEmpty($('#listAsSettleEndDt').val())) {
+	   valid = false;
+       msg += '* <spring:message code="svc.alert.msg.asSettleDt" /><br/>';
+   }
+   else {
+       var diffDay = fn_diffDate($('#listAsSettleStartDt').val(), $('#listAsSettleEndDt').val());
+
+       if(diffDay > 31 || diffDay < 0) {
+    	   valid = false;
+           msg += '* <spring:message code="svc.alert.msg.srchPeriodDt" />';
+       }
+   }
 
         if (valid) {
             Common.ajax("GET", "/ResearchDevelopment/selectUsedPartReturnList.do", $(
@@ -312,6 +326,19 @@
         } else {
             Common.alert(msg);
         }
+    }
+
+    function fn_diffDate(startDt, endDt) {
+        var arrDt1 = startDt.split("/");
+        var arrDt2 = endDt.split("/");
+
+        var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+        var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+        var diff = new Date(dt2 - dt1);
+        var day = diff/1000/60/60/24;
+
+        return day;
     }
 
 
@@ -628,6 +655,25 @@
 
                         <th scope="row">Test Result Number</th>
                         <td><input type="text" title="" placeholder="Test Result Number" class="w100p" id="TestResultNo" name="TestResultNo" /></td>
+
+                    </tr>
+
+                    <tr>
+					    <th scope="row">AS Settle Date</th>
+					    <td>
+					    <div class="date_set w100p"><!-- date_set start -->
+					    <p><input id="listAsSettleStartDt" name="asStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    <span>To</span>
+					    <p><input id="listAsSettleEndDt" name="asEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    </div><!-- date_set end -->
+					    </td>
+
+                        <th></th>
+					    <td>
+					    </td>
+					    <th></th>
+					    <td>
+                        </td>
 
                     </tr>
                 </tbody>
