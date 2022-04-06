@@ -147,11 +147,13 @@ public class CrcLimitServiceImpl implements CrcLimitService {
                 insMap.put("signal", "+");
                 insMap.put("adjType", params.get("adjType"));
                 insMap.put("amt", params.get("rAmt"));
+                insMap.put("crcId", params.get("rCrcId_h"));
 
             } else if("4".equals((String) params.get("adjType"))) {
                 insMap.put("signal", "-");
                 insMap.put("adjType", params.get("adjType"));
                 insMap.put("amt", params.get("sAmt"));
+                insMap.put("crcId", params.get("sCrcId_h"));
             }
 
             String sAdjPeriod = ("3".equals((String) params.get("adjType"))) ? (String) params.get("rPeriod") : (String) params.get("sPeriod");
@@ -159,8 +161,14 @@ public class CrcLimitServiceImpl implements CrcLimitService {
             int year = Integer.parseInt(sAdjPeriod.substring(3));
             insMap.put("year", year);
 
-            int seq = 1;
+            // int seq = 1;
 
+            insMap.put("seq", 1);
+            insMap.put("month", startAdjMth);
+
+            cnt = crcLimitMapper.insertAdj_FCM33D(insMap);
+
+            /*
             for(int i = startAdjMth; i <= 12; i++) {
                 insMap.put("seq", seq);
                 insMap.put("month", startAdjMth);
@@ -170,6 +178,7 @@ public class CrcLimitServiceImpl implements CrcLimitService {
                 seq++;
                 cnt++;
             }
+            */
         }
 
         if("1".equals((String) params.get("adjType")) || "2".equals((String) params.get("adjType"))) {
@@ -265,7 +274,7 @@ public class CrcLimitServiceImpl implements CrcLimitService {
                 if("J".equals((String) params.get("action"))) {
                     appParam.put("rejctResn", params.get("rejctResn"));
                 }
-LOGGER.debug("appParam :: {}", appParam);
+                
                 appCnt += crcLimitMapper.updateApp_FCM34D(appParam);
             }
         } else {

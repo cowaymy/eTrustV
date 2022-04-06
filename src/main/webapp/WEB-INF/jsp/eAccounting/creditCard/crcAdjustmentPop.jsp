@@ -60,23 +60,32 @@
             $('select[name="adjType"]').find('option[value="' + adjItems[0].adjType + '"]').attr('selected', 'selected');
             $('select[name="adjType"]').prop("disabled", true);
 
-            var mm = adjItems[0].sCrcLimitAdjMm;
-            if(mm.length < 2) {
-                mm = "0" + mm;
+            var adjType = adjItems[0].adjType;
+            var mm;
+
+            if(adjType == "4") {
+                mm = adjItems[0].sCrcLimitAdjMm;
+                if(mm.length < 2) {
+                    mm = "0" + mm;
+                }
+
+                $("#sPeriod").val(mm + "/" + adjItems[0].sCrcLimitAdjYyyy);
             }
 
-            $("#sPeriod").val(mm + "/" + adjItems[0].sCrcLimitAdjYyyy);
             $("#sCostCenter").val(adjItems[0].sCostCenter);
             $("#sCostCenterName").val(adjItems[0].sCostCenterName);
             $("#sCrcHolder option[value=" + adjItems[0].sCrditCardId + "]").attr('selected', 'selected');
             $("#sAmt").val(adjItems[0].sAdjAmt);
 
-            mm = adjItems[0].rCrcLimitAdjMm;
-            if(mm.length < 2) {
-                mm = "0" + mm;
+            if(adjType == "3") {
+                mm = adjItems[0].rCrcLimitAdjMm;
+                if(mm.length < 2) {
+                    mm = "0" + mm;
+                }
+
+                $("#rPeriod").val(mm + "/" + adjItems[0].rCrcLimitAdjYyyy);
             }
 
-            $("#rPeriod").val(mm + "/" + adjItems[0].rCrcLimitAdjYyyy);
             $("#rCostCenter").val(adjItems[0].rCostCenter);
             $("#rCostCenterName").val(adjItems[0].rCostCenterName);
             $("#rCrcHolder option[value=" + adjItems[0].rCrditCardId + "]").attr('selected', 'selected');
@@ -175,7 +184,7 @@
             $("#sCrcHolder").prop("disabled", false);
             $("#sAmt").prop("disabled", false);
 
-            $("#rPeriod").prop("disabled", true);
+            $("#rPeriod").prop("disabled", false);
             $("#rCrcHolder").prop("disabled", false);
             $("#rAmt").prop("disabled", false);
             $("#rAmt").attr("readonly", true);
@@ -266,7 +275,7 @@
     function fn_chgSPeriod(val) {
         console.log("fn_chgSPeriod");
         if($("#adjType").val() == "1") {
-            $("#rPeriod").val(val);
+            // $("#rPeriod").val(val);
 
             if(!FormUtil.isEmpty($("sCrcHolder").val())) {
                 $("#rCrcHolder option[value=" + $("sCrcHolder").val() + "]").attr('selected', 'selected');
@@ -502,17 +511,17 @@
 
                             // Submit
                             if(result2.code == "00" && val ==  "S") {
-                                Common.ajax("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data.docNo}, function (result3) {
+                                Common.ajax("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
                                     console.log(result3);
 
                                     if(result3.code == "00") {
-                                        Common.alert("Allowance adjustment submitted document number : " + result2.data.docNo);
+                                        Common.alert("Allowance adjustment submitted document number : " + result2.data);
                                     } else {
                                         Common.alert("Allowance adjustment fail to submit.");
                                     }
                                 });
                             } else if(result2.code == "00" && val == "D") {
-                                Common.alert("Allowance adjustment drafted document number : " + result2.data.docNo);
+                                Common.alert("Allowance adjustment drafted document number : " + result2.data);
 
                             } else if(result2.code == "99") {
                                 Common.alert("Allowance adjustment failed to save.");
@@ -564,7 +573,7 @@
                     console.log(result3);
 
                     if(result3.code == "00") {
-                        Common.alert("Allowance adjustment submitted document number : " + result2.data.docNo);
+                        Common.alert("Allowance adjustment submitted document number : " + result2.data);
                     } else {
                         Common.alert("Allowance adjustment fail to submit.");
                     }
@@ -602,10 +611,12 @@
                     }
                 });
             } else {
+                $("#crcAdjustmentPop").remove();
                 $("#rejectAdjPop").show();
             }
         });
     }
+
     function fn_rejectProceed(v) {
         console.log("fn_rejectProceed");
         if(v == "P") {
@@ -617,12 +628,14 @@
 
             var data = {
                 action : "J",
-                rejResn : $("#rejctResn").val()
+                rejResn : $("#rejctResn").val(),
+                adjNo : $("#adjNo").val()
             };
 
             Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
-                console.log("approvalUpdate.do :: J :: " + result2);
-                $("#crcAdjustmentPop").remove();
+                $("#adjForm").clearForm()
+                $("#rejctResn").val("");
+                $("#rejectAdjPop").remove();
 
                 if(result.code == "00") {
                     Common.alert("Allowance adjustment successfully rejected");

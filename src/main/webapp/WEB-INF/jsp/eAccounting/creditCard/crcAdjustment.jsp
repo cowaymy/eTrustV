@@ -25,21 +25,38 @@
 
     var allowanceAdjColLayout = [
         {
+            dataField : "adjStus",
+            headerText : "Status",
+            width : 150,
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
+        },{
             dataField : "adjNo",
             headerText : "Adjustment No",
-            width : 150
+            width : 130,
+            cellMerge : true
         }, {
             dataField : "submissionDate",
             headerText : "Submission Date",
-            width : 130
+            width : 130,
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
         }, {
             dataField : "crcName",
             headerText : "Cardholder Name",
-            width : 250
+            width : 220,
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
         }, {
             dataField : "crcNo",
             headerText : "Card Number",
-            width : 160
+            width : 160,
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
         }, {
             dataField : "period",
             headerText : "Month /Year",
@@ -47,33 +64,48 @@
         }, {
             dataField : "adjType",
             headerText : "Adjustment Type",
-            width : 300,
-            style : "aui-grid-user-custom-left"
+            width : 270,
+            style : "aui-grid-user-custom-left",
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
+        }, {
+            dataField : "signal",
+            headerText : "Amount",
+            width : 25,
+            colSpan : 2
         }, {
             dataField : "adjAmt",
-            headerText : "Amount",
             width : 100,
             dataType: "numeric",
             formatString : "#,##0.00",
-            style : "aui-grid-user-custom-right"
+            style : "aui-grid-user-custom-right",
+            colSpan : -1
         }, {
             dataField : "requestor",
             headerText : "Requestor",
-            width : 200
+            width : 200,
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
         }, {
             dataField : "appvStus",
             visible : false
         }, {
             dataField : "appvStusName",
             headerText : "Approval Status",
-            width : 130
+            width : 130,
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
         }
     ];
 
     var allowanceAdjGridPros = {
             usePaging : false,
             showStateColumn : false,
-            showRowNumColumn : false
+            showRowNumColumn : false,
+            enableCellMerge : true
     };
 
     $(document).ready(function () {
@@ -188,25 +220,13 @@
                             <span>~</span>
                             <p><input type="text" id="toAdjPeriod" name="toAdjPeriod" title="" placeholder="" class="j_date2 w100p" /></p>
                         </td>
-                        <th scope="row">Adjustment Type</th>
+                        <th scope="row">Cost Center</th>
                         <td>
-                            <select class="w100p multy_select" multiple="multiple" id="selAdjType" name="selAdjType">
-                                <option value="1">Transfer between Credit Card Holder</option>
-                                <option value="2">Transfer between Period</option>
-                                <option value="3">Addition</option>
-                                <option value="4">Deduction</option>
-                            </select>
+                            <input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" />
+                            <a href="#" class="search_btn" id="search_costCenter_btn" onclick="javascript:fn_costCenterSearchPop()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Adjustment Number</th>
-                        <td>
-                            <div class="date_set w100p">
-                                <p><input type="text" title="From Adjustment Number" placeholder="From Adjustment Number" class="w100p" id="frAdjNo" name="frAdjNo" /></p>
-                                <span>To</span>
-                                <p><input type="text" title="To Adjustment Number" placeholder="To Adjustment Number" class="w100p" id="toAdjNo" name="toAdjNo" /></p>
-                            </div>
-                        </td>
                         <th scope="row">Credit Cardholder Name/Number</th>
                         <td>
                             <select class="w100p multy_select" multiple="multiple" id="crcDropdown" name="crcDropdown">
@@ -215,12 +235,24 @@
                                 </c:forEach>
                             </select>
                         </td>
+                        <th scope="row">Adjustment Number</th>
+                        <td>
+                            <div class="date_set w100p">
+                                <p><input type="text" title="From Adjustment Number" placeholder="From Adjustment Number" class="w100p" id="frAdjNo" name="frAdjNo" /></p>
+                                <span>To</span>
+                                <p><input type="text" title="To Adjustment Number" placeholder="To Adjustment Number" class="w100p" id="toAdjNo" name="toAdjNo" /></p>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
-                        <th scope="row">Cost Center</th>
+                        <th scope="row">Adjustment Type</th>
                         <td>
-                            <input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" />
-                            <a href="#" class="search_btn" id="search_costCenter_btn" onclick="javascript:fn_costCenterSearchPop()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                            <select class="w100p multy_select" multiple="multiple" id="selAdjType" name="selAdjType">
+                                <option value="1">Transfer between Credit Card Holder</option>
+                                <option value="2">Transfer between Period</option>
+                                <option value="3">Addition</option>
+                                <option value="4">Deduction</option>
+                            </select>
                         </td>
                         <th scope="row">Status</th>
                         <td>

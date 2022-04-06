@@ -1115,11 +1115,11 @@ WHERE CRDIT_CARD_STUS = 'A'
             A.CRDIT_CARD_NO,
             D.COST_CENTER,
             D.COST_CENTER_TEXT COST_CENTER_NAME,
-            A.CREDIT_LIMIT + B.PLUS_ADJ_AMT - B.MINUS_ADJ_AMT CREDIT_LIMIT,
-            B.TOTAL_ADJ_AMT ADJ_AMT,
+            A.CREDIT_LIMIT + NVL(B.PLUS_ADJ_AMT, 0) - NVL(B.MINUS_ADJ_AMT, 0) CREDIT_LIMIT,
+            NVL(B.TOTAL_ADJ_AMT, 0) ADJ_AMT,
             NVL(C.PENDING_AMT, 0) PENDING_AMT,
             NVL(C.UTILIZED_AMT, 0) UTILIZED_AMT,
-            NVL((A.CREDIT_LIMIT + B.PLUS_ADJ_AMT - B.MINUS_ADJ_AMT) - C.UTILIZED_AMT, (A.CREDIT_LIMIT + B.PLUS_ADJ_AMT - B.MINUS_ADJ_AMT)) AVAILABLE_AMT
+            A.CREDIT_LIMIT + NVL(B.PLUS_ADJ_AMT, 0) - NVL(B.MINUS_ADJ_AMT, 0) - NVL(C.PENDING_AMT, 0) - NVL(C.UTILIZED_AMT, 0) AVAILABLE_AMT
         FROM (
             SELECT
                 B.CRDIT_CARD_SEQ,
@@ -1160,7 +1160,6 @@ WHERE CRDIT_CARD_STUS = 'A'
                 </if>
             LEFT JOIN FCM0034D C
                 ON B.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
-                AND C.APPV_PRCSS_STUS = 'A'
             WHERE A.CRDIT_CARD_NO IN (
                 SELECT DISTINCT CRDIT_CARD_NO
                 FROM FCM0032D
@@ -1170,6 +1169,7 @@ WHERE CRDIT_CARD_STUS = 'A'
                     AND CRC_LIMIT_YYYY = #{year}
                 </if>
             )
+                AND C.APPV_PRCSS_STUS = 'A'
             GROUP BY
                 A.CRDIT_CARD_NO,
                 A.CRDIT_CARD_USER_ID,

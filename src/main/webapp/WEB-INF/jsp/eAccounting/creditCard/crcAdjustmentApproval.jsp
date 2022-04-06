@@ -197,8 +197,8 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
         }
     }
 
-    function fn_rejectProceed(v) {
-        console.log("fn_rejectProceed");
+    function fn_bulkRejectProceed(v) {
+        console.log("fn_bulkRejectProceed");
         if(v == "P") {
             // v = P (Proceed)
             if($("#rejctResn").val() == null || $("#rejctResn").val() == "") {
@@ -231,7 +231,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
-        <h2>Allowance Limit Adjustment Approval</h2>
+        <h2>Allowance Limit Approval</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_listAdjApp()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
         </ul>
@@ -339,8 +339,8 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
             </p>
 
             <ul class="center_btns">
-                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_rejectProceed('P')">Proceed</a></p></li>
-                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_rejectProceed('C')">Cancel</a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_bulkRejectProceed('P')">Proceed</a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_bulkRejectProceed('C')">Cancel</a></p></li>
             </ul>
         </section>
     </div>

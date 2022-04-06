@@ -326,6 +326,17 @@ public class CrcLimitController {
         int cnt = crcLimitService.approvalUpdate(params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
+
+        if(cnt > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(params);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(params);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
         return ResponseEntity.ok(message);
     }
 }

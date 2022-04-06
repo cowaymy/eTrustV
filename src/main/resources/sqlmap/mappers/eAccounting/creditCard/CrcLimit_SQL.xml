@@ -67,7 +67,7 @@
                     A.CRC_LIMIT_ADJ_YYYY,
                     A.CRC_LIMIT_ADJ_MM
                 FROM FCM0033D A
-                LEFT JOIN FCM0034D B
+                JOIN FCM0034D B
                     ON A.CRDIT_CARD_ADJ_NO = B.CRDIT_CARD_ADJ_NO
                     AND B.CRDIT_CARD_ADJ_NO IS NOT NULL
                     AND B.APPV_PRCSS_STUS = 'A'
@@ -162,6 +162,90 @@
                         '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
                         '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
                     )
+                )
+            )
+
+            UNION ALL
+
+            SELECT * FROM (
+                SELECT
+                    CRDIT_CARD_NO,
+                    TO_NUMBER(CLM_YEAR) CLM_YEAR,
+                    CLM_MM,
+                    (SUM(PENDING_AMT) + SUM(UTILIZED_AMT)) * -1 TOTAL
+                FROM (
+                    SELECT
+                        A.CRDIT_CARD_NO,
+                        SUBSTR(B.CLM_MONTH, 1, 4) CLM_YEAR,
+                        TO_NUMBER(SUBSTR(B.CLM_MONTH, -2)) CLM_MM,
+                        CASE WHEN (C.APPV_PRCSS_STUS = 'R' OR C.APPV_PRCSS_STUS = 'P') THEN SUM(D.APPV_AMT) ELSE 0 END PENDING_AMT,
+                        CASE WHEN C.APPV_PRCSS_STUS = 'A' THEN SUM(D.APPV_AMT) ELSE 0 END UTILIZED_AMT
+                    FROM FCM0016M A
+                    JOIN FCM0017M B
+                        ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+                    JOIN FCM0004M C
+                        ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+                        AND C.APPV_PRCSS_STUS IN ('A','R','P')
+                    JOIN FCM0015D D
+                        ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+                        AND D.EXP_TYPE IN (
+                            SELECT EXP_TYPE
+                            FROM FCM0001M
+                            WHERE CNTRL_EXP = 'Y'
+                            AND CLM_TYPE = 'J3'
+                        )
+                    WHERE A.CRDIT_CARD_NO IN (
+                        SELECT DISTINCT CRDIT_CARD_NO
+                        FROM FCM0032D
+                        WHERE 1=1
+                            <if test="year != null and year != '' ">
+                                AND CRC_LIMIT_YYYY = #{year}
+                            </if>
+                            <if test="year == null or year == '' ">
+                                AND CRC_LIMIT_YYYY = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))
+                            </if>
+                    )
+    --                    AND B.CLM_MONTH = '202201'
+                        AND SUBSTR(B.CLM_MONTH, 1, 4) = '2022'
+                        <if test="year != null and year != '' ">
+                            AND SUBSTR(B.CLM_MONTH, 1, 4) = #{year}
+                        </if>
+                        <if test="year == null or year == '' ">
+                            AND SUBSTR(B.CLM_MONTH, 1, 4) = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))
+                        </if>
+
+                        <if test="(stMonth != null and stMonth != '') or (edMonth != null and edMonth != '')">
+                            <if test="stMonth != null and stMonth != '' ">
+                                <![CDATA[
+                                AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -1)) >= #{stMonth}
+                                ]]>
+                            </if>
+                            <if test="edMonth != null and edMonth != '' ">
+                                <![CDATA[
+                                AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -1)) <= #{edMonth}
+                                ]]>
+                            </if>
+                        </if>
+                        <if test="(stMonth == null or stMonth == '') and (edMonth == null or edMonth == '')">
+                            <!-- empty month(s) filter -->
+                            <![CDATA[
+                            AND (TO_NUMBER(SUBSTR(B.CLM_MONTH, -1)) >= 1 AND TO_NUMBER(SUBSTR(B.CLM_MONTH, -1)) <= 12)
+                            ]]>
+                        </if>
+                    GROUP BY
+                        A.CRDIT_CARD_NO,
+                        C.APPV_PRCSS_STUS,
+                        SUBSTR(B.CLM_MONTH, 1, 4),
+                        TO_NUMBER(SUBSTR(B.CLM_MONTH, -2))
+                )
+                GROUP BY
+                    CRDIT_CARD_NO,
+                    CLM_YEAR,
+                    CLM_MM
+            ) PIVOT (SUM(TOTAL)
+                FOR CLM_MM IN (
+                    '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
+                    '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
                 )
             )
         ) A
@@ -363,7 +447,7 @@
 
     <select id="selectAdjItems" parameterType="Map" resultType="egovMap">
         SELECT
-            A.CRDIT_CARD_ADJ_NO ADJ_NO,
+            MAIN.CRDIT_CARD_ADJ_NO ADJ_NO,
             C.ADJ_TYPE,
             A.S_CRDIT_CARD_NO,
             A.S_CRDIT_CARD_ID,
@@ -386,6 +470,11 @@
             C.ATCH_FILE_ID,
             C.ATCH_FILE_NAME
         FROM (
+            SELECT DISTINCT CRDIT_CARD_ADJ_NO
+            FROM FCM0033D
+            WHERE CRDIT_CARD_ADJ_NO = #{docNo}
+        ) MAIN
+        LEFT JOIN (
             SELECT
                 CRDIT_CARD_ADJ_NO,
                 CRDIT_CARD_ID S_CRDIT_CARD_ID,
@@ -400,6 +489,7 @@
                 AND ADJ_TYPE IN (1,2,4)
                 AND SIGNAL = '-'
         ) A
+            ON MAIN.CRDIT_CARD_ADJ_NO = A.CRDIT_CARD_ADJ_NO
         LEFT JOIN (
             SELECT
                 CRDIT_CARD_ADJ_NO,
@@ -415,7 +505,7 @@
                 AND ADJ_TYPE IN (1,2,3)
                 AND SIGNAL = '+'
         ) B
-            ON A.CRDIT_CARD_ADJ_NO = B.CRDIT_CARD_ADJ_NO
+            ON MAIN.CRDIT_CARD_ADJ_NO = B.CRDIT_CARD_ADJ_NO
         LEFT JOIN (
             SELECT DISTINCT
                 A.CRDIT_CARD_ADJ_NO,
@@ -431,7 +521,7 @@
                 ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
             WHERE A.CRDIT_CARD_ADJ_NO = #{docNo}
         ) C
-        ON A.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
+            ON MAIN.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
         LEFT JOIN (
             SELECT
                 A.CRDIT_CARD_SEQ,
@@ -528,6 +618,10 @@
         SELECT *
         FROM (
             SELECT DISTINCT
+                CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'Temporary Save'
+                     WHEN C.APPV_PRCSS_STUS = 'R' THEN 'Open'
+                     WHEN (C.APPV_PRCSS_STUS = 'A' OR C.APPV_PRCSS_STUS = 'J') THEN 'Close'
+                END ADJ_STUS,
                 A.CRDIT_CARD_ADJ_NO ADJ_NO,
                 NVL(TO_CHAR(C.CRT_DT, 'DD/MM/YYYY'), '-') SUBMISSION_DATE,
                 B.CRDIT_CARD_USER_NAME CRC_NAME,
@@ -538,8 +632,10 @@
                      WHEN A.ADJ_TYPE = 3 THEN 'Addition'
                      WHEN A.ADJ_TYPE = 4 THEN 'Deduction'
                 END ADJ_TYPE,
+                A.SIGNAL,
                 A.ADJ_AMT,
-                D.HR_CODE || ' - ' || D.USER_NAME REQUESTOR,
+                /* D.HR_CODE || ' - ' || D.USER_NAME REQUESTOR, */
+                D.USER_NAME REQUESTOR,
                 CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'D'
                      ELSE C.APPV_PRCSS_STUS
                 END APPV_STUS,
@@ -548,6 +644,7 @@
                      WHEN C.APPV_PRCSS_STUS = 'A' THEN 'Approved'
                      WHEN C.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
                 END APPV_STUS_NAME,
+                A.ADJ_GRP_SEQ,
                 A.CRT_DT
             FROM FCM0033D A
             JOIN FCM0016M B
@@ -556,7 +653,7 @@
                 ON A.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
             JOIN SYS0047M D
                 ON A.CRT_USER_ID = D.USER_ID
-            WHERE A.ADJ_GRP_SEQ = 1
+            WHERE 1=1
                 <![CDATA[
                 AND A.CRC_LIMIT_ADJ_MM >= TO_NUMBER(SUBSTR(#{frAdjPeriod}, 1, 2))
                 AND A.CRC_LIMIT_ADJ_YYYY >= TO_NUMBER(SUBSTR(#{frAdjPeriod}, -4))
@@ -600,7 +697,7 @@
             <if test="toAdjNo != null and toAdjNo != '' ">
                 AND ADJ_NO <![CDATA[ <= ]]> #{toAdjNo}
             </if>
-        ORDER BY CRT_DT DESC
+        ORDER BY CRT_DT DESC, ADJ_GRP_SEQ
     </select>
 
     <select id="selectAdjustmentAppvList" parameterType="Map" resultType="egovMap">
@@ -636,6 +733,7 @@
                 ON A.CRDIT_CARD_ID = B.CRDIT_CARD_SEQ
             JOIN FCM0034D C
                 ON A.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
+                AND C.APPV_PRCSS_STUS NOT IN ('A','J')
             JOIN SYS0047M D
                 ON A.CRT_USER_ID = D.USER_ID
             WHERE A.ADJ_GRP_SEQ = 1
