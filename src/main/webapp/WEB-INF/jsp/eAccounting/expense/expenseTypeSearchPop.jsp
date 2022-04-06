@@ -38,45 +38,51 @@ $(document).ready(function() {
     	dataField : "glAccCodeName",
         headerText : '<spring:message code="expense.GLAccount" />',
         width : 100
+    }, {
+    	dataField : "cntrlExp",
+        headerText : 'Control Type',
+        visible: false
     }];
 
-    
+
     expensSearchGridID = GridCommon.createAUIGrid("#expensSearchGrid", budgetcolumnLayout, "expType", {editable:false});
-    
+
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(expensSearchGridID, "cellDoubleClick", function(event){
-                                   
+
          //var selectedItems = AUIGrid.getSelectedItems(newGridID);
-                  
+
          //if(selectedItems.length <= 0) return;
          // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
          //var first = selectedItems[0];
-         
+
          //AUIGrid.setCellValue(newGridID , first.rowIndex , "budgetCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCode"));
          //AUIGrid.setCellValue(newGridID , first.rowIndex , "budgetCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCodeName"));
-         
+
          //AUIGrid.setCellValue(newGridID , first.rowIndex , "expType", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"));
          //AUIGrid.setCellValue(newGridID , first.rowIndex , "expTypeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
-         
+
          //AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCode"));
          //AUIGrid.setCellValue(newGridID , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCodeName"));
-         
+
         $("#search_budgetCode").val(event.item.budgetCode);
         $("#search_budgetCodeName").val(event.item.budgetCodeName);
-        
+
         $("#search_expType").val(event.item.expType);
         $("#search_expTypeName").val(event.item.expTypeName);
-        
+
         $("#search_glAccCode").val(event.item.glAccCode);
         $("#search_glAccCodeName").val(event.item.glAccCodeName);
-        
+        $("#search_cntrlExp").val(event.item.cntrlExp);
+        console.log("step 1: " + $("#search_cntrlExp").val());
+
          fn_setPopExpType();
-         
+
          $("#expenseTypeSearchPop").remove();
     });
-    
+
    // alert("${popClaimType}");
-    
+
     CommonCombo.make("popClaimType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "${popClaimType}", {
         id: "code",
         name: "codeName"
@@ -86,11 +92,11 @@ $(document).ready(function() {
 });
 
 //리스트 조회.
-function fn_selectExpensePopListAjax() {        
+function fn_selectExpensePopListAjax() {
 	$("#popClaimType").attr("disabled", false);
-	
+
     Common.ajax("GET", "/eAccounting/expense/selectExpenseList?_cacheId=" + Math.random(), $("#expPopSForm").serialize(), function(result) {
-        
+
          console.log("성공.");
          console.log( result);
 
@@ -123,6 +129,7 @@ function fn_selectExpensePopListAjax() {
 <input type="hidden" id="search_expTypeName">
 <input type="hidden" id="search_glAccCode">
 <input type="hidden" id="search_glAccCodeName">
+<input type="hidden" id="search_cntrlExp">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -12,6 +12,7 @@
 }
 </style>
 <script type="text/javascript">
+var totalExpAmt = 0;
 var clickType = "";
 var clmNo = "";
 var reimbursementColumnLayout = [ {
@@ -379,6 +380,9 @@ function fn_setPopExpType() {
 
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCode", $("#search_glAccCode").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "cntrlExp", $("#search_cntrlExp").val());
+    console.log("Step 2: " + $("#search_cntrlExp").val());
+    $("#cntrlExp").val($("#search_cntrlExp").val());
 }
 
 function fn_supplierSearchPop() {
@@ -847,7 +851,6 @@ function fn_getItemTotal() {
 	    //allTotAmt = allTotAmt.toFixed(2);
 	    //console.log($.number(allTotAmt,2,'.',''));
 	    //allTotAmt = $.number(allTotAmt,2,'.',',');
-	    console.log(allTotAmt);
     });
     return allTotAmt
 }
@@ -855,7 +858,6 @@ function fn_getItemTotal() {
 function fn_checkCreditLimit() {
     // To check if limit exceeded
     var allTotAmt = fn_getItemTotal();
-    console.log(allTotAmt);
     var limitFlg = true;
     var clmDt = $("#clmMonth").val(); //claim date
     var month = Number(clmDt.substring(0, 2));
@@ -879,11 +881,17 @@ function fn_checkCreditLimit() {
 		}
 		if($("#cardControlYN").val() == "Y")
 	    {
-			if(allTotAmt > planAmt)
-	        {
-	            Common.alert('Insufficient Allowance Limit');
-	            limitFlg = false;
-	        }
+			if($("#cntrlExp").val() == "Y")
+			{
+				var totalExpAmtSmall = 0;
+				totalExpAmtSmall = Number(AUIGrid.getColumnValues(myGridID, "totAmt", true));
+				totalExpAmt = totalExpAmt + totalExpAmtSmall;
+				if(totalExpAmt > planAmt)
+	            {
+	                Common.alert('Insufficient Allowance Limit');
+	                limitFlg = false;
+	            }
+			}
 	    }
 	});
 	return limitFlg;
@@ -1337,6 +1345,7 @@ function fn_excelDown(){
 <input type="hidden" id="crditCardUserId" name="crditCardUserId">
 <input type="hidden" id="chrgUserId" name="chrgUserId">
 <input type="hidden" id="costCenterText" name="costCentrName">
+<input type="hidden" id="cntrlExp" name="cntrlExp">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
