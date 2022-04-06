@@ -800,7 +800,6 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		ReturnOnHandStockReqDForm form = null;
 		Map<String, Object> insMap = new HashMap();
-		Map<String, Object> itmMap = new HashMap();
 
 		String scanNo = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -810,67 +809,41 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			System.out.println("++++ list.get("+i+") ::" + list.get(i) );
 			System.out.println("++++ form ::" + form.toString() );
 
-			itmMap.put("reqno", seq);
-			itmMap.put("partsCode", form.getPartsCode());
-			int itmChk = MlogApiMapper.selectSMDitmExist(itmMap);
-			System.out.println("++++ form.getSerialNo() ::" + String.valueOf(form.getSerialNo()) );
-			System.out.println("++++ itmChk ::" + String.valueOf(itmChk) );
-			if(itmChk > 0){
-				itmMap.put("requestQty", String.valueOf(form.getRequestQty()));
-				MlogApiMapper.updateRequestMovementQty(itmMap);
+			// insMap.put("reqno", headtitle + seq);
+			insMap.put("reqno", seq);
+			insMap.put("partsCode", form.getPartsCode());
+			insMap.put("partsId", form.getPartsId());
+			insMap.put("requestQty", form.getRequestQty());
+			insMap.put("serialNo", form.getSerialNo());
+			insMap.put("partsName", form.getPartsName());
+			insMap.put("userId", returnOnHandStockReqMForm.getUserId());
 
-				itmMap.put("delno", deliSeq);
-				MlogApiMapper.updateDeliveryMovementQty(itmMap);
+			// logger.debug("reqno 값 : {}", headtitle + seq);
+			// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
+			// logger.debug("partsId 값 : {}", insMap.get("partsId"));
+			// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
+			// logger.debug("serialNo 값 : {}", insMap.get("serialNo"));
+			// logger.debug("partsName 값 : {}", insMap.get("partsName"));
 
-				insMap.put("reqno", seq);
-				insMap.put("partsCode", form.getPartsCode());
-				insMap.put("partsId", form.getPartsId());
-				insMap.put("requestQty", form.getRequestQty());
-				insMap.put("serialNo", form.getSerialNo());
-				insMap.put("partsName", form.getPartsName());
-				insMap.put("userId", returnOnHandStockReqMForm.getUserId());
+			// 2. LOG0048D insert
+			MlogApiMapper.insStockMovementDetail(insMap);
 
-				insMap.put("delno", deliSeq);
-				insMap.put("itmcd", insMap.get("partsCode"));
-				insMap.put("itmname", insMap.get("partsName"));
-				insMap.put("reqstno", insMap.get("reqno"));
-			}else{
-				// insMap.put("reqno", headtitle + seq);
-				insMap.put("reqno", seq);
-				insMap.put("partsCode", form.getPartsCode());
-				insMap.put("partsId", form.getPartsId());
-				insMap.put("requestQty", form.getRequestQty());
-				insMap.put("serialNo", form.getSerialNo());
-				insMap.put("partsName", form.getPartsName());
-				insMap.put("userId", returnOnHandStockReqMForm.getUserId());
+			System.out.println("++++ insMap.toString() ::" + insMap.toString() );
 
-				// logger.debug("reqno 값 : {}", headtitle + seq);
-				// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
-				// logger.debug("partsId 값 : {}", insMap.get("partsId"));
-				// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
-				// logger.debug("serialNo 값 : {}", insMap.get("serialNo"));
-				// logger.debug("partsName 값 : {}", insMap.get("partsName"));
+			insMap.put("delno", deliSeq);
+			insMap.put("itmcd", insMap.get("partsCode"));
+			insMap.put("itmname", insMap.get("partsName"));
+			insMap.put("reqstno", insMap.get("reqno"));
 
-				// 2. LOG0048D insert
-				MlogApiMapper.insStockMovementDetail(insMap);
+			// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
+			// logger.debug("partsId 값 : {}", insMap.get("partsId"));
+			// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
+			// logger.debug("serialNo 값 : {}", insMap.get("serialNo"));
+			// logger.debug("partsName 값 : {}", insMap.get("partsName"));
 
-				System.out.println("++++ insMap.toString() ::" + insMap.toString() );
-
-				insMap.put("delno", deliSeq);
-				insMap.put("itmcd", insMap.get("partsCode"));
-				insMap.put("itmname", insMap.get("partsName"));
-				insMap.put("reqstno", insMap.get("reqno"));
-
-				// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
-				// logger.debug("partsId 값 : {}", insMap.get("partsId"));
-				// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
-				// logger.debug("serialNo 값 : {}", insMap.get("serialNo"));
-				// logger.debug("partsName 값 : {}", insMap.get("partsName"));
-
-				// 55 insert
-				// 3. LOG0055D merge
-				MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
-			}
+			// 55 insert
+			// 3. LOG0055D merge
+			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
 
 			if (form.getSerialNo() != null && form.getSerialNo() != "") {
 				// scan info
