@@ -1063,7 +1063,7 @@
             </td>
             <th scope="row"><spring:message code="sal.title.text.oldIcarmyPolice" /></th>
             <td >
-                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  disabled="disabled" />
+                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="30"  placeholder="Old IC/Army/Police" class="w100p"  disabled="disabled" />
             </td>
         </tr>
         <tr>
@@ -1075,7 +1075,7 @@
         <tr>
             <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
             <td>
-                <input type="text" title="" id="_nric_" name="nric" maxlength="18"  "  placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
+                <input type="text" title="" id="_nric_" name="nric" maxlength="30" placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
             </td>
             <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
             <td>
