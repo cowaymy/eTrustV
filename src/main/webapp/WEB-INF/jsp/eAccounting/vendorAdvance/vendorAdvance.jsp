@@ -17,7 +17,7 @@
     var update = new Array();
     var remove = new Array();
     var attachmentList = new Array();
-    var settlementTotalAdv;
+    var settlementTotalAdv = 0;
 
     //Main Menu Grid Listing Grid -- Start
     var advanceColumnLayout = [{
@@ -849,7 +849,8 @@
                         $("#settlementTotalExp").val(0);
                         $("#settlementTotalExp").val(AUIGrid.formatNumber(0, "#,##0.00"));
                         $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.cur + ")");
-                        $("#settlementTotalBalance").val(result.data.balAmt);
+                        //$("#settlementTotalBalance").val(result.data.balAmt);
+                        $("#settlementTotalBalance").val($("#settlementTotalAdv").val() - $("#settlementTotalExp").val());
                         $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.balAmt), "#,##0.00"));
                         $("#settlementMemAccId").val(result.data.memAccId);
                         $("#settlementMemAccName").val(result.data.memAccName);
@@ -1575,8 +1576,9 @@
                 console.log("totAmt: " + totAmt);
                 $("#settlementTotalExp").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
                 $("#settlementTotAmt").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                console.log("settlementTotalAdv: " +settlementTotalAdv)
-                $("#settlementTotalBalance").val(settlementTotalAdv - totAmt);
+                console.log("settlementTotalAdv BEFORE: " + $("#settlementTotalAdv").val());
+                var settlementGridSettTotalAdv = parseFloat($("#settlementTotalAdv").val().replace(",", "")).toFixed(0);
+                $("#settlementTotalBalance").val(settlementGridSettTotalAdv - totAmt);
                 $("#settlementTotalBalance").val(AUIGrid.formatNumber($("#settlementTotalBalance").val(), "#,##0.00"));
 
                 // Check budget

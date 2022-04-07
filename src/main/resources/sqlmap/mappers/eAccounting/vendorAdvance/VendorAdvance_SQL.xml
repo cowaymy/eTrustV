@@ -287,7 +287,7 @@
             #{bankId},
             #{bankAccNo},
             #{glAccNo},
-            #{amt},
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
             #{atchFileGrpId},
             <if test="advType == 5">
                 #{advRem},
@@ -350,7 +350,7 @@
             </if>
             <if test="advType == 6">
                 #{invcNo},
-                TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
+                TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
                 #{expType},
                 #{expTypeNm},
                 #{glAccCode},
@@ -624,8 +624,8 @@
             #{budgetCode},
             #{budgetCodeName},
             'VB',
-            #{amt},
-            #{amt},
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
             #{expDesc},
             #{atchFileGrpId},
             #{clamUn},

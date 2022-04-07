@@ -248,7 +248,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             	params.put("expTypeNm", "Vendor Advance Expenses Refund");
             	params.put("expType", params.get("settlementType"));
             	params.put("costCenter", params.get("settlementCostCenter"));
-            	params.put("amt", params.get("settlementTotalAdv"));
+            	params.put("amt", params.get("settlementTotAmt"));
             	params.put("expDesc", params.get("settlementRem"));
             	params.put("atchFileGrpId", params.get("settlementAtchFileGrpId"));
             	params.put("advCurr", "MYR");
