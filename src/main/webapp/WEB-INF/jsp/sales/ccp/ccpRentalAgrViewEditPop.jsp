@@ -155,6 +155,12 @@
                 $("#_isChkSms").val("0");
             }
 
+            if($("#_erlTerNonCrisisChk").is(":checked") == true){
+            	$("#_isErlTerNonCrisisChk").val('1');
+            }else{
+            	$("#_isErlTerNonCrisisChk").val('0');
+            }
+
             //Validation Success ()
             $("#_hiddenUpdMsgStatus").val($("#_msgStatus").val());
 
@@ -482,7 +488,7 @@
     	});
     	$("#_latestFwd").change(function() {
     	    $("#_latestFwdUpd").val('Y');
-    	    setRemResultMessage('1', "Approval from Business Unit Required " + $("#_latestFwd").val());
+    	    setRemResultMessage('1', "RFD/Business Unit Approval Received " + $("#_latestFwd").val());
     	});
     	$("#_isRfd").change(function() {
     	    $("#_isRfdUpd").val('Y');
@@ -517,7 +523,7 @@
     	});
     	$("#_erlTerNonCrisisChk").change(function() {
             $("#_erlTerNonCrisisChkUpd").val('Y');
-            if($("#_erlTerNonCrisisChk").val() == 'on'){
+            if($("#_erlTerNonCrisisChk").is(":checked") == true){
             	setRemResultMessage('1', "Contract Contains Early Termination Clause Yes");
             }else{
             	setRemResultMessage('1', "Contract Contains Early Termination Clause No");
@@ -690,15 +696,15 @@
     	$("#_draftRcvd").val('${infoMap.govAgDraftDt}');
     	$("#_firstReview").val('${infoMap.govAgFirstRevDt}');
     	$("#_isSecReview").val('${infoMap.isGovAgSecRev}');
-    	$("#_secReview").val('${infoMap.govAgSecRev}');
+    	$("#_secReview").val('${infoMap.govAgSecRevDt}');
     	$("#_isThirdReview").val('${infoMap.isGovAgThirdRev}');
-    	$("#_thirdReview").val('${infoMap.govAgThirdRev}');
+    	$("#_thirdReview").val('${infoMap.govAgThirdRevDt}');
     	$("#_isFirstFeedback").val('${infoMap.isGovAgFirstFeed}');
-    	$("#_firstFeedback").val('${infoMap.govAgFirstFeedDt}');
+    	$("#_firstFeedback").val('${infoMap.govAgFirstFeedDtDt}');
     	$("#_isSecFeedback").val('${infoMap.isGovAgSecFeed}');
-    	$("#_secFeedback").val('${infoMap.govAgSecFeed}');
+    	$("#_secFeedback").val('${infoMap.govAgSecFeedDt}');
     	$("#_isLatestFwd").val('${infoMap.isGovAgOthDept}');
-    	$("#_latestFwd").val('${infoMap.govAgOthDept}');
+    	$("#_latestFwd").val('${infoMap.govAgOthDeptDt}');
     	$("#_isRfd").val('${infoMap.isGovAgRfd}');
     	$("#_rfd").val('${infoMap.govAgRfdDt}');
     	$("#_agrExecution").val('${infoMap.govAgExeDt}');
@@ -813,7 +819,7 @@
             if($("#_msgStatus").val() == '6' ){
 
                 if(null == $("#_agrPeriodStart").val() || '' == $("#_agrPeriodStart").val() || null == $("#_agrPeriodEnd").val() || '' == $("#_agrPeriodEnd").val() ){
-                    Common.alert('<spring:message code="sal.alert.msg.agrSubmStgNotAllowRej" />');
+                    Common.alert('* Contract Commencement Date cannot bigger than Contract Expiry Date.');
                     return false;
                 }
             }
@@ -842,7 +848,7 @@
                     Common.alert('No. of copies is required.');
                     return false;
                 }
-                if(null == $("#_cntPeriodValue").val() || '' == $("#_cntPeriodValue").val()){
+                if(null == $("#_cntPeriodValue").val() || '' == $("#_cntPeriodValue").val() || '0' == $("#_cntPeriodValue").val()){
                     Common.alert('Contract Period is required.');
                     return false;
                 }
@@ -860,7 +866,7 @@
                     Common.alert('No. of copies is required.');
                     return false;
                 }
-                if(null == $("#_cntPeriodValue").val() || '' == $("#_cntPeriodValue").val()){
+                if(null == $("#_cntPeriodValue").val() || '' == $("#_cntPeriodValue").val() || '0' == $("#_cntPeriodValue").val()){
                     Common.alert('Contract Period is required.');
                     return false;
                 }
@@ -885,7 +891,7 @@
                     return false;
                 }
                 if($("#_isLatestFwd").val() == "1" && (null == $("#_latestFwd").val() || '' == $("#_latestFwd").val())){
-                    Common.alert('Approval from Business Unit Required is required.');
+                    Common.alert('RFD/Business Unit Approval Received is required.');
                     return false;
                 }
                 if($("#_isRfd").val() == "1" && (null == $("#_rfd").val() || '' == $("#_rfd").val())){
@@ -901,10 +907,6 @@
             if(agrStatus == '11'){//execution
             	if(null == $("#_agrExecution").val() || '' == $("#_agrExecution").val()){
                     Common.alert('Agreement Executed is required.');
-                    return false;
-                }
-                if(null == $("#_sendStamping").val() || '' == $("#_sendStamping").val()){
-                    Common.alert('Sent for stamping is required.');
                     return false;
                 }
             }
@@ -928,7 +930,7 @@
 
             if(startChgStr > endChgStr){
 
-                Common.alert('<spring:message code="sal.alert.msg.agrPeriodStDateCanNotBigEdDate" />');
+            	Common.alert('* Contract Commencement Date cannot bigger than Contract Expiry Date.');
                 return false;
             }
 
@@ -1100,12 +1102,15 @@
     <th scope="row">Date Created</th>
     <td><span>${infoMap.govAgCrtDt}</span></td>
 </tr>
-<tr>
-    <th scope="row"><spring:message code="sal.title.text.msgStatus" /></th>
-    <td>
-    <select class="w100p" id="_msgStatus" name="updMsgStatus"></select>
-    </td>
-</tr>
+<c:if test="${!(infoMap.govAgStusId == '4' || infoMap.govAgStusId == '10')}">
+	<tr>
+	    <th scope="row"><spring:message code="sal.title.text.msgStatus" /></th>
+	    <td>
+	    <select class="w100p" id="_msgStatus" name="updMsgStatus"></select>
+	    </td>
+	</tr>
+</c:if>
+
 <tr>
     <th scope="row">No. of copies</th>
     <td><input type="text" id="_govAgQty" name="govAgQty" class="w100p" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/>
@@ -1124,14 +1129,14 @@
     <th scope="row"><spring:message code="sal.title.text.renAgrStart" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_govAgStartDt" name="govAgStartDt"/></p>
+    <p><input type="text" placeholder="DD/MM/YYYY" class="j_date"   id="_govAgStartDt" name="govAgStartDt"/></p>
     </div><!-- date_set end -->
     <%-- <span>${infoMap.govAgStartDt}</span> --%>
     </td>
     <th scope="row"><spring:message code="sal.title.text.renAgrExpiry" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_govAgEndDt" name="govAgEndDt"/></p>
+    <p><input type="text" placeholder="DD/MM/YYYY" class="j_date"   id="_govAgEndDt" name="govAgEndDt"/></p>
     </div><!-- date_set end -->
     <%-- <span>${infoMap.govAgEndDt}</span> --%>
     </td>
@@ -1161,13 +1166,13 @@
     <th scope="row">Received Customer’s Draft</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Customer Draft Received" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_draftRcvd" name="draftRcvd"/></p>
+    <p><input type="text" title="Customer Draft Received" placeholder="DD/MM/YYYY" class="j_date"   id="_draftRcvd" name="draftRcvd"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">1st Review</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_firstReview" name="firstReview"/></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   id="_firstReview" name="firstReview"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1180,7 +1185,7 @@
         <option value="0">NO</option>
     </select>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Customer First Feedback" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_firstFeedback" name="firstFeedback"/></p>
+    <p><input type="text" title="Customer First Feedback" placeholder="DD/MM/YYYY" class="j_date"   id="_firstFeedback" name="firstFeedback"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">2nd Review</th>
@@ -1191,7 +1196,7 @@
         <option value="0">NO</option>
     </select>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Second review" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_secReview" name="secReview"/></p>
+    <p><input type="text" title="Second review" placeholder="DD/MM/YYYY" class="j_date"   id="_secReview" name="secReview"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1204,7 +1209,7 @@
         <option value="0">NO</option>
     </select>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Customer Second Feedback" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_secFeedback" name="secFeedback"/></p>
+    <p><input type="text" title="Customer Second Feedback" placeholder="DD/MM/YYYY" class="j_date"   id="_secFeedback" name="secFeedback"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">3rd Review</th>
@@ -1215,7 +1220,7 @@
         <option value="0">NO</option>
     </select>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Third review" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_thirdReview" name="thirdReview"/></p>
+    <p><input type="text" title="Third review" placeholder="DD/MM/YYYY" class="j_date"   id="_thirdReview" name="thirdReview"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1223,7 +1228,7 @@
     <th scope="row">Agreement Finalised</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Agreement finalised" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_agrFinal" name="agrFinal"/></p>
+    <p><input type="text" title="Agreement finalised" placeholder="DD/MM/YYYY" class="j_date"   id="_agrFinal" name="agrFinal"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1236,18 +1241,18 @@
         <option value="0">NO</option>
     </select>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="RFD" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_rfd" name="rfd"/></p>
+    <p><input type="text" title="RFD" placeholder="DD/MM/YYYY" class="j_date"   id="_rfd" name="rfd"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Approval from Business Unit Required</th>
+    <th scope="row">RFD/Business Unit Approval Received</th>
     <td>
-    <select class="w100p" id="_isLatestFwd" name="_isLatestFwd">
+    <select class="w100p" id="_isLatestFwd" name="isLatestFwd">
         <option value="" selected>Choose One</option>
         <option value="1">YES</option>
         <option value="0">NO</option>
     </select>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Lastest fwd to other department" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_latestFwd" name="latestFwd"/></p>
+    <p><input type="text" title="Lastest fwd to other department" placeholder="DD/MM/YYYY" class="j_date"   id="_latestFwd" name="latestFwd"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1255,13 +1260,13 @@
     <th scope="row">Agreement Executed</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Agreement execution" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_agrExecution" name="agrExecution"/></p>
+    <p><input type="text" title="Agreement execution" placeholder="DD/MM/YYYY" class="j_date"   id="_agrExecution" name="agrExecution"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">Sent for stamping</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Sent for stamping" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_sendStamping" name="sendStamping"/></p>
+    <p><input type="text" title="Sent for stamping" placeholder="DD/MM/YYYY" class="j_date"   id="_sendStamping" name="sendStamping"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1269,13 +1274,13 @@
     <th scope="row">Received Stamp Certificate</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Received stamped" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_receiveStamp" name="receiveStamp"/></p>
+    <p><input type="text" title="Received stamped" placeholder="DD/MM/YYYY" class="j_date"   id="_receiveStamp" name="receiveStamp"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">Courier Out</th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Courier out" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_courier" name="courier"/></p>
+    <p><input type="text" title="Courier out" placeholder="DD/MM/YYYY" class="j_date"   id="_courier" name="courier"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -1285,6 +1290,8 @@
         <input type="checkbox" id="_erlTerNonCrisisChk" name="erlTerNonCrisisChk"/>
     </td>
 </tr>
+
+<input type="hidden" id="_isErlTerNonCrisisChk" name="isErlTerNonCrisisChk">
 </tbody>
 </table><!-- table end -->
 

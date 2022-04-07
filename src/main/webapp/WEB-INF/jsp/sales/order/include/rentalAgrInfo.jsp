@@ -237,7 +237,7 @@
     <span>${orderDetail.renAgrInfo.isGovAgRfd}</span>
     <span>${orderDetail.renAgrInfo.govAgRfdDt}</span>
     </td>
-    <th scope="row">Approval from Business Unit Required</th>
+    <th scope="row">RFD/Business Unit Approval Received</th>
     <td>
     <span>${orderDetail.renAgrInfo.isGovAgOthDept}</span>
     <span>${orderDetail.renAgrInfo.govAgOthDeptDt}</span>

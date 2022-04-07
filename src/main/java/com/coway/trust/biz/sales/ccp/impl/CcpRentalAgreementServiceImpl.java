@@ -406,11 +406,11 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		LOGGER.info("_______________________________________________ getPrgId : " + getPrgId);
 		LOGGER.info("_______________________________________________ getupdMsgStatus : " + getupdMsgStatus);
 
-		if (params.get("erlTerNonCrisisChk") != null && "on".equals(params.get("erlTerNonCrisisChk"))){
+		/*if (params.get("erlTerNonCrisisChk") != null && "on".equals(params.get("erlTerNonCrisisChk"))){
 			params.put("erlTerNonCrisisChk", 1);
     	} else {
     		params.put("erlTerNonCrisisChk", 0);
-    	}
+    	}*/
 
 		if(getPrgId != 10){
 
@@ -505,7 +505,8 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
 			if(getupdMsgStatus == 5){
 				LOGGER.info("__________________________________ getPrgId == 9 && getupdMsgStatus == 5");
-				params.put("govAgrStatusId", "1");
+				//params.put("govAgrStatusId", "1"); //change to status complete in stamping approve
+				params.put("govAgrStatusId", "4");
 				//params.put("updIsNotification", "1");
 				//params.put("updNotificationMonth", "1");
 			}else if(getupdMsgStatus == 44){
@@ -888,6 +889,7 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
     		updParam.put("sendStamping",  params.get("sendStamping"));
     		updParam.put("receiveStamp",  params.get("receiveStamp"));
     		updParam.put("courier",  params.get("courier"));
+    		updParam.put("erlTerNonCrisisChk",  params.get("isErlTerNonCrisisChk"));
 
     		ccpRentalAgreementMapper.updateCcpLatMessageId(updParam);
 
