@@ -38,10 +38,10 @@ function fn_report(){
     var whereSQL = "";
 
     if(!($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0)){
-        whereSQL += " AND TO_DATE(ArgM.GOV_AG_START_DT, 'DD/MM/YYYY') >= TO_DATE('"+$("#dpDateFr").val()+"', 'DD/MM/YYYY')";
+        whereSQL += " AND ArgM.GOV_AG_START_DT >= TO_DATE('"+$("#dpDateFr").val()+"', 'DD/MM/YYYY')";
     }
     if(!($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
-    	whereSQL += " AND TO_DATE(ArgM.GOV_AG_START_DT, 'DD/MM/YYYY') <= TO_DATE('"+$("#dpDateTo").val()+"', 'DD/MM/YYYY')";
+    	whereSQL += " AND ArgM.GOV_AG_START_DT <= TO_DATE('"+$("#dpDateTo").val()+"', 'DD/MM/YYYY')";
     }
 
     if(!($("#txtAgrNoFrom").val() == null || $("#txtAgrNoFrom").val().length == 0) && !($("#txtAgrNoTo").val() == null || $("#txtAgrNoTo").val().length == 0)){
