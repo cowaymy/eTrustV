@@ -184,7 +184,7 @@
 
 	// Button functions - Start
 	function fn_searchROT() {
-// 		console.log($("#root_searchForm").serialize());
+ 		console.log($("#root_searchForm").serialize());
 		Common.ajax("GET", "/sales/ownershipTransfer/selectRootList.do", $(
 				"#root_searchForm").serialize(), function(result) {
 			AUIGrid.setGridData(search_rootGridID, result);
@@ -355,25 +355,6 @@
 
         fn_clearOrderSalesman();
 
-        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
-            console.log("memRC checking");
-
-            if(memRc != null) {
-                if(memRc.rookie == 1) {
-                    if(memRc.rcPrct != null) {
-                        if(memRc.rcPrct < 30) {
-                            fn_clearOrderSalesman();
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-                            return false;
-                        }
-                    }
-                } else {
-                    fn_clearOrderSalesman();
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
-                    return false;
-                }
-            }
-
             Common.ajax("GET", "/sales/ownershipTransfer/selectMemberByMemberIDCode1.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
                 console.log("print meminfo")
                 console.log(memInfo.memCode)
@@ -398,12 +379,9 @@
 	                     $('#orgMemId').val(memInfo.lvl1UpId);
 	                     $('#Requestor_Brnch').val(memInfo.branchName);
                 	}
-
-
                 }
             });
-        });
-    }
+        };
 
     function fn_clearOrderSalesman() {
         if (typeof($('#btnReqOwnTrans').val()) == "undefined"){
