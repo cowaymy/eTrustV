@@ -40,8 +40,10 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
 
 
-        if ("${sessionRoleId}" == 130  || "${sessionRoleId}" == 193  || "${sessionRoleId}" == 192 || "${sessionRoleId}" == 191 || "${sessionRoleId}" == 89
-        	|| "${sessionRoleId}" == 87 || "${sessionRoleId}" == 85 || "${sessionRoleId}" == 252  || "${sessionRoleId}" == 200) {
+        if ("${sessionRoleId}" == 130  || "${sessionRoleId}" == 405 || "${sessionRoleId}" == 406   || "${sessionRoleId}" == 408 || "${sessionRoleId}" == 409
+        	|| "${sessionRoleId}" == 414 || "${sessionRoleId}" == 414 || "${sessionRoleId}" == 415
+            || "${sessionRoleId}" == 406 || "${sessionRoleId}" == 193 || "${sessionRoleId}" == 192 || "${sessionRoleId}" == 191 || "${sessionRoleId}" == 89
+        	|| "${sessionRoleId}" == 87   || "${sessionRoleId}" == 85 || "${sessionRoleId}" == 252  || "${sessionRoleId}" == 200 ) {
 
 		$("#statementList").append("<option value='initSummaryOfInvoicePop.do'>Summary of Invoice</option>");
 		$("#statementList").append("<option value='initSummaryOfAccountPop.do'>Summary of Account</option>");
