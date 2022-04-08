@@ -20,7 +20,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class ExpenseServieImpl extends EgovAbstractServiceImpl implements ExpenseService {
 
 	private static final Logger Logger = LoggerFactory.getLogger(CcpAgreementServieImpl.class);
-	
+
 	@Resource(name = "expenseMapper")
 	private ExpenseMapper expenseMapper;
 
@@ -32,10 +32,10 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 
 	@Override
 	public int insertExpenseInfo(List<Object> addList, Integer crtUserId) throws Exception {
-		
+
 		int saveCnt = 0;
 
-		for (Object obj : addList) 
+		for (Object obj : addList)
 		{
 			((Map<String, Object>) obj).put("userId", crtUserId);
 
@@ -44,13 +44,14 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 			Logger.debug(" expType : {}", ((Map<String, Object>) obj).get("expType"));
 			Logger.debug(" budgetCode : {}", ((Map<String, Object>) obj).get("budgetCode"));
 			Logger.debug(" glAccountCode : {}", ((Map<String, Object>) obj).get("glAccountCode"));
+			Logger.debug(" cntrlExp : {}", ((Map<String, Object>) obj).get("cntrlExp"));
 
 			saveCnt++;
 
 			String expType = expenseMapper.selectMaxExpType((Map<String, Object>) obj);
 
 			((Map<String, Object>) obj).put("expType", expType);
-			
+
 			expenseMapper.insertExpenseInfo((Map<String, Object>) obj);
 		}
 
@@ -62,16 +63,16 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 		// TODO Auto-generated method stub
 		return expenseMapper.selectBudgetCodeList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectGlCodeList(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return expenseMapper.selectGlCodeList(params);
 	}
-	
+
 	@Override
 	public int updateExpenseInfo(Map<String, Object> params) throws Exception {
-				
+
 		return expenseMapper.updateExpenseInfo(params);
 	}
 
@@ -80,5 +81,5 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 		// TODO Auto-generated method stub
 		return expenseMapper.selectCodeList(params);
 	}
-	
+
 }
