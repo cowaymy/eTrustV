@@ -222,6 +222,40 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
             });
         }
     }
+
+    function fn_rejectProceed(v) {
+        console.log("crcAdjustmentApproval :: fn_rejectProceed");
+        if(v == "P") {
+            // v = P (Proceed)
+            if($("#rejctResn").val() == null || $("#rejctResn").val() == "") {
+                Common.alert("Reject reason cannot be empty");
+                return false;
+            }
+
+            var data = {
+                action : "J",
+                rejResn : $("#rejctResn").val(),
+                adjNo : $("#adjNo").val()
+            };
+
+            Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
+                $("#crcAdjustmentPop").remove();
+                $("#adjForm").clearForm()
+                $("#rejctResn").val("");
+                $("#rejectAdjPop1").remove();
+
+                if(result.code == "00") {
+                    Common.alert("Allowance adjustment successfully rejected");
+                } else {
+                    Common.alert("Allowance adjustment fail to reject");
+                }
+            });
+
+        } else {
+            // v = C (Cancel)
+            $("#rejectAdjPop1").hide();
+        }
+    }
 </script>
 
 <section id="content">

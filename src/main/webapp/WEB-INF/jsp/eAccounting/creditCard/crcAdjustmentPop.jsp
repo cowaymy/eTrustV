@@ -63,7 +63,7 @@
             var adjType = adjItems[0].adjType;
             var mm;
 
-            if(adjType == "4") {
+            if(adjType == "1" || adjType == "2" || adjType == "4") {
                 mm = adjItems[0].sCrcLimitAdjMm;
                 if(mm.length < 2) {
                     mm = "0" + mm;
@@ -77,7 +77,7 @@
             $("#sCrcHolder option[value=" + adjItems[0].sCrditCardId + "]").attr('selected', 'selected');
             $("#sAmt").val(adjItems[0].sAdjAmt);
 
-            if(adjType == "3") {
+            if(adjType == "1" || adjType == "2" || adjType == "3") {
                 mm = adjItems[0].rCrcLimitAdjMm;
                 if(mm.length < 2) {
                     mm = "0" + mm;
@@ -611,14 +611,19 @@
                     }
                 });
             } else {
-                $("#crcAdjustmentPop").remove();
-                $("#rejectAdjPop").show();
+                console.log("fn_appAdjustment :: v = j")
+
+                $("#crcAdjustmentPop").hide();
+                /*
+                $("#rejectAdjPop1").show();
+                */
+                Common.popupDiv("/eAccounting/creditCard/crcAdjustmentRejectPop.do", {adjNo : $("#adjNo").val()}, null, true, "crcAdjustmentRejectPop");
             }
         });
     }
 
     function fn_rejectProceed(v) {
-        console.log("fn_rejectProceed");
+        console.log("crcAdjustmentPop :: fn_rejectProceed");
         if(v == "P") {
             // v = P (Proceed)
             if($("#rejctResn").val() == null || $("#rejctResn").val() == "") {
@@ -633,9 +638,10 @@
             };
 
             Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
+                $("#crcAdjustmentPop").remove();
                 $("#adjForm").clearForm()
                 $("#rejctResn").val("");
-                $("#rejectAdjPop").remove();
+                $("#rejectAdjPop1").remove();
 
                 if(result.code == "00") {
                     Common.alert("Allowance adjustment successfully rejected");
@@ -646,7 +652,7 @@
 
         } else {
             // v = C (Cancel)
-            $("#rejectAdjPop").hide();
+            $("#rejectAdjPop1").hide();
         }
     }
     // ========== Approve/Reject - End ==========
@@ -844,7 +850,7 @@
     </section>
 </div>
 
-<div class="popup_wrap msg_box" id="rejectAdjPop" style="display:none">
+<div class="popup_wrap msg_box" id="rejectAdjPop1" style="display:none">
     <header class="pop_header">
         <h1>Reject Reason</h1>
         <ul class="right_opt">

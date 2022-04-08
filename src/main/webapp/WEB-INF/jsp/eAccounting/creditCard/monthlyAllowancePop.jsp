@@ -115,7 +115,7 @@
 	                <tr>
 	                    <th scope="col" class="bg_color_gray">Allowance Limit</th>
 	                    <th scope="col" class="bg_color_gray">Adjustment Amount</th>
-	                    <th scope="col" class="bg_color_gray">Draft Amount</th>
+	                    <th scope="col" class="bg_color_gray">Pending Amount</th>
 	                    <th scope="col" class="bg_color_gray">Utilised Amount</th>
 	                    <th scope="col" class="black_text bold_text"><spring:message code="budget.Available" /> <spring:message code="budget.Amount" /></th>
 	                </tr>

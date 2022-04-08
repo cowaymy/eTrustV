@@ -339,4 +339,13 @@ public class CrcLimitController {
 
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/crcAdjustmentRejectPop.do")
+    public String crcAdjustmentRejectPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+        LOGGER.debug("========== crcAdjustmentRejectPop ==========");
+
+        model.addAttribute("adjNo", params.get("adjNo"));
+
+        return "eAccounting/creditCard/crcAdjustmentRejectPop";
+    }
 }
