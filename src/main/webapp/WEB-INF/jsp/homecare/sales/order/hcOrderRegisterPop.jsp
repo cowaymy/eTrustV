@@ -2370,19 +2370,19 @@ console.log(orderVO);
     function fn_loadProductPromotion_chg(appTypeVal, stkId, empChk, custTypeVal, exTrade, promoVal, tagNum) {
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
+
+        if(empChk ==null || empChk ==""){
+            empChk = '0';
+        }
+
+        if($('#srvPacId').val() ==null || $('#srvPacId').val() ==""){
+            srvPacId = '${orderInfo.basicInfo.srvPacId}';
+        }
+        else{
+            srvPacId=$('#srvPacId').val();
+        }
+
         if(appTypeVal !=66){
-        	if(empChk ==null || empChk ==""){
-        		empChk = '0';
-        	}
-
-        	if($('#srvPacId').val() ==null || $('#srvPacId').val() ==""){
-        		srvPacId = '${orderInfo.basicInfo.srvPacId}';
-            }
-        	else{
-        		srvPacId=$('#srvPacId').val();
-        	}
-
-
 
             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
         } else {
@@ -2390,6 +2390,7 @@ console.log(orderVO);
         }
 
         $('#ordPromo1').val('${orderInfo.basicInfo.ordPromoId}');
+        $('#ordPromo2').val('${orderInfo2.basicInfo.ordPromoId}');
 
     }
 
