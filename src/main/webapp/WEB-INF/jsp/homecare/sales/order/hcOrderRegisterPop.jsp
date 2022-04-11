@@ -46,6 +46,8 @@
     $(document).ready(function(){
         createAUIGrid();
 
+
+
         fn_selectDocSubmissionList();
 
         doDefCombo(codeList_10, '', 'appType', 'S', '');              // Common Code
@@ -1084,6 +1086,7 @@
 
                 //}
                 if(copyChangeYn == 'Y') {
+
                 	if(_tagNum == '1') {
                         fn_loadProductPromotion_chg(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, '${orderInfo.basicInfo.ordPromoId}', _tagNum);
                     } else {
@@ -2368,10 +2371,26 @@ console.log(orderVO);
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:'Y'}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+        	if(empChk ==null || empChk ==""){
+        		empChk = '0';
+        	}
+
+        	if($('#srvPacId').val() ==null || $('#srvPacId').val() ==""){
+        		srvPacId = '${orderInfo.basicInfo.srvPacId}';
+            }
+        	else{
+        		srvPacId=$('#srvPacId').val();
+        	}
+
+
+
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
         }
+
+        $('#ordPromo1').val('${orderInfo.basicInfo.ordPromoId}');
+
     }
 
     /* function fn_loadProductPromotion2(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
