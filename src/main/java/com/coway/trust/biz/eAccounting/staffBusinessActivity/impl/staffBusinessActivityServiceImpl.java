@@ -190,13 +190,13 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     				hm.put("advType", params.get("advType"));
     				hm.put("dAmt", params.get("totAmt"));
     				String clmNo = (String) params.get("clmNo");
-    				if(clmNo.substring(0, 2).equals("A2"))
+    				/*if(clmNo.substring(0, 2).equals("A2"))
     				{
     					hm.put("glAccCode", params.get("glAccCode"));
         				hm.put("glAccNm", params.get("glAccCodeName"));
         				hm.put("budgetCode", params.get("budgetCode"));
         				hm.put("budgetCodeNm", params.get("budgetCodeName"));
-    				}
+    				}*/
     				LOGGER.debug("editDraftRequestD =====================================>>  " + hm);
     				staffBusinessActivityMapper.editDraftRequestD(hm);
     			}

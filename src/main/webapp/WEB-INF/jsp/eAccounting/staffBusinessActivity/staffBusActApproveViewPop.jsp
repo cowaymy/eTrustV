@@ -32,18 +32,25 @@
         dataField : "appvItmSeq",
         visible : false // Color 칼럼은 숨긴채 출력시킴
     }, {
-        dataField : "glAccCode",
-        headerText : '<spring:message code="expense.GLAccount" />'
-    }, {
-        dataField : "glAccCodeName",
-        headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-        style : "aui-grid-user-custom-left"
-    }, {
-        dataField : "budgetCode",
+    	dataField : "budgetCode",
         headerText : '<spring:message code="approveView.budget" />'
     }, {
-        dataField : "budgetCodeName",
+    	dataField : "budgetCodeName",
         headerText : '<spring:message code="approveView.budgetName" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+       	dataField : "glAccCode",
+        headerText : '<spring:message code="expense.GLAccount" />'
+    }, {
+       	dataField : "glAccCodeName",
+        headerText : '<spring:message code="newWebInvoice.glAccountName" />',
+        style : "aui-grid-user-custom-left"
+    },{
+    	dataField : "invcDt",
+        headerText : 'Invoice Date',
+    },{
+    	dataField : "invcNo",
+        headerText : 'Invoice No.',
         style : "aui-grid-user-custom-left"
     },{
         dataField : "taxName",
@@ -221,8 +228,8 @@
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewAdvReqClmNo").text(myGridData[0].advRefdClmNo);
-            $("#viewAdvReqTotAmt").text("RM " + myGridData[0].advAmt.toFixed(2));
-            $("#viewAdvSettBalAmt").text("RM " + (myGridData[0].advAmt - myGridData[0].repayAmt).toFixed(2));
+            $("#viewAdvReqTotAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].advAmt, "#,##0.00"));
+            $("#viewAdvSettBalAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].advAmt - myGridData[0].repayAmt, "#,##0.00"));
             $("#viewBankRef").text(myGridData[0].bankRef);
             $("#advOcc option[value=" + myGridData[0].advOcc + "]").attr('selected', true);
             $("#viewRefundMode option[value=" + myGridData[0].refundMode + "]").attr('selected', true);

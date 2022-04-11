@@ -219,7 +219,7 @@
     dataField : "invcDt",
     headerText : 'Invoice Date',
     dataType : "date",
-    formatString : "dd/mm/yyyy",
+    //formatString : "dd/mm/yyyy",
     editRenderer : {
       type : "CalendarRenderer",
       defaultFormat : "dd/mm/yyyy",
@@ -577,7 +577,7 @@ var myGridPros = {
                  $("#refEventEndDt").val(results.advPrdTo);
                  $("#refAtchFileGrpId").val(results.fileAtchGrpId);
 
-                 $("#refTotExp").val(results.totAmt.toFixed(2));
+                 $("#refTotExp").val(AUIGrid.formatNumber(results.totAmt, "#,##0.00"));
                  $("#refBankRef").val(results.advRefdRef);
                  var balanceAmt = results.reqAdvTotAmt - results.totAmt;
                  balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
@@ -1094,8 +1094,9 @@ var myGridPros = {
     // Refund Save
      function fn_saveRefund(v) {
          console.log("fn_saveRefund");
+         console.log(mode);
 
-         if(fn_checkRefund) {
+         if(fn_checkRefund()) {
              if(mode != "DRAFT") {
                  var formData = Common.getFormData("advRepayForm");
                  Common.ajaxFile("/eAccounting/staffBusinessActivity/attachmentUpload.do", formData, function(result) {
@@ -1198,32 +1199,88 @@ var myGridPros = {
 
      function fn_checkRefund() {
          console.log("fn_checkRefund");
+         var checkRefundFlg = true;
 
          // Feedback 20211227 - Settlement item 1 fix
          if(AUIGrid.getRowCount(newGridID) == 0) {
              Common.alert("No details key in. Kindly add details.");
-             return false;
+             checkRefundFlg = false;
+             return checkRefundFlg;
          }
 
          if($("#refMode :selected").val() == 'OTRX')
          {
              if($("#trvBankRefNo").val() == "" || $("#trvBankRefNo").val() == null) {
                  Common.alert("Bank-In Advice Ref No required.");
-                 return false;
+                 checkRefundFlg = false;
+                 return checkRefundFlg;
              }
          }
 
-         if($("#trvRepayRem").val() == "" || $("#trvRepayRem").val() == null) {
+         if(FormUtil.isEmpty($("#trvRepayRem").val()) || $("#trvRepayRem").val() == null) {
              Common.alert("Remarks required.");
-             return false;
+             checkRefundFlg = false;
+             return checkRefundFlg;
          }
 
-         if($("input[name=trvAdvFileSelector]")[0].files[0] == "" || $("input[name=trvAdvFileSelector]")[0].files[0] == null) {
+         //if($("input[name=trvAdvFileSelector]")[0].files[0] == "" || $("input[name=trvAdvFileSelector]")[0].files[0] == null) {
+         if(FormUtil.isEmpty($(".input_text").val())) {
              Common.alert("Please attach supporting document zipped files!")
-             return false;
+             checkRefundFlg = false;
+             return checkRefundFlg;
          }
 
-         return true;
+         var newFlag = fn_saveSubmitCheckRowValidation();
+         console.log(newFlag);
+         if(!newFlag){
+        	 checkRefundFlg = false;
+         }
+
+         return checkRefundFlg;
+     }
+
+   //Check settlement submission details row has data
+     function fn_saveSubmitCheckRowValidation() {
+         console.log("fn_saveSubmitCheckRowValidation");
+         var checkRowFlg = true;
+         var settlementRowCount = AUIGrid.getRowCount(newGridID);
+         console.log(settlementRowCount);
+         if(settlementRowCount > 0){
+             for(var i=0; i < settlementRowCount; i++){
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "budgetCode"))){
+                     Common.alert("Please choose a budget code.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "glAccCode"))){
+                     Common.alert("Please choose a GL code.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "totAmt")) || AUIGrid.getCellValue(newGridID, i, "totAmt") <= 0){
+                     Common.alert("Please enter an amount.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "invcNo"))){
+                     Common.alert("Please enter an Invoice Number.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "invcDt"))){
+                     Common.alert("Please enter a date.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+             }
+             return checkRowFlg;
+         }
+         else{
+             Common.alert("Please enter at least 1 detail line.");
+             checkRowFlg = false;
+             return checkRowFlg;
+         }
+         return checkRowFlg;
      }
 
     //Empty Validation checking
@@ -1700,6 +1757,39 @@ var myGridPros = {
     	                        for(var i = 1; i < AUIGrid.getRowCount(newGridID); i++) {
     	                            AUIGrid.setCellValue(newGridID, i, "cur", fCur);
     	                        }
+    	                    }
+    	                }
+
+    	                if(event.dataField == "invcNo") {
+    	                    var data = {
+    	                            memAccId : $("#refPayeeCode").val(),
+    	                            invcNo : AUIGrid.getCellValue(newGridID, event.rowIndex, "invcNo")
+    	                    }
+
+    	                    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(sameVenderResult) {
+    	                        if(sameVenderResult.data) {
+    	                            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+    	                        }
+    	                    });
+    	                }
+
+    	                if(event.dataField == "invcDt") {
+    	                	var errMsg = "Selected dates cannot be future date";
+    	                    var arrInvcDt, invcDtFDate, invcDtTDate, invcDtRDate;
+    	                    var dd, mm, yyyy;
+
+    	                    var invcDtCDate = new Date();
+
+    	                    if(event.item.invcDt != null && event.item.invcDt != "")
+    	                    {
+    	                    	arrInvcDt = event.item.invcDt.split("/");;
+    	                    	invcDtFDate = new Date(arrInvcDt[2], arrInvcDt[1]-1, arrInvcDt[0]);
+
+    	                    	if(invcDtFDate > invcDtCDate)
+    	                    	{
+    	                    		AUIGrid.setCellValue(newGridID, event.rowIndex, "invcDt", "");
+    	                    		Common.alert(errMsg);
+    	                    	}
     	                    }
     	                }
     	          });
@@ -2540,9 +2630,9 @@ var myGridPros = {
                     <tr>
                         <th scope="row">Attachment<span class="must">*</span></th>
                         <td colspan="2">
-                            <div class="auto_file w100p">
+                            <div class="auto_file attachment_file w100p">
                                 <input type="file" id="trvAdvFileSelector"
-                                    name="trvAdvFileSelector" title="file add" accept=".rar, .zip" />
+                                    name="trvAdvFileSelector" title="file add" />
                             </div>
                         </td>
                     </tr>

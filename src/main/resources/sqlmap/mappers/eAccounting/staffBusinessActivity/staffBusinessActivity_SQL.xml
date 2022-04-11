@@ -44,7 +44,7 @@
                 A.TOT_AMT AMT,
                 B.APPV_PRCSS_NO,
                 B.APPV_PRCSS_DT APPV_DT,
-                B.REQST_DT RQST_DT,
+                A.ADV_REFD_DT RQST_DT,
                 NVL(B.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS,
                 CASE WHEN A.ADV_TYPE = '3' THEN (
                     CASE WHEN A.APPV_PRCSS_NO IS NOT NULL THEN (
@@ -104,12 +104,12 @@
             </if>
             <if test="reqStartDt != null and reqStartDt != ''">
                 <![CDATA[
-                    AND B.REQST_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+                    AND A.CRT_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
                 ]]>
             </if>
             <if test="reqEndDt != null and reqEndDt != ''">
                 <![CDATA[
-                    AND B.REQST_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
+                    AND A.CRT_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
                 ]]>
             </if>
             <if test="clmNoStart != null and clmNoStart != ''">
@@ -206,21 +206,22 @@
             D.USER_NAME CRT_USER_NAME,
             A.ADV_OCC OTH_EXP,
             G.CODE_DESC OTH_NM,
-            NVL(H.TOT_AMT, 0) REQ_ADV_TOT_AMT,
             <if test="advType == 3">
                 <!-- (SELECT EXP_TYPE FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_EXP,
                 (SELECT EXP_TYPE_NM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_NM,
                 (SELECT REM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_REM,
                 NVL((SELECT AMT FROM FCM0028D WHERE CLM_NO = A.CLM_NO), 0) as OTH_AMT, -->
+                NVL(H.TOT_AMT, 0) REQ_ADV_TOT_AMT,
             </if>
             <if test="advType == 4">
                 <!-- (SELECT EXP_TYPE FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_EXP,
                 (SELECT EXP_TYPE_NM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_NM,
                 (SELECT REM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_REM,
                 NVL((SELECT AMT FROM FCM0028D WHERE CLM_NO = A.CLM_NO), 0) as OTH_AMT, -->
-                (SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO) ADV_REQ_CLM_NO,
+                NVL((SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT PREV_CLM_NO FROM FCM0027M WHERE CLM_NO = A.CLM_NO))ADV_REQ_CLM_NO,
                 A.ADV_REFD_MODE,
                 A.ADV_REFD_REF,
+                NVL(A.TOT_AMT,0) REQ_ADV_TOT_AMT,
             </if>
             A.FILE_ATCH_GRP_ID,
             C.ATCH_FILE_ID,
@@ -238,7 +239,9 @@
         LEFT JOIN SYS0004M F
             ON A.BANK_CODE = F.BANK_ID
         LEFT JOIN SYS0013M G ON G.CODE_ID = A.ADV_OCC
+        <if test="advType == 3">
         LEFT JOIN FCM0027M H ON H.ADV_REFD_NO = A.CLM_NO
+        </if>
         WHERE A.CLM_NO = #{clmNo}
     </select>
 
@@ -419,7 +422,7 @@
             BANK_ACC_NO = #{bankAccNo},
             <if test="advType == 3">
                 ADV_REM = #{busActReqRem},
-                TOT_AMT = #{reqTotAmt},
+                TOT_AMT = REGEXP_REPLACE(#{reqTotAmt}, '[^0-9.]+', NULL),
                 ADV_PRD_FR = TO_DATE(#{eventStartDt}, 'DD/MM/YYYY'),
                 ADV_PRD_TO = TO_DATE(#{eventEndDt}, 'DD/MM/YYYY'),
                 ADV_OCC = #{advOcc},
@@ -428,7 +431,7 @@
                 ADV_REFD_MODE = #{refMode},
                 ADV_REFD_REF = #{refBankRef},
                 ADV_REM = #{trvRepayRem},
-                TOT_AMT = #{totAmt},
+                TOT_AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
             </if>
             ADV_REFD_DT = TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
             UPD_DT = SYSDATE
@@ -437,21 +440,20 @@
 
     <update id="editDraftRequestD" parameterType="Map">
         MERGE INTO FCM0028D TRGT
+        <if test="advType == 3">
         USING (
             SELECT #{clmNo} CLM_NO,
-                   #{expType} EXP_TYPE,
-                   #{clamUn} CLAM_UN
+                   #{expType} EXP_TYPE
             FROM DUAL
         ) SRC
-        ON (TRGT.CLM_NO = SRC.CLM_NO  AND TRGT.CLAM_UN = SRC.CLAM_UN)
-        <if test="advType == 3">
+        ON (TRGT.CLM_NO = SRC.CLM_NO)
         WHEN MATCHED THEN
             UPDATE SET
                 INVC_NO = #{invcNo},
                 INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
                 EXP_TYPE = #{expType},
                 EXP_TYPE_NM = #{expTypeNm},
-                AMT = #{dAmt},
+                AMT = REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
                 UPD_DT = SYSDATE
         WHEN NOT MATCHED THEN
             INSERT (
@@ -480,7 +482,7 @@
                 #{expType},
                 #{expTypeNm},
                 #{mileage},
-                #{dAmt},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
                 SYSDATE,
                 #{userId},
                 SYSDATE,
@@ -489,10 +491,17 @@
                 #{taxCode},
                 #{cur},
                 #{taxAmt},
-                #{dAmt}
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL)
             )
         </if>
         <if test="advType == 4">
+        USING (
+            SELECT #{clmNo} CLM_NO,
+                   #{expType} EXP_TYPE,
+                   #{clamUn} CLAM_UN
+            FROM DUAL
+        ) SRC
+        ON (TRGT.CLM_NO = SRC.CLM_NO  AND TRGT.CLAM_UN = SRC.CLAM_UN)
         WHEN MATCHED THEN
             UPDATE SET
                 INVC_NO = #{invcNo},
@@ -503,7 +512,7 @@
                 GL_ACC_NM = (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
                 BGT_CODE = #{budgetCode},
                 BGT_NM = (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
-                AMT = #{totAmt},
+                AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
                 REM = #{expDesc},
                 UPD_DT = SYSDATE,
                 TAX_CODE = 'VB',
@@ -542,7 +551,7 @@
                 (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
                 #{budgetCode},
                 (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
-                #{totAmt},
+                REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
                 #{expDesc},
                 SYSDATE,
                 #{userId},
@@ -559,7 +568,8 @@
 
     <update id="updateTotal" parameterType="Map">
         UPDATE FCM0027M
-        SET TOT_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo})
+        SET TOT_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo}),
+        NET_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo})
         WHERE CLM_NO = #{clmNo}
     </update>
 
@@ -608,8 +618,8 @@
             #{budgetCode},
             #{budgetCodeName},
             'VB',
-            #{amt},
-            #{amt},
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
             #{expDesc},
             #{atchFileGrpId},
             #{clamUn},
@@ -1103,6 +1113,7 @@
             BANK_ACC_NO,
             GL_ACC_NO,
             TOT_AMT,
+            ADV_REFD_DT,
             FILE_ATCH_GRP_ID,
             ADV_REM,
             ADV_PRD_FR,
@@ -1126,6 +1137,7 @@
             BANK_ACC_NO,
             GL_ACC_NO,
             TOT_AMT,
+            ADV_REFD_DT,
             #{newFileAtchGrpId},
             ADV_REM,
             ADV_PRD_FR,

@@ -287,7 +287,7 @@ public class StaffBusinessActivityController {
                 hmTrv.put("advType", params.get("reqAdvType"));
 
                 //Business Activity Request
-                if(Double.parseDouble(params.get("reqTotAmt").toString()) != 0.00) {
+                if(amountFormatRemover(params.get("reqTotAmt").toString()) != 0) {
                     hmTrv.put("expType", params.get("advOcc"));
                     hmTrv.put("expTypeNm", params.get("advOccDesc"));
                     hmTrv.put("dAmt",params.get("reqTotAmt"));
@@ -702,5 +702,16 @@ public class StaffBusinessActivityController {
         }
 
         return ResponseEntity.ok(rtn);
+    }
+
+    public int amountFormatRemover(String oriAmount)
+    {
+    	int formattedAmount = 0;
+
+    	oriAmount =oriAmount.replace(",", "");
+    	oriAmount = oriAmount.replace(".00", "");
+
+    	formattedAmount = Integer.parseInt(oriAmount);
+    	return formattedAmount;
     }
 }
