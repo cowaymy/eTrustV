@@ -71,6 +71,16 @@ public class HeartServicePartsDto {
 	@ApiModelProperty(value = "필터 바코드 Serial No")
 	private String filterBarcdSerialNo;
 
+	@ApiModelProperty(value = "Existing Filter Serial No")
+	private String filterBarcdSerialNoOld;
+
+	@ApiModelProperty(value = "Filter Serial No Unmatch Reason")
+	private String filterSerialUnmatchReason;
+
+	@ApiModelProperty(value = "Is Fill Filter Info Detail")
+	private String isFillFilterInfo;
+
+
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
@@ -230,6 +240,30 @@ public class HeartServicePartsDto {
 
 	public void setFilterBarcdSerialNo(String filterBarcdSerialNo) {
 		this.filterBarcdSerialNo = filterBarcdSerialNo;
+	}
+
+	public String getFilterBarcdSerialNoOld() {
+		return filterBarcdSerialNoOld;
+	}
+
+	public String getFilterSerialUnmatchReason() {
+		return filterSerialUnmatchReason;
+	}
+
+	public void setFilterBarcdSerialNoOld(String filterBarcdSerialNoOld) {
+		this.filterBarcdSerialNoOld = filterBarcdSerialNoOld;
+	}
+
+	public void setFilterSerialUnmatchReason(String filterSerialUnmatchReason) {
+		this.filterSerialUnmatchReason = filterSerialUnmatchReason;
+	}
+
+	public String getIsFillFilterInfo() {
+		return isFillFilterInfo;
+	}
+
+	public void setIsFillFilterInfo(String isFillFilterInfo) {
+		this.isFillFilterInfo = isFillFilterInfo;
 	}
 
 	public static HeartServicePartsDto create(EgovMap egvoMap) {
