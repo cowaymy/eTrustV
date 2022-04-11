@@ -240,87 +240,87 @@ var salesDailyDashboard_1 = [
 ];
 
 var salesDailyDashboard_2 = [
-                             {
-                              dataField: "codeName",
-                              headerText: currentmonth,
-                              width : "10%"
-                              }
-                             ,{
-                              dataField: "17",
-                              headerText: "17",
-                              width : "8%"
-                              }
-                             ,{
-                               dataField: "18",
-                               headerText: "18",
-                               width : "8%"
-                              }
-                             ,{
-                                dataField: "19",
-                                headerText: "19",
-                                width : "8%"
-                              }
-                             ,{
-                                 dataField: "20",
-                                 headerText: "20",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "21",
-                                 headerText: "21",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "22",
-                                 headerText: "22",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "23",
-                                 headerText: "23",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "24",
-                                 headerText: "24",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "25",
-                                 headerText: "25",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "26",
-                                 headerText: "26",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "27",
-                                 headerText: "27",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "28",
-                                 headerText: "28",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "29",
-                                 headerText: "29",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "30",
-                                 headerText: "30",
-                                 width : "8%"
-                              }
-                             ,{
-                                 dataField: "31",
-                                 headerText: "31",
-                                 width : "8%"
-                              }
-                          ];
+   {
+    dataField: "codeName",
+    headerText: currentmonth,
+    width : "10%"
+    }
+   ,{
+    dataField: "17",
+    headerText: "17",
+    width : "8%"
+    }
+   ,{
+     dataField: "18",
+     headerText: "18",
+     width : "8%"
+    }
+   ,{
+      dataField: "19",
+      headerText: "19",
+      width : "8%"
+    }
+   ,{
+       dataField: "20",
+       headerText: "20",
+       width : "8%"
+    }
+   ,{
+       dataField: "21",
+       headerText: "21",
+       width : "8%"
+    }
+   ,{
+       dataField: "22",
+       headerText: "22",
+       width : "8%"
+    }
+   ,{
+       dataField: "23",
+       headerText: "23",
+       width : "8%"
+    }
+   ,{
+       dataField: "24",
+       headerText: "24",
+       width : "8%"
+    }
+   ,{
+       dataField: "25",
+       headerText: "25",
+       width : "8%"
+    }
+   ,{
+       dataField: "26",
+       headerText: "26",
+       width : "8%"
+    }
+   ,{
+       dataField: "27",
+       headerText: "27",
+       width : "8%"
+    }
+   ,{
+       dataField: "28",
+       headerText: "28",
+       width : "8%"
+    }
+   ,{
+       dataField: "29",
+       headerText: "29",
+       width : "8%"
+    }
+   ,{
+       dataField: "30",
+       headerText: "30",
+       width : "8%"
+    }
+   ,{
+       dataField: "31",
+       headerText: "31",
+       width : "8%"
+    }
+];
 
 
 $(document).ready(function () {

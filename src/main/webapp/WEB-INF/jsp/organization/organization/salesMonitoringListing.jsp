@@ -256,13 +256,14 @@
 
 	 $(function() {
 		$('#performanceView').click(function() {
-		  document.searchForm.action = '/organization/organization/performanceView';
+		  document.searchForm.action = '/organization/performanceView.do';
 		  document.searchForm.submit();
 		  });
 	  });
 
 </script>
-
+<form id="searchForm" name="searchForm" method="post"
+ <section class="search_result">
 	<aside class="title_line mt30"><!-- title_line start -->
 	<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 	<h2>Sales Organization Performance</h2>
@@ -270,7 +271,8 @@
 	<li><p class="btn_blue"><a id="performanceView">Performance View</a></p></li>
 	</ul>
 	</aside>
-
+ </section>
+ </form>
     <div id="salesOrgSummaryList" class="grid_wrap mt30" style="width: 100%; height:300px; margin: 0 auto;"></div>
 
     <div id="salesOrgWeeklyList" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>

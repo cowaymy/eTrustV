@@ -43,7 +43,7 @@ $(document).ready(function() {
 
 $(function(){
     $('#btnSrch_actHP').click(function() {
-        fn_selectHCListAjax();
+    	fn_selectSmfActHpListAjax();
     });
 
      $("#download_actHP").click(function() {
