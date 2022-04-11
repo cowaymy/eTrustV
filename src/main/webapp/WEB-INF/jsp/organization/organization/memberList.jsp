@@ -105,7 +105,7 @@ console.log( memberType )
 
 
     if(val == '1'){
-        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 || memberType ==  7 || memberType ==  5758 ) { // ADDED HOMECARE -- BY TOMMY
+        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 || memberType ==  7 || memberType ==  5758 || memberType ==  6672) { // ADDED HOMECARE -- BY TOMMY
              var jsonObj = {
                          MemberID :memberid,
                         MemberType : memberType
@@ -116,7 +116,7 @@ console.log( memberType )
             Common.alert("Only available to entry with Terminate/Resign Request in regular type of member");
         }
     }else{
-       if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 || memberType == 7 || memberType ==  5758 ) { // ADDED HOMECARE -- BY TOMMY
+       if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 || memberType == 7 || memberType ==  5758 || memberType ==  6672) { // ADDED HOMECARE -- BY TOMMY
             var jsonObj = {
                      MemberID :memberid,
                     MemberType : memberType
