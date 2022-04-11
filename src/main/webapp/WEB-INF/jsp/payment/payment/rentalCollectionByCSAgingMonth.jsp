@@ -92,7 +92,7 @@ $(document).ready(function(){
 // AUIGrid 칼럼 설정
 var columnLayout = [
       {dataField : "salesOrdId", editable : false, visible : false}
-    , {dataField : "bsMonth", headerText : "<spring:message code='sal.title.bsMonth'/>", editable : false}
+    , {dataField : "bsMonth", headerText : "CS Month", editable : false}
     , {dataField : "renMem", headerText : "Rental Membership", editable : false, width : 150}
     , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
     , {dataField : "codyCode", headerText : "Cody Code", editable : false,width : 100}
@@ -101,7 +101,9 @@ var columnLayout = [
     , {dataField : "telMobile", headerText : "<spring:message code='pay.head.mobile'/>", editable : false,width : 100}
     , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}
     , {dataField : "telOffice", headerText : "<spring:message code='pay.head.telO'/>", editable : false,width : 100}
-    , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false}
+    , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false, width : 150}
+    , {dataField : "thisMonth", headerText : "This Mth", editable : false, width : 150}
+    , {dataField : "previousMonth", headerText : "Prev Mth", editable : false, width : 150}
     , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
     , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
     ];

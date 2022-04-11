@@ -1829,22 +1829,47 @@
     <!-- RentalCollectionByBS 리스트 조회 -->
     <select id="searchRCByBSAgingMonthNewList" parameterType="Map" resultType="egovMap">
         SELECT
-            SALES_ORD_ID,
-            BS_MONTH,
-            REN_MEM,
-            SALES_ORD_NO,
-            CODY_CODE,
-            CODY_NAME,
-            CUST_NAME,
-            TEL_MOBILE,
-            TEL_HOME,
-            TEL_OFFICE,
-            PAY_MODE,
-            TARGET,
-            COLLECTION
+            A.SALES_ORD_ID,
+            A.BS_MONTH,
+            A.REN_MEM,
+            A.SALES_ORD_NO,
+            A.CODY_CODE,
+            A.CODY_NAME,
+            A.CUST_NAME,
+            A.TEL_MOBILE,
+            A.TEL_HOME,
+            A.TEL_OFFICE,
+            A.PAY_MODE,
+            A.TARGET,
+            A.COLLECTION,
+            C.BANK_DTL_APPR_CODE APPR_THS_MNTH
+            , CASE WHEN D.ctrl_stus_id = 1 THEN '-'
+            WHEN SYS.IND = 'SUCCESS' OR (C.BANK_DTL_APPR_CODE IS NULL) AND A.PAY_MODE = 'CRC' THEN 'Success'
+            WHEN SYS.IND = 'INSFUNDS' THEN 'Insufficient Funds'
+            WHEN SYS.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+            WHEN SYS.IND = 'CHGCARD' THEN 'Change Card'
+            WHEN SYS.IND = 'TRXNOTALW' AND D.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+            ELSE (CASE WHEN A.PAY_MODE = 'CRC' THEN 'Failed' ELSE '' END) END THIS_MONTH
+            ,E.BANK_DTL_APPR_CODE APPR_PREV_MNTH
+            , CASE WHEN F.ctrl_stus_id = 1 THEN '-'
+            WHEN (SYC.IND = 'SUCCESS' OR E.BANK_DTL_APPR_CODE IS NULL)AND A.PAY_MODE = 'CRC' THEN 'Success'
+            WHEN SYC.IND = 'INSFUNDS' THEN 'Insufficient Funds'
+            WHEN SYC.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+            WHEN SYC.IND = 'CHGCARD' THEN 'Change Card'
+            WHEN SYC.IND = 'TRXNOTALW' AND F.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+            ELSE (CASE WHEN A.PAY_MODE = 'CRC' THEN 'Failed' ELSE '' END) END PREVIOUS_MONTH
+
         FROM REP0087S A
         INNER JOIN PAY0053S B
             ON A.ACC_DEBT_SUB_ID = B.ACC_DEBT_SUB_ID
+        LEFT JOIN PAY0042D C
+            ON A.SALES_ORD_ID = C.SALES_ORD_ID AND A.THSMNTH = C.BANK_DTL_ID
+        LEFT JOIN PAY0041D D ON D.CTRL_ID = C.BANK_DTL_CTRL_ID
+        LEFT JOIN SYS0094M SYS ON SYS.CODE = C.BANK_DTL_APPR_CODE AND SYS.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+        LEFT JOIN PAY0042D E
+            ON A.SALES_ORD_ID = E.SALES_ORD_ID AND A.PRVMNTH = E.BANK_DTL_ID
+        LEFT JOIN PAY0041D F ON D.CTRL_ID = E.BANK_DTL_CTRL_ID
+        LEFT JOIN SYS0094M SYC ON SYC.CODE = E.BANK_DTL_APPR_CODE AND SYC.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
         WHERE 1=1
         <if test="orgCode != '' ">
            AND A.ORG_CODE = #{orgCode}
