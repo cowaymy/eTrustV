@@ -28,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
+import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
 import com.coway.trust.biz.payment.payment.service.PayDVO;
@@ -52,6 +54,7 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
+import com.googlecode.mp4parser.h264.Debug;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -61,6 +64,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SearchPaymentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchPaymentController.class);
+
+	@Autowired
+	private SessionHandler sessionHandler;
+
+	@Resource(name = "accessMonitoringService")
+	private AccessMonitoringService accessMonitoringService;
 
 	@Resource(name = "searchPaymentService")
 	private SearchPaymentService searchPaymentService;
@@ -189,7 +198,14 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/selectOrderList", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectOrderList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestParam Map<String, Object> params, ModelMap model) {
+				, @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+
+    	//Log down user search params
+        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    	StringBuffer requestUrl = new StringBuffer(request.getRequestURI());
+    	requestUrl.replace(requestUrl.lastIndexOf("/"), requestUrl.lastIndexOf("/") + 1, "/initSearchPayment.do/");
+		accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
+
         // 조회.
 
         List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
@@ -221,7 +237,13 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/selectOrderListPaging", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectOrderListPaging(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestParam Map<String, Object> params, ModelMap model) {
+				, @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+    	//Log down user search params
+        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    	StringBuffer requestUrl = new StringBuffer(request.getRequestURI());
+    	requestUrl.replace(requestUrl.lastIndexOf("/"), requestUrl.lastIndexOf("/") + 1, "/initSearchPayment.do/");
+		accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
+
         // 조회.
         List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
 

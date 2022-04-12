@@ -78,15 +78,16 @@
 
    INSERT INTO SYS0078M
    (
-	    system_id
-	   ,access_dtm
-	   ,user_id
-	   ,user_name
-	   ,ip_addr
-	   ,pgm_code
-	   ,pgm_path
-	   ,acces_day
-	)
+        system_id
+       ,access_dtm
+       ,user_id
+       ,user_name
+       ,ip_addr
+       ,pgm_code
+       ,pgm_path
+       ,acces_day
+       ,pgm_path_param
+    )
     SELECT #{systemId}
              , SYSDATE
              , #{userId}
@@ -99,6 +100,7 @@
              ,#{pgmCode}
              ,#{pgmPath}
              , TO_CHAR(SYSDATE,'YYYYMMDD')
+             ,#{pgmPathParam}
       FROM SYS0050M a
      WHERE ROWNUM = 1
      /* Remark for all log

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderListService;
@@ -49,6 +50,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderListController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderListController.class);
+
+	@Resource(name = "accessMonitoringService")
+	private AccessMonitoringService accessMonitoringService;
 
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
@@ -94,6 +98,10 @@ public class OrderListController {
 
 	@RequestMapping(value = "/selectOrderJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrderJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		//Log down user search params
+    	StringBuffer requestUrl = new StringBuffer(request.getRequestURI());
+    	requestUrl.replace(requestUrl.lastIndexOf("/"), requestUrl.lastIndexOf("/") + 1, "/orderList.do/");
+		accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
 
 		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
 		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status

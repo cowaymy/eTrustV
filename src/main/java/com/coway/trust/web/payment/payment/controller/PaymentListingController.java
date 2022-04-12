@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +21,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
 @Controller
 @RequestMapping(value = "/payment")
 public class PaymentListingController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentListingController.class);
+
+	@Autowired
+	private SessionHandler sessionHandler;
+
+	@Resource(name = "accessMonitoringService")
+	private AccessMonitoringService accessMonitoringService;
 
 	/******************************************************
 	 * Payment Listing
@@ -49,9 +63,15 @@ public class PaymentListingController {
      */
     @RequestMapping(value = "/generateReportParam.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> generateReportParam(@RequestBody Map<String, Object> params,
-    		Model model) {
+    		Model model,  HttpServletRequest request) {
 
     	LOGGER.debug("params : {}",params);
+
+    	//Log down user search params
+    	SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    	StringBuffer requestUrl = new StringBuffer(request.getRequestURI());
+    	requestUrl.replace(requestUrl.lastIndexOf("/"), requestUrl.lastIndexOf("/") + 1, "/initPaymentListing.do/");
+		accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
 
     	//레포트 표지에 보여질 데이터
     	String showPaymentDate = "";
