@@ -44,7 +44,7 @@ public class AccessMonitoringServiceImpl implements AccessMonitoringService {
 		monitorData.put("userId", sessionVO.getUserId());
 		monitorData.put("pgmPath", requestUrl);
 		monitorData.put("userName", sessionVO.getUserName());
-		monitorData.put("systemId", AppConstants.LOGIN_CALL_CENTER);
+		monitorData.put("systemId", AppConstants.LOGIN_WEB);
 		monitorData.put("pgmCode", "-");
 		monitorData.put("ipAddr", CommonUtils.getClientIp(request));
 		monitorData.put("pgmPathParam", searchParams.toString());

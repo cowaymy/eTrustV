@@ -8,6 +8,7 @@
                b.pgm_code ,
                b.pgm_name ,
                a.pgm_path ,
+               a.pgm_path_param ,
                a.user_id,
                a.user_name,
                a.ip_addr,

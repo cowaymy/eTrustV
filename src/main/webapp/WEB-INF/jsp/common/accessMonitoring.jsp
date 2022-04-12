@@ -191,6 +191,27 @@ var grdAccessColumnLayout =
          }
        },
 
+       {
+           dataField : "pgmPathParam",
+           headerText : "Program Path Param",
+           style : "aui-grid-user-custom-left",
+           width : "21%",
+           editRenderer : {
+               type : "InputEditRenderer",
+
+               // 에디팅 유효성 검사
+               validator : function(oldValue, newValue, item, dataField) {
+                   var isValid = false;
+
+                   if(newValue.length <= 600) {
+                       isValid = true;
+                   }
+                   // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                   return { "validate" : isValid, "message"  : "The maximum of characters is 600 "};
+               }
+           }
+         },
+
      {
         dataField : "userId",
         headerText : "User Id",
