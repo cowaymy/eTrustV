@@ -132,12 +132,26 @@
                 }
                 else
                 {
-                	doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
-                        ,stkId:'${orderInfo.basicInfo.stockId}'
-                        ,empChk:'${orderInfo.basicInfo.empChk}'
-                        ,promoCustType:$("#typeId").val()
-                        ,exTrade:'${orderInfo.basicInfo.exTrade}'
-                        ,srvPacId:'${orderInfo.basicInfo.srvPacId}'}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                	 if($("#appType").val() == '66') {
+                		  doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                              ,stkId:'${orderInfo.basicInfo.stockId}'
+                              ,empChk:'${orderInfo.basicInfo.empChk}'
+                              ,promoCustType:$("#typeId").val()
+                              ,exTrade:'${orderInfo.basicInfo.exTrade}'
+                              ,srvPacId:'${orderInfo.basicInfo.srvPacId}'}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+
+                	 }
+                	 else{
+                		  doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                              ,stkId:'${orderInfo.basicInfo.stockId}'
+                              ,empChk:'${orderInfo.basicInfo.empChk}'
+                              ,promoCustType:$("#typeId").val()
+                              , isSrvPac:'Y'
+                              ,exTrade:'${orderInfo.basicInfo.exTrade}'
+                              ,srvPacId:'${orderInfo.basicInfo.srvPacId}'}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                	 }
+
+
                 }
 
 
