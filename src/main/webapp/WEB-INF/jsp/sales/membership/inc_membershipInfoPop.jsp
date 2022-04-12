@@ -92,11 +92,11 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.quotationNo" /></th>
-    <td><span id="quotNo"></span></td>
+    <td><span id="quotNo"> ${membershipInfoTab.quotNo} </span></td>
     <th scope="row"><spring:message code="sal.text.createDate" /></th>
-    <td><span id="crtDt"></span></td>
+    <td><span id="crtDt">${membershipInfoTab.mbrshCrtDt}</span></td>
     <th scope="row"><spring:message code="sal.text.creator" /></th>
-    <td><span id="crtUserId"></span></td>
+    <td><span id="crtUserId">${membershipInfoTab.mbrshSalesMemCode}</span></td>
 </tr>
 </tbody>
 </table><!-- table end     -->
