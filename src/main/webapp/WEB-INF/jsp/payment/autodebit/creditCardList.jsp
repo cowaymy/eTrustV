@@ -1398,7 +1398,6 @@ function fn_ordersListPop(){
         </form>
         <ul class="center_btns mt20">
             <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFileM2();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
-            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/Month2UploadOrders_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
     </section>
     <!-- pop_body end -->
