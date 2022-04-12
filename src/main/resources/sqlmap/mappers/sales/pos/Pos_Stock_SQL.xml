@@ -98,8 +98,8 @@
 			  CRT_USER_ID,
 			  UPD_DATE,
 			  UPD_USER_ID,
-			  ITEM_REASON,
-			  ITEM_REJ_REMARK,
+<!--			  ITEM_REASON, -->
+<!--			  ITEM_REJ_REMARK, -->
 			  SCN_MOVE_DATE,
 			  SCN_FROM_LOC_ID,
 			  SCN_TO_LOC_ID,
