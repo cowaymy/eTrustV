@@ -130,52 +130,109 @@
                 } */
 
 
-                // Set Mattress Promotion
-               if($("#ordProduct1 option:selected").index() > 0) {
-                    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
-                        , stkId:'${orderInfo.basicInfo.stockId}'
-                        , empChk:'${orderInfo.basicInfo.empChk}'
-                        , promoCustType:$("#typeId").val()
-                        , exTrade:'${orderInfo.basicInfo.exTrade}'
-                        , srvPacId:'${orderInfo.basicInfo.srvPacId}'
-                        , promoId:'${orderInfo.basicInfo.ordPromoId}'}
-                        , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
-                        , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
+                if($("#appType").val() == '66') {
+                    // Set Mattress Promotion
+                    if($("#ordProduct1 option:selected").index() > 0) {
+                         doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                             , stkId:'${orderInfo.basicInfo.stockId}'
+                             , empChk:'${orderInfo.basicInfo.empChk}'
+                             , promoCustType:$("#typeId").val()
+                             , exTrade:'${orderInfo.basicInfo.exTrade}'
+                             , srvPacId:'${orderInfo.basicInfo.srvPacId}'
+                             , promoId:'${orderInfo.basicInfo.ordPromoId}'}
+                             , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
+                             , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
 
-                    /* $('#ordRentalFees1').val('${orderInfo.basicInfo.mthRentAmt}');
-                    $('#promoDiscPeriodTp1').val('${orderInfo.basicInfo.promoDiscPeriodTp}');
-                    $('#promoDiscPeriod1').val('${orderInfo.basicInfo.promoDiscPeriod}');
-                    $('#ordPrice1').val('${orderInfo.basicInfo.ordAmt}');
-                    $('#orgOrdPrice1').val('${orderInfo.basicInfo.norAmt}');
-                    $('#orgOrdRentalFees1').val('${orderInfo.basicInfo.norRntFee}');
-                    $('#ordRentalFees1').val('${orderInfo.basicInfo.discRntFee}');
-                    $('#ordPv1').val('${orderInfo.basicInfo.ordPv}');
-                    $('#ordPriceId1').val('${orderInfo.basicInfo.itmPrcId}'); */
+                         /* $('#ordRentalFees1').val('${orderInfo.basicInfo.mthRentAmt}');
+                         $('#promoDiscPeriodTp1').val('${orderInfo.basicInfo.promoDiscPeriodTp}');
+                         $('#promoDiscPeriod1').val('${orderInfo.basicInfo.promoDiscPeriod}');
+                         $('#ordPrice1').val('${orderInfo.basicInfo.ordAmt}');
+                         $('#orgOrdPrice1').val('${orderInfo.basicInfo.norAmt}');
+                         $('#orgOrdRentalFees1').val('${orderInfo.basicInfo.norRntFee}');
+                         $('#ordRentalFees1').val('${orderInfo.basicInfo.discRntFee}');
+                         $('#ordPv1').val('${orderInfo.basicInfo.ordPv}');
+                         $('#ordPriceId1').val('${orderInfo.basicInfo.itmPrcId}'); */
+                     }
+
+                     // Set Frame Promotion
+                     if($("#ordProduct2 option:selected").index() > 0) {
+                         doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                             , stkId:'${orderInfo2.basicInfo.stockId}'
+                             , empChk:'${orderInfo2.basicInfo.empChk}'
+                             , promoCustType:$("#typeId").val()
+                             , exTrade:'${orderInfo2.basicInfo.exTrade}'
+                             , srvPacId:'${orderInfo2.basicInfo.srvPacId}'
+                             , promoId:'${orderInfo2.basicInfo.ordPromoId}'}
+                             , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
+                             , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
+
+                         /* $('#ordRentalFees2').val('${orderInfo2.basicInfo.mthRentAmt}');
+                         $('#promoDiscPeriodTp2').val('${orderInfo2.basicInfo.promoDiscPeriodTp}');
+                         $('#promoDiscPeriod2').val('${orderInfo2.basicInfo.promoDiscPeriod}');
+                         $('#ordPrice2').val('${orderInfo2.basicInfo.ordAmt}');
+                         $('#orgOrdPrice2').val('${orderInfo2.basicInfo.norAmt}');
+                         $('#orgOrdRentalFees2').val('${orderInfo2.basicInfo.norRntFee}');
+                         $('#ordRentalFees2').val('${orderInfo2.basicInfo.discRntFee}');
+                         $('#ordPv2').val('${orderInfo2.basicInfo.ordPv}');
+                         $('#ordPriceId2').val('${orderInfo2.basicInfo.itmPrcId}'); */
+                        // fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2');
+                     }
+
+                }
+                else{
+
+                    // Set Mattress Promotion
+                    if($("#ordProduct1 option:selected").index() > 0) {
+                         doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                             , stkId:'${orderInfo.basicInfo.stockId}'
+                             , empChk:'${orderInfo.basicInfo.empChk}'
+                             , promoCustType:$("#typeId").val()
+                             , exTrade:'${orderInfo.basicInfo.exTrade}'
+                             , srvPacId:'${orderInfo.basicInfo.srvPacId}'
+                             , isSrvPac:'Y'
+                             , promoId:'${orderInfo.basicInfo.ordPromoId}'}
+                             , '${orderInfo.basicInfo.ordPromoId}', 'ordPromo1', 'S'
+                             , fn_loadPromotionPrice('${orderInfo.basicInfo.ordPromoId}', '${orderInfo.basicInfo.stockId}', '${orderInfo.basicInfo.srvPacId}', '1')); //Common Code */
+
+                         /* $('#ordRentalFees1').val('${orderInfo.basicInfo.mthRentAmt}');
+                         $('#promoDiscPeriodTp1').val('${orderInfo.basicInfo.promoDiscPeriodTp}');
+                         $('#promoDiscPeriod1').val('${orderInfo.basicInfo.promoDiscPeriod}');
+                         $('#ordPrice1').val('${orderInfo.basicInfo.ordAmt}');
+                         $('#orgOrdPrice1').val('${orderInfo.basicInfo.norAmt}');
+                         $('#orgOrdRentalFees1').val('${orderInfo.basicInfo.norRntFee}');
+                         $('#ordRentalFees1').val('${orderInfo.basicInfo.discRntFee}');
+                         $('#ordPv1').val('${orderInfo.basicInfo.ordPv}');
+                         $('#ordPriceId1').val('${orderInfo.basicInfo.itmPrcId}'); */
+                     }
+
+                     // Set Frame Promotion
+                     if($("#ordProduct2 option:selected").index() > 0) {
+                         doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                             , stkId:'${orderInfo2.basicInfo.stockId}'
+                             , empChk:'${orderInfo2.basicInfo.empChk}'
+                             , promoCustType:$("#typeId").val()
+                             , exTrade:'${orderInfo2.basicInfo.exTrade}'
+                             , srvPacId:'${orderInfo2.basicInfo.srvPacId}'
+                             , isSrvPac:'Y'
+                             , promoId:'${orderInfo2.basicInfo.ordPromoId}'}
+                             , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
+                             , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
+
+                         /* $('#ordRentalFees2').val('${orderInfo2.basicInfo.mthRentAmt}');
+                         $('#promoDiscPeriodTp2').val('${orderInfo2.basicInfo.promoDiscPeriodTp}');
+                         $('#promoDiscPeriod2').val('${orderInfo2.basicInfo.promoDiscPeriod}');
+                         $('#ordPrice2').val('${orderInfo2.basicInfo.ordAmt}');
+                         $('#orgOrdPrice2').val('${orderInfo2.basicInfo.norAmt}');
+                         $('#orgOrdRentalFees2').val('${orderInfo2.basicInfo.norRntFee}');
+                         $('#ordRentalFees2').val('${orderInfo2.basicInfo.discRntFee}');
+                         $('#ordPv2').val('${orderInfo2.basicInfo.ordPv}');
+                         $('#ordPriceId2').val('${orderInfo2.basicInfo.itmPrcId}'); */
+                        // fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2');
+                     }
+
                 }
 
-                // Set Frame Promotion
-                if($("#ordProduct2 option:selected").index() > 0) {
-                    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
-                        , stkId:'${orderInfo2.basicInfo.stockId}'
-                        , empChk:'${orderInfo2.basicInfo.empChk}'
-                        , promoCustType:$("#typeId").val()
-                        , exTrade:'${orderInfo2.basicInfo.exTrade}'
-                        , srvPacId:'${orderInfo2.basicInfo.srvPacId}'
-                        , promoId:'${orderInfo2.basicInfo.ordPromoId}'}
-                        , '${orderInfo2.basicInfo.ordPromoId}', 'ordPromo2', 'S'
-                        , fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2')); //Common Code */
 
-                    /* $('#ordRentalFees2').val('${orderInfo2.basicInfo.mthRentAmt}');
-                    $('#promoDiscPeriodTp2').val('${orderInfo2.basicInfo.promoDiscPeriodTp}');
-                    $('#promoDiscPeriod2').val('${orderInfo2.basicInfo.promoDiscPeriod}');
-                    $('#ordPrice2').val('${orderInfo2.basicInfo.ordAmt}');
-                    $('#orgOrdPrice2').val('${orderInfo2.basicInfo.norAmt}');
-                    $('#orgOrdRentalFees2').val('${orderInfo2.basicInfo.norRntFee}');
-                    $('#ordRentalFees2').val('${orderInfo2.basicInfo.discRntFee}');
-                    $('#ordPv2').val('${orderInfo2.basicInfo.ordPv}');
-                    $('#ordPriceId2').val('${orderInfo2.basicInfo.itmPrcId}'); */
-                   // fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2');
-                }
                 totSumPrice();   // 합계
 
                 $('[name="advPay"]').removeAttr("disabled");
