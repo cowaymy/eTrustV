@@ -131,8 +131,8 @@
 
 
                 // Set Mattress Promotion
-               /*  if($("#ordProduct1 option:selected").index() <= 0) {
-                    doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+               if($("#ordProduct1 option:selected").index() > 0) {
+                    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
                         , stkId:'${orderInfo.basicInfo.stockId}'
                         , empChk:'${orderInfo.basicInfo.empChk}'
                         , promoCustType:$("#typeId").val()
@@ -151,11 +151,11 @@
                     $('#ordRentalFees1').val('${orderInfo.basicInfo.discRntFee}');
                     $('#ordPv1').val('${orderInfo.basicInfo.ordPv}');
                     $('#ordPriceId1').val('${orderInfo.basicInfo.itmPrcId}'); */
-                //}
+                }
 
                 // Set Frame Promotion
-                /* if($("#ordProduct2 option:selected").index() <= 0) {
-                    doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
+                if($("#ordProduct2 option:selected").index() > 0) {
+                    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
                         , stkId:'${orderInfo2.basicInfo.stockId}'
                         , empChk:'${orderInfo2.basicInfo.empChk}'
                         , promoCustType:$("#typeId").val()
@@ -175,8 +175,8 @@
                     $('#ordPv2').val('${orderInfo2.basicInfo.ordPv}');
                     $('#ordPriceId2').val('${orderInfo2.basicInfo.itmPrcId}'); */
                    // fn_loadPromotionPrice('${orderInfo2.basicInfo.ordPromoId}', '${orderInfo2.basicInfo.stockId}', '${orderInfo2.basicInfo.srvPacId}', '2');
-                //}
-                //totSumPrice();   // 합계
+                }
+                totSumPrice();   // 합계
 
                 $('[name="advPay"]').removeAttr("disabled");
                 $("input:radio[name='advPay']:radio[value='${orderInfo.basicInfo.advBill}']").prop("checked", true);
@@ -258,10 +258,10 @@
             AUIGrid.setCellValue(docGridID, i, "chkfield", 0);
 
             var vCodeId = AUIGrid.getCellValue(docGridID, i, "codeId");
-            console.log('vCodeId:'+vCodeId);
+            //console.log('vCodeId:'+vCodeId);
             for(var j = 0; j < list.length; j++) {
 
-                console.log('list[j].docTypeId:'+list[j].docTypeId);
+                //console.log('list[j].docTypeId:'+list[j].docTypeId);
 
                 if(vCodeId == list[j].docTypeId) {
                     AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
