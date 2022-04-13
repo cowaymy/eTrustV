@@ -106,6 +106,7 @@ public class ExpenseController {
         model.addAttribute("budgetCode", params.get("popBudgetCode").toString());
         model.addAttribute("budgetCodeName", params.get("popBudgetCodeName").toString());
         model.addAttribute("taxCode", params.get("popTaxCode").toString());
+        model.addAttribute("cntrlCheck", params.get("popCntrlCheck").toString());
 
         return "eAccounting/expense/editExpenseTypePop";
     }

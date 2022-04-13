@@ -107,7 +107,7 @@ function fn_expenseEdit(){
     $("#popBudgetCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "budgetCodeName"));
     $("#popGlAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
     $("#popTaxCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "taxCode"));
-
+    $("#popCntrlCheck").val(AUIGrid.getCellValue(myGridID, first.rowIndex, "cntrlExp"));
 
    Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");
 }
@@ -237,6 +237,7 @@ function createAUIGrid() {
 <input type="hidden" id="popGlAccCodeName" name="popGlAccCodeName"/>
 <input type="hidden" id="popBudgetCodeName" name="popBudgetCodeName"/>
 <input type="hidden" id="popTaxCode" name="popTaxCode"/>
+<input type="hidden" id="popCntrlCheck" name="popCntrlCheck"/>
 </form>
 
 

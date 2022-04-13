@@ -172,7 +172,10 @@
                         <!-- 20220408 - LaiKW - Added for Credit Card Allowance Limit control -->
                         <tr>
                             <th scope="row">Controlled Type</th>
-                            <td><label><input type="checkbox" value="Y" id="cntrlFlag" name ="cntrlFlag"/><span></span></label></td>
+                            <td>
+                                <label><span><input type="checkbox" value="Y" id="cntrlFlag" name ="cntrlFlag"
+                                <c:if test="${cntrlCheck eq 'Y'}">checked</c:if> /></span></label>
+                            </td>
                         </tr>
                     </tbody>
                 </table><!-- table end -->
