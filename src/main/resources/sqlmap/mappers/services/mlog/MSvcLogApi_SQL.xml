@@ -1014,10 +1014,10 @@
                    , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
 
                    , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
-				   , TO_CHAR (SAL0046D.RESULT_CUST_NAME)
-				   , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO)
-				   , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO)
-				   , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME)
+                   , TO_CHAR (SAL0046D.RESULT_CUST_NAME)
+                   , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO)
+                   , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO)
+                   , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME)
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1530,9 +1530,8 @@
                   S90A.SRV_CODY_ID,
                   S08A.SCHDUL_ID,
                   S87A.SRV_FILTER_STK_ID,
-                  S87A.SRV_FILTER_LAST_SERIAL AS filter_Barcd_Serial_No_Old,   /*  Hui Ding - Added previous used filter serial 2021-11-24 */
-                  NULL AS filter_Serial_Unmatch_Reason,   /* Hui Ding - Added previous used filter serial 2021-11-24 */
-                  NULL AS is_Fill_Filter_Info,
+                  /* S87A.SRV_FILTER_LAST_SERIAL AS srv_filter_last_serial,  Hui Ding - Added previous used filter serial 2021-11-24 */
+                  /* NULL AS filter_srl_unmatch_rsn,   Hui Ding - Added previous used filter serial 2021-11-24 */
                   S08A.CODY_ID,
                   S26B.STK_CODE
            FROM SAL0001D S01A
@@ -1584,9 +1583,8 @@
          , TO_CHAR(FILTER_BARCD_SERIAL_NO)    AS     filter_Barcd_Serial_No
          , TO_CHAR(CRT_USER_ID           )    AS     Create_User_ID
          , TO_CHAR(CRT_DT                )    AS     Create_Date
-         , TO_CHAR(SRV_FILTER_PREV_SERIAL) AS filter_Barcd_Serial_No_Old   /* Hui Ding - Added previous used filter serial 2021-11-24 */
-         , TO_CHAR(FILTER_SRL_UNMATCH_RSN) AS filter_Serial_Unmatch_Reason  /* Hui Ding - Added previous used filter serial 2021-11-24 */
-         , TO_CHAR(IS_FILL_FILTER_INFO) AS is_Fill_Filter_Info  /* Hui Ding - Added previous used filter serial 2021-11-24 */
+         /* , TO_CHAR(SRV_FILTER_PREV_SERIAL) AS srv_filter_prev_serial   Hui Ding - Added previous used filter serial 2021-11-24 */
+         /* , TO_CHAR(FILTER_SRL_UNMATCH_RSN) AS filter_srl_unmatch_rsn  Hui Ding - Added previous used filter serial 2021-11-24 */
     FROM SVC0105T
     WHERE MEM_CODE = #{userId}
   </select>
