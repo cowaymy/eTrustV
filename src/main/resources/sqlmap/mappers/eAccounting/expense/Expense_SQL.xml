@@ -137,7 +137,7 @@
               , BUDGET_CODE_NAME = #{budgetCodeName}
             </if>
             <if test="cntrlFlag != null and cntrlFlag != '' ">
-              , CNTRL_EXP = 'Y'
+              , CNTRL_EXP = #{cntrlFlag}
             </if>
               , UPD_USER_ID = #{userId}
               , UPD_DT = SYSDATE

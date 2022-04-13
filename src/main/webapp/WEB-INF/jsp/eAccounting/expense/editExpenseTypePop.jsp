@@ -69,6 +69,13 @@
     }
 
     function fn_updateExpenseType(){
+        console.log("fn_updateExpenseType");
+        if($("#cntrlFlagBox").prop("checked")) {
+            $("#cntrlFlag").val("Y");
+        } else {
+            $("#cntrlFlag").val("N");
+        }
+
         Common.ajax("POST", "/eAccounting/expense/updateExpenseInfo", $("#editForm").serializeJSON(), function(result)    {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 
@@ -121,6 +128,7 @@
                 <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
                 <input type="hidden" id = "pClmType" name="pClmType" />
                 <input type="hidden" id = "pExpType" name="pExpType" />
+                <input type="hidden" id = "cntrlFlag" name="cntrlFlag" />
 
                 <table class="type1"><!-- table start -->
                     <caption>table</caption>
@@ -173,7 +181,7 @@
                         <tr>
                             <th scope="row">Controlled Type</th>
                             <td>
-                                <label><span><input type="checkbox" value="Y" id="cntrlFlag" name ="cntrlFlag"
+                                <label><span><input type="checkbox" value="Y" id="cntrlFlagBox" name ="cntrlFlagBox"
                                 <c:if test="${cntrlCheck eq 'Y'}">checked</c:if> /></span></label>
                             </td>
                         </tr>
