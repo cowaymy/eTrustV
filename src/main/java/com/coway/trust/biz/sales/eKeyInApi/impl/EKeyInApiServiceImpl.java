@@ -83,7 +83,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public List<EgovMap> selecteKeyInList(EKeyInApiForm param) throws Exception {
-    if (null == param) {
+
+	  throw new ApplicationException(AppConstants.FAIL, "This function is currently unavailable..");
+
+   /* if (null == param) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
     if (CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
@@ -99,7 +102,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getRegId())) {
       throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
     }
-    return eKeyInApiMapper.selecteKeyInList(EKeyInApiForm.createMap(param));
+    return eKeyInApiMapper.selecteKeyInList(EKeyInApiForm.createMap(param));*/
   }
 
   @Override
@@ -1220,11 +1223,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public EKeyInApiDto selectExistSofNo(EKeyInApiForm param) throws Exception {
-	  
+
 	  throw new ApplicationException(AppConstants.FAIL,
 	          "This function is currently unavailable..");
-	  
-	  
+
+
  /*   if (null == param) {
       throw new ApplicationException(AppConstants.FAIL,
           "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
