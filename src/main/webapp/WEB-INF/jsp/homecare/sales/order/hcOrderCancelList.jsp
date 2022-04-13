@@ -344,8 +344,8 @@
         Common.popupDiv("/sales/order/orderCancelRequestRawDataPop.do", null, null, true);
     }
 
-    function fn_productReturnRaw() {
-        Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", {"type" : "HC"}, null, true);
+    function fn_productReturnRaw(a) {
+        Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", {"type" : "HC","ind": a}, null, true);
     }
 
     function fn_productReturnLogBookList() {
@@ -580,10 +580,15 @@
 							<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 								<li>
 								    <p class="link_btn type2">
-										<a href="#" onClick="fn_productReturnRaw()">Product Return Raw</a>
+										<a href="#" onClick="fn_productReturnRaw(0)">Product Return Raw</a>
 									</p>
 								</li>
 							</c:if>
+							 <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+						        <li><p class="link_btn type2">
+						          <a href="#" onClick="fn_productReturnRaw(1)">Product Return Raw (4 Months)</a>
+						         </p></li>
+					         </c:if>
 							<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 								<li>
 								    <p class="link_btn type2">
