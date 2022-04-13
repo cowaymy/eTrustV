@@ -1220,7 +1220,12 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public EKeyInApiDto selectExistSofNo(EKeyInApiForm param) throws Exception {
-    if (null == param) {
+	  
+	  throw new ApplicationException(AppConstants.FAIL,
+	          "This function is currently unavailable..");
+	  
+	  
+ /*   if (null == param) {
       throw new ApplicationException(AppConstants.FAIL,
           "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
     }
@@ -1276,7 +1281,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       List<EgovMap> selectBankList = eKeyInApiMapper.selectBankList();
       rtn.setBankList(selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
     }
-    return rtn;
+    return rtn;*/
   }
 
   @Override
