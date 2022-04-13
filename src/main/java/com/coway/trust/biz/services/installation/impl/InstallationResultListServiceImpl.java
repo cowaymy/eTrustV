@@ -1818,6 +1818,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftPsi", CommonUtils.nvl(params.get("aftPsi")).toString());
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
+    //installResult.put("waterSrcType",	 CommonUtils.nvl(params.get("waterSrcType")).toString());
 
     // mobile trigger SMS - ALEX
     installResult.put("resultIcMobileNo", CommonUtils.nvl(params.get("resultIcMobileNo")).toString());
@@ -2661,18 +2662,18 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
-    String smsMessage = "";
-    EgovMap failReasonCode = installationResultListMapper.selectFailReasonCode(installResult);
-    if(installResult.get("statusCodeId").toString().equals("4")){
-      smsMessage = "COWAY:Dear Customer, Your Installation/After Service is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
-    }else{
-      smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/After Service has failed due to "+ failReasonCode.get("defectCode").toString() +".Will call to set new appointment.";
-    }
-    Map<String, Object> smsList = new HashMap<>();
-    smsList.put("userId", installResult.get("creator"));
-    smsList.put("smsType", 975);
-    smsList.put("smsMessage", smsMessage);
-    smsList.put("smsMobileNo", installResult.get("smsMobileNo").toString());
+//    String smsMessage = "";
+//    EgovMap failReasonCode = installationResultListMapper.selectFailReasonCode(installResult);
+//    if(installResult.get("statusCodeId").toString().equals("4")){
+//      smsMessage = "COWAY:Dear Customer, Your Installation/After Service is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
+//    }else{
+//      smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/After Service has failed due to "+ failReasonCode.get("defectCode").toString() +".Will call to set new appointment.";
+//    }
+//    Map<String, Object> smsList = new HashMap<>();
+//    smsList.put("userId", installResult.get("creator"));
+//    smsList.put("smsType", 975);
+//    smsList.put("smsMessage", smsMessage);
+//    smsList.put("smsMobileNo", installResult.get("smsMobileNo").toString());
 
     //if(smsMessage != "")
     //{
