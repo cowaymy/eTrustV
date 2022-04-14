@@ -861,11 +861,14 @@ function fn_checkCreditLimit() {
     var limitFlg = true;
     var clmDt = $("#clmMonth").val(); //claim date
     var month = Number(clmDt.substring(0, 2));
+    if(month < 10){
+    	month = "0" + month
+    }
     var year = Number(clmDt.substring(3));
     var data = {
     		userid : $("#newCrditCardUserId").val(),
     		cardNo : $("#newCrditCardNo").val(),
-    		clmMonth : clmDt,
+    		clmMonth : ""+year+month,
     		month : month,
     		year : year,
     		crcId : $("#sCardSeq").val()
