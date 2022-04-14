@@ -660,7 +660,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			//Member Save
 			memberListMapper.insertMember(params);
 
-
 			logger.debug("params : {}",params);
 
 
@@ -689,7 +688,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						}
 			Map<String, Object> memOrg = new HashMap<String, Object>();
 			CodeMap.put("code", "mem");
-			CodeMap.put("nric", params.get("nric"));
+			//CodeMap.put("nric", params.get("nric"));
 			String MemberId = memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
 
 			if(params.get("deptCode").toString() != null){

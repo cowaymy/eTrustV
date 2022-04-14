@@ -32,7 +32,7 @@ function fn_memberSave(){
                     if(result.message == "Email has been used"){
                         Common.alert(result.message);
                     }else{
-                    	// Only applicable to HP Applicant
+                        // Only applicable to HP Applicant
                         if($("#memberType").val() == "2803") {
                             $("#aplcntNRIC").val($("#nric").val());
                             $("#aplcntName").val($("#memberNm").val());
@@ -1018,8 +1018,8 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
             {
                 if (!regEmail.test($("#email").val()))
                 {
-                	Common.alert("Invalid contact person email");
-                	return false;
+                    Common.alert("Invalid contact person email");
+                    return false;
                 }
             }
             //endregion
@@ -1033,7 +1033,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
 
     //@AMEER add INCOME TAX
     if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 13){
-    	 Common.alert("Invalid Income Tax Length");
+         Common.alert("Invalid Income Tax Length");
          return false;
    }
     var regIncTax = /^[a-zA-Z0-9]*$/;
@@ -1386,7 +1386,6 @@ function checkBankAccNo() {
                 Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
                     console.log(result);
                     if(result.cnt1 == "0" && result.cnt2 == "0") {
-                    //if(result.cnt1 == 0) { //comment for revert code rev19070
                         return true;
                     } else {
                         Common.alert("Bank account number has been registered.");
@@ -1401,7 +1400,6 @@ function checkBankAccNo() {
             Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
                 console.log(result);
                 if(result.cnt1 == "0" && result.cnt2 == "0") {
-                //if(result.cnt1 == "0") { //comment for revert rev19071
                     return true;
                 } else {
                     Common.alert("Bank account number has been registered.");

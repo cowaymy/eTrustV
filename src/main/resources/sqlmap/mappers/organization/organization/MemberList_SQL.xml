@@ -1388,7 +1388,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
       <select id="selectMemberId" parameterType="Map" resultType="String">
 
       <if test="code != null and code == 'mem'">
-          SELECT MAX(MEM_ID) MEMBERID FROM ORG0001D /*where nric = #{nric} */
+          SELECT MAX(MEM_ID) MEMBERID FROM ORG0001D
       </if>
 
       <if test="code != null and code == 'tax'">
@@ -2541,7 +2541,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     <insert id="traineeUpdate" parameterType="Map" >
 
          UPDATE ORG0001D
-          SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ,'5758' , FN_GET_DOCNO(171),'6672' , FN_GET_DOCNO(184) ) ,
+          SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ,'5758' , FN_GET_DOCNO(171), '6672' , FN_GET_DOCNO(184) ) ,
                   MEM_TYPE = TRAINEE_TYPE,
                   TRAINEE_CODE = MEM_CODE,
                   UPD_DT     = SYSDATE
@@ -3939,18 +3939,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <select id="checkNRIC1"  parameterType="Map" resultType="egovMap">
-	<![CDATA[
-	        SELECT *
-	        FROM ORG0003D
-	        WHERE APLICNT_NRIC = #{nric}
-	        AND STUS_ID <> '6'
-	        AND APLICNT_TYPE IN ('1', '2803')
-	]]>
-    /*Comment for revert rev19050 code
-        Select * from org0001d A
-        Left join org0003d B ON B.APLICNT_BANK_ACC_NO = A.BANK_ACC_NO AND B.APLICNT_NRIC = A.NRIC
-        WHERE A.STUS NOT IN ('51','3') AND B.STUS_ID NOT IN ('6') AND (A.NRIC =  #{nric} OR B.APLICNT_NRIC = #{nric})
-    */
+    <![CDATA[
+        SELECT *
+        FROM ORG0003D
+        WHERE APLICNT_NRIC = #{nric}
+        AND STUS_ID <> '6'
+        AND APLICNT_TYPE IN ('1', '2803')
+    ]]>
     </select>
 
     <select id="checkNRIC2"  parameterType="Map" resultType="egovMap">
@@ -4587,7 +4582,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       </select>
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
-      SELECT
+        SELECT
             COUNT(1) CNT
         <if test="srcA != '' and srcA != null ">
             <![CDATA[
@@ -4604,11 +4599,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 AND STUS <> '3'
             ]]>
         </if>
-        /*rever for rev19050 code
-        select COUNT(1) CNT from org0001d A
-        Left join org0003d B ON B.APLICNT_BANK_ACC_NO = A.BANK_ACC_NO AND B.APLICNT_NRIC = A.NRIC
-        WHERE A.STUS NOT IN ('51','3') AND B.STUS_ID NOT IN ('6') AND (A.BANK_ACC_NO =  #{bankAccNo} OR B.APLICNT_BANK_ACC_NO = #{bankAccNo})
-        */
       </select>
 
       <select id="checkIncomeTax" parameterType="Map" resultType="egovMap">
@@ -5372,138 +5362,138 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <select id="selectPromoDisHistory" parameterType="Map" resultType="egovMap">
-		SELECT
-		  *
-		FROM
-		  (
-		    SELECT
-		      MEM_CODE,
-		      POSITION_NAME,
-		      MEMBER_CODE_HISTORY,
-		      NAME,
-		      GMCODE,
-		      SMCODE,
-		      HMCODE,
-		      MOTHER_MANAGER_CODE,
-		      MOTHER_MANAGER_NAME,
-		      MEMBER_ID,
-		      SPONS_CODE,
-		      PROMOTION_DATE,
-		      CASE WHEN (
-		        SELECT
-		          PROMO_TYPE_ID
-		        FROM
-		          ORG0007D
-		        WHERE
-		          PROMO_ID = (
-		            SELECT
-		              MAX(PROMO_ID)
-		            FROM
-		              ORG0007D o
-		            WHERE
-		              o.MEM_ID = T.MEM_ID
-		          )
-		      ) IN ('747','749') THEN '-' ELSE DISCONTINUE_DATE END AS DISCONTINUE_DATE,
-		      MEM_LVL,
-		      ORG_CODE,
-		      GRP_CODE,
-		      DEPT_CODE,
-		      ROW_NUMBER() OVER(
-		        PARTITION BY MEM_ID
-		        ORDER BY
-		          PROMO_ID DESC
-		      ),
-		      CASE WHEN MEM_LVL_CURR = MEM_LVL
-		      AND MEM_LVL_CURR = 4 THEN 1 WHEN MEM_LVL_CURR != 4
-		      AND ROW_NUMBER() OVER(
-		        PARTITION BY MEM_ID
-		        ORDER BY
-		          PROMO_ID DESC
-		      ) = 1 THEN 1 ELSE 0 END MAIN,
-		      MEM_LVL_CURR,
-		      PROMO_ID
-		    FROM
-		      (
-		        SELECT
-		          O1.MEM_ID,
-		          O1.MEM_CODE,
-		          O3.CODE_NAME POSITION_NAME,
-		          '' MEMBER_CODE_HISTORY,
-		          NAME NAME,
-		          O2.ORG_CODE GMCODE,
-		          O2.GRP_CODE SMCODE,
-		          O2.DEPT_CODE HMCODE,
-		          '' MOTHER_MANAGER_CODE,
-		          '' MOTHER_MANAGER_NAME,
-		          '' MEMBER_ID,
-		          SPONS_CODE SPONS_CODE,
-		          TO_CHAR(JOIN_DT, 'DD/MM/YYYY') PROMOTION_DATE,
-		          '' DISCONTINUE_DATE,
-		          4 MEM_LVL,
-		          O2.ORG_CODE,
-		          O2.GRP_CODE,
-		          O2.DEPT_CODE,
-		          O2.MEM_LVL MEM_LVL_CURR,
-		          0 PROMO_ID
-		        FROM
-		          ORG0001D O1
-		          JOIN ORG1001V O2 ON O2.MEM_ID = O1.MEM_ID
-		          JOIN SYS0013M O3 ON O3.CODE_ID = O1.MEM_TYPE
-		        WHERE
-		          MEM_TYPE IN (
-		            '1',
-		            '2',
-		            '3',
-		            '7'
-		          )
-		        UNION
-		        SELECT
-		          EXTENT1.MEM_ID,
-		          EXTENT1.MEM_CODE,
-		          EXTENT3.MEM_ORG_DESC POSITION_NAME,
-		          EXTENT2.DEPT_CODE_TO MEMBER_CODE_HISTORY,
-		          EXTENT1.NAME NAME,
-		          CASE WHEN EXTENT2.MEM_LVL_TO IN (
-		            '2',
-		            '3'
-		          ) THEN EXTENT2.LAST_ORG_CODE END GMCODE,
-		          CASE WHEN EXTENT2.MEM_LVL_TO IN (
-		            '3',
-		            '4'
-		          ) THEN EXTENT2.LAST_GRP_CODE END SMCODE,
-		          CASE WHEN EXTENT2.MEM_LVL_TO = 4 THEN EXTENT2.LAST_DEPT_CODE END HMCODE,
-		          EXTENT2.PR_CODE MOTHER_MANAGER_CODE,
-		          EXTENT11.NAME MOTHER_MANAGER_NAME,
-		          '' MEMBER_ID,
-		          EXTENT1.SPONS_CODE SPONS_CODE,
-		          TO_CHAR(EXTENT2.CRT_DT, 'DD/MM/YYYY') PROMOTION_DATE,
-		          TO_CHAR(EXTENT7.CRT_DT, 'DD/MM/YYYY') DISCONTINUE_DATE,
-		          EXTENT2.MEM_LVL_TO MEM_LVL,
-		          EXTENT4.ORG_CODE,
-		          EXTENT4.GRP_CODE,
-		          EXTENT4.DEPT_CODE,
-		          EXTENT4.MEM_LVL MEM_LVL_CURR,
-		          EXTENT2.PROMO_ID
-		        FROM
-		          ORG0001D EXTENT1
-		          JOIN ORG0007D EXTENT2 ON EXTENT2.MEM_ID = EXTENT1.MEM_ID
-		          JOIN ORG0012D EXTENT3 ON (EXTENT3.MEM_TYPE_ID = EXTENT2.MEM_TYPE_ID)
-		          AND (EXTENT3.MEM_ORG_LVL = EXTENT2.MEM_LVL_TO)
-		          JOIN ORG1001V EXTENT4 ON EXTENT1.MEM_CODE = EXTENT4.MEM_CODE
-		          LEFT JOIN ORG0005D EXTENT8 ON EXTENT8.MEM_ID = EXTENT1.MEM_ID
-		          LEFT JOIN ORG0007D EXTENT7 ON (EXTENT7.MEM_ID = EXTENT2.MEM_ID)
-		          AND (EXTENT7.DEPT_CODE_FROM = EXTENT2.DEPT_CODE_TO)
-		          AND (
-		            EXTENT7.PROMO_TYPE_ID IN (
-		              '747',
-		              '748'
-		            )
-		          )
-		          JOIN ORG0001D EXTENT11 ON EXTENT11.MEM_ID = EXTENT2.PARENT_ID_FROM
-		        WHERE
-		          1 = 1
-		          AND EXTENT2.PROMO_TYPE_ID IN (
-		            '747'
+        SELECT
+          *
+        FROM
+          (
+            SELECT
+              MEM_CODE,
+              POSITION_NAME,
+              MEMBER_CODE_HISTORY,
+              NAME,
+              GMCODE,
+              SMCODE,
+              HMCODE,
+              MOTHER_MANAGER_CODE,
+              MOTHER_MANAGER_NAME,
+              MEMBER_ID,
+              SPONS_CODE,
+              PROMOTION_DATE,
+              CASE WHEN (
+                SELECT
+                  PROMO_TYPE_ID
+                FROM
+                  ORG0007D
+                WHERE
+                  PROMO_ID = (
+                    SELECT
+                      MAX(PROMO_ID)
+                    FROM
+                      ORG0007D o
+                    WHERE
+                      o.MEM_ID = T.MEM_ID
+                  )
+              ) IN ('747','749') THEN '-' ELSE DISCONTINUE_DATE END AS DISCONTINUE_DATE,
+              MEM_LVL,
+              ORG_CODE,
+              GRP_CODE,
+              DEPT_CODE,
+              ROW_NUMBER() OVER(
+                PARTITION BY MEM_ID
+                ORDER BY
+                  PROMO_ID DESC
+              ),
+              CASE WHEN MEM_LVL_CURR = MEM_LVL
+              AND MEM_LVL_CURR = 4 THEN 1 WHEN MEM_LVL_CURR != 4
+              AND ROW_NUMBER() OVER(
+                PARTITION BY MEM_ID
+                ORDER BY
+                  PROMO_ID DESC
+              ) = 1 THEN 1 ELSE 0 END MAIN,
+              MEM_LVL_CURR,
+              PROMO_ID
+            FROM
+              (
+                SELECT
+                  O1.MEM_ID,
+                  O1.MEM_CODE,
+                  O3.CODE_NAME POSITION_NAME,
+                  '' MEMBER_CODE_HISTORY,
+                  NAME NAME,
+                  O2.ORG_CODE GMCODE,
+                  O2.GRP_CODE SMCODE,
+                  O2.DEPT_CODE HMCODE,
+                  '' MOTHER_MANAGER_CODE,
+                  '' MOTHER_MANAGER_NAME,
+                  '' MEMBER_ID,
+                  SPONS_CODE SPONS_CODE,
+                  TO_CHAR(JOIN_DT, 'DD/MM/YYYY') PROMOTION_DATE,
+                  '' DISCONTINUE_DATE,
+                  4 MEM_LVL,
+                  O2.ORG_CODE,
+                  O2.GRP_CODE,
+                  O2.DEPT_CODE,
+                  O2.MEM_LVL MEM_LVL_CURR,
+                  0 PROMO_ID
+                FROM
+                  ORG0001D O1
+                  JOIN ORG1001V O2 ON O2.MEM_ID = O1.MEM_ID
+                  JOIN SYS0013M O3 ON O3.CODE_ID = O1.MEM_TYPE
+                WHERE
+                  MEM_TYPE IN (
+                    '1',
+                    '2',
+                    '3',
+                    '7'
+                  )
+                UNION
+                SELECT
+                  EXTENT1.MEM_ID,
+                  EXTENT1.MEM_CODE,
+                  EXTENT3.MEM_ORG_DESC POSITION_NAME,
+                  EXTENT2.DEPT_CODE_TO MEMBER_CODE_HISTORY,
+                  EXTENT1.NAME NAME,
+                  CASE WHEN EXTENT2.MEM_LVL_TO IN (
+                    '2',
+                    '3'
+                  ) THEN EXTENT2.LAST_ORG_CODE END GMCODE,
+                  CASE WHEN EXTENT2.MEM_LVL_TO IN (
+                    '3',
+                    '4'
+                  ) THEN EXTENT2.LAST_GRP_CODE END SMCODE,
+                  CASE WHEN EXTENT2.MEM_LVL_TO = 4 THEN EXTENT2.LAST_DEPT_CODE END HMCODE,
+                  EXTENT2.PR_CODE MOTHER_MANAGER_CODE,
+                  EXTENT11.NAME MOTHER_MANAGER_NAME,
+                  '' MEMBER_ID,
+                  EXTENT1.SPONS_CODE SPONS_CODE,
+                  TO_CHAR(EXTENT2.CRT_DT, 'DD/MM/YYYY') PROMOTION_DATE,
+                  TO_CHAR(EXTENT7.CRT_DT, 'DD/MM/YYYY') DISCONTINUE_DATE,
+                  EXTENT2.MEM_LVL_TO MEM_LVL,
+                  EXTENT4.ORG_CODE,
+                  EXTENT4.GRP_CODE,
+                  EXTENT4.DEPT_CODE,
+                  EXTENT4.MEM_LVL MEM_LVL_CURR,
+                  EXTENT2.PROMO_ID
+                FROM
+                  ORG0001D EXTENT1
+                  JOIN ORG0007D EXTENT2 ON EXTENT2.MEM_ID = EXTENT1.MEM_ID
+                  JOIN ORG0012D EXTENT3 ON (EXTENT3.MEM_TYPE_ID = EXTENT2.MEM_TYPE_ID)
+                  AND (EXTENT3.MEM_ORG_LVL = EXTENT2.MEM_LVL_TO)
+                  JOIN ORG1001V EXTENT4 ON EXTENT1.MEM_CODE = EXTENT4.MEM_CODE
+                  LEFT JOIN ORG0005D EXTENT8 ON EXTENT8.MEM_ID = EXTENT1.MEM_ID
+                  LEFT JOIN ORG0007D EXTENT7 ON (EXTENT7.MEM_ID = EXTENT2.MEM_ID)
+                  AND (EXTENT7.DEPT_CODE_FROM = EXTENT2.DEPT_CODE_TO)
+                  AND (
+                    EXTENT7.PROMO_TYPE_ID IN (
+                      '747',
+                      '748'
+                    )
+                  )
+                  JOIN ORG0001D EXTENT11 ON EXTENT11.MEM_ID = EXTENT2.PARENT_ID_FROM
+                WHERE
+                  1 = 1
+                  AND EXTENT2.PROMO_TYPE_ID IN (
+                    '747'
                     )
 
                 <if test="promoDisHismemTypeCom != null and promoDisHismemTypeCom != ''">
@@ -5624,33 +5614,33 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
 
      <select id="selectSocialMedia" parameterType="Map" resultType="egovMap">
         SELECT
-			MEM_ID,
-			MEM_CODE,
-			MEM_TYPE,
-			STUS,
-			FB_LINK,
-			IG_LINK,
-			PHOTO_ID,
-	        B.ATCH_FILE_GRP_ID,
-	        C.ATCH_FILE_ID,
-	        C.ATCH_FILE_NAME,
-	        C.FILE_SUB_PATH,
-	        C.PHYSICL_FILE_NAME
-		FROM ORG0001D A
+            MEM_ID,
+            MEM_CODE,
+            MEM_TYPE,
+            STUS,
+            FB_LINK,
+            IG_LINK,
+            PHOTO_ID,
+            B.ATCH_FILE_GRP_ID,
+            C.ATCH_FILE_ID,
+            C.ATCH_FILE_NAME,
+            C.FILE_SUB_PATH,
+            C.PHYSICL_FILE_NAME
+        FROM ORG0001D A
             LEFT JOIN SYS0070M B ON B.ATCH_FILE_GRP_ID = A.PHOTO_ID
             LEFT JOIN SYS0071D C ON C.ATCH_FILE_ID = B.ATCH_FILE_ID
-		WHERE
-	       MEM_ID = #{MemberID}
+        WHERE
+           MEM_ID = #{MemberID}
     </select>
 
      <update id="updateSocialMedia" parameterType="Map">
-	     UPDATE ORG0001D
-	     SET
-	        FB_LINK = #{fbLink},
-	        IG_LINK =  #{igLink},
-	        PHOTO_ID = #{photoId}
-	     WHERE
-	        MEM_ID = #{MemberID}
+         UPDATE ORG0001D
+         SET
+            FB_LINK = #{fbLink},
+            IG_LINK =  #{igLink},
+            PHOTO_ID = #{photoId}
+         WHERE
+            MEM_ID = #{MemberID}
     </update>
 
 
