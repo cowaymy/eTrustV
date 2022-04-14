@@ -1842,17 +1842,17 @@
             A.PAY_MODE,
             A.TARGET,
             A.COLLECTION,
-            C.BANK_DTL_APPR_CODE APPR_THS_MNTH
+            NVL(C.BANK_DTL_APPR_CODE,'00') APPR_THS_MNTH
             , CASE WHEN D.ctrl_stus_id = 1 THEN '-'
-            WHEN SYS.IND = 'SUCCESS' OR (C.BANK_DTL_APPR_CODE IS NULL) AND A.PAY_MODE = 'CRC' THEN 'Success'
+            WHEN SYS.IND = 'SUCCESS' OR (C.BANK_DTL_APPR_CODE IS NULL) AND A.PAY_MODE IN ('CRC','DD') THEN 'Success'
             WHEN SYS.IND = 'INSFUNDS' THEN 'Insufficient Funds'
             WHEN SYS.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
             WHEN SYS.IND = 'CHGCARD' THEN 'Change Card'
             WHEN SYS.IND = 'TRXNOTALW' AND D.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
             ELSE (CASE WHEN A.PAY_MODE = 'CRC' THEN 'Failed' ELSE '' END) END THIS_MONTH
-            ,E.BANK_DTL_APPR_CODE APPR_PREV_MNTH
+            ,NVL(E.BANK_DTL_APPR_CODE,'00') APPR_PREV_MNTH
             , CASE WHEN F.ctrl_stus_id = 1 THEN '-'
-            WHEN (SYC.IND = 'SUCCESS' OR E.BANK_DTL_APPR_CODE IS NULL)AND A.PAY_MODE = 'CRC' THEN 'Success'
+            WHEN (SYC.IND = 'SUCCESS' OR E.BANK_DTL_APPR_CODE IS NULL)AND A.PAY_MODE IN ('CRC','DD') THEN 'Success'
             WHEN SYC.IND = 'INSFUNDS' THEN 'Insufficient Funds'
             WHEN SYC.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
             WHEN SYC.IND = 'CHGCARD' THEN 'Change Card'
