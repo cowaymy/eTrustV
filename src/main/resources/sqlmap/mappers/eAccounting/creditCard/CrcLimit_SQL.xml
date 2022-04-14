@@ -265,6 +265,13 @@
             </if>
         JOIN ORG0001D C
             ON B.CHRG_USER_ID = C.MEM_CODE
+        <if test="loginUserId != null and loginUserId != '' ">
+            WHERE B.CHRG_USER_ID = (
+                SELECT HR_CODE
+                FROM SYS0047M
+                WHERE USER_ID = #{loginUserId}
+            )
+        </if>
         GROUP BY
             B.CRDIT_CARD_SEQ,
             B.CRDIT_CARD_USER_ID,
@@ -674,6 +681,13 @@
                 </if>
                 <if test="costCenter != null and costCenter != '' ">
                     AND B.COST_CENTR = #{costCenter}
+                </if>
+                <if test="loginUserId != null and loginUserId != '' ">
+                    AND B.CHRG_USER_ID = (
+                        SELECT HR_CODE
+                        FROM SYS0047M
+                        WHERE USER_ID = #{loginUserId}
+                    )
                 </if>
             )
         WHERE 1=1
