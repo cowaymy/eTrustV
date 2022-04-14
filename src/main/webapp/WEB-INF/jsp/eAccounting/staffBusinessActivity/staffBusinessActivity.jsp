@@ -1210,8 +1210,8 @@ var myGridPros = {
 
          if($("#refMode :selected").val() == 'OTRX')
          {
-             if($("#trvBankRefNo").val() == "" || $("#trvBankRefNo").val() == null) {
-                 Common.alert("Bank-In Advice Ref No required.");
+             if($("#refBankRef").val() == "" || $("#refBankRef").val() == null) {
+                 Common.alert("Bank Reference is required.");
                  checkRefundFlg = false;
                  return checkRefundFlg;
              }
