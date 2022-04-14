@@ -308,17 +308,23 @@ function fn_validSearch() {
 	&& FormUtil.isEmpty($('#chequeNo').val())
 	&& FormUtil.isEmpty($('#crcNo').val())
 	&& FormUtil.isEmpty($('#trxId').val())
+	&& FormUtil.isEmpty($('#crcStateId').val())
+	&& FormUtil.isEmpty($('#customerIC').val())
+	&& FormUtil.isEmpty($('#batchPaymentId').val())
+	&& FormUtil.isEmpty($('#poNo').val())
 	&& FormUtil.isEmpty($('#trNo').val()))
 	{
+		 isValid = false;
+		msg += '* Please fill in atleast one search criteria. ';
 
-
-	 if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())) {
+		   /*
+		   if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())) {
             isValid = false;
             msg += '* <spring:message code="pay.alert.dateFormTo" /><br/>';
-            if($('#crcStateId').val() !=""||  $('#crcStateId').val() != null){
+            if($('#crcStateId').val() !="" &&  $('#crcStateId').val() != null){
             	isValid = true;
             }
-        } else{
+        }else{
         	var diffDay = fn_diffDate($('#payDate1').val(), $('#payDate2').val());
             var dayGap = 15 ;
         	if(diffDay > dayGap || diffDay < 0) {
@@ -327,6 +333,7 @@ function fn_validSearch() {
             }
 
         }
+		   */
 	}
 
 	 if(!isValid) Common.alert(msg);
