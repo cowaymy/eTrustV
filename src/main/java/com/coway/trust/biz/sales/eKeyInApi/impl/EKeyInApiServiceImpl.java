@@ -83,10 +83,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public List<EgovMap> selecteKeyInList(EKeyInApiForm param) throws Exception {
-
-	  throw new ApplicationException(AppConstants.FAIL, "This function is currently unavailable..");
-
-   /* if (null == param) {
+    if (null == param) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
     if (CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
@@ -102,7 +99,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getRegId())) {
       throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
     }
-    return eKeyInApiMapper.selecteKeyInList(EKeyInApiForm.createMap(param));*/
+    return eKeyInApiMapper.selecteKeyInList(EKeyInApiForm.createMap(param));
   }
 
   @Override
@@ -1223,12 +1220,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public EKeyInApiDto selectExistSofNo(EKeyInApiForm param) throws Exception {
-
-	  throw new ApplicationException(AppConstants.FAIL,
-	          "This function is currently unavailable..");
-
-
- /*   if (null == param) {
+    if (null == param) {
       throw new ApplicationException(AppConstants.FAIL,
           "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
     }
@@ -1284,7 +1276,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       List<EgovMap> selectBankList = eKeyInApiMapper.selectBankList();
       rtn.setBankList(selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
     }
-    return rtn;*/
+    return rtn;
   }
 
   @Override
