@@ -1,5 +1,6 @@
 package com.coway.trust.biz.eAccounting.webInvoice.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -429,7 +430,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					Map<String, Object> appvSettlementInfo = null;
 					Map<String, Object> refundRecordInfo = null;
 
-					int diffAmt = 0; //initiate as 0, 0=no outstanding and balance
+					BigDecimal diffAmt = BigDecimal.ZERO; //initiate as 0, 0=no outstanding and balance
 					boolean diffAmtFlg = false; // false: No need to insert (request<exp)
 				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
                         String ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
@@ -458,11 +459,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 invoAppvItems.put("glCode", invoAppvItems.get("glCode"));
                                 invoAppvItems.put("memAccId", "");
 
-                                int reqAmt, expAmt;
-                                reqAmt = Integer.valueOf(invoAppvItems.get("reqAmt").toString());
-                                expAmt = Integer.valueOf(invoAppvItems.get("totAmt").toString());
-                                diffAmt = reqAmt - expAmt;
-                                if(diffAmt < 0)
+                                BigDecimal reqAmt, expAmt;
+                                reqAmt = (BigDecimal)invoAppvItems.get("reqAmt");
+                                expAmt = (BigDecimal)invoAppvItems.get("totAmt");
+                                //diffAmt = reqAmt - expAmt;
+                                diffAmt= reqAmt.subtract(expAmt);
+                                if(diffAmt.compareTo(BigDecimal.ZERO) == -1) //if(diffAmt < 0)
                                 {
                                 	//insert settlement request with itemize total as 1 record
                                 	//insert balance amt 1 line
@@ -476,7 +478,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                         staffBusinessActivityMapper.insertBusinessActAdvInterface(invoAppvItems);
                     }
 				    String ifKey;
-				    if(diffAmt < 0) //expenses more than advance
+				    if(diffAmt.compareTo(BigDecimal.ZERO) == -1)  //if(diffAmt < 0) //expenses more than advance
 				    {
 				    	//itemize total as 1 record
 				    	appvSettlementInfo = staffBusinessActivityMapper.selectSettlementInfo(invoAppvInfo); //main record
@@ -506,7 +508,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
                         LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
 				    }
-				    else if(diffAmt > 0) //advance more than expenses
+				    else if(diffAmt.compareTo(BigDecimal.ZERO) == 1)//else if(diffAmt > 0) //advance more than expenses
 				    {
 
 				    	//itemize total as 1 record

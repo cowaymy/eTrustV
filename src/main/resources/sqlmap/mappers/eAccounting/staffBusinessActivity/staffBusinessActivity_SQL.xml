@@ -934,8 +934,8 @@
 	        #{expDesc},
 	        #{advClamNo},
 	        #{glCode},
-	        #{grandAmt},
-	        #{expAmt},
+	        REGEXP_REPLACE(#{grandAmt}, '[^0-9.]+', NULL),
+	        REGEXP_REPLACE(#{expAmt}, '[^0-9.]+', NULL),
 	        <if test="balAmt &lt; 0">
 	           #{balAmt}*-1,
 	        </if>
@@ -944,7 +944,7 @@
             </if>
 	        #{taxAmt},
 	        #{nonTaxAmt},
-	        #{totAmt},
+	        REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
 	        'VB',
 	        #{dim1},
 	        #{dim2},
