@@ -1223,8 +1223,8 @@ var myGridPros = {
              return checkRefundFlg;
          }
 
-         //if($("input[name=trvAdvFileSelector]")[0].files[0] == "" || $("input[name=trvAdvFileSelector]")[0].files[0] == null) {
-         if(FormUtil.isEmpty($(".input_text").val())) {
+         if($("input[name=trvAdvFileSelector]")[0].files[0] == "" || $("input[name=trvAdvFileSelector]")[0].files[0] == null) {
+         //if(FormUtil.isEmpty($(".input_text").val())) {
              Common.alert("Please attach supporting document zipped files!")
              checkRefundFlg = false;
              return checkRefundFlg;
