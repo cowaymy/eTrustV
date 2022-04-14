@@ -1388,7 +1388,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
       <select id="selectMemberId" parameterType="Map" resultType="String">
 
       <if test="code != null and code == 'mem'">
-          SELECT MAX(MEM_ID) MEMBERID FROM ORG0001D where nric = #{nric}
+          SELECT MAX(MEM_ID) MEMBERID FROM ORG0001D /*where nric = #{nric} */
       </if>
 
       <if test="code != null and code == 'tax'">
@@ -3939,11 +3939,18 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <select id="checkNRIC1"  parameterType="Map" resultType="egovMap">
-
+	<![CDATA[
+	        SELECT *
+	        FROM ORG0003D
+	        WHERE APLICNT_NRIC = #{nric}
+	        AND STUS_ID <> '6'
+	        AND APLICNT_TYPE IN ('1', '2803')
+	]]>
+    /*Comment for revert rev19050 code
         Select * from org0001d A
         Left join org0003d B ON B.APLICNT_BANK_ACC_NO = A.BANK_ACC_NO AND B.APLICNT_NRIC = A.NRIC
         WHERE A.STUS NOT IN ('51','3') AND B.STUS_ID NOT IN ('6') AND (A.NRIC =  #{nric} OR B.APLICNT_NRIC = #{nric})
-
+    */
     </select>
 
     <select id="checkNRIC2"  parameterType="Map" resultType="egovMap">
@@ -4580,9 +4587,28 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       </select>
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
+      SELECT
+            COUNT(1) CNT
+        <if test="srcA != '' and srcA != null ">
+            <![CDATA[
+                FROM ORG0003D
+                WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
+                AND STUS_ID <> '6'
+            ]]>
+        </if>
+        <if test="srcM != '' and srcM != null ">
+            <![CDATA[
+                FROM ORG0001D
+                WHERE BANK_ACC_NO = #{bankAccNo}
+                AND STUS <> '51'
+                AND STUS <> '3'
+            ]]>
+        </if>
+        /*rever for rev19050 code
         select COUNT(1) CNT from org0001d A
         Left join org0003d B ON B.APLICNT_BANK_ACC_NO = A.BANK_ACC_NO AND B.APLICNT_NRIC = A.NRIC
         WHERE A.STUS NOT IN ('51','3') AND B.STUS_ID NOT IN ('6') AND (A.BANK_ACC_NO =  #{bankAccNo} OR B.APLICNT_BANK_ACC_NO = #{bankAccNo})
+        */
       </select>
 
       <select id="checkIncomeTax" parameterType="Map" resultType="egovMap">
