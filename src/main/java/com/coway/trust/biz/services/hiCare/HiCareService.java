@@ -23,6 +23,8 @@ public interface HiCareService {
 
 	public List<EgovMap> selectModelCode();
 
+	public List<EgovMap> getBch(Map<String, Object> params);
+
 	public List<EgovMap> selectHiCareList(Map<String, Object> params);
 
 	public List<Object> saveHiCareBarcode(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;

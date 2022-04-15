@@ -50,7 +50,7 @@
     		}
         });
 
-    	$("#filterTxtBarcode").change(function() {
+    	$("#_filterTxtBarcode").change(function() {
             event.preventDefault();
             fn_splitUsedBarcode();
         });

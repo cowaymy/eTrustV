@@ -5,9 +5,9 @@
 
     <select id="selectCdbCode" parameterType="Map" resultType="egovMap">
 	    <![CDATA[
-	       SELECT Extent1.BRNCH_ID BRNCH_ID
-	       , Extent1.CODE CODE_ID
-	       , Extent1.CODE ||' '|| Extent1.NAME CDB_NAME
+	       SELECT Extent1.BRNCH_ID CODE_ID
+	       , Extent1.CODE CODE
+	       , Extent1.CODE ||' '|| Extent1.NAME CODE_NAME
 	       FROM SYS0005M Extent1
 	       WHERE Extent1.TYPE_ID = '42' AND Extent1.STUS_ID = '1'
 	       ORDER BY CODE
@@ -21,6 +21,21 @@
             ,CODE_DESC
             FROM SYS0013M WHERE CODE_MASTER_ID IN ('490')
         ]]>
+    </select>
+
+    <select id="getBch" parameterType="Map" resultType="egovMap">
+	    SELECT BRNCH_ID AS CODE_ID,
+	           CODE || ' - ' || NAME AS CODE_NAME
+	    FROM SYS0005M
+	    WHERE 1 = 1
+	    AND TYPE_ID IN (42) --43
+	      <!-- <if test="cboBchTyp != null and cboBchTyp !='' ">
+	        <![CDATA[ AND TYPE_ID = #{cboBchTyp} ]]>
+	      </if> -->
+	      <if test="groupCode != null and groupCode !='' ">
+	      AND BRNCH_ID = #{groupCode}
+	      </if>
+	    ORDER BY CODE
     </select>
 
     <select id="selectHiCareList" parameterType="Map" resultType="egovMap">

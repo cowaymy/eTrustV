@@ -116,9 +116,10 @@
 
     var brnch = '${SESSION_INFO.userBranchId}';
 
-      hiCareGrid();
+    var userName = '${SESSION_INFO.userName}';
 
-      console.log('branch ' +brnch);
+
+      hiCareGrid();
 
       $("#temp").hide();
 
@@ -139,8 +140,19 @@
       /* if(MEM_TYPE != "5"){
     	  if("${SESSION_INFO.memberLevel}" =="4"){ */
 
-    		  $("#cmdBranchCode option:eq(1)", '#hiCareForm').attr("selected", true);
+    		  //$('#cmdBranchCode').val(brnch);
+    	  if(brnch == "42" || userName == 'KHSATO'){
+    		  //doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode', 'M', 'f_multiComboType');
+    		  doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode', 'S', '');
+    		  $("#cmdBranchCode option[value='"+ brnch +"']", '#hiCareForm').attr("selected", true);
     		  $('#cmdBranchCode').trigger('click');
+    	  }else{
+    		  //$('#cmdBranchCode').prop("disabled", true);
+    		  doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'cmdBranchCode', 'S', '');
+    		  //$("#cmdBranchCode option[value='"+ brnch +"']", '#hiCareForm').attr("selected", true);
+              $('#cmdBranchCode').trigger('click');
+    	  }
+
     		  //$('#cmdBranchCode', '#hiCareForm').attr("readonly", true);
     		  //$('#cmdBranchCode', '#hiCareForm').attr('class','w100p readonly ');
     	  /* }
@@ -174,6 +186,16 @@
 	        }).multipleSelect({
 	            selectAll : true
 	        });
+
+	        /* $('#cmdBranchCode').change(function() {
+	          }).multipleSelect({
+	              selectAll : true, // 전체선택
+	              width : '80%'
+	          }).multipleSelect("checkAll"); */
+	        /* $('#cmdBranchCode').change(function() {
+            }).multipleSelect({
+                selectAll : true
+            }); */
 
 	    });
 	}
@@ -378,16 +400,18 @@
         <tr>
             <th scope="row"><spring:message code='service.grid.memberCode'/></th>
                 <td>
-                    <select id="cmdMemberCode" name="cmdMemberCode" class="w100p">
+                    <select id="cmdMemberCode" name="cmdMemberCode" class="w100p"></select>
                 </td>
             <th scope="row"><spring:message code='service.grid.BranchCode'/></th>
                 <td>
-                    <select id="cmdBranchCode" name="cmdBranchCode" class="w100p readOnly ">
+                <!-- <select class="multy_select w100p" multiple="multiple" name="cmdBranchCode" id="cmdBranchCode"></select> -->
+                <select id="cmdBranchCode" name="cmdBranchCode" class="w100p"></select>
+                   <%--  <select id="cmdBranchCode" name="cmdBranchCode" class="w100p readOnly ">
                         <option value="">Choose One</option>
                             <c:forEach var="list" items="${branchList}" varStatus="status">
                                 <option value="${list.codeId}">${list.codeName}</option>
                             </c:forEach>
-                    </select>
+                    </select> --%>
                 </td>
         </tr>
         <tr>

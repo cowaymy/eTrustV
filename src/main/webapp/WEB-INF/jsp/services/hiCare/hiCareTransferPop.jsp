@@ -5,6 +5,8 @@
 
 <script type="text/javaScript">
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+var brnch = '${SESSION_INFO.userBranchId}';
+var userName = '${SESSION_INFO.userName}';
 
 var resGrid;
 var reqGrid;
@@ -101,7 +103,7 @@ var reqop = {
 resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout, "", resop);
 reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout, "", reqop);
 
-var conditionOption = [{"codeId": "33","codeName": "New"},{"codeId": "111","codeName": "Used"}];
+var conditionOption = [{"codeId": "33","codeName": "New"},{"codeId": "111","codeName": "Used"},{"codeId": "112","codeName": "Defect"}];
 var statusOption = [{"codeId": "1","codeName": "Active"}];
 
 $(document).ready(function(){
@@ -112,10 +114,17 @@ $(document).ready(function(){
 	doDefCombo(statusOption, '' ,'tstatus', 'M', 'f_multiCombo');
 	doGetCombo('/common/selectCodeList.do', '490', '', 'tcmbModel', 'M', 'f_multiCombo');
 	doGetComboOrder('/common/selectCodeList.do', '498', 'CODE_ID', '', 'courier', 'S', ''); //Common Code
-    $("#fromLoc option:eq(1)", '#hiCareTrfHeadForm').attr("selected", true);
+    //$("#fromLoc option:eq(1)", '#hiCareTrfHeadForm').attr("selected", true);
 
-    if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){
+    /* if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){
         $('#fromLoc', '#hiCareTrfHeadForm').attr("disabled", true);
+    } */
+
+    if(brnch == "42" || userName == 'KHSATO'){
+        doGetCombo('/services/hiCare/getBch.do', '', brnch, 'fromLoc', 'S', '');
+        $("#fromLoc option[value='"+ brnch +"']", '#hiCareTrfHeadForm').attr("selected", true);
+    }else{
+        doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'fromLoc', 'S', '');
     }
 
 	$("#rightbtn").click(function() {
@@ -324,12 +333,13 @@ function f_validatation(){
             <tr id="type">
                 <th scope="row">From Location</th>
                 <td colspan="3">
-	                <select id="fromLoc" name="fromLoc" class="w100p readOnly ">
+                <select id="fromLoc" name="fromLoc" class="w100p"></select>
+	                <%-- <select id="fromLoc" name="fromLoc" class="w100p readOnly ">
 	                    <option value="">Choose One</option>
 	                        <c:forEach var="list" items="${fromBranchList}" varStatus="status">
 	                            <option value="${list.codeId}">${list.codeName}</option>
 	                        </c:forEach>
-	                </select>
+	                </select> --%>
                 </td>
             </tr>
             <tr>

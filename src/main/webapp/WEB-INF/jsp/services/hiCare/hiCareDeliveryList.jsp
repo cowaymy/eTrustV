@@ -6,6 +6,9 @@
   var counselingId;
 
   var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+  var brnch = '${SESSION_INFO.userBranchId}';
+
+  var userName = '${SESSION_INFO.userName}';
 
   function hiCareGrid() {
 
@@ -108,7 +111,14 @@
 
       console.log('branch ' +brnch);
 
-      $("#cmbToBranch option:eq(1)", '#hiCareDeliveryForm').attr("selected", true);
+      //$("#cmbToBranch option:eq(1)", '#hiCareDeliveryForm').attr("selected", true);
+      if(brnch == "42" || userName == 'KHSATO'){
+          doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmbToBranch', 'S', '');
+          $("#cmbToBranch option[value='"+ brnch +"']", '#hiCareDeliveryForm').attr("selected", true);
+      }else{
+          doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'cmbToBranch', 'S', '');
+      }
+
       $("#crtsdt").val('${searchVal.crtsdt}');
       $("#crtedt").val('${searchVal.crtedt}');
       /* if(MEM_TYPE != "5"){
@@ -269,12 +279,13 @@
                 </td>
             <th scope="row"><spring:message code='log.head.tolocation'/></th>
                 <td>
-                    <select id="cmbToBranch" name="cmbToBranch" class="w100p readOnly ">
+                    <select id="cmbToBranch" name="cmbToBranch" class="w100p"></select>
+                    <%-- <select id="cmbToBranch" name="cmbToBranch" class="w100p readOnly ">
                         <option value="">Choose One</option>
                             <c:forEach var="list" items="${toBranchList}" varStatus="status">
                                 <option value="${list.codeId}">${list.codeName}</option>
                             </c:forEach>
-                    </select>
+                    </select> --%>
                 </td>
         </tr>
     </tbody>

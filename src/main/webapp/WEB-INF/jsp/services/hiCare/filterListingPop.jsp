@@ -18,6 +18,16 @@ $('.multy_select').change(function() {
    width: '100%'
 });
 
+$(document).ready(
+        function() {
+            if(brnch == "42" || userName == 'KHSATO'){
+                doGetCombo('/services/hiCare/getBch.do', '', brnch, 'sBranchCode', 'S', '');
+                $("#sBranchCode option[value='"+ brnch +"']").attr("selected", true);
+            }else{
+                doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'sBranchCode', 'S', '');
+            }
+        });
+
 $.fn.clearForm = function() {
 	//$("#sHolder").multipleSelect("checkAll");
 	//$("#sStatus").multipleSelect("checkAll");
@@ -54,7 +64,7 @@ function validRequiredField(){
     var message = "";
 
     if(
-            ( !(MEM_TYPE == 4 || MEM_TYPE ==6) && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
+            ( !(brnch == "42" || userName == 'KHSATO') && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
             || ($("#sHolder :selected").val() == '' || $("#sHolder :selected").val() == null || $("#sHolder :selected").length == 0 )
             || ($("#sStatus :selected").val() == '' || $("#sStatus :selected").val() == null || $("#sStatus :selected").length == 0 )
             || ($("#sCondition :selected").val() == '' || $("#sCondition :selected").val() == null || $("#sCondition :selected").length == 0)
@@ -566,12 +576,13 @@ CommonCombo.make('sOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType
                          <c:forEach var="list" items="${branchList}" varStatus="status">
                              <option value="${list.codeId}" selected="selected">${list.codeName}</option>
                          </c:forEach> --%>
-                 <select id="sBranchCode" name="sBranchCode" class="w100p readOnly ">
+                 <%-- <select id="sBranchCode" name="sBranchCode" class="w100p readOnly ">
                      <option value="">Choose One</option>
                          <c:forEach var="list" items="${branchList}" varStatus="status">
                              <option value="${list.codeId}">${list.codeName}</option>
                          </c:forEach>
-                 </select>
+                 </select> --%>
+                 <select id="sBranchCode" name="sBranchCode" class="w100p"></select>
              </td>
 </tr>
 <tr>

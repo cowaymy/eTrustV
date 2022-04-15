@@ -109,6 +109,18 @@ public class HiCareController {
     return "services/hiCare/hiCareList";
 	}
 
+  @RequestMapping(value = "/getBch.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getBch(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/getBch.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getBch.do===============================");
+
+    List<EgovMap> bch = hiCareService.getBch(params);
+    logger.debug("BRANCH {}", bch);
+    return ResponseEntity.ok(bch);
+  }
+
  	@RequestMapping(value = "/selectHiCareList")
 	public ResponseEntity<List<EgovMap>> getHiCareList(@RequestParam Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws Exception{
 
@@ -123,7 +135,22 @@ public class HiCareController {
  		String branchList[] = null ;
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmdBranchCode").toString();
- 		if(!(userType == 4 || userType == 6) && branchId.equals("")){
+ 		if(sessionVO.getUserBranchId() == 42 || sessionVO.getUserName().equals("KHSATO")){
+ 			if(branchId.equals("")){
+ 				request.setAttribute("cmdBranchCode", null);
+ 			}else{
+ 				branchList= request.getParameterValues("cmdBranchCode");
+ 				branchId = "0";
+ 			}
+ 		}else{
+ 			if(branchId.equals("")){
+ 				branchList = new String[]{"0"};
+ 			}else{
+ 				branchList= request.getParameterValues("cmdBranchCode");
+ 			}
+ 			branchId = "0";
+ 		}
+ 		/*if(!(userType == 4 || userType == 6) && branchId.equals("")){
  			branchList = new String[]{"0"};
  			branchId = "0";
  		}else if((userType == 4 || userType == 6) && branchId.equals("")){
@@ -131,7 +158,7 @@ public class HiCareController {
  		}else{
  			branchList= request.getParameterValues("cmdBranchCode");
  			branchId = "0";
- 		}
+ 		}*/
  		String memberList[] = request.getParameterValues("cmdMemberCode");
  		String holderList[] = request.getParameterValues("cmbHolder");
 
@@ -480,7 +507,7 @@ public class HiCareController {
 
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmbToBranch").toString();
- 		if(!(userType == 4 || userType == 6) && branchId.equals("")){
+ 		if(!(sessionVO.getUserBranchId() == 42 || sessionVO.getUserName().equals("KHSATO")) && branchId.equals("")){
  			params.put("cmbToBranch", "0");
  		}
 

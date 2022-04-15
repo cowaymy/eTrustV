@@ -19,6 +19,8 @@ public interface HiCareMapper {
 
 	public List<EgovMap> selectModelCode();
 
+	public List<EgovMap> getBch(Map<String, Object> params);
+
 	public List<EgovMap> selectHiCareList(Map<String, Object> params);
 
 	public EgovMap selectItemSerch(Map<String, Object> obj) throws Exception;

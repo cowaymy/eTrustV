@@ -67,6 +67,11 @@ public class HiCareServiceImpl implements HiCareService {
 	}
 
 	@Override
+	public List<EgovMap> getBch(Map<String, Object> params) {
+		return hiCareMapper.getBch(params);
+	}
+
+	@Override
 	public List<EgovMap> selectHiCareList(Map<String, Object> params) {
 		return hiCareMapper.selectHiCareList(params);
 	}
