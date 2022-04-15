@@ -32,15 +32,15 @@ public class SalesConstants {
   public static final String SALES_AEON_CODE = "AEON";
   public static final int SALES_CCP_CODEID = 122;
   public static final String SALES_CCp_CODE = "CCP";
-	// Added for On-Loan Order module by Hui Ding, 19/02/2020
-	public static final String APP_TYPE_CODE_IHR_LOAN			= "IHR"; // In-House Repair Loan Product -- Hidden. only applicable for On-Loan Order Module.
+  // Added for On-Loan Order module by Hui Ding, 19/02/2020
+  public static final String APP_TYPE_CODE_IHR_LOAN           = "IHR"; // In-House Repair Loan Product -- Hidden. only applicable for On-Loan Order Module.
 
   // COMMON CODE : PST_TRANSIT_TYPE(CODEMASTERID = 93)
   public static final int SALES_PSTREQ_CODEID = 1144;
   public static final int SALES_PSTDO_CODEID = 1145;
   public static final int SALES_PSTCAN_CODEID = 1146;
-	// Added for On-Loan Order module by Hui Ding, 19/02/2020
-	public static final String APP_TYPE_CODE_IHR_LOAN_FULL			= "In-House Repair Loan";  // IHR -- Hidden. only applicable for On-Loan Order Module.
+  // Added for On-Loan Order module by Hui Ding, 19/02/2020
+  public static final String APP_TYPE_CODE_IHR_LOAN_FULL          = "In-House Repair Loan";  // IHR -- Hidden. only applicable for On-Loan Order Module.
 
   // STATUS CODE
   public static final String APP_TYPE_CODE_RENTAL = "REN"; // Rental
@@ -60,8 +60,8 @@ public class SalesConstants {
   public static final String APP_TYPE_CODE_OUTRIGHTPLUS = "OUTPLS"; // Outright
                                                                     // Plus
   public static final String APP_TYPE_CODE_AUX = "AUX"; // AUX
-    // Added for On-Loan Order module by Hui Ding, 19/02/2020
- 	public static final int APP_TYPE_CODE_ID_IHR_LOAN		= 5788;  // IHR -- Hidden. only applicable for On-Loan Order Module.
+  // Added for On-Loan Order module by Hui Ding, 19/02/2020
+  public static final int APP_TYPE_CODE_ID_IHR_LOAN       = 5788;  // IHR -- Hidden. only applicable for On-Loan Order Module.
 
   public static final String APP_TYPE_CODE_RENTAL_FULL = "Rental"; // Rental
   public static final String APP_TYPE_CODE_OUTRIGHT_FULL = "Outright"; // Outright
@@ -522,6 +522,14 @@ public class SalesConstants {
    */
   public static final String FICO_VIEW_TYPE = "FICO_VIEW";
   public static final String CTOS_VIEW_TYPE = "CTOS_VIEW";
+
+  /* EXPERIAN Score */
+  public static final String EXPERIAN_REPORT_SUBPATH = "sales";
+  public static final String EXPERIAN_REPORT_FILENAME = "expresponse.html";
+  public static final String IRISS_VIEW_TYPE = "IRISS_VIEW";
+  public static final String IRIS_VIEW_TYPE = "IRIS_VIEW";
+  /* EXPERIAN Score */
+
   /**
    * 메세지 KEY
    */

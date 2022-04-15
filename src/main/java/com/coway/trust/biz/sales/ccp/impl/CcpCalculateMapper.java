@@ -94,7 +94,9 @@ public interface CcpCalculateMapper {
 	EgovMap chkECash(Map<String, Object> params);
 
 	EgovMap getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params);
-
+//EXPERIAN CHANEG
+	EgovMap getResultRowForEXPERIANDisplayForCCPCalculation(Map<String, Object> params);
+//EXPERIAN CHANEG
 	List<EgovMap> getCcpInstallationList(Map<String, Object> params);
 
 	EgovMap getAux(Map<String, Object> params);
@@ -121,5 +123,5 @@ public interface CcpCalculateMapper {
 
 	String getEzyDocNo();
 
-	EgovMap getExisitngOrderId(Map<String, Object> params) throws Exception;
+    EgovMap getExisitngOrderId(Map<String, Object> params) throws Exception;
 }

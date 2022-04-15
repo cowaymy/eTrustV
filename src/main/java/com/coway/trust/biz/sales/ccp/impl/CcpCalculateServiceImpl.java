@@ -47,8 +47,8 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	@Resource(name = "ccpCalculateMapper")
 	private CcpCalculateMapper ccpCalculateMapper;
 
-	@Resource(name = "ccpRentalAgreementMapper")
-	private CcpRentalAgreementMapper ccpRentalAgreementMapper;
+    @Resource(name = "ccpRentalAgreementMapper")
+    private CcpRentalAgreementMapper ccpRentalAgreementMapper;
 
 	@Value("${web.resource.upload.file}")
 	private String webPath;
@@ -871,243 +871,243 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		 		 LOGGER.info("_________________________________________________________________________________________");
 			 }
 
-			 //ccp rental agreement 24/02/2022 hltang
-			 if(("5").equals(params.get("statusEdit"))
-					 && String.valueOf(SalesConstants.CCP_SCHEME_TYPE_CODE_ID_CCS).equals(String.valueOf(params.get("saveCustTypeId")))
-					 && ("1").equals(params.get("agmReq"))
-					 ){
-				 insertRentalAgreement(params);
-			 }
+             //ccp rental agreement 24/02/2022 hltang
+             if(("5").equals(params.get("statusEdit"))
+                     && String.valueOf(SalesConstants.CCP_SCHEME_TYPE_CODE_ID_CCS).equals(String.valueOf(params.get("saveCustTypeId")))
+                     && ("1").equals(params.get("agmReq"))
+                     ){
+                 insertRentalAgreement(params);
+             }
  		}
 
 	}//Impl End
 
 
-	public Map<String, Object> insertRentalAgreement(Map<String, Object> params) throws Exception {
+    public Map<String, Object> insertRentalAgreement(Map<String, Object> params) throws Exception {
 
-		//check whether today has place any order(s),
-		//if no , open new main and new detail
-		//if yes , use back existing main and create new detail
-		EgovMap OrdList = ccpCalculateMapper.getExisitngOrderId(params); //check today's order
+        //check whether today has place any order(s),
+        //if no , open new main and new detail
+        //if yes , use back existing main and create new detail
+        EgovMap OrdList = ccpCalculateMapper.getExisitngOrderId(params); //check today's order
 
-		String docNo = "";
-		String govAgreeIdSeq = "";
-		String govMsgIdSeq = "";
-		String govConsignSeq = "";
-		String govAgItmIdSeq = "";
-		String govCallEntryIdSeq = "";
-		String govCallResultIdSeq = "";
+        String docNo = "";
+        String govAgreeIdSeq = "";
+        String govMsgIdSeq = "";
+        String govConsignSeq = "";
+        String govAgItmIdSeq = "";
+        String govCallEntryIdSeq = "";
+        String govCallResultIdSeq = "";
 
-		Map<String, Object> formMap = new HashMap<String, Object>();
-		formMap.put("userId", "193232");
-		EgovMap userRollMap = ccpRentalAgreementMapper.getUserInfo(formMap);
+        Map<String, Object> formMap = new HashMap<String, Object>();
+        formMap.put("userId", "193232");
+        EgovMap userRollMap = ccpRentalAgreementMapper.getUserInfo(formMap);
 
-		int rollId;
-    	if(userRollMap == null ){
-    		rollId = 0;
-    	}else{
-    		rollId = (Integer)userRollMap.get("govAgRoleId");
-    	}
-    	formMap.put("rollId", rollId);
+        int rollId;
+        if(userRollMap == null ){
+            rollId = 0;
+        }else{
+            rollId = (Integer)userRollMap.get("govAgRoleId");
+        }
+        formMap.put("rollId", rollId);
 
-    	formMap.put("salesOrdId", params.get("saveOrdId"));
-    	formMap.put("govAgMemId", params.get("saveSalesManId")); //salesman
-    	formMap.put("inputProgress", "7");
-    	formMap.put("inputAgreementType", "949");
-    	formMap.put("agreementAgmRemark", params.get("pncRem"));
-    	formMap.put("inputDocQty", "1");
-    	formMap.put("agreementMsg", params.get("pncRem"));
-    	formMap.put("cowayTemplate", params.get("cowayTemplate"));
-    	formMap.put("cntPeriodValue", params.get("cntPeriodValue"));
+        formMap.put("salesOrdId", params.get("saveOrdId"));
+        formMap.put("govAgMemId", params.get("saveSalesManId")); //salesman
+        formMap.put("inputProgress", "7");
+        formMap.put("inputAgreementType", "949");
+        formMap.put("agreementAgmRemark", params.get("pncRem"));
+        formMap.put("inputDocQty", "1");
+        formMap.put("agreementMsg", params.get("pncRem"));
+        formMap.put("cowayTemplate", params.get("cowayTemplate"));
+        formMap.put("cntPeriodValue", params.get("cntPeriodValue"));
 
-		if(OrdList == null || OrdList.size() == 0){ //today's new order
-			//String AgreeMainId = OrdList.get("govAgId").toString();
+        if(OrdList == null || OrdList.size() == 0){ //today's new order
+            //String AgreeMainId = OrdList.get("govAgId").toString();
 
-	    	/* ##################  Document Number Numbering Set Param #####################*/
-			//put Code Id = 183
-	    	formMap.put("docNoId", SalesConstants.RENTAL_AGREEMENT_CODEID	);
+            /* ##################  Document Number Numbering Set Param #####################*/
+            //put Code Id = 183
+            formMap.put("docNoId", SalesConstants.RENTAL_AGREEMENT_CODEID   );
 
-	    	docNo = ccpRentalAgreementMapper.getDocNo(formMap); //docNo
-	    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!           생성된 DOCNO : " + docNo);
-	    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	    	formMap.put("docNo", docNo);
+            docNo = ccpRentalAgreementMapper.getDocNo(formMap); //docNo
+            LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!           생성된 DOCNO : " + docNo);
+            LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            formMap.put("docNo", docNo);
 
-//	    	agreementMsg pncRem
-			govAgreeIdSeq = ccpRentalAgreementMapper.crtSeqSAL0305D();
-			LOGGER.info("____________________________________________________________________________________________________________");
-			LOGGER.info("_____________________ 생성 된 AgrId : " + govAgreeIdSeq);
-			LOGGER.info("____________________________________________________________________________________________________________");
-			formMap.put("govAgreeIdSeq", govAgreeIdSeq);
+//          agreementMsg pncRem
+            govAgreeIdSeq = ccpRentalAgreementMapper.crtSeqSAL0305D();
+            LOGGER.info("____________________________________________________________________________________________________________");
+            LOGGER.info("_____________________ 생성 된 AgrId : " + govAgreeIdSeq);
+            LOGGER.info("____________________________________________________________________________________________________________");
+            formMap.put("govAgreeIdSeq", govAgreeIdSeq);
 
-			LOGGER.info("____________________________________________________________________________________________________________");
-			LOGGER.info("_____________________ insert1 전 파라미터 확인 :  AgrId = " + formMap.get("govAgreeIdSeq"));
-			LOGGER.info("____________________________________________________________________________________________________________");
-			ccpRentalAgreementMapper.insertGovAgreementInfo(formMap);
-			LOGGER.info("######################################################");
-			LOGGER.info("################### Insert 1 Complete ###################");
-			LOGGER.info("######################################################");
-
-
-			/* ##################   insert 2 ######################*/
-
-			govMsgIdSeq = ccpRentalAgreementMapper.crtSeqSAL0308D();
-			formMap.put("govMsgIdSeq", govMsgIdSeq);
-			LOGGER.info("____________________________________________________________________________________________________________");
-			LOGGER.info("_____________________ 생성 된 msgId : " + govMsgIdSeq);
-			LOGGER.info("____________________________________________________________________________________________________________");
-
-			LOGGER.info("____________________________________________________________________________________________________________");
-			LOGGER.info("_____________________ insert2 전 파라미터 확인 :  AgrId = " + formMap.get("govAgreeIdSeq") + " , msgId = " + formMap.get("govMsgIdSeq"));
-			LOGGER.info("____________________________________________________________________________________________________________");
-			ccpRentalAgreementMapper.insertGovAgreementMessLog(formMap);
-			LOGGER.info("######################################################");
-			LOGGER.info("################### Insert 2 Complete ###################");
-			LOGGER.info("######################################################");
+            LOGGER.info("____________________________________________________________________________________________________________");
+            LOGGER.info("_____________________ insert1 전 파라미터 확인 :  AgrId = " + formMap.get("govAgreeIdSeq"));
+            LOGGER.info("____________________________________________________________________________________________________________");
+            ccpRentalAgreementMapper.insertGovAgreementInfo(formMap);
+            LOGGER.info("######################################################");
+            LOGGER.info("################### Insert 1 Complete ###################");
+            LOGGER.info("######################################################");
 
 
-			//hltang - close first - not sure need consignment information
-			/*if(SalesConstants.AGREEMENT_TRUE.equals(formMap.get("consignment"))){
+            /* ##################   insert 2 ######################*/
 
-				govConsignSeq = ccpRentalAgreementMapper.crtSeqSAL0307D();
+            govMsgIdSeq = ccpRentalAgreementMapper.crtSeqSAL0308D();
+            formMap.put("govMsgIdSeq", govMsgIdSeq);
+            LOGGER.info("____________________________________________________________________________________________________________");
+            LOGGER.info("_____________________ 생성 된 msgId : " + govMsgIdSeq);
+            LOGGER.info("____________________________________________________________________________________________________________");
 
-				formMap.put("govConsignSeq", govConsignSeq);
-				formMap.put("agCnsgnSendDt", SalesConstants.DEFAULT_DATE);
-				if(SalesConstants.CONSIGNMENT_HAND.equals(formMap.get("inputCourier"))){
-					formMap.put("consignBtHand", '1');
-				}else{
-					formMap.put("consignBtHand", '0');
-				}
-
-				ccpRentalAgreementMapper.insertConsignment(formMap);
-
-				LOGGER.info("######################################################");
-				LOGGER.info("################### Consignment Complete ###################");
-				LOGGER.info("######################################################");
-
-			}*/
-
-			/*################# Grid Insert( Insert 3, 4, 5) , Update 1 #######################*/
-//			for (int idx = 0; idx < grid.size(); idx++) {
-
-//				Map<String, Object> insMap = (Map<String, Object>)grid.get(idx);
-				Map<String, Object> insMap = new HashMap<String, Object>();
-
-				//Param Setting
-				insMap.put("userId", params.get("userId"));
-				insMap.put("salesOrdId", formMap.get("salesOrdId"));
-//				insMap.put("inputPeriodStart", formMap.get("inputPeriodStart"));
-//				insMap.put("inputPeriodEnd", formMap.get("inputPeriodEnd"));
-				insMap.put("docNo",  docNo);
-				insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
-
-				govAgItmIdSeq = ccpRentalAgreementMapper.crtSeqSAL0306D();
-				insMap.put("govAgItmIdSeq", govAgItmIdSeq);
-				insMap.put("govAgreeIdSeq", govAgreeIdSeq);
-				//SUB
-
-				LOGGER.info("____________________________________________________________________________________________________________");
-				LOGGER.info("___________________________ insMap 에 들어있는 AgrId : " + insMap.get("govAgreeIdSeq"));
-				LOGGER.info("____________________________________________________________________________________________________________");
-
-				ccpRentalAgreementMapper.insertGovAgreementSub(insMap);
-
-//				LOGGER.info("######################################################");
-//				LOGGER.info("################### NO.["+  idx +"]  Grid Insert Complete(AgreementSub) ###################");
-//				LOGGER.info("######################################################");
-
-				//CALL ENTRY
-
-				govCallEntryIdSeq = ccpRentalAgreementMapper.crtSeqCCR0006D();
-				insMap.put("govCallEntryIdSeq", govCallEntryIdSeq);
-				ccpRentalAgreementMapper.insertCallEntry(insMap); //result ID
-
-				LOGGER.info("######################################################");
-				LOGGER.info("######################################################");
-
-				//CALL RESULT
-
-				govCallResultIdSeq = ccpRentalAgreementMapper.crtSeqCCR0007D();
-				insMap.put("govCallResultIdSeq", govCallResultIdSeq);
-				ccpRentalAgreementMapper.insertCallResult(insMap); //CallResultID;
-
-				LOGGER.info("######################################################");
-				LOGGER.info("######################################################");
-
-				//Update Result Id
-				ccpRentalAgreementMapper.updateResultId(insMap);
-
-				LOGGER.info("######################################################");
-				LOGGER.info("######################################################");
-
-//			}
-//			LOGGER.info("######################################################");
-//			LOGGER.info("###################  Insert 3, 4, 5 Complete Update 1 Complete ###################");
-//			LOGGER.info("######################################################");
+            LOGGER.info("____________________________________________________________________________________________________________");
+            LOGGER.info("_____________________ insert2 전 파라미터 확인 :  AgrId = " + formMap.get("govAgreeIdSeq") + " , msgId = " + formMap.get("govMsgIdSeq"));
+            LOGGER.info("____________________________________________________________________________________________________________");
+            ccpRentalAgreementMapper.insertGovAgreementMessLog(formMap);
+            LOGGER.info("######################################################");
+            LOGGER.info("################### Insert 2 Complete ###################");
+            LOGGER.info("######################################################");
 
 
-			/*################# UPDATE 2 #######################*/
-			ccpRentalAgreementMapper.updatePreUpdUserId(formMap);
+            //hltang - close first - not sure need consignment information
+            /*if(SalesConstants.AGREEMENT_TRUE.equals(formMap.get("consignment"))){
+
+                govConsignSeq = ccpRentalAgreementMapper.crtSeqSAL0307D();
+
+                formMap.put("govConsignSeq", govConsignSeq);
+                formMap.put("agCnsgnSendDt", SalesConstants.DEFAULT_DATE);
+                if(SalesConstants.CONSIGNMENT_HAND.equals(formMap.get("inputCourier"))){
+                    formMap.put("consignBtHand", '1');
+                }else{
+                    formMap.put("consignBtHand", '0');
+                }
+
+                ccpRentalAgreementMapper.insertConsignment(formMap);
+
+                LOGGER.info("######################################################");
+                LOGGER.info("################### Consignment Complete ###################");
+                LOGGER.info("######################################################");
+
+            }*/
+
+            /*################# Grid Insert( Insert 3, 4, 5) , Update 1 #######################*/
+//          for (int idx = 0; idx < grid.size(); idx++) {
+
+//              Map<String, Object> insMap = (Map<String, Object>)grid.get(idx);
+                Map<String, Object> insMap = new HashMap<String, Object>();
+
+                //Param Setting
+                insMap.put("userId", params.get("userId"));
+                insMap.put("salesOrdId", formMap.get("salesOrdId"));
+//              insMap.put("inputPeriodStart", formMap.get("inputPeriodStart"));
+//              insMap.put("inputPeriodEnd", formMap.get("inputPeriodEnd"));
+                insMap.put("docNo",  docNo);
+                insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
+
+                govAgItmIdSeq = ccpRentalAgreementMapper.crtSeqSAL0306D();
+                insMap.put("govAgItmIdSeq", govAgItmIdSeq);
+                insMap.put("govAgreeIdSeq", govAgreeIdSeq);
+                //SUB
+
+                LOGGER.info("____________________________________________________________________________________________________________");
+                LOGGER.info("___________________________ insMap 에 들어있는 AgrId : " + insMap.get("govAgreeIdSeq"));
+                LOGGER.info("____________________________________________________________________________________________________________");
+
+                ccpRentalAgreementMapper.insertGovAgreementSub(insMap);
+
+//              LOGGER.info("######################################################");
+//              LOGGER.info("################### NO.["+  idx +"]  Grid Insert Complete(AgreementSub) ###################");
+//              LOGGER.info("######################################################");
+
+                //CALL ENTRY
+
+                govCallEntryIdSeq = ccpRentalAgreementMapper.crtSeqCCR0006D();
+                insMap.put("govCallEntryIdSeq", govCallEntryIdSeq);
+                ccpRentalAgreementMapper.insertCallEntry(insMap); //result ID
+
+                LOGGER.info("######################################################");
+                LOGGER.info("######################################################");
+
+                //CALL RESULT
+
+                govCallResultIdSeq = ccpRentalAgreementMapper.crtSeqCCR0007D();
+                insMap.put("govCallResultIdSeq", govCallResultIdSeq);
+                ccpRentalAgreementMapper.insertCallResult(insMap); //CallResultID;
+
+                LOGGER.info("######################################################");
+                LOGGER.info("######################################################");
+
+                //Update Result Id
+                ccpRentalAgreementMapper.updateResultId(insMap);
+
+                LOGGER.info("######################################################");
+                LOGGER.info("######################################################");
+
+//          }
+//          LOGGER.info("######################################################");
+//          LOGGER.info("###################  Insert 3, 4, 5 Complete Update 1 Complete ###################");
+//          LOGGER.info("######################################################");
 
 
-		}else{//today's second or above order(s)
-			String AgreeMainId = OrdList.get("govAgId").toString();
-			Integer agrQty = Integer.parseInt(OrdList.get("govAgQty").toString());
-
-			Map<String, Object> insMap = new HashMap<String, Object>();
-
-			insMap.put("govAgreeIdSeq", AgreeMainId);
-			//Param Setting
-			insMap.put("userId", params.get("userId"));
-			insMap.put("salesOrdId", formMap.get("salesOrdId"));
-//			insMap.put("inputPeriodStart", formMap.get("inputPeriodStart"));
-//			insMap.put("inputPeriodEnd", formMap.get("inputPeriodEnd"));
-			insMap.put("docNo",  docNo);
-			insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
-
-			govAgItmIdSeq = ccpRentalAgreementMapper.crtSeqSAL0306D();
-			insMap.put("govAgItmIdSeq", govAgItmIdSeq);
-			insMap.put("inputDocQty", agrQty +1);
-			//SUB
-
-			LOGGER.info("____________________________________________________________________________________________________________");
-			LOGGER.info("___________________________ insMap 에 들어있는 AgrId : " + insMap.get("govAgreeIdSeq"));
-			LOGGER.info("____________________________________________________________________________________________________________");
-
-			ccpRentalAgreementMapper.insertGovAgreementSub(insMap);
-
-			//CALL ENTRY
-			govCallEntryIdSeq = ccpRentalAgreementMapper.crtSeqCCR0006D();
-			insMap.put("govCallEntryIdSeq", govCallEntryIdSeq);
-			ccpRentalAgreementMapper.insertCallEntry(insMap); //result ID
-
-			LOGGER.info("######################################################");
-			LOGGER.info("######################################################");
-
-			//CALL RESULT
-
-			govCallResultIdSeq = ccpRentalAgreementMapper.crtSeqCCR0007D();
-			insMap.put("govCallResultIdSeq", govCallResultIdSeq);
-			ccpRentalAgreementMapper.insertCallResult(insMap); //CallResultID;
-
-			LOGGER.info("######################################################");
-			LOGGER.info("######################################################");
-
-			//Update Result Id
-			ccpRentalAgreementMapper.updateResultId(insMap);
-
-		}
+            /*################# UPDATE 2 #######################*/
+            ccpRentalAgreementMapper.updatePreUpdUserId(formMap);
 
 
-		Map<String, Object> returnMap = new HashMap<String, Object>();
+        }else{//today's second or above order(s)
+            String AgreeMainId = OrdList.get("govAgId").toString();
+            Integer agrQty = Integer.parseInt(OrdList.get("govAgQty").toString());
 
-		returnMap.put("msgId", govMsgIdSeq);
-		returnMap.put("docNo", docNo);
+            Map<String, Object> insMap = new HashMap<String, Object>();
 
-		LOGGER.info("####################### Return Map : " + returnMap.toString());
+            insMap.put("govAgreeIdSeq", AgreeMainId);
+            //Param Setting
+            insMap.put("userId", params.get("userId"));
+            insMap.put("salesOrdId", formMap.get("salesOrdId"));
+//          insMap.put("inputPeriodStart", formMap.get("inputPeriodStart"));
+//          insMap.put("inputPeriodEnd", formMap.get("inputPeriodEnd"));
+            insMap.put("docNo",  docNo);
+            insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
 
-		return returnMap;
-	}
+            govAgItmIdSeq = ccpRentalAgreementMapper.crtSeqSAL0306D();
+            insMap.put("govAgItmIdSeq", govAgItmIdSeq);
+            insMap.put("inputDocQty", agrQty +1);
+            //SUB
+
+            LOGGER.info("____________________________________________________________________________________________________________");
+            LOGGER.info("___________________________ insMap 에 들어있는 AgrId : " + insMap.get("govAgreeIdSeq"));
+            LOGGER.info("____________________________________________________________________________________________________________");
+
+            ccpRentalAgreementMapper.insertGovAgreementSub(insMap);
+
+            //CALL ENTRY
+            govCallEntryIdSeq = ccpRentalAgreementMapper.crtSeqCCR0006D();
+            insMap.put("govCallEntryIdSeq", govCallEntryIdSeq);
+            ccpRentalAgreementMapper.insertCallEntry(insMap); //result ID
+
+            LOGGER.info("######################################################");
+            LOGGER.info("######################################################");
+
+            //CALL RESULT
+
+            govCallResultIdSeq = ccpRentalAgreementMapper.crtSeqCCR0007D();
+            insMap.put("govCallResultIdSeq", govCallResultIdSeq);
+            ccpRentalAgreementMapper.insertCallResult(insMap); //CallResultID;
+
+            LOGGER.info("######################################################");
+            LOGGER.info("######################################################");
+
+            //Update Result Id
+            ccpRentalAgreementMapper.updateResultId(insMap);
+
+        }
+
+
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+
+        returnMap.put("msgId", govMsgIdSeq);
+        returnMap.put("docNo", docNo);
+
+        LOGGER.info("####################### Return Map : " + returnMap.toString());
+
+        return returnMap;
+    }
 
 	@Override
 	public Map<String, Object> getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params) throws Exception {
@@ -1179,6 +1179,79 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		return resultMap;
 	}
+
+	@Override
+	public Map<String, Object> getResultRowForEXPERIANDisplayForCCPCalculation(Map<String, Object> params) throws Exception {
+
+	    EgovMap rtnExpMap = ccpCalculateMapper.getResultRowForEXPERIANDisplayForCCPCalculation(params);
+
+	    Map<String, Object> resultMap = new HashMap<String, Object>();
+
+	    if(rtnExpMap != null){
+	        if(rtnExpMap.get("resultRaw") != null){
+	            /*___Return Path___*/
+	            String subPath = SalesConstants.EXPERIAN_REPORT_SUBPATH;
+                String fileName = SalesConstants.EXPERIAN_REPORT_FILENAME;
+
+                /*___Result Raw___*/
+                String expresultRaw = String.valueOf(rtnExpMap.get("resultRaw"));
+                InputStream expis = new ByteArrayInputStream(expresultRaw.getBytes());
+                StreamSource expsource = new StreamSource(expis);  // raw_data xml data
+
+                /*___Style Sheet___*/
+                String reExpPaht = "";
+                String ExpLayout = String.valueOf(rtnExpMap.get("rptType"));
+
+                LOGGER.info("________________________________params : " + params.toString());
+                if(ExpLayout.equals("IRISS")){
+                    reExpPaht = "template/stylesheet/iriss.xsl";
+                    LOGGER.info("_______________________________ IRISS VIEW " + params.get("viewType"));
+                }else{
+                    reExpPaht = "template/stylesheet/iris.xsl";
+                    LOGGER.info("_______________________________ IRIS VIEW "  + params.get("viewType"));
+                }
+                LOGGER.info("###################### Style Sheet Path :   " + reExpPaht);
+
+                org.springframework.core.io.Resource resourceExp = new ClassPathResource(reExpPaht);
+                //trim
+                reExpPaht.trim();
+
+                if(reExpPaht.startsWith("/")){
+                    reExpPaht = reExpPaht.substring(1);
+                }
+
+                //StreamSource stylesource = new StreamSource("C:/works/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/etrust/WEB-INF/classes/template/stylesheet/ctos_report.xsl"); // xsl file...
+                StreamSource expstylesource = new StreamSource(resourceExp.getFile()); // xsl file...
+                TransformerFactory expfactory = TransformerFactory.newInstance();
+                Transformer exptransformer = expfactory.newTransformer(expstylesource);
+
+                //String htPath = resourceLoader.getResource("resources/WebShare/"+subPath+"/"+fileName).getURI().getPath();
+                String exphtPath = webPath+"/"+subPath+"/"+fileName;
+
+                LOGGER.info("########################### HTML PATH : " + exphtPath);
+
+                File expfile = new File(exphtPath);
+                if(!expfile.getParentFile().exists()){
+                    LOGGER.info("######## Not Found File!!!!");
+                    //make dir
+                    expfile.getParentFile().mkdirs();
+                    // make file
+                    FileWriter expfileWriter = new FileWriter(expfile);
+                    BufferedWriter expout = new BufferedWriter(expfileWriter);
+                    expout.flush();
+                    expout.close();
+                }
+
+                StreamResult expresult = new StreamResult(new File(exphtPath)); //result html
+                exptransformer.transform(expsource, expresult);
+
+                resultMap.put("webPath", webPath);
+                resultMap.put("subPath", subPath);
+                resultMap.put("fileName", fileName);
+            }
+        }
+        return resultMap;
+    }
 
 
 	@Override

@@ -224,6 +224,28 @@ $(document).ready(function() {
             }
         }
 
+        //EXPERIAN
+        if( null == $("#_experianScore").val() || '' == $("#_experianScore").val()){
+            Common.alert("* Please Enter Experian Score");
+            return;
+        }else{
+            if( $("#_experianScore").val() > 9999 || $("#_experianScore").val() < 0){
+                Common.alert("* Please key in Experian score range between 0 to 9999 points.");
+                return;
+            }
+        }
+
+        if( null == $("#_experianRisk").val() || '' == $("#_experianRisk").val()){
+            Common.alert("* Please Enter Experian Risk");
+            return;
+        }else{
+            if( $("#_experianRisk").val() > 10 || $("#_experianRisk").val() < 0){
+                Common.alert("* Please key in Experian Risk range between 0 to 10 points.");
+                return;
+            }
+        }
+        //EXPERIAN
+
         //Validation (Call Entry Count)
         var ccpOrdEditId = $("#_editOrdId").val();
         var salData = {salesOrdId : ccpOrdEditId};
@@ -442,6 +464,11 @@ function calSave(){
         $("#_updSmsMsg").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ficoScore").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
+        //experian
+        $("#_experianScore").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_experianRisk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        //experian
+
         $("#_calSearch").click();
     });
 
@@ -455,6 +482,11 @@ function fn_ccpStatusChangeFunc(getVal){
 	var isHold = $("#_onHoldCcp").is("checked") == true? 1 : 0;
 	var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
 	var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
+
+	//experian
+	var experianScore = '${ccpInfoMap.ccpExperians}';
+	var experianRisk = '${ccpInfoMap.ccpExperianr}';
+	var experianbankrupt = '${ccpInfoMap.experianBankrupt}';
 
     //Init
     $("#_smsDiv").css("display" , "none");
@@ -477,9 +509,19 @@ function fn_ccpStatusChangeFunc(getVal){
 
            if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
                $("#_ficoScore").attr("disabled" , false);
+               //experian
+               $("#_experianScore").attr("disabled" , false);
+               $("#_experianRisk").attr("disabled" , false);
+               //experian
            }else{
                $("#_ficoScore").val("0");
                $("#_ficoScore").attr("disabled" , "disabled");
+               //experian
+               $("#_experianScore").val("0");
+               $("#_experianScore").attr("disabled" , "disabled");
+               $("#_experianRisk").val("0");
+               $("#_experianRisk").attr("disabled" , "disabled");
+               //experian
            }
 
              //chkbox
@@ -551,6 +593,12 @@ function fn_ccpStatusChangeFunc(getVal){
              Common.ajax("GET", "/sales/ccp/getFicoScoreByAjax", data , function(result) {
                  $("#_ficoScore").val(result.ccpFico);
                  $("#_ficoScore").attr("disabled" , false);
+                 //experian
+                 $("#_experianScore").val(result.ccpExperians);
+                 $("#_experianScore").attr("disabled" , false);
+                 $("#_experianRisk").val(result.ccpExperianr);
+                 $("#_experianRisk").attr("disabled" , false);
+                 //experian
              });
 
              //sms Changed by Lee (2018/01/18)
@@ -583,6 +631,12 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_ficoScore").val("0");
             $("#_ficoScore").attr("disabled" , "disabled");
 
+            //experian
+            $("#_experianScore").val("0");
+            $("#_experianScore").attr("disabled" , "disabled");
+            $("#_experianRisk").val("0");
+            $("#_experianRisk").attr("disabled" , "disabled");
+            //experian
         }
 
     }
@@ -602,9 +656,19 @@ function  bind_RetrieveData(){
     //Fico
      if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
          $("#_ficoScore").attr("disabled" , false);
+         //experian
+         $("#_experianScore").attr("disabled" , false);
+         $("#_experianRisk").attr("disabled" , false);
+         //experian
      }else{
          $("#_ficoScore").val("0");
          $("#_ficoScore").attr("disabled" , "disabled");
+         //experian
+         $("#_experianScore").val("0");
+         $("#_experianScore").attr("disabled" , "disabled");
+         $("#_experianRisk").val("0");
+         $("#_experianRisk").attr("disabled" , "disabled");
+         //experian
      }
     //bind and Setting by CcpStatus
     if(ccpStus == "1"){
@@ -942,22 +1006,37 @@ function chgTab(tabNm) {
 
 
  function fn_displayReport(viewType){
-
-    var isRe = false;
-    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
-        console.log("result : " + result);
-        console.log("content  :  " + JSON.stringify(result));
-         if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
-             window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
-        }else{
-            isRe  = true;
-        }
-    },'',{async : false});
-
-    if(isRe == true){
-        Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
-        return;
-    }
+	    var isRe = false;
+	    if (viewType == "FICO_VIEW"){
+	    	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
+	            console.log("result : " + result);
+	            console.log("content  :  " + JSON.stringify(result));
+	             if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+	                 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+	            }else{
+	                isRe  = true;
+	            }
+	        },'',{async : false});
+	    	if(isRe == true){
+	            Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
+	            return;
+	        }
+	    }else if(viewType == "EXPERIAN_VIEW"){
+	    	// Experian project
+	        Common.ajax("GET", "/sales/ccp/getResultRowForEXPERIANDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
+	            console.log("result : " + result);
+	            console.log("content  :  " + JSON.stringify(result));
+	             if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+	                 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+	            }else{
+	                isRe  = true;
+	            }
+	        },'',{async : false});
+	        if(isRe == true){
+	            Common.alert("No result from EXPERIAN");
+	            return;
+	        }
+	    }
  }
 
  function fn_suggestRem(text){
@@ -1107,8 +1186,10 @@ function chgTab(tabNm) {
 <h3><spring:message code="sal.title.text.ccpScorePoint" /></h3>
 <ul class="right_btns">
     <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()"><spring:message code="sal.title.text.installArea" /></a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li>
+<!--    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li> -->
+<!--    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li> -->
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')">CTOS Score</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('EXPERIAN_VIEW')">Experian Score</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -1349,7 +1430,7 @@ function chgTab(tabNm) {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
-    <td><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
+    <td colspan="5"><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
 
     <!--eResubmit status -->
 
@@ -1364,14 +1445,30 @@ function chgTab(tabNm) {
     -->
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
-    <td><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled" maxlength="10"></span></td>
-        <th scope="row">CHS Status</th>
-    <td id="chs_stus">
+<!--  "sal.title.text.ficoScore" THIS IS IN THE TABLE SYS0052M-->
+<!--    <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th> -->
+    <th scope="row">CTOS Score</th>
+    <td colspan="5" ><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled" maxlength="10"></span></td>
+</tr>
+<tr>
+    <th scope="row">Experian Score</th>
+    <td colspan="5">
+        <span>
+            <input style="width:87pt" type="text" id="_experianScore" name="experianScore" value="${ccpInfoMap.ccpExperians}" disabled="disabled" maxlength="10">
+            <input style="width:87pt" type="text" id="_experianRisk" name="experianRisk" value="${ccpInfoMap.ccpExperianr}" disabled="disabled" maxlength="10">
+        </span>
+    </td>
+<!--    <td colspan="5" ></td> -->
+</tr>
+<tr>
+    <th scope="row">CHS Status</th>
+    <td colspan="5" id="chs_stus">
 <%--     <span>${ccpInfoMap.chsStus}</span> --%>
     </td>
+</tr>
+<tr>
     <th scope="row">CHS Reason</th>
-    <td id="chs_rsn">
+    <td colspan="5" id="chs_rsn">
  <%--     <span>${ccpInfoMap.chsRsn}</span> --%>
     </td>
 </tr>

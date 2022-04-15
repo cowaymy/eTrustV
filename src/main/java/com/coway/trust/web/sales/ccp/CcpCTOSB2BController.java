@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.ccp.CcpCTOSB2BService;
+import com.coway.trust.biz.sales.ccp.CcpExpB2BService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -38,6 +39,11 @@ public class CcpCTOSB2BController {
 
 	@Resource(name = "ccpCTOSB2BService")
 	private CcpCTOSB2BService ccpCTOSB2BService;
+
+//experian
+	@Resource(name = "ccpExpB2BService")
+    private CcpExpB2BService ccpExpB2BService;
+//experian
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -59,7 +65,6 @@ public class CcpCTOSB2BController {
 		return "sales/ccp/ccpCTOSB2BList";
 
 	}
-
 
 	@RequestMapping(value = "/selectCTOSB2BList")
 	public ResponseEntity<List<EgovMap>> selectCTOSB2BList(@RequestParam Map<String, Object> params , HttpServletRequest request) throws Exception{
@@ -115,7 +120,7 @@ public class CcpCTOSB2BController {
 		return "sales/ccp/ccpCTOSB2BConfig";
 
 	}
-	
+
 	  @RequestMapping(value = "/savePromoB2BUpdate.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> saveVRescueUpdate(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
 
@@ -135,4 +140,60 @@ public class CcpCTOSB2BController {
 			return ResponseEntity.ok(message);
 
 		}
+
+	//experian
+	   @RequestMapping(value = "/selectExpB2BList.do")
+	    public String selectExpB2BList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+	        LOGGER.info("################ Start B2BList #########");
+	        String expbfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+	        String exptoDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+	        model.put("bfDay", expbfDay);
+	        model.put("toDay", exptoDay);
+
+	        return "sales/ccp/ccpExpB2BList";
+	    }
+	    @RequestMapping(value = "/selectEXPERIANB2BList")
+	    public ResponseEntity<List<EgovMap>> selectEXPERIANB2BList(@RequestParam Map<String, Object> params , HttpServletRequest request) throws Exception{
+
+	        LOGGER.info("######################  get EXPERIAN List ###################");
+	        List<EgovMap> expList = null;
+	        String stusExpArr[] = request.getParameterValues("stus");
+	        params.put("stusArr", stusExpArr);
+	        expList = ccpExpB2BService.selectEXPERIANB2BList(params);
+
+	        return ResponseEntity.ok(expList);
+	    }
+
+
+	    @RequestMapping(value = "/getExpDetailList")
+	    public ResponseEntity<List<EgovMap>> getExpDetailList (@RequestParam Map<String, Object> params) throws Exception{
+
+	        LOGGER.info("######################  get EXPERIAN Detail List ###################");
+	        List<EgovMap> expdetailList = null;
+	        expdetailList = ccpExpB2BService.getExpDetailList(params);
+
+	        return ResponseEntity.ok(expdetailList);
+	    }
+
+	    @RequestMapping(value = "/getExpDetailByOrdNo")
+	    public ResponseEntity<List<EgovMap>> getExpDetailByOrdNo (@RequestParam Map<String, Object> params) throws Exception{
+
+	        LOGGER.info("######################  get EXPERIAN Detail List ###################");
+	        List<EgovMap> expdetailList = null;
+	        expdetailList = ccpExpB2BService.getExpDetailList(params);
+
+	        return ResponseEntity.ok(expdetailList);
+	    }
+
+	    @RequestMapping(value = "/getResultRowForExpDisplay")
+	    public ResponseEntity<Map<String, Object>> getResultRowForExpDisplay(@RequestParam Map<String, Object> params) throws Exception{
+
+	         Map<String, Object> rtnexpMap =   ccpExpB2BService.getResultRowForExpDisplay(params);
+
+	        LOGGER.info("####################ResultRow Chk RESULT : " + rtnexpMap.toString());
+	        return ResponseEntity.ok(rtnexpMap);
+	    }
+	//experian
 }

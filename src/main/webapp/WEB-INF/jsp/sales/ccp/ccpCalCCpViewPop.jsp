@@ -399,21 +399,37 @@ function chgTab(tabNm) {
  function fn_displayReport(viewType){
 
     var isRe = false;
-    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
-        console.log("result : " + result);
-        console.log("content  :  " + JSON.stringify(result));
-         if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
-             window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
-        }else{
-            isRe  = true;
+    if (viewType == "FICO_VIEW"){
+    	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
+            console.log("result : " + result);
+            console.log("content  :  " + JSON.stringify(result));
+             if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+                 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+            }else{
+                isRe  = true;
+            }
+        },'',{async : false});
+    	if(isRe == true){
+            Common.alert("No result from CTOS");
+            return;
         }
-    },'',{async : false});
-
-    if(isRe == true){
-        Common.alert("No result from CTOS");
-        return;
+    }else if (viewType == "EXPERIAN_VIEW"){
+// Experian project
+    	Common.ajax("GET", "/sales/ccp/getResultRowForEXPERIANDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
+            console.log("result : " + result);
+            console.log("content  :  " + JSON.stringify(result));
+             if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+                 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+            }else{
+                isRe  = true;
+            }
+        },'',{async : false});
+    	if(isRe == true){
+            Common.alert("No result from EXPERIAN");
+            return;
+        }
     }
-}
+ }
 
  function fn_installationArea(){
 	 Common.popupDiv("/sales/ccp/ccpCalInstallationAreaPop.do", null, null, true, "_instPopDiv");
@@ -533,8 +549,10 @@ function chgTab(tabNm) {
 <h3><spring:message code="sal.title.text.ccpScorePoint" /></h3>
 <ul class="right_btns">
     <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()"><spring:message code="sal.title.text.installArea" /></a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li>
+<!--      <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li> -->
+<!--      <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('EXPERIAN_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li> -->
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')">CTOS Score</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('EXPERIAN_VIEW')">Experian Score</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -632,14 +650,31 @@ function chgTab(tabNm) {
     -->
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
-    <td><span>${ccpInfoMap.ccpFico}</span></td>
-           <th scope="row">CHS Status</th>
-    <td id="chs_stus">
+<!--  "sal.title.text.ficoScore" THIS IS IN THE TABLE SYS0052M-->
+<!-- <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th> -->
+    <th scope="row">CTOS Score</th>
+    <td colspan="5" ><span>${ccpInfoMap.ccpFico}</span></td>
+</tr>
+<tr>
+    <th scope="row">Experian Score</th>
+    <td colspan="5">
+        <span style="width:87pt" >
+            ${ccpInfoMap.ccpExperians}
+        </span>
+        <span style="width:87pt">
+            ${ccpInfoMap.ccpExperianr}
+        </span>
+    </td>
+</tr>
+<tr>
+    <th scope="row">CHS Status</th>
+    <td colspan="5" id="chs_stus">
  <%--   <span>${ccpInfoMap.chsStus}</span> --%>
     </td>
+</tr>
+<tr>
     <th scope="row">CHS Reason</th>
-    <td id="chs_rsn">
+    <td colspan="5" id="chs_rsn">
  <%--   <span>${ccpInfoMap.chsRsn}</span> --%>
     </td>
 </tr>

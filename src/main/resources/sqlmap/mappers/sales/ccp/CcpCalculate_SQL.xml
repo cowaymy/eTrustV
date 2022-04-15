@@ -824,6 +824,11 @@ SELECT Extent1.CCP_ID   ,
        CASE WHEN ( Extent5.NAME IS NULL ) THEN '' ELSE Extent5.NAME END NAME1  ,
        CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC ,
        CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END CCP_FICO,
+<!-- Experian -->
+       CASE WHEN ( Extent1.CCP_EXPERIANS IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANS END CCP_EXPERIANS,
+       CASE WHEN ( Extent1.CCP_EXPERIANR IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANR END CCP_EXPERIANR,
+       CASE WHEN  (Extent10.EXPERIAN_BANKRUPT > 0) THEN EXPERIAN_BANKRUPT ELSE 0 END EXPERIAN_BANKRUPT ,
+<!-- Experian -->
        NVL(Extent1.CCP_RJ_STUS_ID , 0) CCP_RJ_STUS_ID,
        CASE WHEN  (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT ,
        Extent9.CHS_STUS ,
@@ -839,6 +844,7 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SAL0107D Extent7   ON Extent6.SALES_ORD_NO = Extent7.ORD_NO
          LEFT JOIN SAL0074D Extent8   ON Extent8.SALES_ORD_ID = Extent6.SALES_ORD_ID
          LEFT JOIN SAL0262D Extent9   ON Extent6.CUST_ID = Extent9.CUST_ID
+         LEFT JOIN SAL0313D Extent10   ON Extent6.SALES_ORD_NO = Extent10.ORD_NO
          AND Extent9.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
          AND Extent9.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
 <![CDATA[
@@ -931,6 +937,8 @@ SELECT Extent1.CCP_ID   ,
 			       CCP_HAS_GRNT = #{hasGrnt},
 			       CCP_IS_HOLD = #{onHoldCcp},
 			       CCP_FICO = #{ficoScore},
+                   CCP_EXPERIANS = #{experianScore},
+                   CCP_EXPERIANR = #{experianRisk},
 			       CCP_AGM_REQ = #{agmReq},
 			       CCP_TEMPLATE = #{cowayTemplate}
 			WHERE
@@ -1349,6 +1357,60 @@ WHERE
 AND T1.CNT = 1
 </select>
 
+<select id="getResultRowForEXPERIANDisplayForCCPCalculation" parameterType="Map" resultMap="resultRowMap">
+SELECT
+        T1.BATCH_ID,
+        T1.ORD_NO,
+        T1.CUST_IC,
+        T1.CUST_NAME,
+        T1.PRCSS,
+        T1.EXPERIAN_SCRE,
+        T1.EXPERIAN_RISK,
+        T1.BATCH_NO,
+        T1.RESULT_RAW,
+        T1.EXPERIAN_DT,
+        T1.UPD_USER_ID,
+        T1.EXPERIAN_BANKRUPT,
+        T1.ORD_ID,
+        T1.CUST_ID,
+        T1.MEM_ID,
+        T1.PRCSSR,
+        T1.RPT_TYPE,
+        T1.CNT
+FROM(
+          SELECT
+                BATCH_ID,
+                ORD_NO,
+                CUST_IC,
+                CUST_NAME,
+                PRCSS,
+                EXPERIAN_SCRE,
+                EXPERIAN_RISK,
+                BATCH_NO,
+                RESULT_RAW,
+                EXPERIAN_DT,
+                UPD_USER_ID,
+                EXPERIAN_BANKRUPT,
+                ORD_ID,
+                CUST_ID,
+                MEM_ID,
+                PRCSSR,
+                RPT_TYPE,
+                ROW_NUMBER() OVER (PARTITION BY CUST_IC ORDER BY EXPERIAN_DT DESC) CNT
+          FROM
+                SAL0313D
+          WHERE
+                PRCSS = 1
+                AND PRCSSR = 1
+          AND
+                EXPERIAN_DT IS NOT NULL
+          AND
+                RESULT_RAW IS NOT NULL
+        ) T1
+WHERE
+      T1.CUST_IC = #{nric}
+AND T1.CNT = 1
+</select>
 
 <!-- ccp Installation Grid -->
 <select id="getCcpInstallationList" parameterType="Map" resultType="egovMap">
@@ -1404,6 +1466,11 @@ AND T1.CNT = 1
        CASE WHEN ( Extent5.NAME IS NULL ) THEN '' ELSE Extent5.NAME END NAME1  ,
        CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC ,
        CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END CCP_FICO,
+       <!-- Experian -->
+       CASE WHEN ( Extent1.CCP_EXPERIANS IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANS END CCP_EXPERIANS,
+       CASE WHEN ( Extent1.CCP_EXPERIANR IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANR END CCP_EXPERIANR,
+       CASE WHEN  (Extent10.EXPERIAN_BANKRUPT > 0) THEN EXPERIAN_BANKRUPT ELSE 0 END EXPERIAN_BANKRUPT ,
+       <!-- Experian -->
        NVL(Extent1.CCP_RJ_STUS_ID , 0) CCP_RJ_STUS_ID,
        CASE WHEN  (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT ,
        Extent9.CHS_STUS ,
@@ -1423,6 +1490,7 @@ AND T1.CNT = 1
          LEFT JOIN SAL0107D Extent7   ON Extent6.SALES_ORD_NO = Extent7.ORD_NO
          LEFT JOIN SAL0074D Extent8   ON Extent8.SALES_ORD_ID = Extent6.SALES_ORD_ID
          LEFT JOIN SAL0262D Extent9   ON Extent6.CUST_ID = Extent9.CUST_ID
+         LEFT JOIN SAL0313D Extent10   ON Extent6.SALES_ORD_NO = Extent10.ORD_NO
          AND Extent9.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
          AND Extent9.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
 <![CDATA[

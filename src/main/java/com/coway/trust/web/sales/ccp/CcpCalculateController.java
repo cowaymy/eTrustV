@@ -502,7 +502,16 @@ public class CcpCalculateController {
 		LOGGER.info("####################ResultRow Chk RESULT : " + rtnMap.toString());
 		return ResponseEntity.ok(rtnMap);
 	}
+//EXPERIAN PROJECT
+   @RequestMapping(value = "/getResultRowForEXPERIANDisplayForCCPCalculation")
+    public ResponseEntity<Map<String, Object>> getResultRowForEXPERIANDisplayForCCPCalculation(@RequestParam Map<String, Object> params) throws Exception{
 
+        Map<String, Object> exprtnMap = ccpCalculateService.getResultRowForEXPERIANDisplayForCCPCalculation(params);
+
+        LOGGER.info("####################ResultRow Chk RESULT : " + exprtnMap.toString());
+        return ResponseEntity.ok(exprtnMap);
+    }
+ //EXPERIAN PROJECT
 	/* RPT */
 
 	@RequestMapping(value = "/goCcpPerformancePop.do")
@@ -979,10 +988,10 @@ public class CcpCalculateController {
 		return ResponseEntity.ok(message);
 	}
 
-	  @RequestMapping(value = "/ezyCcpRawDataPop.do")
-	  public String ccpRawDataPop() {
+    @RequestMapping(value = "/ezyCcpRawDataPop.do")
+    public String ccpRawDataPop() {
 
-	    return "sales/ccp/ezyCcpRawDataPop";
-	  }
+      return "sales/ccp/ezyCcpRawDataPop";
+    }
 }
 

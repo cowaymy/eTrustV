@@ -41,7 +41,9 @@ public interface CcpCalculateService {
 	void calSave (Map<String, Object> params) throws Exception;
 
 	Map<String, Object> getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params) throws Exception;
-
+//experian
+	Map<String, Object> getResultRowForEXPERIANDisplayForCCPCalculation(Map<String, Object> params) throws Exception;
+//experian
 	List<EgovMap> getCcpInstallationList(Map<String, Object> params)throws Exception;
 
 	EgovMap getAux(Map<String, Object> params);
