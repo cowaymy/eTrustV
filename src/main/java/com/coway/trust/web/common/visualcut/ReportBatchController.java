@@ -2429,6 +2429,36 @@ public class ReportBatchController {
  }
 //GENERATION TIME : 23 45 END
 
+ // Celeste: Account Health Index Raw Data (No need to set CRON ; manual job)
+ @RequestMapping(value = "/accHealthIndexRawData.do")
+ public void AccountHealthIndexRawData() throws IOException{
+   LOGGER.info("[START] Account_Health_Index_Raw_Data...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/AccHealthIndexRawData_Excel.rpt");// visualcut
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "Rental Collection" + File.separator + "Account_Health_Index_Raw_Data_" + CommonUtils.getNowDate() + ".xls");
+
+   this.view(null, null, params);
+   LOGGER.info("[END] Account_Health_Index_Raw_Data...");
+ }
+
+//Celeste: Account Health Index Report (No need to set CRON ; manual job)
+@RequestMapping(value = "/accHealthIndexReport.do")
+public void AccountHealthIndexReport() throws IOException{
+ LOGGER.info("[START] Account_Health_Index_Report...");
+ Map<String, Object> params = new HashMap<>();
+ params.put(REPORT_FILE_NAME, "/visualcut/AccHealthIndexReport_Excel.rpt");// visualcut
+ params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+ params.put("V_TEMP", "TEMP");// parameter
+ params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+     "Rental Collection" + File.separator + "Account_Health_Index_Report_" + CommonUtils.getNowDate() + ".xls");
+
+ this.view(null, null, params);
+ LOGGER.info("[END] Account_Health_Index_Report...");
+}
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
