@@ -115,6 +115,7 @@
                                     </choose>
                                           ) A on V1.ORD_ID = A.SALES_ORD_ID
                     </if>
+                    JOIN SAL0001D SAL01 ON V1.ORD_ID = SAL01.SALES_ORD_ID
                     WHERE 1=1
                     /*
                     JOIN ORG0005D ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
@@ -221,6 +222,9 @@
                         <if test='bndlNo != null and bndlNo != ""'>
                             AND UPPER(D1.BNDL_NO) = UPPER(#{bndlNo})
                         </if>
+                         <if test='isECommerce != null and isECommerce != ""'>
+				           AND SAL01.ECOMM_ORD_ID > 0
+				         </if>
                         AND S1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                              WHERE AA.CODE = BB.CODE
                                                                  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */

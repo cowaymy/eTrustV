@@ -783,8 +783,8 @@
                         <td><input id="isEKeyin" name="isEKeyin" type="checkbox" /></td>
                         <th scope="row">Bundle Number</th>
                         <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
-                        <th scope="row"></th>
-                        <td></td>
+                        <th scope="row">is e-Commerce</th>
+					    <td><input id="isECommerce" name="isECommerce" type="checkbox"/></td>
                     </tr>
                     <tr>
                         <th scope="row" colspan="6"><span class="must"><spring:message code='sales.msg.ordlist.keyin' /></span></th>
