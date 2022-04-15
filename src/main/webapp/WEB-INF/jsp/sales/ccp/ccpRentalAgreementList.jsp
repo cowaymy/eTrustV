@@ -104,7 +104,7 @@ $(document).ready(function() {
 	 //Move to Insert Page
     $("#_goToAddWindow").click(function() {
     	//self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
-    	Common.popupDiv("/sales/ccp/newCcpAgreementSearchPop.do", $("#popForm").serializeJSON(), null , true , '_newDiv');
+    	Common.popupDiv("/sales/ccp/newCcpRenAgrSearchPop.do", $("#popForm").serializeJSON(), null , true , '_newDiv');
 	});
 
     /* // 셀 클릭 이벤트 바인딩
@@ -284,9 +284,9 @@ function popup(location){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="sal.title.text.govAgrList" /></h2>
 <ul class="right_btns">
-<%--     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span><spring:message code="sal.title.text.new" /></a></p></li>
-    </c:if> --%>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
@@ -312,9 +312,9 @@ function popup(location){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.agrNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="govAgBatchNo"/></td>
-    <th scope="row"><spring:message code="sal.title.text.crtDateFrom" /></th>
+    <th scope="row">Date Created (From)</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="govAgCrtDtFrom" readonly="readonly"/></td>
-    <th scope="row"><spring:message code="sal.title.text.crtDateTo" /></th>
+    <th scope="row">Date Created (To)</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgCrtDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
@@ -367,7 +367,7 @@ function popup(location){
     </td>
     <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="memCode"/></td>
-    <th scope="row"><spring:message code="sal.title.text.agrCrtor" /></th>
+    <th scope="row">Created by</th>
     <td><input type="text" title="" placeholder="" class="w100p" name="userName"/></td>
 </tr>
 <tr>

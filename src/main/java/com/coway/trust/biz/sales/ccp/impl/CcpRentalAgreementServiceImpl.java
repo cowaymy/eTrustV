@@ -139,7 +139,7 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
 		/* ##################  Document Number Numbering Set Param #####################*/
 		//put Code Id = 51
-    	formMap.put("docNoId", SalesConstants.AGREEMENT_CODEID	);
+    	formMap.put("docNoId", SalesConstants.RENTAL_AGREEMENT_CODEID	);
     	String docNo = "";
     	docNo = ccpRentalAgreementMapper.getDocNo(formMap); //docNo
     	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -178,6 +178,14 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		LOGGER.info("################### Insert 1 Complete ###################");
 		LOGGER.info("######################################################");
 
+		Map<String, Object> updParam = new HashMap<String, Object>();
+		updParam.put("updAgrId",  govAgreeIdSeq);
+		updParam.put("govAgStartDt", formMap.get("govAgStartDt"));
+		updParam.put("govAgEndDt", formMap.get("govAgEndDt"));
+
+		ccpRentalAgreementMapper.updateAgreement(updParam);
+
+
 		/* ##################   insert 2 ######################*/
 
 		govMsgIdSeq = ccpRentalAgreementMapper.crtSeqSAL0308D();
@@ -189,31 +197,12 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		LOGGER.info("____________________________________________________________________________________________________________");
 		LOGGER.info("_____________________ insert2 전 파라미터 확인 :  AgrId = " + formMap.get("govAgreeIdSeq") + " , msgId = " + formMap.get("govMsgIdSeq"));
 		LOGGER.info("____________________________________________________________________________________________________________");
+		formMap.put("agreementMsg", formMap.get("agreementAgmRemark"));
 		ccpRentalAgreementMapper.insertGovAgreementMessLog(formMap);
 		LOGGER.info("######################################################");
 		LOGGER.info("################### Insert 2 Complete ###################");
 		LOGGER.info("######################################################");
 
-
-		if(SalesConstants.AGREEMENT_TRUE.equals(formMap.get("consignment"))){
-
-			govConsignSeq = ccpRentalAgreementMapper.crtSeqSAL0307D();
-
-			formMap.put("govConsignSeq", govConsignSeq);
-			formMap.put("agCnsgnSendDt", SalesConstants.DEFAULT_DATE);
-			if(SalesConstants.CONSIGNMENT_HAND.equals(formMap.get("inputCourier"))){
-				formMap.put("consignBtHand", '1');
-			}else{
-				formMap.put("consignBtHand", '0');
-			}
-
-			ccpRentalAgreementMapper.insertConsignment(formMap);
-
-			LOGGER.info("######################################################");
-			LOGGER.info("################### Consignment Complete ###################");
-			LOGGER.info("######################################################");
-
-		}
 
 		/*################# Grid Insert( Insert 3, 4, 5) , Update 1 #######################*/
 		for (int idx = 0; idx < grid.size(); idx++) {
@@ -222,8 +211,8 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
 			//Param Setting
 			insMap.put("userId", params.get("userId"));
-			insMap.put("inputPeriodStart", formMap.get("inputPeriodStart"));
-			insMap.put("inputPeriodEnd", formMap.get("inputPeriodEnd"));
+			insMap.put("inputPeriodStart", formMap.get("govAgStartDt"));
+			insMap.put("inputPeriodEnd", formMap.get("govAgEndDt"));
 			insMap.put("docNo",  docNo);
 			insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
 
@@ -368,16 +357,19 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
 		Map<String, Object> gridData = (Map<String, Object>) paramsForm.get("gridData");
 		List<Object> addList = null;
-		if(gridData.get(AppConstants.AUIGRID_ADD) != null){
-			addList = (List<Object>) gridData.get(AppConstants.AUIGRID_ADD);
-		}
-		/*List<Object> updList = null;
-		if(gridData.get(AppConstants.AUIGRID_UPDATE) != null){
-			updList = (List<Object>) gridData.get(AppConstants.AUIGRID_UPDATE);
-		}*/
 		List<Object> delList = null;
-		if(gridData.get(AppConstants.AUIGRID_REMOVE) != null){
-			delList = (List<Object>) gridData.get(AppConstants.AUIGRID_REMOVE);
+		if(gridData != null){
+			if(gridData.get(AppConstants.AUIGRID_ADD) != null){
+				addList = (List<Object>) gridData.get(AppConstants.AUIGRID_ADD);
+			}
+			/*List<Object> updList = null;
+			if(gridData.get(AppConstants.AUIGRID_UPDATE) != null){
+				updList = (List<Object>) gridData.get(AppConstants.AUIGRID_UPDATE);
+			}*/
+
+			if(gridData.get(AppConstants.AUIGRID_REMOVE) != null){
+				delList = (List<Object>) gridData.get(AppConstants.AUIGRID_REMOVE);
+			}
 		}
 
 		// updAgrId == Agreement Id ,  updPrgId == Progress Hidden Id ,  updMsgStatus == messageStatus Id
@@ -482,6 +474,9 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 			}else if(getupdMsgStatus == 44){
 				LOGGER.info("__________________________________ getPrgId == 10 && getupdMsgStatus == 44");
 				params.put("govAgrStatusId", "1");
+			}else if(getupdMsgStatus == 10){
+				LOGGER.info("__________________________________ getPrgId == 10 && getupdMsgStatus == 10");
+				params.put("govAgrStatusId", "10");
 			}else{
 				LOGGER.info("__________________________________ getPrgId == 10 && else");
 				params.put("govAgrStatusId", "1");
@@ -514,9 +509,12 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 				params.put("govAgrStatusId", "1");
 				//params.put("updIsNotification", "1");
 				//params.put("updNotificationMonth", "1");
+			}else if(getupdMsgStatus == 10){
+				LOGGER.info("__________________________________ getPrgId == 9 && getupdMsgStatus == 10");
+				params.put("govAgrStatusId", "10");
 			}else{
 				LOGGER.info("__________________________________ getPrgId == 9 && else");
-				params.put("govAgrStatusId", "1");
+				params.put("govAgrStatusId", "");
 				//params.put("updIsNotification", "1");
 				//params.put("updNotificationMonth", "1");
 			}
@@ -524,14 +522,17 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 			// Progress ID = 8 - Verifying Progress / 11 - Execution
 
 			if(getupdMsgStatus == 5){
-				LOGGER.info("__________________________________ getPrgId  가  10, 7, 9 아님  && getupdMsgStatus == 5" );
+				LOGGER.info("__________________________________ getPrgId  가  8,11 아님  && getupdMsgStatus == 5" );
 				params.put("govAgrStatusId", "1");
 
 			}else if(getupdMsgStatus == 44){
-				LOGGER.info("__________________________________ getPrgId  가  10, 7, 9 아님  && getupdMsgStatus == 44" );
+				LOGGER.info("__________________________________ getPrgId  가  8,11 아님  && getupdMsgStatus == 44" );
 				params.put("govAgrStatusId", "1");
+			}else if(getupdMsgStatus == 10){
+				LOGGER.info("__________________________________ getPrgId 8,11 ==  && getupdMsgStatus == 10");
+				params.put("govAgrStatusId", "10");
 			}else{
-				LOGGER.info("__________________________________ getPrgId  가  10, 7, 9 아님  && else" );
+				LOGGER.info("__________________________________ getPrgId  가  8,11 아님  && else" );
 				params.put("govAgrStatusId", "1");
 			}
 		} // if End
@@ -546,7 +547,7 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		String govCallResultIdSeq = "";
 
 		//Add order
-		if(!addList.isEmpty()){
+		if(addList != null && !addList.isEmpty()){
 			for (int idx = 0; idx < addList.size(); idx++) {
 
 				Map<String, Object> insMap = (Map<String, Object>)addList.get(idx);
@@ -604,7 +605,7 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 		}
 
 		//remove order
-		if(!delList.isEmpty()){
+		if(delList != null && !delList.isEmpty()){
 			for (int idx = 0; idx < delList.size(); idx++) {
 				Map<String, Object> insMap = (Map<String, Object>)delList.get(idx);
 				insMap.put("itmStatus", "8");
@@ -863,33 +864,31 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
     			updParam.put("govAgrStartDate", params.get("govAgStartDt"));
         		updParam.put("govAgrEndDate", params.get("govAgEndDt"));
+        		updParam.put("govAgTypeId",  params.get("govAgTypeId"));
+        		updParam.put("govAgQty",  params.get("govAgQty"));
+        		updParam.put("cowayTemplate",  params.get("cowayTemplate"));
+        		updParam.put("cntPeriodValue",  params.get("cntPeriodValue"));
+        		updParam.put("draftRcvd",  params.get("draftRcvd"));
+        		updParam.put("firstReview",  params.get("firstReview"));
+        		updParam.put("isSecReview",  params.get("isSecReview"));
+        		updParam.put("secReview",  params.get("secReview"));
+        		updParam.put("isThirdReview",  params.get("isThirdReview"));
+        		updParam.put("thirdReview",  params.get("thirdReview"));
+        		updParam.put("isFirstFeedback",  params.get("isFirstFeedback"));
+        		updParam.put("firstFeedback",  params.get("firstFeedback"));
+        		updParam.put("isSecFeedback",  params.get("isSecFeedback"));
+        		updParam.put("secFeedback",  params.get("secFeedback"));
+        		updParam.put("isLatestFwd",  params.get("isLatestFwd"));
+        		updParam.put("latestFwd",  params.get("latestFwd"));
+        		updParam.put("isRfd",  params.get("isRfd"));
+        		updParam.put("rfd",  params.get("rfd"));
+        		updParam.put("agrExecution",  params.get("agrExecution"));
+        		updParam.put("agrFinal",  params.get("agrFinal"));
+        		updParam.put("sendStamping",  params.get("sendStamping"));
+        		updParam.put("receiveStamp",  params.get("receiveStamp"));
+        		updParam.put("courier",  params.get("courier"));
+        		updParam.put("erlTerNonCrisisChk",  params.get("isErlTerNonCrisisChk"));
     		}
-
-    		updParam.put("govAgTypeId",  params.get("govAgTypeId"));
-    		updParam.put("govAgQty",  params.get("govAgQty"));
-
-    		updParam.put("cowayTemplate",  params.get("cowayTemplate"));
-    		updParam.put("cntPeriodValue",  params.get("cntPeriodValue"));
-    		updParam.put("draftRcvd",  params.get("draftRcvd"));
-    		updParam.put("firstReview",  params.get("firstReview"));
-    		updParam.put("isSecReview",  params.get("isSecReview"));
-    		updParam.put("secReview",  params.get("secReview"));
-    		updParam.put("isThirdReview",  params.get("isThirdReview"));
-    		updParam.put("thirdReview",  params.get("thirdReview"));
-    		updParam.put("isFirstFeedback",  params.get("isFirstFeedback"));
-    		updParam.put("firstFeedback",  params.get("firstFeedback"));
-    		updParam.put("isSecFeedback",  params.get("isSecFeedback"));
-    		updParam.put("secFeedback",  params.get("secFeedback"));
-    		updParam.put("isLatestFwd",  params.get("isLatestFwd"));
-    		updParam.put("latestFwd",  params.get("latestFwd"));
-    		updParam.put("isRfd",  params.get("isRfd"));
-    		updParam.put("rfd",  params.get("rfd"));
-    		updParam.put("agrExecution",  params.get("agrExecution"));
-    		updParam.put("agrFinal",  params.get("agrFinal"));
-    		updParam.put("sendStamping",  params.get("sendStamping"));
-    		updParam.put("receiveStamp",  params.get("receiveStamp"));
-    		updParam.put("courier",  params.get("courier"));
-    		updParam.put("erlTerNonCrisisChk",  params.get("isErlTerNonCrisisChk"));
 
     		ccpRentalAgreementMapper.updateCcpLatMessageId(updParam);
 

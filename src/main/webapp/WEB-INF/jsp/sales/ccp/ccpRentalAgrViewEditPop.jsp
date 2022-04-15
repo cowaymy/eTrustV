@@ -14,6 +14,7 @@
     var msgGridID;
     var orderGridID;
     var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+    var ROLE_ID = "${SESSION_INFO.roleId}";
 
     //isFile
     var fileResult;
@@ -41,12 +42,17 @@
 
         //hide all editable fields, until click edit button
         fn_disable_all();
+        $("#_btnCancel").css("display" , "none");
+
         var agrStatus = $("#_prgId").val();
         var stusId = $("#_govAgStusId").val();
         if(stusId == 4 || stusId == 10){
             $("#_agrResult").css("display" , "none");
+        }else{
+        	if(ROLE_ID == "262" || ROLE_ID == "264" || ROLE_ID == "267" || ROLE_ID == "130"){
+                $("#_btnCancel").css("display" , "");
+            }
         }
-
         /* if(agrStatus == '10'){
         	$("#_btnEdit").css("display" , "none");
         }else{ */
@@ -259,20 +265,12 @@
             fn_editable_fields();
         });
 
-        //preset Notification Period by Hui Ding, 2020-09-18
-        /* var min = 0;
-        var max = 6;
-        var optionName = " Months";
-        var select = document.getElementById('_notificationMonth');
 
-	    for (var i = min; i<=max; i++){
-	        var opt = document.createElement('option');
-	        opt.value = i;
-	        opt.innerHTML = i + optionName;
-	        select.appendChild(opt);
-	    } */
+        $("#_btnCancel").click(function() {
+        	Common.confirm('Are you sure you want to cancel this agreement ? ', fn_cancelAgm , "");
 
-	    //document.getElementById('_notificationMonth').value = select;
+
+        });
 
 	    // add early termination non crisis flag - only available at Agreement Verifying stage by Hui Ding, 2020-09-21
 	    if ($("#_updErlTerNonCrisisChk").val() == '1'){
@@ -999,6 +997,34 @@
         }
 
     }
+
+    function fn_cancelAgm(){
+    	//$("#_msgStatus").val('10');
+
+        //Validation Success ()
+        //$("#_hiddenUpdMsgStatus").val($("#_msgStatus").val());
+
+        var data ={};
+        //var param = AUIGrid.getGridData(orderGridID);
+        //var gridData = GridCommon.getEditData(orderGridID);
+
+        //upload attachment
+        //var formData = Common.getFormData("_saveForm");
+        //formData.append("updMsgId", $("#_updAgrId").val());
+
+        data.form = $("#_saveForm").serializeJSON();
+        //data.gridData = gridData;
+
+        Common.ajax("POST", "/sales/ccp/cancelRentalAgrMtcEdit.do", data , function(result){
+            //msg
+            //result.msgLogSeq
+            //$("#_upMsgId").val(result.msgLogSeq);
+            //fn_disable_all();
+            Common.alert("Agreement had cancelled.");
+        });
+
+    	$("#_close").click();
+    }
 </script>
 
 
@@ -1426,9 +1452,13 @@
 </table><!-- table end -->
 
 </div>
-<ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" id="_btnEdit"><spring:message code="sal.btn.edit" /></a></p></li>
-    <li><p class="btn_blue2"><a href="#" id="_btnSave"><spring:message code="sal.btn.save" /></a></p></li>
+<ul>
+    <li>
+        <div ><a href="#" id="_btnCancel" ><font style="text-decoration: underline;">Cancel agreement</font></a></div>
+        <div class="btn_blue2 center_btns"><a href="#" id="_btnEdit"><spring:message code="sal.btn.edit" /></a></div>
+    </li>
+    <%-- <li><p class="btn_blue2 center_btns"><a href="#" id="_btnEdit"><spring:message code="sal.btn.edit" /></a></p></li> --%>
+    <li><p class="btn_blue2 center_btns"><a href="#" id="_btnSave"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 

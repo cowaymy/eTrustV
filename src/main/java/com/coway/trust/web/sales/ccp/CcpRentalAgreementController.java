@@ -348,7 +348,7 @@ public class CcpRentalAgreementController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("fullName", sessionVO.getUserFullname());
 		//TODO 추후 삭제 세션
-		params.put("fullName", "Jang Gwang Ryul");
+		//params.put("fullName", "Jang Gwang Ryul");
 
 		isResult = ccpRentalAgreementService.sendUpdateEmail(params);
 
@@ -399,6 +399,59 @@ public class CcpRentalAgreementController {
 		return "sales/ccp/ccpRentalConsignmentCourierListingPop";
 	}
 
+	@RequestMapping(value = "/newCcpRenAgrSearchPop.do")
+	public String newCcpAgreementSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		return "sales/ccp/ccpRentalAgrNewSearchPop";
+	}
+
+	@RequestMapping(value = "/newCcpRenAgrSearchResultPop.do", method = RequestMethod.POST)
+	public String newCcpAgreementSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+
+		return "sales/ccp/ccpRentalAgrNewSearchResultPop";
+	}
+
+	@RequestMapping(value = "/insertRentalAgreement.do" , method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertAgreement (@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
+
+		LOGGER.info("################## insertAgreement Start #######################");
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		returnMap = ccpRentalAgreementService.insertAgreement(params);
+
+		return ResponseEntity.ok(returnMap);
+
+	}
+
+	@RequestMapping(value = "/cancelRentalAgrMtcEdit.do")
+	public ResponseEntity<Map<String, Object>> cancelRentalAgrMtcEdit (@RequestBody Map<String, Object> params) throws Exception{
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		params.put("userId", sessionVO.getUserId());
+
+		Map<String, Object> params1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		params1.put("updMsgStatus", "10");
+		params1.put("agreementAgmRemark", "Agreement Cancelled");
+		params1.put("updResultRemark", "Agreement Cancelled");
+
+		returnMap = ccpRentalAgreementService.updateAgreementMtcEdit(params);
+
+		return ResponseEntity.ok(returnMap);
+	}
+
 	/*@RequestMapping(value="/ccpCalListingPop.do")
 	public String ccpSearchListingPop(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/ccp/ccpCalListingPop";
@@ -412,41 +465,6 @@ public class CcpRentalAgreementController {
 	@RequestMapping(value="/ccpCalPerformancePop")
 	public String ccpSearchPerformancePop(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/ccp/ccpCalPerformancePop";
-	}
-
-
-
-	@RequestMapping(value = "/newCcpAgreementSearchPop.do")
-	public String newCcpAgreementSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
-
-		return "sales/ccp/ccpRentalAgreementNewSearchPop";
-	}
-
-
-	@RequestMapping(value = "/getOrderId", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> getOrderId(@RequestParam Map<String, Object> params) throws Exception{
-
-		EgovMap resultMap = null;
-		//서비스
-		resultMap = ccpRentalAgreementService.getOrderId(params);
-
-		return ResponseEntity.ok(resultMap);
-	}
-
-
-	@RequestMapping(value = "/newCcpAgreementSearchResultPop.do", method = RequestMethod.POST)
-	public String newCcpAgreementSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
-
-		int prgrsId = 0;
-		EgovMap orderDetail = null;
-		params.put("prgrsId", prgrsId);
-
-        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-
-		model.put("orderDetail", orderDetail);
-		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
-
-		return "sales/ccp/ccpRentalAgreementNewSearchResultPop";
 	}
 
 
@@ -549,20 +567,7 @@ public class CcpRentalAgreementController {
 
 	}
 
-	@RequestMapping(value = "/insertAgreement.do" , method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> insertAgreement (@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
 
-		LOGGER.info("################## insertAgreement Start #######################");
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		params.put("userId", sessionVO.getUserId());
-
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-
-		returnMap = ccpRentalAgreementService.insertAgreement(params);
-
-		return ResponseEntity.ok(returnMap);
-
-	}
 
 	@RequestMapping(value = "/sendSuccessEmail.do")
 	public ResponseEntity<ReturnMessage> sendSuccessEmail (@RequestParam Map<String, Object> params) throws Exception{

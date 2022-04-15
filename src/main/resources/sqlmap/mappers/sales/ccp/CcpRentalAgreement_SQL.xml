@@ -1569,15 +1569,8 @@ SET RESULT_ID = #{resultId},
 			UPDATE
 			     SAL0305D
 			SET
-			       GOV_AG_PRE_UPD_USER_ID = #{updAgrId},
-			       GOV_AG_STUS_ID = #{govAgrStatusId},
-			       GOV_AG_PRGRS_ID = #{govAgrPrgId},
-			       <if test=" '' != changeMsgDate and null != changeMsgDate">
-			             GOV_AG_START_DT = TO_DATE(#{govAgStartDt}, 'DD/MM/YYYY'),
-			             GOV_AG_END_DT = TO_DATE(#{govAgEndDt}, 'DD/MM/YYYY'),
-			       </if>
-			       ERL_TER_NON_CRISIS = #{erlTerNonCrisisChk},
-			       GOV_AG_UPD_DT = SYSDATE
+	             GOV_AG_START_DT = TO_DATE(#{govAgStartDt}, 'DD/MM/YYYY'),
+	             GOV_AG_END_DT = TO_DATE(#{govAgEndDt}, 'DD/MM/YYYY')
 			 WHERE   GOV_AG_ID = #{updAgrId}
 </update>
 

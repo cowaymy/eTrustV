@@ -57,6 +57,13 @@ function fn_report(){
     	whereSQL += " AND Usr1.USER_NAME = '"+$("#txtCreator").val()+"'";
     }
 
+    if(!($("#crtDateFr").val() == null || $("#crtDateFr").val().length == 0)){
+        whereSQL += " AND to_char(ArgM.GOV_AG_CRT_DT, 'DD/MM/YYYY') >= TO_DATE('"+$("#crtDateFr").val()+"', 'DD/MM/YYYY')";
+    }
+    if(!($("#crtDateTo").val() == null || $("#crtDateTo").val().length == 0)){
+        whereSQL += " AND to_char(ArgM.GOV_AG_CRT_DT, 'DD/MM/YYYY') <= TO_DATE('"+$("#crtDateTo").val()+"', 'DD/MM/YYYY')";
+    }
+
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -131,9 +138,9 @@ function ValidRequiredField(){
     <th scope="row"><spring:message code="sal.title.text.agrStartDate" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
+    <p><input type="text" title="agm start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
     <span><spring:message code="sal.title.to" /></span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
+    <p><input type="text" title="agm end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
@@ -164,6 +171,14 @@ function ValidRequiredField(){
 <tr>
     <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td><input type="text" title="" placeholder="" class="" id="txtCreator"/></td>
+</tr>
+<tr>
+    <th scope="row">Date created</th>
+	    <td><div class="date_set"><!-- date_set start -->
+	    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="crtDateFr"/></p>
+	    <span><spring:message code="sal.title.to" /></span>
+	    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="crtDateTo"/></p>
+	    </div><!-- date_set end --></td>
 </tr>
 </tbody>
 </table><!-- table end -->
