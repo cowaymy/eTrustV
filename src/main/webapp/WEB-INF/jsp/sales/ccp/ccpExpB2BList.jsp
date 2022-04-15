@@ -288,7 +288,7 @@ function efileDown(batchId){
 	}
 
 	$('#v_batchId').val(batchId);
-	$('#reportDownFileName').val("B2B RawData_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	$('#reportDownFileName').val("B2B Experian RawData_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
 	var option = {
 			isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -340,7 +340,7 @@ function fn_displayReport(viewType, batchId, ordNo){
     </aside><!-- title_line end -->
     <section class="search_table"><!-- search_table start -->
         <form id="_searchForm">
-            <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CCPB2BRaw_Excel.rpt"/>
+            <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CCPEXPB2BRaw_Excel.rpt"/>
             <input type="hidden" id="v_batchId" name="v_batchId" value=""/>
             <input type="hidden" id="viewType" name="viewType" value="EXCEL"/>
             <input type="hidden" id="reportDownFileName" name="reportDownFileName" value=""/>
