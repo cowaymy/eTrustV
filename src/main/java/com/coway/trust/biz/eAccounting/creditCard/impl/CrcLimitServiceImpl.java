@@ -43,9 +43,8 @@ public class CrcLimitServiceImpl implements CrcLimitService {
         LOGGER.debug("params :: {}", params);
 
         String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-        if(!"A1101".equals(costCentr)) {
+        if(!"A1101".equals(costCentr) && sessionVO.getUserId() != 16178 && sessionVO.getUserId() != 22661)
             params.put("loginUserId", sessionVO.getUserId());
-        }
 
         String[] crcId = request.getParameterValues("crcDropdown");
         params.put("crcId", crcId);
@@ -200,7 +199,8 @@ public class CrcLimitServiceImpl implements CrcLimitService {
         LOGGER.debug("params :: {}", params);
 
         String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-        if(!"A1101".equals(costCentr)) params.put("loginUserId", sessionVO.getUserId());
+        if(!"A1101".equals(costCentr) && sessionVO.getUserId() != 16178 && sessionVO.getUserId() != 22661)
+            params.put("loginUserId", sessionVO.getUserId());
 
         String[] adjType = request.getParameterValues("selAdjType");
         params.put("adjType", adjType);
@@ -274,7 +274,7 @@ public class CrcLimitServiceImpl implements CrcLimitService {
                 if("J".equals((String) params.get("action"))) {
                     appParam.put("rejctResn", params.get("rejctResn"));
                 }
-                
+
                 appCnt += crcLimitMapper.updateApp_FCM34D(appParam);
             }
         } else {
