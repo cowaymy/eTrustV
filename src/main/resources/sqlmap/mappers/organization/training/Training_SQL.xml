@@ -180,7 +180,7 @@ SELECT Project1.CODE_ID   ,
          FROM SYS0013M Extent1
           WHERE  ( Extent1.CODE_MASTER_ID = 22 )
                    AND ( 0 = Extent1.DISAB ) ) Project1
-  ORDER BY Project1.CODE_NAME ASC
+  ORDER BY Project1.CODE ASC
 </select>
 
 <select id="selectAttendeeList" parameterType="Map" resultType="egovMap">
