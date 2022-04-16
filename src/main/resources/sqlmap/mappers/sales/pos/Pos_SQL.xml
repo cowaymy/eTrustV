@@ -3627,10 +3627,10 @@
                 S5.CODE || '-' || S5.NAME CODE_NAME,
                 S5.NAME ,
                 S5.CODE ,
-                S28.WH_LOC_ID ,
+                <!-- S28.WH_LOC_ID ,
                 S28.WH_LOC_CODE ,
                 S28.WH_LOC_DESC ,
-                S28.WH_LOC_GB ,
+                S28.WH_LOC_GB , -->
                 (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
             FROM
                 SYS0005M S5 ,SYS0028M S28
