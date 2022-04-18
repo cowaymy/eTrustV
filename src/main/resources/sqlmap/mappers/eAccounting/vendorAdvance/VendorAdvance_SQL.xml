@@ -191,7 +191,7 @@
             A.BANK_ACC_NO,
             A.GL_ACC_NO,
             CASE WHEN A.ADV_TYPE = 5 THEN A.TOT_AMT
-                 WHEN A.ADV_TYPE = 6 THEN (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = #{clmNo})
+                 WHEN A.ADV_TYPE = 6 THEN (NVL((SELECT SUM(TOT_AMT) FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = A.PREV_CLM_NO)))
             END TOT_AMT,
             CASE WHEN A.ADV_TYPE = 6
                 THEN (SELECT SUM(AMT) FROM FCM0028D FCM28 WHERE FCM28.CLM_NO = A.CLM_NO)
@@ -223,8 +223,8 @@
             ON A.MEM_ACC_ID = C.MEM_ACC_ID
         LEFT JOIN FCM0004M D
             ON D.APPV_PRCSS_NO = A.APPV_PRCSS_NO
-        LEFT JOIN FCM0028D E
-            ON E.CLM_NO = A.CLM_NO
+        LEFT JOIN FCM0015D E
+            ON E.APPV_PRCSS_NO = A.APPV_PRCSS_NO
         WHERE A.CLM_NO = #{clmNo}
     </select>
 
@@ -668,7 +668,8 @@
             VATCODE,
             DIMENSION1,
             DIMENSION2,
-            STATUS
+            STATUS,
+            WAERS
         ) VALUES (
             #{ifKey},
             '1',
@@ -704,7 +705,8 @@
             'VB',
             #{dim1},
             #{dim2},
-            #{appvPrcssStus}
+            #{appvPrcssStus},
+            #{curr}
         )
     </insert>
 
@@ -751,7 +753,8 @@
             D.REQST_USER_ID,
             B.USER_NAME,
             TO_CHAR(D.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
-            D.APPV_PRCSS_STUS
+            D.APPV_PRCSS_STUS,
+            G.INVC_CUR CURRENCY
         FROM FCM0027M A
         JOIN SYS0047M B
             ON A.CRT_USER_ID = B.USER_ID
@@ -765,6 +768,7 @@
             LEFT JOIN FCM0027M J ON J.CLM_NO = I.CLM_NO
             GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER
         ) E ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
+        LEFT JOIN FCM0015D G ON G.APPV_PRCSS_NO = E.APPV_PRCSS_NO
         WHERE A.CLM_NO = #{clmNo}
     </select>
 
@@ -794,12 +798,14 @@
             TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
             TO_CHAR(A.APPV_PRCSS_DT,'DD/MM/YYYY') INVC_DT, /* DOCDATE */
             --TO_CHAR(E.INVC_DT, 'DD/MM/YYYY') INVC_DT,        /* DOCDATE */
-            (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT
+            (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+            G.INVC_CUR CURRENCY
         FROM FCM0004M A
         LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
         LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE
         LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
         LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+        LEFT JOIN FCM0015D G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
         WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
     </select>
 
@@ -838,12 +844,14 @@
                 A.APPV_PRCSS_STUS,
                 TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
                 TO_CHAR( a.appv_prcss_dt, 'DD/MM/YYYY') INVC_DT,        /* DOCDATE */
-                (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT
+                (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+                G.INVC_CUR CURRENCY
             FROM FCM0004M A
             LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
             LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE
             LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
             LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+            LEFT JOIN FCM0015D G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
             WHERE A.APPV_PRCSS_NO = #{appvPrcssNo})x
     </select>
 
@@ -863,6 +871,12 @@
         SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
         FROM FCM0027M
         WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+        <if test="reqType == 'R4'">
+        AND CLM_NO like 'R4%'
+        </if>
+         <if test="reqType == 'A3'">
+        AND CLM_NO like 'A3%'
+        </if>
     )
     </select>
 
@@ -932,14 +946,9 @@
             TOT_AMT,
             FILE_ATCH_GRP_ID,
             ADV_REM,
-            <if test="advType == 5">
-                ADV_OCC,
-            </if>
             <if test="advType == 6">
                 ADV_PRD_FR,
                 ADV_PRD_TO,
-                ADV_REFD_MODE,
-                ADV_REFD_REF,
             </if>
             CRT_DT,
             CRT_USER_ID,
@@ -962,14 +971,9 @@
             TOT_AMT,
             #{newFileAtchGrpId},
             ADV_REM,
-            <if test="advType == 5">
-                ADV_OCC,
-            </if>
             <if test="advType == 6">
                 ADV_PRD_FR,
                 ADV_PRD_TO,
-                ADV_REFD_MODE,
-                ADV_REFD_REF,
             </if>
             SYSDATE,
             CRT_USER_ID,

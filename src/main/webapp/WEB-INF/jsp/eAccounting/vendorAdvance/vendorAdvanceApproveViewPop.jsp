@@ -201,6 +201,10 @@
             if(myGridData[0].advType == 5)
             {
             	$("#trvPeriod").hide();
+            	$("#trvTotExp").hide();
+                $("#trvBalAmt").hide();
+                $("#trvRefundMode").hide();
+                $("#trvBankRef").hide();
             }
 
             fn_setGridData(myGridID, myGridData);
@@ -451,19 +455,19 @@
                                     <span id="viewTrvTotAmt"></span>
                                 </td>
                         </tr>
-                        <tr>
+                        <tr id="trvTotExp">
                                 <th scope="row">Total Expenses</th>
                                 <td colspan="4">
                                     <span id="viewTrvTotExp"></span>
                                 </td>
                         </tr>
-                        <tr>
+                        <tr id="trvBalAmt">
                                 <th scope="row">Balance Amount</th>
                                 <td colspan="4">
                                     <span id="viewTrvBalAmt"></span>
                                 </td>
                         </tr>
-                        <tr>
+                        <tr id="trvRefundMode">
                                 <th scope="row">Refund Mode</th>
                                 <td colspan="4">
                                     <select class="readonly w100p" id="viewTrvRefundMode">
@@ -472,7 +476,7 @@
                                     </select>
                                 </td>
                         </tr>
-                        <tr>
+                        <tr id="trvBankRef">
                                 <th scope="row">Bank Reference</th>
                                 <td colspan="4">
                                     <span id="viewTrvBankRef"></span>

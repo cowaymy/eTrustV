@@ -158,7 +158,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
     @Override
     public int approveLineSubmit(Map<String, Object> params, SessionVO sessionVO) {
         LOGGER.debug("========== vendorAdvance.approveLineSubmit ==========");
-        LOGGER.debug("vendorAdvance.approveLineSubmit :: params >>>>> ", params);
+        LOGGER.debug("vendorAdvance.approveLineSubmit :: params >>>>> "+ params);
 
         int ins = 0;
         int fcm4m_ins = 0;
@@ -248,7 +248,8 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             	params.put("expTypeNm", "Vendor Advance Expenses Refund");
             	params.put("expType", params.get("settlementType"));
             	params.put("costCenter", params.get("settlementCostCenter"));
-            	params.put("amt", params.get("settlementTotAmt"));
+            	//params.put("amt", params.get("settlementTotAmt"));
+            	params.put("amt", params.get("settlementTotalExp"));
             	params.put("expDesc", params.get("settlementRem"));
             	params.put("atchFileGrpId", params.get("settlementAtchFileGrpId"));
             	params.put("advCurr", "MYR");
@@ -427,6 +428,14 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
 
         vendorAdvanceMapper.insertSYS0071D_ER(params);
 
+        if(params.get("reqType").equals("R4"))
+        {
+        	params.put("advType", 5);
+        }
+        else if(params.get("reqType").equals("A3"))
+        {
+        	params.put("advType", 6);
+        }
         // Insert FCM0027M
         vendorAdvanceMapper.insertRejectM(params);
         // Insert FCM0028D

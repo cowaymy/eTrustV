@@ -517,8 +517,11 @@
                 $("#advReqMsgPop").hide();
                 $("#ack1Checkbox").prop('checked', false);
 
-            } else if($("#appvLinePop").is(":visible")) {
+            }
+
+            if($("#appvLinePop").is(":visible")) {
                 $("#appvLinePop").hide();
+                $("#requestAppvLine").hide();
                 AUIGrid.clearGridData(approveLineGridID);
             }
         }
@@ -942,10 +945,10 @@
                     settlementTotalAdv = result.data.totAmt;
                     $("#settlementTotalAdv").val(AUIGrid.formatNumber(result.data.totAmt, "#,##0.00"));
                     //$("#settlementTotalAdv").val(AUIGrid.formatNumber(result.data.totAmt), "#,##0.00");
-                    $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.cur + ")");
+                    $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.settlementItems[0].currency + ")");
                     $("#settlementTotalExp").val(result.data.expAmt);
                     $("#settlementTotalExp").val(AUIGrid.formatNumber(Number(result.data.expAmt), "#,##0.00"));
-                    $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.cur + ")");
+                    $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.settlementItems[0].currency + ")");
                     $("#settlementTotalBalance").val(Number(result.data.totAmt) - Number(result.data.expAmt));
                     $("#settlementTotalBalance").val(AUIGrid.formatNumber((result.data.totAmt) - (result.data.expAmt), "#,##0.00"));
                     $("#settlementMode option[value=" + result.data.advRefMode + "]").attr('selected', true);
@@ -2117,7 +2120,7 @@
                         </td>
                         <th scope="row">Repayment Status</th>
                         <td>
-                            <select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
+                            <select class="multy_select" multiple="multiple" id="refundStus" name="refundStus">
                                 <option value="1">Not Due</option>
                                 <option value="2">Due but not repaid</option>
                                 <option value="3">Repaid</option>
