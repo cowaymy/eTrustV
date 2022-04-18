@@ -437,6 +437,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                         Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
                         invoAppvItems.put("ifKey", ifKey);
                         invoAppvItems.put("userId", "");
+                        invoAppvItems.put("curr", "currency");
 
 
                         if("3".equals(invoAppvItems.get("advType").toString()) || "4".equals(invoAppvItems.get("advType").toString())) {
@@ -490,6 +491,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
 				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
 //
 				    	// insert balance amount as 1 record
@@ -503,6 +505,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("glCode", "22200400");
 				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
 				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
+				    	refundRecordInfo.put("curr", refundRecordInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(refundRecordInfo);
 
 				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
@@ -521,6 +524,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
 				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
 
 				    	// insert balance amount as 1 record
@@ -539,6 +543,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("expAmt", "0");
 				    	refundRecordInfo.put("taxAmt", "0");
 				    	refundRecordInfo.put("nonTaxAmt", "0");
+				    	refundRecordInfo.put("curr", refundRecordInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(refundRecordInfo);
 
 				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
