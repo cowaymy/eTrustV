@@ -7,16 +7,16 @@ var salesOrgSummaryList, salesOrgWeeklyList,salesOrgDailyList1,salesOrgDailyList
 
 var previous3month = new Date(), previous2month = new Date(), previousmonth = new Date(), currentmonth = new Date();
 
-previous3month.setMonth(previous3month.getMonth()-5);
+previous3month.setMonth(previous3month.getMonth()-3);
 previous3month = previous3month.toLocaleString('default', { month: 'long' });
 
-previous2month.setMonth(previous2month.getMonth()-4);
+previous2month.setMonth(previous2month.getMonth()-2);
 previous2month = previous2month.toLocaleString('default', { month: 'long' });
 
-previousmonth.setMonth(previousmonth.getMonth()-3);
+previousmonth.setMonth(previousmonth.getMonth()-1);
 previousmonth = previousmonth.toLocaleString('default', { month: 'long' });
 
-currentmonth.setMonth(currentmonth.getMonth()-2);
+currentmonth.setMonth(currentmonth.getMonth());
 currentmonth = currentmonth.toLocaleString('default', { month: 'long' });
 
 

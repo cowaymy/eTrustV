@@ -7,10 +7,10 @@
             (SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6605,6607) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
                 (
                 SELECT
-                         CASE  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'MM') THEN 'A'
-                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-4),'MM') THEN 'B'
-                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'C'
-                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'MM') THEN 'D'
+                         CASE  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'A'
+                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'MM') THEN 'B'
+                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'MM') THEN 'C'
+                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'MM') THEN 'D'
                           END AS MONTH
                         , A.TYPE
                         , B.CODE_NAME
@@ -21,7 +21,7 @@
                  FROM ORG0043T A
                  JOIN SYS0013M B ON A.TYPE = B.CODE_ID
                  WHERE A.MEM_CODE = #{memCode}
-                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                 GROUP BY A.MEM_CODE, A.YEAR, A.MONTH, A.TYPE, B.CODE_NAME
                 ORDER BY A.YEAR, A.MONTH, A.TYPE
                 )
@@ -40,10 +40,10 @@
             SELECT * FROM
                 (
                  SELECT
-                        CASE WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'MM') THEN 'A'
-                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-4),'MM') THEN 'B'
-                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'C'
-                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'MM') THEN 'D'
+                        CASE WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'A'
+                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'MM') THEN 'B'
+                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'MM') THEN 'C'
+                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'MM') THEN 'D'
                           END AS MONTH
                         , A.TYPE
                         , B.CODE_NAME
@@ -54,7 +54,7 @@
                  FROM ORG0043T A
                  JOIN SYS0013M B ON A.TYPE = B.CODE_ID
                  WHERE A.MEM_CODE = #{memCode}
-                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                  GROUP BY A.MONTH, A.TYPE, B.CODE_NAME
                 )
             )
@@ -182,7 +182,7 @@
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY')))
                         </if>
                          <if test="netSalesMonth == null and netSalesMonth == ''">
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                          <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
                            AND B.STK_CTGRY_ID IN
@@ -315,7 +315,7 @@
 		                            AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')))
 		                        </if>
 		                         <if test="netSalesMonth_HA == null and netSalesMonth_HA == ''">
-		                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+		                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
 		                         </if>
 		                         <if test="cmbProductCtgry_HA != null and cmbProductCtgry_HA != ''">
 		                           AND B.STK_CTGRY_ID IN
@@ -449,7 +449,7 @@
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')))
                         </if>
                          <if test="netSalesMonth_HC == null and netSalesMonth_HC == ''">
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                          <if test="cmbProductCtgry_HC != null and cmbProductCtgry_HC != ''">
                            AND B.STK_CTGRY_ID IN
@@ -586,7 +586,7 @@
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_actHP},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_actHP},'MM/YYYY')))
                         </if>
                          <if test="netSalesMonth_actHP == null and netSalesMonth_actHP == ''">
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-5),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                          <if test="cmbProductCtgry_actHP != null and cmbProductCtgry_actHP != ''">
                            AND B.STK_CTGRY_ID IN
@@ -639,7 +639,7 @@
                         , SUM(A.RESULT_RECRUIT) RESULT_RECRUIT
                         , ROUND(SUM(COLLECTAMT_SHI)/SUM(TARGETATMT_SHI) * 100,5) AS RESULT_SHI
                  FROM ORG0044T A
-                 WHERE  TO_CHAR(TO_DATE(A.PV_YEAR || A.PV_MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM')
+                 WHERE  TO_CHAR(TO_DATE(A.PV_YEAR || A.PV_MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                       <if test='orgCode != null and orgCode != ""'>
                             AND UPPER(A.ORG_CODE) = UPPER(#{orgCode})
                         </if>
