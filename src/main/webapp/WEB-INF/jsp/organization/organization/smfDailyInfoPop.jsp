@@ -395,18 +395,13 @@ $(document).ready(function () {
 </ul>
 </header><!-- pop_header end -->
 
-<section>
+<section class="pop_body"><!-- pop_body start -->
  <div id="salesOrgWeeklyList" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
-</section>
 
-<section>
  <div id="salesOrgDailyList1" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
-</section>
 
-<section>
  <div id="salesOrgDailyList2" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
 </section>
-
 
 
 </div><!-- popup_wrap end -->

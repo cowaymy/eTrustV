@@ -262,6 +262,16 @@
 	  });
 
 </script>
+
+
+<ul class="path">
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Organization</li>
+    <li>Organization Mgmt.</li>
+    <li>Sales Monitoring File</li>
+</ul>
+
+
 <form id="searchForm" name="searchForm" method="post"
  <section class="search_result">
 	<aside class="title_line mt30"><!-- title_line start -->
