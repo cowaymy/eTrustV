@@ -10,8 +10,6 @@ $(document).ready(function() {
 
     createAUIGrid();
 
-    fn_selectSmfActHpListAjax();
-
    if("${memType}"== "1"){
 
        if("${SESSION_INFO.memberLevel}" =="1"){
@@ -33,8 +31,9 @@ $(document).ready(function() {
 
           $("#deptCode_actHP").attr("class", "w100p readonly");
           $("#deptCode_actHP").attr("readonly", "readonly");
-
       }
+
+       fn_selectSmfActHpListAjax();
   }
 
 });
@@ -115,7 +114,12 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_actHP", columnLayout, "", gridPros);
-    fn_selectSmfActHpListAjax();
+
+    if("${memType}"== "1"){
+    	console.log("fffff");
+    	fn_selectSmfActHpListAjax();
+    }
+
 }
 
 function fn_selectSmfActHpListAjax() {
@@ -173,31 +177,26 @@ function fn_selectSmfActHpListAjax() {
     <th scope="row">Month</th>
     <td><input type="text" title="기준년월" id="netSalesMonth_actHP" name="netSalesMonth_actHP" placeholder="MM/YYYY" class="j_date2 w100p" /></td>
 
+	<th></th>
+	<td></td>
 
-
+	<th></th>
+	<td></td>
 </tr>
-
 
 </tbody>
 </table><!-- table end -->
-
-
-
-
 </form>
 
 
 <section class="search_result"><!-- search_result start -->
-
 <article class="grid_wrap"><!-- grid_wrap start -->
    <ul class="right_btns">
    <li><p class="btn_grid"><a id="download_actHP">GENERATE</a></p></li>
    </ul>
     <div id="list_grid_wrap_actHP" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
-
 </section><!-- search_result end -->
-
 
 </section><!-- content end -->
 

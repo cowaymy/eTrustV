@@ -23,6 +23,7 @@ public interface SalesMonitoringFileMapper {
 
 	List<EgovMap> selectSmfDailyListing(Map<String, Object> params);
 
+	List<EgovMap> selectSimulatedMemberCRSCode(Map<String, Object> params);
 
 
 }

@@ -330,28 +330,20 @@ $(document).ready(function () {
     var roleType, userId, userName, memLvl;
 
     Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
-    console.log(result);
 
+    $('#userType').val(result.userTypeId);
 
-        roleType = result.roleType;
-        userId = result.userId;
-        userName =  '${SESSION_INFO.userName}';
-        memLvl =  '${SESSION_INFO.memberLevel}';
-
-
+    var salesGridOption = {
+            usePaging : false,
+            showStateColumn : false,
+            showRowNumColumn : false,
+            pageRowCount : 4,
+            editable : false,
+            headerHeight : 50
+        };
 
         if(result.userTypeId == 1) {
-
-            $("#salesTable").css('border-top','0');
-
-            var salesGridOption = {
-                    usePaging : false,
-                    showStateColumn : false,
-                    showRowNumColumn : false,
-                    pageRowCount : 4,
-                    editable : false,
-                    headerHeight : 50
-                };
+        	$("#smfDailyForm").hide();
 
             salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
             fn_selectWeeklyDashboard() ;
@@ -360,28 +352,48 @@ $(document).ready(function () {
             salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
             fn_selectDailyDashboard() ;
         }
+        else if(result.userTypeId == 4) {
+        	$("#smfDailyForm").show();
+
+        	  salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
+        	  salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
+              salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
+        }
+
      });
     });   //$(document).ready
 
 
     function fn_selectWeeklyDashboard() {
-        Common.ajax("GET", "/organization/selectWeekSalesListing.do", {memCode :  '${SESSION_INFO.userName}'}, function (result) {
+        Common.ajax("GET", "/organization/selectWeekSalesListing.do", $("#smfDailyForm").serialize(), function (result) {
         AUIGrid.setGridData(salesOrgWeeklyList, result);
      });
     }
 
     function fn_selectDailyDashboard() {
-        Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : '${orgCode}', grpCode : '${grpCode}', deptCode:'${deptCode}'}, function (result) {
-        AUIGrid.setGridData(salesOrgDailyList1, result);
-        AUIGrid.setGridData(salesOrgDailyList2, result);
-     });
+    	 if($('#userType').val() == 1) {
+    	        Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : '${orgCode}', grpCode : '${grpCode}', deptCode:'${deptCode}'}, function (result) {
+    	        AUIGrid.setGridData(salesOrgDailyList1, result);
+    	        AUIGrid.setGridData(salesOrgDailyList2, result);
+    	     });
+    	 }
+    	 else if($('#userType').val() == 4) {
+    		 Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do",  $("#smfDailyForm").serialize(), function (result) {
+                 Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : result[0].orgCode, grpCode : result[0].grpCode, deptCode: result[0].deptCode}, function (result2) {
+                	 AUIGrid.setGridData(salesOrgDailyList1, result2);
+                     AUIGrid.setGridData(salesOrgDailyList2, result2);
+                   });
+    		 });
+    	 }
     }
 
 
-
-
-
-
+    $(function() {
+         $('#btnSrchDailyInfo').click(function() {
+        	 fn_selectWeeklyDashboard();
+        	 fn_selectDailyDashboard();
+          });
+      });
 
 
 </script>
@@ -395,13 +407,37 @@ $(document).ready(function () {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
- <div id="salesOrgWeeklyList" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
+
+<section class="pop_body">
+  <!-- pop_body start -->
+  <section class="search_table">
+   <!-- search_table start -->
+   <form action="#" method="post" id="smfDailyForm">
+    <input type="hidden" id="userType" name="userType" />
+   <aside class="title_line"><!-- title_line start -->
+    <ul class="right_btns">
+    <li><p class="btn_blue"><a id="btnSrchDailyInfo" href="#"><span class="search"></span>Search</a></p></li>
+    </ul>
+    </aside>
+    <table class="type1">
+     <!-- table start -->
+     <tbody>
+    <tr>
+    <th scope="row">Simulate Member Code</th>
+    <td><input id="memCode" name="memCode" type="text" title="memCode"  class="w100p" value = '${SESSION_INFO.userName}'.trim() /></td>
+    </tr>
+     </tbody>
+    </table>
+    <!-- table end -->
+   </form>
+  </section>
+
+  <div id="salesOrgWeeklyList" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
 
  <div id="salesOrgDailyList1" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
 
  <div id="salesOrgDailyList2" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
-</section>
+ </section>
 
 
 </div><!-- popup_wrap end -->

@@ -53,6 +53,11 @@ public class SalesMonitoringFileServiceImpl implements SalesMonitoringFileServic
         return salesMonitoringFileMapper.selectSmfDailyListing(params);
     }
 
+	@Override
+    public List<EgovMap> selectSimulatedMemberCRSCode(Map<String, Object> params) {
+        return salesMonitoringFileMapper.selectSimulatedMemberCRSCode(params);
+    }
+
 
 
 

@@ -9,12 +9,10 @@ $(document).ready(function() {
 
 	 createAUIGrid();
 
-
+	 $("#Code").val('${SESSION_INFO.userName}');
+     $("#Code").attr("class", "w100p readonly");
 
     if("${memType}"== "1"){
-
-        $("#Code").val('${SESSION_INFO.userName}');
-        $("#Code").attr("class", "w100p readonly");
 
         if("${SESSION_INFO.memberLevel}" =="1"){
            $("#orgCode").attr("class", "w100p readonly");
@@ -133,7 +131,10 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
-    fn_selectListAjax();
+    if("${memType}"== "1"){
+    	 fn_selectListAjax();
+    }
+
 }
 
 
@@ -241,7 +242,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Code</th>
-    <td><input id="Code" name="Code" type="text" title="Code"  class="w100p" value = '${SESSION_INFO.userName}'.trim() /></td>
+    <td><input id="Code" name="Code" type="text" title="Code"  class="w100p" value = '${SESSION_INFO.userName}' readonly="readonly"/></td>
 
     <th scope="row">Org Code</th>
     <td><input id="orgCode" name="orgCode" type="text" title="orgCode"  class="w100p" value = '${orgCode}'.trim() /></td>

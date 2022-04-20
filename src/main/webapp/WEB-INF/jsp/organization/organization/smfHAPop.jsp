@@ -10,8 +10,6 @@ $(document).ready(function() {
 
     createAUIGrid();
 
-    fn_selectHAListAjax();
-
    if("${memType}"== "1"){
 
        if("${SESSION_INFO.memberLevel}" =="1"){
@@ -35,6 +33,8 @@ $(document).ready(function() {
           $("#deptCode_HA").attr("readonly", "readonly");
 
       }
+
+       fn_selectHAListAjax();
   }
 
    doGetComboOrder('/sales/order/colorGridProductList.do', '', '', '', 'cmbProduct_HA', 'M', 'f_multiCombo'); //Common Code
@@ -141,7 +141,11 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_HA", columnLayout, "", gridPros);
-    fn_selectHAListAjax();
+
+    if("${memType}"== "1"){
+    	 fn_selectHAListAjax();
+    }
+
 }
 
 function fn_selectHAListAjax() {

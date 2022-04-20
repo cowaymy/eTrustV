@@ -700,5 +700,15 @@
         )
         </select>
 
+         <select id="selectSimulatedMemberCRSCode" parameterType="Map" resultType="egovMap">
+           SELECT
+			    DEPT_CODE
+			  , GRP_CODE
+			  , ORG_CODE
+		   FROM ORG1001V
+		   WHERE MEM_ID =(SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{memCode})
+
+         </select>
+
 
 </mapper>

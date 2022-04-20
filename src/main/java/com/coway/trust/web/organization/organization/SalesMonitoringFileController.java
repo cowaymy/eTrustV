@@ -211,5 +211,12 @@ public class SalesMonitoringFileController {
         return ResponseEntity.ok(notice);
     }
 
+	@RequestMapping(value = "/selectSimulatedMemberCRSCode.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSimulatedMemberCRSCode(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+
+        List<EgovMap> notice = salesMonitoringFileService.selectSimulatedMemberCRSCode(params);
+        return ResponseEntity.ok(notice);
+    }
+
 
 }
