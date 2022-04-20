@@ -63,6 +63,12 @@ function fn_upload(){
     Common.popupDiv("/sales/ccp/ccpUploadAssignUserPop.do", $("#searchForm").serializeJSON(), null, true, 'savePop');
 }
 
+function fn_reassign(){
+	var selectedItems = AUIGrid.getSelectedItems(batchGrid);
+	var batchId = selectedItems[0].item.batchId;
+    Common.popupDiv("/sales/ccp/ccpUploadReAssignUserDtlPop.do", {batchId : batchId}, null, true, 'ReassignPop');
+	}
+
 $.fn.clearForm = function() {
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
@@ -93,6 +99,7 @@ $.fn.clearForm = function() {
 <h2>CCP Upload Assign User</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <li><p class="btn_blue"><a href="#" onClick="fn_reassign()">Reassign</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_upload()">Upload</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">

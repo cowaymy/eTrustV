@@ -23,7 +23,10 @@ public interface CcpUploadAssignUserMapper {
 	int insertUploadAssignUserMst(Map<String, Object> params);
 	int insertUploadAssignUserDtl(Map<String, Object> params);
 	List<EgovMap> selectUploadAssignUserList (Map<String, Object> params);
+	List<EgovMap> selectUploadCcpUsertList (Map<String, Object> params);
+	int updateUploadCcpUsertList (Map<String, Object> params);
 	List<EgovMap> selectUploadAssignUserDtlList (Map<String, Object> params);
+	List<EgovMap> selectUploadReAssignUserDtlList (Map<String, Object> params);
 	EgovMap selectViewHeaderInfo (Map<String, Object> params);
 	void callBatchCcpAssignUser(Map<String, Object> params);
 

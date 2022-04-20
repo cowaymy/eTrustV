@@ -82,11 +82,40 @@ public class CcpUploadAssignUserImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
+    public List<EgovMap> selectUploadCcpUsertList(Map<String, Object> params) {
+		return uploadMapper.selectUploadCcpUsertList(params);
+	}
+
+	@Override
+    public int updateUploadCcpUsertList(Map<String, Object> params) {
+		return uploadMapper.updateUploadCcpUsertList(params);
+	}
+
+	@Override
 	public EgovMap selectCcpAssignUserDtlList(Map<String, Object> params) {
 		List<EgovMap> batchDtlList = uploadMapper.selectUploadAssignUserDtlList(params);
 		EgovMap batchInfo = uploadMapper.selectViewHeaderInfo(params);
 
 		batchInfo.put("batchDtlList", batchDtlList);
+		return batchInfo;
+
+	}
+
+	@Override
+	public EgovMap selectCcpReAssignUserDtlList(Map<String, Object> params) {
+		List<EgovMap> batchDtlList = uploadMapper.selectUploadReAssignUserDtlList(params);
+		EgovMap batchInfo = uploadMapper.selectViewHeaderInfo(params);
+
+		batchInfo.put("batchDtlList", batchDtlList);
+		return batchInfo;
+
+	}
+
+	@Override
+	public EgovMap selectCcpReAssignUserDtlListBody(Map<String, Object> params) {
+		List<EgovMap> batchDtlListBody = uploadMapper.selectUploadReAssignUserDtlList(params);
+		EgovMap batchInfo = uploadMapper.selectViewHeaderInfo(params);
+		batchInfo.put("batchDtlListBody", batchDtlListBody);
 		return batchInfo;
 
 	}

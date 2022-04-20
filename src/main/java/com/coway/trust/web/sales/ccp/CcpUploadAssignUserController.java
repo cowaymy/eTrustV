@@ -133,4 +133,45 @@ public class CcpUploadAssignUserController {
 
 	      return "sales/ccp/ccpUplAssUserDtlViewPop";
 	  }
+
+	@RequestMapping(value = "/ccpUploadReAssignUserDtlPop.do")
+	  public String ccpUploadReAssignUserDtlPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	      logger.debug("### params : " + params);
+
+	      EgovMap viewInfo = ccpUploadAssignUserService.selectCcpReAssignUserDtlList(params);
+
+	      model.addAttribute("viewInfo", viewInfo);
+	      model.addAttribute("batchDtlList", new Gson().toJson(viewInfo.get("batchDtlList")));
+
+	      return "sales/ccp/ccpUplReAssUserDtlViewPop";
+	  }
+
+		@RequestMapping(value = "/selectUploadCcpUsertList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectUploadCcpUsertList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	      List<EgovMap> list = ccpUploadAssignUserService.selectUploadCcpUsertList(params);
+
+	      logger.debug("### list " + list.toString());
+	      return ResponseEntity.ok(list);
+	  }
+
+		 @RequestMapping(value = "/updateAssignUserCcpList", method = RequestMethod.GET)
+		  public ResponseEntity<EgovMap>updateAssignUserCcpList(@RequestParam Map<String, Object> params,
+		      HttpServletRequest request, ModelMap model) {
+
+			 int ccpUserList = 0;
+
+				if(null != params.get("orderNoList")){
+					String olist = (String)params.get("orderNoList");
+					String[] spl = olist.split(",");
+					params.put("orderNoList", spl);
+				}
+
+		    ccpUserList = ccpUploadAssignUserService.updateUploadCcpUsertList(params);
+
+		    EgovMap list= ccpUploadAssignUserService.selectCcpReAssignUserDtlList(params);
+
+			return ResponseEntity.ok(list);
+		  }
+
 }

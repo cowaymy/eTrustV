@@ -33,6 +33,18 @@
 
     </select>
 
+    <select id="selectUploadCcpUsertList" parameterType="Map" resultType="egovMap">
+	   SELECT OM.USER_NAME as CODE_NAME, OM.USER_NAME as CODE_ID FROM SYS0045M OD
+	   JOIN SYS0047M OM ON OM.USER_ID = OD.USER_ID WHERE USER_STUS_ID = 1 and OD.ROLE_ID IN (206,210,254)
+    </select>
+
+      <update id="updateUploadCcpUsertList" parameterType="Map">
+       UPDATE SAL0291D SET ASSIGN_PIC =  #{ccpUser} WHERE UPLOAD_BATCH_ID = #{batchId}  AND ORDER_NO IN
+       <foreach item="item" collection="orderNoList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    </update >
     <select id="selectViewHeaderInfo" parameterType="Map" resultType="egovMap">
         SELECT
             M.UPLOAD_BATCH_ID BATCH_ID, S.NAME STATUS, M.QTY
@@ -49,6 +61,23 @@
         WHERE
             UPLOAD_BATCH_ID = #{batchId}
         ORDER BY BATCH_ITM_NO ASC
+    </select>
+
+        <select id="selectUploadReAssignUserDtlList" parameterType="Map" resultType="egovMap">
+		      SELECT
+		            OD.ORDER_NO
+		            , OD.ASSIGN_PIC
+		            , OD.REMARKS
+		            , NVL(OD.RESULT, '') RESULT
+		            , SYS.NAME AS CCP_STUS_ID
+		        FROM SAL0291D OD
+		        JOIN SAL0001D OE ON OE.SALES_ORD_NO = OD.ORDER_NO
+		        JOIN SAL0102D OM ON OM.CCP_SALES_ORD_ID = OE.SALES_ORD_ID
+		        JOIN SYS0038M SYS ON SYS.STUS_CODE_ID = OM.CCP_STUS_ID
+		        WHERE 1 = 1
+		            AND OD.UPLOAD_BATCH_ID = #{batchId}
+		            AND OM.CCP_STUS_ID = 1
+		        ORDER BY BATCH_ITM_NO ASC
     </select>
 
     <insert id="insertUploadAssignUserMst" parameterType="Map">
