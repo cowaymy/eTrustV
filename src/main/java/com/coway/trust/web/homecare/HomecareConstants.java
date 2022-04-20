@@ -116,6 +116,8 @@ public class HomecareConstants {
 		public static final String CT = "3";
 		/** DT Memeber Type */
 		public static final String DT = "5758";
+
+		public static final String LT = "6672";
 	}
 
 }

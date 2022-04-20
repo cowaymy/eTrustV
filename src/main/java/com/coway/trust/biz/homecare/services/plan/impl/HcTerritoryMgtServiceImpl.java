@@ -132,6 +132,7 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
 		int rtnCnt = 0;
 
 		String bType = CommonUtils.nvl(params.get("comBranchTypep"));
+		String memType = CommonUtils.nvl(params.get("comMemType"));
 		List<TerritoryRawDataVO> vos = (ArrayList<TerritoryRawDataVO>) params.get("voList");
 
 		EgovMap requestNo = territoryManagementService.getDocNo("156");
@@ -154,26 +155,60 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
 
 		switch (bType) {
 		case HomecareConstants.HDC_BRANCH_TYPE : // HDC Branch
-			Map<String, Object> hdcList = new HashMap<String, Object>();
+			logger.debug("CASE_HDC./////" + bType);
+			switch (memType) {
+			case HomecareConstants.MEM_TYPE.DT :
+				logger.debug("CASE_DT./////" + memType);
+				Map<String, Object> hdcList = new HashMap<String, Object>();
 
-			for (int i = 0; i <= page; i++) {
-				start = i * size;
-				end = size;
+				for (int i = 0; i <= page; i++) {
+					start = i * size;
+					end = size;
 
-				if(i == page) {
-					end = list.size();
+					if(i == page) {
+						end = list.size();
+					}
+					hdcList.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+
+					logger.debug("HDC LIST./////" + hdcList);
+					rtnCnt = hcTerritoryMgtMapper.insertHDC(hdcList);
+					logger.debug("HDC LIST11./////" + rtnCnt);
+					if(rtnCnt <= 0) {
+						throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
+					}
 				}
-				hdcList.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
 
-				rtnCnt = hcTerritoryMgtMapper.insertHDC(hdcList);
-				if(rtnCnt <= 0) {
-					throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
+				rtnMap.put("isErr", false);
+				rtnMap.put("errMsg", "upload success");
+
+				break;
+
+			case HomecareConstants.MEM_TYPE.LT :
+				logger.debug("CASE_LT./////" + memType);
+				Map<String, Object> LThdcList = new HashMap<String, Object>();
+
+				for (int i = 0; i <= page; i++) {
+					start = i * size;
+					end = size;
+
+					if(i == page) {
+						end = list.size();
+					}
+					LThdcList.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+
+					logger.debug("HDC LIST./////" + LThdcList);
+					rtnCnt = hcTerritoryMgtMapper.insertHDCLT(LThdcList);
+					logger.debug("HDC LIST./////" + rtnCnt);
+					if(rtnCnt <= 0) {
+						throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
+					}
 				}
+
+				rtnMap.put("isErr", false);
+				rtnMap.put("errMsg", "upload success");
+
+				break;
 			}
-
-			rtnMap.put("isErr", false);
-			rtnMap.put("errMsg", "upload success");
-
 			break;
 
 		default:

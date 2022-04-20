@@ -1193,13 +1193,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						deptCode = getDocNo("166");
 					}
 				}else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 5758) { // HOMECARE DELIVERY TECHNICIAN ADDED BY TOMMY
-                  if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
-                    deptCode = getDocNo("174");
-                } else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
-                    deptCode = getDocNo("173");
-                } else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
-                    deptCode = getDocNo("172");
-                }
+	                  if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
+	                    deptCode = getDocNo("174");
+	                } else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
+	                    deptCode = getDocNo("173");
+	                } else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
+	                    deptCode = getDocNo("172");
+	                }
+				}else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 6672) { // LOGISTICS TECHNICIAN ADDED BY KEYI
+                    if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
+                      deptCode = getDocNo("174");
+                  } else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
+                      deptCode = getDocNo("173");
+                  } else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
+                      deptCode = getDocNo("172");
+                  }
             }
 
 				// Demote
@@ -1233,7 +1241,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                   } else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
                     deptCode = getDocNo("173");
                   }
-				}
+				}else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 6672) { // LOGISTICS TECHNICIAN ADDED BY KEYI
+	                  if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
+	                      deptCode = getDocNo("174");
+	                    } else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
+	                      deptCode = getDocNo("173");
+	                    }
+	  				}
 
 				if (params.get("lvlTo").equals("4")) {
 					promoEntry.put("deptCodeTo", selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");

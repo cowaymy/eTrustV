@@ -47,6 +47,9 @@ public interface HcTerritoryMgtMapper {
 	 */
 	public int insertHDC(Map<String, Object> params);
 
+	public int insertHDCLT(Map<String, Object> params);
+
+
 	/**
 	 * Select Table - ORG0019M
 	 * @Author KR-SH

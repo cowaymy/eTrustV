@@ -172,6 +172,7 @@ public class HcTerritoryMgtController {
 		//step 1 vaild
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("comBranchTypep", request.getParameter("comBranchTypep"));
+		param.put("comMemType", request.getParameter("comMemType"));
 		param.put("voList", vos);
 
 		EgovMap  vailMap = hcTerritoryMgtService.uploadExcel(param,sessionVO);
