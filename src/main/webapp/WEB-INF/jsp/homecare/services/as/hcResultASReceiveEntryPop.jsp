@@ -60,7 +60,7 @@
 
     fn_checkASReceiveEntryPop();
 
-    $("#memType").change(function(){
+    /* $("#memType").change(function(){
         codyId = '${orderDetail.codyInfo.memId}';
     	codyCde ='${orderDetail.codyInfo.memCode}';
 
@@ -78,7 +78,7 @@
     		$("#CTCode").val("");
     		fn_brCde_SetVal();
     	}
-    });
+    }); */
 
 });
 
@@ -439,7 +439,7 @@
       CTgroupObj : 'CTgroupObj'
     }
 
-    if($("#memType option:selected").index() =="2"){//DT
+    //if($("#memType option:selected").index() =="2"){//DT
     	 // /organization/allocation/allocation.do
         Common.popupDiv("/homecare/services/install/hcAllocation.do", {
         	  ORD_ID : ord_id,
@@ -447,7 +447,7 @@
         	  OPTIONS : options,
         	  TYPE : 'AS'
         }, null, true, '_doAllactionDiv');
-     }
+     //}
   }
 
   function fn_getBSHistoryInfo() {
@@ -820,7 +820,7 @@
                     var memCode = $("#CTCode").val();
                     var appDate = $("#appDate").val();
                     var branchDSC = $("#branchDSC option:selected").text();
-                    
+
                     if ($("#checkSms").prop("checked")) {
                       $("#sms_AsNo").val(asNo);
                       $("#sms_AsId").val(asId);
@@ -991,7 +991,7 @@
         rtnValue =false;
     }
     */
-    if($("#memType option:selected").index() != "1"){ // DT
+    //if($("#memType option:selected").index() != "1"){ // DT
         if ($("#CTCode").val() == "" || $("#branchDSC").val() == null) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
           rtnValue = false;
@@ -1001,7 +1001,7 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT ID' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
-    }
+    //}
 
     if ($("#requestor").val() == ""  || $("#branchDSC").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Requestor' htmlEscape='false'/> </br>";
@@ -1365,7 +1365,7 @@
         <col style="width: *" />
        </colgroup>
        <tbody>
-       <tr>
+       <%-- <tr>
         <th scope="row"><spring:message code='service.title.memType' /></th>
         <td colspan="3">
             <select class="w100p" id="memType" name="memType" class="">
@@ -1376,7 +1376,7 @@
         </td>
         <th></th>
         <td colspan="3"></td>
-       </tr>
+       </tr> --%>
         <tr>
          <th scope="row"><spring:message code='service.grid.ReqstDt' /><span class="must">*</span></th>
          <td>

@@ -21,7 +21,7 @@ public interface HcASManagementListService {
 	public List<EgovMap> selectHomeCareBranchWithNm() throws Exception;
 	public List<EgovMap> selectCTByDSC(Map<String, Object> params) throws Exception;
 	public List<EgovMap> selectCTByDSCSearch(Map<String, Object> params) throws Exception;
-	public List<EgovMap> selectHTAndDTCode() throws Exception;
+	//public List<EgovMap> selectHTAndDTCode() throws Exception;
 	public List<EgovMap> getErrMstList(Map<String, Object> params) throws Exception;
 
 
@@ -66,5 +66,5 @@ public interface HcASManagementListService {
 	public ReturnMessage newResultAdd(Map<String, Object> params) throws Exception;
 	public EgovMap asResult_updateSerial(Map<String, Object> params) throws Exception;
 
-	public int hcChkRcdTms(Map<String, Object> params) throws Exception;
+	//public int hcChkRcdTms(Map<String, Object> params) throws Exception;
 }

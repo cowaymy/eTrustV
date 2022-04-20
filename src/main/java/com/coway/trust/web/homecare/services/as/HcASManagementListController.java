@@ -150,12 +150,12 @@ public class HcASManagementListController {
       return ResponseEntity.ok(selectCTSubGroupDscList);
   }
 
-  @RequestMapping(value = "/selectHTAndDTCode", method = RequestMethod.GET)
+  /*@RequestMapping(value = "/selectHTAndDTCode", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectHTAndDTCode() throws Exception {
       List<EgovMap> selectHTAndDTCodeList = hcASManagementListService.selectHTAndDTCode();
       logger.debug("selectHTAndDTCodeList {}", selectHTAndDTCodeList);
       return ResponseEntity.ok(selectHTAndDTCodeList);
-  }
+  }*/
 
   @RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getErrMstList(@RequestParam Map<String, Object> params,
@@ -653,7 +653,7 @@ public class HcASManagementListController {
       ReturnMessage message = new ReturnMessage();
 
       message = hcASManagementListService.newASInHouseAddSerial(params);
-      logger.debug("[newASInHouseAddSerial] message >> " + message);
+      //logger.debug("[newASInHouseAddSerial] message >> " + message);
       return ResponseEntity.ok(message);
     }
 
