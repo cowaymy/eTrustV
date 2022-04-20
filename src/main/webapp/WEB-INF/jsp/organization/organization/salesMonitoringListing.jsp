@@ -215,6 +215,11 @@
         	$("#simulateTable").hide();
         	$("#btnSrch").hide();
 
+        	if(result.roleType == 111){
+        		$("#simulateTable").show();
+                $("#btnSrch").show();
+        	}
+
         }
         else if(result.userTypeId == 4) {
         	$("#simulateTable").show();

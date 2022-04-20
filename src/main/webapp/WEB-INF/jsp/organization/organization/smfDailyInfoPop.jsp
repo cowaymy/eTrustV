@@ -332,6 +332,7 @@ $(document).ready(function () {
     Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
 
     $('#userType').val(result.userTypeId);
+    $('#roleType').val(result.roleType);
 
     var salesGridOption = {
             usePaging : false,
@@ -343,14 +344,23 @@ $(document).ready(function () {
         };
 
         if(result.userTypeId == 1) {
-        	$("#smfDailyForm").hide();
+        	if(result.roleType == 111){
+        		$("#smfDailyForm").show();
 
-            salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
-            fn_selectWeeklyDashboard() ;
+                salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
+                salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
+                salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
+        	}
+        	else{
+        		$("#smfDailyForm").hide();
 
-            salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
-            salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
-            fn_selectDailyDashboard() ;
+                salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
+                fn_selectWeeklyDashboard() ;
+
+                salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
+                salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
+                fn_selectDailyDashboard() ;
+        	}
         }
         else if(result.userTypeId == 4) {
         	$("#smfDailyForm").show();
@@ -371,13 +381,13 @@ $(document).ready(function () {
     }
 
     function fn_selectDailyDashboard() {
-    	 if($('#userType').val() == 1) {
+    	 if($('#userType').val() == 1 && $('#roleType') !=111) {
     	        Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : '${orgCode}', grpCode : '${grpCode}', deptCode:'${deptCode}'}, function (result) {
     	        AUIGrid.setGridData(salesOrgDailyList1, result);
     	        AUIGrid.setGridData(salesOrgDailyList2, result);
     	     });
     	 }
-    	 else if($('#userType').val() == 4) {
+    	 else if($('#userType').val() == 4 || $('#roleType') == 111) {
     		 Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do",  $("#smfDailyForm").serialize(), function (result) {
                  Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : result[0].orgCode, grpCode : result[0].grpCode, deptCode: result[0].deptCode}, function (result2) {
                 	 AUIGrid.setGridData(salesOrgDailyList1, result2);
@@ -414,6 +424,7 @@ $(document).ready(function () {
    <!-- search_table start -->
    <form action="#" method="post" id="smfDailyForm">
     <input type="hidden" id="userType" name="userType" />
+    <input type="hidden" id="roleType" name="roleType" />
    <aside class="title_line"><!-- title_line start -->
     <ul class="right_btns">
     <li><p class="btn_blue"><a id="btnSrchDailyInfo" href="#"><span class="search"></span>Search</a></p></li>
