@@ -31,6 +31,8 @@
                  , A.STATE
                  , A.DT_BRNCH_CODE
                  , A.DT_SUB_GRP
+                 , A.LT_BRNCH_CODE
+                 , A.LT_SUB_GRP
                  , CASE
                  WHEN A.AREA_ID IN (SELECT AREA_ID
                                                 FROM SYS0064M
@@ -67,6 +69,14 @@
 	                AND (CODY_BRNCH_CODE IS NOT NULL AND CT_BRNCH_CODE IS NOT NULL)
 	            </if>
 	        </if>
+	        <if test="memType != null and memType != ''">
+                <if test="memType == '5758'">
+                    AND (DT_BRNCH_CODE IS NOT NULL OR DT_SUB_GRP IS NULL)
+                </if>
+                <if test="memType == '6672'">
+                    AND (LT_BRNCH_CODE IS NOT NULL AND LT_SUB_GRP IS NOT NULL)
+                </if>
+            </if>
         </where>
     </select>
 
@@ -80,6 +90,31 @@
                  , REQST_USER_ID
                  , DT_BRNCH_CODE        /* DT Branch Code(HDC) */
                  , DT_SUB_GRP              /* Dt Sub Group */
+                 , BRNCH_TYPE
+                 , CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+                     , #{item.areaId}
+                     , SYSDATE
+                     , #{item.requester}
+                     , #{item.branch}
+                     , #{item.extBranch}
+                     , #{item.brnchId}
+                     , '1'
+             FROM DUAL
+        </foreach>
+    </insert>
+
+    <insert id="insertHDCLT" parameterType="java.util.List">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.insertHDC */
+        INSERT INTO ORG0019M (
+                   REQST_NO
+                 , AREA_ID
+                 , REQST_DT
+                 , REQST_USER_ID
+                 , LT_BRNCH_CODE        /* DT Branch Code(HDC) */
+                 , LT_SUB_GRP              /* Dt Sub Group */
                  , BRNCH_TYPE
                  , CNFM_STUS
         )

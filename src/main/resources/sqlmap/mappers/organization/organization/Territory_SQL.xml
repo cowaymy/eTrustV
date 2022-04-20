@@ -77,7 +77,11 @@
             A.BRNCH_NAME BRNCH_NAME,
             A.CNFM_STUS CNFM_STUS ,
             A.CNFM_STUS_NAME CNFM_STUS_NAME,
-            A.FULL_NAME
+            A.FULL_NAME,
+            A.DT_BRNCH_CODE,
+            A.DT_SUB_GRP,
+            A.LT_BRNCH_CODE,
+            A.LT_SUB_GRP
             FROM     (SELECT    REQST_NO,
                TO_CHAR(REQST_DT,'YYYY-MM-DD') REQST_DT,
                REQST_USER_ID,
@@ -85,6 +89,10 @@
                CNFM_STUS,
                B.USER_FULL_NAME FULL_NAME,
                C.CODE_NAME BRNCH_NAME,
+               DT_BRNCH_CODE,
+               DT_SUB_GRP,
+               LT_BRNCH_CODE,
+               LT_SUB_GRP,
               CASE
                   WHEN (CNFM_STUS = 1) THEN 'ACT'
                   WHEN (CNFM_STUS = 4) THEN 'COM'
@@ -123,7 +131,16 @@
               <if test="requestDt != null and requestDt != ''">
                  <![CDATA[ AND  TO_DATE (A.REQST_DT, 'YYYY-MM-DD') =  TO_DATE(#{requestDt},'DD/MM/YYYY') ]]>
               </if>
-          GROUP BY A.REQST_NO,A.REQST_DT ,A.REQST_USER_ID,A.BRNCH_TYPE,A.BRNCH_NAME,A.CNFM_STUS,A.CNFM_STUS_NAME,A.FULL_NAME
+              <if test="comMemType != 11">
+                <if test="comMemType == 5758">
+                  AND (DT_BRNCH_CODE IS NOT NULL AND DT_SUB_GRP IS NOT NULL)
+                </if>
+                <if test="comMemType == 6672">
+                  AND (LT_BRNCH_CODE IS NOT NULL AND LT_SUB_GRP IS NOT NULL)
+                </if>
+              </if>
+
+          GROUP BY A.REQST_NO,A.REQST_DT ,A.REQST_USER_ID,A.BRNCH_TYPE,A.BRNCH_NAME,A.CNFM_STUS,A.CNFM_STUS_NAME,A.FULL_NAME, A.DT_BRNCH_CODE, A.DT_SUB_GRP, A.LT_BRNCH_CODE,A.LT_SUB_GRP
           ORDER BY A.REQST_NO
 	</select>
 

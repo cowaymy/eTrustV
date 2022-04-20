@@ -119,6 +119,11 @@
                        <if test="cmbctId != null and cmbctId != '' ">
                        AND E.MEM_ID =  #{cmbctId}
                        </if>
+
+                       <if test="orgType != null and orgType != '' ">
+                       AND E.mem_type =  #{orgType}
+                       </if>
+
 				       AND E.STUS  = '1'
 				       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
                         </otherwise>

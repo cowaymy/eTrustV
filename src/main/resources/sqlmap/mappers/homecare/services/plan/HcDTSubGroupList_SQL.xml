@@ -13,6 +13,7 @@
 		             , C.CT_SUB_GRP
 		             , C.LAST_GRP_CODE
 		             , D.MEM_CODE MEMCODE
+		             , D.MEM_TYPE
 		     FROM SYS0005M A
 		     INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
 		     INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL IN ('3', '4')
@@ -44,6 +45,9 @@
         </if>
         <if test="dtSubGrp != null and dtSubGrp != ''">
             AND LOWER(T2.CT_SUB_GRP)  = LOWER(#{dtSubGrp})
+        </if>
+        <if test="orgType != null and orgType != ''">
+            AND T1.MEM_TYPE  = #{orgType}
         </if>
         ORDER BY T1.CODE
 	</select>
