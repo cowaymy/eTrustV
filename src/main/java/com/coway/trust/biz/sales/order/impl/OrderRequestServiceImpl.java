@@ -2422,6 +2422,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     view.put("totalcnbill", TotalCNBill);
     view.put("totaldnrpf", TotalDNRPF);
     view.put("totalcnrpf", TotalCNRPF);
+    System.out.println(view.toString());
 
     return view;
   }
