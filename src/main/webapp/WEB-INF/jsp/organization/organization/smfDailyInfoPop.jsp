@@ -158,82 +158,82 @@ var salesDailyDashboard_1 = [
     width : "10%"
     }
    ,{
-	dataField: "1",
+	dataField: "day1",
 	headerText: "1",
 	width : "8%"
 	}
    ,{
-	 dataField: "2",
+	 dataField: "day2",
 	 headerText: "2",
 	 width : "8%"
 	}
    ,{
-	  dataField: "3",
+	  dataField: "day3",
 	  headerText: "3",
 	  width : "8%"
 	}
    ,{
-	   dataField: "4",
+	   dataField: "day4",
 	   headerText: "4",
 	   width : "8%"
 	}
    ,{
-       dataField: "5",
+       dataField: "day5",
        headerText: "5",
        width : "8%"
     }
    ,{
-       dataField: "6",
+       dataField: "day6",
        headerText: "6",
        width : "8%"
     }
    ,{
-       dataField: "7",
+       dataField: "day7",
        headerText: "7",
        width : "8%"
     }
    ,{
-       dataField: "8",
+       dataField: "day8",
        headerText: "8",
        width : "8%"
     }
    ,{
-       dataField: "9",
+       dataField: "day9",
        headerText: "9",
        width : "8%"
     }
    ,{
-       dataField: "10",
+       dataField: "day10",
        headerText: "10",
        width : "8%"
     }
    ,{
-       dataField: "11",
+       dataField: "day11",
        headerText: "11",
        width : "8%"
     }
    ,{
-       dataField: "12",
+       dataField: "day12",
        headerText: "12",
        width : "8%"
     }
    ,{
-       dataField: "13",
+       dataField: "day13",
        headerText: "13",
        width : "8%"
     }
    ,{
-       dataField: "14",
+       dataField: "day14",
        headerText: "14",
        width : "8%"
     }
    ,{
-       dataField: "15",
+       dataField: "day15",
        headerText: "15",
        width : "8%"
     }
    ,{
-       dataField: "16",
+       dataField: "day16",
        headerText: "16",
        width : "8%"
     }
@@ -246,77 +246,77 @@ var salesDailyDashboard_2 = [
     width : "10%"
     }
    ,{
-    dataField: "17",
+    dataField: "day17",
     headerText: "17",
     width : "8%"
     }
    ,{
-     dataField: "18",
+     dataField: "day18",
      headerText: "18",
      width : "8%"
     }
    ,{
-      dataField: "19",
+      dataField: "day19",
       headerText: "19",
       width : "8%"
     }
    ,{
-       dataField: "20",
+       dataField: "day20",
        headerText: "20",
        width : "8%"
     }
    ,{
-       dataField: "21",
+       dataField: "day21",
        headerText: "21",
        width : "8%"
     }
    ,{
-       dataField: "22",
+       dataField: "day22",
        headerText: "22",
        width : "8%"
     }
    ,{
-       dataField: "23",
+       dataField: "day23",
        headerText: "23",
        width : "8%"
     }
    ,{
-       dataField: "24",
+       dataField: "day24",
        headerText: "24",
        width : "8%"
     }
    ,{
-       dataField: "25",
+       dataField: "day25",
        headerText: "25",
        width : "8%"
     }
    ,{
-       dataField: "26",
+       dataField: "day26",
        headerText: "26",
        width : "8%"
     }
    ,{
-       dataField: "27",
+       dataField: "day27",
        headerText: "27",
        width : "8%"
     }
    ,{
-       dataField: "28",
+       dataField: "day28",
        headerText: "28",
        width : "8%"
     }
    ,{
-       dataField: "29",
+       dataField: "day29",
        headerText: "29",
        width : "8%"
     }
    ,{
-       dataField: "30",
+       dataField: "day30",
        headerText: "30",
        width : "8%"
     }
    ,{
-       dataField: "31",
+       dataField: "day31",
        headerText: "31",
        width : "8%"
     }

@@ -107,12 +107,8 @@
           , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
                  WHEN TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,'fm0D00'), '%')
             ELSE CONCAT(TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)), '%') END NEW_NEO_ACT_RATE
-          , CASE WHEN NVL(NEO_PRO,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)), '%') END NEO_PRO_PRODUCTIVITY
-          , CASE WHEN NVL(PARTTIME_NET,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)), '%') END PARTTIME_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)  END NEO_PRO_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)  END PARTTIME_PRODUCTIVITY
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
           , CASE WHEN NVL(SHI,0)= 0 THEN '0%' WHEN TO_CHAR(SHI)  LIKE '._%' THEN CONCAT(TO_CHAR(SHI ,'fm0D00'), '%') ELSE CONCAT(TO_CHAR(ROUND(SHI,2)), '%') END SHI
@@ -208,7 +204,7 @@
              ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
         </select>
 
-          <select id="selectSmfHA" parameterType="Map" resultType="egovMap">
+        <select id="selectSmfHA" parameterType="Map" resultType="egovMap">
             SELECT
 		            MEM_CODE
 		          , MEM_LVL
@@ -248,12 +244,8 @@
 		          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
 		                 WHEN TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,'fm0D00'), '%')
 		            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)), '%') END NEW_NEO_ACT_RATE
-		          , CASE WHEN NVL(NEO_PRO,0)= 0 OR MEM_LVL = 4 THEN '0%'
-		                 WHEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,'fm0D00'), '%')
-		            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)), '%') END NEO_PRO_PRODUCTIVITY
-		          , CASE WHEN NVL(PARTTIME_NET,0)= 0 OR MEM_LVL = 4 THEN '0%'
-		                 WHEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,'fm0D00'), '%')
-		            ELSE CONCAT(TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)), '%') END PARTTIME_PRODUCTIVITY
+                  , CASE WHEN MEM_LVL = 4 OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2) END NEO_PRO_PRODUCTIVITY
+                  , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2) END PARTTIME_PRODUCTIVITY
 		          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
 		          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
 		          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' WHEN TO_CHAR(SHI)  LIKE '._%' THEN CONCAT(TO_CHAR(SHI ,'fm0D00'), '%') ELSE CONCAT(TO_CHAR(ROUND(SHI,2)), '%') END SHI
@@ -301,6 +293,7 @@
 		                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
 		                        WHERE 1 = 1
 		                        AND B.STK_CTGRY_ID NOT IN ('5706')
+		                        AND B.STK_CTGRY_ID NOT IN ('5707')
 		                        AND E.MEM_TYPE = 1
 		                        <if test='orgCode_HA != null and orgCode_HA != ""'>
 		                            AND UPPER(A.ORG_CODE) = UPPER(#{orgCode_HA})
@@ -339,11 +332,10 @@
 		                        )
 		             )
 		             ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
-          </select>
+         </select>
 
          <select id="selectSmfHC" parameterType="Map" resultType="egovMap">
-
-           SELECT
+          SELECT
             MEM_CODE
           , MEM_LVL
           , FULL_NAME
@@ -382,12 +374,8 @@
           , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
                  WHEN TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,'fm0D00'), '%')
             ELSE CONCAT(TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)), '%') END NEW_NEO_ACT_RATE
-          , CASE WHEN NVL(NEO_PRO,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)), '%') END NEO_PRO_PRODUCTIVITY
-          , CASE WHEN NVL(PARTTIME_NET,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)), '%') END PARTTIME_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2) END  NEO_PRO_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2) END PARTTIME_PRODUCTIVITY
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
           , CASE WHEN NVL(SHI,0)= 0 THEN '0%' WHEN TO_CHAR(SHI)  LIKE '._%' THEN CONCAT(TO_CHAR(SHI ,'fm0D00'), '%') ELSE CONCAT(TO_CHAR(ROUND(SHI,2)), '%') END SHI
@@ -473,62 +461,55 @@
                         )
              )
              ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
-
-
          </select>
 
 
 
          <select id="selectSmfActHp" parameterType="Map" resultType="egovMap">
-
            SELECT
-            MEM_CODE
-          , MEM_LVL
-          , FULL_NAME
-          , DEPT_CODE
-          , GRP_CODE
-          , ORG_CODE
-          , CASE WHEN MEM_LVL = 1 THEN ORG_CODE
-                    WHEN MEM_LVL = 2 THEN GRP_CODE
-                    WHEN MEM_LVL = 3 THEN DEPT_CODE
-            ELSE '' END CRS_CODE
-          , POSITION
-          , YEAR
-          , MONTH
-          <if test="cmbProductCtgry_actHP != null and cmbProductCtgry_actHP != ''">
-          , PRODUCTCTGRY
-           </if>
-          <if test="cmbProduct_actHP != null and cmbProduct_actHP != ''">
-          , PRODUCTNAME
-           </if>
-       , NVL(KEYIN_W1,0) KEYIN_W1
-          , NVL(KEYIN_W2,0) KEYIN_W2
-          , NVL(KEYIN_W3,0) KEYIN_W3
-          , NVL(KEYIN_W4,0) KEYIN_W4
-          , NVL(KEYIN_TOTAL_AMT,0) KEYIN_TOTAL_AMT
-          , NVL(NETSALES_W1,0) NETSALES_W1
-          , NVL(NETSALES_W2,0) NETSALES_W2
-          , NVL(NETSALES_W3,0) NETSALES_W3
-          , NVL(NETSALES_W4,0) NETSALES_W4
-          , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
-          , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)), '%') END NET_RATE
-          , TARGETATMT_NS
-          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
-          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
-          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)), '%') END NEW_NEO_ACT_RATE
-          , CASE WHEN NVL(NEO_PRO,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)), '%') END NEO_PRO_PRODUCTIVITY
-          , CASE WHEN NVL(PARTTIME_NET,0)= 0 OR MEM_LVL = 4 THEN '0%'
-                 WHEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0) ,'fm0D00'), '%')
-            ELSE CONCAT(TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)), '%') END PARTTIME_PRODUCTIVITY
-          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
-          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
-          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' WHEN TO_CHAR(SHI)  LIKE '._%' THEN CONCAT(TO_CHAR(SHI ,'fm0D00'), '%') ELSE CONCAT(TO_CHAR(ROUND(SHI,2)), '%') END SHI
+	            MEM_CODE
+	          , MEM_LVL
+	          , FULL_NAME
+	          , DEPT_CODE
+	          , GRP_CODE
+	          , ORG_CODE
+	          , CASE WHEN MEM_LVL = 1 THEN ORG_CODE
+	                    WHEN MEM_LVL = 2 THEN GRP_CODE
+	                    WHEN MEM_LVL = 3 THEN DEPT_CODE
+	            ELSE '' END CRS_CODE
+	          , POSITION
+	          , YEAR
+	          , MONTH
+	          <if test="cmbProductCtgry_actHP != null and cmbProductCtgry_actHP != ''">
+	          , PRODUCTCTGRY
+	           </if>
+	          <if test="cmbProduct_actHP != null and cmbProduct_actHP != ''">
+	          , PRODUCTNAME
+	           </if>
+              , NVL(KEYIN_W1,0) KEYIN_W1
+	          , NVL(KEYIN_W2,0) KEYIN_W2
+	          , NVL(KEYIN_W3,0) KEYIN_W3
+	          , NVL(KEYIN_W4,0) KEYIN_W4
+	          , NVL(KEYIN_TOTAL_AMT,0) KEYIN_TOTAL_AMT
+	          , NVL(NETSALES_W1,0) NETSALES_W1
+	          , NVL(NETSALES_W2,0) NETSALES_W2
+	          , NVL(NETSALES_W3,0) NETSALES_W3
+	          , NVL(NETSALES_W4,0) NETSALES_W4
+	          , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
+	          , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
+	                 WHEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,'fm0D00'), '%')
+	            ELSE CONCAT(TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)), '%') END NET_RATE
+	          , TARGETATMT_NS
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
+	          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
+	                 WHEN TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) LIKE '._%' THEN CONCAT(TO_CHAR(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,'fm0D00'), '%')
+	            ELSE CONCAT(TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)), '%') END NEW_NEO_ACT_RATE
+	          , CASE WHEN MEM_LVL = 4 OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2) END NEO_PRO_PRODUCTIVITY
+	          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0 THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2) END PARTTIME_PRODUCTIVITY
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
+	          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' WHEN TO_CHAR(SHI)  LIKE '._%' THEN CONCAT(TO_CHAR(SHI ,'fm0D00'), '%') ELSE CONCAT(TO_CHAR(ROUND(SHI,2)), '%') END SHI
             FROM (
                SELECT * FROM
                         (
@@ -610,12 +591,49 @@
                         )
              )
              ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
-
-
          </select>
 
-  <select id="selectSmfDailyListing" parameterType="Map" resultType="egovMap">
-   SELECT B.CODE_NAME,A.* FROM
+        <select id="selectSmfDailyListing" parameterType="Map" resultType="egovMap">
+        SELECT
+            CODE_NAME
+          , PV_YEAR
+          , PV_MONTH
+          , ORG_CODE
+          , TYPE
+          , NVL(DAY1,0) DAY1
+          , NVL(DAY2,0) DAY2
+          , NVL(DAY3,0) DAY3
+          , NVL(DAY4,0) DAY4
+          , NVL(DAY5,0) DAY5
+          , NVL(DAY6,0) DAY6
+          , NVL(DAY7,0) DAY7
+          , NVL(DAY8,0) DAY8
+          , NVL(DAY9,0) DAY9
+          , NVL(DAY10,0) DAY10
+          , NVL(DAY11,0) DAY11
+          , NVL(DAY12,0) DAY12
+          , NVL(DAY13,0) DAY13
+          , NVL(DAY14,0) DAY14
+          , NVL(DAY15,0) DAY15
+          , NVL(DAY16,0) DAY16
+          , NVL(DAY17,0) DAY17
+          , NVL(DAY18,0) DAY18
+          , NVL(DAY19,0) DAY19
+          , NVL(DAY20,0) DAY20
+          , NVL(DAY21,0) DAY21
+          , NVL(DAY22,0) DAY22
+          , NVL(DAY23,0) DAY23
+          , NVL(DAY24,0) DAY24
+          , NVL(DAY25,0) DAY25
+          , NVL(DAY26,0) DAY26
+          , NVL(DAY27,0) DAY27
+          , NVL(DAY28,0) DAY28
+          , NVL(DAY29,0) DAY29
+          , NVL(DAY30,0) DAY30
+          , NVL(DAY31,0) DAY31
+        FROM
+        (
+            SELECT B.CODE_NAME,A.* FROM
                 (
                 SELECT * FROM
                  (
@@ -633,11 +651,11 @@
                             , A.DEPT_CODE
                         </if>
                         , TO_CHAR(TO_DATE(A.SALES_DT), 'DD') AS DAY
-                        , SUM(A.RESULT_KEYIN) RESULT_KEYIN
-                        , SUM(A.RESULT_NETSALES) RESULT_NETSALES
-                        , SUM(A.RESULT_ACTHP) RESULT_ACTHP
-                        , SUM(A.RESULT_RECRUIT) RESULT_RECRUIT
-                        , ROUND(SUM(COLLECTAMT_SHI)/SUM(TARGETATMT_SHI) * 100,5) AS RESULT_SHI
+                        , NVL(SUM(A.RESULT_KEYIN),0) RESULT_KEYIN
+                        , NVL(SUM(A.RESULT_NETSALES),0) RESULT_NETSALES
+                        , NVL(SUM(A.RESULT_ACTHP),0) RESULT_ACTHP
+                        , NVL(SUM(A.RESULT_RECRUIT),0) RESULT_RECRUIT
+                        , NVL(ROUND(SUM(COLLECTAMT_SHI)/SUM(TARGETATMT_SHI) * 100,2),0) AS RESULT_SHI
                  FROM ORG0044T A
                  WHERE  TO_CHAR(TO_DATE(A.PV_YEAR || A.PV_MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                       <if test='orgCode != null and orgCode != ""'>
@@ -671,14 +689,16 @@
                 )
              PIVOT
             (
-                SUM(AMT)
-                FOR (DAY) IN (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)
+                 SUM(NVL(AMT,0))
+                FOR (DAY) IN (1 day1,2 day2,3 day3,4 day4,5 day5,6 day6,7 day7,8 day8,9 day9,10 day10,
+                11 day11,12 day12,13 day13,14 day14,15 day15,16 day16,17 day17,18 day18,19 day19,20 day20,
+                21 day21,22 day22,23 day23,24 day24,25 day25,26 day26,27 day27,28 day28,29 day29,30 day30,31 day31)
             ) A
             JOIN SYS0013M B ON A.TYPE =B.CODE_ID
             WHERE 1=1
-
-ORDER BY TYPE
-  </select>
+        ORDER BY TYPE
+        )
+        </select>
 
 
 </mapper>
