@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 
-var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"},{"codeId": "5758","codeName": "Homecare Delivery Technician"}];
+var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"},{"codeId": "5758","codeName": "Homecare Delivery Technician"},{"codeId": "6672","codeName": "Logistics Technician"}];
 
 
 function fn_saveConfirm(){

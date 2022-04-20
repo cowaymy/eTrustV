@@ -695,7 +695,7 @@ function fn_branchEditPop(){
 
 function fn_searchPosition(selectedData){
     $("#position option").remove();
-      if(selectedData == "2" || selectedData =="3" || selectedData =="1" || selectedData =="7" || selectedData =="5758"){
+      if(selectedData == "2" || selectedData =="3" || selectedData =="1" || selectedData =="7" || selectedData =="5758" || selectedData =="6672"){
            $("#position").attr("disabled",false);   /*position button enable*/
            Common.ajax("GET",
                     "/organization/positionList.do",
