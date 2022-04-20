@@ -354,10 +354,16 @@
 					    <td><select class="w100p"id="ctSubGrp" name="ctSubGrp"></select></td>
 					</tr>
 					<tr>
-					    <th scope="row">DT</th>
+					    <th scope="row">DT/LT</th>
 					    <td><input type="text" class="w100p" id="DTMemId" name="DTMemId"/></td>
-					    <th scope="row"></th>
-					    <td></td>
+					    <th scope="row">Organization</th>
+	                    <td>
+	                        <select id="orgType" name="orgType" class="w100p" style='text-align:left' >
+	                            <option value="">Choose One</option>
+	                            <option value="6672">Logistics Technician</option>
+	                            <option value="5758">Delivery Technician</option>
+	                        </select>
+	                    </td>
 					    <th scope="row"></th>
 					    <td></td>
 					</tr>

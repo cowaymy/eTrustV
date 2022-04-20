@@ -189,6 +189,19 @@
 					<input type="text" title="Request Date" class="j_dateHc w100p" id="requestDt" name="requestDt"  placeholder="DD/MM/YYYY" />
 				</td>
 			</tr>
+			<tr>
+			<th scope="row">Member Type<span class="must">*</span></th>
+                <td>
+                    <select class="w100p"  id="comMemType" name="comMemType">
+                       <option value="11">Choose One</option>
+                       <option value="5758">Homecare Delivery Technician</option>
+                       <option value="6672">Logistics Technician</option>
+                    </select>
+                </td>
+                <th></th><td></td>
+                <th></th><td></td>
+                <th></th><td></td>
+            </tr>
 			</tbody>
 		</table>
         <!-- table end -->

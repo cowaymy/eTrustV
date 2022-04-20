@@ -51,6 +51,16 @@
 	        headerText : "DT Sub Group",
 	        width: 120
 	    },
+        {
+            dataField : "ltBrnchCode",
+            headerText : "LT Branch",
+            width: 100
+        },
+        {
+            dataField : "ltSubGrp",
+            headerText : "LT Sub Group",
+            width: 120
+        },
 	    {
 	        dataField : "status",
 	        headerText : "Status",
@@ -73,6 +83,7 @@
 
 	    doGetCombo('/organization/territory/selectState.do', '', '','state', 'S' , '');
 	   	doGetCombo('/organization/territory/selectBranchCode.do', brnchType, '','hdcBranch', 'S' , '');
+	   	doGetCombo('/organization/territory/selectBranchCode.do', brnchType, '','LTBranch', 'S' , '');
 	});
 
 	function fn_searchCurrentTerritory() {
@@ -133,7 +144,7 @@
 				        <select class="w100p"  id="state" name="state">
 				        </select>
 				    </td>
-				    <th scope="row">DT Branch</th>
+				    <th scope="row">HDC Branch</th>
 				    <td>
 				        <select class="w100p"  id="hdcBranch" name="hdcBranch">
 				        </select>
@@ -148,8 +159,14 @@
 				           <option value="Complete">Complete</option>
 				        </select>
 				    </td>
-				    <th></th>
-				    <td></td>
+				    <th scope="row">Member Type</th>
+                    <td><!-- <input type="text" title="" placeholder="" class="w100p" id="status" name="status" /> -->
+                        <select class="w100p"  id="memType" name="memType">
+                           <option value="11" selected>Choose One</option>
+                           <option value="5758">Homecare Delivery Technician</option>
+                           <option value="6672">Logistics Technician</option>
+                        </select>
+                    </td>
 				    <th></th>
 				    <td></td>
 				</tr>

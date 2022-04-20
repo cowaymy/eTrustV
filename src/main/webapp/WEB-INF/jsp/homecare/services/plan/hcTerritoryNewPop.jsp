@@ -41,8 +41,14 @@
 
     function fn_uploadFile() {
 	    var formData = new FormData();
+	    if ($("#comMemTypep").val() == '11')
+        {
+              Common.alert("Please Choose a member type (DT/LT)");
+              return;
+        }
 	    formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
 	    formData.append("comBranchTypep", $("#comBranchTypep").val());
+	    formData.append("comMemType", $("#comMemTypep").val());
 
 	    Common.ajaxFile("/homecare/services/plan/excelUpload.do", formData, function (result) {
 	    	if(result.code == "99"){
@@ -112,6 +118,16 @@
 			        </select>
 			    </td>
 			</tr>
+			<tr>
+                <th scope="row">Member Type</th>
+                <td>
+                    <select class="multy_select w100p"  id="comMemTypep" name="comMemTypep">
+                       <option value="11" selected>Choose One</option>
+                       <option value="5758">HomeCare Delivery Technician</option>
+                       <option value="6672">Logistics Technician</option>
+                    </select>
+                </td>
+            </tr>
 			<tr>
                 <th scope="row">File</th>
                 <td>

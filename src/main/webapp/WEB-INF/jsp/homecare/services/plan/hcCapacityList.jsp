@@ -344,6 +344,20 @@
 					        </select>
 					    </td>
 					</tr>
+					<tr>
+					<th scope="row">Organization</th>
+                    <td>
+                        <select id="orgType" name="orgType" class="w100p" style='text-align:left' >
+                            <option value="">Choose One</option>
+                            <option value="6672">Logistics Technician</option>
+                            <option value="5758">Delivery Technician</option>
+                        </select>
+                    </td>
+                    <th></th>
+                    <td></td>
+                    <th></th>
+                    <td></td>
+					</tr>
 				</tbody>
 			</table>
 			<!-- table end -->
