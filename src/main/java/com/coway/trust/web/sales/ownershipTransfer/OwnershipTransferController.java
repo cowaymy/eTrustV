@@ -509,4 +509,14 @@ public class OwnershipTransferController {
 		return ResponseEntity.ok(message);
 	}
 
+
+	//add in date filter for raw data - Gen Liang
+	@RequestMapping(value="/rootRawDataPop.do")
+	public String rootSearchRawDataPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "/sales/ownershipTransfer/rootRawDataPop";
+	}
+
+
+
+
 }

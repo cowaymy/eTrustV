@@ -934,16 +934,16 @@
             return;
         }
          */
-
+        console.log($("#_editCustTypeId").val())
+        console.log('hello')
         if (null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()) {
-            Common
-                    .alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
             return;
-        } else if (($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300) && $("#_ficoScore").val() != 0 && $("#_editCustTypeId").val() == '964') {
+        } else if (($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300) && $("#_editCustTypeId").val() == '964') {
                 Common
                         .alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
-        } else if (($("#_ficoScore").val() > 400 || $("#_ficoScore").val() < 100) && $("#_ficoScore").val() != 0 && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
+        } else if (($("#_ficoScore").val() > 400 || $("#_ficoScore").val() < 100) && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
             Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
             return;
     }
@@ -1214,11 +1214,13 @@
 
     // ROT History Functions - Start
     function fn_retrieveRotHist() {
-        Common.ajax("GET", "/sales/ownershipTransfer/selectRotHistory.do", {
+    	console.log('rot history')
+    	Common.ajax("GET", "/sales/ownershipTransfer/selectRotHistory.do", {
             salesOrdID : salesOrdID,
             rotId : rotId
         }, function(result) {
-            console.log(result);
+        	$("#_editCustTypeId").val(result[0]['appTypeId'])
+        	console.log(result);
             AUIGrid.setGridData(rotHistoryGridID, result);
         });
     }
@@ -1351,8 +1353,7 @@
                         value="${orderDetail.basicInfo.custName}"> <input
                         type="hidden" id="_editOrdNo"
                         value="${orderDetail.basicInfo.ordNo}"> <input
-                        type="hidden" id="_editCustTypeId"
-                        value="${orderDetail.basicInfo.custTypeId}"> <input
+                        type="hidden" id="_editCustTypeId" > <input
                         type="hidden" id="_editCustNation"
                         value="${orderDetail.basicInfo.custNation}">
                     <!-- from SalesMan (HP/CODY) -->
@@ -1889,7 +1890,7 @@
                         <li id="tabCP"><a href="#"><spring:message
                                     code="sal.tap.title.contactPerson" /></a></li>
                         <li id="tabRP"><a href="#"><spring:message
-                                    code="sal.title.text.rentalPaySetting" /></a></li>
+                                    code="sal.title.text.paymentChnnl" /></a></li>
                         <li id="tabIN"><a href="#"><spring:message
                                     code="sal.text.inst" /></a></li>
                     </ul>

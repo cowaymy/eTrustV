@@ -47,7 +47,7 @@
 		width : 70
 	}, {
 		dataField : "rotReqDt",
-		headerText : "Request<Br> Date (By)",
+		headerText : "Request Date<Br> (ROOT Key In <Br>User)",
 		width : 140
 	}, {
 		dataField : "rotFeedbackCode",
@@ -307,9 +307,9 @@
 	}
 
 	function fn_rootRawData() {
-
+		Common.popupDiv("/sales/ownershipTransfer/rootRawDataPop.do", $("#root_searchForm").serializeJSON(), null, true);
 		//set date portion for report download filename - start
-        var date = new Date();
+        /* var date = new Date();
         var month = date.getMonth() + 1;
         var day = date.getDate();
         if (date.getDate() < 10) {
@@ -343,7 +343,7 @@
         var option = {
             isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
         };
-        Common.report("reportForm", option);
+        Common.report("reportForm", option); */
 	}
 
 
@@ -555,8 +555,9 @@
 					   <th scope="row">Last Update User</th>
 					   <td><input type="text" title="Last Update User" id="lastUpdateUser" name="lastUpdateUser"
 					               placeholder="Last Update User" class="w100p" /></td>
-					   <th scope="row"></th>
-                        <td></td>
+                       <th scope="row">Root Key In User</th>
+                       <td><input type="text" title="Root Key In User" id="rootKeyInUser" name="rootKeyInUser"
+                                   placeholder="Root Key In User" class="w100p" /></td>
 					</tr>
 				</tbody>
 			</table>
