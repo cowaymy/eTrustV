@@ -260,10 +260,10 @@
              , INS_STAT
              , INS_FB
              , CL_FB
-             , (select code || ' ' || name from SYS0005M where brnch_id in (NVL(( SELECT BRNCH FROM
+             <!-- , (select code || ' ' || name from SYS0005M where brnch_id in (NVL(( SELECT BRNCH FROM
                     (SELECT RANK() OVER (ORDER BY RUN_DT DESC) my_rank, MEM_CODE, BRNCH,MH.RUN_DT from org0030D MH
                 ) WHERE RUN_DT = AAA.CALL_CRT_DT_2 AND MY_RANK = 1 AND MEM_CODE = AAA.MEM_CODE
-                                            ) , CURR_BRNCH) )) CALL_CRT_BRANCH
+                                            ) , CURR_BRNCH) )) CALL_CRT_BRANCH -->
              FROM ( SELECT T2.SALES_ORD_ID
                                  , T2.CALL_ENTRY_ID
                                  , T1.CALL_RESULT_ID
