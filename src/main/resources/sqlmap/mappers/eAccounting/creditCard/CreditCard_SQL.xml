@@ -74,11 +74,11 @@
 			                                                   F2.ATCH_FILE_ID) F
 			                          WHERE  F.RNUM = 1) T3
 			                      ON T1.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID
+			      LEFT JOIN (SELECT * FROM FCM0032D WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') AND CRC_LIMIT_MM = TO_CHAR(SYSDATE, 'MM')) T4
+                                  ON T1.CRDIT_CARD_NO = T4.CRDIT_CARD_NO AND T1.CRDIT_CARD_USER_ID = T4.CRDIT_CARD_USER_ID
 			      <if test="loginUserId != null and loginUserId != ''">
 			        WHERE T1.CRT_USER_ID = #{loginUserId}
 			      </if>
-			      LEFT JOIN (SELECT * FROM FCM0032D WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') AND CRC_LIMIT_MM = TO_CHAR(SYSDATE, 'MM')) T4
-                                  ON T1.CRDIT_CARD_NO = T4.CRDIT_CARD_NO AND T1.CRDIT_CARD_USER_ID = T4.CRDIT_CARD_USER_ID
 			        ) T
 			WHERE 1=1
 			<if test="startDt != null and startDt != ''">
