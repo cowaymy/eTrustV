@@ -145,6 +145,11 @@
                                             + "</span>");
                         }
 
+                        //TEST
+                        console.log('test','${rotInfoMap}');
+                        //TEST END
+
+
                         var mst = getMstId();
                         var ordUnitSelVal = $("#_ordUnitSelVal").val();
                         var rosUnitSelVal = $("#_rosUnitSelVal").val();
@@ -1894,7 +1899,6 @@
                         <li id="tabIN"><a href="#"><spring:message
                                     code="sal.text.inst" /></a></li>
                     </ul>
-
                     <!-- tabCT (Customer) - Start -->
                     <article class="tap_area">
                         <section class="search_table">
@@ -1911,7 +1915,16 @@
                                     <tr>
                                         <th scope="row"><spring:message
                                                 code="sal.text.customerId" /></th>
+                                        <td><span id="extCustIdOwnt">${rotInfoMap.extCustId}</span>
+                                        </td>
+                                        <th scope="row"><spring:message
+                                                code="sal.text.customerId" /></th>
                                         <td><span id="custIdOwnt">${rotInfoMap.rotNewCustId}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code="sal.text.type" /></th>
+                                        <td><span id="extCustTypeNmOwnt">${rotInfoMap.extCustType}</span>
                                         </td>
                                         <th scope="row"><spring:message code="sal.text.type" /></th>
                                         <td><span id="custTypeNmOwnt">${rotInfoMap.custType}</span>
@@ -1919,8 +1932,16 @@
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.name" /></th>
+                                        <td><span id="extNameOwnt">${rotInfoMap.extCustName}</span>
+                                        </td>
+                                        <th scope="row"><spring:message code="sal.text.name" /></th>
                                         <td><span id="nameOwnt">${rotInfoMap.rotNewCustName}</span>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message
+                                                code="sal.text.nricCompanyNo" /></th>
+                                        <td><span id="extNricOwnt">${rotInfoMap.extCustNric}</span></td>
                                         <th scope="row"><spring:message
                                                 code="sal.text.nricCompanyNo" /></th>
                                         <td><span id="nricOwnt">${rotInfoMap.nric}</span></td>
@@ -1928,14 +1949,29 @@
                                     <tr>
                                         <th scope="row"><spring:message
                                                 code="sal.text.nationality" /></th>
+                                        <td><span id="extNationNmOwnt">${rotInfoMap.extCustNationality}</span>
+                                        </td>
+                                        <th scope="row"><spring:message
+                                                code="sal.text.nationality" /></th>
                                         <td><span id="nationNmOwnt">${rotInfoMap.custNationality}</span>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code="sal.text.race" /></th>
+                                        <td><span id="extRaceOwnt">${rotInfoMap.extCustRace}</span></td>
                                         <th scope="row"><spring:message code="sal.text.race" /></th>
                                         <td><span id="raceOwnt">${rotInfoMap.custRace}</span></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.dob" /></th>
+                                        <td><span id="extDobOwnt">${rotInfoMap.extCustDob}</span></td>
+                                        <th scope="row"><spring:message code="sal.text.dob" /></th>
                                         <td><span id="dobOwnt">${rotInfoMap.dob}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code="sal.text.gender" /></th>
+                                        <td><span id="extGenderOwnt">${rotInfoMap.extCustGender}</span>
+                                        </td>
                                         <th scope="row"><spring:message code="sal.text.gender" /></th>
                                         <td><span id="genderOwnt">${rotInfoMap.custGender}</span>
                                         </td>
@@ -1943,27 +1979,48 @@
                                     <tr>
                                         <th scope="row"><spring:message
                                                 code="sal.text.passportExpire" /></th>
+                                        <td><span id="extPasSportExprOwnt">${rotInfoMap.extPassSportExpr}</span>
+                                        <th scope="row"><spring:message
+                                                code="sal.text.passportExpire" /></th>
                                         <td><span id="pasSportExprOwnt">${rotInfoMap.passSportExpr}</span>
                                         </td>
+                                    </tr>
+                                    <tr>
                                         <th scope="row"><spring:message
+                                                code="sal.text.visaExpire" /></th>
+                                        <td><span id="extVisaExprOwnt">${rotInfoMap.extVisaExpr}</span>
+                                        </td>
+                                         <th scope="row"><spring:message
                                                 code="sal.text.visaExpire" /></th>
                                         <td><span id="visaExprOwnt">${rotInfoMap.visaExpr}</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.email" /></th>
+                                        <td><span id="extEmailOwnt">${rotInfoMap.extCustEmail}</span></td>
+                                        <th scope="row"><spring:message code="sal.text.email" /></th>
                                         <td><span id="emailOwnt">${rotInfoMap.custEmail}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code="sal.text.indutryCd" /></th>
+                                        <td><span id="extCorpTypeNmOwnt">${rotInfoMap.extIndustryCode}</span>
+                                        </td>
                                         <th scope="row"><spring:message code="sal.text.indutryCd" /></th>
                                         <td><span id="corpTypeNmOwnt">${rotInfoMap.industryCode}</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.employee" /></th>
-                                        <td colspan="3"><span id="empChkOwnt"></span></td>
+                                        <td><span id="extEmpChkOwnt"></span></td>
+                                        <th scope="row"><spring:message code="sal.text.employee" /></th>
+                                        <td><span id="empChkOwnt"></span></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.remark" /></th>
-                                        <td colspan="3"><span id="custRemOwnt">${rotInfoMap.custRem}</span>
+                                        <td><span id="extCustRemOwnt">${rotInfoMap.extCustRemark}</span>
+                                        </td>
+                                        <th scope="row"><spring:message code="sal.text.remark" /></th>
+                                        <td><span id="custRemOwnt">${rotInfoMap.custRem}</span>
                                         </td>
                                     </tr>
                                 </tbody>

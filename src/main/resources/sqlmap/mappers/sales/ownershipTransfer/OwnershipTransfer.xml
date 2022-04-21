@@ -700,7 +700,7 @@
     <select id="selectRootDetails" parameterType="Map" resultType="egovMap">
         /* ownershipTransfer.selectRootDetails */
         <![CDATA[
-        SELECT
+ SELECT
             /* GENERAL ROT DETAILS */
             A.ROT_ID,
             A.ROT_NO,
@@ -806,7 +806,21 @@
             Z21.CODE_NAME DD_ACC_TYPE,
             Z19.CUST_ACC_OWNER,
             NVL(Z19.CUST_ACC_BANK_BRNCH, '-') DD_ISSUE_BANK_BRNCH,
-            Z20.NAME DD_BANK
+            Z20.NAME DD_BANK,
+            /* EXIST CUSTOMER INFO */
+            EXT1.CUST_ID EXT_CUST_ID,
+            EXT2.CODE_NAME EXT_CUST_TYPE,
+            EXT3.NAME EXT_CUST_NATIONALITY,
+            EXT4.CODE_NAME EXT_CUST_RACE,
+            EXT1.NAME EXT_CUST_NAME,
+            EXT1.NRIC EXT_CUST_NRIC,
+            TO_CHAR(EXT1.DOB, 'DD-MM-YYYY') EXT_CUST_DOB,
+            CASE WHEN EXT1.GENDER = 'M' THEN 'Male' WHEN G.GENDER = 'F' THEN 'Female' ELSE '' END EXT_CUST_GENDER,
+            CASE WHEN EXT1.NATION <> 1 THEN TO_CHAR(EXT1.PAS_SPORT_EXPR, 'YYYY-MM-DD') ELSE '' END EXT_PASS_SPORT_EXPR,
+            CASE WHEN EXT1.NATION <> 1 THEN TO_CHAR(EXT1.VISA_EXPR, 'YYYY-MM-DD') ELSE '' END EXT_VISA_EXPR,
+            EXT1.EMAIL EXT_CUST_EMAIL,
+            EXT1.REM EXT_CUST_REMARK,
+            EXT5.CODE_NAME EXT_INDUSTRY_CODE
         FROM SAL0275M A
         JOIN SAL0276D B
             ON A.ROT_ID = B.ROT_ID
@@ -905,6 +919,19 @@
         LEFT JOIN SYS0013M Z22 /* DD CHANNEL */
             ON Z19.CUST_ACC_DDT_CHL = Z22.CODE_ID
             AND Z22.CODE_MASTER_ID = 403
+        /* EXIST CUSTOMER INFO */
+        LEFT JOIN SAL0029D EXT1 ON B.ROT_OLD_CUST_ID = EXT1.CUST_ID
+        LEFT JOIN SYS0013M EXT2 /* EXIST CUST TYPE */
+            ON EXT1.TYPE_ID = EXT2.CODE_ID
+            AND EXT2.CODE_MASTER_ID = 8
+        LEFT JOIN SYS0015M EXT3 /* EXIST CUST NATIONALITY */
+            ON EXT1.NATION = EXT3.CNTY_ID
+        LEFT JOIN SYS0013M EXT4 /* EXIST CUST RACE */
+            ON EXT1.RACE_ID = EXT4.CODE_ID
+            AND EXT4.CODE_MASTER_ID = 2
+        LEFT JOIN SYS0013M EXT5 /* CORPORATE TYPE */
+            ON EXT1.CORP_TYPE_ID = EXT5.CODE_ID
+            AND EXT5.CODE_MASTER_ID = 95
         WHERE A.ROT_ID = #{rotId}
         ]]>
     </select>
