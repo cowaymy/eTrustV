@@ -32,6 +32,12 @@ public class HeartServiceResultDetailForm {
   @ApiModelProperty(value = "교체 필터 바코드", example = "")
   private String filterBarcdSerialNo;
 
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String filterBarcdNewSerialNo;
+
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String filterSerialUnmatchReason;
+
   public int getAlternativeFilterCode() {
     return alternativeFilterCode;
   }
@@ -80,7 +86,23 @@ public class HeartServiceResultDetailForm {
     this.filterChangeQtyTst = filterChangeQtyTst;
   }
 
-  public static List<Map<String, Object>> createMaps(List<HeartServiceResultDetailForm> heartServiceResultDetailForms) {
+  public String getFilterBarcdNewSerialNo() {
+	return filterBarcdNewSerialNo;
+}
+
+public String getFilterSerialUnmatchReason() {
+	return filterSerialUnmatchReason;
+}
+
+public void setFilterBarcdNewSerialNo(String filterBarcdNewSerialNo) {
+	this.filterBarcdNewSerialNo = filterBarcdNewSerialNo;
+}
+
+public void setFilterSerialUnmatchReason(String filterSerialUnmatchReason) {
+	this.filterSerialUnmatchReason = filterSerialUnmatchReason;
+}
+
+public static List<Map<String, Object>> createMaps(List<HeartServiceResultDetailForm> heartServiceResultDetailForms) {
 
     List<Map<String, Object>> list = new ArrayList<>();
     Map<String, Object> map;
@@ -103,6 +125,8 @@ public class HeartServiceResultDetailForm {
       map.put("exchangeId", map.get("exchangeId"));
       map.put("name", map.get("filterChangeQty"));
       map.put("filterBarcdSerialNo", map.get("filterBarcdSerialNo"));
+      //map.put("filterBarcdNewSerialNo", map.get("filterBarcdNewSerialNo"));
+      //map.put("filterSerialUnmatchReason", map.get("filterSerialUnmatchReason"));
 
       list.add(map);
     }

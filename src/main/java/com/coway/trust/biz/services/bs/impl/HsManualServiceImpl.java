@@ -461,7 +461,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             docSub.put("bsResultRem", "");
             docSub.put("bsResultCrtUserId", sessionVO.getUserId());
             docSub.put("bsResultFilterClm", docSub.get("name"));
-            docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
+            //docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
+            docSub.put("serialNo", docSub.get("filterBarcdNewSerialNo"));
+            docSub.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason"));
 
             // docSub.put("bsResultCrtDt");
             // Map<String, Object> docSub2 = (Map<String, Object>)
