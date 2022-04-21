@@ -168,6 +168,7 @@ public class CcpUploadAssignUserController {
 				}
 
 		    ccpUserList = ccpUploadAssignUserService.updateUploadCcpUsertList(params);
+		    ccpUserList = ccpUploadAssignUserService.updateCcpCalculationPageUser(params);
 
 		    EgovMap list= ccpUploadAssignUserService.selectCcpReAssignUserDtlList(params);
 

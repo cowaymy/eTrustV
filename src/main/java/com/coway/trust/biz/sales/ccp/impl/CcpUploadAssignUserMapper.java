@@ -25,6 +25,7 @@ public interface CcpUploadAssignUserMapper {
 	List<EgovMap> selectUploadAssignUserList (Map<String, Object> params);
 	List<EgovMap> selectUploadCcpUsertList (Map<String, Object> params);
 	int updateUploadCcpUsertList (Map<String, Object> params);
+	int updateCcpCalculationPageUser (Map<String, Object> params);
 	List<EgovMap> selectUploadAssignUserDtlList (Map<String, Object> params);
 	List<EgovMap> selectUploadReAssignUserDtlList (Map<String, Object> params);
 	EgovMap selectViewHeaderInfo (Map<String, Object> params);

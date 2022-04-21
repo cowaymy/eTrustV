@@ -23,6 +23,8 @@ public interface CcpUploadAssignUserService {
 
 	int  updateUploadCcpUsertList(Map<String, Object> params);
 
+	int  updateCcpCalculationPageUser(Map<String, Object> params);
+
 	public EgovMap selectCcpAssignUserDtlList(Map<String, Object> params);
 
 	public EgovMap selectCcpReAssignUserDtlList(Map<String, Object> params);
