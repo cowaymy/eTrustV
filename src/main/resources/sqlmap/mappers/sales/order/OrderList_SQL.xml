@@ -1560,38 +1560,12 @@
                 , V1.RELATED_NO
                 , V1.RELATED_ID
            FROM SAL1013V  V1
-             JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
+           JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
 
-           /*
-             INNER JOIN ( SELECT IE.SALES_ORD_ID
-                          FROM SAL0047D IR
-                          LEFT OUTER JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID WHERE
-                          <choose>
-                            <when test='serialNo != null and serialNo != ""'>
-                              UPPER(IR.SERIAL_NO) = serialNo
-                              <if test='sirimNo != null and sirimNo != ""'>
-                                AND UPPER(IR.SIRIM_NO) = sirimNo
-                              </if>
-                            </when>
-                            <otherwise>
-                              <if test='sirimNo != null and sirimNo != ""'>
-                                IR.SIRIM_NO = sirimNo
-                              </if>
-                            </otherwise>
-                          </choose>
-                        ) A on V1.ORD_ID = A.SALES_ORD_ID
-           */
+            WHERE 1 = 1
+
             <if test='memType != null and memType != "" '>
-            JOIN(
-                /*
-                SELECT DISTINCT S1.CUST_ID , S1.SALES_ORD_ID
-                FROM SAL0090D G
-                LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
-                JOIN SAL0001D S ON S.SALES_ORD_ID = G.SRV_SO_ID
-                JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
-                JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
-                WHERE 1=1
-                */
+            AND EXISTS (
                 SELECT DISTINCT S1.CUST_ID , S1.SALES_ORD_ID
                 FROM SAL0001D S
                 JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
@@ -1627,10 +1601,9 @@
                 AND (V.ORG_CODE = #{orgCode}
                 OR C.TYPE_ID = 965)
                 </if>
-            ) SVC
-            ON V1.ORD_ID = SVC.SALES_ORD_ID
+            )
             </if>
-           WHERE 1 = 1
+
            <if test='ordDt == null || ordDt == ""'>
              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
            </if>
