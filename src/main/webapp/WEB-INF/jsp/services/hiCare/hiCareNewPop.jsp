@@ -46,6 +46,8 @@
 </style>
 <script type="text/javaScript">
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+var brnch = '${SESSION_INFO.userBranchId}';
+var userName = '${SESSION_INFO.userName}';
 
 var uomDs = [];
 var uomObj = {};
@@ -146,14 +148,24 @@ $(document).ready(function(){
 
 	$("#temp1").hide();
 
-	$("#cmdBranchCode1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
+	if(brnch == "42" || userName == 'KHSATO'){
+        doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode1', 'S', '');
+        $("#cmdBranchCode1 option[value='"+ brnch +"']", '#hiCareNewForm').attr("selected", true);
+        $('#cmdBranchCode1').trigger('click');
+    }else{
+        //$('#cmdBranchCode').prop("disabled", true);
+        doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'cmdBranchCode1', 'S', '');
+        $('#cmdBranchCode1').trigger('click');
+    }
+
+	//$("#cmdBranchCode1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
 	$("#cmbModel1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
 
-	console.log("MEM_TYPE" + MEM_TYPE);
+	/* console.log("MEM_TYPE" + MEM_TYPE);
 	if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){
 		$('#cmdBranchCode1', '#hiCareNewForm').attr("disabled", true);
 		$('#cmbModel1', '#hiCareNewForm').attr("disabled", true);
-	}
+	} */
 
     // Moblie Popup Setting
     Common.setMobilePopup(true, false, 'serialGrid');
@@ -409,26 +421,46 @@ function fn_scanClosePop(){
 }
 
 function saveFunc(){
-    var rdata = AUIGrid.getGridData(scanGridId);
+	var checkResult = fn_checkEmpty();
+    if(!checkResult) {
+        return false;
+    }
 
+	if(Common.confirm("Do you want to save?", function(){
+    	var items = {
+    			"branchCode":$('#cmdBranchCode1').val()
+                , "model":$('#cmbModel1').val()
+                , "scanNo":$('#scanNo').val()
+            };
+
+    	Common.ajax("POST", "/services/hiCare/saveHiCareNew.do", items, function(result) {
+           if(result.code == "00"){
+               Common.alert("The record(s) save successfully.");
+               $("#btnScanClose").click();
+           }
+       });
+   }));
+}
+
+function fn_checkEmpty(){
+    var checkResult = true;
+
+    var rdata = AUIGrid.getGridData(scanGridId);
     if(rdata == null || rdata.length == 0){
         Common.alert("No record to save.");
-    }else{
-        if(Common.confirm("Do you want to save?", function(){
-        	var items = {
-        			"branchCode":$('#cmdBranchCode1').val()
-                    , "model":$('#cmbModel1').val()
-                    , "scanNo":$('#scanNo').val()
-                };
-
-        	Common.ajax("POST", "/services/hiCare/saveHiCareNew.do", items, function(result) {
-               if(result.code == "00"){
-                   Common.alert("The record(s) save successfully.");
-                   $("#btnScanClose").click();
-               }
-           });
-       }));
+        checkResult = false;
+        return checkResult;
+    }else if(FormUtil.isEmpty($("#cmdBranchCode1").val()) ) {
+        Common.alert('Please select a Branch to proceed.');
+        checkResult = false;
+        return checkResult;
+    }else if(FormUtil.isEmpty($("#cmbModel1").val()) ) {
+        Common.alert('Please select a Model to proceed.');
+        checkResult = false;
+        return checkResult;
     }
+
+    return checkResult;
 }
 </script>
 
@@ -458,12 +490,13 @@ function saveFunc(){
             <tr id="type">
                 <th scope="row"><spring:message code='service.grid.BranchCode'/></th>
                 <td>
-                    <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p readOnly ">
+                    <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p"></select>
+                    <%-- <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p readOnly ">
                         <option value="">Choose One</option>
                             <c:forEach var="list" items="${branchList}" varStatus="status">
                                 <option value="${list.codeId}">${list.codeName}</option>
                             </c:forEach>
-                    </select>
+                    </select> --%>
                 </td>
                 <th scope="row"><spring:message code='service.grid.model'/></th>
                 <td>
