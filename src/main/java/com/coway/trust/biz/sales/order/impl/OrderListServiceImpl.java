@@ -360,7 +360,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 
     		// DELVRY_NO 조회
     		Map<String, Object> schDelvryNoMap = new HashMap();
-    		schDelvryNoMap.put("refDocNo", params.get("hidRefDocNo") );
+    		schDelvryNoMap.put("refDocNo", String.valueOf(pReturnParam.get("retnNo")));
     		Map<String, Object> dlvryNoMap = orderListMapper.selectDelvryNo(schDelvryNoMap);
 
 		if( null !=rtnValue){
