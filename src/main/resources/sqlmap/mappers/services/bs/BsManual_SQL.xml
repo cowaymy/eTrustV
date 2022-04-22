@@ -5528,4 +5528,22 @@ SELECT DISTINCT A.ORD_ID FROM (
         AND RESULT_ID = #{resultId}
     </update>
 
+    <update id="selectFilterSerial" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+          FROM LOG0100M
+        WHERE SERIAL_NO = #{serialNo}
+        and LOC_ID = #{codyId}
+    </update>
+
+    <update id="updateHsFilterSerial" parameterType="Map">
+        UPDATE LOG0100M
+        SET
+        STUS_CODE = 'C'
+        , LAST_SALES_ORD_ID = #{salesOrdId}
+        , HS_NO = #{serviceNo}
+        , UPD_USER_ID = '349'
+        , UPD_DT = SYSDATE
+        WHERE SERIAL_NO = #{serialNo}
+    </update>
+
 </mapper>

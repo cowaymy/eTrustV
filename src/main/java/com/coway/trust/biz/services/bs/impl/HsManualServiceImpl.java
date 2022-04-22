@@ -488,7 +488,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             // docSub2.put("bsResultCrtDt");
 
             String vstkId = String.valueOf(docSub.get("stkId"));
+            String filterBarcdNewSerialNo = String.valueOf(docSub.get("filterBarcdNewSerialNo"));
             logger.debug("= STOCK ID : {}", vstkId);
+            logger.debug("= filterBarcdNewSerialNo : {}", filterBarcdNewSerialNo);
 
             /*
              * String filterLastserial = hsManualMapper.select0087DFilter(docSub);
@@ -537,6 +539,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
               } else {
                 hsManualMapper.updateHsFilterSiriNo2(docSub); // UPDATE SAL0087D
               }
+
+              //April 2022 start - HLTANG - filter barcode scanner - update log0100m after serial has been used
+              if (!"".equals(filterBarcdNewSerialNo) && !("null").equals(filterBarcdNewSerialNo) && filterBarcdNewSerialNo != null) {
+            	  Map<String, Object> filter = new HashMap<String, Object>();
+            	  filter.put("serialNo", filterBarcdNewSerialNo);
+            	  filter.put("salesOrdId", params.get("hidSalesOrdId"));
+            	  filter.put("serviceNo", params.get("serviceNo"));
+
+            	  int LocationID_Rev = 0;
+                  if (Integer.parseInt(params.get("hidCodyId").toString()) != 0) {
+                	  filter.put("codyId", params.get("hidCodyId"));
+                	  LocationID_Rev = hsManualMapper.getMobileWarehouseByMemID(filter);
+                  }
+
+                  int filterCnt = hsManualMapper.selectFilterSerial(filter);
+            	  if (filterCnt == 0) {
+          	        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "HS Result Error : Cody did not have this serial on hand "+ filter.get("serialNo").toString());
+          	      }
+
+            	  hsManualMapper.updateHsFilterSerial(filter);
+              }
+              //April 2022 end - HLTANG
             }
           }
 

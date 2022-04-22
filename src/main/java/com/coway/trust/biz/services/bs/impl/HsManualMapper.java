@@ -344,4 +344,8 @@ public interface HsManualMapper {
 
   void editHSEditSettleDate(Map<String, Object> params);
 
+  int selectFilterSerial(Map<String, Object> params);
+
+  void updateHsFilterSerial(Map<String, Object> params);
+
 }
