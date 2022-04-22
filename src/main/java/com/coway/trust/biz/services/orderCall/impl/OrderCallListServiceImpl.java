@@ -293,19 +293,25 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
         }
 
-        smsMessage = "COWAY:Dear Customer, Ur Appt for  *Installation/After Service/Product collection is set on "+ installMaster.get("appDate") +". For Enquiry 1800-888-111.";
+        smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
+        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
 
-        //IF APP TYPE != AUX,TRL,EDU, IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READT TO DO
-        if((params.get("appType") != "AUX" || params.get("appType") != "TRL" || params.get("appType") != "EDU")
-        		&& params.get("callStatus") == "20" && params.get("feedBackCode") == "225"){
-        	Map<String, Object> smsList = new HashMap<>();
-            smsList.put("userId", sessionVO.getUserId());
-            smsList.put("smsType", 975);
-            smsList.put("smsMessage", smsMessage);
-            smsList.put("smsMobileNo", params.get("telM").toString());
+	       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
+	       {
+	    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+	    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on") //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+	    			   && params.get("callTypeId").equals("257")){ //ONLY FOR NEW INSTALLATION ORDER (PR ONLY HAVE SMS AFTER INSTALLATION COMPLETE)
 
-            sendSms(smsList);
-        }
+		       	       Map<String, Object> smsList = new HashMap<>();
+		               smsList.put("userId", sessionVO.getUserId());
+		               smsList.put("smsType", 975);
+		               smsList.put("smsMessage", smsMessage);
+		               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+
+		               sendSms(smsList);
+	    	   }
+	      }
+
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL
       }

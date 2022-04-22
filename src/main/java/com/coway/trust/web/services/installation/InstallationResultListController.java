@@ -823,6 +823,7 @@ public class InstallationResultListController {
                 }
               }
 
+
               resultValue = installationResultListService.insertInstallationResult_2(param, sessionVO);
 
               // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021

@@ -3638,6 +3638,7 @@
                         ,AFT_PSI
                         ,AFT_LPM
                         ,TURB_LVL
+                        ,WATER_SRC_TYPE
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3674,6 +3675,7 @@
             , #{aftPsi}
             , #{aftLpm}
             , #{turbLvl}
+            , #{waterSrcType}
     )
   </insert>
 
@@ -4832,6 +4834,7 @@
                       ,AFT_PSI = #{aftPsi}
                       ,AFT_LPM = #{aftLpm}
                       ,TURB_LVL = #{turbLvl}
+                      ,WATER_SRC_TYPE = #{waterSrcType}
 
                     <if test="atchFileGrpId != null and atchFileGrpId != ''">
                       ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
@@ -5191,7 +5194,8 @@ Q.NAME CUST_NAME ,
  S.STATE ,
  S.AREA ,
  S.CITY ,
- S.POSTCODE
+ S.POSTCODE ,
+ C.WATER_SRC_TYPE
 FROM SAL0045D A
 LEFT JOIN SAL0046D B ON A.SALES_ORD_ID = B.SALES_ORD_ID AND B.CALL_ENTRY_ID NOT IN (0)
 LEFT JOIN SAL0047D C ON B.INSTALL_ENTRY_ID = C.ENTRY_ID
@@ -5440,12 +5444,4 @@ AND J.CODE IN ('COM','FAL','CAN')
     SELECT U.USER_ID, U.USER_NAME FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME WHERE M.MEM_ID = #{memId} AND M.STUS = 1 AND ROWNUM = 1
 </select>
 
-<select id="selectFailReasonCode" parameterType="Map" resultType="egovMap">
-     SELECT  EXTENT1.DEFECT_CODE
-    FROM SYS0100M EXTENT1
-    WHERE 1=1
-        AND DEFECT_STATUS = 1
-        AND DEFECT_TYP in( 'IFA', 'IFB')
-        AND EXTENT1.DEFECT_ID = #{failId}
-  </select>
 </mapper>

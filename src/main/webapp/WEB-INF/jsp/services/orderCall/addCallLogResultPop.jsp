@@ -600,6 +600,7 @@
    <input type="hidden" value="${salesOrdNo}" id="salesOrdNo" name="salesOrdNo" />
    <input type="hidden" value="${orderCall.rcdTms}" id="rcdTms" name="rcdTms" />
    <input type="hidden" value="${orderCall.callTypeId}" id="callTypeId" name="callTypeId" />
+   <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
 
    <table class="type1" id="hideContent1">
     <!-- table start -->
@@ -670,7 +671,14 @@
        name="feedBackCode">
         <option value=""><spring:message code='service.title.FeedbackCode' /></option>
         <c:forEach var="list" items="${callStatus}" varStatus="status">
-         <option value="${list.resnId}">${list.c1}</option>
+            <c:choose>
+	            <c:when test="${list.resnId=='225'}">
+	              <option value="${list.resnId}" selected>${list.c1}</option>
+	            </c:when>
+	            <c:otherwise>
+	              <option value="${list.resnId}">${list.c1}</option>
+	            </c:otherwise>
+            </c:choose>
         </c:forEach>
       </select></td>
      </tr>
@@ -696,6 +704,16 @@
         <option value="A">A</option>
         <option value="B">B</option>
       </select></td>
+     </tr>
+     <tr>
+     <th scope="row">Mobile</th>
+      <td colspan="3">
+	      <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" />
+	      <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
+	      <br><br>
+	      <span>Total SMS Count :</span><input type="text" id="smsCount" name="smsCount" class="readonly" readonly="readonly" style="width:10%;">
+     </td>
+     <th></th><td colspan="3"></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.Remark' /></th>

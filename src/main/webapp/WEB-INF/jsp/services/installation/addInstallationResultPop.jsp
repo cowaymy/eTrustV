@@ -1841,6 +1841,10 @@
       <input type="hidden" value="${installResult.appntDt}" id="hidAppntDt" name="hidAppntDt" />
       <input type="hidden" value="${installResult.appntTm}" id="hidAppntTm" name="hidAppntTm" />
       <input type="hidden" id="insAsItemList" name="insAsItemList"/>
+      <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
+      <input type="hidden" value="${installResult.salesOrdNo}" id="salesOrdNo" name="salesOrdNo" />
+
+
       <table class="type1 mb1m">
         <!-- table start -->
         <caption>table</caption>
@@ -1909,7 +1913,12 @@
           </tr> --%>
           <tr>
             <th scope="row"><spring:message code='service.title.AddUsedParts' /></th>
-            <td colspan='3'><label><input type="checkbox" id='chkCrtAS' name='chkCrtAS' onChange="fn_chkCrtAS(this)" /></label></td>
+            <td><label><input type="checkbox" id='chkCrtAS' name='chkCrtAS' onChange="fn_chkCrtAS(this)" /></label></td>
+            <th scope="row">Mobile</th>
+	        <td>
+	          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
+	          <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
+	        </td>
           </tr>
         </tbody>
       </table>
