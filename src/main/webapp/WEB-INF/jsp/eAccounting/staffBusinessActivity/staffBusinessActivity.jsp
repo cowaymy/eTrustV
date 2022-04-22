@@ -1183,6 +1183,8 @@ var myGridPros = {
          var data = $("#advRepayForm").serializeJSON();
          var apprLineGrid = AUIGrid.getOrgGridData(approveLineGridID);
          data.apprLineGrid = apprLineGrid;
+         var gridData = GridCommon.getEditData(newGridID);
+         data.gridData = gridData;
 
          console.log(data);
 

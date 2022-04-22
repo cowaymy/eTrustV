@@ -245,7 +245,48 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
 
     @Override
     public void insertAppvDetails(Map<String, Object> params) {
-    	staffBusinessActivityMapper.insertAppvDetails(params);
+    	if(params.get("advType").equals("4"))
+		{
+    		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
+
+    		List<Object> addList = (List<Object>) gridData.get("add"); // 추가 리스트 얻기
+    		LOGGER.debug("gridData AddList: =====================================>> " + addList);
+
+    		if (addList.size() > 0) {
+    			Map hm = null;
+    			// biz처리
+    			for (Object map : addList) {
+    				hm = (HashMap<String, Object>) map;
+    				hm.put("clmNo", (String) params.get("clmNo"));
+    				int clmSeq = staffBusinessActivityMapper.selectNextClmSeq((String) params.get("clmNo"));
+    				hm.put("clmSeq", clmSeq);
+    				hm.put("appvItmSeq", "1");
+    				hm.put("clmType", "A2");
+    				hm.put("userId", params.get("userId"));
+    				hm.put("expType", params.get("expType"));
+    				hm.put("expTypeNm", params.get("expTypeNm"));
+    				hm.put("advType", params.get("advType"));
+    				hm.put("amt", ((Map<String, Object>) map).get("totAmt"));
+    				hm.put("advType", params.get("advType"));
+    				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
+    				hm.put("memAccId", params.get("memAccId"));
+    				hm.put("costCenter", params.get("costCenter"));
+                	hm.put("glAccNo", "12400200");
+                	hm.put("glAccNm", "ADVANCES - STAFF (COMPANY EVENTS)");
+                	hm.put("atchFileGrpId", params.get("atchFileGrpId"));
+    				LOGGER.debug("insertBusinessActivityDetail =====================================>>  " + hm);
+    				staffBusinessActivityMapper.insertAppvDetails(hm);
+    			}
+    		}
+    		LOGGER.info("추가 : {}", addList.toString());
+
+		}
+		else
+		{
+			staffBusinessActivityMapper.insertAppvDetails(params);
+		}
+
+//    	staffBusinessActivityMapper.insertAppvDetails(params);
     }
 
     @Override

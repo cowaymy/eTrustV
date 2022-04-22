@@ -1099,7 +1099,7 @@
             J.NET_AMT,
             NVL(J.INVC_CUR, 'MYR') CUR,
             NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
-            C.ADV_REM REM,
+            REGEXP_REPLACE(C.ADV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) REM,
             C.ADV_REFD_MODE,
             C.ADV_REFD_REF
         FROM FCM0004M A

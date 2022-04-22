@@ -441,18 +441,19 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
 
                         if("3".equals(invoAppvItems.get("advType").toString()) || "4".equals(invoAppvItems.get("advType").toString())) {
-                            invoAppvItems.put("grandAmt", invoAppvItems.get("netAmt"));
                             invoAppvItems.put("taxAmt", 0);
                             invoAppvItems.put("nonTaxAmt", 0);
                             invoAppvItems.put("taxCode", "");
 
                             if("3".equals(invoAppvItems.get("advType").toString())) {
-                                invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
+                            	invoAppvItems.put("grandAmt", invoAppvItems.get("netAmt"));
+                            	invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
                                 invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
                             }
 
                             if("4".equals(invoAppvItems.get("advType").toString())) {
-                            	invoAppvItems.put("expAmt", 0);
+                            	//invoAppvItems.put("expAmt", 0);
+                            	invoAppvItems.put("grandAmt", 0);
                             	invoAppvItems.put("balAmt", 0);
                                 invoAppvItems.put("docDt", invoAppvItems.get("invcDt"));
                                 invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt"));
@@ -465,11 +466,13 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 expAmt = (BigDecimal)invoAppvItems.get("totAmt");
                                 //diffAmt = reqAmt - expAmt;
                                 diffAmt= reqAmt.subtract(expAmt);
+                                invoAppvItems.put("expAmt", expAmt);
                                 if(diffAmt.compareTo(BigDecimal.ZERO) == -1) //if(diffAmt < 0)
                                 {
                                 	//insert settlement request with itemize total as 1 record
                                 	//insert balance amt 1 line
                                 	diffAmtFlg = true;
+//                                	invoAppvItems.put("balAmt", diffAmt);
                                 }
                             }
                         }
@@ -489,6 +492,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("glCode", "12400200");
 				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("expAmt", "0");
+				    	appvSettlementInfo.put("balAmt", "0");
+				    	appvSettlementInfo.put("taxAmt", "0");
+				    	appvSettlementInfo.put("nonTaxAmt", "0");
 				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
 				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
 				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
@@ -502,6 +509,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("userId", params.get("userId"));
 				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("balAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("grandAmt", 0);
+				    	refundRecordInfo.put("expAmt", "0");
+				    	refundRecordInfo.put("taxAmt", "0");
+				    	refundRecordInfo.put("nonTaxAmt", "0");
 				    	refundRecordInfo.put("glCode", "22200400");
 				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
 				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
@@ -522,6 +533,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("glCode", "12400200");
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("expAmt", "0");
+				    	appvSettlementInfo.put("balAmt", "0");
+				    	appvSettlementInfo.put("taxAmt", "0");
+				    	appvSettlementInfo.put("nonTaxAmt", "0");
 				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
 				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
 				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
@@ -536,10 +551,11 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("glCode", "22200400");
 				    	refundRecordInfo.put("memAccId", "");
-				    	refundRecordInfo.put("grandAmt", refundRecordInfo.get("balAmt"));
+//				    	refundRecordInfo.put("grandAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("grandAmt", 0);
 				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
 				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
-				    	refundRecordInfo.put("balAmt", "0");
+				    	refundRecordInfo.put("balAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("expAmt", "0");
 				    	refundRecordInfo.put("taxAmt", "0");
 				    	refundRecordInfo.put("nonTaxAmt", "0");

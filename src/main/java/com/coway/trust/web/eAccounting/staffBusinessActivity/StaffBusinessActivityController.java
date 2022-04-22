@@ -389,7 +389,7 @@ public class StaffBusinessActivityController {
         LOGGER.debug("businessActivityAdvance :: insert approval details");
         // Insert Approval Details
         Map hm = new HashMap<String, Object>();
-        hm.put("appvPrcssNo", appvPrcssNo);
+        params.put("appvPrcssNo", appvPrcssNo);
         String advType = "";
         if(params.containsKey("reqAdvType")) {
             advType = (String) params.get("reqAdvType");
@@ -397,53 +397,54 @@ public class StaffBusinessActivityController {
             advType = (String) params.get("refAdvType_h");
         }
 
+        params.put("advType", advType);
         if("1".equals(advType) || "3".equals(advType)) {
-            hm.put("appvItmSeq", "1");
-            hm.put("memAccId", params.get("payeeCode"));
-            hm.put("payDueDt", params.get("refdDate"));
-            hm.put("expType", params.get("reqAdvType"));
+            params.put("appvItmSeq", "1");
+            params.put("memAccId", params.get("payeeCode"));
+            params.put("payDueDt", params.get("refdDate"));
+            params.put("expType", params.get("reqAdvType"));
             if("3".equals(advType)) {
-                hm.put("expTypeNm", "Staff Business Activity Expenses");
-                hm.put("glAccNo", "1240300"); //12400200
-                hm.put("glAccNm", "Advances-Staff Travel Expenses");
-                hm.put("billPeriodFr", params.get("trvPeriodFr"));
-                hm.put("billPeriodTo", params.get("trvPeriodTo"));
-                hm.put("clamUn", params.get("clamUn"));
-                hm.put("budgetCode", params.get("budgetCode"));
-                hm.put("budgetCodeName", params.get("budgetCodeName"));
+            	params.put("expTypeNm", "Staff Business Activity Expenses");
+            	params.put("glAccNo", "1240300"); //12400200
+            	params.put("glAccNm", "Advances-Staff Travel Expenses");
+            	params.put("billPeriodFr", params.get("trvPeriodFr"));
+            	params.put("billPeriodTo", params.get("trvPeriodTo"));
+            	params.put("clamUn", params.get("clamUn"));
+            	params.put("budgetCode", params.get("budgetCode"));
+            	params.put("budgetCodeName", params.get("budgetCodeName"));
             }
-            hm.put("costCenter", params.get("costCenterCode"));
-            hm.put("costCenterNm", params.get("costCenterName"));
-            hm.put("amt", params.get("reqTotAmt"));
-            hm.put("expDesc", params.get("busActReqRem"));
-            hm.put("atchFileGrpId", params.get("atchFileGrpId"));
-            hm.put("userId", sessionVO.getUserId());
-            hm.put("advCurr", "MYR");
+            params.put("costCenter", params.get("costCenterCode"));
+            params.put("costCenterNm", params.get("costCenterName"));
+            params.put("amt", params.get("reqTotAmt"));
+            params.put("expDesc", params.get("busActReqRem"));
+            params.put("atchFileGrpId", params.get("atchFileGrpId"));
+            params.put("userId", sessionVO.getUserId());
+            params.put("advCurr", "MYR");
 
-            staffBusinessActivityService.insertAppvDetails(hm);
+            staffBusinessActivityService.insertAppvDetails(params);
             LOGGER.debug("businessActivityAdvance :: insertAppvDetails");
 
         } else if("2".equals(advType) || "4".equals(advType)) {
 
-            hm.put("appvItmSeq", "1");
-            hm.put("memAccId", params.get("refPayeeCode"));
-            hm.put("invcNo", params.get("trvBankRefNo"));
-            hm.put("invcDt", params.get("refAdvRepayDate"));
-            hm.put("expType", params.get("refAdvType"));
+        	params.put("appvItmSeq", "1");
+        	params.put("memAccId", params.get("refPayeeCode"));
+        	params.put("invcNo", params.get("trvBankRefNo"));
+        	params.put("invcDt", params.get("refAdvRepayDate"));
+        	params.put("expType", params.get("refAdvType"));
             if("4".equals(advType)) {
-                hm.put("expTypeNm", "Staff Business Activity Expenses Repayment");
-                hm.put("glAccNo", "12400200");
-                hm.put("glAccNm", "ADVANCES - STAFF (COMPANY EVENTS)");
-                hm.put("budgetCode", params.get("budgetCode"));
-                hm.put("budgetCodeName", params.get("budgetCodeName"));
+            	params.put("expTypeNm", "Staff Business Activity Expenses Repayment");
+            	params.put("glAccNo", "12400200");
+            	params.put("glAccNm", "ADVANCES - STAFF (COMPANY EVENTS)");
+            	params.put("budgetCode", params.get("budgetCode"));
+            	params.put("budgetCodeName", params.get("budgetCodeName"));
             }
-            hm.put("costCenter", params.get("refCostCenterCode"));
-            hm.put("amt", params.get("refTotExp"));
-            hm.put("expDesc", params.get("trvRepayRem"));
-            hm.put("atchFileGrpId", params.get("refAtchFileGrpId"));
-            hm.put("userId", sessionVO.getUserId());
+            params.put("costCenter", params.get("refCostCenterCode"));
+            params.put("amt", params.get("refTotExp"));
+            params.put("expDesc", params.get("trvRepayRem"));
+            params.put("atchFileGrpId", params.get("refAtchFileGrpId"));
+            params.put("userId", sessionVO.getUserId());
 
-            staffBusinessActivityService.insertAppvDetails(hm);
+            staffBusinessActivityService.insertAppvDetails(params);
             LOGGER.debug("businessActivityAdvance :: insertAppvDetails");
         }
 

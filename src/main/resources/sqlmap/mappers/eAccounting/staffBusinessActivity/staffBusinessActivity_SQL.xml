@@ -221,7 +221,7 @@
                 NVL((SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT PREV_CLM_NO FROM FCM0027M WHERE CLM_NO = A.CLM_NO))ADV_REQ_CLM_NO,
                 A.ADV_REFD_MODE,
                 A.ADV_REFD_REF,
-                NVL(A.TOT_AMT,0) REQ_ADV_TOT_AMT,
+                NVL(H.TOT_AMT,0) REQ_ADV_TOT_AMT,
             </if>
             A.FILE_ATCH_GRP_ID,
             C.ATCH_FILE_ID,
@@ -240,6 +240,9 @@
             ON A.BANK_CODE = F.BANK_ID
         LEFT JOIN SYS0013M G ON G.CODE_ID = A.ADV_OCC
         <if test="advType == 3">
+        LEFT JOIN FCM0027M H ON H.ADV_REFD_NO = A.CLM_NO
+        </if>
+        <if test="advType == 4">
         LEFT JOIN FCM0027M H ON H.ADV_REFD_NO = A.CLM_NO
         </if>
         WHERE A.CLM_NO = #{clmNo}
@@ -604,7 +607,7 @@
             INVC_CUR
         ) VALUES (
             #{appvPrcssNo},
-            #{appvItmSeq},
+            (SELECT NVL(MAX(APPV_ITM_SEQ) + 1, 1) AS APPV_ITM_SEQ FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo}),
             #{invcNo},
             NVL(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), NULL),
             #{memAccId},
@@ -701,13 +704,13 @@
             A.APPV_LINE_PRCSS_CNT,
             TO_CHAR(J.INVC_DT, 'DD/MM/YYYY') INVC_DT,
             J.INVC_NO,
-            B.MEM_ACC_ID,
+            C.MEM_ACC_ID,
             D.MEM_ACC_NAME,
-            B.COST_CENTR,
-            B.COST_CENTR_NAME,
+            C.COST_CENTER COST_CENTR,
+            C.COST_CENTER_NM COST_CENTR_NAME,
             F.NAME BANK,
             C.BANK_ACC_NO,
-            B.PAY_DUE_DT,
+            C.ADV_REFD_DT PAY_DUE_DT,
             TO_CHAR(C.ADV_PRD_FR, 'DD/MM/YYYY') ADV_PRD_FR,
             TO_CHAR(C.ADV_PRD_TO, 'DD/MM/YYYY') ADV_PRD_TO,
             (C.ADV_PRD_TO - C.ADV_PRD_FR) + 1 DATEDIFF,
@@ -715,14 +718,14 @@
             C.ADV_LOC_TO,
             J.REM EXP_DESC,
             TO_CHAR(C.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
-            B.APPV_AMT REPAY_AMT,
+            J.AMT REPAY_AMT,
             I.CLM_NO ADV_REFD_CLM_NO,
             TO_CHAR(I.ADV_PRD_FR, 'DD/MM/YYYY') REF_TRV_PRD_FR,
             TO_CHAR(I.ADV_PRD_TO, 'DD/MM/YYYY') REF_TRV_PRD_TO,
-            B.ATCH_FILE_GRP_ID,
+            C.FILE_ATCH_GRP_ID ATCH_FILE_GRP_ID,
             H.ATCH_FILE_ID,
             H.ATCH_FILE_NAME,
-            B.APPV_ITM_SEQ,
+            J.CLM_SEQ APPV_ITM_SEQ,
             J.GL_ACC_NO GL_ACC_CODE,
             J.GL_ACC_NM GL_ACC_CODE_NAME,
             J.BGT_CODE BUDGET_CODE,
@@ -732,18 +735,18 @@
             J.NET_AMT,
             NVL(J.INVC_CUR, 'MYR') CUR,
             NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
-            C.ADV_REM REM,
+            REGEXP_REPLACE(C.ADV_REM , '(^[[:space:]]+)|([[:space:]]+$)', NULL) REM,
             C.ADV_OCC,
             I.TOT_AMT ADV_AMT,
             C.ADV_REFD_MODE REFUND_MODE,
             C.ADV_REFD_REF BANK_REF
         FROM FCM0004M A
-        LEFT JOIN FCM0015D B
-            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        <!-- LEFT JOIN FCM0015D B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO -->
         LEFT JOIN FCM0027M C
             ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
         LEFT JOIN FCM0006M D
-            ON B.MEM_ACC_ID = D.MEM_ACC_ID
+            ON C.MEM_ACC_ID = D.MEM_ACC_ID
         LEFT JOIN SYS0013M E
             ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = E.CODE
         LEFT JOIN SYS0004M F
@@ -989,7 +992,8 @@
 	    LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE
 	    LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
 	    LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
-	    LEFT JOIN FCM0015D G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+	    LEFT JOIN
+        (SELECT * FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo} AND ROWNUM = 1) G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
 	    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
     </select>
 
@@ -1033,7 +1037,8 @@
 		    LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE
 		    LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
 		    LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
-		    LEFT JOIN FCM0015D G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+		    LEFT JOIN
+		    (SELECT * FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo} AND ROWNUM = 1) G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
 		    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo})x
     </select>
 
