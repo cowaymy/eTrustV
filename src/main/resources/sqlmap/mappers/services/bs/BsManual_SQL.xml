@@ -5528,12 +5528,12 @@ SELECT DISTINCT A.ORD_ID FROM (
         AND RESULT_ID = #{resultId}
     </update>
 
-    <update id="selectFilterSerial" parameterType="Map" resultType="int">
+    <select id="selectFilterSerial" parameterType="Map" resultType="int">
         SELECT COUNT(1) AS CNT
           FROM LOG0100M
         WHERE SERIAL_NO = #{serialNo}
         and LOC_ID = #{codyId}
-    </update>
+    </select>
 
     <update id="updateHsFilterSerial" parameterType="Map">
         UPDATE LOG0100M
