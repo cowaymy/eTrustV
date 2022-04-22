@@ -710,8 +710,8 @@
       <td colspan="3">
 	      <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" />
 	      <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
-	      <br><br>
-	      <span>Total SMS Count :</span><input type="text" id="smsCount" name="smsCount" class="readonly" readonly="readonly" style="width:10%;">
+	      <!-- <br><br>
+	      <span>Total SMS Count :</span><input type="text" id="smsCount" name="smsCount" class="readonly" readonly="readonly" style="width:10%;"> -->
      </td>
      <th></th><td colspan="3"></td>
      </tr>
