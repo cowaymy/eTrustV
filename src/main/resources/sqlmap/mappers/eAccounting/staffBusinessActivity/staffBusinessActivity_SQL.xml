@@ -217,18 +217,20 @@
                 <!-- (SELECT EXP_TYPE FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_EXP,
                 (SELECT EXP_TYPE_NM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_NM,
                 (SELECT REM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_REM,
-                NVL((SELECT AMT FROM FCM0028D WHERE CLM_NO = A.CLM_NO), 0) as OTH_AMT, -->
-                NVL((SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT PREV_CLM_NO FROM FCM0027M WHERE CLM_NO = A.CLM_NO))ADV_REQ_CLM_NO,
+                NVL((SELECT AMT FROM FCM0028D WHERE CLM_NO = A.CLM_NO), 0) as OTH_AMT,
+                NVL((SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT PREV_CLM_NO FROM FCM0027M WHERE CLM_NO = A.CLM_NO))ADV_REQ_CLM_NO, -->
+                A.MAIN_REQ_NO ADV_REQ_CLM_NO,
                 A.ADV_REFD_MODE,
                 A.ADV_REFD_REF,
-                NVL(H.TOT_AMT,0) REQ_ADV_TOT_AMT,
+                <!-- NVL(H.TOT_AMT,0) REQ_ADV_TOT_AMT, -->
+                (SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = A.MAIN_REQ_NO) REQ_ADV_TOT_AMT,
             </if>
             A.FILE_ATCH_GRP_ID,
             C.ATCH_FILE_ID,
             C.ATCH_FILE_NAME,
             A.APPV_PRCSS_NO
         FROM FCM0027M A
-        LEFT JOIN SYS0070M B
+        LEFT JOIN (SELECT ATCH_FILE_GRP_ID,ATCH_FILE_ID FROM (SELECT A.*,  RANK() OVER (PARTITION BY ATCH_FILE_GRP_ID ORDER BY ATCH_FILE_ID DESC) row_num FROM SYS0070M A) WHERE row_num=1) B
             ON A.FILE_ATCH_GRP_ID = B.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D C
             ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
@@ -571,8 +573,8 @@
 
     <update id="updateTotal" parameterType="Map">
         UPDATE FCM0027M
-        SET TOT_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo}),
-        NET_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo})
+        SET TOT_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo})
+        <!-- NET_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo}) -->
         WHERE CLM_NO = #{clmNo}
     </update>
 
@@ -719,9 +721,12 @@
             J.REM EXP_DESC,
             TO_CHAR(C.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
             J.AMT REPAY_AMT,
-            I.CLM_NO ADV_REFD_CLM_NO,
-            TO_CHAR(I.ADV_PRD_FR, 'DD/MM/YYYY') REF_TRV_PRD_FR,
-            TO_CHAR(I.ADV_PRD_TO, 'DD/MM/YYYY') REF_TRV_PRD_TO,
+<!--            I.CLM_NO ADV_REFD_CLM_NO, -->
+            C.MAIN_REQ_NO ADV_REFD_CLM_NO,
+<!--            TO_CHAR(I.ADV_PRD_FR, 'DD/MM/YYYY') REF_TRV_PRD_FR, -->
+<!--            TO_CHAR(I.ADV_PRD_TO, 'DD/MM/YYYY') REF_TRV_PRD_TO, -->
+            (SELECT TO_CHAR(ADV_PRD_FR, 'DD/MM/YYYY') FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO) REF_TRV_PRD_FR,
+            (SELECT TO_CHAR(ADV_PRD_TO, 'DD/MM/YYYY') FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO) REF_TRV_PRD_TO,
             C.FILE_ATCH_GRP_ID ATCH_FILE_GRP_ID,
             H.ATCH_FILE_ID,
             H.ATCH_FILE_NAME,
@@ -737,9 +742,11 @@
             NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
             REGEXP_REPLACE(C.ADV_REM , '(^[[:space:]]+)|([[:space:]]+$)', NULL) REM,
             C.ADV_OCC,
-            I.TOT_AMT ADV_AMT,
+<!--            I.TOT_AMT ADV_AMT, -->
+            NVL((SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO),0) ADV_AMT,
             C.ADV_REFD_MODE REFUND_MODE,
-            C.ADV_REFD_REF BANK_REF
+            C.ADV_REFD_REF BANK_REF,
+            J.INVC_CUR CURRENCY
         FROM FCM0004M A
         <!-- LEFT JOIN FCM0015D B
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO -->
@@ -751,12 +758,12 @@
             ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = E.CODE
         LEFT JOIN SYS0004M F
             ON C.BANK_CODE = F.BANK_ID
-        LEFT JOIN SYS0070M G
+        LEFT JOIN (SELECT ATCH_FILE_GRP_ID,ATCH_FILE_ID FROM (SELECT A.*,  RANK() OVER (PARTITION BY ATCH_FILE_GRP_ID ORDER BY ATCH_FILE_ID DESC) row_num FROM SYS0070M A) WHERE row_num=1) G
             ON C.FILE_ATCH_GRP_ID = G.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D H
             ON G.ATCH_FILE_ID = H.ATCH_FILE_ID
-        LEFT JOIN FCM0027M I
-                ON A.APPV_REQ_KEY_NO = I.ADV_REFD_NO
+        <!-- LEFT JOIN FCM0027M I
+                ON A.APPV_REQ_KEY_NO = I.ADV_REFD_NO -->
         LEFT JOIN FCM0028D J
                 ON J.CLM_NO = C.CLM_NO
         WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
@@ -785,7 +792,8 @@
             UPD_USER_ID,
             ADV_OCC,
             ADV_REFD_MODE,
-            ADV_REFD_REF
+            ADV_REFD_REF,
+            MAIN_REQ_NO
         ) SELECT
             #{clmNo},
             #{refAdvType},
@@ -807,7 +815,8 @@
             #{userId},
             #{expType},
             #{refMode},
-            #{refBankRef}
+            #{refBankRef},
+            #{advReqClmNo}
         FROM FCM0027M
         WHERE CLM_NO = #{advReqClmNo}
     </insert>
@@ -1138,7 +1147,8 @@
             ADV_OCC,
             ADV_REFD_MODE,
             ADV_REFD_REF,
-            PREV_CLM_NO
+            PREV_CLM_NO,
+            MAIN_REQ_NO
         )
         SELECT
             #{newClmNo} CLM_NO,
@@ -1162,7 +1172,8 @@
             ADV_OCC,
             ADV_REFD_MODE,
             ADV_REFD_REF,
-            CLM_NO
+            CLM_NO,
+            MAIN_REQ_NO
         FROM FCM0027M
         WHERE CLM_NO = #{clmNo}
     </insert>

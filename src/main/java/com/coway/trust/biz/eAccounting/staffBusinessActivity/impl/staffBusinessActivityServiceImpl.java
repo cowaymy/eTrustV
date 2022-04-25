@@ -247,15 +247,26 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     public void insertAppvDetails(Map<String, Object> params) {
     	if(params.get("advType").equals("4"))
 		{
-    		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
+   		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
+    		//List<Object> gridData = (List<Object>) params.get("gridData");
+//    		List<Object> addList = (List<Object>) gridData.get("add"); // 추가 리스트 얻기
+   		List<Object> itemGrid= null;
+   		if((List<Object>) gridData.get("add") != null)
+   		{
+   			itemGrid = (List<Object>) gridData.get("add");
+   		}
+   		else if((List<Object>)gridData.get(AppConstants.AUIGRID_ALL) != null)
+   		{
+   			itemGrid = (List<Object>)gridData.get(AppConstants.AUIGRID_ALL);
+   		}
 
-    		List<Object> addList = (List<Object>) gridData.get("add"); // 추가 리스트 얻기
-    		LOGGER.debug("gridData AddList: =====================================>> " + addList);
+    	LOGGER.debug("gridData gridData: =====================================>> " + gridData);
+    	LOGGER.debug("gridData itemGrid: =====================================>> " + itemGrid);
 
-    		if (addList.size() > 0) {
+    		if (gridData.size() > 0) {
     			Map hm = null;
     			// biz처리
-    			for (Object map : addList) {
+    			for (Object map : itemGrid) {
     				hm = (HashMap<String, Object>) map;
     				hm.put("clmNo", (String) params.get("clmNo"));
     				int clmSeq = staffBusinessActivityMapper.selectNextClmSeq((String) params.get("clmNo"));
@@ -278,7 +289,7 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     				staffBusinessActivityMapper.insertAppvDetails(hm);
     			}
     		}
-    		LOGGER.info("추가 : {}", addList.toString());
+    		LOGGER.info("추가 : {}", gridData.toString());
 
 		}
 		else

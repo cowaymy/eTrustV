@@ -188,7 +188,7 @@
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewTrvRem").text(myGridData[0].rem);
-            $("#viewTrvTotAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
+            $("#viewTrvTotAmt").text(myGridData[0].currency + " " + AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
             $("#settViewReq").hide();
             $("#settViewReqTotAmt").hide();
@@ -223,13 +223,13 @@
             $("#refRepayDate").text(myGridData[0].advRefdDt);
             $("#refBankInRefNo").text(myGridData[0].invcNo);
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
-            $("#viewTrvTotAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
+            $("#viewTrvTotAmt").text(myGridData[0].currency + " " + AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
             $("#viewTrvRem").text(myGridData[0].rem);
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewAdvReqClmNo").text(myGridData[0].advRefdClmNo);
-            $("#viewAdvReqTotAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].advAmt, "#,##0.00"));
-            $("#viewAdvSettBalAmt").text("RM " + AUIGrid.formatNumber(myGridData[0].advAmt - myGridData[0].totAmt, "#,##0.00"));
+            $("#viewAdvReqTotAmt").text(myGridData[0].currency + " " + AUIGrid.formatNumber(myGridData[0].advAmt, "#,##0.00"));
+            $("#viewAdvSettBalAmt").text(myGridData[0].currency+ " " + AUIGrid.formatNumber(myGridData[0].advAmt - myGridData[0].totAmt, "#,##0.00"));
             $("#viewBankRef").text(myGridData[0].bankRef);
             $("#advOcc option[value=" + myGridData[0].advOcc + "]").attr('selected', true);
             $("#viewRefundMode option[value=" + myGridData[0].refundMode + "]").attr('selected', true);

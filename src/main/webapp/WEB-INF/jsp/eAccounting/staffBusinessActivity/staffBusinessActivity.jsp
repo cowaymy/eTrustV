@@ -377,7 +377,7 @@ var myGridPros = {
         });
 
         $("#advRepayForm :file").change(function() {
-            var div = $(this).parents(".auto_file");
+            var div = $(this).parents(".auto_file2");
             var oriFileName = div.find(":text").val();
 
             for(var i = 0; i < attachmentList.length; i++) {
@@ -387,8 +387,8 @@ var myGridPros = {
             }
         });
 
-        $(".auto_file a:contains('Delete')").click(function() {
-            var div = $(this).parents(".auto_file");
+        $(".auto_file2 a:contains('Delete')").click(function() {
+            var div = $(this).parents(".auto_file2");
             var oriFileName = div.find(":text").val();
 
             for(var i = 0; i < attachmentList.length; i++) {
@@ -637,6 +637,8 @@ var myGridPros = {
     function fn_busActReqPop() {
         console.log("fn_busActReqPop");
 
+        advType = "3";
+        $(".input_text").val("");
         $("#bankName").val("CIMB BANK BHD");
         $("#bankId").val("3");
         $("#costCenterCode").val("${costCentr}");
@@ -1183,7 +1185,7 @@ var myGridPros = {
          var data = $("#advRepayForm").serializeJSON();
          var apprLineGrid = AUIGrid.getOrgGridData(approveLineGridID);
          data.apprLineGrid = apprLineGrid;
-         var gridData = GridCommon.getEditData(newGridID);
+         var gridData = GridCommon.getGridData(newGridID);
          data.gridData = gridData;
 
          console.log(data);
@@ -1225,11 +1227,13 @@ var myGridPros = {
              return checkRefundFlg;
          }
 
-         if($("input[name=trvAdvFileSelector]")[0].files[0] == "" || $("input[name=trvAdvFileSelector]")[0].files[0] == null) {
-         //if(FormUtil.isEmpty($(".input_text").val())) {
-             Common.alert("Please attach supporting document zipped files!")
-             checkRefundFlg = false;
-             return checkRefundFlg;
+         if(FormUtil.isEmpty($("#refClmNo").val())){
+        	 if($("input[name=trvAdvFileSelector]").get(0).files.length == 0) {
+                 //if(FormUtil.isEmpty($(".input_text").val())) {
+                     Common.alert("Please attach supporting document zipped files!")
+                     checkRefundFlg = false;
+                     return checkRefundFlg;
+                 }
          }
 
          var newFlag = fn_saveSubmitCheckRowValidation();
@@ -1238,7 +1242,8 @@ var myGridPros = {
         	 checkRefundFlg = false;
          }
 
-         return checkRefundFlg;
+         return false;
+         /* return checkRefundFlg; */
      }
 
    //Check settlement submission details row has data
@@ -2411,11 +2416,11 @@ var myGridPros = {
 					    </td>
 					</tr> -->
 					<tr>
-						<th scope="row">Attachment</th>
+						<th scope="row">Attachment<span class="must">*</span></th>
 						<td colspan=2>
 							<div class="auto_file2">
 								<!-- auto_file2 start -->
-								<input id="fileSelector" name="fileSelector" type="file" title="file add" accept=".rar, .zip"  />
+								<input id="fileSelector" name="fileSelector" type="file" title="file add" />
 							</div>
 							<!-- auto_file2 end -->
 						</td>
@@ -2625,17 +2630,24 @@ var myGridPros = {
                     -->
                     <tr>
                         <th scope="row">Remarks<span class="must">*</span></th>
-                        <td colspan="2"><textarea id="trvRepayRem" name="trvRepayRem"
+                        <td colspan="3"><textarea id="trvRepayRem" name="trvRepayRem"
                                 placeholder="Enter up to 100 characters" maxlength="100"
                                 style="resize: none"></textarea></td>
                     </tr>
                     <tr>
                         <th scope="row">Attachment<span class="must">*</span></th>
-                        <td colspan="2">
+                        <!-- <td colspan="2" id="trvAdvFileSelector"
+                                    name="trvAdvFileSelector" >
                             <div class="auto_file attachment_file w100p">
-                                <input type="file" id="trvAdvFileSelector"
-                                    name="trvAdvFileSelector" title="file add" />
+                                <input type="file"  title="file add" />
                             </div>
+                        </td> -->
+                        <td colspan=3>
+                            <div class="auto_file2">
+                                <!-- auto_file2 start -->
+                                <input id="trvAdvFileSelector" name="trvAdvFileSelector" type="file" title="file add" />
+                            </div>
+                            <!-- auto_file2 end -->
                         </td>
                     </tr>
         </table>
