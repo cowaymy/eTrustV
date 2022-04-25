@@ -1846,10 +1846,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("resultReportEmailNo", CommonUtils.nvl(params.get("resultReportEmailNo")).toString());
     installResult.put("resultAcceptanceName", CommonUtils.nvl(params.get("resultAcceptanceName")).toString());
 
-    installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
+    /*installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
-    installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());
+    installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());*/
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
