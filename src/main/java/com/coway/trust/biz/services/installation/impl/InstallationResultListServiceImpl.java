@@ -3619,7 +3619,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  return stockMapper.selectStkCatType(params);
   }
 
-  @Override
+/*  @Override
   public void sendSms(Map<String, Object> smsList){
     int userId = (int) smsList.get("userId");
     SmsVO sms = new SmsVO(userId, 975);
@@ -3628,31 +3628,31 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
-  }
+  }*/
 
 
-  @SuppressWarnings("unchecked")
+  /*@SuppressWarnings("unchecked")
   @Override
   public void sendEmail() {
     EmailVO email = new EmailVO();
-    /*String emailTitle = paymentApiMapper.getEmailTitle(params);*/
+    String emailTitle = paymentApiMapper.getEmailTitle(params);
     Map<String, Object> params = new HashMap<>();
     String emailTitle = "Hello World";
 
-    /*Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
-    params.putAll(additionalParams);*/
+    Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
+    params.putAll(additionalParams);
 
  //   List<String> emailNo = new ArrayList<String>();
 
     List<String> emailNo = Arrays.asList("alex.lau@coway.com.my","jiahua.yong@coway.com.my","keyi.por@coway.com.my");
 
- /*if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+ if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
       emailNo.add(CommonUtils.nvl(params.get("email1")));
     }
 
     if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
       emailNo.add(CommonUtils.nvl(params.get("email2")));
-    }*/
+    }
 
     String text = "";
     text += "Dear All,\r\n\r\n";
@@ -3692,7 +3692,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     boolean isResult = false;
 
     isResult = adaptorService.sendEmail(email, false);
-  }
+  }*/
   //////////////////////////////EMAIL TESTING FROM MOBILE API
 
   private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,

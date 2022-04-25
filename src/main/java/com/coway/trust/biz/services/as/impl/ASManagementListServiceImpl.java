@@ -1954,7 +1954,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     }
 
 
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
+    /*LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
     LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
     LOGGER.debug("CHECKPOINT BY YONG - get AS_CT_CODE:" + svc0004dmap.get("AS_CT_CODE"));
     LOGGER.debug("CHECKPOINT BY YONG - get TEL_M:" + svc0004dmap.get("TEL_M").toString());
@@ -1977,7 +1977,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     if(smsMessage != "")
     {
     	sendSms(smsList);
-    }
+    }*/
 
     LOGGER.debug("================asResult_insert - END ================");
     return em;
@@ -4200,7 +4200,7 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     return returnemp;
   }
 
-  @Override
+ /* @Override
   public void sendSms(Map<String, Object> smsList){
 	//int userId = (int) smsList.get("userId");
     //SmsVO sms = new SmsVO(userId, 975);
@@ -4210,5 +4210,5 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
-  }
+  }*/
 }

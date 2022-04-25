@@ -1568,9 +1568,9 @@
 			SERIAL_NO : $("#stockSerialNo").val(),
 			SERIAL_REQUIRE_CHK_YN : $("#hidSerialRequireChkYn").val(),
 			// DATA FOR SMS
-			AS_CT_CODE : $('#ddlCTCodeText').val(),
+			/* AS_CT_CODE : $('#ddlCTCodeText').val(),
 			AS_FAIL_RESN_DESC : $('#ddlFailReason option:selected').text(),
-			TEL_M : $("#txtTelMobile").text(),
+			TEL_M : $("#txtTelMobile").text(), */
 
 		}
 
