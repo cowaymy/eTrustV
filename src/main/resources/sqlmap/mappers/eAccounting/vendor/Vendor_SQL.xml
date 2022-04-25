@@ -813,9 +813,9 @@
             #{newFileAtchGrpId},
             /*APPV_PRCSS_NO,*/
             REM,
-            CRT_USER_ID,
+            #{userId},
             SYSDATE,
-            UPD_USER_ID,
+            #{userId},
             SYSDATE,
             VENDOR_REQ_NO
         FROM FCM0029D
