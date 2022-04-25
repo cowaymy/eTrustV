@@ -53,32 +53,42 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Product</th>
     <td>${result.product }</td>
-    <th scope="row">Payment Mode</th>
-    <td>${result.payMode }</td>
+    <th scope="row" style="display:none;">Payment Mode</th>
+    <td style="display:none;">${result.payMode }</td>
+    <th></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Installed Date</th>
     <td>${result.installDt }</td>
-    <th scope="row">Issued Bank</th>
-    <td>${result.bankName }</td>
+    <th scope="row" style="display:none;">Issued Bank</th>
+    <td style="display:none;">${result.bankName }</td>
+    <th></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Pair with I-Care</th>
     <td>${icare }</td>
-    <th scope="row">Aging Month (Avg. Last 6 mth)</th>
-    <td>${aging.agingMth }</td>
+    <th scope="row" style="display:none;">Aging Month (Avg. Last 6 mth)</th>
+    <td style="display:none;">${aging.agingMth }</td>
+    <th></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Eligible for Key In</th>
     <td>${verify }</td>
-    <th scope="row">Unit Count</th>
-    <td>${result.untCnt}</td>
+    <th scope="row" style="display:none;">Unit Count</th>
+    <td style="display:none;">${result.untCnt}</td>
+    <th></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row">Own Purchase</th>
     <td>${result.ownPurchse}</td>
+    <th></th>
+    <td></td>
 </tr>
-<tr>
+<tr style="display:none;" >
     <th scope="row">Installation Address</th>
     <td colspan="3">${result.instAdd }</td>
 </tr>

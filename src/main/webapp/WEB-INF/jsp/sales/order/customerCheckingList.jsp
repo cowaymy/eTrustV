@@ -30,7 +30,6 @@
             $("#_promoId").val(event.item.promoId);
 
 
-
             Common.popupDiv("/sales/customer/selectCustomerOrderView.do", $("#popForm").serializeJSON());
         });
         // 셀 클릭 이벤트 바인딩
@@ -91,17 +90,20 @@
                 dataField : "payModeCode",
                 headerText : 'Payment Mode',
                 width : "10%",
-                editable : false
+                editable : false,
+                visible : false
             },{
                 dataField : "pvMonth",
                 headerText : 'PV Month',
                 width : "10%",
-                editable : false
+                editable : false,
+                visible : false
             },{
                 dataField : "pvYear",
                 headerText : 'PV Year',
                 width : "10%",
-                editable : false
+                editable : false,
+                visible : false
             },{
                 dataField : "chsStus",
                 headerText : 'CHS',
