@@ -326,6 +326,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
         params.put("userId", sessionVO.getUserId());
         params.put("totAmt", params.get("settlementTotalExp"));
         params.put("costCenterCode", params.get("settlementCostCenter"));
+        params.put("memAccId", params.get("settlementMemAccId"));
 
         int mstUpd = vendorAdvanceMapper.updateAdvMst_FCM27M(params);
 
