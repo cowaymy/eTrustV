@@ -10,7 +10,7 @@
         NAME CODE_NAME,
         NAME DESCRIPTION
         FROM SYS0038M
-        WHERE STUS_CODE_ID in (1,5,10)
+        WHERE STUS_CODE_ID in (1,5,6)
         ORDER BY CODE_NAME ASC
     </select>
 

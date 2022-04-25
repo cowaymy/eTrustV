@@ -585,6 +585,9 @@
 				    <li><p class="link_btn">
                             <a href="#" id="rootRawData">ROOT Raw Data</a>
                         </p></li>
+                    <li><p class="link_btn">
+                            <a href="#" id="Performance">Performance</a>
+                        </p></li>
 				</ul>
 				<p class="hide_btn">
 					<a href="#"><img

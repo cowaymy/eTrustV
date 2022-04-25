@@ -1901,6 +1901,15 @@
                     </ul>
                     <!-- tabCT (Customer) - Start -->
                     <article class="tap_area">
+                            <aside class="title_line" style="display:flex;justify-content:space-between;">
+                                <!-- title_line start -->
+                                <h3 class="col-lg-6">
+                                    Current Customer
+                                </h3>
+                                <h3 class="d-flex">
+                                    New Customer
+                                </h3>
+                            </aside>
                         <section class="search_table">
                             <table class="type1">
                                 <caption>table</caption>

@@ -2042,7 +2042,7 @@
                             <li id="tabCP"><a href="#"><spring:message
                                         code="sal.tap.title.contactPerson" /></a></li>
                             <li id="tabRP" class="blind"><a href="#"><spring:message
-                                        code="sal.title.text.rentalPaySetting" /></a></li>
+                                        code="sal.title.text.paymentChnnl" /></a></li>
                             <li id="tabBG" class="blind"><a href="#"><spring:message
                                         code="sal.page.subtitle.rentalBillingGroup" /></a></li>
                             <li id="tabIN"><a href="#"><spring:message
@@ -2069,7 +2069,6 @@
                                         <col style="width: 170px" />
                                         <col style="width: *" />
                                     </colgroup>
-
                                     <tbody>
                                         <tr>
                                             <th scope="row"><spring:message
