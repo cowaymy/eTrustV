@@ -2667,7 +2667,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19 //UNDER UAT
-    String smsMessage = "";
+   /* String smsMessage = "";
     LOGGER.debug("================ApptypeID================" + ApptypeID);
     LOGGER.debug("================chkSMS================" + installResult.get("chkSMS"));
     LOGGER.debug("================custType================" + installResult.get("custType"));
@@ -2695,7 +2695,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     if(smsMessage != "")
     {
     	sendSms(smsList); // rollback for SMS triggering due to UAT not completely buyoff
-    }
+    }*/
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
 
