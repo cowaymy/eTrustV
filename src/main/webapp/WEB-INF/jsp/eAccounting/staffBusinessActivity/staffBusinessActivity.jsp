@@ -1241,9 +1241,7 @@ var myGridPros = {
          if(!newFlag){
         	 checkRefundFlg = false;
          }
-
-         return false;
-         /* return checkRefundFlg; */
+         return checkRefundFlg;
      }
 
    //Check settlement submission details row has data
