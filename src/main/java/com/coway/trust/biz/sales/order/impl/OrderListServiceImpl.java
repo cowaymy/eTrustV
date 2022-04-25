@@ -204,7 +204,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
       }
     }
 
-    String smsMessage = "";
+   /* String smsMessage = "";
     if(String.valueOf(params.get("stkRetnStusId")).equals("4") &&
       !(String.valueOf(params.get("appTypeId")).equals("144") || String.valueOf(params.get("appTypeId")).equals("145") || String.valueOf(params.get("appTypeId")).equals("5764"))
       && !(String.valueOf(params.get("stkRetnResnId")).equals("1993"))
@@ -221,7 +221,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     if(smsMessage != "")
     {
     	sendSms(smsList);
-    }
+    }*/
     logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
 
     return rMp;
