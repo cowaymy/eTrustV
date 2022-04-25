@@ -184,7 +184,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("hidCallType", String.valueOf(installResult.get("typeId")));
 
 
-        params.put("resultIcMobileNo", String.valueOf(insApiresult.get("resultIcMobileNo")));
+        //params.put("resultIcMobileNo", String.valueOf(insApiresult.get("resultIcMobileNo")));
         // ctCode
         // failId
         // failLct
@@ -206,6 +206,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("aftPsi", String.valueOf(insApiresult.get("aftPsi")));
         params.put("aftLpm", String.valueOf(insApiresult.get("aftLpm")));
         params.put("turbLvl", String.valueOf(insApiresult.get("turbLvl")));
+        //params.put("waterSrcType", String.valueOf(insApiresult.get("waterSrcType")));
 
 /*        params.put("boosterPump", String.valueOf(params.get("boosterPump")));
         params.put("aftPsi", String.valueOf(params.get("aftPsi")));
@@ -484,6 +485,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("roomTemp", String.valueOf(params.get("roomTemp")));
       params.put("waterSourceTemp", String.valueOf(params.get("waterSourceTemp")));
       params.put("turbLvl", String.valueOf(params.get("turbLvl")));
+      //params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
       params.put("remark", String.valueOf(params.get("remark")));
       params.put("failLct", String.valueOf(params.get("failLocCde")));
       params.put("failDeptChk", String.valueOf(params.get("failBfDepWH")));

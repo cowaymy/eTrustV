@@ -551,7 +551,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logger.debug(" TOTAL UPDATE RECORD LOG0038D : " + log38cnt);
     logger.debug(" TOTAL INSERT RECORD LOG0039D : " + log39cnt);
 
-    EgovMap  PRFailReason = MSvcLogApiMapper.selectPRFailReason(params);
+    /*EgovMap  PRFailReason = MSvcLogApiMapper.selectPRFailReason(params);
 	params.put("FailReasonCode", PRFailReason.get("code"));
 
 
@@ -574,8 +574,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logger.debug("TEST001");
 
     Map<String, Object> smsList = new HashMap<>();
-    /*smsList.put("userId", params.get("userId").toString());
-    smsList.put("userId", String.valueOf(params.get("userId")));*/
+    smsList.put("userId", params.get("userId").toString());
+    smsList.put("userId", String.valueOf(params.get("userId")));
     smsList.put("userId", params.get("userId"));
     logger.debug("TEST002" + params.get("userId"));
 
@@ -593,7 +593,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
     	logger.debug("Into  sendSms");
     	sendSms(smsList);
-    }
+    }*/
 
     logger.debug("====================setPRFailJobRequest=====================");
   }
@@ -1035,7 +1035,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Autowired
   private AdaptorService adaptorService;
 
-  @Override
+ /* @Override
   public void sendSms(Map<String, Object> smsList){
     //int userId = (int) smsList.get("userId");
 
@@ -1055,5 +1055,5 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     SmsResult smsResult = adaptorService.sendSMS(sms);
 
     logger.debug("Trobleshooting 0099");
-  }
+  }*/
 }

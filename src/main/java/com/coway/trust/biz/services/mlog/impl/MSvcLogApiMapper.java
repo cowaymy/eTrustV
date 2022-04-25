@@ -180,7 +180,7 @@ public interface MSvcLogApiMapper {
 
   int updateFailed_LOG0038D(Map<String, Object> params);
 
-  EgovMap selectPRFailReason(Map<String, Object> params);
+  //EgovMap selectPRFailReason(Map<String, Object> params);
 
   int isPrdRtnAlreadyResult(Map<String, Object> params);
 

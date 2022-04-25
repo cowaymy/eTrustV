@@ -56,10 +56,13 @@ public class InstallFailJobRequestForm {
 
   private String failBfDepWH;
 
-  private String resultIcMobileNo;
+  //private String resultIcMobileNo;
 
   private String failDeptChk;
 
+ /* @ApiModelProperty(value = "waterSrcType")
+  private int waterSrcType;
+*/
 
   public String getTurbLvl() {
 	return turbLvl;
@@ -205,13 +208,21 @@ public String getFailDeptChk() {
     this.failBfDepWH = failBfDepWH;
   }
 
-  public String getResultIcMobileNo() {
+  /*public String getResultIcMobileNo() {
 	return resultIcMobileNo;
   }
 
   public void setResultIcMobileNo(String resultIcMobileNo) {
 	this.resultIcMobileNo = resultIcMobileNo;
   }
+
+	public int getWaterSrcType() {
+	    return waterSrcType;
+	}
+
+	public void setWaterSrcType(int waterSrcType) {
+	  this.waterSrcType = waterSrcType;
+	}*/
 
 public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
 

@@ -1095,7 +1095,7 @@
          , TO_CHAR(APPNT_DT) AS appointment_Date
          , TO_CHAR(APPNT_TM) AS appointment_Time
          , TO_CHAR(JOB_SESION) AS job_Session
-         , TO_CHAR(CHECKIN_DT) AS check_In_Date
+         , TO_CHAR(CHECKIN_DT) AS check_In_Dates
          , TO_CHAR(CHECKIN_TM) AS check_In_Time
          , TO_CHAR(CHECKIN_GPS) AS check_In_Gps
          , TO_CHAR(CUST_TYPE) AS customer_Type
@@ -4016,14 +4016,14 @@ SELECT MST.*
     )
   </insert>
 
-  <select id="selectPRFailReason" parameterType="Map" resultType="egovMap">
+  <!-- <select id="selectPRFailReason" parameterType="Map" resultType="egovMap">
     SELECT RESN_ID,
            CODE,
            RESN_DESC
     FROM  SYS0032M
     WHERE 1=1
       AND RESN_ID = #{failReasonCode}
-  </select>
+  </select> -->
 
   <update id="updateFailed_LOG0038D" parameterType="Map">
     UPDATE LOG0038D SET STUS_CODE_ID   = '21',

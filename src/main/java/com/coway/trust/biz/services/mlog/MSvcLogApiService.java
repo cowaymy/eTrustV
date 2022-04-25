@@ -230,5 +230,5 @@ public interface MSvcLogApiService {
 
   void insertSVC0115D(Map<String, Object> params);
 
-  void sendSms(Map<String, Object> smsList);
+  //void sendSms(Map<String, Object> smsList);
 }
