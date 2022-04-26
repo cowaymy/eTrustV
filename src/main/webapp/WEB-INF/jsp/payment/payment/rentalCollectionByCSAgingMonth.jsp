@@ -95,8 +95,9 @@ var columnLayout = [
     , {dataField : "bsMonth", headerText : "CS Month", editable : false}
     , {dataField : "renMem", headerText : "Rental Membership", editable : false, width : 150}
     , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
-    , {dataField : "codyCode", headerText : "Cody Code", editable : false,width : 100}
+    , {dataField : "codyCode", headerText : "HT Code", editable : false,width : 100}
     , {dataField : "codyName", headerText : "<spring:message code='pay.head.memberName'/>", editable : false,width : 150}
+    , {dataField : "status", headerText : "Status", editable : false,width : 100}
     , {dataField : "custName", headerText : "<spring:message code='pay.head.custName'/>", editable : false,width : 150 }
     , {dataField : "telMobile", headerText : "<spring:message code='pay.head.mobile'/>", editable : false,width : 100}
     , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}

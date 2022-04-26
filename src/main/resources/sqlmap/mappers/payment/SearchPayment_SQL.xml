@@ -1835,6 +1835,7 @@
             A.SALES_ORD_NO,
             A.CODY_CODE,
             A.CODY_NAME,
+            SYD.CODE AS STATUS,
             A.CUST_NAME,
             A.TEL_MOBILE,
             A.TEL_HOME,
@@ -1870,6 +1871,8 @@
             ON A.SALES_ORD_ID = E.SALES_ORD_ID AND A.PRVMNTH = E.BANK_DTL_ID
         LEFT JOIN PAY0041D F ON D.CTRL_ID = E.BANK_DTL_CTRL_ID
         LEFT JOIN SYS0094M SYC ON SYC.CODE = E.BANK_DTL_APPR_CODE AND SYC.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+         JOIN ORG0001D G ON G.MEM_CODE = A.CODY_CODE
+         JOIN SYS0038M SYD ON SYD.STUS_CODE_ID = G.STUS
         WHERE 1=1
         <if test="orgCode != '' ">
            AND A.ORG_CODE = #{orgCode}
