@@ -69,7 +69,6 @@
       });
 
       fn_getHTandCTDetails();
-
       $("#ddlCTCodeText").change(function(){
           var ddlCTCodeTextSelectedVal = $("#ddlCTCodeText option:selected").val();
           var selectedCTbranchId = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchId;
@@ -407,7 +406,7 @@
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
     //$("#ddlCTCodeText").val(result[0].c12);
-    $("#ddlCTCodeText").val(result[0].c11);
+    $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlDSCCodeText").val(result[0].c5);
 
     $("#ddlWarehouse").val(result[0].asWhId);
@@ -597,7 +596,7 @@
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
       $("#ddlCTCode").val(selectedItems[0].item.asMemId);
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-      $("#ddlCTCodeText").val(selectedItems[0].item.asMemId);
+      $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
       $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
     }
 
@@ -2477,8 +2476,9 @@
        </th>
        <td>
          <input type="hidden" title="" placeholder="ddlCTCode" class="" id='ddlCTCode' name='ddlCTCode' />
+         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText' />
          <!--<input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText'/>  -->
-            <select id='ddlCTCodeText' name='ddlCTCodeText' class="w100p"  disabled="disabled"></select>
+          <!--  <select id='ddlCTCodeText' name='ddlCTCodeText' class="w100p"  disabled="disabled"></select>-->
          <!--
            <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
            <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
