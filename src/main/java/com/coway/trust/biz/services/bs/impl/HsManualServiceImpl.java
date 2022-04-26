@@ -553,6 +553,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 	  LocationID_Rev = hsManualMapper.getMobileWarehouseByMemID(filter);
                   }
 
+                  filter.put("lastLocId", LocationID_Rev);
                   int filterCnt = hsManualMapper.selectFilterSerial(filter);
             	  if (filterCnt == 0) {
           	        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "HS Result Error : Cody did not have this serial on hand "+ filter.get("serialNo").toString());

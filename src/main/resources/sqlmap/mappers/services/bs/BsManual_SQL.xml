@@ -5532,7 +5532,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         SELECT COUNT(1) AS CNT
           FROM LOG0100M
         WHERE SERIAL_NO = #{serialNo}
-        and LOC_ID = #{codyId}
+        and LAST_LOC_ID = #{lastLocId}
     </select>
 
     <update id="updateHsFilterSerial" parameterType="Map">
@@ -5544,6 +5544,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , UPD_USER_ID = '349'
         , UPD_DT = SYSDATE
         WHERE SERIAL_NO = #{serialNo}
+        and LAST_LOC_ID = #{lastLocId}
     </update>
 
 </mapper>
