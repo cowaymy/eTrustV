@@ -294,4 +294,6 @@ public interface MSvcLogApiMapper {
   List<EgovMap> getOrdDetail(Map<String, Object> params);
 
   void insertSVC0115D(Map<String, Object> params);
+
+  String selectSVC0115D(Map<String, Object> params);
 }

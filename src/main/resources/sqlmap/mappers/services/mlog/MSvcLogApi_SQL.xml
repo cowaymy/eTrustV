@@ -5505,4 +5505,8 @@ SELECT MST.*
     )
   </insert>
 
+  <select id="selectSVC0115D" parameterType="Map" resultType="String">
+    SELECT NVL(BNDL_ID,'') FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}
+  </select>
+
 </mapper>

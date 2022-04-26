@@ -1028,6 +1028,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   }
 
   @Override
+  public String selectSVC0115D(Map<String, Object> params) {
+    return MSvcLogApiMapper.selectSVC0115D(params);
+  }
+
+  @Override
   public void insertSVC0115D(Map<String, Object> params) {
     MSvcLogApiMapper.insertSVC0115D(params);
   }

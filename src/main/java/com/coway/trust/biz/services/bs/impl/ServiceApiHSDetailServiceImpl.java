@@ -220,9 +220,11 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 
               logger.debug("### SP_SVC_LOGISTIC_REQUEST_SERIAL params  : " + spMap.toString());
 
+              String bndlId = MSvcLogApiService.selectSVC0115D(params);
               // ONGHC - START INSERT SVC0115D FOR HC BARCODE MATCHING PURPOSE..
-              MSvcLogApiService.insertSVC0115D(params);
-
+              if(bndlId != null){ //hltang - to check whether is HC order
+            	  MSvcLogApiService.insertSVC0115D(params);
+              }
             } else {
               // SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
               servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
