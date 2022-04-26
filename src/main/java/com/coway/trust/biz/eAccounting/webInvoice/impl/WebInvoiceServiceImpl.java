@@ -452,9 +452,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
                             }
 
-                            invoAppvItems.put("docDt", appvInfoAndItems.get(0).get("invcDt"));
-                            docDate = (String)invoAppvItems.get("docDt");
                             if("4".equals(invoAppvItems.get("advType").toString())) {
+                            	invoAppvItems.put("docDt", appvInfoAndItems.get(0).get("invcDt"));
+                                docDate = (String)invoAppvItems.get("docDt");
                             	//invoAppvItems.put("expAmt", 0);
                             	invoAppvItems.put("grandAmt", 0);
                             	invoAppvItems.put("balAmt", 0);
