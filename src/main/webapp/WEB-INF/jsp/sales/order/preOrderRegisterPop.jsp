@@ -682,9 +682,12 @@
             if(file.size > 2000000){
             	msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-            	checkFileValid = false;
+            	myFileCaches[1].file['checkFileValid'] = false;
+            	Common.alert(msg);
+            }
+            else{
+            	myFileCaches[1].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -710,9 +713,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -737,9 +743,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[3].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[3].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -764,9 +773,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[4].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[4].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -791,9 +803,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[5].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[5].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -818,9 +833,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[6].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[6].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -845,9 +863,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[7].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[7].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -872,9 +893,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[8].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[8].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -899,9 +923,12 @@
             if(file.size > 2000000){
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
-            checkFileValid = true;
             if(msg != null && msg != ''){
-                checkFileValid = false;
+                myFileCaches[9].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[9].file['checkFileValid'] = true;
             }
             console.log(myFileCaches);
         });
@@ -1327,11 +1354,12 @@
             msg += "* Please upload copy of NRIC<br>";
         }
 
-        if(checkFileValid == false){
-        	isValid = false;
-            msg += "* File uploaded only allowed for picture format less than 2MB and 20 wordings<br>";
-            checkFileValid = true;
-        }
+        $.each(myFileCaches, function(i, j) {
+             if(myFileCaches[i].file.checkFileValid == false){
+            	 isValid = false;
+                msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 20 wordings<br>";
+            }
+        });
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
