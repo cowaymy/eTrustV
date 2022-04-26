@@ -411,13 +411,17 @@ $(function(){
 
 
 function fn_scanClosePop(){
+
+	$("#search").click();
+    $('#newPop').remove();
+
     // Moblie Popup Setting
-    if(Common.checkPlatformType() == "mobile") {
+    /* if(Common.checkPlatformType() == "mobile") {
         opener.fn_PopSerialClose();
     } else {
         $("#search").click();
         $('#newPop').remove();
-    }
+    } */
 }
 
 function saveFunc(){
