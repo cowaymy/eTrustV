@@ -670,7 +670,7 @@
             }
 
             var msg = '';
-            if(file.name.length>20){
+            if(file.name.length > 30){
             	msg += "*File name wording should be not more than 20 alphabet.<br>";
             }
 
