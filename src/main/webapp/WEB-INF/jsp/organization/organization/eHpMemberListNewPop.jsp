@@ -9,6 +9,7 @@ var optionArea = {chooseMessage: "4. Area"};
 var myFileCaches = {};
 var atchFileGrpId = 0;
 var issuedBankTxt;
+var checkFileValid = true;
 
 function fn_memberSave(){
 
@@ -157,6 +158,26 @@ $(function(){
         }else if(file != null){
             myFileCaches[1] = {file:file};
         }
+        var msg = '';
+        if(file.name.length>20){
+            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[1].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[1].file['checkFileValid'] = true;
+        }
         console.log(myFileCaches);
     });
 
@@ -166,6 +187,26 @@ $(function(){
             delete myFileCaches[4];
         }else if(file != null){
             myFileCaches[4] = {file:file};
+        }
+        var msg = '';
+        if(file.name.length>20){
+            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[4].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[4].file['checkFileValid'] = true;
         }
         console.log(myFileCaches);
     });
@@ -177,6 +218,26 @@ $(function(){
         }else if(file != null){
             myFileCaches[3] = {file:file};
         }
+        var msg = '';
+        if(file.name.length>20){
+            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[3].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[3].file['checkFileValid'] = true;
+        }
         console.log(myFileCaches);
     });
 
@@ -186,6 +247,26 @@ $(function(){
             delete myFileCaches[5];
         }else if(file != null){
             myFileCaches[5] = {file:file};
+        }
+        var msg = '';
+        if(file.name.length>20){
+            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[5].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[5].file['checkFileValid'] = true;
         }
         console.log(myFileCaches);
     });
@@ -197,6 +278,26 @@ $(function(){
         }else if(file != null){
             myFileCaches[6] = {file:file};
         }
+        var msg = '';
+        if(file.name.length>20){
+            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[6].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[6].file['checkFileValid'] = true;
+        }
         console.log(myFileCaches);
     });
 
@@ -206,6 +307,26 @@ $(function(){
             delete myFileCaches[2];
         }else if(file != null){
             myFileCaches[2] = {file:file};
+        }
+        var msg = '';
+        if(file.name.length>20){
+            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[2].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[2].file['checkFileValid'] = true;
         }
         console.log(myFileCaches);
     });
@@ -1265,9 +1386,15 @@ function fn_validFile() {
     }
     if(FormUtil.isEmpty($('#passportFile').val().trim())) {
         isValid = false;
-        msg += "* Please upload copy of Passport phoyo<br>";
+        msg += "* Please upload copy of Passport photo<br>";
     }
 
+    $.each(myFileCaches, function(i, j) {
+        if(myFileCaches[i].file.checkFileValid == false){
+            isValid = false;
+           msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 20 wordings<br>";
+       }
+   });
 
     if(!isValid) Common.alert("Save eHP - Add New Member" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -1861,7 +1988,7 @@ function fn_validFile() {
                 <th scope="row">NRIC<span class="must">*</span></th>
                 <td >
                     <div class="auto_file2">
-                        <input type="file" title="file add" id="nricFile" accept="image/*"/>
+                        <input type="file" title="file add" id="nricFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
                         <label>
                             <input type='text' class='input_text' readonly='readonly' />
                             <span class='label_text'><a href='#'>Upload</a></span>
@@ -1874,7 +2001,7 @@ function fn_validFile() {
                 <th scope="row">Bank Passbook/Statement Copy<span class="must">*</span></th>
                 <td >
                     <div class="auto_file2">
-                        <input type="file" title="file add" id="statementFile" accept="image/*"/>
+                        <input type="file" title="file add" id="statementFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
                         <label>
                             <input type='text' class='input_text' readonly='readonly' />
                             <span class='label_text'><a href='#'>Upload</a></span>
@@ -1887,7 +2014,7 @@ function fn_validFile() {
                 <th scope="row">Passport Photo<span class="must">*</span></th>
                 <td >
                     <div class="auto_file2">
-                        <input type="file" title="file add" id="passportFile" accept="image/*"/>
+                        <input type="file" title="file add" id="passportFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
                         <label>
                         <input type='text' class='input_text'  />
                         <span class='label_text'><a href='#'>Upload</a></span>
@@ -1900,7 +2027,7 @@ function fn_validFile() {
                 <th scope="row">Payment RM120</th>
                 <td >
                     <div class="auto_file2">
-                        <input type="file" title="file add" id="paymentFile" accept="image/*"/>
+                        <input type="file" title="file add" id="paymentFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
                         <label>
                             <input type='text' class='input_text'  />
                             <span class='label_text'><a href='#'>Upload</a></span>
@@ -1913,7 +2040,7 @@ function fn_validFile() {
                 <th scope="row">Declaration letter/Others form</th>
                 <td >
                     <div class="auto_file2">
-                        <input type="file" title="file add" id="otherFile" accept="image/*"/>
+                        <input type="file" title="file add" id="otherFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
                         <label>
                             <input type='text' class='input_text'  />
                             <span class='label_text'><a href='#'>Upload</a></span>
@@ -1927,7 +2054,7 @@ function fn_validFile() {
                 <th scope="row">Declaration letter/Others form 2</th>
                 <td >
                     <div class="auto_file2">
-                        <input type="file" title="file add" id="otherFile2" accept="image/*"/>
+                        <input type="file" title="file add" id="otherFile2" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
                         <label>
                             <input type='text' class='input_text'  />
                             <span class='label_text'><a href='#'>Upload</a></span>
@@ -1939,7 +2066,9 @@ function fn_validFile() {
             </tr>
 
             <tr>
-                <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+                <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG, PDF) less than 2 MB.
+			    <br>
+			    File rename wording no more than 20 alphabet (including spacing, symbol).</span></td>
             </tr>
             </tbody>
             </table>
