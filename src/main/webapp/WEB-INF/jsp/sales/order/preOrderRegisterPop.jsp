@@ -671,7 +671,7 @@
 
             var msg = '';
             if(file.name.length > 30){
-            	msg += "*File name wording should be not more than 20 alphabet.<br>";
+            	msg += "*File name wording should be not more than 30 alphabet.<br>";
             }
 
             var fileType = file.type.split('/');
