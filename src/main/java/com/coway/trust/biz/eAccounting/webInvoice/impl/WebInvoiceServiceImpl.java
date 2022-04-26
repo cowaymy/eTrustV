@@ -429,6 +429,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					List<EgovMap> appvInfoAndItems = staffBusinessActivityMapper.selectAdvInfoAndItems(invoAppvInfo); //itemize record
 					Map<String, Object> appvSettlementInfo = null;
 					Map<String, Object> refundRecordInfo = null;
+					String docDate = null;
 
 					BigDecimal diffAmt = BigDecimal.ZERO; //initiate as 0, 0=no outstanding and balance
 					boolean diffAmtFlg = false; // false: No need to insert (request<exp)
@@ -451,11 +452,14 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
                             }
 
+                            invoAppvItems.put("docDt", appvInfoAndItems.get(0).get("invcDt"));
+                            docDate = (String)invoAppvItems.get("docDt");
                             if("4".equals(invoAppvItems.get("advType").toString())) {
                             	//invoAppvItems.put("expAmt", 0);
                             	invoAppvItems.put("grandAmt", 0);
                             	invoAppvItems.put("balAmt", 0);
-                                invoAppvItems.put("docDt", invoAppvItems.get("invcDt"));
+                                //invoAppvItems.put("docDt", invoAppvItems.get("invcDt"));
+                            	invoAppvItems.put("docDt", docDate);
                                 invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt"));
                                 invoAppvItems.put("totAmt", invoAppvItems.get("netAmt"));
                                 invoAppvItems.put("glCode", invoAppvItems.get("glCode"));
@@ -496,7 +500,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("balAmt", "0");
 				    	appvSettlementInfo.put("taxAmt", "0");
 				    	appvSettlementInfo.put("nonTaxAmt", "0");
-				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("docDt", docDate);
 				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
 				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
@@ -514,7 +518,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("taxAmt", "0");
 				    	refundRecordInfo.put("nonTaxAmt", "0");
 				    	refundRecordInfo.put("glCode", "22200400");
-				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
+				    	refundRecordInfo.put("docDt", docDate);
 				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
 				    	refundRecordInfo.put("curr", refundRecordInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(refundRecordInfo);
@@ -537,7 +541,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("balAmt", "0");
 				    	appvSettlementInfo.put("taxAmt", "0");
 				    	appvSettlementInfo.put("nonTaxAmt", "0");
-				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("docDt", docDate);
 				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
 				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
 				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
@@ -553,7 +557,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("memAccId", "");
 //				    	refundRecordInfo.put("grandAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("grandAmt", 0);
-				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
+				    	refundRecordInfo.put("docDt", docDate);
 				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
 				    	refundRecordInfo.put("balAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("expAmt", "0");

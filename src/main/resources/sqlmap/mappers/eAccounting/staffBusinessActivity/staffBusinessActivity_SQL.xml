@@ -373,6 +373,7 @@
             <if test="advType == 3">
                 GL_ACC_NO,
                 NET_AMT,
+                INVC_CUR,
             </if>
             <if test="advType == 4">
                 REM,
@@ -400,6 +401,7 @@
             <if test="advType == 3">
                 #{glAccNo},
                 #{dAmt},
+                #{cur},
             </if>
             <if test="advType == 4">
                 #{expDesc},
@@ -891,7 +893,7 @@
         ) E
         ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
         LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
-        WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+        WHERE A.APPV_PRCSS_NO = #{appvPrcssNo} ORDER BY E.APPV_ITM_SEQ
     </select>
 
     <insert id="insertBusinessActAdvInterface" parameterType="Map">
