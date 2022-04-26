@@ -189,8 +189,8 @@ $(function(){
             myFileCaches[4] = {file:file};
         }
         var msg = '';
-        if(file.name.length>20){
-            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
         }
 
         var fileType = file.type.split('/');
@@ -219,8 +219,8 @@ $(function(){
             myFileCaches[3] = {file:file};
         }
         var msg = '';
-        if(file.name.length>20){
-            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
         }
 
         var fileType = file.type.split('/');
@@ -249,8 +249,8 @@ $(function(){
             myFileCaches[5] = {file:file};
         }
         var msg = '';
-        if(file.name.length>20){
-            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
         }
 
         var fileType = file.type.split('/');
@@ -279,8 +279,8 @@ $(function(){
             myFileCaches[6] = {file:file};
         }
         var msg = '';
-        if(file.name.length>20){
-            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
         }
 
         var fileType = file.type.split('/');
@@ -309,8 +309,8 @@ $(function(){
             myFileCaches[2] = {file:file};
         }
         var msg = '';
-        if(file.name.length>20){
-            msg += "*File name wording should be not more than 20 alphabet.<br>";
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
         }
 
         var fileType = file.type.split('/');
@@ -2068,7 +2068,7 @@ function fn_validFile() {
             <tr>
                 <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG, PDF) less than 2 MB.
 			    <br>
-			    File rename wording no more than 20 alphabet (including spacing, symbol).</span></td>
+			    File rename wording no more than 30 alphabet (including spacing, symbol).</span></td>
             </tr>
             </tbody>
             </table>
