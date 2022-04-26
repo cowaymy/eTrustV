@@ -99,10 +99,17 @@
             AND B.ROT_REQUESTOR_CODE = #{reqInfo}
         </if>
         <if test="(rotFeedbackCode != null and rotFeedbackCode != '') ">
+
             AND H.CCP_RESN_ID IN
             <foreach item="item" collection="rotFeedbackCode" index="index"
                 open="(" separator="," close=")">
-                #{item}
+                <if test="item == 3481 ">
+                0
+                </if>
+                <if test="item != 3481 ">
+                    #{item}
+                </if>
+
             </foreach>
         </if>
         <if test="lastUpdateUser != null and lastUpdateUser != '' ">
@@ -700,7 +707,7 @@
     <select id="selectRootDetails" parameterType="Map" resultType="egovMap">
         /* ownershipTransfer.selectRootDetails */
         <![CDATA[
- SELECT
+SELECT
             /* GENERAL ROT DETAILS */
             A.ROT_ID,
             A.ROT_NO,
@@ -820,7 +827,25 @@
             CASE WHEN EXT1.NATION <> 1 THEN TO_CHAR(EXT1.VISA_EXPR, 'YYYY-MM-DD') ELSE '' END EXT_VISA_EXPR,
             EXT1.EMAIL EXT_CUST_EMAIL,
             EXT1.REM EXT_CUST_REMARK,
-            EXT5.CODE_NAME EXT_INDUSTRY_CODE
+            EXT5.CODE_NAME EXT_INDUSTRY_CODE,
+            /* old customer contact person */
+            G1.NAME EXT_CTN_NAME,
+            G1.TEL_M1 EXT_CTN_MOBILE,
+            G1.TEL_R EXT_CTN_RESIDENCE,
+            G1.TEL_O EXT_CTN_OFFICE,
+            /* old cus inst addr */
+            I1.ADDR_DTL|| I1.STREET || I2.CITY ||', '|| I2.POSTCODE || ', '|| I2.STATE ||', '|| I2.COUNTRY EXT_INST_ADDR,
+            /* NEW cus inst addr */
+            E.ADDR_DTL|| E.STREET || F.CITY ||', '|| F.POSTCODE || ', '|| F.STATE ||', '|| F.COUNTRY NEW_INST_ADDR,
+            /* EXT CUS CRC DETAIL */
+            EXT7.CODE_NAME EXT_PAYMODE,
+            EXT8.CUST_ORI_CRC_NO EXT_CRC_NO,
+            EXT10.CODE_NAME EXT_CRC_TYPE,
+            EXT8.CUST_CRC_OWNER EXT_CRC_OWNER,
+            SUBSTR(EXT8.CUST_CRC_EXPR, 1, 2) || '/' || SUBSTR(EXT8.CUST_CRC_EXPR, 3, 2) EXT_CRC_EXPR,
+            EXT10.CODE_NAME EXT_CRC_TYPE,
+            ext11.CODE_NAME EXT_CARD_TYPE,
+            EXT9.NAME EXT_ISSUE_BANK
         FROM SAL0275M A
         JOIN SAL0276D B
             ON A.ROT_ID = B.ROT_ID
@@ -838,11 +863,18 @@
         /* CONTACT INFO */
         JOIN SAL0027D G
             ON B.ROT_CNT_ID = G.CUST_CNTC_ID
+        JOIN SAL0027D G1
+            ON B.ROT_OLD_CUST_ID = G1.CUST_ID AND G1.STUS_CODE_ID = 9
         /* INSTALLATION INFO */
         JOIN SAL0282D H
             ON A.ROT_ID = H.ROT_ID
         JOIN SAL0023D I
             ON H.ADD_ID = I.CUST_ADD_ID
+        /* EXisting customer address*/
+        JOIN SAL0023D I1
+            ON B.ROT_OLD_CUST_ID =  I1.CUST_ID and I1.STUS_CODE_ID = 9
+        left join SYS0064M I2 on I1.AREA_ID = I2.AREA_ID
+
         JOIN SYS0064M J
             ON I.AREA_ID = J.AREA_ID
         JOIN SAL0027D K
@@ -932,6 +964,21 @@
         LEFT JOIN SYS0013M EXT5 /* CORPORATE TYPE */
             ON EXT1.CORP_TYPE_ID = EXT5.CODE_ID
             AND EXT5.CODE_MASTER_ID = 95
+        /* Existing Customer Payment Detail*/
+        JOIN SAL0074D EXT6 on EXT6.sales_ord_Id = M.sales_ord_Id
+        LEFT JOIN SYS0013M EXT7 /* PAYMENT MODE */
+            ON EXT6.MODE_ID = EXT7.CODE_ID
+            AND EXT7.CODE_MASTER_ID = 19
+        LEFT JOIN SAL0028D EXT8 /* CRC PAYMODE */
+            ON EXT6.CUST_CRC_ID = EXT8.CUST_CRC_ID
+        LEFT JOIN sys0004M EXT9 /* CRC BANK */
+            ON EXT6.BANK_ID = EXT9.BANK_ID
+        LEFT JOIN SYS0013M EXT10 /* CRC TYPE */
+            ON EXT8.CUST_CRC_TYPE_ID = EXT10.CODE_ID
+            AND EXT10.CODE_MASTER_ID = 21
+        LEFT JOIN SYS0013M EXT11 /* CARD TYPE */
+            ON EXT8.CARD_TYPE_ID = EXT11.CODE_ID
+            AND EXT11.CODE_MASTER_ID = 115
         WHERE A.ROT_ID = #{rotId}
         ]]>
     </select>

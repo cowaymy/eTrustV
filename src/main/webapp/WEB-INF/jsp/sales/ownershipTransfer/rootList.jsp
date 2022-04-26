@@ -93,8 +93,9 @@
 						'', 'rotAppType', 'M', 'fn_multiCombo'); //Common Code
 				doGetComboOrder('/sales/ownershipTransfer/selectStatusCode.do',
 						'', '', '', 'rotStus', 'M', 'fn_multiCombo'); //Status Code
+
 				doGetComboCodeId('/common/selectReasonCodeList.do',
-						{typeId : '6242', separator : ' - ', inputId : ''}, '', 'rotFeedbackCode', 'M', 'fn_multiCombo'); //Feedback Code
+					    {typeId : '6242', separator : ' - ', inputId : ''}, '', 'rotFeedbackCode', 'M', 'fn_multiCombo'); //Feedback Code
 
 				$("#search").click(fn_searchROT);
 				$("#requestROT").click(fn_requestROTSearchOrder);
@@ -184,6 +185,7 @@
 
 	// Button functions - Start
 	function fn_searchROT() {
+		$("#root_searchForm")
  		console.log($("#root_searchForm").serialize());
 		Common.ajax("GET", "/sales/ownershipTransfer/selectRootList.do", $(
 				"#root_searchForm").serialize(), function(result) {

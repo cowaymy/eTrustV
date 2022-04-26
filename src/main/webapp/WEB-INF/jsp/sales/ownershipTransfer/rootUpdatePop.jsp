@@ -1971,21 +1971,69 @@
                                         <th scope="row"><spring:message code="sal.text.race" /></th>
                                         <td><span id="raceOwnt">${rotInfoMap.custRace}</span></td>
                                     </tr>
-                                    <tr>
+<%--                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.dob" /></th>
                                         <td><span id="extDobOwnt">${rotInfoMap.extCustDob}</span></td>
                                         <th scope="row"><spring:message code="sal.text.dob" /></th>
                                         <td><span id="dobOwnt">${rotInfoMap.dob}</span></td>
-                                    </tr>
+                                    </tr> --%>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.gender" /></th>
                                         <td><span id="extGenderOwnt">${rotInfoMap.extCustGender}</span>
                                         </td>
                                         <th scope="row"><spring:message code="sal.text.gender" /></th>
-                                        <td><span id="genderOwnt">${rotInfoMap.custGender}</span>
+                                        <td>
+                                        <span id="genderOwnt">${rotInfoMap.custGender}</span>
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
+                                        <td>
+                                            <a id="txtContactNameOwnt">Name : ${rotInfoMap.extCtnName}</a><br>
+                                            <a id="txtContactNameOwnt">Tel (Mobile) : ${rotInfoMap.extCtnMobile}</a><br>
+                                            <a id="txtContactNameOwnt">Tel (Residence) : ${rotInfoMap.extCtnResidence}</a><br>
+                                            <a id="txtContactNameOwnt">Tel (Office) : ${rotInfoMap.extCtnOffice}</a>
+                                        </td>
+                                        <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
+                                        <td>
+                                            <a id="txtContactNameOwnt">Name : ${rotInfoMap.cntcName}</a><br>
+                                            <a id="txtContactNameOwnt">Tel (Mobile) : ${rotInfoMap.telM}</a><br>
+                                            <a id="txtContactNameOwnt">Tel (Residence) : ${rotInfoMap.telR}</a><br>
+                                            <a id="txtContactNameOwnt">Tel (Office) : ${rotInfoMap.telO}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code="sal.text.instAddr" /></th>
+                                        <td><span id="extGenderOwnt">${rotInfoMap.extInstAddr}</span>
+                                        </td>
+                                        <th scope="row"><spring:message code="sal.text.instAddr" /></th>
+                                        <td>
+                                        <a id="txtContactNameOwnt">${rotInfoMap.newInstAddr}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
+                                        <td>
+                                            <a>Rental Paymode : ${rotInfoMap.paymode}</a><br>
+                                            <a>Credit Card No : ${rotInfoMap.custOriCrcNo}</a><br>
+                                            <a>Name On Card : ${rotInfoMap.custCrcOwner}</a><br>
+                                            <a>Credit Card Type : ${rotInfoMap.crcType}</a><br>
+                                            <a>Issue Bank : ${rotInfoMap.crcBank}</a><br>
+                                            <a>Card Type : ${rotInfoMap.cardType}</a><br>
+                                            <a>Expiry : ${rotInfoMap.crcExpr}</a>
+                                        </td>
+                                        <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
+                                        <td>
+                                            <a>Rental Paymode : ${rotInfoMap.extPaymode}</a><br>
+                                            <a>Credit Card No : ${rotInfoMap.extCrcNo}</a><br>
+                                            <a>Name On Card : ${rotInfoMap.extCrcOwner}</a><br>
+                                            <a>Credit Card Type : ${rotInfoMap.extCrcType}</a><br>
+                                            <a>Issue Bank : ${rotInfoMap.extIssueBank}</a><br>
+                                            <a>Card Type : ${rotInfoMap.extCardType}</a><br>
+                                            <a>Expiry : ${rotInfoMap.extCrcExprr}</a>
+                                        </td>
+                                    </tr>
+                                    <%-- <tr>
                                         <th scope="row"><spring:message
                                                 code="sal.text.passportExpire" /></th>
                                         <td><span id="extPasSportExprOwnt">${rotInfoMap.extPassSportExpr}</span>
@@ -2031,7 +2079,7 @@
                                         <th scope="row"><spring:message code="sal.text.remark" /></th>
                                         <td><span id="custRemOwnt">${rotInfoMap.custRem}</span>
                                         </td>
-                                    </tr>
+                                    </tr> --%>
                                 </tbody>
                             </table>
                         </section>
