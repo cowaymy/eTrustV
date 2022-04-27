@@ -724,17 +724,18 @@
             A.BANK_CODE,
             A.BANK_ACC_NO,
             A.GL_ACC_NO,
-            CASE WHEN A.ADV_TYPE = 5 THEN A.TOT_AMT
+            <!-- CASE WHEN A.ADV_TYPE = 5 THEN A.TOT_AMT
                  WHEN A.ADV_TYPE = 6 THEN (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = #{clmNo})
-            END TOT_AMT,
+            END TOT_AMT, -->
+            A.TOT_AMT,
             CASE WHEN A.ADV_TYPE = 6
-                THEN (SELECT SUM(AMT) FROM FCM0028D FCM28 WHERE FCM28.CLM_NO = A.CLM_NO)
+                THEN E.TOT_AMT
                 ELSE 0
             END EXP_AMT,
-            CASE WHEN A.ADV_TYPE = 6
+            <!-- CASE WHEN A.ADV_TYPE = 6
                 THEN (A.TOT_AMT - (SELECT SUM(AMT) FROM FCM0028D FCM28 WHERE FCM28.CLM_NO = A.CLM_NO))
                 ELSE 0
-            END BAL_AMT,
+            END BAL_AMT, -->
             A.ADV_REM REM,
             E.APPV_ITM_SEQ,
             A.FILE_ATCH_GRP_ID,
@@ -754,7 +755,8 @@
             B.USER_NAME,
             TO_CHAR(D.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
             D.APPV_PRCSS_STUS,
-            G.INVC_CUR CURRENCY
+            (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO) REQ_AMT,
+            E.INVC_CUR CURRENCY
         FROM FCM0027M A
         JOIN SYS0047M B
             ON A.CRT_USER_ID = B.USER_ID
@@ -763,13 +765,13 @@
         LEFT JOIN FCM0004M D
             ON D.APPV_PRCSS_NO = A.APPV_PRCSS_NO
         LEFT JOIN (
-            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER
+            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR
             FROM FCM0028D I
             LEFT JOIN FCM0027M J ON J.CLM_NO = I.CLM_NO
-            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER
+            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR
         ) E ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
-        LEFT JOIN FCM0015D G ON G.APPV_PRCSS_NO = E.APPV_PRCSS_NO
         WHERE A.CLM_NO = #{clmNo}
+        ORDER BY E.APPV_ITM_SEQ
     </select>
 
     <select id="selectSettlementInfo" parameterType="Map" resultType="egovMap">
