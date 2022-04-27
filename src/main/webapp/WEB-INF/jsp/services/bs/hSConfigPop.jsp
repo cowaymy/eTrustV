@@ -327,7 +327,7 @@
 
     	   Common.ajax("GET",
         			"/services/bs/selectPopUpCdList.do",
-        			{SaleOrdList : '${ordCdList}',SalesOrderNo : '${SalesOrderNo}'},
+        			{SaleOrdList : '${ordCdList}',SalesOrderNo : '${SalesOrderNo}',assignCody:$('#assignCody').val()},
         			function(result) {
         	               console.log("성공.");
 	                       console.log("data : " + result);
@@ -348,6 +348,16 @@
 
 
     }
+
+    function fn_searchCody(){
+
+            Common.ajax("GET",
+                     "/services/bs/selectPopUpCdList.do",
+                     {SaleOrdList : '${ordCdList}',SalesOrderNo : '${SalesOrderNo}',assignCody:$('#assignCody').val()},
+                     function(result) {
+                            AUIGrid.setGridData(myCdGridID, result);
+            });
+     }
 
 
 
@@ -452,7 +462,29 @@
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Cody List</h2>
+<ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_searchCody();"><span class="search"></span>
+       <spring:message code='sys.btn.search' /></a></p></li>
+    </ul>
 </aside><!-- title_line end -->
+
+<!-- <section class="search_result"> -->
+<!--     <aside class="title_line mt30">title_line start -->
+<!--     <ul class="right_btns"> -->
+<!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_searchCody();"><span class="search"></span> -->
+<%--        <spring:message code='sys.btn.search' /></a></p></li> --%>
+<!--     </ul> -->
+<!--     </aside> -->
+<!--  </section> -->
+
+<table id="assignCodyTable" class="type1" ><!-- table start -->
+<tbody>
+<tr>
+    <th scope="row">Search Cody:</th>
+    <td><input id="assignCody" name="assignCody" type="text" title="assignCody"  class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
 
 <div class="border_box" style="height:400px"><!-- border_box start -->
 

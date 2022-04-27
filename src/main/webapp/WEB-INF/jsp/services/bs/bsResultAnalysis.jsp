@@ -94,7 +94,7 @@
         { dataField : "act", headerText : "Active", width : 80 },
         { dataField : "cmplt", headerText : "Complete", width : 80 },
         { dataField : "cmpltOwn", headerText : "Complete (Own)", width : 130 },
-        /* { dataField : "cmpltOtr", headerText : "Complete (Other)", width : 140 }, */
+        { dataField : "cmpltOtr", headerText : "Complete (Other)", width : 140 },
         { dataField : "fail", headerText : "Fail", width : 80 },
         { dataField : "cancl", headerText : "Cancel", width : 80 },
         { dataField : "bsSuccesRateWeek1", headerText : "WEEK 1 (>30%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },

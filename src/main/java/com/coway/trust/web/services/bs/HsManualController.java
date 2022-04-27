@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -44,6 +45,9 @@ public class HsManualController {
 
   @Resource(name = "orderDetailService")
   private OrderDetailService orderDetailService;
+
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
@@ -81,6 +85,18 @@ public class HsManualController {
 
     model.put("bfDay", bfDay);
     model.put("toDay", toDay);
+
+    params.put("userId", sessionVO.getUserId());
+
+    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+		model.put("memType", getUserInfo.get("memType"));
+		model.put("orgCode", getUserInfo.get("orgCode"));
+		model.put("grpCode", getUserInfo.get("grpCode"));
+		model.put("deptCode", getUserInfo.get("deptCode"));
+		model.put("memCode", getUserInfo.get("memCode"));
+		logger.info("memType ##### " + getUserInfo.get("memType"));
+	}
 
     return "services/bs/hsManual";
   }

@@ -196,6 +196,14 @@
                   AND OG.DEPT_CODE = #{deptCode}
                 </if>
 
+                <if test="grpCode != null and grpCode != ''">
+                  AND OG.LAST_GRP_CODE = #{grpCode}
+                </if>
+
+                 <if test="orgCode != null and orgCode != ''">
+                  AND OG.LAST_ORG_CODE = #{orgCode}
+                </if>
+
                 <if test="userType == '3'.toString()">
                   AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
                 </if>

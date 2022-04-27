@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.services.bs.HsAccConfigService;
 import com.coway.trust.biz.services.bs.HsMaintenanceService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -52,6 +53,9 @@ public class HsMaintenanceController {
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
+
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 
 	@RequestMapping(value="/initHsMaintenanceList.do")
@@ -104,6 +108,18 @@ public class HsMaintenanceController {
 	    		}
 	    	}
 	    }
+
+	    params.put("userId", sessionVO.getUserId());
+
+	    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+			logger.info("memType ##### " + getUserInfo.get("memType"));
+		}
 
 	    model.put("hsBlockDtFrom", dayFrom);
 	    model.put("hsBlockDtTo", dayTo);

@@ -113,7 +113,7 @@
             c.NRIC as BSCustIC
         FROM SVC0008D m
         JOIN ORG0001D mem
-            ON mem.MEM_ID = m.CODY_ID
+            ON mem.MEM_ID = m.TARGET_CODY_ID
             AND mem.MEM_CODE = #{memCode}
         JOIN SYS0038M s
             ON s.STUS_CODE_ID = m.STUS_CODE_ID

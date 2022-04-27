@@ -73,7 +73,7 @@ SELECT
                                  Extent4.NRIC NRIC ,
                                  Extent5.CODE CODE1 ,
                                  TO_CHAR (Extent10.SETL_DT, 'DD/MM/YYYY') SETL_DT ,
-                                 Extent11.RESN_DESC FAIL_RESN ,
+                                 CASE WHEN EXTENT1.STUS_CODE_ID=10 THEN EXTENT1.REM ELSE EXTENT11.RESN_DESC END FAIL_RESN ,
                                  Extent12.RESN_DESC COLL_RESN ,
                                  1 C1 ,
                                 CASE
@@ -121,7 +121,7 @@ SELECT
                                 ON Extent4.CUST_ID = Extent3.CUST_ID
                             JOIN SYS0013M Extent5
                                 ON Extent5.CODE_ID = Extent3.APP_TYPE_ID
-                            JOIN SVC0006D Extent10
+                            LEFT JOIN SVC0006D Extent10
                                 ON Extent10.SCHDUL_ID = Extent1.SCHDUL_ID
                             JOIN SAL0002D  ON Extent3.sales_ord_id = sal0002d.sales_ord_id
                             JOIN sys0026m vOrderBasicInfo

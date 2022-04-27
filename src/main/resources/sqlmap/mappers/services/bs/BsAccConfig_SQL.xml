@@ -723,6 +723,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         <!-- , Project2.Result as Result  -->
                         , project2.dept_code
                         , project2.crt_user_id
+                        , project2.UPD_USER_ID
                         , project2.SERIAL_REQUIRE_CHK_YN
                         , TO_CHAR(project2.INSTALL_DT, 'DD/MM/YYYY') AS INSTALL_DT
                         , project2.STATE
@@ -755,6 +756,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , mg.cody_mangr_user_id
                               , og.dept_code
                               , CASE WHEN HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
+                              , CASE WHEN HS.UPD_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS UPD_USER_ID
                               , LOC.SERIAL_REQUIRE_CHK_YN
                               , ad.ADDR_DTL
                               , ad.street
@@ -780,6 +782,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
                 LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
+                LEFT JOIN SYS0047M USR2 ON HS.UPD_USER_ID = USR2.USER_ID
                 LEFT JOIN SYS0028M LOC ON LOC.WH_LOC_CODE = cd.MEM_CODE
               <!--   LEFT JOIN entry_info_max eimax ON eimax.sales_ord_id = so.sales_ord_id
                 LEFT JOIN sal0047d ir2  ON ir2.entry_id = eimax.install_entry_id and ir2.result_id = eimax.INSTALL_RESULT_ID AND ir2.stus_code_id = 4 -->
@@ -861,6 +864,14 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
 
                 <if test="deptCode != null and deptCode != ''">
                   AND OG.DEPT_CODE = #{deptCode}
+                </if>
+
+                 <if test="grpCode != null and grpCode != ''">
+                  AND OG.LAST_GRP_CODE = #{grpCode}
+                </if>
+
+                 <if test="orgCode != null and orgCode != ''">
+                  AND OG.LAST_ORG_CODE = #{orgCode}
                 </if>
 
                 <if test="userType == '3'.toString()">

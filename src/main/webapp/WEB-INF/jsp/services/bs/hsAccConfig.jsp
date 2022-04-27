@@ -214,6 +214,12 @@
            width : 300
         },
 
+        {
+            dataField : "updUserId",
+            headerText : "Update By",
+            width : 120
+         },
+
 ////////////////ADDITIONAL FIELD////////////////////
 
       {
@@ -321,7 +327,7 @@
 	    	}
 	    }
 
-      if ($("#userType").val() != "4" && $("#userType").val() != "6") {
+      if ($("#userType").val() != "4" && $("#userType").val() != "6" && $("#userType").val() != "2") {
         if ($("#cmdBranchCode").val() == ''
             || $("#cmdBranchCode").val() == null) {
           Common.alert("Please Select 'Cody Branch'");
@@ -369,7 +375,7 @@
         memId = "";
       }
 
-      if ($("#userType").val() != "4" && $("#userType").val() != "6") {
+      if ($("#userType").val() != "4" && $("#userType").val() != "6" && $("#userType").val() != "2") {
         if ($("#cmdBranchCode1").val() == ''
             || $("#cmdBranchCode1").val() == null) {
           Common.alert("Please Select 'Branch'");
@@ -794,6 +800,65 @@
   $(document).ready(
       function() {
         doDefCombo(StatusTypeData, '', 'cmbStatusType', 'S', '');
+
+        $("#orgCode").val($("#orgCode").val().trim());
+
+        if($("#userType").val() == 1 || $("#userType").val() == 2 || $("#userType").val() == 7){
+
+           if("${SESSION_INFO.memberLevel}" =="0"){
+
+               $("#memtype").val('${SESSION_INFO.userTypeId}');
+               $("#memtype").attr("class", "w100p readonly");
+               $('#memtype').attr('disabled','disabled').addClass("disabled");
+
+           }else if("${SESSION_INFO.memberLevel}" =="1"){
+
+               $("#orgCode").val("${orgCode}".trim());
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+           }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+               $("#orgCode").val("${orgCode}".trim());
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+               $("#grpCode").val("${grpCode}");
+               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("readonly", "readonly");
+
+           }else if("${SESSION_INFO.memberLevel}" =="3"){
+               $("#orgCode").val("${orgCode}".trim());
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+               $("#grpCode").val("${grpCode}");
+               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("readonly", "readonly");
+
+               $("#deptCode").val("${deptCode}");
+               $("#deptCode").attr("class", "w100p readonly");
+               $("#deptCode").attr("readonly", "readonly");
+
+           }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+               $("#orgCode").val("${orgCode}".trim());
+               $("#orgCode").attr("class", "w100p readonly");
+               $("#orgCode").attr("readonly", "readonly");
+
+               $("#grpCode").val("${grpCode}");
+               $("#grpCode").attr("class", "w100p readonly");
+               $("#grpCode").attr("readonly", "readonly");
+
+               $("#deptCode").val("${deptCode}");
+               $("#deptCode").attr("class", "w100p readonly");
+               $("#deptCode").attr("readonly", "readonly");
+
+               $("#memCode").val("${memCode}");
+               $("#memCode").attr("class", "w100p readonly");
+               $("#memCode").attr("readonly", "readonly");
+           }
+       }
 
         $('#myBSMonth').val(
             $.datepicker.formatDate('mm/yy', new Date()));
@@ -1312,7 +1377,9 @@
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row">Cody Branch<span class="must">*</span></th>
+         <th scope="row">Cody Branch
+<!--          <span class="must">*</span> -->
+         </th>
          <td><select id="cmdBranchCode" name="cmdBranchCode"
           class="w100p readOnly ">
            <option value="">Choose One</option>
@@ -1354,9 +1421,11 @@
          <th scope="row">HS Status</th>
          <td><select class="w100p" id="cmbStatusType" name="cmbStatusType">
            <option value="">HS Status</option></td>
-         <th scope="row">Dept. Code</th>
-         <td><input id="deptCode" name="deptCode" type="text"
-          title="" placeholder="Dept. Code" class="w100p" /></td>
+           <th></th>
+           <td></td>
+<!--          <th scope="row">Dept. Code</th> -->
+<!--          <td><input id="deptCode" name="deptCode" type="text" -->
+<!--           title="" placeholder="Dept. Code" class="w100p" /></td> -->
          <!-- <td><input id="txtCustomer" name="txtCustomer" type="text"
           title="" placeholder="Customer ID" class="w100p" /></td> -->
         </tr>
@@ -1379,6 +1448,17 @@
          <th scope="row">Install State</th>
          <td><input id="myInstallState" name="myInstallState" type="text"
           title="" placeholder="Install State" class="w100p" /></td>
+        </tr>
+        <tr>
+        <th scope="row">Org. Code</th>
+         <td><input id="orgCode" name="orgCode" type="text"
+          title="" placeholder="Org Code" class="w100p" /></td>
+          <th scope="row">Grp. Code</th>
+         <td><input id="grpCode" name="grpCode" type="text"
+          title="" placeholder="Grp Code" class="w100p"  /></td>
+          <th scope="row">Dept. Code</th>
+         <td><input id="deptCode" name="deptCode" type="text"
+          title="" placeholder="Dept Code" class="w100p" /></td>
         </tr>
        </tbody>
       </table>

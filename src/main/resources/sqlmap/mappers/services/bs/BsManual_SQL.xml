@@ -301,6 +301,9 @@
 		b.mem_id = d.mem_id
 		AND d.stus = '1'
 		AND d.mem_type = '2'
+		<if test="assignCody != null and assignCody != ''">
+		AND D.MEM_CODE = #{assignCody}
+		</if>
 		AND b.mem_lvl =
 		'4'
 		<if test="deptListSpl != null and deptListSpl != ''">
