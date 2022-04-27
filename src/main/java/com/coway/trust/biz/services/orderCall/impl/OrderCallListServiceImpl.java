@@ -296,7 +296,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
         		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
 
-        params.put("chkSMS", CommonUtils.intNvl(params.get("chkSMS"))); //to prevent untick SMS
+        params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
+
+        //logger.debug("//SMS params");
+        //logger.debug(params.toString());
 
 	       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
 	       {
