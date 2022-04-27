@@ -1392,7 +1392,7 @@ function fn_validFile() {
     $.each(myFileCaches, function(i, j) {
         if(myFileCaches[i].file.checkFileValid == false){
             isValid = false;
-           msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 20 wordings<br>";
+           msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
        }
    });
 
