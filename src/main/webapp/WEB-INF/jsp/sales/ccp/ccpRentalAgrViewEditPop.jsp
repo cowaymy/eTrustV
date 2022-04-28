@@ -1185,7 +1185,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Received Customer’s Draft</th>
+    <th scope="row">Received Customer's Draft /Draft sent to customer</th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Customer Draft Received" placeholder="DD/MM/YYYY" class="j_date"   id="_draftRcvd" name="draftRcvd"/></p>

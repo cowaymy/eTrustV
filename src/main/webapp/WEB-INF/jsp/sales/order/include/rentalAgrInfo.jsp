@@ -198,7 +198,7 @@
     <td><span>${orderDetail.renAgrInfo.govAgPeriod}</span></td>
 </tr>
 <tr>
-    <th scope="row">Received Customer Draft</th>
+    <th scope="row">Received Customer's Draft /Draft sent to customer</th>
     <td><span>${orderDetail.renAgrInfo.govAgDraftDt}</span></td>
     <th scope="row">1st Review</th>
     <td><span>${orderDetail.renAgrInfo.govAgFirstRevDt}</span></td>
