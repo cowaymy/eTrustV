@@ -850,10 +850,6 @@
                     Common.alert('Contract Period is required.');
                     return false;
                 }
-                if(null == $("#_draftRcvd").val() || '' == $("#_draftRcvd").val()){
-                    Common.alert('Received Customer’s Draft  is required.');
-                    return false;
-                }
             }
             if(agrStatus == '8'){//verify
             	if(null == $("#_cowayTemplate").val() || '' == $("#_cowayTemplate").val()){
