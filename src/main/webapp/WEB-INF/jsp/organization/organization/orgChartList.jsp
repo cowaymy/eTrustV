@@ -174,7 +174,8 @@
                      var vMemLvl = item.memLvl +1 ;
                      var memType = item.memType;
 
-                     console.log("data : " + event.item);
+                     console.log("data : ");
+                     console.log(event.item);
 
                         $.ajax({
                             url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType + "&searchDt="+$('#searchDt').val(),
@@ -662,7 +663,8 @@
 
                         if ( memType == "6672" || memType == "4" ) {
                             AUIGrid.setGridData(myLtGridID, result);
-                            console.log("data1111 : " + result);
+                            console.log("data1111 : ");
+                            console.log(result);
                         }
                     });
 
