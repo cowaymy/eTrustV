@@ -2459,6 +2459,20 @@ public void AccountHealthIndexReport() throws IOException{
  LOGGER.info("[END] Account_Health_Index_Report...");
 }
 
+//Celeste: Weekly Rental Accumulated Account Report (Every Friday Morning 9:00 AM)
+@RequestMapping(value = "/weeklyRentalAccumulatedAccReportPDF.do")
+//@Scheduled(cron = " 0 0 9 * * FRI") //Every Friday Morning 9:00 AM
+public void WeeklyRentalAccumulatedAccReportPDF() throws IOException{
+LOGGER.info("[START] WeeklyRentalAccumulatedAccReportPDF...");
+Map<String, Object> params = new HashMap<>();
+params.put(REPORT_FILE_NAME, "/visualcut/WeeklyRentalAccumulatedAccReportPDF.rpt");// visualcut
+params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+   "Finance_PNC" + File.separator + "Weekly_Rental_Accumulated_Account_Report_" + CommonUtils.getNowDate() + ".pdf");
+
+this.view(null, null, params);
+LOGGER.info("[END] WeeklyRentalAccumulatedAccReportPDF...");
+}
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
