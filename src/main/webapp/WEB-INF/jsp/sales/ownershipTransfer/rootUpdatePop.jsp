@@ -1989,17 +1989,17 @@
                                     <tr>
                                         <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
                                         <td>
-                                            <a id="txtContactNameOwnt">Name : ${rotInfoMap.extCtnName}</a><br>
-                                            <a id="txtContactNameOwnt">Tel (Mobile) : ${rotInfoMap.extCtnMobile}</a><br>
-                                            <a id="txtContactNameOwnt">Tel (Residence) : ${rotInfoMap.extCtnResidence}</a><br>
-                                            <a id="txtContactNameOwnt">Tel (Office) : ${rotInfoMap.extCtnOffice}</a>
+                                            <p id="txtContactNameOwnt">Name : ${rotInfoMap.extCtnName}</p><br>
+                                            <p id="txtContactNameOwnt">Tel (Mobile) : ${rotInfoMap.extCtnMobile}</p><br>
+                                            <p id="txtContactNameOwnt">Tel (Residence) : ${rotInfoMap.extCtnResidence}</p><br>
+                                            <p id="txtContactNameOwnt">Tel (Office) : ${rotInfoMap.extCtnOffice}</p>
                                         </td>
                                         <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
                                         <td>
-                                            <a id="txtContactNameOwnt">Name : ${rotInfoMap.cntcName}</a><br>
-                                            <a id="txtContactNameOwnt">Tel (Mobile) : ${rotInfoMap.telM}</a><br>
-                                            <a id="txtContactNameOwnt">Tel (Residence) : ${rotInfoMap.telR}</a><br>
-                                            <a id="txtContactNameOwnt">Tel (Office) : ${rotInfoMap.telO}</a>
+                                            <p id="txtContactNameOwnt">Name : ${rotInfoMap.cntcName}</p><br>
+                                            <p id="txtContactNameOwnt">Tel (Mobile) : ${rotInfoMap.telM}</p><br>
+                                            <p id="txtContactNameOwnt">Tel (Residence) : ${rotInfoMap.telR}</p><br>
+                                            <p id="txtContactNameOwnt">Tel (Office) : ${rotInfoMap.telO}</p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -2008,29 +2008,29 @@
                                         </td>
                                         <th scope="row"><spring:message code="sal.text.instAddr" /></th>
                                         <td>
-                                        <a id="txtContactNameOwnt">${rotInfoMap.newInstAddr}</a>
+                                        <p id="txtContactNameOwnt">${rotInfoMap.newInstAddr}</p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
                                         <td>
-                                            <a>Rental Paymode : ${rotInfoMap.paymode}</a><br>
-                                            <a>Credit Card No : ${rotInfoMap.custOriCrcNo}</a><br>
-                                            <a>Name On Card : ${rotInfoMap.custCrcOwner}</a><br>
-                                            <a>Credit Card Type : ${rotInfoMap.crcType}</a><br>
-                                            <a>Issue Bank : ${rotInfoMap.crcBank}</a><br>
-                                            <a>Card Type : ${rotInfoMap.cardType}</a><br>
-                                            <a>Expiry : ${rotInfoMap.crcExpr}</a>
+                                            <p>Rental Paymode : ${rotInfoMap.paymode}</p><br>
+                                            <p>Credit Card No : ${rotInfoMap.custOriCrcNo}</p><br>
+                                            <p>Name On Card : ${rotInfoMap.custCrcOwner}</p><br>
+                                            <p>Credit Card Type : ${rotInfoMap.crcType}</p><br>
+                                            <p>Issue Bank : ${rotInfoMap.crcBank}</p><br>
+                                            <p>Card Type : ${rotInfoMap.cardType}</p>
+                                            <p>Expiry : ${rotInfoMap.crcExpr}</p>
                                         </td>
                                         <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
                                         <td>
-                                            <a>Rental Paymode : ${rotInfoMap.extPaymode}</a><br>
-                                            <a>Credit Card No : ${rotInfoMap.extCrcNo}</a><br>
-                                            <a>Name On Card : ${rotInfoMap.extCrcOwner}</a><br>
-                                            <a>Credit Card Type : ${rotInfoMap.extCrcType}</a><br>
-                                            <a>Issue Bank : ${rotInfoMap.extIssueBank}</a><br>
-                                            <a>Card Type : ${rotInfoMap.extCardType}</a><br>
-                                            <a>Expiry : ${rotInfoMap.extCrcExprr}</a>
+                                            <p>Rental Paymode : ${rotInfoMap.extPaymode}</p><br>
+                                            <p>Credit Card No : ${rotInfoMap.extCrcNo}</p><br>
+                                            <p>Name On Card : ${rotInfoMap.extCrcOwner}</p><br>
+                                            <p>Credit Card Type : ${rotInfoMap.extCrcType}</p><br>
+                                            <p>Issue Bank : ${rotInfoMap.extIssueBank}</p><br>
+                                            <p>Card Type : ${rotInfoMap.extCardType}</p>
+                                            <p>Expiry : ${rotInfoMap.extCrcExprr}</p>
                                         </td>
                                     </tr>
                                     <%-- <tr>
