@@ -205,57 +205,58 @@
     $(document).ready(function () {
     $(".bottom_msg_box").attr("style","display:none");
     /***********************************************[ NOTICE GRID] ************************************************/
-    $("#simulateTable").hide();
-    var roleType, userId, userName, memLvl;
 
-    Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
-    console.log(result);
+            var salesGridOption = {
+                    usePaging : false,
+                    showStateColumn : false,
+                    showRowNumColumn : false,
+                    pageRowCount : 4,
+                    editable : false,
+                    headerHeight : 50
+                };
 
-        if(result.userTypeId == 1) {
-        	$("#simulateTable").hide();
-        	$("#btnSrch").hide();
+            salesOrgSummaryList = GridCommon.createAUIGrid("salesOrgSummaryList", salesSummaryDashboard, null, salesGridOption);
+            salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
+            fn_selectSummaryDashboard() ;
+            fn_selectWeeklyDashboard() ;
 
-        	if(result.roleType == 111){
-        		$("#simulateTable").show();
-                $("#btnSrch").show();
-        	}
-
-        }
-        else if(result.userTypeId == 4) {
-        	$("#simulateTable").show();
-        	$("#btnSrch").show();
-
-        }
-        var salesGridOption = {
-                usePaging : false,
-                showStateColumn : false,
-                showRowNumColumn : false,
-                pageRowCount : 4,
-                editable : false,
-                headerHeight : 50
-            };
-
-        salesOrgSummaryList = GridCommon.createAUIGrid("salesOrgSummaryList", salesSummaryDashboard, null, salesGridOption);
-        salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
-        fn_selectSummaryDashboard() ;
-        fn_selectWeeklyDashboard() ;
-
-
-     });
     });   //$(document).ready
 
 	function fn_selectSummaryDashboard() {
-	        Common.ajax("GET", "/organization/selectSummarySalesListing.do", $("#searchForm").serialize(), function (result) {
-	        AUIGrid.setGridData(salesOrgSummaryList, result);
+		 var memCode;
+         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+              Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
+                     if(result.userTypeId == 1 && result.roleType != 111) {
+                         memCode = '${SESSION_INFO.userName}';
+                     }
+                     else {
+                         memCode = result2[0].memCode;
+                    }
 
-	    });
+                     Common.ajax("GET", "/organization/selectSummarySalesListing.do", {memCode: memCode}, function (result) {
+                         AUIGrid.setGridData(salesOrgSummaryList, result);
+                     });
+               });
+          });
 	}
 
 	function fn_selectWeeklyDashboard() {
-	    Common.ajax("GET", "/organization/selectWeekSalesListing.do", $("#searchForm").serialize(), function (result) {
-	    AUIGrid.setGridData(salesOrgWeeklyList, result);
-	 });
-	}
+		  var memCode;
+	        Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+	             Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
+	                    if(result.userTypeId == 1 && result.roleType != 111) {
+	                        memCode = '${SESSION_INFO.userName}';
+	                    }
+	                    else {
+	                        memCode = result2[0].memCode;
+	                   }
+
+	                    Common.ajax("GET", "/organization/selectWeekSalesListing.do", {memCode: memCode}, function (result) {
+	                        AUIGrid.setGridData(salesOrgWeeklyList, result);
+	                    });
+	              });
+	         });
+	  }
 
 	 $(function() {
 		$('#performanceView').click(function() {
@@ -263,11 +264,6 @@
 		  document.searchForm.submit();
 		  });
 
-
-		 $('#btnSrch').click(function() {
-			 fn_selectSummaryDashboard();
-			 fn_selectWeeklyDashboard();
-	      });
 
 	  });
 
@@ -289,20 +285,10 @@
 	<h2>Sales Organization Performance</h2>
 	<ul class="right_btns">
 	<li><p class="btn_blue"><a id="performanceView">Performance View</a></p></li>
-	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
-
 	</ul>
 	</aside>
  </section>
 
- <table id="simulateTable" class="type1" ><!-- table start -->
-<tbody>
-<tr>
-    <th scope="row">Simulate Member Code</th>
-    <td><input id="memCode" name="memCode" type="text" title="memCode"  class="w100p" value = '${SESSION_INFO.userName}'.trim() /></td>
-</tr>
-</tbody>
-</table><!-- table end -->
 
  </form>
     <div id="salesOrgSummaryList" class="grid_wrap mt30" style="width: 100%; height:300px; margin: 0 auto;"></div>

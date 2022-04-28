@@ -58,6 +58,24 @@ public class SalesMonitoringFileServiceImpl implements SalesMonitoringFileServic
         return salesMonitoringFileMapper.selectSimulatedMemberCRSCode(params);
     }
 
+	@Override
+	public List<EgovMap> cmbProduct_HA() {
+		return salesMonitoringFileMapper.cmbProduct_HA();
+	}
+
+	@Override
+	public List<EgovMap> cmbProduct_HC() {
+		return salesMonitoringFileMapper.cmbProduct_HC();
+	}
+	@Override
+	public List<EgovMap> selectProductCategoryList_HA() {
+		return salesMonitoringFileMapper.selectProductCategoryList_HA();
+	}
+
+	@Override
+	public List<EgovMap> selectProductCategoryList_HC() {
+		return salesMonitoringFileMapper.selectProductCategoryList_HC();
+	}
 
 
 

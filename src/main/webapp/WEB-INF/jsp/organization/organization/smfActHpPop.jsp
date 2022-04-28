@@ -115,10 +115,10 @@ function createAUIGrid() {
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_actHP", columnLayout, "", gridPros);
 
-    if("${memType}"== "1"){
-    	console.log("fffff");
+//     if("${memType}"== "1"){
+//     	console.log("fffff");
     	fn_selectSmfActHpListAjax();
-    }
+//     }
 
 }
 

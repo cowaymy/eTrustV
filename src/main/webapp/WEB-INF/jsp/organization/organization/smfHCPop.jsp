@@ -35,8 +35,9 @@ $(document).ready(function() {
        fn_selectHCListAjax();
   }
 
-   doGetComboOrder('/sales/order/colorGridProductList.do', '', '', '', 'cmbProduct_HC', 'M', 'f_multiCombo'); //Common Code
-   doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry_HC', 'M','f_multiCombo'); //Category
+   doGetComboOrder('/organization/cmbProduct_HC.do', '', '', '', 'cmbProduct_HC', 'M', 'f_multiCombo'); //Common Code
+   doGetCombo('/organization/selectProductCategoryList_HC.do', '', '', 'cmbProductCtgry_HC', 'M','f_multiCombo'); //Category
+
 
 });
 
@@ -139,9 +140,9 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_HC", columnLayout, "", gridPros);
-    if("${memType}"== "1"){
+//     if("${memType}"== "1"){
     	 fn_selectHCListAjax();
-    }
+//     }
 
 }
 

@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-var salesOrgSummaryList, salesOrgWeeklyList,salesOrgDailyList1,salesOrgDailyList2;
+var salesOrgSummaryList, salesOrgWeeklyList,salesOrgDailyList1,salesOrgDailyList2,salesOrgDailyList3,salesOrgDailyList4;
 
 var previous3month = new Date(), previous2month = new Date(), previousmonth = new Date(), currentmonth = new Date();
 
@@ -323,6 +323,180 @@ var salesDailyDashboard_2 = [
 ];
 
 
+var salesDailyDashboard_3 = [
+     {
+      dataField: "codeName",
+      headerText: previousmonth,
+      width : "10%"
+      }
+     ,{
+      dataField: "day1",
+      headerText: "1",
+      width : "8%"
+      }
+     ,{
+       dataField: "day2",
+       headerText: "2",
+       width : "8%"
+      }
+     ,{
+        dataField: "day3",
+        headerText: "3",
+        width : "8%"
+      }
+     ,{
+         dataField: "day4",
+         headerText: "4",
+         width : "8%"
+      }
+     ,{
+         dataField: "day5",
+         headerText: "5",
+         width : "8%"
+      }
+     ,{
+         dataField: "day6",
+         headerText: "6",
+         width : "8%"
+      }
+     ,{
+         dataField: "day7",
+         headerText: "7",
+         width : "8%"
+      }
+     ,{
+         dataField: "day8",
+         headerText: "8",
+         width : "8%"
+      }
+     ,{
+         dataField: "day9",
+         headerText: "9",
+         width : "8%"
+      }
+     ,{
+         dataField: "day10",
+         headerText: "10",
+         width : "8%"
+      }
+     ,{
+         dataField: "day11",
+         headerText: "11",
+         width : "8%"
+      }
+     ,{
+         dataField: "day12",
+         headerText: "12",
+         width : "8%"
+      }
+     ,{
+         dataField: "day13",
+         headerText: "13",
+         width : "8%"
+      }
+     ,{
+         dataField: "day14",
+         headerText: "14",
+         width : "8%"
+      }
+     ,{
+         dataField: "day15",
+         headerText: "15",
+         width : "8%"
+      }
+     ,{
+         dataField: "day16",
+         headerText: "16",
+         width : "8%"
+      }
+  ];
+
+var salesDailyDashboard_4 = [
+     {
+      dataField: "codeName",
+      headerText: previousmonth,
+      width : "10%"
+      }
+     ,{
+      dataField: "day17",
+      headerText: "17",
+      width : "8%"
+      }
+     ,{
+       dataField: "day18",
+       headerText: "18",
+       width : "8%"
+      }
+     ,{
+        dataField: "day19",
+        headerText: "19",
+        width : "8%"
+      }
+     ,{
+         dataField: "day20",
+         headerText: "20",
+         width : "8%"
+      }
+     ,{
+         dataField: "day21",
+         headerText: "21",
+         width : "8%"
+      }
+     ,{
+         dataField: "day22",
+         headerText: "22",
+         width : "8%"
+      }
+     ,{
+         dataField: "day23",
+         headerText: "23",
+         width : "8%"
+      }
+     ,{
+         dataField: "day24",
+         headerText: "24",
+         width : "8%"
+      }
+     ,{
+         dataField: "day25",
+         headerText: "25",
+         width : "8%"
+      }
+     ,{
+         dataField: "day26",
+         headerText: "26",
+         width : "8%"
+      }
+     ,{
+         dataField: "day27",
+         headerText: "27",
+         width : "8%"
+      }
+     ,{
+         dataField: "day28",
+         headerText: "28",
+         width : "8%"
+      }
+     ,{
+         dataField: "day29",
+         headerText: "29",
+         width : "8%"
+      }
+     ,{
+         dataField: "day30",
+         headerText: "30",
+         width : "8%"
+      }
+     ,{
+         dataField: "day31",
+         headerText: "31",
+         width : "8%"
+      }
+  ];
+
+
+
+
 $(document).ready(function () {
     $(".bottom_msg_box").attr("style","display:none");
     /***********************************************[ NOTICE GRID] ************************************************/
@@ -343,68 +517,77 @@ $(document).ready(function () {
             headerHeight : 50
         };
 
-        if(result.userTypeId == 1) {
-        	if(result.roleType == 111){
-        		$("#smfDailyForm").show();
-
                 salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
                 salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
                 salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
-        	}
-        	else{
-        		$("#smfDailyForm").hide();
+                salesOrgDailyList3 = GridCommon.createAUIGrid("salesOrgDailyList3", salesDailyDashboard_3, null, salesGridOption);
+                salesOrgDailyList4 = GridCommon.createAUIGrid("salesOrgDailyList4", salesDailyDashboard_4, null, salesGridOption);
 
-                salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
                 fn_selectWeeklyDashboard() ;
-
-                salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
-                salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
-                fn_selectDailyDashboard() ;
-        	}
-        }
-        else if(result.userTypeId == 4) {
-        	$("#smfDailyForm").show();
-
-        	  salesOrgWeeklyList = GridCommon.createAUIGrid("salesOrgWeeklyList", salesWeeklyDashboard, null, salesGridOption);
-        	  salesOrgDailyList1 = GridCommon.createAUIGrid("salesOrgDailyList1", salesDailyDashboard_1, null, salesGridOption);
-              salesOrgDailyList2 = GridCommon.createAUIGrid("salesOrgDailyList2", salesDailyDashboard_2, null, salesGridOption);
-        }
+                fn_selectCurrentMonthDailyDashboard() ;
+                fn_selectPreviousMonthDailyDashboard() ;
 
      });
     });   //$(document).ready
 
 
     function fn_selectWeeklyDashboard() {
-        Common.ajax("GET", "/organization/selectWeekSalesListing.do", $("#smfDailyForm").serialize(), function (result) {
-        AUIGrid.setGridData(salesOrgWeeklyList, result);
+         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+              Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
+                     if(result.userTypeId == 1 && result.roleType != 111) {
+                         memCode = '${SESSION_INFO.userName}';
+                     }
+                     else {
+                         memCode = result2[0].memCode;
+                    }
+
+                     Common.ajax("GET", "/organization/selectWeekSalesListing.do", {memCode:memCode}, function (result) {
+                     AUIGrid.setGridData(salesOrgWeeklyList, result);
+               });
+          });
+
      });
     }
 
-    function fn_selectDailyDashboard() {
-    	 if($('#userType').val() == 1 && $('#roleType') !=111) {
-    	        Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : '${orgCode}', grpCode : '${grpCode}', deptCode:'${deptCode}'}, function (result) {
-    	        AUIGrid.setGridData(salesOrgDailyList1, result);
-    	        AUIGrid.setGridData(salesOrgDailyList2, result);
-    	     });
-    	 }
-    	 else if($('#userType').val() == 4 || $('#roleType') == 111) {
-    		 Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do",  $("#smfDailyForm").serialize(), function (result) {
-                 Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : result[0].orgCode, grpCode : result[0].grpCode, deptCode: result[0].deptCode}, function (result2) {
-                	 AUIGrid.setGridData(salesOrgDailyList1, result2);
-                     AUIGrid.setGridData(salesOrgDailyList2, result2);
-                   });
-    		 });
-    	 }
+    function fn_selectCurrentMonthDailyDashboard() {
+
+         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+              Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
+                     if(result.userTypeId == 1 && result.roleType != 111) {
+                    	  Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : '${orgCode}', grpCode : '${grpCode}', deptCode:'${deptCode}',current:1}, function (result3) {
+                              AUIGrid.setGridData(salesOrgDailyList1, result3);
+                              AUIGrid.setGridData(salesOrgDailyList2, result3);
+                           });
+                     }
+                     else {
+                    	 Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : result2[0].orgCode, grpCode : result2[0].grpCode, deptCode: result2[0].deptCode,current:1}, function (result4) {
+                             AUIGrid.setGridData(salesOrgDailyList1, result4);
+                             AUIGrid.setGridData(salesOrgDailyList2, result4);
+                           });
+                    	}
+                  });
+         });
     }
 
+    function fn_selectPreviousMonthDailyDashboard() {
 
-    $(function() {
-         $('#btnSrchDailyInfo').click(function() {
-        	 fn_selectWeeklyDashboard();
-        	 fn_selectDailyDashboard();
-          });
-      });
-
+        Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+             Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
+                    if(result.userTypeId == 1 && result.roleType != 111) {
+                         Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : '${orgCode}', grpCode : '${grpCode}', deptCode:'${deptCode}', current:0}, function (result3) {
+                             AUIGrid.setGridData(salesOrgDailyList3, result3);
+                             AUIGrid.setGridData(salesOrgDailyList4, result3);
+                          });
+                    }
+                    else {
+                        Common.ajax("GET", "/organization/selectSmfDailyListing.do", {orgCode : result2[0].orgCode, grpCode : result2[0].grpCode, deptCode: result2[0].deptCode, current:0}, function (result4) {
+                            AUIGrid.setGridData(salesOrgDailyList3, result4);
+                            AUIGrid.setGridData(salesOrgDailyList4, result4);
+                          });
+                       }
+                    });
+        });
+   }
 
 </script>
 
@@ -420,34 +603,16 @@ $(document).ready(function () {
 
 <section class="pop_body">
   <!-- pop_body start -->
-  <section class="search_table">
-   <!-- search_table start -->
-   <form action="#" method="post" id="smfDailyForm">
-    <input type="hidden" id="userType" name="userType" />
-    <input type="hidden" id="roleType" name="roleType" />
-   <aside class="title_line"><!-- title_line start -->
-    <ul class="right_btns">
-    <li><p class="btn_blue"><a id="btnSrchDailyInfo" href="#"><span class="search"></span>Search</a></p></li>
-    </ul>
-    </aside>
-    <table class="type1">
-     <!-- table start -->
-     <tbody>
-    <tr>
-    <th scope="row">Simulate Member Code</th>
-    <td><input id="memCode" name="memCode" type="text" title="memCode"  class="w100p" value = '${SESSION_INFO.userName}'.trim() /></td>
-    </tr>
-     </tbody>
-    </table>
-    <!-- table end -->
-   </form>
-  </section>
 
-  <div id="salesOrgWeeklyList" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
+ <div id="salesOrgWeeklyList" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
 
  <div id="salesOrgDailyList1" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
 
  <div id="salesOrgDailyList2" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
+
+  <div id="salesOrgDailyList3" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
+
+ <div id="salesOrgDailyList4" class="grid_wrap" style="width: 100%; height:300px; margin: 0 auto;"></div>
  </section>
 
 

@@ -25,5 +25,13 @@ public interface SalesMonitoringFileMapper {
 
 	List<EgovMap> selectSimulatedMemberCRSCode(Map<String, Object> params);
 
+	List<EgovMap> cmbProduct_HA();
+
+	List<EgovMap> cmbProduct_HC();
+
+	List<EgovMap> selectProductCategoryList_HA();
+
+	List<EgovMap> selectProductCategoryList_HC();
+
 
 }

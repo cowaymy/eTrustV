@@ -9,33 +9,51 @@ $(document).ready(function() {
 
 	 createAUIGrid();
 
-	 $("#Code").val('${SESSION_INFO.userName}');
-     $("#Code").attr("class", "w100p readonly");
 
-    if("${memType}"== "1"){
 
-        if("${SESSION_INFO.memberLevel}" =="1"){
-           $("#orgCode").attr("class", "w100p readonly");
-           $("#orgCode").attr("readonly", "readonly");
+     var memCode;
+     Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+          Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
+                 if(result.userTypeId == 1 && result.roleType != 111) {
+                     memCode = '${SESSION_INFO.userName}';
+                 }
+                 else {
+                     memCode = result2[0].memCode;
+                }
 
-       }else if("${SESSION_INFO.memberLevel}" =="2"){
-           $("#orgCode").attr("class", "w100p readonly");
-           $("#orgCode").attr("readonly", "readonly");
-           $("#grpCode").attr("class", "w100p readonly");
-           $("#grpCode").attr("readonly", "readonly");
+                 $("#Code").val(memCode);
+                 $("#Code").attr("class", "w100p readonly");
 
-       }else if("${SESSION_INFO.memberLevel}" =="3"){
-           $("#orgCode").attr("class", "w100p readonly");
-           $("#orgCode").attr("readonly", "readonly");
+            });
+        });
 
-           $("#grpCode").attr("class", "w100p readonly");
-           $("#grpCode").attr("readonly", "readonly");
 
-           $("#deptCode").attr("class", "w100p readonly");
-           $("#deptCode").attr("readonly", "readonly");
+		if("${memType}"== "1"){
 
-       }
-   }
+		    if("${SESSION_INFO.memberLevel}" =="1"){
+		       $("#orgCode").attr("class", "w100p readonly");
+		       $("#orgCode").attr("readonly", "readonly");
+
+		   }else if("${SESSION_INFO.memberLevel}" =="2"){
+		       $("#orgCode").attr("class", "w100p readonly");
+		       $("#orgCode").attr("readonly", "readonly");
+		       $("#grpCode").attr("class", "w100p readonly");
+		       $("#grpCode").attr("readonly", "readonly");
+
+		   }else if("${SESSION_INFO.memberLevel}" =="3"){
+		       $("#orgCode").attr("class", "w100p readonly");
+		       $("#orgCode").attr("readonly", "readonly");
+
+		       $("#grpCode").attr("class", "w100p readonly");
+		       $("#grpCode").attr("readonly", "readonly");
+
+		       $("#deptCode").attr("class", "w100p readonly");
+		       $("#deptCode").attr("readonly", "readonly");
+
+		   }
+		}
+
+
 
     doGetComboOrder('/sales/order/colorGridProductList.do', '', '', '', 'cmbProduct', 'M', 'f_multiCombo'); //Common Code
     doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
@@ -131,9 +149,9 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
-    if("${memType}"== "1"){
+//     if("${memType}"== "1"){
     	 fn_selectListAjax();
-    }
+//     }
 
 }
 
@@ -165,7 +183,7 @@ $(function(){
 });
 
 function fn_selectListAjax() {
-    Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serialize(), function(result) {
+    Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(listMyGridID, result);
     });
 
@@ -242,7 +260,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Code</th>
-    <td><input id="Code" name="Code" type="text" title="Code"  class="w100p" value = '${SESSION_INFO.userName}' readonly="readonly"/></td>
+    <td><input id="Code" name="Code" type="text" title="Code"  class="w100p" readonly="readonly"/></td>
 
     <th scope="row">Org Code</th>
     <td><input id="orgCode" name="orgCode" type="text" title="orgCode"  class="w100p" value = '${orgCode}'.trim() /></td>

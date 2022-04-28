@@ -89,6 +89,8 @@ public class SalesMonitoringFileController {
 		params.put("cmbProduct", cmbProduct);
 		params.put("cmbProductCtgry",cmbProductCtgry);
 
+		LOGGER.info("gg",params);
+System.out.println(params);
         List<EgovMap> notice = salesMonitoringFileService.selectPerformanceView(params);
         return ResponseEntity.ok(notice);
     }
@@ -217,6 +219,39 @@ public class SalesMonitoringFileController {
         List<EgovMap> notice = salesMonitoringFileService.selectSimulatedMemberCRSCode(params);
         return ResponseEntity.ok(notice);
     }
+
+	@RequestMapping(value = "/cmbProduct_HA.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> cmbProduct_HA(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> colorGridProductList = salesMonitoringFileService.cmbProduct_HA();
+
+		return ResponseEntity.ok(colorGridProductList);
+	}
+
+	@RequestMapping(value = "/cmbProduct_HC.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> cmbProduct_HC(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> colorGridProductList = salesMonitoringFileService.cmbProduct_HC();
+
+		return ResponseEntity.ok(colorGridProductList);
+	}
+
+	@RequestMapping(value = "/selectProductCategoryList_HA.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductCategoryList_HA(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> colorGridProductList = salesMonitoringFileService.selectProductCategoryList_HA();
+
+		return ResponseEntity.ok(colorGridProductList);
+	}
+
+	@RequestMapping(value = "/selectProductCategoryList_HC.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductCategoryList_HC(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> colorGridProductList = salesMonitoringFileService.selectProductCategoryList_HC();
+
+		return ResponseEntity.ok(colorGridProductList);
+	}
+
 
 
 }
