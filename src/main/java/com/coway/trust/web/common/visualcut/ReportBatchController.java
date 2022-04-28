@@ -88,7 +88,7 @@ public class ReportBatchController {
 
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
-  @Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
+  //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
   // http://fmaker7.tistory.com/163
   public void sqlColorGridNoRentalOutInsExcel() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
@@ -107,7 +107,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel_S.do")
-  @Scheduled(cron = "0 10 4 * * *")//Daily (4:10am)
+  //@Scheduled(cron = "0 10 4 * * *")//Daily (4:10am)
   public void sqlColorGridNoRentalOutInsExcelS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel_S...");
     Map<String, Object> params = new HashMap<>();
@@ -125,7 +125,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2017_Jan_Dec_S.do")
-  @Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
   public void colorGridDaily2017JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -143,7 +143,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalMembership_CCP.do")
-  @Scheduled(cron = "0 20 4 * * *")//Daily (4:20am)
+  //@Scheduled(cron = "0 20 4 * * *")//Daily (4:20am)
   public void rentalMembershipCCP() {
     LOGGER.info("[START] RentalMembership_CCP...");
     Map<String, Object> params = new HashMap<>();
