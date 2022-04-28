@@ -88,7 +88,7 @@ public class ReportBatchController {
 
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
-  //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
+  @Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
   // http://fmaker7.tistory.com/163
   public void sqlColorGridNoRentalOutInsExcel() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
@@ -107,7 +107,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel_S.do")
-  //@Scheduled(cron = "0 10 4 * * *")//Daily (4:10am)
+  @Scheduled(cron = "0 10 4 * * *")//Daily (4:10am)
   public void sqlColorGridNoRentalOutInsExcelS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel_S...");
     Map<String, Object> params = new HashMap<>();
@@ -125,7 +125,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2017_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  @Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
   public void colorGridDaily2017JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -143,7 +143,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalMembership_CCP.do")
-  //@Scheduled(cron = "0 20 4 * * *")//Daily (4:20am)
+  @Scheduled(cron = "0 20 4 * * *")//Daily (4:20am)
   public void rentalMembershipCCP() {
     LOGGER.info("[START] RentalMembership_CCP...");
     Map<String, Object> params = new HashMap<>();
@@ -2468,7 +2468,7 @@ Map<String, Object> params = new HashMap<>();
 params.put(REPORT_FILE_NAME, "/visualcut/WeeklyRentalAccumulatedAccReportPDF.rpt");// visualcut
 params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
 params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-   "Finance_PNC" + File.separator + "Weekly_Rental_Accumulated_Account_Report_" + CommonUtils.getNowDate() + ".pdf");
+   "Finance_PNC" + File.separator + "WKLY_REN_ACMLT_ACC_" + CommonUtils.getNowDate() + ".pdf");
 
 this.view(null, null, params);
 LOGGER.info("[END] WeeklyRentalAccumulatedAccReportPDF...");
