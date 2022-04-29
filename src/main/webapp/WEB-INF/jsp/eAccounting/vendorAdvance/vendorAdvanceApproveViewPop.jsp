@@ -179,7 +179,7 @@
         myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
 
         $("#viewClmNo").text(myGridData[0].clmNo);
-        $("#viewClmType").text(myGridData[0].clmType);
+        $("#viewAdvClm").text(myGridData[0].advRefdClmNo);
         $("#viewAdvType").text(myGridData[0].advTypeDesc);
         $("#viewAdvEntryDt").text(myGridData[0].reqstDt);
         $("#viewAdvCostCenter").text(myGridData[0].costCentr + " - " + myGridData[0].costCentrName);
@@ -196,7 +196,7 @@
             $("#viewTrvRem").text(myGridData[0].rem);
             $("#viewTrvTotAmt").text(myGridData[0].cur + " "+ AUIGrid.formatNumber(myGridData[0].repayAmt, "#,##0.00"));
             $("#viewTrvTotExp").text(myGridData[0].cur + " "+ AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
-            $("#viewTrvBalAmt").val(myGridData[0].repayAmt - AUIGrid.formatNumber(myGridData[0].totAmt));
+            $("#viewTrvBalAmt").val(myGridData[0].advAmt - AUIGrid.formatNumber(myGridData[0].totAmt));
             $("#viewTrvBalAmt").text(myGridData[0].cur + " "+ AUIGrid.formatNumber($("#viewTrvBalAmt").val(), "#,##0.00"));
             if(myGridData[0].advType == 5)
             {
@@ -205,6 +205,8 @@
                 $("#trvBalAmt").hide();
                 $("#trvRefundMode").hide();
                 $("#trvBankRef").hide();
+                $("#advClmHeader").hide();
+                $("#viewAdvClm").hide();
             }
 
             fn_setGridData(myGridID, myGridData);
@@ -223,12 +225,12 @@
             $("#refAdvReqClmNo").text(myGridData[0].advRefdClmNo);
             $("#refRepayDate").text(myGridData[0].advRefdDt);
             $("#refBankInRefNo").text(myGridData[0].invcNo);
-            $("#viewTrvTotAmt").text(myGridData[0].cur + " " + AUIGrid.formatNumber(myGridData[0].repayAmt, "#,##0.00"));
+            $("#viewTrvTotAmt").text(myGridData[0].cur + " " + AUIGrid.formatNumber(myGridData[0].advAmt, "#,##0.00"));
             $("#viewTrvRem").text(myGridData[0].rem);
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewTrvTotExp").text(myGridData[0].cur + " "+ AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
-            $("#viewTrvBalAmt").val(myGridData[0].repayAmt - AUIGrid.formatNumber(myGridData[0].totAmt));
+            $("#viewTrvBalAmt").val(myGridData[0].advAmt - AUIGrid.formatNumber(myGridData[0].totAmt));
             $("#viewTrvBalAmt").text(myGridData[0].cur + " "+ AUIGrid.formatNumber($("#viewTrvBalAmt").val(), "#,##0.00"));
             $("#viewTrvRefundMode option[value=" + myGridData[0].advRefdMode + "]").attr('selected', true);
             $("#viewTrvRefundMode").attr("disabled", true);
@@ -368,13 +370,13 @@
 
 	                <tbody>
 	                    <tr>
-	                        <th>Claim No</th>
+	                        <th scope="row">Claim No</th>
 	                        <td>
 	                            <span id="viewClmNo"></span>
 	                        </td>
-	                        <th>Claim Type</th>
+	                        <th scope="row" id="advClmHeader">Advance Claim No</th>
 	                        <td>
-	                            <span id="viewClmType"></span>
+	                            <span id="viewAdvClm"></span>
 	                        </td>
 	                    </tr>
 	                    <tr>

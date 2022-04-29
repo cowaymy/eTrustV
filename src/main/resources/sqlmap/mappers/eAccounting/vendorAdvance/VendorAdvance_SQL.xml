@@ -215,7 +215,8 @@
             A.CRT_USER_ID,
             B.USER_NAME,
             D.APPV_PRCSS_DT,
-            E.INVC_CUR CUR
+            E.INVC_CUR CUR,
+            A.MAIN_REQ_NO ADV_REFD_CLM_NO
         FROM FCM0027M A
         JOIN SYS0047M B
             ON A.CRT_USER_ID = B.USER_ID
@@ -268,6 +269,7 @@
                 ADV_PRD_TO,
                 ADV_REFD_MODE,
                 ADV_REFD_REF,
+                MAIN_REQ_NO,
             </if>
             CRT_DT,
             CRT_USER_ID,
@@ -299,6 +301,7 @@
                 TO_DATE(#{eventEndDt}, 'DD/MM/YYYY'),
                 #{settlementMode},
                 #{bankRef},
+                #{settlementAdvRefdNo},
             </if>
             SYSDATE,
             #{userId},
@@ -694,14 +697,14 @@
             #{grandAmt},
             #{expAmt},
             <if test="balAmt &lt; 0">
-               #{balAmt}*-1,
+               NVL(#{balAmt}*-1,0),
             </if>
             <if test="balAmt &gt;= 0">
-               #{balAmt},
+               NVL(#{balAmt},0),
             </if>
             #{taxAmt},
             #{nonTaxAmt},
-            #{totAmt},
+            NVL(#{totAmt},0),
             'VB',
             #{dim1},
             #{dim2},
@@ -755,7 +758,8 @@
             B.USER_NAME,
             TO_CHAR(D.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
             D.APPV_PRCSS_STUS,
-            (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO) REQ_AMT,
+            A.MAIN_REQ_NO ADV_CLAM_NO,
+            NVL((SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = A.MAIN_REQ_NO)) REQ_AMT,
             E.INVC_CUR CURRENCY
         FROM FCM0027M A
         JOIN SYS0047M B
@@ -785,6 +789,8 @@
                  WHEN F.ADV_TYPE = '2' THEN 'STAFF TRAVEL ADVANCE REPAYMENT'
                  WHEN F.ADV_TYPE = '3' THEN 'STAFF/COMPANY EVENT REQUEST'
                  WHEN F.ADV_TYPE = '4' THEN 'STAFF/COMPANY EVENT REPAYMENT'
+                 WHEN F.ADV_TYPE = '5' THEN 'VENDOR ADVANCE REQUEST'
+                 WHEN F.ADV_TYPE = '6' THEN 'VENDOR ADVANCE REPAYMENT'
             END AS ADV_TYPE_NAME,
             TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,     /* REQDATE */
             A.REQST_USER_ID,                                               /* REQPERNM */
@@ -793,14 +799,13 @@
             D.MEM_ACC_ID,                                     /* ACCOUNT */
             B.ADV_REM EXP_DESC,                           /* LINEMEMO */
             (SELECT MAX(CLM_SEQ)+1 FROM FCM0028D WHERE CLM_NO = B.CLM_NO) APPV_ITM_SEQ,/* LINEID */
-            CASE WHEN (F.ADV_TYPE = '2' OR F.ADV_TYPE = '4') THEN (SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.APPV_REQ_KEY_NO)
-            END AS ADV_CLAM_NO,                         /* ADV_CLAM_NO */
+            B.MAIN_REQ_NO ADV_CLM_NO,             /* ADV_CLAM_NO */
             B.TOT_AMT,                                         /* TAMT */
             A.APPV_PRCSS_STUS,
             TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
             TO_CHAR(A.APPV_PRCSS_DT,'DD/MM/YYYY') INVC_DT, /* DOCDATE */
             --TO_CHAR(E.INVC_DT, 'DD/MM/YYYY') INVC_DT,        /* DOCDATE */
-            (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+            (SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = B.MAIN_REQ_NO) REQ_AMT,
             G.INVC_CUR CURRENCY
         FROM FCM0004M A
         LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
@@ -846,7 +851,7 @@
                 A.APPV_PRCSS_STUS,
                 TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
                 TO_CHAR( a.appv_prcss_dt, 'DD/MM/YYYY') INVC_DT,        /* DOCDATE */
-                (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+                (SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = B.MAIN_REQ_NO) REQ_AMT,
                 G.INVC_CUR CURRENCY
             FROM FCM0004M A
             LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
@@ -959,7 +964,8 @@
             ADV_OCC,
             ADV_REFD_MODE,
             ADV_REFD_REF,
-            PREV_CLM_NO
+            PREV_CLM_NO,
+            MAIN_REQ_NO
         )
         SELECT
             #{newClmNo} CLM_NO,
@@ -984,7 +990,8 @@
             ADV_OCC,
             ADV_REFD_MODE,
             ADV_REFD_REF,
-            CLM_NO
+            CLM_NO,
+            MAIN_REQ_NO
         FROM FCM0027M
         WHERE CLM_NO = #{clmNo}
     </insert>
@@ -1103,7 +1110,8 @@
             NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
             REGEXP_REPLACE(C.ADV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) REM,
             C.ADV_REFD_MODE,
-            C.ADV_REFD_REF
+            C.ADV_REFD_REF,
+            NVL((SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO),0) ADV_AMT
         FROM FCM0004M A
         LEFT JOIN FCM0015D B
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO

@@ -485,7 +485,7 @@
             } else if($("#settlementPop").is(":visible")) {
                 $("#form_vendorAdvanceSettlement").clearForm();
                 AUIGrid.clearGridData(settlementGridId);
-                $("#settlementPop").hide();
+                //$("#settlementPop").hide();
 
                 if($("#eventStartDt").hasClass("readonly")) $("#eventStartDt").removeClass("readonly");
                 if($("#eventEndDt").hasClass("readonly")) $("#eventEndDt").removeClass("readonly");
@@ -500,6 +500,7 @@
                 if($("#settlementRem").attr("readonly")) $("#settlementRem").removeAttr("readonly");
 
                 $("#settlementFileSelector").html();
+                $("#settlementPop").hide();
 
             }
         } else if(type == "S") {
@@ -847,6 +848,7 @@
                         $("#settlementAdvRefdNo").val(advGridClmNo);
 
                         $("#settlementTotalAdv").val(result.data.totAmt);
+                        $("#settlementAdvNo").val(result.data.clmNo);
                         $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
                         $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.cur + ")");
                         $("#settlementTotalExp").val(0);
@@ -868,7 +870,8 @@
                 } else if(advGridAdvType == "6") {
                     if(advGridAppvPrcssStus == "T") {
                         // Settlement Claim Type + Draft = Allow continuation of editing settlement
-                        $("h1_settlement").text("Vendor Advance Settlement - Edit");
+                        $("#h1_settlement").text("Vendor Advance Settlement - Edit");
+                        //$("#h1_settlement").replaceWith('<h1 id="h1_settlement">Vendor Advance Settlement - Edit</h1>');
 
                         $("#settlementNewClmNo").val(advGridClmNo);
 
@@ -891,6 +894,14 @@
                         $("#settlementMemAccName").val(result.data.memAccName);
                         $("#settlementCostCenter").val(result.data.costCenter);
                         $("#settlementCrtUserName").val(result.data.userName);
+                        $("#settlementAdvNo").val(result.data.advRefdClmNo);
+                        $("#settlementMode").attr('disabled', false);
+                        $("#settlementMode").val(result.data.advRefdMode).attr("selected", "selected");
+
+                        $("#settlementDraft").show();
+                        $("#settlementSubmit").show();
+                        $("#settlement_add_row").show();
+                        $("#settlement_remove_row").show();
                     } else {
                         // Settlement Claim Type + Approved/Rejected/Pending Approval/Request = Allow view
                         //$("#h1_settlement").text("Vendor Advance Settlement - View");
@@ -935,6 +946,8 @@
                         $("#settlementCostCenter").val(result.data.costCenter);
                         $("#settlementCrtUserName").val(result.data.userName);
                         $("#viewAppvStusSett").html(result.data.appvPrcssStus);
+                        $("#settlementAdvNo").val(result.data.advRefdClmNo);
+                        $("#settlementMode").attr('disabled', true);
                     }
 
                     //set queried values
@@ -951,8 +964,8 @@
                     $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.settlementItems[0].currency + ")");
                     $("#settlementTotalBalance").val(Number(result.data.totAmt) - Number(result.data.expAmt));
                     $("#settlementTotalBalance").val(AUIGrid.formatNumber((result.data.totAmt) - (result.data.expAmt), "#,##0.00"));
-                    $("#settlementMode option[value=" + result.data.advRefMode + "]").attr('selected', true);
-                    $("#settlementMode").attr('disabled', true);
+                    $("#settlementMode option[value=" + result.data.advRefdMode + "]").attr('selected', true);
+                    //$("#settlementMode").attr('disabled', true);
                     $("#bankRef").val(result.data.advRefdRef);
                     // $("#settlementFileSelector").val(); // Settlement file
                     $("#settlementRem").val(result.data.rem);
@@ -2521,19 +2534,21 @@
                                     <p><input type="text" title="Event End Date" placeholder="DD/MM/YYYY" class="j_date" id="eventEndDt" name="eventEndDt"/></p>
                                 </div><!-- date_set end -->
                             </td>
-                            <th></th>
-                            <td></td>
+                            <th scope="row">Advance Claim No</th>
+                            <td>
+                                <input type="text" title="Advance Claim Number" placeholder="Advance Claim Number" id="settlementAdvNo" name="settlementAdvNo" class="readonly w100p" readonly="readonly" />
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row" id="settlementTotalAdvHeader">Advance Amount (RM)</th>
                             <td colspan="3">
-                                <input type="text" title="Total Advance (RM)" placeholder="Total Advance (RM)" id="settlementTotalAdv" name="settlementTotalAdv" class="readonly" readonly="readonly" />
+                                <input type="text" title="Total Advance (RM)" placeholder="Total Advance (RM)" id="settlementTotalAdv" name="settlementTotalAdv" class="readonly w100p" readonly="readonly" />
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" id="settlementTotalExpHeader">Total Expenses (RM)</th>
                             <td colspan="3">
-                                <input type="text" title="Total Expenses (RM)" placeholder="Total Expenses (RM)" id="settlementTotalExp" name="settlementTotalExp" class="readonly" readonly="readonly" />
+                                <input type="text" title="Total Expenses (RM)" placeholder="Total Expenses (RM)" id="settlementTotalExp" name="settlementTotalExp" class="readonly w100p" readonly="readonly" />
                             </td>
                         </tr>
                         <tr>
@@ -2549,13 +2564,13 @@
                             <th scope="row">Refund Mode</th>
                             <td>
                                 <select class="readonly w100p" id="settlementMode" name="settlementMode">
-                                    <option value="CASH" selected="selected">Cash</option>
-                                    <option value="OTRX" selected="selected">Online</option>
+                                    <option value="CASH">Cash</option>
+                                    <option value="OTRX">Online</option>
                                 </select>
                             </td>
                             <th scope="row">Bank Reference</th>
                             <td>
-                                <input type="text" title="Bank Reference" placeholder="Bank Reference" id="bankRef" name="bankRef" />
+                                <input type="text" title="Bank Reference" placeholder="Bank Reference" id="bankRef" name="bankRef" class="w100p"/>
                             </td>
                         </tr>
                         <tr>
