@@ -3537,39 +3537,39 @@ console.log("vBindingNo" + vBindingNo);
 <tr>
     <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
     <td colspan="3">
-    <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
+    <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.street" /></th>
     <td colspan="3">
-    <input id="billStreet" name="billStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
+    <input id="billStreet" name="billStreet" type="text" title="" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.area" /><span class="must">*</span></th>
     <td colspan="3">
-    <input id="billArea" name="billArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
+    <input id="billArea" name="billArea" type="text" title="" placeholder="eg. TAMAN RIMBA" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.city" /><span class="must">*</span></th>
     <td>
-    <input id="billCity" name="billCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    <input id="billCity" name="billCity" type="text" title="" placeholder="eg. KOTA KINABALU" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.postCode" /><span class="must">*</span></th>
     <td>
-    <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="eg. 88450" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.state" /><span class="must">*</span></th>
     <td>
-    <input id="billState" name="billState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    <input id="billState" name="billState" type="text" title="" placeholder="eg. SABAH" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
     <td>
-    <input id="billCountry" name="billCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    <input id="billCountry" name="billCountry" type="text" title="" placeholder="eg. MALAYSIA" class="w100p readonly" readonly/>
     </td>
 </tr>
 
@@ -3718,34 +3718,34 @@ console.log("vBindingNo" + vBindingNo);
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
-    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.street" /><span class="must">*</span></th>
-    <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.area" /><span class="must">*</span></th>
-    <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="eg. TAMAN RIMBA" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.city" /><span class="must">*</span></th>
     <td>
-    <input id="instCity" name="instCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    <input id="instCity" name="instCity" type="text" title="" placeholder="eg. KOTA KINABALU" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.postCode" /><span class="must">*</span></th>
     <td>
-    <input id="instPostCode" name="instPostCode" type="text" title="" placeholder="Post Code" class="w100p readonly" readonly/>
+    <input id="instPostCode" name="instPostCode" type="text" title="" placeholder="eg. 88450" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.state" /><span class="must">*</span></th>
     <td>
-    <input id="instState" name="instState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    <input id="instState" name="instState" type="text" title="" placeholder="eg. SABAH" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
     <td>
-    <input id="instCountry" name="instCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    <input id="instCountry" name="instCountry" type="text" title="" placeholder="eg. MALAYSIA" class="w100p readonly" readonly/>
     </td>
 </tr>
 

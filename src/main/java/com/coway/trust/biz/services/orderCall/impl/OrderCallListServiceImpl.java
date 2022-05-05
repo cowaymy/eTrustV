@@ -229,6 +229,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         installMaster = getSaveInstallMaster(params, sessionVO);
         orderLogList = getSaveOrderLogList(params, sessionVO);
 
+        installMaster.put("CTSSessionCode", params.get("CTSSessionCode"));
+        installMaster.put("CTSSessionSegmentType", params.get("CTSSessionSegmentType"));
+
         // INSERT INSTALL ENTRY
         installNo = getDocNo("9");
         //returnNo = installNo.get("docNo").toString();

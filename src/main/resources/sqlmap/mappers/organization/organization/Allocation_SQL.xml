@@ -250,11 +250,96 @@
 
 	                       AS_O_CNT     ||'-'||NVL(0 ,0)      othAsCnt,
 	                       INS_O_CNT    ||'-'||NVL(0 ,0)      othInsCnt,
-	                       RTN_O_CNT    ||'-'||NVL(0 ,0)      othRtnCnt
+	                       RTN_O_CNT    ||'-'||NVL(0 ,0)      othRtnCnt,
+
+                           SUM_AS_ST_CNT ||'-'|| NVL(AS_ST_15MT_SUM,0)         sumAsStCnt,
+                           SUM_AS_DSK_CNT ||'-'|| NVL(AS_DSK_15MT_SUM,0)         sumAsDskCnt,
+                           SUM_AS_SML_CNT ||'-'|| NVL(AS_SML_15MT_SUM,0)         sumAsSmlCnt,
+
+                           SUM_INS_ST_CNT ||'-'|| NVL(INS_ST_15MT_SUM ,0)       sumInsStCnt,
+                           SUM_INS_DSK_CNT ||'-'|| NVL(INS_DSK_15MT_SUM ,0)       sumInsDskCnt,
+                           SUM_INS_SML_CNT ||'-'|| NVL(INS_SML_15MT_SUM ,0)       sumInsSmlCnt,
+
+                           SUM_RTN_ST_CNT ||'-'|| NVL(RTN_ST_15_SUM ,0)           sumRtnStCnt,
+                           SUM_RTN_DSK_CNT ||'-'|| NVL(RTN_DSK_15_SUM ,0)           sumRtnDskCnt,
+                           SUM_RTN_SML_CNT ||'-'|| NVL(RTN_SML_15_SUM ,0)           sumRtnSmlCnt,
+
+                           AS_ST_M_CNT     ||'-'|| NVL(AS_ST_MORNG_SESION_SUM,0)      morAsStCnt,
+                           AS_DSK_M_CNT     ||'-'|| NVL(AS_DSK_MORNG_SESION_SUM,0)      morAsDskCnt,
+                           AS_SML_M_CNT     ||'-'|| NVL(AS_SML_MORNG_SESION_SUM,0)      morAsSmlCnt,
+                           INS_ST_M_CNT    ||'-'|| NVL(INS_ST_MORNG_SESION_SUM,0)      morInsStCnt,
+                           INS_DSK_M_CNT    ||'-'|| NVL(INS_DSK_MORNG_SESION_SUM,0)      morInsDskCnt,
+                           INS_SML_M_CNT    ||'-'|| NVL(INS_SML_MORNG_SESION_SUM,0)      morInsSmlCnt,
+                           RTN_ST_M_CNT    ||'-'||NVL(RTN_ST_MORNG_SESION_SUM,0)      morRtnStCnt,
+                           RTN_DSK_M_CNT    ||'-'||NVL(RTN_DSK_MORNG_SESION_SUM,0)      morRtnDskCnt,
+                           RTN_SML_M_CNT    ||'-'||NVL(RTN_SML_MORNG_SESION_SUM,0)      morRtnSmlCnt,
+
+                           AS_ST_A_CNT     ||'-'||NVL(AS_ST_AFTNON_SESION_SUM ,0)    aftAsStCnt,
+                           AS_DSK_A_CNT     ||'-'||NVL(AS_DSK_AFTNON_SESION_SUM ,0)    aftAsDskCnt,
+                           AS_SML_A_CNT     ||'-'||NVL(AS_SML_AFTNON_SESION_SUM ,0)    aftAsSmlCnt,
+                           INS_ST_A_CNT    ||'-'||NVL(INS_ST_AFTNON_SESION_SUM ,0)    aftInsStCnt,
+                           INS_DSK_A_CNT    ||'-'||NVL(INS_DSK_AFTNON_SESION_SUM ,0)    aftInsDskCnt,
+                           INS_SML_A_CNT    ||'-'||NVL(INS_SML_AFTNON_SESION_SUM ,0)    aftInsSmlCnt,
+                           RTN_ST_A_CNT    ||'-'||NVL(RTN_ST_AFTNON_SESION_SUM ,0)    aftRtnStCnt,
+                           RTN_DSK_A_CNT    ||'-'||NVL(RTN_DSK_AFTNON_SESION_SUM ,0)    aftRtnDskCnt,
+                           RTN_SML_A_CNT    ||'-'||NVL(RTN_SML_AFTNON_SESION_SUM ,0)    aftRtnSmlCnt,
+
+                           AS_ST_E_CNT     ||'-'||NVL(AS_ST_EVNG_SESION_SUM ,0)    evnAsStCnt,
+                           AS_DSK_E_CNT     ||'-'||NVL(AS_DSK_EVNG_SESION_SUM ,0)    evnAsDskCnt,
+                           AS_SML_E_CNT     ||'-'||NVL(AS_SML_EVNG_SESION_SUM ,0)    evnAsSmlCnt,
+                           INS_ST_E_CNT    ||'-'||NVL(INS_ST_EVNG_SESION_SUM ,0)    evnInsStCnt,
+                           INS_DSK_E_CNT    ||'-'||NVL(INS_DSK_EVNG_SESION_SUM ,0)    evnInsDskCnt,
+                           INS_SML_E_CNT    ||'-'||NVL(INS_SML_EVNG_SESION_SUM ,0)    evnInsSmlCnt,
+                           RTN_ST_E_CNT    ||'-'||NVL(RTN_ST_EVNG_SESION_SUM ,0)    evnRtnStCnt,
+                           RTN_DSK_E_CNT    ||'-'||NVL(RTN_DSK_EVNG_SESION_SUM ,0)    evnRtnDskCnt,
+                           RTN_SML_E_CNT    ||'-'||NVL(RTN_SML_EVNG_SESION_SUM ,0)    evnRtnSmlCnt,
+
+                           AS_ST_O_CNT     ||'-'||NVL(0 ,0)    othAsStCnt,
+                           AS_DSK_O_CNT     ||'-'||NVL(0 ,0)    othAsDskCnt,
+                           AS_SML_O_CNT     ||'-'||NVL(0 ,0)    othAsSmlCnt,
+                           INS_ST_O_CNT    ||'-'||NVL(0 ,0)    othInsStCnt,
+                           INS_DSK_O_CNT    ||'-'||NVL(0 ,0)    othInsDskCnt,
+                           INS_SML_O_CNT    ||'-'||NVL(0 ,0)   othInsSmlCnt,
+                           RTN_ST_O_CNT    ||'-'||NVL(0 ,0)   othRtnStCnt,
+                           RTN_DSK_O_CNT    ||'-'||NVL(0 ,0)    othRtnDskCnt,
+                           RTN_SML_O_CNT    ||'-'||NVL(0 ,0)    othRtnSmlCnt
                 FROM(
                         SELECT   #{CT_ID}  MEM_ID ,
                                 (SELECT MEM_CODE  FROM ORG0001D   where MEM_ID = #{CT_ID}) MEM_CODE ,
                                 (SELECT CT_SUB_GRP  FROM ORG0005D D5  WHERE D5.MEM_ID  =#{CT_ID}  ) CT_SUB_GRP ,
+
+
+
+                                (SELECT    nvl(MORNG_SESION_AS_ST,0)+
+                                               nvl(AFTNON_SESION_AS_ST,0)+
+                                               nvl(EVNG_SESION_AS_ST,0) as  AS_ST_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_ST_15MT_SUM,
+                                (SELECT    nvl(MORNG_SESION_AS_DSK,0)+
+                                               nvl(AFTNON_SESION_AS_DSK,0)+
+                                               nvl(EVNG_SESION_AS_DSK,0) as  AS_DSK_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_DSK_15MT_SUM,
+                                (SELECT    nvl(MORNG_SESION_AS_SML,0)+
+                                               nvl(AFTNON_SESION_AS_SML,0)+
+                                               nvl(EVNG_SESION_AS_SML,0) as  AS_SML_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_SML_15MT_SUM,
+
+                                (SELECT    nvl(MORNG_SESION_INS_ST,0)+
+                                               nvl(AFTNON_SESION_INS_ST,0)+
+                                               nvl(EVNG_SESION_INS_ST,0) as  INS_ST_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_ST_15MT_SUM,
+                                (SELECT    nvl(MORNG_SESION_INS_DSK,0)+
+                                               nvl(AFTNON_SESION_INS_DSK,0)+
+                                               nvl(EVNG_SESION_INS_DSK,0) as  INS_DSK_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_DSK_15MT_SUM,
+                                (SELECT    nvl(MORNG_SESION_INS_SML,0)+
+                                               nvl(AFTNON_SESION_INS_SML,0)+
+                                               nvl(EVNG_SESION_INS_SML,0) as  INS_SML_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_SML_15MT_SUM,
+
+                                (SELECT    nvl(MORNG_SESION_RTN_ST,0)+
+                                               nvl(AFTNON_SESION_RTN_ST,0)+
+                                               nvl(EVNG_SESION_RTN_ST,0) as  RTN_ST_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  RTN_ST_15_SUM,
+                                (SELECT    nvl(MORNG_SESION_RTN_DSK,0)+
+                                               nvl(AFTNON_SESION_RTN_DSK,0)+
+                                               nvl(EVNG_SESION_RTN_DSK,0) as  RTN_DSK_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  RTN_DSK_15_SUM,
+                                (SELECT    nvl(MORNG_SESION_RTN_SML,0)+
+                                               nvl(AFTNON_SESION_RTN_SML,0)+
+                                               nvl(EVNG_SESION_RTN_SML,0) as  RTN_SML_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  RTN_SML_15_SUM,
+
 
                                 (SELECT    nvl(MORNG_SESION_AS,0)+
                                                nvl(AFTNON_SESION_AS,0)+
@@ -268,6 +353,44 @@
                                                nvl(AFTNON_SESION_RTN,0)+
                                                nvl(EVNG_SESION_RTN,0) as  RTN_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  RTN_15_SUM,
 
+
+
+
+
+                                (SELECT    nvl(MORNG_SESION_AS_ST,0)    MORNG_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_ST_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_AS_DSK,0)    MORNG_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_DSK_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_AS_SML,0)    MORNG_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_SML_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_INS_ST,0)   MORNG_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_ST_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_INS_DSK,0)   MORNG_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_DSK_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_INS_SML,0)   MORNG_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_SML_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_RTN_ST,0)  MORNG_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_ST_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_RTN_DSK,0)  MORNG_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_DSK_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_RTN_SML,0)  MORNG_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_SML_MORNG_SESION_SUM,
+
+
+                                (SELECT    nvl(AFTNON_SESION_AS_ST,0)   AFTNON_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  AS_ST_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_AS_DSK,0)   AFTNON_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  AS_DSK_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_AS_SML,0)   AFTNON_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  AS_SML_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_INS_ST,0)  AFTNON_SESION_INS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_ST_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_INS_DSK,0)  AFTNON_SESION_INS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_DSK_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_INS_SML,0)  AFTNON_SESION_INS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_SML_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_RTN_ST,0)  AFTNON_SESION_RTN_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_ST_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_RTN_DSK,0)  AFTNON_SESION_RTN_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_DSK_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_RTN_SML,0)  AFTNON_SESION_RTN_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_SML_AFTNON_SESION_SUM,
+
+                                (SELECT    nvl(EVNG_SESION_AS_ST,0) EVNG_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_ST_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_AS_DSK,0) EVNG_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_DSK_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_AS_SML,0) EVNG_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_SML_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_INS_ST,0)  EVNG_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_ST_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_INS_DSK,0)  EVNG_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_DSK_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_INS_SML,0)  EVNG_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_SML_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_RTN_ST,0)  EVNG_SESION_AS_ST   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   RTN_ST_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_RTN_DSK,0)  EVNG_SESION_AS_DSK   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   RTN_DSK_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_RTN_SML,0)  EVNG_SESION_AS_SML   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   RTN_SML_EVNG_SESION_SUM,
+
+
+
+
                                 (SELECT    nvl(MORNG_SESION_AS,0)    MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_MORNG_SESION_SUM,
                                 (SELECT    nvl(MORNG_SESION_INS,0)   MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_MORNG_SESION_SUM,
                                 (SELECT    nvl(MORNG_SESION_RTN,0)  MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_MORNG_SESION_SUM,
@@ -279,6 +402,44 @@
                                 (SELECT    nvl(EVNG_SESION_AS,0) EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_EVNG_SESION_SUM,
                                 (SELECT    nvl(EVNG_SESION_INS,0)  EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_EVNG_SESION_SUM,
                                 (SELECT    nvl(EVNG_SESION_RTN,0)  EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   RTN_EVNG_SESION_SUM,
+
+
+
+
+
+                                (SELECT    nvl(MORNG_SESION_AS_ST,0)+
+                                               nvl(MORNG_SESION_INS_ST,0)+
+                                               nvl(MORNG_SESION_RTN_ST,0) as  MORNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) MORNG_SESION_ST_SUM,
+                                (SELECT    nvl(MORNG_SESION_AS_DSK,0)+
+                                               nvl(MORNG_SESION_INS_DSK,0)+
+                                               nvl(MORNG_SESION_RTN_DSK,0) as  MORNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) MORNG_SESION_DSK_SUM,
+                                (SELECT    nvl(MORNG_SESION_AS_SML,0)+
+                                               nvl(MORNG_SESION_INS_SML,0)+
+                                               nvl(MORNG_SESION_RTN_SML,0) as  MORNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) MORNG_SESION_SML_SUM,
+
+                                (SELECT    nvl(AFTNON_SESION_AS_ST,0)+
+                                               nvl(AFTNON_SESION_INS_ST,0)+
+                                               nvl(AFTNON_SESION_RTN_ST,0) as  AFTNON_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AFTNON_SESION_ST_SUM,
+                                (SELECT    nvl(AFTNON_SESION_AS_DSK,0)+
+                                               nvl(AFTNON_SESION_INS_DSK,0)+
+                                               nvl(AFTNON_SESION_RTN_DSK,0) as  AFTNON_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AFTNON_SESION_DSK_SUM,
+                                (SELECT    nvl(AFTNON_SESION_AS_SML,0)+
+                                               nvl(AFTNON_SESION_INS_SML,0)+
+                                               nvl(AFTNON_SESION_RTN_SML,0) as  AFTNON_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AFTNON_SESION_SML_SUM,
+
+                                (SELECT    nvl(EVNG_SESION_AS_ST,0)+
+                                               nvl(EVNG_SESION_INS_ST,0)+
+                                               nvl(EVNG_SESION_RTN_ST,0) as   EVNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) EVNG_SESION_ST_SUM,
+                                (SELECT    nvl(EVNG_SESION_AS_DSK,0)+
+                                               nvl(EVNG_SESION_INS_DSK,0)+
+                                               nvl(EVNG_SESION_RTN_DSK,0) as   EVNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) EVNG_SESION_DSK_SUM,
+                                (SELECT    nvl(EVNG_SESION_AS_SML,0)+
+                                               nvl(EVNG_SESION_INS_SML,0)+
+                                               nvl(EVNG_SESION_RTN_SML,0) as   EVNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) EVNG_SESION_SML_SUM,
+
+
+
+
 
                                 (SELECT    nvl(MORNG_SESION_AS,0)+
                                                nvl(MORNG_SESION_INS,0)+
@@ -305,7 +466,52 @@
                                 RTN_E_CNT,
                                 AS_O_CNT,
                                 INS_O_CNT,
-                                RTN_O_CNT
+                                RTN_O_CNT,
+                                SUM_AS_ST_CNT,
+                                SUM_AS_DSK_CNT,
+                                SUM_AS_SML_CNT,
+                                SUM_INS_ST_CNT,
+                                SUM_INS_DSK_CNT,
+                                SUM_INS_SML_CNT,
+                                SUM_RTN_ST_CNT,
+                                SUM_RTN_DSK_CNT,
+                                SUM_RTN_SML_CNT,
+                                AS_ST_M_CNT,
+                                AS_ST_A_CNT,
+                                AS_ST_E_CNT,
+                                AS_ST_O_CNT,
+                                AS_DSK_M_CNT,
+                                AS_DSK_A_CNT,
+                                AS_DSK_E_CNT,
+                                AS_DSK_O_CNT,
+                                AS_SML_M_CNT,
+                                AS_SML_A_CNT,
+                                AS_SML_E_CNT,
+                                AS_SML_O_CNT,
+                                INS_ST_M_CNT,
+                                INS_ST_A_CNT,
+                                INS_ST_E_CNT,
+                                INS_ST_O_CNT,
+                                INS_DSK_M_CNT,
+                                INS_DSK_A_CNT,
+                                INS_DSK_E_CNT,
+                                INS_DSK_O_CNT,
+                                INS_SML_M_CNT,
+                                INS_SML_A_CNT,
+                                INS_SML_E_CNT,
+                                INS_SML_O_CNT,
+                                RTN_ST_M_CNT,
+                                RTN_ST_A_CNT,
+                                RTN_ST_E_CNT,
+                                RTN_ST_O_CNT,
+                                RTN_DSK_M_CNT,
+                                RTN_DSK_A_CNT,
+                                RTN_DSK_E_CNT,
+                                RTN_DSK_O_CNT,
+                                RTN_SML_M_CNT,
+                                RTN_SML_A_CNT,
+                                RTN_SML_E_CNT,
+                                RTN_SML_O_CNT
                      FROM (
                                 SELECT
                                         (MAX(A01)  +  MAX(A02) + MAX(A03))   SUM_AS_CNT ,
@@ -313,7 +519,26 @@
                                         (MAX(R01)  +  MAX(R02) +MAX(R03))    SUM_RTN_CNT ,
                                         MAX(A01) AS_M_CNT  , MAX(A02)  AS_A_CNT,   MAX(A03)  AS_E_CNT , MAX(A04)  AS_O_CNT  ,
                                         MAX(I01) INS_M_CNT , MAX(I02)  INS_A_CNT , MAX(I03)  INS_E_CNT, MAX(I04)  INS_O_CNT ,
-                                        MAX(R01) RTN_M_CNT , MAX(R02)  RTN_A_CNT , MAX(R03)  RTN_E_CNT, MAX(R04)  RTN_O_CNT
+                                        MAX(R01) RTN_M_CNT , MAX(R02)  RTN_A_CNT , MAX(R03)  RTN_E_CNT, MAX(R04)  RTN_O_CNT,
+                                        (MAX(AST01)  +  MAX(AST02) + MAX(AST03))   SUM_AS_ST_CNT ,
+                                        (MAX(ADSK01)  +  MAX(ADSK02) + MAX(ADSK03))   SUM_AS_DSK_CNT ,
+                                        (MAX(ASML01)  +  MAX(ASML02) + MAX(ASML03))   SUM_AS_SML_CNT ,
+                                        (MAX(IST01)  +  MAX(IST02) + MAX(IST03))   SUM_INS_ST_CNT ,
+                                        (MAX(IDSK01)  +  MAX(IDSK02) + MAX(IDSK03))   SUM_INS_DSK_CNT ,
+                                        (MAX(ISML01)  +  MAX(ISML02) + MAX(ISML03))   SUM_INS_SML_CNT ,
+                                        (MAX(RST01)  +  MAX(RST02) +MAX(RST03))    SUM_RTN_ST_CNT ,
+                                        (MAX(RDSK01)  +  MAX(RDSK02) +MAX(RDSK03))    SUM_RTN_DSK_CNT ,
+                                        (MAX(RSML01)  +  MAX(RSML02) +MAX(RSML03))    SUM_RTN_SML_CNT ,
+                                        MAX(AST01) AS_ST_M_CNT  , MAX(AST02)  AS_ST_A_CNT,   MAX(AST03)  AS_ST_E_CNT , MAX(AST04)  AS_ST_O_CNT  ,
+                                        MAX(ADSK01) AS_DSK_M_CNT  , MAX(ADSK02)  AS_DSK_A_CNT,   MAX(ADSK03)  AS_DSK_E_CNT , MAX(ADSK04)  AS_DSK_O_CNT  ,
+                                        MAX(ASML01) AS_SML_M_CNT  , MAX(ASML02)  AS_SML_A_CNT,   MAX(ASML03)  AS_SML_E_CNT , MAX(ASML04)  AS_SML_O_CNT  ,
+                                        MAX(IST01) INS_ST_M_CNT  , MAX(IST02)  INS_ST_A_CNT,   MAX(IST03)  INS_ST_E_CNT , MAX(IST04)  INS_ST_O_CNT  ,
+                                        MAX(IDSK01) INS_DSK_M_CNT  , MAX(IDSK02)  INS_DSK_A_CNT,   MAX(IDSK03)  INS_DSK_E_CNT , MAX(IDSK04)  INS_DSK_O_CNT  ,
+                                        MAX(ISML01) INS_SML_M_CNT  , MAX(ISML02)  INS_SML_A_CNT,   MAX(ISML03)  INS_SML_E_CNT , MAX(ISML04)  INS_SML_O_CNT  ,
+                                        MAX(RST01) RTN_ST_M_CNT  , MAX(RST02)  RTN_ST_A_CNT,   MAX(RST03)  RTN_ST_E_CNT , MAX(RST04)  RTN_ST_O_CNT  ,
+                                        MAX(RDSK01) RTN_DSK_M_CNT  , MAX(RDSK02)  RTN_DSK_A_CNT,   MAX(RDSK03)  RTN_DSK_E_CNT , MAX(RDSK04)  RTN_DSK_O_CNT  ,
+                                        MAX(RSML01) RTN_SML_M_CNT  , MAX(RSML02)  RTN_SML_A_CNT,   MAX(RSML03)  RTN_SML_E_CNT , MAX(RSML04)  RTN_SML_O_CNT
+
                                 FROM(
                                             SELECT
                                                  NVL(SUM(DECODE(B.AS_SESION_CODE,'M',1,0)),0)   A01 ,
@@ -327,7 +552,43 @@
                                                  0 R01 ,
                                                  0 R02 ,
                                                  0 R03 ,
-                                                 0 R04
+                                                 0 R04,
+                                                 NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'M' AND B.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) AST01,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'A' AND B.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) AST02,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'E' AND B.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) AST03,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'O' AND B.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) AST04,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'M' AND B.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) ADSK01,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'A' AND B.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) ADSK02,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'E' AND B.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) ADSK03,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'O' AND B.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) ADSK04,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'M' AND B.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ASML01,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'A' AND B.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ASML02,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'E' AND B.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ASML03,
+											     NVL(SUM(CASE WHEN(B.AS_SESION_CODE = 'O' AND B.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ASML04,
+											     0 IST01,
+											     0 IST02,
+											     0 IST03,
+											     0 IST04,
+											     0 IDSK01,
+											     0 IDSK02,
+											     0 IDSK03,
+											     0 IDSK04,
+											     0 ISML01,
+											     0 ISML02,
+											     0 ISML03,
+											     0 ISML04,
+											     0 RST01,
+											     0 RST02,
+											     0 RST03,
+											     0 RST04,
+											     0 RDSK01,
+											     0 RDSK02,
+											     0 RDSK03,
+											     0 RDSK04,
+											     0 RSML01,
+											     0 RSML02,
+											     0 RSML03,
+											     0 RSML04
                                               FROM SVC0001D B
                                             WHERE  1=1
                                               AND to_char(B.AS_APPNT_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')
@@ -339,14 +600,50 @@
                                                  0 A02,
                                                  0 A03,
                                                  0 A04,
-                                                 NVL(SUM(DECODE(D.SESION_CODE,'A',1,0)),0)   I01 ,
-                                                 NVL(SUM(DECODE(D.SESION_CODE,'M',1,0)),0)   I02 ,
+                                                 NVL(SUM(DECODE(D.SESION_CODE,'M',1,0)),0)   I01 ,
+                                                 NVL(SUM(DECODE(D.SESION_CODE,'A',1,0)),0)   I02 ,
                                                  NVL(SUM(DECODE(D.SESION_CODE,'E',1,0)),0)   I03 ,
                                                  NVL(SUM(DECODE(D.SESION_CODE,'O',1,0)),0)   I04 ,
                                                  0 R01 ,
                                                  0 R02 ,
                                                  0 R03 ,
-                                                 0 R04
+                                                 0 R04,
+                                                 0 AST01,
+												0 AST02,
+												0 AST03,
+												0 AST04,
+												0 ADSK01,
+												0 ADSK02,
+												0 ADSK03,
+												0 ADSK04,
+												0 ASML01,
+												0 ASML02,
+												0 ASML03,
+												0 ASML04,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'M' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) IST01,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'A' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) IST02,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'E' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0)  IST03,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'O' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) IST04,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'M' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) IDSK01,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'A' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) IDSK02,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'E' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) IDSK03,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'O' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) IDSK04,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'M' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ISML01,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'A' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ISML02,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'E' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ISML03,
+												NVL(SUM(CASE WHEN(D.SESION_CODE = 'O' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) ISML04,
+												0 RST01,
+												0 RST02,
+												0 RST03,
+												0 RST04,
+												0 RDSK01,
+												0 RDSK02,
+												0 RDSK03,
+												0 RDSK04,
+												0 RSML01,
+												0 RSML02,
+												0 RSML03,
+												0 RSML04
                                                FROM SAL0046D D
                                              WHERE 1=1
                                                 AND D.CT_ID = #{CT_ID}
@@ -362,10 +659,46 @@
                                                  0 I02 ,
                                                  0 I03 ,
                                                  0 I04 ,
-                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'A',1,0)),0)   R01 ,
-                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'M',1,0)),0)   R02 ,
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'M',1,0)),0)   R01 ,
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'A',1,0)),0)   R02 ,
                                                  NVL(SUM(DECODE(D.RT_SESION_CODE,'E',1,0)),0)   R03 ,
-                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'O',1,0)),0)   R04
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'O',1,0)),0)   R04,
+                                                 0 AST01,
+												0 AST02,
+												0 AST03,
+												0 AST04,
+												0 ADSK01,
+												0 ADSK02,
+												0 ADSK03,
+												0 ADSK04,
+												0 ASML01,
+												0 ASML02,
+												0 ASML03,
+												0 ASML04,
+												0 IST01,
+												0 IST02,
+												0 IST03,
+												0 IST04,
+												0 IDSK01,
+												0 IDSK02,
+												0 IDSK03,
+												0 IDSK04,
+												0 ISML01,
+												0 ISML02,
+												0 ISML03,
+												0 ISML04,
+										        NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'M' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) RST01,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'A' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) RST02,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'E' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) RST03,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'O' AND D.SEGMENT_TYPE = 'ST') THEN 1 ELSE 0 END),0) RST04,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'M' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) RDSK01,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'A' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) RDSK02,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'E' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) RDSK03,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'O' AND D.SEGMENT_TYPE = 'DSK') THEN 1 ELSE 0 END),0) RDSK04,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'M' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) RSML01,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'A' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) RSML02,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'E' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) RSML03,
+                                                NVL(SUM(CASE WHEN(D.RT_SESION_CODE = 'O' AND D.SEGMENT_TYPE = 'SML') THEN 1 ELSE 0 END),0) RSML04
                                                FROM LOG0038D D
                                              WHERE 1=1
                                                 AND D.CT_ID = #{CT_ID}

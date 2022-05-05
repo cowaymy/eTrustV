@@ -850,6 +850,12 @@
         } else {
           $("#CTSSessionCode").val("");
         }
+        if(result[0].segmentType != null){
+            $("#CTSSessionSegmentType").val(result[0].segmentType);
+        }
+        else{
+            $("#CTSSessionSegmentType").val("");
+        }
         if (result[0].dscCde != null) {
           $("#branchDSC").val(result[0].dscCde);
         } else {
@@ -1652,6 +1658,7 @@
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
       AS_APP_SESS : $("#CTSSessionCode").val(),
+      SEGMENT_TYPE : $("#CTSSessionSegmentType").val(),
       AS_RCL_ASG_DSC : $("#branchDSC").val(),
       AS_RCL_ASG_CT : $("#CTCode").val(),
       AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),

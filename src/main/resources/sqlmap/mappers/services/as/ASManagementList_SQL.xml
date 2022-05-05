@@ -902,7 +902,8 @@
              B.PIC_NAME ,
              B.PIC_CNTC,
              B.AS_PIC_ID,
-             (SELECT  MEM_CODE FROM ORG0001D WHERE MEM_ID = AS_MEM_ID) MEM_CODE
+             (SELECT  MEM_CODE FROM ORG0001D WHERE MEM_ID = AS_MEM_ID) MEM_CODE,
+             S.SEGMENT_TYPE
       FROM SVC0001D S,
            SVC0003D B
      WHERE S.AS_ID = B.AS_ID (+)
@@ -1069,7 +1070,8 @@
              D.CODE BR_CDE,
              E.MEM_CODE MEM_ID,
              A.AS_MEM_GRP MEM_GRP,
-             NVL(DBMS_LOB.substr(C.CALL_REM, 3000), '') RCL_RMK
+             NVL(DBMS_LOB.substr(C.CALL_REM, 3000), '') RCL_RMK,
+             A.SEGMENT_TYPE SEGMENT_TYPE
       FROM SVC0001D A
       JOIN CCR0006D B ON A.AS_CALLLOG_ID = B.CALL_ENTRY_ID
       JOIN CCR0007D C ON B.CALL_ENTRY_ID = C.CALL_ENTRY_ID
@@ -2960,6 +2962,7 @@
                           , AS_SESION_CODE
                           , CALL_MEM
                           , REF_REQST
+                          , SEGMENT_TYPE
       ) VALUES ( #{AS_ID},
                #{AS_NO},
                #{AS_SO_ID},
@@ -2993,7 +2996,8 @@
                #{AS_REM_ADD_CNTC_SMS},
                #{AS_SESION_CODE},
                #{CALL_MEMBER},
-               #{REF_REQUEST}
+               #{REF_REQUEST},
+               #{SEGMENT_TYPE}
                )
         ]]>
   </insert>
@@ -3034,6 +3038,7 @@
                           , AS_SESION_CODE
                           , CALL_MEM
                           , REF_REQST
+                          , SEGMENT_TYPE
       ) SELECT #{AS_ID},
                #{AS_NO},
                AS_SO_ID,
@@ -3067,7 +3072,9 @@
                AS_REM_ADD_CNTC_SMS,
                AS_SESION_CODE,
                CALL_MEM,
-               #{REF_REQUEST} FROM SVC0001D WHERE AS_ID = #{REF_REQUEST}
+               #{REF_REQUEST}
+               SEGMENT_TYPE
+               FROM SVC0001D WHERE AS_ID = #{REF_REQUEST}
     ]]>
     <!-- AS_ALLOW_COMM -->
   </insert>
@@ -4495,7 +4502,8 @@
                         AS_REM_ADD_CNTC_SMS = #{AS_REM_ADD_CNTC_SMS},
                         AS_SESION_CODE = #{AS_SESION_CODE},
                         CALL_MEM = #{CALL_MEMBER},
-                        REF_REQST = #{REF_REQUEST}
+                        REF_REQST = #{REF_REQUEST},
+                        SEGMENT_TYPE = #{SEGMENT_TYPE}
     WHERE AS_ID = #{AS_ID}
   </update>
 
@@ -4506,7 +4514,8 @@
                         AS_BRNCH_ID = #{AS_RCL_ASG_DSC},
                         AS_SESION_CODE = #{AS_APP_SESS},
                         AS_UPD_USER_ID = #{updator},
-                        AS_UPD_DT = SYSDATE
+                        AS_UPD_DT = SYSDATE,
+                        SEGMENT_TYPE = #{SEGMENT_TYPE}
     WHERE AS_ID = #{AS_ID}
 
     <!-- AS_APPNT_TM = #{AS_APP_SESS}, -->

@@ -37,6 +37,16 @@ public interface SessionCapacityListMapper {
 	 */
 	public int selectCountSsCapacityCTM(Map<String, Object> params);
 
+	List<EgovMap> selectSsCapacityBrListEnhance(Map<String, Object> params);
+
+	int insertCapacityEnhance(Map<String, Object> params);
+
+	int updateCapacityEnhance(Map<String, Object> params);
+
+	int updateCTMCapacityEnhance(Map<String, Object> params);
+
+	List<EgovMap> selectAllCarModelList();
+
 
 	/*List<EgovMap> selectOrgChartCdList(Map<String, Object> params);
 

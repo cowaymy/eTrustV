@@ -126,6 +126,7 @@
       $("#requestor").val(eOjb.asReqsterTypeId);
       $("#additionalCont").val(eOjb.asRemAddCntc);
       $("#CTSSessionCode").val(eOjb.asSesionCode);
+      $("#CTSSessionSegmentType").val(eOjb.segmentType);
       $("#perIncharge").val(eOjb.picName);
       $("#perContact").val(eOjb.picCntc);
 
@@ -644,6 +645,7 @@
                          "AS_REM_REQSTER_CNTC_SMS" : $("#checkSms1").prop("checked") ? '1' : '0',
                          "AS_REM_ADD_CNTC_SMS" : $("#checkSms2").prop("checked") ? '1' : '0',
                          "AS_SESION_CODE" : $("#CTSSessionCode").val(),
+                         "SEGMENT_TYPE": $("#CTSSessionSegmentType").val(),
                          "CALL_MEMBER" : '0',
                          "REF_REQUEST" : '0',
                          "PIC_NAME" : $("#perIncharge").val(),
@@ -806,6 +808,7 @@
                        "AS_REM_REQSTER_CNTC_SMS" : $("#checkSms1").prop("checked") ? '1' : '0',
                        "AS_REM_ADD_CNTC_SMS" : $("#checkSms2").prop("checked") ? '1' : '0',
                        "AS_SESION_CODE" : $("#CTSSessionCode").val(),
+                       "SEGMENT_TYPE": $("#CTSSessionSegmentType").val(),
                        "CALL_MEMBER" : '0',
                        "REF_REQUEST" : $("#IN_AsResultId").val(),
                        "CALL_REM" : $("#callRem").val(),
@@ -1436,6 +1439,10 @@
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
          <td>
           <input type="text" title="" placeholder="<spring:message code='service.title.AppointmentSessione' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" />
+           <th scope="row"><spring:message code='service.title.Segment' /></th>
+           <td>
+           <input type="text" title="" placeholder="<spring:message code='service.title.Segment' />" readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType" class="readonly w100p" />
+         </td>
           <div class="time_picker w100p" style="display: none">
            <input type="text" title="" placeholder="" class="time_date w100p" id="requestTime" name="requestTime" />
            <ul>

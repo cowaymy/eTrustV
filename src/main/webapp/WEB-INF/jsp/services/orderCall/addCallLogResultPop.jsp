@@ -130,6 +130,9 @@
         if ($("#CTSSessionCode").val() != "") {
           msg += "<spring:message code='service.title.AppointmentSession'/><b>" + " : " + $("#CTSSessionCode").val() + "</b></br>";
         }
+        if ($("#CTSSessionSegmentType").val() != "") {
+            msg += "<spring:message code='service.title.Segment'/><b>" + " : " + $("#CTSSessionSegmentType").val() + "</b></br>";
+          }
         if ($("#CTCode").val() != "") {
           msg += "<spring:message code='service.title.CTCode'/><b>" + " : " + $("#CTCode").val() + "</b></br>";
         }
@@ -257,6 +260,7 @@
       $("#appDate").val("");
       $("#CTgroup").val("");
       $("#CTSSessionCode").val("");
+      $("#CTSSessionSegmentType").val("");
       $("#feedBackCode").val("");
       $("#CTCode").val("");
       $("#CTID").val("");
@@ -664,6 +668,11 @@
         code='service.title.AppointmentSessione' /></th>
       <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentSessione' />"
        readonly="readonly" id="CTSSessionCode" name="CTSSessionCode"
+       class="readonly w100p" /></td>
+      <th scope="row"><spring:message
+        code='service.title.Segment' /></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.Segment' />"
+       readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType"
        class="readonly w100p" /></td>
       <th scope="row"><spring:message
         code='service.title.FeedbackCode' /><span name="m4" id="m4" class="must">*</span></th>

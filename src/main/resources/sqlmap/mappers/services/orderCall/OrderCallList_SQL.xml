@@ -879,6 +879,7 @@
                         , APPNT_DT
                         ,SESION_CODE
                         ,GRADE
+                        ,SEGMENT_TYPE
     ) VALUES (#{installEntryId}
             , #{installEntryNo}
             , #{salesOrderId}
@@ -899,6 +900,7 @@
             , TO_DATE(#{appDate},'dd-mm-yyyy')
             ,#{CTSSessionCode}
             , #{stock}
+            ,#{CTSSessionSegmentType}
     )
   </insert>
 

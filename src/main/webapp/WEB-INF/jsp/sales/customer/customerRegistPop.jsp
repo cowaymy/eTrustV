@@ -1184,13 +1184,13 @@
             <tr>
                 <th scope="row" ><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p"  />
                 </td>
             </tr>
             <tr>
                 <th scope="row" ><spring:message code="sal.text.street" /></th>
                 <td colspan="3">
-                <input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p"  />
                 </td>
             </tr>
             <tr>
@@ -1210,9 +1210,9 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row"><spring:message code="sal.title.text.areaSearch" /><span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.title.text.areaSearch"/><span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="w50p disabled" disabled/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input type="text" title="" id="_searchSt_" name="searchSt" placeholder="eg. TAMAN RIMBA" class="w50p disabled" disabled/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
             <tr>

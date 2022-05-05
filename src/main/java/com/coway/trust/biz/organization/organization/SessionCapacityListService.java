@@ -42,6 +42,20 @@ public interface SessionCapacityListService {
 	 */
 	public int selectCountSsCapacityCTM(Map<String, Object> params);
 
+	List<EgovMap> selectSsCapacityBrListEnhance(Map<String, Object> params);
+
+	void insertCapacityEnhance(List<Object> params, SessionVO sessionVO);
+
+	void updateCapacityEnhance(List<Object> params, SessionVO sessionVO);
+
+	void updateCapacityByExcelEnhance(List<Map<String, Object>> updateList, SessionVO sessionVO);
+
+	void updateCTMCapacityEnhance(List<Object> udtList, SessionVO sessionVO);
+
+	void updateCTMCapacityByExcelEnhance(List<Map<String, Object>> updateList, SessionVO sessionVO);
+
+	List<EgovMap> selectAllCarModelList();
+
 	/*List<EgovMap> selectHpChildList(Map<String, Object> params);
 
 	List<EgovMap> getDeptTreeList(Map<String, Object> params);

@@ -240,6 +240,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
         saveParam.put("ctGrp", params.get("cmbCtGroup"));
 
         saveParam.put("cTSSessionCode", params.get("CTSSessionCode"));
+        saveParam.put("segmentType", params.get("CTSSessionSegmentType"));
         saveParam.put("brnchId", params.get("brnchId"));
         saveParam.put("requestDate", params.get("requestDate"));
         saveParam.put("cTGroup", params.get("CTGroup"));

@@ -1286,7 +1286,7 @@
                         <tbody>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.areaSearch2" /><span class="must">*</span></th>
-                                <td colspan="1"><input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="" />
+                                <td colspan="1"><input type="text" title="" id="_searchSt_" name="searchSt" placeholder="eg. TAMAN RIMBA" class="" />
                                     <a href="#" onclick="fn_addrSearch()" class="search_btn">
                                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                     </a>
@@ -1294,11 +1294,11 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.addressDetail2" /><span class="must">*</span></th>
-                                <td colspan="1"><input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="Detail Address" class="w100p" /></td>
+                                <td colspan="1"><input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p" /></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.street2" /></th>
-                                <td colspan="1"><input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="Detail Address" class="w100p" /></td>
+                                <td colspan="1"><input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p" /></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.area42" /><span class="must">*</span></th>

@@ -96,6 +96,17 @@ public class SessionCapacityListController {
 		return ResponseEntity.ok(ssCapacityCtList);
 	}
 
+	@RequestMapping(value = "/selectSsCapacityCtListEnhance", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSsCapacityCtListEnhance(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> ssCapacityCtList = null;
+
+        // 조회.
+		ssCapacityCtList = sessionCapacityListService.selectSsCapacityBrListEnhance(params);
+
+		return ResponseEntity.ok(ssCapacityCtList);
+	}
+
 	@RequestMapping(value = "/selectSsCapacityCTM", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSsCapacityCTM(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 
@@ -179,8 +190,8 @@ public class SessionCapacityListController {
 //			sessionCapacityListService.insertCapacity(addList,sessionVO);
 //		}
 		if(udtList != null){
-			sessionCapacityListService.updateCapacity(udtList,sessionVO);
-			//sessionCapacityListService.updateCTMCapacity(udtList,sessionVO);
+			sessionCapacityListService.updateCapacityEnhance(udtList,sessionVO);
+			sessionCapacityListService.updateCTMCapacityEnhance(udtList,sessionVO);
 			sessionCapacityListService.deleteCapacity(udtList,sessionVO);
 		}
 //		if(delList != null){
@@ -240,4 +251,14 @@ public class SessionCapacityListController {
 		return ResponseEntity.ok(ssCapacityCtList);
 	}
 
+	@RequestMapping(value = "/selectAllCarModelList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAllCarModelList(HttpServletRequest request, ModelMap model) {
+		List<EgovMap> carModelList = null;
+
+        // 조회.
+		carModelList = sessionCapacityListService.selectAllCarModelList();
+		logger.debug("carTypeCTList {}", carModelList);
+
+		return ResponseEntity.ok(carModelList);
+	}
 }

@@ -188,6 +188,7 @@
            $("#CTGroup").val(obj.ctSubGrp);
            $("#brnchId").val(obj.brnchId);
            $("#CTSSessionCode").val(obj.sessionCode);
+           $("#CTSSessionSegmentType").val(obj.sessionSegmentType);
    }
 
 
@@ -952,6 +953,13 @@
       <td>
          <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"  readonly="readonly" />
       </td>
+    </tr>
+    <tr>
+      <th scope="row"><spring:message
+        code='service.title.Segment' /></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.Segment' />"
+       readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType"
+       class="readonly" /></td>
     </tr>
     <tr>
       <th scope="row"><spring:message code="sal.text.remark" /><span id='m9' name='m9' class="must">*</span></th>

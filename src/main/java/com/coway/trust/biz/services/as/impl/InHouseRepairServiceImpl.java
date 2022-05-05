@@ -1948,6 +1948,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
       rclUpdASEntry.put("AS_ID", SVC0109Dmap.get("AS_ENTRY_ID"));
       rclUpdASEntry.put("AS_APP_DT", SVC0109Dmap.get("AS_APP_DT"));
       rclUpdASEntry.put("AS_APP_SESS", SVC0109Dmap.get("AS_APP_SESS"));
+      rclUpdASEntry.put("SEGMENT_TYPE", SVC0109Dmap.get("SEGMENT_TYPE"));
       rclUpdASEntry.put("AS_RCL_ASG_DSC", SVC0109Dmap.get("AS_RCL_ASG_DSC"));
       rclUpdASEntry.put("AS_MEM_ID", SVC0109Dmap.get("AS_RCL_ASG_CT"));
       rclUpdASEntry.put("AS_MEM_GRP", SVC0109Dmap.get("AS_RCL_ASG_CT_GRP"));

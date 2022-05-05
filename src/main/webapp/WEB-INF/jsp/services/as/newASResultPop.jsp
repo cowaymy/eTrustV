@@ -1093,6 +1093,12 @@
 				} else {
 					$("#CTSSessionCode").val("");
 				}
+				if(result[0].segmentType != null){
+					$("#CTSSessionSegmentType").val(result[0].segmentType);
+				}
+				else{
+					$("#CTSSessionSegmentType").val("");
+				}
 				if (result[0].dscCde != null) {
 					$("#branchDSC").val(result[0].dscCde);
 				}
@@ -1149,6 +1155,7 @@
 		$("#CTCode").val("");
 		$("#CTGroup").val("");
 		$("#callRem").val("");
+		$("CTSSessionSegmentType").val("");
 	}
 
 	function fn_rstDftEnt() {
@@ -1516,6 +1523,7 @@
 			AS_RCL_ASG_CT : $("#CTCode").val(),
 			AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),
 			AS_RCL_RMK : $("#callRem").val(),
+			SEGMENT_TYPE : $("CTSSessionSegmentType").val(),
 
 			// AS DEFECT ENTRY
 			AS_DEFECT_TYPE_ID : _AS_DEFECT_TYPE_ID,
@@ -2187,7 +2195,7 @@
 			CTIDObj : 'CTIDObj',
 			CTgroupObj : 'CTgroupObj'
 		}
-
+	    console.log("newAsResultPop.do");
 		Common.popupDiv("/organization/allocation/allocation.do", {
 			ORD_ID : ord_id,
 			S_DATE : vdte,
@@ -3074,6 +3082,11 @@
                                             id="CTSSessionCode" name="CTSSessionCode"
                                             class="readonly w100p" readonly="readonly"
                                         /></td>
+                                        <th scope="row"><spring:message
+									        code='service.title.Segment' /></th>
+									       <td><input type="text" title="" placeholder="<spring:message code='service.title.Segment' />"
+									       readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType"
+									       class="readonly w100p" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message

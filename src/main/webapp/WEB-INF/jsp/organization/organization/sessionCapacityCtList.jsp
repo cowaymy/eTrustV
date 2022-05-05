@@ -46,6 +46,7 @@
        };
             var  branchList =[];
             var  ctCodeList = [];
+            var  carTypeList = [];
 
             function createAUIGrid(){
 		        // AUIGrid 칼럼 설정
@@ -57,10 +58,8 @@
 		        }];
 
 
-
 			// AUIGrid 칼럼 설정
 			var columnLayout = [
-
 					{
 					    dataField : "code",
 					    headerText : "Branch",
@@ -76,7 +75,8 @@
 					    },
 					    style : "aui-grid-user-custom-left",
                         editable : false
-					}, {
+					},
+					{
 					    dataField : "memCode",
 					    headerText : "CT",
 					    width: 280,
@@ -93,71 +93,254 @@
                         editable : false
 					},
 			        {
-			            	dataField : "codeId",
-			                headerText : "Branch1",
-			                width: 0
-			        }, {
-				        	dataField : "memId",
-			                headerText : "CT1",
-			                width: 0
-			        }, {
-
-
+		            	dataField : "codeId",
+		                headerText : "Branch1",
+		                width: 0
+			        },
+			        {
+			        	dataField : "memId",
+		                headerText : "CT1",
+		                width: 0
+			        },
+			        {
+                        dataField : "carType",
+                        headerText : "Car Model",
+                        width: 150,
+                        labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
+                            var retStr = "";
+                            for(var i=0, len=carTypeList.length; i<len; i++) {
+                                if(carTypeList[i]["codeName"] == value) {
+                                    retStr = carTypeList[i]["codeName"];
+                                    break;
+                                }
+                            }
+                            return retStr;
+                        },
+                        editRenderer : {
+                            type : "DropDownListRenderer",
+                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                            list : carTypeList, //key-value Object 로 구성된 리스트
+                            keyField : "codeName", // key 에 해당되는 필드명
+                            valueField : "codeName", // value 에 해당되는 필드명
+                            listAlign : "left"
+                        },
+                        style : "aui-grid-user-custom-left",
+                        editable : true
+                    },
+			        {
 			        headerText : "Morning",
 			        children : [
 			            {
-			                    dataField: "morngSesionAs",
 			                    headerText: "AS",
-			                    width:60
+			                    width:100,
+			                    children : [
+			                                {
+			                                        dataField: "morngSesionAsSt",
+			                                        headerText: "ST",
+			                                        width:60
+			                                }, {
+			                                        dataField: "morngSesionAsDsk",
+			                                        headerText: "DSK",
+			                                        width:60
+			                                }, {
+			                                        dataField: "morngSesionAsSml",
+			                                        headerText: "SML",
+			                                        width:60
+			                                }, {
+				                                    dataField: "morngSesionAs",
+	                                                headerText: "TOTAL(AS)",
+	                                                width:80
+                                            }
+			                            ]
 			            }, {
-			                    dataField: "morngSesionIns",
 			                    headerText: "INS",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "morngSesionInsSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "morngSesionInsDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "morngSesionInsSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "morngSesionIns",
+                                                    headerText: "TOTAL(INS)",
+                                                    width:80
+                                            }
+                                        ]
 			            }, {
-			                    dataField: "morngSesionRtn",
 			                    headerText: "RTN",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "morngSesionRtnSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "morngSesionRtnDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "morngSesionRtnSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "morngSesionRtn",
+                                                    headerText: "TOTAL(RTN)",
+                                                    width:80
+                                            }
+                                        ]
 			            }
 			        ]
 			}, {
 			        headerText : "Afternoon",
 			        children : [
 			            {
-			                    dataField: "aftnonSesionAs",
 			                    headerText: "AS",
-			                    width:60,
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "aftnonSesionAsSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionAsDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionAsSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionAs",
+                                                    headerText: "TOTAL(AS)",
+                                                    width:80
+                                            }
+                                        ]
 			            }, {
-			                    dataField: "aftnonSesionIns",
 			                    headerText: "INS",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "aftnonSesionInsSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionInsDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionInsSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionIns",
+                                                    headerText: "TOTAL(INS)",
+                                                    width:80
+                                            }
+                                        ]
 			            }, {
-			                    dataField: "aftnonSesionRtn",
 			                    headerText: "RTN",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "aftnonSesionRtnSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionRtnDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionRtnSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "aftnonSesionRtn",
+                                                    headerText: "TOTAL(RTN)",
+                                                    width:80
+                                            }
+                                        ]
 			            }
 			        ]
 			},{
 			        headerText : "Evening",
 			        children : [
 			            {
-			                    dataField: "evngSesionAs",
 			                    headerText: "AS",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "evngSesionAsSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionAsDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionAsSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionAs",
+                                                    headerText: "TOTAL(AS)",
+                                                    width:80
+                                            }
+                                        ]
 			            }, {
-			                    dataField: "evngSesionIns",
 			                    headerText: "INS",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "evngSesionInsSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionInsDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionInsSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionIns",
+                                                    headerText: "TOTAL(INS)",
+                                                    width:80
+                                            }
+                                        ]
 			            }, {
-			                    dataField: "evngSesionRtn",
 			                    headerText: "RTN",
-			                    width:60
+			                    width:100,
+			                    children : [
+                                            {
+                                                    dataField: "evngSesionRtnSt",
+                                                    headerText: "ST",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionRtnDsk",
+                                                    headerText: "DSK",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionRtnSml",
+                                                    headerText: "SML",
+                                                    width:60
+                                            }, {
+                                                    dataField: "evngSesionRtn",
+                                                    headerText: "TOTAL(RTN)",
+                                                    width:80
+                                            }
+                                        ]
 			            }
 			        ]
 			}];
-
-
-
-
 
             // 그리드 속성 설정
             var gridPros = {
@@ -218,6 +401,7 @@
 
      // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
+        fn_getAllCarModelList();
        // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -261,7 +445,7 @@
 
     // 리스트 조회.
 		function fn_getSsCapacityBrListAjax() {
-		    Common.ajax("GET", "/organization/selectSsCapacityCtList", $("#searchForm").serialize(), function(result1) {
+		    Common.ajax("GET", "/organization/selectSsCapacityCtListEnhance", $("#searchForm").serialize(), function(result1) {
 
 		        //console.log("성공(GridResult).");
 		        //console.log("data : " + result1);
@@ -384,7 +568,7 @@
           //console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
           formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
 
-        Common.ajaxFile("/organization/excel/saveCapacityByExcel.do"
+        Common.ajaxFile("/organization/excel/saveCapacityByExcel_Enhance.do"
                   , formData
                   , function (result)
                    {
@@ -396,6 +580,13 @@
                         }
                });
     };
+
+    function fn_getAllCarModelList(){
+        Common.ajax("GET", "/organization/selectAllCarModelList.do",null, function(result) {
+            carTypeList = result;
+            console.log(carTypeList);
+        }, null, {async : false});
+    }
 
     </script>
 
@@ -520,6 +711,7 @@
 
 <section class="search_result"><!-- search_result start -->
 
+<p style="color:red">Remarks: (ST - STANDING || DSK - DESKTOP || SML - SMALL)</p>
 <aside class="title_line"><!-- title_line start -->
 <h3>CT Capacity Configuration</h3>
 <ul class="right_btns">

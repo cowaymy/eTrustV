@@ -940,6 +940,11 @@
         } else {
           $("#CTSSessionCode").val("");
         }
+        if (result[0].segmentType != null) {
+            $("#CTSSessionSegmentType").val(result[0].segmentType);
+          } else {
+            $("#CTSSessionSegmentType").val("");
+          }
         if (result[0].dscCde != null) {
           $("#branchDSC").val(result[0].dscCde);
         }
@@ -991,6 +996,7 @@
   function fn_rstRecall() {
     $("#appDate").val("");
     $("#CTSSessionCode").val("");
+    $("#CTSSessionSegmentType").val("");
     $("#branchDSC").val("");
     $("#CTCode").val("");
     $("#CTGroup").val("");
@@ -1320,6 +1326,7 @@
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
       AS_APP_SESS : $("#CTSSessionCode").val(),
+      SEGMENT_TYPE : $("#CTSSessionSegmentType").val(),
       AS_RCL_ASG_DSC : $("#branchDSC").val(),
       AS_RCL_ASG_CT : $("#CTCode").val(),
       AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),
@@ -2004,6 +2011,7 @@
       alert("Appointment Date must be greater or equal to Current Date ");
       $("#appDate").val("");
       $("#CTSSessionCode").val("");
+      $("#CTSSessionSegmentType").val("");
       $("#branchDSC").val("");
       $("#CTCode").val("");
       $("#CTGroup").val("");
@@ -2549,6 +2557,10 @@ function fnSerialSearchResult(data) {
            <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
            <td>
              <input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" />
+           </td>
+           <th scope="row"><spring:message code='service.title.Segment' /></th>
+           <td>
+           <input type="text" title="" placeholder="<spring:message code='service.title.Segment' />" readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType" class="readonly w100p" />
            </td>
          </tr>
          <tr>

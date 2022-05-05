@@ -1495,7 +1495,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     LOGGER.debug("== NEW ASR RESULT NO = " + eMap.get("asno"));
 
     ArrayList<AsResultChargesViewVO> vewList = new ArrayList<AsResultChargesViewVO>();
-
     List<EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
 
     svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
@@ -1916,6 +1915,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       rclUpdASEntry.put("AS_RCL_ASG_DSC", svc0004dmap.get("AS_RCL_ASG_DSC"));
       rclUpdASEntry.put("AS_MEM_ID", svc0004dmap.get("AS_RCL_ASG_CT"));
       rclUpdASEntry.put("AS_MEM_GRP", svc0004dmap.get("AS_RCL_ASG_CT_GRP"));
+      rclUpdASEntry.put("SEGMENT_TYPE", svc0004dmap.get("SEGMENT_TYPE"));
 
       int a = ASManagementListMapper.updateSVC0001D_RCL(rclUpdASEntry);
     }

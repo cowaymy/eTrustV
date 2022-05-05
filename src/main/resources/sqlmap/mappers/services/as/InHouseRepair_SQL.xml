@@ -1946,6 +1946,7 @@
              S.AS_SESION_CODE,
              S.CALL_MEM,
              S.REF_REQST,
+             S.SEGMENT_TYPE,
              B.PIC_NAME ,
              B.PIC_CNTC,
              B.AS_PIC_ID,
@@ -1961,6 +1962,7 @@
     SELECT * FROM (
       SELECT TO_CHAR(A.AS_APPNT_DT,'dd/mm/yyyy') APP_DT,
              A.AS_SESION_CODE APP_SESS,
+             A.SEGMENT_TYPE SEGMENT_TYPE,
              A.AS_BRNCH_ID AS DSC_CDE,
              D.CODE BR_CDE,
              E.MEM_CODE MEM_ID,
@@ -3272,6 +3274,7 @@
                           , AS_SESION_CODE
                           , CALL_MEM
                           , REF_REQST
+                          , SEGMENT_TYPE
       ) VALUES ( #{AS_ID},
                #{AS_NO},
                #{AS_SO_ID},
@@ -3305,7 +3308,8 @@
                #{AS_REM_ADD_CNTC_SMS},
                #{AS_SESION_CODE},
                #{CALL_MEMBER},
-               #{REF_REQUEST}
+               #{REF_REQUEST},
+               #{SEGMENT_TYPE}
                )
         ]]>
   </insert>
@@ -4701,7 +4705,8 @@
                         AS_REM_ADD_CNTC_SMS = #{AS_REM_ADD_CNTC_SMS},
                         AS_SESION_CODE = #{AS_SESION_CODE},
                         CALL_MEM = #{CALL_MEMBER},
-                        REF_REQST = #{REF_REQUEST}
+                        REF_REQST = #{REF_REQUEST},
+                        SEGMENT_TYPE = #{SEGMENT_TYPE}
     WHERE AS_ID = #{AS_ID}
   </update>
 
@@ -4712,7 +4717,8 @@
                         AS_BRNCH_ID = #{AS_RCL_ASG_DSC},
                         AS_SESION_CODE = #{AS_APP_SESS},
                         AS_UPD_USER_ID = #{updator},
-                        AS_UPD_DT = SYSDATE
+                        AS_UPD_DT = SYSDATE,
+                        SEGMENT_TYPE = #{SEGMENT_TYPE}
     WHERE AS_ID = #{AS_ID}
 
     <!-- AS_APPNT_TM = #{AS_APP_SESS}, -->

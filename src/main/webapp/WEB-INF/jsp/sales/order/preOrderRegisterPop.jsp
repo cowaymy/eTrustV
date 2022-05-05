@@ -2482,31 +2482,31 @@
 <tbody>
 <tr>
     <th scope="row">Address Line 1<span class="must">*</span></th>
-    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Address Line 2<span class="must">*</span></th>
-    <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Area | Daerah<span class="must">*</span></th>
-    <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="eg. TAMAN RIMBA" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">City | Bandar<span class="must">*</span></th>
-    <td colspan="3"><input id="instCity" name="instCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instCity" name="instCity" type="text" title="" placeholder="eg. KOTA KINABALU" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">PostCode | Poskod<span class="must">*</span></th>
-    <td colspan="3"><input id="instPostCode" name="instPostCode" type="text" title="" placeholder="Post Code" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instPostCode" name="instPostCode" type="text" title="" placeholder="eg. 88450" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">State | Negeri<span class="must">*</span></th>
-    <td colspan="3"><input id="instState" name="instState" type="text" title="" placeholder="State" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instState" name="instState" type="text" title="" placeholder="eg. SABAH" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Country | Negara<span class="must">*</span></th>
-    <td colspan="3"><input id="instCountry" name="instCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instCountry" name="instCountry" type="text" title="" placeholder="eg. MALAYSIA" class="w100p readonly" readonly/></td>
 </tr>
 
 </tbody>
@@ -2992,43 +2992,43 @@
 <tr>
     <th scope="row">Address Detail<span class="must">*</span></th>
     <td >
-    <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
+    <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Street</th>
     <td >
-    <input id="billStreet" name="billStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
+    <input id="billStreet" name="billStreet" type="text" title="" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Area<span class="must">*</span></th>
     <td >
-    <input id="billArea" name="billArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
+    <input id="billArea" name="billArea" type="text" title="" placeholder="eg. TAMAN RIMBA" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">City<span class="must">*</span></th>
     <td >
-    <input id="billCity" name="billCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    <input id="billCity" name="billCity" type="text" title="" placeholder="eg. KOTA KINABALU" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">PostCode<span class="must">*</span></th>
     <td >
-    <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="eg. 88450" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">State<span class="must">*</span></th>
     <td >
-    <input id="billState" name="billState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    <input id="billState" name="billState" type="text" title="" placeholder="eg. SABAH" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Country<span class="must">*</span></th>
     <td >
-    <input id="billCountry" name="billCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    <input id="billCountry" name="billCountry" type="text" title="" placeholder="eg. MALAYSIA" class="w100p readonly" readonly/>
     </td>
 </tr>
 
