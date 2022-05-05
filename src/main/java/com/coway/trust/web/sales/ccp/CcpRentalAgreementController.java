@@ -254,7 +254,7 @@ public class CcpRentalAgreementController {
 				sms.setMessage((String) paramsSMS.get("hiddenUpdSmsMsg"));
 				sms.setMobiles(mobileNumList);
 				//send SMS
-				/*SmsResult smsResult = adaptorService.sendSMS(sms);
+				SmsResult smsResult = adaptorService.sendSMS(sms);
 
 				smsResultMSg += "Total Send Message : " + smsResult.getReqCount() + "</br>";
 				smsResultMSg += "Success Count : " + smsResult.getSuccessCount() + "</br>";
@@ -263,7 +263,7 @@ public class CcpRentalAgreementController {
 
 				if(smsResult.getFailCount() > 0){
 					smsResultMSg += "Fail Reason : " + smsResult.getFailReason() + "</br>";
-				}*/
+				}
 			}
 		}
 		//Return MSG
