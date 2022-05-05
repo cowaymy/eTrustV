@@ -360,7 +360,13 @@ console.log("membershipESvmList");
     }
 
     function fn_getESvmList() {
-        Common.ajax("GET", "/sales/membership/selectESvmListAjax.do", $("#_frmESvmSrch").serialize(), function(result) {
+    	var data = $("#_frmESvmSrch").serialize();
+    	if(document.querySelector("#_brnchId").parentElement.querySelectorAll('div > div > ul > li.ms-select-all.selected').length == 1)
+   		{
+	        data = data.replace(/_brnchId=\d+\&/g, '');
+   		}
+    	console.log(data);
+        Common.ajax("GET", "/sales/membership/selectESvmListAjax.do", data, function(result) {
             AUIGrid.setGridData(listGridID, result);
             AUIGrid.setGridData(excelListGridID, result);
         });
@@ -491,7 +497,7 @@ console.log("membershipESvmList");
 <tr>
     <th scope="row"><spring:message code="sal.title.text.saRefNo" /></th>
         <td>
-            <input type="text" title="" placeholder="" class="w100p"  name=saRefNo/>
+            <input type="text" title="" placeholder="" class="w100p"  name="saRefNo" />
         </td>
     <th scope="row">Time</th>
     <td>
