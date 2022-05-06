@@ -467,7 +467,22 @@ FROM   (SELECT COST_CENTR                             AS COST_CENTER,
                                     ON A.COST_CENTR = C.COST_CENTR
                                        AND A.BUDGET_CODE = C.BUDGET_CODE
                                        AND A.GL_ACC_CODE = C.GL_ACC_CODE) A
-        WHERE  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND A.COST_CENTR = #{costCentr}
+        WHERE  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+        /* AND A.COST_CENTR = costCentr */
+        <if test="procFlg != null and procFlg != '' and procFlg == 1">
+            AND A.COST_CENTR IN (
+            <![CDATA[
+                SELECT COST_CENTER
+                FROM FCM0107M
+                WHERE USER_ID = #{userId}
+                  AND SYSDATE >= VALID_DT_FR
+                  AND SYSDATE <= VALID_DT_TO
+                  AND MAIN_MODULE = #{mainMod}
+                  AND SUB_MODULE = #{subMod}
+                GROUP BY COST_CENTER
+            ]]>
+            )
+        </if>
         GROUP  BY BUDGET_PLAN_YEAR,
                   COST_CENTR,
                   GL_ACC_CODE,
@@ -1549,7 +1564,7 @@ WHERE 1=1
 
     <select id="getListPermAppr" parameterType="Map" resultType="egovMap">
     <![CDATA[
-        SELECT APPR_USER_ID FROM FCM0023M WHERE APPR_GRP = 'BUDGET' AND APPR_USER_ID =#{userId}
+        SELECT APPR_USER_ID FROM FCM0023M WHERE APPR_GRP = 'BUDGET' AND APPR_USER_ID = #{userId}
     ]]>
     </select>
 </mapper>

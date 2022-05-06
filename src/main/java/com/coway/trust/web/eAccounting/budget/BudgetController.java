@@ -284,7 +284,7 @@ public class BudgetController {
 
 		params.put("procFlg", procFlg);
 		LOGGER.debug(sessionVO.getCostCentr());
-		if(!"A1101".equals(sessionVO.getCostCentr())) {
+		if(!"A1102".equals(sessionVO.getCostCentr())) {
 			params.put("flg", "1");
 		} else {
 			if(sessionVO.getUserId() == 140139) {
@@ -309,7 +309,23 @@ public class BudgetController {
 
 		List<EgovMap> info = null;
 
-		params.put("costCentr", sessionVO.getCostCentr());
+//		params.put("costCentr", sessionVO.getCostCentr());
+
+		params.put("mainMod", "E-ACCOUNTING");
+        params.put("subMod", "BUDGET");
+        params.put("userId", sessionVO.getUserId());
+
+        List<EgovMap> permissions = null;
+        permissions = budgetService.getListPermAppr(params);
+        int procFlg = 0;
+
+        if(permissions.size() == 0)
+        {
+            procFlg = 1;
+            params.put("procFlg", procFlg);
+        }
+
+        params.put("procFlg", procFlg);
 
 		LOGGER.debug("params =====================================>>  " + params);
 
