@@ -1074,7 +1074,7 @@
 <input type="hidden" id="_erlTerNonCrisisChkUpd"  value="N">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.title.text.cntcAgrMtcView" /></h1>
+<h1>Rental Agreement Status Update/View</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close" ><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -1255,7 +1255,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">RFD Required</th>
+    <th scope="row">RFD Required & Date Forward to Business Unit</th>
     <td>
     <select class="w100p" id="_isRfd" name="isRfd">
         <option value="" selected>Choose One</option>

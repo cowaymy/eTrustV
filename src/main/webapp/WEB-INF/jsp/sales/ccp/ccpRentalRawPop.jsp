@@ -1,5 +1,9 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
+<!-- <script>
+    document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
+</script> -->
 
 <script type="text/javascript">
 
@@ -11,8 +15,8 @@ var month = new Date().getMonth()+1;
 if(month.toString().length == 1){
 	month = "0" + month;
 }
-$("#dpDateFr").val(date+"/"+month+"/"+new Date().getFullYear());
-$("#dpDateTo").val(date+"/"+month+"/"+new Date().getFullYear());
+$("#crtDateFr").val(date+"/"+month+"/"+new Date().getFullYear());
+$("#crtDateTo").val(date+"/"+month+"/"+new Date().getFullYear());
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -27,8 +31,8 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
-        $("#dpDateFr").val(date+"/"+month+"/"+new Date().getFullYear());
-        $("#dpDateTo").val(date+"/"+month+"/"+new Date().getFullYear());
+        $("#crtDateFr").val(date+"/"+month+"/"+new Date().getFullYear());
+        $("#crtDateTo").val(date+"/"+month+"/"+new Date().getFullYear());
     });
 };
 
@@ -64,6 +68,7 @@ function fn_report(){
         whereSQL += " AND to_char(ArgM.GOV_AG_CRT_DT, 'DD/MM/YYYY') <= TO_DATE('"+$("#crtDateTo").val()+"', 'DD/MM/YYYY')";
     }
 
+    //console.log("whersql " + whereSQL);
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -85,15 +90,23 @@ function ValidRequiredField(){
 	var valid = true;
 	var message = "";
 
-	if($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0){
+	if($("#crtDateFr").val() == null || $("#crtDateFr").val().length == 0){
 		valid = false;
-		message += "* Please key in the Agreement Start Date.\n";
+		message += "* Please key in the Date created.\n";
+    }else if($("#crtDateTo").val() == null || $("#crtDateTo").val().length == 0){
+        valid = false;
+        message += "* Please key in the Date created.\n";
     }
+	else if (!js.date.checkDateRange($("#crtDateFr").val(),$("#crtDateTo").val(),"Date Created", "6"))
+        valid = false;
 
 	if(valid == true){
 		fn_report();
 	}else{
-		Common.alert('<spring:message code="sal.alert.msg.ccpGenSummry" />'+ DEFAULT_DELIMITER + message);
+		if(message != ""){
+			Common.alert('Rental Agreement Rawdata'+ DEFAULT_DELIMITER + message);
+		}
+
 	}
 }
 

@@ -232,7 +232,7 @@
     <td><span>${orderDetail.renAgrInfo.govAgFinalDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">RFD Required</th>
+    <th scope="row">RFD Required & Date Forward to Business Unit</th>
     <td>
     <span>${orderDetail.renAgrInfo.isGovAgRfd}</span>
     <span>${orderDetail.renAgrInfo.govAgRfdDt}</span>
