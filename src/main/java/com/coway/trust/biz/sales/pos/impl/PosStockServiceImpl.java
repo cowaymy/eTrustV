@@ -163,8 +163,6 @@ public Map<String, Object> insertTransPosStock(Map<String, Object> params) throw
 
 		posMapper.insertSAL0293M(heardMap);
 
-
-
 		for (int i = 0; i < addList.size(); i++) {
 		      Map<String, Object> addMap = (Map<String, Object>)addList.get(i);
 
@@ -174,6 +172,8 @@ public Map<String, Object> insertTransPosStock(Map<String, Object> params) throw
 		      posMapper.insertSAL0294D(addMap);
 
 		 }
+		 posMapper.updateFloatingStockLOG0106M(heardMap);
+
 	}
 
 
@@ -244,9 +244,9 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
                   	    	  posMapper.updateMergeLOG0106M(upMap);	   //stock in.
 
 
-                  	    	  upMap.put("logId", master.get("scnFromLocId")); //stock out
-                  	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
-                  	    	  posMapper.updateOutStockLOG0106M(upMap);
+//                  	    	  upMap.put("logId", master.get("scnFromLocId")); //stock out
+//                  	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
+//                  	    	  posMapper.updateOutStockLOG0106M(upMap);
 
                   	    }
                   	     //posMapper.updateMergeLOG0106M(upMap);
@@ -260,6 +260,10 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
         	 upHMap.put("scnMoveStat","C");
         }else {
           	 upHMap.put("scnMoveStat","R");
+          	 params.put("userId", params.get("userId"));
+              	if((master.get("scnMoveType")).toString().equals("T")){
+              		posMapper.updateRejectedFloatingStockLOG0106M(params);
+              	}
         }
 
        	posMapper.updateReceviedSAL0293M(upHMap);

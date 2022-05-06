@@ -552,6 +552,42 @@ MERGE INTO LOG0106M C
         AND  ITEM_CODE =#{itemCode}
  </update>
 
+ <update id="updateFloatingStockLOG0106M" parameterType="Map">
+            MERGE INTO LOG0106M C
+            USING
+            (
+	             SELECT
+	                    B.ITEM_CODE, B.ITEM_TRAN_QTY, A.SCN_FROM_LOC_ID
+	              FROM SAL0293M A
+	              JOIN SAL0294D B on A.SCN_NO = b.SCN_NO
+	              WHERE A.SCN_NO = #{scnNo}
+             ) N
+            ON ( C.LOC_ID = N.SCN_FROM_LOC_ID AND C.ITEM_CODE =N.ITEM_CODE)
+            WHEN MATCHED THEN
+                UPDATE
+	            SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0) - (N.ITEM_TRAN_QTY)
+	                , C.UPD_USER_ID  = #{userId}
+	                , C.UPD_DT       = SYSDATE
+ </update>
+
+  <update id="updateRejectedFloatingStockLOG0106M" parameterType="Map">
+            MERGE INTO LOG0106M C
+            USING
+            (
+                 SELECT
+                        B.ITEM_CODE, B.ITEM_TRAN_QTY, A.SCN_FROM_LOC_ID
+                  FROM SAL0293M A
+                  JOIN SAL0294D B on A.SCN_NO = b.SCN_NO
+                  WHERE A.SCN_NO = #{scnNo}
+             ) N
+            ON ( C.LOC_ID = N.SCN_FROM_LOC_ID AND C.ITEM_CODE =N.ITEM_CODE)
+            WHEN MATCHED THEN
+                UPDATE
+                SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0) + (N.ITEM_TRAN_QTY)
+                    , C.UPD_USER_ID  = #{userId}
+                    , C.UPD_DT       = SYSDATE
+ </update>
+
 
 
 

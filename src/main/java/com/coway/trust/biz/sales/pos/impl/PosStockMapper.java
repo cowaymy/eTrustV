@@ -45,6 +45,8 @@ public interface PosStockMapper {
 	void  updateMergeLOG0106M(Map<String, Object> params);
 	void  updateLOG0106M(Map<String, Object> params);
 	void  updateOutStockLOG0106M(Map<String, Object> params);
+	void  updateFloatingStockLOG0106M(Map<String, Object> params);
+	void  updateRejectedFloatingStockLOG0106M(Map<String, Object> params);
 
 
 
