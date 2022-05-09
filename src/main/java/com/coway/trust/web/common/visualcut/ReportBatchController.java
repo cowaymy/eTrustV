@@ -673,6 +673,31 @@ public class ReportBatchController {
   }
 
 
+  @RequestMapping(value = "/RejoinNetRawData.do")
+  //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  public void rejoinNetRawData() {
+    LOGGER.info("[START] RejoinNetRawData...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RejoinNetRaw.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+
+    String dt = CommonUtils.getCalMonth(0);
+    dt = dt.substring(4,6) + "/" + dt.substring(0,4);
+
+
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");// parameter// viewType
+    params.put("V_GENDATE", dt);
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RejoinNetRawData" + File.separator + "RejoinNetRawData_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] RejoinNetRawData...");
+  }
+
+
 
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
     this.checkArgument(params);
