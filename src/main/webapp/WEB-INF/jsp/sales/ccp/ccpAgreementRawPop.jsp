@@ -58,8 +58,8 @@ function fn_report(){
         date = "0" + date;
     }
     $("#form #viewType").val("EXCEL");
-    $("#form #reportFileName").val("/sales/RentalAgrRaw.rpt");
-    $("#form #reportDownFileName").val("RentalAgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#form #reportFileName").val("/sales/GovContratAgrRaw.rpt");
+    $("#form #reportDownFileName").val("AgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#V_WHERESQL").val(whereSQL);
 
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.

@@ -62,10 +62,10 @@ function fn_report(){
     }
 
     if(!($("#crtDateFr").val() == null || $("#crtDateFr").val().length == 0)){
-        whereSQL += " AND to_char(ArgM.GOV_AG_CRT_DT, 'DD/MM/YYYY') >= TO_DATE('"+$("#crtDateFr").val()+"', 'DD/MM/YYYY')";
+        whereSQL += " AND ArgM.GOV_AG_CRT_DT >= TO_DATE('"+$("#crtDateFr").val()+"', 'DD/MM/YYYY')";
     }
     if(!($("#crtDateTo").val() == null || $("#crtDateTo").val().length == 0)){
-        whereSQL += " AND to_char(ArgM.GOV_AG_CRT_DT, 'DD/MM/YYYY') <= TO_DATE('"+$("#crtDateTo").val()+"', 'DD/MM/YYYY')";
+        whereSQL += " AND ArgM.GOV_AG_CRT_DT <= TO_DATE('"+$("#crtDateTo").val()+"', 'DD/MM/YYYY')";
     }
 
     //console.log("whersql " + whereSQL);
