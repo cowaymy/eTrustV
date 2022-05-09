@@ -301,10 +301,13 @@
 	<!-- search_table end -->
 
 	<ul class="right_btns">
+	   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+
 		<li><p class="btn_grid">
 				<a href="#" onClick="fn_excelDown(gridViewData)"><spring:message
 						code='service.btn.Generate' /></a>
 			</p></li>
+			     </c:if>
 	</ul>
 
 <form id="form">
