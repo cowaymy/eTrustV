@@ -1559,6 +1559,14 @@
 			    ACC_BILL_TASK_ID = #{accBillTaskId}
     </update>
 
+     <update id="updateLOG0106MDetail"  parameterType="Map">
+	     UPDATE
+	           LOG0106M
+	     SET
+	           ITEM_INV_QTY = ITEM_INV_QTY - #{posDetailQty}
+	     WHERE LOC_ID = #{locId} AND ITEM_CODE = #{posItmStockId}
+     </update>
+
     <select id="getSeqPay0011D" resultType="java.lang.Integer">
          SELECT PAY0011D_SEQ.NEXTVAL FROM DUAL
     </select>

@@ -1512,11 +1512,14 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
                                                                                  // Receive)
         revDetailMap.put("userId", params.get("userId"));
 
+        revDetailMap.put("locId", params.get("rePosBrnchId"));
+
         if (revDetailMap != null) {
           LOGGER.info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT START  ################");
           LOGGER
               .info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT param : " + revDetailMap.toString());
           posMapper.insertPosReversalDetail(revDetailMap);
+          posMapper.updateLOG0106MDetail(revDetailMap);
           LOGGER.info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT END  ################");
         }
       }
@@ -5232,11 +5235,15 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
                                                                                  // Receive)
         revDetailMap.put("userId", params.get("userId"));
 
+        revDetailMap.put("locId", params.get("rePosBrnchId"));
+
+
         if (revDetailMap != null) {
           LOGGER.info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT START  ################");
           LOGGER
               .info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT param : " + revDetailMap.toString());
           posMapper.insertPosReversalDetail(revDetailMap);
+          posMapper.updateLOG0106MDetail(revDetailMap);
           LOGGER.info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT END  ################");
         }
       }
