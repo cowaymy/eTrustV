@@ -726,7 +726,7 @@
             C.MEM_ACC_NAME,
             A.BANK_CODE,
             A.BANK_ACC_NO,
-            A.GL_ACC_NO,
+            E.GL_ACC_NO,
             <!-- CASE WHEN A.ADV_TYPE = 5 THEN A.TOT_AMT
                  WHEN A.ADV_TYPE = 6 THEN (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = #{clmNo})
             END TOT_AMT, -->
