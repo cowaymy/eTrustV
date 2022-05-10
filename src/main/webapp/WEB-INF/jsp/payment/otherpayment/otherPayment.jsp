@@ -148,8 +148,7 @@ $(document).ready(function(){
 		        $("#searchBankAcc").attr("disabled", "disabled");
 
 		    }
-	     $("#memType").val(memType);
-	     $("#memLevel").val(memLevel);
+
 
 	     bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayoutCody,null,gridPros);
 	 }
@@ -157,6 +156,9 @@ $(document).ready(function(){
 	 {
 		   bankGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
      }
+
+	    $("#memType").val(memType);
+	    $("#memLevel").val(memLevel);
 
 	pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);
 
@@ -232,6 +234,11 @@ $(document).ready(function(){
 
 	 $('#searchVa').prop("readonly", true);
 
+	 if("${SESSION_INFO.userTypeId}" =="4" ||"${SESSION_INFO.userTypeId}" =="6" ){
+         doGetCombo('/common/getOrgCodeList.do', '','', 'orgCode', 'S', '' );
+         doGetCombo('/common/getGrpCodeList.do', '','', 'grpCode', 'S', '' );
+    }
+
 	 if("${SESSION_INFO.userTypeId}" !="2"){
 		  doGetCombo('/common/getAccountList.do', 'CASH ||   ','', 'searchBankAcc', 'S', '' );
 	 } else{
@@ -252,6 +259,32 @@ $(document).ready(function(){
 
      //화면init시에 cash라서 jompay 삭제
      $("#searchBankType option[value='2728']").remove();
+
+     $("#orgCode").change(
+             function() {
+               if ($("#orgCodeList").val() == '') {
+                 $("#grpCodeList").val('');
+                 $("#grpCodeList").find("option").remove();
+
+                    doGetCombo('/common/getGrpCodeList.do', '', '', 'grpCode', 'S', '');
+               }
+               else{
+            	   doGetCombo('/common/getGrpCodeList.do', $("#orgCode").val(), '', 'grpCode', 'S', '');
+               }
+           });
+
+     $("#grpCode").change(
+             function() {
+               if ($("#grpCodeList").val() == '') {
+                 $("#deptCodeList").val('');
+                 $("#deptCodeList").find("option").remove();
+
+                    doGetCombo('/common/getDeptCodeList.do', '', '', 'deptCode', 'S', '');
+               }
+               else{
+            	   doGetComboData('/common/getDeptCodeList.do', {orgCodes : $("#orgCode").val(), grpCodes :  $("#grpCode").val() }, '', 'deptCode', 'S', '');
+               }
+           });
 
 	 $('#payMode').change(function() {
 
@@ -3895,11 +3928,37 @@ $.fn.clearForm = function() {
                     <tr>
 
                 <th scope="row">Org Code</th>
-                <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" readonly/></td>
+
+                <td>
+                 <c:choose>
+                    <c:when test="${SESSION_INFO.userTypeId == '4'  || SESSION_INFO.userTypeId == '6' }">
+                           <select id="orgCode" name="orgCode" class="w100p"></select>
+                    </c:when>
+                    <c:otherwise>
+                       <input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" readonly/>
+                       </c:otherwise>
+                </c:choose>
+                </td>
                 <th scope="row">Grp Code</th>
-                <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p" readonly/></td>
+                <td>
+                <c:choose>
+                    <c:when test="${SESSION_INFO.userTypeId == '4'  || SESSION_INFO.userTypeId == '6' }">
+                           <select id="grpCode" name="grpCode" class="w100p"></select>
+                    </c:when>
+                    <c:otherwise>
+                      <input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p" readonly/>
+                       </c:otherwise>
+                </c:choose></td>
                 <th scope="row">Dept Code</th>
-                <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p" readonly/></td>
+                <td>
+                <c:choose>
+                    <c:when test="${SESSION_INFO.userTypeId == '4'  || SESSION_INFO.userTypeId == '6' }">
+                           <select id="deptCode" name="deptCode" class="w100p"></select>
+                    </c:when>
+                    <c:otherwise>
+                     <input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p" readonly/>
+                       </c:otherwise>
+                </c:choose></td>
 		      </tr>
 				</tbody>
 			</table>

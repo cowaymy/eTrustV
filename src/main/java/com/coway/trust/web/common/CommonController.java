@@ -201,6 +201,25 @@ public class CommonController {
 		return ResponseEntity.ok(resultList);
 	}
 
+	@RequestMapping(value = "/getOrgCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getOrgCodeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> resultList = commonService.getOrgCodeList(params);
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/getDeptCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDeptCodeList(@RequestParam Map<String, Object> params) {
+		LOGGER.debug("param : " + params);
+		List<EgovMap> resultList = commonService.getDeptCodeList(params);
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/getGrpCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getGrpCodeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> resultList = commonService.getGrpCodeList(params);
+		return ResponseEntity.ok(resultList);
+	}
+
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
 	 *

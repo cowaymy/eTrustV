@@ -1611,6 +1611,22 @@ public class CommonServiceImpl implements CommonService {
 		return commonMapper.getAccountList(params);
 	}
 
+	@Override
+	public List<EgovMap> getOrgCodeList(Map<String, Object> params) {
+		return commonMapper.getOrgCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> getDeptCodeList(Map<String, Object> params) {
+		return commonMapper.getDeptCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> getGrpCodeList(Map<String, Object> params) {
+		return commonMapper.getGrpCodeList(params);
+	}
+
+
 	/**
 	 * Branch ID로 User 정보 조회
 	 *

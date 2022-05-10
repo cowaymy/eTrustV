@@ -323,6 +323,12 @@ public interface CommonService {
 	 */
 	List<EgovMap> getAccountList(Map<String, Object> params);
 
+	List<EgovMap> getOrgCodeList(Map<String, Object> params);
+
+	List<EgovMap> getDeptCodeList(Map<String, Object> params);
+
+	List<EgovMap> getGrpCodeList(Map<String, Object> params);
+
 	/**
 	 * select Bank Account Mapping
 	 * @param params

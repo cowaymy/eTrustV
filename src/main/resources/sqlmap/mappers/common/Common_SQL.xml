@@ -1491,6 +1491,31 @@
         ORDER BY ACC_CODE ASC
     </select>
 
+    <select id="getOrgCodeList" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT ORG_CODE AS CODE_NAME, ORG_CODE AS CODE_ID FROM ORG1001V ORDER BY 1
+    </select>
+
+    <select id="getGrpCodeList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT GRP_CODE  AS CODE_NAME, GRP_CODE AS CODE_ID FROM ORG1001V
+    <if test = "groupCode != null and groupCode != '' ">
+    WHERE ORG_CODE =  #{groupCode}
+    </if>
+    ORDER BY 1
+    </select>
+
+     <select id="getDeptCodeList" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT DEPT_CODE AS CODE_NAME, DEPT_CODE AS CODE_ID FROM ORG1001V
+     WHERE 1 = 1
+     <if test = "orgCodes != null and orgCodes != '' ">
+     and ORG_CODE =  #{orgCodes}
+    </if>
+
+    <if test = "grpCodes != null and grpCodes != '' ">
+     and GRP_CODE =  #{grpCodes}
+    </if>
+     ORDER BY 1
+     </select>
+
     <select id ="selectBankAccountList" parameterType="Map" resultType="egovMap">
         SELECT
              B.CODE_ID,

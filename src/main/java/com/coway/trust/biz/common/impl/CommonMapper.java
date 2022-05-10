@@ -127,7 +127,6 @@ public interface CommonMapper {
 	/************************ accountCodeList  *************************/
     List<EgovMap> getAccountCodeList(Map<String, Object> params);
 
-
     int getAccCodeCount(Map<String, Object> params);
 
     int insertAccountCode(Map<String, Object> params);
@@ -135,7 +134,11 @@ public interface CommonMapper {
     int mergeAccountCode(Map<String, Object> params);
 
     /***********************************/
+    List<EgovMap> getOrgCodeList(Map<String, Object> params);
 
+    List<EgovMap> getDeptCodeList(Map<String, Object> params);
+
+    List<EgovMap> getGrpCodeList(Map<String, Object> params);
     /*general Code*/
 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
 
