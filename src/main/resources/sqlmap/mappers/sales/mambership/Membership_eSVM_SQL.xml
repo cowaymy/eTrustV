@@ -25,6 +25,9 @@
           , ESVM.PSM_SRV_MEM_NO
           , DD.RESN_DESC
           , ESVM.SVM_QUOT_ID
+          ,BRCNH.CODE
+          ,BRCNH.NAME
+          ,BRCNH.CODE || ' ' || BRCNH.NAME AS USER_BRCNH
         FROM SAL0298D ESVM
         LEFT JOIN SAL0093D QUO
             ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
@@ -44,6 +47,8 @@
             ON T9.MEM_CODE = CRTUSR.USER_NAME
         LEFT JOIN SYS0032M DD
             ON DD.RESN_ID = ESVM.APPV_INSTRCT
+        LEFT JOIN SYS0005M BRCNH
+            ON BRCNH.BRNCH_ID = CRTUSR.USER_BRNCH_ID
         WHERE 1 = 1
         <if test='_memCode != null and _memCode != ""'>
             AND CRTUSR.user_name = #{_memCode}
@@ -78,7 +83,7 @@
         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
             AND ESVM.CRT_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
         </if>
-        <if test='_name != null and _name != ""'>
+        <if test='custName != null and custName != ""'>
             AND UPPER(CUST.NAME) LIKE UPPER(#{custName})||'%'
         </if>
         <if test="ordNo != '' ">
@@ -1295,5 +1300,16 @@
         GROUP BY SRV_MEM_ID
     ) A
   </select>
+
+  <select id="isSARefNoExist" parameterType="Map" resultType="int">
+        SELECT count(1) FROM SAL0298D where sa_ref = #{SARefNo} and PSM_ID <![CDATA[ <> ]]> #{psmId}
+    </select>
+
+    <select id="getPayWorNo" parameterType="Map" resultType="String">
+        select min(b.or_no) from pay0007d a
+       left join PAY0064D b on a.BILL_ID = b.BILL_ID
+       where a.BILL_MEM_SHIP_NO = #{docNo}
+       and BILL_NO = #{srvMemBillNo}
+    </select>
 
 </mapper>

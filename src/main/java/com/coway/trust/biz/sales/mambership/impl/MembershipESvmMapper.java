@@ -85,4 +85,8 @@ public interface MembershipESvmMapper {
     EgovMap selectBankStatementInfo(Map<String, Object> params);
 
     EgovMap getPay0024D(Map<String, Object> params);
+
+    int  isSARefNoExist(Map<String, Object> params);
+
+    String getPayWorNo(Map<String, Object> params);
 }

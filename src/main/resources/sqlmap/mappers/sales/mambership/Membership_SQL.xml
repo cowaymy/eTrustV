@@ -219,7 +219,9 @@
 				       stb.quot_no , stb.bill_id_pckg ,
 				       stb.bill_id_filter , stb.cust_name ,
 				       stb.cust_ic,
-				       stb.ref_no
+				       stb.ref_no,
+				       stb.psm_no,
+				       stb.po_no
 				  FROM (SELECT mfo.mbrsh_id mbrsh_id,
 				               mfo.mbrsh_no mbrsh_no,
 				               mfo.mbrsh_bill_no mbrsh_bill_no,
@@ -272,7 +274,9 @@
 				               mfo.bill_id_filter bill_id_filter,
 				               mfo.cust_name cust_name,
 				               mfo.cust_ic cust_ic,
-				               mfo.ref_no ref_no
+				               mfo.ref_no ref_no,
+				               mfo.psm_no,
+				               mfo.po_no
 				          FROM sal1002v mfo) stb
 				 WHERE stb.mbrsh_id = #{MBRSH_ID} AND ROWNUM <= 1
 		]]>

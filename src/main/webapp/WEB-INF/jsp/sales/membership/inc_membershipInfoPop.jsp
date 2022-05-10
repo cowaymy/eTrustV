@@ -72,17 +72,21 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.pakPro" /></th>
-    <td colspan="5">
+    <td colspan="3">
           <span>  ${membershipInfoTab.mbrshPacPromoCode} <c:if test="${not empty membershipInfoTab.mbrshPacPromoCode}"> -  ${membershipInfoTab.mbrshPacPromoName} </c:if> </span>
 
     </td>
+    <th scope="row"><spring:message code="sal.title.text.preSalesNo" /></th>
+    <td><span>${membershipInfoTab.psmNo}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.filterPro" /></th>
-     <td colspan="5">
+     <td colspan="3">
           <span>  ${membershipInfoTab.mbrshPromoCode} <c:if test="${not empty membershipInfoTab.mbrshPromoCode}"> -  ${membershipInfoTab.mbrshPromoName} </c:if> </span>
 
     </td>
+    <th scope="row"><spring:message code="log.head.purchaseorder" /></th>
+    <td><span>${membershipInfoTab.poNo}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.salManCode" /></th>

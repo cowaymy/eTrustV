@@ -57,6 +57,11 @@
             $("#aTabBilling").hide();
         }
 
+        var quotStatus = '${quotInfo.validStusId}';
+        var quotNumber = '${quotInfo.quotNo}';
+        if(!(quotStatus == '1' || quotStatus == '4' || quotStatus == '81')){
+        	Common.alert('Quotation has been deactivated.<br/> Quotation number :<br/> [ ' + quotNumber + ' ]<br/>Please check and proceed reject.');
+        }
         //fn_displaySpecialInst();
         var stus = '${eSvmInfo.stus}';
         var flg = '${paymentInfo.allowComm}';
@@ -493,7 +498,8 @@
                                if($("#unmatchPayment").is(":checked") == true) {
                                    Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo + ". Please proceed manual key in payment.");
                                } else {
-                                   Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo);
+                                   Common.alert('Membership successfully saved. Membership No : ' + "<b>" + result1.data.docNo + "</b>" + "<br/><br/>" +
+                                           '<span style="color: red;">Payment WOR No: ' + "<br/>" + result1.data.payWorNo + "</span>");
                                }
                            }
                            fn_close();
@@ -515,6 +521,7 @@
 
     function fn_close() {
         $("#popup_wrap").remove();
+        $('#_btnSearch').click();
     }
 
     function fn_closePreOrdModPop() {
@@ -776,6 +783,13 @@
             checkResult = false;
             return checkResult;
 
+        } else if(!FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
+            Common.ajaxSync("GET", "/sales/membership/isSARefNoExist.do", {SARefNo:$("#SARefNo").val(),psmId:'${eSvmInfo.psmId}'}, function(result) {
+                if(result.code == "99") {
+                    Common.alert('SA reference number is already exists.');
+                    checkResult = false;
+                }
+            });
         } else if(FormUtil.isEmpty($("#action").val())) {
             Common.alert('Please choose an Action to proceed.');
             checkResult = false;

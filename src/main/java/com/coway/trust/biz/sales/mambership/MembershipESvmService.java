@@ -50,4 +50,8 @@ public interface MembershipESvmService {
 	Map<String, Object> eSVMNormalPayment(Map<String, Object> params, SessionVO sessionVO);
 
     List<EgovMap> eSVMCardPayment(Map<String, Object> params, SessionVO sessionVO);
+
+    int isSARefNoExist(Map<String, Object> params);
+
+    String getPayWorNo(Map<String, Object> params);
 }

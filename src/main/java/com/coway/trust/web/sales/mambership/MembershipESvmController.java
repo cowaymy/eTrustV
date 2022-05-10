@@ -303,6 +303,13 @@ public class MembershipESvmController {
         }
 */
 
+        //srvMemNo
+        //payWorNo
+        String payWorNo = "";
+
+        payWorNo = membershipESvmService.getPayWorNo(params);
+        params.put("payWorNo", payWorNo);
+
         if(updAct > 0) {
             if(!"6506".equals(params.get("payment_mode").toString())) {
                 message.setCode(AppConstants.SUCCESS);
@@ -347,5 +354,19 @@ public class MembershipESvmController {
 
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/isSARefNoExist.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> isSARefNoExist(@RequestParam Map<String, Object> params) {
+		int count = membershipESvmService.isSARefNoExist(params);
+		ReturnMessage message = new ReturnMessage();
+		if(count == 0){
+			message.setCode(AppConstants.SUCCESS);
+		}else{
+			message.setCode(AppConstants.FAIL);
+		}
+
+		return ResponseEntity.ok(message);
+
+	}
 
 }

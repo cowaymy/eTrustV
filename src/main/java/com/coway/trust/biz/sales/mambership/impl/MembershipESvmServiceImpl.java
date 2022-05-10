@@ -248,6 +248,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
             Map<String, Object> sal0093dDataMap = new HashMap<String, Object>();
             sal0093dDataMap.put("srvMemId", srvMemId);
             sal0093dDataMap.put("srvMemQuotID", sal0093dData.get("srvMemQuotId"));
+            sal0093dDataMap.put("userId", params.get("userId"));
 
             logger.debug("sal0093dDataMap  ==>" + sal0093dDataMap.toString());
             int s93upDataCnt = membershipESvmMapper.update_SAL0093D_Stus(sal0093dDataMap);
@@ -1121,5 +1122,15 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         List<EgovMap> resultList = commonPaymentService.savePayment(formInfo, formList);
 
         return resultList;
+    }
+
+    @Override
+    public int isSARefNoExist(Map<String, Object> params) {
+        return membershipESvmMapper.isSARefNoExist(params);
+    }
+
+    @Override
+    public String getPayWorNo(Map<String, Object> params) {
+        return membershipESvmMapper.getPayWorNo(params);
     }
 }
