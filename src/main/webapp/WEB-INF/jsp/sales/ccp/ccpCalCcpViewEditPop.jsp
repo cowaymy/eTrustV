@@ -230,7 +230,7 @@ $(document).ready(function() {
             return;
         }else{
             if( $("#_experianScore").val() > 9999 || $("#_experianScore").val() < 0){
-                Common.alert("* Please key in Experian score range between 0 to 9999 points.");
+                Common.alert("* Please key in Experian score range between 0 to 800 points.");
                 return;
             }
         }
@@ -487,6 +487,7 @@ function fn_ccpStatusChangeFunc(getVal){
 	var experianScore = '${ccpInfoMap.ccpExperians}';
 	var experianRisk = '${ccpInfoMap.ccpExperianr}';
 	var experianbankrupt = '${ccpInfoMap.experianBankrupt}';
+	var expPrcss = '${ccpInfoMap.expPrcss}';
 
     //Init
     $("#_smsDiv").css("display" , "none");
@@ -537,35 +538,57 @@ function fn_ccpStatusChangeFunc(getVal){
                 setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
             }
 
-            //sms  changed by Lee(2018/01/18)
-            if(ficoScre >= 350 && ficoScre <= 450){
-                if(isHold == 0){   ////on hold
-                    if(isAllowSendSMS() == true){
-                        $("#_smsDiv").css("display" , "");
-                        $("#_updSmsChk").prop('checked', true) ;
-                        $("#_updSmsMsg").attr("disabled" , false);
-                        $("#_reasonCodeEdit").val("2177");
-                        setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
+            if (expPrcss == 0){
+            	//sms  changed by Lee(2018/01/18)
+                if(ficoScre >= 350 && ficoScre <= 450){
+                    if(isHold == 0){   ////on hold
+                        if(isAllowSendSMS() == true){
+                            $("#_smsDiv").css("display" , "");
+                            $("#_updSmsChk").prop('checked', true) ;
+                            $("#_updSmsMsg").attr("disabled" , false);
+                            $("#_reasonCodeEdit").val("2177");
+                            setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
+                        }
+                    } //
+                }else if(ficoScre >= 451 && ficoScre <= 500){
+                    if(bankrupt == 1 && isHold == 0){
+                        if(isAllowSendSMS() == true){
+                            $("#_smsDiv").css("display" , "");
+                            $("#_updSmsChk").prop('checked', true) ;
+                            $("#_updSmsMsg").attr("disabled" , false);
+                            $("#_reasonCodeEdit").val("1872");
+                            setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
+                        }
                     }
-                } //
-            }else if(ficoScre >= 451 && ficoScre <= 500){
-                if(bankrupt == 1 && isHold == 0){
-                    if(isAllowSendSMS() == true){
-                        $("#_smsDiv").css("display" , "");
-                        $("#_updSmsChk").prop('checked', true) ;
-                        $("#_updSmsMsg").attr("disabled" , false);
-                        $("#_reasonCodeEdit").val("1872");
-                        setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
+                }else if(ficoScre == 0){
+                    if(bankrupt == 1 && isHold == 0){
+                        if(isAllowSendSMS() == true){
+                            $("#_smsDiv").css("display" , "");
+                            $("#_updSmsChk").prop('checked', true) ;
+                            $("#_updSmsMsg").attr("disabled" , false);
+                            $("#_reasonCodeEdit").val("1872");
+                            setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
+                        }
                     }
                 }
-            }else if(ficoScre == 0){
-                if(bankrupt == 1 && isHold == 0){
-                    if(isAllowSendSMS() == true){
-                        $("#_smsDiv").css("display" , "");
-                        $("#_updSmsChk").prop('checked', true) ;
-                        $("#_updSmsMsg").attr("disabled" , false);
-                        $("#_reasonCodeEdit").val("1872");
-                        setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
+            }else if (expPrcss == 1){
+            	if(experianScore == 0 && experianRisk == 0){
+                    if(experianbankrupt > 0 && isHold == 0){   //on hold
+                        if(isAllowSendSMS() == true){
+                            $("#_smsDiv").css("display" , "");
+                            $("#_updSmsChk").prop('checked', true) ;
+                            $("#_updSmsMsg").attr("disabled" , false);
+                            setSMSMessage('REQUEST ADVANCE' , 'NO SCORE - REQUEST 1Y OR 2YRS ADVANCE RENTAL FEE');
+                        }
+                    } //
+                }else if(experianScore == 9999 && experianRisk == 0){
+                    if(experianbankrupt > 0 && isHold == 0){
+                        if(isAllowSendSMS() == true){
+                            $("#_smsDiv").css("display" , "");
+                            $("#_updSmsChk").prop('checked', true) ;
+                            $("#_updSmsMsg").attr("disabled" , false);
+                            setSMSMessage('REQUEST ADVANCE' , 'NO SCORE - REQUEST 1Y OR 2YRS ADVANCE RENTAL FEE');
+                        }
                     }
                 }
             }
@@ -649,8 +672,14 @@ function  bind_RetrieveData(){
     var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
     var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
     var ccpHold = '${ccpInfoMap.ccpIsHold}';  // 0 , 1
+    //EXPERIAN
+    var expScre = '${ccpInfoMap.ccpExperians}'; //EXPERIAN SCORE
+    var expRisk = '${ccpInfoMap.ccpExperianr}'; //EXPERIAN RISK
+    var expBankrupt = '${ccpInfoMap.experianBankrupt}'; //EXPERIAN_BANKRUPT
+    var expPrcss = '${ccpInfoMap.expPrcss}';
+    //EXPERIAN
 
-    console.log("ccpStus : " + ccpStus +", ficoScre : " + ficoScre + " , bankrupt : " + bankrupt + ", ccpHold : " + ccpHold);
+    console.log("ccpStus : " + ccpStus +", ficoScre : " + ficoScre + " , bankrupt : " + bankrupt + ", expScre : " + expScre + ", expRisk : " + expRisk + ", expBankrupt : " + expBankrupt + ", ccpHold : " + ccpHold);
     //pre Value
     $("#_isPreVal").val("1");
     //Fico
@@ -693,39 +722,62 @@ function  bind_RetrieveData(){
             setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
         }
 
-        //sms  changed by Lee(2018/01/18)
+        if (expPrcss == 0){
+        	//sms  changed by Lee(2018/01/18)
 
-        if(ficoScre >= 350 && ficoScre <= 450){
-            if(ccpHold == 0){   ////on hold
-            	if(isAllowSendSMS() == true){
-                    $("#_smsDiv").css("display" , "");
-                    $("#_updSmsChk").prop('checked', true) ;
-                    $("#_updSmsMsg").attr("disabled" , false);
-                    $("#_reasonCodeEdit").val("2177");
-                    setSMSMessage('Pending' , 'FAILED CTOS SCORE');
+            if(ficoScre >= 350 && ficoScre <= 450){
+                if(ccpHold == 0){   ////on hold
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        $("#_reasonCodeEdit").val("2177");
+                        setSMSMessage('Pending' , 'FAILED CTOS SCORE');
+                    }
+                }
+            }else if(ficoScre >= 451 && ficoScre <= 500){
+                if(bankrupt == 1 && ccpHold == 0){
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        $("#_reasonCodeEdit").val("1872");
+                        setSMSMessage('Pending' , 'FAILED CTOS');
+                    }
+                }
+            }else if(ficoScre == 0){
+                if(bankrupt == 1 && ccpHold == 0){
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        $("#_reasonCodeEdit").val("1872");
+                        setSMSMessage('Pending' , 'FAILED CTOS');
+                    }
                 }
             }
-        }else if(ficoScre >= 451 && ficoScre <= 500){
-            if(bankrupt == 1 && ccpHold == 0){
-            	if(isAllowSendSMS() == true){
-                    $("#_smsDiv").css("display" , "");
-                    $("#_updSmsChk").prop('checked', true) ;
-                    $("#_updSmsMsg").attr("disabled" , false);
-                    $("#_reasonCodeEdit").val("1872");
-                    setSMSMessage('Pending' , 'FAILED CTOS');
+        }else if (expPrcss == 1){
+            if(experianScore == 0 && experianRisk == 0){
+                if(experianbankrupt > 0 && isHold == 0){   //on hold
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        setSMSMessage('REQUEST ADVANCE' , 'NO SCORE - REQUEST 1Y OR 2YRS ADVANCE RENTAL FEE');
+                    }
+                } //
+            }else if(experianScore == 9999 && experianRisk == 0){
+                if(experianbankrupt > 0 && isHold == 0){
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        setSMSMessage('REQUEST ADVANCE' , 'NO SCORE - REQUEST 1Y OR 2YRS ADVANCE RENTAL FEE');
+                    }
                 }
             }
-        }else if(ficoScre == 0){
-        	if(bankrupt == 1 && ccpHold == 0){
-        		if(isAllowSendSMS() == true){
-                    $("#_smsDiv").css("display" , "");
-                    $("#_updSmsChk").prop('checked', true) ;
-                    $("#_updSmsMsg").attr("disabled" , false);
-                    $("#_reasonCodeEdit").val("1872");
-                    setSMSMessage('Pending' , 'FAILED CTOS');
-                }
-        	}
         }
+
 
     }else if(ccpStus == "5"){
 
