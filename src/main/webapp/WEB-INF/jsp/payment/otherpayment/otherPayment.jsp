@@ -2207,7 +2207,7 @@ function isDupPOSToFinal(){
 
     		if(selBank != ''){
 	    		if(selBank == '2730'){
-	    			if("${SESSION_INFO.userTypeId}" !="2"){
+	    			if("${SESSION_INFO.userTypeId}" !="2" && "${SESSION_INFO.userTypeId}" !="6" && "${SESSION_INFO.userTypeId}" !="4"){
 		    			if($("#searchVa").val() == ''){
 		    				Common.alert("<spring:message code='pay.alert.vaAccount'/>");
 		    				return;
@@ -2333,8 +2333,10 @@ function isDupPOSToFinal(){
                 if(selBankType != '' ){
 	                if(selBankType == '2730'){
 	                	if(FormUtil.checkReqValue($("#cash").find("#va"))){
+	                		if("${SESSION_INFO.userTypeId}" !="6" && "${SESSION_INFO.userTypeId}" !="4"){
 	                        Common.alert("<spring:message code='pay.alert.vaAccountEmpty'/>");
 	                        return;
+	                		}
 	                    }
 	                }else{
 	                	$("#cash").find("#bankAcc").prop("disabled", false);
@@ -2372,8 +2374,11 @@ function isDupPOSToFinal(){
                 if(selBankType != '' ){
                     if(selBankType == '2730'){
                         if(FormUtil.checkReqValue($("#cheque").find("#va"))){
+                        	if("${SESSION_INFO.userTypeId}" !="6" && "${SESSION_INFO.userTypeId}" !="4"){
+
                             Common.alert("<spring:message code='pay.alert.vaAccountEmpty'/>");
                             return;
+                        	}
                         }
                     }else{
                         if(FormUtil.checkReqValue($("#bankAccCheque option:selected"))){
@@ -2431,8 +2436,10 @@ function isDupPOSToFinal(){
                 if(selBankType != '' ){
                     if(selBankType == '2730'){
                         if(FormUtil.checkReqValue($("#online").find("#va"))){
+                        	if("${SESSION_INFO.userTypeId}" !="6" && "${SESSION_INFO.userTypeId}" !="4"){
                             Common.alert("<spring:message code='pay.alert.vaAccountEmpty'/>");
                             return;
+                        	}
                         }
                     }else{
                         if(FormUtil.checkReqValue($("#bankAccOnline option:selected"))){
