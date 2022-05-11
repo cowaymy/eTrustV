@@ -11,25 +11,25 @@ import io.swagger.annotations.ApiModelProperty;
 public class DtRentalCollectionListDto {
 
 	@ApiModelProperty(value = "")
-	private String MEM_CODE;
+	private String memCode;
 
 	@ApiModelProperty(value = "")
-	private String RC_PRCT;
+	private String rcPrct;
 
 	public String getMemCode() {
-		return MEM_CODE;
+		return memCode;
 	}
 
-	public void setMemCode(String MEM_CODE) {
-		this.MEM_CODE = MEM_CODE;
+	public void setMemCode(String memCode) {
+		this.memCode = memCode;
 	}
 
 	public String getRcPrct() {
-		return RC_PRCT;
+		return rcPrct;
 	}
 
-	public void setRcPrct(String RC_PRCT) {
-		this.RC_PRCT = RC_PRCT;
+	public void setRcPrct(String rcPrct) {
+		this.rcPrct = rcPrct;
 	}
 
 	public static DtRentalCollectionListDto create(EgovMap egvoMap) {
