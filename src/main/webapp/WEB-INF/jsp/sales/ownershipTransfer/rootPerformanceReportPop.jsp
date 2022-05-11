@@ -47,9 +47,9 @@ function validRequiredField(){
     var message = "";
 
 
-    if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
+    if(($("#dpOrderMonth").val() == null || $("#dpOrderMonth").val().length == 0 )){
         valid = false;
-        message += 'Please Keyin Date" />';
+        message += 'Please Keyin Date"';
     }
 
     if(valid == true){
@@ -72,9 +72,9 @@ function fn_report(){
       month = "0" + month;
     }
 
-    var reportDownFileName = "ROOTRawData_" + day + month + date.getFullYear(); //report name
-    var reportFileName = "/sales/ROOTRawData_Excel.rpt"; //reportFileName
-    var reportViewType = "EXCEL"; //viewType
+    var reportDownFileName = "ROOTPerformenceData_" + day + month + date.getFullYear(); //report name
+    var reportFileName = "/sales/ROOTStatusReport_PDF.rpt"; //reportFileName
+    var reportViewType = "PDF"; //viewType
 
 
     var $reportParameter = $("#reportParameter")[0];
@@ -83,17 +83,11 @@ function fn_report(){
     $($reportParameter).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
     $($reportParameter).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
     $($reportParameter).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
-    $($reportParameter).append('<input type="hidden" id="V_SDATE" name="V_SDATE"  /> ');//start date
-    $($reportParameter).append('<input type="hidden" id="V_EDATE" name="V_EDATE"  /> ');//END DATE
-    var reportDownFileName = "ROOTRawData_" + day + month + date.getFullYear(); //report name
-    var reportFileName = "/sales/ROOTRawData_Excel.rpt"; //reportFileName
-    var reportViewType = "EXCEL"; //viewType
+    $($reportParameter).append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE"  /> ');//start date
     $("#reportParameter #reportFileName").val(reportFileName);
     $("#reportParameter #reportDownFileName").val(reportDownFileName);
     $("#reportParameter #viewType").val(reportViewType);
-    $("#reportParameter #V_SDATE").val($('#dpDateFr').val().split("/")[2] + $('#dpDateFr').val().split("/")[1] + $('#dpDateFr').val().split("/")[0]);
-    $("#reportParameter #V_EDATE").val($('#dpDateTo').val().split("/")[2] + $('#dpDateTo').val().split("/")[1] + $('#dpDateTo').val().split("/")[0]);
-    $("#viewType").val("EXCEL");
+    $("#reportParameter #V_PASSDATE").val($('#dpOrderMonth').val().split("/")[1] + "-" + $('#dpOrderMonth').val().split("/")[0]+"-01");
 
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
@@ -117,7 +111,7 @@ function fn_report(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ROOT Raw Data</h1>
+<h1>ROOT Performance</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -141,12 +135,14 @@ function fn_report(){
 <tbody>
 
 <tr>
-    <th scope="row">ROOT Request Date</th>
+    <%-- <th scope="row">ROOT Performance Month</th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
     <span><spring:message code="sal.title.to" /></span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p> --%>
+    <th scope="row"><spring:message code="sal.title.text.ordMonth" /></th>
+    <td><input type="text" title="Create end Date" placeholder="MM/YYYY" class="j_date2" id="dpOrderMonth"/></td>
     </div><!-- date_set end -->
     </td>
 </tr>

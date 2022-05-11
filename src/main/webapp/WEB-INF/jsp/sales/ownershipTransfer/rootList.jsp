@@ -103,6 +103,7 @@
 				//$("#search_requestor_btn").click(fn_supplierSearchPop);
 				$("#newAS").click(fn_newAS);
 				$("#rootRawData").click(fn_rootRawData);
+				$("#rootPerformanceData").click(fn_rootPerformanceData);
 			    $('#search_requestor_btn').click(function() {
 			        //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
 			        Common.popupDiv("/common/memberPop.do", $("#root_searchForm").serializeJSON(), null, true);
@@ -310,43 +311,11 @@
 
 	function fn_rootRawData() {
 		Common.popupDiv("/sales/ownershipTransfer/rootRawDataPop.do", $("#root_searchForm").serializeJSON(), null, true);
-		//set date portion for report download filename - start
-        /* var date = new Date();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        if (date.getDate() < 10) {
-          day = "0" + date.getDate();
-        }
-
-        if (month < 10) {
-          month = "0" + month;
-        }
-        //set date portion for report download filename - end
-
-        var $reportForm = $("#reportForm")[0];
-
-        $($reportForm).empty(); //remove children
-
-        var reportDownFileName = "ROOTRawData_" + day + month + date.getFullYear(); //report name
-        var reportFileName = "/sales/ROOTRawData_Excel.rpt"; //reportFileName
-        var reportViewType = "EXCEL"; //viewType
-
-        //default input setting
-        $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
-        $($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
-        $($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
-
-        //default setting
-        $("#reportForm #reportFileName").val(reportFileName);
-        $("#reportForm #reportDownFileName").val(reportDownFileName);
-        $("#reportForm #viewType").val(reportViewType);
-
-        //report 호출
-        var option = {
-            isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-        };
-        Common.report("reportForm", option); */
 	}
+
+	function fn_rootPerformanceData() {
+        Common.popupDiv("/sales/ownershipTransfer/rootPerformanceReportPop.do", $("#root_searchForm").serializeJSON(), null, true);
+    }
 
 
 
@@ -588,7 +557,7 @@
                             <a href="#" id="rootRawData">ROOT Raw Data</a>
                         </p></li>
                     <li><p class="link_btn">
-                            <a href="#" id="Performance">Performance</a>
+                            <a href="#" id="rootPerformanceData">Performance</a>
                         </p></li>
 				</ul>
 				<p class="hide_btn">

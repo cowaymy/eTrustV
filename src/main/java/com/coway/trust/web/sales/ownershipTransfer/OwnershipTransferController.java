@@ -516,6 +516,12 @@ public class OwnershipTransferController {
 		return "/sales/ownershipTransfer/rootRawDataPop";
 	}
 
+	//add in date filter for performance data - Gen Liang
+		@RequestMapping(value="/rootPerformanceReportPop.do")
+		public String rootSearchPerformanceDataPop(@RequestParam Map<String, Object> params) throws Exception{
+			return "/sales/ownershipTransfer/rootPerformanceReportPop";
+		}
+
 
 
 
