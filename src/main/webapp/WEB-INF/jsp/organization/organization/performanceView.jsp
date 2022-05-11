@@ -116,17 +116,17 @@ function createAUIGrid() {
             }
       ,]}
 
-      , { headerText : "Net Sales Target",   dataField : "targetatmtNs",      editable : false, width : 100 }
+      , { headerText : "Overall Net Sales Target",   dataField : "targetatmtNs",      editable : false, width : 100 }
       , { headerText : "Accumulated Net", dataField : "netsalesTotalAmt",   editable : false, width : 100 }
       , { headerText : "Net Rate",  dataField : "netRate", editable : false, width : 60  }
-      , { headerText : "Active HP",   dataField : "acthp", editable : false, width : 60  }
-      , { headerText : "Newly Recruit",  dataField : "recruit", editable  : false }
-      , { headerText : "DR", dataField : "recruit", editable  : false }
-      , { headerText : "Active New Neo", dataField : "newNeoAct", editable  : false }
-      , { headerText : "Part time", dataField : "parttime", editable  : false }
-      , { headerText : "New Neo Active Rate", dataField : "newNeoActRate", editable  : false }
-      , { headerText : "Neo Pro Productivity", dataField : "neoProProductivity", editable  : false }
-      , { headerText : "Part time Productivity", dataField : "parttimeProductivity", editable  : false }
+      , { headerText : "Overall Active HP",   dataField : "acthp", editable : false, width : 60  }
+      , { headerText : "Overall Newly Recruit",  dataField : "recruit", editable  : false }
+      , { headerText : "Overall DR", dataField : "recruit", editable  : false }
+      , { headerText : "Overall Active New Neo", dataField : "newNeoAct", editable  : false }
+      , { headerText : "Overall Part time", dataField : "parttime", editable  : false }
+      , { headerText : "Overall New Neo Active Rate", dataField : "newNeoActRate", editable  : false }
+      , { headerText : "Overall Neo Pro Productivity", dataField : "neoProProductivity", editable  : false }
+      , { headerText : "Overall Part time Productivity", dataField : "parttimeProductivity", editable  : false }
       , { headerText : "SHI", dataField : "shi", editable  : false }
         ];
 
@@ -183,7 +183,7 @@ $(function(){
 });
 
 function fn_selectListAjax() {
-    Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serializeJSON(), function(result) {
+    Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serialize(), function(result) {
         AUIGrid.setGridData(listMyGridID, result);
     });
 
@@ -280,7 +280,14 @@ $.fn.clearForm = function() {
     <td><input id="memCode" name="memCode" type="text" title="memCode"  class="w100p" /></td>
 
     <th scope="row">Level</th>
-    <td><input id="memLvl" name="memLvl" type="text" title="memLvl"  class="w100p" /></td>
+    <td>
+        <select id="memLvl" name="memLvl" class="multy_select w100p" multiple="multiple">
+               <option value="1">GM</option>
+               <option value="2">SM</option>
+               <option value="3">HM</option>
+               <option value="4">HP</option>
+        </select>
+    </td>
 
     <th scope="row">Month</th>
     <td><input type="text" title="기준년월" id="netSalesMonth" name="netSalesMonth" placeholder="MM/YYYY" class="j_date2 w100p" /></td>

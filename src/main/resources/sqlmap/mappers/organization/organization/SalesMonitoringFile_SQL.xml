@@ -6,10 +6,10 @@
           SELECT
                 TYPE
               , CODE_NAME
-              , CASE WHEN TYPE IN (6608) THEN TO_CHAR(A)||'%' ELSE TO_CHAR(A) END A
-              , CASE WHEN TYPE IN (6608) THEN TO_CHAR(B)||'%' ELSE TO_CHAR(B) END B
-              , CASE WHEN TYPE IN (6608) THEN TO_CHAR(C)||'%' ELSE TO_CHAR(C) END C
-              , CASE WHEN TYPE IN (6608) THEN TO_CHAR(D)||'%' ELSE TO_CHAR(D) END D
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A)||'%' = '0%' THEN '-' ELSE TO_CHAR(A)||'%' END ELSE TO_CHAR(A) END A
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B)||'%' = '0%' THEN '-' ELSE TO_CHAR(B)||'%' END ELSE TO_CHAR(B) END B
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C)||'%' = '0%' THEN '-' ELSE TO_CHAR(C)||'%' END ELSE TO_CHAR(C) END C
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D)||'%' = '0%' THEN '-' ELSE TO_CHAR(D)||'%' END ELSE TO_CHAR(D) END D
               FROM
            (
 	            SELECT * FROM
@@ -50,22 +50,22 @@
 	       SELECT
 		        TYPE
 		      , CODE_NAME
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(A_W1)||'%' ELSE TO_CHAR(A_W1) END A_W1
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(A_W2)||'%' ELSE TO_CHAR(A_W2) END A_W2
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(A_W3)||'%' ELSE TO_CHAR(A_W3) END A_W3
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(A_W4)||'%' ELSE TO_CHAR(A_W4) END A_W4
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(B_W1)||'%' ELSE TO_CHAR(B_W1) END B_W1
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(B_W2)||'%' ELSE TO_CHAR(B_W2) END B_W2
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(B_W3)||'%' ELSE TO_CHAR(B_W3) END B_W3
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(B_W4)||'%' ELSE TO_CHAR(B_W4) END B_W4
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(C_W1)||'%' ELSE TO_CHAR(C_W1) END C_W1
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(C_W2)||'%' ELSE TO_CHAR(C_W2) END C_W2
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(C_W3)||'%' ELSE TO_CHAR(C_W3) END C_W3
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(C_W4)||'%' ELSE TO_CHAR(C_W4) END C_W4
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(D_W1)||'%' ELSE TO_CHAR(D_W1) END D_W1
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(D_W2)||'%' ELSE TO_CHAR(D_W2) END D_W2
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(D_W3)||'%' ELSE TO_CHAR(D_W3) END D_W3
-		      , CASE WHEN TYPE IN (6608) THEN TO_CHAR(D_W4)||'%' ELSE TO_CHAR(D_W4) END D_W4
+		      , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W1)||'%' END ELSE TO_CHAR(A_W1) END A_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W2)||'%' END ELSE TO_CHAR(A_W2) END A_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W3)||'%' END ELSE TO_CHAR(A_W3) END A_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W4)||'%' END ELSE TO_CHAR(A_W4) END A_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W1)||'%' END ELSE TO_CHAR(B_W1) END B_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W2)||'%' END ELSE TO_CHAR(B_W2) END B_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W3)||'%' END ELSE TO_CHAR(B_W3) END B_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W4)||'%' END ELSE TO_CHAR(B_W4) END B_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W1)||'%' END ELSE TO_CHAR(C_W1) END C_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W2)||'%' END ELSE TO_CHAR(C_W2) END C_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W3)||'%' END ELSE TO_CHAR(C_W3) END C_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W4)||'%' END ELSE TO_CHAR(C_W4) END C_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W1)||'%' END ELSE TO_CHAR(D_W1) END D_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W2)||'%' END ELSE TO_CHAR(D_W2) END D_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W3)||'%' END ELSE TO_CHAR(D_W3) END D_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W4)||'%' END ELSE TO_CHAR(D_W4) END D_W4
 		      FROM
 		      (
 			        SELECT * FROM (
@@ -114,13 +114,9 @@
           , POSITION
           , YEAR
           ,TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
-          <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
           , PRODUCTCTGRY
-           </if>
-          <if test="cmbProduct != null and cmbProduct != ''">
           , PRODUCTNAME
-           </if>
-       , NVL(KEYIN_W1,0) KEYIN_W1
+          , NVL(KEYIN_W1,0) KEYIN_W1
           , NVL(KEYIN_W2,0) KEYIN_W2
           , NVL(KEYIN_W3,0) KEYIN_W3
           , NVL(KEYIN_W4,0) KEYIN_W4
@@ -131,17 +127,19 @@
           , NVL(NETSALES_W4,0) NETSALES_W4
           , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
           , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
-            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)) || '%' END NET_RATE
+            WHEN ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2) >= 1000 THEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm0000.00') || '%'
+            WHEN ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2) >= 100 THEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm000.00') || '%'
+            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm00.00') || '%' END NET_RATE
           , TARGETATMT_NS
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
           , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
             ELSE TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) || '%' END NEW_NEO_ACT_RATE
-          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)  END NEO_PRO_PRODUCTIVITY
-          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)  END PARTTIME_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN TO_CHAR(0, 'fm0.00') ELSE TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm0.00')  END NEO_PRO_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN TO_CHAR(0, 'fm0.00') ELSE TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm0.00')  END PARTTIME_PRODUCTIVITY
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
-          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' ELSE TO_CHAR(ROUND(SHI,2)) || '%' END SHI
+          , CASE WHEN NVL(TARGETATMT_NS,0) = 0 THEN '-' WHEN NVL(SHI,0)= 0 THEN '0%'  ELSE TO_CHAR(ROUND(SHI,2), 'fm00.00') || '%' END SHI
             FROM (
                SELECT * FROM
                         (
@@ -174,6 +172,12 @@
                                 , A.ACT_HP
                                 , A.RECRUIT
                                 , A.SHI
+                                 <if test="cmbProductCtgry == null or cmbProductCtgry == ''">
+                                , 'ALL' PRODUCTCTGRY
+                                </if>
+                                <if test="cmbProduct == null or cmbProduct == ''">
+                                , 'ALL'  PRODUCTNAME
+                                </if>
                                 <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
                                 , C.CODE_NAME PRODUCTCTGRY
                                 </if>
@@ -210,8 +214,9 @@
                             AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                           <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " ) and (orgCode == null or orgCode == "" or orgCode == " ")'>
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
-                            AND UPPER(A.MEM_LVL) NOT IN (4)
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
+<!--                             AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM') -->
+<!--                             AND UPPER(A.MEM_LVL) NOT IN (4) -->
                          </if>
                          <if test="netSalesMonth != null and netSalesMonth != ''">
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY')))
