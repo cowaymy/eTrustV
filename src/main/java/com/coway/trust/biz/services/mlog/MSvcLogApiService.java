@@ -234,6 +234,6 @@ public interface MSvcLogApiService {
 
   String selectSVC0115D(Map<String, Object> params);
 
-  List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params);
+//  List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params);
 
 }

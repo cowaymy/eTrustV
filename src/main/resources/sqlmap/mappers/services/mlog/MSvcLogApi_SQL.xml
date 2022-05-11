@@ -5509,12 +5509,12 @@ SELECT MST.*
     SELECT NVL(BNDL_ID,'') FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}
   </select>
 
-  <select id="searchRentalCollectionByBSNewList" parameterType="Map" resultType="egovMap">
-	  SELECT
-			    MEM_CODE
-			  , TO_CHAR(RC_PRCT)  AS RC_PRCT
-	  FROM REP0085S
-	  WHERE MEM_CODE =  #{userId}
-  </select>
+<!--   <select id="searchRentalCollectionByBSNewList" parameterType="Map" resultType="egovMap"> -->
+<!-- 	  SELECT -->
+<!-- 			    MEM_CODE -->
+<!-- 			  , TO_CHAR(RC_PRCT)  AS RC_PRCT -->
+<!-- 	  FROM REP0085S -->
+<!-- 	  WHERE MEM_CODE =  #{userId} -->
+<!--   </select> -->
 
 </mapper>
