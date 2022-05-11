@@ -696,12 +696,7 @@
             #{glAccNo},
             #{grandAmt},
             #{expAmt},
-            <if test="balAmt &lt; 0">
-               NVL(#{balAmt}*-1,0),
-            </if>
-            <if test="balAmt &gt;= 0">
-               NVL(#{balAmt},0),
-            </if>
+             NVL(#{balAmt},0),
             #{taxAmt},
             #{nonTaxAmt},
             NVL(#{totAmt},0),
@@ -763,7 +758,8 @@
             D.APPV_PRCSS_STUS,
             A.MAIN_REQ_NO ADV_CLAM_NO,
             NVL((SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = A.MAIN_REQ_NO)) REQ_AMT,
-            E.INVC_CUR CURRENCY
+            E.INVC_CUR CURRENCY,
+            E.BGT_CODE
         FROM FCM0027M A
         JOIN SYS0047M B
             ON A.CRT_USER_ID = B.USER_ID
@@ -772,10 +768,10 @@
         LEFT JOIN FCM0004M D
             ON D.APPV_PRCSS_NO = A.APPV_PRCSS_NO
         LEFT JOIN (
-            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.REM
+            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.REM, I.BGT_CODE
             FROM FCM0028D I
             LEFT JOIN FCM0027M J ON J.CLM_NO = I.CLM_NO
-            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.REM
+            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.REM, I.BGT_CODE
         ) E ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
         WHERE A.CLM_NO = #{clmNo}
         ORDER BY E.APPV_ITM_SEQ

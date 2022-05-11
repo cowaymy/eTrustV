@@ -614,6 +614,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 invoAppvItems.put("costCentrName", invoAppvItems.get("costCenterNm"));
                                 invoAppvItems.put("memAccId", "");
                                 invoAppvItems.put("totAmt", invoAppvItems.get("expAmt"));
+                                invoAppvItems.put("dim1", invoAppvItems.get("costCenterNm"));
+                                invoAppvItems.put("dim2", invoAppvItems.get("bgtCode"));
 
                                 BigDecimal reqAmt, expAmt;
                                 reqAmt = (BigDecimal)invoAppvItems.get("reqAmt");
