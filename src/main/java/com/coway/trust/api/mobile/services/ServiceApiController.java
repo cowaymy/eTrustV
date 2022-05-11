@@ -2695,6 +2695,8 @@ public class ServiceApiController {
 
     Map<String, Object> params = DtRentalCollectionListForm.createMap(DtRentalCollectionListForm);
 
+    LOGGER.debug("Rental Collection Param",params);
+
     List<EgovMap> DtRentalCollectionList = MSvcLogApiService.searchRentalCollectionByBSNewList(params);
 
 

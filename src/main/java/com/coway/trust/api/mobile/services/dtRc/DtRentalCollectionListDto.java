@@ -1,6 +1,5 @@
 package com.coway.trust.api.mobile.services.dtRc;
 
-import com.coway.trust.api.mobile.services.installation.InstallationJobDto;
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
