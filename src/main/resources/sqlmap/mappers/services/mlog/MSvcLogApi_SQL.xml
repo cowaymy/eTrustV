@@ -5514,7 +5514,7 @@ SELECT MST.*
 			    MEM_CODE
 			  , RC_PRCT
 	  FROM REP0085S
-	  WHERE MEM_CODE =  (SELECT MEM_CODE FROM ORG0001D WHERE MEM_ID = #{userId})
+	  WHERE MEM_CODE =  #{userId}
   </select>
 
 </mapper>
