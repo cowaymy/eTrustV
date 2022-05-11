@@ -154,6 +154,8 @@ import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductRetrunJobDto
 import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductRetrunJobForm;
 import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResultDto;
 import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResultForm;
+import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListDto;
+import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListForm;
 
 /*********************************************************************************************
  * DATE             PIC           VERSION  COMMENT
@@ -2684,4 +2686,32 @@ public class ServiceApiController {
 
     return ResponseEntity.ok(hList);
   }
+
+
+  @ApiOperation(value = "Rental Collection List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/searchRentalCollectionByBSNewList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtRentalCollectionListDto>> searchRentalCollectionByBSNewList(
+      @ModelAttribute DtRentalCollectionListForm DtRentalCollectionListForm) throws Exception {
+
+    Map<String, Object> params = DtRentalCollectionListForm.createMap(DtRentalCollectionListForm);
+
+    List<EgovMap> DtRentalCollectionList = MSvcLogApiService.searchRentalCollectionByBSNewList(params);
+
+
+    LOGGER.debug(
+        "==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
+    for (int i = 0; i < DtRentalCollectionList.size(); i++) {
+      LOGGER.debug("DtRentalCollectionList: {}", DtRentalCollectionList.get(i));
+    }
+    LOGGER.debug(
+        "==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
+
+    List<DtRentalCollectionListDto> list = DtRentalCollectionList.stream().map(r -> DtRentalCollectionListDto.create(r))
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+
+
 }

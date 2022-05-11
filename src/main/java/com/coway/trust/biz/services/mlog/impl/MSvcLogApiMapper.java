@@ -296,4 +296,6 @@ public interface MSvcLogApiMapper {
   void insertSVC0115D(Map<String, Object> params);
 
   String selectSVC0115D(Map<String, Object> params);
+
+  List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params);
 }

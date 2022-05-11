@@ -233,4 +233,7 @@ public interface MSvcLogApiService {
   //void sendSms(Map<String, Object> smsList);
 
   String selectSVC0115D(Map<String, Object> params);
+
+  List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params);
+
 }
