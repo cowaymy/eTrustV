@@ -5512,7 +5512,7 @@ SELECT MST.*
   <select id="searchRentalCollectionByBSNewList" parameterType="Map" resultType="egovMap">
 	  SELECT
 			    MEM_CODE
-			  , RC_PRCT
+			  , TO_CHAR(RC_PRCT)  AS RC_PRCT
 	  FROM REP0085S
 	  WHERE MEM_CODE =  #{userId}
   </select>
