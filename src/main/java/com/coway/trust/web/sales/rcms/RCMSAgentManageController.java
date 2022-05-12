@@ -392,6 +392,7 @@ public class RCMSAgentManageController {
               Map<String, Object> map = BeanConverter.toMap(r);
               map.put("ordNo", r.getOrderNo());
               map.put("agentId", r.getCaller());
+              map.put("agentGrpId", r.getCaller2());
               map.put("renStus", r.getRenStus());
               return map;
           }).collect(Collectors.toList());

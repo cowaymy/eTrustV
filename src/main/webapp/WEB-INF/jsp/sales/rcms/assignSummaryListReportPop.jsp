@@ -16,13 +16,13 @@ $(document).ready(function() {
     //Company Type
     CommonCombo.make("_companyType", "/common/selectCodeList.do", {groupCode : '95'}, null, {isShowChoose: false , isCheckAll : false, type: "M"});
 
-    CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',{  id:"agentId",  name:"agentName", isCheckAll : false,isShowChoose: false ,type: "M"});
+    CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',{  id:"agentGrpId",  name:"agentName", isCheckAll : false,isShowChoose: false ,type: "M"});
     $("#_companyType").multipleSelect("disable");
 
     $("#_agentType").change(function(){
         CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: $("#_agentType").val()}, '',
                 {
-                    id:"agentId",
+                    id:"agentGrpId",
                     name:"agentName",
                     isCheckAll : false,
                     isShowChoose: false ,
@@ -83,7 +83,7 @@ function fn_genReport(){
         Common.alert('<spring:message code="sal.alert.msg.rosCaller" />');
         return;
     }else{
-        whereSql += " AND  EXTENT3.AGENT_ID IN (";
+        whereSql += " AND  EXTENT3.AGENT_GRP_ID IN (";
         $('#_rosCaller :selected').each(function(i, mul){
             if(runNo > 0){
                 whereSql += ",'"+$(mul).val()+"'";

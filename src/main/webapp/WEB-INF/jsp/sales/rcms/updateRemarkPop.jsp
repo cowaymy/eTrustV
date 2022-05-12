@@ -22,14 +22,14 @@ function fn_selectAjax() {
 
 	     console.log(result.data);
 
-	     var currAgentId = result.data.agentId > 0 ? result.data.agentId.toString() : null;
+	     var currAgentGrpId = result.data.agentGrpId > 0 ? result.data.agentGrpId.toString() : null;
 	     $("#remark").val(result.data.rem);
 	     $("#popOrderNo").val(result.data.salesOrdNo);
 	     $("#popOrdId").val(result.data.salesOrdId);
-	     $("#prevAgentId").val(result.data.agentId);
+	     $("#prevAgentGrpId").val(result.data.agentGrpId);
 	     $("#custId").val(result.data.custId);
 
-	     CommonCombo.make("rosCaller2", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}', stus : 1}, currAgentId,  {id:"agentId", name:"agentName", isShowChoose: true });
+	     CommonCombo.make("rosCaller2", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}', stus : 1}, currAgentGrpId,  {id:"agentGrpId", name:"agentName", isShowChoose: true });
 
 	     if(result.data.sensitiveFg == "1"){
              $("#sensitiveFg").val(result.data.sensitiveFg);
@@ -74,11 +74,11 @@ function fn_save(){
 
 function fn_Validsave(){
 
-    var prevAgentId = $("#prevAgentId").val();
-    var currAgentId = $("#rosCaller2").val();
+    var prevAgentGrpId = $("#prevAgentGrpId").val();
+    var currAgentGrpId = $("#rosCaller2").val();
 	Common.ajax("GET", "/sales/rcms/checkCustAgent", $("#saveForm").serializeJSON(), function(result) {
 		if(result.length != 0){
-			if(result[0].agentId != 0 && result[0].agentId != currAgentId && FormUtil.isNotEmpty(currAgentId)){
+			if(result[0].agentGrpId != 0 && result[0].agentGrpId != currAgentGrpId && FormUtil.isNotEmpty(currAgentGrpId)){
 			   Common.confirm("<spring:message code='sal.alert.msg.diffAgentSaved'/>",function(){fn_save()});
 			}else{
 			   fn_save();
@@ -107,7 +107,7 @@ function fn_Validsave(){
     <input type="hidden" id="popOrdId" name="salesOrdId" />
     <input type="hidden" id="sensitiveFg" name="sensitiveFg" />
     <input type="hidden" id="etrFg" name="etrFg" />
-    <input type="hidden" id="prevAgentId" name="prevAgentId" />
+    <input type="hidden" id="prevAgentGrpId" name="prevAgentGrpId" />
     <input type="hidden" id="custId" name="custId" />
 
 <table class="type1"><!-- table start -->

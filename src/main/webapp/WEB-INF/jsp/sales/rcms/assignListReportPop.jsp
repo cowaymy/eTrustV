@@ -32,7 +32,7 @@ $(document).ready(function() {
 		var agentType = $("#_agentType").val() != null ? $("#_agentType").val() : 2326;
 		CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: agentType}, '',
 			    {
-			        id:"agentId",
+			        id:"agentGrpId",
 			        name:"agentName",
 			        isCheckAll : false,
 			        isShowChoose: false ,
@@ -74,7 +74,7 @@ function fn_genReport(){
         Common.alert('<spring:message code="sal.alert.msg.rosCaller" />');
         return;
     }else{
-    	whereSql += " AND  EXTENT3.AGENT_ID IN (";
+    	whereSql += " AND  EXTENT3.AGENT_GRP_ID IN (";
         $('#_rosCaller :selected').each(function(i, mul){
             if(runNo > 0){
                 whereSql += ",'"+$(mul).val()+"'";

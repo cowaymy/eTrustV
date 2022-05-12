@@ -34,6 +34,7 @@
 <insert id="insAgentMaster" parameterType="Map">
 		INSERT INTO SAL0148M(
 											AGENT_ID,
+											AGENT_GRP_ID,
 											AGENT_TYPE,
 											AGENT_NAME,
 											STUS_ID,
@@ -45,6 +46,7 @@
 									)
 							VALUES(
 											#{agentSeq},
+											#{agentGrpId},
 											#{agentType},
 											#{agentName},
 											#{stusId},
@@ -61,6 +63,7 @@
         SAL0148M
     SET
         AGENT_TYPE = #{agentType},
+        AGENT_GRP_ID = #{agentGrpId},
         AGENT_NAME = #{agentName},
         STUS_ID = #{stusId},
         USER_ID = #{userId},
@@ -87,6 +90,7 @@
 <select id="selectAgentList" parameterType="Map" resultType="egovMap">
 			SELECT
 			    AGENT_ID,
+			    AGENT_GRP_ID,
 			    AGENT_TYPE,
 			    AGENT_NAME,
 			    STUS_ID,
@@ -118,7 +122,8 @@
 
 <select id="selectRosCaller" parameterType="Map"  resultType="egovMap">
 	SELECT A.AGENT_ID
-	           ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
+	           , A.AGENT_GRP_ID
+	           ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||A.AGENT_NAME AGENT_NAME
 	  FROM SAL0148M A
 	    JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
 	                             AND B.CODE_MASTER_ID = 329
@@ -133,11 +138,11 @@
       <if test="agentType != null and agentType != '' ">
          AND A.AGENT_TYPE = #{agentType}
       </if>
-     ORDER BY A.AGENT_ID
+     ORDER BY A.AGENT_GRP_ID
 </select>
 
 <select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">
-    WITH FIRST_INSTALL AS
+   WITH FIRST_INSTALL AS
     (SELECT SALES_ORD_ID, INSTALL_DT
               FROM (SELECT SALES_ORD_ID,
               INSTALL_DT,
@@ -148,14 +153,14 @@
                       FROM SAL0046D
                      WHERE STUS_CODE_ID = 4)
              WHERE RANK = 1)
-	SELECT C.SALES_ORD_NO
-		        ,A.SALES_ORD_ID
-		        ,A.CUST_ID
-		        ,B.NAME
-		        ,CASE WHEN B.CORP_TYPE_ID = 0 THEN null ELSE H.CODE_NAME  END  CORP_TYPE_ID
-		        ,A.COLCT_TRGET
+    SELECT C.SALES_ORD_NO
+                ,A.SALES_ORD_ID
+                ,A.CUST_ID
+                ,B.NAME
+                ,CASE WHEN B.CORP_TYPE_ID = 0 THEN null ELSE H.CODE_NAME  END  CORP_TYPE_ID
+                ,A.COLCT_TRGET
 
-		         <choose>
+                 <choose>
                   <when test="appType == 66">
                       ,(SELECT SUM(RENT_AMT) AS CURRENT_OS
                     FROM PAY0022D
@@ -170,37 +175,37 @@
                   </otherwise>
                  </choose>
 
-		        ,A.OPEN_MTH_AGING
-		        ,CASE WHEN A.AGENT_ID = 0 THEN null ELSE  C.AGENT_NAME END AGENT_ID
-		        ,CASE WHEN A.PREV_AGENT_ID = 0 THEN null ELSE D.AGENT_NAME END ORI_PREV_AGENT_ID
-		        ,CASE WHEN A.AGENT_ID = 0 THEN null ELSE A.AGENT_ID END PREV_AGENT_ID
-		        ,CASE WHEN A.AGENT_ID = 0 THEN  (SELECT NVL(AGENT_ID, 0) FROM SAL0149D WHERE CUST_ID = A.CUST_ID AND AGENT_ID <![CDATA[<>]]> 0 AND ROWNUM =1)  ELSE A.AGENT_ID  END SUGGEST_AGENT
-		        ,CASE WHEN A.AGENT_ID = 0 THEN 'N' ELSE 'Y' END ASSIGNED
-		        ,CASE WHEN A.SENSITIVE_FG = 0 THEN 'N' ELSE 'Y' END SENSITIVE_FG
-		        ,CASE WHEN A.ETR_FG = 0 or A.ETR_FG is null THEN 'N' ELSE 'Y' END ETR_FG
-		        ,E.STUS_CODE_ID CURR_RENTAL_STUS
-		        ,C.STUS_CODE_ID
-		        ,B.TYPE_ID
-		        ,TO_CHAR(A.UPD_AGENT_DT, 'dd/mm/yyyy') UPD_AGENT_DT
-		        ,A.REM
-		        ,A.ETR_REM
-		        ,F.CODE_DESC RACE
-		        ,cD.UN_BILL_AMT
-		        ,(C.MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) MTH_RENT_AMT
-		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
-		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-        LEFT JOIN ( SELECT A.AGENT_ID ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
+                ,A.OPEN_MTH_AGING
+                ,CASE WHEN A.AGENT_GRP_ID = 0 THEN null ELSE  C.AGENT_NAME END AGENT_GRP_ID
+                ,CASE WHEN A.PREV_AGENT_GRP_ID = 0 THEN null ELSE D.AGENT_NAME END ORI_PREV_AGENT_GRP_ID
+                ,CASE WHEN A.AGENT_GRP_ID = 0 THEN null ELSE A.AGENT_GRP_ID END PREV_AGENT_GRP_ID
+                ,CASE WHEN A.AGENT_GRP_ID = 0 THEN  (SELECT NVL(AGENT_GRP_ID, 0) FROM SAL0149D WHERE CUST_ID = A.CUST_ID AND AGENT_GRP_ID <![CDATA[<>]]> 0 AND ROWNUM =1)  ELSE A.AGENT_GRP_ID  END SUGGEST_AGENT
+                ,CASE WHEN A.AGENT_GRP_ID = 0 THEN 'N' ELSE 'Y' END ASSIGNED
+                ,CASE WHEN A.SENSITIVE_FG = 0 THEN 'N' ELSE 'Y' END SENSITIVE_FG
+                ,CASE WHEN A.ETR_FG = 0 or A.ETR_FG is null THEN 'N' ELSE 'Y' END ETR_FG
+                ,E.STUS_CODE_ID CURR_RENTAL_STUS
+                ,C.STUS_CODE_ID
+                ,B.TYPE_ID
+                ,TO_CHAR(A.UPD_AGENT_DT, 'dd/mm/yyyy') UPD_AGENT_DT
+                ,A.REM
+                ,A.ETR_REM
+                ,F.CODE_DESC RACE
+                ,cD.UN_BILL_AMT
+                ,(C.MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) MTH_RENT_AMT
+         FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
+            JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+        LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||A.AGENT_NAME AGENT_NAME
                     FROM SAL0148M A
                     JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
-                  ) C ON A.AGENT_ID = C.AGENT_ID
-            LEFT JOIN ( SELECT A.AGENT_ID ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
+                  ) C ON A.AGENT_GRP_ID = C.AGENT_GRP_ID
+            LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||A.AGENT_NAME AGENT_NAME
                     FROM SAL0148M A
                     JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
-                  ) D ON A.PREV_AGENT_ID = D.AGENT_ID
+                  ) D ON A.PREV_AGENT_GRP_ID = D.AGENT_GRP_ID
         LEFT JOIN SAL0071D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
         LEFT JOIN SYS0013M F ON F.CODE_ID = B.RACE_ID
         LEFT JOIN FIRST_INSTALL G ON A.SALES_ORD_ID = G.SALES_ORD_ID
@@ -213,15 +218,15 @@
         LEFT JOIN SYS0026M L ON L.STK_ID = K.ITM_STK_ID
         LEFT JOIN SYS0013M M ON M.CODE_ID = L.STK_CTGRY_ID
 
-		WHERE 1=1
-		<choose>
+        WHERE 1=1
+        <choose>
             <when test="orderNo != null and orderNo !=''">
                 AND C.SALES_ORD_NO = #{orderNo}
-	            <if test="customerId != null and customerId !='' ">
-	                AND A.CUST_ID = #{customerId}
-	            </if>
-	            <if test="rosCaller != null and rosCaller != ''">
-                    AND A.AGENT_ID IN
+                <if test="customerId != null and customerId !='' ">
+                    AND A.CUST_ID = #{customerId}
+                </if>
+                <if test="rosCaller != null and rosCaller != ''">
+                    AND A.AGENT_GRP_ID IN
                     <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
@@ -261,7 +266,7 @@
             <when test="customerId != null and customerId !='' ">
                 AND A.CUST_ID = #{customerId}
                 <if test="rosCaller != null and rosCaller != ''">
-                    AND A.AGENT_ID IN
+                    AND A.AGENT_GRP_ID IN
                     <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
@@ -273,7 +278,7 @@
             <when test="nric != null and nric !='' ">
                     AND B.NRIC = #{nric}
                     <if test="rosCaller != null and rosCaller != ''">
-                    AND A.AGENT_ID IN
+                    AND A.AGENT_GRP_ID IN
                     <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
@@ -282,7 +287,7 @@
             <when test="custName != null and custName !='' ">
                     AND UPPER(B.NAME) LIKE '%'||#{custName}||'%'
                     <if test="rosCaller != null and rosCaller != ''">
-                    AND A.AGENT_ID IN
+                    AND A.AGENT_GRP_ID IN
                     <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
@@ -291,71 +296,71 @@
             <when test="vaNo != null and vaNo !='' ">
                     AND B.CUST_VA_NO = #{vaNo}
                     <if test="rosCaller1 != null and rosCaller1 != ''">
-                    AND A.AGENT_ID IN
+                    AND A.AGENT_GRP_ID IN
                     <foreach item="item" collection="rosCaller1" index="index" open="(" separator="," close=")">
                       #{item}
                     </foreach>
                   </if>
             </when>
             <otherwise>
-				  <if test="appType != null and appType !='' ">
-<!-- 				    AND C.APP_TYPE_ID = #{appType} -->
-				  </if>
-				  <if test="orderStatus != null and orderStatus !='' ">
-<!-- 				    AND C.STUS_CODE_ID = #{orderStatus} -->
-				  </if>
+                  <if test="appType != null and appType !='' ">
+<!--                    AND C.APP_TYPE_ID = #{appType} -->
+                  </if>
+                  <if test="orderStatus != null and orderStatus !='' ">
+<!--                    AND C.STUS_CODE_ID = #{orderStatus} -->
+                  </if>
 
-				  <if test="rentalStatus != null and rentalStatus != ''">
-			          AND E.STUS_CODE_ID IN
-			        <foreach item="item" collection="rentalStatus" index="index" open="(" separator="," close=")">
-			          #{item}
-			        </foreach>
-			      </if>
+                  <if test="rentalStatus != null and rentalStatus != ''">
+                      AND E.STUS_CODE_ID IN
+                    <foreach item="item" collection="rentalStatus" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
 
-			      <if test="customerType != null and customerType !='' ">
-				    AND B.TYPE_ID = #{customerType}
-				  </if>
+                  <if test="customerType != null and customerType !='' ">
+                    AND B.TYPE_ID = #{customerType}
+                  </if>
 
-				  <if test="nric != null and nric !='' ">
+                  <if test="nric != null and nric !='' ">
                     AND B.NRIC = #{nric}
                   </if>
 
-				  <if test='customerType== "965" '>
-					  <if test="companyType != null and companyType != ''">
-				          AND B.CORP_TYPE_ID IN
-				        <foreach item="item" collection="companyType" index="index" open="(" separator="," close=")">
-				          #{item}
-				        </foreach>
-				      </if>
-				    </if>
-			     <if test="openMonth != null and openMonth != ''">
-			          AND ( A.OPEN_MTH_AGING IN
-			        <foreach item="item" collection="openMonth" index="index" open="(" separator="," close=")">
-			          #{item}
-			        </foreach>
-	                  <if test="month != null and month !='' ">
-	                  OR A.OPEN_MTH_AGING <![CDATA[>=]]> #{month}
-	                  </if>
-	                  )
-			      </if>
-
-			      <if test="rosCaller != null and rosCaller != ''">
-			          AND A.AGENT_ID IN
-			        <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
-			          #{item}
-			        </foreach>
-			      </if>
-
-                  <if test="assignYn != null and assignYn != ''">
-			          <if test="assignYn == 1">
-			            AND A.AGENT_ID <![CDATA[<>]]> 0
-			          </if>
-			          <if test="assignYn == 0">
-	                    AND (A.AGENT_ID = 0 OR A.AGENT_ID IS NULL)
-	                  </if>
+                  <if test='customerType== "965" '>
+                      <if test="companyType != null and companyType != ''">
+                          AND B.CORP_TYPE_ID IN
+                        <foreach item="item" collection="companyType" index="index" open="(" separator="," close=")">
+                          #{item}
+                        </foreach>
+                      </if>
+                    </if>
+                 <if test="openMonth != null and openMonth != ''">
+                      AND ( A.OPEN_MTH_AGING IN
+                    <foreach item="item" collection="openMonth" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                      <if test="month != null and month !='' ">
+                      OR A.OPEN_MTH_AGING <![CDATA[>=]]> #{month}
+                      </if>
+                      )
                   </if>
 
-		          <if test="sensitiveYn != null and sensitiveYn !='' ">
+                  <if test="rosCaller != null and rosCaller != ''">
+                      AND A.AGENT_GRP_ID IN
+                    <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
+
+                  <if test="assignYn != null and assignYn != ''">
+                      <if test="assignYn == 1">
+                        AND A.AGENT_GRP_ID <![CDATA[<>]]> 0
+                      </if>
+                      <if test="assignYn == 0">
+                        AND (A.AGENT_GRP_ID = 0 OR A.AGENT_GRP_ID IS NULL)
+                      </if>
+                  </if>
+
+                  <if test="sensitiveYn != null and sensitiveYn !='' ">
                     AND A.SENSITIVE_FG  = #{sensitiveYn}
                     </if>
                     <if test="etrYn != null and etrYn !='' ">
@@ -385,12 +390,12 @@
                   </if>
 
                   <if test="bsMonth != null and bsMonth !=''">
-	                        <if test="bsMonth == 1">
-	                            AND I.MONTH IS NOT NULL
-		                    </if>
-		                    <if test="bsMonth == 2">
-		                        AND I.MONTH IS NULL
-		                    </if>
+                            <if test="bsMonth == 1">
+                                AND I.MONTH IS NOT NULL
+                            </if>
+                            <if test="bsMonth == 2">
+                                AND I.MONTH IS NULL
+                            </if>
 
                   </if>
                     <if test="payMode != null and payMode !='' ">
@@ -401,15 +406,15 @@
 
                     </if>
 
-	            </otherwise>
-	            </choose>
-	      <!-- <if test="orderNo != null and orderNo !='' ">
-		    AND C.SALES_ORD_NO = #{orderNo}
-		    </if>
-	      <if test="customerId != null and customerId !='' ">
-		    AND A.CUST_ID = #{customerId}
-		    </if> -->
-		    ORDER BY SALES_ORD_NO
+                </otherwise>
+                </choose>
+          <!-- <if test="orderNo != null and orderNo !='' ">
+            AND C.SALES_ORD_NO = #{orderNo}
+            </if>
+          <if test="customerId != null and customerId !='' ">
+            AND A.CUST_ID = #{customerId}
+            </if> -->
+            ORDER BY SALES_ORD_NO
 </select>
 
     <update id="updateAgent" parameterType="Map">
@@ -437,7 +442,9 @@
 		   SET REM = #{remark},
 		       ETR_REM = #{remark2},
 		       AGENT_ID = #{rosCaller2},
-               PREV_AGENT_ID = #{prevAgentId},
+               PREV_AGENT_ID = #{prevAgentGrpId},
+               AGENT_GRP_ID = #{rosCaller2},
+               PREV_AGENT_GRP_ID = #{prevAgentGrpId},
                UPD_AGENT_DT = SYSDATE,
 		       SENSITIVE_FG = #{sensitiveFg},
 		       ETR_FG = #{etrFg},
@@ -468,12 +475,13 @@
 	        JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
 	                                 AND B.CODE_MASTER_ID = 329
 	                                 AND DISAB = 0
-	      WHERE A.AGENT_ID = #{updateField}
+	      WHERE A.AGENT_GRP_ID = #{updateField}
     </select>
 
     <select id="selectRcmsInfo" parameterType="Map" resultType="egovMap">
          SELECT A.SALES_ORD_ID,
                     A.AGENT_ID,
+                    A.AGENT_GRP_ID,
                     A.REM,
                     A.SENSITIVE_FG,
                     A.ETR_FG,
@@ -546,6 +554,7 @@
                 EXTENT3.NAME STUS_NAME,
                 EXTENT1.RC_ITM_REN_STUS,
                 EXTENT1.RC_ITM_AGENT_ID,
+                EXTENT1.RC_ITM_AGENT_GRP_ID,
                 EXTENT1.RC_ITM_CNVR_STUS_ID,
                 EXTENT1.RC_ITM_CNVR_REM
             FROM SAL0240D EXTENT1
@@ -593,9 +602,9 @@
 	 </select>
 
 	 <select id="checkCustAgent" parameterType="Map" resultType="egovMap">
-        SELECT COUNT(CUST_ID) CNT,AGENT_ID
+        SELECT COUNT(CUST_ID) CNT,AGENT_GRP_ID
             FROM SAL0149D
-            WHERE CUST_ID = #{custId} AND AGENT_ID != 0  GROUP BY CUST_ID,AGENT_ID
+            WHERE CUST_ID = #{custId} AND AGENT_GRP_ID != 0  GROUP BY CUST_ID,AGENT_GRP_ID
     </select>
 
  <!--    <select id="selectUploadedConversionList" parameterType="java.util.List" resultType="egovMap">
@@ -626,6 +635,7 @@
             EXTENT2.SALES_ORD_ID as SALES_ORD_ID,
             EXTENT1.ORD_NO,
             EXTENT1.AGENT_ID,
+            EXTENT1.AGENT_GRP_ID,
             EXTENT1.REN_STUS,
             EXTENT1.ITM,
             EXTENT1.REM,
@@ -638,11 +648,12 @@
 
 
     <insert id="insertUploadedConversionList" parameterType="java.util.List">
-    INSERT INTO SAL0241T (ORD_NO,AGENT_ID,REN_STUS,ITM,REM)
+    INSERT INTO SAL0241T (ORD_NO,AGENT_ID,AGENT_GRP_ID, REN_STUS,ITM,REM)
     <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
             (SELECT
             #{item.ordNo} as ORD_NO,
             #{item.agentId} as AGENT_ID,
+            #{item.agentGrpId} as AGENT_GRP_ID,
             #{item.renStus} as REN_STUS,
             #{item.itm} as ITM,
             #{item.rem}  as REM
@@ -689,11 +700,11 @@
         INSERT INTO SAL0240D
         (RC_ITM_ID ,RC_BATCH_ID ,RC_ITM_ORD_ID ,RC_ITM_STUS_ID ,RC_ITM_FIELD ,RC_ITM_REM
         ,RC_ITM_CRT_USER_ID ,RC_ITM_CRT_DT ,RC_ITM_UPD_USER_ID ,RC_ITM_UPD_DT
-        ,RC_ITM_CNVR_STUS_ID,RC_ITM_CNVR_REM,RC_ITM_AGENT_ID,RC_ITM_REN_STUS)
+        ,RC_ITM_CNVR_STUS_ID,RC_ITM_CNVR_REM,RC_ITM_AGENT_ID,RC_ITM_AGENT_GRP_ID,RC_ITM_REN_STUS)
 
         SELECT   SAL0240D_RC_ITM_ID_SEQ.NEXTVAL ,#{seq} ,EXTENT2.SALES_ORD_ID ,CASE WHEN EXTENT2.SALES_ORD_ID IS NOT NULL THEN 4 ELSE 21 END,EXTENT1.ITM ,EXTENT1.REM
         ,#{userId} ,SYSDATE ,#{userId} ,SYSDATE
-        , 1 ,null,EXTENT1.AGENT_ID,EXTENT1.REN_STUS
+        , 1 ,null,EXTENT1.AGENT_ID,EXTENT1.AGENT_GRP_ID,EXTENT1.REN_STUS
         FROM SAL0241T EXTENT1
         LEFT JOIN SAL0001D EXTENT2 ON EXTENT2.SALES_ORD_NO = EXTENT1.ORD_NO
     </insert>

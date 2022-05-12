@@ -87,6 +87,7 @@ function createGrid(){
                                          {dataField : "rcItmField", headerText : "eTR / Sensitve", width : '10%'},
                                          {dataField : "rcItmRem", headerText : "Remark", width : '20%'},
                                          {dataField : "rcItmAgentId", headerText : "Agent ID", width : '10%'},
+                                         {dataField : "rcItmAgentGrpId", headerText : "Group ID", width : '10%'},
                                          {dataField : "rcItmRenStus", headerText : "Rental<br/>Status", width : '10%'},
                                          {dataField : "stusName", headerText : "Conversion<br/>Status", width : '10%'},
                                          {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : '20%'}
@@ -98,6 +99,7 @@ function createGrid(){
                                             {dataField : "rcItmField", headerText : "eTR / Sensitve", width : 100},
                                             {dataField : "rcItmRem", headerText : "Remark", width : 400},
                                             {dataField : "rcItmAgentId", headerText : "Agent ID", width : 200},
+                                            {dataField : "rcItmAgentGrpId", headerText : "Group ID", width :200},
                                             {dataField : "rcItmRenStus", headerText : "Rental Status", width : 100},
                                             {dataField : "stusName", headerText : "Conversion Status", width : 100},
                                             {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : 400}

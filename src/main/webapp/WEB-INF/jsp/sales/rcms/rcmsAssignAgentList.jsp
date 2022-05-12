@@ -31,7 +31,7 @@
 
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var userName = '${SESSION_INFO.userName}';
-	var agentId = null;
+	var agentGrpId = null;
 
 	$(document).ready(
 			function() {
@@ -45,7 +45,7 @@
 						userName : userName
 					}, function(result) {
 						if (result.length > 0) {
-							agentId = "" + result[0].agentId + "|!|";
+							agentGrpId = "" + result[0].agentGrpId + "|!|";
 						}
 					}, null, {
 						async : false
@@ -110,8 +110,8 @@
 				//RosCaller
 				CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {
 					stus : '1'
-				}, agentId, {
-					id : 'agentId',
+				}, agentGrpId, {
+					id : 'agentGrpId',
 					name : "agentName",
 					isShowChoose : false,
 					isCheckAll : false,
@@ -238,15 +238,15 @@
 				},
 				/* {dataField : "currRentalStus", headerText : '<spring:message code="sal.title.text.currRentStatus" />', width : '10%'  , editable       : false      } , */
 				{
-					dataField : "prevAgentId",
+					dataField : "prevAgentGrpId",
 					headerText : "",
 					width : 90,
 					visible : false,
 					editable : false
 				},
-				//{dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : '14%'    ,    editable       : false } ,
+				//{dataField : "oriPrevAgentGrpId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : '14%'    ,    editable       : false } ,
 				{
-					dataField : "agentId",
+					dataField : "agentGrpId",
 					headerText : '<spring:message code="sal.title.text.rosCaller" />',
 					width : '14%',
 					editable : false
@@ -339,12 +339,12 @@
 					formatString : "#,##0.00"
 				},
 				{
-					dataField : "oriPrevAgentId",
+					dataField : "oriPrevAgentGrpId",
 					headerText : '<spring:message code="sal.title.text.prevCaller" />',
 					width : 250
 				},
 				{
-					dataField : "agentId",
+					dataField : "agentGrpId",
 					headerText : '<spring:message code="sal.title.text.rosCaller" />',
 					width : 250
 				},

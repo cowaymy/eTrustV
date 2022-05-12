@@ -98,6 +98,7 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 				int agentSeq = 0;
 				agentSeq = rcmsAgentManageMapper.getSeqSAL0148M();
 				insMap.put("agentSeq", agentSeq);
+				insMap.put("agentGrpId", Integer.parseInt(String.valueOf(addMap.get("agentGrpId"))));
 				insMap.put("agentType", Integer.parseInt(String.valueOf(addMap.get("agentType"))));
 				insMap.put("agentName", addMap.get("agentName"));
 				insMap.put("stusId", Integer.parseInt(String.valueOf(addMap.get("stusId"))));
@@ -123,6 +124,7 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 				updMap.put("userId", editMap.get("userId"));
 				updMap.put("crtUserId", params.get("crtUserId"));
 				updMap.put("agentId", Integer.parseInt(String.valueOf(editMap.get("agentId"))));
+				updMap.put("agentGrpId", Integer.parseInt(String.valueOf(editMap.get("agentGrpId"))));
 
 				rcmsAgentManageMapper.updAgentMaster(updMap);
 

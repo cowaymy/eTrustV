@@ -133,6 +133,10 @@ function creatGrid(){
         headerText : '<spring:message code="sal.title.agentId" />',
         width : '15%'
     },{
+        dataField : "agenGrptId",
+        headerText : 'Group Id',
+        width : '15%'
+    },{
         dataField : "renStus",
         headerText : '<spring:message code="sal.title.text.rentalStatus" />',
         width : '15%'

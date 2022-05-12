@@ -6,6 +6,7 @@ public class uploadAssignAgentDataVO {
 
     private String orderNo;
     private String caller;
+    private String caller2;
     private String renStus;
 
     public static uploadAssignAgentDataVO create(CSVRecord CSVRecord){
@@ -14,7 +15,8 @@ public class uploadAssignAgentDataVO {
 
         vo.setOrderNo(CSVRecord.get(0));
         vo.setCaller(CSVRecord.get(1));
-        vo.setRenStus(CSVRecord.get(2));
+        vo.setCaller2(CSVRecord.get(2));
+        vo.setRenStus(CSVRecord.get(3));
 
         return vo;
     }
@@ -31,6 +33,13 @@ public class uploadAssignAgentDataVO {
     public void setCaller(String caller) {
         this.caller = caller;
     }
+    public void setCaller2(String caller2) {
+        this.caller2 = caller2;
+    }
+    public String getCaller2() {
+        return caller2;
+    }
+
     public String getRenStus() {
        return renStus;
     }
