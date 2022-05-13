@@ -79,6 +79,8 @@ public interface eSVMApiMapper {
 
     void insertSal298D(Map<String, Object> param);
 
+    void updateProgressStatusSal298D(Map<String, Object> param);
+
     void insertPay312D(Map<String, Object> param);
 
     String getCustName(Map<String, Object> param);
@@ -104,4 +106,6 @@ public interface eSVMApiMapper {
     int updateSYS0071D(Map<String, Object> param);
 
     int updateSYS0070M(Map<String, Object> param);
+
+    EgovMap getMemberLevel(Map<String, Object> param);
 }

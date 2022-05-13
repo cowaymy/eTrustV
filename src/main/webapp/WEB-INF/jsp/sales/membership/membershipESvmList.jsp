@@ -163,6 +163,7 @@ console.log("membershipESvmList");
            {dataField : "crtDt", headerText :'<spring:message code="sal.title.text.eSvmKeyInDt" />', width : "10%" , editable : false},
            {dataField : "crtTm", headerText : '<spring:message code="sal.title.text.eSvmKeyInTm" />', width : "10%" , editable : false},
            {dataField : "status", headerText : '<spring:message code="sal.title.text.preSalSts" />', width : "9%" , editable : false},
+           {dataField : "progressStatus", headerText : '<spring:message code="sal.title.text.prgssStus" />', width : "9%" , editable : false},
            {dataField : "psmSrvMemNo", headerText : '<spring:message code="sales.MembershipNo" />', width : "9%" , editable : false},
            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : "15%" , editable : false},
            {dataField : "crtUser", headerText : '<spring:message code="sales.Creator" />', width : "7%" , editable : false},
@@ -173,6 +174,7 @@ console.log("membershipESvmList");
            {dataField : "psmId",headerText : "psmId", visible  : false },
            {dataField : "atchFileGrpId",headerText : "atchFileGrpId", visible  : false }
           , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
+          , { headerText : "ProgressStatusId",          dataField : "stusProgressId",     editable : false, visible  : false,  width : 100 }
           , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : false}
             , { headerText : "updDt",      dataField : "updDt",   visible  : false}
 
@@ -210,6 +212,7 @@ console.log("membershipESvmList");
 		{dataField : "crtDt", headerText :'<spring:message code="sal.title.text.eSvmKeyInDt" />', width : 100 , editable : false},
 		{dataField : "crtTm", headerText : '<spring:message code="sal.title.text.eSvmKeyInTm" />', width : 100 , editable : false},
 		{dataField : "status", headerText : '<spring:message code="sal.title.text.preSalSts" />', width : 100 , editable : false},
+        {dataField : "progressStatus", headerText : '<spring:message code="sal.title.text.prgssStus" />', width : 100, editable : false},
 		{dataField : "psmSrvMemNo", headerText : '<spring:message code="sales.MembershipNo" />', width : 100 , editable : false},
 		{dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : 250 , editable : false},
 		{dataField : "crtUser", headerText : '<spring:message code="sales.Creator" />', width : 100 , editable : false},
@@ -399,7 +402,13 @@ console.log("membershipESvmList");
             width: '100%'
         });
         $('#_typeId').multipleSelect("checkAll");
-
+        $('#_stusProgressId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#_stusProgressId').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {
@@ -549,6 +558,16 @@ console.log("membershipESvmList");
     <th scope="row"><spring:message code="sal.text.membershipNo" /></th>
         <td>
             <input type="text" title="" placeholder="" class="w100p"  name="membershipNo"  placeholder="SM No"/>
+        </td>
+        <th scope="row"><spring:message code="sal.title.text.prgssStus" /></th>
+       <td>
+            <select class="multy_select w100p" multiple="multiple" name="_stusProgressId">
+                <option value="" selected="selected">None</option>
+                <option value="1" selected="selected"><spring:message code="sal.btn.active" /></option>
+                <option value="104" selected="selected"><spring:message code="sal.combo.text.processing" /></option>
+                <option value="21" selected="selected"><spring:message code="sal.combo.text.failed" /></option>
+                <option value="4" selected="selected"><spring:message code="sal.combo.text.complete" /></option>
+            </select>
         </td>
 </tr>
 <%-- <tr>

@@ -45,4 +45,6 @@ public interface eSVMApiService {
     int updatePaymentUploadFile(List<FileVO> list, eSVMApiDto param);
 
     eSVMApiDto updatePaymentUploadFile_1(eSVMApiForm param) throws Exception;
+
+    eSVMApiDto getMemberLevel(eSVMApiForm param) throws Exception;
 }

@@ -196,4 +196,10 @@ public class eSVMApiController {
         LOGGER.debug("eSVMApiController :: insertPSM");
         return ResponseEntity.ok(eSVMApiService.updatePaymentUploadFile_1(param));
     }
+
+    @ApiOperation(value = "getMemberLevel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getMemberLevel", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> selectMemberLevel(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.getMemberLevel(param));
+    }
 }

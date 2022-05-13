@@ -99,10 +99,12 @@ public class MembershipESvmController {
 		String[] arrESvmStusId = request.getParameterValues("_stusId");    //Pre-Order Status
 		String[] arrKeyinBrnchId = request.getParameterValues("_brnchId");   //Key-In Branch
 		String[] arrCustType     = request.getParameterValues("_typeId");    //Customer Type
+		String[] arrESvmStusProgressId = request.getParameterValues("_stusProgressId");    //Status Progress
 
 		if(arrESvmStusId != null && !CommonUtils.containsEmpty(arrESvmStusId)) params.put("arrESvmStusId", arrESvmStusId);
 		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) params.put("arrKeyinBrnchId", arrKeyinBrnchId);
 		if(arrCustType     != null && !CommonUtils.containsEmpty(arrCustType))     params.put("arrCustType", arrCustType);
+		if(arrESvmStusProgressId != null && !CommonUtils.containsEmpty(arrESvmStusProgressId)) params.put("arrESvmStusProgressId", arrESvmStusProgressId);
 
 		List<EgovMap> result = membershipESvmService.selectESvmListAjax(params);
 
@@ -277,6 +279,7 @@ public class MembershipESvmController {
                 // To update SAL0298D status (updateAction) [Approved]
                 logger.debug("post-PO Billing - updateAction :: params :: {}", params);
                 if(resultVal == 1) {
+                	params.put("progressStatus", 4);
                     updAct = membershipESvmService.updateAction(params);
                 }
             }
@@ -289,6 +292,16 @@ public class MembershipESvmController {
              */
             // Set resultVal = 2, IF "Active" status action
             if("6506".equals(params.get("payment_mode").toString()) && "1".equals(params.get("action").toString())) resultVal = 2;
+
+            //CHECK SPECIAL INSTRUCTION IF == 3434/3435 then processing status, Progress Status  remains Processing, else Failed for pending for reuploads
+            if("1".equals(params.get("action").toString())){
+                if(params.get("specialInstruction").toString() != "3434" || params.get("specialInstruction").toString() != "3435"){
+                	params.put("progressStatus", 21);
+                }
+                else{
+                	params.put("progressStatus", 104);
+                }
+            }
 
             updAct = membershipESvmService.updateAction(params);
         }

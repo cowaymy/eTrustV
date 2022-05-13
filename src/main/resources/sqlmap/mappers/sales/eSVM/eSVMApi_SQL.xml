@@ -798,6 +798,7 @@
             SVM_QUOT_ID,
             PSM_SALES_ORD_ID,
             STUS,
+            STUS_PROGRESS,
             ATCH_FILE_GRP_ID,
             CRT_USER_ID,
             CRT_DT,
@@ -809,6 +810,7 @@
             #{srvMemQuotId},
             #{salesOrdId},
             1,
+            1,
             #{atchFileGrpId},
             #{regId},
             SYSDATE,
@@ -816,6 +818,15 @@
             SYSDATE
         )
     </insert>
+
+    <update id="updateProgressStatusSal298D" parameterType="Map">
+            UPDATE SAL0298D SET
+	            UPD_USER_ID = #{regId},
+	            UPD_USER_ID = SYSDATE,
+                STUS_PROGRESS = #{progressStatus}
+            WHERE PSM_ID = #{psmId}
+    </update>
+
 
     <insert id="insertPay312D" parameterType="Map">
         INSERT INTO PAY0312D
@@ -977,7 +988,8 @@
             D.NAME CUST_NAME,
             NVL(A.APPV_INSTRCT, 0) RESN_ID,
             NVL(E.RESN_DESC, '-') RESN,
-            NVL(A.APPV_REM, '-') APPV_REM
+            NVL(A.APPV_REM, '-') APPV_REM,
+            A.SA_REF
         FROM SAL0298D A
         JOIN PAY0312D B
             ON A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID
@@ -1076,4 +1088,13 @@
         WHERE ATCH_FILE_GRP_ID = #{nAtchFileGrpId}
             AND ATCH_FILE_ID = #{nAtchFileId}
     </update>
+
+    <select id="getMemberLevel" parameterType="Map" resultType="egovMap">
+        SELECT C.MEM_LVL AS MEM_LVL FROM GBSLCVD.SYS0047M A
+		INNER JOIN ORG0001D B
+		ON A.USER_NAME = B.MEM_CODE
+		INNER JOIN ORG0005D C
+		ON B.MEM_ID = C.MEM_ID
+		WHERE A.USER_NAME = #{regId}
+    </select>
 </mapper>

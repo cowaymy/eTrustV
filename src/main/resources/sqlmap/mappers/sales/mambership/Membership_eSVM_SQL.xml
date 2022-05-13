@@ -28,6 +28,8 @@
           ,BRCNH.CODE
           ,BRCNH.NAME
           ,BRCNH.CODE || ' ' || BRCNH.NAME AS USER_BRCNH
+          , STS1.NAME PROGRESS_STATUS
+          , ESVM.STUS_PROGRESS
         FROM SAL0298D ESVM
         LEFT JOIN SAL0093D QUO
             ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
@@ -49,6 +51,8 @@
             ON DD.RESN_ID = ESVM.APPV_INSTRCT
         LEFT JOIN SYS0005M BRCNH
             ON BRCNH.BRNCH_ID = CRTUSR.USER_BRNCH_ID
+        LEFT JOIN SYS0038M STS1
+            ON STS1.STUS_CODE_ID = ESVM.STUS_PROGRESS
         WHERE 1 = 1
         <if test='_memCode != null and _memCode != ""'>
             AND CRTUSR.user_name = #{_memCode}
@@ -65,6 +69,12 @@
         <if test='arrESvmStusId != null and arrESvmStusId != ""'>
             AND ESVM.STUS IN
             <foreach item="item" collection="arrESvmStusId" index="index" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+         <if test='arrESvmStusProgressId != null and arrESvmStusProgressId != ""'>
+            AND ESVM.STUS_PROGRESS IN
+            <foreach item="item" collection="arrESvmStusProgressId" index="index" open="(" separator="," close=")">
                 #{item, jdbcType=VARCHAR}
             </foreach>
         </if>
@@ -680,7 +690,8 @@
 		    ESVM.APPV_REM = REGEXP_REPLACE(#{remark}, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
 		    ESVM.APPV_USER_ID = #{userId},
 		    ESVM.UPD_USER_ID = #{userId},
-		    ESVM.UPD_DT = SYSDATE
+		    ESVM.UPD_DT = SYSDATE,
+		    ESVM.STUS_PROGRESS = #{progressStatus}
 	   WHERE ESVM.PSM_ID = #{psmId}
     </update>
 

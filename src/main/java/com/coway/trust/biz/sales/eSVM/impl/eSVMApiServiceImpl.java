@@ -1111,11 +1111,25 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
             // Update New File's ATCH_FILE_GRP_ID in SYS0070M to Existing File's
             // ATCH_FILE_GRP_ID
             eSVMApiMapper.updateSYS0070M(fileMap);
+
+          //Back to processing status
+            param.setProgressStatus(104);
+            eSVMApiMapper.updateProgressStatusSal298D(eSVMApiForm.createMap(param));
         }
 
         eSVMApiDto rtn = new eSVMApiDto();
         rtn.setAtchFileGrpId(param.getAtchFileGrpId());
 
         return rtn;
+    }
+
+    @Override
+    public eSVMApiDto getMemberLevel(eSVMApiForm param) throws Exception {
+
+        if(null == param.getRegId()) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        eSVMApiDto getMemberLevel = eSVMApiDto.create(eSVMApiMapper.getMemberLevel(eSVMApiForm.createMap(param)));
+        return getMemberLevel;
     }
 }

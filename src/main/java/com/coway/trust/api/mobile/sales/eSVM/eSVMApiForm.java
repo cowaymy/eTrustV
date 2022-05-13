@@ -130,6 +130,7 @@ public class eSVMApiForm {
         params.put("atchFileOther2", vo.getAtchFileOther2());
         params.put("atchFileOther3", vo.getAtchFileOther3());
         params.put("curAtchFileGrpId", vo.getCurAtchFileGrpId());
+        params.put("progressStatus", vo.getProgressStatus());
         return params;
     }
 
@@ -152,6 +153,7 @@ public class eSVMApiForm {
     private String orderType;
     private String custType;
     private String status;
+    private int progressStatus;
     private int stkId;
     private String ordNo;
     private String nric;
@@ -1181,4 +1183,12 @@ public class eSVMApiForm {
     public void setCurAtchFileGrpId(int curAtchFileGrpId) {
         this.curAtchFileGrpId = curAtchFileGrpId;
     }
+
+	public int getProgressStatus() {
+		return progressStatus;
+	}
+
+	public void setProgressStatus(int progressStatus) {
+		this.progressStatus = progressStatus;
+	}
 }

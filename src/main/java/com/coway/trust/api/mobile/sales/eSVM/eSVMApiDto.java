@@ -104,6 +104,7 @@ public class eSVMApiDto {
     private String hiddenBsFreq;
     private int srvMemPacId;
     private int filterCharge;
+    private int memLvl;
 
     /* Package change/Filter change */
     private int promoPrcPrcnt;
@@ -1096,4 +1097,12 @@ public class eSVMApiDto {
     public void setCurAtchFileGrpId(int curAtchFileGrpId) {
         this.curAtchFileGrpId = curAtchFileGrpId;
     }
+
+	public int getMemLvl() {
+		return memLvl;
+	}
+
+	public void setMemLvl(int memLvl) {
+		this.memLvl = memLvl;
+	}
 }
