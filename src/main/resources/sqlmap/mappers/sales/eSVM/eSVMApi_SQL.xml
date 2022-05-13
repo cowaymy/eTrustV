@@ -822,7 +822,7 @@
     <update id="updateProgressStatusSal298D" parameterType="Map">
             UPDATE SAL0298D SET
 	            UPD_USER_ID = #{regId},
-	            UPD_USER_ID = SYSDATE,
+	            UPD_DT = SYSDATE,
                 STUS_PROGRESS = #{progressStatus}
             WHERE PSM_ID = #{psmId}
     </update>
