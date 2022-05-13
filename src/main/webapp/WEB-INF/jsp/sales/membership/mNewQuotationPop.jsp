@@ -87,6 +87,11 @@ $(document).ready(function(){
 
 				fn_outspro();
 
+	            if("${SESSION_INFO.userTypeId}" == "1"  || "${SESSION_INFO.userTypeId}" == "2" ){
+	                $("#cEmplo option[value='0']").attr('selected', 'selected');
+	                $('#cEmplo').attr("disabled",true);
+	            }
+
 				if ('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2 || '${SESSION_INFO.userTypeId}' == 3 || '${SESSION_INFO.userTypeId}' == 7) {
 					$("#SALES_PERSON").val("${SESSION_INFO.userName}");
 					$("#sale_confirmbt").hide();
