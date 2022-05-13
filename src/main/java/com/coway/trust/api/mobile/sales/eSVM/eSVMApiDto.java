@@ -61,6 +61,7 @@ public class eSVMApiDto {
     private int resnId;
     private int payMode;
     private String appvRem;
+    private String saRef;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -1104,5 +1105,13 @@ public class eSVMApiDto {
 
 	public void setMemLvl(int memLvl) {
 		this.memLvl = memLvl;
+	}
+
+	public String getSaRef() {
+		return saRef;
+	}
+
+	public void setSaRef(String saRef) {
+		this.saRef = saRef;
 	}
 }
