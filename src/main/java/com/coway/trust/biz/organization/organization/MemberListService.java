@@ -248,4 +248,15 @@ public interface MemberListService {
 
 	void updateSocialMedia(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectHTOrgCode(Map<String, Object> params);
+
+	List<EgovMap> selectHTGroupCode(Map<String, Object> params);
+
+	List<EgovMap> selectHTDeptCode(Map<String, Object> params);
+
+	List<EgovMap> selectStatusList(Map<String, Object> params);
+
+	List<EgovMap> selectPositionList(Map<String, Object> params);
+
+
 }

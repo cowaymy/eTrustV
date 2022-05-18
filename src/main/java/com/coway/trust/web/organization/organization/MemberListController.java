@@ -2631,5 +2631,51 @@ public class MemberListController {
 
 		return ResponseEntity.ok(fileInfo);
 	}
+
+
+	@RequestMapping(value="/getHTContactList.do")
+	public String getHTContactList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+		return "organization/organization/getHTContactList";
+
+	}
+
+	@RequestMapping(value = "/selectHTOrgCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHTOrgCode(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> orgCodeList = memberListService.selectHTOrgCode(params);
+		return ResponseEntity.ok(orgCodeList);
+	}
+
+	@RequestMapping(value = "/selectHTGroupCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHTGroupCode(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> grpCodeList = memberListService.selectHTGroupCode(params);
+		return ResponseEntity.ok(grpCodeList);
+	}
+
+	@RequestMapping(value = "/selectHTDeptCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHTDeptCode(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> deptCodeList = memberListService.selectHTDeptCode(params);
+		return ResponseEntity.ok(deptCodeList);
+	}
+
+	@RequestMapping(value = "/selectStatusList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStatusList(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> statusCodeList = memberListService.selectStatusList(params);
+		return ResponseEntity.ok(statusCodeList);
+	}
+
+	@RequestMapping(value = "/selectPositionList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPositionList(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> positionList = memberListService.selectPositionList(params);
+		return ResponseEntity.ok(positionList);
+	}
+
+
+
 }
 

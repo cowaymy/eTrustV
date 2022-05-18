@@ -849,6 +849,15 @@ $(function() {
         }
     });
 
+    $("#htContactList").click(function() {
+
+    	 if('${SESSION_INFO.userTypeId}' == "7") {
+    		 Common.popupDiv("/organization/getHTContactList.do", null, null, true);
+         } else {
+             Common.alert("Only HT Member is allowed!");
+         }
+    });
+
     $("#getNonVaccineDeclare").click(function() {
         /* if($("#code").val() == null){
             Common.alert("Admin need to key in value for 'Code' value' ! ");
@@ -1258,6 +1267,7 @@ function fn_socialMediaInfo(){
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine15 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="htPwReset">HT Password Reset</a></li>
+                <li><p class="link_btn"><a href="#" id="htContactList">HT Contact List</a></li>
             </c:if>
             <li><p class="link_btn"><a href="#" id="getNonVaccineDeclare">Non-Vaccination Declaration Form</a></li>
         </ul>

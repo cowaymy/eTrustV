@@ -2780,4 +2780,29 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void updateSocialMedia(Map<String, Object> params)  throws Exception {
 	    memberListMapper.updateSocialMedia(params);
 	}
+
+	@Override
+    public List<EgovMap> selectHTOrgCode(Map<String, Object> params) {
+        return memberListMapper.selectHTOrgCode(params);
+    }
+
+	@Override
+    public List<EgovMap> selectHTGroupCode(Map<String, Object> params) {
+        return memberListMapper.selectHTGroupCode(params);
+    }
+
+	@Override
+    public List<EgovMap> selectHTDeptCode(Map<String, Object> params) {
+        return memberListMapper.selectHTDeptCode(params);
+    }
+
+	@Override
+    public List<EgovMap> selectStatusList(Map<String, Object> params) {
+        return memberListMapper.selectStatusList(params);
+    }
+
+	@Override
+    public List<EgovMap> selectPositionList(Map<String, Object> params) {
+        return memberListMapper.selectPositionList(params);
+    }
 }
