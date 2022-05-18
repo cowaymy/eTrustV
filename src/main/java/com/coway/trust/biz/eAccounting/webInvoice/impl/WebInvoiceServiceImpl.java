@@ -582,6 +582,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					BigDecimal diffAmt = BigDecimal.ZERO; //initiate as 0, 0=no outstanding and balance
 					//int diffAmt = 0; //initiate as 0, 0=no outstanding and balance
 					boolean diffAmtFlg = false; // false: No need to insert (request<exp)
+					BigDecimal reqAmt, expAmt = BigDecimal.ZERO;
 				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
                         String ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
                         Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
@@ -614,15 +615,16 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 invoAppvItems.put("costCentrName", invoAppvItems.get("costCenterNm"));
                                 invoAppvItems.put("memAccId", "");
                                 invoAppvItems.put("totAmt", invoAppvItems.get("expAmt"));
-                                invoAppvItems.put("dim1", invoAppvItems.get("costCenterNm"));
+                                invoAppvItems.put("dim1", invoAppvItems.get("costCenter"));
                                 invoAppvItems.put("dim2", invoAppvItems.get("bgtCode"));
 
-                                BigDecimal reqAmt, expAmt;
+                                //BigDecimal reqAmt, expAmt = BigDecimal.ZERO;
                                 reqAmt = (BigDecimal)invoAppvItems.get("reqAmt");
-                                expAmt = (BigDecimal)invoAppvItems.get("expAmt");
+                                //expAmt = (BigDecimal)invoAppvItems.get("expAmt");
+                                expAmt = expAmt.add((BigDecimal)invoAppvItems.get("expAmt"));
                                 //diffAmt = reqAmt - expAmt;
                                 diffAmt= reqAmt.subtract(expAmt);
-                                invoAppvItems.put("expAmt", expAmt);
+                                invoAppvItems.put("expAmt", invoAppvItems.get("expAmt"));
 
                                 /*int reqAmt, expAmt;
                                 reqAmt = Integer.valueOf(invoAppvItems.get("grandAmt").toString());
@@ -695,6 +697,51 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                         LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
 				    }
 				    else if(diffAmt.compareTo(BigDecimal.ZERO) == 1) //advance more than expenses
+				    {
+
+				    	//itemize total as 1 record
+				    	appvSettlementInfo = VendorAdvanceMapper.selectSettlementInfo(invoAppvInfo); //main record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	appvSettlementInfo.put("ifKey", ifKey);
+				    	appvSettlementInfo.put("userId", params.get("userId"));
+				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("glAccNo", "12400200");
+				    	appvSettlementInfo.put("expAmt", "0");
+				    	appvSettlementInfo.put("balAmt", "0");
+				    	appvSettlementInfo.put("taxAmt", "0");
+				    	appvSettlementInfo.put("nonTaxAmt", "0");
+				    	appvSettlementInfo.put("docDt", docDate);
+				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	//appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
+				    	appvSettlementInfo.put("rem", appvSettlementInfo.get("expDesc"));
+				    	VendorAdvanceMapper.insertVendorAdvInterface(appvSettlementInfo);
+
+				    	// insert balance amount as 1 record
+				    	invoAppvInfo.put("flg", "1");
+				    	refundRecordInfo = VendorAdvanceMapper.selectBalanceInfo(invoAppvInfo); //balance refund record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	refundRecordInfo.put("ifKey", ifKey);
+				    	refundRecordInfo.put("userId", params.get("userId"));
+				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("glAccNo", "22200400");
+				    	refundRecordInfo.put("memAccId", "");
+				    	refundRecordInfo.put("grandAmt", 0);
+				    	refundRecordInfo.put("docDt", docDate);
+				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
+				    	refundRecordInfo.put("expAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("taxAmt", "0");
+				    	refundRecordInfo.put("nonTaxAmt", "0");
+				    	refundRecordInfo.put("curr", refundRecordInfo.get("currency"));
+				    	refundRecordInfo.put("balAmt", "0");
+				    	refundRecordInfo.put("rem", refundRecordInfo.get("expDesc"));
+				    	VendorAdvanceMapper.insertVendorAdvInterface(refundRecordInfo);
+
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
+                        LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
+				    }
+				    else if(diffAmt.compareTo(BigDecimal.ZERO) == 0 && "A3".equals(clmType)) //advance == expenses
 				    {
 
 				    	//itemize total as 1 record
