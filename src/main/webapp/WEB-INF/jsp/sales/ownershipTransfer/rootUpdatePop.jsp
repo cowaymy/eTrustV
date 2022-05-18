@@ -939,15 +939,15 @@
             return;
         }
          */
-        console.log($("#_editCustTypeId").val())
+        //console.log($("#_editCustTypeId").val())
         if (null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()) {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
-
             return;
-        } else if (($("#_ficoScore").val() > 9999 ||$("#_ficoScore").val() < 0) && $("#_editCustTypeId").val() == '964') {
-                Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
+        } else if (  (  ($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 0) && $("#_ficoScore").val() != 9999    ) && $("#_editCustTypeId").val() == '964') {
+                Common
+                        .alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
-        } else if (($("#_ficoScore").val() > 9999 ||$("#_ficoScore").val() < 0) && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
+        } else if (  ($("#_ficoScore").val() < 400 && $("#_ficoScore").val() > 100)  && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
             Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
             return;
     }
@@ -1218,13 +1218,13 @@
 
     // ROT History Functions - Start
     function fn_retrieveRotHist() {
-    	console.log('rot history')
-    	Common.ajax("GET", "/sales/ownershipTransfer/selectRotHistory.do", {
+        console.log('rot history')
+        Common.ajax("GET", "/sales/ownershipTransfer/selectRotHistory.do", {
             salesOrdID : salesOrdID,
             rotId : rotId
         }, function(result) {
-        	$("#_editCustTypeId").val(result[0]['appTypeId'])
-        	console.log(result);
+            $("#_editCustTypeId").val(result[0]['appTypeId'])
+            console.log(result);
             AUIGrid.setGridData(rotHistoryGridID, result);
         });
     }
