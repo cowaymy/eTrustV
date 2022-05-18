@@ -55,14 +55,25 @@ function fn_memberListSearch(){
         //console.log("data : " + result);
 
         var isTrainee = 0;
+        var isHp = false;
         for (var i=0; i<result.length; i++) {
             if (result[i]["membertype"] == 5) {
                 isTrainee = 1;
-            } else {
+
+            }else if (result[i]["hpType"] != "" && result[i]["hpType"] != null){
+            	isHp = true;
+            }
+            	else {
                 result[i]["testResult"] = "";
             }
         }
 
+        if(isHp == true){
+        	AUIGrid.showColumnByDataField(myGridID, "hpType");
+        }
+        else{
+        	AUIGrid.hideColumnByDataField(myGridID, "hpType");
+        }
         if (isTrainee != 0) {
             AUIGrid.showColumnByDataField(myGridID, "testResult");
             AUIGrid.setColumnProp( myGridID, 5, { width : 130, visible : true } );
@@ -578,6 +589,12 @@ function createAUIGrid() {
             visible : false
 
         }, {
+            dataField : "hpType",
+            headerText : "HP Type",
+            editable : false,
+            width : 130,
+            visible : false
+        },{
             dataField : "neoProStatus",
             headerText : "Neo Pro",
             editable : false,

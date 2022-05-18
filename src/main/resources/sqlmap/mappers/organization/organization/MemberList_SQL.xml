@@ -124,7 +124,7 @@
 
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-           SELECT row_number,
+SELECT row_number,
             Project1.MEM_ID MemberID,
             Project1.MEM_TYPE  MemberType,
             Project1.MEM_CODE MemberCode,
@@ -149,7 +149,8 @@
 
              project1.VACCINE_STATUS,
              project1.REASON_ID,
-             project1.NEO_PRO_STATUS
+             project1.NEO_PRO_STATUS,
+             project1.HP_TYPE
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
@@ -179,7 +180,8 @@
                     project1.NEO_PRO_STATUS,
 
 
-                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number,
+                     project1.HP_TYPE
 
                      FROM ( SELECT DISTINCT
                     GroupBy1.A1 C1,
@@ -228,7 +230,8 @@
                     /*vaccination information */
                     V.VACCINE_STATUS,
                     V.REASON_ID,
-                    CASE WHEN Extent16.HP_CODE is not null THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS
+                    CASE WHEN Extent16.HP_CODE is not null THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS,
+                    extent17.code_name HP_TYPE
 
                     FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -244,7 +247,7 @@
                     LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
                     LEFT JOIN ORG0040D V ON V.MEM_ID = Extent1.MEM_ID /* Vaccination info */
                     LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE =Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE,'MM') AND NVL(IS_NW,0)=0
-
+                    LEFT JOIN SYS0013M Extent17 ON Extent1.rank = Extent17.code_id
                     LEFT JOIN (SELECT * FROM (
                     SELECT B.* , ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY SALES_ORD_ID DESC) ITM_ROWS
                     FROM SAL0001D B
