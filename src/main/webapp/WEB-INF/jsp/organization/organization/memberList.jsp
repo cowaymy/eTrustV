@@ -851,11 +851,11 @@ $(function() {
 
     $("#htContactList").click(function() {
 
-    	 if('${SESSION_INFO.userTypeId}' == "7") {
+//     	 if('${SESSION_INFO.userTypeId}' == "7") {
     		 Common.popupDiv("/organization/getHTContactList.do", null, null, true);
-         } else {
-             Common.alert("Only HT Member is allowed!");
-         }
+//          } else {
+//              Common.alert("Only HT Member is allowed!");
+//          }
     });
 
     $("#getNonVaccineDeclare").click(function() {
