@@ -479,6 +479,7 @@ function fn_downloadAgreement() {
             $("#userRole").val() == 403 || $("#userRole").val() == 405 || $("#userRole").val() == 406 || // Administrator New (ITGC)
             $("#userRole").val() == 415 || $("#userRole").val() == 414 ||                                            // Administrator New (ITGC)
             $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261 ||
+            $("#userRole").val() == 335 || $("#userRole").val() == 336 || $("#userRole").val() == 337 || // Sales Care
             $("#userRole").val() == 339 || $("#userRole").val() == 341 || $("#userRole").val() == 343  // HT Leader
             ){
 
@@ -493,6 +494,8 @@ function fn_downloadAgreement() {
     if($("#memTypeCom").val() == "1") {
         // HP Download
         console.log("memLvl :: " + $("#memLevelCom").val());
+        console.log("v_memCode :: " + $("#v_memCode").val());
+        console.log("userRole :: " + $("#userRole").val());
         var memLvl = $("#memLevelCom").val();
 
         if(memLvl < "4" && memLvl != "") {
