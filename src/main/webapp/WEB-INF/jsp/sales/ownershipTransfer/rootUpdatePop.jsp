@@ -947,7 +947,7 @@
                 Common
                         .alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
-        } else if (  ($("#_ficoScore").val() < 400 && $("#_ficoScore").val() > 100)  && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
+        } else if (  ($("#_ficoScore").val() > 400 || $("#_ficoScore").val() < 100)  && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
             Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
             return;
     }
