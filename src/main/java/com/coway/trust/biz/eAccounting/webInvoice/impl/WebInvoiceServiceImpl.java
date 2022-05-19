@@ -658,8 +658,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("glAccNo", "12400200");
 				    	/*appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
-				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
-				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));*/
+				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));*/
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
 				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("expAmt", "0");
@@ -726,7 +726,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("userId", params.get("userId"));
 				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("glAccNo", "22200400");
-				    	refundRecordInfo.put("memAccId", "");
 				    	refundRecordInfo.put("grandAmt", 0);
 				    	refundRecordInfo.put("docDt", docDate);
 				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
@@ -763,29 +762,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("rem", appvSettlementInfo.get("expDesc"));
 				    	VendorAdvanceMapper.insertVendorAdvInterface(appvSettlementInfo);
 
-				    	// insert balance amount as 1 record
-				    	invoAppvInfo.put("flg", "1");
-				    	refundRecordInfo = VendorAdvanceMapper.selectBalanceInfo(invoAppvInfo); //balance refund record
-				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
-				    	refundRecordInfo.put("ifKey", ifKey);
-				    	refundRecordInfo.put("userId", params.get("userId"));
-				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
-				    	refundRecordInfo.put("glAccNo", "22200400");
-				    	refundRecordInfo.put("memAccId", "");
-				    	refundRecordInfo.put("grandAmt", 0);
-				    	refundRecordInfo.put("docDt", docDate);
-				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
-				    	refundRecordInfo.put("expAmt", refundRecordInfo.get("balAmt"));
-				    	refundRecordInfo.put("taxAmt", "0");
-				    	refundRecordInfo.put("nonTaxAmt", "0");
-				    	refundRecordInfo.put("curr", refundRecordInfo.get("currency"));
-				    	refundRecordInfo.put("balAmt", "0");
-				    	refundRecordInfo.put("rem", refundRecordInfo.get("expDesc"));
-				    	VendorAdvanceMapper.insertVendorAdvInterface(refundRecordInfo);
-
-				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
-                        LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
-				    }
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);				    }
 				}
 			}
 		}
