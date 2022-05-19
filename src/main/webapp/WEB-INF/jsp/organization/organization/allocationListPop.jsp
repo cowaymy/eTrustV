@@ -246,209 +246,6 @@
                           visible :false
                         },
                         {
-                          headerText : "Summary",
-                          children : [
-                                        {
-                                          headerText : "AS",
-                                          width : 100,
-                                          children : [
-                                                      {
-                                                    	  dataField : "sumasstcnt",
-                                                          headerText : "ST",
-                                                          width : 80,
-                                                          styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                            var valArray  = new Array();
-                                                            valArray = value.split("-");
-                                                            if(Number(valArray[0]) > Number(valArray[1])) {
-                                                              return "my-cell-style";
-                                                            }
-                                                            return null;
-                                                           }
-                                                      },
-                                                      {
-                                                          dataField : "sumasdskcnt",
-                                                          headerText : "DSK",
-                                                          width : 80,
-                                                          styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                            var valArray  = new Array();
-                                                            valArray = value.split("-");
-                                                            if(Number(valArray[0]) > Number(valArray[1])) {
-                                                              return "my-cell-style";
-                                                            }
-                                                            return null;
-                                                           }
-                                                      },
-                                                      {
-                                                          dataField : "sumassmlcnt",
-                                                          headerText : "SML",
-                                                          width : 80,
-                                                          styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                            var valArray  = new Array();
-                                                            valArray = value.split("-");
-                                                            if(Number(valArray[0]) > Number(valArray[1])) {
-                                                              return "my-cell-style";
-                                                            }
-                                                            return null;
-                                                           }
-                                                      },
-														{
-															dataField : "sumascnt",
-														    headerText : "TOTAL(AS)",
-														    width : 80,
-														    styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-														      var valArray  = new Array();
-														      valArray = value.split("-");
-														      if(Number(valArray[0]) > Number(valArray[1])) {
-														        return "my-cell-style";
-														      }
-														      return null;
-														     }
-														}
-                                          ]
-                                        },
-                                        {
-                                        	headerText : "INS",
-                                            width : 100,
-                                            children : [
-                                                        {
-                                                            dataField : "suminsstcnt",
-                                                            headerText : "ST",
-                                                            width : 80,
-                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                              var valArray  = new Array();
-                                                              valArray = value.split("-");
-                                                              if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              return null;
-                                                             }
-                                                        },
-                                                        {
-                                                            dataField : "suminsdskcnt",
-                                                            headerText : "DSK",
-                                                            width : 80,
-                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                              var valArray  = new Array();
-                                                              valArray = value.split("-");
-                                                              if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              return null;
-                                                             }
-                                                        },
-                                                        {
-                                                            dataField : "suminssmlcnt",
-                                                            headerText : "SML",
-                                                            width : 80,
-                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                              var valArray  = new Array();
-                                                              valArray = value.split("-");
-                                                              if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              return null;
-                                                             }
-                                                        },
-                                                          {
-                                                              dataField : "suminscnt",
-                                                              headerText : "TOTAL(INS)",
-                                                              width : 80,
-                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                                var valArray  = new Array();
-                                                                valArray = value.split("-");
-                                                                if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                  return "my-cell-style";
-                                                                }
-                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                  return "my-cell-style";
-                                                                }
-                                                                return null;
-                                                               }
-                                                          }
-                                            ]
-                                        },
-                                        {
-                                        	headerText : "RTN",
-                                            width : 100,
-                                            children : [
-                                                        {
-                                                            dataField : "sumrtnstcnt",
-                                                            headerText : "ST",
-                                                            width : 80,
-                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                              var valArray  = new Array();
-                                                              valArray = value.split("-");
-                                                              if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              return null;
-                                                             }
-                                                        },
-                                                        {
-                                                            dataField : "sumrtndskcnt",
-                                                            headerText : "DSK",
-                                                            width : 80,
-                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                              var valArray  = new Array();
-                                                              valArray = value.split("-");
-                                                              if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              return null;
-                                                             }
-                                                        },
-                                                        {
-                                                            dataField : "sumrtnsmlcnt",
-                                                            headerText : "SML",
-                                                            width : 80,
-                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                              var valArray  = new Array();
-                                                              valArray = value.split("-");
-                                                              if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                return "my-cell-style";
-                                                              }
-                                                              return null;
-                                                             }
-                                                        },
-                                                          {
-                                                              dataField : "sumrtncnt",
-                                                              headerText : "TOTAL(RTN)",
-                                                              width : 80,
-                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-                                                                var valArray  = new Array();
-                                                                valArray = value.split("-");
-                                                                if(Number(valArray[0]) > Number(valArray[1])) {
-                                                                  return "my-cell-style";
-                                                                }
-                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                                  return "my-cell-style";
-                                                                }
-                                                                return null;
-                                                               }
-                                                          }
-                                            ]
-                                        }
-                                     ]
-                        },
-                        {
                           headerText : "Morning",
                           children : [
                                         {
@@ -528,6 +325,7 @@
                                                            dataField : "morascnt",
                                                            headerText : "TOTAL(AS)",
                                                            width : 80,
+                                                           visible :false,
                                                            styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                                              var valArray  = new Array();
                                                              valArray = value.split("-");
@@ -623,6 +421,7 @@
                                                     	   dataField : "morinscnt",
                                                            headerText : "TOTAL(INS)",
                                                            width : 80,
+                                                           visible :false,
                                                            styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                                              var valArray  = new Array();
                                                              valArray = value.split("-");
@@ -717,6 +516,7 @@
                                                     	   dataField : "morrtncnt",
                                                            headerText : "TOTAL(RTN)",
                                                            width : 80,
+                                                           visible :false,
                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                                              var valArray  =new Array();
                                                              valArray = value.split("-");
@@ -810,6 +610,7 @@
 														    dataField : "aftascnt",
 														    headerText : "TOTAL(AS)",
 														    width : 80,
+	                                                        visible :false,
 														    styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 														      var valArray  = new Array();
 														      valArray = value.split("-");
@@ -905,6 +706,7 @@
 															    dataField : "aftinscnt",
 															    headerText : "TOTAL(INS)",
 															    width : 80,
+		                                                        visible :false,
 															    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 															      var valArray = new Array();
 															      valArray = value.split("-");
@@ -1003,6 +805,7 @@
 					                                          dataField : "aftrtncnt",
 					                                          headerText : "TOTAL(RTN)",
 					                                          width : 80,
+					                                          visible :false,
 					                                          styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 					                                            var valArray = new Array();
 					                                            valArray = value.split("-");
@@ -1103,6 +906,7 @@
 																    dataField : "evnascnt",
 																    headerText : "TOTAL(AS)",
 																    width : 80,
+		                                                            visible :false,
 																    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 																      var valArray  = new Array();
 																      valArray = value.split("-");
@@ -1200,6 +1004,7 @@
                                                             	dataField : "evninscnt",
                                                                 headerText : "TOTAL(INS)",
                                                                 width : 80,
+                                                                visible :false,
                                                                 styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                                                     var valArray  = new Array();
                                                                     valArray = value.split("-");
@@ -1295,6 +1100,7 @@
 																	dataField : "evnrtncnt",
 																    headerText : "TOTAL(RTN)",
 																    width : 80,
+		                                                            visible :false,
 																    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 																      var valArray  =new Array();
 																      valArray = value.split("-");
@@ -1448,7 +1254,225 @@
                                                           ]
                                             }
                                          ]
-                            }
+                            },
+                           {
+                            headerText : "Summary",
+                            children : [
+                                          {
+                                            headerText : "AS",
+                                            width : 100,
+                                            children : [
+                                                        {
+                                                            dataField : "sumasstcnt",
+                                                            headerText : "ST",
+                                                            width : 80,
+                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                              var valArray  = new Array();
+                                                              valArray = value.split("-");
+                                                              if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                              return null;
+                                                             }
+                                                        },
+                                                        {
+                                                            dataField : "sumasdskcnt",
+                                                            headerText : "DSK",
+                                                            width : 80,
+                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                              var valArray  = new Array();
+                                                              valArray = value.split("-");
+                                                              if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                              return null;
+                                                             }
+                                                        },
+                                                        {
+                                                            dataField : "sumassmlcnt",
+                                                            headerText : "SML",
+                                                            width : 80,
+                                                            styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                              var valArray  = new Array();
+                                                              valArray = value.split("-");
+                                                              if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                              return null;
+                                                             }
+                                                        },
+                                                          {
+                                                              dataField : "sumascnt",
+                                                              headerText : "TOTAL(AS)",
+                                                              width : 80,
+                                                              visible :false,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                    return "my-cell-style";
+                                                                  }
+                                                                  if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                    return "my-cell-style";
+                                                                  }
+                                                                return null;
+                                                               }
+                                                          }
+                                            ]
+                                          },
+                                          {
+                                              headerText : "INS",
+                                              width : 100,
+                                              children : [
+                                                          {
+                                                              dataField : "suminsstcnt",
+                                                              headerText : "ST",
+                                                              width : 80,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                return null;
+                                                               }
+                                                          },
+                                                          {
+                                                              dataField : "suminsdskcnt",
+                                                              headerText : "DSK",
+                                                              width : 80,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                return null;
+                                                               }
+                                                          },
+                                                          {
+                                                              dataField : "suminssmlcnt",
+                                                              headerText : "SML",
+                                                              width : 80,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                return null;
+                                                               }
+                                                          },
+                                                            {
+                                                                dataField : "suminscnt",
+                                                                headerText : "TOTAL(INS)",
+                                                                width : 80,
+                                                                visible :false,
+                                                                styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                  var valArray  = new Array();
+                                                                  valArray = value.split("-");
+                                                                  if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                    return "my-cell-style";
+                                                                  }
+                                                                  if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                    return "my-cell-style";
+                                                                  }
+                                                                  return null;
+                                                                 }
+                                                            }
+                                              ]
+                                          },
+                                          {
+                                              headerText : "RTN",
+                                              width : 100,
+                                              children : [
+                                                          {
+                                                              dataField : "sumrtnstcnt",
+                                                              headerText : "ST",
+                                                              width : 80,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                return null;
+                                                               }
+                                                          },
+                                                          {
+                                                              dataField : "sumrtndskcnt",
+                                                              headerText : "DSK",
+                                                              width : 80,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                return null;
+                                                               }
+                                                          },
+                                                          {
+                                                              dataField : "sumrtnsmlcnt",
+                                                              headerText : "SML",
+                                                              width : 80,
+                                                              styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                var valArray  = new Array();
+                                                                valArray = value.split("-");
+                                                                if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                  return "my-cell-style";
+                                                                }
+                                                                return null;
+                                                               }
+                                                          },
+                                                            {
+                                                                dataField : "sumrtncnt",
+                                                                headerText : "TOTAL(RTN)",
+                                                                width : 80,
+                                                                visible :false,
+                                                                styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                                                  var valArray  = new Array();
+                                                                  valArray = value.split("-");
+                                                                  if(Number(valArray[0]) > Number(valArray[1])) {
+                                                                    return "my-cell-style";
+                                                                  }
+                                                                  if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                                    return "my-cell-style";
+                                                                  }
+                                                                  return null;
+                                                                 }
+                                                            }
+                                              ]
+                                          }
+                                       ]
+                          },
                         ];
 
     var gridPros = { usePaging : true,  editable: false, fixedColumnCount : 1,  showRowNumColumn : true};
