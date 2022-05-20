@@ -2499,6 +2499,31 @@ this.view(null, null, params);
 LOGGER.info("[END] WeeklyRentalAccumulatedAccReportPDF...");
 }
 
+@RequestMapping(value = "/CTDutyAllowanceMonthly.do")
+//@Scheduled(cron = " 0 0 2 8 * ?")//Monthly (Day 8) 2:00am
+public void CTDutyAllowanceMonthly() {
+  LOGGER.info("[START] CTDutyAllowanceMonthly...");
+  Map<String, Object> params = new HashMap<>();
+
+  // Get Last Month
+  LocalDate lastMonth = LocalDate.now().minusMonths(1);
+  String month = lastMonth.getMonth().toString();
+  String year = String.valueOf(lastMonth.getYear());
+  String rptDate = month + "_" + year;
+
+  params.put(REPORT_FILE_NAME, "/visualcut/CT_Duty_Allowance_Excel.rpt");// visualcut
+                                                                      // rpt
+                                                                      // file
+                                                                      // name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("v_WhereSQL", null);// parameter
+  params.put("v_OrderBySQL", null);// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CT" + File.separator + "Duty_Allowance_" + rptDate + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] CTDutyAllowanceMonthly...");
+}
+
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
     checkArgument(params);
