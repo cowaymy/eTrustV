@@ -145,9 +145,6 @@
                                             + "</span>");
                         }
 
-                        //TEST
-                        console.log('test','${rotInfoMap}');
-                        //TEST END
 
 
                         var mst = getMstId();
