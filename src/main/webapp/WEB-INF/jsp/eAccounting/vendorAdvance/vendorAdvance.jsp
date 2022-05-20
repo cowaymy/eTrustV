@@ -402,17 +402,12 @@
             }
         });
 
-        //$("#acknowledgement_closeBtn").click(fn_closePop("S"))
+
         // Advance Request - End
         // =======================================================================
         // Advance Settlement - Start
-        //$("#advSettlementClose_btn").click(fn_closePop("M"));\\
-
         $("#settlementDraft").click(fn_settlementDraft);
         $("#settlementSubmit").click(fn_settlementSubmit);
-
-        //$("#settlement_add_row").click(fn_settlementAddRow);
-        //$("#settlement_remove_row").click(fn_settlementRemoveRow);
 
         $("#settlementBudgetSearch_closeBtn").click(fn_closePop("S"));
         $("#settlementGlSearch_closeBtn").click(fn_closePop("S"));
@@ -727,20 +722,14 @@
                     $("#costCenter_search_btn").show();
                     $("#reqCostCenter").val(result.data.costCenter);
                 }
-                console.log(result.data.advOcc);
+
                 // Set queried values
                 $("#keyDate").val(result.data.crtDt);
                 $("#newMemAccId").val(result.data.memAccId);
                 $("#newMemAccName").val(result.data.memAccName);
-                //$("#reqCostCenter").val(result.data.costCenter);
-                //$("#totalAdv").val(result.data.totAmt);
                 $("#totalAdvHeader").text("Total Advance (" + result.data.cur + ")");
-                //$("#totalAdv").val(result.data.totAmt);
                 $("#totalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
-                //$("#advOccasion option[value='" + result.data.advOcc + "']").attr("selected", "selected");
                 $("#advOccasion").val(result.data.advOcc).prop("selected", true);
-                console.log(result.data.advOcc);
-                console.log($("#advOccasion").val());
                 $("#advRem").val(result.data.rem);
                 $("#reqCrtUserName").val(result.data.userName);
                 $("#bankName").val(result.data.bankName);
@@ -828,8 +817,6 @@
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
                 console.log(result);
 
-                console.log("advGridAppvPrcssStus: ", advGridAppvPrcssStus);
-                console.log("advGridAdvType: ", advGridAdvType);
                 if(advGridAdvType == "5") {
                     if(advGridAppvPrcssStus == "A") {
                         // Approved Vendor Advance Request
@@ -854,7 +841,6 @@
                         $("#settlementTotalExp").val(0);
                         $("#settlementTotalExp").val(AUIGrid.formatNumber(0, "#,##0.00"));
                         $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.cur + ")");
-                        //$("#settlementTotalBalance").val(result.data.balAmt);
                         $("#settlementTotalBalance").val($("#settlementTotalAdv").val() - $("#settlementTotalExp").val());
                         $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.balAmt), "#,##0.00"));
                         $("#settlementMemAccId").val(result.data.memAccId);
@@ -871,8 +857,6 @@
                     if(advGridAppvPrcssStus == "T") {
                         // Settlement Claim Type + Draft = Allow continuation of editing settlement
                         $("#h1_settlement").text("Vendor Advance Settlement - Edit");
-                        //$("#h1_settlement").replaceWith('<h1 id="h1_settlement">Vendor Advance Settlement - Edit</h1>');
-
                         $("#settlementNewClmNo").val(advGridClmNo);
 
                         AUIGrid.setProp(settlementGridId, {"editable" : "true"});
@@ -889,7 +873,6 @@
                         if($("#bankRef").attr("readonly")) $("#bankRef").removeAttr("readonly");
                         if($("#settlementRem").attr("readonly")) $("#settlementRem").removeAttr("readonly");
 
-                        console.log("here",result);
                         $("#settlementMemAccId").val(result.data.memAccId);
                         $("#settlementMemAccName").val(result.data.memAccName);
                         $("#settlementCostCenter").val(result.data.costCenter);
@@ -904,7 +887,6 @@
                         $("#settlement_remove_row").show();
                     } else {
                         // Settlement Claim Type + Approved/Rejected/Pending Approval/Request = Allow view
-                        //$("#h1_settlement").text("Vendor Advance Settlement - View");
                         $("#h1_settlement").replaceWith('<h1 id="h1_settlement">Vendor Advance Settlement - View</h1>');
 
                         AUIGrid.setProp(settlementGridId, {"editable" : "false"});
@@ -951,23 +933,19 @@
                     }
 
                     //set queried values
-                    //$("#settlementMemAccId").val();
-                    //$("#settlementMemAccName").val();
                     $("#eventStartDt").val(result.data.advPrdFr);
                     $("#eventEndDt").val(result.data.advPrdTo);
                     settlementTotalAdv = result.data.totAmt;
                     $("#settlementTotalAdv").val(AUIGrid.formatNumber(result.data.totAmt, "#,##0.00"));
-                    //$("#settlementTotalAdv").val(AUIGrid.formatNumber(result.data.totAmt), "#,##0.00");
                     $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.settlementItems[0].currency + ")");
                     $("#settlementTotalExp").val(result.data.expAmt);
                     $("#settlementTotalExp").val(AUIGrid.formatNumber(Number(result.data.expAmt), "#,##0.00"));
                     $("#settlementTotalExpHeader").text("Total Expenses (" + result.data.settlementItems[0].currency + ")");
                     $("#settlementTotalBalance").val(Number(result.data.totAmt) - Number(result.data.expAmt));
                     $("#settlementTotalBalance").val(AUIGrid.formatNumber((result.data.totAmt) - (result.data.expAmt), "#,##0.00"));
-                    $("#settlementMode option[value=" + result.data.advRefdMode + "]").attr('selected', true);
                     //$("#settlementMode").attr('disabled', true);
+                    $("#settlementMode").val(result.data.advRefdMode);
                     $("#bankRef").val(result.data.advRefdRef);
-                    // $("#settlementFileSelector").val(); // Settlement file
                     $("#settlementRem").val(result.data.rem);
 
                     // Settlement file selector
@@ -1137,7 +1115,6 @@
             }
 
             var newFlag = fn_saveSubmitCheckRowValidation();
-            console.log(newFlag);
             if(!newFlag){
             	flag = false;
             }
@@ -1152,7 +1129,6 @@
     	console.log("fn_saveSubmitCheckRowValidation");
     	var checkRowFlg = true;
     	var settlementRowCount = AUIGrid.getRowCount(settlementGridId);
-    	console.log(settlementRowCount);
     	if(settlementRowCount > 0){
     		for(var i=0; i < settlementRowCount; i++){
     			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "budgetCode"))){
@@ -1224,8 +1200,6 @@
             url = "/eAccounting/vendorAdvance/settlementAttachmentUpload.do";
             formData = Common.getFormData("form_vendorAdvanceSettlement");
         }
-
-        console.log("fn_attachmentUpload :: url :: " + url);
 
         Common.ajaxFile(url, formData, function(result) {
             /*
@@ -1589,10 +1563,8 @@
             if(event.dataField == "totalAmt" || event.dataField == "netAmt" || event.dataField == "taxAmt") {
                 // Set Settlement's total expenses
                 var totAmt = fn_getTotalExpenses();
-                console.log("totAmt: " + totAmt);
                 $("#settlementTotalExp").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
                 $("#settlementTotAmt").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                console.log("settlementTotalAdv BEFORE: " + $("#settlementTotalAdv").val());
                 var settlementGridSettTotalAdv = parseFloat($("#settlementTotalAdv").val().replace(",", "")).toFixed(0);
                 $("#settlementTotalBalance").val(settlementGridSettTotalAdv - totAmt);
                 $("#settlementTotalBalance").val(AUIGrid.formatNumber($("#settlementTotalBalance").val(), "#,##0.00"));
@@ -1643,7 +1615,6 @@
             }
 
             if(event.dataField == "currency") {
-                console.log("currency change");
 
                 var fCur = AUIGrid.getCellValue(settlementGridId, 0, "currency");
 
@@ -1715,7 +1686,6 @@
 
     // Settlement Grid - Search Button functions - Start
     function fn_budgetCodePop(rowIndex) {
-        // console.log("fn_budgetCodePop");
         if(!FormUtil.isEmpty($("#settlementCostCenter").val())) {
             $("#budgetSearchPop").show();
 
@@ -1759,7 +1729,6 @@
     // Settlement - Budget Code Search functions - Start
     function fn_setSettlementBudgetGridEvent() {
         console.log("fn_setSettlementBudgetGridEvent");
-        //console.log("hBudgetRowIndex :: " + $("#hBudgetRowIndex").val());
         console.log("gRowIndex :: " + gRowIndex);
 
         AUIGrid.bind(budgetGridID, "cellDoubleClick", function(event) {
@@ -1797,7 +1766,6 @@
     // Settlement - GL Code Search functions - Start
     function fn_setSettlementGLGridEvent() {
         console.log("fn_setSettlementGLGridEvent");
-        //console.log("hGLRowIndex :: " + $("#hGLRowIndex").val());
         console.log("gRowIndex :: " + gRowIndex);
 
         AUIGrid.bind(glAccGridID, "cellDoubleClick", function(event) {
@@ -1861,7 +1829,6 @@
                     Common.alert('<b>Member not found.</br>Your input member code : ' + memCode + '</b>');
 
                 } else {
-                    console.log(memInfo);
                     AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "memCode", memInfo.memCode);
                     AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "name", memInfo.name);
                 }
