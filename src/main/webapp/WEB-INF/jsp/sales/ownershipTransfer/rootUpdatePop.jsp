@@ -943,11 +943,11 @@
         if (null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()) {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
             return;
-        } else if (  (  ($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 0) && $("#_ficoScore").val() != 9999    ) && $("#_editCustTypeId").val() == '964') {
+        } else if (  (  ($("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300) && ($("#_ficoScore").val() != 9999 && $("#_ficoScore").val() != 0) ) && $("#_editCustTypeId").val() == '964') {
                 Common
                         .alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
-        } else if (  ($("#_ficoScore").val() > 400 || $("#_ficoScore").val() < 100)  && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
+        } else if ( ( ($("#_ficoScore").val() > 400 || $("#_ficoScore").val() < 100) && $("#_ficoScore").val() != 0    )  && ($("#_editCustTypeId").val() == '965' || $("#_editCustTypeId").val() == '966')) {
             Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
             return;
     }
