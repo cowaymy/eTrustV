@@ -2013,16 +2013,6 @@
                                     <tr>
                                         <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
                                         <td>
-                                            <p>Rental Paymode : ${rotInfoMap.paymode}</p><br>
-                                            <p>Credit Card No : ${rotInfoMap.custOriCrcNo}</p><br>
-                                            <p>Name On Card : ${rotInfoMap.custCrcOwner}</p><br>
-                                            <p>Credit Card Type : ${rotInfoMap.crcType}</p><br>
-                                            <p>Issue Bank : ${rotInfoMap.crcBank}</p><br>
-                                            <p>Card Type : ${rotInfoMap.cardType}</p>
-                                            <p>Expiry : ${rotInfoMap.crcExpr}</p>
-                                        </td>
-                                        <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
-                                        <td>
                                             <p>Rental Paymode : ${rotInfoMap.extPaymode}</p><br>
                                             <p>Credit Card No : ${rotInfoMap.extCrcNo}</p><br>
                                             <p>Name On Card : ${rotInfoMap.extCrcOwner}</p><br>
@@ -2030,6 +2020,16 @@
                                             <p>Issue Bank : ${rotInfoMap.extIssueBank}</p><br>
                                             <p>Card Type : ${rotInfoMap.extCardType}</p>
                                             <p>Expiry : ${rotInfoMap.extCrcExprr}</p>
+                                        </td>
+                                        <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
+                                        <td>
+                                            <p>Rental Paymode : ${rotInfoMap.paymode}</p><br>
+                                            <p>Credit Card No : ${rotInfoMap.custOriCrcNo}</p><br>
+                                            <p>Name On Card : ${rotInfoMap.custCrcOwner}</p><br>
+                                            <p>Credit Card Type : ${rotInfoMap.crcType}</p><br>
+                                            <p>Issue Bank : ${rotInfoMap.crcBank}</p><br>
+                                            <p>Card Type : ${rotInfoMap.cardType}</p>
+                                            <p>Expiry : ${rotInfoMap.crcExpr}</p>
                                         </td>
                                     </tr>
                                     <%-- <tr>
