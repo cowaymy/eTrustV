@@ -279,7 +279,6 @@
            FROM SAL1013V  V1
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
              JOIN sal0001d s1 ON v1.ORD_NO = s1.SALES_ORD_NO
-             JOIN ORG0005D ORG ON ORG.MEM_ID = V1.SALESMAN_MEM_ID
             /*
              INNER JOIN ( SELECT IE.SALES_ORD_ID
                           FROM SAL0047D IR
@@ -346,6 +345,9 @@
                 FROM SAL0001D S
                 LEFT JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
                 WHERE 1=1
+                <if test='memId != null and memId != ""'>
+                AND (V.MEM_ID = #{memId})
+                </if>
                 <if test='deptCode != null and deptCode != ""'>
                 AND (V.DEPT_CODE = #{deptCode})
                 </if>
