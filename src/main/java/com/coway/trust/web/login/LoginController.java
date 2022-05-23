@@ -98,12 +98,15 @@ public class LoginController {
 		ReturnMessage message = new ReturnMessage();
 
 		int maxAttempt = loginService.getLoginFailedMaxAttempt();
+		int attemptLeft = 0;
 
 		if (loginVO == null || loginVO.getUserId() == 0) {
 
 			if (loginVO == null && params.get("userId") != null) {
 
 				EgovMap userMap = loginService.selectUserByUserName(params.get("userId").toString());
+
+				attemptLeft = 5 - Integer.parseInt(userMap.get("loginFailAttempt").toString());
 
 				if (userMap != null){
 
@@ -116,7 +119,7 @@ public class LoginController {
 							loginService.updateLoginFailAttempt(params);
 
 							message.setCode(AppConstants.FAIL);
-							message.setMessage(messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "ID/Password" }));
+							message.setMessage(messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "ID/Password <br/>You have "+ attemptLeft + " login attempts left."}));
 						}
 					}
 				}
