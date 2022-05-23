@@ -449,7 +449,7 @@ function fn_setEvent() {
 function fn_creditCardNoChange() {
 	console.log("fn_creditCardNoChange() Action");
 	if(!FormUtil.isEmpty($("#newCrditCardNo").val())) {
-		Common.ajax("GET", "/eAccounting/creditCard/selectCrditCardInfoByNo.do", {crditCardNo:$("#newCrditCardNo").val()}, function(result) {
+		Common.ajaxSync("GET", "/eAccounting/creditCard/selectCrditCardInfoByNo.do", {crditCardNo:$("#newCrditCardNo").val()}, function(result) {
 	        console.log(result);
 	        if(result.data) {
 	            $("#newCrditCardUserId").val(result.data.crditCardUserId);

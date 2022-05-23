@@ -605,6 +605,10 @@ function fn_tempSave() {
 <input type="hidden" id="hNewSupplyName" name="hNewSupplyName">
 <input type="hidden" id="hExpDesc" name="hExpDesc">
 
+<input type="hidden" id="sCardSeq" name="sCardSeq">
+<input type="hidden" id="cardControlYN" name="cardControlYN">
+<input type="hidden" id="cntrlExp" name="cntrlExp">
+
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
