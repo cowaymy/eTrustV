@@ -21,7 +21,7 @@
 	var salesSummaryDashboard = [{
 	    dataField: "codeName",
 	    headerText: "Index",
-	    width : "20%"
+	    width : "10%"
 	    }, {
 	    headerText: previous3month,
 	    width : "20%",
@@ -75,7 +75,7 @@
 	   var salesWeeklyDashboard = [{
 	        dataField: "codeName",
 	        headerText: "Index",
-	        width : "20%"
+	        width : "10%"
 	    }, {
 	        headerText: previous3month,
 	        width : "20%",
@@ -234,6 +234,7 @@
                     }
 
                      Common.ajax("GET", "/organization/selectSummarySalesListing.do", {memCode: memCode}, function (result) {
+                    	 console.log(result);
                          AUIGrid.setGridData(salesOrgSummaryList, result);
                      });
                });
@@ -250,9 +251,8 @@
 	                    else {
 	                        memCode = result2[0].memCode;
 	                   }
-	                    console.log(memCode);
+
 	                    Common.ajax("GET", "/organization/selectWeekSalesListing.do", {memCode: memCode}, function (result) {
-	                    	console.log(result);
 	                        AUIGrid.setGridData(salesOrgWeeklyList, result);
 	                    });
 	              });
