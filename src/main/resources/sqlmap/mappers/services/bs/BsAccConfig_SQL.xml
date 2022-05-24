@@ -756,7 +756,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , mg.cody_mangr_user_id
                               , og.dept_code
                               , CASE WHEN HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
-                              , CASE WHEN HS.UPD_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS UPD_USER_ID
+                              , CASE WHEN HS.UPD_USER_ID = '1111' THEN '' ELSE USR2.USER_NAME END AS UPD_USER_ID
                               , LOC.SERIAL_REQUIRE_CHK_YN
                               , ad.ADDR_DTL
                               , ad.street
