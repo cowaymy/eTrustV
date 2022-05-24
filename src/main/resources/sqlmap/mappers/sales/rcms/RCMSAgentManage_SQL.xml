@@ -153,7 +153,7 @@
                       FROM SAL0046D
                      WHERE STUS_CODE_ID = 4)
              WHERE RANK = 1)
-    SELECT C.SALES_ORD_NO
+    SELECT DISTINCT C.SALES_ORD_NO
                 ,A.SALES_ORD_ID
                 ,A.CUST_ID
                 ,B.NAME
@@ -194,7 +194,7 @@
                 ,(C.MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) MTH_RENT_AMT
          FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
             JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-        LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||A.AGENT_NAME AGENT_NAME
+        LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID AGENT_NAME
                     FROM SAL0148M A
                     JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
                                  AND B.CODE_MASTER_ID = 329
