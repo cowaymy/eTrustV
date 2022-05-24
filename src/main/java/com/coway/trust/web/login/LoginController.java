@@ -106,8 +106,6 @@ public class LoginController {
 
 				EgovMap userMap = loginService.selectUserByUserName(params.get("userId").toString());
 
-				attemptLeft = 5 - Integer.parseInt(userMap.get("loginFailAttempt").toString());
-
 				if (userMap != null){
 
 					if (maxAttempt > 0 ) {
@@ -117,6 +115,9 @@ public class LoginController {
 						} else {
 							// update login fail attempt. Hui Ding, 18/03/2022
 							loginService.updateLoginFailAttempt(params);
+
+							EgovMap failedLogin = loginService.selectUserByUserName(params.get("userId").toString());
+							attemptLeft = 5 - Integer.parseInt(failedLogin.get("loginFailAttempt").toString());
 
 							message.setCode(AppConstants.FAIL);
 							message.setMessage(messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "ID/Password <br/>You have "+ attemptLeft + " login attempts left."}));
