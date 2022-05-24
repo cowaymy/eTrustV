@@ -252,7 +252,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             	params.put("amt", params.get("settlementTotalExp"));
             	params.put("expDesc", params.get("settlementRem"));
             	params.put("atchFileGrpId", params.get("settlementAtchFileGrpId"));
-            	params.put("advCurr", "MYR");
+//            	params.put("advCurr", "MYR");
             	params.put("memAccId", params.get("settlementMemAccId"));
             }
 

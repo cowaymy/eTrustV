@@ -432,6 +432,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					String docDate = null;
 
 					BigDecimal diffAmt = BigDecimal.ZERO; //initiate as 0, 0=no outstanding and balance
+					BigDecimal reqAmt, expAmt = BigDecimal.ZERO;
 					boolean diffAmtFlg = false; // false: No need to insert (request<exp)
 				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
                         String ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
@@ -464,13 +465,17 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                                 invoAppvItems.put("totAmt", invoAppvItems.get("netAmt"));
                                 invoAppvItems.put("glCode", invoAppvItems.get("glCode"));
                                 invoAppvItems.put("memAccId", "");
+                                invoAppvItems.put("dim1", invoAppvItems.get("dim1"));
+                                invoAppvItems.put("dim2", invoAppvItems.get("bgtCode"));
 
-                                BigDecimal reqAmt, expAmt;
                                 reqAmt = (BigDecimal)invoAppvItems.get("reqAmt");
-                                expAmt = (BigDecimal)invoAppvItems.get("totAmt");
+                                expAmt = expAmt.add((BigDecimal)invoAppvItems.get("expAmt"));
+                                //expAmt = (BigDecimal)invoAppvItems.get("totAmt");
                                 //diffAmt = reqAmt - expAmt;
                                 diffAmt= reqAmt.subtract(expAmt);
-                                invoAppvItems.put("expAmt", expAmt);
+                                //invoAppvItems.put("expAmt", expAmt);
+                                invoAppvItems.put("expAmt", invoAppvItems.get("expAmt"));
+
                                 if(diffAmt.compareTo(BigDecimal.ZERO) == -1) //if(diffAmt < 0)
                                 {
                                 	//insert settlement request with itemize total as 1 record
@@ -554,7 +559,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	refundRecordInfo.put("userId", params.get("userId"));
 				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("glCode", "22200400");
-				    	refundRecordInfo.put("memAccId", "");
+//				    	refundRecordInfo.put("memAccId", "");
 //				    	refundRecordInfo.put("grandAmt", refundRecordInfo.get("balAmt"));
 				    	refundRecordInfo.put("grandAmt", 0);
 				    	refundRecordInfo.put("docDt", docDate);
@@ -568,6 +573,28 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
 				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
                         LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
+				    }
+				    else if(diffAmt.compareTo(BigDecimal.ZERO) == 0 && "A2".equals(clmType)) //advance == expenses (exclude balance record)
+				    {
+
+				    	//itemize total as 1 record
+				    	appvSettlementInfo = staffBusinessActivityMapper.selectSettlementInfo(invoAppvInfo); //main record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	appvSettlementInfo.put("ifKey", ifKey);
+				    	appvSettlementInfo.put("userId", params.get("userId"));
+				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("glCode", "12400200");
+				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("expAmt", "0");
+				    	appvSettlementInfo.put("balAmt", "0");
+				    	appvSettlementInfo.put("taxAmt", "0");
+				    	appvSettlementInfo.put("nonTaxAmt", "0");
+				    	appvSettlementInfo.put("docDt", docDate);
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	appvSettlementInfo.put("curr", appvSettlementInfo.get("currency"));
+				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
+
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
 				    }
 
 				}
