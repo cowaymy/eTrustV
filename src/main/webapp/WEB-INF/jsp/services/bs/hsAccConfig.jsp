@@ -1148,18 +1148,18 @@
 
 
        //if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 7 ))  { // temp change to 8th of the month. Hui Ding, 2021-10-06
-       if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
-        	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
-           return;
-        }
+//        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
+//         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
+//            return;
+//         }
 
         //if (  todayDD >= 1  &&  todayDD <= 7 )  { // temp change to 7th of the month. Hui Ding, 2021-10-06
-        if (  todayDD >= 1  &&  todayDD <= 5 )  {
-        	   if (schdulId.includes (undefined)){
-        		    Common.alert("Please ensure a valid HS Period being selected during 1st to 5th of the month");
-        		    return;
-        		    }
-        }
+//         if (  todayDD >= 1  &&  todayDD <= 5 )  {
+//         	   if (schdulId.includes (undefined)){
+//         		    Common.alert("Please ensure a valid HS Period being selected during 1st to 5th of the month");
+//         		    return;
+//         		    }
+//         }
 
         /////////////////////////////////////////////////////// RESTRICTION /////////////////////////////////////////////////
 
@@ -1171,7 +1171,7 @@
 
         ////////////////////////////////////////////////////////  RESTRICTION /////////////////////////////////////////////////
 
-        else if (radioVal == 2) {
+        if (radioVal == 2) {
              Common.alert('Not allow to Assign HT in Manual CS');
               return;
         }
