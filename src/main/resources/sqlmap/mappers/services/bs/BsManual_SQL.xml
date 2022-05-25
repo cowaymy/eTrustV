@@ -1973,37 +1973,39 @@
 	</select>
 
 	<insert id="insertHsResultD" parameterType="Map">
-		INSERT INTO SVC0007D
-		(BS_RESULT_ITM_ID
-		, BS_RESULT_ID
-		, BS_RESULT_PART_ID
-		,
-		BS_RESULT_PART_DESC
-		, BS_RESULT_PART_QTY
-		, BS_RESULT_REM
-		,
-		BS_RESULT_CRT_DT
-		, BS_RESULT_CRT_USER_ID
-		, BS_RESULT_FILTER_CLM
-		,
-		SERIAL_NO
-		,FILTER_BARCD_SERIAL_NO
-		) VALUES ( SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
-		,
-		#{bsResultId}
-		, #{bsResultPartId}
-		, #{bsResultPartDesc}
-		,
-		nvl(#{bsResultPartQty},1)
-		, #{bsResultRem}
-		, sysdate
-		,
-		#{bsResultCrtUserId}
-		, #{bsResultFilterClm}
-		, nvl(#{serialNo}, '')
-		,nvl(#{serialNo}, '')
-		)
-	</insert>
+        INSERT INTO SVC0007D
+        (BS_RESULT_ITM_ID
+        , BS_RESULT_ID
+        , BS_RESULT_PART_ID
+        ,
+        BS_RESULT_PART_DESC
+        , BS_RESULT_PART_QTY
+        , BS_RESULT_REM
+        ,
+        BS_RESULT_CRT_DT
+        , BS_RESULT_CRT_USER_ID
+        , BS_RESULT_FILTER_CLM
+        ,
+        SERIAL_NO
+        ,FILTER_BARCD_SERIAL_NO
+        , FILTER_SRL_UNMATCH_RSN
+        ) VALUES ( SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
+        ,
+        #{bsResultId}
+        , #{bsResultPartId}
+        , #{bsResultPartDesc}
+        ,
+        nvl(#{bsResultPartQty},1)
+        , #{bsResultRem}
+        , sysdate
+        ,
+        #{bsResultCrtUserId}
+        , #{bsResultFilterClm}
+        , nvl(#{serialNo}, '')
+        ,nvl(#{serialNo}, '')
+        ,nvl(#{filterSerialUnmatchReason}, '')
+        )
+    </insert>
 
 	<select id="selectHsViewBasicInfo" parameterType="Map"
 		resultType="egovMap">
