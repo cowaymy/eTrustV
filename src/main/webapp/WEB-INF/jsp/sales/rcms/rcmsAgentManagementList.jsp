@@ -4,6 +4,7 @@
 
 //Create And Return Grid ID
 var agentGridID;
+var agentGroupGridID;
 //Combo Option
 var comboOption = { isShowChoose: false , type: "M"};
 var comboStatusOption = { isShowChoose: false , type: "M", id: "stusCodeId", name: "codeName"};
@@ -26,6 +27,8 @@ $(document).ready(function() {
 
 	//Create Grid
 	createAgentGrid();
+	createAgentGroupGrid();
+	 AUIGrid.resize(agentGroupGridID, 940,250);
 
 	//Save
 	$("#_agentSave").click(function() {
@@ -76,7 +79,9 @@ AUIGrid.bind(agentGridID, "cellEditEndBefore", function( event ) {
 	}
 });
 
+
 });//Doc Ready Func End////////////////////
+
 
 function fn_chkAgentVal(){
 
@@ -351,6 +356,140 @@ function addRowToGrid(){
 
 	    AUIGrid.addRow(agentGridID, item, "first");
 }
+
+
+function getAgentGroupList(){
+    Common.ajax("GET", "/sales/rcms/selectAgentGroupList", null, function(result){
+        AUIGrid.setGridData(agentGroupGridID, result);
+    });
+}
+
+
+function fn_chkAgentGroupVal(){
+
+ //Add Objects
+ var editArr = [];
+ var isVal = true;
+ var data = {};
+
+ editArr = GridCommon.getEditData(agentGroupGridID);
+
+ //Valition
+ //1. NullCheck
+ var agentSize = AUIGrid.getGridData(agentGroupGridID);
+
+ if(agentSize == null || agentSize.length <= 0){
+     Common.alert('<spring:message code="sal.alert.msg.noChngData" />');
+     return false;
+ }
+
+ if(editArr == null || editArr.size <= 0){
+     Common.alert('<spring:message code="sal.alert.msg.noChngData" />');
+     return false;
+ }
+
+ if(editArr.add != null || editArr.add.size > 0){
+     $(editArr.add).each(function(idx, el) {
+         if(el.agentGrpName.trim() == ''){
+             Common.alert('<spring:message code="sal.alert.msg.agentNameCannotBeEmpty" />');
+             isVal = false;
+             return false;
+         }
+     });
+
+     if(isVal == false){
+         return;
+     }
+
+     data.add = editArr.add;
+ }
+ //1 - 2 . Update Row Check
+ if(editArr.update != null || editArr.update.size > 0){
+     $(editArr.update).each(function(idx, el) {
+         //console.log("el["+idx+"] : " + el.agentName + " , " +  el.userId);
+
+         if(el.agentGrpName.trim() == ''){
+             Common.alert('<spring:message code="sal.alert.msg.agentNameCannotBeEmpty" />');
+             isVal = false;
+             return false;
+         }
+     });
+
+     if(isVal == false){
+         return;
+     }
+
+     data.upd = editArr.update;
+ }
+
+
+ //Save
+ Common.ajax("POST", "/sales/rcms/insUpdAgentGroup.do", data, function(result){
+       Common.alert(result.message);
+       getAgentGroupList();
+ });
+}
+
+
+function agentGrpSave(){
+    var isVal = true;
+
+    //Validation
+    isVal = fn_chkAgentGroupVal();
+
+    //Save
+    if(isVal == false){
+        return;
+    }
+}
+
+ function createAgentGroupGrid(){
+
+    	 var gridPros = {
+
+    	            usePaging           : true,         //페이징 사용
+    	            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+    	            fixedColumnCount    : 1,
+    	            showStateColumn     : true,
+    	            displayTreeOpen     : false,
+    	            softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+    	            headerHeight        : 30,
+    	            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+    	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+    	            showRowNumColumn    : true
+    	    };
+
+        var agentColumnLayout =  [
+              {dataField : "agentGrpId", headerText : 'Group Id', width : '40%' ,editable : false},
+              {dataField : "agentGrpName", headerText : '<spring:message code="sal.title.text.agentName" />', width : '60%'}
+        ];
+
+        agentGroupGridID = GridCommon.createAUIGrid("#agentGrp_grid_wrap", agentColumnLayout,'', gridPros);
+
+        getAgentGroupList();
+  }
+
+ function fn_openAgentGroupPop(){
+    $("#popup_wrap2").show();
+ }
+
+ function fn_closeAgentGroupPop(){
+	    $("#popup_wrap2").close();
+  }
+
+//Grid Add Row
+ function addAgentGrpRowToGrid(){
+         var item = new Object();
+
+         item.agentGrpId = "";
+         item.agentGrpName = "";
+
+         AUIGrid.addRow(agentGroupGridID, item, "second");
+ }
+
+
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -365,8 +504,15 @@ function addRowToGrid(){
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_agentSearch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+    <li><p class="btn_blue"><a id="_addGroupName" onclick="fn_openAgentGroupPop();"">Add Group</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
+
+
+
+
 
 <section class="search_table"><!-- search_table start -->
 <form  id="_searchForm">
@@ -421,3 +567,27 @@ function addRowToGrid(){
 </section><!-- search_result end -->
 
 </section><!-- content end -->
+
+
+
+<div id="popup_wrap2" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Agent Group Name Configuration</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a onclick="javascript:fn_closeAgentGroupPop()">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
+
+<ul class="right_btns">
+    <li><p class="btn_grid"><a onclick="agentGrpSave();"><span></span><spring:message code="sal.btn.save" /></a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : addAgentGrpRowToGrid()"><spring:message code="sal.btn.addBtn" /></a></p></li>
+</ul>
+
+<div id="agentGrp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->

@@ -33,6 +33,8 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.BeanConverter;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -488,5 +490,43 @@ public class RCMSAgentManageController {
 	    return ResponseEntity.ok(message);
 
 	}
+
+	  @RequestMapping(value = "/rcmsAgentGroupManagement.do")
+	  public String eshopItemRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    return "sales/rcms/rcmsAgentGroupManagement";
+
+	  }
+
+		@RequestMapping(value = "/selectAgentGroupList")
+		public ResponseEntity<List<EgovMap>> selectAgentGroupList (@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
+
+			List<EgovMap> agentGrpList = null;
+
+			agentGrpList = rcmsAgentService.selectAgentGroupList(params);
+
+			return ResponseEntity.ok(agentGrpList);
+
+		}
+
+		@RequestMapping(value = "/insUpdAgentGroup.do")
+		public ResponseEntity<ReturnMessage> insUpdAgentGroup(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
+
+			params.put("crtUserId", session.getUserId());
+
+
+			 LOGGER.debug("param insUpdAgentGroup===================>>  " + params.toString());
+
+			rcmsAgentService.insUpdAgentGroup(params);
+
+			//Return Message
+			ReturnMessage message = new ReturnMessage();
+	    	message.setCode(AppConstants.SUCCESS);
+	    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+
+			return ResponseEntity.ok(message);
+		}
+
 
 }

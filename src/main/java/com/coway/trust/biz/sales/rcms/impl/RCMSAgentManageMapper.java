@@ -61,4 +61,12 @@ public interface RCMSAgentManageMapper {
 
 	void deleteUploadedConversionList(Map<String, Object> params);
 
+	List<EgovMap> selectAgentGroupList(Map<String, Object> updateMap);
+
+	void insAgentGroupMaster(Map<String, Object> params);
+
+	void updAgentGroupMaster(Map<String, Object> params);
+
+	int getSeqSAL0324M();
+
 }

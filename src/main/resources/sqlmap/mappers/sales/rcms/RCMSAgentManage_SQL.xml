@@ -194,8 +194,9 @@
                 ,(C.MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) MTH_RENT_AMT
          FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
             JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-        LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID AGENT_NAME
+        LEFT JOIN ( SELECT DISTINCT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
                     FROM SAL0148M A
+                    JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID
                     JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
@@ -708,4 +709,35 @@
         FROM SAL0241T EXTENT1
         LEFT JOIN SAL0001D EXTENT2 ON EXTENT2.SALES_ORD_NO = EXTENT1.ORD_NO
     </insert>
+
+	<select id="getSeqSAL0324M" resultType="java.lang.Integer">
+	    SELECT SAL0324M_AGENT_GRP_ID_SEQ.NEXTVAL FROM DUAL
+	</select>
+
+    <select id="selectAgentGroupList" parameterType="Map" resultType="egovMap">
+            SELECT * FROM SAL0324M ORDER BY AGENT_GRP_ID
+    </select>
+
+    <insert id="insAgentGroupMaster" parameterType="Map">
+             INSERT INTO SAL0324M(
+                    AGENT_GRP_ID,
+                    AGENT_GRP_NAME
+               )
+              VALUES(
+              #{agentGrpId},
+              #{agentGrpName}
+               )
+     </insert>
+
+     <update id="updAgentGroupMaster" parameterType="Map">
+		    UPDATE
+		        SAL0324M
+		    SET
+		        AGENT_GRP_NAME = #{agentGrpName}
+		    WHERE
+		        AGENT_GRP_ID = #{agentGrpId}
+    </update>
+
+
+
 </mapper>

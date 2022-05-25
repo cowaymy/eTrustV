@@ -342,4 +342,60 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
       rcmsAgentManageMapper.insert_SAL0240D(bulkMap);
 
   }
+
+
+	@Override
+	public List<EgovMap> selectAgentGroupList(Map<String, Object> params) throws Exception {
+
+		return rcmsAgentManageMapper.selectAgentGroupList(params);
+	}
+
+	@Override
+	@Transactional
+	public void insUpdAgentGroup(Map<String, Object> params) throws Exception {
+
+		List<Object> addList = (List<Object>)params.get("add");
+		List<Object> updList = (List<Object>)params.get("upd");
+
+		//__________________________________________________________________________________Add
+		if(addList != null && addList.size() > 0){
+
+			for (int idx = 0; idx < addList.size(); idx++) {
+
+				Map<String, Object> addMap = (Map<String, Object>)addList.get(idx);
+
+				//params Set
+				Map<String, Object> insMap = new HashMap<String, Object>();
+
+				int agentGrpSeq = 0;
+				agentGrpSeq = rcmsAgentManageMapper.getSeqSAL0324M();
+
+				insMap.put("agentGrpId", agentGrpSeq);
+				insMap.put("agentGrpName", addMap.get("agentGrpName"));
+
+				rcmsAgentManageMapper.insAgentGroupMaster(insMap);
+
+			}
+		}
+
+		//__________________________________________________________________________________Update
+		if(updList != null && updList.size() > 0){
+			for (int idx = 0; idx < updList.size(); idx++) {
+
+				Map<String, Object> editMap = (Map<String, Object>)updList.get(idx);
+
+				//params Set
+				Map<String, Object> updMap = new HashMap<String, Object>();
+				updMap.put("agentGrpName", editMap.get("agentGrpName"));;
+				updMap.put("agentGrpId", Integer.parseInt(String.valueOf(editMap.get("agentGrpId"))));
+
+				rcmsAgentManageMapper.updAgentGroupMaster(updMap);
+
+			}
+		}
+	}
+
+
+
+
 }

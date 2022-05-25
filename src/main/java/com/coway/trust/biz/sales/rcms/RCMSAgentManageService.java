@@ -50,4 +50,8 @@ public interface RCMSAgentManageService {
 
 	void deleteUploadedConversionList(Map<String, Object> params);
 
+	List<EgovMap> selectAgentGroupList(Map<String, Object> params) throws Exception;
+
+	void insUpdAgentGroup(Map<String, Object> params) throws Exception;
+
 }
