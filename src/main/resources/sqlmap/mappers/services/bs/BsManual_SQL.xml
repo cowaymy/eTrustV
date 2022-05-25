@@ -1988,7 +1988,6 @@
 		,
 		SERIAL_NO
 		,FILTER_BARCD_SERIAL_NO
-		, FILTER_SRL_UNMATCH_RSN
 		) VALUES ( SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
 		,
 		#{bsResultId}
@@ -2003,7 +2002,6 @@
 		, #{bsResultFilterClm}
 		, nvl(#{serialNo}, '')
 		,nvl(#{serialNo}, '')
-		,nvl(#{filterSerialUnmatchReason}, '')
 		)
 	</insert>
 
