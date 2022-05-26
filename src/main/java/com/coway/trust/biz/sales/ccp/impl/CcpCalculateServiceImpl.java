@@ -872,12 +872,12 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 			 }
 
              //ccp rental agreement 24/02/2022 hltang
-             if(("5").equals(params.get("statusEdit"))
+             /*if(("5").equals(params.get("statusEdit"))
                      && String.valueOf(SalesConstants.CCP_SCHEME_TYPE_CODE_ID_CCS).equals(String.valueOf(params.get("saveCustTypeId")))
                      && ("1").equals(params.get("agmReq"))
                      ){
                  insertRentalAgreement(params);
-             }
+             }*/
  		}
 
 	}//Impl End
