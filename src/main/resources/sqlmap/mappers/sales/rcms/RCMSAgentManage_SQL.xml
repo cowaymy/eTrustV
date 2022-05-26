@@ -121,14 +121,14 @@
 </select>
 
 <select id="selectRosCaller" parameterType="Map"  resultType="egovMap">
-	SELECT A.AGENT_ID
-	           , A.AGENT_GRP_ID
-	           ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||A.AGENT_NAME AGENT_NAME
-	  FROM SAL0148M A
-	    JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
-	                             AND B.CODE_MASTER_ID = 329
-	                             AND DISAB = 0
-	 WHERE 1=1
+	SELECT distinct A.AGENT_GRP_ID
+               ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
+      FROM SAL0148M A
+      JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID
+        JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
+                                 AND B.CODE_MASTER_ID = 329
+                                 AND DISAB = 0
+     WHERE 1=1
 	 <if test="stus != null and stus != '' ">
 	      AND A.STUS_ID = 1
 	 </if>
@@ -201,9 +201,10 @@
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
                   ) C ON A.AGENT_GRP_ID = C.AGENT_GRP_ID
-            LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||A.AGENT_NAME AGENT_NAME
+            LEFT JOIN ( SELECT A.AGENT_GRP_ID ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
                     FROM SAL0148M A
                     JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
+                    JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
                   ) D ON A.PREV_AGENT_GRP_ID = D.AGENT_GRP_ID
