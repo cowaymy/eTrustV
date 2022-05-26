@@ -31,6 +31,8 @@ var blockDtTo = "${hsBlockDtTo}";
     var sofTncFileName = "";
     var msofFileName = "";
     var msofTncFileName = "";
+    var myFileCaches = {};
+    var checkFileValid = true;
 
     $(document).ready(function(){
 
@@ -665,6 +667,28 @@ var blockDtTo = "${hsBlockDtTo}";
                      update.push(sofFileId);
                  }
              }
+
+             var msg = '';
+             if(file.name.length > 30){
+                 msg += "*File name wording should be not more than 30 alphabet.<br>";
+             }
+
+             var fileType = file.type.split('/');
+             if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                 msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+             }
+
+             if(file.size > 2000000){
+                 msg += "*Only allow picture with less than 2MB.<br>";
+             }
+             if(msg != null && msg != ''){
+                 myFileCaches[1].file['checkFileValid'] = false;
+                 Common.alert(msg);
+             }
+             else{
+                 myFileCaches[1].file['checkFileValid'] = true;
+             }
+             console.log(myFileCaches);
         });
         $('#nricFile').change( function(evt) {
             var file = evt.target.files[0];
@@ -673,6 +697,27 @@ var blockDtTo = "${hsBlockDtTo}";
                 if(nricFileName != ""){
                     update.push(nricFileId);
                 }
+            }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
             }
         });
         $('#payFile').change(function(evt) {
@@ -684,6 +729,27 @@ var blockDtTo = "${hsBlockDtTo}";
                 if(payFileName != ""){
                     update.push(payFileId);
                 }
+            }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
             }
         });
 
@@ -698,6 +764,27 @@ var blockDtTo = "${hsBlockDtTo}";
 	            	update.push(trFileId);
 	           }
 	        }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
+            }
         });
 
         $('#otherFile').change(function(evt) {
@@ -709,6 +796,27 @@ var blockDtTo = "${hsBlockDtTo}";
                 if(otherFileName != ""){
                     update.push(otherFileId);
                 }
+            }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
             }
         });
 
@@ -722,6 +830,27 @@ var blockDtTo = "${hsBlockDtTo}";
                     update.push(otherFileId2);
                 }
             }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
+            }
         });
 
         $('#sofTncFile').change(function(evt) {
@@ -733,6 +862,27 @@ var blockDtTo = "${hsBlockDtTo}";
                 if(sofTncFileName != ""){
                     update.push(sofTncFileId);
                 }
+            }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
             }
         });
 
@@ -746,6 +896,27 @@ var blockDtTo = "${hsBlockDtTo}";
                      update.push(msofFileId);
                  }
              }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
+            }
         });
 
         $('#msofTncFile').change(function(evt) {
@@ -757,6 +928,27 @@ var blockDtTo = "${hsBlockDtTo}";
                 if(msofTncFileName != ""){
                     update.push(msofTncFileId);
                 }
+            }
+
+            var msg = '';
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+                msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow picture with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[2].file['checkFileValid'] = false;
+                Common.alert(msg);
+            }
+            else{
+                myFileCaches[2].file['checkFileValid'] = true;
             }
         });
     });
@@ -2251,6 +2443,11 @@ var blockDtTo = "${hsBlockDtTo}";
             isValid = false;
             msg += "* Please upload copy of NRIC<br>";
         }
+        if(checkFileValid == false){
+            isValid = false;
+            msg += "* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
+            checkFileValid = true;
+        }
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -3180,7 +3377,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
     <td>
         <div class='auto_file2 auto_file3'>
-            <input type='file' title='file add'  id='sofFile' accept='image/*''/>
+            <input type='file' title='file add'  id='sofFile' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='sofFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -3192,7 +3389,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
     <td>
         <div class="auto_file2 auto_file3">
-            <input type="file" title="file add" id="sofTncFile" accept="image/*"/>
+            <input type="file" title="file add" id="sofTncFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='sofTncFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -3204,7 +3401,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
     <td>
         <div class='auto_file2 auto_file3'>
-            <input type='file' title='file add' id='nricFile' accept='image/*''/>
+            <input type='file' title='file add' id='nricFile' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='nricFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -3216,7 +3413,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Payment document</th>
     <td id="tdPayFile">
         <div class='auto_file2 auto_file3'>
-                <input type='file' title='file add' id='payFile' accept='image/*''/>
+                <input type='file' title='file add' id='payFile' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='payFileTxt' name=''/>
                     <span class='label_text'><a href='#'>Upload</a></span>
@@ -3229,7 +3426,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Coway temporary receipt (TR)</th>
     <td id="tdTrFile">
         <div class='auto_file2 auto_file3'>
-                <input type='file' title='file add' id='trFile' accept='image/*''/>
+                <input type='file' title='file add' id='trFile' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='trFileTxt' name=''/>
                     <span class='label_text'><a href='#'>Upload</a></span>
@@ -3242,7 +3439,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Declaration letter/Others form</th>
     <td id="tdOtherFile">
         <div class='auto_file2 auto_file3'>
-                <input type='file' title='file add' id='otherFile' accept='image/*''/>
+                <input type='file' title='file add' id='otherFile' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='otherFileTxt' name=''/>
                     <span class='label_text'><a href='#'>Upload</a></span>
@@ -3255,7 +3452,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Declaration letter/Others form 2</th>
     <td id="tdOtherFile2">
         <div class='auto_file2 auto_file3'>
-                <input type='file' title='file add' id='otherFile2' accept='image/*''/>
+                <input type='file' title='file add' id='otherFile2' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='otherFileTxt2' name=''/>
                     <span class='label_text'><a href='#'>Upload</a></span>
@@ -3269,7 +3466,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Mattress Sales Order Form (MSOF)</th>
     <td>
         <div class='auto_file2 auto_file3'>
-            <input type='file' title='file add'  id='msofFile' accept='image/*''/>
+            <input type='file' title='file add'  id='msofFile' accept='image/jpg, image/jpeg, image/png, application/pdf'/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='msofFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -3283,7 +3480,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
     <td>
         <div class="auto_file2 auto_file3">
-            <input type="file" title="file add" id="msofTncFile" accept="image/*"/>
+            <input type="file" title="file add" id="msofTncFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='msofTncFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -3294,7 +3491,9 @@ var blockDtTo = "${hsBlockDtTo}";
 </tr>
 
 <tr>
-    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG, PDF) less than 2 MB.
+    <br>
+    File rename wording no more than 30 alphabet (including spacing, symbol).</span></td>
 </tr>
 </tbody>
 </table>
