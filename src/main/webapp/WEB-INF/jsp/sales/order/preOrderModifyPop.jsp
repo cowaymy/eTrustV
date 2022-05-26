@@ -745,11 +745,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[3].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[3].file['checkFileValid'] = true;
             }
         });
 
@@ -779,11 +779,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[4].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[4].file['checkFileValid'] = true;
             }
         });
 
@@ -812,11 +812,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[5].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[5].file['checkFileValid'] = true;
             }
         });
 
@@ -845,11 +845,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[6].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[6].file['checkFileValid'] = true;
             }
         });
 
@@ -878,11 +878,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[7].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[7].file['checkFileValid'] = true;
             }
         });
 
@@ -911,11 +911,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[8].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[8].file['checkFileValid'] = true;
             }
         });
 
@@ -944,11 +944,11 @@ var blockDtTo = "${hsBlockDtTo}";
                 msg += "*Only allow picture with less than 2MB.<br>";
             }
             if(msg != null && msg != ''){
-                myFileCaches[2].file['checkFileValid'] = false;
+                myFileCaches[9].file['checkFileValid'] = false;
                 Common.alert(msg);
             }
             else{
-                myFileCaches[2].file['checkFileValid'] = true;
+                myFileCaches[9].file['checkFileValid'] = true;
             }
         });
     });
@@ -2443,11 +2443,12 @@ var blockDtTo = "${hsBlockDtTo}";
             isValid = false;
             msg += "* Please upload copy of NRIC<br>";
         }
-        if(checkFileValid == false){
-            isValid = false;
-            msg += "* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
-            checkFileValid = true;
-        }
+        $.each(myFileCaches, function(i, j) {
+            if(myFileCaches[i].file.checkFileValid == false){
+                isValid = false;
+               msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
+           }
+       });
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
