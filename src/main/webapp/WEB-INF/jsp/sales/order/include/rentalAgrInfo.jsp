@@ -33,7 +33,7 @@
                                    {dataField : "govAgMsg" , headerText : '<spring:message code="sal.title.text.msg" />' , width : "30%"},
                                    {dataField : "govAgMsgHasAttach" , headerText : '<spring:message code="sal.title.text.attatch" />' , width : "10%"},
                                    {dataField : "atchFileGrpId" , visible : false},
-                                   {dataField : "atchFileId",  headerText : '<spring:message code="sal.title.text.download" />', width : '10%', styleFunction : cellStyleFunction,
+                                   {dataField : "atchFileId",  headerText : 'Download', width : '10%', styleFunction : cellStyleFunction,
                                          renderer : {
                                            type : "ButtonRenderer",
                                            labelText : "Download",

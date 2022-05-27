@@ -58,6 +58,10 @@ $(document).ready(function() {
             $("#DeptCode").attr("class", "w100p readonly");
             $("#DeptCode").attr("readonly", "readonly");
 
+            $("#memCode").val('${SESSION_INFO.userName}');
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+
             //$("#SalesmanCode").val("${SESSION_INFO.userName}");
             //$("#SalesmanCode").attr("class", "w100p readonly");
             //$("#memCode").attr("readonly", "readonly");
@@ -161,12 +165,14 @@ $.fn.clearForm = function() {
         if (tag === 'form'){
             return $(':input',this).clearForm();
         }
-        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-            this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
-        }else if (tag === 'select'){
-            this.selectedIndex = -1;
+        if(!(this.id == 'OrgCode' || this.id == 'GrpCode' || this.id == 'DeptCode' || this.id == 'memCode')){
+        	if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+                this.value = '';
+            }else if (type === 'checkbox' || type === 'radio'){
+                this.checked = false;
+            }else if (tag === 'select'){
+                this.selectedIndex = -1;
+            }
         }
     });
 };
@@ -282,7 +288,7 @@ function popup(location){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2><spring:message code="sal.title.text.govAgrList" /></h2>
+<h2>Rental Agreement Search</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span><spring:message code="sal.title.text.new" /></a></p></li>
@@ -337,11 +343,11 @@ function popup(location){
     <th scope="row"><spring:message code="sal.title.text.prgss" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" name="progressVal">
-        <option value="7" selected="selected"><spring:message code="sal.title.text.submissPrgss" /></option>
-        <option value="8" selected="selected"><spring:message code="sal.title.text.verifyPrgss" /></option>
-        <option value="11" selected="selected"><spring:message code="sal.title.text.executionPrgss" /></option>
-        <option value="9" selected="selected"><spring:message code="sal.title.text.stampingConfPrgss" /></option>
-        <option value="10" selected="selected"><spring:message code="sal.title.text.fillingPrgss" /></option>
+        <option value="7" selected="selected">Submission</option>
+        <option value="8" selected="selected">Verifying</option>
+        <option value="11" selected="selected">Execution</option>
+        <option value="9" selected="selected">Stamping & Confirmation</option>
+        <option value="10" selected="selected">Filling</option>
     </select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.agrStatus" /></th>
@@ -366,9 +372,9 @@ function popup(location){
     <select class="multy_select w100p" disabled="disabled"></select>
     </td>
     <th scope="row"><spring:message code="sal.text.memberCode" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" name="memCode"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="memCode" name="memCode"/></td>
     <th scope="row">Created by</th>
-    <td><input type="text" title="" placeholder="" class="w100p" name="userName"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="userName" name="userName"/></td>
 </tr>
 <tr>
     <th scope="row">Org. Code</th>

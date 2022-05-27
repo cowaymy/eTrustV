@@ -174,7 +174,7 @@
 		              AND UPPER(Project2.USER_NAME) LIKE '%' || UPPER(#{userName}) || '%'
 		          </if>
 		          <if test=" '' != OrgCode and null != OrgCode">
-                    AND Project2.org_code = #{DeptCode}
+                    AND Project2.org_code = #{OrgCode}
                   </if>
 		          <if test=" '' != DeptCode and null != DeptCode">
                     AND Project2.dept_code = #{DeptCode}
