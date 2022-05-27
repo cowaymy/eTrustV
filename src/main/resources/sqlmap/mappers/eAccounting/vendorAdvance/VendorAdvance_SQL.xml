@@ -343,9 +343,9 @@
         ) values (
             #{clmNo},
             #{clmSeq},
-            #{amt},
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
             #{taxAmt},
-            #{netAmt},
+            REGEXP_REPLACE(#{netAmt}, '[^0-9.]+', NULL),
             #{currency},
             <if test="advType == 5">
                 #{glAccNo},
