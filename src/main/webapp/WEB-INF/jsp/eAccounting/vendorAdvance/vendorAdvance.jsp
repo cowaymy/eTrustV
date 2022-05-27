@@ -845,6 +845,7 @@
                         $("#settlementTotalBalance").val(AUIGrid.formatNumber(Number(result.data.balAmt), "#,##0.00"));
                         $("#settlementMemAccId").val(result.data.memAccId);
                         $("#settlementMemAccName").val(result.data.memAccName);
+                        $("#settlementCurrency").val(result.data.cur);
 
                         $("#settlementPop").show();
 
@@ -878,6 +879,7 @@
                         $("#settlementCostCenter").val(result.data.costCenter);
                         $("#settlementCrtUserName").val(result.data.userName);
                         $("#settlementAdvNo").val(result.data.advRefdClmNo);
+                        $("#settlementCurrency").val(result.data.cur);
                         $("#settlementMode").attr('disabled', false);
                         $("#settlementMode").val(result.data.advRefdMode).attr("selected", "selected");
 
@@ -947,6 +949,7 @@
                     $("#settlementMode").val(result.data.advRefdMode);
                     $("#bankRef").val(result.data.advRefdRef);
                     $("#settlementRem").val(result.data.rem);
+                    $("#settlementCurrency").val(result.data.settlementItems[0].currency);
 
                     // Settlement file selector
                     gAtchFileGrpId = result.data.attachList[0].atchFileGrpId;
@@ -1626,10 +1629,17 @@
                             Common.alert("Different currency selected!");
                             AUIGrid.setCellValue(settlementGridId, event.rowIndex, "currency", fCur);
                         }
+
+
                     }
                 } else {
                     for(var i = 1; i < AUIGrid.getRowCount(settlementGridId); i++) {
                         AUIGrid.setCellValue(settlementGridId, i, "currency", fCur);
+                    }
+                    console.log("settlementCurrency: " + $("#settlementCurrency").val());
+                    if($("#settlementCurrency").val() != fCur){
+                        Common.alert("Different currency selected!");
+                        AUIGrid.setCellValue(settlementGridId, event.rowIndex, "currency", fCur);
                     }
                 }
             }
@@ -1891,6 +1901,7 @@
             obj = $("#form_vendorAdvanceSettlement").serializeJSON();
             obj.clmNo = $("#settlementNewClmNo").val();
             obj.apprGridList = apprGridList;
+            obj.advCurr = $("#settlementCurrency").val();
 
             msg = "Settlement";
         }
@@ -2440,6 +2451,7 @@
                 <input type="hidden" id="balanceAmt" name="balanceAmt"> <!-- Requested amount - Expenses total amount -->
                 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
                 <input type="hidden" id="settlementAdvRefdNo" name="settlementAdvRefdNo">
+                <input type="hidden" id="settlementCurrency" name="settlementCurrency">
 
                 <table class="type1"><!-- table start -->
                     <caption><spring:message code="webInvoice.table" /></caption>
