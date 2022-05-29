@@ -1037,10 +1037,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.insertSVC0115D(params);
   }
 
-//  @Override
-//  public List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params) {
-//    return MSvcLogApiMapper.searchRentalCollectionByBSNewList(params);
-//  }
+  @Override
+  public List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params) {
+    return MSvcLogApiMapper.searchRentalCollectionByBSNewList(params);
+  }
 
   @Autowired
   private AdaptorService adaptorService;
