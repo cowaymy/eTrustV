@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pos.impl.PosEshopMapper">
+
+
+	<select id="selectItemPrice" parameterType="Map" resultType="egovMap">
+	 <![CDATA[
+			 SELECT
+			         STK.STK_CODE,
+			         CASE WHEN (61 = stk.STK_TYPE_ID) THEN
+			                CASE WHEN (sp1.AMT IS NOT NULL) THEN sp1.AMT ELSE CAST (0 AS FLOAT (53)) END
+			              WHEN (sp2.AMT IS NOT NULL) THEN sp2.AMT ELSE CAST (0 AS FLOAT (53))
+			         END AS SELLING_PRICE
+			 FROM SYS0026M STK
+			 LEFT OUTER JOIN SAL0016M SP1
+			        ON   (67 = SP1.APP_TYPE_ID)
+			        AND (61 = STK.STK_TYPE_ID)
+			        AND (SP1.STK_ID = STK.STK_ID)
+			        AND (0 = SP1.MEM_PAC_ID)
+			        AND (1 = SP1.STUS_CODE_ID)
+			  LEFT OUTER JOIN SAL0016M SP2
+			        ON   (61 <> STK.STK_TYPE_ID)
+			        AND (SP2.STK_ID = STK.STK_ID)
+			        AND (0 = SP2.MEM_PAC_ID)
+			        AND (1 = SP2.STUS_CODE_ID)
+			  WHERE STK.STK_ID = #{itemCode}
+	]]>
+	</select>
+
+
+	<select id="getSeqSAL0321D" resultType="java.lang.Integer">
+        SELECT SAL0321D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertEshopItemList" parameterType="Map">
+            INSERT INTO SAL0321D (
+                             ID
+                           , POS_TYPE
+                           , SELLING_TYPE
+                           , ITEM_ID
+                           , ITEM_CTGRY_ID
+                           , ITEM_TYPE
+                           , ITEM_QTY
+                           , ITEM_WEIGHT
+                           , ITEM_PRICE
+                           , ITEM_SIZE
+                           , ITEM_ATTCH_GRP_ID
+                           , TOTAL_PRICE
+                           , TOTAL_WEIGHT
+                           , CRT_ID
+                           , CRT_DT
+             )VALUES (
+		                     #{id}
+		                   , #{posType}
+					       , #{sellingType}
+					       , #{itemId}
+					       , #{itemCtgryId}
+					       , #{itemType}
+					       , #{itemQty}
+					       , #{itemWeight}
+					       , #{itemPrice}
+					       , #{itemSize}
+					       , #{itemAttachGrpId}
+					       , #{totalPrice}
+					       , #{totalWeight}
+					       , #{crtId}
+		                   , sysdate
+            )
+    </insert>
+
+    <select id="selectItemList" parameterType="Map" resultType="egovMap">
+			SELECT
+                      A.ID
+                    , B.CODE_NAME AS POS_TYPE
+                    , C.CODE_NAME AS SELLING_TYPE
+                    , E.CODE_NAME AS ITEM_CTGRY
+                    , A.ITEM_ID
+                    , D.STK_CODE || ' - ' || D.STK_DESC AS STK_CODE
+                    , A.ITEM_SIZE
+                    , A.ITEM_QTY
+                    , A.TOTAL_PRICE
+                    , A.TOTAL_WEIGHT
+                    , A.ITEM_ATTCH_GRP_ID
+                    , G.ATCH_FILE_NAME
+            from SAL0321D A
+            LEFT JOIN SYS0013M B ON A.POS_TYPE = B.CODE_ID
+            LEFT JOIN SYS0013M C ON A.SELLING_TYPE = C.CODE_ID
+            LEFT JOIN SYS0026M D ON A.ITEM_ID = D.STK_ID
+            LEFT JOIN SYS0013M E ON A.ITEM_CTGRY_ID = E.CODE_ID
+            LEFT JOIN SYS0070M F ON A.ITEM_ATTCH_GRP_ID = F.ATCH_FILE_GRP_ID
+            LEFT JOIN SYS0071D G ON F.ATCH_FILE_ID = G.ATCH_FILE_ID
+            WHERE 1=1
+                  AND NVL(A.DISAB,0) = 0
+           <if test="posType_editItem != null and posType_editItem != '' ">
+                  AND  A.POS_TYPE = #{posType_editItem}
+          </if>
+           <if test="sellingType_editItem != null and sellingType_editItem != '' ">
+                  AND  A.SELLING_TYPE = #{sellingType_editItem}
+          </if>
+    </select>
+
+     <update id="removeEshopItemList"  parameterType="java.util.Map">
+              UPDATE SAL0321D
+                SET DISAB  = 1
+                     ,UPD_ID  = #{userId}
+                     ,UPD_DT       = SYSDATE
+            WHERE ID IN
+            <foreach collection="searchitemvalue" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+    </update>
+
+    <update id="updateEshopItemList"  parameterType="java.util.Map">
+              UPDATE SAL0321D
+                SET
+                        ITEM_QTY = #{itemQty}
+                     ,  ITEM_WEIGHT = #{itemWeight}
+                     ,  ITEM_PRICE = #{itemPrice}
+                     ,  ITEM_SIZE = #{itemSize}
+                     ,  ITEM_ATTCH_GRP_ID = #{itemAttachGrpId}
+                     ,  TOTAL_PRICE = #{totalPrice}
+                     ,  TOTAL_WEIGHT = #{totalWeight}
+                     ,  UPD_ID  = #{updId}
+                     ,  UPD_DT  = SYSDATE
+            WHERE ID = #{id}
+    </update>
+
+</mapper>
