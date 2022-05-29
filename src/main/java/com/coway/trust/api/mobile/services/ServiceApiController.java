@@ -2688,31 +2688,31 @@ public class ServiceApiController {
   }
 
 
-//  @ApiOperation(value = "Rental Collection List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//  @RequestMapping(value = "/searchRentalCollectionByBSNewList", method = RequestMethod.GET)
-//  public ResponseEntity<List<DtRentalCollectionListDto>> searchRentalCollectionByBSNewList(
-//      @ModelAttribute DtRentalCollectionListForm DtRentalCollectionListForm) throws Exception {
-//
-//    Map<String, Object> params = DtRentalCollectionListForm.createMap(DtRentalCollectionListForm);
-//
-//    LOGGER.debug("Rental Collection Param",params);
-//
-//    List<EgovMap> DtRentalCollectionList = MSvcLogApiService.searchRentalCollectionByBSNewList(params);
-//
-//
-//    LOGGER.debug(
-//        "==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
-//    for (int i = 0; i < DtRentalCollectionList.size(); i++) {
-//      LOGGER.debug("DtRentalCollectionList: {}", DtRentalCollectionList.get(i));
-//    }
-//    LOGGER.debug(
-//        "==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
-//
-//    List<DtRentalCollectionListDto> list = DtRentalCollectionList.stream().map(r -> DtRentalCollectionListDto.create(r))
-//        .collect(Collectors.toList());
-//
-//    return ResponseEntity.ok(list);
-//  }
+  @ApiOperation(value = "Rental Collection List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/searchRentalCollectionByBSNewList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtRentalCollectionListDto>> searchRentalCollectionByBSNewList(
+      @ModelAttribute DtRentalCollectionListForm DtRentalCollectionListForm) throws Exception {
+
+    Map<String, Object> params = DtRentalCollectionListForm.createMap(DtRentalCollectionListForm);
+
+    LOGGER.debug("Rental Collection Param",params);
+
+    List<EgovMap> DtRentalCollectionList = MSvcLogApiService.searchRentalCollectionByBSNewList(params);
+
+
+    LOGGER.debug(
+        "==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
+    for (int i = 0; i < DtRentalCollectionList.size(); i++) {
+      LOGGER.debug("DtRentalCollectionList: {}", DtRentalCollectionList.get(i));
+    }
+    LOGGER.debug(
+        "==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
+
+    List<DtRentalCollectionListDto> list = DtRentalCollectionList.stream().map(r -> DtRentalCollectionListDto.create(r))
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
 
 
 
