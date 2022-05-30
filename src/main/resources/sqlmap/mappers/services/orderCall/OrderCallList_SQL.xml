@@ -1019,4 +1019,18 @@
     ORDER BY C1 ASC
   </select>
 
+  <select id="selectSOExchgInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    SELECT
+	    SO_ID,
+	    SO_EXCHG_NW_CALL_ENTRY_ID,
+	    SO_EXCHG_STUS_ID,
+	    SO_CUR_STUS_ID
+	FROM SAL0004D
+	WHERE SO_ID = #{salesOrdId} AND SO_EXCHG_NW_CALL_ENTRY_ID = #{callEntryId}
+	AND ROWNUM <= 1
+	order by SO_ID
+    ]]>
+  </select>
+
 </mapper>

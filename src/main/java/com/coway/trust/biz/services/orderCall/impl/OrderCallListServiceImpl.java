@@ -301,23 +301,35 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
         params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
 
+        EgovMap exchgInfo = orderCallListMapper.selectSOExchgInfo(params);
+        params.put("soCurStusId", exchgInfo.get("soCurStusId").toString());
+
         //logger.debug("//SMS params");
         //logger.debug(params.toString());
 
-	       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
-	       {
-	    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
-	    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){  //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
+       {
+    	   //logger.debug("//IN SMS1");
 
-		       	       Map<String, Object> smsList = new HashMap<>();
-		               smsList.put("userId", sessionVO.getUserId());
-		               smsList.put("smsType", 975);
-		               smsList.put("smsMessage", smsMessage);
-		               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+    			   //&& (params.get("callTypeId").equals("257") || exchgInfo.get("soCurStusId").equals("25"))){ //ONLY FOR NEW INSTALLATION ORDER (PEX ONLY HAVE SMS AFTER INSTALLATION COMPLETE)
 
-		               sendSms(smsList);
-	    	   }
-	      }
+    		   //logger.debug("//IN SMS2");
+    		   if(params.get("callTypeId").equals("257") || params.get("soCurStusId").equals("25")){
+    		   	   //logger.debug("//IN SMS3");
+
+	       	       Map<String, Object> smsList = new HashMap<>();
+	               smsList.put("userId", sessionVO.getUserId());
+	               smsList.put("smsType", 975);
+	               smsList.put("smsMessage", smsMessage);
+	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+
+	               sendSms(smsList);
+    		   }
+
+    	   }
+      }
 
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL
