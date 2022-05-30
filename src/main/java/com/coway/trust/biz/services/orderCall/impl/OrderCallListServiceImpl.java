@@ -313,10 +313,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
     	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
     			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-    			   //&& (params.get("callTypeId").equals("257") || exchgInfo.get("soCurStusId").equals("25"))){ //ONLY FOR NEW INSTALLATION ORDER (PEX ONLY HAVE SMS AFTER INSTALLATION COMPLETE)
 
     		   //logger.debug("//IN SMS2");
-    		   if(params.get("callTypeId").equals("257") || params.get("soCurStusId").equals("25")){
+    		   if(params.get("callTypeId").equals("257") || params.get("soCurStusId").equals("25")){ //NEW INSTALLATION OR AFTER INSTALLATION PEX
     		   	   //logger.debug("//IN SMS3");
 
 	       	       Map<String, Object> smsList = new HashMap<>();
