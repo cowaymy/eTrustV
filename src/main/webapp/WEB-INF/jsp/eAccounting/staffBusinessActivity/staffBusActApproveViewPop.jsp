@@ -52,7 +52,10 @@
     	dataField : "invcNo",
         headerText : 'Invoice No.',
         style : "aui-grid-user-custom-left"
-    },{
+    }, {
+        dataField : "supplierName",
+        headerText : "Supplier Name"
+    }, {
         dataField : "taxName",
         visible : false // Color 칼럼은 숨긴채 출력시킴
     }, {

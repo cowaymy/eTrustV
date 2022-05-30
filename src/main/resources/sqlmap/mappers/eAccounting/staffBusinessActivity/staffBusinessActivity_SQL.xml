@@ -346,11 +346,11 @@
             SYSDATE,
             #{userId},
             <if test="reqAdvType == 3">
-                #{reqTotAmt},
+                REGEXP_REPLACE(#{reqTotAmt}, '[^0-9.]+', NULL),
                 #{advOcc},
             </if>
             <if test="reqAdvType == 4">
-                #{refTotExp},
+                REGEXP_REPLACE(#{refTotExp}, '[^0-9.]+', NULL),
                 #{refMode},
                 #{refBankRef},
             </if>
@@ -385,6 +385,7 @@
                 TAX_CODE,
                 INVC_CUR,
                 NET_AMT,
+                SUPPLIER,
             </if>
             UPD_DT,
             UPD_USER_ID
@@ -395,12 +396,12 @@
             TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
             #{expType},
             #{expTypeNm},
-            #{dAmt},
+            REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
             SYSDATE,
             #{userId},
             <if test="advType == 3">
                 #{glAccNo},
-                #{dAmt},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
                 #{cur},
             </if>
             <if test="advType == 4">
@@ -412,7 +413,8 @@
                 #{clamUn},
                 'VB',
                 #{cur},
-                #{dAmt},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
+                #{supplierName},
             </if>
             SYSDATE,
             #{userId}
@@ -523,7 +525,8 @@
                 REM = #{expDesc},
                 UPD_DT = SYSDATE,
                 TAX_CODE = 'VB',
-                NET_AMT = #{totAmt}
+                NET_AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
+                SUPPLIER = #{supplierName}
          WHEN NOT MATCHED THEN
             INSERT (
                 CLM_NO,
@@ -536,6 +539,7 @@
                 GL_ACC_NM,
                 BGT_CODE,
                 BGT_NM,
+                SUPPLIER,
                 AMT,
                 REM,
                 CRT_DT,
@@ -558,6 +562,7 @@
                 (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
                 #{budgetCode},
                 (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
+                #{supplierName},
                 REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
                 #{expDesc},
                 SYSDATE,
@@ -568,7 +573,7 @@
                 'VB',
                 #{cur},
                 #{taxAmt},
-                #{totAmt}
+                REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL)
             )
         </if>
     </update>
@@ -844,7 +849,8 @@
                REGEXP_REPLACE(T1.REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
                T1.CLAM_UN,
                T3.TOT_AMT AS ALL_TOT_AMT,
-               T3.APPV_PRCSS_NO
+               T3.APPV_PRCSS_NO,
+               T1.SUPPLIER SUPPLIER_NAME
         FROM   FCM0028D T1
                LEFT JOIN FCM0007C T2 ON T1.TAX_CODE = T2.TAX_CODE
                LEFT JOIN FCM0027M T3 ON T1.CLM_NO = T3.CLM_NO
@@ -862,6 +868,10 @@
             CASE WHEN F.ADV_TYPE = '3' THEN 'STAFF ADVANCE BUSINESS REQUEST'
                     WHEN F.ADV_TYPE = '4' THEN 'STAFF ADVANCE BUSINESS REPAYMENT'
             END AS ADV_TYPE_NAME,
+            CASE WHEN F.ADV_TYPE = 4
+                THEN E.TOT_AMT
+                ELSE 0
+            END EXP_AMT,
             TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT, /* REQDATE */
             A.REQST_USER_ID,                                             /* REQPERNM */
             TO_CHAR(B.ADV_REFD_DT, 'DD/MM/YYYY') PAY_DUE_DT,/* DUEDATE */
@@ -880,16 +890,17 @@
             TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
             TO_CHAR(E.INVC_DT, 'DD/MM/YYYY') INVC_DT,   /* DOCDATE */
             (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
-            E.INVC_CUR CURRENCY
+            E.INVC_CUR CURRENCY,
+            E.BGT_CODE
         FROM FCM0004M A
         LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
         LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE
         LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
         LEFT JOIN (
-            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR
+            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.BGT_CODE
             FROM FCM0028D I
             LEFT JOIN FCM0027M J ON J.CLM_NO = I.CLM_NO
-            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR
+            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.BGT_CODE
         ) E
         ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
         LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
@@ -952,12 +963,7 @@
 	        #{glCode},
 	        REGEXP_REPLACE(#{grandAmt}, '[^0-9.]+', NULL),
 	        REGEXP_REPLACE(#{expAmt}, '[^0-9.]+', NULL),
-	        <if test="balAmt &lt; 0">
-	           NVL(#{balAmt},0)*-1,
-	        </if>
-	        <if test="balAmt &gt;= 0">
-               NVL(#{balAmt},0),
-            </if>
+	        NVL(#{balAmt},0),
 	        #{taxAmt},
 	        #{nonTaxAmt},
 	        REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),

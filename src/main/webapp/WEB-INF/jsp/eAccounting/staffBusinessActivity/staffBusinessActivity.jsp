@@ -232,6 +232,9 @@
     headerText : 'Invoice No.',
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "supplierName",
+    headerText : "Supplier Name"
+}, {
     dataField : "taxName",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
 }, {
