@@ -225,7 +225,7 @@
 	                         ELSE Extent7.AS_CMMS END AS CMS,
 	                         Extent7.USER_NAME AS AS_RESULT_CRT_USER_ID,
 	                         Extent7.INST_CITY,
-                             Extent16.DEFECT_DESC
+                             Extent15.DEFECT_DESC
 	                  FROM SVC0001D Extent1
 	                  JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
 	                  JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -274,9 +274,16 @@
 	                  ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 	                 AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
 	                 AND ( 1 = Extent7.AS_RESULT_IS_CURR )
-	                 JOIN SYS0100M Extent15 ON Extent15.DEFECT_GRP = Extent1.AS_MALFUNC_ID
-                     JOIN SYS0100M Extent16 ON Extent16.DEFECT_ID = Extent1.AS_MALFUNC_RESN_ID and Extent15.DEFECT_GRP = Extent16.DEFECT_GRP
-
+	                 LEFT JOIN (
+	                   SELECT * FROM (
+	                       SELECT DEFECT_DESC, DEF_TYPE, DEF_DET, ROW_NUMBER() OVER (PARTITION BY DEF_TYPE, DEF_DET ORDER BY 1) N FROM (
+			                   SELECT DEFECT_DESC, CAST(DEFECT_GRP AS VARCHAR(10)) DEF_TYPE, CAST(DEFECT_ID AS VARCHAR(10)) DEF_DET FROM SYS0100M WHERE DEFECT_STATUS = 1
+			                   UNION ALL
+			                   SELECT DEFECT_TYPE_CODE_DESC DEFECT_DESC, DEFECT_TYPE_CODE DEF_TYPE, DEFECT_DTL_CODE DEF_DET FROM SVC0056M WHERE STUS_CODE_ID = 1
+	                       )
+		               ) WHERE N = 1
+	                 ) Extent15 ON Extent15.DEF_TYPE = Extent1.AS_MALFUNC_ID
+	                 AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                       AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
                                                            WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB'))
