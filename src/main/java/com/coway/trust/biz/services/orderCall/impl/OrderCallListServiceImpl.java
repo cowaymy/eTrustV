@@ -307,8 +307,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
 	       {
 	    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
-	    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on") //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-	    			   && params.get("callTypeId").equals("257")){ //ONLY FOR NEW INSTALLATION ORDER (PR ONLY HAVE SMS AFTER INSTALLATION COMPLETE)
+	    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){  //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
 
 		       	       Map<String, Object> smsList = new HashMap<>();
 		               smsList.put("userId", sessionVO.getUserId());
