@@ -682,7 +682,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
 				    	appvSettlementInfo.put("ifKey", ifKey);
 				    	appvSettlementInfo.put("userId", params.get("userId"));
-				    	appvSettlementInfo.put("glAccNo", "12400200");
+				    	appvSettlementInfo.put("glAccNo", "12400100");
 				    	/*appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
 				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));*/
@@ -732,7 +732,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("ifKey", ifKey);
 				    	appvSettlementInfo.put("userId", params.get("userId"));
 				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
-				    	appvSettlementInfo.put("glAccNo", "12400200");
+				    	appvSettlementInfo.put("glAccNo", "12400100");
 				    	appvSettlementInfo.put("expAmt", "0");
 				    	appvSettlementInfo.put("balAmt", "0");
 				    	appvSettlementInfo.put("taxAmt", "0");
@@ -776,7 +776,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				    	appvSettlementInfo.put("ifKey", ifKey);
 				    	appvSettlementInfo.put("userId", params.get("userId"));
 				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
-				    	appvSettlementInfo.put("glAccNo", "12400200");
+				    	appvSettlementInfo.put("glAccNo", "12400100");
 				    	appvSettlementInfo.put("expAmt", "0");
 				    	appvSettlementInfo.put("balAmt", "0");
 				    	appvSettlementInfo.put("taxAmt", "0");
