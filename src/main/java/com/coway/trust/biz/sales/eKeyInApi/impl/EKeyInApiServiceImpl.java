@@ -589,6 +589,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     BigDecimal orderPVPromoGST = BigDecimal.ZERO;
     BigDecimal orderRentalFeesPromo = BigDecimal.ZERO;
     // BigDecimal normalRentalFees = BigDecimal.ZERO;
+    String quotaStus = "";
 
     Map<String, Object> createParam = EKeyInApiForm.createMap(param);
 
@@ -607,6 +608,12 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
           orderPVPromoGST = (BigDecimal) priceInfo.get("promoItmPvGst");
           // normalRentalFees = (BigDecimal) priceInfo.get("amt");
+          quotaStus = (String) priceInfo.get("quataStus");
+
+          if (quotaStus == "N") {
+        	  throw new ApplicationException(AppConstants.FAIL, "This product has reached the quota.");
+          }
+
         } else {
           if (param.getPromoId() == 31834 && param.getPromoId() == 892 && param.getPromoId() == 0) {
             orderPricePromo = BigDecimal.valueOf(3540);
@@ -617,6 +624,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
           orderPVPromoGST = (BigDecimal) priceInfo.get("promoItmPvGst");
           // normalRentalFees = BigDecimal.ZERO;
+          quotaStus = (String) priceInfo.get("quataStus");
+
+          if (quotaStus == "N") {
+        	  throw new ApplicationException(AppConstants.FAIL, "This product has reached the quota.");
+          }
         }
 
         priceInfo.put("totAmt", orderPricePromo);
@@ -643,6 +655,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         priceInfo.put("mthRentAmt", orderRentalFeesPromo);
         priceInfo.put("totPv", orderPVPromo);
         priceInfo.put("totPvGst", BigDecimal.ZERO);
+        quotaStus = (String) priceInfo.get("quataStus");
+
+        if (quotaStus == "N") {
+      	  throw new ApplicationException(AppConstants.FAIL, "This product has reached the quota.");
+        }
 
         // priceInfo.put("promoDiscPeriodTp",
         // selectPromoDesc.get("promoDiscPeriodTp"));
