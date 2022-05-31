@@ -793,7 +793,7 @@ function fn_selectWebInvoiceInfo(clmNo) {
 
 function fn_report() {
     var option = {
-        isProcedure : false
+        isProcedure : true
     };
     Common.report("dataForm", option);
 }
