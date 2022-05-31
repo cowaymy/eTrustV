@@ -694,7 +694,7 @@
   <select id="selectProductPromotionPriceByPromoStockIDNewCorp" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockIDNewCorp] 20191213 - KR JAEMAJEM */
-      SELECT T1.PROMO_ITM_ID AS PROMO_ITM_ID
+      SELECT DISTINCT T1.PROMO_ITM_ID AS PROMO_ITM_ID
                , T1.PROMO_ID AS PROMO_ID
                , T1.PROMO_ITM_STK_ID AS PROMO_ITM_STK_ID
                , T2.STK_CODE AS STK_CODE
@@ -710,31 +710,35 @@
                , NVL(T1.PROMO_ITM_PV, 0) AS PROMO_ITM_PV
                , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
                , NVL(T3.PROMO_APP_TYPE_ID, 0) AS PROMO_APP_TYPE_ID
+               , CASE WHEN (T5.EKEYIN_COUNT + T5.ADMIN_KEYIN_COUNT) > T5.CTRL_QUOTA THEN 'P' ELSE 'N' END AS QUATA_STUS
     FROM SAL0018D T1
     LEFT OUTER JOIN SYS0026M T2 ON T1.PROMO_ITM_STK_ID = T2.STK_ID
     LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
     LEFT OUTER JOIN SAL0016M T4 ON T4.STK_ID = T1.PROMO_ITM_STK_ID
                                                AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+    JOIN SAL1020V T5 ON T5.PROMO_ID = T1.PROMO_ID AND T5.STK_ID = T1.PROMO_ITM_STK_ID
     WHERE T1.PROMO_ID = #{promoId}
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
         AND T4.MEM_PAC_ID = #{srvPacId}
         AND T1.PROMO_ITM_STUS_ID = 1
+        AND T1.PROMO_ITM_STK_ID = T5.STK_ID
+        AND T1.PROMO_ID = T5.PROMO_ID
     ]]>
   </select>
 
   <select id="selectProductPromotionPriceByPromoStockIDNew" parameterType="Map" resultType="egovMap">
     <![CDATA[
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockIDNew] 20191213 - KR JAEMAJEM */
-    SELECT T1.PROMO_ITM_ID                                                         AS PROMO_ITM_ID
+    SELECT DISTINCT T1.PROMO_ITM_ID                                        AS PROMO_ITM_ID
              , T1.PROMO_ID                                                             AS PROMO_ID
-             , T1.PROMO_ITM_STK_ID                                                     AS PROMO_ITM_STK_ID
+             , T1.PROMO_ITM_STK_ID                                               AS PROMO_ITM_STK_ID
              , T2.STK_CODE                                                             AS STK_CODE
              , T2.STK_DESC                                                             AS STK_DESC
-             , T1.PROMO_ITM_CUR_ID                                                     AS PROMO_ITM_CUR_ID
-             , NVL(T1.PROMO_ITM_PRC, 0)                                                AS PROMO_ITM_PRC
+             , T1.PROMO_ITM_CUR_ID                                              AS PROMO_ITM_CUR_ID
+             , NVL(T1.PROMO_ITM_PRC, 0)                                        AS PROMO_ITM_PRC
              , NVL(T4.AMT, 0)                                                          AS AMT
-             , NVL(T4.PRC_RPF, 0)                                                      AS PRC_RPF
-             , NVL(T4.PRC_PV, 0)                                                       AS PRC_PV
+             , NVL(T4.PRC_RPF, 0)                                                    AS PRC_RPF
+             , NVL(T4.PRC_PV, 0)                                                      AS PRC_PV
              , CASE WHEN T4.APP_TYPE_ID IN (67,68) THEN TRUNC( FLOOR( NVL(T4.AMT, 0) - DECODE(NVL(T3.PROMO_DISC_TYPE, 0), 0, NVL(T4.AMT, 0) * (NVL(T3.PROMO_PRC_PRCNT, 0) / 100), NVL(T3.PROMO_PRC_PRCNT, 0)) - NVL(T3.PROMO_ADD_DISC_PRC, 0)), -1)
                        ELSE FLOOR( NVL(T4.AMT, 0) - DECODE(NVL(T3.PROMO_DISC_TYPE, 0), 0, NVL(T4.AMT, 0) * (NVL(T3.PROMO_PRC_PRCNT, 0) / 100), NVL(T3.PROMO_PRC_PRCNT, 0)) - NVL(T3.PROMO_ADD_DISC_PRC, 0))
                END AS PROMO_AMT
@@ -742,15 +746,19 @@
              , NVL(T1.PROMO_ITM_PV, 0)                                                 AS PROMO_ITM_PV
              , NVL(T1.PROMO_ITM_PV_GST, 0)                                             AS PROMO_ITM_PV_GST
              , NVL(T3.PROMO_APP_TYPE_ID, 0)                                            AS PROMO_APP_TYPE_ID
+             , CASE WHEN (T5.EKEYIN_COUNT + T5.ADMIN_KEYIN_COUNT) > T5.CTRL_QUOTA THEN 'P' ELSE 'N' END AS QUATA_STUS
     FROM SAL0018D T1
     LEFT OUTER JOIN SYS0026M T2 ON T1.PROMO_ITM_STK_ID = T2.STK_ID
     LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
     LEFT OUTER JOIN SAL0016M T4 ON T4.STK_ID = T1.PROMO_ITM_STK_ID
                                                AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+    JOIN SAL1020V T5 ON T5.PROMO_ID = T1.PROMO_ID AND T5.STK_ID = T1.PROMO_ITM_STK_ID
     WHERE T1.PROMO_ID = #{promoId}
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
         AND T4.MEM_PAC_ID = #{srvPacId}
         AND T1.PROMO_ITM_STUS_ID = 1
+        AND T1.PROMO_ID = T5.PROMO_ID
+        AND T1.PROMO_ITM_STK_ID = T5.STK_ID
     ]]>
   </select>
 
@@ -760,9 +768,12 @@
     SELECT T1.PROMO_ITM_PRC
              , T1.PROMO_ITM_PV
             , T1.PROMO_ITM_RENTAL
-    FROM SAL0018D T1
+            , CASE WHEN (T5.EKEYIN_COUNT + T5.ADMIN_KEYIN_COUNT) > T5.CTRL_QUOTA THEN 'P' ELSE 'N' END AS QUATA_STUS
+    FROM SAL0018D T1, sal1020V T5
     WHERE T1.PROMO_ID = #{promoId}
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
+        AND T1.PROMO_ID = T5.PROMO_ID
+        AND T1.PROMO_ITM_STK_ID = T5.STK_ID
         AND T1.PROMO_ITM_STUS_ID = 1
     ]]>
   </select>
