@@ -667,6 +667,62 @@ console.log("preOrderList");
             }else if (tag === 'select'){
                 this.selectedIndex = 0;
             }
+
+            if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+
+                if("${SESSION_INFO.memberLevel}" =="1"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                    $("#grpCode").val("${grpCode}");
+                    $("#grpCode").attr("class", "w100p readonly");
+                    $("#grpCode").attr("readonly", "readonly");
+
+                }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                    $("#grpCode").val("${grpCode}");
+                    $("#grpCode").attr("class", "w100p readonly");
+                    $("#grpCode").attr("readonly", "readonly");
+
+                    $("#deptCode").val("${deptCode}");
+                    $("#deptCode").attr("class", "w100p readonly");
+                    $("#deptCode").attr("readonly", "readonly");
+
+                }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+                    $("#orgCode").val("${orgCode}");
+                    $("#orgCode").attr("class", "w100p readonly");
+                    $("#orgCode").attr("readonly", "readonly");
+
+                    $("#grpCode").val("${grpCode}");
+                    $("#grpCode").attr("class", "w100p readonly");
+                    $("#grpCode").attr("readonly", "readonly");
+
+                    $("#deptCode").val("${deptCode}");
+                    $("#deptCode").attr("class", "w100p readonly");
+                    $("#deptCode").attr("readonly", "readonly");
+
+                    $("#_memCode").val("${SESSION_INFO.userName}");
+                    $("#_memCode").attr("class", "w100p readonly");
+                    $("#_memCode").attr("readonly", "readonly");
+                    $("#_memBtn").hide();
+
+                }
+            }
+
+
         });
     };
 
