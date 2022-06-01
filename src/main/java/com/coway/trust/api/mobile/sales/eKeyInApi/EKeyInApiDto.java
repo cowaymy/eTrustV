@@ -239,7 +239,7 @@ public class EKeyInApiDto {
   private String gu;
   private String cpntCode;
   private String cpntCodeName;
-  private String quotaStus;
+  private BigDecimal quotaStus;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1881,12 +1881,12 @@ public class EKeyInApiDto {
     this.cpntCodeName = cpntCodeName;
   }
 
-public String getQuotaStus() {
+  public BigDecimal getQuotaStus() {
 	return quotaStus;
-}
+  }
 
-public void setQuotaStus(String quotaStus) {
+  public void setQuotaStus(BigDecimal quotaStus) {
 	this.quotaStus = quotaStus;
-}
+  }
 
 }
