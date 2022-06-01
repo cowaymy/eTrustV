@@ -780,7 +780,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN SYS0038M STUS ON STUS.stus_code_id = cd.stus
                 LEFT JOIN ORG0001D ac ON ac.mem_id = sal09.SRV_CODY_ID
                 LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
-                LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
+                LEFT JOIN ORG1001V og ON og.MEM_ID = CD.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG0001D USR2 ON HS.UPD_USER_ID = USR2.MEM_ID
                 LEFT JOIN SYS0028M LOC ON LOC.WH_LOC_CODE = cd.MEM_CODE
@@ -867,11 +867,11 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 </if>
 
                  <if test="grpCode != null and grpCode != ''">
-                  AND OG.LAST_GRP_CODE = #{grpCode}
+                  AND OG.GRP_CODE = #{grpCode}
                 </if>
 
                  <if test="orgCode != null and orgCode != ''">
-                  AND OG.LAST_ORG_CODE = #{orgCode}
+                  AND OG.ORG_CODE = #{orgCode}
                 </if>
 
                 <if test="userType == '3'.toString()">
