@@ -60,6 +60,7 @@
                          A.CRT_DT AS CRT_DT,
                          A.CRT_USR AS CRT_USR
                   FROM LOG0089M A JOIN LOG0091D B ON A.REF_NO = B.REF_PFX_NO AND B.STUS_CODE_ID = 1
+                  AND B.TRX_DT BETWEEN fn_get_first_day_month(SYSDATE) AND fn_get_last_day_month(SYSDATE)+1
                  ) A
                  GROUP BY A.REF_NO, A.BR_NO, A.ITM_CDE
     ) A LEFT JOIN SYS0005M B ON A.BR_NO = B.BRNCH_ID
