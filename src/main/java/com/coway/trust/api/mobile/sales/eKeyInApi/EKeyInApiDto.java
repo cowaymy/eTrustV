@@ -239,6 +239,7 @@ public class EKeyInApiDto {
   private String gu;
   private String cpntCode;
   private String cpntCodeName;
+  private String quotaStus;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1879,5 +1880,13 @@ public class EKeyInApiDto {
   public void setCpntCodeName(String cpntCodeName) {
     this.cpntCodeName = cpntCodeName;
   }
+
+public String getQuotaStus() {
+	return quotaStus;
+}
+
+public void setQuotaStus(String quotaStus) {
+	this.quotaStus = quotaStus;
+}
 
 }
