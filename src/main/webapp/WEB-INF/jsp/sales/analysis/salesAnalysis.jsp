@@ -278,7 +278,7 @@ function fn_report(type) {
         $("#viewType").val('EXCEL');
 
         var option = {
-                isProcedure : false
+                isProcedure : true
             };
 
             Common.report("dataForm", option);
