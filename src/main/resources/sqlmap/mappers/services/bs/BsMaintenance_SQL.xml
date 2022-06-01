@@ -131,7 +131,7 @@
 		            LEFT JOIN org0001d cd ON cd.mem_id = hs.cody_id
 		            LEFT JOIN sys0005m br ON br.brnch_id = cd.brnch
 		            LEFT JOIN sys0038m stus ON stus.stus_code_id = cd.stus
-		            LEFT JOIN org0005d og ON og.mem_id = cd.mem_id
+		            LEFT JOIN org1001v og ON og.mem_id = cd.mem_id
 		            LEFT JOIN sys0047m usr ON hs.crt_user_id = usr.user_id
 		            LEFT JOIN sys0028m loc ON loc.wh_loc_code = cd.mem_code
 		            LEFT JOIN entry_info_max eimax ON eimax.sales_ord_id = so.sales_ord_id
@@ -197,11 +197,11 @@
                 </if>
 
                 <if test="grpCode != null and grpCode != ''">
-                  AND OG.LAST_GRP_CODE = #{grpCode}
+                  AND OG.GRP_CODE = #{grpCode}
                 </if>
 
                  <if test="orgCode != null and orgCode != ''">
-                  AND OG.LAST_ORG_CODE = #{orgCode}
+                  AND OG.ORG_CODE = #{orgCode}
                 </if>
 
                 <if test="userType == '3'.toString()">
