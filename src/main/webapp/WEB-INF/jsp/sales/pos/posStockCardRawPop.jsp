@@ -5,10 +5,12 @@
 CommonCombo.make('branch', "/sales/pos/selectWhSOBrnchList", '' ,'', {type: 'M'});
 
 var date = new Date().getDate();
-if(date.toString().length == 1){
-    date = "0" + date;
-}
-$("#transactionDate").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+var month = new Date().getMonth() + 1;
+
+date  = date.toString().length  == 1 ? "0"  + date : date;
+month = month.toString().length == 1 ? "0" + month : month;
+
+$("#transactionDate").val(date+"/"+month+"/"+new Date().getFullYear());
 
 $('.multy_select').change(function() {
 })
@@ -71,7 +73,7 @@ function fn_report(){
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    $("#reportDownFileName").val("POS_StockCardRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#reportDownFileName").val("POS_StockCardRaw_"+date+month+new Date().getFullYear());
 
     var option = {
             isProcedure : true
