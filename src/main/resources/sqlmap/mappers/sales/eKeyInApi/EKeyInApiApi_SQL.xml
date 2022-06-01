@@ -716,13 +716,11 @@
     LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
     LEFT OUTER JOIN SAL0016M T4 ON T4.STK_ID = T1.PROMO_ITM_STK_ID
                                                AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
-    JOIN SAL1020V T5 ON T5.PROMO_ID = T1.PROMO_ID AND T5.STK_ID = T1.PROMO_ITM_STK_ID
+    LEFT OUTER JOIN SAL1020V T5 ON T5.PROMO_ID = T1.PROMO_ID AND T5.STK_ID = T1.PROMO_ITM_STK_ID
     WHERE T1.PROMO_ID = #{promoId}
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
         AND T4.MEM_PAC_ID = #{srvPacId}
         AND T1.PROMO_ITM_STUS_ID = 1
-        AND T1.PROMO_ITM_STK_ID = T5.STK_ID
-        AND T1.PROMO_ID = T5.PROMO_ID
     ]]>
   </select>
 
@@ -752,20 +750,18 @@
     LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
     LEFT OUTER JOIN SAL0016M T4 ON T4.STK_ID = T1.PROMO_ITM_STK_ID
                                                AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
-    JOIN SAL1020V T5 ON T5.PROMO_ID = T1.PROMO_ID AND T5.STK_ID = T1.PROMO_ITM_STK_ID
+    LEFT OUTER JOIN SAL1020V T5 ON T5.PROMO_ID = T1.PROMO_ID AND T5.STK_ID = T1.PROMO_ITM_STK_ID
     WHERE T1.PROMO_ID = #{promoId}
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
         AND T4.MEM_PAC_ID = #{srvPacId}
         AND T1.PROMO_ITM_STUS_ID = 1
-        AND T1.PROMO_ID = T5.PROMO_ID
-        AND T1.PROMO_ITM_STK_ID = T5.STK_ID
     ]]>
   </select>
 
   <select id="selectProductPromotionPriceByPromoStockID" parameterType="Map" resultType="egovMap">
     <![CDATA[
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockID] 20191213 - KR JAEMAJEM */
-    SELECT T1.PROMO_ITM_PRC
+    SELECT DISTINCT T1.PROMO_ITM_PRC
              , T1.PROMO_ITM_PV
             , T1.PROMO_ITM_RENTAL
             , CASE WHEN (T5.EKEYIN_COUNT + T5.ADMIN_KEYIN_COUNT) > T5.CTRL_QUOTA THEN 'P' ELSE 'N' END AS QUATA_STUS
@@ -773,8 +769,6 @@
     WHERE T1.PROMO_ID = #{promoId}
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
         AND T1.PROMO_ID = T5.PROMO_ID
-        AND T1.PROMO_ITM_STK_ID = T5.STK_ID
-        AND T1.PROMO_ITM_STUS_ID = 1
     ]]>
   </select>
 
