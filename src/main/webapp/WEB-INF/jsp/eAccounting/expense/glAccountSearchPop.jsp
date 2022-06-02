@@ -10,7 +10,7 @@
 var glCodeGridID;
 
 $(document).ready(function() {
-	
+
 	//아이템 AUIGrid 칼럼 설정
 	var glCodecolumnLayout = [ {
 	    dataField : "glAccCode",
@@ -22,46 +22,46 @@ $(document).ready(function() {
 	    style : "aui-grid-user-custom-left",
 	    width : 300
 	}];
-    
+
     glCodeGridID = GridCommon.createAUIGrid("#glCodeGrid", glCodecolumnLayout, "budgetCode", {editable:false});
-        
+
      // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(glCodeGridID, "cellDoubleClick", function(event){
-         
+
          $("#pGlAccCode").val(AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccCode"));
          $("#pGlAccCodeName").val( AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccDesc"));
-                  
+
          if("${pop}" == "pop"){
              fn_setPopGlData();
          }else{
              fn_setGlData();
          }
          $("#glAccountSearchPop").remove();
-    }); 
-     
+    });
+
     // add jgkim
     if("${call}" == "budgetAdj") {
         $("#search_btn").click(fn_selectAdjustmentCBG);
     } else {
         $("#search_btn").click(fn_selectGlListAjax);
     }
-    
+
 });
 
 //리스트 조회.
-function fn_selectGlListAjax() {        
+function fn_selectGlListAjax() {
     Common.ajax("GET", "/eAccounting/expense/selectGlCodeList?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
-        
+
          console.log("성공.");
          console.log( result);
-         
+
         AUIGrid.setGridData(glCodeGridID, result);
     });
 }
 
 //add jgkim
 function fn_selectAdjustmentCBG() {
-    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#bgSForm").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#glSForm").serializeJSON(), function(result) {
         console.log(result);
         AUIGrid.setGridData(glCodeGridID, result);
     });

@@ -44,7 +44,7 @@ fileList.push(obj);
 </c:forEach>
 
 $(document).ready(function(){
-
+console.log("budgetAdjustmentPop.jsp");
 	var adjustmentList;
 
 	if('${adjustmentList}'=='' || '${adjustmentList}' == null){
@@ -587,13 +587,14 @@ function fn_pGlAccountSearchPop(str){
 //add jgkim
   var obj = {pop : 'pop'};
 
-  if(glStr =="send"){
+  if(glStr == "send") {
       $("#sendGlAccCode").val("");
       $("#sendGlAccCodeName").val("");
 
-      if($("#pAdjustmentType").val() != "05"){
-          if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+      if($("#pAdjustmentType").val() != "05") {
+          obj.call = 'budgetAdj'; 
 
+          if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02") {
               $("#recvGlAccCode").val("");
               $("#recvGlAccCodeName").val("");
           }
@@ -603,7 +604,7 @@ function fn_pGlAccountSearchPop(str){
       if("${mgrYn}" == "Y") {
           obj.call = 'budgetAdj';
       }
-  }else{
+  } else {
       $("#recvGlAccCode").val("");
       $("#recvGlAccCodeName").val("");
 
