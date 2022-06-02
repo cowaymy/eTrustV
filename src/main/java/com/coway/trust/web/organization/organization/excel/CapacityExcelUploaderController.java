@@ -134,13 +134,19 @@ public class CapacityExcelUploaderController {
 
 			updateMap.put("codeId",vo.getBranch1());
 			updateMap.put("memId",vo.getCT1());
-			updateMap.put("carType",vo.getCarType());
 
-			if((vo.getCarType() != null && !vo.getCarType().isEmpty()) && !carTypeListCheck.contains(vo.getCarType())){
-				ReturnMessage carTypeMessageFailure = new ReturnMessage();
-				carTypeMessageFailure.setCode(AppConstants.FAIL);
-				carTypeMessageFailure.setMessage("Car Model does not exist on CT: " + vo.getCT() + ". Please ensure it is in CAPITAL letter if exist.");
-				return ResponseEntity.ok(carTypeMessageFailure);
+    		if((vo.getCarType() != null && !vo.getCarType().isEmpty()) && !carTypeListCheck.contains(vo.getCarType())){
+				String car1 = vo.getCarType();
+    			if(!vo.getCarType().equals("0.0")){
+    				ReturnMessage carTypeMessageFailure = new ReturnMessage();
+    				carTypeMessageFailure.setCode(AppConstants.FAIL);
+    				carTypeMessageFailure.setMessage("Car Model does not exist on CT: " + vo.getCT() + ". Please ensure it is in CAPITAL letter if exist.");
+    				return ResponseEntity.ok(carTypeMessageFailure);
+    			}
+			}
+
+			if(vo.getCarType() != null){
+				updateMap.put("carType",vo.getCarType());
 			}
 
 			updateMap.put("morngSesionAsSt",vo.getMorngSesionAsSt());

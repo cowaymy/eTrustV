@@ -58,7 +58,13 @@ public class CapacityExcelUploaderDataVOEnhance {
 		vo.setCT(getValue(row.getCell(2)));
 		vo.setBranch1(getValue(row.getCell(3)));
 		vo.setCT1(getValue(row.getCell(4)));
-		vo.setCarType(getValue(row.getCell(5)));
+
+		if(getValue(row.getCell(5)).isEmpty()){
+			vo.setCarType(getValue(row.getCell(5)));
+		}
+		else{
+			vo.setCarType(getValue(row.getCell(5)).replaceAll("\\s+",""));
+		}
 
 		vo.setMorngSesionAsSt(getValue(row.getCell(6)));
 		vo.setMorngSesionAsDsk(getValue(row.getCell(7)));
