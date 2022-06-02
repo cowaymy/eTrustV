@@ -4,6 +4,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.api.project.CMS.CMSCntcCsvHandler;
 import com.coway.trust.biz.common.LargeExcelQuery;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
@@ -380,5 +381,10 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	@Override
     public void downloadCreditCardFileHSBC(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler) {
         this.downLoad(LargeExcelQuery.CREDITCARD_DETAIL_PAGING.getQueryId(), parameter, claimFileGeneralHandler);
+    }
+
+    @Override
+    public void downloadCmsCntcCsv(Object parameter, CMSCntcCsvHandler cmsCntcCsvHandler) {
+        this.downLoad(LargeExcelQuery.CMS_CNTC_API.getQueryId(), parameter, cmsCntcCsvHandler);
     }
 }

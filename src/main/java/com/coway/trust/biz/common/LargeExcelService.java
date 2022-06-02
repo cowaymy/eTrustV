@@ -2,6 +2,7 @@ package com.coway.trust.biz.common;
 
 import org.apache.ibatis.session.ResultHandler;
 
+import com.coway.trust.api.project.CMS.CMSCntcCsvHandler;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
@@ -166,4 +167,6 @@ public interface LargeExcelService {
   void downLoadClaimFileGeneral(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler);
 
   void downloadCreditCardFileHSBC(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler);
+
+  void downloadCmsCntcCsv(Object parameter, CMSCntcCsvHandler cmsCntcCsvHandler);
 }

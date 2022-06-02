@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.CMSApiMapper">
+
+    <select id="getRowCount" parameterType="Map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM API0008M
+        WHERE TO_CHAR(UPD_DT, 'YYYYMMDD') = TO_CHAR(SYSDATE - 1, 'YYYYMMDD')
+    </select>
+
+    <select id="selectCmsCntcByPaging" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT
+                ROWNUM AS RNUM,
+                A.*
+            FROM (
+                SELECT
+                    ID,
+                    TYPE,
+                    MEM_CODE_ID,
+                    CNTC_ID,
+                    ADD_ID,
+                    ORD_CAT,
+                    NAME,
+                    TO_CHAR(DOB, 'YYYYMMDD') DOB,
+                    CASE WHEN REGEXP_LIKE(MOBILE_NO, '^[[:digit:]]+$') THEN MOBILE_NO ELSE '-' END MOBILE_NO,
+                    CASE WHEN REGEXP_LIKE(OFFICE_NO, '^[[:digit:]]+$') THEN OFFICE_NO ELSE '-' END OFFICE_NO,
+                    CASE WHEN REGEXP_LIKE(RESIDENCE_NO, '^[[:digit:]]+$') THEN RESIDENCE_NO ELSE '-' END RESIDENCE_NO,
+                    EMAIL,
+                    SUB_TYPE,
+                    CORP_TYPE,
+                    ADDRESS,
+                    CNTY,
+                    POST_CODE,
+                    TO_CHAR(CRT_DT, 'DD-MON-YYYY HH24:MI:SS') CRT_DT,
+                    TO_CHAR(UPD_DT, 'DD-MON-YYYY HH24:MI:SS') UPD_DT
+                FROM API0008M
+                WHERE 1 = 1
+                  AND TO_CHAR(UPD_DT, 'YYYYMMDD') = TO_CHAR(SYSDATE - 1, 'YYYYMMDD')
+                ORDER BY ID
+            ) A
+            WHERE ROWNUM <![CDATA[ <= ]]> (1 * 100000)
+        )
+        WHERE RNUM <![CDATA[ > ]]> ((1 - 1) * 100000)
+    </select>
+
+</mapper>
