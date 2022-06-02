@@ -57,7 +57,6 @@ public class EKeyInApiForm {
     params.put("stusCodeId", vo.getStusCodeId());
     params.put("userNm", vo.getUserNm());
     params.put("cpntCode", vo.getCpntCode());
-    params.put("quataStus", vo.getQuataStus());
     return params;
   }
 
@@ -88,7 +87,6 @@ public class EKeyInApiForm {
   private int stusCodeId;
   private String userNm;
   private String cpntCode;
-  private String quataStus;
 
   public int getStusCodeId() {
     return stusCodeId;
@@ -304,14 +302,6 @@ public class EKeyInApiForm {
 
   public void setCpntCode(String cpntCode) {
     this.cpntCode = cpntCode;
-  }
-
-  public String getQuataStus() {
-	  return quataStus;
-  }
-
-  public void setQuataStus(String quataStus) {
-	  this.quataStus = quataStus;
   }
 
 }
