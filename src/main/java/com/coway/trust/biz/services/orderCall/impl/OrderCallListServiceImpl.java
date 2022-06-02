@@ -301,8 +301,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
         params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
 
-        EgovMap exchgInfo = orderCallListMapper.selectSOExchgInfo(params);
-        params.put("soCurStusId", exchgInfo.get("soCurStusId").toString());
+        if(params.get("callTypeId").equals("258"))
+        {
+        	EgovMap exchgInfo = orderCallListMapper.selectSOExchgInfo(params);
+            params.put("soCurStusId", exchgInfo.get("soCurStusId").toString());
+        }
 
         //logger.debug("//SMS params");
         //logger.debug(params.toString());
