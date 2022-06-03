@@ -645,13 +645,13 @@
            AND L56.STK_CODE = L75.ITM_CODE(+)
            AND S28.WH_LOC_ID = L56.LOC_ID
            <choose>
-        	<when test="stock eq 'B'.toString()">
+            <when test="stock eq 'B'.toString()">
           AND s28.WH_LOC_STK_GRAD = 'B'
-        	</when>
-        	<otherwise>
+            </when>
+            <otherwise>
           AND s28.WH_LOC_STK_GRAD = 'A'
-        	</otherwise>
-      	</choose>
+            </otherwise>
+        </choose>
            AND L56.STK_CODE = #{productCode}
            AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
            AND s28.WH_LOC_GB = CRDC.WH_LOC_GB
@@ -936,24 +936,24 @@
         SELECT CCR0016D_CALL_VERIFY_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
         INSERT INTO CCR0016D (
-		    CALL_VERIFY_ID
-		    , SALES_ORD_ID
-		    , VERIFY_STUS
-		    , REM
-		    , CRT_USER_ID
-		    , CRT_DT
-		    , UPD_USER_ID
-		    , UPD_DT
-		) VALUES (
-		    #{verifyId}
-		,   #{salesOrdId}
-		,   #{verify}
-		,   #{veriremark}
-		,   349
-		,   SYSDATE
-		,   349
-		,   SYSDATE
-		)
+            CALL_VERIFY_ID
+            , SALES_ORD_ID
+            , VERIFY_STUS
+            , REM
+            , CRT_USER_ID
+            , CRT_DT
+            , UPD_USER_ID
+            , UPD_DT
+        ) VALUES (
+            #{verifyId}
+        ,   #{salesOrdId}
+        ,   #{verify}
+        ,   #{veriremark}
+        ,   349
+        ,   SYSDATE
+        ,   349
+        ,   SYSDATE
+        )
     </insert>
 
     <update id="updateSalesVerification" parameterType="Map">
@@ -1017,20 +1017,6 @@
     AND PROMO_TYPE_ID = 2282
 )
     ORDER BY C1 ASC
-  </select>
-
-  <select id="selectSOExchgInfo" parameterType="Map" resultType="egovMap">
-    <![CDATA[
-    SELECT
-	    SO_ID,
-	    SO_EXCHG_NW_CALL_ENTRY_ID,
-	    SO_EXCHG_STUS_ID,
-	    SO_CUR_STUS_ID
-	FROM SAL0004D
-	WHERE SO_ID = #{salesOrdId} AND SO_EXCHG_NW_CALL_ENTRY_ID = #{callEntryId}
-	AND ROWNUM <= 1
-	order by SO_ID
-    ]]>
   </select>
 
 </mapper>

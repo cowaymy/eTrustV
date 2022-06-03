@@ -34,7 +34,7 @@
       console.log("superCtCode: " + superCtCode);
 
       if (typeof superCtInd === 'undefined' || superCtInd == null){
-    	  if (rdcStk <= 0) {
+          if (rdcStk <= 0) {
               // Common.alert("There is no available inventory in RDC to create installation order ");
               msg += "* There is no available inventory in RDC to create installation order </br>";
           }
@@ -152,7 +152,7 @@
 
   function fn_addCallSave() {
 
-	  Common.ajax("POST", "/callCenter/addCallLogResult_2.do", $("#addCallForm").serializeJSON(), function(result) {
+      Common.ajax("POST", "/callCenter/addCallLogResult_2.do", $("#addCallForm").serializeJSON(), function(result) {
       //Common.ajax("POST", "/callCenter/addCallLogResult.do", $("#addCallForm").serializeJSON(), function(result) {
       fn_orderCallList();
       $("#hideContent").hide();
@@ -193,7 +193,7 @@
       var pickerOpts = { changeMonth:true,
                          changeYear:true,
                          dateFormat: "dd/mm/yy",
-                      	   minDate: dateToday
+                           minDate: dateToday
                        };
 
       $(".j_date").datepicker(pickerOpts);
@@ -521,19 +521,19 @@
        <c:if test="${superCtInd != null}">
             <tr>
                 <th scope="row">Super CT RDC Qty</th>
-		        <td><span id="rdcSuperCt"><c:out
-		           value="${rdcincdcSuperCt.raqty}" /></span></td>
-		        <th scope="row">Super CT In-Transit Qty</th>
-		        <td><span id="rdcInCdcSuperCt"><c:out
-		           value="${rdcincdcSuperCt.rinqty}" /></span></td>
-		        <th scope="row">Super CT CDC Qty</th>
-		        <td>
-		          <c:if test="${rdcincdcSuperCt.rdc== rdcincdcSuperCt.cdc }">
-		          <span id="cdcSuperCt">0</span>
-		         </c:if> <c:if test="${rdcincdcSuperCt.rdc != rdcincdcSuperCt.cdc }">
-		          <span id="cdcSuperCt"><c:out value="${rdcincdcSuperCt.caqty}" /></span>
-		         </c:if>
-		        </td>
+                <td><span id="rdcSuperCt"><c:out
+                   value="${rdcincdcSuperCt.raqty}" /></span></td>
+                <th scope="row">Super CT In-Transit Qty</th>
+                <td><span id="rdcInCdcSuperCt"><c:out
+                   value="${rdcincdcSuperCt.rinqty}" /></span></td>
+                <th scope="row">Super CT CDC Qty</th>
+                <td>
+                  <c:if test="${rdcincdcSuperCt.rdc== rdcincdcSuperCt.cdc }">
+                  <span id="cdcSuperCt">0</span>
+                 </c:if> <c:if test="${rdcincdcSuperCt.rdc != rdcincdcSuperCt.cdc }">
+                  <span id="cdcSuperCt"><c:out value="${rdcincdcSuperCt.caqty}" /></span>
+                 </c:if>
+                </td>
             </tr>
        </c:if>
       </tbody>
@@ -604,7 +604,6 @@
    <input type="hidden" value="${salesOrdNo}" id="salesOrdNo" name="salesOrdNo" />
    <input type="hidden" value="${orderCall.rcdTms}" id="rcdTms" name="rcdTms" />
    <input type="hidden" value="${orderCall.callTypeId}" id="callTypeId" name="callTypeId" />
-   <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
 
    <table class="type1" id="hideContent1">
     <!-- table start -->
@@ -669,25 +668,16 @@
       <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentSessione' />"
        readonly="readonly" id="CTSSessionCode" name="CTSSessionCode"
        class="readonly w100p" /></td>
-      <th scope="row"><spring:message
-        code='service.title.Segment' /></th>
+      <th scope="row"><spring:message code='service.title.Segment' /></th>
        <td><input type="text" title="" placeholder="<spring:message code='service.title.Segment' />"
-       readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType"
-       class="readonly w100p" /></td>
+       readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType" class="readonly w100p" /></td>
       <th scope="row"><spring:message
         code='service.title.FeedbackCode' /><span name="m4" id="m4" class="must">*</span></th>
-      <td colspan="3"><select class="w100p" id="feedBackCode"
+      <td><select class="w100p" id="feedBackCode"
        name="feedBackCode">
         <option value=""><spring:message code='service.title.FeedbackCode' /></option>
         <c:forEach var="list" items="${callStatus}" varStatus="status">
-            <c:choose>
-	            <c:when test="${list.resnId=='225'}">
-	              <option value="${list.resnId}" selected>${list.c1}</option>
-	            </c:when>
-	            <c:otherwise>
-	              <option value="${list.resnId}">${list.c1}</option>
-	            </c:otherwise>
-            </c:choose>
+         <option value="${list.resnId}">${list.c1}</option>
         </c:forEach>
       </select></td>
      </tr>
@@ -713,16 +703,6 @@
         <option value="A">A</option>
         <option value="B">B</option>
       </select></td>
-     </tr>
-     <tr>
-     <th scope="row">Mobile</th>
-      <td colspan="3">
-	      <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" />
-	      <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
-	      <!-- <br><br>
-	      <span>Total SMS Count :</span><input type="text" id="smsCount" name="smsCount" class="readonly" readonly="readonly" style="width:10%;"> -->
-     </td>
-     <th></th><td colspan="3"></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.Remark' /></th>
