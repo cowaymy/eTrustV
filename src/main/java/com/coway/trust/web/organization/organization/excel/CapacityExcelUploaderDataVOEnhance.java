@@ -52,66 +52,74 @@ public class CapacityExcelUploaderDataVOEnhance {
 
 	public static CapacityExcelUploaderDataVOEnhance create(Row row)
 	{
-		CapacityExcelUploaderDataVOEnhance vo = new CapacityExcelUploaderDataVOEnhance();
+//		try{
+    		CapacityExcelUploaderDataVOEnhance vo = new CapacityExcelUploaderDataVOEnhance();
 
-		vo.setBranch(getValue(row.getCell(1)));
-		vo.setCT(getValue(row.getCell(2)));
-		vo.setBranch1(getValue(row.getCell(3)));
-		vo.setCT1(getValue(row.getCell(4)));
+    		vo.setBranch(getValue(row.getCell(1)));
+    		vo.setCT(getValue(row.getCell(2)));
+    		vo.setBranch1(getValue(row.getCell(3)));
+    		vo.setCT1(getValue(row.getCell(4)));
 
-		if(getValue(row.getCell(5)).isEmpty()){
-			vo.setCarType(getValue(row.getCell(5)));
-		}
-		else{
-			vo.setCarType(getValue(row.getCell(5)).replaceAll("\\s+",""));
-		}
+    		if(getValue(row.getCell(5)).isEmpty()){
+    			vo.setCarType(getValue(row.getCell(5)));
+    		}
+    		else{
+    			vo.setCarType(getValue(row.getCell(5)).replaceAll("\\s+",""));
+    		}
 
-		vo.setMorngSesionAsSt(getValue(row.getCell(6)));
-		vo.setMorngSesionAsDsk(getValue(row.getCell(7)));
-		vo.setMorngSesionAsSml(getValue(row.getCell(8)));
-		vo.setMorngSesionAs(getValue(row.getCell(9)));
+    		vo.setMorngSesionAsSt(getValue(row.getCell(6)));
+    		vo.setMorngSesionAsDsk(getValue(row.getCell(7)));
+    		vo.setMorngSesionAsSml(getValue(row.getCell(8)));
+    		vo.setMorngSesionAs(getValue(row.getCell(9)));
 
-		vo.setMorngSesionInsSt(getValue(row.getCell(10)));
-		vo.setMorngSesionInsDsk(getValue(row.getCell(11)));
-		vo.setMorngSesionInsSml(getValue(row.getCell(12)));
-		vo.setMorngSesionIns(getValue(row.getCell(13)));
+    		vo.setMorngSesionInsSt(getValue(row.getCell(10)));
+    		vo.setMorngSesionInsDsk(getValue(row.getCell(11)));
+    		vo.setMorngSesionInsSml(getValue(row.getCell(12)));
+    		vo.setMorngSesionIns(getValue(row.getCell(13)));
 
-		vo.setMorngSesionRtnSt(getValue(row.getCell(14)));
-		vo.setMorngSesionRtnDsk(getValue(row.getCell(15)));
-		vo.setMorngSesionRtnSml(getValue(row.getCell(16)));
-		vo.setMorngSesionRtn(getValue(row.getCell(17)));
+    		vo.setMorngSesionRtnSt(getValue(row.getCell(14)));
+    		vo.setMorngSesionRtnDsk(getValue(row.getCell(15)));
+    		vo.setMorngSesionRtnSml(getValue(row.getCell(16)));
+    		vo.setMorngSesionRtn(getValue(row.getCell(17)));
 
-		vo.setAftnonSesionAsSt(getValue(row.getCell(18)));
-		vo.setAftnonSesionAsDsk(getValue(row.getCell(19)));
-		vo.setAftnonSesionAsSml(getValue(row.getCell(20)));
-		vo.setAftnonSesionAs(getValue(row.getCell(21)));
+    		vo.setAftnonSesionAsSt(getValue(row.getCell(18)));
+    		vo.setAftnonSesionAsDsk(getValue(row.getCell(19)));
+    		vo.setAftnonSesionAsSml(getValue(row.getCell(20)));
+    		vo.setAftnonSesionAs(getValue(row.getCell(21)));
 
-		vo.setAftnonSesionInsSt(getValue(row.getCell(22)));
-		vo.setAftnonSesionInsDsk(getValue(row.getCell(23)));
-		vo.setAftnonSesionInsSml(getValue(row.getCell(24)));
-		vo.setAftnonSesionIns(getValue(row.getCell(25)));
+    		vo.setAftnonSesionInsSt(getValue(row.getCell(22)));
+    		vo.setAftnonSesionInsDsk(getValue(row.getCell(23)));
+    		vo.setAftnonSesionInsSml(getValue(row.getCell(24)));
+    		vo.setAftnonSesionIns(getValue(row.getCell(25)));
 
-		vo.setAftnonSesionRtnSt(getValue(row.getCell(26)));
-		vo.setAftnonSesionRtnDsk(getValue(row.getCell(27)));
-		vo.setAftnonSesionRtnSml(getValue(row.getCell(28)));
-		vo.setAftnonSesionRtn(getValue(row.getCell(29)));
+    		vo.setAftnonSesionRtnSt(getValue(row.getCell(26)));
+    		vo.setAftnonSesionRtnDsk(getValue(row.getCell(27)));
+    		vo.setAftnonSesionRtnSml(getValue(row.getCell(28)));
+    		vo.setAftnonSesionRtn(getValue(row.getCell(29)));
 
-		vo.setEvngSesionAsSt(getValue(row.getCell(30)));
-		vo.setEvngSesionAsDsk(getValue(row.getCell(31)));
-		vo.setEvngSesionAsSml(getValue(row.getCell(32)));
-		vo.setEvngSesionAs(getValue(row.getCell(33)));
+    		vo.setEvngSesionAsSt(getValue(row.getCell(30)));
+    		vo.setEvngSesionAsDsk(getValue(row.getCell(31)));
+    		vo.setEvngSesionAsSml(getValue(row.getCell(32)));
+    		vo.setEvngSesionAs(getValue(row.getCell(33)));
 
-		vo.setEvngSesionInsSt(getValue(row.getCell(34)));
-		vo.setEvngSesionInsDsk(getValue(row.getCell(35)));
-		vo.setEvngSesionInsSml(getValue(row.getCell(36)));
-		vo.setEvngSesionIns(getValue(row.getCell(37)));
+    		vo.setEvngSesionInsSt(getValue(row.getCell(34)));
+    		vo.setEvngSesionInsDsk(getValue(row.getCell(35)));
+    		vo.setEvngSesionInsSml(getValue(row.getCell(36)));
+    		vo.setEvngSesionIns(getValue(row.getCell(37)));
 
-		vo.setEvngSesionRtnSt(getValue(row.getCell(38)));
-		vo.setEvngSesionRtnDsk(getValue(row.getCell(39)));
-		vo.setEvngSesionRtnSml(getValue(row.getCell(40)));
-		vo.setEvngSesionRtn(getValue(row.getCell(41)));
+    		vo.setEvngSesionRtnSt(getValue(row.getCell(38)));
+    		vo.setEvngSesionRtnDsk(getValue(row.getCell(39)));
+    		vo.setEvngSesionRtnSml(getValue(row.getCell(40)));
+    		vo.setEvngSesionRtn(getValue(row.getCell(41)));
 
-		return vo;
+    		return vo;
+//		}
+//		catch(Exception ex){
+//			Row row1 = row;
+//			String exceptionMsg = ex.toString();
+//			CapacityExcelUploaderDataVOEnhance vo = new CapacityExcelUploaderDataVOEnhance();
+//			return vo;
+//		}
 	}
 
 
