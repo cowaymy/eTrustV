@@ -141,4 +141,6 @@ public interface EKeyInApiMapper {
   EgovMap getTokenInfo(Map<String, Object> param);
 
   int updateStagingF(Map<String, Object> param);
+
+  int checkCreditCardValidity(String token);
 }

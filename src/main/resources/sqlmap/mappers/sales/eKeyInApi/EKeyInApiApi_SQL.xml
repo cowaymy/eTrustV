@@ -1040,6 +1040,12 @@
     </if>
   </select>
 
+   <select id="checkCreditCardValidity" parameterType="String" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM PAY0318D
+    WHERE TOKEN_ID = #{token}
+  </select>
+
   <insert id="insertSAL0258D" parameterType="Map">
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0258D] 20191214 - KR JAEMAJEM */
     INSERT INTO SAL0258D ( TKN_ID

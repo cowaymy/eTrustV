@@ -2366,6 +2366,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
               crcCheck = "0";
           }
 
+          //check if credit card is being blocked
+          boolean isCreditCardValid = true;
+          int checkCreditCardValid = eKeyInApiMapper.checkCreditCardValidity(sal0257Dtoken.getToken());
+          if(checkCreditCardValid > 0){
+        	  isCreditCardValid = false;
+          }
+
           logger.debug("crcCheck :: " + crcCheck);
           // If card/token not duplicated
           if(crcCheck == "0") {
