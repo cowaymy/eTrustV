@@ -710,7 +710,9 @@
                , NVL(T1.PROMO_ITM_PV, 0) AS PROMO_ITM_PV
                , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
                , NVL(T3.PROMO_APP_TYPE_ID, 0) AS PROMO_APP_TYPE_ID
-               , CASE WHEN ( NVL(T5.EKEYIN_COUNT, 0) + NVL(T5.ADMIN_KEYIN_COUNT, 0) ) > NVL(T5.CTRL_QUOTA, 0) THEN 1 ELSE 0 END AS QUOTA_STUS
+               , CASE WHEN NVL(T5.CTRL_QUOTA, 0) = 0 THEN 0
+                         WHEN (NVL(T5.EKEYIN_COUNT, 0) + NVL(T5.ADMIN_KEYIN_COUNT, 0)) > = NVL(T5.CTRL_QUOTA, 0) THEN 1
+                         ELSE 0 END AS QUOTA_STUS
     FROM SAL0018D T1
     LEFT OUTER JOIN SYS0026M T2 ON T1.PROMO_ITM_STK_ID = T2.STK_ID
     LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
@@ -744,7 +746,9 @@
              , NVL(T1.PROMO_ITM_PV, 0)                                                 AS PROMO_ITM_PV
              , NVL(T1.PROMO_ITM_PV_GST, 0)                                             AS PROMO_ITM_PV_GST
              , NVL(T3.PROMO_APP_TYPE_ID, 0)                                            AS PROMO_APP_TYPE_ID
-             , CASE WHEN ( NVL(T5.EKEYIN_COUNT, 0) + NVL(T5.ADMIN_KEYIN_COUNT, 0)) > NVL(T5.CTRL_QUOTA,0) THEN 1 ELSE 0 END AS QUOTA_STUS
+             , CASE WHEN NVL(T5.CTRL_QUOTA, 0) = 0 THEN 0
+                       WHEN (NVL(T5.EKEYIN_COUNT, 0) + NVL(T5.ADMIN_KEYIN_COUNT, 0)) > = NVL(T5.CTRL_QUOTA, 0) THEN 1
+                       ELSE 0 END AS QUOTA_STUS
     FROM SAL0018D T1
     LEFT OUTER JOIN SYS0026M T2 ON T1.PROMO_ITM_STK_ID = T2.STK_ID
     LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
@@ -763,8 +767,10 @@
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockID] 20191213 - KR JAEMAJEM */
     SELECT DISTINCT T1.PROMO_ITM_PRC
              , T1.PROMO_ITM_PV
-            , T1.PROMO_ITM_RENTAL
-            , CASE WHEN ( NVL(T5.EKEYIN_COUNT, 0) + NVL(T5.ADMIN_KEYIN_COUNT, 0)) > NVL(T5.CTRL_QUOTA, 0) THEN 1 ELSE 0 END AS QUOTA_STUS
+             , T1.PROMO_ITM_RENTAL
+             , CASE WHEN NVL(T5.CTRL_QUOTA, 0) = 0 THEN 0
+                      WHEN (NVL(T5.EKEYIN_COUNT, 0) + NVL(T5.ADMIN_KEYIN_COUNT, 0)) > = NVL(T5.CTRL_QUOTA, 0) THEN 1
+                      ELSE 0 END AS QUOTA_STUS
     FROM SAL0018D T1
     LEFT JOIN SAL1020V T5 ON T1.PROMO_ID = T5.PROMO_ID
     WHERE T1.PROMO_ID = #{promoId}
