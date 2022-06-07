@@ -1522,7 +1522,7 @@
            return ;
          }
 
-         if(Number(valArray[0]) >  Number(valArray[1]) ){
+         if(Number(valArray[0]) >=  Number(valArray[1]) ){
            Common.alert("The selected session has already been completed. Please select another session ");
            return ;
          }
