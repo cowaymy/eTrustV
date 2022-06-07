@@ -2463,7 +2463,7 @@ public class ReportBatchController {
                                                                                  // rpt
                                                                                  // file
                                                                                  // name.
-   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
    params.put("V_TEMP", "TEMP");// parameter
    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "/visualcut/AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");// visualcut
 
@@ -2533,7 +2533,7 @@ public void CTDutyAllowanceMonthly() {
                                                                       // rpt
                                                                       // file
                                                                       // name.
-  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
   params.put("v_WhereSQL", null);// parameter
   params.put("v_OrderBySQL", null);// parameter
   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CT" + File.separator + "Duty_Allowance_" + rptDate + ".xls");
