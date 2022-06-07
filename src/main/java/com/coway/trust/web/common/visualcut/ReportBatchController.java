@@ -2454,6 +2454,24 @@ public class ReportBatchController {
  }
 //GENERATION TIME : 23 45 END
 
+ @RequestMapping(value = "/agingMonthRentalCollection.do")
+ //@Scheduled(cron = " 0 0 12 * * ?")//Daily 12:00pm
+ public void agingMonthRentalCollection() throws IOException {
+   LOGGER.info("[START] agingMonthRentalCollection...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/AgingMonthRentalCollection.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(REPORT_FILE_NAME, "/visualcut/AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");// visualcut
+
+   this.view(null, null, params);
+   LOGGER.info("[END] magicAddress_raw...");
+ }
+//GENERATION TIME : 10 00 END
+
  // Celeste: Account Health Index Raw Data (No need to set CRON ; manual job)
  @RequestMapping(value = "/accHealthIndexRawData.do")
  public void AccountHealthIndexRawData() throws IOException{
