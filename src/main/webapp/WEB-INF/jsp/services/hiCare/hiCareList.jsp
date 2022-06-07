@@ -483,10 +483,13 @@
             <li><p class="btn_grid">
                 <a href="#" onclick="javascript:fn_exchange();">Filter Exchange</a>
             </p></li>
+         </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
             <li><p class="btn_grid">
                 <a href="#" onclick="javascript:fn_edit(3);"><spring:message code='sys.btn.deactivate'/></a>
             </p></li>
         </c:if>
+
         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid">
                 <a href="#" id="excelDown"><spring:message code='service.btn.Generate'/></a>
