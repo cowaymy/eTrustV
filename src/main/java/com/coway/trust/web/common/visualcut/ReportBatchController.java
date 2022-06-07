@@ -2465,10 +2465,11 @@ public class ReportBatchController {
                                                                                  // name.
    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
    params.put("V_TEMP", "TEMP");// parameter
-   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "/visualcut/AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");// visualcut
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
+	        + "AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");
 
    this.view(null, null, params);
-   LOGGER.info("[END] magicAddress_raw...");
+   LOGGER.info("[END] agingMonthRentalCollection...");
  }
 //GENERATION TIME : 10 00 END
 
