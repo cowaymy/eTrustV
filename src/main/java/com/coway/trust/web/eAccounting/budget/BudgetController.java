@@ -284,7 +284,7 @@ public class BudgetController {
 
 		params.put("procFlg", procFlg);
 		LOGGER.debug(sessionVO.getCostCentr());
-		if(!"A1102".equals(sessionVO.getCostCentr()) && sessionVO.getUserId() != 22661) {
+		if(!"A1101".equals(sessionVO.getCostCentr()) && sessionVO.getUserId() != 22661) {
 			params.put("flg", "1");
 		} else {
 			if(sessionVO.getUserId() == 140139) {
