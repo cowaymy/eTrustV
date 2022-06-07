@@ -19,6 +19,7 @@ function fn_memberSave(){
     $("#memberType").attr("disabled",false);
     $("#joinDate").attr("disabled",false);
     $("#nric").attr("disabled",false);
+    $("#areaId").val($("#areaId").val());
     $("#streetDtl1").val(insAddressForm.streetDtl.value);
     $("#addrDtl1").val(insAddressForm.addrDtl.value);
     $("#searchSt1").val(insAddressForm.searchSt.value);
@@ -47,6 +48,7 @@ function fn_memberSave(){
     }
 
     $.extend(jsonObj, {'memberType' : $("#memberType").val()});
+    $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
 
     console.log(JSON.stringify(jsonObj));
     Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -1553,6 +1555,7 @@ function checkBankAccNo() {
                                 <option value="7">Homecare Technician (HT)</option>
                                 <option value="5758">Homecare Delivery Technician (DT)</option>
                                 <option value="6185">Temporary Staff Code</option>
+                                <option value="6672">Logistics Technician</option>
                             </select>
                         </td>
                     </tr>

@@ -1022,6 +1022,8 @@ public class MemberListController {
 
         // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
         formMap.put("hsptlz",  params.get("hsptlz"));
+
+        formMap.put("areaIdUpd",  params.get("areaIdUpd"));
         // LaiKW - Comment starts here
         formMap.put("memberType", formMap.get("memberTypeUpd"));
         formMap.put("MemberID", formMap.get("MemberIDUpd"));
@@ -1091,7 +1093,8 @@ public class MemberListController {
 
             if(formMap.get("memberType").toString().equals("1") || formMap.get("memberType").toString().equals("2") ||
             		formMap.get("memberType").toString().equals("3") || formMap.get("memberType").toString().equals("5") ||
-            		formMap.get("memberType").toString().equals("7") || formMap.get("memberType").toString().equals("2803")) {
+            		formMap.get("memberType").toString().equals("7") || formMap.get("memberType").toString().equals("6672") ||
+            		formMap.get("memberType").toString().equals("2803")) {
 
             	//specify field update, just will need to update LMS system - HLTANG 20211028
             	if(formMap.containsKey("usernameUpd") || formMap.containsKey("memberNmUpd")
