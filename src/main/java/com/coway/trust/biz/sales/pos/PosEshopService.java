@@ -21,5 +21,10 @@ public interface PosEshopService {
 
 	Map<String, Object> updatePosEshopItemList(Map<String, Object> params) throws Exception;
 
+	void insUpdPosEshopShipping(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectShippingList(Map<String, Object> params);
+
+	Map<String, Object> updatePosEshopShipping(Map<String, Object> params) throws Exception;
 
 }

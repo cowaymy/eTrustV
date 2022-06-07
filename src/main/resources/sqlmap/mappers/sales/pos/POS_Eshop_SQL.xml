@@ -125,4 +125,103 @@
             WHERE ID = #{id}
     </update>
 
+
+    <select id="selectShippingList" parameterType="Map" resultType="egovMap">
+            SELECT
+			      A.ID
+			    , B.CODE_NAME AS REGIONAL
+			    , A.REGIONAL_TYPE
+			    , A.TOTAL_WEIGHT_FROM
+			    , A.TOTAL_WEIGHT_TO
+			    , TO_CHAR(A.START_DT,'DD-MM-YYYY') AS START_DT
+			    , TO_CHAR(A.END_DT,'DD-MM-YYYY') AS END_DT
+			    , A.TOTAL_SHIPPING_FEE
+			    , CASE WHEN TO_CHAR(SYSDATE ,'YYYYMMDD') > TO_CHAR(A.END_DT,'YYYYMMDD')  THEN 'Expired'
+                  ELSE 'Active' END AS STATUS
+                , CASE WHEN TO_CHAR(SYSDATE ,'YYYYMMDD') >= TO_CHAR(A.START_DT,'YYYYMMDD')  THEN 'C'
+                  ELSE 'F' END AS STATUS2
+		from SAL0322D A
+		LEFT JOIN SYS0013M B ON A.REGIONAL_TYPE = B.CODE_ID
+		WHERE 1=1
+		AND NVL(A.DISAB,0) = 0
+		<if test="regional != null and regional != '' ">
+                  AND A.REGIONAL_TYPE = #{regional}
+         </if>
+         <if test="weightFrom != null and weightFrom != '' ">
+                  AND A.TOTAL_WEIGHT_FROM = #{weightFrom}
+         </if>
+         <if test="weightTo != null and weightTo != '' ">
+                  AND A.TOTAL_WEIGHT_TO = #{weightTo}
+         </if>
+          <if test="startDt != null and startDt != '' ">
+                  AND A.START_DT =  TO_DATE(#{startDt},'DD/MM/YYYY')
+         </if>
+          <if test="endDt != null and endDt != '' ">
+                  AND A.END_DT =  TO_DATE(#{endDt},'DD/MM/YYYY')
+         </if>
+          <if test="status != null and status != '' ">
+                    <choose>
+                        <when test="status == 1">
+                           AND TO_CHAR(SYSDATE ,'YYYYMMDD')  <![CDATA[<= ]]> TO_CHAR(A.END_DT,'YYYYMMDD')
+                        </when>
+                        <when test="status != 1">
+                           AND TO_CHAR(SYSDATE ,'YYYYMMDD')  <![CDATA[> ]]> TO_CHAR(A.END_DT,'YYYYMMDD')
+                        </when>
+                    </choose>
+         </if>
+    </select>
+
+    <insert id="insertEshopShippingList" parameterType="Map">
+            INSERT INTO SAL0322D (
+                             ID
+                           , REGIONAL_TYPE
+                           , TOTAL_WEIGHT_FROM
+                           , TOTAL_WEIGHT_TO
+                           , START_DT
+                           , END_DT
+                           , TOTAL_SHIPPING_FEE
+                           , CRT_ID
+                           , CRT_DT
+             )VALUES (
+                             #{id}
+                           , #{regionalType}
+                           , #{weightFrom}
+                           , #{weightTo}
+                           , #{startDt}
+                           , #{endDt}
+                           , #{shippingFee}
+                           , #{crtId}
+                           , sysdate
+            )
+    </insert>
+
+    <select id="getSeqSAL0322D" resultType="java.lang.Integer">
+        SELECT SAL0322D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <update id="removeEshopShippingList"  parameterType="java.util.Map">
+              UPDATE SAL0322D
+                SET DISAB  = 1
+                     ,UPD_ID  = #{userId}
+                     ,UPD_DT       = SYSDATE
+            WHERE ID = #{id}
+    </update>
+
+    <update id="updatePosEshopShipping"  parameterType="java.util.Map">
+              UPDATE SAL0322D
+                SET
+                        REGIONAL_TYPE           = #{regionalType}
+                     ,  TOTAL_WEIGHT_FROM  = #{weightFrom}
+                     ,  TOTAL_WEIGHT_TO      = #{weightTo}
+                     ,  START_DT                   = #{startDt}
+                     ,  END_DT                      = #{endDt}
+                     ,  TOTAL_SHIPPING_FEE   = #{shippingFee}
+                     ,  UPD_ID                       = #{updId}
+                     ,  UPD_DT                      = SYSDATE
+            WHERE ID = #{id}
+    </update>
+
+
+
+
 </mapper>

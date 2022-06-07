@@ -116,6 +116,10 @@ $(function(){
 	      Common.popupDiv("/sales/posstock/eshopItemEditPop.do");
 	  });
 
+	  $('#btnShipping').click(function() {
+          Common.popupDiv("/sales/posstock/eshopShippingPop.do");
+      });
+
 
 });
 
@@ -222,7 +226,7 @@ $(function(){
       <ul class="btns">
         <li><p class="link_btn type2"><a id="btnAddItem" href="#">Add Item</a></p></li>
         <li><p class="link_btn type2"><a id="btnEditItem" href="#">Edit Item</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Shipping</a></p></li>
+        <li><p class="link_btn type2"><a id="btnShipping" href="#">Shipping</a></p></li>
       </ul>
       <p class="hide_btn">
        <a href="#"><img

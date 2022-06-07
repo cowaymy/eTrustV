@@ -168,7 +168,7 @@ function itemCategoryChange(){
 
 
 function setInputFile(){//인풋파일 세팅하기
-    $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' id='uploadImg' class='input_text' readonly='readonly' /></label>");
+    $(".auto_file").append("<label><span class='label_text'><a href='#'>Reupload</a></span><input type='text' id='uploadImg' class='input_text' readonly='readonly' /></label>");
 }
 
 
@@ -431,7 +431,7 @@ function fn_chkItemVal(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="btnAdd_editItem" onclick="javascript:fn_saveGrid()"  >Add</a></p></li>
+    <li><p class="btn_blue2 big"><a id="btnAdd_editItem" onclick="javascript:fn_saveGrid()"  >Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="javascript:void(0);" onclick="javascript:fn_close()">Cancel</a></p></li>
 </ul>
 </section><!-- search_table end -->

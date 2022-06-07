@@ -96,6 +96,20 @@ public class PosEshopController {
 
   }
 
+  @RequestMapping(value = "/eshopShippingPop.do")
+  public String eshopShippingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    return "sales/pos/eshopShippingPop";
+
+  }
+
+  @RequestMapping(value = "/eshopShippingRegisterPop.do")
+  public String eshopShippingRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    return "sales/pos/eshopShippingRegisterPop";
+
+  }
+
   @RequestMapping(value = "/selectItemPrice.do" ,method = RequestMethod.POST)
   public ResponseEntity<EgovMap> selectItemPrice(@RequestBody Map<String, Object> params, SessionVO sessionVO)
       throws Exception {
@@ -227,6 +241,65 @@ public class PosEshopController {
 
     }
 
+
+    @RequestMapping(value = "/insUpdPosEshopShipping.do")
+	public ResponseEntity<ReturnMessage> insUpdPosEshopShipping(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
+
+		params.put("crtUserId", session.getUserId());
+
+
+		 LOGGER.debug("param insUpdPosEshopShipping===================>>  " + params.toString());
+
+		 posEshopService.insUpdPosEshopShipping(params);
+
+		//Return Message
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+
+		return ResponseEntity.ok(message);
+	}
+
+
+	@RequestMapping(value = "/selectShippingList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectShippingList (@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		LOGGER.debug("param selectShippingList===================>>  " + params.toString());
+
+		itemList = posEshopService.selectShippingList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	 @RequestMapping(value = "/updatePosEshopShipping.do", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> updatePosEshopShipping(@RequestBody Map<String, Object> params) throws Exception {
+	      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	      params.put("userId", sessionVO.getUserId());
+	      params.put("userDeptId", sessionVO.getUserDeptId());
+	      params.put("userName", sessionVO.getUserName());
+
+	      Map<String, Object> retunMap = null;
+
+	      LOGGER.debug(" params updatePosEshopShipping==dd=>"+params.toString());
+
+	      retunMap = posEshopService.updatePosEshopShipping(params);
+
+
+	      // Return MSG
+	      ReturnMessage message = new ReturnMessage();
+
+	      message.setCode(AppConstants.SUCCESS);
+	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	      message.setData(retunMap.get("scnNo"));
+
+	      return ResponseEntity.ok(message);
+
+	    }
 
 
 }

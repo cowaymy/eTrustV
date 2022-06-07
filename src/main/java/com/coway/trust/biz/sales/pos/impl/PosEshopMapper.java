@@ -21,6 +21,16 @@ public interface PosEshopMapper {
 
 	void updateEshopItemList(Map<String, Object> params);
 
+	int getSeqSAL0322D();
+
+	List<EgovMap> selectShippingList(Map<String, Object> params);
+
+	void insertEshopShippingList(Map<String, Object> params);
+
+	void removeEshopShippingList(Map<String, Object> params);
+
+	void updatePosEshopShipping(Map<String, Object> params);
+
 
 
 }

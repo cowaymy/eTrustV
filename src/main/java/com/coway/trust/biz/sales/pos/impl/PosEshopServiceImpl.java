@@ -145,10 +145,95 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	  }
 
 
+	  @Override
+	  @Transactional
+	  public void insUpdPosEshopShipping(Map<String, Object> params) throws Exception {
+
+			List<Object> addList = (List<Object>)params.get("add");
+			List<Object> removeList = (List<Object>)params.get("remove");
+
+			LOGGER.debug("removeList insUpdPosEshopShipping===>"+removeList.toString());
+
+			//__________________________________________________________________________________Add
+			if(addList != null && addList.size() > 0){
+
+				for (int idx = 0; idx < addList.size(); idx++) {
+
+					Map<String, Object> addMap = (Map<String, Object>)addList.get(idx);
+
+					LOGGER.debug(" addMap insUpdPosEshopShipping===>"+addList.toString());
+
+					//params Set
+					Map<String, Object> insMap = new HashMap<String, Object>();
+
+					int seq = 0;
+					seq=posMapper.getSeqSAL0322D();
+
+					insMap.put("id", seq);
+					insMap.put("regionalType", addMap.get("regionalType"));
+					insMap.put("weightFrom", addMap.get("totalWeightFrom"));
+					insMap.put("weightTo", addMap.get("totalWeightTo"));
+					insMap.put("startDt", addMap.get("startDt"));
+					insMap.put("endDt", addMap.get("endDt"));
+					insMap.put("shippingFee", addMap.get("totalShippingFee"));
+					insMap.put("crtId",  params.get("crtUserId"));
+
+					posMapper.insertEshopShippingList(insMap);
+
+				}
+			}
+
+			//__________________________________________________________________________________Update
+			if(removeList != null && removeList.size() > 0){
+				for (int idx = 0; idx < removeList.size(); idx++) {
+
+					Map<String, Object> removeMap = (Map<String, Object>)removeList.get(idx);
 
 
+					LOGGER.debug("updList insUpdPosEshopShipping===>"+removeList.toString());
+
+					//params Set
+					Map<String, Object> delMap = new HashMap<String, Object>();
+					delMap.put("id", removeMap.get("id"));
+
+					posMapper.removeEshopShippingList(delMap);
+
+				}
+			}
+		}
 
 
+	  @Override
+		public List<EgovMap> selectShippingList(Map<String, Object> params) {
+			return posMapper.selectShippingList(params);
+		}
+
+	  @Override
+	  public Map<String, Object> updatePosEshopShipping(Map<String, Object> params) throws Exception {
+
+	  		Map<String, Object>  heardMap  = null;
+
+	  		LOGGER.debug(" params updatePosEshopShipping===>"+params.toString());
+
+	  		heardMap= new HashMap<String, Object>();
+
+	  		heardMap.put("id", params.get("id_editShippingItem"));
+	  		heardMap.put("regionalType", params.get("regionalType_editShippingItem"));
+	  		heardMap.put("weightFrom", params.get("weightFrom_edit"));
+	  		heardMap.put("weightTo", params.get("weightTo_edit"));
+	  		heardMap.put("startDt", params.get("startDt_edit"));
+	  		heardMap.put("endDt", params.get("endDt_edit"));
+	  		heardMap.put("shippingFee", params.get("shippingFee_edit"));
+	  		heardMap.put("updId", params.get("userId"));
+
+	  	   posMapper.updatePosEshopShipping(heardMap);
+
+	  	   //Return Message
+		   Map<String, Object> rtnMap = new HashMap<String, Object>();
+		   rtnMap.put("scnNo", "ok");
+		   return rtnMap;
+
+	  }
 
 
 
