@@ -2465,7 +2465,7 @@ public class ReportBatchController {
                                                                                  // name.
    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
    params.put("V_TEMP", "TEMP");// parameter
-   params.put(REPORT_FILE_NAME, "/visualcut/AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");// visualcut
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "/visualcut/AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");// visualcut
 
    this.view(null, null, params);
    LOGGER.info("[END] magicAddress_raw...");
