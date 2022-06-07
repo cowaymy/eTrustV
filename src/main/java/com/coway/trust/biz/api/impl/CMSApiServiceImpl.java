@@ -89,18 +89,17 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("date", df.format(date));
 
-        // Test JSch connection to Bastion > CICD Instance - Start
+        // Test block - JSch connection to Bastion > CICD Instance - Start
         // TODO - remove after test
-//        String subPath = "/resources/WebShare/API/CMS";
 //        String subPath = "C:\\works\\workspace\\etrust\\src\\main\\webapp\\resources\\WebShare\\CRT\\resources\\WebShare\\API\\CMS20220418\\";
 //        String file = "Test.csv";
 //        map.put("subPath", subPath);
 //        map.put("file", file);
 //
 //        sshPushFile(map);
-        // Test JSch connection to Bastion > CICD Instance - End
+        // Test block - JSch connection to Bastion > CICD Instance - End
 
-        // To uncomment - Start
+        // Actual working block - Start
         int rowCnt = cmsApiMapper.getRowCount(map);
         int pages = rowCnt/1000000;
 
@@ -117,7 +116,7 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
                 this.createCsvFile(map);
             }
         }
-        // To uncomment - End
+        // Actual working block - End
 
         return null;
     }
@@ -167,16 +166,8 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
 
         final int SESS_TIMEOUT = 10000;
 
-        // Tunneling properties - Start
-        // TODO - Host and credentials information to hide
-//        String bastionHost = "18.141.229.168";
-//        String cicdHost = "10.201.37.91";
-//        String user = "aleph";
-//        String pw = "e9PwnncwI0";
-
-//         String upFile = map.get("subPath").toString() + map.get("file").toString();
-
-        // Tunneling properties - End
+        // For testing
+        //String upFile = map.get("subPath").toString() + map.get("file").toString();
 
         Session session_b = null; // Bastion Session
         Session session_c = null; // CICD Session
@@ -186,7 +177,7 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
         try {
             JSch jsch = new JSch();
 
-//            File file = new File(upFile);
+            //File file = new File(upFile); // For testing
             File file = new File(map.get("fileDir").toString());
             InputStream isFile = new FileInputStream(file);
 
