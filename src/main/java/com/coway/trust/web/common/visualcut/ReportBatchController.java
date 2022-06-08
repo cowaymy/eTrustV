@@ -2525,7 +2525,8 @@ public void CTDutyAllowanceMonthly() {
   Map<String, Object> params = new HashMap<>();
 
   // Get Last Month
-  LocalDate lastMonth = LocalDate.now().minusMonths(1);
+  //.minusMonths(1)
+  LocalDate lastMonth = LocalDate.now();
   String month = lastMonth.getMonth().toString();
   String year = String.valueOf(lastMonth.getYear());
   String rptDate = month + "_" + year;
@@ -2534,7 +2535,7 @@ public void CTDutyAllowanceMonthly() {
                                                                       // rpt
                                                                       // file
                                                                       // name.
-  params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   params.put("v_WhereSQL", null);// parameter
   params.put("v_OrderBySQL", null);// parameter
   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CT" + File.separator + "Duty_Allowance_" + rptDate + ".xls");
