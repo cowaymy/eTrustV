@@ -85,7 +85,7 @@
                        CASE  WHEN ( Extent1.ORD_STUS_ID IS NOT NULL ) THEN Extent1.ORD_STUS_ID ELSE 0 END ORD_STUS_ID ,
                        NVL(Extent4.CURR_MTH_AGING,0) CURR_MTH_AGING,
                        NVL(Extent4.WEB_RENT_LDGR_OS,0) CURRENT_OS,
-                       CASE  WHEN Extent5.AGENT_ID IS NOT NULL THEN (Extent5.AGENT_ID || '-'  || Extent5.AGENT_NAME) ELSE 'N/A' END ROS_CALLER,
+                       CASE  WHEN Extent5.AGENT_GRP_ID IS NOT NULL THEN (Extent5.AGENT_GRP_ID || '-'  || Extent13.AGENT_GRP_NAME) ELSE 'N/A' END ROS_CALLER,
                        CASE WHEN ETR_FG = 1 THEN 'Yes' ELSE 'No' END ETR ,
                        TO_CHAR(ir1.INSTALL_DT,'DD/MM/YYYY') FIRST_INSTALL_DT ,
                        Extent9.CODE_NAME PAYMODE ,
@@ -102,7 +102,7 @@
                        LEFT JOIN ROS ROS ON ROS.SALES_ORD_ID = Extent1.ORD_ID
                        LEFT JOIN CCR0007D CR ON CR.CALL_RESULT_ID = ROS.CALL_RESULT_ID
                        LEFT JOIN SAL0149D Extent4 ON Extent4.SALES_ORD_ID = Extent1.ORD_ID
-                       LEFT JOIN SAL0148M Extent5 ON Extent5.AGENT_ID = Extent4.AGENT_ID
+                       LEFT JOIN SAL0148M Extent5 ON Extent5.AGENT_GRP_ID = Extent4.AGENT_GRP_ID
                        JOIN SAL0029D CUST ON CUST.CUST_ID =Extent1.CUST_ID
                        LEFT JOIN SYS0013M Extent6 ON Extent6.CODE_ID = Extent1.CUST_TYPE_ID
                        LEFT JOIN SYS0013M Extent7 ON Extent7.CODE_ID = CUST.CORP_TYPE_ID
@@ -113,6 +113,8 @@
                        LEFT JOIN SYS0034M Extent10 ON Extent10.RESN_ID = extent3.ROS_CALL_RESN_ID
                        LEFT JOIN SYS0032M Extent11 ON Extent11.RESN_ID = extent10.PARENT_RESN_ID
                        JOIN SAL0027D Extent12 ON Extent12.CUST_CNTC_ID = Extent1.ORD_CNTC_ID
+                       LEFT JOIN SAL0324M Extent13 ON Extent5.AGENT_GRP_ID =Extent13.AGENT_GRP_ID
+                       LEFT JOIN SYS0013M Extent14 ON Extent14.CODE_ID = Extent5.AGENT_TYPE
                  WHERE 1 = 1
                  <if test=" ordNo != null and ordNo != '' ">
                     AND  Extent1.ORD_NO = #{ordNo}
@@ -173,7 +175,7 @@
                     AND  Extent11.RESN_ID = #{mainReason}
                  </if>
                  <if test=" rosCallerArr != null and rosCallerArr != '' ">
-                    AND Extent4.AGENT_ID IN
+                    AND Extent14.CODE || '_'  || Extent5.AGENT_GRP_ID || '_'  || Extent13.AGENT_GRP_NAME IN
                     <foreach collection="rosCallerArr" item="item" open="(" separator="," close=")">
                         #{item}
                     </foreach>
