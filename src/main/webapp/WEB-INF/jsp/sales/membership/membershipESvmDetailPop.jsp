@@ -57,13 +57,17 @@
             $("#aTabBilling").hide();
         }
 
+        var stus = '${eSvmInfo.stus}';
         var quotStatus = '${quotInfo.validStusId}';
         var quotNumber = '${quotInfo.quotNo}';
         if(!(quotStatus == '1' || quotStatus == '4' || quotStatus == '81')){
-        	Common.alert('Quotation has been deactivated.<br/> Quotation number :<br/> [ ' + quotNumber + ' ]<br/>Please check and proceed reject.');
+            console.log(quotStatus);
+        	console.log(stus);
+        	if(stus != '6'){
+        		Common.alert('Quotation has been deactivated.<br/> Quotation number :<br/> [ ' + quotNumber + ' ]<br/>Please check and proceed reject.');
+        	}
         }
         //fn_displaySpecialInst();
-        var stus = '${eSvmInfo.stus}';
         var flg = '${paymentInfo.allowComm}';
         var specialInst = '${eSvmInfo.appvInstrct}';
         var cardModeCode = '${paymentInfo.cardModeCode}';
