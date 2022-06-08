@@ -48,16 +48,16 @@
 
          <if test="memType == 2 ">
             <if test="memLevel == 1">
-              JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
-              JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+              LEFT JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+              LEFT JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
 
                 <if test="orgCode != null and orgCode != '' ">
                     AND E.ORG_CODE = #{orgCode}
                 </if>
             </if>
             <if test="memLevel == 2">
-              JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
-              JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+             LEFT JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+             LEFT JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
 
                 <if test="grpCode != null and grpCode != '' ">
                     AND E.GRP_CODE = #{grpCode}
