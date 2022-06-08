@@ -1450,6 +1450,7 @@
                              FROM SAL0001D
                              WHERE SALES_ORD_ID = #{salesOrdId} )
       AND D.PROMO_ITM_STUS_ID = 1
+      AND ROWNUM = 1
   </select>
 
   <select id="revMainCboPckage" parameterType="Map" resultType="egovMap">
@@ -1476,6 +1477,7 @@
                               AND F.MEM_PAC_ID = A.SRV_PAC_ID
     WHERE A.PCKAGE_BINDING_NO = #{salesOrdId}
       AND D.PROMO_ITM_STUS_ID = 1
+      AND ROWNUM = 1
   </select>
 
   <insert id="insertSAL0254D" parameterType="Map">
