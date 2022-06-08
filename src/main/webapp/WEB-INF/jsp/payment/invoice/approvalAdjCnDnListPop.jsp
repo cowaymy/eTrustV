@@ -30,7 +30,41 @@ $(document).ready(function(){
 
     });
 
+    fn_setToDay();
+
 });
+
+function fn_setToDay() {
+    var today = new Date();
+
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var mm2 = today.getMonth() + 1 - 3;
+    var yyyy = today.getFullYear();
+    var yyyy2 = "";
+
+    if(dd < 10) {
+        dd = "0" + dd;
+    }
+    if((mm - 3) < 10){
+        mm = "0" + mm
+    }
+    if(mm2 < 10){
+        mm2 = "0" + mm2
+    }
+    if(mm2 < 1){
+    	yyyy2 = yyyy - 1;
+    }
+    else{
+    	yyyy2 = yyyy;
+    }
+
+    today = dd + "/" + mm2 + "/" + yyyy2;
+    $("#date1").val(today);
+
+    var today_s = dd + "/" +  mm + "/" + yyyy;
+    $("#date2").val(today_s);
+}
 
 var columnLayout=[
     { dataField:"code" ,headerText:"<spring:message code='pay.head.type'/>" ,editable : false , visible : false},
