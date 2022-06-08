@@ -981,4 +981,13 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return count;
   }
 
+  @Override
+  public boolean checkCreditCardValidity(String tokenId) {
+    int result = customerMapper.checkCreditCardValidity(tokenId);
+
+    if(result > 0){
+    	return false;
+    }
+    return true;
+  }
 }

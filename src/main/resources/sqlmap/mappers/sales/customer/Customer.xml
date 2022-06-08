@@ -2947,6 +2947,12 @@
       AND TO_CHAR(UPD_DT,'YYYYMMDDHH24MISS') = #{rcdTms}
   </select>
 
+  <select id="checkCreditCardValidity" parameterType="String" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM PAY0318D
+    WHERE TOKEN_ID = #{tokenId}
+  </select>
+
   <update id="updateCustomerStatus" parameterType="Map">
     UPDATE SAL0029D
     SET

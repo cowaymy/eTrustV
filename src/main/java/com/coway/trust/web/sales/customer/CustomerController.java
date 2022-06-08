@@ -2667,8 +2667,21 @@ public class CustomerController {
       //Map<String, Object> result = new HashMap();
       Map<String, Object> result = customerService.getTokenNumber(params);
 
-      if(result == null) {
+      if(result == null){
           customerService.updateTokenStagingF(params);
+      }
+
+      if(result != null && result.get("token") != null){
+          boolean isCreditCardValid = customerService.checkCreditCardValidity(result.get("token").toString());
+          if(isCreditCardValid == false) {
+              customerService.updateTokenStagingF(params);
+
+        	  ReturnMessage message = new ReturnMessage();
+              message.setCode(AppConstants.FAIL);
+              message.setMessage("Transaction Not Allowed. Kindly find other card number.");
+
+              return ResponseEntity.ok(message);
+          }
       }
 
       ReturnMessage message = new ReturnMessage();

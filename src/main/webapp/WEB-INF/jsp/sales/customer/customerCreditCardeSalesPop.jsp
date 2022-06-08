@@ -131,8 +131,8 @@
                     option.winName = option.winName + new Date();
                 }
 
-                //var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
-                var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
+                var URL = "https://services.uat.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E_ERROR&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
+                //var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
 
                 tokenPop = window.open(URL, option.winName,
                         "fullscreen=" + option.fullscreen +
@@ -156,11 +156,16 @@
                             Common.ajax("GET", "/sales/customer/getTokenNumber.do", {refId : r1.tknRef}, function(r2) {
                                 console.log(r2);
                                 if(r2 != null) {
-                                    $("#_cardNo_").val(r2.data.bin + "******" + r2.data.cclast4);
-                                    $("#tknId").val(r2.data.token);
-                                    $("#cardExpr").val(r2.data.expr);
+                                    if(r2.code == "99") { //FAILED
+                                        Common.alert(r2.message);
+                                    }
+                                    else {
+                                    	 $("#_cardNo_").val(r2.data.bin + "******" + r2.data.cclast4);
+                                         $("#tknId").val(r2.data.token);
+                                         $("#cardExpr").val(r2.data.expr);
 
-                                    fn_selectCreditCardType();
+                                         fn_selectCreditCardType();
+                                    }
                                 }
                             });
                         }
