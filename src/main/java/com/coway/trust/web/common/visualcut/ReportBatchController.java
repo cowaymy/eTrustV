@@ -2466,12 +2466,12 @@ public class ReportBatchController {
    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
    params.put("V_TEMP", "TEMP");// parameter
    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
-	        + "AgingMonthRentalCollection_" + CommonUtils.getNowDate() + ".pdf");
+	        + "AG4-6 monitoring report_" + CommonUtils.getNowDate() + ".pdf");
 
    this.view(null, null, params);
    LOGGER.info("[END] agingMonthRentalCollection...");
  }
-//GENERATION TIME : 10 00 END
+//GENERATION TIME : 12 00 END
 
  // Celeste: Account Health Index Raw Data (No need to set CRON ; manual job)
  @RequestMapping(value = "/accHealthIndexRawData.do")
