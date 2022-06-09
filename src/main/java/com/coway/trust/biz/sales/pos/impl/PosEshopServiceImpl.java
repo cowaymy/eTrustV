@@ -235,6 +235,17 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 	  }
 
+	  @Override
+		public List<EgovMap> selectItemImageList(Map<String, Object> params) {
+			return posMapper.selectItemImageList(params);
+	  }
+
+	  @Override
+		public List<EgovMap> selectCatalogList(Map<String, Object> params) {
+			return posMapper.selectCatalogList(params);
+	  }
+
+
 
 
 

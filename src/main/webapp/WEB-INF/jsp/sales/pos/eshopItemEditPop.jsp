@@ -310,7 +310,7 @@ function fn_chkItemVal(){
 
 <aside class=""><!-- title_line start -->
     <ul class="right_btns">
-       <li><p class="btn_blue"><a id="searchBtn" onclick="javascript:selectEditItemList();"  ><span class="search"></span>Search</a></p></li>
+       <li><p class="btn_grid"><a id="searchBtn" onclick="javascript:selectEditItemList();"  ><span class="search"></span>Search</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 

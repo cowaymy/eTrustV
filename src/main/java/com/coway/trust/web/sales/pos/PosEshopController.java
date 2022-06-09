@@ -302,4 +302,36 @@ public class PosEshopController {
 	    }
 
 
+	  @RequestMapping(value = "/eshopOrderPop.do")
+	  public String eshopOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    return "sales/pos/eshopOrderPop";
+
+	  }
+
+	  @RequestMapping(value = "/selectItemImageList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectItemImageList (@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectItemImageList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/selectCatalogList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCatalogList (@RequestParam Map<String, Object> params,
+			  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectCatalogList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+
 }

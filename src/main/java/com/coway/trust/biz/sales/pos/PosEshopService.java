@@ -27,4 +27,8 @@ public interface PosEshopService {
 
 	Map<String, Object> updatePosEshopShipping(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectItemImageList(Map<String, Object> params);
+
+	List<EgovMap> selectCatalogList(Map<String, Object> params);
+
 }

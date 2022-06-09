@@ -87,10 +87,6 @@ $(document).ready(function(){
     var moduleParam = {groupCode : 143, codeIn : [2390, 2391]};
     CommonCombo.make('posType', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
 
-//   //PosModuleTypeComboBox
-//    var stockgradecomboData = [ {"codeId": "A","codeName": "Active"} ,{"codeId": "C","codeName": "Completed"} ,{"codeId": "R","codeName": "Rejected"}  ];
-//    doDefCombo(stockgradecomboData, '' ,'status', 'S', '');
-
 
     //selectStatusCodeList
     var statusParam = {groupCode : 9};
@@ -120,6 +116,11 @@ $(function(){
           Common.popupDiv("/sales/posstock/eshopShippingPop.do");
       });
 
+	  $('#btnOrder').click(function() {
+          Common.popupDiv("/sales/posstock/eshopOrderPop.do");
+      });
+
+
 
 });
 
@@ -139,10 +140,10 @@ $(function(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
     <h2>e-Shop</h2>
     <ul class="right_btns">
-       <li><p class="btn_blue"><a id="orderBtn"  onclick="javascript:fn_selectPosStockMgmtAddPop();" ><span class="add"></span>ORDER</a></p></li>
-       <li><p class="btn_blue"><a id="receivedBtn"  onclick="javascript:fn_selectPosStockMgmtNewAdjPop();" ><span class="edit"></span> RECEIVED</a></p></li>
-       <li><p class="btn_blue"><a id="approvalBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APPROVAL</a></p></li>
-       <li><p class="btn_blue"><a id="searchBtn" onclick="javascript:fn_getDataListAjax();"  ><span class="search"   ></span>Search</a></p></li>
+       <li><p class="btn_blue"><a id="btnOrder" ><span class="add"></span>ORDER</a></p></li>
+       <li><p class="btn_blue"><a id="receivedBtn"><span class="edit"></span> RECEIVED</a></p></li>
+       <li><p class="btn_blue"><a id="approvalBtn"><span class="edit"></span>APPROVAL</a></p></li>
+       <li><p class="btn_blue"><a id="searchBtn"><span class="search"   ></span>Search</a></p></li>
        <li><p class="btn_blue"><a id="clearBtn"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
