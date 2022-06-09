@@ -367,18 +367,16 @@
 //                    elem.setAttribute("id", result[i].id);
 //                    elem.setAttribute("onclick", "imageDtl("+result[i].id+")");
 
-//                    document.getElementById("placehere").appendChild(elem);
+//                    document.getElementById("catalogImgList").appendChild(elem);
 //         	   }
 
 //         });
 
 //     }
 
-    function imageDtl(value){
+    function imageDtl(id, locId){
 
-    	   var param = {imgId: value};
-
-
+    	   var param = {imgId: id, locId: locId};
 
     	   Common.ajax("GET", "/sales/posstock/selectItemList", param, function(result) {
                console.log(result);
@@ -395,12 +393,17 @@
                $("#qty_addToCart").val(result[0].itemQty);
                $("#price_addToCart").val(result[0].totalPrice);
                $("#weight_addToCart").val(result[0].totalWeight);
-               $("#qtyAvailable_addToCart").val(result[0].stkCode);
+               $("#qtyAvailable_addToCart").val(result[0].itemInvQty);
+
+               $("#table_addToCart").show();
+
            });
     }
 
     function selectCatalogList(){
-//     	catalogForm
+
+    	   $("#table_addToCart").hide();
+           $("#catalogImgList").html("");
 		   Common.ajax("GET", "/sales/posstock/selectCatalogList", $("#catalogForm").serializeJSON(), function(result) {
 			   console.log(result);
 			   for(var i=0 ; i<result.length;i++){
@@ -409,14 +412,22 @@
                    elem.setAttribute("height", "150px");
                    elem.setAttribute("width", "150px");
                    elem.setAttribute("id", result[i].id);
-                   elem.setAttribute("onclick", "imageDtl("+result[i].id+")");
+                   elem.setAttribute("onclick", "imageDtl(" + result[i].id + "," + result[i].locId+ ")");
 
-                   document.getElementById("placehere").appendChild(elem);
+                   document.getElementById("catalogImgList").appendChild(elem);
                }
-
-
 		   });
     }
+
+    $(function() {
+
+    	 $("#orderQty_addToCart").change(function(e){
+    		  var totalPrice = $("#orderQty_addToCart").val() *  $("#price_addToCart").val();
+    		  $("#totalPrice_addToCart").val(totalPrice);
+
+    	 });
+
+    });
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -543,7 +554,7 @@
 				<!-- table end -->
 			</form>
 			<ul class="center_btns">
-				<li><p class="btn_blue"><a name="ordSaveBtn" href="#"><spring:message code="sal.btn.ok" /></a></p></li>
+				<li><p class="btn_blue"><a href="#"><spring:message code="sal.btn.ok" /></a></p></li>
 			</ul>
 
 		</section>
@@ -597,14 +608,14 @@
 		</section>
 		<!-- search_table end -->
 
-		<section class="search_table" id="table_addToCart"><!-- search_table start -->
+		<section class="search_table" id="table_addToCart" style="display:none;"><!-- search_table start -->
 		<form action="#" method="post" id="form_addToCart">
 
 		<!-- title_line start -->
 		<aside class="title_line"><h2>Detail</h2></aside>
 		<!-- title_line end -->
- <div id="imgItem" ></div>
-		<table class="type1"><!-- table start -->
+        <div id="imgItem" ></div>
+		<table class="type1 mt20"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
 		    <col style="width:200px" />
@@ -617,27 +628,27 @@
 
 		   <tr>
 		            <th scope="row">Item</th>
-		            <td colspan="3"><input type="text"  class="w100p" id="item_addToCart"  name="item_addToCart"/></td>
+		            <td colspan="3"><input type="text"  class="w100p readonly" id="item_addToCart"  name="item_addToCart"/></td>
 		    </tr>
 		    <tr>
                     <th scope="row">Size</th>
-                    <td colspan="3"><input type="text"  class="w100p" id="size_addToCart"  name="size_addToCart"/></td>
+                    <td colspan="3"><input type="text"  class="w100p readonly" id="size_addToCart"  name="size_addToCart"/></td>
             </tr>
             <tr>
                     <th scope="row">Quantity Per Carton</th>
-                    <td colspan="3"><input type="text"  class="w100p" id="qty_addToCart"  name="qty_addToCart"/></td>
+                    <td colspan="3"><input type="text"  class="w100p readonly"  id="qty_addToCart"  name="qty_addToCart"/></td>
             </tr>
             <tr>
                     <th scope="row">Price Per Carton</th>
-                    <td colspan="3"><input type="text"  class="w100p" id="price_addToCart"  name="price_addToCart"/></td>
+                    <td colspan="3"><input type="text"  class="w100p readonly" id="price_addToCart"  name="price_addToCart"/></td>
             </tr>
             <tr>
                     <th scope="row">Weight Per Carton</th>
-                    <td colspan="3"><input type="text"  class="w100p" id="weight_addToCart"  name="weight_addToCart"/></td>
+                    <td colspan="3"><input type="text"  class="w100p readonly" id="weight_addToCart"  name="weight_addToCart"/></td>
             </tr>
              <tr>
                     <th scope="row">Quantity Available (Carton)</th>
-                    <td colspan="3"><input type="text"  class="w100p" id="qtyAvailable_addToCart"  name="weight_addToCart"/></td>
+                    <td colspan="3"><input type="text"  class="w100p readonly" id="qtyAvailable_addToCart"  name="weight_addToCart"/></td>
             </tr>
 		</tbody>
 		</table>
@@ -661,31 +672,25 @@
             </tr>
             <tr>
                     <th scope="row">Total Price</th>
-                   <td colspan="3"><input type="text"  class="w100p" id="totalPrice_addToCart"  name="totalPrice_addToCart"/></td>
+                   <td colspan="3"><input type="text"  class="w100p readonly" id="totalPrice_addToCart"  name="totalPrice_addToCart"/></td>
             </tr>
         </tbody>
         </table>
 
+        <ul class="center_btns">
+            <li><p class="btn_blue"><a href="#"><spring:message code="sal.btn.add" /></a></p></li>
+            <li><p class="btn_blue"><a href="#"><spring:message code="sys.btn.cancel" /></a></p></li>
+        </ul>
+
 		</form>
 		</section>
 
-		<div id="placehere"></div>
+		 <!-- title_line start -->
+        <aside class="title_line"><h2>Selling Items</h2></aside>
+        <!-- title_line end -->
 
-<!-- 		<table class="type1"> -->
-<!--                     <caption>search table</caption> -->
-<!--                     <colgroup> -->
-<!--                         <col style="width:69%" /> -->
-<!--                         <col style="width:1%" /> -->
-<!--                         <col style="width:30%" /> -->
-<!--                     </colgroup> -->
-<!--                     <tbody> -->
-<!--                     <tr> -->
-<!--                         <td  style="text-align: left;"> -->
-<!--                             <div id="stock_img_div" style="width:100%;"></div></td> -->
-<!--                         <td >&nbsp;</td> -->
-<!--                         <td id="imgShow"></td> -->
-<!--                     </tr> -->
-<!--                 </table> -->
+
+		<div id="catalogImgList"></div>
 
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a name="ordSaveBtn" href="#"><spring:message code="sal.btn.ok" /></a></p></li>
