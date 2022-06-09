@@ -76,7 +76,7 @@
                           LEFT OUTER JOIN SYS0001M H ON A.CRC_STATE_ACC_ID = H.ACC_ID AND H.ACC_STUS_ID = 1 AND H.IS_PAY_CRC = 1
                           LEFT OUTER JOIN PAY0007D I ON D.BILL_ID = I.BILL_ID
                           LEFT OUTER JOIN SAL0225D J ON  I.BILL_SO_ID = J.SRV_ORD_ID
-                          LEFT OUTER JOIN SYS0013M K ON H.ACC_CODE = K.CODE_NAME AND K.CODE_MASTER_ID = 384
+                          LEFT OUTER JOIN SYS0013M K ON H.ACC_CODE = K.CODE AND K.CODE_MASTER_ID = 384
                           LEFT OUTER JOIN
                               (SELECT
                                     B.F_TRNSC_ID,
