@@ -299,7 +299,8 @@
     }
 
     function fn_setPopExpType() {
-        console.log("Action");
+        console.log("Action glacc");
+
         AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCode", $("#search_budgetCode").val());
         AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCodeName", $("#search_budgetCodeName").val());
 
@@ -354,8 +355,33 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
+    if(FormUtil.isEmpty($("#invcDt").val())) {
+        Common.alert('<spring:message code="webInvoice.invcDt.msg" />');
+        checkResult = false;
+        return checkResult;
+    }
+    var settlementRowCount = AUIGrid.getRowCount(myGridID);
+    if(settlementRowCount > 0){
+        for(var i=0; i < settlementRowCount; i++){
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "expType"))){
+                Common.alert("Please choose a Expenses Type.");
+                checkResult = false;
+                return checkResult;
+            }/*
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "glAccCode"))){
+                Common.alert("Please choose a GL code.");
+                checkRowFlg = false;
+                return checkRowFlg;
+            } */
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totalAmt")) || AUIGrid.getCellValue(myGridID, i, "totalAmt") <= 0){
+                Common.alert("Please enter an amount.");
+                checkResult = false;
+                return checkResult;
+                }
+            }
 
     return checkResult;
+    }
 }
 
 //AUIGrid 를 생성합니다.
