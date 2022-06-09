@@ -115,7 +115,7 @@
     function() {
 
     var brnch = '${SESSION_INFO.userBranchId}';
-
+    var roleId = '${SESSION_INFO.roleId}';
     var userName = '${SESSION_INFO.userName}';
 
 
@@ -141,7 +141,7 @@
     	  if("${SESSION_INFO.memberLevel}" =="4"){ */
 
     		  //$('#cmdBranchCode').val(brnch);
-    	  if(brnch == "42" || userName == 'KHSATO'){
+    	  if(brnch == "42" || roleId == '180' || roleId == '179'){
     		  //doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode', 'M', 'f_multiComboType');
     		  doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode', 'S', '');
     		  $("#cmdBranchCode option[value='"+ brnch +"']", '#hiCareForm').attr("selected", true);

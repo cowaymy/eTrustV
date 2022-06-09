@@ -48,6 +48,7 @@
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 var brnch = '${SESSION_INFO.userBranchId}';
 var userName = '${SESSION_INFO.userName}';
+var roleId = '${SESSION_INFO.roleId}';
 
 var uomDs = [];
 var uomObj = {};
@@ -148,7 +149,7 @@ $(document).ready(function(){
 
 	$("#temp1").hide();
 
-	if(brnch == "42" || userName == 'KHSATO'){
+	if(brnch == "42" || roleId == '180' || roleId == '179'){
         doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode1', 'S', '');
         $("#cmdBranchCode1 option[value='"+ brnch +"']", '#hiCareNewForm').attr("selected", true);
         $('#cmdBranchCode1').trigger('click');

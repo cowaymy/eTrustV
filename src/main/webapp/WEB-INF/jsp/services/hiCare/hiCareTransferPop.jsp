@@ -7,6 +7,7 @@
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 var brnch = '${SESSION_INFO.userBranchId}';
 var userName = '${SESSION_INFO.userName}';
+var roleId = '${SESSION_INFO.roleId}';
 
 var resGrid;
 var reqGrid;
@@ -120,7 +121,7 @@ $(document).ready(function(){
         $('#fromLoc', '#hiCareTrfHeadForm').attr("disabled", true);
     } */
 
-    if(brnch == "42" || userName == 'KHSATO'){
+    if(brnch == "42" || roleId == '180' || roleId == '179'){
         doGetCombo('/services/hiCare/getBch.do', '', brnch, 'fromLoc', 'S', '');
         $("#fromLoc option[value='"+ brnch +"']", '#hiCareTrfHeadForm').attr("selected", true);
     }else{

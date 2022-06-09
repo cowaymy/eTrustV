@@ -106,13 +106,14 @@
     function() {
 
     var brnch = '${SESSION_INFO.userBranchId}';
+    var roleId = '${SESSION_INFO.roleId}';
 
       hiCareGrid();
 
       console.log('branch ' +brnch);
 
       //$("#cmbToBranch option:eq(1)", '#hiCareDeliveryForm').attr("selected", true);
-      if(brnch == "42" || userName == 'KHSATO'){
+      if(brnch == "42" || roleId == '180' || roleId == '179'){
           doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmbToBranch', 'S', '');
           $("#cmbToBranch option[value='"+ brnch +"']", '#hiCareDeliveryForm').attr("selected", true);
       }else{
