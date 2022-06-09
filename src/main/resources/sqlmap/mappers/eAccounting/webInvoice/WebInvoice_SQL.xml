@@ -1946,7 +1946,8 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         VATCODE,
         DIMENSION1,
         DIMENSION2,
-        STATUS
+        STATUS,
+        WAERS
     ) VALUES (
         #{ifKey},
         '1',
@@ -1977,7 +1978,8 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         #{taxCode},
         #{dim1},
         #{dim2},
-        #{appvPrcssStus}
+        #{appvPrcssStus},
+        'MYR'
     )
 </insert>
 

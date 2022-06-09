@@ -255,7 +255,8 @@
             CRT_DT,
             CRT_USER_ID,
             UPD_DT,
-            UPD_USER_ID
+            UPD_USER_ID,
+            INVC_CUR
         ) values (
             #{clmNo},
             #{clmSeq},
@@ -269,7 +270,8 @@
             SYSDATE,
             #{userId},
             SYSDATE,
-            #{userId}
+            #{userId},
+            'MYR'
         )
     </insert>
 
@@ -367,7 +369,8 @@
             UPD_DT,
             UPD_USER_ID,
             BIL_PERIOD_F,
-            BIL_PERIOD_T
+            BIL_PERIOD_T,
+            INVC_CUR
         ) VALUES (
             #{appvPrcssNo},
             #{appvItmSeq},
@@ -392,7 +395,8 @@
             SYSDATE,
             #{userId},
             TO_DATE(#{billPeriodFr}, 'DD/MM/YYYY'),
-            TO_DATE(#{billPeriodTo}, 'DD/MM/YYYY')
+            TO_DATE(#{billPeriodTo}, 'DD/MM/YYYY'),
+            'MYR'
         )
 
     </insert>
