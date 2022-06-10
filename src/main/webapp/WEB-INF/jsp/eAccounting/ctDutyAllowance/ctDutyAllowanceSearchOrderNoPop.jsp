@@ -53,6 +53,8 @@ $(document).ready(function() {
 
      doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
 
+     fn_getSearchResultJsonListAjax();
+
 });
 
  function createAUIGrid(){
@@ -107,7 +109,7 @@ $(document).ready(function() {
 
      var flg = 0;
 
-     if($("#searchOrdNo").val() == "" && $("#searchOrdCustNric").val() == "") {
+     /* if($("#searchOrdNo").val() == "" && $("#searchOrdCustNric").val() == "") {
          flg = 1;
      }
 
@@ -118,7 +120,11 @@ $(document).ready(function() {
         Common.ajax("GET", "/eAccounting/ctDutyAllowance/selectSearchOrderNo",$("#_searchOrdForm").serialize(), function(result) {
             AUIGrid.setGridData(orderGridID, result);
         });
-    }
+    } */
+
+    Common.ajax("GET", "/eAccounting/ctDutyAllowance/selectSearchOrderNo",$("#_searchOrdForm").serialize(), function(result) {
+        AUIGrid.setGridData(orderGridID, result);
+    });
  }
 
  function fn_multiCombo(){
@@ -176,13 +182,13 @@ $(document).ready(function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="sal.text.ordNo" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="Order No" class="w100p" name="searchOrdNo" id="searchOrdNo" /></td>
     <th scope="row"><spring:message code="sal.title.text.appType" /></th><!-- ASIS Source Not Exist -->
     <td>
     <select class="w100p" id="listAppType" name="searchOrdAppType"></select>
     </td>
-    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input type="text" title="" placeholder="NRIC/Company No" class="w100p" name="searchOrdCustNric" id="searchOrdCustNric"/></td>
 </tr>
 <tr>

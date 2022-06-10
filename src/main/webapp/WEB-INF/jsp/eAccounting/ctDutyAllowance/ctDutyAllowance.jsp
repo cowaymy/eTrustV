@@ -297,8 +297,8 @@ function fn_approvalSubmit() {
         date = "0" + date;
     }
     console.log("what day? " + date);
-    if(!(date >= 04 && date <= 07)){
-    	Common.alert('Only 4th TO 7th of the month able to APPROVE Claims.');
+    if(date > 15){
+    	Common.alert('Before 15th of the month just able to APPROVE Claims.');
         return;
     }
 

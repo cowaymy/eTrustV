@@ -53,7 +53,7 @@ var aprvColumnLayout = [ {
 	    headerText : 'Service Type'
 	}
 	, {
-	    dataField : "totAmt",
+	    dataField : "netAmt",
 	    headerText : 'Total Amount',
 	    dataType: "numeric",
 	    formatString : "#,##0.00",
@@ -398,7 +398,7 @@ function fn_preloadData() {
     // 2018-07-03 - LaiKW - Added looping calculation of total - Start
     var totalAmt = 0;
     for(var i = 0; i < myGridData.length; i++  ) {
-        totalAmt += myGridData[i].appvAmt;
+        totalAmt += myGridData[i].netAmt;
     }
     $("#viewAppvAmt").text(totalAmt);
 
@@ -719,80 +719,6 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 </form>
 </section><!-- search_table end -->
-
-<table class="type1 mt10" id="noMileage" style="display: none;"><!-- table start -->
-<caption><spring:message code="webInvoice.table" /></caption>
-<colgroup>
-    <col style="width:190px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
-    <td id="invcNo"></td>
-    <th scope="row" id="supplirTh"></th>
-    <td id="supplirTd"></td>
-    <!-- <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
-    <td id="invcType"></td> -->
-</tr>
-<tr id="crcInfo">
-    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-    <td id="crcInvcDt"></td>
-    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td id="crcCostCentr"></td>
-</tr>
-<!-- <tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td id="gstRgistNo"></td>
-</tr>-->
-<tr id="payInfo1" style="display: none;">
-    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
-    <td id="utilNo"></td>
-    <th scope="row">Billing Period</th>
-    <td id="bilPeriod"></td>
-    <!-- <th scope="row" id="supplirTh"></th>
-    <td id="supplirTd"></td> -->
-</tr>
-<tr id="payInfo2" style="display: none;">
-    <th scope="row">JomPAY No</th>
-    <td id="jPayNo"></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-<tr id="payInfo3" style="display: none;">
-    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-    <td id="payInfo3InvcDt"></td>
-    <th scope="row">Billing Period</th>
-    <td id="payInfo3bilPeriod"></td>
-</tr>
-<tr id="payInfo4" style="display: none;">
-    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
-    <td id="payInfo4utilNo"></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-    <td colspan="3" id="attachTd">
-    <div class="auto_file2 auto_file3"><!-- auto_file start -->
-    <input type="file" title="file add" />
-    </div><!-- auto_file end -->
-    </td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-    <td colspan="3" id="expDesc"></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article class="grid_wrap" id="mGrid_wrap" style="display: none;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
-<article class="grid_wrap" id="mileage_grid_wrap" style="display: none;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="viewAppvAmt"></span></h2>

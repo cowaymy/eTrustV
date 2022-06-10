@@ -236,8 +236,8 @@ $(document).ready(function () {
             date = "0" + date;
         }
         console.log("what day? " + date);
-        if(date >= 03){
-            Common.alert('Only 1st TO 3rd of the month able to SUBMIT Claim.');
+        if(date > 15){
+            Common.alert('Before 15th of the month just able to SUBMIT Claim.');
             return;
         }
     	fn_approveLinePop($("#newMemAccId").val(), $("#newClmMonth").val());
@@ -543,10 +543,7 @@ function fn_addValidation(){
     	 if(null == $("#fileName").val() || '' == $("#fileName").val()){
     	        Common.alert('Attachement is required.');
     	        validate = false;
-    	 }else if(null == $("#dutyAllDesc").val() || '' == $("#dutyAllDesc").val()){
-             Common.alert('Remark is required.');
-             validate = false;
-         }
+    	 }
     	 return validate;
     }else{
     	var validate = true;
@@ -574,7 +571,7 @@ function fn_insertStaffClaimExp(action) {
     // row의 수가 0개 이상일때만 insert
     var gridDataList = AUIGrid.getOrgGridData(myGridID);
 
-    $("#claimMonth").val($("#clmMonth").val())
+    $("#claimMonth").val($("#newClmMonth").val())
 
     if(gridDataList.length > 0){
     	if(callType == 'new'){
@@ -665,7 +662,7 @@ function closeApproveLine(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_newStaffClaim">
-<input type="hidden" id="claimMonth" name="claimMonth">
+<input type="hidden" id="claimMonth" name="newClaimMonth">
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
@@ -709,16 +706,6 @@ function closeApproveLine(){
 <tr>
     <th scope="row">Duty Allowance Date</th>
     <td colspan="1"><input type="text" title="Duty Allowance Date" placeholder="DD/MM/YYYY" class="j_date " id="dutyAllDt" name="dutyAllDt" /></td>
-    <th scope="row">Order No.</th>
-    <td><input type="text" title="" placeholder="" class="" id="_salesOrderNo" name="salesOrderNo" value="${orderNo}"/><a href="#" class="search_btn" id="orderNo_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-
-</tr>
-<tr>
-    <th scope="row">Duty Allowance Type</th>
-    <td>
-    <label><input type="radio" id="dutyType" name="dutyType" checked="checked" value="p" data="Public Holiday"/><span>Public Holiday</span></label>
-    <label><input type="radio" id="dutyType" name="dutyType" value="r" data="Rest Day"/><span>Rest Day</span></label>
-    </td>
     <th scope="row">Service Type</th>
     <td>
     <select class="" id="svcType" name="svcType">
@@ -731,6 +718,15 @@ function closeApproveLine(){
     </select>
     </td>
     <input type="hidden" id="svcTypeName" name="svcTypeName">
+</tr>
+<tr>
+    <th scope="row">Duty Allowance Type</th>
+    <td>
+    <label><input type="radio" id="dutyType" name="dutyType" checked="checked" value="p" data="Public Holiday"/><span>Public Holiday</span></label>
+    <label><input type="radio" id="dutyType" name="dutyType" value="r" data="Rest Day"/><span>Rest Day</span></label>
+    </td>
+    <th scope="row">Order No.</th>
+    <td><input type="text" title="" placeholder="" class="" id="_salesOrderNo" name="salesOrderNo" value="${orderNo}"/><a href="#" class="search_btn" id="orderNo_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
@@ -760,7 +756,7 @@ function closeApproveLine(){
     <input type="hidden" id="atchFileId" name="atchFileId">
 
 </tr>
-<tr>
+<tr style="display: none;">
     <th scope="row">Remarks</th>
     <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="dutyAllDesc" name="dutyAllDesc" /></td>
 </tr>
