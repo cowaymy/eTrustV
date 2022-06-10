@@ -1086,8 +1086,7 @@
                           CT_ID,
                           CT_GRP,
                           CALL_ENTRY_ID,
-                          RT_SESION_CODE,
-                          SEGMENT_TYPE
+                          RT_SESION_CODE
     ) VALUES (#{stkRetnId},
               #{stusCodeId},
               #{typeId},
@@ -1106,8 +1105,7 @@
               #{ctId},
               #{ctGrp},
               #{callEntryId},
-              #{cTSSessionCode},
-              #{segmentType}
+              #{cTSSessionCode}
     )
   </insert>
 
