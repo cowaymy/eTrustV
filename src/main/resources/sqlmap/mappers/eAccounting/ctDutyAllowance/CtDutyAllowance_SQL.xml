@@ -676,7 +676,7 @@ WHERE  T1.CLM_NO = #{clmNo}
 		AND CTCODE.MEM_CODE = #{searchCtCode}
 		</if>
 		<if test=" '' != searchDutyDt and null != searchDutyDt">
-		AND INS.APPNT_DT = #{searchDutyDt}
+		AND INS.APPNT_DT = TO_DATE(#{searchDutyDt}, 'DD-MM-YYYY')
 		</if>
 		<if test=" '' != searchOrdNo and null != searchOrdNo">
 		AND SOM.SALES_ORD_NO=#{searchOrdNo}
@@ -718,7 +718,7 @@ WHERE  T1.CLM_NO = #{clmNo}
         AND CTCODE.MEM_CODE = #{searchCtCode}
         </if>
         <if test=" '' != searchDutyDt and null != searchDutyDt">
-        AND ASRV.AS_APPNT_DT = #{searchDutyDt}
+        AND ASRV.AS_APPNT_DT = TO_DATE(#{searchDutyDt}, 'DD-MM-YYYY')
         </if>
 		<if test=" '' != searchOrdNo and null != searchOrdNo">
         AND SOM.SALES_ORD_NO=#{searchOrdNo}
@@ -760,7 +760,7 @@ WHERE  T1.CLM_NO = #{clmNo}
         AND CTCODE.MEM_CODE = #{searchCtCode}
         </if>
         <if test=" '' != searchDutyDt and null != searchDutyDt">
-        AND PR.APP_DT = #{searchDutyDt}
+        AND PR.APP_DT = TO_DATE(#{searchDutyDt}, 'DD-MM-YYYY')
         </if>
         <if test=" '' != searchOrdNo and null != searchOrdNo">
         AND SOM.SALES_ORD_NO=#{searchOrdNo}
