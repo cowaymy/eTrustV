@@ -58,11 +58,15 @@ public interface CcpCalculateService {
 
 	void ccpEresubmitUpdate(Map<String, Object> params) throws Exception;
 
+	void ccpEresubmitUpdateCancel(Map<String, Object> params) throws Exception;
+
 	void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
 
 	void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs);
 
 	void updateCcpEresubmitAttach(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectCcpHistory(Map<String, Object> params) throws Exception;
 
 	EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception;
 

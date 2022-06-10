@@ -645,6 +645,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		if(!("0").equals(params.get("eRstatusEdit"))){
 			LOGGER.info("_______________eRstatusEdit_______________");
 			ccpCalculateMapper.updateCcpEresubmitStus(params);
+			ccpCalculateMapper.updateCcpEresubmitHistStus(params);
 		}
 
 		// Cancel Selected
@@ -1288,11 +1289,22 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
         params.put("ezyDocNo", ezyDocNo);
 
   		ccpCalculateMapper.insertCcpEresubmitNewSave(params);
+
+  		ccpCalculateMapper.insertCcpEresubmitNewSaveHist(params);
   	}
 
   	@Override
 	public void ccpEresubmitUpdate(Map<String, Object> params) throws Exception {
   		ccpCalculateMapper.updateCcpEresubmitStus(params);
+
+  		ccpCalculateMapper.insertCcpEresubmitRenewSaveHist(params);
+  	}
+
+  	@Override
+	public void ccpEresubmitUpdateCancel(Map<String, Object> params) throws Exception {
+  		ccpCalculateMapper.updateCcpEresubmitStus(params);
+
+  		ccpCalculateMapper.updateCcpEresubmitHistStus(params);
   	}
 
   	@Override
@@ -1390,6 +1402,12 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	public EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception {
 
 		return ccpCalculateMapper.selectCcpEresubmit(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCcpHistory(Map<String, Object> params) throws Exception {
+
+		return ccpCalculateMapper.selectCcpHistory(params);
 	}
 
 	@Override

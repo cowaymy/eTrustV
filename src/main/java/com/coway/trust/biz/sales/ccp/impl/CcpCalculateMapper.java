@@ -109,6 +109,10 @@ public interface CcpCalculateMapper {
 
 	void insertCcpEresubmitNewSave(Map<String, Object> params) throws Exception;
 
+	void insertCcpEresubmitNewSaveHist(Map<String, Object> params) throws Exception;
+
+	void 	insertCcpEresubmitRenewSaveHist(Map<String, Object> params) throws Exception;
+
 	int selectNextFileId();
 
 	void insertFileDetail(Map<String, Object> flInfo);
@@ -117,7 +121,11 @@ public interface CcpCalculateMapper {
 
 	EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception;
 
+	List<EgovMap>selectCcpHistory(Map<String, Object> params) throws Exception;
+
 	void updateCcpEresubmitStus(Map<String, Object> params) throws Exception;
+
+	void updateCcpEresubmitHistStus(Map<String, Object> params) throws Exception;
 
 	int getMemberID(Map<String, Object> params);
 

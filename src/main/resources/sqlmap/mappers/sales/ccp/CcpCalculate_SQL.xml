@@ -52,138 +52,138 @@ WITH S291D AS
                         (SELECT REMARKS, ORDER_NO, RANK() OVER(PARTITION BY ORDER_NO ORDER BY UPLOAD_BATCH_ID DESC) RN FROM SAL0291D)
   WHERE RN = 1
 )
-			SELECT Filter1.CCP_ID   ,
-			       Filter1.CCP_SCHEME_TYPE_ID   ,
-			       Filter1.CCP_TYPE_ID   ,
-			       TO_CHAR(Filter1.CCP_TOT_SCRE_POINT , 'FM9999999999990.0') CCP_TOT_SCRE_POINT  ,
-			       Filter1.CCP_STUS_ID   ,
-			       Filter1.CCP_RESN_ID   ,
-			       Filter1.CCP_REM   ,
-			       Filter1.CCP_RJ_STUS_ID   ,
-			       Filter1.CCP_UPD_DT   ,
-			       TO_CHAR(Filter1.CCP_UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||Filter1.USERNAME3 ||')' UPD_AT,
-			       Filter1.SALESORDERID1 SALES_ORD_ID  ,
-			       Filter1.SALES_ORD_NO   ,
-			       Filter1.REF_NO   ,
-			       Filter1.SALES_DT   ,
-			       Filter1.CREATED1 CRT_DT  ,
-			       TO_CHAR(Filter1.CREATED1 , 'DD-MM-YYYY AM HH:MI:SS ') ||'('||Filter1.USERNAME2 || ')' KEY_AT,
-			       Filter1.STUS_CODE_ID,
-			       Filter1.CUSTOMERID1 CUST_ID  ,
-			       Filter1.NAME3 NAME  ,
-			       Filter1.NRIC1 NRIC  ,
-			       Filter1.STK_ID   ,
-			       Filter1.STK_CTGRY_ID   ,
-			       Filter1.STK_CODE   ,
-			       Filter1.STK_DESC   ,
-			       Extent13.BRNCH_ID   ,
-			       Extent13.NAME NAME1  ,
-			       Extent13.REGN_ID   ,
-			       CASE WHEN  972 = Filter1.CCP_TYPE_ID  THEN 'New Sales Order CCP' ELSE 'Reversal CCP' END CCP_TYPE  ,
-			       CASE WHEN  1 = Filter1.STATUSCODEID1  THEN 'Active' WHEN ( 4 = Filter1.STATUSCODEID1 ) THEN 'Completed' ELSE 'Cancelled' END STATUS  ,
-			       CASE WHEN  1 = Filter1.CCP_STUS_ID  THEN 'Active' WHEN ( 5 = Filter1.CCP_STUS_ID ) THEN 'Approved' ELSE 'Rejected' END CCP_STATUS  ,
-			       CASE WHEN  969 = Filter1.CCP_SCHEME_TYPE_ID  THEN 'Individual CCP Scheme' ELSE 'Company CCP scheme' END CCP_SCHEME_TYPE  ,
-			       CASE WHEN  Filter1.CCP_IS_HOLD IS NOT NULL THEN Filter1.CCP_IS_HOLD ELSE UTILS.CONVERT_TO_NUMBER(0,1,0) END CCP_IS_HOLD  ,
-			       Filter1.BRANCHID2 BRANCHID1  ,
-			       Filter1.USERNAME2 USER_NAME  ,
-			       Filter1.USERNAME3 USERNAME1  ,
-			       Filter1.MEM_CODE   ,
-			       Filter1.RESN_DESC   ,
-			       Filter1.NAME4 NAME2  ,
-			       Filter1.CORPCUSTTYPE   ,
-			       Filter1.AGREEMENTTYPE   ,
-			       Filter1.APPTYPEID   ,
-			       Filter1.PVMONTH   ,
-			       Filter1.PVYEAR   ,
-			       Filter1.TYPEID   ,
-			       Filter1.BNDL_NO,
-			       Filter1.APP_TYPE ,
-			       Filter1.CHS_STUS ,
-			       Filter1.CHS_RSN ,
-			       Filter1.ECOMM_ORD_ID,
-			       CASE
+            SELECT Filter1.CCP_ID   ,
+                   Filter1.CCP_SCHEME_TYPE_ID   ,
+                   Filter1.CCP_TYPE_ID   ,
+                   TO_CHAR(Filter1.CCP_TOT_SCRE_POINT , 'FM9999999999990.0') CCP_TOT_SCRE_POINT  ,
+                   Filter1.CCP_STUS_ID   ,
+                   Filter1.CCP_RESN_ID   ,
+                   Filter1.CCP_REM   ,
+                   Filter1.CCP_RJ_STUS_ID   ,
+                   Filter1.CCP_UPD_DT   ,
+                   TO_CHAR(Filter1.CCP_UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||Filter1.USERNAME3 ||')' UPD_AT,
+                   Filter1.SALESORDERID1 SALES_ORD_ID  ,
+                   Filter1.SALES_ORD_NO   ,
+                   Filter1.REF_NO   ,
+                   Filter1.SALES_DT   ,
+                   Filter1.CREATED1 CRT_DT  ,
+                   TO_CHAR(Filter1.CREATED1 , 'DD-MM-YYYY AM HH:MI:SS ') ||'('||Filter1.USERNAME2 || ')' KEY_AT,
+                   Filter1.STUS_CODE_ID,
+                   Filter1.CUSTOMERID1 CUST_ID  ,
+                   Filter1.NAME3 NAME  ,
+                   Filter1.NRIC1 NRIC  ,
+                   Filter1.STK_ID   ,
+                   Filter1.STK_CTGRY_ID   ,
+                   Filter1.STK_CODE   ,
+                   Filter1.STK_DESC   ,
+                   Extent13.BRNCH_ID   ,
+                   Extent13.NAME NAME1  ,
+                   Extent13.REGN_ID   ,
+                   CASE WHEN  972 = Filter1.CCP_TYPE_ID  THEN 'New Sales Order CCP' ELSE 'Reversal CCP' END CCP_TYPE  ,
+                   CASE WHEN  1 = Filter1.STATUSCODEID1  THEN 'Active' WHEN ( 4 = Filter1.STATUSCODEID1 ) THEN 'Completed' ELSE 'Cancelled' END STATUS  ,
+                   CASE WHEN  1 = Filter1.CCP_STUS_ID  THEN 'Active' WHEN ( 5 = Filter1.CCP_STUS_ID ) THEN 'Approved' ELSE 'Rejected' END CCP_STATUS  ,
+                   CASE WHEN  969 = Filter1.CCP_SCHEME_TYPE_ID  THEN 'Individual CCP Scheme' ELSE 'Company CCP scheme' END CCP_SCHEME_TYPE  ,
+                   CASE WHEN  Filter1.CCP_IS_HOLD IS NOT NULL THEN Filter1.CCP_IS_HOLD ELSE UTILS.CONVERT_TO_NUMBER(0,1,0) END CCP_IS_HOLD  ,
+                   Filter1.BRANCHID2 BRANCHID1  ,
+                   Filter1.USERNAME2 USER_NAME  ,
+                   Filter1.USERNAME3 USERNAME1  ,
+                   Filter1.MEM_CODE   ,
+                   Filter1.RESN_DESC   ,
+                   Filter1.NAME4 NAME2  ,
+                   Filter1.CORPCUSTTYPE   ,
+                   Filter1.AGREEMENTTYPE   ,
+                   Filter1.APPTYPEID   ,
+                   Filter1.PVMONTH   ,
+                   Filter1.PVYEAR   ,
+                   Filter1.TYPEID   ,
+                   Filter1.BNDL_NO,
+                   Filter1.APP_TYPE ,
+                   Filter1.CHS_STUS ,
+                   Filter1.CHS_RSN ,
+                   Filter1.ECOMM_ORD_ID,
+                   CASE
                     WHEN CCP_ASSIGN_USER_NAME IS NOT NULL THEN (TO_CHAR(FILTER1.CCP_ASSIGN_USER_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||FILTER1.CCP_ASSIGN_USER_NAME ||')')
                    END AS ASSIGN_PIC,
-		           filter1.eRref,
-		           filter1.eRstatus,
-		           filter1.ASSIGNMENT_BATCH
-			FROM ( SELECT Extent1.CCP_ID   ,
-			          Extent1.CCP_SCHEME_TYPE_ID   ,
-			          Extent1.CCP_TYPE_ID   ,
-			          Extent1.CCP_TOT_SCRE_POINT   ,
-			          Extent1.CCP_STUS_ID   ,
-			          Extent1.CCP_RESN_ID   ,
-			          Extent1.CCP_REM   ,
-			          Extent1.CCP_RJ_STUS_ID   ,
-			          Extent1.CCP_UPD_DT   ,
-			          Extent1.CCP_IS_HOLD   ,
-			          Extent3.SALES_ORD_ID SALESORDERID1  ,
-			          Extent3.SALES_ORD_NO   ,
-			          Extent3.REF_NO   ,
-			          Extent3.SALES_DT   ,
-			          Extent3.BRNCH_ID BRANCHID3  ,
-			          Extent3.STUS_CODE_ID STATUSCODEID1  ,
-			          Extent3.CRT_DT CREATED1  ,
-			          Extent3.STUS_CODE_ID,
-			          Extent4.BRNCH_ID BRANCHID2  ,
-			          Extent5.USER_NAME USERNAME2  ,
-			          Extent6.USER_NAME USERNAME3  ,
-			          Extent7.MEM_CODE   ,
-			          Extent8.RESN_DESC   ,
-			          Extent9.CUST_ID CUSTOMERID1  ,
-			          Extent9.NAME NAME3  ,
-			          Extent9.NRIC NRIC1  ,
-			          Extent11.STK_ID   ,
-			          Extent11.STK_CTGRY_ID ,
-			          Extent11.STK_CODE   ,
-			          Extent11.STK_DESC   ,
-			          Extent12.NAME NAME4  ,
-			          cd.CODE_NAME CORPCUSTTYPE,
-			          cd2.CODE_NAME AGREEMENTTYPE,
-			          Extent3.APP_TYPE_ID APPTYPEID,
-			          Extent3.PV_MONTH PVMONTH,
-			          Extent3.PV_YEAR PVYEAR,
-			          Extent9.TYPE_ID TYPEID,
-			          Extent13.BNDL_NO,
-			          Extent14.CODE_NAME APP_TYPE ,
-			          Extent15.CHS_STUS ,
-			          Extent15.CHS_RSN,
-			          NVL(Extent3.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
-			          Extent16.USER_NAME CCP_ASSIGN_USER_NAME,
-			          Extent1.CCP_ASSIGN_USER_DT,
-			          extent17.ref_no eRref,
-			          extent17.stus_id eRstatus,
-			          (SELECT REMARKS FROM S291D WHERE ORDER_NO = Extent3.SALES_ORD_NO)  ASSIGNMENT_BATCH
-			       FROM SAL0102D Extent1
-			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
-			                        MAX(Extent2.CCP_ID)  A1
-			                  FROM SAL0102D Extent2
-			                  GROUP BY Extent2.CCP_SALES_ORD_ID ) GroupBy1   ON Extent1.CCP_ID = GroupBy1.A1
-			          JOIN SAL0001D Extent3   ON Extent1.CCP_SALES_ORD_ID = Extent3.SALES_ORD_ID
-			          LEFT JOIN SYS0013M cd ON cd.CODE_ID = Extent3.CORP_CUST_TYPE
-			          LEFT JOIN SYS0013M cd2 ON cd2.CODE_ID = Extent3.AGREEMENT_TYPE
-			          LEFT JOIN SAL0045D Extent4   ON Extent3.SALES_ORD_ID = Extent4.SALES_ORD_ID
-			          LEFT JOIN SYS0047M Extent5   ON Extent3.CRT_USER_ID = Extent5.USER_ID
-			          LEFT JOIN SYS0047M Extent6   ON Extent1.CCP_UPD_USER_ID = Extent6.USER_ID
-			          LEFT JOIN ORG0001D Extent7   ON Extent3.MEM_ID = Extent7.MEM_ID
-			          LEFT JOIN SYS0032M Extent8   ON Extent1.CCP_RESN_ID = Extent8.RESN_ID
-			          JOIN SAL0029D Extent9   ON Extent3.CUST_ID = Extent9.CUST_ID
-			          JOIN SAL0002D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
-			          JOIN SYS0026M Extent11   ON Extent10.ITM_STK_ID = Extent11.STK_ID
-			          LEFT JOIN SYS0038M Extent12   ON Extent1.CCP_RJ_STUS_ID = Extent12.STUS_CODE_ID
-			          LEFT JOIN HMC0011D Extent13   ON Extent13.ORD_SEQ_NO = Extent3.BNDL_ID
-			          LEFT JOIN SYS0013M Extent14   ON Extent14.CODE_ID = Extent3.APP_TYPE_ID
-			          LEFT JOIN SAL0262D Extent15 ON Extent3.CUST_ID = Extent15.CUST_ID
-			          AND Extent15.CHS_MONTH = EXTRACT(MONTH FROM Extent1.CCP_UPD_DT)
-			          AND Extent15.CHS_YEAR = EXTRACT(YEAR FROM Extent1.CCP_UPD_DT)
-			          <!-- Added to get assigned PIC by Hui Ding, 2021-06-16 -->
-			          LEFT JOIN SYS0047M Extent16 ON Extent1.CCP_ASSIGN_USER_ID = Extent16.USER_ID
-			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
-			          LEFT JOIN SAL0304D extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
-			          <!-- ## RENTAL  ONLY ## -->
-			          WHERE Extent3.APP_TYPE_ID IN (66,5764)
+                   filter1.eRref,
+                   filter1.eRstatus,
+                   filter1.ASSIGNMENT_BATCH
+            FROM ( SELECT Extent1.CCP_ID   ,
+                      Extent1.CCP_SCHEME_TYPE_ID   ,
+                      Extent1.CCP_TYPE_ID   ,
+                      Extent1.CCP_TOT_SCRE_POINT   ,
+                      Extent1.CCP_STUS_ID   ,
+                      Extent1.CCP_RESN_ID   ,
+                      Extent1.CCP_REM   ,
+                      Extent1.CCP_RJ_STUS_ID   ,
+                      Extent1.CCP_UPD_DT   ,
+                      Extent1.CCP_IS_HOLD   ,
+                      Extent3.SALES_ORD_ID SALESORDERID1  ,
+                      Extent3.SALES_ORD_NO   ,
+                      Extent3.REF_NO   ,
+                      Extent3.SALES_DT   ,
+                      Extent3.BRNCH_ID BRANCHID3  ,
+                      Extent3.STUS_CODE_ID STATUSCODEID1  ,
+                      Extent3.CRT_DT CREATED1  ,
+                      Extent3.STUS_CODE_ID,
+                      Extent4.BRNCH_ID BRANCHID2  ,
+                      Extent5.USER_NAME USERNAME2  ,
+                      Extent6.USER_NAME USERNAME3  ,
+                      Extent7.MEM_CODE   ,
+                      Extent8.RESN_DESC   ,
+                      Extent9.CUST_ID CUSTOMERID1  ,
+                      Extent9.NAME NAME3  ,
+                      Extent9.NRIC NRIC1  ,
+                      Extent11.STK_ID   ,
+                      Extent11.STK_CTGRY_ID ,
+                      Extent11.STK_CODE   ,
+                      Extent11.STK_DESC   ,
+                      Extent12.NAME NAME4  ,
+                      cd.CODE_NAME CORPCUSTTYPE,
+                      cd2.CODE_NAME AGREEMENTTYPE,
+                      Extent3.APP_TYPE_ID APPTYPEID,
+                      Extent3.PV_MONTH PVMONTH,
+                      Extent3.PV_YEAR PVYEAR,
+                      Extent9.TYPE_ID TYPEID,
+                      Extent13.BNDL_NO,
+                      Extent14.CODE_NAME APP_TYPE ,
+                      Extent15.CHS_STUS ,
+                      Extent15.CHS_RSN,
+                      NVL(Extent3.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
+                      Extent16.USER_NAME CCP_ASSIGN_USER_NAME,
+                      Extent1.CCP_ASSIGN_USER_DT,
+                      extent17.ref_no eRref,
+                      extent17.stus_id eRstatus,
+                      (SELECT REMARKS FROM S291D WHERE ORDER_NO = Extent3.SALES_ORD_NO)  ASSIGNMENT_BATCH
+                   FROM SAL0102D Extent1
+                      JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
+                                    MAX(Extent2.CCP_ID)  A1
+                              FROM SAL0102D Extent2
+                              GROUP BY Extent2.CCP_SALES_ORD_ID ) GroupBy1   ON Extent1.CCP_ID = GroupBy1.A1
+                      JOIN SAL0001D Extent3   ON Extent1.CCP_SALES_ORD_ID = Extent3.SALES_ORD_ID
+                      LEFT JOIN SYS0013M cd ON cd.CODE_ID = Extent3.CORP_CUST_TYPE
+                      LEFT JOIN SYS0013M cd2 ON cd2.CODE_ID = Extent3.AGREEMENT_TYPE
+                      LEFT JOIN SAL0045D Extent4   ON Extent3.SALES_ORD_ID = Extent4.SALES_ORD_ID
+                      LEFT JOIN SYS0047M Extent5   ON Extent3.CRT_USER_ID = Extent5.USER_ID
+                      LEFT JOIN SYS0047M Extent6   ON Extent1.CCP_UPD_USER_ID = Extent6.USER_ID
+                      LEFT JOIN ORG0001D Extent7   ON Extent3.MEM_ID = Extent7.MEM_ID
+                      LEFT JOIN SYS0032M Extent8   ON Extent1.CCP_RESN_ID = Extent8.RESN_ID
+                      JOIN SAL0029D Extent9   ON Extent3.CUST_ID = Extent9.CUST_ID
+                      JOIN SAL0002D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                      JOIN SYS0026M Extent11   ON Extent10.ITM_STK_ID = Extent11.STK_ID
+                      LEFT JOIN SYS0038M Extent12   ON Extent1.CCP_RJ_STUS_ID = Extent12.STUS_CODE_ID
+                      LEFT JOIN HMC0011D Extent13   ON Extent13.ORD_SEQ_NO = Extent3.BNDL_ID
+                      LEFT JOIN SYS0013M Extent14   ON Extent14.CODE_ID = Extent3.APP_TYPE_ID
+                      LEFT JOIN SAL0262D Extent15 ON Extent3.CUST_ID = Extent15.CUST_ID
+                      AND Extent15.CHS_MONTH = EXTRACT(MONTH FROM Extent1.CCP_UPD_DT)
+                      AND Extent15.CHS_YEAR = EXTRACT(YEAR FROM Extent1.CCP_UPD_DT)
+                      <!-- Added to get assigned PIC by Hui Ding, 2021-06-16 -->
+                      LEFT JOIN SYS0047M Extent16 ON Extent1.CCP_ASSIGN_USER_ID = Extent16.USER_ID
+                      <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
+                      LEFT JOIN SAL0304D extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
+                      <!-- ## RENTAL  ONLY ## -->
+                      WHERE Extent3.APP_TYPE_ID IN (66,5764)
 
-			          <if test=" '' != calCcpStatus and null != calCcpStatus ">
+                      <if test=" '' != calCcpStatus and null != calCcpStatus ">
                              AND  Extent1.CCP_STUS_ID IN
                              <foreach collection="arryCalCcpStatus" item="value" open="(" separator="," close=")">
                                  <choose>
@@ -197,103 +197,103 @@ WITH S291D AS
                              </foreach>
                           </if>
 
-			          <if test=" '' != calActPoint and null != calActPoint">
-			             AND UTILS.CONVERT_TO_NUMBER(0,18) = Extent1.CCP_TOT_SCRE_POINT
-			          </if>
+                      <if test=" '' != calActPoint and null != calActPoint">
+                         AND UTILS.CONVERT_TO_NUMBER(0,18) = Extent1.CCP_TOT_SCRE_POINT
+                      </if>
 
-			          <if test=" '' != calReason and null != calReason">
-			             AND Extent1.CCP_RESN_ID IN
-			             <foreach collection="arryCalReason" item="value" open="(" separator="," close=")">
-			                 <if test=" '3478' == value ">
-			                     '0'
-			                </if>
-			                 <if test=" '3478' != value ">
+                      <if test=" '' != calReason and null != calReason">
+                         AND Extent1.CCP_RESN_ID IN
+                         <foreach collection="arryCalReason" item="value" open="(" separator="," close=")">
+                             <if test=" '3478' == value ">
+                                 '0'
+                            </if>
+                             <if test=" '3478' != value ">
                                   #{value}
                             </if>
-			             </foreach>
+                         </foreach>
 
-			          </if>
-			          <if test=" '' != assignPic and null != assignPic">
-			             AND Extent16.USER_NAME = #{assignPic}
-			          </if>
+                      </if>
+                      <if test=" '' != assignPic and null != assignPic">
+                         AND Extent16.USER_NAME = #{assignPic}
+                      </if>
 
-			          ) Filter1
-			     JOIN SYS0005M Extent13   ON Filter1.BRANCHID3 = Extent13.BRNCH_ID
-			     WHERE  1 = 1
-			               <!--Start Condition  -->
+                      ) Filter1
+                 JOIN SYS0005M Extent13   ON Filter1.BRANCHID3 = Extent13.BRNCH_ID
+                 WHERE  1 = 1
+                           <!--Start Condition  -->
 
-			               <!-- Filter1.CCP_STUS_ID = 1 -->
+                           <!-- Filter1.CCP_STUS_ID = 1 -->
 
-			              <if test=" '' != calOrdNo and null != calOrdNo">
-			                 <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
-			                 AND  Filter1.SALES_ORD_NO = #{calOrdNo}
-			              </if>
+                          <if test=" '' != calOrdNo and null != calOrdNo">
+                             <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
+                             AND  Filter1.SALES_ORD_NO = #{calOrdNo}
+                          </if>
 
-			              <if test=" '' != calStartDate and null != calStartDate">
-			                 AND  Filter1.SALES_DT >= TO_DATE(#{calStartDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
-			              </if>
+                          <if test=" '' != calStartDate and null != calStartDate">
+                             AND  Filter1.SALES_DT >= TO_DATE(#{calStartDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                          </if>
 
-			              <if test=" '' != calEndDate and null != calEndDate">
-			                 <![CDATA[
+                          <if test=" '' != calEndDate and null != calEndDate">
+                             <![CDATA[
                              AND  Filter1.SALES_DT <= TO_DATE(#{calEndDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                              ]]>
-			              </if>
+                          </if>
 
-			               <if test=" '' != calBranch and null != calBranch">
-        			          AND Extent13.BRNCH_ID IN
-        			          <foreach collection="arryCalBranch" item="value" open="(" separator="," close=")">
-        			             #{value}
-        			          </foreach>
-			               </if>
+                           <if test=" '' != calBranch and null != calBranch">
+                              AND Extent13.BRNCH_ID IN
+                              <foreach collection="arryCalBranch" item="value" open="(" separator="," close=")">
+                                 #{value}
+                              </foreach>
+                           </if>
 
-			               <if test=" '' != calDscBranch and null != calDscBranch">
-			                 AND  Filter1.BRANCHID2 = #{calDscBranch}
-			               </if>
+                           <if test=" '' != calDscBranch and null != calDscBranch">
+                             AND  Filter1.BRANCHID2 = #{calDscBranch}
+                           </if>
 
-			               <if test=" '' != calCustName and null != calCustName">
-			                 <!-- AND  UPPER(Filter1.NAME3) LIKE '%'||UPPER(#{calCustName})||'%' -->
-			                 AND  UPPER(Filter1.NAME3) = #{calCustName}
-			               </if>
+                           <if test=" '' != calCustName and null != calCustName">
+                             <!-- AND  UPPER(Filter1.NAME3) LIKE '%'||UPPER(#{calCustName})||'%' -->
+                             AND  UPPER(Filter1.NAME3) = #{calCustName}
+                           </if>
 
-			               <if test=" '' != calNric and null != calNric">
-			                <!--  AND  UPPER(Filter1.NRIC1) LIKE '%'||UPPER(#{calNric})||'%' -->
+                           <if test=" '' != calNric and null != calNric">
+                            <!--  AND  UPPER(Filter1.NRIC1) LIKE '%'||UPPER(#{calNric})||'%' -->
                              AND  Filter1.NRIC1 = #{calNric}
-			               </if>
+                           </if>
 
-			               <if test=" '' != calProductId and null != calProductId">
+                           <if test=" '' != calProductId and null != calProductId">
                              AND  Filter1.STK_ID = #{calProductId}
                            </if>
 
-			               <if test=" '' != calCcpType and null != calCcpType  ">
-			                 AND  Filter1.CCP_TYPE_ID = #{calCcpType}
-			               </if>
+                           <if test=" '' != calCcpType and null != calCcpType  ">
+                             AND  Filter1.CCP_TYPE_ID = #{calCcpType}
+                           </if>
 
-			               <if test=" '' != calScheme and null != calScheme">
-			                 AND  Filter1.CCP_SCHEME_TYPE_ID = #{calScheme}
-			               </if>
+                           <if test=" '' != calScheme and null != calScheme">
+                             AND  Filter1.CCP_SCHEME_TYPE_ID = #{calScheme}
+                           </if>
 
-			               <if test=" '' != calOrdRefNo and null != calOrdRefNo">
-			                <!--  AND  UPPER(Filter1.REF_NO) LIKE '%'||UPPER(#{calOrdRefNo})||'%' -->
+                           <if test=" '' != calOrdRefNo and null != calOrdRefNo">
+                            <!--  AND  UPPER(Filter1.REF_NO) LIKE '%'||UPPER(#{calOrdRefNo})||'%' -->
                              AND  Filter1.REF_NO = #{calOrdRefNo}
-			               </if>
+                           </if>
 
-			              <if test=" '' != calRegion and null != calRegion">
-			                 AND  Extent13.REGN_ID = #{calRegion}
-			              </if>
+                          <if test=" '' != calRegion and null != calRegion">
+                             AND  Extent13.REGN_ID = #{calRegion}
+                          </if>
 
-			               <if test=" '' != calUpdator and null != calUpdator">
-			                  <!-- AND  UPPER(Filter1.USERNAME3) =  UPPER(#{calUpdator}) -->
-			                  AND  Filter1.USERNAME3 =  #{calUpdator}
-			               </if>
+                           <if test=" '' != calUpdator and null != calUpdator">
+                              <!-- AND  UPPER(Filter1.USERNAME3) =  UPPER(#{calUpdator}) -->
+                              AND  Filter1.USERNAME3 =  #{calUpdator}
+                           </if>
 
-			               <if test=" bndlNo != '' and bndlNo != null">
+                           <if test=" bndlNo != '' and bndlNo != null">
                              <!--  AND  UPPER(Filter1.BNDL_NO) =  UPPER(#{bndlNo}) -->
                               AND  Filter1.BNDL_NO = #{bndlNo}
                            </if>
                            <if test='isECommerce != null and isECommerce != ""'>
-				              AND Filter1.ECOMM_ORD_ID > 0
-				           </if>
-				           <if test='eRref != null and eRref != ""'>
+                              AND Filter1.ECOMM_ORD_ID > 0
+                           </if>
+                           <if test='eRref != null and eRref != ""'>
                               AND Filter1.eRref = #{eRref}
                            </if>
                            <if test=" '' != eRstatus and null != eRstatus ">
@@ -310,54 +310,54 @@ WITH S291D AS
                              </foreach>
                           </if>
 
-	                      <if test=" '' != remarks and null != remarks">
-	                         AND filter1.ASSIGNMENT_BATCH = #{remarks}
-	                      </if>
-			              <!--End Condition  -->
-			  ORDER BY Filter1.CCP_ID ASC
+                          <if test=" '' != remarks and null != remarks">
+                             AND filter1.ASSIGNMENT_BATCH = #{remarks}
+                          </if>
+                          <!--End Condition  -->
+              ORDER BY Filter1.CCP_ID ASC
 
 </select>
 
 <select id="getPrgId"  parameterType="Map" resultType="egovMap">
-			SELECT
-			    LOG_ID ,
-			    LOG_CRT_DT ,
-			    LOG_CRT_USER_ID ,
-			    C1 ,
-			    IS_LOK ,
-			    LOG_DT ,
-			    SALES_ORD_ID ,
-			    PRGRS_ID ,
-			    PRGRS ,
-			    REF_ID
-			  FROM ( SELECT Project1.LOG_ID   ,
-			                Project1.LOG_CRT_DT   ,
-			                Project1.LOG_CRT_USER_ID   ,
-			                Project1.C1   ,
-			                Project1.IS_LOK   ,
-			                Project1.LOG_DT   ,
-			                Project1.SALES_ORD_ID   ,
-			                Project1.PRGRS_ID   ,
-			                Project1.PRGRS   ,
-			                Project1.REF_ID
-						  FROM ( SELECT Extent1.LOG_ID   ,
-						                Extent1.SALES_ORD_ID   ,
-						                Extent1.PRGRS_ID   ,
-						                Extent1.LOG_DT   ,
-						                Extent1.REF_ID   ,
-						                Extent1.IS_LOK   ,
-						                Extent1.LOG_CRT_USER_ID   ,
-						                Extent1.LOG_CRT_DT   ,
-						                Extent2.PRGRS   ,
-						                CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END C1
-							         FROM SAL0009D Extent1
-							                JOIN SAL0010M Extent2   ON Extent2.PRGRS_ID = Extent1.PRGRS_ID
-							                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.LOG_CRT_USER_ID
-							          WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} ) Project1
-			  ORDER BY Project1.LOG_ID DESC )
-			  <![CDATA[
-			  WHERE ROWNUM <= 1
-			  ]]>
+            SELECT
+                LOG_ID ,
+                LOG_CRT_DT ,
+                LOG_CRT_USER_ID ,
+                C1 ,
+                IS_LOK ,
+                LOG_DT ,
+                SALES_ORD_ID ,
+                PRGRS_ID ,
+                PRGRS ,
+                REF_ID
+              FROM ( SELECT Project1.LOG_ID   ,
+                            Project1.LOG_CRT_DT   ,
+                            Project1.LOG_CRT_USER_ID   ,
+                            Project1.C1   ,
+                            Project1.IS_LOK   ,
+                            Project1.LOG_DT   ,
+                            Project1.SALES_ORD_ID   ,
+                            Project1.PRGRS_ID   ,
+                            Project1.PRGRS   ,
+                            Project1.REF_ID
+                          FROM ( SELECT Extent1.LOG_ID   ,
+                                        Extent1.SALES_ORD_ID   ,
+                                        Extent1.PRGRS_ID   ,
+                                        Extent1.LOG_DT   ,
+                                        Extent1.REF_ID   ,
+                                        Extent1.IS_LOK   ,
+                                        Extent1.LOG_CRT_USER_ID   ,
+                                        Extent1.LOG_CRT_DT   ,
+                                        Extent2.PRGRS   ,
+                                        CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END C1
+                                     FROM SAL0009D Extent1
+                                            JOIN SAL0010M Extent2   ON Extent2.PRGRS_ID = Extent1.PRGRS_ID
+                                            LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.LOG_CRT_USER_ID
+                                      WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} ) Project1
+              ORDER BY Project1.LOG_ID DESC )
+              <![CDATA[
+              WHERE ROWNUM <= 1
+              ]]>
 </select>
 
 
@@ -462,19 +462,19 @@ SELECT Extent3.SCRE_EVENT_ID   ,
 </select>
 
 <select id="getScorePointByEventID"  parameterType="Map" resultType="egovMap">
-			    SELECT Extent1.SCRE_EVENT_ID   ,
-			       Extent1.SCRE_EVENT_CODE   ,
-			       Extent1.SCRE_EVENT_DESC   ,
-			       Extent1.SCRE_EVENT_POINT_START   ,
-			       Extent1.SCRE_EVENT_POINT_END   ,
-			       TO_CHAR(Extent1.SCRE_EVENT_POINT , 'FM9999999999990.0') SCRE_EVENT_POINT  ,
-			       Extent1.SCRE_EVENT_TOT_POINT   ,
-			       Extent1.SCRE_EVENT_STUS_ID   ,
-			       Extent1.SCRE_EVENT_UPD_USER_ID   ,
-			       Extent1.SCRE_EVENT_UPD_DT   ,
-			       Extent1.SCRE_EVENT_PREV_SETT_ID
-			  FROM SYS0010M Extent1
-			 WHERE  Extent1.SCRE_EVENT_ID = #{orderUnit}
+                SELECT Extent1.SCRE_EVENT_ID   ,
+                   Extent1.SCRE_EVENT_CODE   ,
+                   Extent1.SCRE_EVENT_DESC   ,
+                   Extent1.SCRE_EVENT_POINT_START   ,
+                   Extent1.SCRE_EVENT_POINT_END   ,
+                   TO_CHAR(Extent1.SCRE_EVENT_POINT , 'FM9999999999990.0') SCRE_EVENT_POINT  ,
+                   Extent1.SCRE_EVENT_TOT_POINT   ,
+                   Extent1.SCRE_EVENT_STUS_ID   ,
+                   Extent1.SCRE_EVENT_UPD_USER_ID   ,
+                   Extent1.SCRE_EVENT_UPD_DT   ,
+                   Extent1.SCRE_EVENT_PREV_SETT_ID
+              FROM SYS0010M Extent1
+             WHERE  Extent1.SCRE_EVENT_ID = #{orderUnit}
 </select>
 
 <select id="getScoreEventTotalRental"  parameterType="Map" resultType="java.lang.Double">
@@ -654,40 +654,40 @@ SELECT
 </select>
 
 <select id="getScoreEventExistCust"  parameterType="Map" resultType="egovMap">
-		SELECT
-		  T1.RENT_INST_NO
-		FROM
-			( SELECT Extent2.RENT_RUN_ID   ,
-			       Extent2.RENT_ID   ,
-			       Extent2.RENT_SO_ID   ,
-			       Extent2.RENT_DOC_NO   ,
-			       Extent2.RENT_DOC_TYPE_ID   ,
-			       Extent2.RENT_DT_TM   ,
-			       Extent2.RENT_AMT   ,
-			       Extent2.RENT_BATCH_NO   ,
-			       Extent2.RENT_INST_NO   ,
-			       Extent2.RENT_UPD_USER_ID   ,
-			       Extent2.RENT_UPD_DT   ,
-			       Extent2.RENT_IS_SYNC   ,
-			       Extent2.RENT_BILL_RUNNG_TOT   ,
-			       Extent2.R01 R01  ,
-			       Extent2.R02 R02
-			  FROM SAL0001D Extent1
-			         JOIN PAY0022D Extent2   ON Extent1.SALES_ORD_ID = Extent2.RENT_SO_ID
-			 WHERE   Extent1.CUST_ID = #{custId}
-			          AND  66 = Extent1.APP_TYPE_ID
-			          AND  Extent1.STUS_CODE_ID = 4
-			ORDER BY Extent2.RENT_INST_NO DESC ) T1
-		WHERE ROWNUM = 1
+        SELECT
+          T1.RENT_INST_NO
+        FROM
+            ( SELECT Extent2.RENT_RUN_ID   ,
+                   Extent2.RENT_ID   ,
+                   Extent2.RENT_SO_ID   ,
+                   Extent2.RENT_DOC_NO   ,
+                   Extent2.RENT_DOC_TYPE_ID   ,
+                   Extent2.RENT_DT_TM   ,
+                   Extent2.RENT_AMT   ,
+                   Extent2.RENT_BATCH_NO   ,
+                   Extent2.RENT_INST_NO   ,
+                   Extent2.RENT_UPD_USER_ID   ,
+                   Extent2.RENT_UPD_DT   ,
+                   Extent2.RENT_IS_SYNC   ,
+                   Extent2.RENT_BILL_RUNNG_TOT   ,
+                   Extent2.R01 R01  ,
+                   Extent2.R02 R02
+              FROM SAL0001D Extent1
+                     JOIN PAY0022D Extent2   ON Extent1.SALES_ORD_ID = Extent2.RENT_SO_ID
+             WHERE   Extent1.CUST_ID = #{custId}
+                      AND  66 = Extent1.APP_TYPE_ID
+                      AND  Extent1.STUS_CODE_ID = 4
+            ORDER BY Extent2.RENT_INST_NO DESC ) T1
+        WHERE ROWNUM = 1
 </select>
 
 <select id="getCcpStusCodeList"  resultType="egovMap">
-		SELECT STUS_CODE_ID CODE_ID,
-		           CODE ,
-		           NAME CODE_NAME
-		FROM
-		           SYS0038M
-		WHERE  STUS_CODE_ID IN (1, 5 , 6)
+        SELECT STUS_CODE_ID CODE_ID,
+                   CODE ,
+                   NAME CODE_NAME
+        FROM
+                   SYS0038M
+        WHERE  STUS_CODE_ID IN (1, 5 , 6)
 </select>
 
 <select id="getCcpRejectCodeList"  resultType="egovMap">
@@ -825,10 +825,10 @@ SELECT Extent1.CCP_ID   ,
        CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC ,
        CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END CCP_FICO,
 <!-- Experian -->
-       CASE WHEN ( Extent1.CCP_EXPERIANS IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANS END CCP_EXPERIANS,
-       CASE WHEN ( Extent1.CCP_EXPERIANR IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANR END CCP_EXPERIANR,
-       CASE WHEN  (Extent10.EXPERIAN_BANKRUPT IS NULL) THEN 0 ELSE Extent10.EXPERIAN_BANKRUPT END EXPERIAN_BANKRUPT,
-       CASE WHEN  (Extent10.PRCSS IS NULL) THEN 0 ELSE Extent10.PRCSS END EXP_PRCSS ,
+       --CASE WHEN ( Extent1.CCP_EXPERIANS IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANS END CCP_EXPERIANS,
+       --CASE WHEN ( Extent1.CCP_EXPERIANR IS NULL ) THEN 0 ELSE Extent1.CCP_EXPERIANR END CCP_EXPERIANR,
+       --CASE WHEN  (Extent10.EXPERIAN_BANKRUPT IS NULL) THEN 0 ELSE Extent10.EXPERIAN_BANKRUPT END EXPERIAN_BANKRUPT,
+      -- CASE WHEN  (Extent10.PRCSS IS NULL) THEN 0 ELSE Extent10.PRCSS END EXP_PRCSS ,
 <!-- Experian -->
        NVL(Extent1.CCP_RJ_STUS_ID , 0) CCP_RJ_STUS_ID,
        CASE WHEN  (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT ,
@@ -845,9 +845,9 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SAL0107D Extent7   ON Extent6.SALES_ORD_NO = Extent7.ORD_NO
          LEFT JOIN SAL0074D Extent8   ON Extent8.SALES_ORD_ID = Extent6.SALES_ORD_ID
          LEFT JOIN SAL0262D Extent9   ON Extent6.CUST_ID = Extent9.CUST_ID
+        -- LEFT JOIN SAL0313D Extent10   ON Extent6.SALES_ORD_NO = Extent10.ORD_NO
          AND Extent9.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
          AND Extent9.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
-         LEFT JOIN SAL0313D Extent10   ON Extent6.SALES_ORD_NO = Extent10.ORD_NO
 <![CDATA[
  WHERE  Extent1.CCP_ID = #{ccpId}
  AND ROWNUM <= 1
@@ -920,85 +920,85 @@ SELECT Extent1.CCP_ID   ,
 </select>
 
 <update id="updateCcpDecision" parameterType="Map">
-			UPDATE SAL0102D
-			SET
-			       CCP_SCHEME_TYPE_ID = #{saveCustTypeId},
-			       CCP_INCOME_RANGE_ID = #{incomeRangeEdit},
-			       CCP_TOT_SCRE_POINT = #{ccpTotalScorePoint},
-			       CCP_STUS_ID = #{statusEdit},
-			       CCP_RESN_ID = #{reasonCodeEdit},
-			       CCP_REM = #{spcialRem},
-			       CCP_RJ_STUS_ID = #{rejectStatusEdit},
-			       CCP_UPD_DT = SYSDATE,
-			       CCP_UPD_USER_ID = #{userId},
-			       CCP_IS_LOU = #{letterOfUdt},
-			       CCP_IS_SAMAN =#{summon},
-			       CCP_IS_SYNC = #{updateCCPIssynch},
-			       CCP_PNC_REM = #{pncRem},
-			       CCP_HAS_GRNT = #{hasGrnt},
-			       CCP_IS_HOLD = #{onHoldCcp},
-			       CCP_FICO = #{ficoScore},
+            UPDATE SAL0102D
+            SET
+                   CCP_SCHEME_TYPE_ID = #{saveCustTypeId},
+                   CCP_INCOME_RANGE_ID = #{incomeRangeEdit},
+                   CCP_TOT_SCRE_POINT = #{ccpTotalScorePoint},
+                   CCP_STUS_ID = #{statusEdit},
+                   CCP_RESN_ID = #{reasonCodeEdit},
+                   CCP_REM = #{spcialRem},
+                   CCP_RJ_STUS_ID = #{rejectStatusEdit},
+                   CCP_UPD_DT = SYSDATE,
+                   CCP_UPD_USER_ID = #{userId},
+                   CCP_IS_LOU = #{letterOfUdt},
+                   CCP_IS_SAMAN =#{summon},
+                   CCP_IS_SYNC = #{updateCCPIssynch},
+                   CCP_PNC_REM = #{pncRem},
+                   CCP_HAS_GRNT = #{hasGrnt},
+                   CCP_IS_HOLD = #{onHoldCcp},
+                   CCP_FICO = #{ficoScore},
                    CCP_EXPERIANS = #{experianScore},
                    CCP_EXPERIANR = #{experianRisk},
-			       CCP_AGM_REQ = #{agmReq},
-			       CCP_TEMPLATE = #{cowayTemplate}
-			WHERE
-			       CCP_ID = #{saveCcpId}
+                   CCP_AGM_REQ = #{agmReq},
+                   CCP_TEMPLATE = #{cowayTemplate}
+            WHERE
+                   CCP_ID = #{saveCcpId}
 </update>
 
 <select id="getCcpDecisionList" parameterType="Map" resultType="EgovMap">
-	    SELECT Extent1.CCP_ITM_ID   ,
-	       Extent1.CCP_ID   ,
-	       Extent1.CCP_SCRE_EVENT_ID   ,
-	       Extent1.CCP_ITM_SCRE_UNIT   ,
-	       Extent1.CCP_ITM_POINT_SCRE   ,
-	       Extent1.CCP_ITM_REM   ,
-	       Extent1.CCP_ITM_UPD_USER_ID   ,
-	       Extent1.CCP_ITM_UPD_DT   ,
-	       Extent1.CCP_ITM_STUS_ID
-	  FROM SAL0103D Extent1
-	 WHERE  Extent1.CCP_ID = #{saveCcpId}
+        SELECT Extent1.CCP_ITM_ID   ,
+           Extent1.CCP_ID   ,
+           Extent1.CCP_SCRE_EVENT_ID   ,
+           Extent1.CCP_ITM_SCRE_UNIT   ,
+           Extent1.CCP_ITM_POINT_SCRE   ,
+           Extent1.CCP_ITM_REM   ,
+           Extent1.CCP_ITM_UPD_USER_ID   ,
+           Extent1.CCP_ITM_UPD_DT   ,
+           Extent1.CCP_ITM_STUS_ID
+      FROM SAL0103D Extent1
+     WHERE  Extent1.CCP_ID = #{saveCcpId}
 </select>
 
 <update id="updateCcpDecisionStatus" parameterType="egovMap">
-		UPDATE
-		    SAL0103D
-		SET
-		    CCP_ITM_STUS_ID = #{ccpItmStusId}
-		WHERE
-		    CCP_ITM_ID = #{ccpItmId}
+        UPDATE
+            SAL0103D
+        SET
+            CCP_ITM_STUS_ID = #{ccpItmStusId}
+        WHERE
+            CCP_ITM_ID = #{ccpItmId}
 </update>
 
 <insert id="insertCcpDecision" parameterType="Map">
-			INSERT INTO SAL0103D  (CCP_ITM_ID,
-											    CCP_ID,
-											    CCP_SCRE_EVENT_ID,
-											    CCP_ITM_SCRE_UNIT,
-											    CCP_ITM_POINT_SCRE,
-											    CCP_ITM_REM,
-											    CCP_ITM_UPD_USER_ID,
-											    CCP_ITM_UPD_DT,
-											    CCP_ITM_STUS_ID )
-							  VALUES (SAL0103D_CCP_ITM_ID_SEQ.NEXTVAL,
-								           #{saveCcpId},
-								           #{insCcpScreEventId},
-								           #{insCcpItmScreUnit},
-								           #{insCcpItmPointScre},
-								           NULL,
-								           #{userId},
-								           SYSDATE,
-								           #{insCcpItmStusId})
+            INSERT INTO SAL0103D  (CCP_ITM_ID,
+                                                CCP_ID,
+                                                CCP_SCRE_EVENT_ID,
+                                                CCP_ITM_SCRE_UNIT,
+                                                CCP_ITM_POINT_SCRE,
+                                                CCP_ITM_REM,
+                                                CCP_ITM_UPD_USER_ID,
+                                                CCP_ITM_UPD_DT,
+                                                CCP_ITM_STUS_ID )
+                              VALUES (SAL0103D_CCP_ITM_ID_SEQ.NEXTVAL,
+                                           #{saveCcpId},
+                                           #{insCcpScreEventId},
+                                           #{insCcpItmScreUnit},
+                                           #{insCcpItmPointScre},
+                                           NULL,
+                                           #{userId},
+                                           SYSDATE,
+                                           #{insCcpItmStusId})
 </insert>
 
 <update id="updateOrdStus" parameterType="Map">
-			UPDATE
-			        SAL0001D
-			SET REM = #{ordRem},
-			       STUS_CODE_ID = #{ordStusId},
-			       UPD_DT = SYSDATE,
-			       SYNC_CHK = #{syncChk},
-			       UPD_USER_ID = #{userId}
-			WHERE   SALES_ORD_ID = #{saveOrdId}
+            UPDATE
+                    SAL0001D
+            SET REM = #{ordRem},
+                   STUS_CODE_ID = #{ordStusId},
+                   UPD_DT = SYSDATE,
+                   SYNC_CHK = #{syncChk},
+                   UPD_USER_ID = #{userId}
+            WHERE   SALES_ORD_ID = #{saveOrdId}
 
 </update>
 
@@ -1075,23 +1075,23 @@ SELECT Extent1.SALES_ORD_ID   ,
 </select>
 
 <select id="getCancelItm" parameterType="Map" resultType="egovMap">
-		SELECT Extent1.SALES_ORD_ID   ,
-		       Extent1.ITM_NO   ,
-		       Extent1.ITM_STK_ID   ,
-		       Extent1.ITM_PRC_ID   ,
-		       Extent1.ITM_QTY   ,
-		       Extent1.ITM_PRC   ,
-		       Extent1.ITM_PV   ,
-		       Extent1.STUS_CODE_ID   ,
-		       Extent1.UPD_DT   ,
-		       Extent1.UPD_USER_ID   ,
-		       Extent1.EDIT_TYPE_ID   ,
-		       Extent1.ITM_ID   ,
-		       Extent1.ITM_CALL_ENTRY_ID
-		  FROM SAL0002D Extent1
-		  <![CDATA[
-		 WHERE  Extent1.SALES_ORD_ID = #{saveOrdId} AND ROWNUM <= 1
-		 ]]>
+        SELECT Extent1.SALES_ORD_ID   ,
+               Extent1.ITM_NO   ,
+               Extent1.ITM_STK_ID   ,
+               Extent1.ITM_PRC_ID   ,
+               Extent1.ITM_QTY   ,
+               Extent1.ITM_PRC   ,
+               Extent1.ITM_PV   ,
+               Extent1.STUS_CODE_ID   ,
+               Extent1.UPD_DT   ,
+               Extent1.UPD_USER_ID   ,
+               Extent1.EDIT_TYPE_ID   ,
+               Extent1.ITM_ID   ,
+               Extent1.ITM_CALL_ENTRY_ID
+          FROM SAL0002D Extent1
+          <![CDATA[
+         WHERE  Extent1.SALES_ORD_ID = #{saveOrdId} AND ROWNUM <= 1
+         ]]>
 </select>
 
 <select id="crtSeqSAL0020D" resultType="java.lang.String">
@@ -1245,15 +1245,15 @@ INSERT INTO SAL0020D
 </insert>
 
 <update id="updateCallEntryId" parameterType="Map">
-		UPDATE CCR0006D
-		   SET RESULT_ID = #{updCallEntryResultId}
-		 WHERE   CALL_ENTRY_ID = #{updCallEntryId}
+        UPDATE CCR0006D
+           SET RESULT_ID = #{updCallEntryResultId}
+         WHERE   CALL_ENTRY_ID = #{updCallEntryId}
 </update>
 
 <update id="updateOrderRequest"  parameterType="Map">
-	    UPDATE SAL0020D
-	   SET SO_REQ_CUR_CALL_ENTRY_ID = #{updCallEntryId}
-	 WHERE  SO_REQ_ID = #{soReqSeq}
+        UPDATE SAL0020D
+       SET SO_REQ_CUR_CALL_ENTRY_ID = #{updCallEntryId}
+     WHERE  SO_REQ_ID = #{soReqSeq}
 </update>
 
 <insert id="insertLog" parameterType="Map">
@@ -1267,13 +1267,13 @@ INSERT INTO SAL0009D
     LOG_CRT_USER_ID,
     LOG_CRT_DT )
   VALUES ( #{logSeq},
-	           #{saveOrdId},
-	           #{logProgId},
-	           SYSDATE,
-	           #{logRefId},
-	           #{logIsLock},
-	           #{userId},
-	           SYSDATE )
+               #{saveOrdId},
+               #{logProgId},
+               SYSDATE,
+               #{logRefId},
+               #{logIsLock},
+               #{userId},
+               SYSDATE )
 </insert>
 
 <select id="chkECash" parameterType="Map" resultType="egovMap">
@@ -1288,23 +1288,23 @@ INSERT INTO SAL0009D
         ROWNUM <= 1
         ]]>     -->
 
-		SELECT
-		    SALES_ORD_ID,
-		    MODE_ID
-		FROM
-		    SAL0074D
-		WHERE
-		    1 = 1
-		AND
-		<![CDATA[
-		    MODE_ID <> 131
-		]]>
-		AND
-		    SALES_ORD_ID = #{saveOrdId}
-		AND
-		<![CDATA[
-		    ROWNUM <= 1
-		]]>
+        SELECT
+            SALES_ORD_ID,
+            MODE_ID
+        FROM
+            SAL0074D
+        WHERE
+            1 = 1
+        AND
+        <![CDATA[
+            MODE_ID <> 131
+        ]]>
+        AND
+            SALES_ORD_ID = #{saveOrdId}
+        AND
+        <![CDATA[
+            ROWNUM <= 1
+        ]]>
 </select>
 
 <resultMap id="resultRowMap" type="EgovMap">
@@ -1312,47 +1312,47 @@ INSERT INTO SAL0009D
 </resultMap>
 <select id="getResultRowForCTOSDisplayForCCPCalculation" parameterType="Map" resultMap="resultRowMap">
 SELECT
-		T1.BATCH_ID,
-		T1.ORD_NO,
-		T1.CUST_IC,
-		T1.CUST_NAME,
-		T1.PRCSS,
-		T1.FICO_SCRE,
-		T1.BATCH_NO,
-		T1.RESULT_RAW,
-		T1.CTOS_DT,
-		T1.UPD_USER_ID,
-		T1.CTOS_BANKRUPT,
-		T1.ORD_ID,
-		T1.CUST_ID,
-		T1.MEM_ID,
-		T1.CNT
+        T1.BATCH_ID,
+        T1.ORD_NO,
+        T1.CUST_IC,
+        T1.CUST_NAME,
+        T1.PRCSS,
+        T1.FICO_SCRE,
+        T1.BATCH_NO,
+        T1.RESULT_RAW,
+        T1.CTOS_DT,
+        T1.UPD_USER_ID,
+        T1.CTOS_BANKRUPT,
+        T1.ORD_ID,
+        T1.CUST_ID,
+        T1.MEM_ID,
+        T1.CNT
 FROM(
-		  SELECT
-		        BATCH_ID,
-			    ORD_NO,
-			    CUST_IC,
-			    CUST_NAME,
-			    PRCSS,
-			    FICO_SCRE,
-			    BATCH_NO,
-			    RESULT_RAW,
-			    CTOS_DT,
-			    UPD_USER_ID,
-			    CTOS_BANKRUPT,
-			    ORD_ID,
-			    CUST_ID,
-			    MEM_ID,
-			    ROW_NUMBER() OVER (PARTITION BY CUST_IC ORDER BY CTOS_DT DESC) CNT
-		  FROM
-		        SAL0107D
-		  WHERE
-		        PRCSS = 1
-		  AND
-		        CTOS_DT IS NOT NULL
-		  AND
-		       RESULT_RAW IS NOT NULL
-		) T1
+          SELECT
+                BATCH_ID,
+                ORD_NO,
+                CUST_IC,
+                CUST_NAME,
+                PRCSS,
+                FICO_SCRE,
+                BATCH_NO,
+                RESULT_RAW,
+                CTOS_DT,
+                UPD_USER_ID,
+                CTOS_BANKRUPT,
+                ORD_ID,
+                CUST_ID,
+                MEM_ID,
+                ROW_NUMBER() OVER (PARTITION BY CUST_IC ORDER BY CTOS_DT DESC) CNT
+          FROM
+                SAL0107D
+          WHERE
+                PRCSS = 1
+          AND
+                CTOS_DT IS NOT NULL
+          AND
+               RESULT_RAW IS NOT NULL
+        ) T1
 WHERE
       T1.CUST_IC = #{nric}
 AND T1.CNT = 1
@@ -1415,29 +1415,29 @@ AND T1.CNT = 1
 
 <!-- ccp Installation Grid -->
 <select id="getCcpInstallationList" parameterType="Map" resultType="egovMap">
-			 SELECT
-			    A.SALES_ORD_NO,
-			    A.APP_TYPE_ID,
-			    G.CODE_DESC APP_TYPE,
-			    A.STUS_CODE_ID,
-			    I.CODE ORDER_STATUS,
-			    C.ITM_STK_ID,
-			    H.STK_DESC,
-			    D.ADDR_DTL||' '||D.STREET||' '||E.AREA FULL_ADDRESS,
-			    E.CITY,
-			    E.STATE,
-			    F.STUS_CODE_ID RENTAL_STATUS
-			FROM SAL0001D A
-			    JOIN SAL0046D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
-			    JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-			    JOIN SAL0023D D ON A.CUST_ADD_ID = D.CUST_ADD_ID
-			    JOIN SYS0064M E ON D.AREA_ID = E.AREA_ID
-			    LEFT JOIN SAL0071D F ON A.SALES_ORD_ID = F.SALES_ORD_ID
-			    JOIN SYS0013M G ON G.CODE_ID = A.APP_TYPE_ID
-			    JOIN SYS0026M H ON H.STK_ID = C.ITM_STK_ID
-			    JOIN SYS0038M I ON I.STUS_CODE_ID = A.STUS_CODE_ID
-			WHERE A.APP_TYPE_ID IN ( 66, 67, 68, 1412)
-			AND A.CUST_ID = #{custId}
+             SELECT
+                A.SALES_ORD_NO,
+                A.APP_TYPE_ID,
+                G.CODE_DESC APP_TYPE,
+                A.STUS_CODE_ID,
+                I.CODE ORDER_STATUS,
+                C.ITM_STK_ID,
+                H.STK_DESC,
+                D.ADDR_DTL||' '||D.STREET||' '||E.AREA FULL_ADDRESS,
+                E.CITY,
+                E.STATE,
+                F.STUS_CODE_ID RENTAL_STATUS
+            FROM SAL0001D A
+                JOIN SAL0046D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+                JOIN SAL0023D D ON A.CUST_ADD_ID = D.CUST_ADD_ID
+                JOIN SYS0064M E ON D.AREA_ID = E.AREA_ID
+                LEFT JOIN SAL0071D F ON A.SALES_ORD_ID = F.SALES_ORD_ID
+                JOIN SYS0013M G ON G.CODE_ID = A.APP_TYPE_ID
+                JOIN SYS0026M H ON H.STK_ID = C.ITM_STK_ID
+                JOIN SYS0038M I ON I.STUS_CODE_ID = A.STUS_CODE_ID
+            WHERE A.APP_TYPE_ID IN ( 66, 67, 68, 1412)
+            AND A.CUST_ID = #{custId}
 </select>
 
 <select id="getAux" parameterType="Map" resultType="egovMap">
@@ -1502,14 +1502,14 @@ AND T1.CNT = 1
 </select>
 
     <select id="ccpEresubmitNewConfirm" parameterType="Map" resultType="egovMap">
-		select b.sales_ord_id, b.sales_ord_no, a.ccp_id
-		from sal0102d a
-		left join sal0001d b on b.sales_ord_id = a.ccp_sales_ord_id
-		left join sal0304d c on c.sales_ord_id = b.sales_ord_id
-		where
-		b.sales_ord_no = #{ORD_NO} and a.CCP_REM is not null and a.ccp_stus_id = 1
-		and b.mem_id = #{memID}
-		and c.ref_no is null
+        select b.sales_ord_id, b.sales_ord_no, a.ccp_id
+        from sal0102d a
+        left join sal0001d b on b.sales_ord_id = a.ccp_sales_ord_id
+        left join sal0304d c on c.sales_ord_id = b.sales_ord_id
+        where
+        b.sales_ord_no = #{ORD_NO} and a.CCP_REM is not null and a.ccp_stus_id = 1
+        and b.mem_id = #{memID}
+        and c.ref_no is null
     </select>
 
     <select id="ccpEresubmitList" parameterType="Map" resultMap="calCcpListClobMap">
@@ -1568,7 +1568,7 @@ AND T1.CNT = 1
                    END AS ASSIGN_PIC,
                    Filter1.R_REF_NO,
                       TO_CHAR(Filter1.R_CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') R_CRT_DT,
-                      CASE WHEN  1 = Filter1.R_STUS_ID  THEN 'Active' WHEN ( 5 = Filter1.R_STUS_ID ) THEN 'Approved' ELSE 'Rejected' END R_STUS
+                      CASE WHEN ( 1 = Filter1.R_STUS_ID ) THEN 'Active' WHEN ( 5 = Filter1.R_STUS_ID ) THEN 'Approved' WHEN ( 10 = Filter1.R_STUS_ID ) THEN 'Cancel' ELSE 'Rejected' END R_STUS
             FROM ( SELECT Extent1.CCP_ID   ,
                       Extent1.CCP_SCHEME_TYPE_ID   ,
                       Extent1.CCP_TYPE_ID   ,
@@ -1676,7 +1676,7 @@ AND T1.CNT = 1
                  WHERE  1 = 1
                            <!--Start Condition  -->
 
-                           and Filter1.CCP_STUS_ID = 1
+                           and Filter1.CCP_STUS_ID IN ('1','5','6')
 
                           <if test=" '' != OrderNo and null != OrderNo">
                              <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
@@ -1721,38 +1721,102 @@ AND T1.CNT = 1
                            <if test=" '' != GrpCode and null != GrpCode">
                              AND V.GRP_CODE = #{GrpCode}
                            </if>
+
+                           <if test=" '' != eResubmitDate and null != eResubmitDate">
+                             AND TO_CHAR(Filter1.R_CRT_DT,'DD/MM/YYYY')  <![CDATA[>= ]]> TO_DATE(#{eResubmitFrDate}, 'DD/MM/YYYY')
+                            AND TO_CHAR(Filter1.R_CRT_DT,'DD/MM/YYYY')  <![CDATA[<]]> TO_DATE(#{eResubmitToDate}, 'DD/MM/YYYY') + 1
+                          </if>
                           <!--End Condition  -->
               ORDER BY Filter1.CCP_ID ASC
     </select>
 
-	<insert id="insertCcpEresubmitNewSave" parameterType="Map">
-	            insert into SAL0304D(
-	            ref_no
-	            ,SALES_ORD_ID
-	            , CCP_ID
-	            , STUS_ID
-	            , CRT_DT
-	            , CRT_USER_ID
-	            , UPD_DT
-	            , UPD_USER_ID
-	            , ATCH_FILE_GRP_ID
-	            , REMARKS
-	            )
-	            values
-	            (#{ezyDocNo}
-	            ,#{ordId}
-	            , #{ccpId}
-	            , 1
-	            , SYSDATE
-	            , #{userId}
-	            , SYSDATE
-	            , #{userId}
-	            , #{atchFileGrpId}
-	            , #{remarks}
-	            )
-	</insert>
+    <insert id="insertCcpEresubmitNewSave" parameterType="Map">
+                insert into SAL0304D(
+                ref_no
+                ,SALES_ORD_ID
+                , CCP_ID
+                , STUS_ID
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , ATCH_FILE_GRP_ID
+                , REMARKS
+                )
+                values
+                (#{ezyDocNo}
+                ,#{ordId}
+                , #{ccpId}
+                , 1
+                , SYSDATE
+                , #{userId}
+                , SYSDATE
+                , #{userId}
+                , #{atchFileGrpId}
+                , #{remarks}
+                )
+    </insert>
 
-	<select id="selectNextFileId" resultType="int">
+    <insert id="insertCcpEresubmitNewSaveHist" parameterType="Map">
+                insert into SAL0317D(
+                HIST_ID
+                ,REF_NO
+                ,SALES_ORD_ID
+                , CCP_ID
+                , STUS_ID
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , ATCH_FILE_GRP_ID
+                , REMARKS
+                )
+                values
+                (SAL0317D_ID_SEQ.NEXTVAL
+                ,#{ezyDocNo}
+                ,#{ordId}
+                , #{ccpId}
+                , 1
+                , SYSDATE
+                , #{userId}
+                , SYSDATE
+                , #{userId}
+                , #{atchFileGrpId}
+                , #{remarks}
+                )
+    </insert>
+
+    <insert id="insertCcpEresubmitRenewSaveHist" parameterType="Map">
+                insert into SAL0317D(
+                HIST_ID
+                ,REF_NO
+                ,SALES_ORD_ID
+                , CCP_ID
+                , STUS_ID
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , ATCH_FILE_GRP_ID
+                , REMARKS
+                )
+                SELECT
+                SAL0317D_ID_SEQ.NEXTVAL
+                , REF_NO
+                ,SALES_ORD_ID
+                , CCP_ID
+                , STUS_ID
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , ATCH_FILE_GRP_ID
+                , REMARKS
+                FROM SAL0304D
+                WHERE SALES_ORD_ID = #{saveOrdId} AND CCP_ID = #{saveCcpId}
+    </insert>
+
+    <select id="selectNextFileId" resultType="int">
         SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
     </select>
 
@@ -1804,11 +1868,22 @@ AND T1.CNT = 1
             where sales_ord_id = #{saveOrdId} and ccp_id = #{saveCcpId}
 </update>
 
+<update id="updateCcpEresubmitHistStus" parameterType="Map">
+            UPDATE SAL0317D set stus_id = #{eRstatusEdit}
+            <if test="null != remarks">
+            ,remarks = #{remarks}
+            </if>
+            ,upd_dt = SYSDATE
+            ,UPD_USER_ID = #{userId}
+            WHERE REF_NO = (SELECT REF_NO FROM SAL0304D where sales_ord_id = #{saveOrdId} and ccp_id = #{saveCcpId} )
+            AND STUS_ID = 1
+</update>
+
     <select id="getMemberID" parameterType="Map" resultType="int">
         select a.mem_id
         from org0001d a
-		left join sys0047m b on b.hr_Code = a.mem_code
-		where b.user_name = #{salesmanCode}
+        left join sys0047m b on b.hr_Code = a.mem_code
+        where b.user_name = #{salesmanCode}
     </select>
 
    <select id="getEzyDocNo" resultType="String">
@@ -1828,5 +1903,22 @@ AND T1.CNT = 1
     and Extent6.cust_id = #{saveCustId}
     and to_char(Extent1.GOV_AG_CRT_DT,'dd/MM/yyyy') = to_char(SYSDATE,'dd/MM/yyyy')
     and Extent6.ORD_ORG_CODE = #{saveSalesOrgCode}
+</select>
+
+<select id="selectCcpHistory" parameterType="Map" resultType="egovMap">
+SELECT
+   EXT2.SALES_ORD_NO,
+   EXT1.CCP_ID,
+  SYC.NAME AS STUS_ID,
+   EXT1.ATCH_FILE_GRP_ID,
+   TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY') CRT_DT,
+   SYS.USER_NAME,
+   EXT1.REMARKS
+   FROM SAL0317D EXT1
+   JOIN SYS0047M SYS ON SYS.USER_ID = EXT1.CRT_USER_ID
+   JOIN SAL0001D EXT2 ON EXT2.SALES_ORD_ID = EXT1.SALES_ORD_ID
+   JOIN SYS0038M SYC ON SYC.STUS_CODE_ID = EXT1.STUS_ID
+   WHERE EXT2.SALES_ORD_NO = #{orderNo}
+   ORDER BY EXT1.HIST_ID ASC
 </select>
 </mapper>

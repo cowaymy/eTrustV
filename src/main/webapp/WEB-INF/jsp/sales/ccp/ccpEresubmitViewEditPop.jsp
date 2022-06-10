@@ -56,6 +56,7 @@ var option = {
          }
 
 $(document).ready(function(){
+	$("#cancel_Pop").hide();
     console.log('${ccpEresubmitMap.salesOrdId}');
     console.log('${ccpEresubmitMap.ccpId}');
     if('${ccpEresubmitMap.atchFileGrpId}' != 0){
@@ -71,7 +72,7 @@ $(document).ready(function(){
     $("#resultcontens").attr("style","display:inline");
 
     console.log('auth change ' + '${funcChange}');
-    if('${ccpEresubmitMap.stusId}' != 6 || '${isModify}' == 'N' || '${funcChange}' != 'Y'){
+    if(('${ccpEresubmitMap.stusId}' != 6 && '${ccpEresubmitMap.stusId}' != 10 ) ||  '${isModify}' == 'N' || '${funcChange}' != 'Y'){
         var elements = document.getElementsByClassName("attach_mod");
         for(var i = 0; i < elements.length; i++) {
             elements[i].style.display="none";
@@ -79,6 +80,26 @@ $(document).ready(function(){
 
         $("#saveBtn").attr("style","display:none");
         $("#remarks").attr({"disabled" : "disabled"});
+    }
+
+    if('${ccpEresubmitMap.stusId}' == 1 && '${ccpInfoMap.ccpStusId}' == 1){
+        var elementss = document.getElementsByClassName("attach_mod");
+        for(var i = 0; i < elementss.length; i++) {
+            elementss[i].style.display="none";
+
+            if ("${SESSION_INFO.memberLevel}" >= "4") {
+                 $("#cancelBtn").attr("style","display:none");
+            }
+        }
+    }else{
+    	var elementss = document.getElementsByClassName("attach_mod");
+        for(var i = 0; i < elementss.length; i++) {
+            elementss[i].style.display="none";
+
+         if ('${ccpEresubmitMap.stusId}' != 1 ||  '${ccpInfoMap.ccpStusId}' != 1){
+        	    $("#cancelBtn").attr("style","display:none");
+            }
+        }
     }
 });
 
@@ -420,6 +441,35 @@ function fn_doClearPersion(){
             $(".input_text[id='docFrFileTxt']").val("");
             $('#docFrFile').change();
         }
+    }
+
+    function fn_cancel(){
+    	$("#popup_wrap").hide();
+        $("#cancel_Pop").show();
+   }
+
+    function fn_back(){
+    	$("#cancel_Pop").hide();
+        $("#popup_wrap").show();
+   }
+
+    function fn_confirmCancelEzyCcp(){
+
+    	var ordId = '${ccpEresubmitMap.salesOrdId}';
+        var ccpId = '${ccpEresubmitMap.ccpId}';
+        var remarks = $("#remarks").val();
+
+        Common.ajax("POST", "/sales/ccp/ccpEresubmitUpdateCancel", {saveOrdId : ordId,saveCcpId : ccpId, eRstatusEdit : 10, remarks : remarks}, function(result) {
+            console.log( result);
+
+            if(result == null){
+                Common.alert('Failed to cancel eResubmit.');
+            }else{
+                Common.alert('eResubmit has successfully cancel.');
+                $("#cancel_Pop").remove();
+                $("#popup_wrap").remove();
+            }
+       });
     }
 </script>
 
@@ -779,8 +829,8 @@ function fn_doClearPersion(){
 
         <ul class="center_btns">
             <li><p class="btn_blue2" id="saveBtn"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
+            <li><p class="btn_blue2" id="cancelBtn"><a href="#"  onclick="javascript:fn_cancel()">Cancel</a></p></li>
         </ul>
-
 </div>
 </section>
 
@@ -789,4 +839,21 @@ function fn_doClearPersion(){
 
 </section>
 
+</div>
+
+<div id="cancel_Pop" class="popup_wrap msg_box"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Ezy CCP - Cancel</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="cancel_close"><spring:message code="sal.btn.close" /></a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body">
+
+ <p class="msg_txt" >Confirm to cancel eResubmit order:${orderDetail.basicInfo.ordNo}?</p>
+ <ul class="center_btns">
+     <li><p class="btn_blue2"><a href="javascript:fn_confirmCancelEzyCcp()" id="confirm_btn"><spring:message code="approvalWebInvoMsg.confirm" /></a></p></li>
+     <li><p class="btn_blue2"><a href="javascript:fn_back()" id="cancel_btn"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
+ </ul>
+</section>
 </div>

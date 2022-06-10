@@ -45,6 +45,7 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -275,6 +276,10 @@ public class CcpCalculateController {
     	EgovMap ccpInfoMap = null;
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
 
+    	//eResubmit
+    	EgovMap ccpEresubmitMap = null;
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+
     	//Model
     	model.addAttribute("ccpId", params.get("ccpId"));
     	model.addAttribute("orderDetail", orderDetail);
@@ -282,6 +287,7 @@ public class CcpCalculateController {
     	model.addAttribute("incomMap", incomMap);
     	model.addAttribute("ccpInfoMap", ccpInfoMap);
     	model.addAttribute("salesMan", salesMan);
+    	model.addAttribute("ccpEresubmitMap", ccpEresubmitMap);
 
 		//return
     	return "sales/ccp/ccpCalCCpViewPop";
@@ -993,5 +999,45 @@ public class CcpCalculateController {
 
       return "sales/ccp/ezyCcpRawDataPop";
     }
+
+    @RequestMapping(value = "/checkHistoryPop.do")
+    public String checkHistoryPop(@RequestParam Map<String, Object> params, ModelMap model)
+        throws Exception {
+
+      return "/sales/ccp/checkHistoryPop";
+    }
+
+    @RequestMapping(value = "/checkHistoryList.do")
+    public ResponseEntity checkHistoryList(@RequestParam Map<String, Object> params, ModelMap model)
+        throws Exception {
+
+      List<EgovMap>  ccpHistory = ccpCalculateService.selectCcpHistory(params);
+
+      model.addAttribute("ccpHistory", new Gson().toJson(ccpHistory));
+
+      return ResponseEntity.ok(ccpHistory);
+    }
+
+	@RequestMapping(value = "/ccpEresubmitUpdateCancel", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ccpEresubmitUpdateCancel(@RequestBody Map<String, Object> params) throws Exception{
+		//Session
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+
+		//Service
+		ccpCalculateService.ccpEresubmitUpdateCancel(params);
+
+		//Return MSG
+		ReturnMessage message = new ReturnMessage();
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("");
+
+		return ResponseEntity.ok(message);
+	}
 }
 

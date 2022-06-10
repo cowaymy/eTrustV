@@ -190,6 +190,12 @@ function setText(result){
 
 function fn_save(){
 
+	 if($('#sofFrFile').val().trim() == '' &&  $('#softcFrFile').val().trim() == '' && $('#nricFrFile').val().trim() == '' && $('#msofFrFile').val().trim() == '' && $('#msoftcFrFile').val().trim() == ''
+		&& $('#payFrFile').val().trim() == '' && $('#govFrFile').val().trim() == '' && $('#letFrFile').val().trim() == '' && $('#docFrFile').val().trim() == ''){
+		Common.alert("No attachment. Unable to save.");
+        return ;
+	}
+
 	var formData = new FormData();
     formData.append("atchFileGrpId", '${result.ccpEresubmitMap.atchFileGrpId}');
 	formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -768,7 +774,7 @@ function fn_removeFile(name){
 			</td>
 		</tr>
         <tr>
-            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG, PDF)</span></td>
         </tr>
         </tbody>
         </table>

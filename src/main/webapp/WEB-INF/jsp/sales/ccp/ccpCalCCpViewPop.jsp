@@ -87,7 +87,106 @@ $(document).ready(function() {
     $("#_updSmsMsg").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ficoScore").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
+    if('${ccpEresubmitMap.atchFileGrpId}' != 0){
+        fn_loadAtchment('${ccpEresubmitMap.atchFileGrpId}');
+    }
 });//Doc Ready Func End
+
+function fn_loadAtchment(atchFileGrpId) {
+    Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+        //console.log(result);
+       if(result) {
+            if(result.length > 0) {
+                $("#attachTd").html("");
+                for ( var i = 0 ; i < result.length ; i++ ) {
+                    switch (result[i].fileKeySeq){
+                    case '1':
+                        sofFrId = result[i].atchFileId;
+                        sofFrName = result[i].atchFileName;
+                        $(".input_text[id='sofFrFileTxt']").val(sofFrName);
+                        break;
+                    case '2':
+                        softcFrFileId = result[i].atchFileId;
+                        softcFrFileName = result[i].atchFileName;
+                        $(".input_text[id='softcFrFileTxt']").val(softcFrFileName);
+                        break;
+                    case '3':
+                        nricFrFileId = result[i].atchFileId;
+                        nricFrFileName = result[i].atchFileName;
+                        $(".input_text[id='nricFrFileTxt']").val(nricFrFileName);
+                        break;
+                    case '4':
+                        msofFrFileId = result[i].atchFileId;
+                        msofFrFileName = result[i].atchFileName;
+                        $(".input_text[id='msofFrFileTxt']").val(msofFrFileName);
+                        break;
+                    case '5':
+                        msoftcFrFileId = result[i].atchFileId;
+                        msoftcFrFileName = result[i].atchFileName;
+                        $(".input_text[id='msoftcFrFileTxt']").val(msoftcFrFileName);
+                        break;
+                    case '6':
+                        payFrFileId = result[i].atchFileId;
+                        payFrFileName = result[i].atchFileName;
+                        $(".input_text[id='payFrFileTxt']").val(payFrFileName);
+                        break;
+                    case '7':
+                        govFrFileId = result[i].atchFileId;
+                        govFrFileName = result[i].atchFileName;
+                        $(".input_text[id='govFrFileTxt']").val(govFrFileName);
+                        break;
+                    case '8':
+                        letFrFileId = result[i].atchFileId;
+                        letFrFileName = result[i].atchFileName;
+                        $(".input_text[id='letFrFileTxt']").val(letFrFileName);
+                        break;
+                    case '9':
+                        docFrFileId = result[i].atchFileId;
+                        docFrFileName = result[i].atchFileName;
+                        $(".input_text[id='docFrFileTxt']").val(docFrFileName);
+                        break;
+                     default:
+                         Common.alert("no files");
+                    }
+                }
+
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < result.length; i++) {
+                        if(result[i].atchFileName == oriFileName) {
+                            fileGrpId = result[i].atchFileGrpId;
+                            fileId = result[i].atchFileId;
+                        }
+                    }
+                    if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                });
+            }
+        }
+   });
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        //console.log(result)
+        var fileSubPath = result.fileSubPath;
+        fileSubPath = fileSubPath.replace('\', '/'');
+
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            //console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            //console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
 
 function  bind_RetrieveData(){
 
@@ -623,6 +722,114 @@ function chgTab(tabNm) {
 
 </form>
 </section><!-- search_table end -->
+
+<div id="eResubmitAtch">
+<aside class="title_line"><!-- title_line start -->
+<h3>eResubmit Documents</h3>
+</aside><!-- title_line end -->
+<form  id="eResubmitForm">
+
+<table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:350px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Sales Order Form (SOF)</th>
+            <td>
+                <div id='uploadfiletest' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='sofFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
+            <td>
+                <div id='uploadfiletest1' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='softcFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">NRIC / VISA /Bank Card</th>
+            <td>
+                <div id='uploadfiletest2' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='nricFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Mattress Sales ORder Form (MSOF)</th>
+            <td>
+                <div id='uploadfiletest3' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='msofFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
+            <td>
+                <div id='uploadfiletest4' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='msoftcFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Payment document / Payment Channel</th>
+            <td>
+                <div id='uploadfiletest5' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='payFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Government (Agreement / SST / LO)</th>
+            <td>
+                <div id='uploadfiletest6' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='govFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Declaration letter</th>
+            <td>
+                <div id='uploadfiletest7' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='letFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Supporting document (Utility bill / SSM / Others)</th>
+            <td>
+                <div id='uploadfiletest8' class='auto_file3'>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='docFrFileTxt'  name=''/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+        </table>
+</form>
+</div>
 
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.ccpResult" /></h3>

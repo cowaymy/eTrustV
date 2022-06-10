@@ -190,6 +190,12 @@
     function fn_rawData() {
         Common.popupDiv("/sales/ccp/ezyCcpRawDataPop.do", null, null, true);
     }
+
+    function fn_checkHistory() {
+
+    Common.popupDiv("/sales/ccp/checkHistoryPop.do", '', null, true, 'detailHistoryPop');
+
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -244,6 +250,7 @@
                     <option value="1" selected="selected"><spring:message code="sal.combo.text.active" /></option>
                     <option value="5" selected="selected"><spring:message code="sal.combo.text.approv" /></option>
                     <option value="6" selected="selected"><spring:message code="sal.combo.text.rej" /></option>
+                    <option value="10" selected="selected"><spring:message code="sal.combo.text.cancelled" /></option>
                 </select>
                 </td>
             </tr>
@@ -261,6 +268,24 @@
                 <input type="text" title="" id="GrpCode" name="GrpCode" placeholder="Grp Code" class="w100p" />
                 </td>
             </tr>
+            <tr>
+	            <th scope="row">eResubmit Date</th>
+	            <td >
+	                <!-- date_set start -->
+                        <div class="date_set">
+                            <p><input type="text" id="eResubmitFrDate" name="eResubmitFrDate" title="From Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="eResubmitToDate" name="eResubmitToDate" title="To Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                        </div>
+                   <!-- date_set end -->
+	            </td>
+	            <th scope="row"></th>
+	            <td >
+	            </td>
+	           <th scope="row"></th>
+	            <td >
+	            </td>
+             </tr>
         </tbody>
     </table><!-- table end -->
  <aside class="link_btns_wrap">
@@ -278,6 +303,7 @@
         <li><p class="link_btn type2">
           <a href="#" onClick="fn_rawData()">Listing</a>
          </p></li>
+         <li><p class="link_btn"><a href="#" id="checkHistoryBtn" onclick="fn_checkHistory()">History</a></p></li>
       </c:if>
       </ul>
       <p class="hide_btn">
