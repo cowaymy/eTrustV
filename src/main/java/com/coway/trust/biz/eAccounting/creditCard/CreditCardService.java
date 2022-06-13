@@ -66,4 +66,6 @@ public interface CreditCardService {
 	List<EgovMap> selectTotalSpentAmt(Map<String, Object> params);
 
 	List<EgovMap> selectExcelList(Map<String, Object> params);
+
+	List<EgovMap> selectTotalCntrlSpentAmt(Map<String, Object> params);
 }

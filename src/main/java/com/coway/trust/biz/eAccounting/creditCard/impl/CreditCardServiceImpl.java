@@ -388,4 +388,10 @@ public class CreditCardServiceImpl implements CreditCardService {
     	// TODO Auto-generated method stub
     	return creditCardMapper.selectExcelList(params);
     }
+
+    @Override
+    public List<EgovMap> selectTotalCntrlSpentAmt(Map<String, Object> params) {
+    	// TODO Auto-generated method stub
+    	return creditCardMapper.selectTotalCntrlSpentAmt(params);
+    }
 }

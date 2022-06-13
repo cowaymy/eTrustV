@@ -875,27 +875,31 @@ function fn_checkCreditLimit() {
     };
     console.log(data);
 	Common.ajaxSync("GET", "/eAccounting/creditCard/selectAvailableAllowanceAmt.do", data, function(result) {
-		console.log("123");
-		console.log(result);
-		var planAmt = 0;
-		if(result.length > 0)
-		{
-			planAmt = result[0].availableAmt;
-		}
-		if($("#cardControlYN").val() == "Y")
-	    {
-			if($("#cntrlExp").val() == "Y")
-			{
-				var totalExpAmtSmall = 0;
-				totalExpAmtSmall = Number(AUIGrid.getColumnValues(myGridID, "totAmt", true));
-				totalExpAmt = totalExpAmt + totalExpAmtSmall;
-				if(totalExpAmt > planAmt)
+		Common.ajaxSync("GET", "/eAccounting/creditCard/selectTotalCntrlSpentAmt.do", data, function(result1) {
+	        console.log(result);
+	        var planAmt = 0;
+	        if(result.length > 0)
+	        {
+	            planAmt = result[0].availableAmt;
+	        }
+	        if($("#cardControlYN").val() == "Y")
+	        {
+	            if($("#cntrlExp").val() == "Y")
 	            {
-	                Common.alert('Insufficient Allowance Limit');
-	                limitFlg = false;
+	                var totalExpAmtSmall = 0;
+	                var totalCntrlSpentAmt = result1[0].cntrlSpentAmt;
+	                console.log(result1);
+	                totalExpAmtSmall = Number(AUIGrid.getColumnValues(myGridID, "totAmt", true));
+	                totalExpAmt = totalExpAmt + totalExpAmtSmall;
+	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmtSmall;
+	                if(totalCntrlSpentAmt > planAmt)
+	                {
+	                    Common.alert('Insufficient Allowance Limit');
+	                    limitFlg = false;
+	                }
 	            }
-			}
-	    }
+	        }
+		})
 	});
 	return limitFlg;
 }

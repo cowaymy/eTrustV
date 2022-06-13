@@ -592,4 +592,14 @@ public class CreditCardController {
 		return ResponseEntity.ok(excelList);
 	}
 
+	@RequestMapping(value = "/selectTotalCntrlSpentAmt.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTotalCntrlSpentAmt(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		List<EgovMap> totalCntrlSpendAmt = creditCardService.selectTotalCntrlSpentAmt(params);
+		LOGGER.debug("creditCardLimitList =====================================>>  " + totalCntrlSpendAmt);
+		return ResponseEntity.ok(totalCntrlSpendAmt);
+	}
+
 }

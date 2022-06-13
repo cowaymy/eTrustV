@@ -1244,4 +1244,14 @@ WHERE CRDIT_CARD_STUS = 'A'
             ON A.CRDIT_CARD_SEQ = D.CRDIT_CARD_SEQ
         WHERE A.CRDIT_CARD_SEQ = #{crcId}
     </select>
+
+    <select id="selectTotalCntrlSpentAmt" parameterType="Map" resultType="egovMap">
+    SELECT NVL(SUM(B.NET_AMT),0) CNTRL_SPENT_AMT
+	FROM FCM0017M A
+	LEFT JOIN FCM0018D B ON A.CLM_NO = B.CLM_NO
+	WHERE A.CRDIT_CARD_NO = #{cardNo}
+	AND A.CRDIT_CARD_USER_ID = #{userid}
+	AND A.CLM_MONTH = #{clmMonth}
+	AND B.EXP_TYPE in (SELECT EXP_TYPE FROM FCM0001M WHERE CLM_TYPE = 'J3' AND CNTRL_EXP = 'Y')
+</select>
 </mapper>
