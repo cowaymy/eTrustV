@@ -46,17 +46,18 @@ function fn_setToDay() {
     if(dd < 10) {
         dd = "0" + dd;
     }
-    if((mm - 3) < 10){
-        mm = "0" + mm
+    if(mm < 10){
+        mm = "0" + mm;
     }
-    if(mm2 < 10){
-        mm2 = "0" + mm2
+    if(mm2 < 10 && mm2 > 1){
+        mm2 = "0" + mm2;
     }
     if(mm2 < 1){
-    	yyyy2 = yyyy - 1;
+        yyyy2 = yyyy - 1;
+        mm2 = 12 - Math.abs(mm2);
     }
     else{
-    	yyyy2 = yyyy;
+        yyyy2 = yyyy;
     }
 
     today = dd + "/" + mm2 + "/" + yyyy2;
