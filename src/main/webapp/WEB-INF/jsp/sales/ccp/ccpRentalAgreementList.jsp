@@ -278,6 +278,8 @@ function popup(location){
 </form>
 <form id="popForm">
     <input type="hidden" id="_govAgId" name="govAgId" >
+    <input type="hidden" id="pageAuthFuncChange" name="pageAuthFuncChange" value="${PAGE_AUTH.funcChange}">
+    <input type="hidden" id="pageAuthFuncView" name="pageAuthFuncView" value="${PAGE_AUTH.funcView}">
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">

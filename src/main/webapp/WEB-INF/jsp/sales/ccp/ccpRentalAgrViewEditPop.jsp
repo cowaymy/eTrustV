@@ -42,17 +42,18 @@
 
         //hide all editable fields, until click edit button
         fn_disable_all();
-        $("#_btnCancel").css("display" , "none");
+        //$("#_btnCancel").css("display" , "none");
 
         var agrStatus = $("#_prgId").val();
         var stusId = $("#_govAgStusId").val();
         if(stusId == 4 || stusId == 10){
             $("#_agrResult").css("display" , "none");
-        }else{
+        }
+        /* else{
         	if(ROLE_ID == "262" || ROLE_ID == "264" || ROLE_ID == "267" || ROLE_ID == "130"){
                 $("#_btnCancel").css("display" , "");
             }
-        }
+        } */
         /* if(agrStatus == '10'){
         	$("#_btnEdit").css("display" , "none");
         }else{ */
@@ -1450,8 +1451,10 @@
 </div>
 <ul>
     <li>
-        <div ><a href="#" id="_btnCancel" ><font style="text-decoration: underline;">Cancel agreement</font></a></div>
-        <div class="btn_blue2 center_btns"><a href="#" id="_btnEdit"><spring:message code="sal.btn.edit" /></a></div>
+        <c:if test="${params.pageAuthFuncChange eq 'Y'}">
+	        <div ><a href="#" id="_btnCancel" ><font style="text-decoration: underline;">Cancel agreement</font></a></div>
+	        <div class="btn_blue2 center_btns"><a href="#" id="_btnEdit"><spring:message code="sal.btn.edit" /></a></div>
+        </c:if>
     </li>
     <%-- <li><p class="btn_blue2 center_btns"><a href="#" id="_btnEdit"><spring:message code="sal.btn.edit" /></a></p></li> --%>
     <li><p class="btn_blue2 center_btns"><a href="#" id="_btnSave"><spring:message code="sal.btn.save" /></a></p></li>

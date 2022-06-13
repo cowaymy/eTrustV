@@ -138,6 +138,7 @@ public class CcpRentalAgreementController {
 		EgovMap codyInfo = orderDetailMapper.selectOrderServiceMemberViewByOrderID(params);
 		model.addAttribute("salesMan", salesmanInfo);
 		model.addAttribute("codyInfo", codyInfo);
+		model.addAttribute("params", params);
 		//TODO Agreement Type 에 대한 업무 설명 필요 추후 수정
 
 		return "sales/ccp/ccpRentalAgrViewEditPop";
