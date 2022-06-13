@@ -49,7 +49,7 @@ function fn_setToDay() {
     if(mm < 10){
         mm = "0" + mm;
     }
-    if(mm2 < 10 && mm2 > 1){
+    if(mm2 < 10 && mm2 >= 1){
         mm2 = "0" + mm2;
     }
     if(mm2 < 1){
