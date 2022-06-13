@@ -646,6 +646,7 @@
                                       AND B.MEM_PAC_ID = #{srvPacId}
       WHERE A.STK_ID = #{itmStkId}
           AND A.STK_TYPE_ID = 61
+          AND ROWNUM <= 1
     ]]>
   </select>
 
