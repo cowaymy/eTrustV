@@ -24,6 +24,7 @@ public class RentalCollectionByBSListVO implements Serializable {
 	private String corpOrd;
 	private String corpRatio;
 	private String rcPrct;
+	private String adRatio;
 
 	public String getsID() {
 		return sID;
@@ -144,6 +145,12 @@ public class RentalCollectionByBSListVO implements Serializable {
     }
     public void setrcPrct(String rcPrct) {
         this.rcPrct = rcPrct;
+    }
+    public String getadRatio() {
+        return adRatio;
+    }
+    public void setadRatio(String adRatio) {
+        this.adRatio = adRatio;
     }
 
 }

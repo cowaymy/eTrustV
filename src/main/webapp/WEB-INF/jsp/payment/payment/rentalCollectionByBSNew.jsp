@@ -86,6 +86,12 @@ var columnLayout = [
         editable : false,
         width : 180,
         dataType:"numeric"
+    }, {
+        dataField : "adRatio",
+        headerText : "AD Ratio%",
+        editable : false,
+        width : 180,
+        dataType:"numeric"
     }];
 
     // ajax list 조회.

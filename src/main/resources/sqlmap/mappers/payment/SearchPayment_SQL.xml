@@ -691,7 +691,9 @@
            CORP_RATIO AS corpRatio,
            S_CL_CTG AS sClCtg,
            S_COL AS sCol,
-           RC_PRCT AS rcPrct
+           RC_PRCT AS rcPrct,
+           AD_RATIO AS adRatio
+
         FROM REP0085S
         WHERE
         1=1
