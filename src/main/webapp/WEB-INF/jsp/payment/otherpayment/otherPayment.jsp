@@ -94,7 +94,7 @@ $(document).ready(function(){
 
 		        $("#searchBankType").val("2730");
 		        $("#searchBankType").attr("disabled", "disabled");
-		        $("#searchBankAcc").attr("disabled", "disabled");
+		         $("#searchBankAcc").attr("readonly", "readonly");
 
 		    }else if("${SESSION_INFO.memberLevel}" =="2"){
 
@@ -108,7 +108,7 @@ $(document).ready(function(){
 
 	             $("#searchBankType").val("2730");
 	             $("#searchBankType").attr("disabled", "disabled");
-	             $("#searchBankAcc").attr("disabled", "disabled");
+	              $("#searchBankAcc").attr("readonly", "readonly");
 
 		    }else if("${SESSION_INFO.memberLevel}" =="3"){
 
@@ -126,7 +126,7 @@ $(document).ready(function(){
 
 	             $("#searchBankType").val("2730");
 	             $("#searchBankType").attr("disabled", "disabled");
-	             $("#searchBankAcc").attr("disabled", "disabled");
+	              $("#searchBankAcc").attr("readonly", "readonly");
 
 		    }else if("${SESSION_INFO.memberLevel}" =="4"){
 
@@ -145,7 +145,7 @@ $(document).ready(function(){
 
 		        $("#searchBankType").val("2730");
 		        $("#searchBankType").attr("disabled", "disabled");
-		        $("#searchBankAcc").attr("disabled", "disabled");
+		        $("#searchBankAcc").attr("readonly", "readonly");
 
 		    }
 
@@ -252,9 +252,11 @@ $(document).ready(function(){
 		 $('#searchBankAcc').val("525");
 	 }
 
+	 if("${SESSION_INFO.userTypeId}" !="2"){
 	 //BankAccount와 VA Account disabled
      $("#searchBankAcc").find('option:first').attr('selected', 'selected');
      $('#searchBankAcc').prop("disabled", true);
+	 }
 
 
      //화면init시에 cash라서 jompay 삭제
