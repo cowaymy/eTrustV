@@ -74,7 +74,7 @@ $(document).ready(function(){
     console.log('auth change ' + '${funcChange}');
     if(('${ccpEresubmitMap.stusId}' != 6 && '${ccpEresubmitMap.stusId}' != 10 ) ||  '${isModify}' == 'N' || '${funcChange}' != 'Y'){
         var elements = document.getElementsByClassName("attach_mod");
-        for(var i = 0; i < elements.length; i++) {
+         for(var i = 0; i < elements.length; i++) {
             elements[i].style.display="none";
         }
 
@@ -82,7 +82,7 @@ $(document).ready(function(){
         $("#remarks").attr({"disabled" : "disabled"});
     }
 
-    if('${ccpEresubmitMap.stusId}' == 1 && '${ccpInfoMap.ccpStusId}' == 1){
+     if('${ccpEresubmitMap.stusId}' == 1 && '${ccpInfoMap.ccpStusId}' == 1){
         var elementss = document.getElementsByClassName("attach_mod");
         for(var i = 0; i < elementss.length; i++) {
             elementss[i].style.display="none";
@@ -92,14 +92,9 @@ $(document).ready(function(){
             }
         }
     }else{
-    	var elementss = document.getElementsByClassName("attach_mod");
-        for(var i = 0; i < elementss.length; i++) {
-            elementss[i].style.display="none";
-
          if ('${ccpEresubmitMap.stusId}' != 1 ||  '${ccpInfoMap.ccpStusId}' != 1){
         	    $("#cancelBtn").attr("style","display:none");
             }
-        }
     }
 });
 
@@ -793,6 +788,19 @@ function fn_doClearPersion(){
                         <input type='text' class='input_text' readonly='readonly' id='letFrFileTxt'/>
                         <span class='label_text attach_mod'><a href='#'>Upload</a></span>
                         <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("LET")'>Remove</a></span>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Supporting document (Utility bill / SSM / Others)</th>
+            <td>
+                <div name='uploadfiletest' class='auto_file2'>
+                    <input type='file' title='file add'  id='docFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='docFrFileTxt'/>
+                        <span class='label_text attach_mod'><a href='#'>Upload</a></span>
+                        <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("DOC")'>Remove</a></span>
                     </label>
                 </div>
             </td>
