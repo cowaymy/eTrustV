@@ -41,7 +41,7 @@ var columnLayout = [
         editable : false
     }, {
         dataField : "memCode",
-        headerText : "<spring:message code='pay.head.codyCode'/>",
+        headerText :  "HT Code",
         editable : false
     }, {
         dataField : "sUnit",
@@ -83,6 +83,12 @@ var columnLayout = [
     }, {
         dataField : "rcPrct",
         headerText : "RC%",
+        editable : false,
+        width : 180,
+        dataType:"numeric"
+    }, {
+        dataField : "adRatio",
+        headerText : "AD%",
         editable : false,
         width : 180,
         dataType:"numeric"
