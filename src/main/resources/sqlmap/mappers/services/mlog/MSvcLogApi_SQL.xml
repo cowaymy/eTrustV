@@ -1535,9 +1535,9 @@
                   S90A.SRV_CODY_ID,
                   S08A.SCHDUL_ID,
                   S87A.SRV_FILTER_STK_ID,
-<!--                   S87A.SRV_FILTER_LAST_SERIAL AS filter_Barcd_Serial_No_Old,   /*  Hui Ding - Added previous used filter serial 2021-11-24 */ -->
-<!--                   NULL AS filter_Serial_Unmatch_Reason,   /* Hui Ding - Added previous used filter serial 2021-11-24 */ -->
-<!--                   NULL AS is_Fill_Filter_Info, -->
+                   S87A.SRV_FILTER_LAST_SERIAL AS filter_Barcd_Serial_No_Old,   /*  Hui Ding - Added previous used filter serial 2021-11-24 */
+                   NULL AS filter_Serial_Unmatch_Reason,   /* Hui Ding - Added previous used filter serial 2021-11-24 */
+                   NULL AS is_Fill_Filter_Info,
                   S08A.CODY_ID,
                   S26B.STK_CODE
            FROM SAL0001D S01A
@@ -1589,9 +1589,9 @@
          , TO_CHAR(FILTER_BARCD_SERIAL_NO)    AS     filter_Barcd_Serial_No
          , TO_CHAR(CRT_USER_ID           )    AS     Create_User_ID
          , TO_CHAR(CRT_DT                )    AS     Create_Date
-<!--          , TO_CHAR(SRV_FILTER_PREV_SERIAL) AS filter_Barcd_Serial_No_Old   /* Hui Ding - Added previous used filter serial 2021-11-24 */ -->
-<!--          , TO_CHAR(FILTER_SRL_UNMATCH_RSN) AS filter_Serial_Unmatch_Reason  /* Hui Ding - Added previous used filter serial 2021-11-24 */ -->
-<!--          , TO_CHAR(IS_FILL_FILTER_INFO) AS is_Fill_Filter_Info  /* Hui Ding - Added previous used filter serial 2021-11-24 */ -->
+          , TO_CHAR(SRV_FILTER_PREV_SERIAL) AS filter_Barcd_Serial_No_Old   /* Hui Ding - Added previous used filter serial 2021-11-24 */
+          , TO_CHAR(FILTER_SRL_UNMATCH_RSN) AS filter_Serial_Unmatch_Reason  /* Hui Ding - Added previous used filter serial 2021-11-24 */
+          , TO_CHAR(IS_FILL_FILTER_INFO) AS is_Fill_Filter_Info  /* Hui Ding - Added previous used filter serial 2021-11-24 */
     FROM SVC0105T
     WHERE MEM_CODE = #{userId}
   </select>
