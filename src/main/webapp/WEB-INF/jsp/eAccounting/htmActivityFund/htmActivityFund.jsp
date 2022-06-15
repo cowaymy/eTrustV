@@ -373,7 +373,7 @@ function fn_checkEmpty() {
                 checkRowFlg = false;
                 return checkRowFlg;
             } */
-            if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totalAmt")) || AUIGrid.getCellValue(myGridID, i, "totalAmt") <= 0){
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt")) || AUIGrid.getCellValue(myGridID, i, "totAmt") <= 0){
                 Common.alert("Please enter an amount.");
                 checkResult = false;
                 return checkResult;
