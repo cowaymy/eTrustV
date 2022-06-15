@@ -102,6 +102,7 @@ var columnLayout = [
     , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}
     , {dataField : "telOffice", headerText : "<spring:message code='pay.head.telO'/>", editable : false,width : 100}
     , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false}
+    , {dataField : "monthType", headerText :"M2 Status", editable : false , width : 100}
     , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
     , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
     ];
