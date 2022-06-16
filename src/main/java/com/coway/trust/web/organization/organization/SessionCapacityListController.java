@@ -191,7 +191,7 @@ public class SessionCapacityListController {
 //		}
 		if(udtList != null){
 			sessionCapacityListService.updateCapacityEnhance(udtList,sessionVO);
-			sessionCapacityListService.updateCTMCapacityEnhance(udtList,sessionVO);
+			//sessionCapacityListService.updateCTMCapacityEnhance(udtList,sessionVO);
 			sessionCapacityListService.deleteCapacity(udtList,sessionVO);
 		}
 //		if(delList != null){
