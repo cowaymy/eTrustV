@@ -423,7 +423,14 @@ public class CcpCalculateController {
 		if( null == params.get("ficoScore") || ("").equals(params.get("ficoScore"))){
 			params.put("ficoScore", "0");
 		}
-
+//experian fix
+        if( null == params.get("experianScore") || ("").equals(params.get("experianScore"))){
+            params.put("experianScore", "0");
+        }
+        if( null == params.get("experianRisk") || ("").equals(params.get("experianRisk"))){
+            params.put("experianRisk", "0");
+        }
+//experian fix
 		/*####  eResubmit status ####*/
 		if( null == params.get("eRstatusEdit") || ("").equals(params.get("eRstatusEdit"))){
 			params.put("eRstatusEdit", "0");
