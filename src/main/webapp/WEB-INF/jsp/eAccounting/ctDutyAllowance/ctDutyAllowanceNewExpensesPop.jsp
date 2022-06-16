@@ -72,10 +72,10 @@ var myGridColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00",
 }
-, {
+/* , {
     dataField : "remark",
     headerText : 'Remark'
-}
+} */
 , {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -402,7 +402,7 @@ function fn_addMyGridRow() {
                         ,svcType:$("#svcType option:selected").val()
                         ,svcTypeName:$("#svcType option:selected").text()
                         ,totalAmt:50.00
-                        ,remark:$("#dutyAllDesc").val()
+                        /* ,remark:$("#dutyAllDesc").val() */
                         ,atchFileGrpId:atchFileGrpId
                         ,atchFileId:atchFileId
                         ,isAttach:isAttach
@@ -427,7 +427,7 @@ function fn_addMyGridRow() {
                     ,svcType:$("#svcType option:selected").val()
                     ,svcTypeName:$("#svcType option:selected").text()
                     ,totalAmt:50.00
-                    ,remark:$("#dutyAllDesc").val()
+                    /* ,remark:$("#dutyAllDesc").val() */
                     ,atchFileGrpId:atchFileGrpId
                     ,atchFileId:atchFileId
                     ,isAttach:isAttach
@@ -714,7 +714,7 @@ function closeApproveLine(){
         <option value="AS">AFTER SERVICE</option>
         <option value="PR">PRODUCT RETURN</option>
         <option value="SB">STANDBY *REQUIRE MONTHLY SCHEDULE*</option>
-        <option value="SV">SITE VISIT *REQUIERE ATTACHMENT*</option>
+        <option value="SV">SITE VISIT *REQUIRE ATTACHMENT*</option>
     </select>
     </td>
     <input type="hidden" id="svcTypeName" name="svcTypeName">

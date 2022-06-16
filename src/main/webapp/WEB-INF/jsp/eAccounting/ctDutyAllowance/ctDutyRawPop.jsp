@@ -18,22 +18,17 @@ $('.multy_select').change(function() {
    width: '100%'
 });
 
-var brnch = '${SESSION_INFO.userBranchId}';
+var sbrnch = '${SESSION_INFO.userBranchId}';
+var sroleId = '${SESSION_INFO.roleId}';
 
 $(document).ready(
         function() {
-        	if(brnch == '42'){
-        		brnch = '';
+        	if(sbrnch == '42'){
+        		sbrnch = '';
         	}
-        	doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', brnch, brnch,'sBranchCode', 'M' , 'f_multiCombos');
-        	//doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'sBranchCode', 'S', '');
+        	doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', sbrnch, sbrnch,'sBranchCode', 'M' , 'f_multiCombos');
+        	//doGetCombo('/services/hiCare/getBch.do', sbrnch, sbrnch, 'sBranchCode', 'S', '');
 
-            /* if(brnch == "42" || userName == 'KHSATO'){
-                doGetCombo('/services/hiCare/getBch.do', '', brnch, 'sBranchCode', 'S', '');
-                $("#sBranchCode option[value='"+ brnch +"']").attr("selected", true);
-            }else{
-                doGetCombo('/services/hiCare/getBch.do', brnch, brnch, 'sBranchCode', 'S', '');
-            } */
         });
 
 $.fn.clearForm = function() {
@@ -92,7 +87,7 @@ function validRequiredField(){
         valid = false;
         message += 'Please select one of the selection';
     }
-    else if( $("#sBranchCode :selected").length > 10){
+    else if( $("#sBranchCode :selected").length > 10 && sroleId != '297'){
     	valid = false;
         message += 'DSC Code not allow to select more than 10 branches';
     }

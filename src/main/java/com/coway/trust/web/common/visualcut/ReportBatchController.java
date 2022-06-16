@@ -2519,7 +2519,7 @@ LOGGER.info("[END] WeeklyRentalAccumulatedAccReportPDF...");
 }
 
 @RequestMapping(value = "/CTDutyAllowanceMonthly.do")
-//@Scheduled(cron = " 0 0 2 8 * ?")//Monthly (Day 8) 2:00am
+//@Scheduled(cron = " 0 0 2 13 * ?")//Monthly (Day 8) 2:00am
 public void CTDutyAllowanceMonthly() {
   LOGGER.info("[START] CTDutyAllowanceMonthly...");
   Map<String, Object> params = new HashMap<>();
