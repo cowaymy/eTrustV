@@ -239,7 +239,7 @@ $(document).ready(function() {
             Common.alert("* Please Enter Experian Risk");
             return;
         }else{
-            if( $("#_experianRisk").val() > 10 || $("#_experianRisk").val() < 0){
+            if( $("#_experianRisk").val() < 0 || ($("#_experianRisk").val() > 10 && $("#_experianRisk").val() != 9999) ){
                 Common.alert("* Please key in Experian Risk range between 0 to 10 points.");
                 return;
             }
@@ -757,8 +757,8 @@ function  bind_RetrieveData(){
                 }
             }
         }else if (expPrcss == 1){
-            if(experianScore == 0 && experianRisk == 0){
-                if(experianbankrupt > 0 && isHold == 0){   //on hold
+            if(expScre == 0 && expRisk == 0){
+                if(expBankrupt > 0 && ccpHold == 0){   //on hold
                     if(isAllowSendSMS() == true){
                         $("#_smsDiv").css("display" , "");
                         $("#_updSmsChk").prop('checked', true) ;
@@ -766,8 +766,8 @@ function  bind_RetrieveData(){
                         setSMSMessage('REQUEST ADVANCE' , 'NO SCORE - REQUEST 1Y OR 2YRS ADVANCE RENTAL FEE');
                     }
                 } //
-            }else if(experianScore == 9999 && experianRisk == 0){
-                if(experianbankrupt > 0 && isHold == 0){
+            }else if(expScre == 9999 && (expRisk == 0 || expRisk == 9999)){
+                if(expBankrupt > 0 && ccpHold == 0){
                     if(isAllowSendSMS() == true){
                         $("#_smsDiv").css("display" , "");
                         $("#_updSmsChk").prop('checked', true) ;
