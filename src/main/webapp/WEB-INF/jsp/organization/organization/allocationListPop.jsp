@@ -45,6 +45,9 @@
   var detailSelRowIndex ;
   var detailSelCellIndex ;
 
+  var sessionCode = "";
+  var sessionSegmentType = "";
+
   function fn_doBack(){
     $("#_doAllactionDiv").remove();
   }
@@ -62,13 +65,12 @@
     });
 
     AUIGrid.bind(dAgrid, "cellDoubleClick", function(event) {
-      if(event.headerText != '${TYPE}'){
+      var typeValue = '${TYPE}';
+      if(event.headerText.charAt(0) != typeValue.charAt(0)){
         return ;
       }
-
       detailSelRowIndex = event.rowIndex;
       detailSelCellIndex  = event.columnIndex;
-
       setDetailEvent();
     });
 
@@ -124,6 +126,7 @@
       valArray = selectedValue.split("-");
       AUIGrid.setCellValue(dAgrid, detailSelRowIndex ,      detailSelCellIndex , (Number(valArray[0])+1)  +"-"+  Number(valArray[1]) );
       AUIGrid.setSelectionByIndex(dAgrid, detailSelRowIndex,detailSelCellIndex);
+      fn_AllocationApply();
     });
   }
 
@@ -1480,9 +1483,104 @@
     AUIGrid.bind(dAgrid, ["cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
   }
 
+  function fn_AllocationApply(){
+      var i, rowItem, rowInfoObj, dataField;
+      var selectedItems = AUIGrid.getSelectedItems(dAgrid);
+
+	  for(i=0; i<selectedItems.length; i++) {
+	      rowInfoObj = selectedItems[i];
+	      var typeValue = '${TYPE}';
+
+	      if (rowInfoObj.headerText.charAt(0) != typeValue.charAt(0)){
+	        Common.alert("<b><font color='red'>" + rowInfoObj.headerText + "</font></b> column are selected. Please select highlighted <b><font color='green'>" + '${TYPE}' + "</font></b> column.");
+	        return ;
+	      }
+
+	      var valArray  =new Array();
+	      valArray = rowInfoObj.value.split("-");
+
+	      if(rowInfoObj.dataField =="sumascnt" ||  rowInfoObj.dataField =="suminscnt" ||  rowInfoObj.dataField =="sumrtncnt"   ){
+	        Common.alert("Summary can not be selected.");
+	        return ;
+	      }
+
+	      if(rowInfoObj.dataField =="morascnt" ||  rowInfoObj.dataField =="morinscnt" ||  rowInfoObj.dataField =="morrtncnt"
+	              || rowInfoObj.dataField =="aftascnt" || rowInfoObj.dataField =="aftinscnt" || rowInfoObj.dataField =="aftrtncnt"
+	              || rowInfoObj.dataField =="evnascnt" || rowInfoObj.dataField =="evninscnt" || rowInfoObj.dataField =="evnrtncnt"){
+	          Common.alert("Total value can not be selected.");
+	          return ;
+	      }
+
+	      if(rowInfoObj.dataField !="othascnt"  &&   rowInfoObj.dataField !="othinscnt" && rowInfoObj.dataField !="othrtncnt"  ){
+	         if(Number(valArray[1]) == "0" ){
+	           Common.alert("CAPA is not registered in the selected session.");
+	           return ;
+	         }
+
+	         if(Number(valArray[0]) >  Number(valArray[1]) ){
+	           Common.alert("The selected session has already been completed. Please select another session ");
+	           return ;
+	         }
+	      }
+	    }
+	    if(rowInfoObj.dataField =="morascnt" ||  rowInfoObj.dataField =="morinscnt" ||  rowInfoObj.dataField =="morrtncnt" ||
+	            rowInfoObj.dataField =="morasstcnt" ||  rowInfoObj.dataField =="morasdskcnt" ||rowInfoObj.dataField =="morassmlcnt" ||
+	            rowInfoObj.dataField =="morinsstcnt" ||  rowInfoObj.dataField =="morinsdskcnt" ||  rowInfoObj.dataField =="morinssmlcnt" ||
+	            rowInfoObj.dataField =="morrtnstcnt" || rowInfoObj.dataField =="morrtndskcnt" || rowInfoObj.dataField =="morrtnsmlcnt" ){
+	    	sessionCode ="M";
+	    }
+
+	    if(rowInfoObj.dataField =="othascnt" ||  rowInfoObj.dataField =="othinscnt" ||  rowInfoObj.dataField =="othrtncnt" ||
+	            rowInfoObj.dataField =="othasstcnt" ||  rowInfoObj.dataField =="othasdskcnt" ||  rowInfoObj.dataField =="othassmlcnt" ||
+	            rowInfoObj.dataField =="othinsstcnt" ||  rowInfoObj.dataField =="othinsdskcnt" || rowInfoObj.dataField =="othinssmlcnt" ||
+	            rowInfoObj.dataField =="othrtnstcnt" || rowInfoObj.dataField =="othrtndskcnt" || rowInfoObj.dataField =="othrtnsmlcnt" ){
+	    	sessionCode ="O";
+	    }
+
+	    if(rowInfoObj.dataField =="evnascnt" ||  rowInfoObj.dataField =="evninscnt" ||  rowInfoObj.dataField =="evnrtncnt" ||
+	            rowInfoObj.dataField =="evnasstcnt" ||  rowInfoObj.dataField =="evnasdskcnt" ||  rowInfoObj.dataField =="evnassmlcnt" ||
+	            rowInfoObj.dataField =="evninsstcnt" ||  rowInfoObj.dataField =="evninsdskcnt" || rowInfoObj.dataField =="evninssmlcnt" ||
+	            rowInfoObj.dataField =="evnrtnstcnt" || rowInfoObj.dataField =="evnrtndskcnt" || rowInfoObj.dataField =="evnrtnsmlcnt" ){
+	    	sessionCode ="E";
+	    }
+
+	    if(rowInfoObj.dataField =="aftascnt" ||  rowInfoObj.dataField =="aftinscnt" ||  rowInfoObj.dataField =="aftrtncnt" ||
+	            rowInfoObj.dataField =="aftasstcnt" ||  rowInfoObj.dataField =="aftasdskcnt" ||rowInfoObj.dataField =="aftassmlcnt" ||
+	            rowInfoObj.dataField =="aftinsstcnt" ||  rowInfoObj.dataField =="aftinsdskcnt" ||  rowInfoObj.dataField =="aftinssmlcnt" ||
+	            rowInfoObj.dataField =="aftrtnstcnt" || rowInfoObj.dataField =="aftrtndskcnt" || rowInfoObj.dataField =="aftrtnsmlcnt"){
+	    	sessionCode ="A";
+	    }
+
+	    if(rowInfoObj.dataField =="morasstcnt" || rowInfoObj.dataField =="morinsstcnt" || rowInfoObj.dataField =="morrtnstcnt" ||
+	            rowInfoObj.dataField =="othasstcnt" ||rowInfoObj.dataField =="othinsstcnt" ||rowInfoObj.dataField =="othrtnstcnt" ||
+	            rowInfoObj.dataField =="evnasstcnt" ||rowInfoObj.dataField =="evninsstcnt" ||rowInfoObj.dataField =="evnrtnstcnt" ||
+	            rowInfoObj.dataField =="aftasstcnt" ||rowInfoObj.dataField =="aftinsstcnt" ||rowInfoObj.dataField =="aftrtnstcnt") {
+	           sessionSegmentType = 'ST';
+	        }
+
+	    if(rowInfoObj.dataField =="morasdskcnt" || rowInfoObj.dataField =="morinsdskcnt" || rowInfoObj.dataField =="morrtndskcnt" ||
+	            rowInfoObj.dataField =="othasdskcnt" ||rowInfoObj.dataField =="othinsdskcnt" ||rowInfoObj.dataField =="othrtndskcnt" ||
+	            rowInfoObj.dataField =="evnasdskcnt" ||rowInfoObj.dataField =="evninsdskcnt" ||rowInfoObj.dataField =="evnrtndskcnt" ||
+	            rowInfoObj.dataField =="aftasdskcnt" ||rowInfoObj.dataField =="aftinsdskcnt" ||rowInfoObj.dataField =="aftrtndskcnt") {
+	    	sessionSegmentType = 'DSK';
+	    }
+
+	    if(rowInfoObj.dataField =="morassmlcnt" || rowInfoObj.dataField =="morinssmlcnt" || rowInfoObj.dataField =="morrtnsmlcnt" ||
+	            rowInfoObj.dataField =="othassmlcnt" ||rowInfoObj.dataField =="othinssmlcnt" ||rowInfoObj.dataField =="othrtnsmlcnt" ||
+	            rowInfoObj.dataField =="evnassmlcnt" ||rowInfoObj.dataField =="evninssmlcnt" ||rowInfoObj.dataField =="evnrtnsmlcnt" ||
+	            rowInfoObj.dataField =="aftassmlcnt" ||rowInfoObj.dataField =="aftinssmlcnt" ||rowInfoObj.dataField =="aftrtnsmlcnt") {
+	    	sessionSegmentType = 'SML';
+	    }
+  }
+
   function fn_AllocationConfirm(){
     var selectedItemsMain = AUIGrid.getSelectedItems(mAgrid);
     var selectedItems = AUIGrid.getSelectedItems(dAgrid);
+
+    if(sessionCode == "" && sessionSegmentType == ""){
+        Common.alert("<spring:message code='service.msg.NoRcd'/>");
+        return;
+    }
 
     if(selectedItems.length <= 0 ){
     	Common.alert("<spring:message code='service.msg.NoRcd'/>");
@@ -1522,64 +1620,64 @@
            return ;
          }
 
-         if(Number(valArray[0]) >=  Number(valArray[1]) ){
+         if(Number(valArray[0]) >  Number(valArray[1]) ){
            Common.alert("The selected session has already been completed. Please select another session ");
            return ;
          }
       }
     }
 
-    var sessionText;
-    var sessionCode;
-    var sessionSegmentType;
-    if(rowInfoObj.dataField =="morascnt" ||  rowInfoObj.dataField =="morinscnt" ||  rowInfoObj.dataField =="morrtncnt" ||
-    		rowInfoObj.dataField =="morasstcnt" ||  rowInfoObj.dataField =="morasdskcnt" ||rowInfoObj.dataField =="morassmlcnt" ||
-    		rowInfoObj.dataField =="morinsstcnt" ||  rowInfoObj.dataField =="morinsdskcnt" ||  rowInfoObj.dataField =="morinssmlcnt" ||
-    		rowInfoObj.dataField =="morrtnstcnt" || rowInfoObj.dataField =="morrtndskcnt" || rowInfoObj.dataField =="morrtnsmlcnt" ){
-      sessionCode ="M";
-    }
+//     var sessionText;
+//     var sessionCode;
+//     var sessionSegmentType;
+//     if(rowInfoObj.dataField =="morascnt" ||  rowInfoObj.dataField =="morinscnt" ||  rowInfoObj.dataField =="morrtncnt" ||
+//     		rowInfoObj.dataField =="morasstcnt" ||  rowInfoObj.dataField =="morasdskcnt" ||rowInfoObj.dataField =="morassmlcnt" ||
+//     		rowInfoObj.dataField =="morinsstcnt" ||  rowInfoObj.dataField =="morinsdskcnt" ||  rowInfoObj.dataField =="morinssmlcnt" ||
+//     		rowInfoObj.dataField =="morrtnstcnt" || rowInfoObj.dataField =="morrtndskcnt" || rowInfoObj.dataField =="morrtnsmlcnt" ){
+//       sessionCode ="M";
+//     }
 
-    if(rowInfoObj.dataField =="othascnt" ||  rowInfoObj.dataField =="othinscnt" ||  rowInfoObj.dataField =="othrtncnt" ||
-    		rowInfoObj.dataField =="othasstcnt" ||  rowInfoObj.dataField =="othasdskcnt" ||  rowInfoObj.dataField =="othassmlcnt" ||
-    		rowInfoObj.dataField =="othinsstcnt" ||  rowInfoObj.dataField =="othinsdskcnt" || rowInfoObj.dataField =="othinssmlcnt" ||
-    		rowInfoObj.dataField =="othrtnstcnt" || rowInfoObj.dataField =="othrtndskcnt" || rowInfoObj.dataField =="othrtnsmlcnt" ){
-        sessionCode ="O";
-    }
+//     if(rowInfoObj.dataField =="othascnt" ||  rowInfoObj.dataField =="othinscnt" ||  rowInfoObj.dataField =="othrtncnt" ||
+//     		rowInfoObj.dataField =="othasstcnt" ||  rowInfoObj.dataField =="othasdskcnt" ||  rowInfoObj.dataField =="othassmlcnt" ||
+//     		rowInfoObj.dataField =="othinsstcnt" ||  rowInfoObj.dataField =="othinsdskcnt" || rowInfoObj.dataField =="othinssmlcnt" ||
+//     		rowInfoObj.dataField =="othrtnstcnt" || rowInfoObj.dataField =="othrtndskcnt" || rowInfoObj.dataField =="othrtnsmlcnt" ){
+//         sessionCode ="O";
+//     }
 
-    if(rowInfoObj.dataField =="evnascnt" ||  rowInfoObj.dataField =="evninscnt" ||  rowInfoObj.dataField =="evnrtncnt" ||
-    		rowInfoObj.dataField =="evnasstcnt" ||  rowInfoObj.dataField =="evnasdskcnt" ||  rowInfoObj.dataField =="evnassmlcnt" ||
-    		rowInfoObj.dataField =="evninsstcnt" ||  rowInfoObj.dataField =="evninsdskcnt" || rowInfoObj.dataField =="evninssmlcnt" ||
-    		rowInfoObj.dataField =="evnrtnstcnt" || rowInfoObj.dataField =="evnrtndskcnt" || rowInfoObj.dataField =="evnrtnsmlcnt" ){
-        sessionCode ="E";
-    }
+//     if(rowInfoObj.dataField =="evnascnt" ||  rowInfoObj.dataField =="evninscnt" ||  rowInfoObj.dataField =="evnrtncnt" ||
+//     		rowInfoObj.dataField =="evnasstcnt" ||  rowInfoObj.dataField =="evnasdskcnt" ||  rowInfoObj.dataField =="evnassmlcnt" ||
+//     		rowInfoObj.dataField =="evninsstcnt" ||  rowInfoObj.dataField =="evninsdskcnt" || rowInfoObj.dataField =="evninssmlcnt" ||
+//     		rowInfoObj.dataField =="evnrtnstcnt" || rowInfoObj.dataField =="evnrtndskcnt" || rowInfoObj.dataField =="evnrtnsmlcnt" ){
+//         sessionCode ="E";
+//     }
 
-    if(rowInfoObj.dataField =="aftascnt" ||  rowInfoObj.dataField =="aftinscnt" ||  rowInfoObj.dataField =="aftrtncnt" ||
-    		rowInfoObj.dataField =="aftasstcnt" ||  rowInfoObj.dataField =="aftasdskcnt" ||rowInfoObj.dataField =="aftassmlcnt" ||
-    		rowInfoObj.dataField =="aftinsstcnt" ||  rowInfoObj.dataField =="aftinsdskcnt" ||  rowInfoObj.dataField =="aftinssmlcnt" ||
-    		rowInfoObj.dataField =="aftrtnstcnt" || rowInfoObj.dataField =="aftrtndskcnt" || rowInfoObj.dataField =="aftrtnsmlcnt"){
-        sessionCode ="A";
-    }
+//     if(rowInfoObj.dataField =="aftascnt" ||  rowInfoObj.dataField =="aftinscnt" ||  rowInfoObj.dataField =="aftrtncnt" ||
+//     		rowInfoObj.dataField =="aftasstcnt" ||  rowInfoObj.dataField =="aftasdskcnt" ||rowInfoObj.dataField =="aftassmlcnt" ||
+//     		rowInfoObj.dataField =="aftinsstcnt" ||  rowInfoObj.dataField =="aftinsdskcnt" ||  rowInfoObj.dataField =="aftinssmlcnt" ||
+//     		rowInfoObj.dataField =="aftrtnstcnt" || rowInfoObj.dataField =="aftrtndskcnt" || rowInfoObj.dataField =="aftrtnsmlcnt"){
+//         sessionCode ="A";
+//     }
 
-    if(rowInfoObj.dataField =="morasstcnt" || rowInfoObj.dataField =="morinsstcnt" || rowInfoObj.dataField =="morrtnstcnt" ||
-            rowInfoObj.dataField =="othasstcnt" ||rowInfoObj.dataField =="othinsstcnt" ||rowInfoObj.dataField =="othrtnstcnt" ||
-            rowInfoObj.dataField =="evnasstcnt" ||rowInfoObj.dataField =="evninsstcnt" ||rowInfoObj.dataField =="evnrtnstcnt" ||
-            rowInfoObj.dataField =="aftasstcnt" ||rowInfoObj.dataField =="aftinsstcnt" ||rowInfoObj.dataField =="aftrtnstcnt") {
-    	   sessionSegmentType = 'ST';
-    	}
+//     if(rowInfoObj.dataField =="morasstcnt" || rowInfoObj.dataField =="morinsstcnt" || rowInfoObj.dataField =="morrtnstcnt" ||
+//             rowInfoObj.dataField =="othasstcnt" ||rowInfoObj.dataField =="othinsstcnt" ||rowInfoObj.dataField =="othrtnstcnt" ||
+//             rowInfoObj.dataField =="evnasstcnt" ||rowInfoObj.dataField =="evninsstcnt" ||rowInfoObj.dataField =="evnrtnstcnt" ||
+//             rowInfoObj.dataField =="aftasstcnt" ||rowInfoObj.dataField =="aftinsstcnt" ||rowInfoObj.dataField =="aftrtnstcnt") {
+//     	   sessionSegmentType = 'ST';
+//     	}
 
-    if(rowInfoObj.dataField =="morasdskcnt" || rowInfoObj.dataField =="morinsdskcnt" || rowInfoObj.dataField =="morrtndskcnt" ||
-            rowInfoObj.dataField =="othasdskcnt" ||rowInfoObj.dataField =="othinsdskcnt" ||rowInfoObj.dataField =="othrtndskcnt" ||
-            rowInfoObj.dataField =="evnasdskcnt" ||rowInfoObj.dataField =="evninsdskcnt" ||rowInfoObj.dataField =="evnrtndskcnt" ||
-            rowInfoObj.dataField =="aftasdskcnt" ||rowInfoObj.dataField =="aftinsdskcnt" ||rowInfoObj.dataField =="aftrtndskcnt") {
-        sessionSegmentType = 'DSK';
-    }
+//     if(rowInfoObj.dataField =="morasdskcnt" || rowInfoObj.dataField =="morinsdskcnt" || rowInfoObj.dataField =="morrtndskcnt" ||
+//             rowInfoObj.dataField =="othasdskcnt" ||rowInfoObj.dataField =="othinsdskcnt" ||rowInfoObj.dataField =="othrtndskcnt" ||
+//             rowInfoObj.dataField =="evnasdskcnt" ||rowInfoObj.dataField =="evninsdskcnt" ||rowInfoObj.dataField =="evnrtndskcnt" ||
+//             rowInfoObj.dataField =="aftasdskcnt" ||rowInfoObj.dataField =="aftinsdskcnt" ||rowInfoObj.dataField =="aftrtndskcnt") {
+//         sessionSegmentType = 'DSK';
+//     }
 
-    if(rowInfoObj.dataField =="morassmlcnt" || rowInfoObj.dataField =="morinssmlcnt" || rowInfoObj.dataField =="morrtnsmlcnt" ||
-            rowInfoObj.dataField =="othassmlcnt" ||rowInfoObj.dataField =="othinssmlcnt" ||rowInfoObj.dataField =="othrtnsmlcnt" ||
-            rowInfoObj.dataField =="evnassmlcnt" ||rowInfoObj.dataField =="evninssmlcnt" ||rowInfoObj.dataField =="evnrtnsmlcnt" ||
-            rowInfoObj.dataField =="aftassmlcnt" ||rowInfoObj.dataField =="aftinssmlcnt" ||rowInfoObj.dataField =="aftrtnsmlcnt") {
-        sessionSegmentType = 'SML';
-    }
+//     if(rowInfoObj.dataField =="morassmlcnt" || rowInfoObj.dataField =="morinssmlcnt" || rowInfoObj.dataField =="morrtnsmlcnt" ||
+//             rowInfoObj.dataField =="othassmlcnt" ||rowInfoObj.dataField =="othinssmlcnt" ||rowInfoObj.dataField =="othrtnsmlcnt" ||
+//             rowInfoObj.dataField =="evnassmlcnt" ||rowInfoObj.dataField =="evninssmlcnt" ||rowInfoObj.dataField =="evnrtnsmlcnt" ||
+//             rowInfoObj.dataField =="aftassmlcnt" ||rowInfoObj.dataField =="aftinssmlcnt" ||rowInfoObj.dataField =="aftrtnsmlcnt") {
+//         sessionSegmentType = 'SML';
+//     }
 
     if('${CallBackFun}' !=''){
         rtnObj = new Object();
