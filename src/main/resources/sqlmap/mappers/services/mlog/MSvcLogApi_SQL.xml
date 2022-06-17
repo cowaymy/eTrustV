@@ -1025,6 +1025,7 @@
                    , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME)
 
                    , TO_CHAR (SAL0046D.CHK_SMS)
+                   , TO_CHAR (SAL0046D.CUST_MOBILE_NO)
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1186,6 +1187,7 @@
          , TO_CHAR(AFT_LPM) AS aft_Lpm
          , TO_CHAR(TURB_LVL) AS turb_Lvl
          , TO_CHAR(CHK_SMS) AS chk_sms
+         , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
