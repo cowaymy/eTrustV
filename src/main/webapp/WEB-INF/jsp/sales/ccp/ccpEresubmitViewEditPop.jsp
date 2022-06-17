@@ -128,6 +128,12 @@ function fn_doClearPersion(){
 
  function fn_save(){
 
+	 if($('#sofFrFile').val().trim() == '' &&  $('#softcFrFile').val().trim() == '' && $('#nricFrFile').val().trim() == '' && $('#msofFrFile').val().trim() == '' && $('#msoftcFrFile').val().trim() == ''
+	        && $('#payFrFile').val().trim() == '' && $('#govFrFile').val().trim() == '' && $('#letFrFile').val().trim() == '' && $('#docFrFile').val().trim() == ''){
+	        Common.alert("No attachment. Unable to save.");
+	        return ;
+	 }
+
     var formData = new FormData();
     formData.append("atchFileGrpId", '${ccpEresubmitMap.atchFileGrpId}');
     formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
