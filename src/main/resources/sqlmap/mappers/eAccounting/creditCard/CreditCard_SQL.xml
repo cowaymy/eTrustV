@@ -746,7 +746,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,INVC_NO = #{invcNo}
        ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,TOT_AMT = #{totAmt}
-       ,EXP_DESC = #{expDesc}
+       ,EXP_DESC =  REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,COST_CENTR = UPPER(#{sCostCentr})
        ,COST_CENTR_NAME = NVL(#{sCostCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{sCostCentr})))
        ,GST_RGIST_NO = #{gstRgistNo}

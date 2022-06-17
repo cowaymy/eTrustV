@@ -689,7 +689,7 @@ function fn_tempSave() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-	<td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="expDesc" name="expDesc" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>></textarea></td>
+	<td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="expDesc" name="expDesc" maxlength=100 <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
