@@ -212,6 +212,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("aftPsi", String.valueOf(params.get("aftPsi")));
         params.put("aftLpm", String.valueOf(params.get("aftLpm")));*/
 
+        params.put("custMobileNo", String.valueOf(insApiresult.get("custMobileNo")));
+        params.put("chkSMS", String.valueOf(insApiresult.get("chkSMS")));
+
         if (orderInfo != null) {
           params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
         } else {

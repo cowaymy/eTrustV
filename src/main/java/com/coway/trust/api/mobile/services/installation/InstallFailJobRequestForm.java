@@ -60,6 +60,8 @@ public class InstallFailJobRequestForm {
 
   private String failDeptChk;
 
+  private String chkSMS;
+
  /* @ApiModelProperty(value = "waterSrcType")
   private int waterSrcType;
 */
@@ -70,6 +72,14 @@ public class InstallFailJobRequestForm {
 
 public void setTurbLvl(String turbLvl) {
 	this.turbLvl = turbLvl;
+}
+
+public String getChkSMS() {
+	return chkSMS;
+}
+
+public void setChkSMS(String chkSMS) {
+	this.chkSMS = chkSMS;
 }
 
 public String getFailDeptChk() {

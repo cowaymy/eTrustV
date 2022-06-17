@@ -4698,7 +4698,7 @@
                       , RESULT_ICMOBILE_NO = #{resultIcMobileNo}
                       , RESULT_RPT_EMAIL_NO = #{resultReportEmailNo}
                       , RESULT_ACEPT_NAME = #{resultAcceptanceName}
-
+                      , CHK_SMS = #{chkSMS}
    <if test="installDate != null and installDate != ''">
       , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
    </if>

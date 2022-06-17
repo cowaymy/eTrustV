@@ -1846,10 +1846,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("resultReportEmailNo", CommonUtils.nvl(params.get("resultReportEmailNo")).toString());
     installResult.put("resultAcceptanceName", CommonUtils.nvl(params.get("resultAcceptanceName")).toString());
 
-    /*installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
+    //Added by Keyi Installation SMS 202206
+    installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
-    installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());*/
+    installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
@@ -2454,6 +2455,13 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     maxtaxInvoiceID.put("value", "taxInvoiceId");
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
+    String chkSMS = "";
+    if(installResult.get("chkSMS").equals("on")){
+    	chkSMS = "Y";
+    }
+    else{
+    	chkSMS = "N";
+    }
 
     // Rental || Sponsor || Education || AUX
     if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID)) {
@@ -2473,7 +2481,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("resultIcMobileNo", installResult.get("resultIcMobileNo"));
         s46dup.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
         s46dup.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
-
+        s46dup.put("chkSMS", chkSMS);
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
       }
@@ -2515,6 +2523,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       entry.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
       entry.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
 
+      entry.put("chkSMS", chkSMS);
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
     }
@@ -2613,6 +2622,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         m.put("installResultId", maxId);
         m.put("salesOrdId", installResult.get("salesOrdId"));
         m.put("installDate", installResult.get("installDate"));
+        m.put("chkSMS", chkSMS);
 
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(m);
@@ -2667,13 +2677,14 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19 //UNDER UAT
-   /* String smsMessage = "";
+    String smsMessage = "";
     LOGGER.debug("================ApptypeID================" + ApptypeID);
-    LOGGER.debug("================chkSMS================" + installResult.get("chkSMS"));
+    LOGGER.debug("================chkSMS11111================" + installResult.get("chkSMS"));
+    LOGGER.debug("================chkSMS22222================" + chkSMS);
     LOGGER.debug("================custType================" + installResult.get("custType"));
 
     if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-    		&& installResult.get("custType").equals("Individual") && installResult.get("chkSMS").equals("on"))  //IF CUST_TYPE = INDIVIDUAL , IF SMS CHECKBOX IS CHECKED
+    		&& installResult.get("custType").equals("Individual") && chkSMS.equals("Y"))  //IF CUST_TYPE = INDIVIDUAL , IF SMS CHECKBOX IS CHECKED
     {
         LOGGER.debug("================INSMS================");
 
@@ -2695,7 +2706,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     if(smsMessage != "")
     {
     	sendSms(smsList); // rollback for SMS triggering due to UAT not completely buyoff
-    }*/
+    }
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
 
@@ -3619,7 +3630,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  return stockMapper.selectStkCatType(params);
   }
 
-/*  @Override
+  @Override
   public void sendSms(Map<String, Object> smsList){
     int userId = (int) smsList.get("userId");
     SmsVO sms = new SmsVO(userId, 975);
@@ -3628,7 +3639,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
-  }*/
+  }
 
 
   /*@SuppressWarnings("unchecked")

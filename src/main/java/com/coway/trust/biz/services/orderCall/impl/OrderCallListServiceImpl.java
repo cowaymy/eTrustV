@@ -296,7 +296,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
         }
 
-       /* smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
+        smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
         		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
 
         params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
@@ -331,7 +331,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     		   }
 
     	   }
-      }*/
+      }
 
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL

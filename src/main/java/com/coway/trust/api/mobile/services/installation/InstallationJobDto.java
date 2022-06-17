@@ -277,6 +277,15 @@ public class InstallationJobDto {
 
   private String turbLvl;
 
+  private String chkSMS;
+
+  public String getChkSMS() {
+	return chkSMS;
+  }
+
+  public void setChkSMS(String chkSMS) {
+	this.chkSMS = chkSMS;
+  }
 
   public String getTurbLvl() {
 	return turbLvl;

@@ -1023,6 +1023,8 @@
                    , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO)
                    , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO)
                    , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME)
+
+                   , TO_CHAR (SAL0046D.CHK_SMS)
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1183,6 +1185,7 @@
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
          , TO_CHAR(TURB_LVL) AS turb_Lvl
+         , TO_CHAR(CHK_SMS) AS chk_sms
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -5515,11 +5518,11 @@ SELECT MST.*
   </select>
 
   <select id="searchRentalCollectionByBSNewList" parameterType="Map" resultType="egovMap">
-	  SELECT
-			    MEM_CODE
-			  , TO_CHAR(RC_PRCT)  AS RC_PRCT
-	  FROM REP0085S
-	  WHERE MEM_CODE =  #{userId}
+      SELECT
+                MEM_CODE
+              , TO_CHAR(RC_PRCT)  AS RC_PRCT
+      FROM REP0085S
+      WHERE MEM_CODE =  #{userId}
   </select>
 
 </mapper>
