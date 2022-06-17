@@ -84,9 +84,6 @@ public class ReportBatchController {
   private ReportBatchService reportBatchService;
 
 
-
-
-
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
   // http://fmaker7.tistory.com/163
@@ -1086,7 +1083,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_ASResult.do")
-  //@Scheduled(cron = " 0 0 6 20 * ?")//Monthly (Day 20) 6:00am
+  //@Scheduled(cron = " 0 0 6 15-24 * ?")//Monthly (Day from 15-24) 6:00am
   public void preMonthAsResult() throws IOException {
     LOGGER.info("[START] PreMonth_ASResult...");
     Map<String, Object> params = new HashMap<>();
@@ -1103,7 +1100,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_Installation.do")
-  //@Scheduled(cron = " 0 0 6 20 * ?")//Monthly (Day 20) 6:00am
+  //@Scheduled(cron = " 0 0 6 15-24 * ?")//Monthly (Day from 15-24) 6:00am
   public void preMonthInstallation() throws IOException {
     LOGGER.info("[START] PreMonth_Installation...");
     Map<String, Object> params = new HashMap<>();
@@ -1121,7 +1118,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_ProductReturn.do")
-  //@Scheduled(cron = " 0 0 6 20 * ?")//Monthly (Day 20) 6:00am
+  //@Scheduled(cron = " 0 0 6 15-24 * ?")//Monthly (Day from 15-24) 6:00am
   public void preMonthProductReturn() throws IOException {
     LOGGER.info("[START] PreMonth_ProductReturn...");
     Map<String, Object> params = new HashMap<>();
@@ -1657,7 +1654,7 @@ public class ReportBatchController {
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Monthly Negative Stock Balance Data" + File.separator + "Monthly_Negative_StockB" + CommonUtils.getNowDate() + ".xls");
 
-    this.view(null, null, params);
+    this.viewProcedure(null, null, params);
     LOGGER.info("[END] Negative_StockB_OnMonth_Excel...");
   }
 
