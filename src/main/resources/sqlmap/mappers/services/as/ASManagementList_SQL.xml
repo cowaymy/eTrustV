@@ -3072,7 +3072,7 @@
                AS_REM_ADD_CNTC_SMS,
                AS_SESION_CODE,
                CALL_MEM,
-               #{REF_REQUEST}
+               #{REF_REQUEST},
                SEGMENT_TYPE
                FROM SVC0001D WHERE AS_ID = #{REF_REQUEST}
     ]]>
