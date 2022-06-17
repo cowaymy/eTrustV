@@ -85,6 +85,8 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     transactionId = String.valueOf(insApiresult.get("transactionId"));
     serviceNo = String.valueOf(insApiresult.get("serviceNo"));
 
+    logger.debug("### hsResultSync() : " + params);
+
     // CHECK IF SVC0008D MEM_CODE AND SVC0006D MEM_CODE ARE THE SAME
     int hsResultMemId = hsManualService.hsResultSync(params);
 
@@ -292,6 +294,8 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 
     transactionId = String.valueOf(insApiresult.get("transactionId"));
     serviceNo = String.valueOf(insApiresult.get("serviceNo"));
+
+    logger.debug("### ht hsResultSync() : " + params);
 
     // CHECK IF SVC0008D MEM_CODE AND SVC0006D MEM_CODE ARE THE SAME
     int hsResultMemId = hsManualService.hsResultSync(params);
