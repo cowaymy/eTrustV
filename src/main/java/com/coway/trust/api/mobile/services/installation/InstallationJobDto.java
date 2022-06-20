@@ -281,16 +281,6 @@ public class InstallationJobDto {
 
   private String custMobileNo;
 
-  private String custType;
-
-  public String getCustType() {
-	return custType;
-  }
-
-  public void setCustType(String custType) {
-	this.custType = custType;
-  }
-
   public String getCustMobileNo() {
 	return custMobileNo;
   }
