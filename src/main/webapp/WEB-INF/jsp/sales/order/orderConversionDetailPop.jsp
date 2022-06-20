@@ -4,20 +4,24 @@
 <script type="text/javascript">
 	//AUIGrid 생성 후 반환 ID
 	var itemGridID;
-	
+
 	$(document).ready(function(){
-	    
-	    
+
+
 	    // AUIGrid 그리드를 생성합니다.
 	    createAUIitemGrid();
 
 	    fn_getCnvrItmJsonAjax();
-	    
+
+	    $('#excelDown').click(function() {
+	           GridCommon.exportTo("dt_grid_wrap", 'xlsx', "Conversion List");
+	        });
+
 	});
-	
+
 	function createAUIitemGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -78,16 +82,16 @@
                       }
                }
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : false,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -101,41 +105,41 @@
             showRowNumColumn : true,
             groupingMessage : "Here groupping"
         };
-        
+
         itemGridID = AUIGrid.create("#dt_grid_wrap", columnLayout, gridPros);
     }
-	
+
 	//Get Contact by Ajax
     function fn_getCnvrItmJsonAjax(){
         Common.ajax("GET", "/sales/order/orderConvertViewItmJsonList",$("#gridForm").serialize(), function(result) {
             AUIGrid.setGridData(itemGridID, result);
         });
     }
-	
+
 	function fn_all(){
 		Common.ajax("GET", "/sales/order/orderConvertViewItmJsonList",$("#gridForm").serialize(), function(result) {
             AUIGrid.setGridData(itemGridID, result);
         });
 	}
-	
+
 	function fn_valid(){
         Common.ajax("GET", "/sales/order/orderCnvrValidItmList",$("#gridForm").serialize(), function(result) {
             AUIGrid.setGridData(itemGridID, result);
         });
     }
-	
+
 	function fn_invalid(){
         Common.ajax("GET", "/sales/order/orderCnvrInvalidItmJsonList",$("#gridForm").serialize(), function(result) {
             AUIGrid.setGridData(itemGridID, result);
         });
     }
-	
+
 	function fn_success(){
 		$("#_close").click();
 		fn_searchListAjax();
 		Common.popupDiv("/sales/order/conversionDetailPop.do", $("#searchForm").serializeJSON(), null, true, 'detailPop');
 	}
-	
+
 	function fn_confirm(){
 		var time = new Date();
 		var day = time.getDate();
@@ -159,13 +163,13 @@
             Common.alert("<spring:message code='sal.alert.msg.conversionConfirmed' />", fn_success);
         });
 	}
-	
+
 	function fn_deactivate(){
 		var msg = ("<b><spring:message code='sal.alert.msg.deactivateConversionBatch' /></b>");
 		Common.confirm(msg,fn_deactivateOK);
-        
+
     }
-	
+
 	function fn_deactivateOK(){
         Common.ajax("GET", "/sales/order/updCnvrDeactive.do", $("#gridForm").serialize(), function(result){
             Common.alert("<b><spring:message code='sal.alert.msg.conversionBatchDeactivated' /></b>", fn_success);
@@ -240,7 +244,7 @@
                  Yes
              </c:when>
              <c:otherwise>
-                 No                    
+                 No
              </c:otherwise>
          </c:choose>
        </span>
@@ -303,6 +307,7 @@
     <li><p class="btn_grid"><a href="#" onclick="fn_all()"><spring:message code="sal.combo.text.allItm" /></a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="fn_valid()"><spring:message code="sal.combo.text.validItm" /></a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="fn_invalid()"><spring:message code="sal.combo.text.invalidItm" /></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code="Generate Listing"/></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
