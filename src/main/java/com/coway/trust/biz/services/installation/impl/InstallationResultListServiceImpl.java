@@ -1849,7 +1849,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     //Added by Keyi Installation SMS 202206
     installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
-    installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
     installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());
 
@@ -2686,10 +2685,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     LOGGER.debug("================chkSMS11111================" + installResult.get("chkSMS"));
     LOGGER.debug("================chkSMS22222================" + chkSMS);
     LOGGER.debug("================custType================" + installResult.get("custType"));
-    LOGGER.debug("================custType================" + installResult.get("custTypeMobile"));
 
     if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-    		&& (installResult.get("custType").equals("Individual") || installResult.get("custTypeMobile").equals("964"))&& chkSMS.equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
+    		&& installResult.get("custType").equals("Individual") && chkSMS.equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
     {
         LOGGER.debug("================INSMS================");
 
