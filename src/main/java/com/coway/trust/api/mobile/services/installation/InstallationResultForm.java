@@ -88,6 +88,7 @@ public class InstallationResultForm {
   private String chkCrtAs;
 
   private String chkSMS;
+  private String custMobileNo;
 
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
@@ -119,6 +120,14 @@ public String getChkSMS() {
 
 public void setChkSMS(String chkSMS) {
 	this.chkSMS = chkSMS;
+}
+
+public String getCustMobileNo() {
+	return custMobileNo;
+}
+
+public void setCustMobileNo(String custMobileNo) {
+	this.custMobileNo = custMobileNo;
 }
 
 public String getBoosterPump() {

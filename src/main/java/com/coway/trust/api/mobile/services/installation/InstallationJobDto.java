@@ -279,6 +279,16 @@ public class InstallationJobDto {
 
   private String chkSMS;
 
+  private String custMobileNo;
+
+  public String getCustMobileNo() {
+	return custMobileNo;
+  }
+
+  public void setCustMobileNo(String custMobileNo) {
+	this.custMobileNo = custMobileNo;
+  }
+
   public String getChkSMS() {
 	return chkSMS;
   }
