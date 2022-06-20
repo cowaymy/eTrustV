@@ -64,6 +64,8 @@ public class InstallFailJobRequestForm {
 
   private String custMobileNo;
 
+  private String custType;
+
  /* @ApiModelProperty(value = "waterSrcType")
   private int waterSrcType;
 */
@@ -90,6 +92,14 @@ public String getCustMobileNo() {
 
 public void setCustMobileNo(String custMobileNo) {
 	this.custMobileNo = custMobileNo;
+}
+
+public String getCustType() {
+	return custType;
+}
+
+public void setCustType(String custType) {
+	this.custType = custType;
 }
 
 public String getFailDeptChk() {
