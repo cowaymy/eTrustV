@@ -345,16 +345,24 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
 		try {
 			params.put("updUserId", sessionVO.getUserId());
+			params.put("crtUserId", sessionVO.getUserId()); //added by keyi 202206 Multiple remarks
 
 			rtnCnt = hcPreOrderMapper.updateHcPreOrderFailStatus(params);
+
 			if(rtnCnt <= 0) { // not insert
 				throw new ApplicationException(AppConstants.FAIL, "Order Status updated Failed.");
 			}
+
+			preOrderMapper.InsertPreOrderFailStatus(params); //added by keyi 202206 Multiple remarks
+
 			// HMC0011D에 다른 주문이 있는 경우.
 			if(anoPreOrdId > 0) {
 				params.put("preOrdId", anoPreOrdId);
 
 				rtnCnt = hcPreOrderMapper.updateHcPreOrderFailStatus(params);
+
+				preOrderMapper.InsertPreOrderFailStatus(params); //added by keyi 202206 Multiple remarks
+
 				if(rtnCnt <= 0) { // not insert
 					throw new ApplicationException(AppConstants.FAIL, "Order Status updated Failed.");
 				}
