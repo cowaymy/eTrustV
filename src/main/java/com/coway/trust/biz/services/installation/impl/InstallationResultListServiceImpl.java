@@ -2457,7 +2457,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
     String chkSMS = "";
-    if(installResult.get("chkSMS").equals("on")){
+    if(installResult.get("chkSMS").equals("on") || installResult.get("chkSMS").equals("Y")){
     	chkSMS = "Y";
     }
     else{
