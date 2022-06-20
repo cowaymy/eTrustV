@@ -4699,6 +4699,7 @@
                       , RESULT_RPT_EMAIL_NO = #{resultReportEmailNo}
                       , RESULT_ACEPT_NAME = #{resultAcceptanceName}
                       , CHK_SMS = #{chkSMS}
+                      , CUST_MOBILE_NO = #{custMobileNo}
    <if test="installDate != null and installDate != ''">
       , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
    </if>

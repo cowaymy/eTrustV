@@ -2483,6 +2483,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("resultReportEmailNo", installResult.get("resultReportEmailNo"));
         s46dup.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
         s46dup.put("chkSMS", chkSMS);
+        s46dup.put("custMobileNo", installResult.get("custMobileNo"));
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
       }
@@ -2525,6 +2526,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       entry.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
 
       entry.put("chkSMS", chkSMS);
+      entry.put("custMobileNo", installResult.get("custMobileNo"));
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
     }
@@ -2624,6 +2626,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         m.put("salesOrdId", installResult.get("salesOrdId"));
         m.put("installDate", installResult.get("installDate"));
         m.put("chkSMS", chkSMS);
+        m.put("custMobileNo", installResult.get("custMobileNo"));
 
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(m);
