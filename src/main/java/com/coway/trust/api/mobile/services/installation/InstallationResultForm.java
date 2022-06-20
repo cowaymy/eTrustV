@@ -89,7 +89,7 @@ public class InstallationResultForm {
 
   private String chkSMS;
   private String custMobileNo;
-
+  private String customerType;
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
   @ApiModelProperty(value = "partList")
@@ -129,6 +129,14 @@ public String getCustMobileNo() {
 public void setCustMobileNo(String custMobileNo) {
 	this.custMobileNo = custMobileNo;
 }
+
+public String getCustomerType() {
+    return customerType;
+  }
+
+  public void setCustomerType(String customerType) {
+    this.customerType = customerType;
+  }
 
 public String getBoosterPump() {
 	return boosterPump;
