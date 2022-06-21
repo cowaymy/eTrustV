@@ -1332,6 +1332,7 @@
   </select>
 
   <select id="selectAnoStkPromoD" parameterType="Map" resultType="egovMap">
+  SELECT * FROM (
     SELECT T1.PROMO_ITM_ID
          , T1.PROMO_ID
          , T1.PROMO_ITM_STK_ID
@@ -1390,8 +1391,8 @@
       SYSDATE AND TO_DATE(T3.PROMO_DT_END)  <![CDATA[>=]]>
       SYSDATE
     </if>
-
-    AND ROWNUM &lt;= 1
+    ORDER BY 1 DESC)
+    WHERE ROWNUM &lt;= 1
 
   <!-- SELECT T1.PROMO_ITM_ID , T1.PROMO_ID , T1.PROMO_ITM_STK_ID , T1.PROMO_ITM_CUR_ID
       , T1.PROMO_ITM_PRC , T1.PROMO_ITM_PV , T1.PROMO_ITM_STUS_ID , T1.PROMO_ITM_UPD_USER_ID
@@ -2052,9 +2053,9 @@
     SELECT SUM(T1.RENT_INST_AMT)/2 AS PENALTY_AMT
       FROM SAL0070D T1
      WHERE T1.SALES_ORD_ID = #{salesOrdId}
-       AND T1.RENT_INST_NO <![CDATA[!=]]> 0
-       AND T1.RENT_INST_NO <![CDATA[>]]>  #{usedMnth}
-       AND T1.RENT_INST_NO <![CDATA[<= ]]>#{obPeriod}
+       AND T1.RENT_INST_NO != 0
+       AND T1.RENT_INST_NO >  #{usedMnth}
+       AND T1.RENT_INST_NO <![CDATA[<= ]]> #{obPeriod}
   </select>
 
   <select id="selectCcpDecisionMById" parameterType="Map" resultType="int">
