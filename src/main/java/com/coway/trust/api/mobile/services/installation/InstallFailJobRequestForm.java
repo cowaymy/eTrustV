@@ -56,7 +56,7 @@ public class InstallFailJobRequestForm {
 
   private String failBfDepWH;
 
-  //private String resultIcMobileNo;
+  private String resultIcMobileNo;
 
   private String failDeptChk;
 
@@ -228,7 +228,7 @@ public String getFailDeptChk() {
     this.failBfDepWH = failBfDepWH;
   }
 
-  /*public String getResultIcMobileNo() {
+  public String getResultIcMobileNo() {
 	return resultIcMobileNo;
   }
 
@@ -236,7 +236,7 @@ public String getFailDeptChk() {
 	this.resultIcMobileNo = resultIcMobileNo;
   }
 
-	public int getWaterSrcType() {
+	/*public int getWaterSrcType() {
 	    return waterSrcType;
 	}
 
