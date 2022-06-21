@@ -1019,13 +1019,13 @@
                    , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
 
                    , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
-                   , TO_CHAR (SAL0046D.RESULT_CUST_NAME)
-                   , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO)
-                   , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO)
-                   , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME)
+                   , TO_CHAR (SAL0046D.RESULT_CUST_NAME) AS RESULT_CUST_NAME
+                   , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO) AS RESULT_ICMOBILE_NO
+                   , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO) AS RESULT_RPT_EMAIL_NO
+                   , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME) AS RESULT_ACEPT_NAME
 
-                   , TO_CHAR (SAL0046D.CHK_SMS)
-                   , TO_CHAR (SAL0046D.CUST_MOBILE_NO)
+                   , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
+                   , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
