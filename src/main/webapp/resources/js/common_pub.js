@@ -178,8 +178,10 @@ var pickerOpts2 = {//생년월일달력 세팅
 	changeYear:true,
 	defaultDate: new Date(1960, 00, 01),
 	dateFormat: "dd/mm/yy",
-	yearRange:"1930:2000"
+	yearRange:"1930:" + ((new Date).getFullYear() - 18)
 };
+
+console.log(pickerOpts2)
 
 $(document).on(//생년월일달력 실행
 	"focus", ".j_date3", function(){
