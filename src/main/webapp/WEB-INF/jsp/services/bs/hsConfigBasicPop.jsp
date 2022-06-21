@@ -7,6 +7,27 @@
 //doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');
 	    $(document).ready(function() {
 
+	    	//Added by keyi HS Configuration (Basic Info) for Cody Level 202206
+	    	  var userType = '${SESSION_INFO.userTypeId}';
+
+	    	  if ("${SESSION_INFO.memberLevel}" == "4" && userType == 2) {
+
+	                $("#entry_cmbServiceMem").prop("disabled",true);
+	                $("#entry_availability").prop("disabled",true);
+	                $("#entry_settIns").prop("disabled",true);
+	                $("#entry_settHs").prop("disabled",true);
+	                $("#entry_settAs").prop("disabled",true);
+	                $("#btnSaveConfig").hide();
+	          }
+	    	  else {
+	    		  $("#entry_cmbServiceMem").prop("disabled",false);
+                  $("#entry_availability").prop("disabled",false);
+                  $("#entry_settIns").prop("disabled",false);
+                  $("#entry_settHs").prop("disabled",false);
+                  $("#entry_settAs").prop("disabled",false);
+                  $("#btnSaveConfig").show();
+	    	  }
+
 	    	//doGetCombo('/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), custId : $("#custId").val()} , '', 'entry_cmbServiceMem' , 'S', '');
 
 	    	CommonCombo.make("entry_cmbServiceMem", '/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), entry_orderNo : $("#entry_orderNo").val()}, '${configBasicInfo.c2}', {isShowChoose: true});
@@ -324,7 +345,7 @@
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_doSave()"><spring:message code='service.btn.SAVE'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="btnSaveConfig" onclick="fn_doSave()"><spring:message code='service.btn.SAVE'/></a></p></li>
 </ul>
 </form>
 
