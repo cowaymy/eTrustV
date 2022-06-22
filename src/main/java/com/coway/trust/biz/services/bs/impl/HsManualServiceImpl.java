@@ -690,6 +690,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
      * /////////////////////////물류 호출 END ////////////////////// }
      */
 
+    logger.debug("= userId 1===>" + params.get("userId").toString());
+
     Map<String, Object> resultValue = new HashMap<String, Object>();
     resultValue.put("resultId", params.get("hidSalesOrdCd"));
     resultValue.put("spMap", logPram);
@@ -737,6 +739,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         }
       }
     }
+
+    logger.debug("= userId 2===>" + params.get("userId").toString());
     return resultValue;
   }
 
