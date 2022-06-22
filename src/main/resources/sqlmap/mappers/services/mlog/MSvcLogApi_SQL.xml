@@ -1024,7 +1024,7 @@
                    , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO) AS RESULT_RPT_EMAIL_NO
                    , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME) AS RESULT_ACEPT_NAME
 
-                   , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
+                   , TO_CHAR (SAL0046D.CHK_SMS) AS chkSMS
                    , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
             FROM SAL0046D,
                  ORG0001D,
@@ -1186,7 +1186,7 @@
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
          , TO_CHAR(TURB_LVL) AS turb_Lvl
-         , TO_CHAR(CHK_SMS) AS chk_sms
+         , TO_CHAR(CHK_SMS) AS chksms
          , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
