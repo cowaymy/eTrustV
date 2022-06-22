@@ -176,6 +176,9 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
             logger.debug("++++ String.valueOf( insApiresult.get('serialRequireChkYn')) ::"
                 + String.valueOf(insApiresult.get("serialRequireChkYn")));
 
+            logger.debug("= userId 1===>" + params.get("userId").toString());
+            params.put("sUserCode", params.get("userId"));
+
             if ("Y".equals(String.valueOf(insApiresult.get("serialRequireChkYn")))) {
               params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
               params.put("scanSerial2", String.valueOf(insApiresult.get("scanSerial2")));
@@ -227,11 +230,15 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
               if(bndlId != null){ //hltang - to check whether is HC order
             	  MSvcLogApiService.insertSVC0115D(params);
               }
+
+              logger.debug("= userId 2===>" + params.get("userId").toString());
+              params.put("userId", params.get("sUserCode"));
             } else {
               // SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
               servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
             }
 
+            logger.debug("= userId 3===>" + params.get("userId").toString());
             // HS LOG HISTORY
             if (RegistrationConstants.IS_INSERT_HEART_LOG) {
               MSvcLogApiService.updateSuccessStatus(transactionId);
