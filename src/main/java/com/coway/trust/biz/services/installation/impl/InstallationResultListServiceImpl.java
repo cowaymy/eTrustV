@@ -1847,7 +1847,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("resultAcceptanceName", CommonUtils.nvl(params.get("resultAcceptanceName")).toString());
 
     //Added by Keyi Installation SMS 202206
-    installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
+    if(!params.get("chkSMS").toString().equals(null))//WEB
+	{
+		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
+	}
+    else{
+    	if(!params.get("chkSms").toString().equals(null)){//Mobile
+    		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
+    	}else{
+    		installResult.put("chkSMS", "N");
+    	}
+    }
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
@@ -2271,6 +2281,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     resultValue.put("installEntryNo", CommonUtils.nvl(params.get("hiddeninstallEntryNo")));
 
+   /* logger.debug("========================INSTALLATION RESULT PARAM===========================");
+    logger.debug("INSTALLATION PARAM1 : {}", params);
+    logger.debug("INSTALLATION PARAM2 : {}", installResult);
+    logger.debug("========================INSTALLATION RESULT PRM===========================");*/
+
     // START INSERT
     insertInstallation_2(statusId, ApptypeID, installResult, callEntry, callResult, orderLog, TaxinvoiceCompany,
         AccTradeLedger, AccOrderBill, taxInvoiceOutright, taxInvoiceOutrightSub, salesOrderM, isBillAvb);
@@ -2457,6 +2472,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
     String chkSMS = "";
+    /*logger.debug("CHKSMS999999999999 : /////", installResult.get("chkSMS"));
+    logger.debug("CHKSMS999999999999 : /////", installResult.get("chkSms"));*/
     if(installResult.get("chkSMS").equals("on") || installResult.get("chkSMS").equals("Y")){
     	chkSMS = "Y";
     }
@@ -2682,11 +2699,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19 //UNDER UAT
     String smsMessage = "";
-    LOGGER.debug("================ApptypeID================" + ApptypeID);
+    /*LOGGER.debug("================chkSMS11111================" + installResult.get("chkSms"));
     LOGGER.debug("================chkSMS11111================" + installResult.get("chkSMS"));
-    LOGGER.debug("================chkSMS22222================" + chkSMS);
-    LOGGER.debug("================custType================" + installResult.get("custType"));
-    LOGGER.debug("================custType================" + installResult.get("custTypeMobile"));
+    LOGGER.debug("================chkSMS22222================" + chkSMS);*/
 
     if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
     		&& (installResult.get("custType").equals("Individual") || installResult.get("custTypeMobile").equals("964"))&& chkSMS.equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
