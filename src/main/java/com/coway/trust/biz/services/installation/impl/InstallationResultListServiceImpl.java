@@ -1847,7 +1847,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("resultAcceptanceName", CommonUtils.nvl(params.get("resultAcceptanceName")).toString());
 
     //Added by Keyi Installation SMS 202206
-    installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
+    installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
