@@ -277,7 +277,7 @@ public class InstallationJobDto {
 
   private String turbLvl;
 
-  private String chkSMS;
+  private String chkSms;
 
   private String custMobileNo;
 
@@ -289,12 +289,12 @@ public class InstallationJobDto {
 	this.custMobileNo = custMobileNo;
   }
 
-  public String getChkSMS() {
-	return chkSMS;
+  public String getChkSms() {
+	return chkSms;
   }
 
-  public void setChkSMS(String chkSMS) {
-	this.chkSMS = chkSMS;
+  public void setChkSms(String chkSms) {
+	this.chkSms = chkSms;
   }
 
   public String getTurbLvl() {

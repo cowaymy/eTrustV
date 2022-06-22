@@ -87,7 +87,7 @@ public class InstallationResultForm {
 
   private String chkCrtAs;
 
-  private String chkSMS;
+  private String chkSms;
   private String custMobileNo;
   private String customerType;
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
@@ -114,12 +114,12 @@ public void setTurbLvl(String turbLvl) {
 	this.turbLvl = turbLvl;
 }
 
-public String getChkSMS() {
-	return chkSMS;
+public String getChkSms() {
+	return chkSms;
 }
 
-public void setChkSMS(String chkSMS) {
-	this.chkSMS = chkSMS;
+public void setChkSms(String chkSms) {
+	this.chkSms = chkSms;
 }
 
 public String getCustMobileNo() {
