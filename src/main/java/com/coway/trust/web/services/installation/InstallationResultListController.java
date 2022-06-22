@@ -738,6 +738,7 @@ public class InstallationResultListController {
       logger.debug("INSTALLATION RESULT : {}" + installResult);
 
       param.put("EXC_CT_ID", installResult.get("ctId"));
+      param.put("chkSms", params.get("chkSMS"));
 
       Map<String, Object> locInfoEntry = new HashMap<String, Object>();
       locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
