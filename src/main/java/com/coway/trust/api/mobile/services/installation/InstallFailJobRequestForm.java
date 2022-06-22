@@ -60,7 +60,7 @@ public class InstallFailJobRequestForm {
 
   private String failDeptChk;
 
-  private String chkSms;
+  private String chkSMS;
 
   private String custMobileNo;
 
@@ -77,11 +77,11 @@ public void setTurbLvl(String turbLvl) {
 }
 
 public String getChkSMS() {
-	return chkSms;
+	return chkSMS;
 }
 
-public void setChkSMS(String chkSms) {
-	this.chkSms = chkSms;
+public void setChkSMS(String chkSMS) {
+	this.chkSMS = chkSMS;
 }
 
 public String getCustMobileNo() {
