@@ -7,42 +7,32 @@
      <insert id="insertSAL0323T" parameterType="Map">
               INSERT INTO SAL0323T (FAIL_RESN_ID,CUST_ID,NRIC,ORDER_NO,CARD_HOLDER,CARD_NO,CARD_EXP,CARD_TYPE,BANKNAME,CRC_TYPE)
               <foreach item="item" collection="all" index="index" separator= "union">
-<!--              select
-                  #{item.0}
-                  replace(replace(substr(#{item.1},0,7),'.',''),'E',''),
-                  #{item.2},
-                  #{item.3},
-                  #{item.4},  card no
-                  #{item.5},
-                  #{item.6},
-                  #{item.7}
-                  FROM DUAL a
-                  left join sal0029d b on b.cust_id = #{item.0} and nric like '%'||replace(replace(substr(#{item.1},0,7),'.',''),'E','')||'%'
- -->
- <![CDATA[select
+              <![CDATA[
+              select
                   case
                         when b.cust_id is null then 3482
                         when b1.cust_id is null then 3483
                         when b2.cust_id is null then 3484
                         when length(replace(#{item.8},'-','')) <> 16 then 3485
-                        when c.etrust_bank_name is null then 3486
+                        when c1.bank_id is null then 3486
                         when d1.code_id is null then 3488
                   else 0
                   end as fail_resn,
                   #{item.0},
                   replace(replace(substr(#{item.1},0,7),'.',''),'E',''),
                   #{item.5},
-                  #{item.6},
+                  REGEXP_REPLACE(#{item.6}, '[^a-zA-Z ]', ''),
                   replace(#{item.8},'-',''),
                   TO_CHAR(TO_DATE(#{item.9},'Mon-YY'),'MMYY'),
                   #{item.10},
-                  c.etrust_bank_name,
+                  c1.bank_id,
                   d.crc_type
                   FROM dual a
                   left join sal0029d b on b.cust_id =#{item.0}
                   left join sal0029d b1 on b1.cust_id = #{item.0} and  b1.nric like '%'||replace(replace(substr(#{item.1},0,7),'.',''),'E','')||'%'
                   left join sal0029d b2 on b2.name =  #{item.6}
                   left join sys0109m c on SELFCARE_BANK_NAME = #{item.11}
+                  left join sys0004m c1 on c1.code||' - '||c1.name = c.etrust_bank_name
                   left join (select case
                                         when substr(replace(#{item.8},'-',''),0,1) = 4 then 112
                                         when substr(replace(#{item.8},'-',''),0,1) = 5 then 111
@@ -53,11 +43,11 @@
     </insert>
     <select id="displayRecord" resultType="egovMap">
         select A.CUST_ID,A.ORDER_NO,A.CARD_HOLDER,C.NAME,CASE WHEN A.FAIL_RESN_ID = 0 THEN NULL ELSE B.RESN_DESC END AS FAIL_REASON   from SAL0323T A
-        LEFT JOIN SYS0032M B on A.FAIL_RESN_ID = B.RESN_ID
-        LEFT JOIN SYS0038M C ON A.CONVERT_STATUS = C.STUS_CODE_ID
+            LEFT JOIN SYS0032M B on A.FAIL_RESN_ID = B.RESN_ID
+            LEFT JOIN SYS0038M C ON A.CONVERT_STATUS = C.STUS_CODE_ID
         </select>
     <select id="selectdataForCSV" parameterType="Map"  resultType="egovMap">
-select * from(select   LPAD(NRIC, 12, '0') || LPAD(CUST_ID, 12, '0') || LPAD(SUBSTR(CARD_NO,0,6), 12, '0') refno,
+        select * from(select   LPAD(NRIC, 12, '0') || LPAD(CUST_ID, 12, '0') || LPAD(SUBSTR(CARD_NO,0,6), 12, '0') refno,
             CARD_NO custCrcNo,
             CARD_EXP custCrcExpr
         from SAL0320D
@@ -76,7 +66,7 @@ select * from(select   LPAD(NRIC, 12, '0') || LPAD(CUST_ID, 12, '0') || LPAD(SUB
 
 
     <update id="maskCrcNO" parameterType="Map">
-            update SAL0320D SET card_no = substr(card_no,0,6)||'******'||substr(card_no,-4,16) WHERE BATCH_TOKEN_ID = #{batchId}
+        update SAL0320D SET card_no = substr(card_no,0,6)||'******'||substr(card_no,-4,16) WHERE BATCH_TOKEN_ID = #{batchId}
     </update>
 
 
@@ -122,36 +112,48 @@ select * from(select   LPAD(NRIC, 12, '0') || LPAD(CUST_ID, 12, '0') || LPAD(SUB
 
     <select id="batchTokenizeViewItmJsonList" resultType="egovMap">
         SELECT B.ORDER_NO, B.CUST_ID ,B.CARD_NO,D.NAME Status,C.RESN_DESC,B.UDP_DT UDP_Dt
-        FROM SAL0320D B
-        LEFT JOIN SYS0032M C ON C.RESN_ID = B.FAIL_RESN_ID
-        JOIN SYS0038M D ON B.CONVERT_STATUS = D.STUS_CODE_ID
-        WHERE B.BATCH_TOKENIZE_ID = #{batchId}
+	        FROM SAL0320D B
+	        LEFT JOIN SYS0032M C ON C.RESN_ID = B.FAIL_RESN_ID
+	        JOIN SYS0038M D ON B.CONVERT_STATUS = D.STUS_CODE_ID
+	        WHERE B.BATCH_TOKENIZE_ID = #{batchId}
         ORDER BY B.CUST_ID
     </select>
 
     <insert id="insertSAL0319M" parameterType="Map">
         INSERT INTO SAL0319M values(
-        #{batchid},
-        'BPC'||LPAD(#{batchid}, 7, '0'),
-        1,
-        NULL,
-        349,
-        sysdate,
-        349,
-        sysdate
+	        #{batchid},
+	        'BPC'||LPAD(#{batchid}, 7, '0'),
+	        1,
+	        NULL,
+	        349,
+	        sysdate,
+	        349,
+	        sysdate
         )
     </insert>
 
+    <update id="maskCRCNO" parameterType="Map">
+        UPDATE SAL0320D
+            SET CARD_No = substr(Card_No,0,6)||'******'||substr(Card_No,-4,4)
+            WHERE   BATCH_TOKENIZE_ID = #{batchid}
+    </update>
+
     <insert id="insertSAL0320D" parameterType="Map">
         <![CDATA[
-        insert into sal0320D (
-        select #{batchid} , regexp_substr(order_no, '[^\s **]+', 1, level),
-        CASE WHEN fail_resn_id <> 0 THEN 21 ELSE 1 END,
-        CUST_ID,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,sysdate,349,sysdate,349,crc_type,
-        fail_resn_id, null
-        from sal0323T
-             connect by regexp_substr(order_no, '[^\s **]+', 1, level) is not null AND PRIOR cust_id = cust_id
-            AND PRIOR SYS_GUID() IS NOT NULL)
+        INSERT into sal0320D (
+            select #{batchid},order_no,CASE WHEN b.sales_ord_no = NULL THEN 21 ELSE status END,A.CUST_ID,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,sysdate,349,sysdate,349,crc_type,
+                CASE WHEN c.mode_id = 135 THEN 3490
+                        ELSE a.fail_resn_id END
+                , null
+                FROM (select 112 batch_id, regexp_substr(order_no, '[^\s **]+', 1, level) order_no,
+                CASE WHEN fail_resn_id <> 0 THEN 21 ELSE 1 END AS status,
+                CUST_ID,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,crc_type,
+                fail_resn_id, null
+                    from sal0323T
+                    connect by regexp_substr(order_no, '[^\s **]+', 1, level) is not null AND PRIOR cust_id = cust_id
+                    AND PRIOR SYS_GUID() IS NOT NULL) a
+         LEFT JOIN sal0001d b on b.sales_ord_no = a.order_no
+         LEFT JOIN sal0074d c on b.sales_ord_id = c.sales_ord_id)
             ]]>
     </insert>
 </mapper>

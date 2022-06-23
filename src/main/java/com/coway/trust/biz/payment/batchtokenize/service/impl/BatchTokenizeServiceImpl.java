@@ -51,7 +51,9 @@ public class BatchTokenizeServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public List<EgovMap> getCardDetails(EgovMap BatchID) {
-		return batchTokenizeMapper.selectdataForCSV(BatchID);
+		List<EgovMap> CSVData = batchTokenizeMapper.selectdataForCSV(BatchID);
+		batchTokenizeMapper.maskCRCNO(BatchID);
+		return  CSVData;
 	}
 
 	public List<EgovMap> selectBatchTokenizeRecord(Map<String, Object> params){

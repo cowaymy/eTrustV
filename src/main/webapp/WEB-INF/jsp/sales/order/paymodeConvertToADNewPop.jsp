@@ -211,12 +211,14 @@ var cnvrListGrid;
                 //console.log("data : " + result.data);
 
                 Common.alert("<spring:message code='sal.alert.msg.newConversionBatchSuccessfully' />");       // 메시지 다시 만들어야함.
+                fn_selfClose();
 
                 $("#newCnvrRem").val('');
                 $("#fileSelector").val('');
                 $("#hiddenTotal").val('');
                 AUIGrid.clearGridData(uploadGrid);
                 AUIGrid.clearGridData(cnvrListGrid);
+
             }
             , function(jqXHR, textStatus, errorThrown){
                 try {
@@ -234,7 +236,10 @@ var cnvrListGrid;
 
         }));
     }
-
+    function fn_selfClose() {
+        // fn_selectListAjax();
+        $('#_closeNew').click();
+    }
     $(function(){
     $('#cnvrType').change(function(){
         $("#newCnvrRem").val('');
@@ -279,7 +284,7 @@ var cnvrListGrid;
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<%-- <tr>
     <th scope="row">Conversion Type</th>
     <td>
     <select id="cnvrType" name="cnvrType" class="w100p">
@@ -313,7 +318,7 @@ var cnvrListGrid;
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td><textarea cols="20" rows="5" id="newCnvrRem" name="newCnvrRem" placeholder="Remark"></textarea></td>
-</tr>
+</tr> --%>
             <tr>
                 <th scope="row"><spring:message code="sal.text.selectYourCSVFile" /><span class="must">*</span></th>
                 <td>

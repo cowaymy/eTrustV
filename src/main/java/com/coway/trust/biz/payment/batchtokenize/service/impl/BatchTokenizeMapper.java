@@ -37,6 +37,8 @@ public interface BatchTokenizeMapper {
 
 	public List<EgovMap> batchTokenizeViewItmJsonList(Map<String, Object> params);
 
+	public void maskCRCNO(EgovMap batchID);
+
 
 
 }
