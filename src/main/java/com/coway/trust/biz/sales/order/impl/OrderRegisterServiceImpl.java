@@ -155,7 +155,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     int apptypeid = Integer.parseInt((String) params.get("appTypeId"));
 
-    if (apptypeid == 144) {
+    if (apptypeid == 144 || apptypeid == 145) {
       params.put("appTypeId", apptypeid);
 
     } else {
