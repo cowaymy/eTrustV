@@ -29,7 +29,8 @@
                  , T1.NAME
                  , T1.MEM_CODE
                  , T1.MEM_ID
-                 , T2.CT_SUB_GRP
+                 , CASE WHEN T1.MEM_TYPE = 5758 THEN T2.CT_SUB_GRP END AS CT_SUB_GRP
+                 , CASE WHEN T1.MEM_TYPE = 6672 THEN T2.CT_SUB_GRP END AS LT_SUB_GRP
                  , T1.LAST_GRP_CODE
 		 FROM TEMP T1, TEMP2 T2
 
