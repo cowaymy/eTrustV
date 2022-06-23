@@ -39,6 +39,7 @@ public interface HcHolidayService {
 	 */
 	public List<EgovMap> selectDTAssignList(Map<String, Object> params);
 
+	public List<EgovMap> selectLTAssignList(Map<String, Object> params);
 	/**
 	 * Save Homecare Holiday
 	 * @Author KR-SH
@@ -97,6 +98,8 @@ public interface HcHolidayService {
 	 * @param sessionVO
 	 * @return
 	 */
-	public ReturnMessage DTAssignSave(Map<String, Object> params, SessionVO sessionVO)  throws Exception;
+	public ReturnMessage DTAssignSave(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	public ReturnMessage LTAssignSave(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
 }

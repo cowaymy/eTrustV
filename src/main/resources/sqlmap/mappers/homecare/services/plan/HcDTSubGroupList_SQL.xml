@@ -57,6 +57,7 @@
         /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubAreaGroupList */
         SELECT A.AREA_ID,
                   B.DT_BRNCH_CODE,
+                  B.LT_BRNCH_CODE,
                   B.AREA,
                   B.CITY,
                   B.POSTCODE,
@@ -70,6 +71,7 @@
                    END LOC_TYPE,
                   A.SVC_WEEK,
                   A.DT_SUB_GRP AS CT_SUB_GRP,
+                  A.LT_SUB_GRP AS LT_SUB_GRP,
                   (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 6666) AS NO_SVC_CNT
 
          FROM ORG0019M A
@@ -96,7 +98,7 @@
 		<if test="dtSubGrp != null and dtSubGrp != ''">
             AND  B.DT_SUB_GRP = #{dtSubGrp}
 		</if>
-		ORDER BY CT_SUB_GRP
+		ORDER BY CT_SUB_GRP, LT_SUB_GRP
     </select>
 
     <!-- Select DTM By DSC -->
@@ -125,6 +127,18 @@
         WHERE DT_BRNCH_CODE = #{branchCode}
            AND DT_SUB_GRP IS NOT NULL
         ORDER BY DT_SUB_GRP ASC
+    </select>
+
+    <select id="selectLTSubGroupDscList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubGroupDscList */
+        SELECT DISTINCT
+                   LT_SUB_GRP CODE_ID
+                 , LT_SUB_GRP CODE_NAME
+
+         FROM SYS0064M
+        WHERE LT_BRNCH_CODE = #{branchCode}
+           AND LT_SUB_GRP IS NOT NULL
+        ORDER BY LT_SUB_GRP ASC
     </select>
 
     <!-- Select DT Sub Group -->

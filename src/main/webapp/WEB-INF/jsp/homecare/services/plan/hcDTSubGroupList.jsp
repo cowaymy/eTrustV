@@ -20,6 +20,7 @@
 	var branchTypeId = '${branchTypeId}';
 
 	var subList = new Array();
+	var subListLT = new Array();
     var localList = ["Local", "OutStation"];
 
     // 그리드 속성 설정
@@ -52,6 +53,15 @@
 		                return subList;
 		            }, keyField : "ctSubGrp", valueField : "codeName"
 		        }
+            } ,
+            {dataField : "ltSubGrp",         headerText : "LT Sub Group",    width : 120,
+                editRenderer : {
+                    type : "ComboBoxRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        return subListLT;
+                    }, keyField : "ltSubGrp", valueField : "codeName"
+                }
             }
         ];
 
@@ -115,6 +125,20 @@
                             subList.push(list);
                          }
                     return subList;
+                });
+
+                Common.ajax("GET", "/homecare/services/plan/selectLTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
+                	console.log("here111");
+                	subListLT = new Array()
+                    for (var i = 0; i < result.length; i++) {
+                            var list = new Object();
+                            list.ltSubGrp = result[i].codeId;
+                            list.codeName = result[i].codeName;
+                            subListLT.push(list);
+                         }
+                	 console.log(subListLT);
+                    return subListLT;
+
                 });
             }
 	    });

@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 	var gridID;
 	var gridID1;
+	var gridID2;
 	var type1;
 	var holidayDesc1;
 	var holiday1;
@@ -15,6 +16,7 @@
 	var holidayType = ["Public Holiday", "State Holiday"];
 	var workType = ["Working", "Holiday"];
 	var type, branchName, holidayDesc , holiday, branchId, state, holidaySeq , applCode;
+	var type2, branchName2, holidayDesc2, holiday2, branchId2, state2, holidaySeq2, applCode2;
 
 	// 그리드 세팅 - holiday_CTassign_grid_wap
     function holidayCTassignGrid() {
@@ -43,6 +45,31 @@
         gridID1 = GridCommon.createAUIGrid("holiday_CTassign_grid_wap", columnLayout  ,"" ,gridPros);
     }
 
+    function holidayLTassignGrid() {
+        var columnLayout = [
+            {dataField : "holidayType",            headerText : "Holiday Type",          width : 100, editable: false},
+            {dataField : "state",                      headerText : "State",                     width : 100, editable: false},
+            {dataField : "holiday",                   headerText : "Date",                      width : 100, editable: false, dataType : "date"},
+            {dataField : "holidayDesc",            headerText : "Description",             width : 200, editable: false},
+            {dataField : "holidaySeq",              headerText : "",                            width : 0,    editable: false},
+            {dataField : "ltBrnchCode",           headerText : "Branch",                   width : 100, editable: false},
+            {dataField : "replacementCtPax",    headerText : "Replacement LT Pax", width : 100, editable: false},
+            {dataField : "assignStatus",            headerText : "Assign Status",          width : 100, editable: false},
+            {dataField : "applCode",                headerText : "Working Status",       width : 150, editable: true,
+                editRenderer : {type : "ComboBoxRenderer", showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                               var list = workType;
+                               return list;
+                    },
+                    keyField : "id1"
+                }
+            },
+            {dataField : "brnchId", headerText : "",  width : 0}
+        ];
+
+        var gridPros = { usePaging : true,  pageRowCount: 20, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+        gridID2 = GridCommon.createAUIGrid("holiday_LTassign_grid_wap", columnLayout  ,"" ,gridPros);
+    }
 
 	function holidayGrid() {
 	    var columnLayout = [
@@ -124,11 +151,15 @@
 
 		 holidayGrid();
 		 holidayCTassignGrid();
+		 holidayLTassignGrid();
 		 fn_selectState();
 
 		 $("#holiday_CTassign_grid_wap").hide();
+		 $("#holiday_LTassign_grid_wap").hide();
 		 $("#hiddenBtn").hide();
 		 $("#hiddenBtn4").hide();
+         $("#hiddenBtn5").hide();
+         $("#hiddenBtn6").hide();
 
 		 AUIGrid.bind(gridID, "addRow", auiAddRowHandler);
 		 AUIGrid.bind(gridID, "removeRow", auiRemoveRowHandler);
@@ -151,6 +182,17 @@
 	         holidaySeq = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidaySeq");
 	         applCode = AUIGrid.getCellValue(gridID1, event.rowIndex, "applCode");
 	    });
+
+		 AUIGrid.bind(gridID2, "cellClick", function(event) {
+             type2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "holidayType");
+             branchName2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "ltBrnchCode");
+             holidayDesc2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "holidayDesc");
+             holiday2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "holiday");
+             branchId2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "brnchId");
+             state2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "state");
+             holidaySeq2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "holidaySeq");
+             applCode2 = AUIGrid.getCellValue(gridID2, event.rowIndex, "applCode");
+        });
     });
 
     // 저장 - Save Button Click
@@ -282,7 +324,7 @@
     		Common.ajax("GET", "/homecare/services/plan/selectHcHolidayList.do",$("#holidayForm").serialize(), function(result) {
                 AUIGrid.setGridData(gridID, result);
             });
-    	} else { // radio button - Replacement DT Assign Status
+    	} else if($("#dtList").prop("checked")){ // radio button - Replacement DT Assign Status
     		$("#type1").val(type1.substr(0,1));
             $("#holidayDesc1").val(holidayDesc1);
             $("#holiday1").val( holiday1);
@@ -292,6 +334,16 @@
     		Common.ajax("GET", "/homecare/services/plan/selectDTAssignList.do", $("#holidayForm").serialize(), function(result2) {
                 AUIGrid.setGridData(gridID1, result2);
             });
+    	} else{ //radio button - replacement LT Assign Status
+    		$("#type1").val(type1.substr(0,1));
+            $("#holidayDesc1").val(holidayDesc1);
+            $("#holiday1").val(holiday1);
+            $("#holidaySeq1").val(holidaySeq1);
+            $("#state1").val(state1);
+
+            Common.ajax("GET", "/homecare/services/plan/selectLTAssignList.do", $("#holidayForm").serialize(), function(result3) {
+                AUIGrid.setGridData(gridID2, result3);
+            });
     	}
     }
 
@@ -299,11 +351,14 @@
         if(val == 1) {
             $("#holiday_grid_wap").show();
             $("#holiday_CTassign_grid_wap").hide();
+            $("#holiday_LTassign_grid_wap").hide();
             $("#hiddenBtn").hide();
             $("#hiddenBtn4").hide();
             $("#hiddenBtn1").show();
             $("#hiddenBtn2").show();
             $("#hiddenBtn3").show();
+            $("#hiddenBtn5").hide();
+            $("#hiddenBtn6").hide();
 
             AUIGrid.resize(gridID);
 
@@ -314,15 +369,34 @@
         	}
         	fn_holidayListSearch();
 
-            $("#holiday_CTassign_grid_wap").show();
-            $("#holiday_grid_wap").hide();
-            $("#hiddenBtn").show();
-            $("#hiddenBtn1").hide();
-            $("#hiddenBtn2").hide();
-            $("#hiddenBtn3").hide();
-            $("#hiddenBtn4").show();
+        	if(val == 2){
+	            $("#holiday_CTassign_grid_wap").show();
+                $("#holiday_LTassign_grid_wap").hide();
+	            $("#holiday_grid_wap").hide();
+	            $("#hiddenBtn").show();
+	            $("#hiddenBtn1").hide();
+	            $("#hiddenBtn2").hide();
+	            $("#hiddenBtn3").hide();
+	            $("#hiddenBtn4").show();
+                $("#hiddenBtn5").hide();
+                $("#hiddenBtn6").hide();
 
-            AUIGrid.resize(gridID1);
+	            AUIGrid.resize(gridID1);
+        	}
+        	else {//val == 3
+        		 $("#holiday_CTassign_grid_wap").hide();
+        		 $("#holiday_LTassign_grid_wap").show();
+                 $("#holiday_grid_wap").hide();
+                 $("#hiddenBtn").hide();
+                 $("#hiddenBtn1").hide();
+                 $("#hiddenBtn2").hide();
+                 $("#hiddenBtn3").hide();
+                 $("#hiddenBtn4").hide();
+                 $("#hiddenBtn5").show();
+                 $("#hiddenBtn6").show();
+
+                 AUIGrid.resize(gridID2);
+        	}
         }
     }
 
@@ -338,25 +412,52 @@
     	Common.popupDiv("/homecare/services/plan/replacementDTEntryPop.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     }
 
-    function fn_ChangeApplType() {
-    	var objJson = GridCommon.getEditData(gridID1);
-
-    	$("#type1").val(type1.substr(0,1));
-        $("#holidayDesc1").val(holidayDesc1);
-        $("#holiday1").val( holiday1);
-        $("#holidaySeq1").val(holidaySeq1);
-        $("#state1").val(state1);
-
-        if(type == undefined) {
-        	Common.alert("Retry to click a column");
-        	return;
+    function fn_LTEntry() {
+        if(applCode2 == "Working") {
+            Common.alert("Working day");
+            return;
+        }
+        if(FormUtil.isEmpty(type2)) {
+            Common.alert("Retry to click a column");
+            return;
         }
 
+        Common.popupDiv("/homecare/services/plan/replacementLTEntryPop.do?holidayType=" + type2 +"&branchName=" +  branchName2 +  "&holidayDesc=" + holidayDesc2 + "&holiday=" + holiday2 + "&branchId=" + branchId2 + "&state=" + state2 + "&holidaySeq=" + holidaySeq2 ,null, null , true , '_NewAddDiv1');
+    }
+
+    function fn_ChangeApplType(val) {
+
+    	 var objJson;
+
+    	 $("#type1").val(type1.substr(0,1));
+         $("#holidayDesc1").val(holidayDesc1);
+         $("#holiday1").val(holiday1);
+         $("#holidaySeq1").val(holidaySeq1);
+         $("#state1").val(state1);
+
+    	if(val == 1){
+    		if(type == undefined) {
+                Common.alert("Retry to click a column");
+                return;
+            }
+
+    		objJson = GridCommon.getEditData(gridID1);
+    	}
+    	else{ //val ==2
+
+    		if(type2 == undefined) {
+                Common.alert("Retry to click a column");
+                return;
+            }
+
+    		objJson = GridCommon.getEditData(gridID2);
+    	}
+
     	Common.ajax("GET", "/services/holiday/changeApplType.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode, objJson ,  function(result) {
-    		  fn_holidayListSearch();
-    		  fn_radioBtn(1);
-    		  $("#hList").prop("checked",true);
-    	 });
+            fn_holidayListSearch();
+            fn_radioBtn(1);
+            $("#hList").prop("checked",true);
+       });
     }
 
     function removeRow() {
@@ -460,7 +561,10 @@
     <label><input id="hList" type="radio" name="rdoBtn" checked="checked" onclick="fn_radioBtn(1)"/><span>Holiday List Display</span></label>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <label><input type="radio" name="rdoBtn" onclick="fn_radioBtn(2)" /><span>Replacement DT Assign Status</span></label>
+    <label><input id="dtList" type="radio" name="rdoBtn" onclick="fn_radioBtn(2)" /><span>Replacement DT Assign Status</span></label>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <label><input id="ltList" type="radio" name="rdoBtn" onclick="fn_radioBtn(3)" /><span>Replacement LT Assign Status</span></label>
     </c:if>
     </td>
 </tr>
@@ -471,13 +575,16 @@
     <li><p class="btn_grid" id="hiddenBtn1"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn2"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn3"><a href="#" onclick="javascript:fn_holidaySave()">SAVE</a></p></li>
-    <li><p class="btn_grid" id="hiddenBtn4"><a href="#" onclick="javascript:fn_ChangeApplType()">Change Work Status</a></p></li>
+    <li><p class="btn_grid" id="hiddenBtn4"><a href="#" onclick="javascript:fn_ChangeApplType(1)">Change Work Status</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn"><a href="#" onclick="javascript:fn_DTEntry()">Replacement DT Entry</a></p></li>
+    <li><p class="btn_grid" id="hiddenBtn6"><a href="#" onclick="javascript:fn_ChangeApplType(2)">Change Work Status</a></p></li>
+    <li><p class="btn_grid" id="hiddenBtn5"><a href="#" onclick="javascript:fn_LTEntry()">Replacement LT Entry</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="holiday_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
 <div id="holiday_CTassign_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
+<div id="holiday_LTassign_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

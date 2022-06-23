@@ -68,6 +68,11 @@ public class HcDTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implem
 		return hcDTSubGroupListMapper.selectDTSubGroupDscList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectLTSubGroupDscList(Map<String, Object> params) {
+		return hcDTSubGroupListMapper.selectLTSubGroupDscList(params);
+	}
+
 	/**
 	 * Select DTM By DSC
 	 * @Author KR-SH

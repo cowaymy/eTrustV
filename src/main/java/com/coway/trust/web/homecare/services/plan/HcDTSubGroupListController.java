@@ -94,6 +94,13 @@ public class HcDTSubGroupListController {
 		return ResponseEntity.ok(groupDscList);
 	}
 
+	@RequestMapping(value = "/selectLTSubGroupDscList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLTSubGroupDscList( @RequestParam Map<String, Object> params) {
+		List<EgovMap> groupDscList = hcDTSubGroupListService.selectLTSubGroupDscList(params);
+
+		return ResponseEntity.ok(groupDscList);
+	}
+
 
 	/**
 	 * Select DTM By DSC

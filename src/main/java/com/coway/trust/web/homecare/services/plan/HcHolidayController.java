@@ -92,8 +92,20 @@ public class HcHolidayController {
 		params.put("stateTypeList", (String[])request.getParameterValues("assignState"));
 		params.put("stateList", (String[])request.getParameterValues("cmbState"));
 		params.put("branchList", (String[])request.getParameterValues("branchId"));
+		params.put("paramMemType", HomecareConstants.MEM_TYPE.DT);
 
 		List<EgovMap> assignList = hcHolidayService.selectDTAssignList(params);
+		return ResponseEntity.ok(assignList);
+	}
+
+	@RequestMapping(value = "/selectLTAssignList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLTAssignList(@RequestParam Map<String, Object> params, HttpServletRequest request) {
+		params.put("stateTypeList", (String[])request.getParameterValues("assignState"));
+		params.put("stateList", (String[])request.getParameterValues("cmbState"));
+		params.put("branchList", (String[])request.getParameterValues("branchId"));
+		params.put("paramMemType", HomecareConstants.MEM_TYPE.LT);
+
+		List<EgovMap> assignList = hcHolidayService.selectLTAssignList(params);
 		return ResponseEntity.ok(assignList);
 	}
 
@@ -133,6 +145,13 @@ public class HcHolidayController {
 		return "homecare/services/plan/replacementDTEntryPop";
 	}
 
+	@RequestMapping(value = "/replacementLTEntryPop.do")
+	public String replacementLTEntryPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("params", params);
+		// 호출될 화면
+		return "homecare/services/plan/replacementLTEntryPop";
+	}
+
 	/**
 	 * Select DT/ AssignDT List
 	 * @Author KR-SH
@@ -154,6 +173,20 @@ public class HcHolidayController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/selectLTList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectLTList( @RequestParam Map<String, Object> params) {
+		params.put("paramMemType", HomecareConstants.MEM_TYPE.LT);
+
+		List<EgovMap> LTList = holidayService.selectCTList(params);
+		List<EgovMap> LTAssignList = holidayService.selectAssignCTList(params);
+
+		Map<String, Object> map= new HashMap<String, Object>();
+		map.put("CTList", LTList);
+		map.put("CTAssignList", LTAssignList);
+
+		return ResponseEntity.ok(map);
+	}
+
 	/**
 	 * Save DT Assign
 	 * @Author KR-SH
@@ -165,10 +198,24 @@ public class HcHolidayController {
 	@RequestMapping(value = "/DTAssignSave.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage>DTAssignSave(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = null;
+		params.put("memType", HomecareConstants.MEM_TYPE.DT);
 		try {
 			message = hcHolidayService.DTAssignSave(params, sessionVO);
 		} catch (Exception e) {
 			throw new ApplicationException(AppConstants.FAIL, "Save Replacement DT Entry");
+		}
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/LTAssignSave.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage>LTAssignSave(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = null;
+		params.put("memType", HomecareConstants.MEM_TYPE.LT);
+		try {
+			message = hcHolidayService.LTAssignSave(params, sessionVO);
+		} catch (Exception e) {
+			throw new ApplicationException(AppConstants.FAIL, "Save Replacement LT Entry");
 		}
 
 		return ResponseEntity.ok(message);

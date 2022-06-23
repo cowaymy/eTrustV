@@ -38,6 +38,7 @@ public interface HcHolidayMapper {
 	 */
 	public List<EgovMap> selectDTAssignList(Map<String, Object> params);
 
+	public List<EgovMap> selectLTAssignList(Map<String, Object> params);
 	/**
 	 * Check Duplication Holiday
 	 * @Author KR-SH
@@ -72,5 +73,11 @@ public interface HcHolidayMapper {
 	 * @return
 	 */
 	public int  deleteHcHoliday(Map<String, Object> params);
+
+	public void insertDTLTAssign(Map<String, Object> insertValue);
+
+	public List<EgovMap> selectDTLTInfo(Map<String, Object> insertValue);
+
+	public void deleteDTLTAssign(Map<String, Object> delValue);
 
 }

@@ -14,7 +14,8 @@
 	});
 
 	function fn_CTCode() {
-		Common.ajax("GET", "/homecare/services/plan/selectDTList.do", $("#assignSaveForm").serialize(), function(result) {
+
+		Common.ajax("GET", "/homecare/services/plan/selectLTList.do", $("#assignSaveForm").serialize(), function(result) {
 		    AUIGrid.setGridData(CTListGrid, result.CTList);
 		    AUIGrid.setGridData(CTListGrid2, result.CTAssignList);
 
@@ -42,7 +43,7 @@
 			              unCheckValue : "0"
 			    }
 			},
-			{ dataField : "memCode", headerText : "DT Code",    width : 100 },
+			{ dataField : "memCode", headerText : "LT Code",    width : 100 },
 			{ dataField : "name", headerText : "Name", width : 200 },
 			{ dataField : "totalAssignDate", headerText : "Total Assigned Date Count",  width : 150},
 			{ dataField : "memId", headerText : "",  width : 0}
@@ -66,7 +67,7 @@
 			        unCheckValue : "0"
 			    }
 			},
-			{ dataField : "memCode", headerText : "DT Code", width : 100 },
+			{ dataField : "memCode", headerText : "LT Code", width : 100 },
 			{ dataField : "name", headerText : "Name", width : 200 },
 			{ dataField : "memId", headerText : "",  width : 0},
 			{ dataField : "holidaySeq1", headerText : "",  width : 0},
@@ -88,7 +89,7 @@
 
         jsonObj.form = $("#assignSaveForm").serializeJSON();
 
-    	Common.ajax("POST", "/homecare/services/plan/DTAssignSave.do", jsonObj, function(result) {
+    	Common.ajax("POST", "/homecare/services/plan/LTAssignSave.do", jsonObj, function(result) {
     		Common.alert(result.message);
 
             if(result.code == '00') {  // Success
@@ -163,7 +164,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Replacement DT Entry</h1>
+<h1>Replacement LT Entry</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
 </ul>
@@ -182,7 +183,7 @@
 <input type="hidden" value="<c:out value="${params.branchId}"/>" id="branchId" name="branchId"/>
 <input type="hidden" value="<c:out value="${params.state}"/>" id="state" name="state"/>
 <input type="hidden" value="<c:out value="${params.holidaySeq}"/>" id="holidaySeq" name="holidaySeq"/>
-<input type="hidden" value="<c:out value="5758"/>" id="memType" name="memType"/>
+<input type="hidden" value="<c:out value="6672"/>" id="memType" name="memType"/>
 </form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -211,7 +212,7 @@
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Assigned DT</h2>
+<h2>Assigned LT</h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
@@ -223,7 +224,7 @@
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>DT List</h2>
+<h2>LT List</h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">

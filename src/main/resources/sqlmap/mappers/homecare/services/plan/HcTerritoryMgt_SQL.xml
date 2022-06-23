@@ -12,6 +12,8 @@
                  , A.STATE
                  , A.DT_BRNCH_CODE
                  , A.DT_SUB_GRP
+                 , A.LT_BRNCH_CODE
+                 , A.LT_SUB_GRP
 
          FROM SYS0064M A
            JOIN SYS0005M B

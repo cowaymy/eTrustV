@@ -241,6 +241,14 @@
         WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD')
          AND HOLIDAY_TYPE = #{holidayType}
          AND B.BRNCH = #{branchId}
+         <choose>
+            <when test="paramMemType != null and paramMemType != ''">
+                AND B.MEM_TYPE = #{paramMemType}
+            </when>
+            <otherwise>
+                AND B.MEM_TYPE = '3'
+            </otherwise>
+        </choose>
         GROUP BY B.MEM_CODE, B.NAME, B.MEM_ID
     </select>
     <delete id="deleteCTAssign" parameterType="Map">

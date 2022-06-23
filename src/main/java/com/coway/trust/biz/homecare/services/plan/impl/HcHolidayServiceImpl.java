@@ -68,6 +68,13 @@ public class HcHolidayServiceImpl extends EgovAbstractServiceImpl implements HcH
 		return hcHolidayMapper.selectDTAssignList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectLTAssignList(Map<String, Object> params) {
+		params.put("hdcBranchType", HomecareConstants.HDC_BRANCH_TYPE);
+		return hcHolidayMapper.selectLTAssignList(params);
+	}
+
+
 	/**
 	 * Save Homecare Holiday
 	 * @Author KR-SH
@@ -243,17 +250,78 @@ public class HcHolidayServiceImpl extends EgovAbstractServiceImpl implements HcH
 
 		// 행 수정시
 		if(updList != null) {
-			holidayService.insertCTAssign(updList, formMap);
+			insertDTLTAssign(updList, formMap);
 		}
 
 		// 행 삭제시
 		if(delList != null) {
-			holidayService.deleteCTAssign(delList, formMap);
+			deleteDTLTAssign(delList, formMap);
 		}
 
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage("Save Success Replacement DT Entry");
 		return message;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ReturnMessage LTAssignSave(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage message = new ReturnMessage();
+
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> delList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);     // Get grid DeleteList
+
+		// 행 수정시
+		if(updList != null) {
+			insertDTLTAssign(updList, formMap);
+		}
+
+		// 행 삭제시
+		if(delList != null) {
+			deleteDTLTAssign(delList, formMap);
+		}
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Save Success Replacement LT Entry");
+		return message;
+	}
+
+	public boolean  insertDTLTAssign(List<Object> updList,Map<String , Object> formMap) {
+		Map<String, Object>  insertValue = null;
+		for(int i=0; i< updList.size(); i++){
+			insertValue = (Map<String, Object>) updList.get(i);
+			insertValue.put("holidayType",(formMap.get("holidayType").toString()).substring(0, 1));
+			insertValue.put("holiday", formMap.get("holiday"));
+			insertValue.put("branchName", formMap.get("branchName"));
+			insertValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
+			insertValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
+			insertValue.put("state", formMap.get("state"));
+			insertValue.put("memType", formMap.get("memType"));
+			//holidaySeq1과 asignSeq 둘다 값이 있으면 inset 되어있다.
+			List<EgovMap> CTInfo = hcHolidayMapper.selectDTLTInfo(insertValue);
+
+			if(CTInfo.size() >  0){
+			}else{
+				hcHolidayMapper.insertDTLTAssign(insertValue);
+			}
+		}
+		return true;
+	}
+
+	public boolean  deleteDTLTAssign(List<Object> delList,Map<String , Object> formMap) {
+		Map<String, Object>  delValue = null;
+		for(int i=0; i< delList.size(); i++){
+			delValue = (Map<String, Object>) delList.get(i);
+			delValue.put("holidayType", (formMap.get("holidayType").toString()).substring(0, 1));
+			delValue.put("holiday", formMap.get("holiday"));
+			delValue.put("branchName", formMap.get("branchName"));
+			delValue.put("holidayDesc", formMap.get("holidayDesc") != null ?formMap.get("holidayDesc"):"" );
+			delValue.put("holidaySeq", Integer.parseInt(formMap.get("holidaySeq").toString()));
+			hcHolidayMapper.deleteDTLTAssign(delValue);
+		}
+
+		return true;
 	}
 
 }

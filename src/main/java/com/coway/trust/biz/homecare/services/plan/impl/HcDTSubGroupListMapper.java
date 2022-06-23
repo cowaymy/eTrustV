@@ -47,6 +47,7 @@ public interface HcDTSubGroupListMapper {
 	 */
 	public List<EgovMap> selectDTSubGroupDscList(Map<String, Object> params);
 
+	public List<EgovMap> selectLTSubGroupDscList(Map<String, Object> params);
 	/**
 	 * Select DTM By DSC
 	 * @Author KR-SH

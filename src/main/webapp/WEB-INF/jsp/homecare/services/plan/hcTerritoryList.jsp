@@ -56,7 +56,9 @@
 	        { dataField : "postcode",              headerText : "Postal Code ",     width : 100,    editable : false},
 	        { dataField : "state",                    headerText : "State",                width : 200,    editable : false},
 	        { dataField : "dtBrnchCode",         headerText : "DT Branch",         width : 120,    editable : false},
-	        { dataField : "dtSubGrp",              headerText : "DT Sub Group",   width : 200,    editable : false}
+	        { dataField : "dtSubGrp",              headerText : "DT Sub Group",   width : 200,    editable : false},
+	        { dataField : "ltBrnchCode",         headerText : "LT Branch",         width : 120,    editable : false},
+            { dataField : "ltSubGrp",              headerText : "LT Sub Group",   width : 200,    editable : false}
 	    ];
 
 	    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
