@@ -330,6 +330,7 @@
             $("#holiday1").val( holiday1);
             $("#holidaySeq1").val(holidaySeq1);
             $("#state1").val(state1);
+            $("#memType").val("5758");
 
     		Common.ajax("GET", "/homecare/services/plan/selectDTAssignList.do", $("#holidayForm").serialize(), function(result2) {
                 AUIGrid.setGridData(gridID1, result2);
@@ -340,8 +341,9 @@
             $("#holiday1").val(holiday1);
             $("#holidaySeq1").val(holidaySeq1);
             $("#state1").val(state1);
+            $("#memType").val("6672");
 
-            Common.ajax("GET", "/homecare/services/plan/selectLTAssignList.do", $("#holidayForm").serialize(), function(result3) {
+            Common.ajax("GET", "/homecare/services/plan/selectDTAssignList.do", $("#holidayForm").serialize(), function(result3) {
                 AUIGrid.setGridData(gridID2, result3);
             });
     	}
@@ -494,6 +496,7 @@
 		<input type ="hidden" id="holiday1" name="holiday1">
 		<input type ="hidden" id="holidaySeq1" name="holidaySeq1">
 		<input type ="hidden" id="state1" name="state1">
+		<input type ="hidden" id="memType" name="memType">
 		<!-- table start -->
 		<table class="type1">
 			<caption>table</caption>

@@ -92,20 +92,8 @@ public class HcHolidayController {
 		params.put("stateTypeList", (String[])request.getParameterValues("assignState"));
 		params.put("stateList", (String[])request.getParameterValues("cmbState"));
 		params.put("branchList", (String[])request.getParameterValues("branchId"));
-		params.put("paramMemType", HomecareConstants.MEM_TYPE.DT);
 
 		List<EgovMap> assignList = hcHolidayService.selectDTAssignList(params);
-		return ResponseEntity.ok(assignList);
-	}
-
-	@RequestMapping(value = "/selectLTAssignList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectLTAssignList(@RequestParam Map<String, Object> params, HttpServletRequest request) {
-		params.put("stateTypeList", (String[])request.getParameterValues("assignState"));
-		params.put("stateList", (String[])request.getParameterValues("cmbState"));
-		params.put("branchList", (String[])request.getParameterValues("branchId"));
-		params.put("paramMemType", HomecareConstants.MEM_TYPE.LT);
-
-		List<EgovMap> assignList = hcHolidayService.selectLTAssignList(params);
 		return ResponseEntity.ok(assignList);
 	}
 
