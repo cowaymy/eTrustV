@@ -243,6 +243,12 @@ public class OrderConversionController {
 		return "sales/order/orderConversionRawDataPop";
 	}
 
+	@RequestMapping(value="/orderConversionSummaryReportPop.do")
+	public String orderConversionSummaryReportPop(){
+
+		return "sales/order/orderConversionSummaryReportPop";
+	}
+
 	//@RequestMapping(value = "/payModeConversion.do")
 	//public String payModeConversion(@RequestParam Map<String, Object>params, ModelMap model) {
 

@@ -4,24 +4,24 @@
 <script type="text/javaScript" language="javascript">
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
-	
+
 	$(document).ready(function(){
-		
+
 		// AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
       //AUIGrid.setSelectionMode(myGridID, "singleRow");
-        
+
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
             $("#rsCnvrId").val(event.item.rsCnvrId);
             Common.popupDiv("/sales/order/conversionDetailPop.do", $("#searchForm").serializeJSON(), null, true, 'detailPop');
         });
 	});
-	
+
 	function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -96,14 +96,14 @@
 
      // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -115,27 +115,31 @@
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false,
-        
+
             groupingMessage : "Here groupping"
         };
-        
+
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
-	
+
 	function fn_searchListAjax(){
         Common.ajax("GET", "/sales/order/orderConversionJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
     }
-	
+
 	function fn_newConvert(){
         Common.popupDiv("/sales/order/orderConvertNewPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
     }
-	
+
 	function fn_rawData(){
 		Common.popupDiv("/sales/order/orderConversionRawDataPop.do", null, null, true);
     }
+
+	function fn_summaryReport(){
+	        Common.popupDiv("/sales/order/orderConversionSummaryReportPop.do", null, null, true);
+	}
 
 	$.fn.clearForm = function() {
         return this.each(function() {
@@ -276,6 +280,7 @@
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()"><spring:message code="sal.btn.conversionRawData" /></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onClick="fn_summaryReport()"><spring:message code="sal.btn.summaryReport" /></a></p></li>
         </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
