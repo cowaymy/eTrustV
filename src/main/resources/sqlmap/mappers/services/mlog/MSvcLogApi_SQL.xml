@@ -1024,8 +1024,6 @@
                    , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO) AS RESULT_REPORT_EMAIL_NO
                    , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME) AS RESULT_ACCEPTANCE_NAME
 
-                   , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
-                   , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1186,8 +1184,6 @@
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
          , TO_CHAR(TURB_LVL) AS turb_Lvl
-         , TO_CHAR(CHK_SMS) AS chk_sms
-         , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -2323,8 +2319,7 @@ SELECT MST.*
            Extent6.CODE_NAME CODENAME2,
            Extent4.TYPE_ID TYPE_ID,
            Extent1.APPNT_DT,
-           Extent1.APPNT_TM,
-           Extent10.TYPE_ID as CUST_TYPE
+           Extent1.APPNT_TM
 
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
