@@ -8,8 +8,7 @@ var date = new Date().getDate();
 if(date.toString().length == 1){
     date = "0" + date;
 }
-$("#dpDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-$("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -46,11 +45,16 @@ function validRequiredField(){
     var valid = true;
     var message = "";
 
-
     if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
         valid = false;
         message += 'Please Keyin Date';
     }
+
+    if( fn_getDateGap($("#dpDateFr").val() , $("#dpDateTo").val()) > 30){
+        Common.alert('Start date can not be more than 30 days before the end date.');
+        return;
+    }
+
 
     if(valid == true){
         fn_report();
@@ -59,6 +63,21 @@ function validRequiredField(){
     }
 }
 
+function fn_getDateGap(sdate, edate){
+
+    var startArr, endArr;
+
+    startArr = sdate.split('/');
+    endArr = edate.split('/');
+
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+
+
+    return gap;
+}
 
 function fn_report(){
     var date = new Date();
@@ -71,11 +90,6 @@ function fn_report(){
     if (month < 10) {
       month = "0" + month;
     }
-
-    var reportDownFileName = "ConversionSummaryReport_" + day + month + date.getFullYear(); //report name
-    var reportFileName = "/sales/ConversionSummary.rpt"; //reportFileName
-    var reportViewType = "EXCEL"; //viewType
-
 
     var $reportParameter = $("#reportParameter")[0];
     $($reportParameter).empty(); //remove children
