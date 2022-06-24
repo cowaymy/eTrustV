@@ -63,7 +63,6 @@
                      type : "ButtonRenderer",
                      labelText : "Generate",
                      onclick : function(rowIndex, columnIndex, value, item) {
-                    	 console.log(item);
                          fn_reportDownload(item.custId, item.nric);
                    }
             }
@@ -111,7 +110,6 @@
 		} else {
 			Common.ajax("GET", "/sales/customer/customer360ScoreCardList", $("#searchForm").serialize(), function(result) {
 				console.log("----------------------------");
-				console.log(result);
 				gridViewData = result;
 				if (result != null && result.length == 0) {
 					gridViewData = null;
