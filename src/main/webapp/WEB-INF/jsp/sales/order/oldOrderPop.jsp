@@ -108,11 +108,11 @@
 	    }
 	}
 
-/*	  $(document).ready(function(){
+	  $(document).ready(function(){
 	        $('#rwOldOrder').val($('#relatedNo').val());
-	        $('#btnRWok').click();
+	        // $('#btnRWok').click();
 	    });
-*/
+
 </script>
 </head>
 <body>
@@ -139,7 +139,7 @@
 <tr>
 	<th scope="row">Order No.</th>
 	<td>
-	<input id="rwOldOrder" name="rwOldOrder" type="text" title="" placeholder="" class="w100p" />
+	<input id="rwOldOrder" name="rwOldOrder" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
 	</td>
 </tr>
 </tbody>
