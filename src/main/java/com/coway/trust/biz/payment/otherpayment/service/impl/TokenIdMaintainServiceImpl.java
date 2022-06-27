@@ -1,8 +1,11 @@
 package com.coway.trust.biz.payment.otherpayment.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +34,26 @@ public class TokenIdMaintainServiceImpl extends EgovAbstractServiceImpl implemen
   @Override
   public int saveTokenIdMaintainUpload(Map<String, Object> params, List<Map<String, Object>> list) {
 
-    if(list.size() > 0){
+    int size = 1000;
+    int page = list.size() / size;
+    int start;
+    int end;
+
+    Map<String, Object> bulkMap = new HashMap<>();
+    for (int i = 0; i <= page; i++) {
+      start = i * size;
+      end = size;
+      if (i == page) {
+        end = list.size();
+      }
+      bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+      bulkMap.put("uploadStatus",params.get("uploadStatus").toString());
+      bulkMap.put("userId",params.get("userId").toString());
+      tokenIdMaintainMapper.saveTokenIdMaintainBulk(bulkMap);
+    }
+
+
+    /*if(list.size() > 0){
       List  buLit = new ArrayList();
       for(int i=0 ; i < list.size() ; i++){
          buLit.add(list.get(i));
@@ -39,7 +61,7 @@ public class TokenIdMaintainServiceImpl extends EgovAbstractServiceImpl implemen
 
       params.put("list", buLit);
       tokenIdMaintainMapper.saveTokenIdMaintainBulk(params);
-    }
+    }*/
 
     return list.size();
 
