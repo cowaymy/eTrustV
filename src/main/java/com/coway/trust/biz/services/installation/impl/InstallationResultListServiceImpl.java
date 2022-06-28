@@ -2693,15 +2693,13 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     LOGGER.debug("================TEMP ALEX FOR DEV/LOCAL DEBUG - START ================");
     LOGGER.debug("PARAMS111 :" + installResult.toString());
+    LOGGER.debug("================chkSMS================" + chkSMS);
     LOGGER.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
 
     // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19 //UNDER UAT
     String smsMessage = "";
-    /*LOGGER.debug("================chkSMS11111================" + installResult.get("chkSms"));
-    LOGGER.debug("================chkSMS11111================" + installResult.get("chkSMS"));
-    LOGGER.debug("================chkSMS22222================" + chkSMS);*/
 
     if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
     		&& (installResult.get("custType").equals("Individual") || installResult.get("custTypeMobile").equals("964"))&& chkSMS.equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
