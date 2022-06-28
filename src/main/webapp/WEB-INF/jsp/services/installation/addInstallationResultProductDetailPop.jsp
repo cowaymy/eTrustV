@@ -976,6 +976,7 @@
 	    <input type="hidden" name="pItmCode" id="pItmCode"/>
 	    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
 	    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
+	    <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
   </form>
   <form id="insertPopupForm" method="post">
    <section class="tap_wrap">
