@@ -51,6 +51,30 @@
             //Common.alert('The program is under development.');
         });
 
+        $("#_custVALetterBtn2").click(function() {
+
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(custGridID);
+
+
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert('<spring:message code="sal.alert.msg.noCustSel" />');
+                return;
+            }
+
+            var custID = gridObj[0].item.custId;
+            $("#_repCustId2").val(custID);
+            console.log("custID : " + $("#_repCustId2").val());
+
+            var date = new Date().getDate();
+            if(date.toString().length == 1){
+                date = "0" + date;
+            }
+            $("#downFileName_V2").val("CustomerVALetter_"+custID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+            fn_letter_report_V2();
+        });
+
         //Search
         $("#_listSearchBtn").click(function() {
 
@@ -230,6 +254,13 @@
         Common.report("dataForm", option);
     }
 
+    function fn_letter_report_V2() {
+        var option = {
+            isProcedure : false
+        };
+        Common.report("dataForm3", option);
+    }
+
 
     function fn_comboAuthCtrl(){
     	var status = $("#_selectParam").val();
@@ -310,6 +341,15 @@
 
     <!-- params -->
     <input type="hidden" id="_repCustId" name="@CustID" />
+</form>
+
+<form id="dataForm3">
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter_V2.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="downFileName_V2" name="reportDownFileName" value="" /> <!-- Download Name -->
+
+    <!-- params -->
+    <input type="hidden" id="_repCustId2" name="@CustID" />
 </form>
 
 <section id="content"><!-- content start -->
@@ -399,8 +439,11 @@
         <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-            <li><p class="link_btn"><a href="#" id="_custVALetterBtn"><spring:message code="sal.title.text.custVaLetter" /></a></p></li>
+<!--             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> -->
+ <!--            <li><p class="link_btn"><a href="#" id="_custVALetterBtn"><spring:message code="sal.title.text.custVaLetter" /></a></p></li> -->
+     <!--        </c:if> -->
+             <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="_custVALetterBtn2">Customer VA Letter Version 2</a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="tokenTest" onclick="javascript:fn_tokenTest()">Tokenization Test (IT Usage only)</a></p></li>
