@@ -1027,7 +1027,7 @@
         SO_EXCHG_STUS_ID,
         SO_CUR_STUS_ID
     FROM SAL0004D
-    WHERE SO_ID = #{salesOrdId} AND SO_EXCHG_NW_CALL_ENTRY_ID = #{callEntryId}
+    WHERE SO_ID = #{salesOrdId}
     AND ROWNUM <= 1
     order by SO_ID
     ]]>
