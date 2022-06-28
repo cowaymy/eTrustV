@@ -587,8 +587,6 @@
             "add" : addedRowItems
       }
 
-    console.log("hello////");
-    console.log(saveForm);
     //Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
     Common.ajax("POST", url, saveForm,
       function(result) {
