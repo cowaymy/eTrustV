@@ -803,7 +803,7 @@
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+                        <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
                             <li><p class="link_btn">
                                     <a href="#" id="btnVaLetter"><spring:message
                                             code='sales.btn.custVALetter' /></a>
