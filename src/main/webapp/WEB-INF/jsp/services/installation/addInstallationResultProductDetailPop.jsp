@@ -587,6 +587,8 @@
             "add" : addedRowItems
       }
 
+    console.log("hello////");
+    console.log(saveForm);
     //Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
     Common.ajax("POST", url, saveForm,
       function(result) {
@@ -976,7 +978,7 @@
 	    <input type="hidden" name="pItmCode" id="pItmCode"/>
 	    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
 	    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
-	    <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
+
   </form>
   <form id="insertPopupForm" method="post">
    <section class="tap_wrap">
@@ -986,6 +988,7 @@
      <li><a href="#">Exchange Info</a></li>
      <li><a href="#">Order Info</a></li>
     </ul>
+
     <article class="tap_area">
      <!-- tap_area start -->
      <table class="type1">
@@ -2092,6 +2095,7 @@
     id="rcdTms" name="rcdTms" />
     <input type="hidden" value="${installResult.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
     <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+    <input type="hidden" value="${viewDetail.basicInfo.custType}" id="custType" name="custType" />
    <table class="type1 mb1m">
     <!-- table start -->
     <caption>table</caption>
