@@ -659,48 +659,52 @@
 
     <select id="selectMembershipViewLeader" parameterType="Map" resultType="egovMap">
          <![CDATA[
-                  SELECT  sL03.C1   ,
-						       sL03.C2   ,
-						       sL03.SRV_MEM_LG_ID   ,
-						       sL03.SRV_MEM_DOC_TYPE_ID   ,
-						       sL03.CODE_DESC   ,
-						       CASE WHEN TO_CHAR(sL03.C3, 'dd/mm/yyyy') = '01/01/1900' THEN null ELSE TO_CHAR(sL03.C3, 'dd/mm/yyyy') END C3,
-						       sL03.C4   ,
-						       sL03.C5   ,
-						       sL03.C6   ,
-						       CASE    WHEN ( (C4-C5)  > 0 ) THEN  (C4-C5)   ELSE 0   END C7
-						  FROM ( SELECT dSt.SRV_MEM_LG_ID ,
-						                dSt.SRV_MEM_DOC_TYPE_ID ,
-						                dSt.CODE_DESC   ,
-						                dSt.C1   ,
-						                dSt.C2   ,
-						                dSt.C3   ,
-						                dSt.C4   ,
-						                dSt.C5   ,
-						                dSt.C6
-						         FROM ( SELECT DISTINCT sL01.SRV_MEM_LG_ID   ,
-						                                sL01.SRV_MEM_DOC_TYPE_ID   ,
-						                                s13m.CODE_DESC   ,
-						                                1 C1  ,
-						                                UTILS.CONVERT_TO_FLOAT(0,53) C2  ,
-						                                CASE    WHEN ( sL01.SRV_MEM_DT_TM IS NOT NULL ) THEN  sL01.SRV_MEM_DT_TM   ELSE  TO_DATE('1900-01-01 00:00:00' ,'yyyy-mm-dd hh24:mi:ss')  END C3  ,
-						                                CASE    WHEN ( sL01.SRV_MEM_AMT >= UTILS.CONVERT_TO_FLOAT(0,53) ) THEN sL01.SRV_MEM_AMT  ELSE UTILS.CONVERT_TO_FLOAT(0,53)  END C4  ,
-						                                CASE    WHEN ( sL01.SRV_MEM_AMT < UTILS.CONVERT_TO_FLOAT(0,53) ) THEN UTILS.CONVERT_TO_FLOAT(-1,53) * sL01.SRV_MEM_AMT ELSE UTILS.CONVERT_TO_FLOAT(0,53) END C5  ,
-						                                CASE    WHEN ( sL01.SRV_MEM_BATCH_NO LIKE '%BR%' ) THEN sL01.SRV_MEM_BATCH_NO  ELSE sL01.SRV_MEM_DOC_NO  END C6
-						                FROM ( SELECT 1 X
-						                         FROM DUAL  ) SingleRowTable1
-						                       LEFT JOIN ( SELECT pay24d.SRV_MEM_LG_ID   ,
-								                                          pay24d.SRV_MEM_ID   ,
-								                                          pay24d.SRV_MEM_DOC_NO   ,
-								                                          pay24d.SRV_MEM_DOC_TYPE_ID   ,
-								                                          pay24d.SRV_MEM_DT_TM   ,
-								                                          pay24d.SRV_MEM_AMT   ,
-								                                          pay24d.SRV_MEM_BATCH_NO
-						                                        FROM PAY0024D pay24d
+            SELECT  sL03.C1   ,
+                               sL03.C2   ,
+                               sL03.SRV_MEM_LG_ID   ,
+                               sL03.SRV_MEM_DOC_TYPE_ID   ,
+                               sL03.CODE_DESC   ,
+                               CASE WHEN TO_CHAR(sL03.C3, 'dd/mm/yyyy') = '01/01/1900' THEN null ELSE TO_CHAR(sL03.C3, 'dd/mm/yyyy') END C3,
+                               sL03.C4   ,
+                               sL03.C5   ,
+                               sL03.C6   ,
+                               CASE    WHEN ( (C4-C5)  > 0 ) THEN  (C4-C5)   ELSE 0   END C7
+                          FROM ( SELECT dSt.SRV_MEM_LG_ID ,
+                                        dSt.SRV_MEM_DOC_TYPE_ID ,
+                                        dSt.CODE_DESC   ,
+                                        dSt.C1   ,
+                                        dSt.C2   ,
+                                        dSt.C3   ,
+                                        dSt.C4   ,
+                                        dSt.C5   ,
+                                        dSt.C6
+                                 FROM ( SELECT DISTINCT sL01.SRV_MEM_LG_ID   ,
+                                                        sL01.SRV_MEM_DOC_TYPE_ID   ,
+                                                        s13m.CODE_DESC   ,
+                                                        1 C1  ,
+                                                        UTILS.CONVERT_TO_FLOAT(0,53) C2  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_DT_TM IS NOT NULL ) THEN  sL01.SRV_MEM_DT_TM   ELSE  TO_DATE('1900-01-01 00:00:00' ,'yyyy-mm-dd hh24:mi:ss')  END C3  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_AMT >= UTILS.CONVERT_TO_FLOAT(0,53) ) THEN sL01.SRV_MEM_AMT  ELSE UTILS.CONVERT_TO_FLOAT(0,53)  END C4  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_AMT < UTILS.CONVERT_TO_FLOAT(0,53) ) THEN UTILS.CONVERT_TO_FLOAT(-1,53) * sL01.SRV_MEM_AMT ELSE UTILS.CONVERT_TO_FLOAT(0,53) END C5  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_DOC_NO LIKE '%CB%' ) THEN pay31d.TAX_INVC_REF_NO  ELSE sL01.SRV_MEM_DOC_NO  END C6
+                                        FROM ( SELECT 1 X
+                                                 FROM DUAL  ) SingleRowTable1
+                                               LEFT JOIN ( SELECT pay24d.SRV_MEM_LG_ID   ,
+                                                                          pay24d.SRV_MEM_ID   ,
+                                                                          pay24d.SRV_MEM_DOC_NO   ,
+                                                                          pay24d.SRV_MEM_DOC_TYPE_ID   ,
+                                                                          pay24d.SRV_MEM_DT_TM   ,
+                                                                          pay24d.SRV_MEM_AMT   ,
+                                                                          pay24d.SRV_MEM_BATCH_NO,
+                                                                          pay24d.SRV_MEM_QOTAT_ID
+                                                                FROM PAY0024D pay24d
 						                                             WHERE  pay24d.SRV_MEM_ID = #{MBRSH_ID}
 						                                      ) sL01   ON 1 = 1
-						                       JOIN SYS0013M s13m   ON s13m.CODE_ID = sL01.SRV_MEM_DOC_TYPE_ID ) dSt ) sL03
-						  ORDER BY sL03.SRV_MEM_LG_ID ASC
+                                               JOIN SYS0013M s13m   ON s13m.CODE_ID = sL01.SRV_MEM_DOC_TYPE_ID
+                                               LEFT JOIN SAL0093D s93d ON s93d.SRV_MEM_QUOT_ID = sL01.SRV_MEM_QOTAT_ID
+                                               LEFT JOIN PAY0031D pay31d ON pay31d.TAX_INVC_SVC_NO = s93d.SRV_MEM_QUOT_NO
+                                               ) dSt ) sL03
+                          ORDER BY sL03.SRV_MEM_LG_ID ASC
            ]]>
     </select>
 
