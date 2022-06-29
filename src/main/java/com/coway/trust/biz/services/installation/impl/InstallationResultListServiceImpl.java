@@ -1777,12 +1777,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     Map<String, Object> invoiceNum = new HashMap<String, Object>();
     invoiceNum.put("DocNo", "119");
 
-    logger.debug("========================INS SMS PARAM===========================");
-    logger.debug("INS SMS PARAM : {}", params.toString());
-    logger.debug("========================INS SMS PARAM===========================");
-
     String invoiceNo = installationResultListMapper.getInvoiceNum(invoiceNum);
-
 
     // GET CURRENT DATE TIME
     Date today = new Date();
@@ -1857,23 +1852,20 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     //Added by Keyi Installation SMS 202206
     logger.debug("CHECKPOINT2///////");
-    logger.debug("CHECKPOINT2///////" + params.get("chkSMS").toString());
     logger.debug("CHECKPOINT2///////" + params.get("chkSms").toString());
-    if(!params.get("chkSMS").toString().equals(null))//WEB
-	{
-		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
+	if(!params.get("chkSms").toString().equals(null)){//Mobile
+		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
+	}else{
+		installResult.put("chkSMS", "N");
 	}
-    else{
-    	if(!params.get("chkSms").toString().equals(null)){//Mobile
-    		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
-    	}else{
-    		installResult.put("chkSMS", "N");
-    	}
-    }
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
     installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());
+
+    logger.debug("========================INS SMS PARAM===========================");
+    logger.debug("INS SMS PARAM : {}", params.toString());
+    logger.debug("========================INS SMS PARAM===========================");
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
