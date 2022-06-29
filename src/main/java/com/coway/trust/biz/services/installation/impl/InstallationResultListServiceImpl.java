@@ -1773,14 +1773,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     double outrightSubProcessing = 0;
     double outrightSubBalance = 0;
 
-    logger.debug("========================INS SMS PARAM===========================");
-    logger.debug("INS SMS PARAM : {}", params.toString());
-    logger.debug("========================INS SMS PARAM===========================");
-
     // GET OUTRIGHT REF.NO.
     Map<String, Object> invoiceNum = new HashMap<String, Object>();
     invoiceNum.put("DocNo", "119");
+
+    logger.debug("========================INS SMS PARAM===========================");
+    logger.debug("INS SMS PARAM : {}", params.toString());
+    logger.debug("INVOICENUM PARAM111 : {}", invoiceNum.toString());
+    logger.debug("========================INS SMS PARAM===========================");
+
     String invoiceNo = installationResultListMapper.getInvoiceNum(invoiceNum);
+    logger.debug("INVOICENUM PARAM222 : {}", invoiceNo.toString());
 
     // GET CURRENT DATE TIME
     Date today = new Date();
