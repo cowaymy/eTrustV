@@ -490,10 +490,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("turbLvl", String.valueOf(params.get("turbLvl")));
 
       params.put("customerType", String.valueOf(installResult.get("custType")));
-      params.put("chkSMS", String.valueOf(installResult.get("chkSms")));
-      params.put("custMobileNo", String.valueOf(installResult.get("custMobileNo")));
-      params.put("customerType", String.valueOf(installResult.get("customerType")));
       //params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
+
+      logger.debug("### CustType111 : " + installResult.toString());
 
       params.put("remark", String.valueOf(params.get("remark")));
       params.put("failLct", String.valueOf(params.get("failLocCde")));
