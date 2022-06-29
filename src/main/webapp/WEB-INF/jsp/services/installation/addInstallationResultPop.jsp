@@ -1917,7 +1917,7 @@
             <th scope="row">Mobile</th>
 	        <td>
 	          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
-	          <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
+	          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
 	        </td>
           </tr>
         </tbody>
