@@ -1117,6 +1117,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
             }
           }
 
+          logger.debug("INSSMS11111 :" + params.toString());
           Save_2(true, params, sessionVO);
         }
       }
@@ -2476,8 +2477,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
     String chkSMS = "";
-    /*logger.debug("CHKSMS999999999999 : /////", installResult.get("chkSMS"));
-    logger.debug("CHKSMS999999999999 : /////", installResult.get("chkSms"));*/
+
     if(installResult.get("chkSMS").equals("on") || installResult.get("chkSMS").equals("Y")){
     	chkSMS = "Y";
     }
@@ -2698,6 +2698,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     LOGGER.debug("================TEMP ALEX FOR DEV/LOCAL DEBUG - START ================");
     LOGGER.debug("PARAMS111 :" + installResult.toString());
     LOGGER.debug("================chkSMS================" + chkSMS);
+    LOGGER.debug("================ApptypeID================" + ApptypeID);
     LOGGER.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
