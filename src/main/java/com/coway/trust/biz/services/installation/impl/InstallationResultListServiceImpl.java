@@ -1773,6 +1773,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     double outrightSubProcessing = 0;
     double outrightSubBalance = 0;
 
+    logger.debug("========================INS SMS PARAM===========================");
+    logger.debug("INS SMS PARAM : {}", params.toString());
+    logger.debug("========================INS SMS PARAM===========================");
+
     // GET OUTRIGHT REF.NO.
     Map<String, Object> invoiceNum = new HashMap<String, Object>();
     invoiceNum.put("DocNo", "119");
@@ -1863,10 +1867,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
     installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());
-
-    logger.debug("========================INS SMS PARAM===========================");
-    logger.debug("INS SMS PARAM : {}", params.toString());
-    logger.debug("========================INS SMS PARAM===========================");
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
