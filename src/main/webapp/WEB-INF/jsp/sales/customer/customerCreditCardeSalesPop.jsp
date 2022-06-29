@@ -81,7 +81,7 @@
 	function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
 
-        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custCrcToken : CrcNo}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : '', custCrcToken : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
