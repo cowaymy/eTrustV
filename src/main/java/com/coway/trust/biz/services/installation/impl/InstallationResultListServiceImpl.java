@@ -1779,17 +1779,18 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
-    logger.debug("INVOICENUM PARAM111 : {}", invoiceNum.toString());
     logger.debug("========================INS SMS PARAM===========================");
 
     String invoiceNo = installationResultListMapper.getInvoiceNum(invoiceNum);
-    logger.debug("INVOICENUM PARAM222 : {}", invoiceNo.toString());
+
 
     // GET CURRENT DATE TIME
     Date today = new Date();
     Calendar cal = Calendar.getInstance();
     cal.setTime(today);
     int month = cal.get(Calendar.MONTH);
+
+    logger.debug("CHECKPOINT1//////");
 
     EgovMap installResult = new EgovMap();
 
@@ -1855,6 +1856,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("resultAcceptanceName", CommonUtils.nvl(params.get("resultAcceptanceName")).toString());
 
     //Added by Keyi Installation SMS 202206
+    logger.debug("CHECKPOINT2///////");
+    logger.debug("CHECKPOINT2///////" + params.get("chkSMS").toString());
+    logger.debug("CHECKPOINT2///////" + params.get("chkSms").toString());
     if(!params.get("chkSMS").toString().equals(null))//WEB
 	{
 		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSMS")).toString());
