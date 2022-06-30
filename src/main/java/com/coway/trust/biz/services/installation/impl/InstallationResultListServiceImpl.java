@@ -1852,8 +1852,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     //Added by Keyi Installation SMS 202206
     logger.debug("CHECKPOINT2///////");
-    logger.debug("CHECKPOINT2///////" + params.get("chkSms").toString());
-	if(!params.get("chkSms").toString().equals(null)){//Mobile
+	if(!CommonUtils.nvl(params.get("chkSms")).toString().equals(null)){
 		installResult.put("chkSMS", CommonUtils.nvl(params.get("chkSms")).toString());
 	}else{
 		installResult.put("chkSMS", "N");
