@@ -101,7 +101,16 @@ var myDetailGridData = null;
                                         checkValue : "1", // true, false 인 경우가 기본
                                         unCheckValue : "0"
                              }
-                         }];
+                         }, {
+                             dataField : "oldSerialNo",
+                             headerText : "Old Serial No",
+                             width : 160
+                           }, {
+                               dataField : "filterSerialUnmatchReason",
+                               headerText : "Unmatched Reason",
+                               width : 150
+                             }
+                         ];
 
     // 그리드 속성 설정
     var gridPros = {  // 페이징 사용

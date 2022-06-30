@@ -462,9 +462,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             docSub.put("bsResultCrtUserId", sessionVO.getUserId());
             docSub.put("bsResultFilterClm", docSub.get("name"));
             //docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
-            docSub.put("serialNo", docSub.get("filterBarcdNewSerialNo"));
-            docSub.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason"));
-
+            String srcform = params.get("srcform") == null ? "" : params.get("srcform").toString();
+            if(srcform.equals("WEB")){
+            	docSub.put("filterBarcdNewSerialNo",docSub.get("serialNo"));
+            }else{
+            	docSub.put("serialNo", docSub.get("filterBarcdNewSerialNo"));
+            	docSub.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason"));
+            }
             // docSub.put("bsResultCrtDt");
             // Map<String, Object> docSub2 = (Map<String, Object>)
             // insertHsResultfinal.get(i);
@@ -489,6 +493,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
             String vstkId = String.valueOf(docSub.get("stkId"));
             String filterBarcdNewSerialNo = String.valueOf(docSub.get("filterBarcdNewSerialNo"));
+            String filterBarcdNewSerialNoWeb = String.valueOf(docSub.get("serialNo"));
             logger.debug("= STOCK ID : {}", vstkId);
             logger.debug("= filterBarcdNewSerialNo : {}", filterBarcdNewSerialNo);
 
@@ -545,8 +550,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             	  Map<String, Object> filter = new HashMap<String, Object>();
             	  filter.put("serialNo", filterBarcdNewSerialNo);
             	  filter.put("salesOrdId", params.get("hidSalesOrdId"));
-            	  filter.put("serviceNo", params.get("serviceNo"));
-
+            	  if(srcform.equals("WEB")){
+            		  filter.put("serviceNo", params.get("hidSalesOrdCd"));
+            	  }else{
+            		  filter.put("serviceNo", params.get("serviceNo"));
+            	  }
             	  int LocationID_Rev = 0;
                   if (Integer.parseInt(params.get("hidCodyId").toString()) != 0) {
                 	  filter.put("codyId", params.get("hidCodyId"));

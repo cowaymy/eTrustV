@@ -16,7 +16,12 @@
 
   // AUIGrid 생성 후 반환 ID
   var myDetailGridID;
-
+  var unmatchRsnList = [];
+  var unmatchRsnObj = {};
+  <c:forEach var="obj" items="${unmatchRsnList}">
+  unmatchRsnList.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", codeNames:"("+"${obj.codeId}"+")"+"${obj.codeName}"});
+  unmatchRsnObj["${obj.codeId}"] = "${obj.codeName}";
+  </c:forEach>
   //installation checklist- order stock category
   var stkCtgry;
   var stkId1;
@@ -34,7 +39,7 @@
     // AUIGrid 칼럼 설정
     var columnLayout = [{ dataField:"stkCode",
                           headerText:"Filter Code",
-                          width:140,
+                          width:130,
                           height:30,
                           editable : false
                         }, {
@@ -62,10 +67,11 @@
 						                   step : 1,
 						                   textEditable : true
 						  }*/
-                        }, {
+                        }
+                        , {
                           dataField : "serialNo",
                           headerText : "Serial No",
-                          width : 240
+                          width : 200
                           <c:if test="${orderDetail.codyInfo.serialRequireChkYn == 'Y' }">
                          , renderer : {
                               type : "IconRenderer",
@@ -100,7 +106,29 @@
                             checkValue : "1", // true, false 인 경우가 기본
                             unCheckValue : "0"
                         }
-                      }];
+                      }, {
+                          dataField : "oldSerialNo",
+                          headerText : "Old Serial No",
+                          width : 160,
+                          editable : true
+                        }, {
+                            dataField : "filterSerialUnmatchReason",
+                            headerText : "Unmatched Reason",
+                            width : 150,
+                            editRenderer : {
+                                type : "DropDownListRenderer",
+                                //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                list : unmatchRsnList,
+                                keyField : "codeId",        // key 에 해당되는 필드명
+                                valueField : "codeNames"    // value 에 해당되는 필드명
+                           }
+                          }, {
+                              dataField : "sOldSerialNo",
+                              headerText : "System Old Serial No",
+                              width : 100,
+                              visible:false
+                          }
+                        ];
 
     // 그리드 속성 설정
     var gridPros = {
@@ -202,7 +230,47 @@
           }
         }
       }
+
+      if (event.columnIndex == 4) {
+    	  console.log("event.item.name :: " + event.item.name);
+    	  if(event.item.name > 1){
+    		  Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "serialNo", "");
+    	  }
+      }
+
+      if (event.columnIndex == 7) { //7-old serial number
+
+    	  console.log("event.item.name :: " + event.item.name);
+          if(event.item.name > 1){
+              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "oldSerialNo", "");
+          }else{
+        	  var sOldSerialNo = '';
+              if(event.item.sOldSerialNo != undefined){
+                  sOldSerialNo = event.item.sOldSerialNo;
+              }
+              if(sOldSerialNo != event.item.oldSerialNo){
+                  Common.alert('* Old Serial Number for <b>' + event.item.stkDesc + '<br>is not same as previous.</b>');
+                  AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "oldSerialNo", "");
+              }
+          }
+      }
+
+      if (event.columnIndex == 8) {
+    	  console.log("event.item.name :: " + event.item.name);
+          if(event.item.name > 1){
+              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "filterSerialUnmatchReason", "");
+          }
+      }
     });
+  }
+
+  function getUmmatchRsnComboList()
+  {
+    var list =  ["N", "Y"];
+    return list;
   }
 
   function fn_checkStkDuration(){
@@ -262,6 +330,9 @@
     fn_getHsFilterListAjax();
     fn_viewInstallationChkViewSearch();
 
+    $("#pLocationType").val('${orderDetail.codyInfo.whLocGb}');
+    $('#pLocationCode').val('${orderDetail.codyInfo.ctWhLocId}');
+
     $("#txtInstChkLst").hide();
     $("#grid_wrap_instChk_view").hide();
     $("#instChklstCheckBox").hide();
@@ -291,6 +362,8 @@
       AUIGrid.forceEditingComplete(myDetailGridID, null, false);
       AUIGrid.updateAllToValue(myDetailGridID, "name", '');
       AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
+      AUIGrid.updateAllToValue(myDetailGridID, "filterSerialUnmatchReason", '');
+      AUIGrid.updateAllToValue(myDetailGridID, "oldSerialNo", '');
 
        $("#txtInstChkLst").hide();
       $("#grid_wrap_instChk_view").hide();
@@ -411,6 +484,21 @@
         	}
        }
 
+        var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
+        var returnParam = true;
+        for (var i = 0; i < rsnGridDataList.length; i++) {
+        	if(rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null){
+        		if ((rsnGridDataList[i]["filterSerialUnmatchReason"] == "" || rsnGridDataList[i]["filterSerialUnmatchReason"] == null ) && (rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")) {
+              Common.alert("* Please choose the unmatched reason for Filter with no old serial number. ");
+              returnParam = false;
+              }
+        	}
+
+        	if(returnParam == false){
+        		return returnParam;
+        	}
+        }
+
     } else if ($("#cmbStatusType1").val() == 21) {    // Failed
       if ($("#failReason").val() == '' || $("#failReason").val() == null) {
         Common.alert("Please Select 'Fail Reason'.");
@@ -489,6 +577,7 @@
     }
     console.log("fn_saveHsResult :: resultList :: " + resultList);
     jsonObj.add = resultList;
+    console.log("fn_saveHsResult :: resultList :: " + resultList);
     $("input[name='settleDate']").removeAttr('disabled');
     $("select[name=cmbCollectType]").removeAttr('disabled');
     jsonObj.form = $("#addHsForm").serializeJSON();
@@ -604,8 +693,8 @@ function SearchListAjax(obj){
 
 function fn_serialSearchPop(item){
 
-	$("#pLocationType").val('${orderDetail.codyInfo.whLocGb}');
-    $('#pLocationCode').val('${orderDetail.codyInfo.ctWhLocId}');
+	//$("#pLocationType").val('${orderDetail.codyInfo.whLocGb}');
+    //$('#pLocationCode').val('${orderDetail.codyInfo.ctWhLocId}');
 	$("#pItemCodeOrName").val(item.stkCode);
 
     if (FormUtil.isEmpty(item.stkCode)) {
@@ -655,6 +744,7 @@ function fnSerialSearchResult(data) {
  <input type="hidden" value="${orderDetail.codyInfo.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
  <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
  <input type="hidden" value="${hsDefaultInfo.srvRem}" id="srvRem" name="hidSrvRem"/>
+  <input type="hidden" value="WEB" id="srcform" name="srcform"/>
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>HS - New HS Result</h1>
