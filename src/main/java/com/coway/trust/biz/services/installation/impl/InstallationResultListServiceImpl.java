@@ -1861,7 +1861,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("custType", CommonUtils.nvl(params.get("custType")).toString());
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
-    installResult.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")).toString());
+    installResult.put("salesOrderNo", CommonUtils.nvl(params.get("salesOrderNo")).toString());
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
@@ -2711,10 +2711,10 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         LOGGER.debug("================INSMS================");
 
     	if(installResult.get("statusCodeId").toString().equals("4")){ //COMPLETE
-    	      smsMessage = "COWAY: Order " + installResult.get("salesOrdNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
+    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
     	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
     	    }else{ //FAIL
-    	      smsMessage = "COWAY: Order " + installResult.get("salesOrdNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
     	    }
     }
 
