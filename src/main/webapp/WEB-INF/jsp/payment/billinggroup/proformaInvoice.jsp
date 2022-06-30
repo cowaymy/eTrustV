@@ -131,10 +131,10 @@ function fn_generateStatement(){
     var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
     var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
     if( parseInt(year)*100 + parseInt(month) >= 201810){
-        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF_SST.rpt');
+        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Proforma_PDF_SST.rpt');
     }
     else {
-        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF.rpt');
+        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Proforma_PDF.rpt');
     }
 	$("#reportPDFForm #v_adv1Boolean").val(0);
     $("#reportPDFForm #v_adv2Boolean").val(0);
@@ -178,10 +178,10 @@ function fn_sendEInvoice(){
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
         if( parseInt(year)*100 + parseInt(month) >= 201809){
-            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF_SST.rpt');
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Proforma_PDF_SST.rpt');
         }
         else {
-            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF.rpt');
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Proforma_PDF.rpt');
         }
 	    $("#reportPDFForm #v_adv1Boolean").val(0);
 	    $("#reportPDFForm #v_adv2Boolean").val(0);
