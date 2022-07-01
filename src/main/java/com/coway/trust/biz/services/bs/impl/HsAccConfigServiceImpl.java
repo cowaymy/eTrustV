@@ -125,7 +125,7 @@ public class HsAccConfigServiceImpl extends EgovAbstractServiceImpl implements H
 		if(params.get("groupCode").equals("1")){
 			memUpId = "124";
 		}else if(params.get("groupCode").equals("2")){
-			memUpId = "31983";
+			memUpId = "7493";
 		}else if(params.get("groupCode").equals("3")){
 			memUpId = "23259";
 		}else if(params.get("groupCode").equals("7")){
