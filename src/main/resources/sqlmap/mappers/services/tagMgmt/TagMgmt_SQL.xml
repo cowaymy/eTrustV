@@ -671,7 +671,7 @@
   <select id="selectCmGroup" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT C.LAST_DEPT_CODE CODE, C.LAST_DEPT_CODE CODE_NAME FROM
 		(SELECT
-		  SUBSTR(CODE_NAME,0, INSTR(CODE_NAME, '-', 1, 1)+2) BRANCH_CODE,
+		  REGEXP_substr(CODE_NAME, '([A-Z]{3}-\d+)', '1'),
 		  CODE
 		  FROM SYS0013M
 		  WHERE CODE_MASTER_ID = 360
