@@ -5,7 +5,7 @@
 $(document).ready(function() {
     //brnch
     CommonCombo.make('_cmbBranch', '/sales/ccp/getBranchCodeList', '' , '', '' ,fn_multy);
-    
+
      //Member Search Popup
     $('#memBtn').click(function() {
         Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
@@ -19,12 +19,12 @@ $(document).ready(function() {
             fn_loadOrderSalesman(0, memCd);
         }
     }); */
-    
+
 });
 
 function fn_generate(method){
-    
-       
+
+
     //variable
     var runNo = 0;
     var whereSQL = '';
@@ -40,67 +40,67 @@ function fn_generate(method){
     if(method == "EXCEL"){
         $("#_viewType").val('EXCEL');//method
     }
-    
+
     //Param Setting
     //Where Sql
     if($("#_fromMemNo").val() != null && $("#_fromMemNo").val() != '' && $("#_toMemNo").val() != null && $("#_toMemNo").val() != ''){
-        
+
         keyInMemNo = $("#_fromMemNo").val().trim() + " To " +  $("#_toMemNo").val().trim();
         whereSQL += " AND (sm.SRV_MEM_NO BETWEEN '" + $("#_fromMemNo").val().trim() + "' AND '" + $("#_toMemNo").val().trim() + "')'";
     }
     if($("#_frDate").val() != null && $("#_frDate").val() != '' && $("#_toDate").val() != null && $("#_toDate").val() != '' ){
-        
+
         keyInDate = $("#_frDate").val().trim() + " To " +  $("#_toDate").val().trim();
-        whereSQL += " AND (sm.SRV_CRT_DT BETWEEN  TO_DATE('"+$("#_frDate").val().trim()+"' , 'DD/MM/YYYY') AND TO_DATE('"+$("#_toDate").val().trim()+"' , 'DD/MM/YYYY') )";
-        
+        whereSQL += " AND (TO_DATE(sm.SRV_CRT_DT, 'DD/MM/YYYY') BETWEEN  TO_DATE('"+$("#_frDate").val().trim()+"' , 'DD/MM/YYYY') AND TO_DATE('"+$("#_toDate").val().trim()+"' , 'DD/MM/YYYY') )";
+
     }
-    
+
     var brnchArr = [];
-    
+
     if($("#_cmbBranch :selected").length > 0){
         whereSQL += " AND (";
-        $('#_cmbBranch :selected').each(function(i, e){ 
-            
+        $('#_cmbBranch :selected').each(function(i, e){
+
             if(runNo > 0){
             	brnchArr.push($(e).val());
                 whereSQL += " OR sm.SRV_MEM_BRNCH_ID = " + $(e).val();
             }else{
-            	brnchArr.push($(e).val()); 
+            	brnchArr.push($(e).val());
                 whereSQL += "  sm.SRV_MEM_BRNCH_ID = " + $(e).val();
             }
             runNo += 1;
         });
         whereSQL += ") ";
-        
+
         //keyInBranch
         /*** get Branch Code*/
 	    Common.ajax("GET", "/sales/membership/getBrnchCodeListByBrnchId", {brnchArr : brnchArr},function(result){
 	    	if(result != null){
 	    		  $(result).each(function(idx, el){
-					
+
 					if(idx > 0){
-						keyInBranch += "," + el.code; 
+						keyInBranch += "," + el.code;
 					}else{
 						keyInBranch += el.code;
 					}
 				  });
 	    	 }
 	    },'',{async : false});
-        
+
      }
      runNo = 0;
-     
+
      if($("#hiddenSalesmanId").val() != null && $("#hiddenSalesmanId").val() != ''){
          WhereSQL += "AND sm.SRV_CRT_USER_ID = " + $("#hiddenSalesmanId").val() + " ";
      }
-     
+
      if($("#_sortBy").val() != null && $("#_sortBy").val() != '' ){
-         
+
          if($("#_sortBy").val() == '1'){
              orderBySql = " ORDER BY som.SALES_ORD_NO ";
          }
          if($("#_sortBy").val() == '2'){
-             orderBySql = " ORDER BY c.NAME ";        
+             orderBySql = " ORDER BY c.NAME ";
          }
          if($("#_sortBy").val() == '3'){
              orderBySql = " ORDER BY  sm.SRV_MEM_BRNCH_ID ";
@@ -112,21 +112,21 @@ function fn_generate(method){
              orderBySql = " ORDER BY u.USER_NAME ";
          }
      }
-    
+
      //CURRENT DATE
      var date = new Date().getDate();
      if(date.toString().length == 1){
          date = "0" + date;
      }
-     
+
     //FILE NAME
-  
-//        $("#reportFileName").val('/membership/MembershipKeyInList.rpt'); //File Name   
+
+//        $("#reportFileName").val('/membership/MembershipKeyInList.rpt'); //File Name
         $("#reportDownFileName").val('MembershipKeyInList_'+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
 
         //params
         console.log("keyInBranch : " + keyInBranch);
-        
+
         $("#V_KEYINMEMNO").val(keyInMemNo);
         $("#V_KEYINBRANCH").val(keyInBranch);
         $("#V_KEYINDATE").val(keyInDate);
@@ -134,13 +134,13 @@ function fn_generate(method){
         $("#V_WHERESQL").val(whereSQL);
         $("#V_ORDERBYSQL").val(orderBySql);
         $("#V_FULLSQL").val("");
-    
+
     var option = {
             isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
         };
 
         Common.report("dataForm", option);
-    
+
 }
 
 function fn_loadOrderSalesman(memId, memCode, isPop) {
@@ -199,7 +199,7 @@ function fn_multy(){
     <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"  />
     <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL"  />
     <input type="hidden" id="V_FULLSQL" name="V_FULLSQL"  />
-    
+
     <!--common param  -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
 
