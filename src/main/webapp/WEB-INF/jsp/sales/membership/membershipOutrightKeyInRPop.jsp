@@ -51,7 +51,7 @@ function fn_generate(method){
     if($("#_frDate").val() != null && $("#_frDate").val() != '' && $("#_toDate").val() != null && $("#_toDate").val() != '' ){
 
         keyInDate = $("#_frDate").val().trim() + " To " +  $("#_toDate").val().trim();
-        whereSQL += " AND (TO_DATE(sm.SRV_CRT_DT, 'DD/MM/YYYY') BETWEEN  TO_DATE('"+$("#_frDate").val().trim()+"' , 'DD/MM/YYYY') AND TO_DATE('"+$("#_toDate").val().trim()+"' , 'DD/MM/YYYY') )";
+        whereSQL += " AND (sm.SRV_CRT_DT BETWEEN  TO_DATE('"+$("#_frDate").val().trim()+"' , 'DD/MM/YYYY') AND TO_DATE('"+$("#_toDate").val().trim()+"' , 'DD/MM/YYYY') )";
 
     }
 
