@@ -1861,6 +1861,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("custTypeMobile", CommonUtils.nvl(params.get("customerType")).toString());
     installResult.put("custMobileNo", CommonUtils.nvl(params.get("custMobileNo")).toString());
     installResult.put("salesOrderNo", CommonUtils.nvl(params.get("salesOrderNo")).toString());
+    if(!CommonUtils.nvl(params.get("ctMemCode")).toString().equals(null)){
+		installResult.put("ctCode", CommonUtils.nvl(params.get("ctMemCode")).toString());
+	}else{
+		installResult.put("ctCode", CommonUtils.nvl(params.get("ctCode")).toString());
+	}
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
