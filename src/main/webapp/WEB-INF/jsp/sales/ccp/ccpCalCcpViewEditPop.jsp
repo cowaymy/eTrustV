@@ -1053,6 +1053,12 @@ function chgTab(tabNm) {
                 fn_selectDiscountList();
             }
             break;
+        case 'ccpStusHist' :
+            AUIGrid.resize(ccpStusHistGridID, 942, 380);
+            if(AUIGrid.getRowCount(ccpStusHistGridID) <= 0) {
+                fn_selectCcpStusHistList();
+            }
+            break;
     };
 }
 
