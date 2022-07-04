@@ -1922,7 +1922,7 @@ AND T1.CNT = 1
                 , EXT1.CCP_ID AS CCP_ID
                 , SYS4.CODE AS STUS_CODE
                 , SYS3.RESN_DESC AS FEEDBACK_CODE
-                , EXT1.CCP_REM AS SPECIAL_REMARK
+                , TO_CHAR(EXT1.CCP_REM) AS SPECIAL_REMARK
                 , TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY') AS CREATE_DATE
                 , SYS1.USER_NAME AS CREATED_BY
                 , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY') AS UPDATE_DATE
