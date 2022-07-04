@@ -4,11 +4,13 @@
 //AUIGrid 생성 후 반환  ID
 var calGrid;
 
+var approvalStus = '${PAGE_AUTH.funcUserDefine5}';
 //Window Option
 var option = {
         width: "1000px", // 창 가로 크기
         height: "520px" // 창 세로 크기
          }
+
 $(document).ready(function() {
 
 	createCalGrid();
@@ -54,6 +56,7 @@ $(document).ready(function() {
 	                $("#_ccpId").val(event.item.ccpId);
 	                $("#_salesOrdId").val(event.item.salesOrdId);
 	                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+	                $("#_approvalStus").val(approvalStus);
 	                //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
 
 	                Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
@@ -228,6 +231,7 @@ function fn_view(item) {
 	            $("#_ccpId").val(item.ccpId);
 	            $("#_salesOrdId").val(item.salesOrdId);
 	            $("#_ccpTotScrePoint").val(item.ccpTotScrePoint);
+	            $("#_approvalStus").val(approvalStus);
 	            //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
 
 	            Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
@@ -501,6 +505,7 @@ function popup(location){
 </ul>
 </aside><!-- title_line end -->
 <form id="_detailForm">
+    <input type="hidden" name="approvalStus" id="_approvalStus">
     <input type="hidden" name="ccpId" id="_ccpId">
     <input type="hidden" name="salesOrdId" id="_salesOrdId">
     <input type="hidden" name="ccpTotScrePoint" id="_ccpTotScrePoint">

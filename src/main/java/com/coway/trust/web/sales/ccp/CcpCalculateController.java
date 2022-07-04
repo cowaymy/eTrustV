@@ -282,6 +282,7 @@ public class CcpCalculateController {
 
     	//Model
     	model.addAttribute("ccpId", params.get("ccpId"));
+    	model.addAttribute("approvalStus", params.get("approvalStus"));
     	model.addAttribute("orderDetail", orderDetail);
     	model.addAttribute("fieldMap", fieldMap);
     	model.addAttribute("incomMap", incomMap);
@@ -1045,6 +1046,41 @@ public class CcpCalculateController {
 		message.setMessage("");
 
 		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/ccpCalReverseApproval", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ccpCalReverseApproval(@RequestBody Map<String, Object> params) throws Exception{
+		//Session
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+
+		//Service
+		ccpCalculateService.ccpCalReverseApproval(params);
+
+		//Return MSG
+		ReturnMessage message = new ReturnMessage();
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("");
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/selectCcpStusHistJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCcpStusHistJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		LOGGER.debug("!@##############################################################################");
+		LOGGER.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		LOGGER.debug("!@##############################################################################");
+
+		List<EgovMap> list = ccpCalculateService.selectCcpStusHistList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(list);
 	}
 }
 

@@ -127,6 +127,12 @@ public interface CcpCalculateMapper {
 
 	void updateCcpEresubmitHistStus(Map<String, Object> params) throws Exception;
 
+	void updateCcpCalRevStus(Map<String, Object> params) throws Exception;
+
+	void insertCcpCalRevHistStus(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectCcpStusHistList(Map<String, Object> params);
+
 	int getMemberID(Map<String, Object> params);
 
 	String getEzyDocNo();

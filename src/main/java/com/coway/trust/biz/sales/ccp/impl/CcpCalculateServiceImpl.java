@@ -555,6 +555,8 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
 		ccpCalculateMapper.updateCcpDecision(params);
 
+		ccpCalculateMapper.insertCcpCalRevHistStus(params);
+
 		LOGGER.info("_________________________________________________________________________________________");
 		LOGGER.info("_______________ // 1. Update CCP Decision <Update Data.CcpDecisionM> End _________________________");
 		LOGGER.info("_________________________________________________________________________________________");
@@ -1308,6 +1310,13 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
   	}
 
   	@Override
+	public void ccpCalReverseApproval(Map<String, Object> params) throws Exception {
+  		ccpCalculateMapper.updateCcpCalRevStus(params);
+
+  		ccpCalculateMapper.insertCcpCalRevHistStus(params);
+  	}
+
+  	@Override
 	public void updateCcpEresubmitAttach(Map<String, Object> params) throws Exception {
   		ccpCalculateMapper.updateCcpEresubmitAttach(params);
   	}
@@ -1414,4 +1423,9 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	  public int getMemberID(Map<String, Object> params) {
 	      return ccpCalculateMapper.getMemberID(params);
 	  }
+
+	@Override
+	public List<EgovMap> selectCcpStusHistList(Map<String, Object> params) {
+		return ccpCalculateMapper.selectCcpStusHistList(params);
+	}
 }

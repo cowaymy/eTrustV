@@ -10,6 +10,8 @@ var optionModule = {
 };
 
 $(document).ready(function() {
+	$("#cancel_Pop").hide();
+    var approvalStus =  '${approvalStus}';
 
 /* 	//to List
     $("#_btnList").click(function() {
@@ -20,10 +22,26 @@ $(document).ready(function() {
     	window.close();
     });
 
+    $("#cancel_close").click(function() {
+        window.close();
+    });
+
+    if(approvalStus == 'Y'){
+    	$('#reverseCppApproval').show();
+    }else{
+    	$('#reverseCppApproval').hide();
+    }
+
+    $("#_btnReverseCppApproval").click(function() {
+    	$("#popup_wrap").hide();
+        $("#cancel_Pop").show();
+    });
+
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
      console.log("chsStatus : "+ chsStatus);
      console.log("chsRsn : "+ chsRsn);
+
      if(chsStatus == "YELLOW") {
         $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='red_text'>"+chsRsn+"</span>");
@@ -91,6 +109,31 @@ $(document).ready(function() {
         fn_loadAtchment('${ccpEresubmitMap.atchFileGrpId}');
     }
 });//Doc Ready Func End
+
+function fn_back(){
+    $("#cancel_Pop").hide();
+    $("#popup_wrap").show();
+}
+
+function fn_confirmReverseCcp(){
+
+    var ordId = '${orderDetail.basicInfo.ordId}';
+    var ccpId = '${ccpId}';
+    var remarks = '${ccpInfoMap.ccpRem}';
+
+    Common.ajax("POST", "/sales/ccp/ccpCalReverseApproval", {saveOrdId : ordId,saveCcpId : ccpId, eRstatusEdit : 10, remarks : remarks}, function(result) {
+        console.log( result);
+
+        if(result == null){
+            Common.alert('Failed to reverse CCP status.');
+        }else{
+            Common.alert('CCP Approval has successfully reversed.');
+            $("#cancel_Pop").remove();
+            $("#popup_wrap").hide();
+            $("#popup_wrap").show();
+        }
+   });
+}
 
 function fn_loadAtchment(atchFileGrpId) {
     Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
@@ -491,6 +534,12 @@ function chgTab(tabNm) {
                 fn_selectDiscountList();
             }
             break;
+        case 'ccpStusHist' :
+            AUIGrid.resize(ccpStusHistGridID, 942, 380);
+            if(AUIGrid.getRowCount(ccpStusHistGridID) <= 0) {
+                fn_selectCcpStusHistList();
+            }
+            break;
     };
 
 }
@@ -602,6 +651,7 @@ function chgTab(tabNm) {
     <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
     <li><a href="#" onClick="javascript:chgTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
     <li><a href="#" onClick="javascript:chgTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
+    <li><a href="#" onClick="javascript:chgTab('ccpStusHist');">CCP Status History</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -641,6 +691,10 @@ function chgTab(tabNm) {
     Payment Listing
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/payList.jsp" %>
+<!------------------------------------------------------------------------------
+    Ccp Status History
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/ccpStusHist.jsp" %>
 
 </section><!-- tap_wrap end -->
 
@@ -942,10 +996,30 @@ function chgTab(tabNm) {
 </tbody>
 </table><!-- table end -->
 </div>
+
 <!-- <ul class="center_btns">
     <li><p class="btn_blue2"><a id="_btnList">List</a></p></li>
 </ul> -->
 
+</section>
+<ul class="center_btns" id="reverseCppApproval">
+     <li><p class="btn_blue"><a id="_btnReverseCppApproval"><spring:message code="sal.btn.reverseCcpApproval" /></a></p></li>
+</ul>
+</div>
 
+<div id="cancel_Pop" class="popup_wrap msg_box"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Message</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="cancel_close"><spring:message code="sal.btn.close" /></a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body">
+
+ <p class="msg_txt" >Confirm to reverse CCP Approval from order:${orderDetail.basicInfo.ordNo}?</p>
+ <ul class="center_btns">
+     <li><p class="btn_blue2"><a href="javascript:fn_confirmReverseCcp()" id="confirm_btn"><spring:message code="approvalWebInvoMsg.confirm" /></a></p></li>
+     <li><p class="btn_blue2"><a href="javascript:fn_back()" id="cancel_btn"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
+ </ul>
 </section>
 </div>

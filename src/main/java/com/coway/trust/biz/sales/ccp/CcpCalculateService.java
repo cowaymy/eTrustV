@@ -60,6 +60,10 @@ public interface CcpCalculateService {
 
 	void ccpEresubmitUpdateCancel(Map<String, Object> params) throws Exception;
 
+	void ccpCalReverseApproval(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectCcpStusHistList(Map<String, Object> params);
+
 	void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
 
 	void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs);

@@ -1879,6 +1879,64 @@ AND T1.CNT = 1
             AND STUS_ID = 1
 </update>
 
+<update id="updateCcpCalRevStus" parameterType="Map">
+             UPDATE SAL0102D SET CCP_STUS_ID = '1'
+            ,CCP_UPD_DT = SYSDATE
+            ,CCP_UPD_USER_ID = #{userId}
+            where CCP_SALES_ORD_ID = #{saveOrdId}
+            and CCP_ID = #{saveCcpId}
+</update>
+
+    <insert id="insertCcpCalRevHistStus" parameterType="Map">
+                insert into SAL0328D(
+                HIST_ID
+                ,SALES_ORD_ID
+                , CCP_ID
+                , STUS_ID
+                ,CCP_RESN_ID
+                ,CCP_REM
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                )
+                SELECT
+                SAL0328D_ID_SEQ.NEXTVAL
+                ,CCP_SALES_ORD_ID
+                , CCP_ID
+                , CCP_STUS_ID
+                , CCP_RESN_ID
+                , CCP_REM
+                , CCP_UPD_DT AS CRT_DT
+                , CCP_UPD_USER_ID AS CRT_USER_ID
+                , CCP_UPD_DT AS UPD_DT
+                , CCP_UPD_USER_ID AS UPD_USER_ID
+                FROM SAL0102D
+                WHERE CCP_SALES_ORD_ID = #{saveOrdId} AND CCP_ID = #{saveCcpId}
+    </insert>
+
+     <select id="selectCcpStusHistList" parameterType="Map" resultType="egovMap">
+        SELECT
+                EXT1.HIST_ID
+                , EXT1.SALES_ORD_ID AS SALES_ORD_ID
+                , EXT1.CCP_ID AS CCP_ID
+                , SYS4.CODE AS STUS_CODE
+                , SYS3.RESN_DESC AS FEEDBACK_CODE
+                , EXT1.CCP_REM AS SPECIAL_REMARK
+                , TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY') AS CREATE_DATE
+                , SYS1.USER_NAME AS CREATED_BY
+                , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY') AS UPDATE_DATE
+                , SYS2.USER_NAME AS UPDATED_BY
+                ,to_char(EXT1.UPD_DT, 'HH:MI AM') AS UPDATE_TIME
+        FROM SAL0328D EXT1
+        LEFT JOIN SYS0047M SYS1 ON SYS1.USER_ID = EXT1.CRT_USER_ID
+        LEFT JOIN SYS0047M SYS2 ON SYS2.USER_ID = EXT1.UPD_USER_ID
+        LEFT JOIN SYS0032M SYS3 ON SYS3.RESN_ID = EXT1.CCP_RESN_ID
+        LEFT JOIN SYS0038M SYS4 ON SYS4.STUS_CODE_ID = EXT1.STUS_ID
+        WHERE SALES_ORD_ID = #{salesOrderId}
+        ORDER BY 1
+    </select>
+
     <select id="getMemberID" parameterType="Map" resultType="int">
         select a.mem_id
         from org0001d a
