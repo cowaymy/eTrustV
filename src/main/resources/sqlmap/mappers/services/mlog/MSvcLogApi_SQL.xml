@@ -70,7 +70,8 @@
             SELECT 1 FROM SAL0087D  WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM')   <![CDATA[ <= ]]>   TO_CHAR (SYSDATE, 'YYYYMM')
            ) THEN  '1'  ELSE '0' END AS need_Filter ,
            TO_CHAR( NVL((SELECT FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, FAUCET_EXCH ) ,0)) AS warranty ,
-          (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction
+          (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction,
+          A.prodCat
         FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -132,7 +133,8 @@
                   REDEEM_WARRANTY,
                   CODE_FAIL_REMARK,
                   VOUCHER_REDEMPTION,
-                  IS_VOUCHER
+                  IS_VOUCHER,
+                  prodCat
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -204,7 +206,8 @@
                                    NVL(Y.VOUCHER, '') AS VOUCHER,
                                     CASE WHEN Y.REDEEM_HS = 0 OR Y.REDEEM_HS = '0' OR Y.REDEEM_HS = '' THEN ''
                                     ELSE TO_CHAR(Y.REDEEM_MTH || '-' || Y.REDEEM_YEAR) END AS REDEEM_DT,
-                                    TO_CHAR(Y.REDEEM_WARRANTY) AS REDEEM_WARRANTY
+                                    TO_CHAR(Y.REDEEM_WARRANTY) AS REDEEM_WARRANTY,
+                                    Z.CODE AS prodCat
                   FROM (SELECT
                                  A.NO ,
                                  A.STUS_CODE_ID ,
@@ -299,7 +302,8 @@
                  SAL0017D T,
                  SAL0028D W,
                  SYS0013M X ,
-                 SAL0261D Y
+                 SAL0261D Y,
+                 SYS0013M Z
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -328,6 +332,7 @@
                     )
                     AND B.RESULT_IS_CURR(+) = 1
                     AND C.SALES_ORD_ID = Y.SALES_ORD_ID(+)
+                    AND Z.CODE_ID = L.STK_CTGRY_ID(+)
                   )AA
        ) A LEFT JOIN PAY0053S B ON B.ACC_DEBT_ORD_ID = A.SALES_ORDER_ID AND B.ACC_DEBT_SRV_CNTRCT_ID = A.SRV_MEM_CNTRCT_ID
 
@@ -413,6 +418,7 @@
           , TO_CHAR(CODE_FAIL_REMARK) AS CODE_FAIL_REMARK
           , TO_CHAR(VOUCHER_REDEMPTION) AS VOUCHER_REDEMPTION
           , TO_CHAR(IS_VOUCHER) AS IS_VOUCHER
+          , TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
