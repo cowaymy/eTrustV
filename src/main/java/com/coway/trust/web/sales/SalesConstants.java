@@ -246,6 +246,7 @@ public class SalesConstants {
                                                                     // = "";
   public static final String SALES_ORDER_LOG_PRGID_CANCEL = "13";
   public static final String SALES_ORDER_LOG_PRGID_APPROVED = "2";
+  public static final String SALES_ORDER_LOG_PRGID_ACTIVE = "1";
   public static final String SALES_ORDER_IS_LOCK_CANCEL = "0";
   public static final String SALES_ORDER_IS_LOCK_APPROVED = "1";
   public static final String SALES_ORDER_REF_ID = "0";
