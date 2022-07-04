@@ -1192,6 +1192,7 @@ function chgTab(tabNm) {
     <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
     <li><a href="#" onClick="javascript:chgTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
     <li><a href="#" onClick="javascript:chgTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
+    <li><a href="#" onClick="javascript:chgTab('ccpStusHist');">CCP Status History</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -1231,6 +1232,10 @@ function chgTab(tabNm) {
     Payment Listing
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/payList.jsp" %>
+<!------------------------------------------------------------------------------
+    Ccp Status History
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/ccpStusHist.jsp" %>
 
 </section><!-- tap_wrap end -->
 
