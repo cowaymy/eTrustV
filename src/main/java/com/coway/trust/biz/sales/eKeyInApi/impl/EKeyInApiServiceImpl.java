@@ -2371,7 +2371,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           int checkCreditCardValid = eKeyInApiMapper.checkCreditCardValidity(sal0257Dtoken.getToken());
           if(checkCreditCardValid > 0){
               crcCheck = "2";
-              errorDesc = "Transaction Not Allowed. Kindly find other card number.";
+              errorDesc = "This card has marked as \"Transaction Not Allowed\". Kindly change a new card";
           }
 
           logger.debug("crcCheck :: " + crcCheck);

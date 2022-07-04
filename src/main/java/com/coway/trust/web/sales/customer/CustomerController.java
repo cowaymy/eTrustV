@@ -1662,7 +1662,7 @@ public class CustomerController {
       ModelMap model) throws Exception {
 
     // service
-    customerService.updateCustomerCardInfoAf(params);
+    customerService.updateCustomerCardInfoAf(params); //FRANGO CHECK 1CARD 1 CUST
 
     customerService.tokenCrcUpdate1(params);
 
@@ -2034,7 +2034,7 @@ public class CustomerController {
     int custCrcId = customerService.getCustCrcId();
     params.put("custCrcId", custCrcId);
 
-    customerService.insertCustomerCardAddAf(params);
+    customerService.insertCustomerCardAddAf(params); //FRANGO CHECk
 	customerService.tokenCrcUpdate1(params);
 
     // 결과 만들기 예.
@@ -2678,7 +2678,7 @@ public class CustomerController {
 
         	  ReturnMessage message = new ReturnMessage();
               message.setCode(AppConstants.FAIL);
-              message.setMessage("Transaction Not Allowed. Kindly find other card number.");
+              message.setMessage( "This card has marked as \"Transaction Not Allowed\". Kindly change a new card");
 
               return ResponseEntity.ok(message);
           }
