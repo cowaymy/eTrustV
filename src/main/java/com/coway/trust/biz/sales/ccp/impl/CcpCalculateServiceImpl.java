@@ -1314,6 +1314,14 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
   		ccpCalculateMapper.updateCcpCalRevStus(params);
 
   		ccpCalculateMapper.insertCcpCalRevHistStus(params);
+  		String logseq = "";
+        logseq = ccpCalculateMapper.crtSeqSAL0009D();
+        params.put("logSeq", logseq);
+		params.put("logProgId", SalesConstants.SALES_ORDER_LOG_PRGID_ACTIVE); //1
+		params.put("logRefId", SalesConstants.SALES_ORDER_REF_ID); // 0
+		params.put("logIsLock", SalesConstants.SALES_ORDER_IS_LOCK_APPROVED); //1
+
+  		ccpCalculateMapper.insertLog(params);
   	}
 
   	@Override
