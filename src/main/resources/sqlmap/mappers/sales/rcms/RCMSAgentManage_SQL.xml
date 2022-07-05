@@ -215,7 +215,7 @@
         LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0 AND gstrb.stus_id = 1
         LEFT JOIN SYS0013M H ON H.CODE_ID = B.CORP_TYPE_ID
         LEFT JOIN SVC0008D I ON I.SALES_ORD_ID = A.SALES_ORD_ID AND to_char( sysdate, 'mm' ) = I.Month AND to_char( sysdate, 'yyyy' ) = I.YEAR
-        LEFT JOIN PAY1009V J ON J.ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN SAL0074D J ON J.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0002D K ON K.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SYS0026M L ON L.STK_ID = K.ITM_STK_ID
         LEFT JOIN SYS0013M M ON M.CODE_ID = L.STK_CTGRY_ID
@@ -258,7 +258,7 @@
                     </if>
                     </if>
                     <if test="payMode != null and payMode !='' ">
-                        AND J.PAY_MODE_ID IN
+                        AND J.MODE_ID IN
                         <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
                        #{item}
                     </foreach>
@@ -401,7 +401,7 @@
 
                   </if>
                     <if test="payMode != null and payMode !='' ">
-                        AND J.PAY_MODE_ID IN
+                        AND J.MODE_ID IN
                         <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
                        #{item}
                     </foreach>
