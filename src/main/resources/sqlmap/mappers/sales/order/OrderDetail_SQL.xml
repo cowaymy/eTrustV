@@ -1817,6 +1817,7 @@ SELECT T.BANK_DTL_ID
                                         LEFT JOIN SYS0013M Extent13  ON Extent13.CODE_ID = Extent5.AGREEMENT_TYPE
                                  WHERE  0 <![CDATA[<> ]]> Extent1.GOV_AG_STUS_ID
                                  and Extent14.GOV_AG_itm_SALES_ORD_ID = #{salesOrderId}
+                                 and GOV_AG_STUS_ID <![CDATA[<> ]]> 10
                                  and  ROWNUM = 1
                                  ) Filter1
                                 LEFT JOIN SAL0039M Extent11   ON Filter1.GOV_AG_ROLE_ID = Extent11.GOV_AG_ROLE_ID

@@ -105,7 +105,7 @@
 
 		          <if test="null != salesOrdNo and  '' != salesOrdNo ">
 		              <if test=" exist == 1 ">
-                            AND Project2.GOV_AG_BATCH_NO IN
+                            AND Project2.GOV_AG_ID IN
                             <foreach collection="getBatchNoList" item="value" open="(" separator="," close=")">
                                 #{value}
                             </foreach>
@@ -198,12 +198,12 @@
 
     <select id="selectItemBatchNofromSalesOrdNo" parameterType="Map" resultType="java.lang.String">
 				SELECT
-				    Extent2.GOV_AG_ITM_BATCH_NO
+				    Extent2.GOV_AG_ID
 				FROM
 				    SAL0001D Extent1
 				    JOIN SAL0306D Extent2   ON Extent2.GOV_AG_ITM_SALES_ORD_ID = Extent1.SALES_ORD_ID
 				 WHERE  Extent1.SALES_ORD_NO = #{salesOrdNo}
-				 AND  Extent2.GOV_AG_ITM_BATCH_NO IS NOT NULL
+				 AND  Extent2.GOV_AG_ID IS NOT NULL
      </select>
 
      <select id="getOrderId" parameterType="Map" resultType="egovMap" >

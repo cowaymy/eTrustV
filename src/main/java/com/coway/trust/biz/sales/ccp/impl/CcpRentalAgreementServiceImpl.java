@@ -514,7 +514,7 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 				params.put("govAgrStatusId", "10");
 			}else{
 				LOGGER.info("__________________________________ getPrgId == 9 && else");
-				params.put("govAgrStatusId", "");
+				params.put("govAgrStatusId", "1");
 				//params.put("updIsNotification", "1");
 				//params.put("updNotificationMonth", "1");
 			}
