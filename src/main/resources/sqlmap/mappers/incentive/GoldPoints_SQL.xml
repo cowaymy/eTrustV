@@ -308,6 +308,25 @@
                             GROUP BY RDM_ID) D ON D.RDM_ID = B.RDM_ID
                     WHERE B.MEM_CODE = #{memCode} )
 
+                     UNION ALL
+                     ( SELECT
+                        D.CRT_DT AS TRX_DT,
+                        B.RDM_NO || '-FF'  AS REDEMPTION_NO,
+                        C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                        '-' AS EARNED_DISPLAY,
+                        '-' AS RDM_OR_EXP_DISPLAY,
+                        0  AS EARNED,
+                        0  AS REDEEMED_OR_EXPIRED
+                    FROM ICR0007M B
+                    JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID
+                    JOIN (SELECT
+                                RDM_ID,
+                                MAX(CRT_DT) AS CRT_DT
+                            FROM ICR0008D
+                            WHERE TRN_TYPE = '3'
+                            GROUP BY RDM_ID) D ON D.RDM_ID = B.RDM_ID
+                    WHERE B.MEM_CODE = #{memCode})
+
                 ) T ORDER BY TRX_DT, REDEMPTION_NO
 
             ) T2
