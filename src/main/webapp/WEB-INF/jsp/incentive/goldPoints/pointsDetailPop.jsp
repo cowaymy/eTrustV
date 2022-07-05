@@ -28,12 +28,17 @@
     	        {
     	            dataField : "gpDesc",
     	            headerText : "Reference",
-    	            width : "45%"
+    	            width : "40%"
     	        }, {
     	            dataField : "gpUplPts",
-    	            headerText : "Gold Points",
-    	            width : "25%"
-    	        }, {
+    	            headerText : "Points Earned",
+    	            width : "15%"
+    	        },
+    	         {
+                    dataField : "gpBalPts",
+                    headerText : "Points Balance",
+                    width : "15%"
+                },{
     	            dataField : "gpEndDt",
     	            headerText : "Expiry Date",
     	            width : "30%"

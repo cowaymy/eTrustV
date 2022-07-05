@@ -53,7 +53,7 @@ public interface GoldPointsMapper {
 
 	void cancelRedemption(Map<String, Object> params);
 
-	EgovMap selectRedemptionDetails(Map<String, Object> params);
+	List<EgovMap> selectRedemptionDetails(Map<String, Object> params);
 
 	int updateRedemption(Map<String, Object> params);
 
@@ -74,6 +74,8 @@ public interface GoldPointsMapper {
 	int updPointsUploadReject(Map<String, Object> params);
 
 	void adminCancelRedemption(Map<String, Object> params);
+
+	void adminForfeitRedemption(Map<String, Object> params);
 
 	List<EgovMap> selectRedemptionItemList(Map<String, Object> params);
 

@@ -239,6 +239,7 @@
         SELECT
             GP_DESC,
             GP_UPL_PTS,
+            GP_BAL_PTS,
             TO_CHAR(GP_END_DT, 'DD-MM-YYYY') GP_END_DT
         FROM ICR0003D
         WHERE MEM_CODE = #{memCode}
@@ -492,12 +493,17 @@
                 #{item}
             </foreach>
         </if>
+         <if test="itemCode != null and itemCode != ''">
+            AND UPPER(D.ITM_CODE) || '-' || UPPER(D.ITM_DESC) LIKE UPPER('%' || #{itemCode} || '%')
+        </if>
 
         ORDER BY A.RDM_ID DESC
     </select>
 
     <resultMap id="cancelRdmptnResultStus" type="egovMap"></resultMap>
     <resultMap id="cancelRdmptnResultMsg" type="egovMap"></resultMap>
+    <resultMap id="forfeitRdmptnResultStus" type="egovMap"></resultMap>
+    <resultMap id="forfeitRdmptnResultMsg" type="egovMap"></resultMap>
 
     <update id="cancelRedemption" statementType="CALLABLE" parameterType="Map">
         {call SP_GOLD_PTS_CANCEL_REDEMPTN(#{rdmId}, #{userId},
@@ -511,7 +517,21 @@
                                         #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
     </update>
 
+    <update id="adminForfeitRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_ADM_FORFEIT_RDM(#{rdmId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=forfeitRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=forfeitRdmptnResultMsg})}
+    </update>
+
     <select id="selectRedemptionDetails" parameterType="Map" resultType="egovMap">
+        WITH TOTALPTS AS (
+                SELECT
+                    RDM_ID,
+                    SUM(TRN_PTS_AMT) AS TOTAL_PTS
+                FROM ICR0008D
+                WHERE TRN_TYPE = 1
+                GROUP BY RDM_ID
+        )
         SELECT
             A.RDM_ID,
             A.RDM_NO,
@@ -520,11 +540,16 @@
             B.NRIC,
             C.ITM_CAT,
             UPPER(C.ITM_CODE) || ' - ' || UPPER(C.ITM_DESC) AS ITM_DISPLAY_NAME,
-            A.QTY
+            A.QTY,
+            D.TOTAL_PTS
         FROM ICR0007M A
         JOIN ORG0001D B ON B.MEM_CODE = A.MEM_CODE
         JOIN ICR0006D C ON C.RI_ITM_ID = A.RDM_ITM_ID
-        WHERE A.RDM_ID = #{rdmId}
+        JOIN TOTALPTS D ON D.RDM_ID = A.RDM_ID
+        WHERE A.RDM_ID in
+        <foreach collection="rdmId" item="item" open="(" separator="," close=")">
+            #{item}
+         </foreach>
     </select>
 
     <update id="updateRedemption" parameterType="Map">
@@ -533,7 +558,10 @@
                 REM = #{rdmRemark},
                 UPD_DT = SYSDATE,
                 UPD_USER_ID = #{userId}
-        WHERE RDM_ID = #{rdmId}
+        WHERE RDM_ID in
+        <foreach collection="rdmId" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 
     <select id="getEmailTitle" parameterType="Map" resultType="String">

@@ -58,20 +58,69 @@
             }
         });
 
-        $('#btnUpdRdm').click(function() {
+        $('#btnAdminForfeitRdm').click(function() {
             var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
-            if(selIdx > -1) {
+
+            if (selIdx > -1) {
                 var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
 
-                if (rdmStatus != "In Progress" && rdmStatus != "Ready For Collect") {
-                    Common.alert('<spring:message code="incentive.alert.msg.rdmValidateUpdate" />');
+                if ( (rdmStatus != "Ready For Collect")) {
+                    Common.alert('Only Ready For Collect Redemptions can be forfeited');
                 } else {
-                	Common.popupDiv("/incentive/goldPoints/updateRedemptionPop.do", { rdmId : $("#_rdmId").val() }, null , true, 'updateRedemptionPop');
+                    fn_promptAdminForfeitConfirm(selIdx);
                 }
             }
             else {
                 Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
             }
+        });
+
+        $('#btnUpdRdm').click(function() {
+//             var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
+
+            var chkSaveArray = AUIGrid.getCheckedRowItems(gridID);
+            var flag = true;
+            var param="";
+
+            if(chkSaveArray.length>0){
+                for (var i = 0 ; i < chkSaveArray.length ; i++){
+                    if(chkSaveArray[i].item.status != "In Progress" && chkSaveArray[i].item.status != "Ready For Collect")
+                    {
+                         Common.alert('<spring:message code="incentive.alert.msg.rdmValidateUpdate" />');
+                         flag=false;
+                    }
+                }
+
+                if(flag ==true){
+                	for (var i = 0 ; i < chkSaveArray.length ; i++){
+                		if(i==0){
+                            param = chkSaveArray[i].item.rdmId+"";
+                        }
+                        else{
+                            param = param +"∈"+chkSaveArray[i].item.rdmId;
+                        }
+                	}
+                    Common.popupDiv("/incentive/goldPoints/updateRedemptionPop.do", { rdmId : param }, null , true, 'updateRedemptionPop');
+                }
+            }
+            else{
+            	 Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+            }
+
+
+
+//             if(selIdx > -1) {
+//                 var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
+
+//                 if (rdmStatus != "In Progress" && rdmStatus != "Ready For Collect") {
+//                     Common.alert('<spring:message code="incentive.alert.msg.rdmValidateUpdate" />');
+//                 } else {
+//                 	Common.popupDiv("/incentive/goldPoints/updateRedemptionPop.do", { rdmId : $("#_rdmId").val() }, null , true, 'updateRedemptionPop');
+//                 }
+//             }
+//             else {
+//                 Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+//             }
         });
 
         if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
@@ -148,6 +197,7 @@
                 editable : false,
                 showStateColumn : false,
                 showRowNumColumn : true,
+                showRowCheckColumn : true, //checkBox
                 wordWrap : true,
                 headerHeight : 45
         }
@@ -157,6 +207,7 @@
 
     function fn_searchRedemptionList() {
         Common.ajax("GET", "/incentive/goldPoints/searchRedemptionList.do", $("#searchForm").serialize(), function(result) {
+//         	console.log(result);
            AUIGrid.setGridData(gridID, result);
         });
     }
@@ -199,6 +250,21 @@
         Common.confirm(confirmCancelMsg, fn_adminCancelRedemption);
     }
 
+    function fn_promptAdminForfeitConfirm(selIdx) {
+
+        var memName = AUIGrid.getCellValue(gridID, selIdx, "memName");
+        var memCode = AUIGrid.getCellValue(gridID, selIdx, "memCode");
+        var rdmItem = AUIGrid.getCellValue(gridID, selIdx, "rdmItem");
+        var qty = AUIGrid.getCellValue(gridID, selIdx, "qty");
+        var totalPts = AUIGrid.getCellValue(gridID, selIdx, "totalPts");
+
+        var confirmCancelMsg = memName + "<br />" + memCode + "<br />" +
+        rdmItem + "<br />Quantity : " + qty + "<br />Total Gold Points : " +
+        totalPts + "<br /><br />" + "Do you want to forfeit this redemption request?";
+
+        Common.confirm(confirmCancelMsg, fn_adminForfeitRedemption);
+    }
+
     function fn_cancelRedemption() {
         Common.ajax("POST", "/incentive/goldPoints/cancelRedemption.do", {rdmId:$('#_rdmId').val()}, function(result) {
             if(result.p1 == 1) {     //successful cancelled redemption
@@ -217,6 +283,17 @@
                         + $('#_rdmNo').val(), fn_reloadList);
             } else if (result.p1 == 99) {
                 Common.alert("Failed to Cancel. Redemption is not In Progress", fn_reloadList);
+            }
+        });
+    }
+
+    function fn_adminForfeitRedemption() {
+        Common.ajax("POST", "/incentive/goldPoints/adminForfeitRedemption.do", {rdmId:$('#_rdmId').val()}, function(result) {
+            if(result.p1 == 1) {     //successful forfeited redemption
+                Common.alert("Gold Points Redemption Request has been forfeited. <br />Redemption No. : "
+                        + $('#_rdmNo').val(), fn_reloadList);
+            } else if (result.p1 == 99) {
+                Common.alert("Failed to Forfeit. Redemption is not Ready In Collect", fn_reloadList);
             }
         });
     }
@@ -283,6 +360,9 @@
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
                 <li><p class="btn_blue"><a id="btnAdminCancelRdm" href="#">Cancel Request (Admin)</a></p></li>
+            </c:if>
+             <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+                <li><p class="btn_blue"><a id="btnAdminForfeitRdm" href="#">Forfeit Request (Admin)</a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
                 <li><p class="btn_blue"><a id="btnNewRdm" href="#">New</a></p></li>
@@ -379,6 +459,20 @@
                         </div><!-- date_set end -->
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">Item Code</th>
+                    <td>
+                        <input type="text" title="Item Code" placeholder="" class="w100p" id="itemCode" name="itemCode" />
+                    </td>
+                    <th></th>
+                    <td></td>
+
+                    <th></th>
+                    <td></td>
+
+                    <th></th>
+                    <td></td>
+                 </tr>
             </tbody>
         </table>
     </form>

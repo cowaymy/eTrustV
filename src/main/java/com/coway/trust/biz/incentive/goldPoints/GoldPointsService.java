@@ -35,7 +35,7 @@ public interface GoldPointsService {
 
 	Map<String, Object> cancelRedemption(Map<String, Object> params);
 
-	EgovMap selectRedemptionDetails(Map<String, Object> params);
+	List<EgovMap> selectRedemptionDetails(Map<String, Object> params);
 
 	int updateRedemption(Map<String, Object> params);
 
@@ -48,6 +48,8 @@ public interface GoldPointsService {
 	int updPointsUploadReject(Map<String, Object> params);
 
 	Map<String, Object> adminCancelRedemption(Map<String, Object> params);
+
+	Map<String, Object> adminForfeitRedemption(Map<String, Object> params);
 
 	List<EgovMap> selectRedemptionItemList(Map<String, Object> params);
 

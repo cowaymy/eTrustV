@@ -201,16 +201,43 @@ public class GoldPointsRedemptionController {
 	@RequestMapping(value = "/updateRedemptionPop.do")
 	public String updateRedemptionPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
 
-		EgovMap rdmDetail = goldPointsService.selectRedemptionDetails(params);
+		  String rdmId = (String) params.get("rdmId");
+		  model.put("rdmId", rdmId);
+		  String[] rdmIdArray = rdmId.split("∈");
+		  params.put("rdmId", rdmIdArray);
+
+		  List<EgovMap> rdmDetail = goldPointsService.selectRedemptionDetails(params);
+			LOGGER.debug("===== rdmDetail ====="+rdmDetail);
+
 		model.put("rdmDetail", rdmDetail);
 
+
 		return "incentive/goldPoints/updateRedemptionPop";
+	}
+
+	@RequestMapping(value = "/selectRedemptionDetails", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRedemptionDetails (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+
+		 String rdmId = (String) params.get("rdmId");
+		 String[] rdmIdArray = rdmId.split("∈");
+		 params.put("rdmId", rdmIdArray);
+
+		List<EgovMap> itemList = null;
+
+		itemList = goldPointsService.selectRedemptionDetails(params);
+
+		return ResponseEntity.ok(itemList);
+
 	}
 
 	@RequestMapping(value = "/updateRedemption.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO){
 
 		params.put("userId", sessionVO.getUserId());
+
+		String rdmId = (String) params.get("rdmId");
+		String[] rdmIdArray = rdmId.split("∈");
+		params.put("rdmId", rdmIdArray);
 
 		int result = goldPointsService.updateRedemption(params);
 
@@ -251,6 +278,21 @@ public class GoldPointsRedemptionController {
 		LOGGER.debug("params : {}", params);
 
 		Map<String, Object> resultValue = goldPointsService.adminCancelRedemption(params);
+
+	    LOGGER.debug("resultValue : " + resultValue);
+
+	    return ResponseEntity.ok(resultValue);
+	}
+
+	@RequestMapping(value = "/adminForfeitRedemption.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> adminForfeitRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		params.put("userId", sessionVO.getUserId());
+
+		LOGGER.debug("===== adminCancelRedemption.do =====");
+		LOGGER.debug("params : {}", params);
+
+		Map<String, Object> resultValue = goldPointsService.adminForfeitRedemption(params);
 
 	    LOGGER.debug("resultValue : " + resultValue);
 

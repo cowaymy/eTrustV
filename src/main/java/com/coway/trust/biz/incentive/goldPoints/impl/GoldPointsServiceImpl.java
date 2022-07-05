@@ -232,7 +232,7 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	}
 
 	@Override
-	public EgovMap selectRedemptionDetails(Map<String, Object> params) {
+	public List<EgovMap> selectRedemptionDetails(Map<String, Object> params) {
 		return goldPointsMapper.selectRedemptionDetails(params);
 	}
 
@@ -274,6 +274,12 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	public Map<String, Object> adminCancelRedemption(Map<String, Object> params) {
 		goldPointsMapper.adminCancelRedemption(params);		//CALL SP_GOLD_PTS_ADM_CANCEL_RDM
 		return params;	//return output SP_GOLD_PTS_ADM_CANCEL_RDM
+	}
+
+	@Override
+	public Map<String, Object> adminForfeitRedemption(Map<String, Object> params) {
+		goldPointsMapper.adminForfeitRedemption(params);		//CALL SP_GOLD_PTS_ADM_FORFEIT_RDM
+		return params;	//return output SP_GOLD_PTS_ADM_FORFEIT_RDM
 	}
 
 	@Override
