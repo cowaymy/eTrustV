@@ -1894,7 +1894,6 @@ AND T1.CNT = 1
                 , CCP_ID
                 , STUS_ID
                 ,CCP_RESN_ID
-                ,CCP_REM
                 , CRT_DT
                 , CRT_USER_ID
                 , UPD_DT
@@ -1906,7 +1905,6 @@ AND T1.CNT = 1
                 , CCP_ID
                 , CCP_STUS_ID
                 , CCP_RESN_ID
-                , CCP_REM
                 , CCP_UPD_DT AS CRT_DT
                 , CCP_UPD_USER_ID AS CRT_USER_ID
                 , CCP_UPD_DT AS UPD_DT
@@ -1923,9 +1921,9 @@ AND T1.CNT = 1
                 , SYS4.CODE AS STUS_CODE
                 , SYS3.RESN_DESC AS FEEDBACK_CODE
                 , TO_CHAR(EXT1.CCP_REM) AS SPECIAL_REMARK
-                , TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY') AS CREATE_DATE
+                , TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY HH:MI:SS AM') AS CREATE_DATE
                 , SYS1.USER_NAME AS CREATED_BY
-                , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY') AS UPDATE_DATE
+                , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY HH:MI:SS AM') AS UPDATE_DATE
                 , SYS2.USER_NAME AS UPDATED_BY
                 ,to_char(EXT1.UPD_DT, 'HH:MI AM') AS UPDATE_TIME
         FROM SAL0328D EXT1
