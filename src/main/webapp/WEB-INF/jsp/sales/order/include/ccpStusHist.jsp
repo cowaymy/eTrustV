@@ -13,10 +13,9 @@
         var columnLayoutCcpStusHist = [
             { headerText : '<spring:message code="sal.title.text.ccpStatus" />',    dataField : "stusCode",         width : 120 }
           , { headerText : '<spring:message code="sal.title.feedbackCode" />',   dataField : "feedbackCode", width : 120 }
-          , { headerText : '<spring:message code="sal.title.text.specialRem" />',       dataField : "specialRemark",      width : 360  }
+          , { headerText : '<spring:message code="sal.title.text.specialRem" />',       dataField : "specialRemark",      width : 400  }
           , { headerText : '<spring:message code="pay.head.updatedBy" />',      dataField : "updatedBy",     width : 120 }
-          , { headerText : '<spring:message code="sys.title.date" />',    dataField : "updateDate",      width : 160 }
-          , { headerText : '<spring:message code="sal.title.text.time" />', dataField : "updateTime",         width : 120  }
+          , { headerText : '<spring:message code="sys.title.date" />',    dataField : "updateDate",      width : 180 }
           ];
 
         ccpStusHistGridID = GridCommon.createAUIGrid("grid_ccp_wrap", columnLayoutCcpStusHist, "", gridPros);

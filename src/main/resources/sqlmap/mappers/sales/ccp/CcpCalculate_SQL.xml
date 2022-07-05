@@ -1883,6 +1883,7 @@ AND T1.CNT = 1
              UPDATE SAL0102D SET CCP_STUS_ID = '1'
             ,CCP_UPD_DT = SYSDATE
             ,CCP_UPD_USER_ID = #{userId}
+            ,CCP_REM = NULL
             where CCP_SALES_ORD_ID = #{saveOrdId}
             and CCP_ID = #{saveCcpId}
 </update>
@@ -1925,7 +1926,6 @@ AND T1.CNT = 1
                 , SYS1.USER_NAME AS CREATED_BY
                 , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY HH:MI:SS AM') AS UPDATE_DATE
                 , SYS2.USER_NAME AS UPDATED_BY
-                ,to_char(EXT1.UPD_DT, 'HH:MI AM') AS UPDATE_TIME
         FROM SAL0328D EXT1
         LEFT JOIN SYS0047M SYS1 ON SYS1.USER_ID = EXT1.CRT_USER_ID
         LEFT JOIN SYS0047M SYS2 ON SYS2.USER_ID = EXT1.UPD_USER_ID
