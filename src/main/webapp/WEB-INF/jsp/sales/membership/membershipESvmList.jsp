@@ -216,6 +216,7 @@ console.log("membershipESvmList");
 		{dataField : "psmSrvMemNo", headerText : '<spring:message code="sales.MembershipNo" />', width : 100 , editable : false},
 		{dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : 250 , editable : false},
 		{dataField : "crtUser", headerText : '<spring:message code="sales.Creator" />', width : 100 , editable : false},
+		{dataField : "userBrcnh", headerText : 'User Branch', width : 100 , editable : false},
 		{dataField : "updDt", headerText : '<spring:message code="sal.text.lastUpdate" />', width : 150 , editable : false},
 		{dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : 300 , editable : false},
 		{dataField : "svmQuotId", headerText : 'SVM Quotation ID', width : 300 , editable : false, visible  : false}
