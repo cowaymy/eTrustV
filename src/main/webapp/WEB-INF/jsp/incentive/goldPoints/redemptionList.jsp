@@ -434,6 +434,7 @@
                             <option value="10">Cancelled</option>
                             <option value="60">In Progress</option>
                             <option value="110">Ready For Collect</option>
+                            <option value="114">Forfeited</option>
                         </select>
                     </td>
                 </tr>

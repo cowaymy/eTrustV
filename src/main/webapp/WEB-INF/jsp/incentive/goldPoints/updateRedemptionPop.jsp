@@ -86,14 +86,14 @@
 
         var columnLayout = [
                             {dataField: "rdmNo",headerText :"Redemption No." ,width: 100   ,height:30 , visible:true, editable : false},
-                            {dataField: "memCode",headerText :"Member Code", width: 280    ,height:30 , visible:true, editable : false},
+                            {dataField: "memCode",headerText :"Member Code", width: 100    ,height:30 , visible:true, editable : false},
                             {dataField: "memName" ,headerText :"Member Name" , width:120 ,height:30 , visible:true, editable : true},
-                            {dataField: "nric" ,headerText :"NRIC" ,width:140 ,height:30 , visible:true, editable : false},
-                            {dataField: "itmCat" ,headerText :"Category"  ,width:120 ,height:30 , visible:true, editable : false},
+                            {dataField: "nric" ,headerText :"NRIC" ,width:100 ,height:30 , visible:true, editable : false},
+                            {dataField: "itmCat" ,headerText :"Category"  ,width:100 ,height:30 , visible:true, editable : false},
                             {dataField: "itmDisplayName" ,headerText :"Item" ,width:120 ,height:30 , visible:true, editable : false},
                             {dataField: "qty" ,headerText :"Quantity" ,width:120   ,height:30 , visible:true, editable : false},
-                            {dataField: "totalPts" ,headerText :"Total Points" ,width:120   ,height:30 , visible:true, editable : false},
-                            {dataField: "rdmId" ,headerText :"rdmId" ,width:120   ,height:30 , visible:false, editable : false}
+                            {dataField: "totalPts" ,headerText :"Total Points" ,width:100   ,height:30 , visible:true, editable : false},
+                            {dataField: "rdmId" ,headerText :"rdmId" ,width:100   ,height:30 , visible:false, editable : false}
          ];
 
        myGridIDItem = GridCommon.createAUIGrid("#item_grid_wrap", columnLayout,'', gridProsItem);
