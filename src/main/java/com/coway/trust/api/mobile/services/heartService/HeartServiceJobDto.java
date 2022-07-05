@@ -242,6 +242,10 @@ public class HeartServiceJobDto {
 
   private String switchChkLst;
 
+  @ApiModelProperty(value = "PRODCAT")
+  private String prodcat;
+
+
 public String getSerialChk() {
     return serialChk;
   }
@@ -908,6 +912,14 @@ public String getSwitchChkLst() {
 
 public void setSwitchChkLst(String switchChkLst) {
 	this.switchChkLst = switchChkLst;
+}
+
+public String getProdcat() {
+	return prodcat;
+}
+
+public void setProdcat(String prodcat) {
+	this.prodcat = prodcat;
 }
 
 }
