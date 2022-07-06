@@ -1895,6 +1895,7 @@ AND T1.CNT = 1
                 , CCP_ID
                 , STUS_ID
                 ,CCP_RESN_ID
+                ,CCP_REM
                 , CRT_DT
                 , CRT_USER_ID
                 , UPD_DT
@@ -1906,6 +1907,7 @@ AND T1.CNT = 1
                 , CCP_ID
                 , CCP_STUS_ID
                 , CCP_RESN_ID
+                ,CASE WHEN CCP_STUS_ID = '1' THEN NULL ELSE CCP_REM
                 , CCP_UPD_DT AS CRT_DT
                 , CCP_UPD_USER_ID AS CRT_USER_ID
                 , CCP_UPD_DT AS UPD_DT
