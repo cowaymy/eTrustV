@@ -22,6 +22,8 @@
 		INNER JOIN SYS0064M s0064m
 		ON s0023d.AREA_ID = s0064m.AREA_ID                           <!-- CYSTOMER INSTALL AREA -->
 	    WHERE 1=1
+	    AND CUSTMAS.NATION = 1 <!-- Malaysian -->
+        AND CUSTMAS.TYPE_ID = 964 <!-- Individual -->
 		<if test="custId != null and custId != ''">
 			AND UPPER(s0001d.CUST_ID) = UPPER(#{custId})
 		</if>
