@@ -59,21 +59,42 @@
         });
 
         $('#btnAdminForfeitRdm').click(function() {
-            var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
+                    var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
 
-            if (selIdx > -1) {
-                var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
+                    if(selIdx > -1) {
+                        var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
 
-                if ( (rdmStatus != "Ready For Collect")) {
-                    Common.alert('Only Ready For Collect Redemptions can be forfeited');
-                } else {
-                    fn_promptAdminForfeitConfirm(selIdx);
-                }
-            }
-            else {
-                Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
-            }
+                        if (rdmStatus != "Ready For Collect") {
+                            Common.alert('Only Ready For Collect redemptions can be updated');
+                        }
+                        else {
+	                           var param="";
+	                           param =$("#_rdmId").val()+"";
+
+                              Common.popupDiv("/incentive/goldPoints/updateForfeitRedemptionPop.do", { rdmId : param}, null , true, 'updateForfeitRedemptionPop');
+                        }
+                    }
+                    else {
+                        Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+                    }
         });
+
+//         $('#btnAdminForfeitRdm').click(function() {
+//             var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
+
+//             if (selIdx > -1) {
+//                 var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
+
+//                 if ( (rdmStatus != "Ready For Collect")) {
+//                     Common.alert('Only Ready For Collect Redemptions can be forfeited');
+//                 } else {
+//                     fn_promptAdminForfeitConfirm(selIdx);
+//                 }
+//             }
+//             else {
+//                 Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+//             }
+//         });
 
         $('#btnUpdRdm').click(function() {
 //             var selIdx = AUIGrid.getSelectedIndex(gridID)[0];

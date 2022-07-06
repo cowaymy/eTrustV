@@ -215,6 +215,44 @@ public class GoldPointsRedemptionController {
 		return "incentive/goldPoints/updateRedemptionPop";
 	}
 
+
+	@RequestMapping(value = "/updateForfeitRedemptionPop.do")
+	public String updateForfeitRedemptionPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+
+		LOGGER.debug("===== params ====="+params);
+
+		String rdmId = (String) params.get("rdmId");
+		String[] rdmIdArray = rdmId.split("∈");
+		params.put("rdmId", rdmIdArray);
+
+		List<EgovMap> rdmDetail2 = goldPointsService.selectRedemptionDetails(params);
+		LOGGER.debug("===== rdmDetail2 ====="+rdmDetail2);
+
+
+			if(rdmDetail2 != null && rdmDetail2.size() > 0){
+
+				for (int idx = 0; idx < rdmDetail2.size(); idx++) {
+
+					Map<String, Object> addMap = (Map<String, Object>)rdmDetail2.get(idx);
+
+					model.put("rdmId", addMap.get("rdmId"));
+					model.put("rdmNo", addMap.get("rdmNo"));
+					model.put("memCode", addMap.get("memCode"));
+					model.put("memName", addMap.get("memName"));
+					model.put("nric", addMap.get("nric"));
+					model.put("itmCat", addMap.get("itmCat"));
+					model.put("itmDisplayName", addMap.get("itmDisplayName"));
+					model.put("qty", addMap.get("qty"));
+					model.put("totalPts", addMap.get("totalPts"));
+
+				}
+			}
+
+
+
+		return "incentive/goldPoints/updateForfeitRedemptionPop";
+	}
+
 	@RequestMapping(value = "/selectRedemptionDetails", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectRedemptionDetails (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 
