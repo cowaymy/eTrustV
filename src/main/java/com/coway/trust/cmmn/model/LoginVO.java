@@ -51,6 +51,7 @@ public class LoginVO {
 	// Added vaccination info by Hui Ding, 13/09/2021
 	private String vacStatus;
 	private String diffVacDay;
+	private int bizType;
 
 	public String getVacStatus() {
 		return vacStatus;
@@ -58,6 +59,14 @@ public class LoginVO {
 
 	public void setVacStatus(String vacStatus) {
 		this.vacStatus = vacStatus;
+	}
+
+	public void setBizType(int bizType) {
+		this.bizType = bizType;
+	}
+
+	public int getBizType() {
+		return bizType;
 	}
 
 	public String getDiffVacDay() {

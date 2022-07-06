@@ -38,8 +38,17 @@ public class SessionVO implements Serializable {
 
 	private String costCentr;
 
+	private int bizType;
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
+
+	public int getBizType() {
+		return bizType;
+	}
+
+	public void setBizType(int bizType) {
+		this.bizType = bizType;
+	}
 
 	public int getUserId() {
 		return userId;
@@ -265,6 +274,7 @@ public class SessionVO implements Serializable {
 			sessionVO.setMgrYn(loginVO.getMgrYn());
 			sessionVO.setMemId(loginVO.getMemId());
 			sessionVO.setCostCentr(loginVO.getCostCentr());
+			sessionVO.setBizType(loginVO.getBizType());
 
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}

@@ -81,7 +81,7 @@ var targetGridPros = {
 
 var memType = "${SESSION_INFO.userTypeId}";
 var memLevel = "${SESSION_INFO.memberLevel}";
-
+var bizType = "${SESSION_INFO.bizType}";
 
 $(document).ready(function(){
 
@@ -159,6 +159,7 @@ $(document).ready(function(){
 
 	    $("#memType").val(memType);
 	    $("#memLevel").val(memLevel);
+	    $("#bizType").val(bizType);
 
 	pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);
 
@@ -3974,6 +3975,7 @@ $.fn.clearForm = function() {
 			<!-- table end -->
 			<input type="hidden" id="memType" name="memType" />
 			<input type="hidden" id="memLevel" name="memLevel" />
+			<input type="hidden" id="bizType"    name="bizType" />
 <!-- 			<input type="hidden" id="memLevel" name="memLevel" /> -->
 		</form>
 
