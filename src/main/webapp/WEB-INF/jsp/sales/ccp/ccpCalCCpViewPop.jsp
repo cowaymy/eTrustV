@@ -1016,7 +1016,7 @@ function chgTab(tabNm) {
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body">
-z
+
  <p class="msg_txt" >Confirm to reverse CCP Approval from order:${orderDetail.basicInfo.ordNo}?</p>
  <ul class="center_btns">
      <li><p class="btn_blue2"><a href="javascript:fn_confirmReverseCcp()" id="confirm_btn"><spring:message code="approvalWebInvoMsg.confirm" /></a></p></li>
