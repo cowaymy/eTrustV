@@ -31,6 +31,11 @@ var cnvrListGrid;
             //reader.readAsText(file); // 파일 내용 읽기
             reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
             reader.onload = function(event) {
+            	console.log(event.target.result);
+            	console.log(typeof event.target.result)
+            	if(event.target.result ==  ',,,,,,,,,,,'){
+            		console.log(typeof event.target.result)
+            	}
                 if (typeof event.target.result != "undefined") {
                     console.log("data : " + event.target.result);
 
@@ -137,9 +142,17 @@ var cnvrListGrid;
     function fn_checkNewCnvr(){
         var data = GridCommon.getGridData(uploadGrid);
         data.form = $("#newCnvrForm").serializeJSON();
-        console.log('checking')
-        //remove null data
-        data.all.pop()
+        console.log('checking');
+        for (const key in data.all) {
+		    if (data.all[key][0] == ''){
+		        data.all.pop(key)
+		        }
+        }
+        for (const key in data.all) {
+            if (data.all[key][0] == ''){
+                data.all.pop(key)
+            }
+        }
         Common.ajax("POST", "/payment/BatchConvertChecking.do", data, function(result)    {
 
             console.log("성공." + JSON.stringify(result));

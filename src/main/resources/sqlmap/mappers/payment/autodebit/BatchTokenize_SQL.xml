@@ -4,6 +4,7 @@
     <delete id="delSAL0323T" >
         DELETE FROM SAL0323T
     </delete>
+
      <insert id="insertSAL0323T" parameterType="Map">
               INSERT INTO SAL0323T (FAIL_RESN_ID,CUST_ID,NRIC,ORDER_NO,CARD_HOLDER,CARD_NO,CARD_EXP,CARD_TYPE,BANKNAME,CRC_TYPE)
               <foreach item="item" collection="all" index="index" separator= "union">
@@ -11,15 +12,15 @@
               select
                   case
                         when b.cust_id is null then 3482
-                        when b1.cust_id is null then 3483
-                        when b2.cust_id is null then 3484
+                        when b1.cust_id is null then 3484
+                        when b2.cust_id is null then 3483
                         when length(replace(#{item.8},'-','')) <> 16 then 3485
                         when c1.bank_id is null then 3486
                         when d1.code_id is null then 3488
                   else 0
                   end as fail_resn,
                   #{item.0},
-                  replace(replace(substr(#{item.1},0,7),'.',''),'E',''),
+                  regexp_replace(#{item.1}, '(\d+)\.(\d+)(\d)(.+)', '\1\2'),
                   #{item.5},
                   REGEXP_REPLACE(#{item.6}, '[^a-zA-Z ]', ''),
                   replace(#{item.8},'-',''),
@@ -29,8 +30,8 @@
                   d.crc_type
                   FROM dual a
                   left join sal0029d b on b.cust_id =#{item.0}
-                  left join sal0029d b1 on b1.cust_id = #{item.0} and  b1.nric like '%'||replace(replace(substr(#{item.1},0,7),'.',''),'E','')||'%'
-                  left join sal0029d b2 on b2.name =  #{item.6}
+                  left join sal0029d b1 on b1.cust_id = #{item.0} and  b1.nric like '%'||regexp_replace(#{item.1}, '(\d+)\.(\d+)(\d)(.+)', '\1\2')||'%'
+                  left join sal0029d b2 on trim(b2.name) =  #{item.6} and b2.cust_id = #{item.0}
                   left join sys0109m c on SELFCARE_BANK_NAME = #{item.11}
                   left join sys0004m c1 on c1.code||' - '||c1.name = c.etrust_bank_name
                   left join (select case
@@ -41,11 +42,13 @@
                   left join sys0013m d1 on d.crc_type = d1.code_id]]>
                </foreach>
     </insert>
+
     <select id="displayRecord" resultType="egovMap">
         select A.CUST_ID,A.ORDER_NO,A.CARD_HOLDER,C.NAME,CASE WHEN A.FAIL_RESN_ID = 0 THEN NULL ELSE B.RESN_DESC END AS FAIL_REASON   from SAL0323T A
             LEFT JOIN SYS0032M B on A.FAIL_RESN_ID = B.RESN_ID
             LEFT JOIN SYS0038M C ON A.CONVERT_STATUS = C.STUS_CODE_ID
         </select>
+
     <select id="selectdataForCSV" parameterType="Map"  resultType="egovMap">
         select * from(select   LPAD(NRIC, 12, '0') || LPAD(CUST_ID, 12, '0') || LPAD(SUBSTR(CARD_NO,0,6), 12, '0') refno,
             CARD_NO custCrcNo,
@@ -57,18 +60,9 @@
         group by refno,CUSTCRCNO,CUSTCRCEXPR
         </select>
 
-    <update id="updateCardExist" parameterType="Map">
-        update SAL0320D SET CONVERT_STATUS = 8
-            WHERE CUST_ID IN (SELECT B.CUST_ID FROM SAL0028D A LEFT JOIN SAL0320D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CRC_TOKEN = B.CRC_TOKEN)
-    </update>
-
-
-
-
     <update id="maskCrcNO" parameterType="Map">
         update SAL0320D SET card_no = substr(card_no,0,6)||'******'||substr(card_no,-4,16) WHERE BATCH_TOKEN_ID = #{batchId}
     </update>
-
 
     <select id="selectBatchID" resultType="egovMap">
         SELECT GBSLCVD.SAL0319M_ID_SEQ.nextval as batchID FROM DUAL
@@ -107,7 +101,6 @@
         JOIN SYS0038M D ON A.STATUS = D.STUS_CODE_ID
         WHERE A.BATCH_TOKENIZE_ID = #{batchId}
         GROUP BY A.BATCH_TOKENIZE_NO,D.NAME,A.CRT_DT,C.USER_Name,A.BATCH_TOKENIZE_ID
-
     </select>
 
     <select id="batchTokenizeViewItmJsonList" resultType="egovMap">
@@ -125,9 +118,9 @@
 	        'BPC'||LPAD(#{batchid}, 7, '0'),
 	        1,
 	        NULL,
-	        349,
+	        #{userId},
 	        sysdate,
-	        349,
+	        #{userId},
 	        sysdate
         )
     </insert>
@@ -141,7 +134,7 @@
     <insert id="insertSAL0320D" parameterType="Map">
         <![CDATA[
         INSERT into sal0320D (
-            select #{batchid},order_no,CASE WHEN b.sales_ord_no = NULL THEN 21 ELSE status END,A.CUST_ID,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,sysdate,349,sysdate,349,crc_type,
+            select #{batchid},order_no,CASE WHEN b.sales_ord_no = NULL THEN 21 ELSE status END,A.CUST_ID,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,sysdate,#{userId},sysdate,#{userId},crc_type,
                 CASE WHEN c.mode_id = 135 THEN 3490
                         ELSE a.fail_resn_id END
                 , null
@@ -156,4 +149,5 @@
          LEFT JOIN sal0074d c on b.sales_ord_id = c.sales_ord_id)
             ]]>
     </insert>
+
 </mapper>

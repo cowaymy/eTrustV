@@ -1,11 +1,8 @@
 package com.coway.trust.biz.payment.batchtokenize.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -34,10 +31,11 @@ public class BatchTokenizeServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 
-	  public EgovMap processBatchTokenizeRecord() {
+	  public EgovMap processBatchTokenizeRecord(int Userid) {
 		  System.out.println("save Record");
 
 		  EgovMap param = batchTokenizeMapper.selectBatchID();
+		  param.put("user_id",Userid);
 		  //param.put("batchID",Integer.toString(BatchID));
 		  System.out.println(param);
 		  batchTokenizeMapper.displayRecord();
@@ -74,6 +72,8 @@ public class BatchTokenizeServiceImpl extends EgovAbstractServiceImpl implements
 		System.out.println(params);
 		return batchTokenizeMapper.batchTokenizeViewItmJsonList(params);
 	}
+
+
 
 
 

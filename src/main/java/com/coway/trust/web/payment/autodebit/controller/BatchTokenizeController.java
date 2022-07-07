@@ -41,35 +41,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class BatchTokenizeController {
 
 	//TING GEN LIANG Enhancement Batch paymode conversion TO Auto Debit
-/*	@RequestMapping(value = "/paymodeConversionToADList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> paymodeConversionToADList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-
-		String[] convStusFrList = request.getParameterValues("cmbStatusFr");
-		String[] convStusToList = request.getParameterValues("cmbStatusTo");
-		params.put("convStusFrList", convStusFrList);
-		params.put("convStusToList", convStusToList);
-
-		List<EgovMap> conversionList = orderConversionService.paymodeConversionList(params);
-
-		// 데이터 리턴.
-		return ResponseEntity.ok(conversionList);
-	}*/
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
 	@Value("${web.resource.upload.file}"+"/MCPayment")
 	private String filePath;
-	@Autowired
-	 private LargeExcelService largeExcelService;
-	@Autowired
-	private CsvReadComponent csvReadComponent;
-
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
 	@Resource(name = "batchTokenizeService")
 	private BatchTokenizeService batchTokenizeService;
 
-	private String[] claimFileColumns = new String[] { "refno", "bankDtlCtrlId", "salesOrdId" };
-	  @Value("${tokenization.mcp.sftp.host}")
+	@Value("${tokenization.mcp.sftp.host}")
 	  private String host;
 
 	  @Value("${tokenization.mcp.sftp.port}")
@@ -91,46 +69,23 @@ public class BatchTokenizeController {
 
 
 	@RequestMapping(value = "/BatchConvertChecking.do")
-	public ResponseEntity<List<EgovMap>> BatchConvertChecking (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws IOException, InvalidFormatException {
+	public ResponseEntity<List<EgovMap>> BatchConvertChecking (@RequestBody Map<String, Object> params, ModelMap model) throws IOException, InvalidFormatException {
 		System.out.print(params);
 
 		ReturnMessage message = new ReturnMessage();
-	    params.put("userId", sessionVO.getUserId());
+
 
 	    List<EgovMap> result = batchTokenizeService.verifyRecord(params);
 
     	return ResponseEntity.ok(result);
 	}
-/*
-	@RequestMapping(value = "/paymodeConversionDetailToADPop.do")
-	public String paymodeConversionDetailToADPop(@RequestParam Map<String, Object>params, ModelMap model) {
-		EgovMap cnvrInfo = orderConversionService.paymodeConversionView(params);
-
-		//List<EgovMap> orderCnvrInvalidItmList = orderConversionService.orderCnvrInvalidItmList(params);
-		//List<EgovMap> orderCnvrValidItmList = orderConversionService.orderCnvrValidItmList(params);
-		//List<EgovMap> conversionItmList = orderConversionService.orderConversionViewItmList(params);
-
-		//int invalidRows = orderCnvrInvalidItmList.size();
-		//int validRows = orderCnvrValidItmList.size();
-		//int allRows = conversionItmList.size();
-
-		//logger.info("##### invalidRows #####" +invalidRows);
-		//logger.info("##### validRows #####" +validRows);
-
-		model.addAttribute("cnvrInfo", cnvrInfo);
-		//model.addAttribute("invalidRows", invalidRows);
-		//model.addAttribute("validRows", validRows);
-		//model.addAttribute("allRows", allRows);
-
-		return "sales/order/paymodeConversionDetailToADPop";
-	}*/
 
 	@RequestMapping(value = "/paymodeConvertViewItmJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> paymodeConvertViewItmJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 
 		List<EgovMap> cnvrItmList = batchTokenizeService.selectBatchTokenizeRecord(params);
 
-		// 데이터 리턴.
+
 		return ResponseEntity.ok(cnvrItmList);
 	}
 
@@ -139,7 +94,7 @@ public class BatchTokenizeController {
 
 		List<EgovMap> cnvrItmList = batchTokenizeService.selectBatchTokenizeRecord(params);
 
-		// 데이터 리턴.
+
 		return ResponseEntity.ok(cnvrItmList);
 	}
 
@@ -161,19 +116,18 @@ public class BatchTokenizeController {
 		return ResponseEntity.ok(cnvrItmList);
 	}
 
-
 	@RequestMapping(value = "/paymodeConversionToAD.do")
 	public String paymodeConversionToAD(@RequestParam Map<String, Object>params, ModelMap model) {
 		//logger.info("###################### New ###############");
 		return "sales/order/paymodeConvertToADNewPop";
 	}
 	@RequestMapping(value = "/submitBatchTokenize.do")
-	  public ResponseEntity<String> submitBatchTokenize() throws Exception {
+	  public ResponseEntity<String> submitBatchTokenize(SessionVO sessionVO) throws Exception {
 
 		    ClaimFileCrcCIMBHandler downloadHandler = null;
 		    String sFile;
 		    String todayDate;
-		    EgovMap batchID = batchTokenizeService.processBatchTokenizeRecord();
+		    EgovMap batchID = batchTokenizeService.processBatchTokenizeRecord(sessionVO.getUserId());
 		    System.out.println("over csv data");
 		    System.out.println(batchID);
 		    todayDate = CommonUtils.getNowDate();

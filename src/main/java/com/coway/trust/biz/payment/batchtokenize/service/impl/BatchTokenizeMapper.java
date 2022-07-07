@@ -25,8 +25,6 @@ public interface BatchTokenizeMapper {
 
 	public int updateSAL0074D(Map<String, String> params);
 
-	public int updateCardExist(Map<String, String> params);
-
 	public int updateToken(Map<String, String> params);
 
 	public List<EgovMap> selectdataForCSV(EgovMap param);
