@@ -179,12 +179,12 @@ $(function(){
          Common.popupDiv("/sales/posstock/eshopShippingRegisterPop.do");
      });
 
-     $('#btnClear').click(function() {
+     $('#btnClear2').click(function() {
          $('#form_item_pop').clearForm();
          createAUIDGridShipping();
      });
 
-     $('#btnSearch').click(function() {
+     $('#btnSearch2').click(function() {
     	  createAUIDGridShipping();
      });
 
@@ -216,8 +216,8 @@ $(function(){
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a id="btnNew">New</a></p></li>
-    <li><p class="btn_grid"><a id="btnSearch">Search</a></p></li>
-    <li><p class="btn_grid"><a id="btnClear">Clear</a></p></li>
+    <li><p class="btn_grid"><a id="btnSearch2">Search</a></p></li>
+    <li><p class="btn_grid"><a id="btnClear2">Clear</a></p></li>
 </ul>
 
 

@@ -238,8 +238,8 @@
                            , #{regionalType}
                            , #{weightFrom}
                            , #{weightTo}
-                           , #{startDt}
-                           , #{endDt}
+                           , TO_DATE(#{startDt}, 'DD/MM/YYYY HH24:MI:SS')
+                           , TO_DATE(#{endDt}, 'DD/MM/YYYY HH24:MI:SS')
                            , #{shippingFee}
                            , #{crtId}
                            , sysdate
