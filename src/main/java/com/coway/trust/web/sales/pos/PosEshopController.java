@@ -1,9 +1,13 @@
 package com.coway.trust.web.sales.pos;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +36,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.pos.PosEshopService;
 import com.coway.trust.biz.sales.pos.PosStockService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -42,6 +47,10 @@ import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+import com.coway.trust.biz.sales.common.SalesCommonService;
+import com.coway.trust.biz.sales.order.PreOrderApplication;
+import com.coway.trust.biz.sales.order.PreOrderService;
 
 @Controller
 @RequestMapping(value = "/sales/posstock")
@@ -61,19 +70,36 @@ public class PosEshopController {
   @Resource(name = "posEshopService")
   private PosEshopService posEshopService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
   @Value("${com.file.upload.path}")
   private String uploadDir;
 
   @Value("${web.resource.upload.file}")
   private String uploadDirWeb;
 
+  @Autowired
+  private PreOrderApplication preOrderApplication;
+
 
   @RequestMapping(value = "/selectEshopList.do")
-  public String selectEshopList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+  public String selectEshopList(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) throws Exception {
 
-    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-    params.put("userId", sessionVO.getUserId());
-    // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+	SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	params.put("userId", sessionVO.getUserId());
+
+	if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+		model.put("memType", getUserInfo.get("memType"));
+		model.put("orgCode", getUserInfo.get("orgCode"));
+		model.put("grpCode", getUserInfo.get("grpCode"));
+		model.put("deptCode", getUserInfo.get("deptCode"));
+		model.put("memCode", getUserInfo.get("memCode"));
+	}
+
+    String statusArray[] = request.getParameterValues("status");
+    params.put("statusArray", statusArray);
 
     model.addAttribute("branchId", sessionVO.getUserBranchId());
 
@@ -175,12 +201,24 @@ public class PosEshopController {
 
 
 	@RequestMapping(value = "/selectItemList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAssignAgentList (@RequestParam Map<String, Object> params,
+	public ResponseEntity<List<EgovMap>> selectItemList (@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
 		itemList = posEshopService.selectItemList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	@RequestMapping(value = "/selectItemList2", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectItemList2 (@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectItemList2(params);
 
 		return ResponseEntity.ok(itemList);
 
@@ -305,6 +343,18 @@ public class PosEshopController {
 	  @RequestMapping(value = "/eshopOrderPop.do")
 	  public String eshopOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+		int seq = 0;
+
+  		seq=posEshopService.getGrpSeqSAL0327T();
+
+  		LOGGER.debug(" params eshopOrderPop getGrpSeqSAL0327T==dd=>"+seq);
+
+
+		model.put("userFullName", sessionVO.getUserFullname());
+		model.put("cartGrpId",seq);
+
 	    return "sales/pos/eshopOrderPop";
 
 	  }
@@ -332,6 +382,328 @@ public class PosEshopController {
 		return ResponseEntity.ok(itemList);
 
 	}
+
+	  @RequestMapping(value = "/insertItemToCart.do", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> insertItemToCart(@RequestBody Map<String, Object> params) throws Exception {
+	      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	      params.put("userId", sessionVO.getUserId());
+	      params.put("userDeptId", sessionVO.getUserDeptId());
+	      params.put("userName", sessionVO.getUserName());
+
+	      Map<String, Object> retunMap = null;
+
+	      LOGGER.debug(" params insertItemToCart==dd=>"+params.toString());
+
+	      retunMap = posEshopService.insertItemToCart(params);
+
+
+	      // Return MSG
+	      ReturnMessage message = new ReturnMessage();
+
+	      message.setCode(AppConstants.SUCCESS);
+	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	      message.setData(retunMap.get("scnNo"));
+
+	      return ResponseEntity.ok(message);
+
+	    }
+
+	  @RequestMapping(value = "/selectItemCartList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectItemCartList (@RequestParam Map<String, Object> params,
+			  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectItemCartList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/selectItemCartList2", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectItemCartList2 (@RequestParam Map<String, Object> params,
+			  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectItemCartList2(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/selectTotalPrice", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectTotalPrice (@RequestParam Map<String, Object> params,
+			  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectTotalPrice(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+
+	  @RequestMapping(value = "/selectDefaultBranchList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectDefaultBranchList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectDefaultBranchList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	 @RequestMapping(value = "/selectShippingFee", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectShippingFee (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectShippingFee(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	 @RequestMapping(value = "/insertPosEshop.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> insertPosEshop(@RequestBody Map<String, Object> params) throws Exception {
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    params.put("userId", sessionVO.getUserId());
+	    params.put("userDeptId", sessionVO.getUserDeptId());
+	    params.put("userName", sessionVO.getUserName());
+
+
+	    Map<String, Object> retunMap = null;
+//	    params.put("scnMoveType", "I");
+	    retunMap = posEshopService.insertPosEshop(params);
+
+
+	    // Return MSG
+	    ReturnMessage message = new ReturnMessage();
+
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    message.setData(retunMap.get("esnNo"));
+
+	    return ResponseEntity.ok(message);
+
+	  }
+
+
+
+	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+			String err = "";
+			String code = "";
+			List<String> seqs = new ArrayList<>();
+
+			LocalDate date = LocalDate.now();
+			String year    = String.valueOf(date.getYear());
+			String month   = String.format("%02d",date.getMonthValue());
+
+			String subPath = File.separator + "sales"
+			               + File.separator + "eshop"
+			               + File.separator + year
+			               + File.separator + month
+			               + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+
+
+			try{
+				 Set set = request.getFileMap().entrySet();
+				 Iterator i = set.iterator();
+
+				 while(i.hasNext()) {
+				     Map.Entry me = (Map.Entry)i.next();
+				     String key = (String)me.getKey();
+				     seqs.add(key);
+				 }
+
+			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+			preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+
+			params.put("attachFiles", list);
+			code = AppConstants.SUCCESS;
+			}catch(ApplicationException e){
+				err = e.getMessage();
+				code = AppConstants.FAIL;
+			}
+
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(code);
+			message.setData(params);
+			message.setMessage(err);
+
+			return ResponseEntity.ok(message);
+		}
+
+	 @RequestMapping(value = "/checkDiffWarehouse", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> checkDiffWarehouse (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.checkDiffWarehouse(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+
+	  @RequestMapping(value = "/selectEshopList2", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectEshopList2 (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+		}
+
+		String statusArray[] = request.getParameterValues("status");
+		params.put("statusArray", statusArray);
+
+		LOGGER.debug(" params selectEshopList ==dd=>"+params.toString());
+
+		itemList = posEshopService.selectEshopList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/selectPosEshopApprovalList.do")
+	  public String selectPosEshopApprovalList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    params.put("userId", sessionVO.getUserId());
+	    // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+
+	    LOGGER.debug(params.toString());
+	    model.put("esnNo", params.get("esnNo"));
+
+	    return "sales/pos/posEshopApprovalPop";
+	  }
+
+	  @RequestMapping(value = "/selectPosEshopApprovalViewList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectPosEshopApprovalViewList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		LOGGER.debug(" params selectPosEshopApprovalViewList==dd=>"+params.toString());
+
+		itemList = posEshopService.selectPosEshopApprovalViewList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/insertPos.do", method = RequestMethod.POST)
+	  public ResponseEntity<Map<String, Object>> insertPos(@RequestBody Map<String, Object> params) throws Exception {
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    params.put("userId", sessionVO.getUserId());
+	    params.put("userDeptId", sessionVO.getUserDeptId());
+	    params.put("userName", sessionVO.getUserName());
+	    Map<String, Object> retunMap = null;
+	    retunMap = posEshopService.insertPos(params);
+
+	    return ResponseEntity.ok(retunMap);
+
+	  }
+
+	  @RequestMapping(value = "/rejectPosEshopPop.do")
+	  public String rejectPosEshopPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		  model.put("esnNo", params.get("esnNo"));
+		  return "sales/pos/posEshopRejectPop";
+
+	  }
+
+	  @RequestMapping(value = "/rejectPos.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> rejectPos(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+			params.put("userId", sessionVO.getUserId());
+
+			int result = posEshopService.rejectPos(params);
+
+			LOGGER.debug(" params rejectPos result==dd=>"+result);
+			ReturnMessage message = new ReturnMessage();
+
+		    if (result > 0) {
+		    	message.setMessage("ESN update successful.");
+		        message.setCode(AppConstants.SUCCESS);
+		    } else {
+		    	message.setMessage("ESN update failed.");
+		        message.setCode(AppConstants.FAIL);
+		    }
+
+		    return ResponseEntity.ok(message);
+		}
+
+	  @RequestMapping(value = "/updatePosInfo.do")
+	  public String updatePosInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    params.put("userId", sessionVO.getUserId());
+	    // TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+
+	    LOGGER.debug(params.toString());
+	    model.put("esnNo", params.get("esnNo"));
+
+	    return "sales/pos/posEshopUpdateInfoPop";
+	  }
+
+	  @RequestMapping(value = "/eshopUpdateCourierSvc.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> eshopUpdateCourierSvc(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+			params.put("userId", sessionVO.getUserId());
+
+			int result = posEshopService.eshopUpdateCourierSvc(params);
+
+			ReturnMessage message = new ReturnMessage();
+
+		    if (result > 0) {
+		    	message.setMessage("ESN update successful.");
+		        message.setCode(AppConstants.SUCCESS);
+		    } else {
+		    	message.setMessage("ESN update failed.");
+		        message.setCode(AppConstants.FAIL);
+		    }
+
+		    return ResponseEntity.ok(message);
+		}
+
+	  @RequestMapping(value = "/completePos.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> completePos(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+			params.put("userId", sessionVO.getUserId());
+
+			int result = posEshopService.completePos(params);
+
+			LOGGER.debug(" params rejectPos result==dd=>"+result);
+			ReturnMessage message = new ReturnMessage();
+
+		    if (result > 0) {
+		    	message.setMessage("ESN update successful.");
+		        message.setCode(AppConstants.SUCCESS);
+		    } else {
+		    	message.setMessage("ESN update failed.");
+		        message.setCode(AppConstants.FAIL);
+		    }
+
+		    return ResponseEntity.ok(message);
+		}
+
 
 
 }

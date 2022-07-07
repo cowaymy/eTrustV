@@ -123,7 +123,7 @@ function createAUIDGridShipping(){
                         {dataField: "status" ,headerText :"Status" ,width:100 ,height:30 , visible:true, editable : false},
                         {dataField: "status2" ,headerText :"Status2" ,width:100 ,height:30 , visible:false, editable : false},
                         {dataField: "id" ,headerText :"ID" ,width:120   ,height:30 , visible:false, editable : false},
-                        {dataField: "regionalType" ,headerText :"Regional" ,width:120   ,height:30 , visible:true, editable : false}
+                        {dataField: "regionalType" ,headerText :"Regional" ,width:120   ,height:30 , visible:false, editable : false}
 
      ];
 
@@ -154,10 +154,8 @@ $.fn.clearForm = function() {
 };
 
 function fn_saveShippingGrid(){
-	console.log($("#form_item_edit").serializeJSON());
     Common.ajax("POST", "/sales/posstock/updatePosEshopShipping.do", $("#form_item_edit").serializeJSON(), function(result) {
         Common.alert('Success to update');
-//         fn_close();
         createAUIDGridShipping();
 
     }, function(jqXHR, textStatus, errorThrown) {
