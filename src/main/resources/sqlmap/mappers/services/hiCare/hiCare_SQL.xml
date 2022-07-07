@@ -17,10 +17,20 @@
     <select id="selectModelCode" parameterType="Map" resultType="egovMap">
         <![CDATA[
             SELECT
-            CODE_ID
-            ,CODE_DESC
-            FROM SYS0013M WHERE CODE_MASTER_ID IN ('490')
-        ]]>
+             A.CODE_ID CODE_ID
+             ,B.STK_CODE STK_CODE
+             ,B.STK_CODE || ' - ' || B.STK_DESC  AS CODE_NAME
+            ,B.STK_CODE || ' - ' || B.STK_DESC  AS CODE_DESC
+            FROM SYS0013M A
+            LEFT JOIN SYS0026M B ON B.STK_CODE = A.CODE
+            WHERE
+            A.CODE_MASTER_ID IN ('490')
+            AND A.DISAB = 0]]>
+            <if test="modelCode != null and modelCode !='' ">
+                AND A.CODE = #{modelCode}
+            </if>
+            order by A.CODE_ID
+
     </select>
 
     <select id="getBch" parameterType="Map" resultType="egovMap">
@@ -74,7 +84,7 @@
 		, D.NAME status
 		, E.NAME condition
 		, F.USER_NAME creator
-		, G.CODE_DESC model
+		, i.stk_code || ' - ' || i.stk_desc model
 		, Case when A.DELVRY_NO is not null
         then nvl(h.DELVRY_CMPLT,'N')
         else
@@ -89,12 +99,13 @@
 		left join SYS0047m f on f.user_id = A.CRT_USER_ID
 		left join SYS0013m g on g.code_id = A.model
 		left join SVC0127M h on h.transit_no = a.delvry_no
+		left join sys0026m i on i.stk_code = g.code
 		<if test=" '' != filterSN and null != filterSN">
 		  join (select distinct(serial_no) from svc0129h where filter_sn = #{filterSN}) i on i.serial_no = a.serial_no
 		</if>
 		where 1=1
 		<if test=" '' != serialNo and null != serialNo">
-		  and a.serial_no = #{serialNo}
+		  and a.serial_no like UPPER(#{serialNo}) || '%'
 		</if>
 		<if test=" '' != cmbModel and null != cmbModel ">
            and a.model in
@@ -264,6 +275,8 @@
     <update id="updateHiCareSerialMaster" parameterType="Map">
         UPDATE SVC0126M SET
         STATUS = '1'
+        ,BRANCH_ID = #{branchCode}
+        ,MODEL = #{model}
         ,UPD_DT = SYSDATE
         ,UPD_USER_ID = #{userId}
         WHERE
@@ -385,6 +398,8 @@
     <update id="updateHiCareSerialHistory" parameterType="Map">
         UPDATE SVC0129H SET
         STATUS = '1'
+        ,BRANCH_ID = #{branchCode}
+        ,MODEL = #{model}
         ,UPD_DT = SYSDATE
         ,UPD_USER_ID = #{userId}
         WHERE
@@ -438,7 +453,7 @@
         , D.NAME status
         , E.NAME condition
         , F.USER_NAME creator
-        , G.CODE_DESC model
+        , j.stk_code || ' - ' || j.stk_desc model
         , H.CODE_DESC reason_desc
         , i.code_name trans_type_desc
         from SVC0126M a
@@ -450,6 +465,7 @@
         left join SYS0013m g on g.code_id = A.model
         left join SYS0013m h on h.code_id = a.reason
         left join SYS0013m i on i.code = a.trnsc_type and i.code_master_id = '491'
+        left join sys0026m j on j.stk_code = g.code
         where 1=1
           and a.serial_no = #{serialNo}
     </select>
@@ -469,6 +485,9 @@
         </if>
         <if test="branchId !=null and branchId !=''">
              , BRANCH_ID = #{branchId}
+        </if>
+        <if test="model !=null and model !=''">
+             , MODEL = #{model}
         </if>
         <if test="locId !=null">
              , LOC_ID = #{locId}
@@ -586,7 +605,7 @@
         , D.NAME status
         , E.NAME condition
         , F.USER_NAME creator
-        , G.CODE_DESC model
+        , j.stk_code || ' - ' || j.stk_desc model
         , H.CODE_DESC reason_desc
         , i.code_name trans_type_desc
         ,a.remarks
@@ -601,6 +620,7 @@
         left join SYS0013m g on g.code_id = A.model
         left join SYS0013m h on h.code_id = a.reason
         left join SYS0013m i on i.code = a.trnsc_type and i.code_master_id = '491'
+        left join sys0026m j on j.stk_code = g.code
         where 1=1
           and a.serial_no = #{serialNo}
           order by a.seq
@@ -764,7 +784,7 @@
         , D.NAME status
         , E.NAME condition
         , F.USER_NAME creator
-        , G.CODE_DESC model
+        , h.stk_code || ' - ' || h.stk_desc model
         from SVC0126M a
         left join SYS0028M b on b.wh_loc_code = a.loc_id
         left join SYS0005M c on c.brnch_id = a.BRANCH_ID
@@ -772,6 +792,7 @@
         left join SYS0038M e on e.stus_code_id = a.CONDITION
         left join SYS0047m f on f.user_id = A.CRT_USER_ID
         left join SYS0013m g on g.code_id = A.model
+        left join sys0026m h on h.stk_code = g.code
         where 1=1
         and a.serial_no not in
         (

@@ -17,7 +17,7 @@ public interface HiCareMapper {
 
 	public List<EgovMap> selectCdbCode();
 
-	public List<EgovMap> selectModelCode();
+	public List<EgovMap> selectModelCode(Map<String, Object> params);
 
 	public List<EgovMap> getBch(Map<String, Object> params);
 

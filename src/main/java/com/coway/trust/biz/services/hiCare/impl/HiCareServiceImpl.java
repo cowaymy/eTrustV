@@ -63,7 +63,8 @@ public class HiCareServiceImpl implements HiCareService {
 
 	@Override
 	public List<EgovMap> selectModelCode() {
-		return hiCareMapper.selectModelCode();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		return hiCareMapper.selectModelCode(resultValue);
 	}
 
 	@Override
@@ -554,5 +555,14 @@ public class HiCareServiceImpl implements HiCareService {
 		}
 
 		return resultValue;
+	}
+
+	@Override
+	public void updateHiCareDetailMapper(Map<String, Object> params) throws Exception{
+		List<EgovMap> modelList = hiCareMapper.selectModelCode(params);
+
+		params.put("model", modelList.get(0).get("codeId"));
+		hiCareMapper.updateHiCareDetail(params);
+		hiCareMapper.insertHiCareSerialHistory(params);
 	}
 }

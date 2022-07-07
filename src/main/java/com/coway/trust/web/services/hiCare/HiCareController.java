@@ -1,6 +1,7 @@
 package com.coway.trust.web.services.hiCare;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -40,13 +44,18 @@ import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.web.commission.CommissionConstants;
+import com.coway.trust.web.commission.csv.NonIncentiveDataVO;
 import com.coway.trust.web.sales.SalesConstants;
+import com.coway.trust.web.services.csv.HiCareDataVO;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
 import com.google.gson.Gson;
 
@@ -74,8 +83,17 @@ public class HiCareController {
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
 
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
 	@Resource(name = "hsManualService")
 	private HsManualService hsManualService;
+
+	@Autowired
+	private CsvReadComponent csvReadComponent;
+
+	@Autowired
+	private SessionHandler sessionHandler;
 
  	@Autowired
 	private FileApplication fileApplication;
@@ -195,6 +213,8 @@ public class HiCareController {
 
  		model.addAttribute("branchList", branchList);
  		model.addAttribute("modelList", modelList);
+ 		params.put("groupCode", "512");
+ 		model.addAttribute("stockCodeList", commonService.selectCodeList(params));
 
  	    return "services/hiCare/hiCareNewPop";
 	}
@@ -612,4 +632,75 @@ public class HiCareController {
 
 		return ResponseEntity.ok(result);
 	}
+
+ 	/*@RequestMapping(value = "/selectModelCode.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> selectModelCode(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+ 		List<EgovMap> modelList = hiCareService.selectModelCode();
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setData(modelList);
+
+		return ResponseEntity.ok(result);
+	}*/
+
+ 	@RequestMapping(value = "/selectModelCode.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectModelCode(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+
+	    List<EgovMap> modelCode = hiCareService.selectModelCode();
+
+	    return ResponseEntity.ok(modelCode);
+	  }
+
+ 	@RequestMapping(value = "/hiCareModelUpdatePop.do")
+	public String hiCareModelUpdatePop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+ 		model.addAttribute("params", params);
+
+ 		EgovMap headerDetail = hiCareService.selectHiCareDetail(params);
+
+ 		model.addAttribute("headerDetail", headerDetail);
+ 		model.addAttribute("movementType", params.get("movementType"));
+
+ 	    return "services/hiCare/hiCareModelUpdatePop";
+	}
+
+ 	@RequestMapping(value = "/uploadModelCsv", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> uploadModelCsv(MultipartHttpServletRequest request) throws Exception,IOException, InvalidFormatException {
+		//ReturnMessage message = new ReturnMessage();
+
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+
+		List<HiCareDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, HiCareDataVO::create);
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = String.valueOf(sessionVO.getUserId());
+
+		for (HiCareDataVO vo : vos) {
+			/*det.Updated = DateTime.Now;*/
+			Map map = new HashMap();
+			map.put("serialNo",vo.getSerialNo());
+			map.put("modelCode",vo.getModel());
+			map.put("userId",loginId);
+			map.put("reason","6834");
+
+			hiCareService.updateHiCareDetailMapper(map);
+		}
+		//commissionCalculationService.callNonIncentiveDetail(Integer.parseInt(uploadId));
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(result);
+	}
+
+ 	@RequestMapping(value = "/hiCareUpdateSamplePop.do")
+	public String hiCareUpdateSamplePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "commission/commissionNonIncentiveUploadSamplePop";
+	}
+
 }

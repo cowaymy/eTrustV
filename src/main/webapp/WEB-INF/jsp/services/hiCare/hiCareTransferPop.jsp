@@ -113,8 +113,10 @@ $(document).ready(function(){
 
 	doDefCombo(conditionOption, '' ,'tcondition', 'M', 'f_multiCombo');
 	doDefCombo(statusOption, '' ,'tstatus', 'M', 'f_multiCombo');
-	doGetCombo('/common/selectCodeList.do', '490', '', 'tcmbModel', 'M', 'f_multiCombo');
+	//doGetCombo('/services/hiCare/selectModelCode.do', '490', '', 'tcmbModel', 'M', 'f_multiCombo');
 	doGetComboOrder('/common/selectCodeList.do', '498', 'CODE_ID', '', 'courier', 'S', ''); //Common Code
+	doGetCombo('/services/hiCare/selectModelCode.do','' , '','tcmbModel', 'M' , 'f_multiCombo');
+
     //$("#fromLoc option:eq(1)", '#hiCareTrfHeadForm').attr("selected", true);
 
     /* if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){

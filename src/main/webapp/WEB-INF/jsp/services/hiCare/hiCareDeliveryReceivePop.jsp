@@ -80,7 +80,7 @@
         }, {
           dataField : "modelName",
           headerText : "Model",
-          width : "10%"
+          width : "20%"
         }, {
             dataField : "statusDesc",
             headerText : "status",

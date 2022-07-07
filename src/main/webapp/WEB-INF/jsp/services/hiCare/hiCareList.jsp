@@ -215,6 +215,10 @@
 	  Common.popupDiv("/services/hiCare/hiCareNewPop.do", $("#hiCareForm").serializeJSON(), null, true, 'newPop');
   }
 
+  function fn_modelUpdate() {
+      Common.popupDiv("/services/hiCare/hiCareModelUpdatePop.do", $("#hiCareForm").serializeJSON(), null, true, 'modelUpdatePop');
+  }
+
   function fn_edit(item) {
 	  var selectedItem = AUIGrid.getSelectedItems(gridID);
 	  if(selectedItem.length <= 0){
@@ -468,6 +472,9 @@
     <!-- search_result start -->
         <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <li><p class="btn_grid">
+                <a href="#" onclick="javascript:fn_modelUpdate();">Model Update</a>
+            </p></li>
             <li><p class="btn_grid">
                 <a href="#" onclick="javascript:fn_new();">New Entry</a>
             </p></li>

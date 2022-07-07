@@ -57,6 +57,13 @@ var uomObj = {};
   uomObj["${obj.codeId}"] = "${obj.codeName}";
 </c:forEach>
 
+var stockCodeList = [];
+var stockCodeObj = {};
+<c:forEach var="obj" items="${stockCodeList}">
+stockCodeList.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", codeNames:"("+"${obj.codeId}"+")"+"${obj.codeName}"});
+stockCodeObj["${obj.codeId}"] = "${obj.codeName}";
+</c:forEach>
+
 //*****************************************/
 var msIe = (js.browser.isMsie() || js.browser.isSafari());
 console.log("msIe : " +msIe);
@@ -286,9 +293,35 @@ function fn_splitBarcode(){
                 AUIGrid.addRow(scanGridId, rowData, "first");
                 continue;
             }else{
+            	/* console.log("BarCodeArray[i] " + BarCodeArray[i]);
             	var stockCode1 = BarCodeArray[i].substr(3,5);
                 if(stockCode1 != "02F5U"){
                 	failSound = true;
+                    rowData = {
+                            "serialNo":BarCodeArray[i]
+                          , "status":0
+                          , "desc":"Serial No. is not valid.",
+                        };
+                    AUIGrid.addRow(scanGridId, rowData, "first");
+                    continue;
+                } */
+
+                console.log("BarCodeArray[i] " + BarCodeArray[i]);
+                console.log("stockCode1 " + stockCode1);
+                var errorFlag = true;
+                var stockCode1 = BarCodeArray[i].substr(3,5);
+                for (var j = 0 ; j < stockCodeList.length ; j++){
+                    console.log("stockCodeList[i] " + stockCodeList[j].codeName);
+
+                    if(stockCode1 == stockCodeList[j].codeName){
+                        errorFlag = false;
+                    }
+                }
+                console.log("BarCodeArray[i] " + BarCodeArray[i]);
+                console.log("errorFlag " + errorFlag);
+                if(errorFlag == true){
+                    console.log("BarCodeArray[i] " + BarCodeArray[i]);
+                    failSound = true;
                     rowData = {
                             "serialNo":BarCodeArray[i]
                           , "status":0

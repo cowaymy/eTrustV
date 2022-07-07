@@ -63,4 +63,5 @@ public interface HiCareService {
 
 	public Map<String, Object> saveHiCareDelivery(Map<String, Object> obj, SessionVO sessionVO) throws Exception;
 
+	void updateHiCareDetailMapper(Map<String, Object> params) throws Exception;
 }
