@@ -471,10 +471,12 @@
     <section class="search_result">
     <!-- search_result start -->
         <ul class="right_btns">
-        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
             <li><p class="btn_grid">
                 <a href="#" onclick="javascript:fn_modelUpdate();">Model Update</a>
             </p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid">
                 <a href="#" onclick="javascript:fn_new();">New Entry</a>
             </p></li>
