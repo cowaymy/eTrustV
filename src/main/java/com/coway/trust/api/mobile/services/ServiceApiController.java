@@ -44,6 +44,7 @@ import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiDto;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiForm;
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelDto;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelSmsForm;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
@@ -84,6 +85,7 @@ import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.as.AsFromCodyApiService;
 import com.coway.trust.biz.services.as.IhrApiService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -172,6 +174,7 @@ import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListForm;
  * 22/04/2019    ONGHC      1.0.10      - Add function getRelateOrderInfo
  * 23/04/2019    ONGHC      1.0.11      - Add function getOrdDetail
  * 24/09/2020    FARUQ       1.0.12      - Missing product name when fail (mobile site only)
+ * 07/07/2022    FARUQ       1.0.13 	  - establish /mobile/api/v1/service/insertAsFromCodyRequest
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -218,6 +221,9 @@ public class ServiceApiController {
 
   @Resource(name = "ihrApiService")
   private IhrApiService ihrApiService;
+
+  @Resource(name = "asFromCodyApiService")
+  private AsFromCodyApiService asFromCodyApiService;
 
   @ApiOperation(value = "Heart Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/heartServiceJobList", method = RequestMethod.GET)
@@ -2714,6 +2720,10 @@ public class ServiceApiController {
     return ResponseEntity.ok(list);
   }
 
-
+	@ApiOperation(value = "Insert As From Cody Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/insertAsFromCodyRequest", method = RequestMethod.POST)
+	public void insertAsFromCodyRequest(@RequestBody AsFromCodyForm  asFromCodyForm) throws Exception {
+		asFromCodyApiService.insertAsFromCodyRequest(asFromCodyForm);
+	}
 
 }
