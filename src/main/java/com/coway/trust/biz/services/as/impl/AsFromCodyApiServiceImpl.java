@@ -66,6 +66,7 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
 
 	    LoginVO loginVO = loginMapper.selectLoginInfoById(params);
 	    //params.put("payStusId", '1');
+	    params.put("_USER_ID", asFromCodyForm.getUserId());
 
 	    params.put("crtUserId", loginVO.getUserId());
 	    params.put("updUserId", loginVO.getUserId());
