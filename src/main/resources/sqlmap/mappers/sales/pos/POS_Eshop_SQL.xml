@@ -285,7 +285,7 @@
     <select id="selectCatalogList" parameterType="Map" resultType="egovMap">
             SELECT
                       A.ID
-                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME || '.' || G.FILE_EXTSN AS FILEPATH
+                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME || '.' || C.FILE_EXTSN AS FILEPATH
                     , D.LOC_ID
             FROM SAL0321D A
             LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID

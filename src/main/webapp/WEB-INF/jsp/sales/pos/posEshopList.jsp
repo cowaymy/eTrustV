@@ -253,6 +253,12 @@ function fn_completePos() {
 	 if(selectedItems.length <= 0) {
 		 return;
 	 }
+
+	 if(selectedItems[0].item.status  !="Delivered"){
+	        Common.alert('* Please check the status "DELIVERED" status is only available.');
+	        return ;
+	 }
+
 	 else{
 	       var confirmSaveMsg = "Are you sure want to Complete?";
 	       Common.confirm(confirmSaveMsg, updateStatus);
