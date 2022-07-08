@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.AsFromCodyApiServiceMapper">
+
+  <insert id="insertAsFromCodyRequest" parameterType="Map"  >
+    INSERT  /* [.com/coway/trust/biz/services/as/impl/AsFromCodyApiServiceMapper.java] */
+    INTO SVC0130D( AS_CD_SEQ
+                          , SALES_ORDER_NO
+                          , STUS
+                          , CUST_NAME
+                          , PRODUCT_CODE
+                          , PRODUCT_NAME
+                          , APP_TYPE
+                          , SALES_PROMOTION
+                          , CONTRACT_DURATION
+                          , OUTSTANDING
+                          , SIRIM_NO
+                          , SERIAL_NO
+                          , MEMBERSHIP_CONTRACT_EXPIRY
+                          , DSC_CODE
+                          , PROD_CAT
+                          , REG_ID
+                          , DEFECT_CODE
+                          , DEFECT_DESC
+                          , CRT_USER_ID
+                          , CRT_DT
+                          , UPD_USER_ID
+                          , UPD_DT
+
+    ) VALUES ( SVC0130D_ID_SEQ.NEXTVAL
+                  ,#{salesOrderNo}
+                  ,#{stus}
+                  ,#{custName}
+                  ,#{productCode}
+                  ,#{productName}
+                  ,#{appType}
+                  ,#{salesPromotion}
+                  ,#{contractDuration}
+                  ,#{outstanding}
+                  ,#{sirimNo}
+                  ,#{serialNo}
+                  ,#{membershipContractExpiry}
+                  ,#{dscCode}
+                  ,#{prodCat}
+                  ,#{regId}
+                  ,#{defectCode}
+                  ,#{defectDesc}
+                  ,#{crtUserId}
+                  ,SYSDATE
+                  ,#{updUserId}
+                  ,SYSDATE
+    )
+  </insert>
+
+</mapper>
