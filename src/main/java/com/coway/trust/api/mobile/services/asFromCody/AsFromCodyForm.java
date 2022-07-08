@@ -198,7 +198,7 @@ public class AsFromCodyForm {
 	}
 
 	public void setMembershipContractExpiry(String membershipContractExpiry) {
-		membershipContractExpiry = membershipContractExpiry;
+		this.membershipContractExpiry = membershipContractExpiry;
 	}
 
 	public void setDscCode(String dscCode) {
