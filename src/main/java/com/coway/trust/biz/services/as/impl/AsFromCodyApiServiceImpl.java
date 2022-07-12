@@ -89,12 +89,12 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
         if( CommonUtils.isEmpty(param.getUserName()) ){
             throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
         }*/
-        EgovMap selectSubmissionRecords = asFromCodyApiServiceMapper.selectSubmissionRecords(AsFromCodyForm.createMap(asFromCodyForm));
+		EgovMap selectSubmissionRecords = asFromCodyApiServiceMapper.selectSubmissionRecords(AsFromCodyForm.createMap(asFromCodyForm));
         AsFromCodyDto rtn = new AsFromCodyDto();
 
-       /* if( MapUtils.isNotEmpty(selectUserProfile) ){
-            return rtn.create(selectUserProfile);
-        }*/
+        if( MapUtils.isNotEmpty(selectSubmissionRecords) ){
+            return rtn.create(selectSubmissionRecords);
+        }
         return rtn;
     }
 
