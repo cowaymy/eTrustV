@@ -1,6 +1,8 @@
 package com.coway.trust.biz.api.impl;
 
 
+import java.util.List;
+
 /**************************************
  * Date                Author         Description
  * -------------       -----------      -------------
@@ -18,7 +20,9 @@ public interface LMSApiMapper {
 
 	EgovMap selectCourseId(Map<String, Object> params);
 
-	EgovMap selectMemIdByCourse(Map<String, Object> params);
+	EgovMap selectActiveMemberByMemId(Map<String, Object> params);
+
+	List<EgovMap> selectMemIdByCourse(Map<String, Object> params);
 
 	EgovMap selectCourseByMem(Map<String, Object> params);
 

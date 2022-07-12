@@ -443,29 +443,37 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
             				  if (codeId != null){
             					  enrollInfo.put("memCode", courseForm.getUsername().trim());
             					  enrollInfo.put("coursStatus", 1); // active course only
-            					  EgovMap userInfo = lmsApiMapper.selectMemIdByCourse(enrollInfo);
+            					  enrollInfo.put("coursMemStatus", 1); // active course member only
+            					  enrollInfo.put("coursTestResult", 0);
+            					  List<EgovMap> userInfoList = lmsApiMapper.selectMemIdByCourse(enrollInfo);
 
-            					  if (userInfo != null){
+            					  if (userInfoList != null){
+            						  if(userInfoList.size() == 1){
+            							  EgovMap userInfo = userInfoList.get(0);
 
-            						  if (userInfo.get("coursCode") != null && userInfo.get("coursMemStusId").toString().equals("1")){
-            							  Exception e7 = new Exception("username [" + courseForm.getUsername() + "] already enrolled with course = [" + userInfo.get("coursCode") + "]");
-            							  throw e7;
+            							  if (userInfo.get("coursCode") != null){
+                							  Exception e7 = new Exception("username [" + courseForm.getUsername() + "] already enrolled with course = [" + userInfo.get("coursCode") + "]");
+                							  throw e7;
+                						  }
+
+                						 //assign username to course
+                	                      Map<String, Object> attendeeInfo = new HashMap<String, Object>();
+                	                      attendeeInfo.put("coursId", codeId.get("coursId"));
+                	                      attendeeInfo.put("coursMemId", userInfo.get("memId"));
+                	                      attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
+                	                      attendeeInfo.put("coursDMemName", userInfo.get("fullName"));
+                	                      attendeeInfo.put("coursDMemNric", userInfo.get("nric"));
+                	                      //attendeeInfo.put("coursMemShirtSize", shirtSize);
+                	                      lmsApiMapper.registerCourse(attendeeInfo);
+            						  }else{
+            							  Exception e7 = new Exception ("Please contact admistrator"); //the member enroll more than two courses, should have one active course enroll only
+                            			  throw e7;
             						  }
-
-            						 //assign username to course
-            	                      Map<String, Object> attendeeInfo = new HashMap<String, Object>();
-            	                      attendeeInfo.put("coursId", codeId.get("coursId"));
-            	                      attendeeInfo.put("coursMemId", userInfo.get("memId"));
-            	                      attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
-            	                      attendeeInfo.put("coursDMemName", userInfo.get("fullName"));
-            	                      attendeeInfo.put("coursDMemNric", userInfo.get("nric"));
-            	                      //attendeeInfo.put("coursMemShirtSize", shirtSize);
-            	                      lmsApiMapper.registerCourse(attendeeInfo);
-
             					  } else {
             						  Exception e6 = new Exception ("username not found [" + courseForm.getUsername() + "]");
                         			  throw e6;
             					  }
+
 
             				  } else {
             					  Exception e5 = new Exception ("course code not found [" + courseForm.getCourseCode() + "]");
@@ -614,7 +622,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
             		  Map<String, Object> userInfo = new HashMap<String, Object>();
             		  userInfo.put("memCode", username);
 
-           		   	  EgovMap userId = lmsApiMapper.selectMemIdByCourse(userInfo);
+           		   	  EgovMap userId = lmsApiMapper.selectActiveMemberByMemId(userInfo);
 
            		   	  if (userId == null){
            		   		  Exception e5 = new Exception("username [" + username +"] not found");

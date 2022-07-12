@@ -16,20 +16,38 @@
     </if>
 </select>
 
+<select id="selectActiveMemberByMemId" parameterType="Map" resultType="egovMap">
+    SELECT
+	    MEM_ID
+	    ,MEM_CODE
+	    ,FULL_NAME
+	    ,NRIC
+	    ,MEM_TYPE
+    FROM ORG0001D
+    WHERE
+    1= 1
+    <if test="memCode != null and memCode != ''">
+        AND MEM_CODE = #{memCode}
+    </if>
+    AND STUS = 1
+</select>
+
 <select id="selectMemIdByCourse" parameterType="Map" resultType="egovMap">
     SELECT MEM_ID,MEM_CODE,FULL_NAME,NRIC,MEM_TYPE, COURSE.*
     FROM ORG0001D O LEFT JOIN
         (SELECT D.COURS_ID, COURS_CODE, COURS_NAME, COURS_LOC, COURS_STUS_ID, COURS_MEM_TYPE_ID, COURS_ITM_ID,
             COURS_MEM_ID, COURS_TEST_RESULT, COURS_MEM_STUS_ID, COURS_D_MEM_NAME, COURS_D_MEM_NRIC, COURS_CDP_POINT
             FROM MSC0008D D JOIN MSC0009D C ON D.COURS_ID = C.COURS_ID
-            WHERE D.COURS_CODE = #{coursCode}) COURSE
+            WHERE
+            COURS_TEST_RESULT IS NULL
+            <if test="coursMemStatus != null and coursMemStatus != ''">
+		        and COURS_MEM_STUS_ID = #{coursMemStatus}
+		    </if>
+            ) COURSE
     ON O.MEM_ID = COURSE.COURS_MEM_ID
     WHERE 1=1
     <if test="memCode != null and memCode != ''">
         AND O.MEM_CODE = #{memCode}
-    </if>
-    <if test="memStatus != null and memStatus != ''">
-        AND O.STUS = #{memStatus}
     </if>
 
 </select>
