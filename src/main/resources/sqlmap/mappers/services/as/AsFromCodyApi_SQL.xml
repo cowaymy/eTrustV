@@ -52,4 +52,17 @@
     )
   </insert>
 
+
+
+  <select id="selectSubmissionRecords" parameterType="Map" resultType="egovMap">
+<![CDATA[
+
+SELECT DISTINCT SALES_ORDER_NO FROM SVC0130D
+WHERE EXTRACT(MONTH FROM CRT_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual)
+AND EXTRACT(YEAR FROM CRT_DT) IN (SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual)
+AND SALES_ORDER_NO = #{salesOrderNo}
+
+]]>
+</select>
+
 </mapper>
