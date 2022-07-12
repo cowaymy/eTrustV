@@ -17,4 +17,6 @@ public interface AsFromCodyApiServiceMapper {
 
 	int insertAsFromCodyRequest(Map<String, Object> params);
 
+	EgovMap selectSubmissionRecords(Map<String, Object> params);
+
 }

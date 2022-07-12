@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
 import com.coway.trust.api.mobile.payment.payment.PaymentForm;
 import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiForm;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiForm;
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper;
@@ -76,5 +80,22 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
 
 	    return rtn;
 	  }
+
+    @Override
+    public AsFromCodyDto selectSubmissionRecords(AsFromCodyForm asFromCodyForm) throws Exception {
+       /* if( null == param ){
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        if( CommonUtils.isEmpty(param.getUserName()) ){
+            throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
+        }*/
+        EgovMap selectSubmissionRecords = asFromCodyApiServiceMapper.selectSubmissionRecords(AsFromCodyForm.createMap(asFromCodyForm));
+        AsFromCodyDto rtn = new AsFromCodyDto();
+
+       /* if( MapUtils.isNotEmpty(selectUserProfile) ){
+            return rtn.create(selectUserProfile);
+        }*/
+        return rtn;
+    }
 
 }
