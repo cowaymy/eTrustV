@@ -9,8 +9,10 @@ import java.util.List;
  *********************************************************************************************/
 import java.util.Map;
 
-
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
 import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiForm;
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -25,5 +27,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface AsFromCodyApiService {
 
 	int insertAsFromCodyRequest(AsFromCodyForm AsFromCodyForm) throws Exception;
+
+	AsFromCodyDto selectSubmissionRecords(AsFromCodyForm AsFromCodyForm) throws Exception;
 
 }
