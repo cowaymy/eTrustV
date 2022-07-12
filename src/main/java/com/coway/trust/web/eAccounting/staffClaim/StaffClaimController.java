@@ -80,10 +80,8 @@ public class StaffClaimController {
 	public ResponseEntity<List<EgovMap>> selectStaffClaimList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-		if(!"A1101".equals(costCentr)) {
-	         if(!"144140".equals(Integer.toString(sessionVO.getUserId())) && !"79286".equals(Integer.toString(sessionVO.getUserId()))) {
-	                params.put("loginUserId", sessionVO.getUserId());
-	         }
+		if(!"A1101".equals(costCentr) && !params.get("pageAuthFuncUserDefine1").equals("Y")) {
+			 params.put("loginUserId", sessionVO.getUserId());
 		}
 
 		LOGGER.debug("params =====================================>>  " + params);

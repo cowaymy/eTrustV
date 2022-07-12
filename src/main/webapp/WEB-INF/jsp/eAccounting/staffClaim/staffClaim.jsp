@@ -406,7 +406,19 @@ function fn_setPopSubSupplier() {
 }
 
 function fn_selectStaffClaimList() {
-	Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
+// 	Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
+//         console.log(result);
+//         AUIGrid.setGridData(staffClaimGridID, result);
+//     });
+
+//     if("${PAGE_AUTH.funcView}" == 'Y'){
+//         Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
+//             console.log(result);
+//             AUIGrid.setGridData(staffClaimGridID, result);
+//         });
+//     }
+
+    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(staffClaimGridID, result);
     });
@@ -1427,6 +1439,7 @@ function fn_checkClmMonthAndMemAccId() {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_staffClaim">
 <input type="hidden" id="memAccName" name="memAccName">
+<input type="hidden" id="pageAuthFuncUserDefine1" name="pageAuthFuncUserDefine1" value="${PAGE_AUTH.funcUserDefine1}">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
