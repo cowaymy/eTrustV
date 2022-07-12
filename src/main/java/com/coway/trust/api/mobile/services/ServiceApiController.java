@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
+import com.coway.trust.api.mobile.payment.payment.PaymentDto;
+import com.coway.trust.api.mobile.payment.payment.PaymentForm;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestForm;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestDto;
@@ -44,6 +48,7 @@ import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiDto;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiForm;
+import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelDto;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelSmsForm;
@@ -2719,6 +2724,18 @@ public class ServiceApiController {
 
     return ResponseEntity.ok(list);
   }
+
+  @ApiOperation(value = "select Submission Records", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectSubmissionRecords", method = RequestMethod.GET)
+	public ResponseEntity<AsFromCodyDto>  selectSubmissionRecords(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
+	  return ResponseEntity.ok(asFromCodyApiService.selectSubmissionRecords(asFromCodyForm));
+	}
+
+/*  @ApiOperation(value = "selectUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectUserProfile", method = RequestMethod.GET)
+  public ResponseEntity<UserProfileApiDto> selectUserProfile(@ModelAttribute UserProfileApiForm param) throws Exception {
+      return ResponseEntity.ok(userProfileApiService.selectUserProfile(param));
+  }*/
 
 	@ApiOperation(value = "Insert As From Cody Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/insertAsFromCodyRequest", method = RequestMethod.POST)
