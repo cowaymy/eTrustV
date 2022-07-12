@@ -3,6 +3,9 @@ package com.coway.trust.api.mobile.services.asFromCody;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
+import com.coway.trust.util.BeanConverter;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,58 +21,54 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "AsFromCodyDto", description = "AsFromCody Dto")
 public class AsFromCodyDto {
 
-	@ApiModelProperty(value = "userId")
+		@SuppressWarnings("unchecked")
+		public AsFromCodyDto create(EgovMap egvoMap) {
+		return BeanConverter.toBean(egvoMap, AsFromCodyDto.class);
+	}
+
+		public static Map<String, Object> createMap(AsFromCodyDto asFromCodyForm){
+		    Map<String, Object> params = new HashMap<>();
+
+		    params.put("userId", asFromCodyForm.getUserId());
+		    params.put("custName", asFromCodyForm.getCustName());
+		    params.put("salesOrderNo", 	asFromCodyForm.getSalesOrderNo());
+		    params.put("productCode", asFromCodyForm.getProductCode());
+		    params.put("productName", asFromCodyForm.getProductName());
+		    params.put("appType", asFromCodyForm.getAppType());
+		    params.put("salesPromotion", asFromCodyForm.getSalesPromotion());
+		    params.put("contractDuration", asFromCodyForm.getContractDuration());
+		    params.put("outstanding", asFromCodyForm.getOutstanding());
+		    params.put("sirimNo", asFromCodyForm.getSirimNo());
+		    params.put("serialNo", asFromCodyForm.getSerialNo());
+		    params.put("membershipContractExpiry", asFromCodyForm.getMembershipContractExpiry());
+		    params.put("dscCode", asFromCodyForm.getDscCode());
+		    params.put("prodCat", asFromCodyForm.getProdCat());
+		    params.put("regId", asFromCodyForm.getRegId());
+		    params.put("stus", asFromCodyForm.getStus());
+		    params.put("defectCode", asFromCodyForm.getDefectCode());
+		    params.put("defectDesc", asFromCodyForm.getDefectDesc());
+
+		    return params;
+		  }
+
+
 	private String userId;
-
-	@ApiModelProperty(value = "custName")
 	private String custName;
-
-	@ApiModelProperty(value = "salesOrderNo")
 	private String salesOrderNo;
-
-	@ApiModelProperty(value = "productCode")
 	private String productCode;
-
-	@ApiModelProperty(value = "productName")
 	private String productName;
-
-	@ApiModelProperty(value = "appType")
 	private String appType;
-
-	@ApiModelProperty(value = "salesPromotion")
 	private String salesPromotion;
-
-	@ApiModelProperty(value = "contractDuration")
 	private String contractDuration;
-
-	@ApiModelProperty(value = "outstanding")
 	private String outstanding;
-
-	@ApiModelProperty(value = "sirimNo")
 	private String sirimNo;
-
-	@ApiModelProperty(value = "serialNo")
 	private String serialNo;
-
-	@ApiModelProperty(value = "membershipContractExpiry")
 	private String membershipContractExpiry;
-
-	@ApiModelProperty(value = "dscCode")
 	private String dscCode;
-
-	@ApiModelProperty(value = "prodCat")
 	private String prodCat;
-
-	@ApiModelProperty(value = "regId")
 	private String regId;
-
-	@ApiModelProperty(value = "stus")
 	private String stus;
-
-	@ApiModelProperty(value = "defectCode")
 	private String defectCode;
-
-	@ApiModelProperty(value = "defectDesc")
 	private String defectDesc;
 
 
@@ -217,34 +216,5 @@ public class AsFromCodyDto {
 	public void setStus(String stus) {
 		this.stus = stus;
 	}
-
-
-
-
-public static Map<String, Object> createMap(AsFromCodyDto asFromCodyForm){
-    Map<String, Object> params = new HashMap<>();
-
-    params.put("userId", asFromCodyForm.getUserId());
-    params.put("custName", asFromCodyForm.getCustName());
-    params.put("salesOrderNo", 	asFromCodyForm.getSalesOrderNo());
-    params.put("productCode", asFromCodyForm.getProductCode());
-    params.put("productName", asFromCodyForm.getProductName());
-    params.put("appType", asFromCodyForm.getAppType());
-    params.put("salesPromotion", asFromCodyForm.getSalesPromotion());
-    params.put("contractDuration", asFromCodyForm.getContractDuration());
-    params.put("outstanding", asFromCodyForm.getOutstanding());
-    params.put("sirimNo", asFromCodyForm.getSirimNo());
-    params.put("serialNo", asFromCodyForm.getSerialNo());
-    params.put("membershipContractExpiry", asFromCodyForm.getMembershipContractExpiry());
-    params.put("dscCode", asFromCodyForm.getDscCode());
-    params.put("prodCat", asFromCodyForm.getProdCat());
-    params.put("regId", asFromCodyForm.getRegId());
-    params.put("stus", asFromCodyForm.getStus());
-    params.put("defectCode", asFromCodyForm.getDefectCode());
-    params.put("defectDesc", asFromCodyForm.getDefectDesc());
-
-    return params;
-  }
-
 
 }
