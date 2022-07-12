@@ -53,6 +53,7 @@
             LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
         WHERE
             Extent1.APP_TYPE_ID = 66
+            AND extent6.stus_id <![CDATA[ <> ]]> 8
             <if test="orderId != null and orderId != ''">
             AND Extent1.SALES_ORD_ID = #{orderId}
             </if>
