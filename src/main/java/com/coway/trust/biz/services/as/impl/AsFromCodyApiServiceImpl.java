@@ -43,13 +43,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Service("asFromCodyApiService")
 public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements AsFromCodyApiService {
-	private static final Logger logger = LoggerFactory.getLogger(AsFromCodyApiServiceImpl.class);
 
 	@Resource(name = "asFromCodyApiServiceMapper")
 	private AsFromCodyApiServiceMapper asFromCodyApiServiceMapper;
 
     @Autowired
     private LoginMapper loginMapper;
+
+	private static final Logger logger = LoggerFactory.getLogger(AsFromCodyApiServiceImpl.class);
 
 	@Override
 	public int insertAsFromCodyRequest(AsFromCodyForm asFromCodyForm) throws Exception {
@@ -64,14 +65,12 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
 
 	    //params.put("_USER_ID", asFromCodyForm.getUserId());
 
-	    params.put("_USER_ID", asFromCodyForm.getUserId());
-
 	    LoginVO loginVO = loginMapper.selectLoginInfoById(params);
 	    //params.put("payStusId", '1');
 
 
-	    params.put("crtUserId", loginVO.getUserId());
-	    params.put("updUserId", loginVO.getUserId());
+	    //params.put("crtUserId", loginVO.getUserId());
+	    //params.put("updUserId", loginVO.getUserId());
 
 	    rtn = asFromCodyApiServiceMapper.insertAsFromCodyRequest(params);
 
