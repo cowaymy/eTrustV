@@ -99,7 +99,6 @@
 
             var isExistCrc = fn_existCrcNo('${custId}', $("#tknId").val().trim());
             if(isExistCrc) {
-                Common.alert("<spring:message code='sal.alert.msg.creditCardIsExisting' />");
                 return;
             }
 
@@ -166,14 +165,33 @@
 
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
+    	var resultInfo = null;
 
         Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : '', custCrcToken : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
+                resultInfo = rsltInfo;
             }
         }, null, {async : false});
         console.log('isExist ggg:'+isExist);
+
+        if(isExist){
+        	var sameCustIdAndCardCheck = false;
+
+        	for(var i = 0; i < resultInfo.length; i++){
+        		if(resultInfo[i].custId == CustID){
+        			sameCustIdAndCardCheck = true;
+        		}
+        	}
+        	if(sameCustIdAndCardCheck){
+        		Common.alert("<spring:message code='sal.alert.msg.creditCardIsExisting' />");
+        	}
+        	else{
+        		Common.alert("This bank card is used by another customer.");
+        	}
+        }
+
         return isExist;
     }
 

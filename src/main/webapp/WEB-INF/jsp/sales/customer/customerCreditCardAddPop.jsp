@@ -4,7 +4,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://www.onlinepayment.com.my/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javaScript" language="javascript">
-
+	var creditCardErrorMessage = "";
       //AUIGrid ���� �� ��ȯ ID
 
     $(document).ready(function(){
@@ -105,7 +105,7 @@
         var isExistCrc = fn_existCrcNo($("#custId").val(), $("#tknId").val().trim());
         if(isExistCrc) {
             isValid = false;
-            msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
+            msg += creditCardErrorMessage;
         }
 
         if(!isValid) {
@@ -117,15 +117,34 @@
     }
 
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
+    	creditCardErrorMessage = "";
+    	var resultInfo = null;
         var isExist = false;
 
         Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : '', custCrcToken : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
-                console.log('rsltInfo.length:'+rsltInfo.length);
+                console.log('rsltInfo.length:'+JSON.stringify(rsltInfo));
                 isExist = rsltInfo.length == 0 ? false : true;
+                resultInfo = rsltInfo;
             }
         }, null, {async : false});
         console.log('isExist ggg:'+isExist);
+        if(isExist){
+        	var sameCustIdAndCardCheck = false;
+
+        	for(var i = 0; i < resultInfo.length; i++){
+        		if(resultInfo[i].custId == CustID){
+        			sameCustIdAndCardCheck = true;
+        		}
+        	}
+        	if(sameCustIdAndCardCheck){
+        		creditCardErrorMessage = "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
+        	}
+        	else{
+        		creditCardErrorMessage = "This bank card is used by another customer.";
+        	}
+        }
+
         return isExist;
     }
 
