@@ -13,7 +13,7 @@
     }).multipleSelect({});
 
     //doGetCombo('/services/as/report/selectMemberCodeList.do', '', '', 'CTCode', 'S', '');
-    doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
+    doGetComboSepa("/common/selectBranchCodeList.do", 5758, '-', '', 'branch', 'S', '');
   });
 
   function fn_validation() {
