@@ -50,10 +50,9 @@
                             WHERE
                                 RENT_DOC_TYPE_ID = 161 AND RENT_AMT  <![CDATA[ >= ]]>0
                             GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
-            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id AND extent6.stus_id <![CDATA[ <> ]]> 8
         WHERE
             Extent1.APP_TYPE_ID = 66
-            AND extent6.stus_id <![CDATA[ <> ]]> 8
             <if test="orderId != null and orderId != ''">
             AND Extent1.SALES_ORD_ID = #{orderId}
             </if>
