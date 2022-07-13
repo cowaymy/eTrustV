@@ -17,6 +17,8 @@ public interface ASReportMapper {
 
   List<EgovMap> selectMemberCodeList(Map<String, Object> params);
 
+  List<EgovMap> selectMemberCodeList2(Map<String, Object> params);
+
   EgovMap selectOrderNum();
 
   List<EgovMap> selectViewLedger(Map<String, Object> params);

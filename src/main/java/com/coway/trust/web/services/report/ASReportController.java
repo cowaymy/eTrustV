@@ -68,6 +68,19 @@ public class ASReportController {
 		return ResponseEntity.ok(memberCode);
 	}
 
+	@RequestMapping(value = "/selectMemberCodeList2.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemberCode2(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		/*
+		 * BY KV - branch - CT
+		 */
+		List<EgovMap> memberCode = ASReportService.selectMemberCodeList2(params);
+		// model.addAttribute("branchList", branchList);
+		logger.debug("memberCode {}", memberCode);
+		return ResponseEntity.ok(memberCode);
+	}
+
 	@RequestMapping(value = "/asRawDataPop.do")
 	public String asRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("ind", params.get("ind"));

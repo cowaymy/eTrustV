@@ -1180,7 +1180,7 @@ var branchDs = [];
          </li>
         </c:if>
         <li><p class="link_btn type2">
-          <a href="#none" onclick="fn_asSummaryList()"><spring:message code='service.btn.asSumLst'/></a>
+          <a href="#none" onclick="fn_asSummaryList()">AS Summary Listing</a>
          </p></li>
         <li><p class="link_btn type2">
           <a href="#none" onclick="fn_asYsList()"><spring:message code='service.btn.asYsLst'/></a>

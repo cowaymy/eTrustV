@@ -232,14 +232,14 @@
 
   function fn_changeCT() {
     var branchCd = $("#branch").val();
-    doGetCombo('/services/as/report/selectMemberCodeList.do', branchCd, '', 'CTCode', 'S', '');
+    doGetCombo('/services/as/report/selectMemberCodeList2.do', branchCd, '', 'CTCode', 'S', '');
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
  <header class="pop_header">
   <!-- pop_header start -->
-  <h1><spring:message code='service.btn.asSumLst'/></h1>
+  <h1>AS Summary Listing</h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
      <a href="#none"><spring:message code='sys.btn.close' /></a>
@@ -371,7 +371,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.DSCCode' /></th>
+       <th scope="row">HDC Code</th>
        <td><select id="branch" class="w100p"  onchange="fn_changeCT()">
        </select></td>
         <th scope="row"><spring:message code='home.lbl.dtCode' /></th>

@@ -30,6 +30,11 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
   }
 
   @Override
+  public List<EgovMap> selectMemberCodeList2(Map<String, Object> params) {
+    return ASReportMapper.selectMemberCodeList2(params);
+  }
+
+  @Override
   public EgovMap selectOrderNum() {
     return ASReportMapper.selectOrderNum();
   }
