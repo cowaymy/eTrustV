@@ -103,7 +103,7 @@
             filterCount++;
         }
 
-		if (filterCount <= 1) {
+		if (filterCount <= 0) {
 			//&& FormUtil.isEmpty($("#mBrandCredit").val()) && FormUtil.isEmpty($("#mRePurcFlag").val())) {
 			Common.alert("A minimum of 2 filtering criteria must be Inserted/Selected");
 			return;
