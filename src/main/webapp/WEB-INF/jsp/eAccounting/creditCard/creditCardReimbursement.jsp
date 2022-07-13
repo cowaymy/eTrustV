@@ -744,7 +744,11 @@ function fn_addRow() {
                         data.gridData.update[i].invcTypeName = data.invcTypeName;
                         data.gridData.update[i].cur = data.cur;
                         data.gridData.update[i].expDesc = data.expDesc;
-                        AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+                        if(fn_checkCreditLimit())
+                        {
+                        	AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+                        }
+
                     }
                     fn_clearData();
                 }
@@ -988,6 +992,9 @@ function fn_selectReimbursementInfo() {
         $("#newSupplyName").val(result.supplyName);
         $("#gstRgistNo").val(result.gstRgistNo);
         $("#expDesc").val(result.expDesc);
+        $("#sCardSeq").val(result.crditCardSeq);
+        $("#cardControlYN").val(result.cntrlCard);
+        $("#cntrlExp").val(result.cntrlExp);
 
         AUIGrid.setGridData(myGridID, result.itemGrp);
 
