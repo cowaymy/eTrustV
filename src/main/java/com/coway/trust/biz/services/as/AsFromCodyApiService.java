@@ -30,4 +30,6 @@ public interface AsFromCodyApiService {
 
 	AsFromCodyDto selectSubmissionRecords(AsFromCodyForm AsFromCodyForm) throws Exception;
 
+	AsFromCodyDto selectOrderInfo(AsFromCodyForm AsFromCodyForm) throws Exception;
+
 }
