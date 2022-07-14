@@ -79,12 +79,12 @@
 
         if(FormUtil.isEmpty($('#nameOnCard').val())) {
             isValid = false;
-            msg += "<spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' />";
+            msg += "<spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' /><br/>";
         }
         else {
             if(!FormUtil.checkSpecialChar($('#nameOnCard').val())) {
                 isValid = false;
-                msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />";
+                msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' /><br/>";
             } else {
                 $("#nameCard").val($("#nameOnCard").val());
             }
@@ -92,19 +92,19 @@
 
         if($("#cmbCardType").val() <= 0) {
             isValid = false;
-            msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
+            msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' /><br/>";
         }
 
         //Token ID
         if("" == $("tknId").val() || null == $("#tknId").val()) {
             isValid = false;
-            msg += "Credit card has not been encrypted";
+            msg += "Credit card has not been encrypted<br/>";
         }
 
         var isExistCrc = fn_existCrcNo($("#custId").val(), $("#tknId").val().trim());
         if(isExistCrc) {
             isValid = false;
-            msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
+            msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' /><br/>";
         }
 
         if(!isValid) {
@@ -137,10 +137,10 @@
         		}
         	}
         	if(sameCustIdAndCardCheck){
-        		creditCardErrorMessage = "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
+        		creditCardErrorMessage = "<spring:message code='sal.alert.msg.creditCardIsExisting' /><br/>";
         	}
         	else{
-        		creditCardErrorMessage = "This bank card is used by another customer.";
+        		creditCardErrorMessage = "This bank card is used by another customer.<br/>";
         	}
         }
 
