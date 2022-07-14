@@ -30,6 +30,7 @@
 
 	    // 셀 클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellClick", function(event) {
+	    	 if( event.dataField != "attchmentDownload" ){
 	        $("#reqId").val(event.item.reqId);
 	        $("#callEntryId").val(event.item.callEntryId);
 	        $("#salesOrdId").val(event.item.ordId);
@@ -50,6 +51,15 @@
 	        rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
 	        $("#rcdTms").val(rcdTms);
 	        //gridValue = AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
+	    	 }
+             else if( event.dataField == "attchmentDownload" ){
+                     if( FormUtil.isEmpty(event.value) == false){
+                       var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+                       if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
+                         window.open("/file/fileDownWeb.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+                       }
+                     }
+                   }
 	    });
 	});
 
@@ -182,7 +192,19 @@
 	        {dataField : "callStusName",                visible : false},
 	        {dataField : "reqStageId",                   visible : false},
 	        {dataField : "rcdTms",                        visible : false},
-	        {dataField : "appTypeId",                    visible : false}
+	        {dataField : "appTypeId",                    visible : false},
+	        {
+	            dataField : "attchmentDownload",
+	            width:100,
+	            headerText : "<spring:message code='pay.head.attachment'/>",
+	            renderer : { type : "ImageRenderer",
+	                             width : 20,
+	                             height : 20,
+	                             imgTableRef : {
+	                               "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+	                             }
+	            }
+	          }
         ];
 
 	    // 그리드 속성 설정
