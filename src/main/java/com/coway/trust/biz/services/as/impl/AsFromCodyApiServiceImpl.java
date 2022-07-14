@@ -98,15 +98,4 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
         return rtn;
     }
 
-    public AsFromCodyDto selectOrderInfo(AsFromCodyForm asFromCodyForm) throws Exception {
-
- 		EgovMap selectOrderInfo = asFromCodyApiServiceMapper.selectOrderInfo(AsFromCodyForm.createMap(asFromCodyForm));
-         AsFromCodyDto rtn = new AsFromCodyDto();
-
-         if( MapUtils.isNotEmpty(selectOrderInfo) ){
-             return rtn.create(selectOrderInfo);
-         }
-         return rtn;
-     }
-
 }

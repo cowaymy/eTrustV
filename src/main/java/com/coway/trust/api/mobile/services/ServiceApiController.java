@@ -2731,12 +2731,6 @@ public class ServiceApiController {
 	  return ResponseEntity.ok(asFromCodyApiService.selectSubmissionRecords(asFromCodyForm));
 	}
 
-  @ApiOperation(value = "select Submission Records", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/selectSubmissionRecords", method = RequestMethod.GET)
-	public ResponseEntity<AsFromCodyDto>  selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
-	  return ResponseEntity.ok(asFromCodyApiService.selectOrderInfo(asFromCodyForm));
-	}
-
 /*  @ApiOperation(value = "selectUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectUserProfile", method = RequestMethod.GET)
   public ResponseEntity<UserProfileApiDto> selectUserProfile(@ModelAttribute UserProfileApiForm param) throws Exception {
