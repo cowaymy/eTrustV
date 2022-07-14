@@ -2857,7 +2857,7 @@ var blockDtTo = "${hsBlockDtTo}";
 </tr>
 <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
-    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
+    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36)" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Price / RPF (RM)</th>
