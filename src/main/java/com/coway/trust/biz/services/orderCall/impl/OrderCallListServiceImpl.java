@@ -301,25 +301,15 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
         params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
 
-        if(params.get("callTypeId").equals("258"))
-        {
-        	EgovMap exchgInfo = orderCallListMapper.selectSOExchgInfo(params);
-            params.put("soCurStusId", exchgInfo.get("soCurStusId").toString());
-        }
-
-        //logger.debug("//SMS params");
-        //logger.debug(params.toString());
+        logger.debug("//SMS params");
+        logger.debug(params.toString());
 
        if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
        {
-    	   //logger.debug("//IN SMS1");
+    	   logger.debug("//IN SMS1");
 
     	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
     			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-
-    		   //logger.debug("//IN SMS2");
-    		   if(params.get("callTypeId").equals("257") || params.get("soCurStusId").equals("25")){ //NEW INSTALLATION OR AFTER INSTALLATION PEX
-    		   	   //logger.debug("//IN SMS3");
 
 	       	       Map<String, Object> smsList = new HashMap<>();
 	               smsList.put("userId", sessionVO.getUserId());
@@ -328,8 +318,6 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
 
 	               sendSms(smsList);
-    		   }
-
     	   }
       }
 

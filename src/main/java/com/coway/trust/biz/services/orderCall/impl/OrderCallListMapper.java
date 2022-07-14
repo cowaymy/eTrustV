@@ -73,7 +73,4 @@ public interface OrderCallListMapper {
 
   List<EgovMap> selectPromotionList();
 
-  EgovMap selectSOExchgInfo(Map<String, Object> params);
-
-
 }
