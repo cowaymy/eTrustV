@@ -516,6 +516,8 @@ var blockDtTo = "${hsBlockDtTo}";
 
       if (promoIdIdx > 0 && promoIdVal != '0') {
         fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId, _tagNum);
+        console.log('yow');
+        console.log(srvPacId);
         fn_selectPromotionFreeGiftListForList2(promoIdVal);
       } else {
         fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
@@ -1796,9 +1798,10 @@ var blockDtTo = "${hsBlockDtTo}";
     $('#refereNo').val('${preOrderInfo.sofNo}');
 
     $('#ordPromo1, #ordPromo2').removeAttr("disabled");
-
+    console.log($('#ordProduct1').val());
     // Set Mattress Promotion
     if ($("#ordProduct1 option:selected").index() > 0) {
+        console.log('adib test');
       doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {
         appTypeId : '${preOrderInfo.appTypeId}',
         stkId : '${preMatOrderInfo.itmStkId}',
@@ -2699,6 +2702,10 @@ var blockDtTo = "${hsBlockDtTo}";
                     <p><select id="appType" name="appType" class="w100p"></select></p>
                     <p><select id="srvPacId" name="srvPacId" class="w100p" disabled></select></p>
                   </td>
+                </tr>
+                <tr>
+                    <th scope="row">Installment Duration<span class="must">*</span></th>
+                    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36)" class="w100p readonly" readonly/></td>
                 </tr>
               </tbody>
             </table>
