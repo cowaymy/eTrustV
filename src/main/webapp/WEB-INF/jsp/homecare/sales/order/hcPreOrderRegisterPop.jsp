@@ -1144,6 +1144,7 @@
             custPoNo                 : $('#poNo').val().trim(),
             appTypeId                : vAppType,
             srvPacId                   : $('#srvPacId').val(),
+            instPriod                   : $('#installDur').val().trim(),
             custId                      : $('#hiddenCustId').val(),
             empChk                   : 0,
             gstChk                     : 0,
@@ -2306,6 +2307,10 @@
 		    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
 		    </td>
 		</tr>
+		<tr>
+            <th scope="row">Installment Duration<span class="must">*</span></th>
+            <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36)" class="w100p readonly" readonly/></td>
+        </tr>
 	</tbody>
 </table>
 
