@@ -39,11 +39,11 @@
         join (
             select
                 c.MEM_LVL,
-                c.LAST_ORG_CODE
+                c.ORG_CODE LAST_ORG_CODE
             from SYS0047M a
             inner join ORG0001D b
                 on b.MEM_CODE = a.HR_CODE
-            LEFT join ORG0005D c
+            LEFT join ORG1001V c
                 on c.MEM_ID = b.MEM_ID
             <if test = "roleId != '128' and roleId != '129' and roleId != '130' and roleId != '137' and roleId != '179'
                         and roleId != '360' and roleId != '200' and roleId != '253' and roleId != '252' and roleId != '365' and roleId != '367' ">
