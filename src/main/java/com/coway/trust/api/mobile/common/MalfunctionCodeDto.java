@@ -18,12 +18,17 @@ public class MalfunctionCodeDto {
 	@ApiModelProperty(value = "사용 여부 [ 1 : 사용, 8 : 미사용]")
 	private int stusCodeId;
 
+	private String prodCat;
+
+
+
 	public static MalfunctionCodeDto create(EgovMap egvoMap) {
 		MalfunctionCodeDto dto = new MalfunctionCodeDto();
 		dto.setTypeId(CommonUtils.getInt(egvoMap.get("errTypeId")));
 		dto.setTypeCode((String) egvoMap.get("errTypeCode"));
 		dto.setDesc((String) egvoMap.get("errTypeName"));
 		dto.setStusCodeId(CommonUtils.getInt(egvoMap.get("stusCodeId")));
+		dto.setProdCat((String) egvoMap.get("prodCat"));
 		return dto;
 	}
 
@@ -57,5 +62,13 @@ public class MalfunctionCodeDto {
 
 	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
+	}
+
+	public String getProdCat() {
+		return prodCat;
+	}
+
+	public void setProdCat(String prodCat) {
+		this.prodCat = prodCat;
 	}
 }
