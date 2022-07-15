@@ -94,7 +94,7 @@ AND SALES_ORDER_NO = #{salesOrderNo}
                     LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
 
                   where A.SALES_ORD_NO = #{salesOrderNo}
-                  AND C.STUS_CODE_ID = '9'
+                  AND C.STUS_CODE_ID = 9
 ]]>
 </select>
 
