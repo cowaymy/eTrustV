@@ -68,20 +68,9 @@ AND SALES_ORDER_NO = #{salesOrderNo}
 
   <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
 <![CDATA[
-                  select DISTINCT A.SALES_ORD_NO AS SALES_ORD_NO
-                        ,A.APP_TYPE_ID AS APP_TYPE
 
+select SALES_ORD_NO from SAL0001D where SALES_ORD_NO = #{salesOrderNo}
 
-                  from SAL0001D A
-                    JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
-                    JOIN SAL0027D C ON C.CUST_ID = A.CUST_ID
-                    JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
-                    JOIN SAL0095D E ON E.SRV_SALES_ORD_ID = A.SALES_ORD_ID
-                    JOIN SYS0026M F ON B.ITM_STK_ID = F.STK_ID
-                    LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
-
-                  where A.SALES_ORD_NO = #{salesOrderNo}
-                  AND C.STUS_CODE_ID = 9
 ]]>
 </select>
 
