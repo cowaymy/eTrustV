@@ -1280,7 +1280,7 @@ function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
 function fn_report() {
 
     var option = {
-        isProcedure : false
+        isProcedure : true
     };
 
     Common.report("dataForm", option);
