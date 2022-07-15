@@ -2731,10 +2731,22 @@ public class ServiceApiController {
 	  return ResponseEntity.ok(asFromCodyApiService.selectSubmissionRecords(asFromCodyForm));
 	}
 
-  @ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+/*  @ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectOrderInfo", method = RequestMethod.GET)
 	public ResponseEntity<AsFromCodyDto>  selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
 	  return ResponseEntity.ok(asFromCodyApiService.selectOrderInfo(asFromCodyForm));
+	}*/
+
+	@ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectOrderInfo", method = RequestMethod.GET)
+	public ResponseEntity<AsFromCodyDto>  selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
+
+     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
+     EgovMap resultMap = null;
+      //
+     resultMap = asFromCodyApiService.selectOrderInfo(params);
+
+     return ResponseEntity.ok(AsFromCodyDto.create(resultMap));
 	}
 
 /*  @ApiOperation(value = "selectUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
