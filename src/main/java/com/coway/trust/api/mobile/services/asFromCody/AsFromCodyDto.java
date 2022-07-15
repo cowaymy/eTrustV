@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class AsFromCodyDto {
 
 		@SuppressWarnings("unchecked")
-		public AsFromCodyDto create(EgovMap egvoMap) {
+		public static AsFromCodyDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, AsFromCodyDto.class);
 	}
 
