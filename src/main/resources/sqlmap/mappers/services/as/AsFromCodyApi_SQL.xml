@@ -69,7 +69,8 @@ AND SALES_ORDER_NO = #{salesOrderNo}
   <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
 <![CDATA[
 
-select SALES_ORD_NO from SAL0001D where SALES_ORD_NO = #{salesOrderNo}
+select SALES_ORD_NO AS SALES_ORDER_NO
+from SAL0001D where SALES_ORD_NO = #{salesOrderNo}
 
 ]]>
 </select>
