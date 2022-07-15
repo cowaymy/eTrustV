@@ -100,7 +100,13 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
     		//가져온값 64M에 UPDATE
     		if(select19M.size() > 0){
     			for(int i=0; i<select19M.size(); i++) {
-    				rtnCnt = hcTerritoryMgtMapper.updateSYS0064M(select19M.get(i));
+
+    				if(params.get("memType").equals("5758")){
+        				rtnCnt = hcTerritoryMgtMapper.updateSYS0064M(select19M.get(i));
+    				}
+    				if(params.get("memType").equals("6672")){
+        				rtnCnt = hcTerritoryMgtMapper.updateSYS0064MLT(select19M.get(i));
+    				}
     				//전에 썼던 것을 N으로 바꿔줘야된다(area_id로 이전 데이터가 쌓이니까
     				//area_id로 n을 주고 밑에서 area_id랑 reqstNo로 구분해 y로 바꿔주므로 n으로 바꿈)
     				rtnCnt += hcTerritoryMgtMapper.updateORG0019MFlag(select19M.get(i));
@@ -108,6 +114,7 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
     				rtnCnt += hcTerritoryMgtMapper.updateORG0019M(select19M.get(i));
 
     				if(rtnCnt != 3) {
+    					logger.debug("select19M/////" + select19M);
     					throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
     				}
     			}

@@ -86,4 +86,6 @@ public interface HcTerritoryMgtMapper {
 	 */
 	public int updateORG0019M(EgovMap params);
 
+	public int updateSYS0064MLT(EgovMap egovMap);
+
 }

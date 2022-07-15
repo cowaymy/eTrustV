@@ -6,6 +6,7 @@
 	var  detailGridID;
 	var reqstNo = "";
 	var brnchType = "";
+	var memType = "";
 
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
@@ -21,6 +22,8 @@
 	    AUIGrid.bind(gridID, "cellClick", function(event) {
 	        reqstNo = AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo");
 	        brnchType = AUIGrid.getCellValue(gridID, event.rowIndex, "brnchType");
+	        memType = $("#comMemType").val();
+
 	    });
 
 	    fn_keyEvent();
@@ -67,6 +70,11 @@
 
 	//리스트 조회.
 	function fn_mainSelectListAjax() {
+
+		if($("#comMemType").val() == "11"){
+			Common.alert("Please choose a Member Type (DT/LT)");
+		    return false;
+		}
 		// datail 그리드 초기화.
 		AUIGrid.setGridData(detailGridID, []);
 
@@ -120,7 +128,7 @@
 	        Common.alert("There Are No selected Items.");
 		    return ;
 	    }
-	    Common.ajax("GET", "/homecare/services/plan/updateHcTerritoryList.do", { reqstNo: reqstNo, brnchType : brnchType }, function(result) {
+	    Common.ajax("GET", "/homecare/services/plan/updateHcTerritoryList.do", { reqstNo: reqstNo, brnchType : brnchType, memType : memType }, function(result) {
 	    	Common.alert(result.message);
 	    });
 	}

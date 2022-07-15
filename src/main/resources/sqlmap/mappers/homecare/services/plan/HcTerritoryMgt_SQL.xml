@@ -151,8 +151,9 @@
                    SO_BRNCH_CODE,
                    HT_CODE,
                    DT_BRNCH_CODE,        /* DT Branch Code(HDC) */
-                   DT_SUB_GRP               /* Dt Sub Group */
-
+                   DT_SUB_GRP,               /* Dt Sub Group */
+                   LT_BRNCH_CODE,
+                   LT_SUB_GRP
           FROM ORG0019M
          WHERE REQST_NO=#{reqstNo} AND BRNCH_TYPE= #{brnchType}
     </select>
@@ -163,6 +164,14 @@
         UPDATE SYS0064M SET
                     DT_BRNCH_CODE   =  #{dtBrnchCode},
                     DT_SUB_GRP         =  #{dtSubGrp}
+         WHERE AREA_ID                = #{areaId}
+    </update>
+
+    <update id="updateSYS0064MLT" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateSYS0064M */
+        UPDATE SYS0064M SET
+                    LT_BRNCH_CODE   =  #{ltBrnchCode},
+                    LT_SUB_GRP         =  #{ltSubGrp}
          WHERE AREA_ID                = #{areaId}
     </update>
 
