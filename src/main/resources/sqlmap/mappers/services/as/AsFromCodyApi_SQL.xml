@@ -74,7 +74,6 @@ AND SALES_ORDER_NO = #{salesOrderNo}
                         ,A.APP_TYPE_ID AS APP_TYPE
                         ,D.TYPE_ID AS customer_Type
                         ,D.CORP_TYPE_ID AS CORP_TYPE_ID
-                        ,F.STK_DESC AS product_Name
                         ,F.STK_CODE AS product_Code
 
 
