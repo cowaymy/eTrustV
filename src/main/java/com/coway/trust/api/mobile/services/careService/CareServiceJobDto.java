@@ -223,6 +223,8 @@ public class CareServiceJobDto {
 
   private String disinfecServ;
 
+  private String srvType;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -827,6 +829,14 @@ public class CareServiceJobDto {
 
   public void setDisinfecServ(String disinfecServ) {
     this.disinfecServ = disinfecServ;
+  }
+
+  public String getSrvType() {
+	    return srvType;
+  }
+
+  public void setSrvType(String srvType) {
+	    this.srvType = srvType;
   }
 
 }
