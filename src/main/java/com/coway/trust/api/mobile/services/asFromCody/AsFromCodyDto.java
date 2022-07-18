@@ -130,7 +130,7 @@ public class AsFromCodyDto {
 	private String resulticMobileNo;
 
 	@ApiModelProperty(value = "customerId")
-	private String customerId;
+	private int customerId;
 
 	@ApiModelProperty(value = "customerType")
 	private int customerType;
@@ -162,7 +162,7 @@ public class AsFromCodyDto {
 		return resulticMobileNo;
 	}
 
-	public String getCustomerId() {
+	public int getCustomerId() {
 		return customerId;
 	}
 
@@ -198,7 +198,7 @@ public class AsFromCodyDto {
 		this.resulticMobileNo = resulticMobileNo;
 	}
 
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
 
