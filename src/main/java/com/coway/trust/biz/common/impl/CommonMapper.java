@@ -155,9 +155,15 @@ public interface CommonMapper {
 
     List<EgovMap> selectBranchList(Map<String, Object> params);
 
+    List<EgovMap> selectProductSizeList(Map<String, Object> params);
+
+    List<EgovMap> selectServiceTypeList(Map<String, Object> params);
 
     List<EgovMap> selectReasonCodeList(Map<String, Object> params);
 
+    List<EgovMap> selectBrandTypeList(Map<String, Object> params);
+
+    List<EgovMap> selectUnitTypeList(Map<String, Object> params);
 
     /**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)

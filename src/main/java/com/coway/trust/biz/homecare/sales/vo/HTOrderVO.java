@@ -152,6 +152,10 @@ public class HTOrderVO implements Serializable {
 
 	private String prodBrand;
 
+	private String serviceType;
+
+	private String unitType;
+
 	private String cntId;
 
 	private String instct;
@@ -684,6 +688,22 @@ public class HTOrderVO implements Serializable {
 
 	public void setProdSize(String prodSize) {
 		this.prodSize = prodSize;
+	}
+
+	public String getUnitType() {
+		return unitType;
+	}
+
+	public void setUnitType(String unitType) {
+		this.unitType = unitType;
+	}
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
 	}
 
 	public String getProdBrand() {

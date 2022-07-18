@@ -52,13 +52,22 @@
         	codeInList = 'CS1T,CS1Y';
         }
 
-        CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : codeInList}, "", {
+        CommonCombo.make("serviceType", "/common/selectServiceTypeList.do", {groupCode : '514'}, "", {
             id: "codeId",
             name: "codeName",
             type:"S"
         });
 
-
+        CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : codeInList}, "", {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        });
+        $('#ordProductLbl1').hide();
+        $('#ordProductLbl2').hide();
+        $('#ordUnitTypeboard').hide();
+        $('#ordUnitTypeLbl').hide();
+        $('#ordUnitType').hide();
         //doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         //doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
@@ -972,6 +981,8 @@
         var vGstChk = 0 ;
         var vProdBrand = "";
         var vOrderQuantity = $('#ordQuantity').val();
+        var vServiceType = "";
+        var vUnitType = "";
 
         var brandTypeIdx = $("#brandType option:selected").index();
         if (brandTypeIdx == 11 ){
@@ -1026,6 +1037,8 @@
         srvPacId                : $('#srvPacId').val(),
         prodSize                 : $('#ordProudct').val(),
         prodBrand                :vProdBrand,
+        serviceType             :  $('#serviceType').val(),
+        unitType                 : $('#ordUnitType').val(),
 
         // SERVICE ADDRESS
         installationVO : {
@@ -1748,8 +1761,75 @@
         return chkCnt;
     }
 
+    function fn_changeDetails(){
 
+    	var productSizeMasterId;
+    	var brandTypeMasterId;
+    	var unitTypeMasterId;
 
+    	if($("#serviceType").val() == "6862"){
+    		//AIRCOND
+    		productSizeMasterId = 516;
+    		brandTypeMasterId = 518;
+    		unitTypeMasterId = 520;
+    	}else if($("#serviceType").val() == "6863"){
+    		//MASSAGE
+    		productSizeMasterId = 515;
+    		brandTypeMasterId = 519;
+    	}else if($("#serviceType").val() == "6861"){
+    		//MATTRESS
+    		productSizeMasterId = 447;
+    		brandTypeMasterId = 517;
+        }
+
+        CommonCombo.make("ordProudct", "/common/selectProductSizeList.do", {groupCode : productSizeMasterId}, "", {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        });
+
+        CommonCombo.make("brandType", "/common/selectBrandTypeList.do", {groupCode : brandTypeMasterId}, "", {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        });
+
+        CommonCombo.make("ordUnitType", "/common/selectUnitTypeList.do", {groupCode : unitTypeMasterId}, "", {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        });
+
+    	if ($("#serviceType").val() == "6862" ||  $("#serviceType").val() == "6863"){
+
+    		$('#ordProductLbl').hide();
+
+    		if($("#serviceType").val() == "6862"){
+    			$('#ordProductLbl2').hide();
+    			$('#ordProductLbl1').show();
+    			$('#ordUnitTypeboard').show();
+    			$('#ordUnitTypeLbl').show();
+    			$('#ordUnitType').show();
+    			/* $("#ordProudct").prop("disabled", false); */
+    		}else if($("#serviceType").val() == "6863"){
+    			$('#ordProductLbl1').hide();
+    			$('#ordProductLbl2').show();
+    			$('#ordUnitTypeboard').hide();
+                $('#ordUnitTypeLbl').hide();
+                $('#ordUnitType').hide();
+                /* $("#ordProudct").prop("disabled", true); */
+    		}
+
+    	}else{
+    		$('#ordProductLbl1').hide();
+    		$('#ordProductLbl2').hide();
+    		$('#ordProductLbl').show();
+    		$('#ordUnitTypeboard').hide();
+            $('#ordUnitTypeLbl').hide();
+            $('#ordUnitType').hide();
+            /* $("#ordProudct").prop("disabled", false); */
+    	}
+    }
 
 </script>
 
@@ -2005,6 +2085,12 @@
 </colgroup>
 <tbody>
 <tr>
+<th scope="row">Service Type<span class="must">*</span></th>
+    <td>
+    <p><select id="serviceType" name="serviceType" class="w100p" onchange = "fn_changeDetails()"></select> </p>
+    </td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.appType" /><span class="must">*</span></th>
     <td>
     <p><select id="appType" name="appType" class="w100p"></select> </p>
@@ -2034,8 +2120,16 @@
     <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/>
         <input id="hiddenSalesmanTypeId" name="salesmanTypeId" type="hidden" /></td>
 </tr>
+<tr id = "ordUnitTypeboard">
+    <th scope="row" id = "ordUnitTypeLbl">Unit Type<span class="must">*</span></th>
+    <td>
+    <select id="ordUnitType" name="ordUnitType" class="w100p">
+    </td>
+</tr>
 <tr>
-    <th scope="row" id = "ordProductLbl">Mattress Size<span class="must"></span></th>
+    <th scope="row" id = "ordProductLbl">Mattress Size<span class="must">*</span></th>
+    <th scope="row" id = "ordProductLbl1">Horsepower (HP)<span class="must">*</span></th>
+    <th scope="row" id = "ordProductLbl2">Chair Size<span class="must">*</span></th>
     <td>
 <!--             <select id="srvProduct" name="srvProduct" class="w100p">
             <option value="0">Choose One</option>
@@ -2045,20 +2139,20 @@
 
              <select id="ordProudct" name="ordProudct" class="w100p">
           <!--   <select id="compType" name="compType" class="w100p" ></select> -->
-         <option value="0">Choose One</option>
-        <option value="KING">KING</option>
-        <option value="QUEEN">QUEEN</option>
-         <option value="SINGLE">SINGLE</option>
+        <!--     <option value="0">Choose One</option>
+            <option value="KING">KING</option>
+            <option value="QUEEN">QUEEN</option>
+            <option value="SINGLE">SINGLE</option> -->
             </select>
             </td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
     <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-       <th scope="row">Brand</th>
+       <th scope="row">Brand<span class="must">*</span></th>
         <td>
          <select id="brandType" name="brandType">
-         <option value="0">Choose One</option>
+<!--          <option value="0">Choose One</option>
         <option value="Dorma">Dorma</option>
         <option value="DreamLand">DreamLand</option>
         <option value="Getha">Getha</option>
@@ -2069,7 +2163,7 @@
         <option value="Slumberland">Slumberland</option>
         <option value="Sonno">Sonno</option>
         <option value="SweetDram">SweetDram</option>
-        <option value="Other">Other</option>
+        <option value="Other">Other</option> -->
        </select>
     </td>
 

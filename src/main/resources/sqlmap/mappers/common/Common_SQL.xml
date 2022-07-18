@@ -1339,6 +1339,34 @@
         WHERE CODE_ID      = #{detailcodeid}
     </update>
 
+	<select id="selectProductSizeList" parameterType="Map" resultType="egovMap">
+	    SELECT CODE_NAME AS CODE_ID ,CODE_DESC AS CODE_NAME
+	    FROM SYS0013M
+	    WHERE CODE_MASTER_ID = #{groupCode}
+	    AND CODE_ID <![CDATA[<>]]> '5759'
+	    ORDER BY 1
+	</select>
+
+	<select id="selectServiceTypeList" parameterType="Map" resultType="egovMap">
+	    SELECT  CODE_ID ,CODE_DESC AS CODE_NAME
+	    FROM SYS0013M
+	    WHERE CODE_MASTER_ID = #{groupCode}
+	    ORDER BY 1
+	</select>
+
+	<select id="selectBrandTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
+
+     <select id="selectUnitTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
 
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
         SELECT <choose>

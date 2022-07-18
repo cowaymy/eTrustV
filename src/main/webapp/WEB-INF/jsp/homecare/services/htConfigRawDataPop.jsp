@@ -165,6 +165,10 @@ function fn_report(viewType){
 
     }
 
+    if($("#cmbServiceType").val() != '' && $("#cmbServiceType").val() != null) {
+        whereSQL += " AND som.SRV_TYPE IN (" + $("#cmbServiceType").val() + ")";
+     }
+
     if($("#cmbSort :selected").index() > -1){
         sortBy = $("#cmbSort :selected").text();
 
@@ -219,7 +223,7 @@ function fn_report(viewType){
     Common.report("form", option);
 
 }
-
+CommonCombo.make("cmbServiceType", "/common/selectServiceTypeList.do", {groupCode : '514'}, "", {id: "codeId",name: "codeName",type:"M"});
 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId : 10} , '', {type: 'M'});
 CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
@@ -261,9 +265,9 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row"><spring:message code="sal.text.appType" /></th>
+    <th scope="row">Service Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="cmbAppType"></select>
+    <select class="multy_select w100p" multiple="multiple" id="cmbServiceType" name="cmbServiceType" ></select>
     </td>
 </tr>
 <tr>
@@ -275,17 +279,17 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNoTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
-    <select class="w100p" id="cmbKeyBranch"></select>
+    <select class="multy_select w100p" multiple="multiple" id="cmbAppType"></select>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="txtCustName"/></td>
-    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
+    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
     <td>
-    <select class="w100p" id="cmbUser"></select>
+        <select class="w100p" id="cmbKeyBranch"></select>
     </td>
 </tr>
 <tr>
@@ -296,7 +300,12 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
         <!-- <option value="" selected="selected">dd</option>-->
         </select>
     </td>
-
+ <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
+    <td>
+        <select class="w100p" id="cmbUser"></select>
+    </td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.title.text.sorting" /></th>
     <td>
     <select class="w100p" id="cmbSort">
@@ -307,7 +316,6 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
         <option value="5"><spring:message code="sal.combo.text.byCustName" /></option>
     </select>
     </td>
-
 </tr>
 </tbody>
 </table><!-- table end -->

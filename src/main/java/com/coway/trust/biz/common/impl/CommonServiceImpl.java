@@ -1591,6 +1591,26 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectUnitTypeList(Map<String, Object> params) {
+		return commonMapper.selectUnitTypeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectProductSizeList(Map<String, Object> params) {
+		return commonMapper.selectProductSizeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectServiceTypeList(Map<String, Object> params) {
+		return commonMapper.selectServiceTypeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectBrandTypeList(Map<String, Object> params) {
+		return commonMapper.selectBrandTypeList(params);
+	}
+
+	@Override
 	public List<EgovMap> selectBankAccountList(Map<String, Object> params) {
 		return commonMapper.selectBankAccountList(params);
 	}

@@ -183,6 +183,30 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectUnitTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectUnitTypeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectUnitTypeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+	@RequestMapping(value = "/selectBrandTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBrandTypeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectBrandTypeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+	@RequestMapping(value = "/selectProductSizeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductSizeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectProductSizeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+	@RequestMapping(value = "/selectServiceTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectServiceTypeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectServiceTypeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	@RequestMapping(value = "/selectReasonCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectReasonCodeList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> codeList = commonService.selectReasonCodeList(params);

@@ -141,14 +141,13 @@ console.log($("#listSearchForm").serialize());
       });
       $('#btnSof').click(function() {
     	    Common.popupDiv("/homecare/sales/htOrderSOFListPop.do", null, null, true);
-    	});
+      });
       $('#btnRaw').click(function() {
           Common.popupDiv("/homecare/sales/htRawDataPop.do", null, null, true);
       });
       $("#btnPayList").click(function() {
           Common.popupDiv("/homecare/sales/htOrderPaymentListingPop.do", '', null, null, true);
-     });
-
+      });
   });
 
 function fn_validSearchList() {
@@ -210,6 +209,7 @@ function createAUIGrid() {
         { headerText : "Service Order No",                                dataField : "ordNo",       editable : false, width : 150 }
       , { headerText : "<spring:message code='sales.Status'/>",  dataField : "ordStusCode", editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.AppType'/>", dataField : "appTypeCode", editable : false, width : 80  }
+      , { headerText : "Srv Type",                                          dataField : "serviceType", editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.ordDt'/>",   dataField : "ordDt",       editable : false, width : 100 }
       , { headerText : "<spring:message code='sales.refNo2'/>",  dataField : "refNo",       editable : false, width : 200  }
       , { headerText : "Adjustment Note",  dataField : "adjnote",       editable : false, width : 200  }
@@ -304,7 +304,6 @@ function fn_multiCombo(){
     });
 
     $('#listOrdStusId').multipleSelect("checkAll");
-    $('#listProductId').multipleSelect("checkAll");
     $('#listPackId').multipleSelect("checkAll");
 
 }
@@ -319,6 +318,29 @@ function fn_multiCombo2(){
     $('#listAppType').multipleSelect("checkAll");
 }
 
+function fn_multiCombo3(){
+    $('#listProductId').change(function() {
+        //console.log($(this).val());
+    }).multipleSelect({
+        selectAll: true, // 전체선택
+        width: '100%'
+    });
+    $('#listProductId').multipleSelect("checkAll");
+}
+
+function fn_getProductSize(){
+
+	var serviceType = "";
+	if ($("#ServiceTypeId").val() == '6861'){
+		serviceType = '447';
+	}else if ($("#ServiceTypeId").val() == '6862'){
+		serviceType = '516';
+	}else if ($("#ServiceTypeId").val() == '6863'){
+        serviceType = '515';
+    }
+
+	doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceType }, '', 'listProductId', 'M','fn_multiCombo3');
+}
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -460,21 +482,28 @@ function fn_excelDown(){
     <td>
     <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
     </td>
+    <th scope="row">Service Type</th>
+    <td>
+    <select id="ServiceTypeId" name="ServiceTypeId" class="w100p" onchange = "fn_getProductSize()" >
+        <option value="">Choose One</option>
+        <option value="6862">Air-Conditioning</option>
+        <option value="6861">Mattress</option>
+        <option value="6863">Massage Chair</option>
+        </select>
+    </td>
     <th scope="row">Product Size</th>
     <td>
     <select id="listProductId" name="productId" class="multy_select w100p" multiple="multiple">
-        <option value="SINGLE">SINGLE</option>
-        <option value="QUEEN">QUEEN</option>
-        <option value="KING">KING</option>
     </select>
-    </td>
-    <th scope="row"><spring:message code='sales.salesman'/></th>
-    <td>
-    <input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="<spring:message code='sales.salesman'/>" class="w100p" />
     </td>
 
 </tr>
 <tr>
+
+    <th scope="row"><spring:message code='sales.salesman'/></th>
+    <td>
+    <input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="<spring:message code='sales.salesman'/>" class="w100p" />
+    </td>
     <th scope="row"><spring:message code='sales.refNo3'/></th>
     <td>
     <input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="<spring:message code='sales.refNo3'/>" class="w100p" />
@@ -483,12 +512,13 @@ function fn_excelDown(){
     <td>
     <input id="listContactNo" name="contactNo" type="text" title="Contact No" placeholder="<spring:message code='sales.ContactNo'/>" class="w100p" />
     </td>
+
+</tr>
+<tr>
     <th scope="row"><spring:message code='sales.promoCd'/></th>
     <td>
     <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
     </td>
-</tr>
-<tr>
     <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
     <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
@@ -497,7 +527,10 @@ function fn_excelDown(){
     <td>
     <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
     </td>
-    <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
+
+</tr>
+<tr>
+<th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
     <td>
     <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
     </td>
@@ -516,9 +549,9 @@ function fn_excelDown(){
     <ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnSof">Mattress Care Service (MCS) List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" id="btnRaw">Mattress Care Service (MCS) Raw Data</a></p></li>
-          <li><p class="link_btn type2"><a href="#" id="btnPayList">Mattress Care Service (MCS) Payment Listing</a></p></li>
-          </c:if>
+        <li><p class="link_btn type2"><a href="#" id="btnRaw">Care Service (SALES) Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" id="btnPayList">Mattress Care Service (MCS) Payment Listing</a></p></li>
+      </c:if>
     </ul>
 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

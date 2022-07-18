@@ -413,4 +413,17 @@ public interface CommonService {
 
 	 // Homecare material category list in MDN
 	List<EgovMap> selectHCMaterialCtgryList(Map<String, Object> params);
+
+	// Homecare Product Size list
+	List<EgovMap> selectProductSizeList(Map<String, Object> params);
+
+	// Homecare Service Type list
+	List<EgovMap> selectServiceTypeList(Map<String, Object> params);
+
+	// Homecare Brand Type list
+	List<EgovMap> selectBrandTypeList(Map<String, Object> params);
+
+	// Homecare Unit Type list
+	List<EgovMap> selectUnitTypeList(Map<String, Object> params);
+
 }

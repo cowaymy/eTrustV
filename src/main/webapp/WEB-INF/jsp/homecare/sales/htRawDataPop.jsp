@@ -155,6 +155,10 @@ function fn_report(viewType){
         whereSQL += " AND som.STUS_CODE_ID = '" + $("#cmbStatus").val() + "'";
      }
 
+    if($("#cmbServiceType").val() != '' && $("#cmbServiceType").val() != null) {
+        whereSQL += " AND som.SRV_TYPE IN (" + $("#cmbServiceType").val() + ")";
+     }
+
 
 /*     if($("#cmbUser :selected").index() > 0){
         whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
@@ -211,7 +215,7 @@ function fn_report(viewType){
     Common.report("form", option);
 
 }
-
+CommonCombo.make("cmbServiceType", "/common/selectServiceTypeList.do", {groupCode : '514'}, "", {id: "codeId",name: "codeName",type:"M"});
 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId : 10} , '', {type: 'M'});
 //CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
@@ -220,7 +224,7 @@ CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CS Report - Mattress Care Service (MCS) Raw Data</h1>
+<h1>CS Report - Care Service (Sales) Raw Data</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -253,9 +257,9 @@ CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row"><spring:message code="sal.text.appType" /></th>
+    <th scope="row">Service Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="cmbAppType"></select>
+    <select class="multy_select w100p" multiple="multiple" id="cmbServiceType" name="cmbServiceType" ></select>
     </td>
 </tr>
 <tr>
@@ -267,23 +271,17 @@ CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNoTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
-    <select class="w100p" id="cmbKeyBranch"></select>
+    <select class="multy_select w100p" multiple="multiple" id="cmbAppType"></select>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="txtCustName"/></td>
-   <th scope="row">Status</th>
+     <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
     <td>
-    <select id="cmbStatus" name="cmbStatus">
-        <option value="">Choose one</option>
-        <option value="1">Active</option>
-        <option value="4">Complete</option>
-        <option value="10">Cancel</option>
-        <option value="21">Fail</option>
-    </select>
+    <select class="w100p" id="cmbKeyBranch"></select>
     </td>
 </tr>
 <tr>
@@ -295,6 +293,16 @@ CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId
         <option value="3"><spring:message code="sal.combo.text.byOrdDt" /></option>
         <option value="4" selected><spring:message code="sal.combo.text.byOrdNumber" /></option>
         <option value="5"><spring:message code="sal.combo.text.byCustName" /></option>
+    </select>
+    </td>
+    <th scope="row">Status</th>
+    <td>
+    <select id="cmbStatus" name="cmbStatus">
+        <option value="">Choose one</option>
+        <option value="1">Active</option>
+        <option value="4">Complete</option>
+        <option value="10">Cancel</option>
+        <option value="21">Fail</option>
     </select>
     </td>
 </tr>
