@@ -85,7 +85,7 @@ public class AsFromCodyDto {
 	private String contractDuration;
 
 	@ApiModelProperty(value = "outstanding")
-	private String outstanding;
+	private int outstanding;
 
 	@ApiModelProperty(value = "sirimNo")
 	private String sirimNo;
@@ -262,7 +262,7 @@ public class AsFromCodyDto {
 		return contractDuration;
 	}
 
-	public String getOutstanding() {
+	public int getOutstanding() {
 		return outstanding;
 	}
 
@@ -326,7 +326,7 @@ public class AsFromCodyDto {
 		this.contractDuration = contractDuration;
 	}
 
-	public void setOutstanding(String outstanding) {
+	public void setOutstanding(int outstanding) {
 		this.outstanding = outstanding;
 	}
 
