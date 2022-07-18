@@ -77,7 +77,7 @@ AND SALES_ORDER_NO = #{salesOrderNo}
                         ,F.STK_DESC AS product_Name
                         ,F.STK_CODE AS product_Code
 
-                        ,TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
+
 
                   from SAL0001D A
                     JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
