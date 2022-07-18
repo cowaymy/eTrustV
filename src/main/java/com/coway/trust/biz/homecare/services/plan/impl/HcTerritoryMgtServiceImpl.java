@@ -114,7 +114,6 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
     				rtnCnt += hcTerritoryMgtMapper.updateORG0019M(select19M.get(i));
 
     				if(rtnCnt != 3) {
-    					logger.debug("select19M/////" + select19M);
     					throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
     				}
     			}
