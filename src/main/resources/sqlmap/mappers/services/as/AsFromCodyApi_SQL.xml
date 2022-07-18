@@ -72,15 +72,11 @@ AND SALES_ORDER_NO = #{salesOrderNo}
 
                   SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
                         ,A.APP_TYPE_ID AS APP_TYPE
-                        ,C.EMAIL AS MAIL_ADDRESS
-                        ,D.NAME AS cust_Name
                         ,D.TYPE_ID AS customer_Type
                         ,D.CORP_TYPE_ID AS CORP_TYPE_ID
-                        ,D.cust_id AS customer_Id
-                        ,D.CUST_VA_NO AS customer_Va_No
                         ,F.STK_DESC AS product_Name
                         ,F.STK_CODE AS product_Code
-                        ,TO_CHAR (E.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry
+
                         ,TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
 
                   from SAL0001D A
