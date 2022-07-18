@@ -98,7 +98,7 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
         return rtn;
     }
 
-   /* public AsFromCodyDto selectOrderInfo(AsFromCodyForm asFromCodyForm) throws Exception {
+/*    public AsFromCodyDto selectOrderInfo(AsFromCodyForm asFromCodyForm) throws Exception {
 
  		EgovMap selectOrderInfo = asFromCodyApiServiceMapper.selectOrderInfo(AsFromCodyForm.createMap(asFromCodyForm));
          AsFromCodyDto rtn = new AsFromCodyDto();
@@ -109,6 +109,7 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
          return rtn;
      }*/
 
+    @Override
     public EgovMap selectOrderInfo(Map<String, Object> params) {
 
         return asFromCodyApiServiceMapper.selectOrderInfo(params);
