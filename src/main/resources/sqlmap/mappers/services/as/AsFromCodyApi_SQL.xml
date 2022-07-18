@@ -69,8 +69,34 @@ AND SALES_ORDER_NO = #{salesOrderNo}
   <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
 <![CDATA[
 
-select SALES_ORD_NO AS SALES_ORDER_NO
-from SAL0001D where SALES_ORD_NO = #{salesOrderNo}
+
+                  SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
+                        ,A.APP_TYPE_ID AS APP_TYPE
+                        ,C.TEL_M1 AS HANDPHONE_TEL
+                        ,C.TEL_O AS HOME_TEL
+                        ,C.TEL_R AS OFFICE_TEL
+                        ,C.EMAIL AS MAIL_ADDRESS
+                        ,C.NRIC AS RESULTIC_MOBILE_NO
+                        ,D.NAME AS cust_Name
+                        ,D.TYPE_ID AS customer_Type
+                        ,D.CORP_TYPE_ID AS CORP_TYPE_ID
+                        ,D.cust_id AS customer_Id
+                        ,D.CUST_VA_NO AS customer_Va_No
+                        ,F.STK_DESC AS product_Name
+                        ,F.STK_CODE AS product_Code
+                        ,TO_CHAR (E.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry
+                        ,TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
+
+                  from SAL0001D A
+                    JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+                    JOIN SAL0027D C ON C.CUST_ID = A.CUST_ID
+                    JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+                    JOIN SAL0095D E ON E.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+                    JOIN SYS0026M F ON B.ITM_STK_ID = F.STK_ID
+                    LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+
+                  where A.SALES_ORD_NO = #{salesOrderNo}
+                  AND C.STUS_CODE_ID = 9
 
 ]]>
 </select>
