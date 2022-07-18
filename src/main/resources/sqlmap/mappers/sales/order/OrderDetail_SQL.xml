@@ -111,7 +111,6 @@
                            , V8.REDEEM_YEAR
                            , V8.REDEEM_WARRANTY
                            , V1.ADV_DISC
-                           , V1.STK_CTGRY_ID
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID

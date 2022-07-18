@@ -378,8 +378,15 @@
 
     function fn_orderRequestPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+        	if(prodCat == '5706' || prodCat == '5707')
+        	{
+                Common.alert('* Please proceed to Request at HC Module for this order');
+        	}
+        	else{
+                Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+        	}
         }
         else {
             Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
@@ -414,7 +421,8 @@
           , { headerText : "<spring:message code='sales.pvMth'/>",   dataField : "pvMonth",     editable : false, width : 60  }
           , { headerText : "ordId",                                  dataField : "ordId",       visible  : false }
           , { headerText : "salesmanCode",                                  dataField : "salesmanCode",       visible  : false }
-            ];
+          , { headerText : "stkCtgryId",                                  dataField : "stkCtgryId",       visible  : false }
+           ];
 
         //그리드 속성 설정
         var gridPros = {

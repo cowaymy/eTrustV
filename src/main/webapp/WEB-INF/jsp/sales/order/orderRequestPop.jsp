@@ -28,7 +28,6 @@
   var IS_NEW_VER = "${orderDetail.isNewVer}";
   var txtPrice_uc_Value = "${orderDetail.basicInfo.ordAmt}";
   var txtPV_uc_Value = "${orderDetail.basicInfo.ordPv}";
-  var STK_CTGRY_ID = "${orderDetail.basicInfo.stkCtgryId}";
 
   var myFileCaches = {};
   var atchFileGrpId = 0;
@@ -39,7 +38,7 @@
   $(document).ready(function() {
     doGetComboData('/common/selectCodeList.do', {
       groupCode : '348'
-    }, TAB_NM, 'ordReqType', 'S','fn_ordReqTypeCallBack'); //Order Edit Type
+    }, TAB_NM, 'ordReqType', 'S'); //Order Edit Type
 
     if (FormUtil.isNotEmpty(TAB_NM)) {
       <c:if test="${callCenterYn != 'Y'}">
@@ -58,19 +57,6 @@
 
     $("#dpCallLogDate").datepicker(pickerOpts);
   });
-
-   function fn_ordReqTypeCallBack(){
-      var ordReqTpVal = '';
-      var ordReqTpLen = $('#ordReqType option').size();
-
-      for(var i=0; i<ordReqTpLen; ++i) {
-          ordReqTpVal = $("#ordReqType option:eq("+i+")").val();
-          if((STK_CTGRY_ID == '5706' || STK_CTGRY_ID == '5707')&& ordReqTpVal == 'CANC') {  // Product category == matress && frame
-              // 특정 삭제
-              $("#ordReqType option:eq("+i+")").remove();
-          }
-      }
-  }
 
   $(function() {
     $('#btnEditType').click(function() {

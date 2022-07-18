@@ -231,6 +231,7 @@
          , T.PV_YEAR
          , T.BNDL_ID
          , T.ECOMM_ORD_ID
+         , T.STK_CTGRY_ID
     FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
                   V1.APP_TYPE_CODE
                 , V1.APP_TYPE_ID
@@ -276,6 +277,7 @@
                 , V1.RELATED_ID
                 , V1.BNDL_ID
                 , NVL(S1.ECOMM_ORD_ID,0) AS ECOMM_ORD_ID
+                , M1.STK_CTGRY_ID
            FROM SAL1013V  V1
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
              JOIN sal0001d s1 ON v1.ORD_NO = s1.SALES_ORD_NO
