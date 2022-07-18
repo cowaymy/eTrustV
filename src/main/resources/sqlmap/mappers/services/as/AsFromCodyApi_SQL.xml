@@ -73,7 +73,6 @@ AND SALES_ORDER_NO = #{salesOrderNo}
                   SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
                         ,A.APP_TYPE_ID AS APP_TYPE
                         ,C.EMAIL AS MAIL_ADDRESS
-                        ,C.NRIC AS RESULTIC_MOBILE_NO
                         ,D.NAME AS cust_Name
                         ,D.TYPE_ID AS customer_Type
                         ,D.CORP_TYPE_ID AS CORP_TYPE_ID
