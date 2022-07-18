@@ -60,33 +60,85 @@ public class AsFromCodyDto {
 		    return params;
 		  }
 
-
+	@ApiModelProperty(value = "userId")
 	private String userId;
+
+	@ApiModelProperty(value = "custName")
 	private String custName;
+
+	@ApiModelProperty(value = "salesOrderNo")
 	private String salesOrderNo;
+
+	@ApiModelProperty(value = "productCode")
 	private String productCode;
+
+	@ApiModelProperty(value = "productName")
 	private String productName;
+
+	@ApiModelProperty(value = "appType")
 	private String appType;
+
+	@ApiModelProperty(value = "salesPromotion")
 	private String salesPromotion;
+
+	@ApiModelProperty(value = "contractDuration")
 	private String contractDuration;
+
+	@ApiModelProperty(value = "outstanding")
 	private String outstanding;
+
+	@ApiModelProperty(value = "sirimNo")
 	private String sirimNo;
+
+	@ApiModelProperty(value = "serialNo")
 	private String serialNo;
+
+	@ApiModelProperty(value = "membershipContractExpiry")
 	private String membershipContractExpiry;
+
+	@ApiModelProperty(value = "dscCode")
 	private String dscCode;
+
+	@ApiModelProperty(value = "prodCat")
 	private String prodCat;
+
+	@ApiModelProperty(value = "regId")
 	private String regId;
+
+	@ApiModelProperty(value = "stus")
 	private String stus;
+
+	@ApiModelProperty(value = "defectCode")
 	private String defectCode;
+
+	@ApiModelProperty(value = "defectDesc")
 	private String defectDesc;
+
+	@ApiModelProperty(value = "handphoneTel")
 	private String handphoneTel;
+
+	@ApiModelProperty(value = "homeTel")
 	private String homeTel;
+
+	@ApiModelProperty(value = "officeTel")
 	private String officeTel;
+
+	@ApiModelProperty(value = "mailAddress")
 	private String mailAddress;
+
+	@ApiModelProperty(value = "resulticMobileNo")
 	private String resulticMobileNo;
+
+	@ApiModelProperty(value = "customerId")
 	private String customerId;
+
+	@ApiModelProperty(value = "customerType")
 	private String customerType;
+
+	@ApiModelProperty(value = "corpTypeId")
 	private String corpTypeId;
+
+	@ApiModelProperty(value = "customerVaNo")
 	private String customerVaNo;
 
 
