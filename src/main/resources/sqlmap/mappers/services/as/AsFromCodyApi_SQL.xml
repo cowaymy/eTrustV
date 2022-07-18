@@ -71,6 +71,7 @@ AND SALES_ORDER_NO = #{salesOrderNo}
 
 
                   SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
+                        ,G.CODE AS PROD_CAT
                         ,A.APP_TYPE_ID AS APP_TYPE
                         ,C.EMAIL AS MAIL_ADDRESS
                         ,C.NRIC AS RESULTIC_MOBILE_NO
@@ -91,6 +92,7 @@ AND SALES_ORDER_NO = #{salesOrderNo}
                     JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
                     JOIN SAL0095D E ON E.SRV_SALES_ORD_ID = A.SALES_ORD_ID
                     JOIN SYS0026M F ON B.ITM_STK_ID = F.STK_ID
+                    JOIN SYS0013M G ON G.CODE_ID = F.STK_CTGRY_ID
                     LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
 
                   where A.SALES_ORD_NO = #{salesOrderNo}
