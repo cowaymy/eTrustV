@@ -703,8 +703,8 @@ public class HcServiceJobDto {
     this.nextAppointmentTime = nextAppointmentTime;
   }
 
-  public static CareServiceJobDto create(EgovMap egvoMap) {
-    return BeanConverter.toBean(egvoMap, CareServiceJobDto.class);
+  public static HcServiceJobDto create(EgovMap egvoMap) {
+    return BeanConverter.toBean(egvoMap, HcServiceJobDto.class);
   }
 
   public String getServiceNo() {

@@ -2370,28 +2370,28 @@ public class ServiceApiController {
     return ResponseEntity.ok(list);
   }
 
-  /* Woongjin Jun */
-  @ApiOperation(value = "Hc Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ApiOperation(value = "Home Care Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/hcServiceJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<CareServiceJobDto>> getHcServiceJob(
+  public ResponseEntity<List<HcServiceJobDto>> getHcServiceJob(
       @ModelAttribute HcServiceJobForm hcServiceJobForm) throws Exception {
     Map<String, Object> params = HcServiceJobForm.createMap(hcServiceJobForm);
 
     List<EgovMap> hcServiceJobList = MSvcLogApiService.getHcServiceJobList(params);
 
     LOGGER.debug(
-        "==================================[MB]HC SERVICE JOB LIST SEARCH====================================");
+        "==================================[MB]HOME CARE SERVICE JOB LIST SEARCH====================================");
     for (int i = 0; i < hcServiceJobList.size(); i++) {
-      LOGGER.debug("hcServiceJobList: {}", hcServiceJobList.get(i));
+      LOGGER.debug("careServiceJobList: {}", hcServiceJobList.get(i));
     }
     LOGGER.debug(
-        "==================================[MB]HC SERVICE JOB LIST SEARCH====================================");
+        "==================================[MB]HOME CARE SERVICE JOB LIST SEARCH====================================");
 
-    List<CareServiceJobDto> list = hcServiceJobList.stream().map(r -> CareServiceJobDto.create(r))
+    List<HcServiceJobDto> list = hcServiceJobList.stream().map(r -> HcServiceJobDto.create(r))
         .collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
   }
+
 
   @ApiOperation(value = "Care Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/careServiceParts", method = RequestMethod.GET)
