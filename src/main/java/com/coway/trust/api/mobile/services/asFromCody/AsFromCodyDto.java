@@ -76,7 +76,7 @@ public class AsFromCodyDto {
 	private String productName;
 
 	@ApiModelProperty(value = "appType")
-	private String appType;
+	private int appType;
 
 	@ApiModelProperty(value = "salesPromotion")
 	private String salesPromotion;
@@ -133,10 +133,10 @@ public class AsFromCodyDto {
 	private String customerId;
 
 	@ApiModelProperty(value = "customerType")
-	private String customerType;
+	private int customerType;
 
 	@ApiModelProperty(value = "corpTypeId")
-	private String corpTypeId;
+	private int corpTypeId;
 
 	@ApiModelProperty(value = "customerVaNo")
 	private String customerVaNo;
@@ -166,11 +166,11 @@ public class AsFromCodyDto {
 		return customerId;
 	}
 
-	public String getCustomerType() {
+	public int getCustomerType() {
 		return customerType;
 	}
 
-	public String getCorpTypeId() {
+	public int getCorpTypeId() {
 		return corpTypeId;
 	}
 
@@ -202,11 +202,11 @@ public class AsFromCodyDto {
 		this.customerId = customerId;
 	}
 
-	public void setCustomerType(String customerType) {
+	public void setCustomerType(int customerType) {
 		this.customerType = customerType;
 	}
 
-	public void setCorpTypeId(String corpTypeId) {
+	public void setCorpTypeId(int corpTypeId) {
 		this.corpTypeId = corpTypeId;
 	}
 
@@ -250,7 +250,7 @@ public class AsFromCodyDto {
 		return productName;
 	}
 
-	public String getAppType() {
+	public int getAppType() {
 		return appType;
 	}
 
@@ -314,7 +314,7 @@ public class AsFromCodyDto {
 		this.productName = productName;
 	}
 
-	public void setAppType(String appType) {
+	public void setAppType(int appType) {
 		this.appType = appType;
 	}
 
