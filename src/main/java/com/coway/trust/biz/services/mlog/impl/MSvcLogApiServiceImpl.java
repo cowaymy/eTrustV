@@ -895,6 +895,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   }
 
   @Override
+  public List<EgovMap> getHcServiceJobList(Map<String, Object> params) {
+    return MSvcLogApiMapper.getHcServiceJobList(params);
+  }
+
+  @Override
   public void updateHTReAppointmentReturnResult(Map<String, Object> params) {
     MSvcLogApiMapper.updateHTReAppointmentReturnResult(params);
   }

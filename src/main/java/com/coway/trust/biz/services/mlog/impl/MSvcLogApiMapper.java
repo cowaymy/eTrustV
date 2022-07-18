@@ -252,6 +252,8 @@ public interface MSvcLogApiMapper {
   /* Woongjin Jun */
   List<EgovMap> getCareServiceJobList(Map<String, Object> params);
 
+  List<EgovMap> getHcServiceJobList(Map<String, Object> params);
+
   void updateHTReAppointmentReturnResult(Map<String, Object> params);
 
   void updateHtFailJobResult(Map<String, Object> params);

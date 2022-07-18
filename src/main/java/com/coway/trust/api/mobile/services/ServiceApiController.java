@@ -118,6 +118,8 @@ import com.coway.trust.api.mobile.services.careService.CSReAppointmtRequestForm;
 import com.coway.trust.api.mobile.services.careService.CareServiceJobDto;
 import com.coway.trust.api.mobile.services.careService.CareServiceJobForm;
 import com.coway.trust.api.mobile.services.careService.CareServicePartsDto;
+import com.coway.trust.api.mobile.services.careService.HcServiceJobDto;
+import com.coway.trust.api.mobile.services.careService.HcServiceJobForm;
 import com.coway.trust.api.mobile.services.careService.CareServicePartsForm;
 import com.coway.trust.api.mobile.services.careService.CareServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.careService.CareServiceResultDto;
@@ -2363,6 +2365,29 @@ public class ServiceApiController {
         "==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
 
     List<CareServiceJobDto> list = careServiceJobList.stream().map(r -> CareServiceJobDto.create(r))
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  /* Woongjin Jun */
+  @ApiOperation(value = "Hc Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hcServiceJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServiceJobDto>> getHcServiceJob(
+      @ModelAttribute HcServiceJobForm hcServiceJobForm) throws Exception {
+    Map<String, Object> params = HcServiceJobForm.createMap(hcServiceJobForm);
+
+    List<EgovMap> hcServiceJobList = MSvcLogApiService.getHcServiceJobList(params);
+
+    LOGGER.debug(
+        "==================================[MB]HC SERVICE JOB LIST SEARCH====================================");
+    for (int i = 0; i < hcServiceJobList.size(); i++) {
+      LOGGER.debug("hcServiceJobList: {}", hcServiceJobList.get(i));
+    }
+    LOGGER.debug(
+        "==================================[MB]HC SERVICE JOB LIST SEARCH====================================");
+
+    List<CareServiceJobDto> list = hcServiceJobList.stream().map(r -> CareServiceJobDto.create(r))
         .collect(Collectors.toList());
 
     return ResponseEntity.ok(list);

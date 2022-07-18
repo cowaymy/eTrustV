@@ -189,6 +189,8 @@ public interface MSvcLogApiService {
   /* Woongjin Jun */
   List<EgovMap> getCareServiceJobList(Map<String, Object> params);
 
+  List<EgovMap> getHcServiceJobList(Map<String, Object> params);
+
   void updateHTReAppointmentReturnResult(Map<String, Object> params);
 
   void insertHtFailJobResult(Map<String, Object> params, SessionVO sessionVO);
