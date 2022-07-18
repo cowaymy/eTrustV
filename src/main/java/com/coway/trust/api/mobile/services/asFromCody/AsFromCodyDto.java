@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "AsFromCodyDto", description = "AsFromCody Dto")
 public class AsFromCodyDto {
 
-		@SuppressWarnings("unchecked")
+		//@SuppressWarnings("unchecked")
 		public static AsFromCodyDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, AsFromCodyDto.class);
 	}
