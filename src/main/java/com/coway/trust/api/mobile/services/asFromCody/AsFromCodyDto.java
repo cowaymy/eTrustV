@@ -47,6 +47,15 @@ public class AsFromCodyDto {
 		    params.put("stus", asFromCodyForm.getStus());
 		    params.put("defectCode", asFromCodyForm.getDefectCode());
 		    params.put("defectDesc", asFromCodyForm.getDefectDesc());
+		    params.put("handphoneTel", asFromCodyForm.getHandphoneTel());
+		    params.put("homeTel", asFromCodyForm.getHomeTel());
+		    params.put("officeTel", asFromCodyForm.getOfficeTel());
+		    params.put("mailAddress", asFromCodyForm.getMailAddress());
+		    params.put("resulticMobileNo", asFromCodyForm.getResulticMobileNo());
+		    params.put("customerId", asFromCodyForm.getCustomerId());
+		    params.put("customerType", asFromCodyForm.getCustomerType());
+		    params.put("corpTypeId", asFromCodyForm.getCorpTypeId());
+		    params.put("customerVaNo", asFromCodyForm.getCustomerVaNo());
 
 		    return params;
 		  }
@@ -70,7 +79,88 @@ public class AsFromCodyDto {
 	private String stus;
 	private String defectCode;
 	private String defectDesc;
+	private String handphoneTel;
+	private String homeTel;
+	private String officeTel;
+	private String mailAddress;
+	private String resulticMobileNo;
+	private String customerId;
+	private String customerType;
+	private String corpTypeId;
+	private String customerVaNo;
 
+
+	public String getHandphoneTel() {
+		return handphoneTel;
+	}
+
+	public String getHomeTel() {
+		return homeTel;
+	}
+
+	public String getOfficeTel() {
+		return officeTel;
+	}
+
+	public String getMailAddress() {
+		return mailAddress;
+	}
+
+	public String getResulticMobileNo() {
+		return resulticMobileNo;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public String getCorpTypeId() {
+		return corpTypeId;
+	}
+
+	public String getCustomerVaNo() {
+		return customerVaNo;
+	}
+
+	public void setHandphoneTel(String handphoneTel) {
+		this.handphoneTel = handphoneTel;
+	}
+
+	public void setHomeTel(String homeTel) {
+		this.homeTel = homeTel;
+	}
+
+	public void setOfficeTel(String officeTel) {
+		this.officeTel = officeTel;
+	}
+
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
+	}
+
+	public void setResulticMobileNo(String resulticMobileNo) {
+		this.resulticMobileNo = resulticMobileNo;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
+
+	public void setCorpTypeId(String corpTypeId) {
+		this.corpTypeId = corpTypeId;
+	}
+
+	public void setCustomerVaNo(String customerVaNo) {
+		this.customerVaNo = customerVaNo;
+	}
 
 	public String getDefectCode() {
 		return defectCode;
