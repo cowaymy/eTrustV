@@ -2742,6 +2742,10 @@ public class ServiceApiController {
 	public ResponseEntity<AsFromCodyDto>  selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
 
      Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
+
+     LOGGER.debug("selectOrderInfo Param",params);
+     LOGGER.debug("### selectOrderInfo Param FORM : " + params.toString());
+
      EgovMap resultMap = null;
       //
      resultMap = asFromCodyApiService.selectOrderInfo(params);
