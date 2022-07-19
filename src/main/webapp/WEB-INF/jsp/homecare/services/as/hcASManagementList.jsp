@@ -1162,10 +1162,12 @@ var branchDs = [];
       <ul class="btns">
       </ul>
       <ul class="btns">
-       <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcUserDefine12 == 'Y'}">
         <li><p class="link_btn type2">
           <a href="#none" onclick="fn_ASReport()"><spring:message code='service.btn.asRpt'/></a>
          </p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
         <li><p class="link_btn type2">
           <a href="#none" onclick="fn_asLogBookList()"><spring:message code='service.btn.asLogBook'/></a>
          </p></li>
