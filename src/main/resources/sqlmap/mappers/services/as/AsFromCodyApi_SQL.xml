@@ -97,6 +97,7 @@ AND SALES_ORDER_NO = #{salesOrderNo}
 
                   where A.SALES_ORD_NO = #{salesOrderNo}
                   AND C.STUS_CODE_ID = 9
+                  AND ROWNUM < 2
 
 ]]>
 </select>
