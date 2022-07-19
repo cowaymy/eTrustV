@@ -21,4 +21,6 @@ public interface AsFromCodyApiServiceMapper {
 
 	EgovMap selectOrderInfo(Map<String, Object> params);
 
+	List<EgovMap> selectSubmissionRecordsAll(Map<String, Object> params);
+
 }
