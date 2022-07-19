@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.services.asFromCody;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -143,16 +144,16 @@ public class AsFromCodyDto {
 	private String customerVaNo;
 
 	@ApiModelProperty(value = "crtDt")
-	private String crtDt;
+	private Date crtDt;
 
 
 
 
-	public String getCrtDt() {
+	public Date getCrtDt() {
 		return crtDt;
 	}
 
-	public void setCrtDt(String crtDt) {
+	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
