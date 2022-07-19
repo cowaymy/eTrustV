@@ -56,19 +56,35 @@
 
   <select id="selectSubmissionRecords" parameterType="Map" resultType="egovMap">
 <![CDATA[
-
 SELECT DISTINCT SALES_ORDER_NO FROM SVC0130D
 WHERE EXTRACT(MONTH FROM CRT_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual)
 AND EXTRACT(YEAR FROM CRT_DT) IN (SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual)
 AND SALES_ORDER_NO = #{salesOrderNo}
-
 ]]>
+</select>
+
+
+  <select id="selectSubmissionRecordsAll" parameterType="Map" resultType="egovMap">
+
+SELECT
+    SALES_ORDER_NO,
+    PROD_CAT,
+    STUS,
+    CRT_DT
+FROM SVC0130D
+WHERE 1 = 1
+
+    <if test="_reqstStartDt != null and _reqstStartDt != '' ">
+        AND TO_CHAR (T1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+    </if>
+
+ORDER BY CRT_DT DESC
+
 </select>
 
 
   <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
 <![CDATA[
-
 
                   SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
                         ,G.CODE AS PROD_CAT
@@ -83,8 +99,6 @@ AND SALES_ORDER_NO = #{salesOrderNo}
                         ,F.STK_DESC AS product_Name
                         ,TO_CHAR (E.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry
                         ,TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
-
-
 
                   from SAL0001D A
                     JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
