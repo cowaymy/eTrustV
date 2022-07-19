@@ -32,6 +32,8 @@ public interface AsFromCodyApiService {
 
 	EgovMap selectOrderInfo(Map<String, Object> params);
 
+	List<EgovMap> selectSubmissionRecordsAll(Map<String, Object> params);
+
 	//AsFromCodyDto selectOrderInfo(Map<String, Object> params) throws Exception;
 
 	//EgovMap selectOrderInfo(Map<String, Object> AsFromCodyForm);
