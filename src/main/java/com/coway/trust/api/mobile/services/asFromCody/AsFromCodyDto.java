@@ -56,6 +56,7 @@ public class AsFromCodyDto {
 		    params.put("customerType", asFromCodyForm.getCustomerType());
 		    params.put("corpTypeId", asFromCodyForm.getCorpTypeId());
 		    params.put("customerVaNo", asFromCodyForm.getCustomerVaNo());
+		    params.put("crtDt", asFromCodyForm.getCrtDt());
 
 		    return params;
 		  }
@@ -141,6 +142,19 @@ public class AsFromCodyDto {
 	@ApiModelProperty(value = "customerVaNo")
 	private String customerVaNo;
 
+	@ApiModelProperty(value = "crtDt")
+	private String crtDt;
+
+
+
+
+	public String getCrtDt() {
+		return crtDt;
+	}
+
+	public void setCrtDt(String crtDt) {
+		this.crtDt = crtDt;
+	}
 
 	public String getHandphoneTel() {
 		return handphoneTel;
