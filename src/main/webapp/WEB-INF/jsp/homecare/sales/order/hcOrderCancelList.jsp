@@ -55,6 +55,9 @@
              else if( event.dataField == "attchmentDownload" ){
                      if( FormUtil.isEmpty(event.value) == false){
                        var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+
+                       console.log("helloooo");
+                       console.log(rowVal);
                        if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
                          window.open("/file/fileDownWeb.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
                        }

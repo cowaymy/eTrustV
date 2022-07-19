@@ -41,6 +41,9 @@
     var ordCtgryCd = "${hcOrder.ordCtgryCd}";
     var anoOrdId = "${hcOrder.anoOrdId}";
 
+    var myFileCaches = {};
+    var atchFileGrpId = 0;
+
     var filterGridID;
     var _cancleMsg = "Another order :  "+ anoOrdNo +"<br/>is also canceled together.<br/>";
 
@@ -2018,17 +2021,63 @@
 
     // Click Request Cancle Order
     function fn_doSaveReqCanc() {
-        Common.ajax("POST", "/homecare/sales/order/hcRequestCancelOrder.do", $('#frmReqCanc').serializeJSON(), function(result) {
-            Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_success);
-        }, function(jqXHR, textStatus, errorThrown) {
-            try {
-                //console.log("Error message : " + jqXHR.responseJSON.message);
-                Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
-            } catch(e) {
-                console.log(e);
-            }
-        });
-    }
+
+    	 var formData = new FormData();
+         $.each(myFileCaches, function(n, v) {
+             console.log("n : " + n + " v.file : " + v.file);
+             formData.append(n, v.file);
+         });
+
+         Common.ajaxFile("/homecare/sales/order/hcAttachmentFileUpload.do", formData, function(result) {
+        	 console.log("helloooo");
+        	 console.log(result);
+
+             if(result != 0 && result.code == 00){
+                 atchFileGrpId = result.data.fileGroupKey;
+                  console.log("atchFileGrpId :: " + atchFileGrpId);
+                   var jsonObj =  {
+                             salesOrdId : '${orderDetail.basicInfo.ordId}',
+                             salesAnoOrdId : '${hcOrder.anoOrdId}',
+                             salesOrdCtgryCd : '${hcOrder.ordCtgryCd}',
+                             cmbRequestor : $("#cmbRequestor").val(),
+                             dpCallLogDate : $("#dpCallLogDate").val(),
+                             cmbReason : $("#cmbReason").val(),
+                             dpReturnDate : $("#dpReturnDate").val(),
+                             txtRemark : $("#txtRemark").val(),
+                             txtTotalUseMth : $("#txtTotalUseMth").val(),
+                             txtObPeriod : $("#txtObPeriod").val(),
+                             txtRentalFees : $("#txtRentalFees").val(),
+                             txtPenaltyCharge : $("#txtPenaltyCharge").val(),
+                             txtPenaltyAdj : $("#txtPenaltyAdj").val(),
+                             txtCurrentOutstanding : $("#txtCurrentOutstanding").val(),
+                             spTotalAmount : $("#spTotalAmount").val(),
+                             atchFileGrpId : atchFileGrpId
+
+                   };
+
+        console.log("-------------------------" + JSON.stringify(jsonObj));
+
+        //Common.ajax("POST", "/homecare/sales/order/hcRequestCancelOrder.do", $('#frmReqCanc').serializeJSON(), function(result) {
+	        Common.ajax("POST", "/homecare/sales/order/hcRequestCancelOrder.do", jsonObj, function(result) {
+	        	 console.log("-------------------------" );
+	        	Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_success);
+	        }, function(jqXHR, textStatus, errorThrown) {
+	            try {
+	            	console.log("-------------------------" + errorThrown);
+
+	                //console.log("Error message : " + jqXHR.responseJSON.message);
+	                Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
+	            } catch(e) {
+	                console.log(e);
+	            }
+	        });
+	    }else{
+	        Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+	    }
+	},function(result){
+	    Common.alert("Upload Failed. Please check with System Administrator.");
+	});
+	}
 
     // save - Transfer Ownership
     function fn_doSaveReqOwnt() {
@@ -2516,6 +2565,18 @@
             $('#cmbPromotionAexc option:eq(3)').attr('selected', 'selected');
         }
     }
+
+    $(function(){
+        $('#attchmentFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[1] != null){
+                delete myFileCaches[1];
+            }else if(file != null){
+                myFileCaches[1] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+        });
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -2604,6 +2665,18 @@
 			<tr>
 			    <th scope="row"><spring:message code="sal.text.ocrRem" /><span class="must">*</span></th>
 			    <td colspan="3"><textarea id="txtRemark" name="txtRemark" cols="20" rows="5"></textarea></td>
+			</tr>
+			<tr>
+                    <th scope="row">Attachment</th>
+                    <td >
+                    <div class="auto_file2">
+                    <input type="file" title="file add" id="attchmentFile" accept=".zip"/>
+			            <label>
+			                <input type='text' class='input_text' readonly='readonly' />
+			                <span class='label_text'><a href='#'>Upload</a></span>
+			            </label>
+			        </div>
+			    </td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->

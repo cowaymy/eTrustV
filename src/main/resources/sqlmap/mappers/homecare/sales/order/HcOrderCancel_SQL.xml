@@ -82,7 +82,12 @@
                    A.ASSIGN_CT,
                    A.RCD_TMS,
                    B.CODE AS DSC,
-                   A.BNDL_NO
+                   A.BNDL_NO,
+                   A.ATCH_FILE_GRP_ID ,
+                   A.ATTCHMENT_DOWNLOAD ,
+                   A.FILE_SUB_PATH ,
+                   A.ATCH_FILE_NAME ,
+                   A.PHYSICL_FILE_NAME
          FROM (
             SELECT V.REQ_ID ,
                        V.REQ_NO ,
@@ -146,7 +151,12 @@
                        V.ASSIGN_CT,
                        V.RCD_TMS,
                        V.STK_CTGRY_ID,
-                       D1.BNDL_NO
+                       D1.BNDL_NO,
+                       V.ATCH_FILE_GRP_ID ,
+	                   V.ATTCHMENT_DOWNLOAD ,
+	                   V.FILE_SUB_PATH ,
+	                   V.ATCH_FILE_NAME ,
+	                   V.PHYSICL_FILE_NAME
              FROM SAL1007V V
         LEFT JOIN HMC0011D D1 ON V.BNDL_ID = D1.ORD_SEQ_NO
              ) A
