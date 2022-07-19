@@ -78,6 +78,8 @@ function fn_generateInvoice(){
       }
       $("#reportPDFForm #V_REFERENCEID").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
       $("#reportPDFForm #V_TYPE").val(134);
+      $("#reportPDFForm #reportDownFileName").val('PUBLIC_TaxInvoice_ServiceContract');
+
       console.log("referenceId :  "  + AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
 
       //report 호출
@@ -177,5 +179,6 @@ function fn_clear(){
     <input type="hidden" id="V_REFMONTH" name="V_REFMONTH" value="0" />
     <input type="hidden" id="V_REFYEAR" name="V_REFYEAR" value="0" />
     <input type="hidden" id="V_REFERENCEID" name="V_REFERENCEID" />
+    <input type="hidden" id ="reportDownFileName" name="reportDownFileName" value=""/>
 </form>
 </div>
