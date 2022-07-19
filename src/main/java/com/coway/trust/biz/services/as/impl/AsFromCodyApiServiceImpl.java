@@ -115,4 +115,15 @@ public class AsFromCodyApiServiceImpl extends EgovAbstractServiceImpl implements
         return asFromCodyApiServiceMapper.selectOrderInfo(params);
       }
 
+    @Override
+	public List<EgovMap> selectSubmissionRecordsAll(Map<String, Object> params) {
+
+    	params.put("_USER_ID", params.get("userId") );
+		LoginVO loginVO = loginMapper.selectLoginInfoById(params);
+		params.put("userId",  loginVO.getUserId());
+		
+		return asFromCodyApiServiceMapper.selectSubmissionRecordsAll(params);
+	}
+    
+
 }
