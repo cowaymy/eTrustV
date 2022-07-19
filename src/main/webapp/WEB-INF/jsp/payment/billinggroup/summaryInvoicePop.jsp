@@ -141,7 +141,7 @@
 			date = "0" + date;
 		}
 		$("#reportDownFileName").val(
-				"SummaryofInvoice_" + date + (new Date().getMonth() + 1)
+				"PUBLIC_SummaryofInvoice_" + date + (new Date().getMonth() + 1)
 						+ new Date().getFullYear());
 		$("#form #viewType").val("PDF");
 		$("#form #reportFileName").val("/statement/SummaryOfInvoice.rpt");

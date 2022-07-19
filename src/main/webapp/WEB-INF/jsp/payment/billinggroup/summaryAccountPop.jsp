@@ -108,7 +108,7 @@
             $("#reportPDFForm #V_MMYYYY").val(V_MMYYYY);
 	        var reportDownFileName = "";
 
-	        reportDownFileName = 'SummaryOfAccount_' + custId + '_' + V_MMYYYY;
+	        reportDownFileName = 'PUBLIC_SummaryOfAccount_' + custId + '_' + V_MMYYYY;
 	        $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
 
 	        //report 호출

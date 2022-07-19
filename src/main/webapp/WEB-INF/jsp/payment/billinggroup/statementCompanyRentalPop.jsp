@@ -69,7 +69,7 @@ function fn_generateInvoice(){
         month = (month < 10) ? ('0' + month) : month;
         var reportDownFileName = "";
 
-        reportDownFileName = 'SOA_' + stateItmOrdNo + '_StatementPeriod(' + month + year + ')';
+        reportDownFileName = 'PUBLIC_SOA_' + stateItmOrdNo + '_StatementPeriod(' + month + year + ')';
         $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
 
         //report 호출
