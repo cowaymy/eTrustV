@@ -150,6 +150,7 @@ function fn_generateStatement(){
     //옵션 세팅
     $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid"));
     $("#reportPDFForm #viewType").val("PDF");
+    $("#reportPDFForm #reportDownFileName").val('PUBLIC_TaxInvoice_Proforma');
 
     if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
     if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
@@ -376,6 +377,7 @@ function fn_clear(){
     <input type="hidden" id="emailSubject" name="emailSubject" value="" />
     <input type="hidden" id="emailText" name="emailText" value="" />
     <input type="hidden" id="emailTo" name="emailTo" value="" />
+    <input type="hidden" id ="reportDownFileName" name="reportDownFileName" value=""/>
 </form>
 </div>
 <!---------------------------------------------------------------

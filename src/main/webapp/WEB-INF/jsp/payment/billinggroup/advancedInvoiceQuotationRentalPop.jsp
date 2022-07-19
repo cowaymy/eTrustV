@@ -212,6 +212,7 @@ function fn_generateStatement(){
 		$("#reportPDFForm #v_orderId").val(salesOrderId);
 		$("#reportPDFForm #v_creatorId").val(userId);
 		$("#reportPDFForm #viewType").val("PDF");
+		$("#reportPDFForm #reportDownFileName").val('PUBLIC_TaxInvoice_AdvancedRentalInvoice');
 
 		if ($("#advance1").is(":checked"))
 			$("#reportPDFForm #v_adv1Boolean").val(1);
@@ -353,6 +354,7 @@ function fn_generateStatement(){
     <input type="hidden" id="emailSubject" name="emailSubject" value="" />
     <input type="hidden" id="emailText" name="emailText" value="" />
     <input type="hidden" id="emailTo" name="emailTo" value="" />
+    <input type="hidden" id ="reportDownFileName" name="reportDownFileName" value=""/>
 </form>
 </div>
 <!---------------------------------------------------------------
