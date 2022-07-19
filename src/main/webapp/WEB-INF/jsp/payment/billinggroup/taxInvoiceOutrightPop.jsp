@@ -105,7 +105,7 @@ function fn_generateInvoice(){
       var Month = InvoiceDate.getMonth() + 1;
       Month = (Month < 10) ? ('0' + Month) : Month;
 
-      reportDownFileName = 'TaxInvoice_' + invcItmOrdNo + '_InvoiceDate(' + Day + Month + InvoiceDate.getFullYear() + ')';
+      reportDownFileName = 'PUBLIC_TaxInvoice_' + invcItmOrdNo + '_InvoiceDate(' + Day + Month + InvoiceDate.getFullYear() + ')';
       $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
 
       //report 호출
