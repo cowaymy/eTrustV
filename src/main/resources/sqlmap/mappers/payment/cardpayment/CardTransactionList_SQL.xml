@@ -29,7 +29,6 @@
                   , T.OR_NO
                   , T.TRX_ID
                   , T.F_TRNSC_ID
-                  ,T.RN
            FROM (SELECT DISTINCT A.CRC_STATE_ID
                               , TO_CHAR(A.CRC_STATE_CRT_DT , 'DD/MM/YYYY') CRC_STATE_CRT_DT
                               , A.CRC_STATE_REF_NO
@@ -63,7 +62,6 @@
                               , C.TRX_ID
                               , E.PAY_ITM_ID
                               , L.F_TRNSC_ID
-                              , ROW_NUMBER() OVER (PARTITION BY D.OR_NO ORDER BY L.F_TRNSC_ID) RN
                           FROM PAY0075D A
                          INNER JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
                           LEFT OUTER JOIN PAY0252T C ON B.CRC_TRNSC_ID = C.CRC_STATE_MAPPING_ID AND NVL(REV_STUS_ID,0) <![CDATA[<>]]> 5
@@ -126,7 +124,6 @@
                             </if>
                         </if>
                    ) T
-                   WHERE RN = 1
            ORDER BY T.CRC_STATE_ID DESC, T.CRC_STATE_CRT_DT DESC, T.CRC_TRNSC_APPV ASC, T.OR_NO ASC
     </select>
 
