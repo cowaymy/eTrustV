@@ -144,16 +144,16 @@ public class AsFromCodyDto {
 	private String customerVaNo;
 
 	@ApiModelProperty(value = "crtDt")
-	private Date crtDt;
+	private String crtDt;
 
 
 
 
-	public Date getCrtDt() {
+	public String getCrtDt() {
 		return crtDt;
 	}
 
-	public void setCrtDt(Date crtDt) {
+	public void setCrtDt(String crtDt) {
 		this.crtDt = crtDt;
 	}
 
