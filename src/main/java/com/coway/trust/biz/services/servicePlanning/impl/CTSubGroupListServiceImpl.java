@@ -389,6 +389,13 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 			CTSubGroupListMapper.insertCTSubGroup(insertValue);
 
 			insertValue.put("userId", sessionVO.getUserId());
+			if(insertValue.get("ltSubGrp") != null && insertValue.get("ltSubGrp") != "")
+			{
+				insertValue.put("ctSubGrp", insertValue.get("ltSubGrp"));
+			}
+			else{
+				insertValue.put("ctSubGrp", insertValue.get("ctSubGrp"));
+			}
 			insertValue.put("mainGroup", CommonUtils.nvl(insertValue.get("ctSubGrp")));
 
 			int mainGroupCnt =CTSubGroupListMapper.selectOneMainGroup(insertValue);
