@@ -26,7 +26,7 @@
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
-var rawFileGrid1;
+var dataMartFileGrid1;
 
 var columnLayout1 = [
 					{dataField: "orignlfilenm" ,headerText: "<spring:message code='log.head.filename'/>"  ,width: "30%" ,visible:  true },
@@ -35,7 +35,7 @@ var columnLayout1 = [
                     {dataField: ""             ,headerText: "" ,
                         renderer: {
                         	type: "ButtonRenderer" ,labelText: "Download" ,onclick: function(rowIndex, columnIndex, value, item){
-                              fileDown(rowIndex,"BI");
+//                               fileDownload(rowIndex,"BI");
                             }
                         }
                     , editable : false
@@ -58,11 +58,8 @@ var gridoptions = {
 var paramdata;
 
 $(document).ready(function(){
-
-    rawFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
-
-    doGetCombo('/logistics/file/checkDirectory.do', 'BI', '','bizintel', 'S' , ''); //File Type 리스트 조회
-
+    dataMartFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
+//     doGetCombo('/logistics/file/checkDirectory.do', 'PB', '','dataMartList', 'S' , ''); //File Type 리스트 조회
 });
 
 
@@ -70,9 +67,10 @@ $(document).ready(function(){
 $(function(){
 	$("#grid_wrap1").hide();
 	var userId = '${SESSION_INFO.userId}' ;
-	$('#bizintel').change(function() {
-	var div= $('#bizintel').val();
+	$('#dataMartList').change(function() {
+	var div= $('#dataMartList').val();
 	console.log('div : ' + div);
+	//Custom Access Right definition
 	if("${SESSION_INFO.userId}" !="281" && "${SESSION_INFO.userId}" !="131268"  && "${SESSION_INFO.userId}" !="33670"   && div == "SHI"){
 		var msg = "Sorry. You have no access rights to download this file.";
         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
@@ -92,39 +90,35 @@ $(function(){
 	 }
 
 	$("#grid_wrap1").show();
-	SearchListAjax1(div);
+		SearchListAjax1(div);
 	});
 });
 
 
 function SearchListAjax1(str) {
-    var url = "/logistics/file/rawdataList.do";
+//     var url = "/logistics/file/rawdataList.do";
     var param = {type :"Public/"+str};
     Common.ajax("GET" , url , param , function(data){
     	console.log(data);
-    	AUIGrid.clearGridData(rawFileGrid1);
-        AUIGrid.setGridData(rawFileGrid1, data);
+    	AUIGrid.clearGridData(dataMartFileGrid1);
+        AUIGrid.setGridData(dataMartFileGrid1, data);
         var sortingInfo = [];
         // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
         sortingInfo[0] = { dataField : "updDt", sortType : -1 };
-        AUIGrid.setSorting(rawFileGrid1, sortingInfo);
+        AUIGrid.setSorting(dataMartFileGrid1, sortingInfo);
 
-        AUIGrid.resize(rawFileGrid1);
+        AUIGrid.resize(dataMartFileGrid1);
     });
 }
 
-function fileDown(rowIndex,str){
+function fileDownload(rowIndex,str){
 	var subPath;
 	var fileName;
 	var orignlFileNm;
-	subPath = "/resources/WebShare/RawData/Public/"+$('#bizintel').val();
-    orignlFileNm = AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "orignlfilenm");
+// 	subPath = "/resources/WebShare/RawData/Public/"+$('#dataMartList').val();
+    orignlFileNm = AUIGrid.getCellValue(dataMartFileGrid1,  rowIndex, "orignlfilenm");
     window.open("${pageContext.request.contextPath}"+subPath + "/" + orignlFileNm);
 
-    if(yrdy)
-    	{
-    	
-    	}
 }
 </script>
 
@@ -142,7 +136,7 @@ function fileDown(rowIndex,str){
         <p class="fav">
             <a href="#" class="click_add_on">My menu</a>
         </p>
-        <h2>File Download</h2>
+        <h2>Data Mart File Download</h2>
     </aside>
     <!-- title_line end -->
     <section class="search_table">
@@ -150,7 +144,7 @@ function fileDown(rowIndex,str){
         <form action="#" method="post">
             <aside class="title_line">
                 <!-- title_line start -->
-                <h3>Data File(s)</h3>
+                <h3>Data Mart File(s)</h3>
             </aside>
             <!-- title_line end -->
             <table class="type1">
@@ -162,9 +156,9 @@ function fileDown(rowIndex,str){
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Raw Type</th>
+                        <th scope="row">Data Mart Type</th>
                         <td>
-                            <select class="w100p" id="bizintel" name="bizintel"></select>
+                            <select class="w100p" id="dataMartList" name="dataMartList"></select>
                         </td>
                     </tr>
                 </tbody>
