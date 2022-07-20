@@ -67,7 +67,7 @@ AND SALES_ORDER_NO = #{salesOrderNo}
   <select id="selectSubmissionRecordsAll" parameterType="Map" resultType="egovMap">
 
 SELECT
-    A.USER_ID AS USER_ID
+    A.USER_ID AS USER_ID,
     A.SALES_ORDER_NO AS SALES_ORDER_NO,
     A.PROD_CAT AS PROD_CAT,
     A.STUS AS STUS,
