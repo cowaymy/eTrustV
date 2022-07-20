@@ -123,7 +123,7 @@
                     , A.TOTAL_WEIGHT
                     , A.ITEM_ATTCH_GRP_ID
                     , G.ATCH_FILE_NAME
-                    , G.FILE_SUB_PATH || '\' || G.PHYSICL_FILE_NAME || '.' || G.FILE_EXTSN AS FILEPATH
+                    , G.FILE_SUB_PATH || '\' || G.PHYSICL_FILE_NAME  AS FILEPATH
                     , H.ITEM_INV_QTY
                     , H.LOC_ID
             from SAL0321D A
@@ -275,7 +275,7 @@
      <select id="selectItemImageList" parameterType="Map" resultType="egovMap">
 			 SELECT
 				      A.ID
-				    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME || '.' || C.FILE_EXTSN AS FILEPATH
+				    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
 			FROM SAL0321D A
 			JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
 			JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
@@ -285,7 +285,7 @@
     <select id="selectCatalogList" parameterType="Map" resultType="egovMap">
             SELECT
                       A.ID
-                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME || '.' || C.FILE_EXTSN AS FILEPATH
+                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
                     , D.LOC_ID
             FROM SAL0321D A
             LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
