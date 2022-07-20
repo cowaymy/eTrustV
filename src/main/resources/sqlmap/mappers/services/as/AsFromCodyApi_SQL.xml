@@ -74,10 +74,15 @@ SELECT
 FROM SVC0130D
 WHERE 1 = 1
 
-    <if test="_reqstStartDt != null and _reqstStartDt != '' ">
-        AND TO_CHAR (T1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+    <where>
+        AND      Extent1.REG_ID = #{userId}
+    <if test="fromDate != null and fromDate != '' ">
+            AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate},   'YYYYMMDD'),'YYYY-MM-DD')
     </if>
-
+    <if test="toDate != null and toDate != '' ">
+            AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
+    </if>
+    </where>
 ORDER BY CRT_DT DESC
 
 </select>
