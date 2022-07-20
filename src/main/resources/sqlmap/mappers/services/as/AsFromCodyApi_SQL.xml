@@ -67,10 +67,10 @@ AND SALES_ORDER_NO = #{salesOrderNo}
   <select id="selectSubmissionRecordsAll" parameterType="Map" resultType="egovMap">
 
 SELECT
-    SALES_ORDER_NO,
-    PROD_CAT,
-    STUS,
-    CRT_DT
+    SALES_ORDER_NO AS SALES_ORDER_NO,
+    PROD_CAT AS PROD_CAT,
+    STUS AS STUS,
+    TO_CHAR (CRT_DT, 'YYYY-MM-DD') AS CRT_DT
 FROM SVC0130D
 WHERE 1 = 1
 
