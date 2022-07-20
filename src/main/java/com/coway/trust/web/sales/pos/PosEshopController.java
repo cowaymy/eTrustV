@@ -73,18 +73,13 @@ public class PosEshopController {
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
 
-//
-//  @Value("${com.file.upload.path}")
-//  private String uploadDir;
-//
-//  @Value("${web.resource.upload.file}")
-//  private String uploadDirWeb;
 
   @Value("${com.file.upload.path}")
-  private String uploadDirWeb;
+  private String uploadDir;
 
   @Value("${web.resource.upload.file}")
-  private String uploadDir;
+  private String uploadDirWeb;
+
 
   @Autowired
   private PreOrderApplication preOrderApplication;
