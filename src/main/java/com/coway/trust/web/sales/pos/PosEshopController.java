@@ -187,7 +187,7 @@ public class PosEshopController {
   @RequestMapping(value = "/eShopItemUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<FileDto> eShopItemUpload(MultipartHttpServletRequest request,	@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDirWeb,
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles3(request, uploadDirWeb,
 				File.separator + "ESHOP" + File.separator + "ESHOP", 1024 * 1024 * 6);
 
 		String param01 = (String) params.get("param01");
@@ -195,8 +195,8 @@ public class PosEshopController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		//serivce 에서 파일정보를 가지고, DB 처리.
-		int fileGroupKey = fileApplication.commonAttachByUserId(FileType.WEB, FileVO.createList(list), params);
-		FileDto fileDto = FileDto.create(list, fileGroupKey);
+		int fileGroupKey = fileApplication.commonAttachByUserId(FileType.WEB, FileVO.createList2(list), params);
+		FileDto fileDto = FileDto.create2(list, fileGroupKey);
 
 		return ResponseEntity.ok(fileDto);
 	}
@@ -523,7 +523,7 @@ public class PosEshopController {
 				     seqs.add(key);
 				 }
 
-			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles3(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
 			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 

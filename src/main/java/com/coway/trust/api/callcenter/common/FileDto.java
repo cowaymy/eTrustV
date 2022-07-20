@@ -24,6 +24,13 @@ public class FileDto {
 		return dto;
 	}
 
+	public static FileDto create2(List<EgovFormBasedFileVo> egovFormBasedFileVoList, int atchFileGrpId) {
+		FileDto dto = new FileDto();
+		dto.setFiles(FileDetailVO.createList2(egovFormBasedFileVoList));
+		dto.setAtchFileGrpId(atchFileGrpId);
+		return dto;
+	}
+
 	public static FileDto createByFileVO(List<FileVO> fileVOList, int atchFileGrpId) {
 		FileDto dto = new FileDto();
 		List<FileDetailVO> fileDetailVOList = fileVOList.stream().map(r -> FileDetailVO.create(r)).collect(Collectors.toList());
@@ -49,12 +56,32 @@ public class FileDto {
 			return fileDetailVOList;
 		}
 
+		public static List<FileDetailVO> createList2(List<EgovFormBasedFileVo> list) {
+			List<FileDetailVO> fileDetailVOList = list.stream().map(r -> FileDetailVO.create2(r)).collect(Collectors.toList());
+			return fileDetailVOList;
+		}
+
 		public static FileDetailVO create(EgovFormBasedFileVo egovFormBasedFileVo) {
 			FileDetailVO vo = new FileDetailVO();
 
 			vo.setAtchFileName(egovFormBasedFileVo.getFileName());
 			vo.setFileSubPath(egovFormBasedFileVo.getServerSubPath());
 			vo.setPhysiclFileName(egovFormBasedFileVo.getPhysicalName());
+			vo.setFileExtsn(egovFormBasedFileVo.getExtension());
+			vo.setFileSize(egovFormBasedFileVo.getSize());
+
+			return vo;
+		}
+
+		public static FileDetailVO create2(EgovFormBasedFileVo egovFormBasedFileVo) {
+			FileDetailVO vo = new FileDetailVO();
+
+			String physicalName="";
+			physicalName = egovFormBasedFileVo.getPhysicalName() + "." + egovFormBasedFileVo.getExtension().toLowerCase();
+
+			vo.setAtchFileName(egovFormBasedFileVo.getFileName());
+			vo.setFileSubPath(egovFormBasedFileVo.getServerSubPath());
+			vo.setPhysiclFileName(physicalName);
 			vo.setFileExtsn(egovFormBasedFileVo.getExtension());
 			vo.setFileSize(egovFormBasedFileVo.getSize());
 
