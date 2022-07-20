@@ -32,6 +32,26 @@ public class FileVO {
 		return vo;
 	}
 
+	public static List<FileVO> createList2(List<EgovFormBasedFileVo> list) {
+		List<FileVO> fileVOList = list.stream().map(r -> FileVO.create2(r)).collect(Collectors.toList());
+		return fileVOList;
+	}
+
+	public static FileVO create2(EgovFormBasedFileVo egovFormBasedFileVo) {
+		FileVO vo = new FileVO();
+		String physicalName="";
+		physicalName = egovFormBasedFileVo.getPhysicalName() + "." + egovFormBasedFileVo.getExtension().toLowerCase();
+
+		vo.setAtchFileName(egovFormBasedFileVo.getFileName());
+		vo.setFileSubPath(egovFormBasedFileVo.getServerSubPath());
+		vo.setPhysiclFileName(physicalName);
+		vo.setFileExtsn(egovFormBasedFileVo.getExtension());
+		vo.setFileSize(egovFormBasedFileVo.getSize());
+		vo.setFilePassword("");
+
+		return vo;
+	}
+
 	public int getAtchFileId() {
 		return atchFileId;
 	}
