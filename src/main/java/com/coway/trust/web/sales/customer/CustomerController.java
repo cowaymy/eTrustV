@@ -30,6 +30,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,6 +75,9 @@ public class CustomerController {
 
   @Autowired
   private SessionHandler sessionHandler;
+
+  @Value("${payment.mc.urlPath}")
+  private String mcPaymentUrl;
 
   @RequestMapping(value = "/selectIssueBank.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectIssueBank(@RequestParam Map<String, Object> params, Model model) {
@@ -183,6 +187,7 @@ public class CustomerController {
     List<EgovMap> bankList = customerService.selectIssueBank(params);
     model.addAttribute("bankList", bankList);
     model.addAttribute("nric", params.get("nric"));
+    model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardPop";
   }
@@ -201,6 +206,7 @@ public class CustomerController {
     List<EgovMap> bankList = customerService.selectIssueBank(params);
     model.addAttribute("bankList", bankList);
     model.addAttribute("nric", params.get("nric"));
+    model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardeSalesPop";
   }
@@ -243,6 +249,7 @@ public class CustomerController {
     model.put("custId", params.get("custId"));
     model.put("callPrgm", params.get("callPrgm"));
     model.put("nric", params.get("nric"));
+    model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardAddPop";
   }
@@ -253,6 +260,7 @@ public class CustomerController {
     model.put("custId", params.get("custId"));
     model.put("callPrgm", params.get("callPrgm"));
     model.put("nric", params.get("nric"));
+    model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardeSalesAddPop";
   }
@@ -1313,6 +1321,7 @@ public class CustomerController {
     model.addAttribute("result", basicinfo);
     model.addAttribute("addresinfo", addresinfo);
     model.addAttribute("contactinfo", contactinfo);
+    model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardEditPop";
   }
@@ -1620,6 +1629,7 @@ public class CustomerController {
     model.addAttribute("detailcard", detailcard);
     model.addAttribute("custId", params.get("custId"));
     model.addAttribute("custNric", params.get("editCustNric"));
+    model.put("mcPaymentUrl", mcPaymentUrl);
 
     return "sales/customer/customerCreditCardEditInfoPop";
 
@@ -1899,6 +1909,7 @@ public class CustomerController {
         model.addAttribute("insNric", customerService.getCustNric(params));
     }
 
+    model.put("mcPaymentUrl", mcPaymentUrl);
     return "sales/customer/customerNewCardPop";
   }
 
@@ -2637,6 +2648,7 @@ public class CustomerController {
       List<EgovMap> bankList = customerService.selectIssueBank(params);
       model.addAttribute("bankList", bankList);
       model.addAttribute("nric", params.get("nric"));
+      model.put("mcPaymentUrl", mcPaymentUrl);
 
       return "sales/customer/tokenCustomerCreditCardTest";
     }
