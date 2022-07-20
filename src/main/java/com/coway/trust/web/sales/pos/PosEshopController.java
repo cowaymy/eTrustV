@@ -527,7 +527,7 @@ public class PosEshopController {
 
 			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-			preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+			preOrderApplication.insertPreOrderAttachBiz(FileVO.createList2(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
 
 			params.put("attachFiles", list);
 			code = AppConstants.SUCCESS;
