@@ -77,12 +77,12 @@ JOIN SYS0047M B on A.REG_ID = B.USER_NAME
 WHERE 1 = 1
 
         AND    B.USER_ID = #{userId}
-    <if test="fromDate != null and fromDate != '' ">
+
             AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate},   'YYYYMMDD'),'YYYY-MM-DD')
-    </if>
-    <if test="toDate != null and toDate != '' ">
+
+
             AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
-    </if>
+
 
 ORDER BY A.CRT_DT DESC
 
