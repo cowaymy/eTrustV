@@ -26,6 +26,7 @@
                           , CRT_DT
                           , UPD_USER_ID
                           , UPD_DT
+                          , REMARK
 
     ) VALUES ( SVC0130D_ID_SEQ.NEXTVAL
                   ,#{salesOrderNo}
@@ -49,6 +50,7 @@
                   ,SYSDATE
                   ,#{updUserId}
                   ,SYSDATE
+                  ,#{remark}
     )
   </insert>
 
