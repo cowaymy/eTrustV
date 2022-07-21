@@ -585,6 +585,9 @@ var myGridPros = {
                  var balanceAmt = results.reqAdvTotAmt - results.totAmt;
                  balanceAmt = AUIGrid.formatNumber(balanceAmt, "#,##0.00");
                  $("#refBalAmt").val(balanceAmt);
+                 $("#refMode").empty();
+                 $('#refMode').append($('<option value="CASH">Cash</option>'));
+                 $('#refMode').append($('<option value="OTRX">Online</option>'));
                  $("#refMode option[value=" + results.advRefdMode + "]").attr('selected', true);
                  Common.ajax("GET", "/eAccounting/staffBusinessActivity/getRefDtlsGrid.do", data, function(results1) {
                 	 AUIGrid.setGridData(newGridID, results1);
@@ -739,7 +742,7 @@ var myGridPros = {
 	                    console.log(results);
 
 	                    $("#reqEditClmNo").show();
-	                    $("#advHeader").text("Edit Vendor Advance");
+	                    $("#advHeader").text("Edit Staff Advance");
 	                    $("#createUserId").val(results.crtUserId);
 	                    $("#costCenterName").val(results.costCenterNm);
 	                    $("#bankId").val(results.bankCode);
@@ -1029,7 +1032,7 @@ var myGridPros = {
                        }
                    });
                } else if (mode == "D" && result1.message == "success") {
-                   fn_alertClmNo(result1.data.clmNo);
+                   fn_alertClmNo(result1.data.clmNo, result1.data.advType);
                } else {
                    fn_closePop();
                    fn_searchAdv();
@@ -1199,7 +1202,7 @@ var myGridPros = {
              $("#appvLinePop").hide();
 
              fn_closePop();
-             fn_alertClmNo(result.data.clmNo);
+             fn_alertClmNo(result.data.clmNo, result.data.advType);
              fn_searchAdv();
          })
      }
@@ -1416,7 +1419,8 @@ var myGridPros = {
 
             //$("#advType").val('');
             fn_closePop();
-            fn_alertClmNo(result.data.clmNo);
+
+            fn_alertClmNo(result.data.clmNo, result.data.advType);
             fn_searchAdv();
         });
     }
@@ -1488,10 +1492,15 @@ var myGridPros = {
          console.log("fileDel complete.");
      });
 
-     function fn_alertClmNo(clmNo) {
+     function fn_alertClmNo(clmNo, advType) {
          console.log("fn_alertClmNo");
 
-         Common.alert("Claim number : <b>" + clmNo + "</b><br>Registration of new advance request has completed.");
+         if(advType == '4'){
+        	    Common.alert("Claim number : <b>" + clmNo + "</b><br>Registration of Settlement Advance has completed.");
+         } else{
+        	 Common.alert("Claim number : <b>" + clmNo + "</b><br>Registration of new advance request has completed.");
+         }
+
          fn_closePop
      }
 

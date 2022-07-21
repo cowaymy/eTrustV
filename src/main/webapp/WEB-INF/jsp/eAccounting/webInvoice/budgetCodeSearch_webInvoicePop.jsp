@@ -29,9 +29,7 @@ $(document).ready(function() {
 
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(bgGridID, "cellDoubleClick", function(event){
-
     	 /* var selectedItems = AUIGrid.getSelectedItems(expPopGridID);
-
     	 budgetCode = AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode");
     	 budgetCodeText = AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText");
 
@@ -57,10 +55,11 @@ $(document).ready(function() {
          AUIGrid.setCellValue(newGridID , "${rowIndex}" , "budgetCode", AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode"));
          AUIGrid.setCellValue(newGridID , "${rowIndex}" , "budgetCodeName",  AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"));
 
-         AUIGrid.setCellValue(newGridID, event.rowIndex, "glAccCode", "");
-         AUIGrid.setCellValue(newGridID, event.rowIndex, "glAccCodeName", "");
-         AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
-         AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+         AUIGrid.setCellValue(newGridID, "${rowIndex}" , "glAccCode", "");
+         AUIGrid.setCellValue(newGridID, "${rowIndex}" , "glAccCodeName", "");
+         AUIGrid.setCellValue(newGridID, "${rowIndex}", "netAmt", "0.00");
+         AUIGrid.setCellValue(newGridID, "${rowIndex}", "totAmt", "0.00");
+
 
          var totAmt = fn_getTotalAmount();
          $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));

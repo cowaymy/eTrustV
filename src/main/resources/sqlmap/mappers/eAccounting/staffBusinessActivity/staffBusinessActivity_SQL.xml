@@ -41,7 +41,10 @@
                 F.MEM_ACC_NAME PAYEE_NAME,
                 A.COST_CENTER,
                 A.COST_CENTER_NM,
-                A.TOT_AMT AMT,
+                CASE WHEN A.ADV_TYPE = '4' THEN(
+                    NVL((SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = A.MAIN_REQ_NO),0)
+                )
+                ELSE A.TOT_AMT END as AMT,
                 B.APPV_PRCSS_NO,
                 B.APPV_PRCSS_DT APPV_DT,
                 A.ADV_REFD_DT RQST_DT,
@@ -440,6 +443,8 @@
                 ADV_REFD_MODE = #{refMode},
                 ADV_REFD_REF = #{refBankRef},
                 ADV_REM = #{trvRepayRem},
+                ADV_PRD_FR = TO_DATE(#{refEventStartDt}, 'DD/MM/YYYY'),
+                ADV_PRD_TO = TO_DATE(#{refEventEndDt}, 'DD/MM/YYYY'),
                 TOT_AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
             </if>
             ADV_REFD_DT = TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
@@ -753,7 +758,8 @@
             NVL((SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO),0) ADV_AMT,
             C.ADV_REFD_MODE REFUND_MODE,
             C.ADV_REFD_REF BANK_REF,
-            J.INVC_CUR CURRENCY
+            J.INVC_CUR CURRENCY,
+            J.SUPPLIER
         FROM FCM0004M A
         <!-- LEFT JOIN FCM0015D B
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO -->

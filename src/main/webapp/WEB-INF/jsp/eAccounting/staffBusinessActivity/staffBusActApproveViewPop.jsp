@@ -53,7 +53,7 @@
         headerText : 'Invoice No.',
         style : "aui-grid-user-custom-left"
     }, {
-        dataField : "supplierName",
+        dataField : "supplier",
         headerText : "Supplier Name"
     }, {
         dataField : "taxName",
@@ -172,7 +172,6 @@
 
     $(document).ready(function () {
         myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
-
         $("#viewClmNo").text(myGridData[0].clmNo);
         $("#viewClmType").text(myGridData[0].clmType);
         $("#viewAdvType").text(myGridData[0].advTypeDesc);
