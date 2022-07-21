@@ -146,8 +146,30 @@ public class AsFromCodyDto {
 	@ApiModelProperty(value = "crtDt")
 	private String crtDt;
 
+	@ApiModelProperty(value = "fromDate")
+	private String fromDate;
 
+	@ApiModelProperty(value = "toDate")
+	private String toDate;
 
+	
+	
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
 
 	public String getCrtDt() {
 		return crtDt;
