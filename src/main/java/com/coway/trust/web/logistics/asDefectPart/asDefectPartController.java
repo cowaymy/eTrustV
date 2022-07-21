@@ -1,6 +1,5 @@
 package com.coway.trust.web.logistics.asDefectPart;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,14 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,14 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.biz.common.CommonService;
-import com.coway.trust.biz.logistics.serial.SerialService;
 import com.coway.trust.biz.logistics.asDefectPart.asDefectPartService;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -53,12 +45,6 @@ public class asDefectPartController {
 
 	@Resource(name = "accessMonitoringService")
 	private AccessMonitoringService accessMonitoringService;
-
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
-	@Autowired
-	private SessionHandler sessionHandler;
 
 	@RequestMapping(value = "/asDefectPartSmallCodeList.do")
 	public String asDefectPartSmallCodeList(@RequestParam Map<String, Object> params) {
