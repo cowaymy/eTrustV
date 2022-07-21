@@ -273,11 +273,11 @@
 
     <insert id="insertAutoDebitMobileSubmmisionData" parameterType="Map">
 		INSERT INTO PAY0333M (PAD_ID,PAD_NO,CRT_DT,STUS_CODE_ID,SALES_ORD_NO,CUST_ID,
-		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,
+		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG
 		ATCH_FILE_GROUP_ID)
 		VALUES
 		(#{padId}, #{padNo}, SYSDATE, '1', #{salesOrdNo}, #{custId},#{creatorId},#{userBranch},
-		#{isThirdPartyPaymentCheck},#{newCustCreditCardId},
+		#{isThirdPartyPaymentCheck},#{newCustCreditCardId},UTL_RAW.CAST_TO_RAW(#{signImg}),
 		#{atchFileGrpId}
 	</insert>
 
