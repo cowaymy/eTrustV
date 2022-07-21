@@ -99,6 +99,12 @@ public class AsFromCodyForm {
 	@ApiModelProperty(value = "customerVaNo")
 	private String customerVaNo;
 
+	@ApiModelProperty(value = "fromDate")
+	private String fromDate;
+
+	@ApiModelProperty(value = "toDate")
+	private String toDate;
+
 
 
 	public String getHandphoneTel() {
@@ -318,8 +324,21 @@ public class AsFromCodyForm {
 		this.stus = stus;
 	}
 
+	public String getFromDate() {
+		return fromDate;
+	}
 
+	public String getToDate() {
+		return toDate;
+	}
 
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
 
 public static Map<String, Object> createMap(AsFromCodyForm asFromCodyForm){
     Map<String, Object> params = new HashMap<>();
@@ -342,6 +361,8 @@ public static Map<String, Object> createMap(AsFromCodyForm asFromCodyForm){
     params.put("stus", asFromCodyForm.getStus());
     params.put("defectCode", asFromCodyForm.getDefectCode());
     params.put("defectDesc", asFromCodyForm.getDefectDesc());
+    params.put("fromDate", asFromCodyForm.getFromDate());
+    params.put("toDate", asFromCodyForm.getToDate());
 
     return params;
   }
