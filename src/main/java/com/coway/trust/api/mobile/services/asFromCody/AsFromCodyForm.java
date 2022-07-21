@@ -105,7 +105,18 @@ public class AsFromCodyForm {
 	@ApiModelProperty(value = "toDate")
 	private String toDate;
 
+	@ApiModelProperty(value = "remark")
+	private String remark;
 
+
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getHandphoneTel() {
 		return handphoneTel;
@@ -363,6 +374,7 @@ public static Map<String, Object> createMap(AsFromCodyForm asFromCodyForm){
     params.put("defectDesc", asFromCodyForm.getDefectDesc());
     params.put("fromDate", asFromCodyForm.getFromDate());
     params.put("toDate", asFromCodyForm.getToDate());
+    params.put("remark", asFromCodyForm.getRemark());
 
     return params;
   }

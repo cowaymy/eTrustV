@@ -152,8 +152,17 @@ public class AsFromCodyDto {
 	@ApiModelProperty(value = "toDate")
 	private String toDate;
 
-	
-	
+	@ApiModelProperty(value = "remark")
+	private String remark;
+
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getFromDate() {
 		return fromDate;
