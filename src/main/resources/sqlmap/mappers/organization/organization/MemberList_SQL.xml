@@ -5060,6 +5060,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         <if test="incomeTaxNo != null and incomeTaxNo != '' ">
           , INC_TAX = #{incomeTaxNo}
         </if>
+        <if test="Birth != null and Birth != '' ">
+          , DOB = TO_DATE(#{Birth}, 'DD/MM/YYYY')
+        </if>
         WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
     </update>
 
@@ -5139,6 +5142,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         </if>
         <if test="meetingPointUpd != null and meetingPointUpd != '' ">
           , APLICNT_MEETPOINT = #{meetingPointUpd}
+        </if>
+        <if test="Birth != null and Birth != '' ">
+          , APLICNT_DOB = TO_DATE(#{Birth}, 'DD/MM/YYYY')
         </if>
         WHERE APLCTN_ID = (
             SELECT APLICNT_ID

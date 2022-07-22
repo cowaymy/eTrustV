@@ -1003,6 +1003,8 @@ public class MemberListController {
 
         //@AMEER INCOME TAX 2021-10-25
         formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
+
+        formMap.put("Birth", params.get("Birth"));
         //logger.debug("@@incomeTaxNo : {}", params.get("incomeTaxNo"));
 
 

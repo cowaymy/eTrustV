@@ -47,6 +47,7 @@ function fn_memberSave(){
     	$.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
     }
 
+    $.extend(jsonObj, {'Birth' :$("#Birth").val() });
     $.extend(jsonObj, {'memberType' : $("#memberType").val()});
     $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
 
