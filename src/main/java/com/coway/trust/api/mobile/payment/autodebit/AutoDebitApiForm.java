@@ -7,19 +7,19 @@ import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "AutoDebitApiForm", description = "AutoDebitApiForm")
 public class AutoDebitApiForm {
-	private String salesOrdNo;
+	private int salesOrdNo;
 	private String dateFrom;
 	private String dateTo;
-	private String statusCode;
-	private String custId;
-	private String newCustCreditCardId;
-	private String isThirdPartyPayment;
+	private int statusCode;
+	private int custId;
+	private int newCustCreditCardId;
+	private int isThirdPartyPayment;
 	private String signData;
-	private String createdBy;
-	private String monthlyRentalAmount;
-	private String atchFileGroupId;
+	private int createdBy;
+	private int monthlyRentalAmount;
+	private int atchFileGroupId;
     private String subPath;
-    private String fileKeySeq;
+    private int fileKeySeq;
 
 	public static Map<String, Object> createMap(AutoDebitApiForm vo){
 		Map<String, Object> params = new HashMap<>();
@@ -34,6 +34,14 @@ public class AutoDebitApiForm {
 		params.put("createdBy", vo.getCreatedBy());
 		params.put("monthlyRentalAmount", vo.getMonthlyRentalAmount());
 		return params;
+	}
+
+	public int getSalesOrdNo() {
+		return salesOrdNo;
+	}
+
+	public void setSalesOrdNo(int salesOrdNo) {
+		this.salesOrdNo = salesOrdNo;
 	}
 
 	public String getDateFrom() {
@@ -52,43 +60,35 @@ public class AutoDebitApiForm {
 		this.dateTo = dateTo;
 	}
 
-	public String getStatusCode() {
+	public int getStatusCode() {
 		return statusCode;
 	}
 
-	public void setStatusCode(String statusCode) {
+	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
 
-	public String getSalesOrdNo() {
-		return salesOrdNo;
-	}
-
-	public void setSalesOrdNo(String salesOrdNo) {
-		this.salesOrdNo = salesOrdNo;
-	}
-
-	public String getNewCustCreditCardId() {
-		return newCustCreditCardId;
-	}
-
-	public void setNewCustCreditCardId(String newCustCreditCardId) {
-		this.newCustCreditCardId = newCustCreditCardId;
-	}
-
-	public String getCustId() {
+	public int getCustId() {
 		return custId;
 	}
 
-	public void setCustId(String custId) {
+	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 
-	public String getIsThirdPartyPayment() {
+	public int getNewCustCreditCardId() {
+		return newCustCreditCardId;
+	}
+
+	public void setNewCustCreditCardId(int newCustCreditCardId) {
+		this.newCustCreditCardId = newCustCreditCardId;
+	}
+
+	public int getIsThirdPartyPayment() {
 		return isThirdPartyPayment;
 	}
 
-	public void setIsThirdPartyPayment(String isThirdPartyPayment) {
+	public void setIsThirdPartyPayment(int isThirdPartyPayment) {
 		this.isThirdPartyPayment = isThirdPartyPayment;
 	}
 
@@ -100,27 +100,27 @@ public class AutoDebitApiForm {
 		this.signData = signData;
 	}
 
-	public String getCreatedBy() {
+	public int getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(int createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public String getMonthlyRentalAmount() {
+	public int getMonthlyRentalAmount() {
 		return monthlyRentalAmount;
 	}
 
-	public void setMonthlyRentalAmount(String monthlyRentalAmount) {
+	public void setMonthlyRentalAmount(int monthlyRentalAmount) {
 		this.monthlyRentalAmount = monthlyRentalAmount;
 	}
 
-	public String getAtchFileGroupId() {
+	public int getAtchFileGroupId() {
 		return atchFileGroupId;
 	}
 
-	public void setAtchFileGroupId(String atchFileGroupId) {
+	public void setAtchFileGroupId(int atchFileGroupId) {
 		this.atchFileGroupId = atchFileGroupId;
 	}
 
@@ -132,11 +132,13 @@ public class AutoDebitApiForm {
 		this.subPath = subPath;
 	}
 
-	public String getFileKeySeq() {
+	public int getFileKeySeq() {
 		return fileKeySeq;
 	}
 
-	public void setFileKeySeq(String fileKeySeq) {
+	public void setFileKeySeq(int fileKeySeq) {
 		this.fileKeySeq = fileKeySeq;
 	}
+
+
 }
