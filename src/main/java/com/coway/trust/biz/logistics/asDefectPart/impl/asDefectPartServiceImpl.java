@@ -56,4 +56,14 @@ public class asDefectPartServiceImpl implements asDefectPartService {
 
 		 logger.debug("================updateDefPart - END ================");
 	  }
+
+	 @Override
+	  public void updateDefPartStus(Map<String, Object> params) {
+		 logger.debug("================updateDefPartStus - START ================");
+		 logger.debug(params.toString());
+
+		 asDefectPartMapper.updateDefPartStus(params);
+
+		 logger.debug("================updateDefPartStus - END ================");
+	  }
 }

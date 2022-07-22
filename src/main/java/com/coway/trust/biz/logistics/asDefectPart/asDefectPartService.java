@@ -18,5 +18,5 @@ public interface asDefectPartService
 
 	void updateDefPart(Map<String, Object> params);
 
-
+	void updateDefPartStus(Map<String, Object> params);
 }

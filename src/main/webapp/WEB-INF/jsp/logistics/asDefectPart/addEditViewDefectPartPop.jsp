@@ -15,6 +15,8 @@
 </style>
 <script type="text/javaScript" language="javascript">
 
+var msg = "";
+
 $(document).ready(function(){
     doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'productCtgry', 'S','fn_viewType'); //Category
     doGetCombo('/common/selectCodeList.do', '15', '', 'matType', 'S','fn_viewType');
@@ -33,7 +35,6 @@ function  fn_viewType(type){
     $("#matName").val('${asDefectPartInfo.matName}');
     $("#defPartCode").val('${asDefectPartInfo.defPartCode}');
     $("#defPartName").val('${asDefectPartInfo.defPartName}');
-    $("#listStatus").val('${asDefectPartInfo.stus}');
 
     if (type == 2 || type == 1){ //Edit and New
     	$('#btn_save').show();
@@ -55,7 +56,9 @@ function  fn_viewType(type){
 
 function fn_save(){
     if(fn_validate()){
-
+    	if(msg != "") {
+            Common.alert(msg);
+        }
     }
     else{
     	//save
@@ -69,8 +72,7 @@ function fn_save(){
             matCode : $("#matCode").val(),
             matName : $("#matName").val(),
             defPartCode : $("#defPartCode").val(),
-            defPartName : $("#defPartName").val(),
-            stus : $("#listStatus").val()
+            defPartName : $("#defPartName").val()
 
         }
 
@@ -93,34 +95,46 @@ function fn_saveclose() {
 
 function fn_validate(){
 
-	var msg = "";
+	msg = "";
+
+	//checkReges
+    var checkRegexResult = true;
+    var regExpSpecChar = /^[^*|\":<>[\]{}`\\()';@&$]+$/;
 
 	if($("#productCtgry").val() == ""){
 		msg += "* Please select a product category <br>"
 	}
+
 	if($("#matType").val() == ""){
         msg += "* Please select a product type <br>"
     }
+
 	if($("#matCode").val() == ""){
         msg += "* Please select a material code <br>"
+    }else if( regExpSpecChar.test($("#matCode").val()) == false ){
+            msg += "* Material code contains special character <br>";
     }
+
 	if($("#matName").val() == ""){
         msg += "* Please select a material name <br>"
+    } else if( regExpSpecChar.test($("#matName").val()) == false ){
+        msg += "* Material name contains special character <br>";
     }
+
 	if($("#defPartCode").val() == ""){
         msg += "* Please select a defect part code <br>"
+    }else if( regExpSpecChar.test($("#defPartCode").val()) == false ){
+        msg += "* Defect part code contains special character <br>";
     }
+
 	if($("#defPartName").val() == ""){
         msg += "* Please select a defect part name <br>"
+    }else if( regExpSpecChar.test($("#defPartName").val()) == false ){
+        msg += "* Defect part name contains special character <br>";
     }
 
-	if(msg != "") {
-		Common.alert(msg);
-        return false;
-	}
+    return msg;
 }
-
-
 
 </script>
 
@@ -178,17 +192,6 @@ function fn_validate(){
             </td>
             <th scope="row">Defect Part Name</th>
             <td><input type="text" title=""  class="w100p"  id="defPartName"  name="defPartName" /></td>
-        </tr>
-        <tr>
-            <th scope="row">Status</th>
-            <td>
-            <select id="listStatus" name="status" class="w100p">
-	           <option value="1">Active</option>
-	           <option value="8">Inactive</option>
-            </select>
-            </td>
-            <th scope="row"></th>
-            <td></td>
         </tr>
         </tbody>
         </table><!-- table end -->

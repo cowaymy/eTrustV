@@ -19,4 +19,7 @@ public interface asDefectPartMapper
 	void addDefPart(Map<String, Object> params);
 
 	void updateDefPart(Map<String, Object> params);
+
+	void updateDefPartStus(Map<String, Object> params);
+
 }

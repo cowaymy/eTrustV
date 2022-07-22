@@ -88,7 +88,7 @@
     </insert>
 
   <update id="updateDefPart" parameterType="Map">
-    UPDATE GBSLCVD.SVC0131D
+    UPDATE SVC0131D
     SET
         PROD_CAT = #{productCtgry} ,
         PROD_TYPE = #{matType},
@@ -96,12 +96,18 @@
         MAT_NAME = #{matName},
         DEF_PART_CODE = #{defPartCode},
         DEF_PART_NAME = #{defPartName},
-        STUS = #{stus},
 	    UPD_DT = SYSDATE,
 	    UPD_USER_ID = #{updator}
     WHERE DEF_PART_ID = #{defPartId}
   </update>
 
-
+    <update id="updateDefPartStus" parameterType="Map">
+        UPDATE SVC0131D
+        SET
+             STUS = #{updStus},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{updator}
+        WHERE DEF_PART_ID = #{defPartId}
+      </update>
 
 </mapper>

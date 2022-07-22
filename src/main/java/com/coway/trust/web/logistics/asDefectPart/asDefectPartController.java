@@ -110,7 +110,6 @@ public class asDefectPartController {
 	    params.put("matName",svc0131map.get("matName"));
 	    params.put("defPartCode",svc0131map.get("defPartCode"));
 	    params.put("defPartName",svc0131map.get("defPartName"));
-	    params.put("stus",svc0131map.get("stus"));
 
 	    params.put("creator", sessionVO.getUserId());
 	    params.put("updator", sessionVO.getUserId());
@@ -127,9 +126,37 @@ public class asDefectPartController {
 		    message.setMessage("Successfully update product code" + svc0131map.get("matCode"));
 	    }
 
-	    logger.debug("================saveDefPart - START ================");
+	    logger.debug("================saveDefPart - END ================");
 	    message.setCode(AppConstants.SUCCESS);
 
+
+	    return ResponseEntity.ok(message);
+	  }
+
+	@RequestMapping(value = "/updateDefPartStus.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> updateDefPartStus(@RequestBody Map<String, Object> params, Model model,
+	      HttpServletRequest request, SessionVO sessionVO) {
+	    logger.debug("===========================/updateDefPartStus.do===============================");
+	    logger.debug("==params111 " + params.toString());
+	    logger.debug("===========================/updateDefPartStus.do===============================");
+
+	    params.put("updator", sessionVO.getUserId());
+	    ReturnMessage message = new ReturnMessage();
+
+	    String active = "1";
+	    String deact = "8";
+
+	    String stus = params.get("stusId").toString().equals("1") ? deact : active;
+	    params.put("updStus", stus);
+
+	    asDefectPartService.updateDefPartStus(params);
+
+	    logger.debug("==params222 " + params.toString());
+	    logger.debug("================updateDefPartStus - END ================");
+
+	    message.setCode(AppConstants.SUCCESS);
+	    String actMsg = stus.equals("1") ? " activated" : " deactivated";
+	    message.setMessage(params.get("matCode") + " is " + actMsg);
 
 	    return ResponseEntity.ok(message);
 	  }

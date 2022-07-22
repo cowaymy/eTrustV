@@ -42,14 +42,15 @@
 
    function createAUIGrid() {
        var columnLayout = [
-                 {dataField :"prodCatId",  headerText : "Category",      width: 150 ,editable : false, visible : false},
+                 {dataField :"prodCatId",  headerText : "prodCatId",      width: 150 ,editable : false, visible : false},
                  {dataField :"prodCat",  headerText : "Category",      width: 150 ,editable : false},
-                 {dataField :"prodTypeID",  headerText : "Category",      width: 150 ,editable : false, visible : false},
+                 {dataField :"prodTypeID",  headerText : "prodTypeID",      width: 150 ,editable : false, visible : false},
                  {dataField :"prodType",  headerText : "Type",      width: 150 ,editable : false },
                  {dataField :"matCode",  headerText : "Material Code",    width: 150, editable : false },
                  {dataField :"matName", headerText : "Material Name",   width: 150, editable : false },
                  {dataField :"defPartCode", headerText : "Defect Part Code",  width: 150, editable : false },
                  {dataField :"defPartName", headerText : "Defect Part Name",  width: 150, editable : false },
+                 {dataField :"stusId",  headerText : "stusId",      width: 150 ,editable : false, visible : false},
                  {dataField :"stus", headerText : "Status", width: 150, editable : false },
                  {dataField :"crtUser", headerText : "Creator", width: 150, editable : false },
                  {dataField :"crtDt", headerText : "Create Date",width: 150, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false }
@@ -109,6 +110,30 @@
             AUIGrid.setGridData(myGridID, result);
        });
    }
+
+   function fn_excelDown() {
+	    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	    var today = new Date();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		var yyyy = today.getFullYear();
+
+	    GridCommon.exportTo("list_grid_wrap", "xlsx", "AS Defect Part Small Code" + yyyy + mm + dd);
+   }
+
+   function fn_UpdStatus(){
+	   var selectedItems = AUIGrid.getSelectedItems(myGridID);
+
+	   var defPartId = selectedItems[0].item.defPartId;
+	   var stusId = selectedItems[0].item.stusId;
+	   var matCode = selectedItems[0].item.matCode;
+
+	   Common.ajax("POST", "/logistics/asDefectPart/updateDefPartStus.do", { defPartId : defPartId, stusId: stusId, matCode : matCode},
+               function(result) {
+                 Common.alert(result.message);
+                 fn_selectListAjax();
+     });
+   }
 </script>
 
 <section id="content"><!-- content start -->
@@ -124,6 +149,7 @@
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_UpdStatus()">Activate/Deactivate</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
@@ -195,6 +221,11 @@
     </dl>
    </aside>
    <!-- link_btns_wrap end -->
+
+<ul class="right_btns">
+    <li><p class="btn_grid">
+    <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a></p></li>
+ </ul>
 
 <section class="search_result"><!-- search_result start -->
 
