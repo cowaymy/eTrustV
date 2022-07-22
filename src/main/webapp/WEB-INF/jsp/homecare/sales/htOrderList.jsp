@@ -326,20 +326,31 @@ function fn_multiCombo3(){
         width: '100%'
     });
     $('#listProductId').multipleSelect("checkAll");
+
+    $('#unitTypeId').change(function() {
+        //console.log($(this).val());
+    }).multipleSelect({
+        selectAll: true, // 전체선택
+        width: '100%'
+    });
+    $('#unitTypeId').multipleSelect("checkAll");
 }
 
 function fn_getProductSize(){
 
 	var serviceType = "";
+	var unitTypeMasterId;
 	if ($("#ServiceTypeId").val() == '6861'){
 		serviceType = '447';
 	}else if ($("#ServiceTypeId").val() == '6862'){
-		serviceType = '516';
+		serviceType = '521';
+		unitTypeMasterId = '520';
 	}else if ($("#ServiceTypeId").val() == '6863'){
         serviceType = '515';
     }
 
 	doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceType }, '', 'listProductId', 'M','fn_multiCombo3');
+	doGetComboData('/common/selectUnitTypeList.do', { groupCode : unitTypeMasterId }, '', 'unitTypeId', 'M','fn_multiCombo3');
 }
 
 $.fn.clearForm = function() {
@@ -478,10 +489,6 @@ function fn_excelDown(){
     </td>
 </tr>
 <tr>
-<th scope="row"><spring:message code='sales.poNum'/></th>
-    <td>
-    <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
-    </td>
     <th scope="row">Service Type</th>
     <td>
     <select id="ServiceTypeId" name="ServiceTypeId" class="w100p" onchange = "fn_getProductSize()" >
@@ -496,7 +503,11 @@ function fn_excelDown(){
     <select id="listProductId" name="productId" class="multy_select w100p" multiple="multiple">
     </select>
     </td>
-
+    <th scope="row">Unit Type</th>
+    <td>
+    <select id="unitTypeId" name="unitTypeId" class="multy_select w100p" multiple="multiple">
+    </select>
+    </td>
 </tr>
 <tr>
 
@@ -515,10 +526,6 @@ function fn_excelDown(){
 
 </tr>
 <tr>
-    <th scope="row"><spring:message code='sales.promoCd'/></th>
-    <td>
-    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
-    </td>
     <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
     <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
@@ -527,13 +534,21 @@ function fn_excelDown(){
     <td>
     <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
     </td>
-
-</tr>
-<tr>
-<th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
+    <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
     <td>
     <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
     </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.poNum'/></th>
+    <td>
+    <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
+    </td>
+    <th scope="row"><spring:message code='sales.promoCd'/></th>
+    <td>
+    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
+    </td>
+
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyin'/></span></th>

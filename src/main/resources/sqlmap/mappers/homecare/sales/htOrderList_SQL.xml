@@ -43,7 +43,9 @@
  V1.ADJNOTE,
  V1.ORG_CODE ORG_CODE,
  V1.GRP_CODE GRP_CODE,
- V1.DEPT_CODE DEPT_CODE
+ V1.DEPT_CODE DEPT_CODE,
+ v1.CODE SERVICE_TYPE,
+ v1.UNIT_TYPE
  FROM (
  SELECT DISTINCT
           cd.CODE APP_TYPE_CODE,
@@ -86,7 +88,10 @@
           EXTENT10.MEMO_ADJ_REF_NO ADJNOTE,
           F1.ORG_CODE ,
           F1.GRP_CODE ,
-          F1.DEPT_CODE
+          F1.DEPT_CODE,
+          som.SRV_TYPE,
+          srv.CODE,
+          som.UNIT_TYPE
      FROM SAL0225D som
           JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
           JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
@@ -101,6 +106,7 @@
           LEFT JOIN PAY0011D EXTENT10 ON EXTENT10.MEMO_ADJ_INVC_NO = EXTENT7.TAX_INVC_REF_NO
                                    AND MEMO_ADJ_STUS_ID = 4
           LEFT JOIN ORG1001V F1 ON SOM.MEM_ID = F1.MEM_ID
+          JOIN SYS0013M srv on srv.CODE_ID = som.SRV_TYPE
 
           WHERE  1= 1
                   AND SOM.APP_TYPE_ID IN (3216,3217)
@@ -161,7 +167,10 @@
 	EXTENT10.MEMO_ADJ_REF_NO ADJNOTE,
 	F1.ORG_CODE ,
 	F1.GRP_CODE ,
-	F1.DEPT_CODE
+	F1.DEPT_CODE,
+	som.SRV_TYPE,
+	srv.CODE,
+	som.UNIT_TYPE
 	FROM SAL0225D som
 	JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
 	JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
@@ -177,6 +186,7 @@
 	EXTENT7.TAX_INVC_REF_NO
 	AND MEMO_ADJ_STUS_ID = 4
 	LEFT JOIN ORG1001V F1 ON SOM.MEM_ID = F1.MEM_ID
+    JOIN SYS0013M srv on srv.CODE_ID = som.SRV_TYPE
 
 	WHERE 1= 1
 	AND SOM.APP_TYPE_ID IN (5701,5702)
@@ -211,9 +221,15 @@
                     #{item}
                   </foreach>
                 </if>
-                  <if test='arrProductId != null and arrProductId != ""'>
+                 <if test='arrProductId != null and arrProductId != ""'>
                   AND V1.PRODUCT_NAME IN
                    <foreach item="item" collection="arrProductId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrUnitTypeId != null and arrUnitTypeId != ""'>
+                  AND V1.UNIT_TYPE IN
+                   <foreach item="item" collection="arrUnitTypeId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
@@ -228,7 +244,7 @@
                   <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
-             </if>
+                </if>
                 <if test='custId != null and custId != ""'>
                   AND V1.CUST_ID = #{custId}
                 </if>
@@ -268,9 +284,12 @@
                                      WHERE PO_REF_NO = #{invoicePoNo})
                 </if>
 
-               <if test="memLevel == 4  and memType == 7 ">
+                <if test="memLevel == 4  and memType == 7 ">
                   AND V1.SALESMAN_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{memCode})
-              </if>
+                </if>
+                <if test='ServiceTypeId != null and ServiceTypeId != ""'>
+                  AND V1.SRV_TYPE = #{ServiceTypeId}
+                </if>
 
            ORDER BY V1.ORD_NO ASC
     </select>

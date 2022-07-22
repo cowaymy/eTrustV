@@ -1769,7 +1769,7 @@
 
     	if($("#serviceType").val() == "6862"){
     		//AIRCOND
-    		productSizeMasterId = 516;
+    		productSizeMasterId = 521;
     		brandTypeMasterId = 518;
     		unitTypeMasterId = 520;
     	}else if($("#serviceType").val() == "6863"){

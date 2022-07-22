@@ -1361,7 +1361,7 @@
         ORDER BY 1
     </select>
 
-     <select id="selectUnitTypeList" parameterType="Map" resultType="egovMap">
+    <select id="selectUnitTypeList" parameterType="Map" resultType="egovMap">
         SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
         FROM SYS0013M
         WHERE CODE_MASTER_ID = #{groupCode}
