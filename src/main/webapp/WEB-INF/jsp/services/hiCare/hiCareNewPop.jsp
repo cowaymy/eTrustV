@@ -306,12 +306,13 @@ function fn_splitBarcode(){
                     continue;
                 } */
 
-                console.log("BarCodeArray[i] " + BarCodeArray[i]);
-                console.log("stockCode1 " + stockCode1);
+
                 var errorFlag = true;
                 var stockCode1 = BarCodeArray[i].substr(3,5);
+                console.log("BarCodeArray[i] " + BarCodeArray[i]);
+                console.log("stockCode1 " + stockCode1);
                 for (var j = 0 ; j < stockCodeList.length ; j++){
-                    console.log("stockCodeList[i] " + stockCodeList[j].codeName);
+                    console.log("stockCodeList[j] " + stockCodeList[j].codeName);
 
                     if(stockCode1 == stockCodeList[j].codeName){
                         errorFlag = false;

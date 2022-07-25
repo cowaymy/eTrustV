@@ -96,7 +96,7 @@ public class HiCareServiceImpl implements HiCareService {
 			mainMap.put("updUserId", sessionVO.getUserId());
 			mainMap.put("serialNo", mainMap.get("serialNo"));
 
-			EgovMap itemmap = hiCareMapper.selectItemSerch(mainMap);
+			/*EgovMap itemmap = hiCareMapper.selectItemSerch(mainMap);
 
 			if(itemmap == null || itemmap.size() == 0){
 				mainMap.put("desc", "Serial No. (Invalid Item)");
@@ -107,7 +107,7 @@ public class HiCareServiceImpl implements HiCareService {
 				mainMap.put("stockCode", itemmap.get("stkCode"));
 				mainMap.put("stockName", itemmap.get("stkDesc"));
 				mainMap.put("uom", itemmap.get("uom"));
-			}
+			}*/
 
 			Integer cnt = hiCareMapper.selectHiCareSerialCheck(mainMap);
 			if(cnt > 0){
