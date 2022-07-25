@@ -470,6 +470,7 @@ function fn_clearData() {
     $("#labelFile").hide();
     $("#_salesOrderNo").removeClass("readonly");
     $("#orderNo_search_btn").show();
+    $("#fileName").val("");
 
 }
 
