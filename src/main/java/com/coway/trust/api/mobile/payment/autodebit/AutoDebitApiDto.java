@@ -26,7 +26,7 @@ public class AutoDebitApiDto {
 	private String custMobile;
 
 	//History Result Additional Info
-	private String padId;
+	private int padId;
 	private String padNo;
 	private String updatedDate;
 	private String remarks;
@@ -135,11 +135,11 @@ public class AutoDebitApiDto {
 		this.salesOrdNo = salesOrdNo;
 	}
 
-	public String getPadId() {
+	public int getPadId() {
 		return padId;
 	}
 
-	public void setPadId(String padId) {
+	public void setPadId(int padId) {
 		this.padId = padId;
 	}
 
