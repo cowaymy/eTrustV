@@ -1171,7 +1171,7 @@ WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDA
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND (Extent1.MEM_LVL = 1)
-                                                                             AND (Extent1.MEM_UP_ID IN (31983,78960,113237,145056))
+                                                                             AND (Extent1.MEM_UP_ID IN (31983,78960,113237,145056,7493))
                                                                              and   mem_id  = #{orgId})
                                </if>
                                <if test="gropId != null and gropId != ''">
