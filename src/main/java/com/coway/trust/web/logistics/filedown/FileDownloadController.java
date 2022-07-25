@@ -3,6 +3,7 @@ package com.coway.trust.web.logistics.filedown;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -221,6 +222,8 @@ public class FileDownloadController {
 
 		File directory = new File(path);
 
+		logger.debug("directory    값 : {}", directory);
+
 		FileFilter directoryFileFilter = new FileFilter() {
 			@Override
 			public boolean accept(File file) {
@@ -228,11 +231,17 @@ public class FileDownloadController {
 			}
 		};
 
+
 		File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
+
+
 		List<String> foldersInDirectory = new ArrayList<String>(directoryListAsFile.length);
 		for (File directoryAsFile : directoryListAsFile) {
 			foldersInDirectory.add(directoryAsFile.getName());
 		}
+
+		Collections.sort(foldersInDirectory);
+
 
 		List<Map> list = new ArrayList<>();
 		for (int i = 0; i < foldersInDirectory.size(); i++) {
@@ -243,6 +252,8 @@ public class FileDownloadController {
 			list.add(rtn);
 
 		}
+		logger.debug("foldersInDirectory23    값 : {}", foldersInDirectory);
+		logger.debug("list    값 : {}", list);
 
 		return ResponseEntity.ok(list);
 	}
