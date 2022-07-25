@@ -1106,12 +1106,12 @@ public class MemberListController {
             			|| formMap.containsKey("trNoUpd") || formMap.containsKey("areaIdUpd") || formMap.containsKey("addrDtlUpd")
             			|| formMap.containsKey("streetDtlUpd"))
             	{
-            		EgovMap trainingItem = memberListService.selectMemCourse(formMap);
+            		/*EgovMap trainingItem = memberListService.selectMemCourse(formMap);
 
                     if(trainingItem != null && !trainingItem.isEmpty()) {
                         formMap.put("coursItmId", trainingItem.get("coursItmId"));
                         u5 = memberListService.memberListUpdate_MSC09(formMap);
-                    }
+                    }*/
 
                 	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdate(formMap);
     				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
