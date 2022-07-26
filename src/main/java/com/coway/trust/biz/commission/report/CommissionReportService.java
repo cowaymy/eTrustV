@@ -17,37 +17,36 @@ public interface CommissionReportService
      * @param params
      * @return
      */
-    int selectMemberCount(Map<String, Object> param);
-    
+    EgovMap selectMemberCount(Map<String, Object> param);
+
     List<EgovMap> commissionGroupType(Map<String, Object> params);
     Map commSHIMemberSearch (Map<String, Object> params);
     List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params);
     List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params);
-    
+
     /**
      *  search Organization Gruop List
      * @param params
      * @return
      */
     List<EgovMap> selectOrgGrList(Map<String, Object> params);
-    
+
     /**
      * search Organization List
      * @param params
      * @return
      */
     List<EgovMap> selectOrgList(Map<String, Object> params);
-    
+
     /**
      *  search Organization Code List
      * @param params
      * @return
      */
     List<EgovMap> selectOrgCdListAll(Map<String, Object> params);
-    
+
     List<EgovMap> selectCodyRawData(Map<String, Object> params);
     List<EgovMap> selectCMRawData(Map<String, Object> params);
     List<EgovMap> selectHPRawData(Map<String, Object> params);
     List<EgovMap> selectCTRawData(Map<String, Object> params);
 }
-	

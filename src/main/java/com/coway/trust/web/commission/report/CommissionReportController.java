@@ -147,13 +147,14 @@ public class CommissionReportController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectMemberCount", method = RequestMethod.GET)
-	public ResponseEntity<Integer> selectCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	public ResponseEntity<Map> selectCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 
 		// 조회.
-		int cnt = commissionReportService.selectMemberCount(params);
+		//int cnt = commissionReportService.selectMemberCount(params);
+		EgovMap map = commissionReportService.selectMemberCount(params);
 
 		// 데이터 리턴.
-		return ResponseEntity.ok(cnt);
+		return ResponseEntity.ok(map);
 	}
 
 	@RequestMapping(value = "/commSHIIndexView.do")

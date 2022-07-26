@@ -49,42 +49,42 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/**
 	 * select count member
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	@Override
-	public int selectMemberCount(Map<java.lang.String, Object> param) {
-		int cnt = commissionReportMapper.selectMemberCount(param);
-		return cnt;
+	public EgovMap selectMemberCount(Map<java.lang.String, Object> param) {
+		return commissionReportMapper.selectMemberCount(param);
+		//return cnt;
 	}
-	
+
 	@Override
 	public List<EgovMap> commissionGroupType(Map<String, Object> params) {
 		return commissionReportMapper.commissionGroupType(params);
 	}
-	
+
 	@Override
 	public Map commSHIMemberSearch (Map<String, Object> params){
 		return commissionReportMapper.commSHIMemberSearch(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> commSPCRgenrawSHIIndexCall (Map<String, Object> params){
 		return commissionReportMapper.commSHIIndexCall(params);
-		
+
 	}
-	
+
 	@Override
 	public List<EgovMap> commSHIIndexDetailsCall (Map<String, Object> params){
 		return commissionReportMapper.commSHIIndexDetailsCall(params);
-		
+
 	}
-	
+
 	/**
 	 * search Organization Gruop List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -96,7 +96,7 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/**
 	 * search Organization List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -105,10 +105,10 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectOrgList(Map<String, Object> params) {
 		return commissionReportMapper.selectOrgList(params);
 	}
-	
+
 	/**
 	 * search Organization Code List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -117,22 +117,22 @@ public class CommissionReportServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectOrgCdListAll(Map<String, Object> params) {
 		return commissionReportMapper.selectOrgCdListAll(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCMRawData(Map<String, Object> params) {
 		return commissionReportMapper.selectCMRawData(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCodyRawData(Map<String, Object> params) {
 		return commissionReportMapper.selectCodyRawData(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectHPRawData(Map<String, Object> params) {
 		return commissionReportMapper.selectHPRawData(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCTRawData(Map<String, Object> params) {
 		return commissionReportMapper.selectCTRawData(params);
