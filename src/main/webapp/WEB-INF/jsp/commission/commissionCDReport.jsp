@@ -7,6 +7,7 @@
     today = "${today}";
     memberType = "${memberType}";
     $(document).ready(function() {
+    	var memLevel = "";
 
         //form clear
         $("#clear").click(function() {
@@ -46,6 +47,7 @@
                     //Common.alert("Unable to find [" + salesPersonCd + "] in  Cody Code .<br />Please ensure you key in the correct member code.");
                     $("#searchForm [name=salesPersonCd]").val("");
                 } else {
+                	memLevel = result.cnt;
                     $("#searchForm [name=confirmChk]").val("Y");
                     Common.alert("<spring:message code='sys.msg.success'/>");
                 }
@@ -121,30 +123,36 @@
                 }
 console.log(month);
 console.log(year);
-            if(year >= 2022 && month >=02 || year > 2022)
-            {
-            	reportFileName = "/commission/CodyComm_PDF_202203.rpt"; //reportFileName
-            }
-            else if(year >= 2022 && month >=01 || year > 2022)
-            {
-            	reportFileName = "/commission/CodyComm_PDF_202201.rpt"; //reportFileName
-            }
-            else if(year >= 2021 && month >=12 || year > 2021)
-            {
-            	reportFileName = "/commission/CodyComm_PDF_2022.rpt"; //reportFileName
-            }
-            else if (month >= 9 && year >= 2020 || year > 2020){
+			if(memLevel == 0){
+				reportFileName = "/commission/CodyComm_SGCM_PDF.rpt";
+			}
+			else
+			{
+	            if(year >= 2022 && month >=02 || year > 2022)
+	            {
+	            	reportFileName = "/commission/CodyComm_PDF_202203.rpt"; //reportFileName
+	            }
+	            else if(year >= 2022 && month >=01 || year > 2022)
+	            {
+	            	reportFileName = "/commission/CodyComm_PDF_202201.rpt"; //reportFileName
+	            }
+	            else if(year >= 2021 && month >=12 || year > 2021)
+	            {
+	            	reportFileName = "/commission/CodyComm_PDF_2022.rpt"; //reportFileName
+	            }
+	            else if (month >= 9 && year >= 2020 || year > 2020){
 
-            	console.log(1);
-               reportFileName = "/commission/CodyComm_PDF_202010.rpt"; //reportFileName
-            }
-            else if (month >= 10 && year >= 2018 || year >2018){
-            	console.log(2);
-                reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
-            }
-            else{
-                reportFileName = "/commission/CodyComm_PDF.rpt"; //reportFileName
-            }
+	            	console.log(1);
+	               reportFileName = "/commission/CodyComm_PDF_202010.rpt"; //reportFileName
+	            }
+	            else if (month >= 10 && year >= 2018 || year >2018){
+	            	console.log(2);
+	                reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
+	            }
+	            else{
+	                reportFileName = "/commission/CodyComm_PDF.rpt"; //reportFileName
+	            }
+			}
                 reportDownFileName = "CodyCommission_" + today; //report name
                 reportViewType = "PDF"; //viewType
 
