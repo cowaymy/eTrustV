@@ -208,12 +208,6 @@ public class htOrderListController {
 		return "homecare/sales/htOrderSOFListPop";
 	}
 
-	@RequestMapping(value="/htCareSrvRawDataPop.do")
-	public String htCareSrvRawDataPop(){
-
-		return "homecare/sales/htCareSrvRawDataPop";
-	}
-
 	@RequestMapping(value="/htRawDataPop.do")
 	public String htRawDataPop(){
 
