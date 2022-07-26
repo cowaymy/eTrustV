@@ -15,6 +15,7 @@ var nricFileId = 0;
 var statementFileId = 0;
 var passportFileId = 0;
 var paymentFileId = 0;
+var hpAppFormFileId = 0;
 var otherFileId = 0;
 var otherFileId2 = 0;
 
@@ -22,10 +23,11 @@ var nricFileName = "";
 var statementFileName = "";
 var passportFileName = "";
 var paymentFileName = "";
+var hpAppFormFileName = "";
 var otherFileName = "";
 var otherFileName2 = "";
 
-
+var FailedRemarkGridID;
 
 //Start AUIGrid
 $(document).ready(function() {
@@ -35,6 +37,8 @@ $(document).ready(function() {
     //createAUIGrid1();
     createAUIGrid2();
     createAUIGrid3();
+    createAUIGridFailedRemark();
+    fn_selectFailedRemarkList();
 
     fn_selectPromote();
     //fn_selectDocSubmission();
@@ -654,11 +658,16 @@ function fn_loadAtchment(atchFileGrpId) {
                         $(".input_text[id='paymentFileTxt']").val(paymentFileName);
                         break;
                     case '5':
+                    	hpAppFormFileId = result[i].atchFileId;
+                    	hpAppFormFileName = result[i].atchFileName;
+                        $(".input_text[id='hpAppFormTxt']").val(hpAppFormFileName);
+                        break;
+                    case '6':
                         otherFileId = result[i].atchFileId;
                         otherFileName = result[i].atchFileName;
                         $(".input_text[id='otherFileTxt']").val(otherFileName);
                         break;
-                    case '6':
+                    case '7':
                         otherFileId2 = result[i].atchFileId;
                         otherFileName2 = result[i].atchFileName;
                         $(".input_text[id='otherFileTxt2']").val(otherFileName2);
@@ -707,6 +716,36 @@ function fn_atchViewDown(fileGrpId, fileId) {
     });
 }
 
+function createAUIGridFailedRemark() {
+
+    //AUIGrid 칼럼 설정
+     var columnLayout = [
+            { headerText : 'Status', dataField : "stus", width : 150}
+          , { headerText : 'Fail Reason', dataField : "rem1", width : 150}
+          , { headerText : 'Remark', dataField : "rem2", width : 355 }
+          , { headerText : 'Creator', dataField : "crtUserId",  width : 180 }
+          , { headerText : 'Create Date', dataField : "crtDt",  width : 180, dataType : "date", formatString : "dd/mm/yyyy"}
+          , { headerText : 'Create Time', dataField : "crtTime",  width : 180}
+     ];
+
+     var gridPros = {
+              usePaging : true,
+              pageRowCount : 10,
+              editable : false,
+              selectionMode : "singleRow",
+              showRowNumColumn : true,
+              showStateColumn : false,
+              wordWrap : true
+     };
+
+     FailedRemarkGridID =  GridCommon.createAUIGrid("grid_FailedRemark_wrap", columnLayout, "", gridPros);
+ }
+
+function fn_selectFailedRemarkList() {
+	Common.ajax("GET", "/organization/selecteHPFailRemark.do", {aplctnId : '${memberView.memId}'}, function(result) {
+        AUIGrid.setGridData(FailedRemarkGridID, result);
+    });
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -724,12 +763,13 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <h4>Member Information</h4>
 </aside><!-- title_line end -->
  <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue"/>
- <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
+ <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/><!-- aplctnId -->
   <input type="hidden" value="<c:out value="${memberView.hpId}"/>" id="hpid"/>
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
  <input type="hidden" value="<c:out value="${memberView.bank}"/> "  id="bank"/>
  <input type="hidden" value="<c:out value="${memberView.hsptlz}"/> "  id="hsptlz"/>
  <input type="hidden" value="<c:out value="${atchFileGrpId}"/> "  id="atchFileGrpId"/>
+
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
@@ -740,7 +780,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <li><a href="#" >Promote/Demote History</a></li>
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
     <li><a href="#" >Attachment</a></li>
-
+    <li><a href="aTabFR" >Failed Remark</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1238,6 +1278,19 @@ function fn_atchViewDown(fileGrpId, fileId) {
     </td>
 </tr>
 <tr>
+    <th scope="row">HP Application Form<span class="must">*</span></th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="hpAppForm" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'  id='hpAppFormTxt' readonly="readonly"/>
+               <!--  <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+               <!--  <span class='label_text'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
     <th scope="row">Declaration letter/Others form</th>
     <td>
         <div class="auto_file2 auto_file3">
@@ -1272,6 +1325,14 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 </form>
 </article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_FailedRemark_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</article>
 
 </section><!-- tap_wrap end -->
 <div id="requestTerminateResign" style="display:none">

@@ -778,12 +778,10 @@
             B.POSTCODE ,
              C.NAME NATION ,
              A.CNFM ,
-             D.SEQ,
              A.APLICNT_INC_TAX
             FROM ORG0003D A
             LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
             LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
-            LEFT JOIN ORG0031D D ON A.APLCTN_ID = D.MEM_ID
             WHERE 1=1
             AND     A.APLCTN_ID = #{MemberID}
 
@@ -1403,6 +1401,25 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     <select id="selectHpApplByEmail" parameterType="Map" resultType="egovMap">
         SELECT
         APLCTN_ID, APLICNT_CODE, APLICNT_EMAIL FROM ORG0003D WHERE APLICNT_EMAIL = #{eHPemail} AND STUS_ID NOT IN (6,8,10)
+    </select>
+
+    <select id="selecteHPFailRemark" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+	    SELECT
+            T2.NAME AS STUS
+            , T4.RESN_DESC AS REM1
+            , REM AS REM2
+            , T3.USER_NAME AS CRT_USER_ID
+            , CRT_DT
+            ,CASE WHEN TO_CHAR(CRT_DT, 'HH12') < 12 THEN  TO_CHAR(CRT_DT, 'HH12:MI AM')
+             ELSE TO_CHAR(CRT_DT, 'HH12:MI PM') END AS CRT_TIME
+        from ORG0031D T1
+            join sys0038m T2 on T1.STUS_CODE_ID = T2.STUS_CODE_ID
+            join sys0047m T3 on T1.CRT_USER_ID = T3.USER_ID
+            join sys0032m T4 on T1.FAIL_RESN_ID = T4.RESN_ID
+        where MEM_ID = #{aplctnId}
+        ORDER BY CRT_DT DESC
+     ]]>
     </select>
 
     </mapper>

@@ -54,4 +54,7 @@ public interface eHPmemberListMapper {
 
   List<EgovMap> selectHpApplByEmail(Map<String, Object> params);
 
+  List<EgovMap> selecteHPFailRemark(Map<String, Object> params);
+
+
 }

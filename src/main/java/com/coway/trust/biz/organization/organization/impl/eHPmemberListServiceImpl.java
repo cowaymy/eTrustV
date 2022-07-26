@@ -302,4 +302,9 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
         return eHPmemberListMapper.selectHpApplByEmail(params);
     }
 
+    @Override
+	public List<EgovMap> selecteHPFailRemark(Map<String, Object> params) {
+		return eHPmemberListMapper.selecteHPFailRemark(params);
+	}
+
 }

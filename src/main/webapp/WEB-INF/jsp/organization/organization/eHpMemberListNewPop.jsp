@@ -243,36 +243,6 @@ $(function(){
 
     $('#otherFile').change(function(evt) {
         var file = evt.target.files[0];
-        if(file == null && myFileCaches[5] != null){
-            delete myFileCaches[5];
-        }else if(file != null){
-            myFileCaches[5] = {file:file};
-        }
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
-        }
-
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
-        }
-
-        if(file.size > 2000000){
-            msg += "*Only allow picture with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[5].file['checkFileValid'] = false;
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[5].file['checkFileValid'] = true;
-        }
-        console.log(myFileCaches);
-    });
-
-    $('#otherFile2').change(function(evt) {
-        var file = evt.target.files[0];
         if(file == null && myFileCaches[6] != null){
             delete myFileCaches[6];
         }else if(file != null){
@@ -297,6 +267,35 @@ $(function(){
         }
         else{
             myFileCaches[6].file['checkFileValid'] = true;
+        }
+    });
+
+    $('#otherFile2').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[7] != null){
+            delete myFileCaches[7];
+        }else if(file != null){
+            myFileCaches[7] = {file:file};
+        }
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[7].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[7].file['checkFileValid'] = true;
         }
         console.log(myFileCaches);
     });
@@ -329,6 +328,35 @@ $(function(){
             myFileCaches[2].file['checkFileValid'] = true;
         }
         console.log(myFileCaches);
+    });
+
+    $('#hpAppForm').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[5] != null){
+            delete myFileCaches[5];
+        }else if(file != null){
+            myFileCaches[5] = {file:file};
+        }
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[5].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[5].file['checkFileValid'] = true;
+        }
     });
 
 });
@@ -625,7 +653,7 @@ console.log("ready");
     //doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S' , '');
 
     //doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
-    doGetCombo('/common/selectCodeList.do', '4', '','eHPmarrital', 'S' , '');
+    doGetCombo('/common/selectCodeList.do', '4', '','eHPmarrital', 'S' , 'fn_eHPmarritalCallBack');
     doGetCombo('/common/selectCodeList.do', '3', '','eHPlanguage', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','eHPeducationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'eHPissuedBank', 'S', '');
@@ -789,6 +817,7 @@ console.log("ready");
             }
         }
     }); */
+
 });
 
 // 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
@@ -1388,6 +1417,10 @@ function fn_validFile() {
         isValid = false;
         msg += "* Please upload copy of Passport photo<br>";
     }
+    if(FormUtil.isEmpty($('#hpAppForm').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of HP Application Form<br>";
+    }
 
     $.each(myFileCaches, function(i, j) {
         if(myFileCaches[i].file.checkFileValid == false){
@@ -1400,6 +1433,19 @@ function fn_validFile() {
 
     return isValid;
 }
+
+function fn_eHPmarritalCallBack(){
+    var eHPmarritalVal = '';
+    var eHPmarritalLen = $('#eHPmarrital option').size();
+
+    for(var i=0; i<eHPmarritalLen; ++i) {
+    	eHPmarritalVal = $("#eHPmarrital option:eq("+i+")").val();
+        if(eHPmarritalVal == '29') {  // Other
+            $("#eHPmarrital option:eq("+i+")").remove();
+        }
+    }
+}
+
 
 </script>
 
@@ -1900,7 +1946,7 @@ function fn_validFile() {
             <article class="tap_area">
 
             <aside class="title_line">
-            <h2>Installation Address</h2>
+            <h2>Address</h2>
             </aside>
 
             <form id="eHPinsAddressForm" name="insAddressForm" method="POST">
@@ -2037,6 +2083,18 @@ function fn_validFile() {
                 </td>
             </tr>
             <tr>
+                <th scope="row">HP Application Form<span class="must">*</span></th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="hpAppForm" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
+                        <label>
+                            <input type='text' class='input_text'  id="hpAppFormTxt"/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+					</div>
+                </td>
+            </tr>
+            <tr>
                 <th scope="row">Declaration letter/Others form</th>
                 <td >
                     <div class="auto_file2">
@@ -2082,6 +2140,7 @@ function fn_validFile() {
             </ul>
 
             </article>
+
         </section><!-- tap_wrap end -->
     </div><!-- popup_wrap end -->
 </form>

@@ -15,6 +15,7 @@ var nricFileId = 0;
 var statementFileId = 0;
 var passportFileId = 0;
 var paymentFileId = 0;
+var hpAppFormFileId = 0;
 var otherFileId = 0;
 var otherFileId2 = 0;
 
@@ -22,9 +23,11 @@ var nricFileName = "";
 var statementFileName = "";
 var passportFileName = "";
 var paymentFileName = "";
+var hpAppFormFileName = "";
 var otherFileName = "";
 var otherFileName2 = "";
 
+var FailedRemarkGridID;
 
 $(document).ready(function() {
 
@@ -46,7 +49,7 @@ $(document).ready(function() {
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'eHPcountry' , 'S');
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'eHPnational' , 'S');
     doGetCombo('/common/selectCodeList.do', '2', '','eHPcmbRace', 'S' , '');
-    doGetCombo('/common/selectCodeList.do', '4', '','eHPmarrital', 'S' , '');
+    doGetCombo('/common/selectCodeList.do', '4', '','eHPmarrital', 'S' , 'fn_eHPmarritalCallBack');
     doGetCombo('/common/selectCodeList.do', '3', '','eHPlanguage', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','eHPeducationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'eHPissuedBank', 'S', '')
@@ -231,12 +234,24 @@ $(document).ready(function() {
         }
     });
 
+    $('#hpAppForm').change( function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(hpAppFormFileId);
+        }else if(file.name != hpAppFormFileName){
+             myFileCaches[5] = {file:file};
+             if(hpAppFormFileName != ""){
+                 update.push(hpAppFormFileId);
+             }
+         }
+    });
+
     $('#otherFile').change(function(evt) {
         var file = evt.target.files[0];
         if(file == null){
             remove.push(otherFileId);
         }else if(file.name != otherFileName){
-            myFileCaches[5] = {file:file};
+            myFileCaches[6] = {file:file};
             if(otherFileName != ""){
                 update.push(otherFileId);
             }
@@ -248,13 +263,15 @@ $(document).ready(function() {
         if(file == null){
             remove.push(otherFileId2);
         }else if(file.name != otherFileName2){
-            myFileCaches[6] = {file:file};
+            myFileCaches[7] = {file:file};
             if(otherFileName2 != ""){
                 update.push(otherFileId2);
             }
         }
     });
 
+    createAUIGridFailedRemark();
+    fn_selectFailedRemarkList();
 });
 
 
@@ -1049,11 +1066,16 @@ function fn_loadAtchment(atchFileGrpId) {
                         $(".input_text[id='paymentFileTxt']").val(paymentFileName);
                         break;
                     case '5':
+                        hpAppFormFileId = result[i].atchFileId;
+                        hpAppFormFileName = result[i].atchFileName;
+                        $(".input_text[id='hpAppFormTxt']").val(hpAppFormFileName);
+                        break;
+                    case '6':
                         otherFileId = result[i].atchFileId;
                         otherFileName = result[i].atchFileName;
                         $(".input_text[id='otherFileTxt']").val(otherFileName);
                         break;
-                    case '6':
+                    case '7':
                         otherFileId2 = result[i].atchFileId;
                         otherFileName2 = result[i].atchFileName;
                         $(".input_text[id='otherFileTxt2']").val(otherFileName2);
@@ -1119,6 +1141,10 @@ function fn_validFile() {
         isValid = false;
         msg += "* Please upload copy of Passport photo<br>";
     }
+    if(FormUtil.isEmpty($('#hpAppFormTxt').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of HP Application Form<br>";
+    }
     if(nricFileId == null) {
         isValid = false;
         msg += "* Please upload copy of NRIC<br>";
@@ -1130,6 +1156,10 @@ function fn_validFile() {
     if(passportFileId == null) {
         isValid = false;
         msg += "* Please upload copy of Passport photo<br>";
+    }
+    if(hpAppFormFileId == null) {
+        isValid = false;
+        msg += "* Please upload copy of HP Application Form<br>";
     }
 
     if(!isValid) Common.alert("Save eHP - Add New Member" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -1254,7 +1284,48 @@ function fn_parentReload() {
 	fn_memberListSearch(); //parent Method (Reload)
   }
 
+function fn_eHPmarritalCallBack(){
+    var eHPmarritalVal = '';
+    var eHPmarritalLen = $('#eHPmarrital option').size();
 
+    for(var i=0; i<eHPmarritalLen; ++i) {
+        eHPmarritalVal = $("#eHPmarrital option:eq("+i+")").val();
+        if(eHPmarritalVal == '29') {  // Other
+            $("#eHPmarrital option:eq("+i+")").remove();
+        }
+    }
+}
+
+function createAUIGridFailedRemark() {
+
+    //AUIGrid 칼럼 설정
+     var columnLayout = [
+            { headerText : 'Status', dataField : "stus", width : 150}
+          , { headerText : 'Fail Reason', dataField : "rem1", width : 150}
+          , { headerText : 'Remark', dataField : "rem2", width : 355 }
+          , { headerText : 'Creator', dataField : "crtUserId",  width : 180 }
+          , { headerText : 'Create Date', dataField : "crtDt",  width : 180, dataType : "date", formatString : "dd/mm/yyyy"}
+          , { headerText : 'Create Time', dataField : "crtTime",  width : 180}
+     ];
+
+     var gridPros = {
+              usePaging : true,
+              pageRowCount : 10,
+              editable : false,
+              selectionMode : "singleRow",
+              showRowNumColumn : true,
+              showStateColumn : false,
+              wordWrap : true
+     };
+
+     FailedRemarkGridID =  GridCommon.createAUIGrid("grid_FailedRemark_wrap", columnLayout, "", gridPros);
+ }
+
+function fn_selectFailedRemarkList() {
+    Common.ajax("GET", "/organization/selecteHPFailRemark.do", {aplctnId : $('#eHPmemberAddForm #eHPMemberID').val().trim()}, function(result) {
+           AUIGrid.setGridData(FailedRemarkGridID, result);
+    });
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1318,6 +1389,7 @@ function fn_parentReload() {
     <li><a href="#">Spouse Info</a></li>
     <li><a href="#">Member Address</a></li>
      <li><a href="#">Attachment</a></li>
+     <li><a href="aTabFR" >Failed Remark</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1729,7 +1801,7 @@ function fn_parentReload() {
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
+<h2>Address</h2>
 </aside><!-- title_line end -->
 <form id="eHPinsAddressForm" name="insAddressForm" method="POST">
     <table class="type1"><!-- table start -->
@@ -1862,6 +1934,18 @@ function fn_parentReload() {
     </td>
 </tr>
 <tr>
+    <th scope="row">HP Application Form<span class="must">*</span></th>
+    <td >
+        <div class="auto_file2">
+            <input type="file" title="file add" id="hpAppForm" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
+            <label>
+                <input type='text' class='input_text'  id='hpAppFormTxt'/>
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
     <th scope="row">Declaration letter/Others form</th>
     <td>
         <div class="auto_file2 auto_file3">
@@ -1899,6 +1983,16 @@ function fn_parentReload() {
 </ul>
 </form>
 </article><!-- tap_area end -->
+
+
+<article class="tap_area"><!-- tap_area start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_FailedRemark_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
 </form>
 </section><!-- tap_wrap end -->
 

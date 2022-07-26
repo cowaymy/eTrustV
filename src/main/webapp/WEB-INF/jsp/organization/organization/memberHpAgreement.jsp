@@ -278,7 +278,7 @@ input {
                     <td style="width : 10px"><input type="checkbox" id="ackMemInfoCheckbox" name="ackMemInfoCheckbox" value="1" /></td>
                     <td colspan="4">
                         I hereby acknowledged that I have read and understood the terms and conditions as stated
-                        in agree to the above Coway (M) Sdn Bhd Health Planner Agreement and I hereby agree to the terms
+                        in agree to the above Coway (Malaysia) Sdn Bhd Health Planner Agreement and I hereby agree to the terms
                         and conditions therein.
                     </td>
                 </tr>
@@ -286,7 +286,7 @@ input {
                     <td style="width : 10px"><input type="checkbox" id="ackMemInfoCheckbox" name="ackMemInfoCheckbox" value="1" /></td>
                     <td colspan="4">
                         I hereby agree and consent that my personal data may be collected, used, processed and
-                        disclosed by Coway (M) Sdn Bhd as described in Schedule 3 of the HP Agreement for the purpose
+                        disclosed by Coway (Malaysia) Sdn Bhd as described in Schedule 3 of the HP Agreement for the purpose
                         of processing my registration, as well as for the programme delivery involved with the above
                         event, in accordance with the Personal Data Protection Act 2012 and all subsidiary legislation
                         related thereto.

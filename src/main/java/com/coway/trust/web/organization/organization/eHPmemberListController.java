@@ -456,7 +456,8 @@ public class eHPmemberListController {
        if(memCode.equals("") && memCode.equals(null)){
            message.setMessage("fail saved");
        }else{
-           message.setMessage("Complete to Create eHP Application Code : " +memCode);
+           message.setMessage("Complete to Create eHP Application Code : " + memCode
+        		   + "<br><br>Kindly Proceed to complete eHP application within 7 days from application date to avoid auto cancel <br><br>Thank You");
        }
        logger.debug("message : {}", message);
 
@@ -528,6 +529,8 @@ public class eHPmemberListController {
    @RequestMapping(value = "/eHpMemberUpdateStatusPop.do")
    public String eHpMemberUpdateStatusPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
+     logger.debug("param111==== : " + params.toString());
+
      params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
      EgovMap selectMemberListView = null;
 
@@ -567,13 +570,15 @@ public class eHPmemberListController {
        params.put("eHPmemberType", memberType);
        params.put("eHPnric", eHPnric);
 
-       String seq = params.get("eHPseq").toString();
+       //String seq = params.get("eHPseq").toString();
 
-       if(seq == "" || seq == null){
+       /*if(seq == "" || seq == null){
          eHPmemberListService.eHPmemberStatusInsert(params); // INSERT ORG0031D
        }else{
        eHPmemberListService.eHPmemberStatusUpdate(params); // UPDATE ORG0031D
-       }
+       }*/
+
+       eHPmemberListService.eHPmemberStatusInsert(params); // INSERT ORG0031D
 
        eHPmemberListService.eHPApplicantStatusUpdate(params); // UPDATE ORG0003D
 
@@ -624,4 +629,12 @@ public class eHPmemberListController {
         List<EgovMap> orientation = eHPmemberListService.selectHPOrientation(params);
         return ResponseEntity.ok(orientation);
     }
+
+    @RequestMapping(value = "/selecteHPFailRemark.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPreOrderFailStatus( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> result = eHPmemberListService.selecteHPFailRemark(params) ;
+
+		return ResponseEntity.ok(result);
+	}
 }
