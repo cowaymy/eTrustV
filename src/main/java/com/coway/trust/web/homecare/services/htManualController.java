@@ -212,8 +212,33 @@ public class htManualController {
 
     params.put("user_id", sessionVO.getUserId());
     params.put("userType", sessionVO.getUserTypeId());
-    logger.debug(" params :  " + params.toString());
 
+	String listProductIdHsManua = (String) params.get("listProductIdHsManua");
+	String[] listProductIdHsManuavalue = listProductIdHsManua.split("∈");
+	logger.debug(" :::: {}", listProductIdHsManuavalue.length);
+
+
+	if (listProductIdHsManuavalue != null && !CommonUtils.containsEmpty(listProductIdHsManuavalue)){
+		params.put("listProductIdHsManua", listProductIdHsManuavalue);
+	}
+	else{
+		params.put("listProductIdHsManua", null);
+	}
+
+	String unitTypeIdHsManua = (String) params.get("unitTypeIdHsManua");
+	String[] unitTypeIdHsManuavalue = unitTypeIdHsManua.split("∈");
+	logger.debug(" :::: {}", unitTypeIdHsManuavalue.length);
+
+	if (unitTypeIdHsManuavalue != null && !CommonUtils.containsEmpty(unitTypeIdHsManuavalue)){
+		params.put("unitTypeIdHsManua", unitTypeIdHsManuavalue);
+	}
+	else{
+		params.put("unitTypeIdHsManuavalue", null);
+	}
+
+
+
+	logger.debug(" params :  " + params.toString());
     // 조회.
     List<EgovMap> bsManagementList = htManualService.selectHsManualList(params);
 
@@ -267,9 +292,17 @@ public class htManualController {
     params.put("userType", sessionVO.getUserTypeId());
 
     String[] arrAppType = request.getParameterValues("cmblistAppType"); // Application
+    String[] arrListProductIdHsManagement = request.getParameterValues("listProductIdHsManagement"); // Application
+    String[] arrUnitTypeIdHsManagement = request.getParameterValues("unitTypeIdHsManagement"); // Application
                                                                         // Type
     if (arrAppType != null && !CommonUtils.containsEmpty(arrAppType))
       params.put("arrAppType", arrAppType);
+
+    if (arrListProductIdHsManagement != null && !CommonUtils.containsEmpty(arrListProductIdHsManagement))
+        params.put("arrListProductIdHsManagement", arrListProductIdHsManagement);
+
+    if (arrUnitTypeIdHsManagement != null && !CommonUtils.containsEmpty(arrUnitTypeIdHsManagement))
+        params.put("arrUnitTypeIdHsManagement", arrUnitTypeIdHsManagement);
 
     logger.debug("userType :  " + sessionVO.getUserTypeId());
     logger.debug("params :  " + params);

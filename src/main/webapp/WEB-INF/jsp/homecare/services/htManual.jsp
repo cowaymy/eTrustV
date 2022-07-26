@@ -49,10 +49,10 @@ var TODAY_DD      = "${toDay}";
 	    headerText : "Sales Order No",
 	    width : 120
 	  }, {
-	        dataField : "ccsOrdNo",
-	        headerText : "Care Service Order",
-	        width : 120
-	      }, {
+        dataField : "ccsOrdNo",
+        headerText : "Care Service Order",
+        width : 120
+      }, {
 	    dataField : "hsDate",
 	    headerText : "CS Date",
 	    width : 120,
@@ -62,14 +62,18 @@ var TODAY_DD      = "${toDay}";
 	    headerText : "HCS Order",
 	    width : 120
 	  }, {
-	        dataField : "apptype",
-	        headerText : "Application Type",
-	        width : 120
-	      }, {
-	            dataField : "salesProdSz",
-	            headerText : "Bed Size",
-	            width : 120
-	          },{
+        dataField : "apptype",
+        headerText : "Application Type",
+        width : 120
+      },{
+        dataField : "srvType",
+        headerText : "Service Type",
+        width : 120
+      },{
+        dataField : "salesProdSz",
+        headerText : "Product Size",
+        width : 120
+      },{
 	    dataField : "c5",
 	    headerText : "Assign HT",
 	    width : 120
@@ -164,13 +168,17 @@ var TODAY_DD      = "${toDay}";
           dataField : "apptype",
           headerText : "Application Type",
           width : 120
+       },
+       {
+           dataField : "srvType",
+           headerText : "Service Type",
+           width : 120
         },
-        {
-            dataField : "salesProdSz",
-            headerText : "Bed Size",
-            width : 120
-          },
-
+       {
+           dataField : "salesProdSz",
+           headerText : "Product Size",
+           width : 120
+         },
       {
         dataField : "c5",
         headerText : "Assign HT",
@@ -399,15 +407,51 @@ var TODAY_DD      = "${toDay}";
 	            }
 	          }
 
+	          var searchlocgbListProductIdHsManua = $('#listProductIdHsManua').val();
+	          var searchlocgbUnitTypeIdHsManua = $('#unitTypeIdHsManua').val();
+
+	          var listProductIdHsManuaParam = "";
+	          var unitTypeIdHsManuaParam = "";
+	          if (searchlocgbListProductIdHsManua != '' && searchlocgbListProductIdHsManua != null) {
+
+
+		          for (var i = 0 ; i < searchlocgbListProductIdHsManua.length ; i++){
+		              if (listProductIdHsManuaParam == ""){
+		                  listProductIdHsManuaParam = searchlocgbListProductIdHsManua[i];
+		              }else{
+		                  listProductIdHsManuaParam = listProductIdHsManuaParam +"∈"+searchlocgbListProductIdHsManua[i];
+		              }
+		          }
+	          }
+
+
+	          if (searchlocgbUnitTypeIdHsManua != '' && searchlocgbUnitTypeIdHsManua != null) {
+
+	              for (var i = 0 ; i < searchlocgbUnitTypeIdHsManua.length ; i++){
+	                  if (unitTypeIdHsManuaParam == ""){
+	                	  unitTypeIdHsManuaParam = searchlocgbUnitTypeIdHsManua[i];
+	                  }else{
+	                	  unitTypeIdHsManuaParam = unitTypeIdHsManuaParam +"∈"+searchlocgbUnitTypeIdHsManua[i];
+	                  }
+	              }
+	          }
+
+	          var data;
+
+              data = {
+                  ManuaSalesOrder : $("#ManuaSalesOrder").val(),
+                    ManuaMyBSMonth : $("#ManuaMyBSMonth").val(),
+                    ManualCustomer : $("#manualCustomer").val(),
+                    ManuaSalesOrderNo : $("#manuaOrderNo").val(),
+                    cmdBranchCode1 : HsCdBranch,
+                    cmdCdManager1 : memId,
+                    unitTypeIdHsManua : unitTypeIdHsManuaParam,
+                    listProductIdHsManua : listProductIdHsManuaParam,
+                    serviceTypeIdHsManua : $("#serviceTypeIdHsManua").val(),
+              };
+
 	          // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
-	          Common.ajax("GET", "/homecare/services/selectHsManualList.do", {
-	            ManuaSalesOrder : $("#ManuaSalesOrder").val(),
-	            ManuaMyBSMonth : $("#ManuaMyBSMonth").val(),
-	            ManualCustomer : $("#manualCustomer").val(),
-	            ManuaSalesOrderNo : $("#manuaOrderNo").val(),
-	            cmdBranchCode1 : HsCdBranch,
-	            cmdCdManager1 : memId
-	          }, function(result) {
+	          Common.ajax("GET", "/homecare/services/selectHsManualList.do", data, function(result) {
 	            AUIGrid.setGridData(myGridID, result);
 	          });
 	        }
@@ -1069,6 +1113,75 @@ var TODAY_DD      = "${toDay}";
 	    }
 	  }
 
+	  function fn_getProductSizeHsManua(){
+
+		    var serviceTypeHsManua = "";
+		    var unitTypeMasterIdHsManua;
+		    if ($("#serviceTypeIdHsManua").val() == '6861'){
+		        serviceTypeHsManua = '447';
+		    }else if ($("#serviceTypeIdHsManua").val() == '6862'){
+		    	serviceTypeHsManua = '521';
+		        unitTypeMasterIdHsManua = '520';
+		    }else if ($("#serviceTypeIdHsManua").val() == '6863'){
+		        serviceTypeHsManua = '515';
+		    }
+
+		    doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceTypeHsManua }, '', 'listProductIdHsManua', 'M','fn_multiCombo3');
+		    doGetComboData('/common/selectUnitTypeList.do', { groupCode : unitTypeMasterIdHsManua }, '', 'unitTypeIdHsManua', 'M','fn_multiCombo3');
+		}
+
+	  function fn_multiCombo3(){
+		    $('#listProductIdHsManua').change(function() {
+		        //console.log($(this).val());
+		    }).multipleSelect({
+		        selectAll: true, // 전체선택
+		        width: '100%'
+		    });
+		    $('#listProductIdHsManua').multipleSelect("checkAll");
+
+		    $('#unitTypeIdHsManua').change(function() {
+		        //console.log($(this).val());
+		    }).multipleSelect({
+		        selectAll: true, // 전체선택
+		        width: '100%'
+		    });
+		    $('#unitTypeIdHsManua').multipleSelect("checkAll");
+		}
+
+	   function fn_getProductSizeHsManagement(){
+
+           var serviceTypeHsManagement = "";
+           var unitTypeMasterIdHsManagement;
+           if ($("#serviceTypeIdHsManagement").val() == '6861'){
+               serviceTypeHsManagement = '447';
+           }else if ($("#serviceTypeIdHsManagement").val() == '6862'){
+               serviceTypeHsManagement = '521';
+               unitTypeMasterIdHsManagement = '520';
+           }else if ($("#serviceTypeIdHsManagement").val() == '6863'){
+               serviceTypeHsManagement = '515';
+           }
+
+           doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceTypeHsManagement }, '', 'listProductIdHsManagement', 'M','fn_multiCombo4');
+           doGetComboData('/common/selectUnitTypeList.do', { groupCode : unitTypeMasterIdHsManagement }, '', 'unitTypeIdHsManagement', 'M','fn_multiCombo4');
+       }
+
+	      function fn_multiCombo4(){
+	            $('#listProductIdHsManagement').change(function() {
+	                //console.log($(this).val());
+	            }).multipleSelect({
+	                selectAll: true, // 전체선택
+	                width: '100%'
+	            });
+	            $('#listProductIdHsManagement').multipleSelect("checkAll");
+
+	            $('#unitTypeIdHsManagement').change(function() {
+	                //console.log($(this).val());
+	            }).multipleSelect({
+	                selectAll: true, // 전체선택
+	                width: '100%'
+	            });
+	            $('#unitTypeIdHsManagement').multipleSelect("checkAll");
+	        }
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
@@ -1217,9 +1330,6 @@ var TODAY_DD      = "${toDay}";
           type="text" title="" placeholder="CS Order" class="w100p" />
          </td>
 
-
-
-
          <th scope="row"><spring:message code='sales.AppType2'/></th>
       <td><select class="multy_select w100p" multiple="multiple"
        id="cmblistAppType" name="cmblistAppType">
@@ -1237,6 +1347,30 @@ var TODAY_DD      = "${toDay}";
       <th scope="row"></th>
 <td></td>
         </tr>
+        <tr>
+        <th scope="row">Service Type</th>
+        <td>
+           <select id="serviceTypeIdHsManagement" name="serviceTypeIdHsManagement" class="w100p" onchange = "fn_getProductSizeHsManagement()" >
+            <option value="">Choose One</option>
+            <option value="6862">Air-Conditioning</option>
+            <option value="6861">Mattress</option>
+            <option value="6863">Massage Chair</option>
+            </select>
+        </td>
+        <th scope="row">Product Size</th>
+        <td>
+        <select id="listProductIdHsManagement" name="listProductIdHsManagement" class="multy_select w100p" multiple="multiple">
+        </select>
+        </td>
+        <th scope="row">Unit Type</th>
+        <td>
+        <select id="unitTypeIdHsManagement" name="unitTypeIdHsManagement" class="multy_select w100p" multiple="multiple">
+        </select>
+        </td>
+        <th scope="row"></th>
+        <td></td>
+        </tr>
+        <tr>
         <th scope="row">Org. Code</th>
          <td><input id="orgCode" name="orgCode" type="text"
           title="" placeholder="Org. Code" class="w100p" /></td>
@@ -1247,7 +1381,8 @@ var TODAY_DD      = "${toDay}";
          <td><input id="deptCode" name="deptCode" type="text"
           title="" placeholder="Dept. Code" class="w100p" /></td>
         <th scope="row"></th>
-<td></td>
+		<td></td>
+		</tr>
        </tbody>
       </table>
       <!-- table end -->
@@ -1366,6 +1501,27 @@ var TODAY_DD      = "${toDay}";
          <td ><select id="cmdCdManager1"
           name="cmdCdManager1" class=""></select></td>
         </tr>
+        <tr>
+	    <th scope="row">Service Type</th>
+	    <td>
+	       <select id="serviceTypeIdHsManua" name="serviceTypeIdHsManua" class="w100p" onchange = "fn_getProductSizeHsManua()" >
+	        <option value="">Choose One</option>
+	        <option value="6862">Air-Conditioning</option>
+	        <option value="6861">Mattress</option>
+	        <option value="6863">Massage Chair</option>
+	        </select>
+	    </td>
+	    <th scope="row">Product Size</th>
+	    <td>
+	    <select id="listProductIdHsManua" name="listProductIdHsManua" class="multy_select w100p" multiple="multiple">
+	    </select>
+	    </td>
+	    <th scope="row">Unit Type</th>
+	    <td>
+	    <select id="unitTypeIdHsManua" name="unitTypeIdHsManua" class="multy_select w100p" multiple="multiple">
+	    </select>
+	    </td>
+	    </tr>
        </tbody>
       </table>
       <!-- table end -->

@@ -74,7 +74,7 @@
     <td><span id="txtCustNRIC_RW"></span></td>
 </tr>
 <tr>
-    <th scope="row">Mattress Size</th>
+    <th scope="row">Product Size</th>
     <td><span id="txtProduct_RW"></span></td>
 </tr>
 <tr id="trAddCmpt" class="blind">

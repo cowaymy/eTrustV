@@ -340,12 +340,12 @@ function fn_getProductSize(){
 
 	var serviceType = "";
 	var unitTypeMasterId;
-	if ($("#ServiceTypeId").val() == '6861'){
+	if ($("#serviceTypeId").val() == '6861'){
 		serviceType = '447';
-	}else if ($("#ServiceTypeId").val() == '6862'){
+	}else if ($("#serviceTypeId").val() == '6862'){
 		serviceType = '521';
 		unitTypeMasterId = '520';
-	}else if ($("#ServiceTypeId").val() == '6863'){
+	}else if ($("#serviceTypeId").val() == '6863'){
         serviceType = '515';
     }
 
@@ -491,7 +491,7 @@ function fn_excelDown(){
 <tr>
     <th scope="row">Service Type</th>
     <td>
-    <select id="ServiceTypeId" name="ServiceTypeId" class="w100p" onchange = "fn_getProductSize()" >
+    <select id="serviceTypeId" name="serviceTypeId" class="w100p" onchange = "fn_getProductSize()" >
         <option value="">Choose One</option>
         <option value="6862">Air-Conditioning</option>
         <option value="6861">Mattress</option>

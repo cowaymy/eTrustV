@@ -319,7 +319,7 @@ SELECT DISTINCT
     SOM.SRV_ORD_ID AS SALES_ORD_ID,
     SOM.BRNCH_ID AS BRNCH_ID,
     SAL023.ADDR_DTL AS ADDRESS,
-    SOM.SALES_PROD_SZ AS STK_DESC,
+    (CASE WHEN (SOM.SRV_TYPE = 6861)THEN SOM.SALES_PROD_SZ ELSE NULL END) AS STK_DESC,
     SCP.SRV_PRD_DUR HS_FREQ,
     (
         CASE
@@ -337,7 +337,10 @@ SELECT DISTINCT
     BRNCH.CODE HT_BRNCH_CODE ,
      MEM4.DEPT_CODE DEPT_CODE_1 ,
     AP.CODE AS APPTYPE ,
-    SOM.SALES_PROD_SZ
+    SOM.SALES_PROD_SZ,
+    ST.CODE_NAME AS SRV_TYPE,
+    SOM.SRV_TYPE AS SERVICE_TYPE,
+    SOM.UNIT_TYPE
 FROM
     SAL0225D SOM
     LEFT JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
@@ -361,7 +364,7 @@ FROM
     LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
     LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
     LEFT JOIN SYS0013M AP ON SOM.APP_TYPE_ID = AP.CODE_ID
-
+    LEFT JOIN SYS0013M ST ON SOM.SRV_TYPE = ST.CODE_ID
     WHERE 1 = 1
 
                  <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)
@@ -393,12 +396,27 @@ FROM
                                      AND A.DEPT_CODE_1 =  SUBSTR(#{cmdCdManager1},1,7)
                                </if>
 
-     <if test="saleOrdListSp != null and saleOrdListSp != '' ">
+                                <if test="saleOrdListSp != null and saleOrdListSp != '' ">
                                     AND A.SALES_ORD_NO IN
                                    <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
                                     #{item}
                                     </foreach>
                                 </if>
+                                <if test="serviceTypeIdHsManua != null and serviceTypeIdHsManua != '' ">
+				                    AND A.SERVICE_TYPE = #{serviceTypeIdHsManua}
+				                </if>
+				                <if test='listProductIdHsManua != null and listProductIdHsManua != ""'>
+				                    AND A.SALES_PROD_SZ IN
+				                   <foreach item="item" collection="listProductIdHsManua" index="index" open="(" separator="," close=")">
+				                        #{item}
+				                  </foreach>
+				                </if>
+				                <if test='unitTypeIdHsManua != null and unitTypeIdHsManua != ""'>
+				                    AND A.UNIT_TYPE IN
+				                   <foreach item="item" collection="unitTypeIdHsManua" index="index" open="(" separator="," close=")">
+				                        #{item}
+				                   </foreach>
+				                </if>
 
           </select>
 
@@ -540,6 +558,9 @@ FROM
                          , Project2.APPTYPE
                          , Project2.SALES_PROD_SZ
                          , Project2.APP_TYPE_ID
+                         , Project2.SRV_TYPE
+                         , Project2.UNIT_TYPE
+                         , Project2.SERVICE_TYPE
           FROM (SELECT
                        DISTINCT HS.NO AS NO
                               , HS.STUS_CODE_ID AS STUS_CODE_ID
@@ -572,6 +593,9 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
+                              ,ST.CODE_NAME AS SRV_TYPE
+                              ,SO.UNIT_TYPE
+                              ,SO.SRV_TYPE AS SERVICE_TYPE
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -590,7 +614,7 @@ FROM
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG1001V T6 ON T6.MEM_ID = OG.MEM_ID
-
+                LEFT JOIN SYS0013M ST ON SO.SRV_TYPE = ST.CODE_ID
                 WHERE
                 CD.MEM_ID IS NOT NULL
 
@@ -645,6 +669,9 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
+                              ,ST.CODE_NAME AS SRV_TYPE
+                              ,SO.UNIT_TYPE
+                              ,SO.SRV_TYPE AS SERVICE_TYPE
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -663,6 +690,7 @@ FROM
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG1001V T6 ON T6.MEM_ID = OG.MEM_ID
+                LEFT JOIN SYS0013M ST ON SO.SRV_TYPE = ST.CODE_ID
                 WHERE
                   CD.MEM_ID IS NULL
           )Project2
@@ -736,7 +764,22 @@ FROM
                     #{item}
                   </foreach>
                 </if>
+                <if test="serviceTypeIdHsManagement != null and serviceTypeIdHsManagement != '' ">
+                    AND Project2.SERVICE_TYPE = #{serviceTypeIdHsManagement}
+                </if>
+                <if test='arrListProductIdHsManagement != null and arrListProductIdHsManagement != ""'>
+                    AND Project2.SALES_PROD_SZ IN
+                  <foreach item="item" collection="arrListProductIdHsManagement" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
 
+                <if test='arrUnitTypeIdHsManagement != null and arrUnitTypeIdHsManagement != ""'>
+                  AND Project2.UNIT_TYPE IN
+                  <foreach item="item" collection="arrUnitTypeIdHsManagement" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
 
         ) Project3
     <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>
