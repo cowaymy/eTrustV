@@ -338,7 +338,7 @@ SELECT DISTINCT
      MEM4.DEPT_CODE DEPT_CODE_1 ,
     AP.CODE AS APPTYPE ,
     SOM.SALES_PROD_SZ,
-    ST.CODE_NAME AS SRV_TYPE,
+    ST.CODE AS SRV_TYPE,
     SOM.SRV_TYPE AS SERVICE_TYPE,
     SOM.UNIT_TYPE
 FROM
@@ -593,7 +593,7 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
-                              ,ST.CODE_NAME AS SRV_TYPE
+                              ,ST.CODE AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
                 FROM SVC0008D HS
@@ -669,7 +669,7 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
-                              ,ST.CODE_NAME AS SRV_TYPE
+                              ,ST.CODE AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
                 FROM SVC0008D HS
