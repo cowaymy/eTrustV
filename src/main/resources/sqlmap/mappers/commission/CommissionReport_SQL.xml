@@ -8,19 +8,27 @@
 	</resultMap> -->
 
 	<!-- searchOrganization Gruop List -->
-	<select id="selectMemberCount" parameterType="Map" resultType="integer">
-	   <![CDATA[
+	<select id="selectMemberCount" parameterType="Map" resultType="EgovMap">
 		SELECT
 		  COUNT(*) cnt
-		FROM ORG0001D
+		<if test="taskIDConf != null and taskIDConf != ''">
+		  ,B.EMPLY_LEV
+		 </if>
+		FROM ORG0001D A
+		<if test="taskIDConf != null and taskIDConf != ''">
+		JOIN CMM0006T B ON A.MEM_CODE = B.EMPLY_CODE
+		</if>
 		WHERE 1=1
-		 ]]>
 		<if test="salesPersonCd != null and salesPersonCd != ''">
 			AND MEM_CODE = #{salesPersonCd}
 		</if>
 		<if test="memType != null and memType != ''">
 	      AND MEM_TYPE = #{memType}
 	    </if>
+	    <if test="taskIDConf != null and taskIDConf != ''">
+          AND B.COMM_TASK_ID = #{taskIDConf}
+           GROUP BY B.EMPLY_LEV
+        </if>
 
 	</select>
 
