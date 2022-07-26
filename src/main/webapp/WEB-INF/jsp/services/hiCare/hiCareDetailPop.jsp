@@ -162,7 +162,7 @@
              }
     	 }
     	 $("#memCode").html('${codyDetail.memCode}');
-    	 $("#memName").html('${codyDetail.memName}');
+    	 $("#memName").html("${codyDetail.memName}");
     	 $("#memNric").html('${codyDetail.memNric}');
     	 $("#orgCode").html('${codyDetail.orgCode}');
     	 $("#grpCode").html('${codyDetail.grpCode}');
