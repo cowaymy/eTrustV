@@ -401,9 +401,11 @@ public class HiCareController {
  		params.put("memberLevel", sessionVO.getMemberLevel());
  	    params.put("userName", sessionVO.getUserName());
  	    params.put("userType", sessionVO.getUserTypeId());
+ 	   List<EgovMap> modelList = hiCareService.selectModelCode();
  		List<EgovMap> branchList = hsManualService.selectBranchList(params);
 
  		model.addAttribute("branchList", branchList);
+ 		model.addAttribute("modelList", modelList);
 
  	    return "services/hiCare/stockListingPop";
 	}
@@ -415,9 +417,11 @@ public class HiCareController {
  		params.put("memberLevel", sessionVO.getMemberLevel());
  	    params.put("userName", sessionVO.getUserName());
  	    params.put("userType", sessionVO.getUserTypeId());
+ 	   List<EgovMap> modelList = hiCareService.selectModelCode();
  		List<EgovMap> branchList = hsManualService.selectBranchList(params);
 
  		model.addAttribute("branchList", branchList);
+ 		model.addAttribute("modelList", modelList);
 
  	    return "services/hiCare/filterListingPop";
 	}

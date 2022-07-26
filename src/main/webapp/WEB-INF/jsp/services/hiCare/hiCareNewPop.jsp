@@ -167,7 +167,8 @@ $(document).ready(function(){
     }
 
 	//$("#cmdBranchCode1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
-	$("#cmbModel1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
+	//$("#cmbModel1 option:eq(1)", '#hiCareNewForm').attr("selected", true);
+	$('#cmbModel1').val('6833');
 
 	/* console.log("MEM_TYPE" + MEM_TYPE);
 	if(!(MEM_TYPE == "4" || MEM_TYPE == "6")){

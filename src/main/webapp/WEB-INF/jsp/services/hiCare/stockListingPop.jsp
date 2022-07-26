@@ -593,9 +593,11 @@ CommonCombo.make('sOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType
 <tr>
     <th scope="row">Model</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="sModel" name="sModel">
-            <option value="6586" selected="selected">SPS 2.0</option>
-        </select>
+         <select class="multy_select w100p" multiple="multiple" id="sModel" name="sModel">
+             <c:forEach var="list" items="${modelList}" varStatus="status">
+               <option value="${list.codeId}" selected>${list.codeDesc}</option>
+             </c:forEach>
+         </select>
     </td>
 </tr>
 </tbody>
