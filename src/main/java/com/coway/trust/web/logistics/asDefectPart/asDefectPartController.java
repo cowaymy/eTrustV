@@ -117,13 +117,14 @@ public class asDefectPartController {
 	    ReturnMessage message = new ReturnMessage();
 	    if(params.get("viewType").equals("1"))//NEW
 	    {
+	    	params.put("stus","1");
 		    asDefectPartService.addDefPart(params);
-		    message.setMessage("Successfully configured product code" + svc0131map.get("matCode"));
+		    message.setMessage("Successfully configured product code " + svc0131map.get("matCode"));
 	    }
 	    else //viewtype ==2 Edit, ==3 View
 	    {
 		    asDefectPartService.updateDefPart(params);
-		    message.setMessage("Successfully update product code" + svc0131map.get("matCode"));
+		    message.setMessage("Successfully update product code " + svc0131map.get("matCode"));
 	    }
 
 	    logger.debug("================saveDefPart - END ================");
