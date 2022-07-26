@@ -338,7 +338,7 @@ SELECT DISTINCT
      MEM4.DEPT_CODE DEPT_CODE_1 ,
     AP.CODE AS APPTYPE ,
     SOM.SALES_PROD_SZ,
-    ST.CODE AS SRV_TYPE,
+    SRT.CODE AS SRV_TYPE,
     SOM.SRV_TYPE AS SERVICE_TYPE,
     SOM.UNIT_TYPE
 FROM
@@ -364,7 +364,7 @@ FROM
     LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
     LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
     LEFT JOIN SYS0013M AP ON SOM.APP_TYPE_ID = AP.CODE_ID
-    LEFT JOIN SYS0013M ST ON SOM.SRV_TYPE = ST.CODE_ID
+    LEFT JOIN SYS0013M SRT ON SOM.SRV_TYPE = SRT.CODE_ID
     WHERE 1 = 1
 
                  <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)
@@ -593,7 +593,7 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
-                              ,ST.CODE AS SRV_TYPE
+                              ,SRT.CODE AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
                 FROM SVC0008D HS
@@ -614,7 +614,7 @@ FROM
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG1001V T6 ON T6.MEM_ID = OG.MEM_ID
-                LEFT JOIN SYS0013M ST ON SO.SRV_TYPE = ST.CODE_ID
+                LEFT JOIN SYS0013M SRT ON SO.SRV_TYPE = SRT.CODE_ID
                 WHERE
                 CD.MEM_ID IS NOT NULL
 
@@ -669,7 +669,7 @@ FROM
                               ,T6.ORG_CODE AS orgCode
                               ,T6.GRP_CODE AS grpCode
                               ,T6.DEPT_CODE AS deptCode
-                              ,ST.CODE AS SRV_TYPE
+                              ,SRT.CODE AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
                 FROM SVC0008D HS
@@ -690,7 +690,7 @@ FROM
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG1001V T6 ON T6.MEM_ID = OG.MEM_ID
-                LEFT JOIN SYS0013M ST ON SO.SRV_TYPE = ST.CODE_ID
+                LEFT JOIN SYS0013M SRT ON SO.SRV_TYPE = SRT.CODE_ID
                 WHERE
                   CD.MEM_ID IS NULL
           )Project2
