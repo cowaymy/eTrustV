@@ -755,6 +755,9 @@ public class CcpCalculateController {
 		String arryCmbResubmitStatus[] = request.getParameterValues("cmbResubmitStatus");
 		params.put("arryCmbResubmitStatus", arryCmbResubmitStatus);
 
+		String arryCmbCcpStatus[] = request.getParameterValues("cmbCcpStatus");
+		params.put("arryCmbCcpStatus", arryCmbCcpStatus);
+
 		list = ccpCalculateService.ccpEresubmitList(params);
 
 		return ResponseEntity.ok(list);

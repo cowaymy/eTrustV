@@ -243,7 +243,24 @@
                 <td >
                 <input type="text" title="" id="SofRefNo" name="SofRefNo" placeholder="Sof Ref No" class="w100p" />
                 </td>
-                <th scope="row">Resubmit status</th>
+                <th scope="row">Salesman Code</th>
+                <td >
+                <input type="text" title="" id="SalesmanCode" name="SalesmanCode" placeholder="Salesman Code" class="w100p" />
+                </td>
+
+            </tr>
+            <tr>
+                <th scope="row">eResubmit Date</th>
+                <td >
+                    <!-- date_set start -->
+                        <div class="date_set">
+                            <p><input type="text" id="eResubmitFrDate" name="eResubmitFrDate" title="From Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="eResubmitToDate" name="eResubmitToDate" title="To Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                        </div>
+                   <!-- date_set end -->
+                </td>
+                <th scope="row">eResubmit Status</th>
                 <td>
                 <!-- <select class="w100p" id="cmbResubmitStatus" name="cmbResubmitStatus" > -->
                 <select class="multy_select w100p" multiple="multiple" name="cmbResubmitStatus">
@@ -253,13 +270,20 @@
                     <option value="10" selected="selected"><spring:message code="sal.combo.text.cancelled" /></option>
                 </select>
                 </td>
+                <th scope="row">CCP Status</th>
+                <td >
+                <select class="multy_select w100p" multiple="multiple" name="cmbCcpStatus">
+                    <option value="1" selected="selected"><spring:message code="sal.combo.text.active" /></option>
+                    <option value="4" selected="selected"><spring:message code="sal.combo.text.compl" /></option>
+                    <option value="5" selected="selected"><spring:message code="sal.combo.text.approv" /></option>
+                    <option value="6" selected="selected"><spring:message code="sal.combo.text.rej" /></option>
+                    <option value="8" selected="selected"><spring:message code="sal.combo.text.inactive" /></option>
+                    <option value="10" selected="selected"><spring:message code="sal.combo.text.cancelled" /></option>
+                </select>
+                </td>
             </tr>
             <tr>
-                <th scope="row">Salesman Code</th>
-                <td >
-                <input type="text" title="" id="SalesmanCode" name="SalesmanCode" placeholder="Salesman Code" class="w100p" />
-                </td>
-                <th scope="row">Dept. Code</th>
+	            <th scope="row">Dept. Code</th>
                 <td >
                 <input type="text" title="" id="DeptCode" name="DeptCode" placeholder="Dept Code" class="w100p" />
                 </td>
@@ -267,24 +291,9 @@
                 <td >
                 <input type="text" title="" id="GrpCode" name="GrpCode" placeholder="Grp Code" class="w100p" />
                 </td>
-            </tr>
-            <tr>
-	            <th scope="row">eResubmit Date</th>
-	            <td >
-	                <!-- date_set start -->
-                        <div class="date_set">
-                            <p><input type="text" id="eResubmitFrDate" name="eResubmitFrDate" title="From Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-                            <span>To</span>
-                            <p><input type="text" id="eResubmitToDate" name="eResubmitToDate" title="To Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-                        </div>
-                   <!-- date_set end -->
-	            </td>
-	            <th scope="row"></th>
-	            <td >
-	            </td>
-	           <th scope="row"></th>
-	            <td >
-	            </td>
+                <th scope="row"></th>
+                <td >
+                </td>
              </tr>
         </tbody>
     </table><!-- table end -->

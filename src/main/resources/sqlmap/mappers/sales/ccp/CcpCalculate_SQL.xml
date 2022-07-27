@@ -1715,6 +1715,12 @@ AND T1.CNT = 1
                                  </choose>
                              </foreach>
                           </if>
+                          <if test=" '' != cmbCcpStatus and null != cmbCcpStatus ">
+                             AND  Filter1.CCP_STUS_ID IN
+                             <foreach collection="arryCmbCcpStatus" item="value" open="(" separator="," close=")">
+                                 #{value}
+                              </foreach>
+                          </if>
                           <if test=" '' != DeptCode and null != DeptCode">
                              AND V.DEPT_CODE = #{DeptCode}
                            </if>
