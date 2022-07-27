@@ -4510,7 +4510,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                         and aplicnt.APLICNT_NRIC = #{aplcntNRIC}
                     </if>
                     <if test="aplcntName != null and aplcntName != '' ">
-                        and aplicnt.APLICNT_NAME = #{aplcntName}
+                        and UPPER(aplicnt.APLICNT_NAME) = UPPER(#{aplcntName})
                     </if>
                     <if test="aplcntMobile != null and aplcntMobile != '' ">
                         and aplicnt.APLICNT_TEL_MOBILE = #{aplcntMobile}

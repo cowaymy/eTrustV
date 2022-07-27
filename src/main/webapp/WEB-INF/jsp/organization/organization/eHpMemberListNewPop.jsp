@@ -117,6 +117,8 @@ function fn_memberSave(){
                                           "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
                                           " for confirmation of HP agreement. TQ!";
 
+                            console.log(cnfmSms);
+
                             if($("#eHPmobileNo").val() != "") {
                                 var rTelNo = $("#eHPmobileNo").val();
 
@@ -1306,13 +1308,6 @@ function fn_autofilledbySpouseNRIC(){
         var autoDOB_year = nric.substr(0,2);
         var autoDOB_month = nric.substr(2,2);
         var autoDOB_date = nric.substr(4,2);
-
-        console.log("nric here///");
-        console.log(nric);
-        console.log(autoGender);
-        console.log(autoDOB_year);
-        console.log(autoDOB_month);
-        console.log(autoDOB_date);
 
         if (parseInt(autoGender)%2 == 0) {
             $("input:radio[name='gender']:radio[value='F']").prop("checked", true);
