@@ -261,7 +261,7 @@
 	      WHERE PAD_ID = #{padId}
     </update>
 
-    <select id="selectCreatorInfo" parameterType="int" resultType="Map">
+    <select id="selectCreatorInfo" parameterType="String" resultType="Map">
        	SELECT s0047m.USER_ID, s0005m.NAME AS USER_BRANCH
        	FROM SYS0047M s0047m
        	LEFT JOIN ORG0001D o0001d
@@ -276,7 +276,7 @@
 		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG
 		ATCH_FILE_GROUP_ID)
 		VALUES
-		(#{padId}, #{padNo}, SYSDATE, '1', #{salesOrdNo}, #{custId},#{creatorId},#{userBranch},
+		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, #{custId},#{creatorId},#{userBranch},
 		#{isThirdPartyPaymentCheck},#{newCustCreditCardId},UTL_RAW.CAST_TO_RAW(#{signImg}),
 		#{atchFileGrpId}
 	</insert>
