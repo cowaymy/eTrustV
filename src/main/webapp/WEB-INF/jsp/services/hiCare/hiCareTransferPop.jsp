@@ -123,7 +123,7 @@ $(document).ready(function(){
         $('#fromLoc', '#hiCareTrfHeadForm').attr("disabled", true);
     } */
 
-    if(brnch == "42" || roleId == '180' || roleId == '179'){
+    if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264'){
         doGetCombo('/services/hiCare/getBch.do', '', brnch, 'fromLoc', 'S', '');
         $("#fromLoc option[value='"+ brnch +"']", '#hiCareTrfHeadForm').attr("selected", true);
     }else{

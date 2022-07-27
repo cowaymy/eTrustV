@@ -156,7 +156,7 @@ $(document).ready(function(){
 
 	$("#temp1").hide();
 
-	if(brnch == "42" || roleId == '180' || roleId == '179'){
+	if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264'){
         doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmdBranchCode1', 'S', '');
         $("#cmdBranchCode1 option[value='"+ brnch +"']", '#hiCareNewForm').attr("selected", true);
         $('#cmdBranchCode1').trigger('click');

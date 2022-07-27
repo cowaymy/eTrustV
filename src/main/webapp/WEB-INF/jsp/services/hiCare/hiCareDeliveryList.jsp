@@ -113,7 +113,7 @@
       console.log('branch ' +brnch);
 
       //$("#cmbToBranch option:eq(1)", '#hiCareDeliveryForm').attr("selected", true);
-      if(brnch == "42" || roleId == '180' || roleId == '179'){
+      if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264'){
           doGetCombo('/services/hiCare/getBch.do', '', brnch, 'cmbToBranch', 'S', '');
           $("#cmbToBranch option[value='"+ brnch +"']", '#hiCareDeliveryForm').attr("selected", true);
       }else{

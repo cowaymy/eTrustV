@@ -6,6 +6,7 @@
 var instDtMM = new Date().getMonth()+1;
 var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 var roleId = '${SESSION_INFO.roleId}';
+var brnch = '${SESSION_INFO.userBranchId}';
 
 instDtMM = FormUtil.lpad(instDtMM, 2, "0");
 
@@ -21,7 +22,7 @@ $('.multy_select').change(function() {
 
 $(document).ready(
         function() {
-            if(brnch == "42" || roleId == '180' || roleId == '179'){
+            if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264' ){
                 doGetCombo('/services/hiCare/getBch.do', '', brnch, 'sBranchCode', 'S', '');
                 $("#sBranchCode option[value='"+ brnch +"']").attr("selected", true);
             }else{
@@ -65,7 +66,7 @@ function validRequiredField(){
     var message = "";
 
     if(
-            ( !(brnch == "42" || roleId == '180' || roleId == '179') && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
+            ( !(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264') && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
             || ($("#sHolder :selected").val() == '' || $("#sHolder :selected").val() == null || $("#sHolder :selected").length == 0 )
             || ($("#sStatus :selected").val() == '' || $("#sStatus :selected").val() == null || $("#sStatus :selected").length == 0 )
             || ($("#sCondition :selected").val() == '' || $("#sCondition :selected").val() == null || $("#sCondition :selected").length == 0)
