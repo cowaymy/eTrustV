@@ -982,14 +982,14 @@
 
   // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
   //doGetCombo('/common/selectCodeList.do', '435', '', 'ticketType', 'S', ''); // Ticket Type
-  doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'S', ''); // Pay Mode
+  doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'L', ''); // Pay Mode
   // doGetCombo('/mobileAppTicket/selectMobileAppTicketStatus.do', '', '', 'ticketStatus', 'S', '');
-  doGetCombo('/common/selectCodeList.do', '130', '', 'keyInCardMode', 'S', ''); //CreditCardMode 생성
-  doGetCombo('/common/selectCodeList.do', '21', '', 'keyInCrcType', 'S', ''); //Credit Card Type 생성
-  doGetCombo('/common/selectCodeList.do', '49', '','cmbRegion', 'M' , 'f_multiCombo'); //region
+  doGetCombo('/common/selectCodeList.do', '130', '', 'keyInCardMode', 'L', ''); //CreditCardMode 생성
+  doGetCombo('/common/selectCodeList.do', '21', '', 'keyInCrcType', 'L', ''); //Credit Card Type 생성
+  doGetCombo('/common/selectCodeList.do', '49', '','cmbRegion', 'L' , 'f_multiCombo'); //region
 
-  doGetCombo('/common/getAccountList.do', '', '', 'keyInMerchantBank', 'S', '');
-  doGetCombo('/common/getIssuedBankList.do', '', '', 'keyInIssueBank', 'S', '');
+  doGetCombo('/common/getAccountList.do', '', '', 'keyInMerchantBank', 'L', '');
+  doGetCombo('/common/getIssuedBankList.do', '', '', 'keyInIssueBank', 'L', '');
 
   // 조회조건 combo box
   function f_multiCombo() {
@@ -1745,7 +1745,7 @@
           <tr>
             <th scope="row"><spring:message code="pay.title.ticketStatus"/></th>
             <td>
-              <select id="ticketStatus" name="ticketStatus" class="w100p" multiple="multiple">
+              <select id="ticketStatus" name="ticketStatus" class="multy_select w100p" multiple="multiple">
                 <option value="1">Active</option>
                 <option value="104">Processing</option>
                 <option value="5">Approved</option>
