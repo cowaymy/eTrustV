@@ -199,13 +199,13 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put("creatorId", creatorInfo.get("userId"));
     params.put("userBranch", creatorInfo.get("userBranch"));
     if (params.get("isThirdPartyPayment").toString().toLowerCase() == "true") {
-      params.put("isThirdPartyPaymentCheck", '1');
+      params.put("isThirdPartyPaymentCheck", 1);
     } else {
-      params.put("isThirdPartyPaymentCheck", '0');
+      params.put("isThirdPartyPaymentCheck", 0);
     }
 
     String padNo = commonMapper.selectDocNo("187");
-    String padId = padNo.substring(3).replaceFirst("^0+(?!$)", "");
+    int padId = Integer.parseInt(padNo.substring(3).replaceFirst("^0+(?!$)", ""));
     params.put("padNo", padNo);
     params.put("padId", padId);
 
