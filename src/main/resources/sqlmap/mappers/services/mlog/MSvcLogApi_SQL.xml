@@ -1701,7 +1701,7 @@
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
            TO_CHAR(LPM) AS lpm,
-           TO_CHAR(PRODCAT) AS prodcat,
+           TO_CHAR(PRODCAT) AS prodcat
         /*   TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON */
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
