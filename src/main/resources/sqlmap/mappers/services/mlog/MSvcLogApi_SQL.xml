@@ -426,6 +426,7 @@
   <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
     <![CDATA[
       SELECT /*+ use_nl(A, MST1, SUB1  ) */
+             SUB2.Membership_Contract_Expiry AS MEMBERSHIP_CONTRACT_EXPIRY,
              MST1.*,
              TO_CHAR (SUB1.SRV_PRD_EXPR_DT, 'YYYYMMDD') AS warranty,
              /* FN_GET_SVC_MADDRESS (sales_Order_No, 'POST') postcode, */
@@ -451,7 +452,7 @@
                    END inhouserepairyn
             FROM (SELECT *
                   FROM (SELECT *
-                        FROM (SELECT ROW_NUMBER () OVER (PARTITION BY sales_Order_No, service_No ORDER BY Membership_Contract_Expiry DESC) RNN,
+                        FROM (SELECT ROW_NUMBER () OVER (PARTITION BY sales_Order_No, service_No ORDER BY Membership_Contract_Expiry1 DESC) RNN,
                                      sales_Order_No,
                                      customer_Id,
                                      app_Type,
@@ -476,7 +477,7 @@
                                       installation_Date,
                                       rental_Status,
                                       contract_Duration,
-                                      Membership_Contract_Expiry,
+                                      Membership_Contract_Expiry1,
                                       service_No,
                                       job_Status,
                                       appointment_Date,
@@ -523,6 +524,7 @@
                                       NVL(Serial_Chk, 'N') AS Serial_Chk,
                                       psi AS psi,
                                       lpm AS lpm,
+                                    /*  as_unmatch_reason AS as_unmatch_reason, */
                                       prodCat AS prodCat
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -571,7 +573,7 @@
                                            sal0022d.cust_acc_no AS card_Account_No,
                                            sal0047d.sirim_no AS sirim_No,
                                            sal0047d.serial_no AS serial_No,
-                                           TO_CHAR (sal0095d.srv_expr_dt, 'YYYYMMDD') AS Membership_Contract_Expiry,
+                                           TO_CHAR (sal0095d.srv_expr_dt, 'YYYYMMDD') AS Membership_Contract_Expiry1,
                                            sal0071d.stus_code_id AS rental_Status,
                                            sys0005m.code AS dsc_Code,
                                            TO_CHAR (sal0047d.install_dt, 'YYYYMMDD') AS installation_Date,
@@ -612,6 +614,7 @@
                                            DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct,
                                            TO_CHAR(svc0004d.PSI) AS psi,
                                            TO_CHAR(svc0004d.LPM) AS lpm,
+                                         /*  TO_CHAR (svc0004d.as_unmatch_reason) AS as_unmatch_reason, */
                                            TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat
                                     FROM sal0001d,
                                          sal0002d,
@@ -718,6 +721,14 @@
                   WHERE 1 = 1) Project1)
              WHERE RNUM = 1) SUB1
            ON MST1.SALES_ORDER_NO = SUB1.SALES_ORD_NO
+            LEFT JOIN
+           (select
+           TO_CHAR(MAX(A.SRV_EXPR_DT),'YYYYMMDD') AS Membership_Contract_Expiry ,
+           B.SALES_ORD_NO
+           from sal0095d A
+           join sal0001d B on A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
+           group by A.SRV_SALES_ORD_ID,B.SALES_ORD_NO) SUB2
+           ON MST1.SALES_ORDER_NO = SUB2.SALES_ORD_NO
     ]]>
   </select>
 
@@ -1690,7 +1701,8 @@
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
            TO_CHAR(LPM) AS lpm,
-           TO_CHAR(PRODCAT) AS prodcat
+           TO_CHAR(PRODCAT) AS prodcat,
+        /*   TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON */
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
