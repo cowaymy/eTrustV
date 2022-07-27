@@ -21,7 +21,7 @@ public class AutoDebitApiDto {
 	private String userType;
 	private int totalOutstanding;
 	private String createdDate;
-	private int montlyRentalAmount;
+	private int monthlyRentalAmount;
 	private String custEmail;
 	private String custMobile;
 
@@ -49,7 +49,7 @@ public class AutoDebitApiDto {
 		params.put("totalOutstanding", vo.getTotalOutstanding());
 		params.put("createdDate", vo.getCreatedDate());
 		params.put("custNric", vo.getCustNric());
-		params.put("montlyRentalAmount", vo.getMontlyRentalAmount());
+		params.put("montlyRentalAmount", vo.getMonthlyRentalAmount());
 		params.put("custEmail", vo.getCustEmail());
 		params.put("custMobile", vo.getCustMobile());
 
@@ -191,11 +191,11 @@ public class AutoDebitApiDto {
 		this.totalOutstanding = totalOutstanding;
 	}
 
-	public int getMontlyRentalAmount() {
-		return montlyRentalAmount;
+	public int getMonthlyRentalAmount() {
+		return monthlyRentalAmount;
 	}
 
-	public void setMontlyRentalAmount(int montlyRentalAmount) {
-		this.montlyRentalAmount = montlyRentalAmount;
+	public void setMonthlyRentalAmount(int monthlyRentalAmount) {
+		this.monthlyRentalAmount = monthlyRentalAmount;
 	}
 }
