@@ -66,7 +66,7 @@ public class AutoDebitApiController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "Order No List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "orderNumberSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/orderNumberSearch", method = RequestMethod.GET)
 	public ResponseEntity<List<AutoDebitApiDto>> orderNumberSearch(@ModelAttribute AutoDebitApiForm autoDebitApiForm) throws Exception {
        Map<String, Object> params = autoDebitApiForm.createMap(autoDebitApiForm);
@@ -78,7 +78,7 @@ public class AutoDebitApiController {
        return ResponseEntity.ok(orderListResult);
 	}
 
-	@ApiOperation(value = "Auto Debit History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "autoDebitHistoryList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitHistoryList", method = RequestMethod.GET)
 	public ResponseEntity<List<AutoDebitApiDto>> autoDebitHistoryList(@ModelAttribute AutoDebitApiForm autoDebitApiForm) throws Exception {
        Map<String, Object> params = autoDebitApiForm.createMap(autoDebitApiForm);
@@ -90,14 +90,14 @@ public class AutoDebitApiController {
        return ResponseEntity.ok(historyListResult);
 	}
 
-	@ApiOperation(value = "Auto Debit Submission Save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "autoDebitSubmissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
 	public void autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm) throws Exception {
         Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
     	autoDebitService.autoDebitMobileSubmissionSave(params);
 	}
 
-	 @ApiOperation(value = "Auto Debit Submission Attachment Save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	 @ApiOperation(value = "autoDebitSubmissionAttachmentSave", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	  @RequestMapping(value = "/autoDebitSubmissionAttachmentSave", method = RequestMethod.POST)
 	  public ResponseEntity<FileDto> autoDebitSubmissionAttachmentSave(@ApiIgnore MultipartHttpServletRequest request,
 	      @ModelAttribute AutoDebitApiForm param) throws Exception {

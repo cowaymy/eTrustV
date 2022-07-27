@@ -237,7 +237,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     loginInfoMap.put("_USER_ID", params.get("createdBy").toString()); // IS USER_NAME
     LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
     if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
-      throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+      throw new ApplicationException(AppConstants.FAIL, "UserID is null for upload.");
     }
 
     int newFileGroupId = 0;
