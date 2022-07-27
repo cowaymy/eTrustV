@@ -20,6 +20,10 @@ public class AutoDebitApiForm {
 	private String atchFileGroupId;
     private String subPath;
     private String fileKeySeq;
+    private String sms1;
+    private String sms2;
+    private String email1;
+    private String email2;
 
 	public static Map<String, Object> createMap(AutoDebitApiForm vo){
 		Map<String, Object> params = new HashMap<>();
@@ -33,6 +37,12 @@ public class AutoDebitApiForm {
 		params.put("isThirdPartyPayment", vo.getIsThirdPartyPayment());
 		params.put("createdBy", vo.getCreatedBy());
 		params.put("monthlyRentalAmount", vo.getMonthlyRentalAmount());
+		params.put("signData", vo.getSignData());
+		params.put("fileKeySeq", vo.getSignData());
+		params.put("sms1", vo.getSms1());
+		params.put("sms2", vo.getSms2());
+		params.put("email1", vo.getEmail1());
+		params.put("email2", vo.getEmail2());
 		return params;
 	}
 
@@ -138,5 +148,37 @@ public class AutoDebitApiForm {
 
 	public void setFileKeySeq(String fileKeySeq) {
 		this.fileKeySeq = fileKeySeq;
+	}
+
+	public String getSms1() {
+		return sms1;
+	}
+
+	public void setSms1(String sms1) {
+		this.sms1 = sms1;
+	}
+
+	public String getSms2() {
+		return sms2;
+	}
+
+	public void setSms2(String sms2) {
+		this.sms2 = sms2;
+	}
+
+	public String getEmail1() {
+		return email1;
+	}
+
+	public void setEmail1(String email1) {
+		this.email1 = email1;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
 	}
 }
