@@ -1298,6 +1298,37 @@ function autofilledbyNRIC(){
 
 }
 
+function fn_autofilledbySpouseNRIC(){
+
+	if(event.keyCode == 13) {
+        var nric = $("#eHPspouseNric").val().replace('-', '');
+        var autoGender = nric.substr(11,1);
+        var autoDOB_year = nric.substr(0,2);
+        var autoDOB_month = nric.substr(2,2);
+        var autoDOB_date = nric.substr(4,2);
+
+        console.log("nric here///");
+        console.log(nric);
+        console.log(autoGender);
+        console.log(autoDOB_year);
+        console.log(autoDOB_month);
+        console.log(autoDOB_date);
+
+        if (parseInt(autoGender)%2 == 0) {
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", true);
+        } else {
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", true);
+        }
+
+        if (parseInt(autoDOB_year) < 20) {
+            $("#eHPspouseDob").val(autoDOB_date+"/"+autoDOB_month+"/"+"20"+autoDOB_year);
+        } else {
+            $("#eHPspouseDob").val(autoDOB_date+"/"+autoDOB_month+"/"+"19"+autoDOB_year);
+        }
+    }
+
+}
+
 function fn_onchangeMarrital() {
     if($("#eHPmarrital").val() != "26") {
         $("#eHPspouseNameLbl").find("span").remove();
@@ -1915,7 +1946,8 @@ function fn_eHPmarritalCallBack(){
                     </td>
                     <th scope="row" id="eHPspouseNricLbl" name="eHPspouseNricLbl">NRIC / Passport No.</th>
                     <td>
-                    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="eHPspouseNric" name="spouseNric"  value=""/>
+                    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="eHPspouseNric" name="spouseNric"  value=""
+                    onkeydown="fn_autofilledbySpouseNRIC()" onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
                     </td>
                 </tr>
                 <tr>
