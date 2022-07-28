@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.PreASManagementListMapper">
+
+	<select id="selectPreASManagementList" parameterType="Map" resultType="egovMap">
+	  SELECT DISTINCT
+                  Extent1.SALES_ORDER_NO
+                , Extent2.SALES_ORD_ID
+                , NVL(Extent1.AS_NO,'') AS AS_NO
+                , Extent9.AS_ID
+                , Extent1.APPV_REMARK
+                , Extent1.CUST_NAME
+                , NVL(Extent3.CODE, '-') BRNCH_CODE
+                , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
+                , Extent5.TEL_M1 AS CONTACT_NO
+                , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
+                , Extent6.NAME AS STUS
+                , Extent1.STUS AS STUS_ID
+                , Extent1.DEFECT_CODE
+                , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
+                , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
+        FROM SVC0130D Extent1
+        JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
+        LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
+        LEFT JOIN SYS0005M Extent3 ON Extent3.BRNCH_ID = Extent9.BRNCH
+        LEFT JOIN SAL0029D Extent4 ON Extent4.NAME =  Extent1.CUST_NAME AND Extent2.CUST_ID = Extent4.CUST_ID
+        LEFT JOIN SAL0027D Extent5 ON Extent5.CUST_ID =  Extent4.CUST_ID AND Extent5.STUS_CODE_ID = 9
+        LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
+        LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
+        LEFT JOIN SYS0026M Extent8 ON Extent1.PRODUCT_CODE = Extent8.STK_CODE
+        LEFT JOIN SVC0001D Extent9 ON Extent1.AS_NO = Extent9.AS_NO
+
+		WHERE 1=1
+
+		<if test="asStatusList != null and asStatusList != '' ">
+            AND Extent1.STUS IN
+           <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
+            #{item}
+           </foreach>
+       </if>
+
+        <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
+            AND Extent3.CODE IN
+            <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+             #{item}
+            </foreach>
+       </if>
+
+       <if test="asProductList != null and asProductList != '' ">
+             AND Extent8.STK_ID IN
+             <foreach item="item" collection="asProductList" index="index" open="(" separator="," close=")">
+             #{item}
+              </foreach>
+       </if>
+
+       <if test=" registerDtFrm  != null  and registerDtFrm !=''  ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.CRT_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{registerDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+        </if>
+
+        <if test="registerDtTo != null   and registerDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.CRT_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{registerDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+        </if>
+
+        <if test="custName != null and custName != '' ">
+             AND ( Extent1.CUST_NAME LIKE '%'||#{custName}||'%')
+        </if>
+
+        <if test="orderNum != null and orderNum != '' ">
+             AND ( Extent1.SALES_ORDER_NO = #{orderNum} )
+         </if>
+
+	</select>
+
+	 <select id="selectPreAsStat"  parameterType="Map" resultType="egovMap">
+	    SELECT CODE AS CODE_ID,
+	           CODE_NAME AS CODE_NAME
+	    FROM SYS0094M
+	    WHERE IND = 'PREAS_STAT'
+	      AND DISB = 0
+	    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <update id="updateRejectedPreAS" parameterType="java.util.Map">
+    UPDATE SVC0130D SET STUS = 6
+                      , UPD_USER_ID = #{userId}
+                      , UPD_DT = SYSDATE
+                      , APPV_REMARK = #{remark}
+                      , FAIL_REASON = #{failReason}
+    WHERE SALES_ORDER_NO = #{orderNo} AND STUS=1
+  </update>
+
+
+</mapper>

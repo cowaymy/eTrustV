@@ -37,6 +37,7 @@
     fn_setComboBox1();
 
     fn_getErrMstList('${orderDetail.basicInfo.ordNo}');
+    $("#ordNo").val('${orderDetail.basicInfo.ordNo}');
 
     <c:if test="${MOD eq 'VIEW'}">
     fn_setEditValue();
@@ -49,6 +50,12 @@
       $("#ISRAS").val("RAS");
     }
 
+
+    if ('${preAsType}' != "undefined" ) {
+        $("#preAsType").val('${preAsType}');
+    }
+
+
     $("#checkComm").prop("checked", true);
 
     fn_setComboBox2();
@@ -58,6 +65,7 @@
     fn_checkASReceiveEntryPop();
 
   });
+
 
   function fn_getErrMstList(_ordNo) {
     var SALES_ORD_NO = _ordNo;
@@ -80,7 +88,13 @@
   }
 
   function fn_errCde_SetVal() {
+
+
     $("#errorCode").val(asErrorCde);
+    if ('${mafuncId}' != "undefined" && '${mafuncId}' != "") {
+        $("#errorCode").val('${mafuncId}');
+      }
+
     fn_errMst_SelectedIndexChanged();
   }
 
@@ -744,7 +758,9 @@
                        "CALL_REM" : $("#callRem").val(),
                        "PIC_NAME" : $("#perIncharge").val(),
                        "PIC_CNTC" : $("#perContact").val(),
-                       "ISRAS" : $("#ISRAS").val()
+                       "ISRAS" : $("#ISRAS").val(),
+                       "PREASTYPE" : $("#preAsType").val(),
+                       "ORDNO" : $("#ordNo").val()
                      }
       Common.ajax("POST", "/services/as/saveASEntry.do", saveForm, function(result) {
         if (result.logerr == "Y") {
@@ -877,7 +893,9 @@
   }
 
   function callbackClose() {
+	  location.reload(true);
     $("#_resultNewEntryPopDiv1").remove();
+
   }
 
   function fn_validRequiredField_Save() {
@@ -1534,6 +1552,8 @@
       <!-- grid_wrap end -->
       <!--</c:if> -->
       <div style="display: none">
+       <input type="text" title="" placeholder="ordNo" id="ordNo" name="ordNo" value="${ordNo}"/>
+       <input type="text" title="" placeholder="preAsType" id="preAsType" name="preAsType" value="${preAsType}"/>
        <input type="text" title="" placeholder="ISRAS" id="ISRAS" name="ISRAS" />
        <input type="text" title="" placeholder="AS_ID" id="AS_ID" name="AS_ID" value="${AS_ID}" />
        <input type="text" title="" placeholder="AS_PIC_ID" id="AS_PIC_ID" name="AS_PIC_ID" />

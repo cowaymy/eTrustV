@@ -42,7 +42,12 @@
       $("#entry_orderNo").val('${ORD_NO}');
       //fn_confirmOrder();
       fn_checkASReceiveEntryConfirmation();
-
+    }
+    if('${PREAS_ORDNO}' != ""){
+    	$("#entry_orderNo").attr("class", "readonly");
+        $("#entry_orderNo").attr("readonly", "readonly");
+    	$("#entry_orderNo").val('${PREAS_ORDNO}');
+    	 fn_checkASReceiveEntryConfirmation();
     }
 
   });
@@ -117,11 +122,13 @@
   }
 
   function fn_checkASReceiveEntryConfirmation() {
-    if ($("#entry_orderNo").val() == "") {
+    if ($("#entry_orderNo").val() == "" ) {
       var field = "<spring:message code='service.title.OrderNo' />";
       Common.alert("<spring:message code='sys.msg.necessary' arguments='* <b>" +field + "</b>' htmlEscape='false'/>");
       return;
     }
+
+
 
     Common.ajax("GET", "/services/as/searchOrderNo", { orderNo : $("#entry_orderNo").val() },
       function(result) {
