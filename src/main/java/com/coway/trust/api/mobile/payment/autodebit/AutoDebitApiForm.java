@@ -39,6 +39,7 @@ public class AutoDebitApiForm {
 		params.put("monthlyRentalAmount", vo.getMonthlyRentalAmount());
 		params.put("signData", vo.getSignData());
 		params.put("fileKeySeq", vo.getSignData());
+		params.put("atchFileGroupId", vo.getAtchFileGroupId());
 		params.put("sms1", vo.getSms1());
 		params.put("sms2", vo.getSms2());
 		params.put("email1", vo.getEmail1());

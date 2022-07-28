@@ -278,7 +278,7 @@
 		VALUES
 		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, #{custId},#{creatorId},#{userBranch},
 		#{isThirdPartyPaymentCheck},#{newCustCreditCardId},UTL_RAW.CAST_TO_RAW(#{signImg}),
-		#{atchFileGrpId})
+		#{atchFileGroupId})
 	</insert>
 
 	<select id="getSmsTemplate" parameterType="Map" resultType="String">
