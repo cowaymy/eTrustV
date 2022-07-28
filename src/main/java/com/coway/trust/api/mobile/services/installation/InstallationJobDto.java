@@ -253,6 +253,9 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "PRODCAT")
   private String prodcat;
 
+  @ApiModelProperty(value = "waterSrcType")
+  private String waterSrcType;
+
   private String serialChk;
 
   private String salesPromotionCde;
@@ -304,6 +307,14 @@ public class InstallationJobDto {
 public void setTurbLvl(String turbLvl) {
 	this.turbLvl = turbLvl;
 }
+
+public String getWaterSrcType() {
+    return waterSrcType;
+  }
+
+  public void setWaterSrcType(String waterSrcType) {
+    this.waterSrcType = waterSrcType;
+  }
 
 public String getBoosterPump() {
 	return boosterPump;

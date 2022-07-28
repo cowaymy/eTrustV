@@ -84,6 +84,7 @@ public class InstallationResultForm {
   private String aftPsi;
   private String aftLpm;
   private String turbLvl;
+  private String waterSrcType;
 
   private String chkCrtAs;
 
@@ -112,6 +113,14 @@ public String getTurbLvl() {
 
 public void setTurbLvl(String turbLvl) {
 	this.turbLvl = turbLvl;
+}
+
+public String getWaterSrcType() {
+	return waterSrcType;
+}
+
+public void setWaterSrcType(String waterSrcType) {
+	this.waterSrcType = waterSrcType;
 }
 
 public String getChkSms() {

@@ -206,7 +206,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("aftPsi", String.valueOf(insApiresult.get("aftPsi")));
         params.put("aftLpm", String.valueOf(insApiresult.get("aftLpm")));
         params.put("turbLvl", String.valueOf(insApiresult.get("turbLvl")));
-        //params.put("waterSrcType", String.valueOf(insApiresult.get("waterSrcType")));
+        params.put("waterSrcType", String.valueOf(insApiresult.get("waterSrcType")));
 
 /*        params.put("boosterPump", String.valueOf(params.get("boosterPump")));
         params.put("aftPsi", String.valueOf(params.get("aftPsi")));
@@ -490,7 +490,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("turbLvl", String.valueOf(params.get("turbLvl")));
 
       params.put("customerType", String.valueOf(installResult.get("custType")));
-      //params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
+      params.put("waterSrcType", String.valueOf(params.get("waterSrcType")));
 
       params.put("remark", String.valueOf(params.get("remark")));
       params.put("failLct", String.valueOf(params.get("failLocCde")));

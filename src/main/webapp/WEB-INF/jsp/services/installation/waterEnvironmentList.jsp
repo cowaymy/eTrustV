@@ -264,6 +264,10 @@
         dataField : "areaId",
         headerText : "Area ID",
         width : 100
+    },{
+        dataField : "waterSrcType",
+        headerText : "Water Source",
+        width : 100
     }
     ];
 

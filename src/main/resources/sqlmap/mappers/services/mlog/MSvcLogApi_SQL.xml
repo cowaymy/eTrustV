@@ -1030,6 +1030,7 @@
                    , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
                    , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
                    , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
+                   , TO_CHAR (SAL0047D.WATER_SRC_TYPE) AS water_src_type
 
                    , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
                    , TO_CHAR (SAL0046D.RESULT_CUST_NAME) AS RESULT_CUST_NAME
@@ -1200,6 +1201,7 @@
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
          , TO_CHAR(TURB_LVL) AS turb_Lvl
+         , TO_CHAR(WATER_SRC_TYPE) AS water_src_type
          , TO_CHAR(CHK_SMS) AS chk_sms
          , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
     FROM SVC0103T
@@ -2332,6 +2334,7 @@ SELECT MST.*
            Extent2.AFT_PSI AFT_PSI ,
            Extent2.AFT_LPM AFT_LPM ,
            Extent2.TURB_LVL TURB_LVL ,
+           Extent2.WATER_SRC_TYPE WATER_SRC_TYPE ,
            CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
              THEN Extent3.CUST_BILL_ID
              ELSE 0 END C7  ,
