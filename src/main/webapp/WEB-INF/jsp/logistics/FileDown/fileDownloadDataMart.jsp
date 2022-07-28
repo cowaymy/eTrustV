@@ -98,7 +98,6 @@ function fileDownload(rowIndex){
 }
 
 $(document).ready(function(){
-	console.log('context:' + '${pageContext.request.contextPath}');
     dataMartFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
      doGetCombo('/logistics/file/checkDirectoryDataMart.do', '', '','dataMartList', 'S' , ''); //File Type 리스트 조회
 });
