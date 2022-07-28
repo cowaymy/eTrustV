@@ -153,6 +153,10 @@ public class SalesOrderMVO implements Serializable {
 
   private String eCommBndlId;
 
+  private String serviceType;
+
+  private String unitType;
+
   public String getSalesProdSz() {
 	return salesProdSz;
 }
@@ -708,5 +712,21 @@ public String geteCommBndlId() {
 public void seteCommBndlId(String eCommBndlId) {
 	this.eCommBndlId = eCommBndlId;
 }
+
+public String getUnitType() {
+    return unitType;
+  }
+
+  public void setUnitType(String unitType) {
+    this.unitType = unitType;
+  }
+
+  public String ServiceType() {
+    return serviceType;
+  }
+
+  public void setServiceType(String serviceType) {
+    this.serviceType = serviceType;
+  }
 
 }
