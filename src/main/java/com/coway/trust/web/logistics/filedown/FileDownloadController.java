@@ -313,7 +313,10 @@ public class FileDownloadController {
 
 		File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
 
-
+		List<Map> list = new ArrayList<>();
+		if(directoryListAsFile == null){
+			return ResponseEntity.ok(list);
+		}
 		List<String> foldersInDirectory = new ArrayList<String>(directoryListAsFile.length);
 		for (File directoryAsFile : directoryListAsFile) {
 			foldersInDirectory.add(directoryAsFile.getName());
@@ -321,8 +324,6 @@ public class FileDownloadController {
 
 		Collections.sort(foldersInDirectory);
 
-
-		List<Map> list = new ArrayList<>();
 		for (int i = 0; i < foldersInDirectory.size(); i++) {
 			Map<String, Object> rtn = new HashMap();
 			rtn.put("codeId", foldersInDirectory.get(i));
