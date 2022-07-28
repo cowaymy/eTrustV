@@ -271,7 +271,7 @@
        	WHERE USER_NAME = #{memCode}
     </select>
 
-    <insert id="3w" parameterType="Map">
+    <insert id="insertAutoDebitMobileSubmmisionData" parameterType="Map">
 		INSERT INTO PAY0333M (PAD_ID,PAD_NO,CRT_DT,STUS_CODE_ID,SALES_ORD_NO,CUST_ID,
 		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG,
 		ATCH_FILE_GROUP_ID)
