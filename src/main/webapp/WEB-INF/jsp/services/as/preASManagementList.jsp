@@ -255,14 +255,25 @@
 	  var param;
 
 	   if(selIdx > -1) {
-		   param = {
-		    preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
-		    preAsDefectCode : AUIGrid.getCellValue(myGridID, selIdx, "defectCode"),
-		    preAsType : "PREAS",
-		    in_ordNo : ""
-		   }
 
-		   Common.popupDiv("/services/as/ASReceiveEntryPop.do", param, null, true, '_NewEntryPopDiv1');
+
+		   var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
+
+           if( stus != "Active"){
+               Common.alert("Approve Order only allow in Active Status");
+           }
+           else{
+
+               param = {
+                preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
+                preAsDefectCode : AUIGrid.getCellValue(myGridID, selIdx, "defectCode"),
+                preAsType : "PREAS",
+                in_ordNo : ""
+               }
+
+               Common.popupDiv("/services/as/ASReceiveEntryPop.do", param, null, true, '_NewEntryPopDiv1');
+           }
+
 
 	   }else{
 		   Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
