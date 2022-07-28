@@ -209,6 +209,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put("padNo", padNo);
     params.put("padId", padId);
 
+    LOGGER.debug(" submitSave : {}", params.toString());
     int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
 
     if (insertPay0333M > 0) {
