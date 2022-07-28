@@ -590,7 +590,7 @@ $.fn.clearForm = function() {
 
     </td>
     <th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>
-    <td><input style="text-transform: uppercase" type="text" maxlength = "16" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" onchange="fn_jsFunction()"/></td>
+    <td><input style="text-transform: uppercase" type="text" maxlength = "16" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo"/></td>
 </tr>
 <tr>
     <th>Branch</th>
