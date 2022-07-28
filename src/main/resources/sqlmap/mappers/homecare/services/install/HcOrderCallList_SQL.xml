@@ -183,7 +183,15 @@
 	                                                           , SYS0064M F
 	                                                  WHERE A.SALES_ORD_ID = #{ORD_ID}
 	                                                     AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
-	                                                 )
+	                                      UNION
+	                                      SELECT F.LT_SUB_GRP
+                                                       FROM SAL0001D A
+                                                               , SAL0045D B
+                                                               , SAL0023D E
+                                                               , SYS0064M F
+                                                      WHERE A.SALES_ORD_ID = #{ORD_ID}
+                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+	                                      )
                    UNION
 		           SELECT B.MEM_ID, C.CT_SUB_GRP, C.BRNCH_ID
 		            FROM SYS0005M A
