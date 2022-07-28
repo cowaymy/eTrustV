@@ -83,12 +83,12 @@ public class FileDownloadController {
 
 		return "logistics/FileDown/fileDownloadRowData";
 	}
-//BI Enhancement
-   @RequestMapping(value = "/DataMart.do")
-    public String datamart(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        return "logistics/FileDown/fileDownloadDataMart";
-    }
+////BI Enhancement
+//   @RequestMapping(value = "/DataMart.do")
+//    public String datamart(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+//
+//        return "logistics/FileDown/fileDownloadDataMart";
+//    }
  //BI Enhancement
 	@RequestMapping(value = "/fileDownloadList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> fileDownloadList(Model model, HttpServletRequest request, HttpServletResponse response)
@@ -294,84 +294,84 @@ public class FileDownloadController {
 		return ResponseEntity.ok(list);
 	}
 
-	@RequestMapping(value = "/checkDirectoryDataMart.do", method = RequestMethod.GET)
-	public ResponseEntity<List<Map>> checkDirectoryDataMart(@RequestParam Map<String, Object> params) {
-		// String path = uploadDir + "/RawData/" + last;
-		String path = uploadDirWeb + "/DataMart";
+//	@RequestMapping(value = "/checkDirectoryDataMart.do", method = RequestMethod.GET)
+//	public ResponseEntity<List<Map>> checkDirectoryDataMart(@RequestParam Map<String, Object> params) {
+//		// String path = uploadDir + "/RawData/" + last;
+//		String path = uploadDirWeb + "/DataMart";
+//
+//		File directory = new File(path);
+//
+//		logger.debug("directory    값 : {}", directory);
+//
+//		FileFilter directoryFileFilter = new FileFilter() {
+//			@Override
+//			public boolean accept(File file) {
+//				return file.isDirectory();
+//			}
+//		};
+//
+//
+//		File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
+//
+//		List<Map> list = new ArrayList<>();
+//		if(directoryListAsFile == null){
+//			return ResponseEntity.ok(list);
+//		}
+//		List<String> foldersInDirectory = new ArrayList<String>(directoryListAsFile.length);
+//		for (File directoryAsFile : directoryListAsFile) {
+//			foldersInDirectory.add(directoryAsFile.getName());
+//		}
+//
+//		Collections.sort(foldersInDirectory);
+//
+//		for (int i = 0; i < foldersInDirectory.size(); i++) {
+//			Map<String, Object> rtn = new HashMap();
+//			rtn.put("codeId", foldersInDirectory.get(i));
+//			rtn.put("codeName", foldersInDirectory.get(i));
+//
+//			list.add(rtn);
+//
+//		}
+//		logger.debug("foldersInDirectory23    값 : {}", foldersInDirectory);
+//		logger.debug("list    값 : {}", list);
+//
+//		return ResponseEntity.ok(list);
+//	}
 
-		File directory = new File(path);
 
-		logger.debug("directory    값 : {}", directory);
-
-		FileFilter directoryFileFilter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				return file.isDirectory();
-			}
-		};
-
-
-		File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
-
-		List<Map> list = new ArrayList<>();
-		if(directoryListAsFile == null){
-			return ResponseEntity.ok(list);
-		}
-		List<String> foldersInDirectory = new ArrayList<String>(directoryListAsFile.length);
-		for (File directoryAsFile : directoryListAsFile) {
-			foldersInDirectory.add(directoryAsFile.getName());
-		}
-
-		Collections.sort(foldersInDirectory);
-
-		for (int i = 0; i < foldersInDirectory.size(); i++) {
-			Map<String, Object> rtn = new HashMap();
-			rtn.put("codeId", foldersInDirectory.get(i));
-			rtn.put("codeName", foldersInDirectory.get(i));
-
-			list.add(rtn);
-
-		}
-		logger.debug("foldersInDirectory23    값 : {}", foldersInDirectory);
-		logger.debug("list    값 : {}", list);
-
-		return ResponseEntity.ok(list);
-	}
-
-
-	@RequestMapping(value = "/dataMartList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<Map>> dataMartList(@RequestParam Map<String, Object> params) throws Exception {
-
-		logger.debug("groupCode : {}", params);
-		// String path = uploadDir + "/RawData/" + params.get("type");
-		String path = uploadDirWeb + "/DataMart/" + params.get("type");
-		File dirFile = new File(path);
-		File[] fileList = dirFile.listFiles();
-		List<Map> list = new ArrayList<>();
-		for (File tempFile : fileList) {
-			if (tempFile.isFile()) {
-				Map<String, Object> rtn = new HashMap();
-				String tempPath = tempFile.getParent();
-				String tempFileName = tempFile.getName();
-				logger.debug("tempPath : {}", tempPath);
-				logger.debug("tempFileName : {}", tempFileName);
-				File f = new File(tempPath, tempFileName);
-				Date made = new Date(f.lastModified());
-				Long length = f.length();
-				logger.debug("made : {}", made);
-				logger.debug("length : {}", length);
-
-				rtn.put("orignlfilenm", tempFileName);
-				rtn.put("updDt", made);
-				rtn.put("filesize", length);
-				rtn.put("subpath", tempPath);
-				list.add(rtn);
-			}
-
-		}
-
-		logger.debug("rtn : {}", list);
-
-		return ResponseEntity.ok(list);
-	}
+//	@RequestMapping(value = "/dataMartList.do", method = RequestMethod.GET)
+//	public ResponseEntity<List<Map>> dataMartList(@RequestParam Map<String, Object> params) throws Exception {
+//
+//		logger.debug("groupCode : {}", params);
+//		// String path = uploadDir + "/RawData/" + params.get("type");
+//		String path = uploadDirWeb + "/DataMart/" + params.get("type");
+//		File dirFile = new File(path);
+//		File[] fileList = dirFile.listFiles();
+//		List<Map> list = new ArrayList<>();
+//		for (File tempFile : fileList) {
+//			if (tempFile.isFile()) {
+//				Map<String, Object> rtn = new HashMap();
+//				String tempPath = tempFile.getParent();
+//				String tempFileName = tempFile.getName();
+//				logger.debug("tempPath : {}", tempPath);
+//				logger.debug("tempFileName : {}", tempFileName);
+//				File f = new File(tempPath, tempFileName);
+//				Date made = new Date(f.lastModified());
+//				Long length = f.length();
+//				logger.debug("made : {}", made);
+//				logger.debug("length : {}", length);
+//
+//				rtn.put("orignlfilenm", tempFileName);
+//				rtn.put("updDt", made);
+//				rtn.put("filesize", length);
+//				rtn.put("subpath", tempPath);
+//				list.add(rtn);
+//			}
+//
+//		}
+//
+//		logger.debug("rtn : {}", list);
+//
+//		return ResponseEntity.ok(list);
+//	}
 }
