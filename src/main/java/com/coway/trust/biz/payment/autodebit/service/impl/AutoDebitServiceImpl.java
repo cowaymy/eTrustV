@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.payment.autodebit.AutoDebitApiDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileGroupVO;
@@ -192,7 +193,8 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   }
 
   @Override
-  public int autoDebitMobileSubmissionSave(Map<String, Object> params) {
+  public AutoDebitApiDto autoDebitMobileSubmissionSave(Map<String, Object> params) {
+	AutoDebitApiDto result = new AutoDebitApiDto();
     EgovMap creatorInfo = autoDebitMapper.selectCreatorInfo(params.get("createdBy").toString());
 
     params.put("signImg", params.get("signData"));
@@ -215,10 +217,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     if (insertPay0333M > 0) {
       // this.sendSms(params);
       // this.sendEmail(params);
-
-      return 1;
+    	result.setResponseCode(1);
+      return result;
     } else {
-      return 0;
+    	result.setResponseCode(0);
+      return result;
     }
   }
 

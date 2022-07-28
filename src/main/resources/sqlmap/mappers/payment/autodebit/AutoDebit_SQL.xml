@@ -261,7 +261,7 @@
 	      WHERE PAD_ID = #{padId}
     </update>
 
-    <select id="selectCreatorInfo" parameterType="String" resultType="Map">
+    <select id="selectCreatorInfo" parameterType="String" resultType="egovMap">
        	SELECT s0047m.USER_ID, s0005m.NAME AS USER_BRANCH
        	FROM SYS0047M s0047m
        	LEFT JOIN ORG0001D o0001d
@@ -286,7 +286,7 @@
 		FROM DUAL
 	</select>
 
-	<select id="selectCustCardBankInformation" parameterType="Map" resultType="Map">
+	<select id="selectCustCardBankInformation" parameterType="Map" resultType="egovMap">
        	SELECT s0028d.CUST_ORI_CRC_NO, s0004m.CODE AS BANK_ISSUER
        	FROM SAL0028D s0028d
        	INNER JOIN SYS0004M s0004m
@@ -299,6 +299,6 @@
 		FROM DUAL
 	</select>
 
-		<select id="getEmailDescription" parameterType="Map" resultType="Map">
+		<select id="getEmailDescription" parameterType="Map" resultType="egovMap">
 	</select>
 </mapper>

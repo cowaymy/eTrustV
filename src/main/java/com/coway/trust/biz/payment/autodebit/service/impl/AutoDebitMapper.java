@@ -25,6 +25,6 @@ public interface AutoDebitMapper {
 	int insertAutoDebitMobileSubmmisionData(Map<String, Object> params);
 	String getSmsTemplate(Map<String, Object> params);
 	EgovMap selectCustCardBankInformation(Map<String, Object> params);
-	String getEmailTitle(Map<String, Object> params);;
+	String getEmailTitle(Map<String, Object> params);
 	EgovMap getEmailDescription(Map<String, Object> params);;
 }

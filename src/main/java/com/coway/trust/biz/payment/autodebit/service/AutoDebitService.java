@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.payment.autodebit.AutoDebitApiDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
@@ -30,7 +31,7 @@ public interface AutoDebitService {
 
 	int updateAction(Map<String, Object> params);
 
-	int autoDebitMobileSubmissionSave(Map<String, Object> params);
+	AutoDebitApiDto autoDebitMobileSubmissionSave(Map<String, Object> params);
 
 	void sendSms(Map<String, Object> params);
 

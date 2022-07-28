@@ -92,9 +92,10 @@ public class AutoDebitApiController {
 
 	@ApiOperation(value = "autoDebitSubmissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
-	public void autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm) throws Exception {
+	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm) throws Exception {
         Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
-    	autoDebitService.autoDebitMobileSubmissionSave(params);
+
+        return ResponseEntity.ok(autoDebitService.autoDebitMobileSubmissionSave(params));
 	}
 
 	 @ApiOperation(value = "autoDebitSubmissionAttachmentSave", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

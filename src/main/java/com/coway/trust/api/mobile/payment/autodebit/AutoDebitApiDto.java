@@ -31,6 +31,9 @@ public class AutoDebitApiDto {
 	private String updatedDate;
 	private String remarks;
 
+	//Result
+	private int responseCode;
+
 	@SuppressWarnings("unchecked")
 	public static AutoDebitApiDto create(EgovMap egovMap) {
 		return BeanConverter.toBean(egovMap, AutoDebitApiDto.class);
@@ -57,6 +60,7 @@ public class AutoDebitApiDto {
 		params.put("padNo", vo.getPadNo());
 		params.put("remarks", vo.getRemarks());
 		params.put("updatedDate", vo.getUpdatedDate());
+		params.put("responseCode", vo.getResponseCode());
 		return params;
 	}
 
@@ -197,5 +201,13 @@ public class AutoDebitApiDto {
 
 	public void setMonthlyRentalAmount(int monthlyRentalAmount) {
 		this.monthlyRentalAmount = monthlyRentalAmount;
+	}
+
+	public int getResponseCode() {
+		return responseCode;
+	}
+
+	public void setResponseCode(int responseCode) {
+		this.responseCode = responseCode;
 	}
 }
