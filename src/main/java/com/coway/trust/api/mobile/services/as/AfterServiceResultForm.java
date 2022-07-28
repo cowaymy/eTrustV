@@ -91,6 +91,18 @@ public class AfterServiceResultForm {
 
   private String lpmRcd;
 
+  private String asUnmatchReason;
+
+
+
+  public String getAsUnmatchReason() {
+	return asUnmatchReason;
+}
+
+  public void setAsUnmatchReason(String asUnmatchReason) {
+	this.asUnmatchReason = asUnmatchReason;
+}
+
   public String getLpmRcd() {
     return lpmRcd;
   }
