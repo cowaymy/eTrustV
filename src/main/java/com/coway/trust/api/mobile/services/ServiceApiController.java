@@ -2754,50 +2754,50 @@ public class ServiceApiController {
     return ResponseEntity.ok(list);
   }
 
-  @ApiOperation(value = "select Submission Records", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/selectSubmissionRecords", method = RequestMethod.GET)
-	public ResponseEntity<AsFromCodyDto>  selectSubmissionRecords(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
-	  return ResponseEntity.ok(asFromCodyApiService.selectSubmissionRecords(asFromCodyForm));
-	}
+//  @ApiOperation(value = "select Submission Records", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/selectSubmissionRecords", method = RequestMethod.GET)
+//	public ResponseEntity<AsFromCodyDto>  selectSubmissionRecords(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
+//	  return ResponseEntity.ok(asFromCodyApiService.selectSubmissionRecords(asFromCodyForm));
+//	}
 
 
-	@ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/selectOrderInfo", method = RequestMethod.GET)
-	public ResponseEntity<AsFromCodyDto>  selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
+//	@ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/selectOrderInfo", method = RequestMethod.GET)
+//	public ResponseEntity<AsFromCodyDto>  selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
+//
+//     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
+//
+//     LOGGER.debug("selectOrderInfo Param",params);
+//     LOGGER.debug("### selectOrderInfo Param FORM : " + params.toString());
+//
+//     EgovMap resultMap = null;
+//      //
+//     resultMap = asFromCodyApiService.selectOrderInfo(params);
+//
+//     LOGGER.debug("### selectOrderInfo Param FORM : " + resultMap.toString());
+//
+//     return ResponseEntity.ok(AsFromCodyDto.create(resultMap));
+//	}
 
-     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
+//	@ApiOperation(value = "Insert As From Cody Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/insertAsFromCodyRequest", method = RequestMethod.POST)
+//	public void insertAsFromCodyRequest(@RequestBody AsFromCodyForm  asFromCodyForm) throws Exception {
+//		asFromCodyApiService.insertAsFromCodyRequest(asFromCodyForm);
+//	}
 
-     LOGGER.debug("selectOrderInfo Param",params);
-     LOGGER.debug("### selectOrderInfo Param FORM : " + params.toString());
-
-     EgovMap resultMap = null;
-      //
-     resultMap = asFromCodyApiService.selectOrderInfo(params);
-
-     LOGGER.debug("### selectOrderInfo Param FORM : " + resultMap.toString());
-
-     return ResponseEntity.ok(AsFromCodyDto.create(resultMap));
-	}
-
-	@ApiOperation(value = "Insert As From Cody Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/insertAsFromCodyRequest", method = RequestMethod.POST)
-	public void insertAsFromCodyRequest(@RequestBody AsFromCodyForm  asFromCodyForm) throws Exception {
-		asFromCodyApiService.insertAsFromCodyRequest(asFromCodyForm);
-	}
-
-	@ApiOperation(value = "selectSubmissionRecordsAll List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/selectSubmissionRecordsAll", method = RequestMethod.GET)
-	public ResponseEntity<List<AsFromCodyDto>>  selectSubmissionRecordsAll(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
-
-       Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
-       List<EgovMap> selectSubmissionRecordsAll = null;
-
-        // 주문 조회
-       selectSubmissionRecordsAll =asFromCodyApiService.selectSubmissionRecordsAll(params);
-
-       List<AsFromCodyDto> recordtList = selectSubmissionRecordsAll.stream().map(r -> AsFromCodyDto.create(r)).collect(Collectors.toList());
-
-       return ResponseEntity.ok(recordtList);
-	}
+//	@ApiOperation(value = "selectSubmissionRecordsAll List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/selectSubmissionRecordsAll", method = RequestMethod.GET)
+//	public ResponseEntity<List<AsFromCodyDto>>  selectSubmissionRecordsAll(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
+//
+//       Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
+//       List<EgovMap> selectSubmissionRecordsAll = null;
+//
+//        // 주문 조회
+//       selectSubmissionRecordsAll =asFromCodyApiService.selectSubmissionRecordsAll(params);
+//
+//       List<AsFromCodyDto> recordtList = selectSubmissionRecordsAll.stream().map(r -> AsFromCodyDto.create(r)).collect(Collectors.toList());
+//
+//       return ResponseEntity.ok(recordtList);
+//	}
 
 }
