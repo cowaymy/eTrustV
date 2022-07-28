@@ -262,7 +262,7 @@
     </update>
 
     <select id="selectCreatorInfo" parameterType="String" resultType="egovMap">
-       	SELECT s0047m.USER_ID, s0005m.NAME AS USER_BRANCH
+       	SELECT s0047m.USER_ID, s0005m.BRNCH_ID AS USER_BRANCH
        	FROM SYS0047M s0047m
        	LEFT JOIN ORG0001D o0001d
        	ON o0001d.MEM_ID = s0047m.USER_ID
@@ -276,7 +276,7 @@
 		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG,
 		ATCH_FILE_GROUP_ID)
 		VALUES
-		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},#{userBranch},
+		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
 		#{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),UTL_RAW.CAST_TO_RAW(#{signImg}),
 		TO_NUMBER(#{atchFileGroupId}))
 	</insert>
