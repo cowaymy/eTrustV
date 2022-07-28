@@ -35,7 +35,7 @@ var columnLayout1 = [
                     {dataField: ""             ,headerText: "" ,
                         renderer: {
                         	type: "ButtonRenderer" ,labelText: "Download" ,onclick: function(rowIndex, columnIndex, value, item){
-//                               fileDownload(rowIndex,"BI");
+                               fileDownload(rowIndex);
                             }
                         }
                     , editable : false
@@ -56,11 +56,6 @@ var gridoptions = {
 
 
 var paramdata;
-
-$(document).ready(function(){
-    dataMartFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
-     doGetCombo('/logistics/file/checkDirectoryDataMart.do', '', '','dataMartList', 'S' , ''); //File Type 리스트 조회
-});
 
 
 //btn clickevent
@@ -93,7 +88,7 @@ function SearchListAjax1(str) {
     });
 }
 
-function fileDownload(rowIndex,str){
+function fileDownload(rowIndex){
 	var subPath;
 	var fileName;
 	var orignlFileNm;
@@ -101,6 +96,11 @@ function fileDownload(rowIndex,str){
     orignlFileNm = AUIGrid.getCellValue(dataMartFileGrid1,  rowIndex, "orignlfilenm");
     window.open("${pageContext.request.contextPath}"+subPath + "/" + orignlFileNm);
 }
+
+$(document).ready(function(){
+    dataMartFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
+     doGetCombo('/logistics/file/checkDirectoryDataMart.do', '', '','dataMartList', 'S' , ''); //File Type 리스트 조회
+});
 </script>
 
 <section id="content">
