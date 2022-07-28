@@ -286,6 +286,9 @@ var discountLayout = [
          }
       }
 
+     function fn_DiscountReport() {
+     	    Common.popupDiv("/payment/discountReportPop.do", null, null, true, '');
+   	  }
 
 
 
@@ -337,6 +340,7 @@ var discountLayout = [
 			                        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 			                        <li><p class="link_btn type2"><a href="javascript:fn_addNewEntry();"><spring:message code='pay.btn.link.addNewEntry'/></a></p></li>
 			                        </c:if>
+			                        <li><p class="link_btn type2"><a href="javascript:fn_DiscountReport();">Discount for Advance Collection Report</a></p></li>
 			                    </ul>
 			                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			                    </dd>

@@ -26,13 +26,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class DiscountMgmtController {
 
 	private static final Logger logger = LoggerFactory.getLogger(DiscountMgmtController.class);
-	
+
 	@Resource(name = "discountMgmtService")
 	private DiscountMgmtService discountMgmtService;
-	
-	
+
+
 	/**
-	 * Discount Mgmt 초기 화면 
+	 * Discount Mgmt 초기 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -41,10 +41,10 @@ public class DiscountMgmtController {
 	public String initEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billing/discountMgmt";
 	}
-	
+
 	/**
 	 * selectBasicInfo 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -52,10 +52,10 @@ public class DiscountMgmtController {
 	@RequestMapping(value = "/selectBasicInfo.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectBasicInfo(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
-        
+
 		EgovMap basicInfo = discountMgmtService.selectBasicInfo(params);
 		List<EgovMap> discountList = discountMgmtService.selectDiscountList(params);
-        
+
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", basicInfo);
         resultMap.put("discountList", discountList);
@@ -63,13 +63,13 @@ public class DiscountMgmtController {
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * conversionSchemeId 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -80,17 +80,17 @@ public class DiscountMgmtController {
         EgovMap conversionSchemeId = discountMgmtService.selectSalesOrderMById(params);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("conversionSchemeId", conversionSchemeId);
-        
+
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * saveDiscount 저장
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -98,19 +98,19 @@ public class DiscountMgmtController {
 	@RequestMapping(value = "/saveDiscount.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveDiscount(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		
+
 		EgovMap resultMap = discountMgmtService.saveAddDiscount(params, sessionVO);
 
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * saveDisableDiscount 저장
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -118,12 +118,12 @@ public class DiscountMgmtController {
 	@RequestMapping(value = "/saveDisableDiscount.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveDisableDiscount(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		
+
         String errorMessage = discountMgmtService.updDiscountEntry(params);
         String resultMessage = "";
         EgovMap basicInfo = new EgovMap();
         List<EgovMap> discountList = new ArrayList<EgovMap>();
-        
+
         if("".equals(errorMessage)){
         	basicInfo = discountMgmtService.selectBasicInfo(params);
         	discountList = discountMgmtService.selectDiscountList(params);
@@ -141,9 +141,23 @@ public class DiscountMgmtController {
 
         // 조회 결과 리턴.
     	message.setData(resultMap);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+	  /**
+	   * Discount Management List
+	   *
+	   * @param request
+	   * @param model
+	   * @return
+	   * @throws Exception
+	   */
+	  @RequestMapping(value = "/discountReportPop.do")
+	  public String discountReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	    // 호출될 화면
+	    return "payment/billing/discountReportDataPop";
+	  }
+
+
 }
