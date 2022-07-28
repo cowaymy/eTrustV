@@ -100,12 +100,15 @@ function fn_memberSave(){
                         $("#eHPaplcntName").val($("#eHPmemberNm").val());
                         $("#eHPaplcntMobile").val($("#eHPmobileNo").val());
 
-                        console.log("NRIC :: " + $("#eHPaplcntNRIC").val());
-                        console.log("Name :: " + $("#eHPaplcntName").val());
-                        console.log("Mobile :: " + $("#eHPaplcntMobile").val());
+                        //Fix HP agreement SMS and Email Link
+                        var jsonObjHp = {
+                        		aplcntNRIC  : $("#eHPaplcntNRIC").val(),
+                        		aplcntName : $("#eHPaplcntName").val(),
+                        		aplcntMobile : $("#eHPaplcntMobile").val()
+                        };
 
                         // Get ID and identification
-                        Common.ajax("GET", "/organization/getApplicantInfo", $("#eHPapplicantDtls").serialize(), function(result) {
+                        Common.ajax("GET", "/organization/getApplicantInfo", jsonObjHp, function(result) {
                             console.log("saving member details");
                             console.log(result);
 
