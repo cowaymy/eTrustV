@@ -21,6 +21,7 @@
 
     	$("#usedFilterTxtBarcode").change(function() {
             event.preventDefault();
+            $('#usedFilterTxtBarcode').val($('#usedFilterTxtBarcode').val().toUpperCase());
             fn_splitUsedBarcode();
         });
 
@@ -28,6 +29,7 @@
 
         $("#newFilterTxtBarcode").change(function() {
             event.preventDefault();
+            $('#newFilterTxtBarcode').val($('#newFilterTxtBarcode').val().toUpperCase());
             fn_splitBarcode();
         });
     });

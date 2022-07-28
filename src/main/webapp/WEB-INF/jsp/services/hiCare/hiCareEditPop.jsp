@@ -52,6 +52,7 @@
 
     	$("#_filterTxtBarcode").change(function() {
             event.preventDefault();
+            $('#_filterTxtBarcode').val($('#_filterTxtBarcode').val().toUpperCase());
             fn_splitUsedBarcode();
         });
     });
