@@ -259,6 +259,17 @@ public class AfterServiceJobDto_b {
   @ApiModelProperty(value = "PRODCAT")
   private int prodcat;
 
+  @ApiModelProperty(value = "AS_UNMATCH_REASON")
+  private String asUnmatchReason;
+
+  public String getAsUnmatchReason() {
+	return asUnmatchReason;
+}
+
+  public void setAsUnmatchReason(String asUnmatchReason) {
+	this.asUnmatchReason = asUnmatchReason;
+}
+
   public String getPsi() {
     return psi;
   }
