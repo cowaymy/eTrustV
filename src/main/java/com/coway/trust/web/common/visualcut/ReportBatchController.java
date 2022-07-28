@@ -511,7 +511,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalAging12Month.do")
-  //@Scheduled(cron = "0 0 2 2 * *")//2nd day of the month (2am)
+  //@Scheduled(cron = "0 0 2 * * *")//2nd day of the month (2am)
   public void RentalAging12Month() {
     LOGGER.info("[START] RentalAging12Month...");
     Map<String, Object> params = new HashMap<>();
@@ -2467,6 +2467,21 @@ public class ReportBatchController {
 
    this.view(null, null, params);
    LOGGER.info("[END] agingMonthRentalCollection...");
+ }
+
+ @RequestMapping(value = "/rentalStusReport.do")
+ //@Scheduled(cron = " 0 0 5 * * ?")//Daily 5:00am
+ public void rentalStusReport() throws IOException {
+   LOGGER.info("[START] rentalStusReport...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/RentalStusReport.rpt");
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
+          + "Rental Status Report_" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] rentalStusReport...");
  }
 //GENERATION TIME : 12 00 END
 
