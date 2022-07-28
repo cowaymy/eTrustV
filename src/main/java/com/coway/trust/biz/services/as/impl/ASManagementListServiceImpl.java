@@ -421,6 +421,16 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
      *
      * LOGGER.debug("ASManagementListServiceImpl.saveASEntry 물류 호출 PRAM ===>"+ logPram.toString()); servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram); LOGGER.debug( "ASManagementListServiceImpl.saveASEntry 물류 호출 결과 ===>" +logPram.toString()); logPram.put("P_RESULT_TYPE", "AS"); logPram.put("P_RESULT_MSG", logPram.get("p1")); /////////////////////////물류 호출 END //////////////////////
      */
+
+    LOGGER.debug(" ============= PREASTYPE :: " + params);
+
+    if ("PREAS".equals(params.get("PREASTYPE"))) {
+
+    	  ASManagementListMapper.updateSVC0130D(params);
+      }
+
+
+
     EgovMap em = new EgovMap();
 
     em.put("AS_NO", String.valueOf(params.get("AS_NO")));

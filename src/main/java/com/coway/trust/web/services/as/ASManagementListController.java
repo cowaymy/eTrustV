@@ -196,6 +196,10 @@ public class ASManagementListController {
     model.put("AS_ResultNO", (String) params.get("asResultNo"));
     model.put("AS_ResultId", (String) params.get("in_asResultId"));
 
+    model.put("PREAS_ORDNO", (String) params.get("preAsSalesOrderNo"));
+    model.put("PREAS_DEFECTCODE", (String) params.get("preAsDefectCode"));
+    model.put("PREAS_TYPE", (String) params.get("preAsType"));
+
     if (!"".equals((String) params.get("in_ordId"))) {
       return "services/as/ASReceiveEntryPop";
     } else {
@@ -258,6 +262,7 @@ public class ASManagementListController {
     model.put("MOD", (String) params.get("mod"));
     model.put("IN_AsResultId", (String) params.get("asResultId"));
 
+
     model.put("mafuncId", (String) params.get("mafuncId"));
     model.put("mafuncResnId", (String) params.get("mafuncResnId"));
 
@@ -265,6 +270,8 @@ public class ASManagementListController {
     model.put("USER_NAME", sessionVO.getUserName());
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
+
+    model.put("preAsType", (String) params.get("preAsType"));
 
     /*
      * if("VIEW".equals(params.get("mod"))){ asentryInfo = ASManagementListService.selASEntryView(params); model.put("asentryInfo", asentryInfo); }

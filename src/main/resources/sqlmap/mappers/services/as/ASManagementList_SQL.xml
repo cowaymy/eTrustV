@@ -5007,4 +5007,14 @@
 
   </select>
 
+
+  <update id="updateSVC0130D" parameterType="Map">
+    UPDATE SVC0130D SET STUS = 5
+                      , UPD_USER_ID = #{USER_ID}
+                      , UPD_DT = SYSDATE
+                      , AS_NO = #{AS_NO}
+                      , APPV_REMARK = #{CALL_REM}
+    WHERE SALES_ORDER_NO = #{ORDNO} AND STUS=1
+  </update>
+
 </mapper>
