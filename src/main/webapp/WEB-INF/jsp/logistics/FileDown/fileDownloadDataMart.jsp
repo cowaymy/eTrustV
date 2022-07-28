@@ -59,7 +59,7 @@ var paramdata;
 
 $(document).ready(function(){
     dataMartFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
-//     doGetCombo('/logistics/file/checkDirectory.do', 'PB', '','dataMartList', 'S' , ''); //File Type 리스트 조회
+     doGetCombo('/logistics/file/checkDirectoryDataMart.do', '', '','dataMartList', 'S' , ''); //File Type 리스트 조회
 });
 
 
@@ -70,24 +70,6 @@ $(function(){
 	$('#dataMartList').change(function() {
 	var div= $('#dataMartList').val();
 	console.log('div : ' + div);
-	//Custom Access Right definition
-	if("${SESSION_INFO.userId}" !="281" && "${SESSION_INFO.userId}" !="131268"  && "${SESSION_INFO.userId}" !="33670"   && div == "SHI"){
-		var msg = "Sorry. You have no access rights to download this file.";
-        Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-        return false;
-    }else if (div == "Rental Details Others Raw"){
-    	if(userId != "281" &&
-  		   userId != "16178" &&
-           userId != "109446" &&
-           userId != "13938" &&
-           userId != "36538" &&
-           userId != "16927" &&
-           userId != "67605" ){
-    		var msg = "Sorry. You have no access rights to download this file.";
-    		Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-    		return false;
-  		}
-	 }
 
 	$("#grid_wrap1").show();
 		SearchListAjax1(div);
@@ -96,9 +78,9 @@ $(function(){
 
 
 function SearchListAjax1(str) {
-//     var url = "/logistics/file/rawdataList.do";
-    var param = {type :"Public/"+str};
-    Common.ajax("GET" , url , param , function(data){
+    var url = "/logistics/file/dataMartList.do";
+    var param = {type :str};
+    Common.ajax("GET" , url , param, function(data){
     	console.log(data);
     	AUIGrid.clearGridData(dataMartFileGrid1);
         AUIGrid.setGridData(dataMartFileGrid1, data);
@@ -115,10 +97,9 @@ function fileDownload(rowIndex,str){
 	var subPath;
 	var fileName;
 	var orignlFileNm;
-// 	subPath = "/resources/WebShare/RawData/Public/"+$('#dataMartList').val();
+ 	subPath = "/resources/WebShare/DataMart/"+$('#dataMartList').val();
     orignlFileNm = AUIGrid.getCellValue(dataMartFileGrid1,  rowIndex, "orignlfilenm");
     window.open("${pageContext.request.contextPath}"+subPath + "/" + orignlFileNm);
-
 }
 </script>
 
