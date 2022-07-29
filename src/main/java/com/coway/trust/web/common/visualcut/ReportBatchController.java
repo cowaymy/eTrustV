@@ -2562,14 +2562,21 @@ public void CTDutyAllowanceMonthly() {
 public void dataMartReport() {
   LOGGER.info("[START] DataMartReport...");
   Map<String, Object> params = new HashMap<>();
-  params.put(REPORT_FILE_NAME, "/sales/DataMartCustData.rpt");// sales
-                                                                   // rpt file
-                                                                   // name.
-  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-//  params.put("V_TEMP", "TEMP"); // viewType
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+//  params.put(REPORT_FILE_NAME, "/sales/DataMartCustData.rpt");// sales
+//                                                                   // rpt file
+//                                                                   // name.
+//  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+////  params.put("V_TEMP", "TEMP"); // viewType
+//  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+//      "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 
+  //TEST
+  params.put(REPORT_FILE_NAME, "/visualcut/Membership_OUT_REN_Raw.rpt");
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "Membership_Raw" + File.separator + "Membership_OUT_REN_Raw" + CommonUtils.getNowDate() + ".xls");
+  //TEST
   this.viewProcedure(null, null, params);
   LOGGER.info("[END] DataMartReport...");
 }
