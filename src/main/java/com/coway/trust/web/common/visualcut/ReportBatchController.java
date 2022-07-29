@@ -2558,11 +2558,43 @@ public void CTDutyAllowanceMonthly() {
 
 @RequestMapping(value = "/DataMartReport.do")
 //@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
-// 8:00am
+//8:00am
 public void dataMartReport() {
+LOGGER.info("[START] DataMartReport...");
+Map<String, Object> params = new HashMap<>();
+params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
+params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+//params.put("V_TEMP", "TEMP"); // viewType
+params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+    "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+
+this.viewProcedure(null, null, params);
+LOGGER.info("[END] DataMartReport...");
+}
+
+@RequestMapping(value = "/DataMartReportWithTemp.do")
+//@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
+//8:00am
+public void dataMartReportWithTemp() {
+LOGGER.info("[START] DataMartReport...");
+Map<String, Object> params = new HashMap<>();
+params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
+params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+params.put("V_TEMP", "TEMP"); // viewType
+params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+  "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+
+this.viewProcedure(null, null, params);
+LOGGER.info("[END] DataMartReport...");
+}
+
+@RequestMapping(value = "/DataMartReport1.do")
+//@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
+// 8:00am
+public void dataMartReport1() {
   LOGGER.info("[START] DataMartReport...");
   Map<String, Object> params = new HashMap<>();
-  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
+  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData1.rpt");// sales rpt file name
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
   //params.put("V_TEMP", "TEMP"); // viewType
   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
