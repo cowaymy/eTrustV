@@ -2572,7 +2572,7 @@ public void dataMartReport(HttpServletRequest request) {
 	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	  	      "DataMart" + File.separator + nameParam +  File.separator + nameParam + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  	      "DataMart" + File.separator + nameParam +  File.separator + "PUBLIC_" + nameParam + CommonUtils.getNowDate() + ".xls"); //directory/filename
 
 	  switch(nameParam){
 	  	case "CLAIM":
@@ -2604,7 +2604,7 @@ public void dataMartReport(HttpServletRequest request) {
 	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "CLAIM" +  File.separator + "CLAIM" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "CLAIM" +  File.separator + "PUBLIC_CLAIM" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 2
@@ -2613,7 +2613,7 @@ public void dataMartReport(HttpServletRequest request) {
 	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "CUSTOMER" +  File.separator + "CUSTOMER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "CUSTOMER" +  File.separator + "PUBLIC_CUSTOMER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 3
@@ -2622,7 +2622,7 @@ public void dataMartReport(HttpServletRequest request) {
 	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "PRODUCT" +  File.separator + "PRODUCT" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "PRODUCT" +  File.separator + "PUBLIC_PRODUCT" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 4
@@ -2631,7 +2631,7 @@ public void dataMartReport(HttpServletRequest request) {
 	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "MEMBER" +  File.separator + "MEMBER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "MEMBER" +  File.separator + "PUBLIC_MEMBER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 5
@@ -2640,7 +2640,7 @@ public void dataMartReport(HttpServletRequest request) {
 	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "ORDER" +  File.separator + "ORDER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "ORDER" +  File.separator + "PUBLIC_ORDER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 	  this.viewProcedure(null, null, params);
   }
   LOGGER.info("[END] DataMartReport...");
