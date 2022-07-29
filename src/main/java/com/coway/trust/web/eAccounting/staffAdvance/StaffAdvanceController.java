@@ -404,6 +404,7 @@ public class StaffAdvanceController {
             ntf.put("code", params.get("clmNo").toString().substring(0, 2));
             ntf.put("appvStus", "R");
             ntf.put("rejctResn", "Pending Approval.");
+            ntf.put("userId", sessionVO.getUserId());
 
             LOGGER.debug("ntf =====================================>>  " + ntf);
 
