@@ -1030,6 +1030,7 @@
                    , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
                    , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
                    , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
+                   , TO_CHAR (SAL0047D.WATER_SRC_TYPE) AS water_src_type
 
                    , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
                    , TO_CHAR (SAL0046D.RESULT_CUST_NAME) AS RESULT_CUST_NAME
