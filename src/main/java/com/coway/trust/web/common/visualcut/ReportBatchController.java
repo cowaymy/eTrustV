@@ -2558,49 +2558,91 @@ public void CTDutyAllowanceMonthly() {
 
 @RequestMapping(value = "/DataMartReport.do")
 //@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
-//8:00am
-public void dataMartReport() {
-LOGGER.info("[START] DataMartReport...");
-Map<String, Object> params = new HashMap<>();
-params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
-params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-//params.put("V_TEMP", "TEMP"); // viewType
-params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-    "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
-
-this.viewProcedure(null, null, params);
-LOGGER.info("[END] DataMartReport...");
-}
-
-@RequestMapping(value = "/DataMartReportWithTemp.do")
-//@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
-//8:00am
-public void dataMartReportWithTemp() {
-LOGGER.info("[START] DataMartReport...");
-Map<String, Object> params = new HashMap<>();
-params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
-params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-params.put("V_TEMP", "TEMP"); // viewType
-params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-  "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
-
-this.viewProcedure(null, null, params);
-LOGGER.info("[END] DataMartReport...");
-}
-
-@RequestMapping(value = "/DataMartReport1.do")
-//@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
 // 8:00am
-public void dataMartReport1() {
+public void dataMartReport(HttpServletRequest request) {
   LOGGER.info("[START] DataMartReport...");
-  Map<String, Object> params = new HashMap<>();
-  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData1.rpt");// sales rpt file name
-  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-  //params.put("V_TEMP", "TEMP"); // viewType
-  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-      "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 
-  this.viewProcedure(null, null, params);
+  String nameParam =  "";
+  if(request.getParameter("name") != null && !request.getParameter("name").isEmpty()){
+	  nameParam =  request.getParameter("name").toString().toUpperCase();
+  }
+  Map<String, Object> params = new HashMap<>();
+
+  if(nameParam != null && nameParam != ""){
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put("isGeneral", "true"); // to be use for general type path define
+	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	  	      "DataMart" + File.separator + nameParam +  File.separator + nameParam + CommonUtils.getNowDate() + ".xls"); //directory/filename
+
+	  switch(nameParam){
+	  	case "CLAIM":
+    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartClaimData.rpt");
+    	  		this.viewProcedure(null, null, params);
+			break;
+	  	case "CUSTOMER":
+    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartCustData.rpt");
+    	  		this.viewProcedure(null, null, params);
+			break;
+	  	case "PRODUCT":
+    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartProductData1.rpt");
+    	  		this.viewProcedure(null, null, params);
+			break;
+	  	case "MEMBER":
+    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartMemberData.rpt");
+    	  		this.viewProcedure(null, null, params);
+			break;
+	  	case "ORDER":
+    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartOrderData.rpt");
+    	  		this.viewProcedure(null, null, params);
+			break;
+	  }
+  }
+  else{
+	  //PART 1
+	  params = new HashMap<>();
+	  params.put(REPORT_FILE_NAME, "/sales/DataMartClaimData.rpt");// sales rpt file name
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put("isGeneral", "true"); // to be use for general type path define
+	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	      "DataMart" + File.separator + "CLAIM" +  File.separator + "CLAIM" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  this.viewProcedure(null, null, params);
+
+	  //PART 2
+	  params = new HashMap<>();
+	  params.put(REPORT_FILE_NAME, "/sales/DataMartCustData.rpt");// sales rpt file name
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put("isGeneral", "true"); // to be use for general type path define
+	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	      "DataMart" + File.separator + "CUSTOMER" +  File.separator + "CUSTOMER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  this.viewProcedure(null, null, params);
+
+	  //PART 3
+	  params = new HashMap<>();
+	  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put("isGeneral", "true"); // to be use for general type path define
+	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	      "DataMart" + File.separator + "PRODUCT" +  File.separator + "PRODUCT" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  this.viewProcedure(null, null, params);
+
+	  //PART 4
+	  params = new HashMap<>();
+	  params.put(REPORT_FILE_NAME, "/sales/DataMartMemberData.rpt");// sales rpt file name
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put("isGeneral", "true"); // to be use for general type path define
+	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	      "DataMart" + File.separator + "MEMBER" +  File.separator + "MEMBER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  this.viewProcedure(null, null, params);
+
+	  //PART 5
+	  params = new HashMap<>();
+	  params.put(REPORT_FILE_NAME, "/sales/DataMartOrderData.rpt");// sales rpt file name
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put("isGeneral", "true"); // to be use for general type path define
+	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	      "DataMart" + File.separator + "ORDER" +  File.separator + "ORDER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  this.viewProcedure(null, null, params);
+  }
   LOGGER.info("[END] DataMartReport...");
 }
 
@@ -2709,6 +2751,9 @@ public void dataMartReport1() {
       case MAIL_EXCEL:
         ReportUtils.sendMail(clientDoc, viewType, params);
         break;
+      case GENERAL_EXCEL:
+    	  ReportUtils.viewGeneralDataEXCEL(response, clientDoc, downFileName, params);
+    	  break;
       default:
         throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
     }

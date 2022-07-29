@@ -295,7 +295,7 @@ public class ReportController {
   }
 
   public enum ViewType {
-    WINDOW, PDF, EXCEL, EXCEL_FULL, CSV, MAIL_PDF, MAIL_EXCEL, MAIL_CSV
+    WINDOW, PDF, EXCEL, EXCEL_FULL, CSV, MAIL_PDF, MAIL_EXCEL, MAIL_CSV, GENERAL_EXCEL
   }
 
   public interface ExportFile {

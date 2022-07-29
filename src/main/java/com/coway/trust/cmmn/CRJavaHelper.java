@@ -709,6 +709,16 @@ public class CRJavaHelper {
 		export(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
 	}
 
+	public static void exportGeneralExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response,
+			boolean attachment, String downFileName, Map<String, Object> params)
+			throws ReportSDKExceptionBase, IOException {
+		ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
+
+		boolean isGeneralPath = Boolean.parseBoolean(params.get("isGeneral").toString());
+
+		exportGeneral(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName,isGeneralPath);
+	}
+
 	public static ExportOptions getExcelExportptionsDataOnly(Map<String, Object> params) {
 		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
 		// excelOptions.setUseConstantColWidth(true);
@@ -844,6 +854,86 @@ public class CRJavaHelper {
 						StandardCopyOption.REPLACE_EXISTING);
 
 				IOUtils.closeQuietly(is);
+			}
+
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+	}
+
+	private static void exportGeneral(ReportClientDocument clientDoc, ExportOptions exportOptions,
+			HttpServletResponse response, boolean attachment, String mimeType, String extension, String downFileName, boolean isGeneral)
+			throws ReportSDKExceptionBase, IOException {
+
+		InputStream is = null;
+		try {
+			is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));
+
+			byte[] data = new byte[1024];
+
+			if (response != null) {
+				response.setContentType(mimeType);
+			}
+
+			if (response != null && attachment) {
+				String name = "";
+				if (StringUtils.isNotEmpty(downFileName)) {
+					name = downFileName;
+				} else if (StringUtils.isEmpty(name)) {
+					name = clientDoc.getReportSource().getReportTitle();
+					name = name.replaceAll("\"", "");
+				}
+
+				if (StringUtils.isEmpty(name)) {
+					name = "Report-" + extension;
+				}
+
+				response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
+				/// callback 호출시 필수.
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "." + extension + "\"");
+			}
+
+			if (response != null) {
+				OutputStream os = response.getOutputStream();
+				while (is.read(data) > -1) {
+					os.write(data);
+				}
+			} else {
+				LOGGER.info("this line is batch call =>downFileName : {}, mimeType : {}", downFileName, mimeType);
+
+				if(isGeneral){
+					File targetFile1 = new File(uploadDirWeb + File.separator + downFileName);
+					if (!targetFile1.exists()) {
+    					LOGGER.debug("make dir1...");
+    					targetFile1.mkdirs();
+    				}
+
+    				java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+    				IOUtils.closeQuietly(is);
+				}
+				else{
+    				File targetFile1 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Public"
+    						+ File.separator + downFileName);
+    				File targetFile2 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Privacy"
+    						+ File.separator + downFileName);
+    				if (!targetFile1.exists()) {
+    					LOGGER.debug("make dir1...");
+    					targetFile1.mkdirs();
+    				}
+    				if (!targetFile2.exists()) {
+    					LOGGER.debug("make dir2...");
+    					targetFile2.mkdirs();
+    				}
+
+    				java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    				java.nio.file.Files.copy(targetFile1.toPath(), targetFile2.toPath(),
+    						StandardCopyOption.REPLACE_EXISTING);
+
+    				IOUtils.closeQuietly(is);
+				}
 			}
 
 		} finally {

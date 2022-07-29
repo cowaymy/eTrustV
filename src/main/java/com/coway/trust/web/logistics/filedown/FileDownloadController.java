@@ -83,12 +83,12 @@ public class FileDownloadController {
 
 		return "logistics/FileDown/fileDownloadRowData";
 	}
-////BI Enhancement
-//   @RequestMapping(value = "/DataMart.do")
-//    public String datamart(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-//
-//        return "logistics/FileDown/fileDownloadDataMart";
-//    }
+
+   @RequestMapping(value = "/DataMart.do")
+    public String datamart(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        return "logistics/FileDown/fileDownloadDataMart";
+    }
  //BI Enhancement
 	@RequestMapping(value = "/fileDownloadList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> fileDownloadList(Model model, HttpServletRequest request, HttpServletResponse response)
