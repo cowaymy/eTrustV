@@ -250,7 +250,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     logger.debug("log38cnt==>" + log38cnt);
     logger.debug("log39cnt==>" + log39cnt);
 
-    EgovMap  PRFailReason = orderListMapper.selectPRFailReason(params);
+    /*EgovMap  PRFailReason = orderListMapper.selectPRFailReason(params);
 	params.put("FailReasonCode", PRFailReason.get("code"));
 
     String smsMessage = "";
@@ -268,7 +268,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     if(smsMessage != "")
     {
     	sendSms(smsList);
-    }
+    }*/
 
   }
 
