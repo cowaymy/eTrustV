@@ -2562,11 +2562,9 @@ public void CTDutyAllowanceMonthly() {
 public void dataMartReport() {
   LOGGER.info("[START] DataMartReport...");
   Map<String, Object> params = new HashMap<>();
-  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales
-                                                                   // rpt file
-                                                                   // name.
+  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-  params.put("V_TEMP", "TEMP"); // viewType
+  //params.put("V_TEMP", "TEMP"); // viewType
   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
       "DataMart" + File.separator + "Sales" +  File.separator + "DataMartReport" + CommonUtils.getNowDate() + ".xls"); //directory/filename
 
