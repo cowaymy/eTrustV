@@ -524,7 +524,7 @@
                                       NVL(Serial_Chk, 'N') AS Serial_Chk,
                                       psi AS psi,
                                       lpm AS lpm,
-                                    /*  as_unmatch_reason AS as_unmatch_reason, */
+                                      as_unmatch_reason AS as_unmatch_reason,
                                       prodCat AS prodCat
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -614,7 +614,7 @@
                                            DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct,
                                            TO_CHAR(svc0004d.PSI) AS psi,
                                            TO_CHAR(svc0004d.LPM) AS lpm,
-                                         /*  TO_CHAR (svc0004d.as_unmatch_reason) AS as_unmatch_reason, */
+                                           TO_CHAR (svc0004d.as_unmatch_reason) AS as_unmatch_reason,
                                            TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat
                                     FROM sal0001d,
                                          sal0002d,
@@ -1701,8 +1701,8 @@
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
            TO_CHAR(LPM) AS lpm,
-           TO_CHAR(PRODCAT) AS prodcat
-        /*   TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON */
+           TO_CHAR(PRODCAT) AS prodcat,
+           TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
