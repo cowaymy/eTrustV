@@ -67,7 +67,7 @@
     	 $("#filterSn").html('${headerDetail.filterSn}');
     	 $("#filterChgDt").html('${headerDetail.filterChgDt}');
     	 $("#branchLoc").html('${headerDetail.branchLoc}');
-    	 $("#holderLoc").html('${headerDetail.holderLoc}');
+    	 $("#holderLoc").html("${headerDetail.holderLoc}");
     	 $("#consignDt").html(date.toLocaleString('en-GB', { hour12:false }));
     	 $("#updateDt").html(date.toLocaleString('en-GB', { hour12:false }));
 
