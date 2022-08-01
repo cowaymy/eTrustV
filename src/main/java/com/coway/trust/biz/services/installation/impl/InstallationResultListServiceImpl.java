@@ -1823,7 +1823,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
     //Added by keyi 20220727 Water Source Type Dropdown mobile
-    //installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
+    installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
 
     // mobile trigger SMS - ALEX
     installResult.put("resultIcMobileNo", CommonUtils.nvl(params.get("resultIcMobileNo")).toString());
