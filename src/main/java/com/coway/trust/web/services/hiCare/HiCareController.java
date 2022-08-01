@@ -153,7 +153,7 @@ public class HiCareController {
  		String branchList[] = null ;
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmdBranchCode").toString();
- 		if(sessionVO.getUserBranchId() == 42 || sessionVO.getRoleId() == 179 || sessionVO.getRoleId() == 180 || sessionVO.getRoleId() == 264){
+ 		if(sessionVO.getUserBranchId() == 42 || sessionVO.getRoleId() == 179 || sessionVO.getRoleId() == 180 || sessionVO.getRoleId() == 250){
  			if(branchId.equals("")){
  				request.setAttribute("cmdBranchCode", null);
  			}else{
@@ -531,7 +531,7 @@ public class HiCareController {
 
  		int userType = sessionVO.getUserTypeId();
  		String branchId = params.get("cmbToBranch").toString();
- 		if(!(sessionVO.getUserBranchId() == 42 || sessionVO.getRoleId() == 179 || sessionVO.getRoleId() == 180 || sessionVO.getRoleId() == 264) && branchId.equals("")){
+ 		if(!(sessionVO.getUserBranchId() == 42 || sessionVO.getRoleId() == 179 || sessionVO.getRoleId() == 180 || sessionVO.getRoleId() == 250) && branchId.equals("")){
  			params.put("cmbToBranch", "0");
  		}
 

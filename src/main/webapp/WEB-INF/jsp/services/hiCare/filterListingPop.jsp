@@ -22,7 +22,7 @@ $('.multy_select').change(function() {
 
 $(document).ready(
         function() {
-            if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264' ){
+            if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '250' ){
                 doGetCombo('/services/hiCare/getBch.do', '', brnch, 'sBranchCode', 'S', '');
                 $("#sBranchCode option[value='"+ brnch +"']").attr("selected", true);
             }else{

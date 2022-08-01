@@ -22,7 +22,7 @@ $('.multy_select').change(function() {
 
 $(document).ready(
 	    function() {
-	    	if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264'){
+	    	if(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '250'){
 	            doGetCombo('/services/hiCare/getBch.do', '', brnch, 'sBranchCode', 'S', '');
 	            $("#sBranchCode option[value='"+ brnch +"']").attr("selected", true);
 	        }else{
@@ -66,7 +66,7 @@ function validRequiredField(){
     var message = "";
 
     if(
-            ( !(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '264') && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
+            ( !(brnch == "42" || roleId == '180' || roleId == '179' || roleId == '250') && $("#sBranchCode :selected").val() == '' || $("#sBranchCode :selected").val() == null || $("#sBranchCode :selected").length == 0 )
             || ($("#sHolder :selected").val() == '' || $("#sHolder :selected").val() == null || $("#sHolder :selected").length == 0 )
             || ($("#sStatus :selected").val() == '' || $("#sStatus :selected").val() == null || $("#sStatus :selected").length == 0 )
             || ($("#sCondition :selected").val() == '' || $("#sCondition :selected").val() == null || $("#sCondition :selected").length == 0)
