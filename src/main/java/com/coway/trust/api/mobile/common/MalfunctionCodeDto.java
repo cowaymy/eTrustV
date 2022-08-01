@@ -17,7 +17,7 @@ public class MalfunctionCodeDto {
 	private String desc;
 	@ApiModelProperty(value = "사용 여부 [ 1 : 사용, 8 : 미사용]")
 	private int stusCodeId;
-
+	@ApiModelProperty(value = "prodCat")
 	private String prodCat;
 
 
