@@ -98,8 +98,8 @@ $(document).ready(function () {
     	    });
 
     //fn_setTemporaryData();
-    //fn_appvLineGridAddRow();
-    fn_appvLineGridAddDefaultRow();
+    fn_appvLineGridAddRow();
+    //fn_appvLineGridAddDefaultRow();
 });
 
 function fn_setTemporaryData() {
