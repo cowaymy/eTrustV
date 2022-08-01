@@ -1823,7 +1823,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
     //Added by keyi 20220727 Water Source Type Dropdown mobile
-    installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
+    //installResult.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")).toString());
 
     // mobile trigger SMS - ALEX
     installResult.put("resultIcMobileNo", CommonUtils.nvl(params.get("resultIcMobileNo")).toString());
@@ -2489,7 +2489,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     }
 
     // Rental || Sponsor || Education || AUX
-    if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID)) {
+    if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID) || "145".equals(ApptypeID)) { //add on Free Trial
       if (installResult.get("statusCodeId").toString().equals("4")) {
         EgovMap s46dup = new EgovMap();
         s46dup.put("installResultId", maxId);
