@@ -926,10 +926,9 @@ SELECT T.BANK_DTL_ID
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
                         WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
                         WHEN T4.IND = 'CHGCARD' THEN
-                                                    CASE WHEN T2.CTRL_IS_CRC != 0 THEN 'Change Card'
+                                                    CASE WHEN T2.CTRL_IS_CRC != 0 THEN 'Transaction Not Allowed'
                                                     ELSE  'Change Account' END
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
-
                         ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
