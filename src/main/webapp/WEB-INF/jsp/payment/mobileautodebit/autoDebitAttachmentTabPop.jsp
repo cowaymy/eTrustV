@@ -20,7 +20,7 @@
                 <input type='text' class='input_text' readonly='readonly' id='cardImageFileTxt'  name=''/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("CIF")'>Remove</a></span>
+<!--             <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("CIF")'>Remove</a></span> -->
         </div>
     </td>
 </tr>

@@ -22,7 +22,7 @@ public interface AutoDebitService {
 
 	List<EgovMap> selectCustomerCreditCardInfo(Map<String, Object> params);
 
-	List<EgovMap> selectAttachmentInfo(Map<String, Object> params);
+	List<Map<String, Object>> selectAttachmentInfo(Map<String, Object> params);
 
 	List<EgovMap> selectRejectReasonCode(Map<String, Object> params);
 

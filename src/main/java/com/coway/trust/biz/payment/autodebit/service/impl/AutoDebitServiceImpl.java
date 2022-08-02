@@ -90,7 +90,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   }
 
   @Override
-  public List<EgovMap> selectAttachmentInfo(Map<String, Object> params) {
+  public List<Map<String, Object>> selectAttachmentInfo(Map<String, Object> params) {
     return autoDebitMapper.selectAttachmentInfo(params);
   }
 
@@ -124,19 +124,19 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
           String atchFileId = updateList[i];
           String removeAtchFileId = removeList[i];
           if (atchFileId.equals(removeAtchFileId)) {
-            fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))),
+            fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGroupId"))),
                 Integer.parseInt(atchFileId), list.get(i), type,
                 Integer.parseInt(String.valueOf(params.get("userId"))));
           } else {
-            int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
+            int fileGroupId = (Integer.parseInt(params.get("atchFileGroupId").toString()));
             this.insertFile(fileGroupId, list.get(i), type, params, seqs.get(i));
           }
         } else if (updateList != null && i < updateList.length) {
           String atchFileId = updateList[i];
-          fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))),
+          fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGroupId"))),
               Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
         } else {
-          int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
+          int fileGroupId = (Integer.parseInt(params.get("atchFileGroupId").toString()));
           this.insertFile(fileGroupId, list.get(i), type, params, seqs.get(i));
         }
       }

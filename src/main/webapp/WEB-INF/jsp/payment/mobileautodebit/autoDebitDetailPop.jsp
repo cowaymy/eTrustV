@@ -16,12 +16,13 @@ var otherFileName1 = "";
 var otherFileName2 = "";
 var otherFileName3 = "";
 var otherFileName4 = "";
+var attachmentInfoList;
 
 
 $(document).ready(function() {
     console.log("${mobileAutoDebitDetail}");
     console.log("${customerCreditCardEnrollInfo}");
-    console.log("${autoDebitAttachmentInfo}");
+    console.log('${autoDebitAttachmentInfo}');
     if(undefinedCheck('${mobileAutoDebitDetail.atchFileGroupId}','number') > 0){
         atchFileGroupId = parseInt('${mobileAutoDebitDetail.atchFileGroupId}');
     }
@@ -202,8 +203,10 @@ function saveDataValidation(){
 	}
 
 	if(cardImageFileAttachment == null || cardImageFileAttachment== ""){
-        Common.alert('Card Image Attachment is required');
-        return;
+		if(cifId == 0){
+	        Common.alert('Card Image Attachment is required');
+	        return;
+		}
 	}
 
 	if(action =="5"){
@@ -217,7 +220,7 @@ function saveDataValidation(){
 		}
 	}
 
-	//doSave();
+	doSave();
 }
 
 function doSave(){
@@ -334,7 +337,73 @@ function undefinedCheck(value, type){
 	return retVal;
 };
 
+function fn_atchViewDown(fileData) {
+	console.log(fileData);
+        var fileSubPath = fileData.CI_FILE_SUB_PATH;
+        fileSubPath = fileSubPath.replace('\', '/'');
+
+        if(fileData.fileExtsn == "jpg" || fileData.fileExtsn == "png" || fileData.fileExtsn == "gif") {
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + fileData.CI_PHYSICL_FILE_NAME);
+        } else {
+           window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + fileData.CI_PHYSICL_FILE_NAME + "&orignlFileNm=" + fileData.CI_ATCH_FILE_NAME);
+        }
+}
+
 function loadAttachmentData(){
+	attachmentInfoList = JSON.parse('${autoDebitAttachmentInfo}');
+
+	if(attachmentInfoList){
+		if(attachmentInfoList.length > 0)
+		{
+			 for (var i = 0; i < attachmentInfoList.length; i++) {
+               switch (attachmentInfoList[i].FILE_KEY_SEQ){
+                 case '1':
+                	 cifId = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                	 cifFileName = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='cardImageFileTxt']").val(cifFileName);
+                     break;
+                 case '2':
+                	 otherFile1Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                	 otherFileName1 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='otherFileTxt1']").val(otherFileName1);
+                     break;
+                 case '3':
+                	 otherFile2Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                	 otherFileName2 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='otherFileTxt2']").val(otherFileName2);
+                     break;
+                 case '4':
+                	 otherFile3Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                	 otherFileName3 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='otherFileTxt3']").val(otherFileName3);
+                     break;
+                 case '5':
+                	 otherFile4Id = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                	 otherFileName4 = attachmentInfoList[i].CI_ATCH_FILE_NAME;
+                     $(".input_text[id='otherFileTxt4']").val(otherFileName4);
+                     break;
+                 default:
+                     Common.alert("No attachment found.");
+                 	break;
+				}
+			}
+
+             $(".input_text").dblclick(function() {
+                 var oriFileName = $(this).val();
+                 var attachmentInfo;
+                 var fileId;
+                 var fileGrpId;
+                 for(var i = 0; i < attachmentInfoList.length; i++) {
+                     if(attachmentInfoList[i].CI_ATCH_FILE_NAME == oriFileName) {
+                         fileGrpId = atchFileGroupId;
+                         fileId = attachmentInfoList[i].CI_ATCH_FILE_ID;
+                         attachmentInfo = attachmentInfoList[i];
+                     }
+                 }
+                 if(fileId != null) fn_atchViewDown(attachmentInfo);
+             });
+		}
+	}
 }
 
 function loadStatusInfoData(){

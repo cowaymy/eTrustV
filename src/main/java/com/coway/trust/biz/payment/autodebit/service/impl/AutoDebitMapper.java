@@ -13,7 +13,7 @@ public interface AutoDebitMapper {
     List<EgovMap> selectAutoDebitEnrollmentList(Map<String, Object> params);
     List<EgovMap> selectCustomerCreditCardInfo(Map<String, Object> params);
     List<EgovMap> selectAutoDebitDetailInfo(Map<String, Object> params);
-    List<EgovMap> selectAttachmentInfo(Map<String, Object> params);
+    List<Map<String, Object>> selectAttachmentInfo(Map<String, Object> params);
     List<EgovMap> selectRejectReasonCode(Map<String, Object> params);
     int selectNextFileId();
     int selectNextFileGroupId();

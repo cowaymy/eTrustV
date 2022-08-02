@@ -37,6 +37,8 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -102,7 +104,7 @@ public class MobileAutoDebitController {
 		//SELECT PAYMENTINFO,ATTACHMENT,STATUS
 		List<EgovMap> autoDebitDetailInfo = autoDebitService.selectAutoDebitDetailInfo(params);
 		List<EgovMap> customerCreditCardEnrollInfo = autoDebitService.selectCustomerCreditCardInfo(params);
-		List<EgovMap> autoDebitAttachmentInfo = autoDebitService.selectAttachmentInfo(params);
+		List<Map<String, Object>> autoDebitAttachmentInfo = autoDebitService.selectAttachmentInfo(params);
 
 		if(autoDebitDetailInfo.size() > 0){
 			model.put("mobileAutoDebitDetail", autoDebitDetailInfo.get(0));
@@ -119,7 +121,14 @@ public class MobileAutoDebitController {
 		}
 
 		if(autoDebitAttachmentInfo.size() > 0){
-			model.put("autoDebitAttachmentInfo", autoDebitAttachmentInfo);
+			String autoDebitAttachmentJSONInfo = "";
+			ObjectMapper map = new ObjectMapper();
+			try {
+				autoDebitAttachmentJSONInfo = map.writeValueAsString(autoDebitAttachmentInfo);
+			} catch (JsonProcessingException e) {
+				LOGGER.debug("Json Error: =====================>> " + e);
+			}
+			model.put("autoDebitAttachmentInfo", autoDebitAttachmentJSONInfo);
 		}
 		else{
 			model.put("autoDebitAttachmentInfo", null);

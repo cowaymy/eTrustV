@@ -44,7 +44,7 @@
 		AND p0333m.SALES_ORD_NO = #{salesOrdNo}
 		</if>
 		<if test='statusCodeID != null and statusCodeID != ""'>
-		AND p0333.STUS_CODE_ID = #{statusCodeID}
+		AND p0333.STUS_CODE_ID = #{statusCode}
 		</if>
   </select>
 
@@ -175,10 +175,10 @@
 		AND s0028d.CUST_CRC_ID = #{custCrcId}
 	</select>
 
-	<select id="selectAttachmentInfo" parameterType="Map" resultType="egovMap">
+	<select id="selectAttachmentInfo" parameterType="Map" resultType="map">
 		SELECT s0071d.ATCH_FILE_ID AS CI_ATCH_FILE_ID, s0071d.ATCH_FILE_NAME AS CI_ATCH_FILE_NAME,
 		s0071d.FILE_SUB_PATH AS CI_FILE_SUB_PATH, s0071d.PHYSICL_FILE_NAME AS CI_PHYSICL_FILE_NAME,
-		s0071d.FILE_EXTSN AS CI_FILE_EXTSN, s0071d.FILE_SIZE AS CI_FILE_SIZE
+		s0071d.FILE_EXTSN AS CI_FILE_EXTSN, s0071d.FILE_SIZE AS CI_FILE_SIZE, s0071d.FILE_KEY_SEQ
 		FROM PAY0333M p0333m
 		LEFT JOIN SYS0070M s0070m
 		ON s0070m.ATCH_FILE_GRP_ID =  p0333m.ATCH_FILE_GROUP_ID
