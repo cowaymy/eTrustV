@@ -225,6 +225,11 @@ function fn_close(){
     $("#popup_wrap2").remove();
 }
 
+function fn_close2(){
+    $("#popup_wrap2").remove();
+    Common.popupDiv("/sales/posstock/eshopItemEditPop.do");
+}
+
 function fn_saveGrid(){
 
     var isVal = true;
@@ -238,9 +243,9 @@ function fn_saveGrid(){
     }else{
 
           Common.ajax("POST", "/sales/posstock/updatePosEshopItemList.do", $("#form_updateitem").serializeJSON(), function(result) {
-                Common.alert('Success to update');
-                fn_close();
-                Common.popupDiv("/sales/posstock/eshopItemEditPop.do");
+                Common.confirm('Success to update',fn_close2);
+                //fn_close();
+
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);

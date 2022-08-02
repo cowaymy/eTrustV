@@ -265,8 +265,8 @@
                         REGIONAL_TYPE           = #{regionalType}
                      ,  TOTAL_WEIGHT_FROM  = #{weightFrom}
                      ,  TOTAL_WEIGHT_TO      = #{weightTo}
-                     ,  START_DT                   = #{startDt}
-                     ,  END_DT                      = #{endDt}
+                     ,  START_DT                   = TO_DATE(#{startDt},'DD-MM-YYYY')
+                     ,  END_DT                      = TO_DATE(#{endDt},'DD-MM-YYYY')
                      ,  TOTAL_SHIPPING_FEE   = #{shippingFee}
                      ,  UPD_ID                       = #{updId}
                      ,  UPD_DT                      = SYSDATE
