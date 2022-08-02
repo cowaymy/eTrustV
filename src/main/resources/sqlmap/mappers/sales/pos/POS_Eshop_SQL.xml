@@ -185,8 +185,8 @@
 			    , A.REGIONAL_TYPE
 			    , A.TOTAL_WEIGHT_FROM
 			    , A.TOTAL_WEIGHT_TO
-			    , TO_CHAR(A.START_DT,'DD-MM-YYYY') AS START_DT
-			    , TO_CHAR(A.END_DT,'DD-MM-YYYY') AS END_DT
+			    , TO_CHAR(A.START_DT,'DD/MM/YYYY') AS START_DT
+			    , TO_CHAR(A.END_DT,'DD/MM/YYYY') AS END_DT
 			    , A.TOTAL_SHIPPING_FEE
 			    , CASE WHEN TO_CHAR(SYSDATE ,'YYYYMMDD') > TO_CHAR(A.END_DT,'YYYYMMDD')  THEN 'Expired'
                   ELSE 'Active' END AS STATUS
@@ -265,8 +265,8 @@
                         REGIONAL_TYPE           = #{regionalType}
                      ,  TOTAL_WEIGHT_FROM  = #{weightFrom}
                      ,  TOTAL_WEIGHT_TO      = #{weightTo}
-                     ,  START_DT                   = TO_DATE(#{startDt},'DD-MM-YYYY')
-                     ,  END_DT                      = TO_DATE(#{endDt},'DD-MM-YYYY')
+                     ,  START_DT                   = TO_DATE(#{startDt},'DD/MM/YYYY')
+                     ,  END_DT                      = TO_DATE(#{endDt},'DD/MM/YYYY')
                      ,  TOTAL_SHIPPING_FEE   = #{shippingFee}
                      ,  UPD_ID                       = #{updId}
                      ,  UPD_DT                      = SYSDATE
