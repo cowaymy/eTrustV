@@ -43,7 +43,7 @@
 		<if test='salesOrderNo != null and salesOrderNo != ""'>
 		AND p0333m.SALES_ORD_NO = #{salesOrdNo}
 		</if>
-		<if test='statusCodeID != null and statusCodeID != ""'>
+		<if test='statusCode != null and statusCode != ""'>
 		AND p0333.STUS_CODE_ID = #{statusCode}
 		</if>
   </select>
