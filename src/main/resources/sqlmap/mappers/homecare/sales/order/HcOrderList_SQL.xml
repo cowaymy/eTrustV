@@ -116,6 +116,7 @@
                                           ) A on V1.ORD_ID = A.SALES_ORD_ID
                     </if>
                     JOIN SAL0001D SAL01 ON V1.ORD_ID = SAL01.SALES_ORD_ID
+                    JOIN ORG1001V ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
                     WHERE 1=1
                     /*
                     JOIN ORG0005D ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
@@ -133,6 +134,22 @@
                             AND ORG.ORG_CODE = #{orgCode}
                         </if>
                         */
+                        <if test='memId != null and memId != ""'>
+                             AND ORG.MEM_ID = #{memId}
+                        </if>
+
+                        <if test='deptCode != null and deptCode != ""'>
+                             AND ORG.DEPT_CODE = #{deptCode}
+                        </if>
+
+                        <if test='grpCode != null and grpCode != ""'>
+                              AND ORG.GRP_CODE = #{grpCode}
+                        </if>
+
+                        <if test='orgCode != null and orgCode != ""'>
+                              AND ORG.ORG_CODE = #{orgCode}
+                        </if>
+
                         <if test='ordDt == null || ordDt == ""'>
                              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
                         </if>

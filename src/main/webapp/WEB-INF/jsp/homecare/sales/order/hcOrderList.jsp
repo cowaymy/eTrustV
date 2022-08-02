@@ -45,7 +45,13 @@
             }
         }
 
-        /* [Celeste - Hide as wrong understanding]
+        if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
+            $("#orgCode").attr("readonly", true);
+            $("#grpCode").attr("readonly", true);
+            $("#deptCode").attr("readonly", true);
+        }
+
+       /*[Celeste - Hide as wrong understanding]
         if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
             $("#orgCode").attr("readonly", true);
             $("#grpCode").attr("readonly", true);
@@ -768,7 +774,7 @@
                         <th scope="row"><spring:message code='sales.relatedNo2' /></th>
                         <td><input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="<spring:message code='sales.relatedNo2'/>" class="w100p" /></td>
                     </tr>
-                    <!--
+
                     <tr>
                         <th scope="row">Org Code</th>
                         <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
@@ -777,7 +783,6 @@
                         <th scope="row">Dept Code</th>
                         <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
                     </tr>
-                    -->
                     <tr>
                         <th scope="row"><spring:message code='sales.isEKeyin' /></th>
                         <td><input id="isEKeyin" name="isEKeyin" type="checkbox" /></td>
