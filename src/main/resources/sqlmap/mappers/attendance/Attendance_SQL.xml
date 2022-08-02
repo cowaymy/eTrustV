@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.attendance.impl.AttendanceMapper">
+
+    <insert id="saveBatchCalMst" parameterType="Map">
+        INSERT INTO ATD0001M
+        (
+              BATCH_ID
+            , BATCH_MEM_TYPE
+            , BATCH_MTH_YEAR
+            , BATCH_STUS_ID
+            , CNFM_STUS_ID
+            , CRT_USER_ID
+            , CRT_DT
+        ) VALUES (
+	          ATD0001M_BATCH_ID_SEQ.NEXTVAL
+	        , #{batchMemType}
+	        , #{batchMthYear}
+	        , '1'
+	        , '44'
+	        , #{crtUserId}
+	        , SYSDATE
+        )
+    </insert>
+
+    <insert id="saveBatchCalDetailList" parameterType="java.util.List">
+        INSERT INTO ATD0002D
+        (
+              ATD_ID
+            , BATCH_ID
+            , ATD_TYPE
+            , MEM_CODE
+            , MEM_TYPE
+            , DT_FROM
+            , DT_TO
+            , TIME
+            , DISAB
+            , CRT_USER_ID
+            , CRT_DT
+        )
+        SELECT ATD0002D_ATD_ID_SEQ.nextval, batchId, atdType, memCode, memType, dateFrom, dateTo, time ,disab, crtUserId, crtDt FROM (
+	        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+	         SELECT
+	              #{item.batchId} batchId
+	            , #{item.atdType} atdType
+	            , #{item.memCode} memCode
+	            , #{item.batchMemType} memType
+	            , TO_DATE(#{item.dateFrom}, 'DD/MM/RRRR') dateFrom
+	            , TO_DATE(#{item.dateTo}, 'DD/MM/RRRR') dateTo
+	            , #{item.time} time
+	            , '0' disab
+	            , #{item.crtUserId} crtUserId
+	            , SYSDATE crtDt
+	      FROM DUAL
+            </foreach>
+        )
+    </insert>
+
+    <update id="updateBatchCalMst" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                  BATCH_STUS_ID = 4
+                , CNFM_STUS_ID = 77
+           WHERE BATCH_ID = #{batchId}
+           AND BATCH_STUS_ID =1
+           AND CNFM_STUS_ID = 44
+    </update>
+
+     <update id="updateMemberInfo" parameterType="Map">
+                MERGE INTO ATD0002D A
+        USING (
+              SELECT DISTINCT
+                    A.BATCH_ID
+                  , A.MEM_CODE
+                  , C.MEM_ID
+                  , C.MEM_LVL
+                  , C.DEPT_CODE
+                  , C.GRP_CODE
+                  , C.ORG_CODE
+              FROM ATD0002D A
+              JOIN ATD0001M B ON A.BATCH_ID = B.BATCH_ID
+              JOIN ORG1002V C ON A.MEM_CODE = C.MEM_CODE AND TO_CHAR (TO_DATE(C.HIST_MONTH||HIST_YEAR,'MM/YYYY'), 'MM/YYYY') = B.BATCH_MTH_YEAR
+            )SRC
+            ON ( A.MEM_CODE = SRC.MEM_CODE AND A.BATCH_ID =SRC.BATCH_ID )
+        WHEN MATCHED THEN UPDATE
+        SET A.MEM_ID = SRC.MEM_ID
+            ,A.MEM_LVL = SRC.MEM_LVL
+            ,A.DEPT_CODE = SRC.DEPT_CODE
+            ,A.GRP_CODE = SRC.GRP_CODE
+            ,A.ORG_CODE = SRC.ORG_CODE
+    </update>
+
+    <select id="selectCurrentBatchId" resultType="int">
+            SELECT NVL(MAX(BATCH_ID), 1) AS BATCH_ID FROM ATD0001M
+    </select>
+
+    <update id="updateAttendanceBatch" parameterType="Map">
+	   UPDATE FCM0019M
+	   SET APPV_PRCSS_NO = #{appvPrcssNo}
+	       ,UPD_DT = SYSDATE
+	       ,UPD_USER_ID = #{userId}
+	    WHERE CLM_NO = #{clmNo}
+    </update>
+
+
+  </mapper>
