@@ -765,9 +765,7 @@
                 if(result != 0 && result.code == 00){
                      $("#hiddenAttachmentPaySlip").val(result.data.fileGroupKey);
                     Common.ajax("POST", "/sales/posstock/insertPosEshop.do", $("#eshopForm").serializeJSON(), function(result) {
-                        Common.alert('ESN Number is : '+result.data);
-                        fn_close();
-
+                        Common.confirm('ESN Number is : '+result.data,reloadList);
                        }, function(jqXHR, textStatus, errorThrown) {
                            try {
                                console.log("status : " + jqXHR.status);
@@ -791,6 +789,10 @@
 
     function fn_close(){
         $("#popup_wrap").remove();
+    }
+
+    function reloadList(){
+    	location.reload();
     }
 
     function setInputFile(){//인풋파일 세팅하기
