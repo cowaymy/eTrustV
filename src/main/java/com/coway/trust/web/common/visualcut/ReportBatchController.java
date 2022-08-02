@@ -2557,8 +2557,7 @@ public void CTDutyAllowanceMonthly() {
 }
 
 @RequestMapping(value = "/DataMartReport.do")
-//@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
-// 8:00am
+//@Scheduled(cron = " 0 0 1 1 * ?")//Monthly (Day 1) 1:00am
 public void dataMartReport(HttpServletRequest request) {
   LOGGER.info("[START] DataMartReport...");
 
