@@ -43,7 +43,7 @@ $(document).ready(function() { //***********************************************
      /*######################## Init Combo Box ########################*/
 
     //PosModuleTypeComboBox
-    var moduleParam = {groupCode : 143, codeIn : [2390, 2391]};
+    var moduleParam = {groupCode : 143, codeIn : [2390, 2391,6795]};
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
 
     //PosSystemTypeComboBox
