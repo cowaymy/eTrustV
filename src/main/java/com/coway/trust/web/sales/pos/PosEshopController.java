@@ -169,7 +169,7 @@ public class PosEshopController {
 
     LOGGER.debug(" params insertPosEshopItemList==dd=>"+params.toString());
 
-    retunMap = posEshopService.insertPosEshopItemList(params);
+    posEshopService.insertPosEshopItemList(params);
 
 
     // Return MSG
@@ -177,11 +177,11 @@ public class PosEshopController {
 
     message.setCode(AppConstants.SUCCESS);
     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    message.setData(retunMap.get("scnNo"));
 
     return ResponseEntity.ok(message);
 
   }
+
 
 
   @RequestMapping(value = "/eShopItemUpload.do", method = RequestMethod.POST)
@@ -650,7 +650,7 @@ public class PosEshopController {
 		    }
 
 		    return ResponseEntity.ok(message);
-		}
+	  }
 
 	  @RequestMapping(value = "/updatePosInfo.do")
 	  public String updatePosInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
@@ -664,6 +664,7 @@ public class PosEshopController {
 
 	    return "sales/pos/posEshopUpdateInfoPop";
 	  }
+
 
 	  @RequestMapping(value = "/eshopUpdateCourierSvc.do", method = RequestMethod.POST)
 		public ResponseEntity<ReturnMessage> eshopUpdateCourierSvc(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
@@ -705,6 +706,68 @@ public class PosEshopController {
 
 		    return ResponseEntity.ok(message);
 		}
+
+
+	  @RequestMapping(value = "/selectEshopWhBrnchList", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectEshopWhBrnchList (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.selectEshopWhBrnchList(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/eshopResultViewPop.do")
+	  public String eshopResultViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+
+		model.put("esnNo", params.get("esnNo"));
+
+	    return "sales/pos/eshopResultViewPop";
+	  }
+
+	  @RequestMapping(value = "/checkDuplicatedStock", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> checkDuplicatedStock (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+
+		List<EgovMap> itemList = null;
+
+		itemList = posEshopService.checkDuplicatedStock(params);
+
+		return ResponseEntity.ok(itemList);
+
+	}
+
+	  @RequestMapping(value = "/deleteCartItem.do")
+		public ResponseEntity<ReturnMessage> deleteCartItem(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
+
+			params.put("crtUserId", session.getUserId());
+
+			posEshopService.deleteCartItem(params);
+
+			//Return Message
+			ReturnMessage message = new ReturnMessage();
+	    	message.setCode(AppConstants.SUCCESS);
+	    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+
+			return ResponseEntity.ok(message);
+		}
+
+
+	  @RequestMapping(value = "/posEshopRawDataPop.do")
+	  public String posEshopRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+	    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3,
+	        SalesConstants.DEFAULT_DATE_FORMAT1);
+	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+	    model.put("bfDay", bfDay);
+	    model.put("toDay", toDay);
+
+	    return "sales/pos/posEshopRawDataPop";
+	  }
+
 
 
 

@@ -32,7 +32,6 @@
 
 //AUIGrid  ID
 var mstGridID;
-var myGridID;
 
 var optionModule = {
         type: "S",
@@ -44,8 +43,8 @@ var optionSystem = {
         isShowChoose: false
 };
 
+
 var columnLayout = [
-//                     {dataField: "esnNo",headerText :"No." ,width: 180 , height:30 , visible:false, editable : false},
                     {dataField: "esnNo",headerText :"Ref No.",width: 180    ,height:30 , visible:true, editable : false},
                     {dataField: "posNo",headerText :"POS No.",width:220   ,height:30 , visible:true, editable : false},
                     {dataField: "posType",headerText :"POS Type" ,width:220   ,height:30 , visible:true, editable : false},
@@ -58,29 +57,38 @@ var columnLayout = [
                     {dataField: "waybillNo",headerText :"Waybill No",width:120   ,height:30 , visible:true,editable : false},
 ];
 
-function createAUIGrid( ){
 
-    var auiGridProps = {
+function createAUIGrid(){
 
-            selectionMode : "multipleCells",
+	  var auiGridProps = {
+		        usePaging           : true,         //페이징 사용
+		        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+		        editable            : false,
+		        fixedColumnCount    : 1,
+		        showStateColumn     : false,
+		        displayTreeOpen     : false,
+		      //selectionMode       : "singleRow",  //"multipleCells",
+		        headerHeight        : 30,
+		        useGroupingPanel    : false,        //그룹핑 패널 사용
+		        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+		        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+		        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+		        noDataMessage       : "No order found.",
+		        groupingMessage     : "Here groupping"
+		 };
 
-            showRowNumColumn : true,
+        mstGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "", auiGridProps);
 
-            showRowCheckColumn : false,
+        var whBrnchParam = {branchId :  '${branchId}'};
+        if('${branchId}' !='' && '${branchId}' !=null){
+              //branch List
+             doGetCombo('/sales/posstock/selectEshopWhBrnchList.do?branchId=' + '${branchId}', '', '', 'branch', 'S', 'fn_selectEshopList');
+        }
+        else{
+              //branch List
+             doGetCombo('/sales/posstock/selectEshopWhBrnchList.do' , '', '', 'branch', 'S', 'fn_selectEshopList');
+        }
 
-            showStateColumn : true,
-
-            enableColumnResize : false,
-
-            enableMovingColumn : false
-        };
-
-        // 실제로 #grid_wrap 에 그리드 생성
-        mstGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
-
-        Common.ajax("GET", "/sales/posstock/selectEshopList2", null, function(result) {
-                    AUIGrid.setGridData(mstGridID, result);
-        });
 
 }
 
@@ -88,15 +96,26 @@ function createAUIGrid( ){
 function fn_selectPosEshopApprovalPop(){
 
     var selectedItems = AUIGrid.getSelectedItems(mstGridID);
-    if(selectedItems.length <= 0) return;
-
-    if(selectedItems[0].item.status  !="Active"){
-        Common.alert('* Please check the status "ACT" status is only available.');
-        return ;
+    if(selectedItems.length <= 0) {
+    	Common.alert("No order is selected.");
+    	return;
     }
+    else{
+        if("${SESSION_INFO.userTypeId}"== "1" || "${SESSION_INFO.userTypeId}" == 2 || "${SESSION_INFO.userTypeId}" == 7){
+            Common.alert("Only SO admin is allowed to approve e-Shop order");
+        }
+        else{
+              if(selectedItems[0].item.status  !="Active"){
+                    Common.alert('* Please check the status "ACT" status is only available.');
+                    return ;
+                }
+                var esnNo = selectedItems[0].item.esnNo;
+                Common.popupDiv("/sales/posstock/selectPosEshopApprovalList.do?esnNo="+esnNo, '' , null , true , "");
+        }
+    }
+}
 
-    var esnNo = selectedItems[0].item.esnNo;
-    Common.popupDiv("/sales/posstock/selectPosEshopApprovalList.do?esnNo="+esnNo, '' , null , true , "_insDiv");
+function fn_close(){
 
 }
 
@@ -119,6 +138,8 @@ function fn_updatePosInfo(){
 
 $(document).ready(function(){
 
+	createAUIGrid();
+
     //PosModuleTypeComboBox
     var moduleParam = {groupCode : 143, codeIn : [6795]};
     CommonCombo.make('posType', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
@@ -128,13 +149,10 @@ $(document).ready(function(){
     var statusParam = {groupCode : 31};
     CommonCombo.make('status', "/sales/pos/selectStatusCodeList", statusParam , '', optionSystem);
 
-    //branch List
-    CommonCombo.make('branch', "/sales/pos/selectWhBrnchList", '' , '', '');
-
-    createAUIGrid();
-
 
     if("${SESSION_INFO.userTypeId}"== "1" || "${SESSION_INFO.userTypeId}" == 2 || "${SESSION_INFO.userTypeId}" == 7){
+
+    	$("#updateInfo").hide();
 
         if("${SESSION_INFO.memberLevel}" =="1"){
 
@@ -180,19 +198,35 @@ $(document).ready(function(){
             $("#deptCode").val("${deptCode}");
             $("#deptCode").attr("class", "w100p readonly");
             $("#deptCode").attr("readonly", "readonly");
-
-            $("#memberId").val("${memCode}");
-            $("#memberId").attr("class", "w100p readonly");
-            $("#memberId").attr("readonly", "readonly");
-
         }
+
+        $("#memberId").val("${memCode}");
+        $("#memberId").attr("class", "w100p readonly");
+        $("#memberId").attr("readonly", "readonly");
     }
+    else{
+    	$("#btnRejected").hide();
+    }
+
+    AUIGrid.bind(mstGridID, "cellDoubleClick", function(event) {
+        var index = AUIGrid.getSelectedIndex(mstGridID)[0];
+
+        if(index > -1) {
+            var esnNo = AUIGrid.getCellValue(mstGridID, index, "esnNo");
+
+            Common.popupDiv("/sales/posstock/eshopResultViewPop.do?esnNo="+esnNo, '' , null , true , '');
+        }
+        else{
+            Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
+        }
+    });
 
 });
 
 
 
 $(function(){
+
 	 $('#btnAddItem').click(function() {
          Common.popupDiv("/sales/posstock/eshopItemRegisterPop.do");
      });
@@ -211,6 +245,10 @@ $(function(){
 
 	  $('#btnApproval').click(function() {
 		  fn_selectPosEshopApprovalPop();
+      });
+
+	  $('#btnRejected').click(function() {
+		  fn_rejectedEshop();
       });
 
 	  $('#btnUpdInfo').click(function() {
@@ -233,12 +271,76 @@ $(function(){
 		  fn_posReceipt();
       });
 
+	   $("#btnGenerateRawData").click(function() {
+	         Common.popupDiv("/sales/posstock/posEshopRawDataPop.do", '', null, null, true);
+	    });
+
 });
 
+function fn_rejectedEshop(){
+
+	  var selectedItems = AUIGrid.getSelectedItems(mstGridID);
+	  var selIdx = AUIGrid.getSelectedIndex(mstGridID)[0];
+
+	    if(selectedItems.length <= 0) {
+	        Common.alert("No order is selected.");
+	        return;
+	    }
+	    else{
+	        if(selectedItems[0].item.status  !="Active"){
+		        Common.alert('* Please check the status "ACT" status is only available.');
+		        return ;
+	        }
+	        else{
+                fn_promptSelfCancellation(selIdx);
+	        }
+	     }
+}
+
+function fn_promptSelfCancellation(selIdx) {
+
+	 var esnNo = AUIGrid.getCellValue(mstGridID, selIdx, "esnNo");
+     var confirmCancelMsg =  "Are you sure to Cancel this order " + esnNo + "?";
+
+      Common.confirm( confirmCancelMsg, function (){fn_selfCancellation(esnNo)});
+
+}
+
+function fn_selfCancellation(esnNo) {
+
+	 var param = {
+	           esnNo : esnNo,
+	           eshopStatus : 6,
+	           eshopRemark : " "
+	       };
+
+    Common.ajax("POST", "/sales/posstock/rejectPos.do", param , function(result) {
+    	if(result.code == "00") {        //successful update
+            Common.alert(" This ESN No: " +  esnNo + " has been cancelled.", fn_reloadList);
+        } else {
+            Common.alert(result.message,fn_reloadList);
+         }
+    });
+}
+
+
+function fn_reloadList() {
+    location.reload();
+}
+
 function fn_selectEshopList(){
+
+	 if('${branchId}' !='' && '${branchId}' !=null){
+         $("#branch").val("${branchId}".trim());
+         $("#branch").attr("class", "w100p readonly disabled");
+         $("#branch").attr("readonly", "readonly");
+      }
+
 	Common.ajax("GET", "/sales/posstock/selectEshopList2", $("#searchForm").serialize(), function(result) {
 	    AUIGrid.setGridData(mstGridID, result);
 	});
+
+
 }
 
 
@@ -248,11 +350,12 @@ function fn_completePos() {
     var selectedItems = AUIGrid.getSelectedItems(mstGridID);
 
 	 if(selectedItems.length <= 0) {
-		 return;
+		 Common.alert("No order is selected");
+		 return ;
 	 }
 
-	 if(selectedItems[0].item.status  !="Delivered"){
-	        Common.alert('* Please check the status "DELIVERED" status is only available.');
+	 if(selectedItems[0].item.status  !="Delivery"){
+	        Common.alert('* Please check the status "DELIVERY" status is only available.');
 	        return ;
 	 }
 
@@ -276,7 +379,7 @@ function updateStatus() {
           if(result.code == "00") {        //successful update
               Common.alert(" This ESN No: " + esnNo + " has been completed.",fn_reloadList());
           } else {
-                 Common.alert(result.message,fn_reloadList());
+                 Common.alert(result.message,fn_reloadList);
              }
        });
 }
@@ -316,7 +419,6 @@ function fn_generateInvoice(){
 
     }
 }
-
 
 
 function fn_posReceipt(){
@@ -393,9 +495,6 @@ $.fn.clearForm = function() {
                  this.selectedIndex = 0;
             }
         }
-
-//         $("#cmbProductCtgry").multipleSelect("uncheckAll");
-//         $("#cmbProduct").multipleSelect("uncheckAll");
     });
 };
 
@@ -421,6 +520,7 @@ $.fn.clearForm = function() {
        <li><p class="btn_blue"><a id="btnOrder" ><span class="add"></span>ORDER</a></p></li>
        <li><p class="btn_blue"><a id="btnReceived"><span class="edit"></span> RECEIVED</a></p></li>
        <li><p class="btn_blue"><a id="btnApproval"><span class="edit"></span>APPROVAL</a></p></li>
+       <li><p class="btn_blue"><a id="btnRejected"><span class="edit"></span>REJECT</a></p></li>
        <li><p class="btn_blue"><a id="btnSearch"><span class="search"   ></span>Search</a></p></li>
        <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
     </ul>
@@ -521,6 +621,7 @@ $.fn.clearForm = function() {
         <li><p class="link_btn type2"><a id="btnShipping" href="#">Shipping</a></p></li>
         <li><p class="link_btn type2"><a id="btnInvoiceGenerate" href="#">Invoice</a></p></li>
         <li><p class="link_btn type2"><a id="btnReceiptGenerate" href="#">Receipt</a></p></li>
+        <li><p class="link_btn type2"><a id="btnGenerateRawData">Raw Data</a></p></li>
       </ul>
       <p class="hide_btn">
        <a href="#"><img
@@ -534,7 +635,7 @@ $.fn.clearForm = function() {
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
 
-        <ul class="right_btns">
+        <ul class="right_btns" id="updateInfo">
             <li><p class="btn_grid"><a id="btnUpdInfo" >Update Info</a></p></li>
         </ul>
 

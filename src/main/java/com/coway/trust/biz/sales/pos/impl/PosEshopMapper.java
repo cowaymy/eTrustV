@@ -75,6 +75,8 @@ public interface PosEshopMapper {
 
 	List<EgovMap> checkDiffWarehouse(Map<String, Object> params);
 
+	List<EgovMap> checkDuplicatedStock(Map<String, Object> params);
+
 	void  updateFloatingStockLOG0106M(Map<String, Object> params);
 
 	void  reverseFloatingStockLOG0106M(Map<String, Object> params);
@@ -110,5 +112,10 @@ public interface PosEshopMapper {
 	int eshopUpdateCourierSvc(Map<String, Object> params);
 
 	int completePos(Map<String, Object> params);
+
+	List<EgovMap> selectEshopWhBrnchList(Map<String, Object> params);
+
+	void deleteCartItem(Map<String, Object> params);
+
 
 }

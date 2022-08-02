@@ -29,7 +29,6 @@ var ItmOption = {
 };
 
 
-
 $(document).ready(function () {
 
 	setInputFile();
@@ -51,7 +50,6 @@ $(document).ready(function () {
 });
 
 function selectItemList(){
-
 
 		var gridProsItem = {
 		        usePaging           : true,         //페이징 사용
@@ -76,15 +74,23 @@ function selectItemList(){
 		                    {dataField: "itemQty" ,headerText :"Quantity (Carton)" ,width:140 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
 		                    {dataField: "totalPrice" ,headerText :"Price (Carton)"  ,width:120 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
 		                    {dataField: "totalWeight" ,headerText :"Weight (Carton)" ,width:120 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
-		                    {dataField: "id" ,headerText :"ID" ,width:120   ,height:30 , visible:false, editable : false}
+		                    {dataField: "id" ,headerText :"ID" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "posType_addItem" ,headerText :"posType_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "sellingType_addItem" ,headerText :"sellingType_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "category_addItem" ,headerText :"category_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "itemType_addItem" ,headerText :"itemType_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "purcItems_addItem" ,headerText :"purcItems_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "qtyPerCarton_addItem" ,headerText :"qtyPerCarton_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "sellingPrice_addItem" ,headerText :"sellingPrice_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "pricePerCarton_addItem" ,headerText :"pricePerCarton_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "unitWeight_addItem" ,headerText :"unitWeight_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "weightPerCarton_addItem" ,headerText :"weightPerCarton_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "size_addItem" ,headerText :"size_addItem" ,width:120   ,height:30 , visible:false, editable : false},
+		                    {dataField: "attachGrpId_addItem" ,headerText :"attachGrpId_addItem" ,width:120   ,height:30 , visible:false, editable : false}
 		 ];
 
 	   myGridIDItem = GridCommon.createAUIGrid("#item_grid_wrap", columnLayout,'', gridProsItem);
 	   AUIGrid.resize(myGridIDItem , 960, 300);
-
-	   Common.ajax("GET", "/sales/posstock/selectItemList", null, function(result) {
-                   AUIGrid.setGridData(myGridIDItem, result);
-       });
 }
 
 
@@ -151,9 +157,9 @@ function fn_close(){
     $("#popup_wrap").remove();
 }
 
-function fn_saveGrid(){
+function addItemRowToGrid(){
 
-	var isVal = true;
+    var isVal = true;
 
     //Validation
     isVal = fn_chkItemVal();
@@ -162,24 +168,77 @@ function fn_saveGrid(){
     if(isVal == false){
         return;
     }else{
+        var item = new Object();
 
-    	  Common.ajax("POST", "/sales/posstock/insertPosEshopItemList.do", $("#form_item").serializeJSON(), function(result) {
-    	        Common.alert('Success to save');
-    	        fn_close();
+        var stkCodeSelect = document.getElementById("purcItems_addItem");
+        var sellingTypeSelect = document.getElementById("sellingType_addItem");
 
-    	    }, function(jqXHR, textStatus, errorThrown) {
-    	        try {
-    	            console.log("status : " + jqXHR.status);
-    	            console.log("code : " + jqXHR.responseJSON.code);
-    	            console.log("message : " + jqXHR.responseJSON.message);
-    	            console.log("detailMessage : "
-    	                    + jqXHR.responseJSON.detailMessage);
-    	        } catch (e) {
-    	            console.log(e);
-    	        }
-    	    });
+        item.stkCode = stkCodeSelect.options[stkCodeSelect.selectedIndex].innerText;
+        item.sellingType = sellingTypeSelect.options[sellingTypeSelect.selectedIndex].innerText;
+        item.itemSize = $("#size_addItem").val();
+        item.itemQty = $("#qtyPerCarton_addItem").val();
+        item.totalPrice = $("#pricePerCarton_addItem").val();
+        item.totalWeight = $("#weightPerCarton_addItem").val();
+
+        item.posType_addItem = $("#posType_addItem").val();
+        item.sellingType_addItem = $("#sellingType_addItem").val();
+        item.category_addItem = $("#category_addItem").val();
+        item.itemType_addItem = $("#itemType_addItem").val();
+        item.purcItems_addItem = $("#purcItems_addItem").val();
+        item.qtyPerCarton_addItem = $("#qtyPerCarton_addItem").val();
+        item.sellingPrice_addItem = $("#sellingPrice_addItem").val();
+        item.pricePerCarton_addItem = $("#pricePerCarton_addItem").val();
+        item.unitWeight_addItem = $("#unitWeight_addItem").val();
+        item.weightPerCarton_addItem = $("#weightPerCarton_addItem").val();
+        item.size_addItem = $("#size_addItem").val();
+        item.attachGrpId_addItem = $("#attachGrpId_addItem").val();
+
+        item.id = "0";
+
+
+        Common.ajax("GET", "/sales/posstock/checkDuplicatedStock", item, function(result) {
+        	  if(result.length > 0 ){
+        		  Common.alert("Same item is not allow duplicated to be added.");
+        	  }else{
+        		  AUIGrid.addRow(myGridIDItem, item, "first");
+        	  }
+        });
+
+        //AUIGrid.addRow(myGridIDItem, item, "first");
     }
 }
+
+function fn_saveGrid(){
+
+    var editArr = [];
+    var data = {};
+
+    editArr = GridCommon.getEditData(myGridIDItem);
+
+    var shippingSize = AUIGrid.getGridData(myGridIDItem);
+
+    if(shippingSize == null || shippingSize.length <= 0){
+        Common.alert('<spring:message code="sal.alert.msg.noChngData" />');
+        return false;
+    }
+
+    if(editArr.add != null || editArr.add.size > 0){
+        data.add = editArr.add;
+     }
+
+    if(editArr.remove != null || editArr.remove.size > 0){
+            data.remove = editArr.remove;
+    }
+
+    console.log(data);
+
+    //Save
+    Common.ajax("POST", "/sales/posstock/insertPosEshopItemList.do", data, function(result){
+          Common.alert(result.message);
+          fn_close();
+    });
+}
+
 
 $(function() {
 
@@ -190,60 +249,16 @@ $(function() {
 
 
        Common.ajaxFile("/sales/posstock/eShopItemUpload.do", formData, function(result) {
-    	   console.log(result);
     	      $("#attachGrpId_addItem").val(result.atchFileGrpId);
           });
      });
 
     $("#btnDel_addItem").click(function() {
-
-        var chkDelArray = AUIGrid.getCheckedRowItems(myGridIDItem);
-        var param="";
-
-
-        for (var i = 0 ; i < chkDelArray.length ; i++){
-        	if(i==0){
-        		param = chkDelArray[i].item.id+"";
-        	}
-        	else{
-        		param = param +"∈"+chkDelArray[i].item.id;
-        	}
-        }
-
-        if(param != null && param.length > 0 && param !=""){
-            $("#delArr_addItem").val(param);
-        }
-
         AUIGrid.removeCheckedRows(myGridIDItem);
-
     });
-
-
-
 
 });
 
-function saveItemList(){
-
-     var param = $("#delArr_addItem").val();
-     console.log(param);
-     console.log($("#form_delArr").serializeJSON());
-
-        Common.ajax("POST", "/sales/posstock/removeEshopItemList.do", $("#form_delArr").serializeJSON(), function(result) {
-            Common.alert('Success to update');
-            fn_close();
-        }, function(jqXHR, textStatus, errorThrown) {
-            try {
-                console.log("status : " + jqXHR.status);
-                console.log("code : " + jqXHR.responseJSON.code);
-                console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : "
-                        + jqXHR.responseJSON.detailMessage);
-            } catch (e) {
-                console.log(e);
-            }
-        });
-}
 
 
 function fn_chkItemVal(){
@@ -395,7 +410,7 @@ function fn_chkItemVal(){
     <td>
            <input type="text" title="" placeholder="" class="w100p"  id="unitWeight_addItem"  name="unitWeight_addItem" onkeyup="autoCalculation();" />
     </td>
-    <th scope="row">Weight Per Carton (RM)</th>
+    <th scope="row">Weight Per Carton (KG)</th>
     <td>
          <input type="text" title="" placeholder="" class="w100p readonly"  id="weightPerCarton_addItem"  name="weightPerCarton_addItem"  readonly="readonly"/>
     </td>
@@ -433,7 +448,7 @@ function fn_chkItemVal(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="btnAdd_addItem" onclick="javascript:fn_saveGrid()"  >Add</a></p></li>
+    <li><p class="btn_blue2 big"><a id="btnAdd_addItem" onclick="javascript:addItemRowToGrid()"  >Add</a></p></li>
     <li><p class="btn_blue2 big"><a href="javascript:void(0);" onclick="javascript:fn_close()">Cancel</a></p></li>
 </ul>
 
@@ -451,7 +466,7 @@ function fn_chkItemVal(){
 <div id="item_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="btnSave_AddItem" onclick="javascript:saveItemList()" ><spring:message code="sal.btn.save" /></a></p></li>
+    <li><p class="btn_blue2 big"><a id="btnSave_AddItem" onclick="javascript:fn_saveGrid()" ><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 <form id="form_delArr"><input type="hidden" id="delArr_addItem" name="delArr_addItem"/></form>
 

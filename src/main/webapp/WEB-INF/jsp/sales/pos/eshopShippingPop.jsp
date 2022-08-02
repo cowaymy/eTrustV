@@ -155,8 +155,10 @@ $.fn.clearForm = function() {
 
 function fn_saveShippingGrid(){
     Common.ajax("POST", "/sales/posstock/updatePosEshopShipping.do", $("#form_item_edit").serializeJSON(), function(result) {
-        Common.alert('Success to update');
-        createAUIDGridShipping();
+//         Common.alert('Success to update');
+//         $("#_alertOk").click();
+        fn_close2();
+        Common.popupDiv("/sales/posstock/eshopShippingPop.do");
 
     }, function(jqXHR, textStatus, errorThrown) {
         try {
@@ -193,6 +195,10 @@ $(function(){
     });
 
 });
+
+function fn_close2(){
+	 $("#popup_wrap3").remove();
+}
 
 
 </script>

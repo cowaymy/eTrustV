@@ -25,6 +25,8 @@
 		isCheckAll : false
 	};
 
+	var myGridIDCartItem;
+
 	  //Combo Box Choose Message
     var optionState = {chooseMessage: " 1.States "};
     var optionCity = {chooseMessage: "2. City"};
@@ -38,8 +40,8 @@
 
     	 $("#contactName").val("${userFullName}".trim());
     	 $("#cartGrpId").val("${cartGrpId}".trim());
-    	 $("#scnFromLocId").attr("class", "w100p disabled");
-    	 $('#scnFromLocId').attr('disabled','disabled');
+//     	 $("#scnFromLocId").attr("class", "w100p disabled");
+//     	 $('#scnFromLocId').attr('disabled','disabled');
 
     	 createAUIDGridCart();
 
@@ -412,6 +414,7 @@
                           Common.alert('Success to add to cart');
                           createAUIDGridCart();
                           calculateShippingFee();
+                          selectCatalogList();
                       }, function(jqXHR, textStatus, errorThrown) {
                           try {
                               console.log("status : " + jqXHR.status);
@@ -471,7 +474,7 @@
                $("#qty_addToCart").val(result[0].itemQty);
                $("#price_addToCart").val(result[0].totalPrice);
                $("#weight_addToCart").val(result[0].totalWeight);
-               $("#qtyAvailable_addToCart").val(result[0].itemInvQty / result[0].itemQty);
+               $("#qtyAvailable_addToCart").val( Math.floor(result[0].itemInvQty / result[0].itemQty));
                $("#cartEshopItemId").val(result[0].id);
                $("#cartItemLocId").val(result[0].locId);
 
@@ -508,6 +511,25 @@
     }
 
     $(function() {
+
+        $("#btnDel_cartItem").click(function() {
+
+        	AUIGrid.removeCheckedRows(myGridIDCartItem);
+
+            var editArr;
+            var data = {};
+            editArr = GridCommon.getEditData(myGridIDCartItem);
+
+            if(editArr.remove != null || editArr.remove.size > 0){
+                data.remove = editArr.remove;
+             }
+
+            //Save
+            Common.ajax("POST", "/sales/posstock/deleteCartItem.do", data, function(result){
+            	createAUIDGridCart();
+            });
+
+        });
 
     	 $("#orderQty_addToCart").change(function(e){
                  var totalPrice = $("#orderQty_addToCart").val() *  $("#price_addToCart").val();
@@ -569,7 +591,7 @@
                     skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                     showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
-                    showRowCheckColumn : false, //checkBox
+                    showRowCheckColumn : true, //checkBox
                     softRemoveRowMode : false
             };
 
@@ -583,22 +605,23 @@
                                       altField : null,
                                   }},
                                 {dataField: "stkCode" ,headerText :"Item" , width:120 ,height:200 , visible:true, editable : true},
-                                {dataField: "itemPrice" ,headerText :"Unit Price" ,width:140 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
-                                {dataField: "itemQty" ,headerText :"Total Quantity (pcs)"  ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
-                                {dataField: "itemOrdQty" ,headerText :"Total Carton" ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
-                                {dataField: "itemWeight" ,headerText :"Weight (Carton)" ,width:120   ,height:200 , visible:true, editable : false},
+                                {dataField: "itemPrice" ,headerText :"Unit Price" ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
+                                {dataField: "totalQty" ,headerText :"Total Quantity (pcs)"  ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
+                                {dataField: "itemOrdQty" ,headerText :"Total Carton" ,width:100 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
+                                {dataField: "itemWeight" ,headerText :"Weight (Carton)" ,width:100   ,height:200 , visible:true, editable : false},
                                 {dataField: "totalPrice" ,headerText :"Total(RM)" ,width:120   ,height:200 , visible:true, editable : false},
+                                {dataField: "id" ,headerText :"ID" ,width:120   ,height:200 , visible:false, editable : false},
              ];
 
 
            $("#item_grid_cart").html("");
-           myGridIDItem = GridCommon.createAUIGrid("#item_grid_cart", columnLayout,'', gridProsItem);
-           AUIGrid.resize(myGridIDItem , 960, 300);
+           myGridIDCartItem = GridCommon.createAUIGrid("#item_grid_cart", columnLayout,'', gridProsItem);
+           AUIGrid.resize(myGridIDCartItem , 960, 300);
 
            var param = {grpId: "${cartGrpId}".trim()};
 
            Common.ajax("GET", "/sales/posstock/selectItemCartList",param, function(result) {
-                       AUIGrid.setGridData(myGridIDItem, result);
+                       AUIGrid.setGridData(myGridIDCartItem, result);
            });
 
            Common.ajax("GET", "/sales/posstock/selectTotalPrice",param, function(result) {
@@ -705,7 +728,6 @@
              }
          }
 
-         console.log($("#totalWeight").val());
          var param = {regionType: regionType, weight:$("#totalWeight").val()};
          Common.ajax("GET", "/sales/posstock/selectShippingFee", param , function(result) {
              if(result.length > 0){
@@ -726,8 +748,6 @@
         if(isVal == false){
             return;
         }else{
-
-        	console.log($("#eshopForm").serializeJSON());
 
             var formData = new FormData();
             $.each(myFileCaches, function(n, v) {
@@ -860,11 +880,11 @@
 					<tbody>
 						<tr>
 							<th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
-							<td><input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p" maxlength="100" /></td>
+							<td><input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p" maxlength="150" /></td>
 						</tr>
 						<tr>
 							<th scope="row"><spring:message code="sal.text.street" /></th>
-							<td><input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p" maxlength="100" /></td>
+							<td><input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p" maxlength="150" /></td>
 						</tr>
 						<tr>
 							<th scope="row"><spring:message code="sal.text.state" /><span class="must">*</span></th>
@@ -1052,9 +1072,14 @@
             <aside class="title_line">
                 <h3>Shopping Cart Info</h3>
             </aside>
+
+            <ul class="right_btns">
+            <li><p class="btn_grid"><a id="btnDel_cartItem"><spring:message code="sal.btn.del" /></a></p></li>
+            </ul>
+
             <!-- title_line end -->
 
-                    <article><div id="item_grid_cart" style="width:100%; height:300px; margin:0 auto;"></div></article>
+                    <article class="mt10"><div id="item_grid_cart" style="width:100%; height:300px; margin:0 auto;"></div></article>
 
                     <!-- title_line start -->
                     <aside class="title_line"><h2>Summary Ordering</h2></aside>
@@ -1064,25 +1089,25 @@
 						<!-- table start -->
 						<caption>table</caption>
 						<colgroup>
-							<col style="width: 150px" />
+							<col style="width: 200px" />
 							<col style="width: *" />
 <!-- 							<col style="width: 150px" /> -->
 						</colgroup>
 						<tbody>
 							<tr>
-                                <th scope="row">Total Ordering</th>
+                                <th scope="row">Total Ordering (RM)</th>
                                 <td><input type="text" id="totalOrdering" name="totalOrdering" /></td>
 							</tr>
 							<tr>
-                                <th scope="row">Total Weight</th>
+                                <th scope="row">Total Weight (KG)</th>
                                 <td><input type="text"  id="totalWeight" name="totalWeight" /></td>
                             </tr>
                             <tr>
-                                <th scope="row">Shipping Fee</th>
+                                <th scope="row">Shipping Fee (RM)</th>
                                 <td><input type="text"  id="totalShippingFee" name="totalShippingFee" /></td>
                             </tr>
                             <tr>
-                                <th scope="row">Grand Total Price</th>
+                                <th scope="row">Grand Total Price (RM)</th>
                                 <td><input type="text" id="totalPrice" name="totalPrice" /></td>
                             </tr>
                               <tr>

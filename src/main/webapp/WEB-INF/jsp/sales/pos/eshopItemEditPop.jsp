@@ -14,6 +14,8 @@
 </style>
 <script type="text/javascript">
 
+console.log(window.location.pathname);
+
 var myGridIDItem;
 
 //Init Option
@@ -33,7 +35,7 @@ var ItmOption = {
 $(document).ready(function () {
 
     setInputFile();
-    selectEditItemList();
+    createEditAUIDGrid();
 
     //PosModuleTypeComboBox
     var modulePopParam = {groupCode : 143, codeIn : [6795]};
@@ -76,47 +78,50 @@ $(document).ready(function () {
 
 });
 
-
-
-function selectEditItemList(){
+function createEditAUIDGrid(){
 
 	$("#table_updateitem").hide();
 
-        var gridProsItem = {
-                usePaging           : true,         //페이징 사용
-                pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
-                editable            : false,
-                fixedColumnCount    : 1,
-                showStateColumn     : true,
-                displayTreeOpen     : false,
-                headerHeight        : 30,
-                useGroupingPanel    : false,        //그룹핑 패널 사용
-                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
-                showRowCheckColumn : false, //checkBox
-                softRemoveRowMode : false
-        };
+    var gridProsItem = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+            headerHeight        : 30,
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            showRowCheckColumn : false, //checkBox
+            softRemoveRowMode : false
+    };
 
-        var columnLayout = [
-                            {dataField: "stkCode",headerText :"Item" ,width: 100   ,height:30 , visible:true, editable : false},
-                            {dataField: "sellingType",headerText :"Sales Type", width: 280    ,height:30 , visible:true, editable : false},
-                            {dataField: "itemSize" ,headerText :"Size" , width:120 ,height:30 , visible:true, editable : true},
-                            {dataField: "itemQty" ,headerText :"Quantity (Carton)" ,width:140 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
-                            {dataField: "totalPrice" ,headerText :"Price (Carton)"  ,width:120 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField: "totalWeight" ,headerText :"Weight (Carton)" ,width:120 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField: "id" ,headerText :"ID" ,width:120   ,height:30 , visible:false, editable : false},
-                            {dataField: "posType" ,headerText :"Pos Type" ,width:120   ,height:30 , visible:false, editable : false},
-                            {dataField: "itemId" ,headerText :"Item Id" ,width:120   ,height:30 , visible:false, editable : false},
-                            {dataField: "atchFileName" ,headerText :"Attachment" ,width:120   ,height:30 , visible:false, editable : false},
-                            {dataField: "itemCtgry" ,headerText :"Item Ctgry" ,width:120   ,height:30 , visible:false, editable : false},
-                            {dataField: "itemAttchGrpId" ,headerText :"Attachment Group Id" ,width:120   ,height:30 , visible:false, editable : false}
-         ];
+    var columnLayout = [
+                        {dataField: "stkCode",headerText :"Item" ,width: 230   ,height:30 , visible:true, editable : false},
+                        {dataField: "sellingType",headerText :"Sales Type", width: 150    ,height:30 , visible:true, editable : false},
+                        {dataField: "itemSize" ,headerText :"Size" , width:120 ,height:30 , visible:true, editable : true},
+                        {dataField: "itemQty" ,headerText :"Quantity (Carton)" ,width:140 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
+                        {dataField: "totalPrice" ,headerText :"Price (Carton)"  ,width:120 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
+                        {dataField: "totalWeight" ,headerText :"Weight (Carton)" ,width:120 ,height:30 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
+                        {dataField: "id" ,headerText :"ID" ,width:120   ,height:30 , visible:false, editable : false},
+                        {dataField: "posType" ,headerText :"Pos Type" ,width:120   ,height:30 , visible:false, editable : false},
+                        {dataField: "itemId" ,headerText :"Item Id" ,width:120   ,height:30 , visible:false, editable : false},
+                        {dataField: "atchFileName" ,headerText :"Attachment" ,width:120   ,height:30 , visible:false, editable : false},
+                        {dataField: "itemCtgry" ,headerText :"Item Ctgry" ,width:120   ,height:30 , visible:false, editable : false},
+                        {dataField: "itemAttchGrpId" ,headerText :"Attachment Group Id" ,width:120   ,height:30 , visible:false, editable : false},
+                        {dataField: "itemWeight" ,headerText :"Item Weight" ,width:120   ,height:30 , visible:false, editable : false}
+     ];
 
 
-       $("#item_grid_wrap2").html("");
-       myGridIDItem = GridCommon.createAUIGrid("#item_grid_wrap2", columnLayout,'', gridProsItem);
-       AUIGrid.resize(myGridIDItem , 960, 300);
+   $("#item_grid_wrap2").html("");
+   myGridIDItem = GridCommon.createAUIGrid("#item_grid_wrap2", columnLayout,'', gridProsItem);
+   //AUIGrid.resize(myGridIDItem , 1200, 300);
+
+}
+
+function selectEditItemList(){
 
        Common.ajax("GET", "/sales/posstock/selectItemList", $("#form_searchitem").serializeJSON(), function(result) {
                    AUIGrid.setGridData(myGridIDItem, result);
@@ -131,16 +136,15 @@ function selectEditItemList(){
                var stkCode  = AUIGrid.getCellValue(myGridIDItem, event.rowIndex,  'stkCode');
                var itemSize  = AUIGrid.getCellValue(myGridIDItem, event.rowIndex,  'itemSize');
                var itemQty  = AUIGrid.getCellValue(myGridIDItem,  event.rowIndex, 'itemQty');
+               var itemWeight  = AUIGrid.getCellValue(myGridIDItem,  event.rowIndex, 'itemWeight');
                var itemCtgry  = AUIGrid.getCellValue(myGridIDItem, event.rowIndex,  'itemCtgry');
                var totalPrice  = AUIGrid.getCellValue(myGridIDItem,  event.rowIndex, 'totalPrice');
                var totalWeight  = AUIGrid.getCellValue(myGridIDItem,  event.rowIndex, 'totalWeight');
                var atchFileName  = AUIGrid.getCellValue(myGridIDItem,  event.rowIndex, 'atchFileName');
                var itemAttchGrpId  = AUIGrid.getCellValue(myGridIDItem,  event.rowIndex, 'itemAttchGrpId');
 
-
-
                $("#pricePerCarton_editItem").val(totalPrice);
-               $("#unitWeight_editItem").val(totalWeight);
+               $("#unitWeight_editItem").val(itemWeight);
                $("#size_editItem").val(itemSize);
                $("#qtyPerCarton_editItem").val(itemQty);
                $("#category_editItem").val(itemCtgry);
@@ -236,7 +240,7 @@ function fn_saveGrid(){
           Common.ajax("POST", "/sales/posstock/updatePosEshopItemList.do", $("#form_updateitem").serializeJSON(), function(result) {
                 Common.alert('Success to update');
                 fn_close();
-
+                Common.popupDiv("/sales/posstock/eshopItemEditPop.do");
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);
@@ -286,7 +290,7 @@ function fn_chkItemVal(){
         return false;
      }
 
-    if(FormUtil.isEmpty($('#attachGrpId_editItem').val())) {
+    if(FormUtil.isEmpty($('#attachGrpId_editItem').val()) || FormUtil.isEmpty($('#uploadImg').val())) {
         Common.alert("Please upload Item Image.");
         return false;
      }
@@ -320,9 +324,9 @@ function fn_chkItemVal(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
         <colgroup>
-            <col style="width:150px" />
+            <col style="width:300px" />
             <col style="width:*" />
-            <col style="width:150px" />
+            <col style="width:300px" />
             <col style="width:*" />
         </colgroup>
     <tbody>
@@ -350,9 +354,9 @@ function fn_chkItemVal(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:300px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:300px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -395,7 +399,7 @@ function fn_chkItemVal(){
     <td>
            <input type="text" title="" placeholder="" class="w100p"  id="unitWeight_editItem"  name="unitWeight_editItem" onkeyup="autoCalculation();" />
     </td>
-    <th scope="row">Weight Per Carton (RM)</th>
+    <th scope="row">Weight Per Carton (KG)</th>
     <td>
          <input type="text" title="" placeholder="" class="w100p readonly"  id="weightPerCarton_editItem"  name="weightPerCarton_editItem"  readonly="readonly"/>
     </td>

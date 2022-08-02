@@ -66,9 +66,9 @@ function createAUIDGrid(){
    myGridIDShipping = GridCommon.createAUIGrid("#shipping_grid_wrap2", columnLayout,'', gridProsItem);
    AUIGrid.resize(myGridIDShipping , 960, 300);
 
-   Common.ajax("GET", "/sales/posstock/selectShippingList", null, function(result) {
-               AUIGrid.setGridData(myGridIDShipping, result);
-   });
+//    Common.ajax("GET", "/sales/posstock/selectShippingList", null, function(result) {
+//                AUIGrid.setGridData(myGridIDShipping, result);
+//    });
 }
 
 

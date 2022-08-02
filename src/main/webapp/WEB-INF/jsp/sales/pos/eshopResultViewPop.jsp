@@ -36,8 +36,14 @@ var gridProsPOS = {
 };
 
 
+
+
+
 $(document).ready(function () {
-	createAUIGrid();
+
+    createAUIGrid();
+
+
 });
 
 
@@ -50,8 +56,18 @@ function createAUIGrid(){
 
         Common.ajax("GET", "/sales/posstock/selectPosEshopApprovalViewList.do?esnNo="+'${esnNo}', null, function(result) {
 
+        	console.log(result);
+
             AUIGrid.setGridData(myRetrunGridIDPOSEshop, result);
-            $("#contactName").val(result[0].esnContactPic);
+
+		    $("#posType2").val(result[0].posType);
+		    $("#esnNo").val('${esnNo}');
+		    $("#posNo").val(result[0].posNo);
+		    $("#branch2").val(result[0].branch);
+		    $("#esnStatus").val(result[0].esnStatus);
+		    $("#salesDt").val(result[0].salesDt);
+            $("#contactName").val(result[0].hpName);
+            $("#hpCode").val(result[0].hpCode);
             $("#contactNo").val(result[0].esnContactNo);
             $("#addrDtl").val(result[0].esnAddr1);
             $("#streetDtl").val(result[0].esnAddr2);
@@ -63,7 +79,7 @@ function createAUIGrid(){
             $("#totalShippingFee").val(result[0].shippingFee);
 
             for(var i=0; i<result.length;i++){
-            	grandTotal +=Number(result[i].totalPrice);
+                grandTotal +=Number(result[i].totalPrice);
             }
             $("#totalPrice").val(Number(grandTotal)+Number(result[0].shippingFee));
             $("#attachId").val(result[0].atchFileId);
@@ -84,7 +100,7 @@ function fn_getApprovalDataListAjax  () {
 
 
 function fn_close(){
-    $("#popup_wrapAppv").remove();
+    $("#popup_wrap").remove();
 }
 
 
@@ -95,15 +111,15 @@ function fn_viewAttachPop(){
 
 function fn_approveEshop(){
 
-	   var data = {};
-	   data.esnNo = '${esnNo}';
+       var data = {};
+       data.esnNo = '${esnNo}';
        data.form = $("#form").serializeJSON();
 
 
-	    Common.ajax("POST", "/sales/posstock/insertPos.do", data, function(result) {
+        Common.ajax("POST", "/sales/posstock/insertPos.do", data, function(result) {
+
               if(result.logError == "000"){
                       Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />',fn_close());
-                      setTimeout(fn_selectEshopList(), 1000);
               }
               else{
                     Common.alert("fail : Contact Logistics Team")
@@ -114,16 +130,16 @@ function fn_approveEshop(){
 
 
 function fn_rejectEshop(){
-	   Common.popupDiv("/sales/posstock/rejectPosEshopPop.do?esnNo="+'${esnNo}');
+       Common.popupDiv("/sales/posstock/rejectPosEshopPop.do?esnNo="+'${esnNo}');
 }
 
 
 </script>
 
-<div id="popup_wrapAppv" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Approval</h1>
+<h1>View</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="javascript:void(0);" onclick="javascript:fn_close()">CLOSE</a></p></li>
 </ul>
@@ -132,6 +148,58 @@ function fn_rejectEshop(){
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <form action="#" method="post" id="form">
+
+<section>
+        <aside class="title_line">
+            <h3>E-Shop Order Info</h3>
+        </aside>
+
+        <section>
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width: 120px" />
+                        <col style="width: *" />
+                        <col style="width: 120px" />
+                        <col style="width: *" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">POS Type</th>
+                            <td colspan="3"><input id="posType2" name="posType2" type="text" class="w100p readonly" readonly /></td>
+
+                            <th scope="row">Ref No</th>
+                            <td colspan="3"><input id="esnNo" name="esnNo" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Status</th>
+                            <td colspan="3"><input id="esnStatus" name="esnStatus" type="text" class="w100p readonly" readonly /></td>
+
+                            <th scope="row">Sales Date</th>
+                            <td colspan="3"><input id="salesDt" name="salesDt" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+
+                         <tr>
+                            <th scope="row">POS No</th>
+                            <td colspan="3"><input id="posNo" name="posNo" type="text" class="w100p readonly" readonly /></td>
+
+                            <th scope="row">Branch</th>
+                            <td colspan="3"><input id="branch2" name="branch2" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+
+                         <tr>
+                            <th scope="row">Courier Service</th>
+                            <td colspan="3"><input id="courierSvc" name="courierSvc" type="text" class="w100p readonly" readonly /></td>
+
+                            <th scope="row">Waybill No.</th>
+                            <td colspan="3"><input id="waybillNo" name="waybillNo" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+                    </tbody>
+                </table>
+        </section>
+</section>
+
 <section>
         <aside class="title_line">
             <h3>Contact Info</h3>
@@ -150,6 +218,11 @@ function fn_rejectEshop(){
                         <tr>
                             <th scope="row"><spring:message code="sal.text.name" /></th>
                             <td colspan="3"><input id="contactName" name="contactName" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+
+                          <tr>
+                            <th scope="row">HP Code</th>
+                            <td colspan="3"><input id="hpCode" name="hpCode" type="text" class="w100p readonly" readonly /></td>
                         </tr>
 
                         <tr>
@@ -208,7 +281,7 @@ function fn_rejectEshop(){
         </section>
 </section>
 
-<div id="grid_wrap_approval" class="mt10" style="height:200px;"></div>
+        <div id="grid_wrap_approval" class="mt10" style="height:200px;"></div>
 
         <section class="mt20">
                     <!-- title_line start -->
@@ -234,14 +307,14 @@ function fn_rejectEshop(){
                             </tr>
                               <tr>
                                <th scope="row">Attachment</th>
-							    <td colspan="3">
+                                <td colspan="3">
 
-							        <ul class="right_btns">
+                                    <ul class="right_btns">
                                         <input id="attachId" name="attachId" type="hidden" />
-							            <li><p class="btn_grid"  id="itemAttachmentBt" ><a id="itemAttachment" onclick="fn_viewAttachPop();" >View</a></p></li>
-							        </ul>
+                                        <li><p class="btn_grid"  id="itemAttachmentBt" ><a id="itemAttachment" onclick="fn_viewAttachPop();" >View</a></p></li>
+                                    </ul>
 
-							    </td>
+                                </td>
                             </tr>
 
 
@@ -249,11 +322,6 @@ function fn_rejectEshop(){
                     </table>
                     <input type="hidden" id="hiddenAttachmentPaySlip" name="hiddenAttachmentPaySlip"/>
                     <input id="crtId" name="crtId" type="hidden" />
-                    <ul class="center_btns">
-	                    <li><p class="btn_blue"><a href="#" onclick="fn_approveEshop()">Approve</a></p></li>
-	                    <li><p class="btn_blue"><a href="#" onclick="fn_rejectEshop()">Reject</a></p></li>
-            </ul>
-
         </section>
 </form>
 </section><!-- pop_body end -->

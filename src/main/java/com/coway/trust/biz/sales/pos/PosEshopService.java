@@ -13,7 +13,7 @@ public interface PosEshopService {
 
 	EgovMap  selectItemPrice(Map<String, Object> params)throws Exception;
 
-	Map<String, Object> insertPosEshopItemList(Map<String, Object> params) throws Exception;
+	void insertPosEshopItemList(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectItemList(Map<String, Object> params);
 
@@ -51,6 +51,8 @@ public interface PosEshopService {
 
 	List<EgovMap> checkDiffWarehouse(Map<String, Object> params);
 
+	List<EgovMap> checkDuplicatedStock(Map<String, Object> params);
+
 	List<EgovMap> selectEshopList(Map<String, Object> params);
 
 	List<EgovMap> selectPosEshopApprovalList(Map<String, Object> params);
@@ -65,7 +67,9 @@ public interface PosEshopService {
 
 	int completePos(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectEshopWhBrnchList(Map<String, Object> params);
 
+	void deleteCartItem(Map<String, Object> params) throws Exception;
 
 
 }

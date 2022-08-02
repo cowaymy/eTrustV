@@ -59,45 +59,83 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	return   posMapper.selectItemPrice(params);
   }
 
+	@Override
+	@Transactional
+	public void insertPosEshopItemList(Map<String, Object> params) throws Exception {
 
-  @Override
-  public Map<String, Object> insertPosEshopItemList(Map<String, Object> params) throws Exception {
+			List<Object> addList = (List<Object>)params.get("add");
+			int seq = 0;
 
-  		int seq = 0;
+			if(addList != null && addList.size() > 0){
 
-  		seq=posMapper.getSeqSAL0321D();
 
-  		Map<String, Object>  heardMap  = null;
+				for (int idx = 0; idx < addList.size(); idx++) {
 
-  		LOGGER.debug(" params insertPosEshopItemList===>"+params.toString());
+					Map<String, Object> insMap = (Map<String, Object>)addList.get(idx);
 
-  		heardMap= new HashMap<String, Object>();
+					seq=posMapper.getSeqSAL0321D();
 
-  		heardMap.put("id", seq);
-  		heardMap.put("posType", params.get("posType_addItem"));
-  		heardMap.put("sellingType", params.get("sellingType_addItem"));
-  		heardMap.put("itemId", params.get("purcItems_addItem"));
-  		heardMap.put("itemCtgryId", params.get("category_addItem"));
-  		heardMap.put("itemType", params.get("itemType_addItem"));
-  		heardMap.put("itemQty", params.get("qtyPerCarton_addItem"));
-  		heardMap.put("itemWeight", params.get("unitWeight_addItem"));
-  		heardMap.put("itemPrice", params.get("sellingPrice_addItem"));
-  		heardMap.put("itemSize", params.get("size_addItem"));
-  		heardMap.put("itemAttachGrpId", params.get("attachGrpId_addItem"));
-  		heardMap.put("totalPrice", params.get("pricePerCarton_addItem"));
-  		heardMap.put("totalWeight", params.get("weightPerCarton_addItem"));
-  		heardMap.put("crtId", params.get("userId"));
+					Map<String, Object> heardMap = new HashMap<String, Object>();
 
-  	   LOGGER.debug(" addList insertPosEshopItemList===>"+heardMap.toString());
+			  		heardMap.put("id", seq);
+			  		heardMap.put("posType", insMap.get("posType_addItem"));
+			  		heardMap.put("sellingType", insMap.get("sellingType_addItem"));
+			  		heardMap.put("itemId", insMap.get("purcItems_addItem"));
+			  		heardMap.put("itemCtgryId", insMap.get("category_addItem"));
+			  		heardMap.put("itemType", insMap.get("itemType_addItem"));
+			  		heardMap.put("itemQty", insMap.get("qtyPerCarton_addItem"));
+			  		heardMap.put("itemWeight", insMap.get("unitWeight_addItem"));
+			  		heardMap.put("itemPrice", insMap.get("sellingPrice_addItem"));
+			  		heardMap.put("itemSize", insMap.get("size_addItem"));
+			  		heardMap.put("itemAttachGrpId", insMap.get("attachGrpId_addItem"));
+			  		heardMap.put("totalPrice", insMap.get("pricePerCarton_addItem"));
+			  		heardMap.put("totalWeight", insMap.get("weightPerCarton_addItem"));
+			  		heardMap.put("crtId", params.get("userId"));
 
-  	   posMapper.insertEshopItemList(heardMap);
+			  	   posMapper.insertEshopItemList(heardMap);
+				}
+			}
+	}
 
-  	   //Return Message
-	   Map<String, Object> rtnMap = new HashMap<String, Object>();
-	   rtnMap.put("scnNo", "ok");
-	   return rtnMap;
 
-  }
+//  @Override
+//  public Map<String, Object> insertPosEshopItemList(Map<String, Object> params) throws Exception {
+//
+//  		int seq = 0;
+//
+//  		seq=posMapper.getSeqSAL0321D();
+//
+//  		Map<String, Object>  heardMap  = null;
+//
+//  		LOGGER.debug(" params insertPosEshopItemList===>"+params.toString());
+//
+//  		heardMap= new HashMap<String, Object>();
+//
+//  		heardMap.put("id", seq);
+//  		heardMap.put("posType", params.get("posType_addItem"));
+//  		heardMap.put("sellingType", params.get("sellingType_addItem"));
+//  		heardMap.put("itemId", params.get("purcItems_addItem"));
+//  		heardMap.put("itemCtgryId", params.get("category_addItem"));
+//  		heardMap.put("itemType", params.get("itemType_addItem"));
+//  		heardMap.put("itemQty", params.get("qtyPerCarton_addItem"));
+//  		heardMap.put("itemWeight", params.get("unitWeight_addItem"));
+//  		heardMap.put("itemPrice", params.get("sellingPrice_addItem"));
+//  		heardMap.put("itemSize", params.get("size_addItem"));
+//  		heardMap.put("itemAttachGrpId", params.get("attachGrpId_addItem"));
+//  		heardMap.put("totalPrice", params.get("pricePerCarton_addItem"));
+//  		heardMap.put("totalWeight", params.get("weightPerCarton_addItem"));
+//  		heardMap.put("crtId", params.get("userId"));
+//
+//  	   LOGGER.debug(" addList insertPosEshopItemList===>"+heardMap.toString());
+//
+//  	   posMapper.insertEshopItemList(heardMap);
+//
+//  	   //Return Message
+//	   Map<String, Object> rtnMap = new HashMap<String, Object>();
+//	   rtnMap.put("scnNo", "ok");
+//	   return rtnMap;
+//
+//  }
 
 	@Override
 	public List<EgovMap> selectItemList(Map<String, Object> params) {
@@ -365,6 +403,11 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 			return posMapper.checkDiffWarehouse(params);
 	  }
 
+	 @Override
+		public List<EgovMap> checkDuplicatedStock(Map<String, Object> params) {
+			return posMapper.checkDuplicatedStock(params);
+	  }
+
 
 	 @Override
 		public List<EgovMap> selectEshopList(Map<String, Object> params) {
@@ -619,8 +662,6 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 //    		      Map<String, Object> invDetailMap = new HashMap<String, Object>();
 
-
-
     		      if(approvalList !=null && approvalList.size()>0){
 
                   	for (int i = 0; i < approvalList.size(); i++) {
@@ -669,11 +710,6 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
         		      posMapper.insertPosTaxInvcMiscSub(invDetailMap2);
 
     		      }
-
-
-
-
-
     		// *********************************************************************************************************
 
 				rtnMap.put("reqDocNo", docNoPsn);
@@ -711,23 +747,40 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 			return result;
 		}
 
-//	  @Override
-//	  public Map<String, Object> rejectPos(Map<String, Object> params) throws Exception {
-//
-//	  		Map<String, Object>  heardMap  = null;
-//
-//	  		heardMap= new HashMap<String, Object>();
-//	  		heardMap.put("esnRemark", params.get("eshopRemark"));
-//	  		heardMap.put("updId", params.get("userId"));
-//
-//	  	   posMapper.rejectPos(heardMap);
-//
-//	  	   //Return Message
-//		   Map<String, Object> rtnMap = new HashMap<String, Object>();
-//		   rtnMap.put("scnNo", "ok");
-//		   return rtnMap;
-//
-//	  }
+	 @Override
+		public List<EgovMap> selectEshopWhBrnchList(Map<String, Object> params) {
+			return posMapper.selectEshopWhBrnchList(params);
+	  }
+
+	 @Override
+	  @Transactional
+	  public void deleteCartItem(Map<String, Object> params) throws Exception {
+
+			List<Object> removeList = (List<Object>)params.get("remove");
+
+			LOGGER.debug(" removeList deleteCartItem===>"+removeList.toString());
+
+			//__________________________________________________________________________________Update
+			if(removeList != null && removeList.size() > 0){
+				for (int idx = 0; idx < removeList.size(); idx++) {
+
+					Map<String, Object> removeMap = (Map<String, Object>)removeList.get(idx);
+
+					//params Set
+					Map<String, Object> delMap = new HashMap<String, Object>();
+					delMap.put("id", removeMap.get("id"));
+
+					LOGGER.debug(" delMap deleteCartItem===>"+delMap.toString());
+
+					posMapper.deleteCartItem(delMap);
+
+				}
+			}
+		}
+
+
+
+
 
 
 
