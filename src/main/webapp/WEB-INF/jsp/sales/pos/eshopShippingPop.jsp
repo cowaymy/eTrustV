@@ -155,10 +155,7 @@ $.fn.clearForm = function() {
 
 function fn_saveShippingGrid(){
     Common.ajax("POST", "/sales/posstock/updatePosEshopShipping.do", $("#form_item_edit").serializeJSON(), function(result) {
-//         Common.alert('Success to update');
-//         $("#_alertOk").click();
-        fn_close2();
-        Common.popupDiv("/sales/posstock/eshopShippingPop.do");
+        Common.confirm('Success to update',fn_close4);
 
     }, function(jqXHR, textStatus, errorThrown) {
         try {
@@ -196,8 +193,13 @@ $(function(){
 
 });
 
-function fn_close2(){
+function fn_close3(){
 	 $("#popup_wrap3").remove();
+}
+
+function fn_close4(){
+    $("#popup_wrap3").remove();
+    Common.popupDiv("/sales/posstock/eshopShippingPop.do");
 }
 
 

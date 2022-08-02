@@ -411,10 +411,7 @@
 
                       if(result.length == 0){
                          Common.ajax("POST", "/sales/posstock/insertItemToCart.do", $("#eshopForm").serializeJSON(), function(result) {
-                          Common.alert('Success to add to cart');
-                          createAUIDGridCart();
-                          calculateShippingFee();
-                          selectCatalogList();
+                          Common.confirm('Success to add to cart',reload);
                       }, function(jqXHR, textStatus, errorThrown) {
                           try {
                               console.log("status : " + jqXHR.status);
@@ -429,9 +426,7 @@
                   }
                       else if(result.length >=1 && result[0].locId == $("#cartItemLocId").val()){
                            Common.ajax("POST", "/sales/posstock/insertItemToCart.do", $("#eshopForm").serializeJSON(), function(result) {
-                               Common.alert('Success to add to cart');
-                               createAUIDGridCart();
-                               calculateShippingFee();
+                               Common.confirm('Success to add to cart',reload);
 
                            }, function(jqXHR, textStatus, errorThrown) {
                                try {
@@ -450,6 +445,17 @@
                   }
                });
              }
+    }
+
+    function reload(){
+        createAUIDGridCart();
+        calculateShippingFee();
+        selectCatalogList();
+    }
+
+    function reload2(){
+    	 createAUIDGridCart();
+         calculateShippingFee();
     }
 
     function imageDtl(id, locId){
