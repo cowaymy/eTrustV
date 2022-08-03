@@ -253,7 +253,6 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "PRODCAT")
   private String prodcat;
 
-  @ApiModelProperty(value = "waterSrcType")
   private String waterSrcType;
 
   private String serialChk;

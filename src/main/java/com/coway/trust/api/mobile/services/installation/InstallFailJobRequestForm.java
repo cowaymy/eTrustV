@@ -236,14 +236,6 @@ public String getFailDeptChk() {
 	this.resultIcMobileNo = resultIcMobileNo;
   }
 
-	public String getWaterSrcType() {
-	    return waterSrcType;
-	}
-
-	public void setWaterSrcType(String waterSrcType) {
-	  this.waterSrcType = waterSrcType;
-	}
-
 public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
 
     List<Map<String, Object>> list = new ArrayList<>();
