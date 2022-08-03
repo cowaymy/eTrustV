@@ -118,23 +118,7 @@
                     JOIN SAL0001D SAL01 ON V1.ORD_ID = SAL01.SALES_ORD_ID
                     JOIN ORG1001V ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
                     WHERE 1=1
-                    /*
-                    JOIN ORG0005D ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
-
-                        <if test="memlvl == 4">
-                            AND ORG.MEM_ID = #{memId}
-                        </if>
-                        <if test="memlvl == 3">
-                            AND ORG.DEPT_CODE = #{deptCode}
-                        </if>
-                        <if test="memlvl == 2">
-                            AND ORG.GRP_CODE = #{grpCode}
-                        </if>
-                        <if test="memlvl == 1">
-                            AND ORG.ORG_CODE = #{orgCode}
-                        </if>
-                        */
-                        <if test='memId != null and memId != ""'>
+                         <if test='memId != null and memId != ""'>
                              AND ORG.MEM_ID = #{memId}
                         </if>
 
@@ -143,11 +127,11 @@
                         </if>
 
                         <if test='grpCode != null and grpCode != ""'>
-                              AND ORG.GRP_CODE = #{grpCode}
+                             AND ORG.GRP_CODE = #{grpCode}
                         </if>
 
                         <if test='orgCode != null and orgCode != ""'>
-                              AND ORG.ORG_CODE = #{orgCode}
+                             AND ORG.ORG_CODE = #{orgCode}
                         </if>
 
                         <if test='ordDt == null || ordDt == ""'>
@@ -369,7 +353,6 @@
 
 
     <select id="getOrgDtls" parameterType="Map" resultType="egovMap">
-      /*
       SELECT
             B.MEM_ID,
             B.MEM_CODE,
@@ -382,7 +365,6 @@
         JOIN ORG0005D C
             ON B.MEM_ID = C.MEM_ID
         WHERE A.USER_ID = #{userId}
-        */
     </select>
 
 </mapper>
