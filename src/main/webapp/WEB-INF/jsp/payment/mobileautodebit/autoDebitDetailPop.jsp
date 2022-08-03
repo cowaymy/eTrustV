@@ -20,9 +20,6 @@ var attachmentInfoList;
 
 
 $(document).ready(function() {
-    console.log("${mobileAutoDebitDetail}");
-    console.log("${customerCreditCardEnrollInfo}");
-    console.log('${autoDebitAttachmentInfo}');
     if(undefinedCheck('${mobileAutoDebitDetail.atchFileGroupId}','number') > 0){
         atchFileGroupId = parseInt('${mobileAutoDebitDetail.atchFileGroupId}');
     }
@@ -33,6 +30,7 @@ $(document).ready(function() {
     loadPaymentInfoData();
     loadStatusInfoData();
     loadAttachmentData();
+    loadThirdPartyCustData();
     checkStatusForConditionalDisable();
 
 	//Ledgers
@@ -46,6 +44,10 @@ $(document).ready(function() {
 
 	$('#btnOrdDtlClose').click(function() {
 	    $('#_divAutoDebitDetailPop').remove();
+	});
+
+	$('#btnAutoDebitDetailClose').click(function() {
+	    fn_close();
 	});
 
 	$('#btnAddThirdPartyCust').click(function() {
@@ -69,8 +71,15 @@ $(document).ready(function() {
 	});
 });
 
+function loadThirdPartyCustData(){
+	var custData = '${thirdPartyCustomerInfo}';
+	if(custData != null && custData != ""){
+		loadThirdPartyPopData(JSON.parse(custData));
+	}
+}
+
 function loadThirdPartyPopData(custData){
-	if(custData != null || custData != ""){
+	if(custData != null && custData != ""){
         $('#thrdPartyId').val(custData.custId);
         $('#thrdPartyType').text(custData.codeName1);
         $('#thrdPartyName').text(custData.name);
@@ -229,7 +238,8 @@ function doSave(){
 			statusCodeId : $('#action').val(),
 			rejectReasonCode : $('#rejectReasonCodeList').val(),
 			remarks : $('#remarks').val(),
-			padId: "${mobileAutoDebitDetail.padId}"
+			padId: "${mobileAutoDebitDetail.padId}",
+			thirdPartyCustId: $('#thrdPartyId').val()
 	}
 	//attachment data
 	var formData = new FormData();

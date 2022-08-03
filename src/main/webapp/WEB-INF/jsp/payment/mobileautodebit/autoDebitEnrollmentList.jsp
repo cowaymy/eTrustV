@@ -238,10 +238,10 @@ function fn_setDetail(gridID, rowIdx){
 	var padidvalue = AUIGrid.getCellValue(gridID, rowIdx, "padId");
 	var salesOrdNo = AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo");
 	var custCrcId = AUIGrid.getCellValue(gridID, rowIdx, "custCrcId");
-	console.log("padidvalue"+padidvalue);
-	console.log("salesOrdNo"+salesOrdNo);
-	console.log("custCrcId"+custCrcId);
-    Common.popupDiv("/payment/mobileautodebit/autoDebitDetailPop.do", { padId : AUIGrid.getCellValue(gridID, rowIdx, "padId"), salesOrdNo : AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo"), custCrcId:  AUIGrid.getCellValue(gridID, rowIdx, "custCrcId")}, null, true, "_divAutoDebitDetailPop");
+    Common.popupDiv("/payment/mobileautodebit/autoDebitDetailPop.do",
+    		{ padId : AUIGrid.getCellValue(gridID, rowIdx, "padId"),
+    	salesOrdNo : AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo"),
+    	custCrcId:  AUIGrid.getCellValue(gridID, rowIdx, "custCrcId")}, null, true, "_divAutoDebitDetailPop");
 }
 </script>
 <!-- html content -->

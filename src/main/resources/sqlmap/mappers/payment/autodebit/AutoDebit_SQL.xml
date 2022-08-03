@@ -44,8 +44,9 @@
 		AND p0333m.SALES_ORD_NO = #{salesOrdNo}
 		</if>
 		<if test='statusCode != null and statusCode != ""'>
-		AND p0333.STUS_CODE_ID = #{statusCode}
+		AND p0333m.STUS_CODE_ID = #{statusCode}
 		</if>
+		ORDER BY CRT_DT DESC
   </select>
 
   <select  id="selectAutoDebitEnrollmentList" parameterType="Map" resultType="egovMap">
@@ -144,7 +145,7 @@
 		SELECT p0333m.PAD_ID, p0333m.PAD_NO, p0333m.SALES_ORD_NO, custtype.CODE_NAME AS CUST_TYPE, s0029d.NAME, s0029d.NRIC, p0333m.CRT_DT,
 		s0001d.SALES_DT, s0026m.STK_DESC, s0001d.MTH_RENT_AMT, rentalstatus.CODE_NAME AS RENTAL_STATUS,
 		p0333m.FAIL_REASON_CODE, p0333m.REMARKS, p0333m.STUS_CODE_ID, p0333m.IS_THIRD_PARTY_PAYMENT, s0001d.SALES_ORD_ID,
-		p0333m.ATCH_FILE_GROUP_ID
+		p0333m.ATCH_FILE_GROUP_ID, p0333m.THIRD_PARTY_CUST_ID
 		FROM PAY0333M p0333m
 		LEFT JOIN SAL0029D s0029d
 		ON s0029d.CUST_ID = p0333m.CUST_ID
@@ -257,7 +258,8 @@
 	      REMARKS = #{remarks},
 	      FAIL_REASON_CODE = #{rejectReasonCode},
 	      UPT_BY = #{userId},
-	      UPT_DT = SYSDATE
+	      UPT_DT = SYSDATE,
+	      THIRD_PARTY_CUST_ID = #{thirdPartyCustId},
 	      WHERE PAD_ID = #{padId}
     </update>
 

@@ -2,6 +2,7 @@ package com.coway.trust.web.payment.mobileAutoDebit.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.payment.autodebit.service.AutoDebitService;
+import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -55,6 +57,9 @@ public class MobileAutoDebitController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
+
+	  @Resource(name = "customerService")
+	  private CustomerService customerService;
 
 	@Resource(name = "autoDebitService")
 	private AutoDebitService autoDebitService;
@@ -108,6 +113,29 @@ public class MobileAutoDebitController {
 
 		if(autoDebitDetailInfo.size() > 0){
 			model.put("mobileAutoDebitDetail", autoDebitDetailInfo.get(0));
+
+			EgovMap autoDebitDetail = autoDebitDetailInfo.get(0);
+			if(autoDebitDetail.get("thirdPartyCustId") != null){
+				String thirdPartyCustId = autoDebitDetailInfo.get(0).get("thirdPartyCustId").toString();
+				if(thirdPartyCustId != null && thirdPartyCustId.length() > 0){
+				    List<EgovMap> customerList = null;
+					Map<String, Object> params1 =  new HashMap<>();
+					params1.put("custId", thirdPartyCustId);
+				    customerList = customerService.selectCustomerList(params1);
+
+				    if(customerList.size() > 0){
+						ObjectMapper map = new ObjectMapper();
+						try {
+							String customerJSONInfo = map.writeValueAsString(customerList.get(0));
+							model.put("thirdPartyCustomerInfo", customerJSONInfo);
+						} catch (JsonProcessingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				    }
+				}
+			}
+
 		}
 		else{
 			model.put("mobileAutoDebitDetail", null);
