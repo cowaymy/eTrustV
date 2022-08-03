@@ -43,7 +43,7 @@
     	 $("#condition").html('${headerDetail.condition}');
     	 $("#filterSn").html('${headerDetail.filterSn}');
     	 $("#filterChgDt").html('${headerDetail.filterChgDt}');
-    	 $("#holderLoc").html('${headerDetail.holderLoc}');
+    	 $("#holderLoc").html("${headerDetail.holderLoc}");
     	 $("#changeDt").html(date.toLocaleString('en-GB', { hour12:false }));
     }
 
