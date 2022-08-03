@@ -712,17 +712,12 @@ public class CRJavaHelper {
 	public static void exportGeneralExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response,
 			boolean attachment, String downFileName, Map<String, Object> params)
 			throws ReportSDKExceptionBase, IOException {
-//		ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
-//
-//		boolean isGeneralPath = Boolean.parseBoolean(params.get("isGeneral").toString());
-//
-//		exportGeneral(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName,isGeneralPath);
-//
+		ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
 
-		ExportOptions exportOptions = getExcelExportOptions();
 		boolean isGeneralPath = Boolean.parseBoolean(params.get("isGeneral").toString());
+
 		exportGeneral(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName,isGeneralPath);
-	}
+}
 
 	public static ExportOptions getExcelExportptionsDataOnly(Map<String, Object> params) {
 		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
@@ -780,6 +775,14 @@ public class CRJavaHelper {
 		exportOptions.setExportFormatType(ReportExportFormat.characterSeparatedValues);
 		exportOptions.setFormatOptions(csvOptions);
 		return exportOptions;
+	}
+
+	public static void exportGeneralCSV(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
+			String downFileName, Map<String, Object> params) throws ReportSDKExceptionBase, IOException {
+		ExportOptions exportOptions = getCSVExportOptions();
+
+		boolean isGeneralPath = Boolean.parseBoolean(params.get("isGeneral").toString());
+		exportGeneral(clientDoc, exportOptions, response, attachment, "text/csv", CSV, downFileName, isGeneralPath);
 	}
 
 	/**

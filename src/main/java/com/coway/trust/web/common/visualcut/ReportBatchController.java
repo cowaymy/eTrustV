@@ -2575,10 +2575,10 @@ public void dataMartReport(HttpServletRequest request) throws IOException {
   Map<String, Object> params = new HashMap<>();
 
   if(nameParam != null && nameParam != ""){
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	  	      "DataMart" + File.separator + nameParam +  File.separator + "PUBLIC_" + nameParam + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	  	      "DataMart" + File.separator + nameParam +  File.separator + "PUBLIC_" + nameParam + CommonUtils.getNowDate() + ".csv"); //directory/filename
 
 	  switch(nameParam){
 	  	case "CLAIM":
@@ -2590,7 +2590,7 @@ public void dataMartReport(HttpServletRequest request) throws IOException {
     	  		this.viewProcedure(null, null, params);
 			break;
 	  	case "PRODUCT":
-    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartProductData1.rpt");
+    	  		params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");
     	  		this.viewProcedure(null, null, params);
 			break;
 	  	case "MEMBER":
@@ -2615,64 +2615,64 @@ public void dataMartReport(HttpServletRequest request) throws IOException {
 /*	  //PART 1
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartClaimData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "CLAIM" +  File.separator + "PUBLIC_CLAIM" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "CLAIM" +  File.separator + "PUBLIC_CLAIM" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 2
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartCustData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "CUSTOMER" +  File.separator + "PUBLIC_CUSTOMER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "CUSTOMER" +  File.separator + "PUBLIC_CUSTOMER" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);*/
 
 	  //PART 3
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartProductData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "PRODUCT" +  File.separator + "PUBLIC_PRODUCT" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "PRODUCT" +  File.separator + "PUBLIC_PRODUCT" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 4
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartMemberData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "MEMBER" +  File.separator + "PUBLIC_MEMBER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "MEMBER" +  File.separator + "PUBLIC_MEMBER" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 /*	  //PART 5
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartOrderData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "ORDER" +  File.separator + "PUBLIC_ORDER" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "ORDER" +  File.separator + "PUBLIC_ORDER" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 6
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartNetSalesData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "NET_SALES" +  File.separator + "PUBLIC_NET_SALES" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "NET_SALES" +  File.separator + "PUBLIC_NET_SALES" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);
 
 	  //PART 7
 	  params = new HashMap<>();
 	  params.put(REPORT_FILE_NAME, "/sales/DataMartAccumAccData.rpt");// sales rpt file name
-	  params.put(REPORT_VIEW_TYPE, "GENERAL_EXCEL"); // viewType
+	  params.put(REPORT_VIEW_TYPE, "GENERAL_CSV"); // viewType
 	  params.put("isGeneral", "true"); // to be use for general type path define
 	  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	      "DataMart" + File.separator + "ACCUMULATED_ACCOUNT" +  File.separator + "PUBLIC_ACCUMULATED_ACCOUNT" + CommonUtils.getNowDate() + ".xls"); //directory/filename
+	      "DataMart" + File.separator + "ACCUMULATED_ACCOUNT" +  File.separator + "PUBLIC_ACCUMULATED_ACCOUNT" + CommonUtils.getNowDate() + ".csv"); //directory/filename
 	  this.viewProcedure(null, null, params);*/
   }
   LOGGER.info("[END] DataMartReport...");
@@ -2786,6 +2786,9 @@ public void dataMartReport(HttpServletRequest request) throws IOException {
       case GENERAL_EXCEL:
     	  ReportUtils.viewGeneralDataEXCEL(response, clientDoc, downFileName, params);
     	  break;
+      case GENERAL_CSV:
+          ReportUtils.viewGeneralCSV(response, clientDoc, downFileName,params);
+          break;
       default:
         throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
     }

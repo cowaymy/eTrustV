@@ -155,6 +155,11 @@ public class ReportUtils {
 						response, clientDoc, downFileName);
 	}
 
+	public static void viewGeneralCSV(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName, Map<String, Object> params) {
+		ReportUtils.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportGeneralCSV(clientDoc,
+				response, true, downFileName, params), response, clientDoc, downFileName);
+	}
+
 	public static void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
 		ReportUtils.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportCSV(clientDoc,
 				response, true, downFileName), response, clientDoc, downFileName);
