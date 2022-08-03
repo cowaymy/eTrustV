@@ -712,10 +712,15 @@ public class CRJavaHelper {
 	public static void exportGeneralExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response,
 			boolean attachment, String downFileName, Map<String, Object> params)
 			throws ReportSDKExceptionBase, IOException {
-		ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
+//		ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
+//
+//		boolean isGeneralPath = Boolean.parseBoolean(params.get("isGeneral").toString());
+//
+//		exportGeneral(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName,isGeneralPath);
+//
 
+		ExportOptions exportOptions = getExcelExportOptions();
 		boolean isGeneralPath = Boolean.parseBoolean(params.get("isGeneral").toString());
-
 		exportGeneral(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName,isGeneralPath);
 	}
 
