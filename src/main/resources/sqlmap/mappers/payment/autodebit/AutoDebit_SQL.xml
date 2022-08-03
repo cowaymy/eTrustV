@@ -46,7 +46,7 @@
 		<if test='statusCode != null and statusCode != ""'>
 		AND p0333m.STUS_CODE_ID = #{statusCode}
 		</if>
-		ORDER BY CRT_DT DESC
+		ORDER BY p0333m.CRT_DT DESC
   </select>
 
   <select  id="selectAutoDebitEnrollmentList" parameterType="Map" resultType="egovMap">
