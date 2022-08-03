@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.ProFormaInvoiceMapper">
+
+    <select id="searchProFormaInvoiceList" parameterType="Map" resultType="egovMap">
+        SELECT
+		   C.CUST_ID,
+		   C.NAME AS CUST_NAME,
+		   A.PRO_FORMA_ID,
+		   A.REF_NO,
+		   B.SALES_ORD_ID,
+		   B.SALES_ORD_NO,
+		   B.BRNCH_ID,
+		   D.CODE || '-' || D.NAME AS BRNCH_NAME,
+		   A.SALESMAN_CODE,
+		   F.DEPT_CODE,
+		   A.CRT_DT,
+		   CASE WHEN A.PACKAGE_TYPE = '12' THEN '1 Year Advance'
+                ELSE '2 Year Advance' END AS PACK_TYPE,
+		   A.STUS_ID,
+		   G.NAME AS STATUS,
+		   H.USER_NAME AS CRT_USER,
+		   A.ADV_PAY_KEY,
+		   B.MTH_RENT_AMT,
+		   A.PACK_PRICE
+		FROM PAY0334D A
+		    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+		    JOIN SAL0029D C ON B.CUST_ID = C.CUST_ID
+		    JOIN SYS0005M D ON D.BRNCH_ID = B.BRNCH_ID
+		    JOIN ORG0001D E ON A.SALESMAN_CODE = E.MEM_CODE
+		    JOIN ORG1001V F ON E.MEM_ID = F.MEM_ID
+		    LEFT JOIN SYS0038M G ON A.STUS_ID = G.STUS_CODE_ID
+		    JOIN SYS0047M H ON A.CRT_USER_ID = H.USER_ID
+		WHERE 1=1
+		      AND A.STUS_ID != 8
+		      <if test="refNo != null and refNo != ''">
+                AND  A.REF_NO = UPPER(#{refNo})
+             </if>
+             <if test='arrBrnchCode != null and arrBrnchCode != ""'>
+                AND B.BRNCH_ID IN
+	             <foreach item="item" collection="arrBrnchCode" index="index" open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+             </if>
+             <if test="advPayId != null and advPayId != ''">
+                AND  A.ADV_PAY_KEY = UPPER(#{advPayId})
+             </if>
+
+             <if test='arrayCustId != null and arrayCustId != ""'>
+                AND B.CUST_ID IN
+             <foreach item="item" collection="arrayCustId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+             </if>
+             <if test="deptCode != null and deptCode != ''">
+                AND F.DEPT_CODE = #{deptCode}
+             </if>
+             <if test="creator != null and creator != ''">
+                AND H.USER_NAME LIKE '%'||UPPER(#{creator})||'%'
+             </if>
+
+		     <if test="ordNo != null and ordNo != ''">
+		          AND  B.SALES_ORD_NO = #{ordNo}
+		     </if>
+		     <if test='startDt != null and startDt != "" and endDt != null and endDt != ""'>
+                AND A.CRT_DT BETWEEN TO_DATE(#{startDt}, 'DD/MM/YYYY') AND TO_DATE(#{endDt}, 'DD/MM/YYYY')
+             </if>
+		     <if test='arrStatus != null and arrStatus != ""'>
+	             AND A.STUS_ID IN
+	             <foreach item="item" collection="arrStatus" index="index" open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+             </if>
+             <if test="packageType != null and packageType != ''">
+                  AND  A.PACKAGE_TYPE = #{packageType}
+             </if>
+
+        ORDER BY A.PRO_FORMA_ID ASC
+    </select>
+
+    <select id="chkCustType" parameterType="Map" resultType="egovMap">
+        SELECT
+		    A.CUST_ID,
+		    B.TYPE_ID
+		FROM sal0001d A
+		JOIN sal0029d B ON A.CUST_ID = B.CUST_ID
+        WHERE 1=1
+             <if test="ordNo != null and ordNo != ''">
+                  AND A.SALES_ORD_NO = #{ordNo}
+             </if>
+    </select>
+
+     <select id="selectDocNo" parameterType="Integer" resultType="String">
+    SELECT FN_GET_DOCNO(#{value}) from dual
+  </select>
+
+
+  <insert id="saveNewProForma" parameterType="Map">
+    INSERT INTO PAY0334D
+    (
+	    PRO_FORMA_ID
+	    , REF_NO
+	    , SALES_ORD_ID
+	    , STUS_ID
+	    , PACKAGE_TYPE
+	    , SALESMAN_CODE
+	    , ADV_START_DT
+	    , ADV_END_DT
+	    , TOTAL_AMT
+	    , PACK_PRICE
+	    , REMARK
+	    , DISC_PROMO
+	    , CRT_USER_ID
+	    , CRT_DT
+	    )
+	    VALUES
+	    (
+	    PAY0334D_PRO_FORMA_ID_SEQ.NEXTVAL
+	    , #{pfNo}
+	    , #{orderId}
+	    , #{stus}
+	    , #{packType}
+	    , #{memCode}
+	    , TO_DATE(#{adStartDt}, 'DD/MM/YYYY')
+	    , TO_DATE(#{adEndDt}, 'DD/MM/YYYY')
+	    , #{totalAmt}
+	    , #{packPrice}
+	    , #{remark}
+	    , #{discount}
+	    , #{creator}
+	    , SYSDATE
+    )
+  </insert>
+
+  <update id="farCheckConvertFn" parameterType="Map">
+        UPDATE PAY0334D
+        SET
+            STUS_ID = #{stusId},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{updator}
+        WHERE PRO_FORMA_ID = #{proFormaId}
+      </update>
+
+</mapper>

@@ -1,0 +1,856 @@
+
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+
+
+<style>
+
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#FFB2D9;
+    font-weight:bold;
+    color:#22741C;
+}
+</style>
+<script type="text/javaScript" language="javascript">
+
+var resultBasicObject;
+var resultSrvconfigObject;
+var resultInstallationObject;
+var defaultcTPackage = "9";
+var myGridIDBillGroup;
+
+var columnLayoutBill =[
+                       {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+                       {dataField:"salesOrdId", headerText:"Sales Ord Id", visible:false },
+                       {dataField:"refNo", headerText:"Ref No."},
+                       {dataField:"orderDate", headerText:"Order Date", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+                       {dataField:"status", headerText:"Status"},
+                       {dataField:"appType", headerText:"App Type"},
+                       {dataField:"product", headerText:"Product"},
+                       {dataField:"custName", headerText:"Customer"},
+                       {dataField:"custBillId", headerText:"Bill ID"},
+                       {
+                           dataField : "undefined",
+                           headerText : " ",
+                           width : '10%',
+                           renderer : {
+                                    type : "ButtonRenderer",
+                                    labelText : "Select",
+                                    onclick : function(rowIndex, columnIndex, value, item) {
+                                        $("#orderId").val(item.salesOrdId);
+                                        fn_SelectPO(item.salesOrdId);
+                                  }
+                           }
+                       }
+                   ];
+
+var gridProsBill = {
+        editable: false,
+        showStateColumn: false,
+        pageRowCount : 5
+};
+
+$(document).ready(function(){
+
+	 myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
+	 $("#grid_wrap_billGroup").hide();
+	 AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
+
+     $("#rbt").attr("style","display:none");
+     $("#ORD_NO_RESULT").attr("style","display:none");
+
+     $("#ORD_NO").keydown(function(key)  {
+            if (key.keyCode == 13) {
+                fn_doConfirm();
+            }
+     });
+});
+
+    function fn_doConfirm() {
+
+
+
+         Common.ajax("GET", "/sales/membership/selectMembershipFreeConF", $("#sForm").serialize(), function(result) {
+
+            if (result == 0) {
+
+                $("#cbt").attr("style", "display:inline");
+                $("#ORD_NO").attr("style", "display:inline");
+                $("#sbt").attr("style", "display:inline");
+                $("#rbt").attr("style", "display:none");
+                $("#ORD_NO_RESULT").attr("style", "display:none");
+
+                $("#resultcontens").attr("style", "display:none");
+
+                Common.alert("No order found or this order is not under complete status or activation status.");
+                return;
+
+            }
+            else if (result[0].stkId == '1' || result[0].stkId == '651' || result[0].stkId == '218' || result[0].stkId == '689' || result[0].stkId == '216' || result[0].stkId == '687'
+                    || result[0].stkId == '3' || result[0].stkId == '653') {
+
+                Common.alert("Product have been discontinued. Therefore, create new quotation is not allowed");
+                return;
+            }
+            else {
+
+                if (fn_isActiveMembershipQuotationInfoByOrderNo()) {
+                    return;
+                }
+
+                if (fn_chkCustType()) {
+                    return;
+                }
+
+                $("#ORD_ID").val(result[0].ordId);
+                $("#ORD_NO_RESULT").val(result[0].ordNo);
+
+                fn_loadOrderPO($("#ORD_ID").val());
+
+            }
+        });
+    }
+
+    function fn_isActiveMembershipQuotationInfoByOrderNo() {
+        var rtnVAL = false;
+        Common.ajaxSync("GET", "/sales/membership/mActiveQuoOrder", {
+            ORD_NO : $("#ORD_NO").val()
+        }, function(result) {
+
+            if (result.length > 0) {
+                rtnVAL = true;
+                Common.alert(" <b><spring:message code="sal.alert.msg.hasActQuotation" />[" + result[0].srvMemQuotNo + "]</b>");
+                return true;
+            }
+        });
+
+        return rtnVAL;
+    }
+
+    function fn_chkCustType() {
+        var rtnVAL = false;
+
+        Common.ajaxSync("GET", "/payment/chkCustType", {
+            ordNo : $("#ORD_NO").val()
+        }, function(result) {
+
+            if (result.length > 0) {
+            	if(result[0].typeId != "965"){ //965 = company
+            		rtnVAL = true;
+                    Common.alert("This order belongs to individual customer <br> (Only for corporate customer only)");
+                    return true;
+            	}
+            }
+        });
+
+        return rtnVAL;
+    }
+
+    function fn_getDataInfo(orderId) {
+        Common.ajax("GET", "/sales/membership/selectMembershipFreeDataInfo", {"ORD_ID" : orderId} , function(result) {
+
+            resultInstallationObject = result.installation;
+            resultBasicObject = result.basic;
+
+            var billMonth = getOrderCurrentBillMonth();
+
+            if (fn_CheckRentalOrder(billMonth)) {
+
+            	 $("#packType").attr("disabled",false);
+                 $("#discount").attr("disabled",false);
+                 $("#SALES_PERSON").attr("disabled",false);
+                 $("#txtRemark").attr("disabled",false);
+                 $("#sale_confirmbt").attr("style", "display:block");
+                 $("#sale_searchbt").attr("style", "display:block");
+
+                 setText(result);
+                 setPackgCombo();
+            }
+        });
+    }
+
+    function fn_outspro() {
+        Common.ajax("GET", "/sales/membership/callOutOutsProcedure", $("#getDataForm").serialize(), function(result) {
+
+            if (result.outSuts.length > 0) {
+                $("#ordoutstanding").html(result.outSuts[0].ordOtstnd);
+                $("#asoutstanding").html(result.outSuts[0].asOtstnd);
+            }
+        });
+    }
+
+    function setText(result) {
+
+        resultBasicObject = result.basic;
+        resultSrvconfigObject = result.srvconfig;
+
+        $("#orderNo").html(result.basic.ordNo);
+        $("#finalRentalFee").html(result.basic.ordMthRental);
+
+        $("#custId").html(result.basic.custId);
+        $("#customerName").html(result.basic.custName);
+        $("#STOCK_ID").val(result.basic.stockId);
+
+    }
+
+    function fn_goCustSearch() {
+        Common.popupDiv('/sales/ccp/searchOrderNoPop.do', $('#_searchForm_').serializeJSON(), null, true, '_searchDiv');
+    }
+
+    function fn_callbackOrdSearchFunciton(item) {
+        $("#ORD_NO").val(item.ordNo);
+        fn_doConfirm();
+
+    }
+
+    function fn_doReset() {
+        $("#newProFormaPopupId").remove();
+        fn_goNew();
+    }
+
+    function fn_goContactPersonPop() {
+        Common.popupDiv("/sales/membership/memberFreeContactPop.do");
+    }
+
+    function fn_goNewContactPersonPop() {
+        Common.popupDiv("/sales/membership/memberFreeNewContactPop.do");
+    }
+
+    function fn_addContactPersonInfo(objInfo) {
+
+        fn_doClearPersion();
+
+        $("#name").html(objInfo.name);
+        $("#gender").html(objInfo.gender);
+        $("#nric").html(objInfo.nric);
+        $("#codename1").html(objInfo.codename1);
+        $("#telM1").html(objInfo.telM1);
+        $("#telO").html(objInfo.telO);
+        $("#telR").html(objInfo.telR);
+        $("#telf").html(objInfo.telf);
+        $("#email").html(objInfo.email);
+        $("#SAVE_CUST_CNTC_ID").val(objInfo.custCntcId);
+
+    }
+
+    function fn_doClearPersion() {
+
+        $("#name").html("");
+        $("#gender").html("");
+        $("#nric").html("");
+        $("#codename1").html("");
+        $("#telM1").html("");
+        $("#telO").html("");
+        $("#telR").html("");
+        $("#telf").html("");
+        $("#email").html("");
+        $("#SAVE_CUST_CNTC_ID").val("");
+    }
+
+    function formatDate(date) {
+        var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [ year, month, day ].join('-');
+    }
+
+    function setPackgCombo() {
+        //doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID=' + $("#ORD_ID").val(), '', defaultcTPackage, 'packType', 'S', '');
+        fn_cTPackage_onchangeEvt();
+
+    }
+
+    function fn_cTPackage_onchangeEvt() {
+
+        $("#txtPackagePrice").html("");
+
+        $("#packpro").attr("checked", false);
+        $("#cPromoCombox").attr("checked", false);
+
+        fn_packType_onChageEvent();
+
+    }
+
+    function fn_packType_onChageEvent(){
+
+        $("#SELPACKAGE_ID").val(defaultcTPackage);
+        var packType = $("#packType").val();
+
+        $("#DUR").val(packType);
+
+        var today = new Date();
+        var tYear = today.getFullYear();
+        var tMonth = today.getMonth() + 1;
+        var tDay = today.getDate();
+        if(tDay < 10) {
+        	tDay = "0" + tDay;
+        }
+        if(tMonth < 10){
+        	tMonth = "0" + tMonth;
+        }
+
+        var today = tDay + "/" + tMonth + "/" + tYear;
+        $("#adStartDt").val(today);
+
+        var adPeriod = packType == "12" ? "1" : "2";
+        var adYear = tYear + parseInt(adPeriod);
+        var adDate = tDay + "/" + tMonth + "/" + adYear;
+        $("#adEndDt").val(adDate);
+
+        fn_getMembershipPackageInfo(packType);
+
+    }
+
+    /*fn_getMembershipPackageInfo*/
+    function fn_getMembershipPackageInfo(_id) {
+
+        Common.ajax("GET", "/sales/membership/mPackageInfo", $("#getDataForm").serialize(), function(result) {
+
+            if (result.packageInfo.srvMemPacId == null || result.packageInfo.srvMemPacId == "") {
+
+                $("#HiddenHasPackage").val(0);
+                $("#txtBSFreq").html("");
+                $("#txtPackagePrice").html("");
+                $("#hiddenPacOriPrice").val(0);
+
+            }
+            else {
+
+                var pacYear = parseInt($("#DUR").val(), 10) / 12;
+                var pacPrice = Math.round((result.packageInfo.srvMemItmPrc * pacYear));
+
+                $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
+                $("#eurCertYn").val(result.packageInfo.eurCertYn);
+
+                $("#HiddenHasPackage").val(1);
+                $("#txtBSFreq").html(result.packageInfo.srvMemItmPriod + " <spring:message code="sal.text.month" />");
+                $("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod);
+
+                $("#srvMemPacId").val(result.packageInfo.srvMemPacId);
+
+                if ($("#eurCertYn").val() == "N") {
+                    $("#txtPackagePrice").html(Math.floor(pacPrice));
+                    $("#hiddenPacOriPrice").val(Math.floor(pacPrice));
+                }
+                else {
+                    $("#txtPackagePrice").html(pacPrice);
+                    $("#hiddenPacOriPrice").val(pacPrice);
+                }
+            }
+
+            $("#packpro").removeAttr("disabled");
+
+            if($("#discount").val() != "0"){
+                fn_discount_onChageEvent();
+            }
+        });
+    }
+
+    function fn_discount_onChageEvent(){
+
+        var discount = $("#discount").val();
+        if(discount != "0") {
+            var discountPercnt = (100 - parseInt(discount)) / 100;
+            var packPrice = $("#hiddenPacOriPrice").val();
+
+            var discountPrice  = parseInt(packPrice) * discountPercnt
+            $("#txtPackagePrice").html(discountPrice.toFixed(2));
+        }
+        else{
+        	fn_packType_onChageEvent();
+        }
+    }
+
+    function fn_back() {
+        $("#newProFormaPopupId").remove();
+    }
+
+    function fn_goSalesConfirm() {
+
+        if ($("#SALES_PERSON").val() == "") {
+
+            Common.alert("Please Key-In Sales Person Code. ");
+            return;
+        }
+
+        Common.ajax("GET", "/sales/membership/paymentColleConfirm", {
+            COLL_MEM_CODE : $("#SALES_PERSON").val()
+        }, function(result) {
+
+            if (result.length > 0) {
+
+                $("#SALES_PERSON").val(result[0].memCode);
+                $("#SALES_PERSON_DESC").html(result[0].name);
+                $("#hiddenSalesPersonID").val(result[0].memId);
+
+                $("#sale_confirmbt").attr("style", "display:none");
+                $("#sale_searchbt").attr("style", "display:none");
+                //$("#sale_resetbt").attr("style" ,"display:inline");
+                $("#SALES_PERSON").attr("class", "readonly");
+
+            }
+            else {
+
+                $("#SALES_PERSON_DESC").html("");
+                Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" + $("#SALES_PERSON").val() + "] <spring:message code="sal.alert.msg.unableToFind2" />   ");
+                return;
+            }
+
+        });
+    }
+
+    function fn_goSalesPerson() {
+
+        Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
+    }
+
+    function fn_goSalesPersonReset() {
+
+        $("#sale_confirmbt").attr("style", "display:inline");
+        $("#sale_searchbt").attr("style", "display:inline");
+        $("#sale_resetbt").attr("style", "display:none");
+        $("#SALES_PERSON").attr("class", "");
+        $("#SALES_PERSON_DESC").html("");
+        $("#hiddenSalesPersonID").val("");
+
+    }
+
+    function fn_doSalesResult(item) {
+
+        if (typeof (item) != "undefined") {
+
+            $("#SALES_PERSON").val(item.memCode);
+            $("#SALES_PERSON_DESC").html(item.name);
+            $("#hiddenSalesPersonID").val(item.memId);
+            $("#sale_confirmbt").attr("style", "display:none");
+            $("#sale_searchbt").attr("style", "display:none");
+            $("#sale_resetbt").attr("style", "display:inline");
+            $("#SALES_PERSON").attr("class", "readonly");
+
+        }
+        else {
+            $("#SALES_PERSON").val("");
+            $("#SALES_PERSON_DESC").html("");
+            $("#SALES_PERSON").attr("class", "");
+        }
+    }
+
+    function getOrderCurrentBillMonth() {
+        var billMonth = 0;
+
+        Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", {
+            ORD_ID : $("#ORD_ID").val()
+        }, function(result) {
+
+            if (result.length > 0) {
+                if (parseInt(result[0].nowDate, 10) > parseInt(result[0].rentInstDt, 10)) {
+
+                    billMonth = 61;
+
+                    return billMonth;
+
+                }
+                else {
+                    Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", {
+                        ORD_ID : $("#ORD_ID").val(),
+                        RENT_INST_DT : 'SYSDATE'
+                    }, function(_result) {
+
+                        if (_result.length > 0) {
+                            billMonth = _result[0].rentInstNo;
+                        }
+
+                    });
+                }
+            }
+        });
+
+        return billMonth;
+    }
+
+    function fn_save() {
+
+        var billMonth = getOrderCurrentBillMonth();
+
+        if (fn_validRequiredField_Save() == false)
+            return;
+        if (fn_CheckRentalOrder(billMonth)) {
+            if (fn_CheckSalesPersonCode()) {
+                fn_unconfirmSalesPerson();
+            }
+        }
+    }
+
+    function fn_validRequiredField_Save() {
+
+        var rtnMsg = "";
+        var rtnValue = true;
+
+        if (FormUtil.checkReqValue($("#adStartDt"))) {
+            rtnMsg += "* Please select Advance Period start date<br />";
+            rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#adEndDt"))) {
+            rtnMsg += "* Please select Advance Period start date<br />";
+            rtnValue = false;
+        }
+
+        if (rtnValue == false) {
+            Common.alert("<spring:message code="sal.alert.title.saveQuotationSummary" />" + DEFAULT_DELIMITER + rtnMsg);
+        }
+
+        return rtnValue;
+    }
+
+    function fn_CheckRentalOrder(billMonth) {
+        var rtnMsg = "";
+        var rtnValue = true;
+
+        if (resultBasicObject.appTypeId == 66) {
+
+            /*  if( $("#rentalStus").text() == "REG" ||$("#rentalStus").text() == "INV" ){ */
+            if (resultBasicObject.rentalStus == "REG" || resultBasicObject.rentalStus == "INV") {
+
+                if (billMonth > 60) {
+                    Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
+
+                        if (result != null) {
+                            if (result.ordTotOtstnd > 0) {
+                                rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br />";
+                                rtnValue = false;
+                            } else{
+                                //webster lee 20072020:Added new validation
+                                Common.ajaxSync("GET", "/sales/membership/getOutrightMemLedge", $("#getDataForm").serialize(), function(result1) {
+
+                                    if(result1 != null) {
+                                        if (result1.amt > 0) {
+                                            rtnMsg +=  "This order has outstanding.<br />";
+                                            rtnValue = false;
+                                        }
+                                    }
+
+                                }, function(jqXHR, textStatus, errorThrown) {
+                                    try {
+                                        console.log("status : " + jqXHR.status);
+                                        console.log("code : " + jqXHR.responseJSON.code);
+                                        console.log("message : " + jqXHR.responseJSON.message);
+                                        console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                                    }
+                                    catch (e) {
+                                        console.log(e);
+                                    }
+                                    rtnMsg += jqXHR.responseJSON.message;
+                                    rtnValue = false;
+                                });
+                            }
+
+                        }
+
+                    }, function(jqXHR, textStatus, errorThrown) {
+                        try {
+                            console.log("status : " + jqXHR.status);
+                            console.log("code : " + jqXHR.responseJSON.code);
+                            console.log("message : " + jqXHR.responseJSON.message);
+                            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
+
+                        rtnMsg += jqXHR.responseJSON.message;
+                        rtnValue = false;
+                    });
+                }
+
+            }
+            else {
+                rtnMsg += "<spring:message code="sal.alert.msg.onlyRegOrINV" /><br>";
+                rtnValue = false;
+            }
+        } else {
+            Common.ajaxSync("GET", "/sales/membership/getOutrightMemLedge", $("#getDataForm").serialize(), function(result1) {
+
+                if(result1 != null) {
+                    if (result1.amt > 0) {
+                        rtnMsg +=  "This order has outstanding.<br />";
+                        rtnValue = false;
+                    }
+                }
+
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    console.log("status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                }
+                catch (e) {
+                    console.log(e);
+                }
+                rtnMsg += jqXHR.responseJSON.message;
+                rtnValue = false;
+            });
+        }
+
+
+        if (rtnValue == false) {
+        	$("#packType").attr("disabled",true);
+            $("#discount").attr("disabled",true);
+            $("#SALES_PERSON").attr("disabled",true);
+            $("#txtRemark").attr("disabled",true);
+            $("#sale_confirmbt").attr("style", "display:none");
+            $("#sale_searchbt").attr("style", "display:none");
+
+            Common.alert("<spring:message code="sal.alert.title.rentalOrderValidation" />" + DEFAULT_DELIMITER + rtnMsg);
+
+        }
+
+        return rtnValue;
+    }
+
+    function fn_CheckSalesPersonCode() {
+
+        if ($("#SALES_PERSON").val() == "") {
+
+            Common.alert("<spring:message code="sal.alert.msg.keyInSalesPersonCode" /> ");
+            return false;
+        }
+        return true;
+    }
+
+    function fn_unconfirmSalesPerson() {
+
+        if ($("#hiddenSalesPersonID").val() == "") {
+            Common.alert("<spring:message code="sal.alert.title.salesPersonConfirmation" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.salesPersonConfirmation" />");
+            return false;
+
+        }
+        else {
+            fn_DoSaveProcess();
+        }
+    }
+
+    function fn_DoSaveProcess(_saveOption) {
+
+    	var ProFormaM = {
+
+    			orderId : $("#ORD_ID").val(),
+    			packType : $("#packType").val(),
+    			memCode : $("#SALES_PERSON").val(),
+    			adStartDt : $("#adStartDt").val(),
+    			adEndDt : $("#adEndDt").val(),
+    			totalAmt : $("#txtPackagePrice").html(),
+    			packPrice : $("#hiddenPacOriPrice").val(),
+                remark : $("#txtRemark").val(),
+                discount : $("#discount").val(),
+                orderNo : $("#ORD_NO").val()
+
+            }
+
+            var saveForm = {
+                "ProFormaM" : ProFormaM
+            }
+
+    	console.log("save ahhhh");
+    	console.log(saveForm);
+
+            Common.ajax("POST", "/payment/saveNewProForma.do", saveForm,
+                      function(result) {
+                        Common.alert(result.message, fn_saveclose);
+                        $("#popup_wrap").remove();
+                        fn_selectListAjax();
+            });
+    }
+
+    function fn_saveclose() {
+        newProFormaPopupId.remove();
+    }
+
+    function fn_loadOrderPO(orderId){
+
+        Common.ajax("GET","/payment/selectInvoiceBillGroupList.do", {"orderId" : orderId} , function(result){
+            if(result != null){
+                $("#billGroupNo").val(result[0].custBillGrpNo);
+                AUIGrid.setGridData(myGridIDBillGroup, result);
+            }
+         });
+    	$("#grid_wrap_billGroup").show();
+    }
+
+    function fn_SelectPO(orderId)
+    {
+         $("#resultcontens").show();
+         fn_getDataInfo(orderId);
+
+         if("${SESSION_INFO.userTypeId}" == "1"  || "${SESSION_INFO.userTypeId}" == "2" ){
+             $("#cEmplo option[value='0']").attr('selected', 'selected');
+             $('#cEmplo').attr("disabled",true);
+         }
+
+         if ('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2 || '${SESSION_INFO.userTypeId}' == 3 || '${SESSION_INFO.userTypeId}' == 7) {
+             $("#SALES_PERSON").val("${SESSION_INFO.userName}");
+             $("#sale_confirmbt").hide();
+             $("#sale_searchbt").hide();
+             fn_goSalesConfirm();
+         }
+    }
+</script>
+
+
+
+<form id="getDataForm" method="post">
+<div style="display:none">
+    <input type="text" name="ORD_ID"     id="ORD_ID"/>
+    <input type="text" name="STOCK_ID"  id="STOCK_ID"/>
+    <input type="text" name="SELPACKAGE_ID"  id="SELPACKAGE_ID"/>
+    <input type="text" name="DUR"  id="DUR"/>
+    <input type="text" name="hiddenPacOriPrice"  id="hiddenPacOriPrice"/>
+</div>
+</form>
+
+<div id="popup_wrap" class="popup_wrap "><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Pro-Forma Invoice</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="nc_close"><spring:message code="sal.btn.close" /></a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body" style="height:450px"><!-- pop_body start -->
+
+<section id="content"><!-- content start -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#"   id="sForm"  name="sForm" method="post" >
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
+    <td>
+           <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" />
+           <p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> <spring:message code="sal.btn.confirm" /></a></p>
+           <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()"><spring:message code="sal.btn.search" /></a></p>
+           <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" />
+           <p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()"><spring:message code="sal.btn.reselect" /></a></p>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section><!-- search_table end -->
+
+<section>
+  <!-- grid_wrap start -->
+  <article id="grid_wrap_billGroup" class="grid_wrap"></article>
+  <!-- grid_wrap end -->
+</section>
+
+<section>
+<div  id="resultcontens"  style="display:none">
+
+<form action="#"   id="sForm"  name="saveForm" method="post"   onsubmit="return false;">
+
+        <aside class="title_line"><!-- title_line start -->
+        <h3>Pro Forma Information</h3>
+        </aside><!-- title_line end -->
+
+        <section class="search_table"><!-- search_table start -->
+        <form action="#" method="post"  id='collForm' name ='collForm'>
+
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+             <col style="width: 130px" />
+		     <col style="width: 350px" />
+		     <col style="width: 170px" />
+		     <col style="width: *" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row"><spring:message code="sal.text.ordNo" /></th>
+            <td><span id='orderNo' ></span></td>
+            <th scope="row"><spring:message code="sal.text.custName" /></th>
+            <td><span id='customerName'></span></td>
+        </tr>
+        <tr>
+            <th scope="row"><spring:message code="sal.text.typeOfPack" /></th>
+            <td>
+            <select  id="packType"   name= "packType" onChange="fn_packType_onChageEvent()" >
+                <option value="12" >1 Year</option>
+                <option value="24" >2 Year</option>
+            </select>
+            </td>
+            <th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
+            <td><span id="finalRentalFee"></span></td>
+        </tr>
+        <tr>
+			<th scope="row">Advance Period</th>
+			<td>
+		        <div class="date_set w100p"><!-- date_set start -->
+		        <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="adStartDt" name="adStartDt" class="readonly "/></p>
+		        <span><spring:message code="sal.text.to" /></span>
+		        <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="adEndDt" name="adEndDt" class="readonly "/></p>
+		        </div><!-- date_set end -->
+	        </td>
+	        <th scope="row"><spring:message code="sal.text.packPrice" /></th>
+            <td><span id='txtPackagePrice'></span></td>
+        </tr>
+        <tr>
+            <th scope="row"><spring:message code="sal.title.text.discount" /></th>
+            <td>
+            <select  id="discount"   name= "discount" onChange="fn_discount_onChageEvent()"   >
+                <option value="0" >Not Eligible</option>
+                <option value="5" >5%</option>
+                <option value="10" >10%</option>
+            </select>
+            </td>
+            <th scope="row"></th><td></td>
+        </tr>
+        <tr>
+            <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
+            <td><input type="text" title="" placeholder="" class=""  style="width:100px" id="SALES_PERSON" name="SALES_PERSON"  />
+                <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()"><spring:message code="sal.btn.confirm" /></a></p>
+                <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" ><spring:message code="sal.btn.search" /></a></p>
+                <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" ><spring:message code="sal.btn.reset" /></a></p>
+            </td>
+            <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
+            <td><span id="SALES_PERSON_DESC"  name="SALES_PERSON_DESC"></span></td>
+        </tr>
+        <tr>
+            <th scope="row"><spring:message code="sal.text.remark" /></th>
+            <td><textarea rows="5" id='txtRemark' name=''></textarea></td>
+            <th scope="row"></th><td></td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+        </form>
+        </section><!-- search_table end -->
+
+
+        <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()"><spring:message code="sal.btn.save" /></a></p></li>
+        </ul>
+</form>
+
+</div>
+</section>
+
+</section><!-- content end -->
+
+
+</section>
+
+</div>
