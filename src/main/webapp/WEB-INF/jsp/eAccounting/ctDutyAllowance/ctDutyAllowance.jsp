@@ -111,13 +111,13 @@ var ctDutyClaimGridPros = {
 $(document).ready(function () {
 	ctDutyClaimGridID = AUIGrid.create("#ctDutyClaim_grid_wrap", ctDutyClaimColumnLayout, ctDutyClaimGridPros);
 
-	if(brnch == "42"){
+	/* if(brnch == "42"){
 		doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', '', brnch, 'cmbDscCode', 'S', '');
 	}else{
 		doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', brnch, brnch, 'cmbDscCode', 'S', '');
 		$("#cmbDscCode option[value='"+ brnch +"']", '#form_staffClaim').attr("selected", true);
 	    $('#cmbDscCode').trigger('click');
-	}
+	} */
 
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#registration_btn").click(fn_newCTDutyAllowPop);
@@ -257,14 +257,14 @@ function fn_setSupplier() {
 
 function fn_selectStaffClaimList() {
 
-	if(FormUtil.isEmpty($("#cmbDscCode").val()) && roleId != '127' && brnch != "42") {
+	/* if(FormUtil.isEmpty($("#cmbDscCode").val()) && roleId != '127' && brnch != "42") {
         Common.alert('Plesae select DSC Code');
-    }else{
+    }else{ */
     	Common.ajax("GET", "/eAccounting/ctDutyAllowance/selectCtDutyAllowanceList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
             console.log(result);
             AUIGrid.setGridData(ctDutyClaimGridID, result);
         });
-    }
+    //}
 }
 
 function fn_editStaffClaimPop(clmNo) {
@@ -425,12 +425,12 @@ function fn_appvRejctSubmit(type, rejctResn) {
 	<th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
     <td><input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/></td>
 </tr>
-<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <th scope="row">DSC Code</th>
     <td>
         <select id="cmbDscCode" name="cmbDscCode" class=""></select>
     </td>
-</c:if>
+</c:if> --%>
 <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <input type="hidden" id="apprvUserId" name="apprvUserId" value='${SESSION_INFO.memId}'>
 </c:if>
