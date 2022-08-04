@@ -34,6 +34,12 @@
 
         // search member confirm
         $('#confirm').click(function() {
+        	var cmmDt = $("#searchForm #cmmDt").val(); //commission date
+            var monthConf = Number(cmmDt.substring(0, 2));
+            var yearConf = Number(cmmDt.substring(3));
+            var taskIDConf = monthConf + (yearConf * 12) - 24157; //taskId
+            $("#searchForm #taskIDConf").val(taskIDConf);
+
             $("#searchForm [name=confirmChk]").val("N");
             var salesPersonCd = $("#searchForm [name=salesPersonCd]").val();
             if (salesPersonCd == "") {
@@ -47,7 +53,7 @@
                     //Common.alert("Unable to find [" + salesPersonCd + "] in  Cody Code .<br />Please ensure you key in the correct member code.");
                     $("#searchForm [name=salesPersonCd]").val("");
                 } else {
-                	memLevel = result.cnt;
+                	memLevel = result.emplyLev;
                     $("#searchForm [name=confirmChk]").val("Y");
                     Common.alert("<spring:message code='sys.msg.success'/>");
                 }
@@ -362,6 +368,7 @@ console.log(year);
         <form name="searchForm" id="searchForm" method="post">
             <input type="hidden" id="confirmChk" name="confirmChk" value="N" />
             <input type="hidden" id="memType" name="memType" value="2" />
+            <input type="hidden" id="taskIDConf" name="taskIDConf" value="" />
             <table class="type1">
                 <!-- table start -->
                 <caption>table</caption>
