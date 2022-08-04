@@ -244,7 +244,7 @@ public class CcpRentalAgreementController {
 					if(!(codyInfo.get("telMobile1") == null || codyInfo.get("telMobile1") == "")){
 						mobileNumList.add((String) codyInfo.get("telMobile1"));
 					}
-					if(!(salesmanInfo.get("telMobile2") == null || codyInfo.get("telMobile2") == "")){
+					if(!(codyInfo.get("telMobile2") == null || codyInfo.get("telMobile2") == "")){
 						mobileNumList.add((String) codyInfo.get("telMobile2"));
 					}
 					if(!(codyInfo.get("telMobile3") == null || codyInfo.get("telMobile3") == "")){
