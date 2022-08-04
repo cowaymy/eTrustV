@@ -6,10 +6,8 @@
 	var itemGridID;
 
 	$(document).ready(function(){
-
 	    // AUIGrid 그리드를 생성합니다.
 	    createAUIitemGrid();
-
 	    fn_getCnvrItmJsonAjax();
 
 	});
@@ -91,66 +89,31 @@
             AUIGrid.setGridData(itemGridID, result);
         });
     }
+	function fn_downloadReport(){
+	    var reportDownFileName = "BatchConversion_"+$('#batchId').val(); //report name
+	    var reportFileName = "/sales/BatchConvertTOADReport.rpt"; //reportFileName
+	    var reportViewType = "EXCEL"; //viewType
 
-	function fn_all(){
-		Common.ajax("GET", "/sales/order/orderConvertViewItmJsonList",$("#gridForm").serialize(), function(result) {
-            AUIGrid.setGridData(itemGridID, result);
-        });
+
+	    var $reportParameter = $("#reportParameter")[0];
+	    $($reportParameter).empty(); //remove children
+	    //default input setting
+	    $($reportParameter).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
+	    $($reportParameter).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+	    $($reportParameter).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
+	    $($reportParameter).append('<input type="hidden" id="batch_id" name="batch_id"  /> ');
+	    $("#reportParameter #reportFileName").val(reportFileName);
+	    $("#reportParameter #reportDownFileName").val(reportDownFileName);
+	    $("#reportParameter #viewType").val(reportViewType);
+	    $("#viewType").val("EXCEL");
+	    $("#batch_id").val($('#batchId').val());
+
+	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+	    var option = {
+	            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+	    };
+	    Common.report("reportParameter", option);
 	}
-
-	function fn_valid(){
-        Common.ajax("GET", "/sales/order/orderCnvrValidItmList",$("#gridForm").serialize(), function(result) {
-            AUIGrid.setGridData(itemGridID, result);
-        });
-    }
-
-	function fn_invalid(){
-        Common.ajax("GET", "/sales/order/orderCnvrInvalidItmJsonList",$("#gridForm").serialize(), function(result) {
-            AUIGrid.setGridData(itemGridID, result);
-        });
-    }
-
-	function fn_success(){
-		$("#_close").click();
-		fn_searchListAjax();
-		Common.popupDiv("/sales/order/conversionDetailPop.do", $("#searchForm").serializeJSON(), null, true, 'detailPop');
-	}
-
-	function fn_confirm(){
-		var time = new Date();
-		var day = time.getDate();
-
-//		if( (day >= 26 || day == 1) && ($("#rsCnvrStusFrom").val() == 'REG') && ($("#rsCnvrStusTo").val() == 'INV')){
-//		    Common.alert("This coversion type is not allowed from 26 until 1 next month.");
-//		    return false;
-//		}else{
-//			if($("#allRows").val() <= 0){
-//				Common.alert("<b>There are no item to convert in this conversion batch.<br />Confirm conversion batch is disallowed.");
-//				return false;
-//			}
-//		}
-		var msg = "<b><spring:message code='sal.alert.msg.thisConversionBatchWillProcess' /><br />";
-		     msg += "<spring:message code='sal.alert.msg.areYouSureWantToConfirmConvtBatch' /></b>";
-		Common.confirm(msg,fn_confirmOK);
-	}
-
-	function fn_confirmOK(){
-		Common.ajax("GET", "/sales/order/updCnvrConfirm.do", $("#gridForm").serialize(), function(result){
-            Common.alert("<spring:message code='sal.alert.msg.conversionConfirmed' />", fn_success);
-        });
-	}
-
-	function fn_deactivate(){
-		var msg = ("<b><spring:message code='sal.alert.msg.deactivateConversionBatch' /></b>");
-		Common.confirm(msg,fn_deactivateOK);
-
-    }
-
-	function fn_deactivateOK(){
-        Common.ajax("GET", "/sales/order/updCnvrDeactive.do", $("#gridForm").serialize(), function(result){
-            Common.alert("<b><spring:message code='sal.alert.msg.conversionBatchDeactivated' /></b>", fn_success);
-        });
-    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -168,12 +131,12 @@
 <h3><spring:message code="sal.page.title.conversionBatchInfo" /></h3>
 
 </aside><!-- title_line end -->
-
 <form id="gridForm" name="gridForm" method="GET">
 
     <input type="hidden" id="batchId" name="batchId" value="${cnvrInfo.batchId}">
 </form>
 <table class="type1"><!-- table start -->
+<form name="reportParameter" id="reportParameter" method="post"></form>
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -208,10 +171,12 @@
     <td colspan="5"><span>${cnvrInfo.payCnvrRem }</span></td>
 </tr> --%>
 </tbody>
+
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.batchItem" /></h3>
+<p class="btn_blue right_opt"><a href="javascript:fn_downloadReport();">Download Report</a></p>
 </aside><!-- title_line end -->
 
 
