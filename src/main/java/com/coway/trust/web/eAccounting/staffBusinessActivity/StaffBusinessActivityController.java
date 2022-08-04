@@ -716,4 +716,24 @@ public class StaffBusinessActivityController {
     	formattedAmount = Integer.parseInt(oriAmount);
     	return formattedAmount;
     }
+
+    @RequestMapping(value = "/manualStaffBusinessAdvReqSettlement.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> manualStaffBusinessAdvReqSettlement(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+        LOGGER.debug("========== staffBusinessActivity.manualStaffBusinessAdvReqSettlement ==========");
+        LOGGER.debug("params =====================================>>  " + params);
+
+        int updCnt = staffBusinessActivityService.manualStaffBusinessAdvReqSettlement(params, sessionVO);
+
+        ReturnMessage message = new ReturnMessage();
+        if(updCnt > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(updCnt);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(updCnt);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+        return ResponseEntity.ok(message);
+    }
 }

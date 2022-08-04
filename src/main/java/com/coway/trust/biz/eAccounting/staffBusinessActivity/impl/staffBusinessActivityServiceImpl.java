@@ -27,6 +27,7 @@ import com.coway.trust.biz.eAccounting.staffBusinessActivity.staffBusinessActivi
 import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -444,6 +445,18 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
 		// TODO Auto-generated method stub
 		return staffBusinessActivityMapper.selectAttachList(atchFileGrpId);
 	}
+
+    @Override
+    public int manualStaffBusinessAdvReqSettlement(Map<String, Object> params, SessionVO sessionVO) {
+        LOGGER.debug("========== staffBusinessActivity.manualStaffBusinessAdvReqSettlement ==========");
+        LOGGER.debug("staffBusinessActivity.manualStaffBusinessAdvReqSettlement :: params >>>>> ", params);
+
+        params.put("userId", sessionVO.getUserId());
+
+        int rtn = staffBusinessActivityMapper.manualStaffBusinessAdvReqSettlement(params);
+
+        return rtn;
+    }
 
 
 }

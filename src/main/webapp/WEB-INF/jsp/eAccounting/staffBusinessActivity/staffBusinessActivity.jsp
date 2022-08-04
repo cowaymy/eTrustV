@@ -297,6 +297,7 @@ var myGridPros = {
 
         $("#advType").multipleSelect("setSelects", [3]);
 
+        $("#settlementUpd_btn").click(fn_settlementConfirm); // Manual update settlement status - Finance use only
         $("#request_btn").click(fn_busActReqPop);
         $("#advList_btn").click(fn_searchAdv);
         $("#refund_btn").click(fn_repaymentPop);
@@ -353,6 +354,33 @@ var myGridPros = {
                 fn_requestPop(event.item.appvPrcssNo, clmType);
             }
         });
+
+        /* $('#trvAdvFileSelector').on('change', function(evt) {
+        	var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+            	return;
+            }
+
+            var reader = new FileReader();
+          //reader.readAsText(file); // 파일 내용 읽기
+            reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+            reader.onload = function(event) {
+                if (typeof event.target.result != "undefined") {
+                    // 그리드 CSV 데이터 적용시킴
+                    Common.alert("Please attach supporting document zipped files!");
+                    checkRefundFlg = false;
+                    return checkRefundFlg;
+
+                } else {
+                    Common.alert("<spring:message code='pay.alert.noData'/>");
+                }
+            };
+
+            reader.onerror = function() {
+                Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
+            };
+    }); */
 
         $("#editRejBtn").click(fn_editRejected);
 
@@ -706,7 +734,7 @@ var myGridPros = {
 
                 $("#reqAdvType option[value=3]").attr('selected', 'selected');
 
-                minPeriod = parseInt(results.sPeriod);
+                minPeriod = parseInt(0);
                 maxPeriod1 = parseInt(results.sMaxRepayDay1);
                 maxPeriod2 = parseInt(results.sMaxRepayDay2);
                 advRetDate = results.sTrDt;
@@ -908,8 +936,9 @@ var myGridPros = {
              tDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
 
              dateDiff = ((new Date(tDate - fDate))/1000/60/60/24) + 1;
+             $("#daysCount").val(dateDiff);
 
-             if(dateDiff < 3) {
+             /* if(dateDiff < 3) {
                  $("#eventStartDt").val("");
                  $("#eventEndDt").val("");
                  $("#daysCount").val("");
@@ -918,7 +947,7 @@ var myGridPros = {
                  return false;
              } else {
                  $("#daysCount").val(dateDiff);
-             }
+             } */
 
          }
 
@@ -1233,15 +1262,15 @@ var myGridPros = {
              return checkRefundFlg;
          }
 
-         if(FormUtil.isEmpty($("#refClmNo").val())){
-        	 if($("input[name=trvAdvFileSelector]").get(0).files.length == 0) {
-                 //if(FormUtil.isEmpty($(".input_text").val())) {
+         //if(FormUtil.isEmpty($("#refClmNo").val())){
+        	 if(mode != "DRAFT"){
+        		 if($("input[name=trvAdvFileSelector]").get(0).files.length == 0) {
                      Common.alert("Please attach supporting document zipped files!")
                      checkRefundFlg = false;
                      return checkRefundFlg;
                  }
-         }
-
+        	 }
+         //}
          var newFlag = fn_saveSubmitCheckRowValidation();
          console.log(newFlag);
          if(!newFlag){
@@ -1280,6 +1309,16 @@ var myGridPros = {
                  }
                  if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "invcDt"))){
                      Common.alert("Please enter a date.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expDesc"))){
+                     Common.alert("Please enter a remark.");
+                     checkRowFlg = false;
+                     return checkRowFlg;
+                 }
+                 if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "supplierName"))){
+                     Common.alert("Please enter a Supplier Name.");
                      checkRowFlg = false;
                      return checkRowFlg;
                  }
@@ -1445,6 +1484,16 @@ var myGridPros = {
             $("#advReqMsgPop").hide();
         }
 
+     // Acknowledgement for Manual Settlement
+        if(mode == "Y") {
+            // Acknowledgement = YES
+            fn_settlementUpdate();
+        }
+        else if(mode == "N") {
+            // Acknowledgement = YES
+            fn_closePop('S');
+        }
+
     }
 
     function fn_requestPop(appvPrcssNo, clmType) {
@@ -1457,6 +1506,34 @@ var myGridPros = {
         };
 
         Common.popupDiv("/eAccounting/staffBusinessActivity/staffBusActApproveViewPop.do", data, null, true, "webInvoiceAppvViewPop");
+    }
+
+    function fn_settlementConfirm() {
+        console.log("fn_settlementConfirm");
+
+        // Display Acknowledgement Pop
+        $("#manualSettMsgPop").show();
+        $("#acknowledgementSett").show();
+    }
+
+    function fn_settlementUpdate() {
+        // Manual settlement - Finance use only
+        /*
+        TODO
+        1. Common.ajax("POST", ) -- Update FCM0027M's ADV_REFD_NO, ADV_REFD_DT; Without inserting repayment/settlement record
+        */
+        console.log("fn_settlementUpdate");
+
+        if(advGridClmNo == "" || advGridClmNo == null) {
+            Common.alert("No advance request selected for manual settlement.");
+            return false;
+
+        } else {
+            Common.ajax("POST", "/eAccounting/staffBusinessActivity/manualStaffBusinessAdvReqSettlement.do", {clmNo : advGridClmNo}, function(result) {
+                console.log(result);
+                $("#manualSettMsgPop").hide();
+            });
+        }
     }
 
     /*******************************************
@@ -1981,7 +2058,7 @@ var myGridPros = {
 
                  Common.alert("New claim number : " + result1.data.newClmNo);
                  fn_searchAdv();
-             })
+             });
          } else {
              Common.alert("Only rejected claims are allowed to edit.");
          }
@@ -2073,15 +2150,12 @@ var myGridPros = {
 		</p>
 		<h2>Staff - Business Activity</h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue">
-					<a href="#" id="request_btn">New Request</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a href="#" id="refund_btn">Settlement</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a href="#" id="advList_btn"><span class="search"></span>Search</a>
-				</p></li>
+			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                <li><p class="btn_blue"><a href="#" id="settlementUpd_btn">Manual Settlement</a></p></li>
+            </c:if>
+			<li><p class="btn_blue"><a href="#" id="request_btn">New Request</a></p></li>
+			<li><p class="btn_blue"><a href="#" id="refund_btn">Settlement</a></p></li>
+			<li><p class="btn_blue"><a href="#" id="advList_btn"><span class="search"></span>Search</a></p></li>
 		</ul>
 	</aside>
 
@@ -2740,6 +2814,55 @@ var myGridPros = {
 
 	</section>
 </div>
+
+<!--
+***********************************************************************
+*************** MANUAL SETTLEMENT ACKNOWLEDGEMENT - START ***************
+***********************************************************************
+-->
+<div class="popup_wrap size_small" id="manualSettMsgPop" style="display: none;">
+    <header class="pop_header">
+        <h1 id="manualSettMsgPopHeader">Manual Settlement Confirmation</h1>
+        <ul class="right_opt">
+            <li>
+                <p class="btn_blue2">
+                    <a href="#" id="acknowledgementSett_closeBtn" onclick="javascript:fn_closePop('S')">
+                        <spring:message code="newWebInvoice.btn.close" />
+                    </a>
+                </p>
+            </li>
+        </ul>
+    </header>
+
+    <section class="pop_body">
+        <div id="acknowledgementSett" style="padding-top:1%; padding-left: 1%; padding-right: 1%">
+            <table class="type1" style="border: none">
+                <caption>Manual Settlement</caption>
+                <colgroup>
+                    <col style="width:30px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td colspan="2" style="font-size : 14px; font-weight : bold; padding-bottom : 2%">
+                            Are you sure you want to manual settle this advance request?
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ul class="center_btns" id="agreementButton">
+                <li><p class="btn_blue"><a href="javascript:fn_advReqAck('Y');">Yes</a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_advReqAck('N');">No</a></p></li>
+            </ul>
+        </div>
+    </section>
+</div>
+<!--
+*********************************************************************
+*************** MANUAL SETTLEMENT ACKNOWLEDGEMENT - END ***************
+*********************************************************************
+-->
 
 <!-- ********************************************************************************************************************************************** -->
 <!-- ******************************************************** ADVANCE REQUEST APPROVAL POP ******************************************************** -->

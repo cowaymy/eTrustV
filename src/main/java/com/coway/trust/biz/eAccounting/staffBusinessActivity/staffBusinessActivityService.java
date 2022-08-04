@@ -3,6 +3,8 @@ package com.coway.trust.biz.eAccounting.staffBusinessActivity;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface staffBusinessActivityService {
@@ -68,4 +70,7 @@ public interface staffBusinessActivityService {
     String checkRefdDate(Map<String, Object> params);
 
     List<EgovMap> selectAttachList(String atchFileGrpId);
+
+    // FCM0027M update - Manual Settlement for Request to add Manual Settlement for Staff Business Activity (R3) - Web invoice requested by invoice number + supplier matching
+    int manualStaffBusinessAdvReqSettlement(Map<String, Object> params, SessionVO sessionVO);
 }

@@ -82,4 +82,6 @@ public interface staffBusinessActivityMapper {
     List<EgovMap> selectAttachList(String atchFileGrpId);
 
     void deleteDraftRequestD(Map<String, Object> params);
+
+    int manualStaffBusinessAdvReqSettlement(Map<String, Object> params);
 }

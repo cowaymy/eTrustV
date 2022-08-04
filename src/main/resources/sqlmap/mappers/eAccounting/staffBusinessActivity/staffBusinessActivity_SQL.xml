@@ -62,7 +62,8 @@
                                   (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND D.APPV_PRCSS_STUS = 'J' AND SYSDATE >= A.ADV_REFD_DT)
                                   /*THEN 'Due but not repaid yet'*/
                                   THEN '2'
-                             WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'A')
+                             WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'A') OR
+                                  (B.APPV_PRCSS_STUS = 'A' AND A.ADV_REFD_NO = 'MANUAL')
                                   /*THEN 'Repaid'*/
                                   THEN '3'
                              WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'R') OR
@@ -77,7 +78,9 @@
                                   THEN '99'
                         END
                         ]]>
-                    ) END
+                    )
+                    WHEN A.APPV_PRCSS_NO IS NULL AND A.ADV_REFD_NO = 'MANUAL' THEN '3'
+                    END
                 )
                 ELSE '99'
                 END as REPAY_STUS,
@@ -1288,4 +1291,13 @@
         DELETE FROM FCM0028D
         WHERE CLM_NO=#{clmNo} AND CLAM_UN=#{clamUn}
     </delete>
+
+    <update id="manualStaffBusinessAdvReqSettlement" parameterType="Map">
+        UPDATE FCM0027M
+        SET ADV_REFD_NO = 'MANUAL',
+            ADV_REFD_DT = SYSDATE,
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE CLM_NO = #{clmNo}
+    </update>
 </mapper>
