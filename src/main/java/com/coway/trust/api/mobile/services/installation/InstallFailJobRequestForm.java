@@ -64,10 +64,6 @@ public class InstallFailJobRequestForm {
 
   private String custMobileNo;
 
-  @ApiModelProperty(value = "waterSrcType")
-  private String waterSrcType;
-
-
   public String getTurbLvl() {
 	return turbLvl;
 }
