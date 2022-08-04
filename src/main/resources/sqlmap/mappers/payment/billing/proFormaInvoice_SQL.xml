@@ -17,6 +17,10 @@
 		   A.CRT_DT,
 		   CASE WHEN A.PACKAGE_TYPE = '12' THEN '1 Year Advance'
                 ELSE '2 Year Advance' END AS PACK_TYPE,
+           A.PACKAGE_TYPE DISC_PERIOD,
+           TO_CHAR(A.ADV_START_DT, 'MM/YYYY') || ' - ' || TO_CHAR(A.ADV_END_DT, 'MM/YYYY') AS ADV_PERIOD,
+           TO_CHAR(A.ADV_START_DT, 'MM/YYYY') AS ADV_START_DT,
+           TO_CHAR(A.ADV_END_DT, 'MM/YYYY') AS ADV_END_DT,
 		   A.STUS_ID,
 		   G.NAME AS STATUS,
 		   H.USER_NAME AS CRT_USER,
@@ -33,6 +37,9 @@
 		    JOIN SYS0047M H ON A.CRT_USER_ID = H.USER_ID
 		WHERE 1=1
 		      AND A.STUS_ID != 8
+		      <if test="proFormaId != null and proFormaId != ''">
+                AND  A.PRO_FORMA_ID = #{proFormaId}
+             </if>
 		      <if test="refNo != null and refNo != ''">
                 AND  A.REF_NO = UPPER(#{refNo})
              </if>
@@ -81,9 +88,15 @@
     <select id="chkCustType" parameterType="Map" resultType="egovMap">
         SELECT
 		    A.CUST_ID,
-		    B.TYPE_ID
+		    B.TYPE_ID,
+		    A.APP_TYPE_ID,
+		    C.CODE_NAME AS APP_TYPE,
+		     A.STUS_CODE_ID AS STUS_ID,
+            D.NAME AS STUS
 		FROM sal0001d A
 		JOIN sal0029d B ON A.CUST_ID = B.CUST_ID
+		LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
+		LEFT JOIN SYS0038M D ON D.STUS_CODE_ID = A.STUS_CODE_ID
         WHERE 1=1
              <if test="ordNo != null and ordNo != ''">
                   AND A.SALES_ORD_NO = #{ordNo}
@@ -121,8 +134,8 @@
 	    , #{stus}
 	    , #{packType}
 	    , #{memCode}
-	    , TO_DATE(#{adStartDt}, 'DD/MM/YYYY')
-	    , TO_DATE(#{adEndDt}, 'DD/MM/YYYY')
+	    , TO_DATE(#{adStartDt}, 'MM/YYYY')
+	    , TO_DATE(#{adEndDt}, 'MM/YYYY')
 	    , #{totalAmt}
 	    , #{packPrice}
 	    , #{remark}

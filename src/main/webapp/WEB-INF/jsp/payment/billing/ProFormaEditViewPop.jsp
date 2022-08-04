@@ -39,7 +39,8 @@
       var columnLayoutProForma = [
                 {dataField :"proFormaId",  headerText : "proFormaId", width: 140 ,editable : false, visible : false},
                 {dataField :"salesOrdId",  headerText : "SalesOrdId", width: 140 ,editable : false, visible : false},
-                {dataField :"salesOrdNo", headerText : "<spring:message code="pay.head.orderNO" />",   width: 100, editable : false },
+                {dataField :"salesOrdNo", headerText : "salesOrdNo",   width: 100,editable : false, visible : false },
+                {dataField :"refNo", headerText : "Ref No",   width: 100, editable : false  },
                 {dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 150 ,editable : false },
                 {dataField :"mthRentAmt",  headerText : "<spring:message code="sal.title.text.finalRentalFees" />",      width: 100 ,editable : false },
                 {dataField :"packType",  headerText : "<spring:message code="pay.head.package" />",    width: 100, editable : false },
@@ -62,13 +63,17 @@
   }
 
   function fn_getProFormaDetail() {
-      Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", $("#sForm").serialize(), function(result) {
+      Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", { proFormaId : '${proFormaId}'}, function(result) {
+    	  console.log("ahhhhhh");
     	  console.log(result);
 
     	  $("#salesOrdNo").html(result[0].salesOrdNo);
           $("#customerName").html(result[0].custName);
           $("#typePack").html(result[0].packType);
           $("#salesmanCode").html(result[0].salesmanCode);
+          $("#discount").val(result[0].discPeriod);
+          $("#advStartDt").val(result[0].advStartDt);
+          $("#advEndDt").val(result[0].advEndDt);
 
           AUIGrid.setGridData(proFormaGridID, result);
       });
@@ -210,7 +215,7 @@
 
             <th scope="row"><spring:message code="pay.head.discountPeriod" /></th>
             <td>
-            <select  id="discount"   name= "discount" >
+            <select  id="discount"   name= "discount" disabled="disabled" readonly="readonly">
                 <option value="12" >1</option>
                 <option value="24" >2</option>
             </select>
@@ -220,9 +225,9 @@
             <th scope="row">Advance Period</th>
             <td>
                 <div class="date_set w100p"><!-- date_set start -->
-                <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date"  id="advStartDt"  name="startDt" class="readonly " readonly="readonly" /></p>
+                <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date2 w100p" id="advStartDt"  name="startDt" disabled="disabled" readonly="readonly" /></p>
                 <span><spring:message code="sal.text.to" /></span>
-                <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date"   id="advEndDt"  name="endDt" class="readonly " readonly="readonly" /></p>
+                <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date2 w100p" id="advEndDt"  name="endDt" disabled="disabled" readonly="readonly" /></p>
                 </div><!-- date_set end -->
             </td>
             <th scope="row"></th><td></td>

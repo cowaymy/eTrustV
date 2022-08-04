@@ -142,6 +142,18 @@ $(document).ready(function(){
                     Common.alert("This order belongs to individual customer <br> (Only for corporate customer only)");
                     return true;
             	}
+
+            	 if(result[0].appTypeId != "66"){ //66 = Rental
+                     rtnVAL = true;
+                     Common.alert("This order is " + result[0].appType + " order <br> (Only for Rental orders only)");
+                     return true;
+                 }
+
+                 if(result[0].stusId != "4"){ //66 = Rental
+                     rtnVAL = true;
+                     Common.alert("This order is currently under " + result[0].stus + " status <br> (Only for Completed orders only)");
+                     return true;
+                 }
             }
         });
 
@@ -287,21 +299,27 @@ $(document).ready(function(){
         var today = new Date();
         var tYear = today.getFullYear();
         var tMonth = today.getMonth() + 1;
-        var tDay = today.getDate();
-        if(tDay < 10) {
-        	tDay = "0" + tDay;
-        }
+
         if(tMonth < 10){
         	tMonth = "0" + tMonth;
         }
 
-        var today = tDay + "/" + tMonth + "/" + tYear;
+        var today = tMonth + "/" + tYear;
         $("#adStartDt").val(today);
 
         var adPeriod = packType == "12" ? "1" : "2";
         var adYear = tYear + parseInt(adPeriod);
-        var adDate = tDay + "/" + tMonth + "/" + adYear;
+        var adMonth = parseInt(tMonth) - 1;
+
+        if(adMonth < 10){
+        	adMonth = "0" + adMonth;
+        }
+
+        var adDate = adMonth + "/" + adYear;
         $("#adEndDt").val(adDate);
+
+        var discountVal = adPeriod == "1" ? "5" : "10";
+        $("#discount").val(discountVal);
 
         fn_getMembershipPackageInfo(packType);
 
@@ -800,9 +818,9 @@ $(document).ready(function(){
 			<th scope="row">Advance Period</th>
 			<td>
 		        <div class="date_set w100p"><!-- date_set start -->
-		        <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="adStartDt" name="adStartDt" class="readonly "/></p>
+		        <p><input type="text"  placeholder="MM/YYYY" class="j_date2 w100p"  id="adStartDt" name="adStartDt" disabled="disabled" class="readonly "/></p>
 		        <span><spring:message code="sal.text.to" /></span>
-		        <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="adEndDt" name="adEndDt" class="readonly "/></p>
+		        <p><input type="text"  placeholder="MM/YYYY" class="j_date2 w100p"  id="adEndDt" name="adEndDt" disabled="disabled" class="readonly "/></p>
 		        </div><!-- date_set end -->
 	        </td>
 	        <th scope="row"><spring:message code="sal.text.packPrice" /></th>
