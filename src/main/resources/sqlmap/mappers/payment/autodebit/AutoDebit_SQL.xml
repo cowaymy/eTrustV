@@ -259,7 +259,7 @@
 	      FAIL_REASON_CODE = #{rejectReasonCode},
 	      UPT_BY = #{userId},
 	      UPT_DT = SYSDATE,
-	      THIRD_PARTY_CUST_ID = #{thirdPartyCustId},
+	      THIRD_PARTY_CUST_ID = #{thirdPartyCustId}
 	      WHERE PAD_ID = #{padId}
     </update>
 

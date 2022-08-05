@@ -69,6 +69,16 @@ $(document).ready(function() {
 	       callPrgm : "loadThirdPartyPopData"
 	     }, null, true);
 	});
+
+	$('#action').change(function() {
+		console.log($(this).val());
+		if($(this).val() == "5") {
+			$('#rejectReasonCodeList').attr('disabled',true);
+		}
+		else{
+			$('#rejectReasonCodeList').attr('disabled',false);
+		}
+	});
 });
 
 function loadThirdPartyCustData(){
