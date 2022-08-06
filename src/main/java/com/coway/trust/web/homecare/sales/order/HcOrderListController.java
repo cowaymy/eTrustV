@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -59,6 +60,9 @@ public class HcOrderListController {
     @Resource(name = "orderDetailService")
     private OrderDetailService orderDetailService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
     /**
      *  Order List Open
      *
@@ -96,7 +100,8 @@ public class HcOrderListController {
 
         if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
 		    params.put("userId", sessionVO.getUserId());
-		    EgovMap result =  hcOrderListService.getOrgDtls(params);
+//		    EgovMap result =  hcOrderListService.getOrgDtls(params);
+		    EgovMap result =  salesCommonService.getUserInfo(params);
 
 		    model.put("memId", result.get("memId"));
 		    model.put("memCode", result.get("memCode"));
