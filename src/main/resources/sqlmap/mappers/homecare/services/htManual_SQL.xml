@@ -782,7 +782,7 @@ FROM
                 </if>
 
         ) Project3
-    <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>
+    <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 50000 ]]>
           </select>
 
 
