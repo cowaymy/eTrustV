@@ -2558,12 +2558,12 @@ public void CTDutyAllowanceMonthly() {
 
 @RequestMapping(value = "/DataMartReportScheduler.do")
 //@Scheduled(cron = " 0 0 1 1 * ?")//Monthly (Day 1) 1:00am
-public void dataMartReportScheduler() throws IOException {
+public void dataMartReportScheduler() {
 	dataMartReport(null);
 }
 
 @RequestMapping(value = "/DataMartReport.do")
-public void dataMartReport(HttpServletRequest request) throws IOException {
+public void dataMartReport(HttpServletRequest request) {
   LOGGER.info("[START] DataMartReport...");
 
   String nameParam =  "";
