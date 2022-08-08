@@ -67,6 +67,9 @@
       if ($("#requestDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>";
       }
+      if ($("#custMobileNo").val() == '') {
+          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
+        }
     } else if ($("#callStatus").val() == 19) {
       if ($("#recallDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Recall Date' htmlEscape='false'/> </br>";
@@ -91,6 +94,8 @@
             return false;
         }
     }
+
+
 
     if (msg != "") {
       Common.alert(msg);
@@ -713,7 +718,7 @@
       </select></td>
      </tr>
      <tr>
-     <th scope="row">Mobile</th>
+     <th scope="row">Mobile<span name="m2" id="m2" class="must">*</span></th>
       <td colspan="3">
           <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" />
           <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
