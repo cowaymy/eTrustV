@@ -90,7 +90,7 @@
 			AND s0028d.CUST_CRC_CRT_DT BETWEEN TO_DATE(#{crcRequestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{crcRequestDateTo},'DD/MM/YYYY')
 		</if>
 		<if test='custName != null and custName != ""'>
-			AND s0029d.NAME = #{custName}
+			AND s0029d.NAME LIKE '%'||UPPER(#{custName})||'%'
 		</if>
 		<if test='nricCompanyNo != null and nricCompanyNo != ""'>
 			AND s0029d.NRIC = #{nricCompanyNo}
