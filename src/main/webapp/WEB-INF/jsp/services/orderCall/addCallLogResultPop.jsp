@@ -67,7 +67,7 @@
       if ($("#requestDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>";
       }
-      if ($("#custMobileNo").val() == '') {
+      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
         }
     } else if ($("#callStatus").val() == 19) {
