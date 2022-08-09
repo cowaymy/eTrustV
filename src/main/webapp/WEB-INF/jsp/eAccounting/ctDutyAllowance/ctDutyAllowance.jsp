@@ -111,6 +111,7 @@ var ctDutyClaimGridPros = {
 $(document).ready(function () {
 	ctDutyClaimGridID = AUIGrid.create("#ctDutyClaim_grid_wrap", ctDutyClaimColumnLayout, ctDutyClaimGridPros);
 
+	doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', '', brnch, 'cmbDscCode', 'S', '');
 	/* if(brnch == "42"){
 		doGetCombo('/eAccounting/ctDutyAllowance/getBch.do', '', brnch, 'cmbDscCode', 'S', '');
 	}else{
@@ -425,12 +426,12 @@ function fn_appvRejctSubmit(type, rejctResn) {
 	<th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
     <td><input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/></td>
 </tr>
-<%-- <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <th scope="row">DSC Code</th>
     <td>
         <select id="cmbDscCode" name="cmbDscCode" class=""></select>
     </td>
-</c:if> --%>
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <input type="hidden" id="apprvUserId" name="apprvUserId" value='${SESSION_INFO.memId}'>
 </c:if>
