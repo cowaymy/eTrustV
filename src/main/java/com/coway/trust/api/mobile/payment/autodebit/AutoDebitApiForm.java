@@ -3,6 +3,8 @@ package com.coway.trust.api.mobile.payment.autodebit;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+
 import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "AutoDebitApiForm", description = "AutoDebitApiForm")
@@ -37,7 +39,12 @@ public class AutoDebitApiForm {
 		params.put("isThirdPartyPayment", vo.getIsThirdPartyPayment());
 		params.put("createdBy", vo.getCreatedBy());
 		params.put("monthlyRentalAmount", vo.getMonthlyRentalAmount());
-		params.put("signData", vo.getSignData());
+		if(vo.getSignData() != null && vo.getSignData().length() > 0){
+			params.put("signData", Base64.decodeBase64(vo.getSignData()));
+		}
+		else{
+			params.put("signData", vo.getSignData());
+		}
 		params.put("fileKeySeq", vo.getSignData());
 		params.put("atchFileGroupId", vo.getAtchFileGroupId());
 		params.put("sms1", vo.getSms1());
