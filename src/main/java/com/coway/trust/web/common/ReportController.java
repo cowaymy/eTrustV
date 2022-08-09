@@ -283,6 +283,12 @@ public class ReportController {
       case MAIL_EXCEL:
         ReportUtils.sendMail(clientDoc, viewType, params);
         break;
+      case GENERAL_EXCEL:
+    	  ReportUtils.viewGeneralDataEXCEL(response, clientDoc, downFileName, params);
+    	  break;
+      case GENERAL_CSV:
+          ReportUtils.viewGeneralCSV(response, clientDoc, downFileName,params);
+          break;
       default:
         viewWindow(request, response, crystalReportViewer);
         break;
