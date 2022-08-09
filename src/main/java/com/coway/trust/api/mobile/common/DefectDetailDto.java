@@ -12,7 +12,7 @@ public class DefectDetailDto {
 	@ApiModelProperty(value = "타입 아이디")
 	private int typeId;
 	@ApiModelProperty(value = "defect 아이디")
-	private int defectId;
+	private String defectId;
 	@ApiModelProperty(value = "defect 코드")
 	private String defectCode;
 	@ApiModelProperty(value = "defectId 설명")
@@ -23,7 +23,7 @@ public class DefectDetailDto {
 	public static DefectDetailDto create(EgovMap egvoMap) {
 		DefectDetailDto dto = new DefectDetailDto();
 		dto.setTypeId(CommonUtils.getInt(egvoMap.get("resnTypeId")));
-		dto.setDefectId(CommonUtils.getInt(egvoMap.get("resnId")));
+		dto.setDefectId((String) egvoMap.get("resnId"));
 		dto.setDefectCode((String) egvoMap.get("resnCode"));
 		dto.setDefectDesc((String) egvoMap.get("resnDesc"));
 		if (egvoMap.get("prodCat") != null) {
@@ -40,11 +40,11 @@ public class DefectDetailDto {
 		this.typeId = typeId;
 	}
 
-	public int getDefectId() {
+	public String getDefectId() {
 		return defectId;
 	}
 
-	public void setDefectId(int defectId) {
+	public void setDefectId(String defectId) {
 		this.defectId = defectId;
 	}
 
