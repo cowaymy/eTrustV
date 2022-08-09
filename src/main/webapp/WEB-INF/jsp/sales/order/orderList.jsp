@@ -300,6 +300,20 @@
           });
         });
 
+        $('#btnCreditDebitAuthorization').click(function() {
+            var gridObj = AUIGrid.getSelectedItems(listMyGridID);
+
+            if(gridObj == null || gridObj.length <= 0 ){
+              Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
+              return;
+            }
+
+            var ordNo =  gridObj[0].item.ordNo;
+            var ordId = gridObj[0].item.ordId;
+            Common.popupDiv("/payment/mobileautodebit/autoDebitAuthorizationForm.do",
+            		{ salesOrdNo : ordNo, salesOrderId: ordId },
+            		null , true);
+          });
     });
 
     function fn_letter_report() {
@@ -822,6 +836,7 @@
     <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
       <li><p class="link_btn"><a href="#" id="btnUnbindCboPromOrd">Unlink Combo Promo. Order</a></p></li>
     </c:if>
+    <li><p class="link_btn"><a href="#" id="btnCreditDebitAuthorization">Credit/Debit Card Auto Debit Authorization (Customer Sign)</a></p></li>
   </ul>
 	<ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine21 == 'Y'}">
