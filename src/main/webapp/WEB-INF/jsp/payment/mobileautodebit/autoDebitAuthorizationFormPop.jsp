@@ -113,19 +113,23 @@ function createAUIGrid() {
 }
 
 function fileDownload(item){
-    var whereSQL = "";
+    var whereSQL = "AND p0333m.PAD_ID = " + item.padId;
     $("#reportFileName").val("");
     $("#reportDownFileName").val("");
     $("#viewType").val("");
+	console.log(item);
 
-
-
-    $("#reportDownFileName").val("AutoDebitAuthorization_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#reportDownFileName").val("AutoDebitAuthorization_"+(new Date().getMonth()+1)+new Date().getFullYear());
 
     $("#searchForm #viewType").val("PDF");
     $("#searchForm #reportFileName").val("/payment/AutoDebitAuthorization.rpt");
     $("#searchForm #V_WHERESQL").val(whereSQL);
-    //Common.report("form", option);
+
+    var option = {
+            isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+    };
+
+    Common.report("searchForm", option);
 }
 
 //ajax list 조회.
@@ -143,7 +147,7 @@ function selectList(){
  <header class="pop_header">
   <!-- pop_header start -->
   <h1 id="hTitle">
-	Credit/Debit Card AUto Debit Authorization (Customer Sign)
+	Credit/Debit Card Auto Debit Authorization (Customer Sign)
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
