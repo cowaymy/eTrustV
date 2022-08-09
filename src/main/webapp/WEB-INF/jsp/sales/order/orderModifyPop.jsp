@@ -35,12 +35,22 @@
 
   $(document).ready(
     function() {
+
       if ("${memType}" == "2") {
         TAB_NM = 'CNT';
         $("#ordEditType").prop("disabled", true);
       }
 
-      doGetComboData('/common/selectCodeList.do', { groupCode : '335' }, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
+
+      var paramGrpCode;
+      if(ROLE_ID =="345" || ROLE_ID =="346" || ROLE_ID =="349" || ROLE_ID =="350"|| ROLE_ID =="351"|| ROLE_ID =="352"){
+    	  parmamGrpCode = { groupCode : '525' };
+      }
+      else{
+    	  parmamGrpCode = { groupCode : '335' };
+      }
+
+      doGetComboData('/common/selectCodeList.do', parmamGrpCode, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
       doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
       doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId', 'S'); //Branch Code
       doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
