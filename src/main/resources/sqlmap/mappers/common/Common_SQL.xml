@@ -377,6 +377,60 @@
          </otherwise>
        </choose>
 
+       <choose>
+         <when test='funcUserDfn26 == "N" '>
+             ,FUNC_USER_DFN26   = 'N'
+             ,DESC_USER_DFN26   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN26   = #{funcUserDfn26}
+             ,DESC_USER_DFN26   = #{descUserDfn26}
+         </otherwise>
+       </choose>
+
+		<choose>
+         <when test='funcUserDfn27 == "N" '>
+             ,FUNC_USER_DFN27   = 'N'
+             ,DESC_USER_DFN27   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN27   = #{funcUserDfn27}
+             ,DESC_USER_DFN27   = #{descUserDfn27}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn28 == "N" '>
+             ,FUNC_USER_DFN28   = 'N'
+             ,DESC_USER_DFN28   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN28   = #{funcUserDfn28}
+             ,DESC_USER_DFN28   = #{descUserDfn28}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn29 == "N" '>
+             ,FUNC_USER_DFN29   = 'N'
+             ,DESC_USER_DFN29   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN29   = #{funcUserDfn29}
+             ,DESC_USER_DFN29   = #{descUserDfn29}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn30 == "N" '>
+             ,FUNC_USER_DFN30   = 'N'
+             ,DESC_USER_DFN30   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN30   = #{funcUserDfn30}
+             ,DESC_USER_DFN30   = #{descUserDfn30}
+         </otherwise>
+       </choose>
 
             ,UPD_USER_ID      = #{updUserId}
             ,UPD_DT           = SYSDATE
@@ -438,6 +492,11 @@
             ,FUNC_USER_DFN23
             ,FUNC_USER_DFN24
             ,FUNC_USER_DFN25
+            ,FUNC_USER_DFN26
+            ,FUNC_USER_DFN27
+            ,FUNC_USER_DFN28
+            ,FUNC_USER_DFN29
+            ,FUNC_USER_DFN30
 
             ,CRT_USER_ID
             ,CRT_DT
@@ -462,6 +521,11 @@
             ,#{pgmName}
             ,#{pgmPath}
             ,NVL(#{pgmDesc},#{pgmName})
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
             ,'N'
             ,'N'
             ,'N'
@@ -541,6 +605,11 @@
             ,FUNC_USER_DFN23
             ,FUNC_USER_DFN24
             ,FUNC_USER_DFN25
+            ,FUNC_USER_DFN26
+            ,FUNC_USER_DFN27
+            ,FUNC_USER_DFN28
+            ,FUNC_USER_DFN29
+            ,FUNC_USER_DFN30
 
               ,DESC_USER_DFN1
               ,DESC_USER_DFN2
@@ -567,6 +636,11 @@
               ,DESC_USER_DFN23
               ,DESC_USER_DFN24
               ,DESC_USER_DFN25
+              ,DESC_USER_DFN26
+              ,DESC_USER_DFN27
+              ,DESC_USER_DFN28
+              ,DESC_USER_DFN29
+              ,DESC_USER_DFN30
 
               ,CRT_USER_ID
               ,CRT_DT
@@ -631,6 +705,11 @@
                 ,FUNC_USER_DFN23
                 ,FUNC_USER_DFN24
                 ,FUNC_USER_DFN25
+	            ,FUNC_USER_DFN26
+	            ,FUNC_USER_DFN27
+	            ,FUNC_USER_DFN28
+	            ,FUNC_USER_DFN29
+	            ,FUNC_USER_DFN30
 
                 ,DESC_USER_DFN1
                 ,DESC_USER_DFN2
@@ -657,6 +736,11 @@
                 ,DESC_USER_DFN23
                 ,DESC_USER_DFN24
                 ,DESC_USER_DFN25
+	              ,DESC_USER_DFN26
+	              ,DESC_USER_DFN27
+	              ,DESC_USER_DFN28
+	              ,DESC_USER_DFN29
+	              ,DESC_USER_DFN30
     FROM SYS0050M
     WHERE PGM_CODE = #{paramPgmId}
     ORDER BY PGM_CODE

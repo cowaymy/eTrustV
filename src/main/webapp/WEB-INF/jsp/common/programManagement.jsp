@@ -1,21 +1,21 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+  <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
-<style type="text/css">
-/* 칼럼 스타일 전체 재정의 */
-.aui-grid-left-column {
-  text-align:left;
-}
+    <style type="text/css">
+      /* 칼럼 스타일 전체 재정의 */
+      .aui-grid-left-column {
+        text-align: left;
+      }
 
-.write-active-style {
-  background:#ddedde;
-}
-.my-inactive-style {
-  background:#efcefc;
-}
+      .write-active-style {
+        background: #ddedde;
+      }
 
-</style>
-<script type="text/javaScript">
+      .my-inactive-style {
+        background: #efcefc;
+      }
+    </style>
+    <script type="text/javaScript">
 
 var gAddRowCnt = 0;
 var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM","HCT","RND"];
@@ -891,6 +891,166 @@ var TransColumnLayout =
                                  width : 150
                 },
                 {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_26'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn26",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn26 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn26",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc26'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_27'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn27",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn27 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn27",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc27'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_28'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn28",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn28 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn28",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc28'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_29'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn29",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn29 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn29",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc29'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_30'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn30",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn30 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn30",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc30'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
                     dataField : "pgmCode",
                     headerText : "<spring:message code='sys.progmanagement.grid1.Id'/>",
                     editable : false,
@@ -1038,6 +1198,17 @@ function fnAddRowTrans()
     item.descUserDfn24 ="";
     item.funcUserDfn25 ="N";
     item.descUserDfn25 ="";
+
+    item.funcUserDfn26 ="N";
+    item.descUserDfn26 ="";
+    item.funcUserDfn27 ="N";
+    item.descUserDfn27 ="";
+    item.funcUserDfn28 ="N";
+    item.descUserDfn28 ="";
+    item.funcUserDfn29 ="N";
+    item.descUserDfn29 ="";
+    item.funcUserDfn30 ="N";
+    item.descUserDfn30 ="";
   // parameter
   // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
   // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -2317,93 +2488,118 @@ $(document).ready(function()
 
 </script>
 
-<section id="content"><!-- content start -->
-<ul class="path">
-  <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-  <li>Sales</li>
-  <li>Order list</li>
-</ul>
+    <section id="content">
+      <!-- content start -->
+      <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li>Sales</li>
+        <li>Order list</li>
+      </ul>
 
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Program Management</h2>
-<ul class="right_btns">
-  <li><p class="btn_blue"><a onclick="fnSelectPgmListAjax();"><span class="search"></span>Search</a></p></li>
-  <!-- <li><p class="btn_blue"><a onclick="fnClear();"><span class="clear"></span>Clear</a></p></li> -->
-</ul>
-</aside><!-- title_line end -->
-
-
-<section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="get" action="">
-<input type ="hidden" id="paramPgmId" name="paramPgmId" value=""/>
-<input type ="hidden" id="paramPgmName" name="paramPgmName" value=""/>
+      <aside class="title_line">
+        <!-- title_line start -->
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <h2>Program Management</h2>
+        <ul class="right_btns">
+          <li>
+            <p class="btn_blue"><a onclick="fnSelectPgmListAjax();"><span class="search"></span>Search</a></p>
+          </li>
+          <!-- <li><p class="btn_blue"><a onclick="fnClear();"><span class="clear"></span>Clear</a></p></li> -->
+        </ul>
+      </aside><!-- title_line end -->
 
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-  <col style="width:150px" />
-  <col style="width:*" />
-<!--   <col style="width:150px" />
+      <section class="search_table">
+        <!-- search_table start -->
+        <form id="MainForm" method="get" action="">
+          <input type="hidden" id="paramPgmId" name="paramPgmId" value="" />
+          <input type="hidden" id="paramPgmName" name="paramPgmName" value="" />
+
+
+          <table class="type1">
+            <!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+              <col style="width:150px" />
+              <col style="width:*" />
+              <!--   <col style="width:150px" />
   <col style="width:*" /> -->
-</colgroup>
-<tbody>
-<tr>
-  <th scope="row">Program</th>
-  <td>
-  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="Program Id or Name" class="" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">Program</th>
+                <td>
+                  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="Program Id or Name" class="" />
 
-  <input type="text" title="" id="hiddenInput" name="hiddenInput" placeholder="hiddenInput" style="display:none;" class="" />
-  </td>
-  <!-- <th scope="row">Name</th>
+                  <input type="text" title="" id="hiddenInput" name="hiddenInput" placeholder="hiddenInput"
+                    style="display:none;" class="" />
+                </td>
+                <!-- <th scope="row">Name</th>
   <td>
   <input type="text" title="" id="pgmNm" name="pgmNm" placeholder="program name" class="w100p" />
   </td> -->
-</tr>
-</tbody>
-</table><!-- table end -->
+              </tr>
+            </tbody>
+          </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn">
-<%--   <a href="javascript:void(0);">
-    <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show"/>
-  </a> --%>
-</p>
-</form>
-</section><!-- search_table end -->
+          <aside class="link_btns_wrap">
+            <!-- link_btns_wrap start -->
+            <p class="show_btn">
+              <%-- <a href="javascript:void(0);">
+                <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
+                </a> --%>
+            </p>
+        </form>
+      </section><!-- search_table end -->
 
-<section class="search_result"><!-- search_result start -->
+      <section class="search_result">
+        <!-- search_result start -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">Program List</h3>
-<ul class="right_opt">
-  <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
-  <li><p class="btn_grid"><a onclick="removeRow();">DEL</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnAddRowPgmId();">ADD</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnSavePgmId();">SAVE</a></p></li>
-</ul>
-</aside><!-- title_line end -->
+        <aside class="title_line">
+          <!-- title_line start -->
+          <h3 class="pt0">Program List</h3>
+          <ul class="right_opt">
+            <li id="delCancel">
+              <p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p>
+            </li>
+            <li>
+              <p class="btn_grid"><a onclick="removeRow();">DEL</a></p>
+            </li>
+            <li>
+              <p class="btn_grid"><a onclick="fnAddRowPgmId();">ADD</a></p>
+            </li>
+            <li>
+              <p class="btn_grid"><a onclick="fnSavePgmId();">SAVE</a></p>
+            </li>
+          </ul>
+        </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-<!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:290px;"></div>
-</article><!-- grid_wrap end -->
+        <article class="grid_wrap">
+          <!-- grid_wrap start -->
+          <!-- 그리드 영역 1-->
+          <div id="grid_wrap" style="height:290px;"></div>
+        </article><!-- grid_wrap end -->
 
 
-<aside class="title_line mt20"><!-- title_line start -->
-<h3 class="pt0">Transaction</h3>
-<ul class="right_opt">
-  <li><p class="btn_grid"><a onclick="fnAddRowTrans();">ADD</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnUpdateTrans();">SAVE</a></p></li>
-</ul>
-</aside><!-- title_line end -->
+        <aside class="title_line mt20">
+          <!-- title_line start -->
+          <h3 class="pt0">Transaction</h3>
+          <ul class="right_opt">
+            <li>
+              <p class="btn_grid"><a onclick="fnAddRowTrans();">ADD</a></p>
+            </li>
+            <li>
+              <p class="btn_grid"><a onclick="fnUpdateTrans();">SAVE</a></p>
+            </li>
+          </ul>
+        </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-<!-- 그리드 영역2 -->
- <div id="transGrid" class="autoGridHeight"></div>
-</article><!-- grid_wrap end -->
+        <article class="grid_wrap">
+          <!-- grid_wrap start -->
+          <!-- 그리드 영역2 -->
+          <div id="transGrid" class="autoGridHeight"></div>
+        </article><!-- grid_wrap end -->
 
-</section><!-- search_result end -->
+      </section><!-- search_result end -->
 
-</section><!-- content end -->
+    </section><!-- content end -->
