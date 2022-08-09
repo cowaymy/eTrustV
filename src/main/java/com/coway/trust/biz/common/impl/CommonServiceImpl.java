@@ -1601,6 +1601,11 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectProductSizeListSearch(Map<String, Object> params) {
+		return commonMapper.selectProductSizeListSearch(params);
+	}
+
+	@Override
 	public List<EgovMap> selectServiceTypeList(Map<String, Object> params) {
 		return commonMapper.selectServiceTypeList(params);
 	}

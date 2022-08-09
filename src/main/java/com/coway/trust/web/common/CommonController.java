@@ -201,6 +201,12 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectProductSizeListSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductSizeListSearch(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectProductSizeListSearch(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	@RequestMapping(value = "/selectServiceTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectServiceTypeList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> codeList = commonService.selectServiceTypeList(params);

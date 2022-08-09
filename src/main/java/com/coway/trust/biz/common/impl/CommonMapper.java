@@ -157,6 +157,8 @@ public interface CommonMapper {
 
     List<EgovMap> selectProductSizeList(Map<String, Object> params);
 
+    List<EgovMap> selectProductSizeListSearch(Map<String, Object> params);
+
     List<EgovMap> selectServiceTypeList(Map<String, Object> params);
 
     List<EgovMap> selectReasonCodeList(Map<String, Object> params);

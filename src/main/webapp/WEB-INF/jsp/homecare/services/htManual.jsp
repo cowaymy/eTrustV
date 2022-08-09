@@ -1126,7 +1126,7 @@ var TODAY_DD      = "${toDay}";
 		        serviceTypeHsManua = '515';
 		    }
 
-		    doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceTypeHsManua }, '', 'listProductIdHsManua', 'M','fn_multiCombo3');
+		    doGetComboData('/common/selectProductSizeListSearch.do', { groupCode : serviceTypeHsManua }, '', 'listProductIdHsManua', 'M','fn_multiCombo3');
 		    doGetComboData('/common/selectUnitTypeList.do', { groupCode : unitTypeMasterIdHsManua }, '', 'unitTypeIdHsManua', 'M','fn_multiCombo3');
 		}
 
@@ -1161,7 +1161,7 @@ var TODAY_DD      = "${toDay}";
                serviceTypeHsManagement = '515';
            }
 
-           doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceTypeHsManagement }, '', 'listProductIdHsManagement', 'M','fn_multiCombo4');
+           doGetComboData('/common/selectProductSizeListSearch.do', { groupCode : serviceTypeHsManagement }, '', 'listProductIdHsManagement', 'M','fn_multiCombo4');
            doGetComboData('/common/selectUnitTypeList.do', { groupCode : unitTypeMasterIdHsManagement }, '', 'unitTypeIdHsManagement', 'M','fn_multiCombo4');
        }
 

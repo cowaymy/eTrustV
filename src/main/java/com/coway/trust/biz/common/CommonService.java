@@ -417,6 +417,8 @@ public interface CommonService {
 	// Homecare Product Size list
 	List<EgovMap> selectProductSizeList(Map<String, Object> params);
 
+	List<EgovMap> selectProductSizeListSearch(Map<String, Object> params);
+
 	// Homecare Service Type list
 	List<EgovMap> selectServiceTypeList(Map<String, Object> params);
 

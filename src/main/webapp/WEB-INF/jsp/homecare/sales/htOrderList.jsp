@@ -349,7 +349,7 @@ function fn_getProductSize(){
         serviceType = '515';
     }
 
-	doGetComboData('/common/selectProductSizeList.do', { groupCode : serviceType }, '', 'listProductId', 'M','fn_multiCombo3');
+	doGetComboData('/common/selectProductSizeListSearch.do', { groupCode : serviceType }, '', 'listProductId', 'M','fn_multiCombo3');
 	doGetComboData('/common/selectUnitTypeList.do', { groupCode : unitTypeMasterId }, '', 'unitTypeId', 'M','fn_multiCombo3');
 }
 
