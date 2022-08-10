@@ -279,7 +279,7 @@
 		ATCH_FILE_GROUP_ID)
 		VALUES
 		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
-		#{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),UTL_RAW.CAST_TO_RAW(#{signImg}),
+		#{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),#{signImg},
 		TO_NUMBER(#{atchFileGroupId}))
 	</insert>
 
@@ -296,11 +296,15 @@
        	WHERE s0028d.CUST_CRC_ID = #{newCustCreditCardId}
     </select>
 
-	<select id="getEmailTitle" parameterType="Map" resultType="String">
-		SELECT REPLACE((SELECT MSG_EMAIL_TITLE FROM SYS0043D WHERE MSG_ID = 11 AND MSG_TYPE_ID = 2001),'{1}', #{salesOrdNo})
-		FROM DUAL
-	</select>
-
-		<select id="getEmailDescription" parameterType="Map" resultType="egovMap">
+	<select id="getEmailDescription" parameterType="Map" resultType="egovMap">
+		SELECT s0004m.CODE AS BANK_SHORT_NAME,SUBSTR(s0028d.CUST_ORI_CRC_NO,13,4) AS CARD_LAST_4_DIGIT, p0333m.SALES_ORD_NO, s0001d.MTH_RENT_AMT AS MONTHLY_RENTAL_AMOUNT
+		FROM PAY0333M p0333m
+		LEFT JOIN SAL0001D s0001d
+		ON p0333m.SALES_ORD_NO = s0001d.SALES_ORD_NO
+		LEFT JOIN SAL0028D s0028d
+		ON p0333m.CUST_CRC_ID = s0028d.CUST_CRC_ID
+		LEFT JOIN SYS0004M s0004m
+		ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
+		WHERE p0333m.PAD_ID = #{padId}
 	</select>
 </mapper>
