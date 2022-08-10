@@ -11,6 +11,7 @@ import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -379,13 +380,13 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
     List<String> emailNo = new ArrayList<String>();
 
-//    if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
-//      emailNo.add(CommonUtils.nvl(params.get("email1")));
-//    } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
-//      emailNo.add(CommonUtils.nvl(params.get("email2")));
-//    }
+    if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+      emailNo.add(CommonUtils.nvl(params.get("email1")));
+    } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
+      emailNo.add(CommonUtils.nvl(params.get("email2")));
+    }
 
-    emailNo.add("frango.liew@coway.com.my");
+    List<String> emailNo1 = Arrays.asList("frango.liew@coway.com.my");
 
     String content = "";
     content += "Dear Sir/Madam,\n";
@@ -395,7 +396,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     content += "This is a system generated email. Please do not respond to this email. \n";
 
     params.put(EMAIL_SUBJECT, emailSubject);
-    params.put(EMAIL_TO, emailNo);
+    params.put(EMAIL_TO, emailNo1);
     params.put(EMAIL_TEXT, content);
 
     try {
