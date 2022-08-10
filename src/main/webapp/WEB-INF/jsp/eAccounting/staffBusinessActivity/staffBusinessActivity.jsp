@@ -1524,12 +1524,12 @@ var myGridPros = {
         */
         console.log("fn_settlementUpdate");
 
-        if(advGridClmNo == "" || advGridClmNo == null) {
+        if(claimNo == "" || claimNo == null) {
             Common.alert("No advance request selected for manual settlement.");
             return false;
 
         } else {
-            Common.ajax("POST", "/eAccounting/staffBusinessActivity/manualStaffBusinessAdvReqSettlement.do", {clmNo : advGridClmNo}, function(result) {
+            Common.ajax("POST", "/eAccounting/staffBusinessActivity/manualStaffBusinessAdvReqSettlement.do", {clmNo : claimNo}, function(result) {
                 console.log(result);
                 $("#manualSettMsgPop").hide();
             });

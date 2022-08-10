@@ -57,15 +57,15 @@
                                   (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND D.APPV_PRCSS_STUS = 'J' AND SYSDATE <= A.ADV_REFD_DT)
                                   /*THEN 'Not due'*/
                                   THEN '1'
+                             WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'A') OR
+                                  (B.APPV_PRCSS_STUS = 'A' AND A.ADV_REFD_NO = 'MANUAL')
+                                  /*THEN 'Repaid'*/
+                                  THEN '3'
                              WHEN (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NULL AND SYSDATE >= A.ADV_REFD_DT) OR
                                   /*(B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND C.APPV_PRCSS_NO IS NULL AND SYSDATE >= A.ADV_REFD_DT) OR*/
                                   (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND D.APPV_PRCSS_STUS = 'J' AND SYSDATE >= A.ADV_REFD_DT)
                                   /*THEN 'Due but not repaid yet'*/
                                   THEN '2'
-                             WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'A') OR
-                                  (B.APPV_PRCSS_STUS = 'A' AND A.ADV_REFD_NO = 'MANUAL')
-                                  /*THEN 'Repaid'*/
-                                  THEN '3'
                              WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'R') OR
                                   (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'P')
                                   /*THEN 'Pending Approval'*/
