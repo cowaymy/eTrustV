@@ -570,11 +570,22 @@ function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataF
 
 function fn_insertStaffClaimExp(action) {
     // row의 수가 0개 이상일때만 insert
+    var validation = true;
     var gridDataList = AUIGrid.getOrgGridData(myGridID);
 
     $("#claimMonth").val($("#newClmMonth").val())
 
     if(gridDataList.length > 0){
+
+        //console.log("gridDataList 0 " + gridDataList[0].totalAmt);
+        for(var i=0 ; i <gridDataList.length; i++){
+        	if(gridDataList[i].totalAmt == 0 || gridDataList[i].totalAmt == null){
+        		Common.alert('There is 0 in amount. Kindly remove the invalid recoord(s).');
+        		validation = false;
+        		return validation;
+        	}
+        }
+
     	if(callType == 'new'){
     		var data = {
                     form : $("#form_newStaffClaim").serializeJSON()
@@ -613,7 +624,10 @@ function fn_insertStaffClaimExp(action) {
     	}
     } else {
         Common.alert('<spring:message code="pettyCashExp.noData.msg" />');
+        validation = false;
     }
+
+    return validation;
 }
 
 function fn_approveLinePop(memAccId, clmMonth) {
@@ -624,15 +638,17 @@ function fn_approveLinePop(memAccId, clmMonth) {
             Common.alert(result.message);
         } else {
             // tempSave를 하지 않고 바로 submit인 경우
-            fn_insertStaffClaimExp();
+            /* var returnValidation = fn_insertStaffClaimExp();
+            console.log("returnValidation " + returnValidation); */
+            if(fn_insertStaffClaimExp()){
+	            var data = {
+	                    clmNo : clmNo
+	                    ,totAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
+	                    ,memAccId : $("#newMemAccId").val()
+	            };
 
-            var data = {
-                    clmNo : clmNo
-                    ,totAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
-                    ,memAccId : $("#newMemAccId").val()
-            };
-
-            Common.popupDiv("/eAccounting/ctDutyAllowance/approveLinePop.do", data, null, true, "approveLineSearchPop");
+	            Common.popupDiv("/eAccounting/ctDutyAllowance/approveLinePop.do", data, null, true, "approveLineSearchPop");
+            }
         }
     });
 }
