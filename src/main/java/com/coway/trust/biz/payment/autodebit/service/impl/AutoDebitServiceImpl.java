@@ -1,18 +1,33 @@
 package com.coway.trust.biz.payment.autodebit.service.impl;
 
+import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
+import static com.coway.trust.AppConstants.EMAIL_TEXT;
+import static com.coway.trust.AppConstants.EMAIL_TO;
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -22,18 +37,30 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.payment.autodebit.service.AutoDebitService;
+import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.ReportController;
+import com.coway.trust.web.common.visualcut.ReportBatchController;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -41,8 +68,29 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("autoDebitService")
 public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements AutoDebitService {
 
+  @Value("${report.file.path}")
+  private String reportFilePath;
+
+  @Value("${report.datasource.driver-class-name}")
+  private String reportDriverClass;
+
+  @Value("${report.datasource.url}")
+  private String reportUrl;
+
+  @Value("${report.datasource.username}")
+  private String reportUserName;
+
+  @Value("${report.datasource.password}")
+  private String reportPassword;
+
   @Value("${app.name}")
   private String appName;
+
+  @Autowired
+  private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private ReportBatchService reportBatchService;
 
   @Autowired
   private FileService fileService;
@@ -216,7 +264,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
     if (insertPay0333M > 0) {
       // this.sendSms(params);
-      // this.sendEmail(params);
+    	this.sendEmail(params);
     	result.setResponseCode(1);
       return result;
     } else {
@@ -316,29 +364,141 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   @SuppressWarnings("unchecked")
   @Override
   public void sendEmail(Map<String, Object> params) {
+	//Sending attachment
+	params.put(REPORT_FILE_NAME, "/payment/AutoDebitAuthorization.rpt");// visualcut
+    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    params.put("V_WHERESQL", "AND p0333m.PAD_ID = " + params.get("padId").toString());// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "AutoDebitAuthorisationForm_" + CommonUtils.getNowDate() + ".pdf");
+
     EmailVO email = new EmailVO();
-    String emailTitle = autoDebitMapper.getEmailTitle(params);
+    String emailSubject = "COWAY: Credit/Debit Card Auto Debit Authorisation";
 
     Map<String, Object> additionalParams = (Map<String, Object>) autoDebitMapper.getEmailDescription(params);
     params.putAll(additionalParams);
 
     List<String> emailNo = new ArrayList<String>();
 
-    if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
-      emailNo.add(CommonUtils.nvl(params.get("email1")));
-    } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
-      emailNo.add(CommonUtils.nvl(params.get("email2")));
-    }
+//    if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
+//      emailNo.add(CommonUtils.nvl(params.get("email1")));
+//    } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
+//      emailNo.add(CommonUtils.nvl(params.get("email2")));
+//    }
 
-    if (emailNo.size() > 0) {
-      email.setTo(emailNo);
-      email.setHtml(true);
-      email.setSubject(emailTitle);
-      email.setHasInlineImage(true);
+    emailNo.add("frango.liew@coway.com.my");
 
-      boolean isResult = false;
+    String content = "";
+    content += "Dear Sir/Madam,\n";
+    content += "Thank you for using " + params.get("bankShortName").toString() + " card ending " + params.get("cardLast4Digit").toString() + " monthly auto debit for order " + params.get("salesOrdNo").toString() + "\n";
+    content += "Monthly Payment Amount : RM" + params.get("monthlyRentalAmount").toString() + "\n";
+    content += "Your card info shall be updated within 3 working days upon your signature acknowledgement. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
+    content += "This is a system generated email. Please do not respond to this email. \n";
 
-      isResult = adaptorService.sendEmail(email, false, EmailTemplateType.MOBILE_AUTO_DEBIT_SUBMISSION, params);
-    }
+    params.put(EMAIL_SUBJECT, emailSubject);
+    params.put(EMAIL_TO, emailNo);
+    params.put(EMAIL_TEXT, content);
+
+    try {
+		this.view(null, null, params); //Included sending email
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+	      LOGGER.debug(" autodebit email result : {}", e.toString());
+		e.printStackTrace();
+	}
+    //Not sure if this needed or not, if no, email type template and .html have to be remove
+//    if (emailNo.size() > 0) {
+//      email.setTo(emailNo);
+//      email.setHtml(true);
+//      email.setSubject(emailSubject);
+//      email.setHasInlineImage(false);
+//
+//      boolean isResult = false;
+//
+//      isResult = adaptorService.sendEmail(email, false, EmailTemplateType.MOBILE_AUTO_DEBIT_SUBMISSION, params);
+//    }
   }
+
+
+  private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
+	      throws IOException {
+
+	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
+		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+
+	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
+		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
+	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    Calendar startTime = Calendar.getInstance();
+	    Calendar endTime = null;
+
+	    String reportFile = (String) params.get(REPORT_FILE_NAME);
+	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    String reportName = reportFilePath + reportFile;
+	    String prodName = "view";
+	    int maxLength = 0;
+	    String msg = "Completed";
+
+	    try {
+
+	      ReportClientDocument clientDoc = new ReportClientDocument();
+
+	      clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
+	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+	      {
+	        String connectString = reportUrl;
+	        String driverName = reportDriverClass;
+	        String jndiName = "";
+	        String userName = reportUserName;
+	        String password = reportPassword;
+
+
+	        CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+	        CRJavaHelper.logonDataSource(clientDoc, userName, password);
+	      }
+
+	      Object reportSource = clientDoc.getReportSource();
+
+	      params.put("repProdName", prodName);
+
+	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+	      ReportUtils.setReportParameter(params, paramController, fields);
+	      {
+	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
+	            params);
+	      }
+	    } catch (Exception ex) {
+	      LOGGER.error(CommonUtils.printStackTraceToString(ex));
+	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
+	      throw new ApplicationException(ex);
+	    } finally{
+	      // Insert Log
+	      endTime = Calendar.getInstance();
+	      params.put("msg", msg);
+	      params.put("startTime", fmt.format(startTime.getTime()));
+	      params.put("endTime", fmt.format(endTime.getTime()));
+	      params.put("userId", 349);
+
+	      reportBatchService.insertLog(params);
+	    }
+	  }
+
+  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
+	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
+	      throws ReportSDKExceptionBase, IOException {
+
+	    String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
+
+	    switch (viewType) {
+	      case MAIL_PDF:
+	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+	          break;
+
+	      default:
+	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+	    }
+	  }
 }
