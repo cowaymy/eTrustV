@@ -47,8 +47,11 @@
 
         if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
             $("#orgCode").attr("readonly", true);
+            $("#orgCode").val("${orgCode}".trim());
             $("#grpCode").attr("readonly", true);
+            $("#grpCode").val("${grpCode}".trim());
             $("#deptCode").attr("readonly", true);
+            $("#deptCode").val("${deptCode}".trim());
         }
 
        /*[Celeste - Hide as wrong understanding]
@@ -777,11 +780,11 @@
 
                     <tr>
                         <th scope="row">Org Code</th>
-                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
+                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" /></td>
                         <th scope="row">Grp Code</th>
-                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Grp Code" class="w100p" value="${grpCode}"/></td>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Grp Code" class="w100p" /></td>
                         <th scope="row">Dept Code</th>
-                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code='sales.isEKeyin' /></th>
