@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -993,12 +994,11 @@ public class CRJavaHelper {
 
 		String subject = (String) params.get(AppConstants.EMAIL_SUBJECT);
 		checkParam(subject, AppConstants.EMAIL_SUBJECT);
-		String[] to = (String[]) params.get(AppConstants.EMAIL_TO);
+		List<String> emailTo = (List<String>) params.get(AppConstants.EMAIL_TO);
+		String[] to = emailTo.toArray(new String[emailTo.size()]);
 		checkParam2(to, AppConstants.EMAIL_TO);
-
 		String downFileName = (String) params.get(AppConstants.REPORT_DOWN_FILE_NAME);
 		String text = (String) params.get(AppConstants.EMAIL_TEXT);
-
 		if (StringUtils.isEmpty(downFileName)) {
 			downFileName = clientDoc.getReportSource().getReportTitle();
 			downFileName = downFileName.replaceAll("\"", "");
