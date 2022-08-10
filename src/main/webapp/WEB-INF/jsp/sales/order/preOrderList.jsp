@@ -115,7 +115,7 @@ console.log("preOrderList");
             AUIGrid.exportToXlsx(excelListGridID, excelProps);
         });
 
-        fn_setToDay();
+        //fn_setToDay(); enhancement asking to remove this function - gen liang
 
     });
 
