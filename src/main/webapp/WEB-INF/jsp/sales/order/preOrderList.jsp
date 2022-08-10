@@ -475,7 +475,12 @@ console.log("preOrderList");
         }
         */
 
-
+        if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val()))
+                || (FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
+               {
+                      msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
+                      isValid = false
+               }
     	if(FormUtil.isEmpty($('#_memCode').val())
     			&& FormUtil.isEmpty($('#_appTypeId').val())
     		    && FormUtil.isEmpty($('#_stusId').val())
@@ -485,12 +490,6 @@ console.log("preOrderList");
     		    && FormUtil.isEmpty($('#_name').val())
     		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
         ){
-    		 if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val()))
-    		  || (FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
-    		 {
-    			    isValid = false;
-    			    msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
-    		 }
 
     		if(FormUtil.isEmpty($('#_sofNo').val())){
     			isValid = false;
