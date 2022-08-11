@@ -31,13 +31,11 @@ public interface AutoDebitService {
 
 	int updateAction(Map<String, Object> params);
 
-	AutoDebitApiDto autoDebitMobileSubmissionSave(Map<String, Object> params);
+	Map<String, Object> autoDebitMobileSubmissionSave(Map<String, Object> params);
 
 	void sendSms(Map<String, Object> params);
 
 	void sendEmail(Map<String, Object> params);
 
 	int insertAttachmentMobileUpload(List<FileVO> list, Map<String, Object> param);
-
-	void testEmailSender();
 }

@@ -244,8 +244,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   }
 
   @Override
-  public AutoDebitApiDto autoDebitMobileSubmissionSave(Map<String, Object> params) {
-	AutoDebitApiDto result = new AutoDebitApiDto();
+  public Map<String, Object> autoDebitMobileSubmissionSave(Map<String, Object> params) {
     EgovMap creatorInfo = autoDebitMapper.selectCreatorInfo(params.get("createdBy").toString());
 
     params.put("signImg", params.get("signData"));
@@ -263,23 +262,16 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put("padId", padId);
 
     LOGGER.debug(" submitSave : {}", params.toString());
-    int insertPay0333M = insertAutoDebitMobileSubmissionDataSave(params);
+    int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
 
     if (insertPay0333M > 0) {
-      // this.sendSms(params);
-    	this.sendEmail(params);
-    	result.setResponseCode(1);
-      return result;
+    	//this.sendEmail(params);
+	  params.put("result", "1");
+      return params;
     } else {
-    	result.setResponseCode(0);
-      return result;
+	  params.put("result", "0");
+      return params;
     }
-  }
-
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  private int insertAutoDebitMobileSubmissionDataSave(Map<String, Object> params) {
-	int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
-	return insertPay0333M;
   }
 
   @Override
@@ -369,14 +361,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     }
   }
 
-  public void testEmailSender()
-  {
-	  Map<String, Object> params = new HashMap();
-
-	  params.put("padId", "44");
-	  this.sendEmail(params);
-  }
-
   // NOT COMPLETED
   @SuppressWarnings("unchecked")
   @Override
@@ -424,17 +408,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      LOGGER.debug(" autodebit email result : {}", e.toString());
 		e.printStackTrace();
 	}
-    //Not sure if this needed or not, if no, email type template and .html have to be remove
-//    if (emailNo.size() > 0) {
-//      email.setTo(emailNo);
-//      email.setHtml(true);
-//      email.setSubject(emailSubject);
-//      email.setHasInlineImage(false);
-//
-//      boolean isResult = false;
-//
-//      isResult = adaptorService.sendEmail(email, false, EmailTemplateType.MOBILE_AUTO_DEBIT_SUBMISSION, params);
-//    }
   }
 
 

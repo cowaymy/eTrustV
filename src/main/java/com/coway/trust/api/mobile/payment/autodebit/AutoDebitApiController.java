@@ -2,6 +2,7 @@ package com.coway.trust.api.mobile.payment.autodebit;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -94,8 +95,19 @@ public class AutoDebitApiController {
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
 	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm) throws Exception {
         Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
+        AutoDebitApiDto result = new AutoDebitApiDto();
+        Map<String, Object> resultparams = new HashMap();
+        resultparams = autoDebitService.autoDebitMobileSubmissionSave(params);
+        int insertResult = Integer.parseInt(resultparams.get("result").toString());
+        if(insertResult > 0){
+            result.setResponseCode(1);
+			autoDebitService.sendEmail(resultparams);
+		 }
+        else{
+            result.setResponseCode(0);
+        }
 
-        return ResponseEntity.ok(autoDebitService.autoDebitMobileSubmissionSave(params));
+        return ResponseEntity.ok(result);
 	}
 
 	 @ApiOperation(value = "autoDebitSubmissionAttachmentSave", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -109,11 +121,4 @@ public class AutoDebitApiController {
 	    FileDto fileDto = FileDto.create(list, fileGroupKey);
 	    return ResponseEntity.ok(fileDto);
 	  }
-
-	 @ApiOperation(value = "testEmail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-		@RequestMapping(value = "/testEmail", method = RequestMethod.POST)
-		public ResponseEntity<AutoDebitApiDto> testEmail() throws Exception {
-		 autoDebitService.testEmailSender();
-	        return ResponseEntity.ok(null);
-		}
 }
