@@ -1020,6 +1020,7 @@ public class CRJavaHelper {
 			emailVO.setSubject(subject);
 			emailVO.setText(text);
 			adaptorService.sendEmail(emailVO, true);
+			LOGGER.debug(">>>>>>>>>>  emailVOParam : {}", emailVO);
 
 		} finally {
 			if (is != null) {
