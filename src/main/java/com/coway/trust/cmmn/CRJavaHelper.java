@@ -1006,8 +1006,6 @@ public class CRJavaHelper {
 			downFileName = clientDoc.getReportSource().getReportTitle();
 			downFileName = downFileName.replaceAll("\"", "");
 		}
-
-		LOGGER.debug(">>>>>>>>>>  params : {} ,  report name : {}", params, downFileName);
 		InputStream is = null;
 		try {
 			is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));
@@ -1020,7 +1018,6 @@ public class CRJavaHelper {
 			emailVO.setSubject(subject);
 			emailVO.setText(text);
 			adaptorService.sendEmail(emailVO, true);
-			LOGGER.debug(">>>>>>>>>>  emailVOParam : {}", emailVO);
 
 		} finally {
 			if (is != null) {
