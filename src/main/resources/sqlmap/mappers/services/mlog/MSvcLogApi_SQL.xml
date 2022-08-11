@@ -1518,7 +1518,8 @@
            '' AS ex_Chgid,
            TO_CHAR(S07A.BS_RESULT_PART_QTY) AS chg_Qty,
            TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_Y_N,
-           1
+           1,
+           NVL(S07A.FILTER_SRL_UNMATCH_RSN,'') filter_Serial_Unmatch_Reason
     FROM ( SELECT ROW_NUMBER () OVER (PARTITION BY S01A.SALES_ORD_NO,
                                                    S08A.NO,
                                                    S26A.STK_CODE,
@@ -1557,8 +1558,8 @@
                   S08A.SCHDUL_ID,
                   S87A.SRV_FILTER_STK_ID,
                    S87A.SRV_FILTER_LAST_SERIAL AS filter_Barcd_Serial_No_Old,  /*  Hui Ding - Added previous used filter serial 2021-11-24 */
-                   NULL AS filter_Serial_Unmatch_Reason,   /* Hui Ding - Added previous used filter serial 2021-11-24 */
-                   NULL AS is_Fill_Filter_Info,
+                   <!-- NVL(S07A.FILTER_SRL_UNMATCH_RSN ,'') AS filter_Serial_Unmatch_Reason, -->   /* Hui Ding - Added previous used filter serial 2021-11-24 */
+                   NULL AS is_Fill_Filter_Info, /* Hui Ding - Added previous used filter serial 2021-11-24 */
                   S08A.CODY_ID,
                   S26B.STK_CODE
            FROM SAL0001D S01A
