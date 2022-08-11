@@ -151,12 +151,10 @@ console.log("customerCreditCardPop");
         var nric = ($("#nric").val()).toString().trim().substr(0,12);
         var custId = "000000000000";
         var crcId = "000000000000";
-        refId = (nric.length < 12 ? pad(nric, 12) : nric) + (custId.length < 12 ? pad(custId, 12) : nric) + crcId;
-        console.log(refId);
+        refId = (nric.length < 12 ? pad(nric, 12) : nric) + (custId.length < 12 ? pad(custId, 12) :  pad(nric, 12)) + crcId;
         Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
             if(r1.tknId != 0) {
                 $("#refNo").val(r1.tknRef);
-
                 // Calls MC Payment pop up
                 var option = {
                         winName: "popup",
