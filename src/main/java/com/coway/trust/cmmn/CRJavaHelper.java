@@ -1,5 +1,7 @@
 package com.coway.trust.cmmn;
 
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+
 import java.io.*;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
@@ -992,6 +994,7 @@ public class CRJavaHelper {
 	public static void exportToMailMultiple(ReportClientDocument clientDoc, ExportOptions exportOptions, String extension,
 			Map<String, Object> params) throws ReportSDKExceptionBase, IOException {
 
+
 		String subject = (String) params.get(AppConstants.EMAIL_SUBJECT);
 		checkParam(subject, AppConstants.EMAIL_SUBJECT);
 		List<String> emailTo = (List<String>) params.get(AppConstants.EMAIL_TO);
@@ -1004,6 +1007,7 @@ public class CRJavaHelper {
 			downFileName = downFileName.replaceAll("\"", "");
 		}
 
+		LOGGER.debug(">>>>>>>>>>  params : {} ,  report name : {}", params, downFileName);
 		InputStream is = null;
 		try {
 			is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));

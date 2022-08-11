@@ -361,6 +361,14 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     }
   }
 
+  public void testEmailSender()
+  {
+	  Map<String, Object> params = new HashMap();
+
+	  params.put("padId", "37");
+	  this.sendEmail(params);
+  }
+
   // NOT COMPLETED
   @SuppressWarnings("unchecked")
   @Override
@@ -387,11 +395,12 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     }
 
     List<String> emailNo1 = Arrays.asList("frango.liew@coway.com.my");
+    LOGGER.debug("email contact list : {}", emailNo1.toString());
 
     String content = "";
     content += "Dear Sir/Madam,\n";
-    content += "Thank you for using " + params.get("bankShortName").toString() + " card ending " + params.get("cardLast4Digit").toString() + " monthly auto debit for order " + params.get("salesOrdNo").toString() + "\n";
-    content += "Monthly Payment Amount : RM" + params.get("monthlyRentalAmount").toString() + "\n";
+    content += "Thank you for using " + params.get("bankShortName").toString() + " card ending " + params.get("cardLast4Digit").toString() + " monthly auto debit for order " + params.get("salesOrdNo").toString() + ".\n\n";
+    content += "Monthly Payment Amount : RM" + params.get("monthlyRentalAmount").toString() + ".\n\n";
     content += "Your card info shall be updated within 3 working days upon your signature acknowledgement. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
     content += "This is a system generated email. Please do not respond to this email. \n";
 
@@ -399,6 +408,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(EMAIL_TO, emailNo1);
     params.put(EMAIL_TEXT, content);
 
+    LOGGER.debug("auto debit result param: {}", params);
     try {
 		this.view(null, null, params); //Included sending email
 	} catch (IOException e) {
@@ -439,7 +449,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	    String prodName = "view";
 	    int maxLength = 0;
 	    String msg = "Completed";
-
 	    try {
 
 	      ReportClientDocument clientDoc = new ReportClientDocument();
@@ -490,8 +499,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
-
-	    String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
 
 	    switch (viewType) {
 	      case MAIL_PDF:

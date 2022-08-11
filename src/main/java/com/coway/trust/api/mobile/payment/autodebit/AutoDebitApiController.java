@@ -109,4 +109,11 @@ public class AutoDebitApiController {
 	    FileDto fileDto = FileDto.create(list, fileGroupKey);
 	    return ResponseEntity.ok(fileDto);
 	  }
+
+	 @ApiOperation(value = "testEmail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/testEmail", method = RequestMethod.POST)
+		public ResponseEntity<AutoDebitApiDto> testEmail() throws Exception {
+		 autoDebitService.testEmailSender();
+	        return ResponseEntity.ok(null);
+		}
 }
