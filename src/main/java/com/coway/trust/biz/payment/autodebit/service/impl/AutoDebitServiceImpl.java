@@ -385,9 +385,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
       emailNo.add(CommonUtils.nvl(params.get("email2")));
     }
-
-    List<String> emailNo1 = Arrays.asList("frango.liew@coway.com.my");
-    LOGGER.debug("email contact list : {}", emailNo1.toString());
+    emailNo.add("frango.liew@coway.com.my");
 
     String content = "";
     content += "Dear Sir/Madam,\n";
@@ -397,7 +395,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     content += "This is a system generated email. Please do not respond to this email. \n";
 
     params.put(EMAIL_SUBJECT, emailSubject);
-    params.put(EMAIL_TO, emailNo1);
+    params.put(EMAIL_TO, emailNo);
     params.put(EMAIL_TEXT, content);
 
     LOGGER.debug("auto debit result param: {}", params);
