@@ -313,7 +313,8 @@ public class ReportBatchController {
     LOGGER.info("[END] RCM_Daily_HTMattress...");
   }
 
-  @RequestMapping(value = "/ColorGrid_Simplification_2014_2015.do")
+  //No longer using this report
+  /*@RequestMapping(value = "/ColorGrid_Simplification_2014_2015.do")
   //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
   public void colorGridSimplification_2014_2015() {
     LOGGER.info("[START] ColorGrid_Simplification_2014_2015...");
@@ -329,9 +330,10 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] ColorGrid_Simplification_2014_2015...");
-  }
+  }*/
 
-  @RequestMapping(value = "/ColorGrid_Simplification_2018.do")
+  //No longer using this report
+  /*@RequestMapping(value = "/ColorGrid_Simplification_2018.do")
   //@Scheduled(cron = "0 20 6 * * *")//Daily (6:20am)
   public void colorGridSimplification_2018() {
     LOGGER.info("[START] ColorGrid_Simplification_2018...");
@@ -347,7 +349,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] ColorGrid_Simplification_2018...");
-  }
+  }*/
 
   @RequestMapping(value = "/ColorGrid_Daily_2015_2006-2012_S.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
@@ -692,6 +694,70 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RejoinNetRawData...");
+  }
+
+  @RequestMapping(value = "/accumAccRenFinLease_Simplified.do")
+  //@Scheduled(cron = "0 0 9 1 * *")//Monthly (8:00am)
+  public void accumAccRenFinLease_Simplified() {
+    LOGGER.info("[START] accumAccRenFinLease_Simplified...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/PQC/AccumulatedAccRentalFinLease_Simplified_Excel.rpt");
+
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "PQC" + File.separator + "AccumulatedAccRentalFinLease_Simplified_Excel" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] accumAccRenFinLease_Simplified...");
+  }
+
+  @RequestMapping(value = "/accumAccRenOptLease_Simplified.do")
+  //@Scheduled(cron = "0 30 8 1 * *")//Monthly (8:00am)
+  public void accumAccRenOptLease_Simplified() {
+    LOGGER.info("[START] accumAccRenOptLease_Simplified...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/PQC/AccumulatedAccRentalOptLease_Simplified_Excel.rpt");
+
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "PQC" + File.separator + "AccumulatedAccRentalOptLease_Simplified_Excel" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] accumAccRenOptLease_Simplified...");
+  }
+
+  @RequestMapping(value = "/accumAccOutright_Simplified.do")
+  //@Scheduled(cron = "0 0 8 1 * *")//Monthly (8:00am)
+  public void accumAccOutright_Simplified() {
+    LOGGER.info("[START] accumAccRenOutright_Simplified...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/PQC/AccumulatedAccOutright_Simplified_Excel.rpt");
+
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "PQC" + File.separator + "AccumulatedAccOutright_Simplified_Excel" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] accumAccOutright_Simplified...");
+  }
+
+  @RequestMapping(value = "/accumAccMembership_Simplified.do")
+  //@Scheduled(cron = "0 15 8 1 * *")//Monthly (8:15am)
+  public void accumAccMembership_Simplified() {
+    LOGGER.info("[START] accumAccMembership_Simplified...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/PQC/AccumulatedAccMembership_Simplified_Excel.rpt");
+
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "PQC" + File.separator + "AccumulatedAccMembership_Simplified_Excel" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] accumAccMembership_Simplified...");
   }
 
 
@@ -2470,7 +2536,7 @@ public class ReportBatchController {
  }
 
  @RequestMapping(value = "/rentalStusReport.do")
- //@Scheduled(cron = " 0 0 5 * * ?")//Daily 5:00am
+ //@Scheduled(cron = " 0 0 9 * * ?")//Daily 9:00am
  public void rentalStusReport() throws IOException {
    LOGGER.info("[START] rentalStusReport...");
    Map<String, Object> params = new HashMap<>();
