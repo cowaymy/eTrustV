@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.payment.autodebit.AutoDebitApiDto;
@@ -261,7 +263,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put("padId", padId);
 
     LOGGER.debug(" submitSave : {}", params.toString());
-    int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
+    int insertPay0333M = insertAutoDebitMobileSubmissionDataSave(params);
 
     if (insertPay0333M > 0) {
       // this.sendSms(params);
@@ -272,6 +274,12 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     	result.setResponseCode(0);
       return result;
     }
+  }
+
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  private int insertAutoDebitMobileSubmissionDataSave(Map<String, Object> params) {
+	int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
+	return insertPay0333M;
   }
 
   @Override
@@ -365,7 +373,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   {
 	  Map<String, Object> params = new HashMap();
 
-	  params.put("padId", "37");
+	  params.put("padId", "44");
 	  this.sendEmail(params);
   }
 
@@ -378,7 +386,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("V_WHERESQL", "AND p0333m.PAD_ID = " + params.get("padId").toString());// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "AutoDebitAuthorisationForm_" + CommonUtils.getNowDate() + ".pdf");
+        "AutoDebitAuthorisationForm_" + CommonUtils.getNowDate());
 
     EmailVO email = new EmailVO();
     String emailSubject = "COWAY: Credit/Debit Card Auto Debit Authorisation";
