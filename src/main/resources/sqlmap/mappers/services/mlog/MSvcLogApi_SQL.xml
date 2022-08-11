@@ -1519,7 +1519,7 @@
            TO_CHAR(S07A.BS_RESULT_PART_QTY) AS chg_Qty,
            TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_Y_N,
            1,
-           NVL(S07A.FILTER_SRL_UNMATCH_RSN,'') filter_Serial_Unmatch_Reason
+           TO_CHAR(NVL(S07A.FILTER_SRL_UNMATCH_RSN,'')) filter_Serial_Unmatch_Reason
     FROM ( SELECT ROW_NUMBER () OVER (PARTITION BY S01A.SALES_ORD_NO,
                                                    S08A.NO,
                                                    S26A.STK_CODE,
