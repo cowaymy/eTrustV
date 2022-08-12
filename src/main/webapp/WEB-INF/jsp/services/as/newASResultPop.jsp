@@ -3023,31 +3023,6 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th scope="row"><spring:message code='service.text.dtlDef' />
-                                            <span id='m12' name='m12' class="must" style="display: none" >*</span></th>
-                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def'
-                                            name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')"
-                                            onkeyup="this.value = this.value.toUpperCase();" />
-                                            <a class="search_btn" id="DD" onclick="fn_dftTyp('DD')">
-                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search" /></a>
-                                            <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class=""/>
-                                            <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text'
-                                            class="" disabled style="width: 60%;" /></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><spring:message code='service.text.defCde' />
-                                            <span id='m10' name='m10' class="must" style="display: none" >*</span></th>
-                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code'
-                                            name='def_code' class=""  onblur="fn_getASReasonCode2(this, 'def_code', '303')"
-                                            onkeyup="this.value = this.value.toUpperCase();" />
-                                            <a class="search_btn" id="DC" onclick="fn_dftTyp('DC')">
-                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                                            <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
-                                            <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class=""
-                                            disabled style="width: 60%;" /></td>
-                                    </tr>
-                                    <tr>
                                         <th scope="row"><spring:message code='service.text.defTyp' />
                                             <span id='m9' name='m9' class="must" style="display: none" >*</span></th>
                                         <td><input type="text" title="" id='def_type' name='def_type' placeholder="" class=""
@@ -3072,6 +3047,31 @@
                                             <input type="text" title="" placeholder="" class="" id='solut_code_text'
                                                 name='solut_code_text' disabled style="width: 60%;" />
                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.dtlDef' />
+                                            <span id='m12' name='m12' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def'
+                                            name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')"
+                                            onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a class="search_btn" id="DD" onclick="fn_dftTyp('DD')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+                                                alt="search" /></a>
+                                            <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class=""/>
+                                            <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text'
+                                            class="" disabled style="width: 60%;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.defCde' />
+                                            <span id='m10' name='m10' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code'
+                                            name='def_code' class=""  onblur="fn_getASReasonCode2(this, 'def_code', '303')"
+                                            onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a class="search_btn" id="DC" onclick="fn_dftTyp('DC')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                            <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
+                                            <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class=""
+                                            disabled style="width: 60%;" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code='service.text.defPrt' />
