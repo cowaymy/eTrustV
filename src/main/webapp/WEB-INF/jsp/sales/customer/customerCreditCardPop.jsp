@@ -92,6 +92,7 @@ console.log("customerCreditCardPop");
 
         var isExistCrc = fn_existCrcNo('', $("#tknId").val().trim());
         if(isExistCrc) {
+            Common.alert("<spring:message code='sal.alert.msg.creditCardIsExisting' />");
             return false;
         }
 
@@ -101,33 +102,14 @@ console.log("customerCreditCardPop");
 
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
-    	var resultInfo = null;
 
-        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : '', custCrcToken : CrcNo}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custCrcToken : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
-                resultInfo = rsltInfo;
             }
         }, null, {async : false});
         console.log('isExist ggg:'+isExist);
-        if(isExist){
-        	var custId = $("#custId").val();
-        	var sameCustIdAndCardCheck = false;
-
-        	for(var i = 0; i < resultInfo.length; i++){
-        		if(resultInfo[i].custId == custId){
-        			sameCustIdAndCardCheck = true;
-        		}
-        	}
-        	if(sameCustIdAndCardCheck){
-        		Common.alert("<spring:message code='sal.alert.msg.creditCardIsExisting' />");
-        	}
-        	else{
-        		Common.alert("This bank card is used by another customer.");
-        	}
-        }
-
         return isExist;
     }
 
@@ -155,6 +137,7 @@ console.log("customerCreditCardPop");
         Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
             if(r1.tknId != 0) {
                 $("#refNo").val(r1.tknRef);
+
                 // Calls MC Payment pop up
                 var option = {
                         winName: "popup",
@@ -174,7 +157,8 @@ console.log("customerCreditCardPop");
                     option.winName = option.winName + new Date();
                 }
 
-                var URL = '${mcPaymentUrl}' + r1.tknRef;
+                //var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
+                var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
 
                 tokenPop = window.open(URL, option.winName,
                         "fullscreen=" + option.fullscreen +
@@ -198,16 +182,11 @@ console.log("customerCreditCardPop");
                             Common.ajax("GET", "/sales/customer/getTokenNumber.do", {refId : r1.tknRef}, function(r2) {
                                 console.log(r2);
                                 if(r2 != null) {
-                                	if(r2.code == "99") { //FAILED
-                                		Common.alert(r2.message);
-                                	}
-                                	else {
-                                		$("#_cardNo_").val(r2.data.bin + "******" + r2.data.cclast4);
-                                        $("#tknId").val(r2.data.token);
-                                        $("#cardExpr").val(r2.data.expr);
+                                    $("#_cardNo_").val(r2.data.bin + "******" + r2.data.cclast4);
+                                    $("#tknId").val(r2.data.token);
+                                    $("#cardExpr").val(r2.data.expr);
 
-                                        fn_selectCreditCardType();
-                                	}
+                                    fn_selectCreditCardType();
                                 }
                             });
                         }
