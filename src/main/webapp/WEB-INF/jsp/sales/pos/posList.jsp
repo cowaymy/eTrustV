@@ -160,7 +160,9 @@ $(document).ready(function() { //***********************************************
     //Pos Reversal
     $("#_reversalBtn").click(function() {
 
+
     	var clickChk = AUIGrid.getSelectedItems(posGridID);
+
     	//Validation
     	if(clickChk == null || clickChk.length <= 0 ){
     		Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
@@ -171,6 +173,11 @@ $(document).ready(function() { //***********************************************
     		Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
     		return;
     	}
+
+    	if(clickChk[0].item.posModuleTypeId == 6795){  //reversal
+    		Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
+            return;
+        }
     	// NO CHECKING FOR POS STATUS FOR REVERSAL -- TPY
     	/* console.log("clickChk[0].item.stusId : " + clickChk[0].item.stusId);
     	if(clickChk[0].item.stusId != 4){
@@ -230,8 +237,7 @@ $(document).ready(function() { //***********************************************
     	AUIGrid.clearGridData(deductionCmGridID);
     	AUIGrid.clearGridData(posPaymentDetailGridID);
 
-
-    	if(event.item.posModuleTypeId == 2390 || event.item.posModuleTypeId == 2392){ // POS SALES & OTHER(ITEM BANK(HQ))
+    	if(event.item.posModuleTypeId == 2390 || event.item.posModuleTypeId == 2392 || event.item.posModuleTypeId == 6795){ // POS SALES & OTHER(ITEM BANK(HQ))
 
     		//Mybatis Separate Param
     		//1. Grid Display Control

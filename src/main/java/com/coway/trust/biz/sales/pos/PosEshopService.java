@@ -71,5 +71,7 @@ public interface PosEshopService {
 
 	void deleteCartItem(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectEshopWhSOBrnchList() throws Exception;
+
 
 }

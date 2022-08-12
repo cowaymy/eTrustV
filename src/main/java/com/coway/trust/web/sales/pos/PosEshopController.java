@@ -769,6 +769,17 @@ public class PosEshopController {
 	  }
 
 
+	  @RequestMapping(value = "/selectEshopWhSOBrnchList")
+	  public ResponseEntity<List<EgovMap>> selectEshopWhSOBrnchList() throws Exception {
+
+	    List<EgovMap> codeList = null;
+
+	    codeList = posEshopService.selectEshopWhSOBrnchList();
+
+	    return ResponseEntity.ok(codeList);
+
+	  }
+
 
 
 }

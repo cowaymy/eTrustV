@@ -242,21 +242,22 @@ function fn_saveGrid(){
         return;
     }else{
 
-          Common.ajax("POST", "/sales/posstock/updatePosEshopItemList.do", $("#form_updateitem").serializeJSON(), function(result) {
-                Common.confirm('Success to update',fn_close2);
-                //fn_close();
+                Common.ajax("POST", "/sales/posstock/updatePosEshopItemList.do", $("#form_updateitem").serializeJSON(), function(result) {
+                    Common.confirm('Success to update',fn_close2);
+                    //fn_close();
 
-            }, function(jqXHR, textStatus, errorThrown) {
-                try {
-                    console.log("status : " + jqXHR.status);
-                    console.log("code : " + jqXHR.responseJSON.code);
-                    console.log("message : " + jqXHR.responseJSON.message);
-                    console.log("detailMessage : "
-                            + jqXHR.responseJSON.detailMessage);
-                } catch (e) {
-                    console.log(e);
-                }
-            });
+                }, function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        console.log("status : " + jqXHR.status);
+                        console.log("code : " + jqXHR.responseJSON.code);
+                        console.log("message : " + jqXHR.responseJSON.message);
+                        console.log("detailMessage : "
+                                + jqXHR.responseJSON.detailMessage);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                });
+
     }
 }
 
@@ -264,12 +265,10 @@ $(function() {
 
     $("#uploadfile_editItem").change(function(e){
 
-       var formData = Common.getFormData("form_item");
+       var formData = Common.getFormData("form_updateitem");
        formData.append("param01", $("#param01").val());
 
-
        Common.ajaxFile("/sales/posstock/eShopItemUpload.do", formData, function(result) {
-           console.log(result);
               $("#attachGrpId_editItem").val(result.atchFileGrpId);
           });
      });

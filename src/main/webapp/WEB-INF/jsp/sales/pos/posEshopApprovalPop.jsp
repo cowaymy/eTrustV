@@ -61,6 +61,7 @@ function createAUIGrid(){
             $("#mState").val(result[0].esnState);
             $("#mCountry").val(result[0].esnCountry);
             $("#totalShippingFee").val(result[0].shippingFee);
+            $("#hpCode").val(result[0].hpCode);
 
             for(var i=0; i<result.length;i++){
             	grandTotal +=Number(result[i].totalPrice);
@@ -150,6 +151,11 @@ function fn_rejectEshop(){
                         <tr>
                             <th scope="row"><spring:message code="sal.text.name" /></th>
                             <td colspan="3"><input id="contactName" name="contactName" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+
+                          <tr>
+                            <th scope="row">HP Code</th>
+                            <td colspan="3"><input id="hpCode" name="hpCode" type="text" class="w100p readonly" readonly /></td>
                         </tr>
 
                         <tr>

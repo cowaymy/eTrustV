@@ -54,7 +54,7 @@
          CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
 
          var selVal = '${branchId}';
-         CommonCombo.make('scnFromLocId', "/sales/pos/selectWhSOBrnchList", '' ,selVal, '');
+         CommonCombo.make('scnFromLocId', "/sales/posstock/selectEshopWhSOBrnchList", '' ,selVal, '');
 
          //SellingTypeComboBox
          var sellingTypePopParam = {groupCode : 507, codeIn :[6796,6797]};
@@ -636,6 +636,12 @@
                 $("#totalWeight").val(result[0].totalWeight);
                 calculateShippingFee();
         	   }
+        	   else{
+        		   $("#totalOrdering").val("");
+                   $("#totalWeight").val("");
+                   $("#totalPrice").val("");
+                   $("#totalShippingFee").val("");
+        	   }
            });
     }
 
@@ -1052,7 +1058,7 @@
 
         <ul class="center_btns">
             <li><p class="btn_blue"><a id="btnAdd" onclick="fn_addToCart()"><spring:message code="sal.btn.add" /></a></p></li>
-            <li><p class="btn_blue"><a href="#"><spring:message code="sys.btn.cancel" /></a></p></li>
+            <li><p class="btn_blue"><a onclick="selectCatalogList()"><spring:message code="sys.btn.cancel" /></a></p></li>
         </ul>
 
 <!-- 		</form> -->

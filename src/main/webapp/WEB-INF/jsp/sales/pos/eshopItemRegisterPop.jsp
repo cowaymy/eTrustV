@@ -148,10 +148,15 @@ function autoCalculation(){
 	 var weightPerCarton = $("#qtyPerCarton_addItem").val() * $("#unitWeight_addItem").val();
 
 	 $("#pricePerCarton_addItem").val(pricePerCarton);
-     $("#weightPerCarton_addItem").val(weightPerCarton);
+     $("#weightPerCarton_addItem").val(roundNumber(weightPerCarton,2).toFixed(2));
 
 }
 
+
+function roundNumber(rnum, rlength) {
+    var newnumber = Math.round(rnum * Math.pow(10, rlength)) / Math.pow(10, rlength);
+    return newnumber;
+}
 
 function fn_close(){
     $("#popup_wrap").remove();
@@ -246,7 +251,6 @@ $(function() {
 
        var formData = Common.getFormData("form_item");
        formData.append("param01", $("#param01").val());
-
 
        Common.ajaxFile("/sales/posstock/eShopItemUpload.do", formData, function(result) {
     	      $("#attachGrpId_addItem").val(result.atchFileGrpId);

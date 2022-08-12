@@ -94,7 +94,11 @@
                         Extent6.USER_NAME  ,
                         CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
                         CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
-                        CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
+                        CASE
+                            WHEN Extent1.POS_MODULE_TYPE_ID =6795 THEN Extent12.USER_FULL_NAME
+                            WHEN (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME
+                            ELSE 'CASH'
+                        END NAME ,
                         CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,
                         extent10.MEMO_ADJ_REF_NO,
                         Extent1.BRNCH_ID,
@@ -108,8 +112,9 @@
                         JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
                         LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
                         LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
-                         LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
-                         LEFT JOIN SYS0038M EXTENT11 ON EXTENT1.STUS_ID = EXTENT11.STUS_CODE_ID
+                        LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
+                        LEFT JOIN SYS0038M EXTENT11 ON EXTENT1.STUS_ID = EXTENT11.STUS_CODE_ID
+                        LEFT JOIN SYS0047M Extent12 ON Extent1.POS_CUST_NAME =  Extent12.USER_NAME
                         <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">
                             LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
                         </if>
@@ -1192,7 +1197,7 @@
                 T1.POS_ITM_ID,
                 T1.POS_ID,
                 T1.POS_ITM_STOCK_ID,
-                T2.STK_DESC,
+                CASE WHEN T1.POS_ITM_STOCK_ID = 0 THEN 'Shipping Fee' ELSE T2.STK_DESC END AS STK_DESC,
                 T2.STK_CODE,
                 <!-- <if test=" null != filterType and '' != filterType">
                 </if> -->

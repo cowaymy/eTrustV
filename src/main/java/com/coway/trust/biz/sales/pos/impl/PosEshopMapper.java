@@ -117,5 +117,7 @@ public interface PosEshopMapper {
 
 	void deleteCartItem(Map<String, Object> params);
 
+	List<EgovMap> selectEshopWhSOBrnchList();
+
 
 }

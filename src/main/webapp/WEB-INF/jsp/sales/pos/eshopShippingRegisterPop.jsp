@@ -14,7 +14,7 @@
 </style>
 <script type="text/javascript">
 
-var myGridIDShipping;
+var myGridIDShipping2;
 var param= [];
 
 var ItmOption = {
@@ -63,11 +63,11 @@ function createAUIDGrid(){
      ];
 
     $("#shipping_grid_wrap2").html("");
-   myGridIDShipping = GridCommon.createAUIGrid("#shipping_grid_wrap2", columnLayout,'', gridProsItem);
-   AUIGrid.resize(myGridIDShipping , 960, 300);
+   myGridIDShipping2 = GridCommon.createAUIGrid("#shipping_grid_wrap2", columnLayout,'', gridProsItem);
+   AUIGrid.resize(myGridIDShipping2 , 960, 300);
 
 //    Common.ajax("GET", "/sales/posstock/selectShippingList", null, function(result) {
-//                AUIGrid.setGridData(myGridIDShipping, result);
+//                AUIGrid.setGridData(myGridIDShipping2, result);
 //    });
 }
 
@@ -103,7 +103,7 @@ function addRowToGrid(){
         item.endDt = $("#endDt_add").val();
         item.id = "0";
 
-        AUIGrid.addRow(myGridIDShipping, item, "first");
+        AUIGrid.addRow(myGridIDShipping2, item, "first");
     }
 }
 
@@ -117,11 +117,11 @@ function shippingSave(){
 	 var data = {};
 	 var updArr = [];
 
-	 editArr = GridCommon.getEditData(myGridIDShipping);
+	 editArr = GridCommon.getEditData(myGridIDShipping2);
 
 	 //Valition
 	 //1. NullCheck
-	 var shippingSize = AUIGrid.getGridData(myGridIDShipping);
+	 var shippingSize = AUIGrid.getGridData(myGridIDShipping2);
 
 	 if(shippingSize == null || shippingSize.length <= 0){
 	     Common.alert('<spring:message code="sal.alert.msg.noChngData" />');
@@ -187,7 +187,7 @@ function fn_chkItemVal(){
 $(function() {
 
     $("#btnDelRow").click(function() {
-        AUIGrid.removeCheckedRows(myGridIDShipping);
+        AUIGrid.removeCheckedRows(myGridIDShipping2);
     });
 
 });

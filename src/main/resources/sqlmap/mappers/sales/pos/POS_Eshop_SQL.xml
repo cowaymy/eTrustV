@@ -284,17 +284,20 @@
     </select>
 
     <select id="selectCatalogList" parameterType="Map" resultType="egovMap">
-            SELECT
-                      A.ID
-                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
-                    , D.LOC_ID
-            FROM SAL0321D A
-            LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
-            LEFT JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
-            LEFT JOIN LOG0106M D ON A.ITEM_ID = D.ITEM_CODE
-            WHERE 1=1
-            AND NVL(A.DISAB,0)=0
-            AND NVL(D.LOC_ID,0) !=0
+		     <![CDATA[
+		            SELECT
+		                      A.ID
+		                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
+		                    , D.LOC_ID
+		            FROM SAL0321D A
+		            LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
+		            LEFT JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+		            LEFT JOIN LOG0106M D ON A.ITEM_ID = D.ITEM_CODE
+		            WHERE 1=1
+		            AND NVL(A.DISAB,0) = 0
+		            AND NVL(D.LOC_ID,0) <> 0
+		            AND NVL(D.ITEM_INV_QTY,0) <> 0
+		      ]]>
             <if test="esnFromLocId != null and esnFromLocId != '' ">
                     AND D.LOC_ID = #{esnFromLocId}
             </if>
@@ -435,6 +438,7 @@
 					, PAY_ATTACH_ID
 					, SHIPPING_FEE
 					, POS_TYPE
+					, AREA_ID
 					, CRT_USER_ID
 					, CRT_DT
             )VALUES (
@@ -453,6 +457,7 @@
 				    , #{hiddenAttachmentPaySlip}
 				    , #{totalShippingFee}
 				    , '6795'
+				    , #{areaId}
 				    , #{userId}
 				    , SYSDATE
             )
@@ -617,7 +622,7 @@
                       , D.FILE_SUB_PATH || '\' || D.PHYSICL_FILE_NAME AS FILEPATH
                       , E.STK_CODE || ' - ' || E.STK_DESC AS STK_CODE
                       , B.ITEM_PRICE
-                      , B.ITEM_QTY
+                      , B.ITEM_QTY * B.ITEM_ORD_QTY AS ITEM_QTY
                       , B.ITEM_ORD_QTY
                       , B.ITEM_WEIGHT * B.ITEM_QTY * B.ITEM_ORD_QTY AS ITEM_WEIGHT
                       , B.ITEM_PRICE * B.ITEM_QTY * B.ITEM_ORD_QTY AS TOTAL_PRICE
@@ -1092,6 +1097,23 @@
       <update id="deleteCartItem"  parameterType="java.util.Map">
               DELETE FROM SAL0327T WHERE ID = #{id}
      </update>
+
+     <select id="selectEshopWhSOBrnchList" resultType="egovMap">
+        SELECT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('08')
+            AND S5.STUS_ID = 1
+        ORDER BY S5.CODE
+   </select>
 
 
 

@@ -660,8 +660,6 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
     		    int invItemTypeID = 0;
     		    invItemTypeID = 1356;
 
-//    		      Map<String, Object> invDetailMap = new HashMap<String, Object>();
-
     		      if(approvalList !=null && approvalList.size()>0){
 
                   	for (int i = 0; i < approvalList.size(); i++) {
@@ -778,6 +776,10 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 			}
 		}
 
+	 @Override
+	  public List<EgovMap> selectEshopWhSOBrnchList() throws Exception {
+	    return posMapper.selectEshopWhSOBrnchList();
+	  }
 
 
 

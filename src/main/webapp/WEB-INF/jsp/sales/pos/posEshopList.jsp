@@ -166,7 +166,7 @@ $(document).ready(function(){
             $("#orgCode").attr("class", "w100p readonly");
             $("#orgCode").attr("readonly", "readonly");
 
-            $("#grpCode").val("${grpCode}");
+            $("#grpCode").val("${grpCode}".trim());
             $("#grpCode").attr("class", "w100p readonly");
             $("#grpCode").attr("readonly", "readonly");
 
@@ -176,11 +176,11 @@ $(document).ready(function(){
             $("#orgCode").attr("class", "w100p readonly");
             $("#orgCode").attr("readonly", "readonly");
 
-            $("#grpCode").val("${grpCode}");
+            $("#grpCode").val("${grpCode}".trim());
             $("#grpCode").attr("class", "w100p readonly");
             $("#grpCode").attr("readonly", "readonly");
 
-            $("#deptCode").val("${deptCode}");
+            $("#deptCode").val("${deptCode}".trim());
             $("#deptCode").attr("class", "w100p readonly");
             $("#deptCode").attr("readonly", "readonly");
 
@@ -191,16 +191,16 @@ $(document).ready(function(){
             $("#orgCode").attr("class", "w100p readonly");
             $("#orgCode").attr("readonly", "readonly");
 
-            $("#grpCode").val("${grpCode}");
+            $("#grpCode").val("${grpCode}".trim());
             $("#grpCode").attr("class", "w100p readonly");
             $("#grpCode").attr("readonly", "readonly");
 
-            $("#deptCode").val("${deptCode}");
+            $("#deptCode").val("${deptCode}".trim());
             $("#deptCode").attr("class", "w100p readonly");
             $("#deptCode").attr("readonly", "readonly");
         }
 
-        $("#memberId").val("${memCode}");
+        $("#memberId").val("${memCode}".trim());
         $("#memberId").attr("class", "w100p readonly");
         $("#memberId").attr("readonly", "readonly");
     }

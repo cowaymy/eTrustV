@@ -77,6 +77,8 @@ function createAUIGrid(){
             $("#mState").val(result[0].esnState);
             $("#mCountry").val(result[0].esnCountry);
             $("#totalShippingFee").val(result[0].shippingFee);
+            $("#courierSvc").val(result[0].courierSvc);
+            $("#waybillNo").val(result[0].waybillNo);
 
             for(var i=0; i<result.length;i++){
                 grandTotal +=Number(result[i].totalPrice);

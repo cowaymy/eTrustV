@@ -147,7 +147,7 @@ $.fn.clearForm = function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.title.text.posRawData" /></h1>
+<h1>E-Shop Raw Data</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="_itmSrchPopClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
