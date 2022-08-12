@@ -1365,7 +1365,7 @@
     	var isSrvPac = 'Y';
     	//if(appTypeVal == "66") isSrvPac = "Y";
 
-        doGetComboData('/sales/order/   .do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 
         /* if(appTypeVal !=66){
             doGetC
