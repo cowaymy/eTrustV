@@ -3,14 +3,14 @@
 <mapper namespace="com.coway.trust.biz.services.as.impl.PreASManagementListMapper">
 
 	<select id="selectPreASManagementList" parameterType="Map" resultType="egovMap">
-	  SELECT DISTINCT
+    SELECT DISTINCT
                   Extent1.SALES_ORDER_NO
                 , Extent2.SALES_ORD_ID
-                , NVL(Extent1.AS_NO,'') AS AS_NO
-                , Extent9.AS_ID
+                , NVL(Extent1.AS_NO,'-') AS AS_NO
+                , Extent10.AS_ID
                 , Extent1.APPV_REMARK
                 , Extent1.CUST_NAME
-                , NVL(Extent3.CODE, '-') BRNCH_CODE
+                , NVL(Extent11.CODE, '-') BRNCH_CODE
                 , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
                 , Extent5.TEL_M1 AS CONTACT_NO
                 , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
@@ -18,6 +18,7 @@
                 , Extent1.STUS AS STUS_ID
                 , Extent1.DEFECT_CODE
                 , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
+                , Extent1.REG_ID AS CREATOR
                 , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
         FROM SVC0130D Extent1
         JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
@@ -28,7 +29,8 @@
         LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
         LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
         LEFT JOIN SYS0026M Extent8 ON Extent1.PRODUCT_CODE = Extent8.STK_CODE
-        LEFT JOIN SVC0001D Extent9 ON Extent1.AS_NO = Extent9.AS_NO
+        LEFT JOIN SVC0001D Extent10 ON Extent1.AS_NO = Extent10.AS_NO
+        LEFT JOIN SYS0005M Extent11 ON Extent10.AS_BRNCH_ID = Extent11.BRNCH_ID
 
 		WHERE 1=1
 

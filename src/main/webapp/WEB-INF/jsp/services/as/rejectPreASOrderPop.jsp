@@ -5,6 +5,7 @@
 
     $(document).ready(function() {
     	$("#branchCode").val('${branchCode}');
+    	$("#creator").val('${creator}');
         doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5550', '','', 'ddlFailReason', 'S', '');
     });
 
@@ -95,6 +96,11 @@
           <tr>
            <th scope="row">DSC Code</th>
            <td><input type="text" class="readonly" name="branchCode" id="branchCode"  readonly=readonly /> </td>
+          </tr>
+
+           <tr>
+           <th scope="row">Create ID</th>
+           <td><input type="text" class="readonly" name="creator" id="creator"  readonly=readonly /> </td>
           </tr>
 
           <tr>

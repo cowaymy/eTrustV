@@ -37,15 +37,15 @@
             if(index > -1) {
 
                 var stus = AUIGrid.getCellValue(myGridID, index, "stus");
-
+                var salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
                 if( stus != "Approved"){
-                    Common.alert("Only Approved Order Is Allowed to view.");
+                   Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : salesOrdId }, null, true, "");
                 }
                 else{
                     var asid = AUIGrid.getCellValue(myGridID, event.rowIndex, "asId");
                     var asNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "asNo");
                     var salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
-                    var salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+                    //var salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 
                     var param =  "?salesOrderId=" + salesOrdId
                               + "&ord_Id=" + salesOrdId
@@ -175,7 +175,15 @@
                   editable : false,
                   width : 150,
                   visible:false
-          }
+          },
+          {
+              dataField : "creator",
+              headerText : "Creator",
+              editable : false,
+              width : 150,
+              visible:false
+      }
+
 
     ];
 
@@ -194,7 +202,7 @@
   function fn_searchPreASManagement() { // SEARCH Pre-Register AS
 	    console.log($("#ASForm").serialize());
         Common.ajax("GET", "/services/as/searchPreASManagementList.do", $("#ASForm").serialize(), function(result) {
-        console.log(result);
+        //console.log(result);
           AUIGrid.setGridData(myGridID, result);
         });
   }
@@ -305,8 +313,11 @@
 	          else{
 	        	  param = {
 	                      preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
-	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "brnchCode")
+	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "brnchCode"),
+	                      preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
 	               }
+
+	        	  console.log(param);
 
 	        	  Common.popupDiv("/services/as/rejectPreASOrder.do", param, null  , true, 'rejectPreASOrderPop');
 	          }

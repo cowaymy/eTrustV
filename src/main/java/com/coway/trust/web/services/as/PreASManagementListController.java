@@ -127,6 +127,7 @@ public class PreASManagementListController {
 	  logger.debug("== params rejectPreASOrder" + params.toString());
 	  	model.put("salesOrdNo", params.get("preAsSalesOrderNo").toString());
 	  	model.put("branchCode",  params.get("preAsBranch").toString());
+	  	model.put("creator",  params.get("preAsCreator").toString());
 		return "services/as/rejectPreASOrderPop";
 	}
 
