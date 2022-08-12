@@ -1,5 +1,6 @@
 package com.coway.trust.web.services.as;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1439,11 +1440,13 @@ public class ASManagementListController {
 
   @RequestMapping(value = "/dftTypPop.do")
   public String dftTypPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	  logger.debug("== params - dftTypPop : " + params.toString());
     model.put("callPrgm", params.get("callPrgm"));
     model.put("prodCde", params.get("prodCde"));
     model.put("ddCde", params.get("ddCde"));
     model.put("dtCde", params.get("dtCde"));
-    logger.debug("== params - dftTypPop : " + params.toString());
+    model.put("matchMatDefCode", params.get("matchMatDefCode"));
+
     return "services/as/dftTypPop";
   }
 
@@ -1453,6 +1456,9 @@ public class ASManagementListController {
     logger.debug("===========================/getDftTyp.do===============================");
     logger.debug("== params " + params.toString());
 
+    String[] matchMatDefCodeP = params.get("search4").toString().split(",");
+
+    params.put("matchMatDefCodeP", matchMatDefCodeP);
     List<EgovMap> dftCde = ASManagementListService.getDftTyp(params);
 
     logger.debug("== dftCde : {}", dftCde);

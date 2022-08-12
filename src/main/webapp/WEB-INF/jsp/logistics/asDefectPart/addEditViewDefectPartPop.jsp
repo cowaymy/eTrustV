@@ -99,7 +99,7 @@ function fn_validate(){
 
 	//checkReges
     var checkRegexResult = true;
-    var regExpSpecChar = /^[^*|\":<>[\]{}`\\()';@&$]+$/;
+    var regExpSpecChar = /^[^*|\":<>[\]{}`\\';@&$]+$/;
 
 	if($("#productCtgry").val() == ""){
 		msg += "* Please select a product category <br>"

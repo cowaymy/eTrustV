@@ -66,4 +66,9 @@ public class asDefectPartServiceImpl implements asDefectPartService {
 
 		 logger.debug("================updateDefPartStus - END ================");
 	  }
+
+	 @Override
+		public EgovMap getStkInfo(Map<String, Object> params) {
+		    return asDefectPartMapper.getStkInfo(params);
+		}
 }

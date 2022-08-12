@@ -20,98 +20,80 @@
 	var myFltGrd10;
 	var productCode;
 	var asMalfuncResnId;
+	var matchMatDefCode = [];
 
-	$(document)
-			.ready(
+	$(document).ready(
+		    function() {
+			 createAUIGrid();
+			 createCFilterAUIGrid();
 
-					function() {
-						createAUIGrid();
-						createCFilterAUIGrid();
+			 //add_CreateAUIGrid();
+			 AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
+			 AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
 
-						//add_CreateAUIGrid();
-						AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
-						AUIGrid.bind(myFltGrd10, "removeRow",
-								auiRemoveRowHandler);
+			 var isF = true;
+			 AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
+				    if (event.marker == "added") {
+				    	   if (event.item.filterType == "CHG") {
+								/*var fChage = Number($("#txtFilterCharge").val());
+								var totchrge = Number($("#txtTotalCharge").val());
 
-						var isF = true;
-						AUIGrid
-								.bind(
-										myFltGrd10,
-										"rowStateCellClick",
-										function(event) {
-											if (event.marker == "added") {
-												if (event.item.filterType == "CHG") {
-													/*var fChage = Number($("#txtFilterCharge").val());
-													var totchrge = Number($("#txtTotalCharge").val());
+								fChage = (fChage - Number(event.item.filterTotal)).toFixed(2);
+								totchrge = (totchrge - Number(event.item.filterTotal)).toFixed(2);
 
-													fChage = (fChage - Number(event.item.filterTotal)).toFixed(2);
-													totchrge = (totchrge - Number(event.item.filterTotal)).toFixed(2);
+								$("#txtFilterCharge").val(fChage);
+								$("#txtTotalCharge").val(totchrge);*/
+							}
+					} else if (event.marker == "removed") {
+						   if (event.item.filterType == "CHG") {
+							   var fChage = Number($("#txtFilterCharge").val());
+							   var totchrge = Number($("#txtTotalCharge").val());
 
-													$("#txtFilterCharge").val(fChage);
-													$("#txtTotalCharge").val(totchrge);*/
-												}
-											} else if (event.marker == "removed") {
-												if (event.item.filterType == "CHG") {
-													var fChage = Number($(
-															"#txtFilterCharge")
-															.val());
-													var totchrge = Number($(
-															"#txtTotalCharge")
-															.val());
+							   fChage = (fChage + Number(event.item.filterTotal)).toFixed(2);
+							   totchrge = (totchrge + Number(event.item.filterTotal)).toFixed(2);
 
-													fChage = (fChage + Number(event.item.filterTotal))
-															.toFixed(2);
-													totchrge = (totchrge + Number(event.item.filterTotal))
-															.toFixed(2);
+							   $("#txtFilterCharge").val(fChage);
+							   $("#txtTotalCharge").val(totchrge);
+							}
+					} else if (event.marker == "added-edited") {
 
-													$("#txtFilterCharge").val(
-															fChage);
-													$("#txtTotalCharge").val(
-															totchrge);
-												}
-											} else if (event.marker == "added-edited") {
-											}
+					}
 
-										});
+		});
 
-						fn_getErrMstList('${ORD_NO}');
+		fn_getErrMstList('${ORD_NO}');
 
-						doGetCombo(
-								'/services/as/getASReasonCode.do?RESN_TYPE_ID=336',
-								'', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
-						doGetCombo('/services/as/getBrnchId', '', '',
-								'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
-						doGetCombo('/services/as/inHouseGetProductMasters.do',
-								'', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
-						// doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
-						// doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');
-						// doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
+		doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336','', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
+		doGetCombo('/services/as/getBrnchId', '', '','branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
+		doGetCombo('/services/as/inHouseGetProductMasters.do','', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
+		// doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
+		// doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');
+		// doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
 
-						fn_getASOrderInfo(); // GET AS ORDER INFOR.
-						fn_getASEvntsInfo(); // GET AS EVENT INFOR.
-						fn_getASHistoryInfo(); // GET AS HISTORY INFOR
+		fn_getASOrderInfo(); // GET AS ORDER INFOR.
+		fn_getASEvntsInfo(); // GET AS EVENT INFOR.
+		fn_getASHistoryInfo(); // GET AS HISTORY INFOR
 
-						fn_DisablePageControl(); // DISABLE ALL THE FIELD
-						$("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
+		fn_DisablePageControl(); // DISABLE ALL THE FIELD
+		$("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
 
-						AUIGrid.resize(myFltGrd10, 950, 200);
+		AUIGrid.resize(myFltGrd10, 950, 200);
 
-						fn_getASRulstSVC0004DInfo();
-						fn_getASRulstEditFilterInfo();
+		fn_getASRulstSVC0004DInfo();
+		fn_getASRulstEditFilterInfo();
 
-						if ('${REF_REQST}' > 0) { // TO BE REMOVE
-							//fn_getASRulstSVC0004DInfo();
-							//fn_getASRulstEditFilterInfo();
-							$("#IN_HOUSE_CLOSE").val("Y");
-							//$("#btnSaveDiv").attr("style", "display:inline");
-						}
+		if ('${REF_REQST}' > 0) { // TO BE REMOVE
+			  //fn_getASRulstSVC0004DInfo();
+			  //fn_getASRulstEditFilterInfo();
+			  $("#IN_HOUSE_CLOSE").val("Y");
+			  //$("#btnSaveDiv").attr("style", "display:inline");
+		}
 
-						if ('${IS_AUTO}' == "true") { // TO BE REMOVE
-							$("#inHouseRepair_div").attr("style",
-									"display:none");
-						}
+		if ('${IS_AUTO}' == "true") { // TO BE REMOVE
+			$("#inHouseRepair_div").attr("style", "display:none");
+		}
 
-					});
+	});
 
 	function fn_inHouseAutoClose() {
 		if ('${IS_AUTO}' == "true") {
@@ -128,9 +110,7 @@
 	function fn_getErrMstList(_ordNo) {
 		var SALES_ORD_NO = _ordNo;
 		$("#ddlErrorCode option").remove();
-		doGetCombo(
-				'/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO,
-				'', '', 'ddlErrorCode', 'S', '');
+		doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO,'', '', 'ddlErrorCode', 'S', '');
 	}
 
 	function fn_errMst_SelectedIndexChanged() {
@@ -138,11 +118,8 @@
 		var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
 
 		$("#ddlErrorDesc option").remove();
-		doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='
-				+ DEFECT_TYPE_CODE, '', '', 'ddlErrorDesc', 'S',
-				'fn_errDetail_SetVal');
+		doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + DEFECT_TYPE_CODE, '', '', 'ddlErrorDesc', 'S', 'fn_errDetail_SetVal');
 		//$("#ddlErrorCode").attr("disabled", true);
-
 	}
 
 	function fn_errDetail_SetVal() {
@@ -408,8 +385,7 @@
 		productCode = result[0].inHuseRepairProductCode;
 
 		if (typeof (productCode) != "undefined") {
-			doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='
-					+ result[0].inHuseRepairGrpCode, '', '', 'productCode',
+			doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + result[0].inHuseRepairGrpCode, '', '', 'productCode',
 					'S', 'fn_inHouseGetProductDetails');
 		}
 
@@ -429,7 +405,8 @@
 	}
 
 	function auiAddRowHandler(event) {
-
+		//Added by keyi - restructure AS result 202208
+		matchMatDefCode.push(event.items[0].filterID);
 	}
 
 	function auiRemoveRowHandler(event) {
@@ -438,15 +415,18 @@
 			var totchrge = Number($("#txtTotalCharge").val());
 
 			if (fChage.toFixed(2) != "0.00") {
-				fChage = (fChage - Number(event.items[0].filterTotal))
-						.toFixed(2);
-				totchrge = (totchrge - Number(event.items[0].filterTotal))
-						.toFixed(2);
+				fChage = (fChage - Number(event.items[0].filterTotal)).toFixed(2);
+				totchrge = (totchrge - Number(event.items[0].filterTotal)).toFixed(2);
 
 				$("#txtFilterCharge").val(fChage);
 				$("#txtTotalCharge").val(totchrge);
 			}
 		}
+	    //Added by keyi - restructure AS result 202208
+        var index = matchMatDefCode.indexOf(event.items[0].filterID);
+        if (index >= 0) {
+            matchMatDefCode.splice(index,1);
+        }
 	}
 
 	function createAUIGrid() {
@@ -517,8 +497,7 @@
 			showRowNumColumn : true
 		};
 
-		regGridID = GridCommon.createAUIGrid("reg_grid_wrap", columnLayout, "",
-				gridPros);
+		regGridID = GridCommon.createAUIGrid("reg_grid_wrap", columnLayout, "", gridPros);
 	}
 
 	function createCFilterAUIGrid() {
@@ -572,6 +551,7 @@
 				labelText : "<spring:message code='pay.btn.remove'/>",
 				onclick : function(rowIndex, columnIndex, value, item) {
 					AUIGrid.removeRow(myFltGrd10, rowIndex);
+
 				}
 			}
 		}, {
@@ -590,8 +570,7 @@
 			showRowNumColumn : true
 		};
 
-		myFltGrd10 = GridCommon.createAUIGrid("asfilter_grid_wrap", clayout,
-				"", gridPros2);
+		myFltGrd10 = GridCommon.createAUIGrid("asfilter_grid_wrap", clayout,"", gridPros2);
 		AUIGrid.resize(myFltGrd10, 950, 200);
 	}
 
@@ -638,8 +617,7 @@
 	}
 
 	function fn_getASEvntsInfo() {
-		Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm")
-				.serialize(), function(result) {
+		Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm").serialize(), function(result) {
 			$("#txtASStatus").text(result[0].code);
 			$("#txtRequestDate").text(result[0].asReqstDt);
 			$("#txtRequestTime").text(result[0].asReqstTm);
@@ -670,8 +648,7 @@
 	}
 
 	function fn_getASHistoryInfo() {
-		Common.ajax("GET", "/services/as/getASHistoryInfo.do", $(
-				"#resultASForm").serialize(), function(result) {
+		Common.ajax("GET", "/services/as/getASHistoryInfo.do", $("#resultASForm").serialize(), function(result) {
 			AUIGrid.setGridData(regGridID, result);
 		});
 	}
@@ -691,8 +668,7 @@
 			CODE : reasonCode
 		}, function(result) {
 			if (result.length > 0) {
-				$("#" + _tobj + "_text")
-						.val((result[0].resnDesc.trim()).trim());
+				$("#" + _tobj + "_text").val((result[0].resnDesc.trim()).trim());
 				$("#" + _tobj + "_id").val(result[0].resnId);
 
 				/*if ('337' == _v) {
@@ -755,8 +731,7 @@
 		var availQty = isstckOk(ct, sk);
 
 		if (availQty == 0) {
-			Common
-					.alert("<spring:message code='service.msg.NoStkAvl' arguments='<b>"
+			Common.alert("<spring:message code='service.msg.NoStkAvl' arguments='<b>"
 							+ $("#ddlCTCodeText option:selected").text()
 							+ "</b> ; <b>"
 							+ ct
@@ -766,8 +741,7 @@
 		} else {
 
 			if (availQty < Number($("#ddlFilterQty").val())) {
-				Common
-						.alert("<spring:message code='service.msg.lessStkQty' arguments='<b>"
+				Common.alert("<spring:message code='service.msg.lessStkQty' arguments='<b>"
 								+ $("#ddlCTCodeText option:selected").text()
 								+ "</b> ; <b>"
 								+ ct
@@ -777,11 +751,8 @@
 			}
 
 			// KR-OHK Serial Check
-			if ($("#hidSerialRequireChkYn").val() == 'Y'
-					&& $("#hidSerialChk").val() == 'Y'
-					&& $("#ddlFilterQty").val() > 1) {
-				Common
-						.alert("For serial check items, only quantity 1 can be entered.");
+			if ($("#hidSerialRequireChkYn").val() == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
+				Common.alert("For serial check items, only quantity 1 can be entered.");
 				$("#ddlFilterQty").val("1");
 				return false;
 			}
@@ -789,8 +760,7 @@
 					&& $("#hidSerialChk").val() == 'Y'
 					&& FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
 				var arg = "<spring:message code='service.title.SerialNo'/>";
-				Common
-						.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
+				Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
 				return false;
 			}
 
@@ -885,8 +855,7 @@
 
 		fitem.filterPrice = parseInt(chargePrice, 10).toFixed(2);
 
-		chargeTotalPrice = Number($("#ddlFilterQty").val())
-				* Number((chargePrice));
+		chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number((chargePrice));
 		fitem.filterTotal = Number(chargeTotalPrice).toFixed(2);
 
 		var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
@@ -901,6 +870,7 @@
 
 		fn_calculateTotalCharges();
 		fn_filterClear();
+
 	}
 
 	function fn_filterClear() {
@@ -919,8 +889,7 @@
 	function fn_LabourCharge_CheckedChanged(_obj) {
 		if (_obj.checked) {
 			$("#fcm1").show();
-			$('#cmbLabourChargeAmt').removeAttr("disabled").removeClass(
-					"readonly");
+			$('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
 			$("#cmbLabourChargeAmt").val("");
 			$("#txtLabourCharge").val("0.00");
 		} else {
@@ -964,14 +933,11 @@
 	function fn_ddlStatus_SelectedIndexChanged(ind) {
 		// STATUS CHANGE FAIL REASON CODE CHANGED
 		if ($("#ddlStatus").val() == 19) { // RECALL
-			doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5551', '',
-					'', 'ddlFailReason', 'S', '');
+			doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5551', '','', 'ddlFailReason', 'S', '');
 		} else if ($("#ddlStatus").val() == 10) { // CANCEL
-			doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5550', '',
-					'', 'ddlFailReason', 'S', '');
+			doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5550', '','', 'ddlFailReason', 'S', '');
 		} else {
-			doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '',
-					'', 'ddlFailReason', 'S', '');
+			doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '','', 'ddlFailReason', 'S', '');
 			$("#ddlFailReason").attr("disabled", true);
 		}
 
@@ -1146,6 +1112,7 @@
 		if (allRowItems.length > 0) {
 			AUIGrid.clearGridData(myFltGrd10);
 		}
+
 	}
 
 	function fn_rstRecall() {
@@ -1592,76 +1559,45 @@
 		// SAVE RESULT
 		// KR-OHK Serial Check add
 		if ($("#hidSerialRequireChkYn").val() == 'Y') {
-			Common
-					.ajax(
-							"POST",
-							"/services/as/newASInHouseAddSerial.do",
-							saveForm,
-							function(result) {
-								if (result.code == '99') {
-									Common.alert(result.message);
-								} else {
-									if (result.data != ""
-											&& result.data != null
-											&& result.data != "null") {
-										Common
-												.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>"
-														+ result.data + " </b>");
-										$("#txtResultNo").html(
-												"<font size='3' color='red'> <b> "
-														+ result.data
-														+ " </b></font>");
-										fn_DisablePageControl();
-										$("#_newASResultDiv1").remove();
-										fn_searchASManagement();
-									} else {
-										Common
-												.alert("<b>AS result save successfully.</b>");
-										$("#txtResultNo").html(
-												"<font size='3' color='red'> <b> "
-														+ $("#txtResultNo")
-																.val()
-														+ " </b></font>");
-										fn_DisablePageControl();
-										$("#_newASResultDiv1").remove();
-										fn_searchASManagement();
-									}
-								}
-							});
+			Common.ajax("POST", "/services/as/newASInHouseAddSerial.do", saveForm, function(result) {
+				 if (result.code == '99') {
+					    Common.alert(result.message);
+				 } else {
+					    if (result.data != "" && result.data != null && result.data != "null") {
+					    	   Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>"
+											+ result.data + " </b>");
+					    	   $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
+							   fn_DisablePageControl();
+							   $("#_newASResultDiv1").remove();
+							   fn_searchASManagement();
+						} else {
+							   Common.alert("<b>AS result save successfully.</b>");
+							   $("#txtResultNo").html("<font size='3' color='red'> <b> "+ $("#txtResultNo").val()+ " </b></font>");
+							   fn_DisablePageControl();
+							   $("#_newASResultDiv1").remove();
+							   fn_searchASManagement();
+						}
+				}
+			});
 		} else {
-			Common
-					.ajax(
-							"POST",
-							"/services/as/newASInHouseAdd.do",
-							saveForm,
-							function(result) {
-								if (result.data != "" && result.data != null
-										&& result.data != "null") {
-									Common
-											.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>"
-													+ result.data + " </b>");
-									$("#txtResultNo").html(
-											"<font size='3' color='red'> <b> "
-													+ result.data
-													+ " </b></font>");
-									fn_DisablePageControl();
-									$("#_newASResultDiv1").remove();
-									fn_searchASManagement();
-								} else {
-									Common
-											.alert("<b>AS result save successfully.</b>");
-									$("#txtResultNo").html(
-											"<font size='3' color='red'> <b> "
-													+ $("#txtResultNo").val()
-													+ " </b></font>");
-									fn_DisablePageControl();
-									$("#_newASResultDiv1").remove();
-									fn_searchASManagement();
-								}
-							}, function() {
-								$("#_newASResultDiv1").remove();
-								fn_searchASManagement();
-							});
+			Common.ajax("POST","/services/as/newASInHouseAdd.do", saveForm, function(result) {
+			    if (result.data != "" && result.data != null && result.data != "null") {
+			        Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
+					$("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
+					fn_DisablePageControl();
+					$("#_newASResultDiv1").remove();
+					fn_searchASManagement();
+				} else {
+				    Common.alert("<b>AS result save successfully.</b>");
+				    $("#txtResultNo").html("<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
+					fn_DisablePageControl();
+					$("#_newASResultDiv1").remove();
+					fn_searchASManagement();
+				}
+			}, function() {
+			    $("#_newASResultDiv1").remove();
+				fn_searchASManagement();
+			});
 		}
 	}
 
@@ -1671,7 +1607,6 @@
 		$('#ddlFilterPayType').val("");
 		$('#ddlFilterExchangeCode').val("");
 		$('#txtFilterRemark').val("");
-
 	}
 
 	function fn_DisablePageControl() {
@@ -1752,8 +1687,7 @@
 		}
 
 		if ($("#ddlStatus").val() == 4) { // IN HOUSE REPAIR
-			if ($("#solut_code").val() == "B8"
-					|| $("#solut_code").val() == "B6") {
+			if ($("#solut_code").val() == "B8" || $("#solut_code").val() == "B6") {
 				if ($("input[name='replacement'][value='1']").prop("checked")) {
 					if (FormUtil.checkReqValue($("#serialNo"))) {
 						rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Loan Product Serial Nuber' htmlEscape='false'/> </br>";
@@ -1788,20 +1722,15 @@
 				} else {
 					var asno = $("#txtASNo").val(); // AS NO.
 					if (asno.match("AS")) {
-						var nowdate = $.datepicker.formatDate(
-								$.datepicker.ATOM, new Date());
+						var nowdate = $.datepicker.formatDate($.datepicker.ATOM, new Date());
 						var nowdateArry = nowdate.split("-");
-						nowdateArry = nowdateArry[0] + "" + nowdateArry[1] + ""
-								+ nowdateArry[2];
+						nowdateArry = nowdateArry[0] + "" + nowdateArry[1] + "" + nowdateArry[2];
 						var rdateArray = $("#dpSettleDate").val().split("/");
-						var requestDate = rdateArray[2] + "" + rdateArray[1]
-								+ "" + rdateArray[0];
+						var requestDate = rdateArray[2] + "" + rdateArray[1] + "" + rdateArray[0];
 
 						// TODO GET PERIOD FROM DB
-						if ((parseInt(requestDate, 10) - parseInt(nowdateArry,
-								10)) > 14
-								|| (parseInt(nowdateArry, 10) - parseInt(
-										requestDate, 10)) > 14) {
+						if ((parseInt(requestDate, 10) - parseInt(nowdateArry,10)) > 14
+								|| (parseInt(nowdateArry, 10) - parseInt( requestDate, 10)) > 14) {
 							rtnMsg += "* <spring:message code='service.msg.RqstDtNoMore' arguments='14' htmlEscape='false'/> </br>";
 							rtnValue = false;
 						}
@@ -1887,9 +1816,7 @@
 
 					if (enddate < strdate) {
 						text = "<spring:message code='service.title.AppointmentDate'/>";
-						rtnMsg += "* "
-								+ text
-								+ " must be greater or equal to Current Date  </br>";
+						rtnMsg += "* " + text + " must be greater or equal to Current Date  </br>";
 						rtnValue = false;
 					}
 				}
@@ -2017,8 +1944,7 @@
 			$("#serialNo").val("");
 			$("#productCode option").remove();
 
-			doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='
-					+ STK_CTGRY_ID, '', '', 'productCode', 'S', '');
+			doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', '', 'productCode', 'S', '');
 		}
 	}
 
@@ -2081,8 +2007,7 @@
 			var cprDt3 = new Date(tdyDt);
 
 			if (cprDt3 > cprDt2) {
-				Common
-						.alert("Promise Date must greater or equal to today's date");
+				Common.alert("Promise Date must greater or equal to today's date");
 				obj.value = "";
 				return;
 			}
@@ -2221,8 +2146,7 @@
 		}
 		if (obj.id == "defEvt_dt" || obj.id == "chrFee_dt") {
 			if ($("#ddlStatus").val() != '4') {
-				Common
-						.alert("This section only applicable for <b>Complete</b> status");
+				Common.alert("This section only applicable for <b>Complete</b> status");
 				return;
 			}
 		}
@@ -2297,8 +2221,7 @@
 				ddCde = $("#def_def_id").val();
 			}
 		} else if (dftTyp == "SC") {
-			if ($("#def_type_id").val() == ""
-					|| $("#def_type_id").val() == null) {
+			if ($("#def_type_id").val() == "" || $("#def_type_id").val() == null) {
 				var text = "<spring:message code='service.text.defTyp' />";
 				var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
 				Common.alert(msg);
@@ -2307,11 +2230,13 @@
 				dtCde = $("#def_type_id").val();
 			}
 		}
+
 		Common.popupDiv("/services/as/dftTypPop.do", {
 			callPrgm : dftTyp,
 			prodCde : $("#PROD_CDE").val(),
 			ddCde : ddCde,
-			dtCde : dtCde
+			dtCde : dtCde,
+			matchMatDefCode : JSON.stringify(matchMatDefCode)
 		}, null, true);
 	}
 
@@ -2623,35 +2548,35 @@
     <section id="content">
         <!-- content start -->
         <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
-            <input type="hidden" name="pSerialNo" id="pSerialNo" /> <input type="hidden"
-                name="pSalesOrdId" id="pSalesOrdId"
-            /> <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" /> <input type="hidden"
-                name="pRefDocNo" id="pRefDocNo"
-            /> <input type="hidden" name="pItmCode" id="pItmCode" /> <input type="hidden"
-                name="pCallGbn" id="pCallGbn"
-            /> <input type="hidden" name="pMobileYn" id="pMobileYn" />
+            <input type="hidden" name="pSerialNo" id="pSerialNo" />
+            <input type="hidden" name="pSalesOrdId" id="pSalesOrdId" />
+            <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" />
+            <input type="hidden"name="pRefDocNo" id="pRefDocNo"/>
+            <input type="hidden" name="pItmCode" id="pItmCode" />
+            <input type="hidden"  name="pCallGbn" id="pCallGbn"/>
+            <input type="hidden" name="pMobileYn" id="pMobileYn" />
         </form>
         <form id="frmSearchSerial" name="frmSearchSerial" method="post">
-            <input id="pGubun" name="pGubun" type="hidden" value="RADIO" /> <input id="pFixdYn"
-                name="pFixdYn" type="hidden" value="N"
-            /> <input id="pLocationType" name="pLocationType" type="hidden" value="" /> <input
-                id="pLocationCode" name="pLocationCode" type="hidden" value=""
-            /> <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" /> <input
-                id="pStatus" name="pStatus" type="hidden" value=""
-            /> <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+            <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
+            <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+            <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+            <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+            <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+            <input id="pStatus" name="pStatus" type="hidden" value="" />
+            <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
         </form>
         <form id="resultASForm" method="post">
             <div style="display: none">
-                <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" /> <input
-                    type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}"
-                /> <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" /> <input
-                    type="text" name="AS_ID" id="AS_ID" value="${AS_ID}"
-                /> <input type="text" name="REF_REQST" id="REF_REQST" value="${REF_REQST}" /> <input
-                    type="text" name="RCD_TMS" id="RCD_TMS" value="${RCD_TMS}"
-                /> <input type="text" name="AS_RESULT_NO" id="RCD_TMS" value="${AS_RESULT_NO}" />
-                <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" /> <input type="text"
-                    name="PROD_CDE" id="PROD_CDE"
-                /> <input type="text" name="PROD_CAT" id="PROD_CAT" />
+                <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
+                <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
+                <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
+                <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
+                <input type="text" name="REF_REQST" id="REF_REQST" value="${REF_REQST}" />
+                <input type="text" name="RCD_TMS" id="RCD_TMS" value="${RCD_TMS}" />
+                <input type="text" name="AS_RESULT_NO" id="RCD_TMS" value="${AS_RESULT_NO}" />
+                <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" />
+                <input type="text" name="PROD_CDE" id="PROD_CDE" />
+                <input type="text" name="PROD_CAT" id="PROD_CAT" />
             </div>
         </form>
         <header class="pop_header">
@@ -2660,30 +2585,26 @@
                 <spring:message code='service.btn.addtAs' />
             </h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2">
-                        <a href="#"><spring:message code='sys.btn.close' /></a>
-                    </p></li>
+                <li>
+	                <p class="btn_blue2">
+	                    <a href="#"><spring:message code='sys.btn.close' /></a>
+	                </p>
+                </li>
             </ul>
         </header>
         <!-- pop_header end -->
         <form id="resultASAllForm" method="post">
-            <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input
-                type="hidden" id='hidStockSerialNo' name='hidStockSerialNo'
-            /> <input type="hidden" id='hidSerialChk' name='hidSerialChk' />
+            <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+            <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+            <input type="hidden" id='hidSerialChk' name='hidSerialChk' />
             <section class="pop_body">
                 <!-- pop_body start -->
                 <section class="tap_wrap">
                     <!-- tap_wrap start -->
                     <ul class="tap_type1">
-                        <li><a href="#" class="on"><spring:message
-                                    code='service.title.General'
-                                /></a></li>
-                        <li><a href="#"><spring:message
-                                    code='service.title.OrderInformation'
-                                /></a></li>
-                        <li><a href="#"
-                            onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "
-                        ><spring:message code='service.title.asPassEvt' /></a></li>
+                        <li><a href="#" class="on"><spring:message code='service.title.General' /></a></li>
+                        <li><a href="#"><spring:message code='service.title.OrderInformation' /></a></li>
+                        <li><a href="#" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); " ><spring:message code='service.title.asPassEvt' /></a></li>
                     </ul>
                     <article class="tap_area">
                         <!-- tap_area start -->
@@ -2702,19 +2623,13 @@
                                 <tr>
                                     <th scope="row"><spring:message code='service.grid.ASNo' /></th>
                                     <td><span id="txtASNo"></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.grid.SalesOrder'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.grid.SalesOrder'/></th>
                                     <td><span id="txtOrderNo"></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.title.ApplicationType'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.ApplicationType' /></th>
                                     <td><span id="txtAppType"></span></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><spring:message
-                                            code='service.title.asStatus'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.asStatus' /></th>
                                     <td><span id='txtASStatus'></span></td>
                                     <th scope="row">Malfunction Code</th>
                                     <td><span id='txtMalfunctionCode'></span></td>
@@ -2724,51 +2639,33 @@
                                 <tr>
                                     <th scope="row"></th>
                                     <td><span id='txtProdCde'></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.grid.ReqstDt'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.grid.ReqstDt' /></th>
                                     <td><span id='txtRequestDate'></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.title.ReqstTm'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.ReqstTm' /></th>
                                     <td><span id='txtRequestTime'></span></td>
                                 </tr>
                                 <tr>
                                     <th scope="row"></th>
                                     <td><span></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.title.AppointmentDate'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
                                     <td><span id='txtAppDt'></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.title.AppointmentTm'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.AppointmentTm'/></th>
                                     <td><span id='txtAppTm'></span></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><spring:message
-                                            code='service.title.DSCCode'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.DSCCode' /></th>
                                     <td><span id='txtDSCCode'></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.title.InchargeCT'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.InchargeCT' /></th>
                                     <td colspan="3"><span id='txtInchargeCT'></span></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><spring:message
-                                            code='service.title.CustomerName'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.CustomerName' /></th>
                                     <td colspan="3"><span id="txtCustName"></span></td>
-                                    <th scope="row"><spring:message
-                                            code='service.title.NRIC_CompanyNo'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.NRIC_CompanyNo' /></th>
                                     <td><span id="txtCustIC"></span></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><spring:message
-                                            code='service.title.ContactNo'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.ContactNo' /></th>
                                     <td colspan="5"><span id="txtContactPerson"></span></td>
                                 </tr>
                                 <tr>
@@ -2780,9 +2677,7 @@
                                     <td><span id="txtTelOffice"></span></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><spring:message
-                                            code='service.title.InstallationAddress'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.InstallationAddress' /></th>
                                     <td colspan="5"><span id="txtInstallAddress"></span></td>
                                 </tr>
                                 <tr>
@@ -2792,9 +2687,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><spring:message
-                                            code='service.title.RqstCtc'
-                                        /></th>
+                                    <th scope="row"><spring:message code='service.title.RqstCtc' /></th>
                                     <td colspan="3"><span id="txtRequestorContact"></span></td>
                                     <th scope="row"><spring:message code='sal.text.createDate' /></th>
                                     <td><span id="txtASKeyAt"></span></td>
@@ -2806,12 +2699,12 @@
                     <!-- tap_area end -->
                     <article class="tap_area">
                         <!------------------------------------------------------------------------------
-          Order Detail Page Include START
-         ------------------------------------------------------------------------------->
+				          Order Detail Page Include START
+				         ------------------------------------------------------------------------------->
                         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
                         <!------------------------------------------------------------------------------
-          Order Detail Page Include END
-         ------------------------------------------------------------------------------->
+				        Order Detail Page Include END
+				       ------------------------------------------------------------------------------->
                     </article>
                     <article class="grid_wrap">
                         <!-- grid_wrap start -->
@@ -2823,11 +2716,7 @@
                         <!-- tap_area start -->
                         <article class="grid_wrap">
                             <!-- grid_wrap start -->
-                            <div id="reg_grid_wrap"
-                                style="width: 100%;
-  height: 300px;
-  margin: 0 auto;"
-                            ></div>
+                            <div id="reg_grid_wrap" style="width: 100%;height: 300px;margin: 0 auto;" ></div>
                         </article>
                         <!-- grid_wrap end -->
                     </article>
@@ -2856,23 +2745,13 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.ResultNo'
-                                            /></th>
+                                        <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
                                         <td><span id='txtResultNo'></span></td>
-                                        <th scope="row"><spring:message
-                                                code='sys.title.status'
-                                            /><span id='m1' name='m1' class="must">*</span></th>
-                                        <td><select class="w100p" id="ddlStatus"
-                                            name="ddlStatus"
-                                            onChange="fn_ddlStatus_SelectedIndexChanged()"
-                                        >
-                                                <option value=""><spring:message
-                                                        code='sal.combo.text.chooseOne'
-                                                    /></option>
-                                                <c:forEach var="list" items="${asCrtStat}"
-                                                    varStatus="status"
-                                                >
+                                        <th scope="row"><spring:message code='sys.title.status' />
+                                            <span id='m1' name='m1' class="must">*</span></th>
+                                        <td><select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
+                                                <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                                                <c:forEach var="list" items="${asCrtStat}" varStatus="status" >
                                                     <c:choose>
                                                         <c:when test="${list.codeId=='1'}">
                                                             <!-- <option value="${list.codeId}">${list.codeName}</option>  -->
@@ -2885,169 +2764,93 @@
                                         </select></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.SettleDate'
-                                            /><span id='m2' name='m2' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="text" title="Create start Date"
-                                            id='dpSettleDate' name='dpSettleDate'
-                                            placeholder="DD/MM/YYYY" class="readonly j_date"
-                                            disabled="disabled"
-                                            onChange="fn_chkDt('#dpSettleDate')"
-                                        /></td>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.FailReason'
-                                            /><span id='m3' name='m3' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select id='ddlFailReason' name='ddlFailReason'
-                                            disabled="disabled" class="w100p"
-                                        >
-                                                <option value=""><spring:message
-                                                        code='sal.combo.text.chooseOne'
-                                                    /></option>
+                                        <th scope="row"><spring:message code='service.grid.SettleDate' />
+                                            <span id='m2' name='m2' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate'
+                                            placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" onChange="fn_chkDt('#dpSettleDate')"/>
+                                        </td>
+                                        <th scope="row"><spring:message code='service.grid.FailReason'/>
+                                            <span id='m3' name='m3' class="must" style="display: none" >*</span></th>
+                                        <td><select id='ddlFailReason' name='ddlFailReason' disabled="disabled" class="w100p" >
+                                            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
                                         </select></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.SettleTm'
-                                            /><span id='m4' name='m4' class="must"
-                                            style="display: none"
-                                        >*</span></th>
+                                        <th scope="row"><spring:message code='service.grid.SettleTm' />
+                                            <span id='m4' name='m4' class="must" style="display: none"  >*</span></th>
                                         <td>
                                             <div class="time_picker">
-                                                <input type="text" title=""
-                                                    placeholder="Settle Time" id='tpSettleTime'
-                                                    name='tpSettleTime' class="readonly time_date"
-                                                    disabled="disabled"
-                                                />
+                                                <input type="text" title="" placeholder="Settle Time" id='tpSettleTime'
+                                                    name='tpSettleTime' class="readonly time_date" disabled="disabled" />
                                                 <ul>
-                                                    <li><spring:message
-                                                            code='service.text.timePick'
-                                                        /></li>
-                                                    <c:forEach var="list" items="${timePick}"
-                                                        varStatus="status"
-                                                    >
+                                                    <li><spring:message code='service.text.timePick' /></li>
+                                                    <c:forEach var="list" items="${timePick}" varStatus="status" >
                                                         <li><a href="#">${list.codeName}</a></li>
                                                     </c:forEach>
                                                 </ul>
                                             </div> <!-- time_picker end -->
                                         </td>
-                                        <th scope="row"><spring:message
-                                                code='service.title.DSCCode'
-                                            /><span id='m5' name='m5' class="must"
-                                            style="display: none"
-                                        >*</span></th>
+                                        <th scope="row"><spring:message  code='service.title.DSCCode' />
+                                            <span id='m5' name='m5' class="must" style="display: none" >*</span></th>
                                         <td>
                                             <!-- <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' > -->
                                             <!-- <input type="hidden" title="" placeholder="" class="" id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
                 <input type="text" title=""    placeholder="" class="readonly"   id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}''/> -->
-                                            <input type="hidden" title=""
-                                            placeholder="<spring:message code='service.title.DSCCode' />"
-                                            class="" id='ddlDSCCode' name='ddlDSCCode'
-                                        /> <input type="text" title="" placeholder=""
-                                            class="readonly" disabled="disabled"
-                                            id='ddlDSCCodeText' name='ddlDSCCodeText'
-                                        />
+                                            <input type="hidden" title="" placeholder="<spring:message code='service.title.DSCCode' />"
+                                                class="" id='ddlDSCCode' name='ddlDSCCode' />
+                                                <input type="text" title="" placeholder="" class="readonly" disabled="disabled"
+                                                    id='ddlDSCCodeText' name='ddlDSCCodeText'/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.ErrCde'
-                                            /><span id='m6' name='m6' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select disabled="disabled" id='ddlErrorCode'
-                                            name='ddlErrorCode'
-                                            onChange="fn_errMst_SelectedIndexChanged()"
-                                            class="w100p"
-                                        ></select></td>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.CTCode'
-                                            /><span id='m7' name='m7' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="hidden" title=""
-                                            placeholder="<spring:message code='service.grid.CTCode' />"
-                                            class="" id='ddlCTCode' name='ddlCTCode'
-                                        /> <input type="text" title="" placeholder=""
-                                            disabled="disabled" id='ddlCTCodeText'
-                                            name='ddlCTCodeText'
-                                        /> <!-- <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+                                        <th scope="row"><spring:message code='service.grid.ErrCde' />
+                                            <span id='m6' name='m6' class="must" style="display: none" >*</span></th>
+                                        <td><select disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'
+                                            onChange="fn_errMst_SelectedIndexChanged()" class="w100p" ></select></td>
+                                        <th scope="row"><spring:message code='service.grid.CTCode' />
+                                            <span id='m7' name='m7' class="must" style="display: none" >*</span></th>
+                                        <td><input type="hidden" title=""  placeholder="<spring:message code='service.grid.CTCode' />"
+                                            class="" id='ddlCTCode' name='ddlCTCode' />
+                                            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' />
+                                        <!-- <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
                  <input type="text" title="" placeholder="" class="readonly" id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
-             --></td>
+                                    --></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.ErrDesc'
-                                            /><span id='m8' name='m8' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select id='ddlErrorDesc' name='ddlErrorDesc'
-                                            class="w100p" onChange="fn_errDescCheck()"
-                                        ></select></td>
-                                        <th scope="row"><spring:message
-                                                code='sal.title.warehouse'
-                                            /></th>
-                                        <td><select disabled="disabled" id='ddlWarehouse'
-                                            name='ddlWarehouse' class="w100p"
-                                        ></select></td>
+                                        <th scope="row"><spring:message code='service.grid.ErrDesc' />
+                                            <span id='m8' name='m8' class="must" style="display: none" >*</span></th>
+                                        <td><select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p" onChange="fn_errDescCheck()"></select></td>
+                                        <th scope="row"><spring:message code='sal.title.warehouse' /></th>
+                                        <td><select disabled="disabled" id='ddlWarehouse' name='ddlWarehouse' class="w100p" ></select></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.Remark'
-                                            /><span id='m14' name='m14' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td colspan="3"><textarea cols="20" rows="5"
-                                                placeholder="<spring:message code='service.title.Remark' />"
-                                                id='txtRemark' name='txtRemark'
-                                            ></textarea></td>
+                                        <th scope="row"><spring:message code='service.title.Remark' />
+                                            <span id='m14' name='m14' class="must" style="display: none" >*</span></th>
+                                        <td colspan="3"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />"
+                                                id='txtRemark' name='txtRemark' ></textarea></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='sal.text.commission'
-                                            /></th>
-                                        <td><label><input type="checkbox"
-                                                disabled="disabled" id='iscommission'
-                                                name='iscommission'
-                                            /><span><spring:message
-                                                        code='sal.text.commissionApplied'
-                                                    /></span></label></td>
-                                        <th scope="row"><spring:message
-                                                code='service.title.SerialNo'
-                                            /><span class="must">*</span></th>
-                                        <td><input type="text" id='stockSerialNo'
-                                            name='stockSerialNo'
-                                            value="${orderDetail.basicInfo.lastSerialNo}"
-                                            class="readonly" readonly
-                                        />
-                                            <p class="btn_grid" style="display: none"
-                                                id="btnSerialEdit"
-                                            >
+                                        <th scope="row"><spring:message code='sal.text.commission' /></th>
+                                        <td><label>
+                                            <input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' />
+                                            <span><spring:message code='sal.text.commissionApplied' /></span></label></td>
+                                        <th scope="row"><spring:message code='service.title.SerialNo' />
+                                            <span class="must">*</span></th>
+                                        <td><input type="text" id='stockSerialNo' name='stockSerialNo'
+                                            value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly />
+                                            <p class="btn_grid" style="display: none" id="btnSerialEdit" >
                                                 <a href="#" onClick="fn_serialModifyPop()">EDIT</a>
                                             </p></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.PSIRcd'
-                                            /><span class="must" id="m15" style="display: none">
-                                                *</span></th>
-                                        <td><input type="text" title=""
-                                            placeholder="<spring:message code='service.title.PSIRcd' />"
-                                            class="w100p" id="psiRcd" name="psiRcd"
-                                            disabled="disabled" onkeypress='validate(event)'
-                                        /></td>
-                                        <th scope="row"><spring:message
-                                                code='service.title.lmp'
-                                            /><span class="must" id="m16" style="display: none">
-                                                *</span></th>
-                                        <td><input type="text" title=""
-                                            placeholder="<spring:message code='service.title.lmp' />"
-                                            class="w100p" id="lpmRcd" name="lpmRcd"
-                                            disabled="disabled" onkeypress='validate(event)'
-                                        /></td>
+                                        <th scope="row"><spring:message code='service.title.PSIRcd' />
+                                            <span class="must" id="m15" style="display: none"> *</span></th>
+                                        <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />"
+                                            class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' /></td>
+                                        <th scope="row"><spring:message code='service.title.lmp' />
+                                            <span class="must" id="m16" style="display: none"> *</span></th>
+                                        <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />"
+                                            class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'/></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -3066,186 +2869,43 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.AppointmentDate'
-                                            /><span class="must">*</span></th>
-                                        <td><input type="text" title="Create start Date"
-                                            placeholder="DD/MM/YYYY" class="j_date "
-                                            readonly="readonly" id="appDate" name="appDate"
-                                            onChange="fn_chkDt2();"
-                                        /></td>
-                                        <th scope="row"><spring:message
-                                                code='service.title.AppointmentSessione'
-                                            /><span class="must">*</span></th>
-                                        <td><input type="text" title=""
-                                            placeholder="<spring:message code='service.title.AppointmentDate' />"
-                                            id="CTSSessionCode" name="CTSSessionCode"
-                                            class="readonly w100p" readonly="readonly"
-                                        /></td>
-                                        <th scope="row"><spring:message
-									        code='service.title.Segment' /></th>
+                                        <th scope="row"><spring:message code='service.title.AppointmentDate' />
+                                            <span class="must">*</span></th>
+                                        <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date "
+                                            readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2();" /></td>
+                                        <th scope="row"><spring:message code='service.title.AppointmentSessione' />
+                                            <span class="must">*</span></th>
+                                        <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />"
+                                            id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" /></td>
+                                        <th scope="row"><spring:message code='service.title.Segment' /></th>
 									       <td><input type="text" title="" placeholder="<spring:message code='service.title.Segment' />"
 									       readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType"
 									       class="readonly w100p" /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.DSCBranch'
-                                            /><span class="must">*</span></th>
-                                        <td><select class="w100p" id="branchDSC"
-                                            name="branchDSC" class="" disabled="disabled"
-                                        ></select></td>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.AssignCT'
-                                            /><span class="must">*</span></th>
-                                        <td><input type="text" title=""
-                                            placeholder="<spring:message code='service.grid.AssignCT' />"
-                                            id="CTCode" name="CTCode" class="readonly"
-                                            readonly="readonly" onchange="fn_changeCTCode(this)"
-                                        /></td>
+                                        <th scope="row"><spring:message code='service.title.DSCBranch' />
+                                            <span class="must">*</span></th>
+                                        <td><select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled" ></select></td>
+                                        <th scope="row"><spring:message code='service.grid.AssignCT' />
+                                            <span class="must">*</span></th>
+                                        <td><input type="text" title="" placeholder="<spring:message code='service.grid.AssignCT' />"
+                                            id="CTCode" name="CTCode" class="readonly" readonly="readonly" onchange="fn_changeCTCode(this)" /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.CTGroup'
-                                            /></th>
-                                        <td colspan="3"><input type="text"
-                                            title="<spring:message code='service.title.CTGroup' />"
+                                        <th scope="row"><spring:message code='service.title.CTGroup' /></th>
+                                        <td colspan="3"><input type="text" title="<spring:message code='service.title.CTGroup' />"
                                             placeholder="<spring:message code='service.title.CTGroup' />"
-                                            class="w100p" id="CTGroup" name="CTGroup"
-                                        /></td>
+                                            class="w100p" id="CTGroup" name="CTGroup"  /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.Remark'
-                                            /><span class="must">*</span></th>
-                                        <td colspan="3"><textarea id='callRem' name='callRem'
-                                                rows='5'
-                                                placeholder="<spring:message code='service.title.Remark' />"
-                                                class="w100p"
-                                            ></textarea></td>
+                                        <th scope="row"><spring:message code='service.grid.Remark' />
+                                            <span class="must">*</span></th>
+                                        <td colspan="3"><textarea id='callRem' name='callRem' rows='5'
+                                                placeholder="<spring:message code='service.title.Remark' />"  class="w100p" ></textarea></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <!-- table end -->
-                        </dd>
-                        <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
-                            <a href="#"><spring:message code='service.title.asDefEnt' /></a>
-                        </dt>
-                        <dd id='defEvt_div' style="display: none">
-                            <table class="type1">
-                                <!-- table start -->
-                                <caption>table</caption>
-                                <colgroup>
-                                    <col style="width: 140px" />
-                                    <col style="width: *" />
-                                </colgroup>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.defPrt'
-                                            /><span id='m11' name='m11' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="text" title="" placeholder=""
-                                            disabled="disabled" id='def_part' name='def_part'
-                                            class=""
-                                            onblur="fn_getASReasonCode2(this, 'def_part' ,'305')"
-                                            onkeyup="this.value = this.value.toUpperCase();"
-                                        /> <a class="search_btn" id="DP" onclick="fn_dftTyp('DP')"><img
-                                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search"
-                                            /></a> <input type="hidden" title="" placeholder=""
-                                            id='def_part_id' name='def_part_id' class=""
-                                        /> <input type="text" title="" placeholder=""
-                                            id='def_part_text' name='def_part_text' class=""
-                                            disabled style="width: 60%;"
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.dtlDef'
-                                            /><span id='m12' name='m12' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="text" title="" placeholder=""
-                                            disabled="disabled" id='def_def' name='def_def'
-                                            class=""
-                                            onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')"
-                                            onkeyup="this.value = this.value.toUpperCase();"
-                                        /> <a class="search_btn" id="DD" onclick="fn_dftTyp('DD')"><img
-                                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search"
-                                            /></a> <input type="hidden" title="" placeholder=""
-                                            id='def_def_id' name='def_def_id' class=""
-                                        /> <input type="text" title="" placeholder=""
-                                            id='def_def_text' name='def_def_text' class="" disabled
-                                            style="width: 60%;"
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.defCde'
-                                            /><span id='m10' name='m10' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="text" title="" placeholder=""
-                                            disabled="disabled" id='def_code' name='def_code'
-                                            class=""
-                                            onblur="fn_getASReasonCode2(this, 'def_code', '303')"
-                                            onkeyup="this.value = this.value.toUpperCase();"
-                                        /> <a class="search_btn" id="DC" onclick="fn_dftTyp('DC')"><img
-                                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search"
-                                            /></a> <input type="hidden" title="" placeholder=""
-                                            id='def_code_id' name='def_code_id' class=""
-                                        /> <input type="text" title="" placeholder=""
-                                            id='def_code_text' name='def_code_text' class=""
-                                            disabled style="width: 60%;"
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.defTyp'
-                                            /><span id='m9' name='m9' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="text" title="" id='def_type'
-                                            name='def_type' placeholder="" class=""
-                                            onblur="fn_getASReasonCode2(this, 'def_type' ,'387')"
-                                            onkeyup="this.value = this.value.toUpperCase();"
-                                        /> <a class="search_btn" id="DT" onclick="fn_dftTyp('DT')"><img
-                                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search"
-                                            /></a> <input type="hidden" title="" id='def_type_id'
-                                            name='def_type_id' placeholder="" class=""
-                                        /> <input type="text" title="" placeholder=""
-                                            id='def_type_text' name='def_type_text' class=""
-                                            disabled style="width: 60%;"
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.sltCde'
-                                            /><span id='m13' name='m13' class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><input type="text" title="" placeholder=""
-                                            class="" disabled="disabled" id='solut_code'
-                                            name='solut_code'
-                                            onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')"
-                                            onkeyup="this.value = this.value.toUpperCase();"
-                                        /> <a class="search_btn" id="SC" onclick="fn_dftTyp('SC')"><img
-                                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search"
-                                            /></a> <input type="hidden" title="" placeholder=""
-                                            class="" id='solut_code_id' name='solut_code_id'
-                                        /> <input type="text" title="" placeholder="" class=""
-                                            id='solut_code_text' name='solut_code_text' disabled
-                                            style="width: 60%;"
-                                        /></td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </dd>
                         <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
                             <a href="#"><spring:message code='service.title.asPrtChr' /></a>
@@ -3262,164 +2922,171 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.asLbrChr'
-                                            /></th>
-                                        <td><label><input type="checkbox"
-                                                id='txtLabourch' name='txtLabourch'
-                                                onChange="fn_LabourCharge_CheckedChanged(this)"
-                                            /></label></td>
-                                        <th scope="row"><spring:message
-                                                code='service.text.asLbrChr'
-                                            /></th>
-                                        <td><input type="text" id='txtLabourCharge'
-                                            name='txtLabourCharge' value='0.00' disabled
-                                        /></td>
+                                        <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+                                        <td><label><input type="checkbox" id='txtLabourch' name='txtLabourch'
+                                            onChange="fn_LabourCharge_CheckedChanged(this)" /></label></td>
+                                        <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+                                        <td><input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' disabled /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.asLbrChr'
-                                            /> (RM) <span id="fcm1" name="fcm1" class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select id='cmbLabourChargeAmt'
-                                            name='cmbLabourChargeAmt'
-                                            onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()"
-                                            disabled
-                                        >
-                                                <option value=""><spring:message
-                                                        code='sal.combo.text.chooseOne'
-                                                    /></option>
-                                                <c:forEach var="list" items="${lbrFeeChr}"
-                                                    varStatus="status"
-                                                >
+                                        <th scope="row"><spring:message code='service.text.asLbrChr'  /> (RM)
+	                                        <span id="fcm1" name="fcm1" class="must" style="display: none" >*</span></th>
+                                        <td><select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt'
+                                            onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled >
+                                            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                                                <c:forEach var="list" items="${lbrFeeChr}" varStatus="status" >
                                                     <option value="${list.codeId}">${list.codeName}</option>
                                                 </c:forEach>
                                         </select></td>
-                                        <th scope="row"><spring:message
-                                                code='service.text.asfltChr'
-                                            /></th>
-                                        <td><input type="text" id='txtFilterCharge'
-                                            name='txtFilterCharge' value='0.00' disabled
-                                        /></td>
+                                        <th scope="row"><spring:message code='service.text.asfltChr' /></th>
+                                        <td><input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' disabled /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"></th>
                                         <td></td>
-                                        <th scope="row"><b><spring:message
-                                                    code='service.text.asTtlChr'
-                                                /></b></th>
-                                        <td><input type="text" id='txtTotalCharge'
-                                            name='txtTotalCharge' value='0.00' disabled
-                                        /></td>
+                                        <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
+                                        <td><input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' disabled /></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.FilterCode'
-                                            /><span id="fcm2" name="fcm2" class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select id='ddlFilterCode' name='ddlFilterCode'
-                                            onchange="fn_setMand(this)"
-                                        ></select></td>
-                                        <th scope="row"><spring:message
-                                                code='service.grid.Quantity'
-                                            /><span id="fcm3" name="fcm3" class="must"
-                                            style="display: none"
-                                        >*</span></th>
+                                        <th scope="row"><spring:message code='service.grid.FilterCode' />
+                                            <span id="fcm2" name="fcm2" class="must" style="display: none" >*</span></th>
+                                        <td><select id='ddlFilterCode' name='ddlFilterCode' onchange="fn_setMand(this)" ></select></td>
+                                        <th scope="row"><spring:message code='service.grid.Quantity' />
+                                        <span id="fcm3" name="fcm3" class="must" style="display: none" >*</span></th>
                                         <td><select id='ddlFilterQty' name='ddlFilterQty'>
-                                                <option value=""><spring:message
-                                                        code='sal.combo.text.chooseOne'
-                                                    /></option>
-                                                <c:forEach var="list" items="${fltQty}"
-                                                    varStatus="status"
-                                                >
+                                            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                                            <c:forEach var="list" items="${fltQty}" varStatus="status" >
+                                                <option value="${list.codeId}">${list.codeName}</option>
+                                            </c:forEach>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.asPmtTyp' />
+                                        <span id="fcm4" name="fcm4" class="must" style="display: none" >*</span></th>
+                                        <td><select id='ddlFilterPayType' name='ddlFilterPayType' >
+                                                <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                                                <c:forEach var="list" items="${fltPmtTyp}" varStatus="status" >
                                                     <option value="${list.codeId}">${list.codeName}</option>
                                                 </c:forEach>
                                         </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.text.asPmtTyp'
-                                            /><span id="fcm4" name="fcm4" class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select id='ddlFilterPayType'
-                                            name='ddlFilterPayType'
-                                        >
-                                                <option value=""><spring:message
-                                                        code='sal.combo.text.chooseOne'
-                                                    /></option>
-                                                <c:forEach var="list" items="${fltPmtTyp}"
-                                                    varStatus="status"
-                                                >
-                                                    <option value="${list.codeId}">${list.codeName}</option>
-                                                </c:forEach>
-                                        </select></td>
-                                        <th scope="row"><spring:message
-                                                code='service.text.asExcRsn'
-                                            /><span id="fcm5" name="fcm5" class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td><select id='ddlFilterExchangeCode'
-                                            name='ddlFilterExchangeCode'
-                                        >
+                                        <th scope="row"><spring:message code='service.text.asExcRsn' />
+                                        <span id="fcm5" name="fcm5" class="must" style="display: none" >*</span></th>
+                                        <td><select id='ddlFilterExchangeCode' name='ddlFilterExchangeCode' >
                                         </select></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.SerialNo'
-                                            /><span id="fcm6" name="fcm6" class="must"
-                                            style="display: none"
-                                        >*</span></th>
-                                        <td colspan="3"><input type="text"
-                                            id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial'
-                                        /> <a id="serialSearch" class="search_btn"
-                                            onclick="fn_serialSearchPop()" style="display: none"
-                                        ><img
-                                                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                alt="search"
-                                            /></a></td>
+                                        <th scope="row"><spring:message code='service.title.SerialNo' />
+                                            <span id="fcm6" name="fcm6" class="must" style="display: none" >*</span></th>
+                                        <td colspan="3">
+                                            <input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
+                                            <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" style="display: none">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+                                                alt="search" /></a></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><spring:message
-                                                code='service.title.Remark'
-                                            /></th>
-                                        <td colspan="3"><textarea cols="20" rows="5"
-                                                placeholder="<spring:message code='service.title.Remark' />"
-                                                id='txtFilterRemark' name='txtFilterRemark'
-                                            ></textarea></td>
+                                        <th scope="row"><spring:message code='service.title.Remark' /></th>
+                                        <td colspan="3">
+                                            <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />"
+                                                id='txtFilterRemark' name='txtFilterRemark'  ></textarea></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"><span
-                                            style="color: red;
-  font-style: italic;"
-                                        ><spring:message code='service.msg.msgFltTtlAmt' /></span></td>
+                                        <td colspan="4"><span style="color: red; font-style: italic;" >
+                                        <spring:message code='service.msg.msgFltTtlAmt' /></span></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <!-- table end -->
                             <ul class="center_btns">
                                 <li><p class="btn_blue2">
-                                        <a href="#" onclick="fn_filterAdd()"><spring:message
-                                                code='sys.btn.add'
-                                            /></a>
+                                        <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
                                     </p></li>
                                 <li><p class="btn_blue2">
-                                        <a href="#" onclick="fn_filterClear()"><spring:message
-                                                code='sys.btn.clear'
-                                            /></a>
+                                        <a href="#" onclick="fn_filterClear()"><spring:message code='sys.btn.clear' /></a>
                                     </p></li>
                             </ul>
                             <article class="grid_wrap">
                                 <!-- grid_wrap start -->
-                                <div id="asfilter_grid_wrap"
-                                    style="width: 100%;
-  height: 250px;
-  margin: 0 auto;"
-                                ></div>
+                                <div id="asfilter_grid_wrap"  style="width: 100%; height: 250px;  margin: 0 auto;"></div>
                             </article>
                             <!-- grid_wrap end -->
+                        </dd>
+                        <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
+                            <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+                        </dt>
+                        <dd id='defEvt_div' style="display: none">
+                            <table class="type1">
+                                <!-- table start -->
+                                <caption>table</caption>
+                                <colgroup>
+                                    <col style="width: 140px" />
+                                    <col style="width: *" />
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.dtlDef' />
+                                            <span id='m12' name='m12' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def'
+                                            name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')"
+                                            onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a class="search_btn" id="DD" onclick="fn_dftTyp('DD')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+                                                alt="search" /></a>
+                                            <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class=""/>
+                                            <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text'
+                                            class="" disabled style="width: 60%;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.defCde' />
+                                            <span id='m10' name='m10' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code'
+                                            name='def_code' class=""  onblur="fn_getASReasonCode2(this, 'def_code', '303')"
+                                            onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a class="search_btn" id="DC" onclick="fn_dftTyp('DC')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                            <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
+                                            <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class=""
+                                            disabled style="width: 60%;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.defTyp' />
+                                            <span id='m9' name='m9' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="" id='def_type' name='def_type' placeholder="" class=""
+                                            onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a class="search_btn" id="DT" onclick="fn_dftTyp('DT')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+                                                alt="search" /></a>
+                                            <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
+                                            <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text'
+                                                class="" disabled style="width: 60%;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.sltCde' />
+                                            <span id='m13' name='m13' class="must" style="display: none" >*</span></th>
+                                        <td><input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code'
+                                            name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')"
+                                            onkeyup="this.value = this.value.toUpperCase();"/>
+                                            <a class="search_btn" id="SC" onclick="fn_dftTyp('SC')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+                                                alt="search" /></a>
+                                            <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id'/>
+                                            <input type="text" title="" placeholder="" class="" id='solut_code_text'
+                                                name='solut_code_text' disabled style="width: 60%;" />
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><spring:message code='service.text.defPrt' />
+                                            <span id='m11' name='m11' class="must" style="display: none"  >*</span></th>
+                                        <td><input type="text" title="" placeholder="" disabled="disabled" id='def_part'
+                                                name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')"
+                                                onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a class="search_btn" id="DP" onclick="fn_dftTyp('DP')">
+                                            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                            <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
+                                            <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class=""
+                                                disabled style="width: 60%;" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </dd>
                         <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
                         <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
@@ -3474,15 +3141,11 @@
                 </article>
                 <ul class="center_btns mt20" id='btnSaveDiv'>
                     <li><p class="btn_blue2 big">
-                            <a href="#" onclick="fn_doSave()"><spring:message
-                                    code='sys.btn.save'
-                                /></a>
+                            <a href="#" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
                         </p></li>
                     <li>
                         <p class="btn_blue2 big">
-                            <a href="#" onclick="javascript:$('#resultASAllForm').clearForm();"><spring:message
-                                    code='sys.btn.clear'
-                                /></a>
+                            <a href="#" onclick="javascript:$('#resultASAllForm').clearForm();"><spring:message code='sys.btn.clear'  /></a>
                         </p>
                     </li>
                 </ul>

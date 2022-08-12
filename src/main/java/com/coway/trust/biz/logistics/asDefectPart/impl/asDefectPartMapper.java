@@ -22,4 +22,5 @@ public interface asDefectPartMapper
 
 	void updateDefPartStus(Map<String, Object> params);
 
+	EgovMap getStkInfo(Map<String, Object> params);
 }

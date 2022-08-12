@@ -114,22 +114,33 @@ public class asDefectPartController {
 	    params.put("creator", sessionVO.getUserId());
 	    params.put("updator", sessionVO.getUserId());
 
+	    EgovMap stkInfo = asDefectPartService.getStkInfo(params);
+
 	    ReturnMessage message = new ReturnMessage();
-	    if(params.get("viewType").equals("1"))//NEW
-	    {
-	    	params.put("stus","1");
-		    asDefectPartService.addDefPart(params);
-		    message.setMessage("Successfully configured product code " + svc0131map.get("matCode"));
-	    }
-	    else //viewtype ==2 Edit, ==3 View
-	    {
-		    asDefectPartService.updateDefPart(params);
-		    message.setMessage("Successfully update product code " + svc0131map.get("matCode"));
-	    }
+	    if(stkInfo == null){
+	    	message.setMessage("There is no " + svc0131map.get("matCode"));
+	    }else{
+	    	logger.debug("============STKINFO=============");
+		    logger.debug(stkInfo.toString());
+		    logger.debug("============STKINFO=============");
 
-	    logger.debug("================saveDefPart - END ================");
-	    message.setCode(AppConstants.SUCCESS);
+	    	params.put("matId", stkInfo.get("stkId"));
 
+		    if(params.get("viewType").equals("1"))//NEW
+		    {
+		    	params.put("stus","1");
+			    asDefectPartService.addDefPart(params);
+			    message.setMessage("Successfully configured product code " + svc0131map.get("matCode"));
+		    }
+		    else //viewtype ==2 Edit, ==3 View
+		    {
+			    asDefectPartService.updateDefPart(params);
+			    message.setMessage("Successfully update product code " + svc0131map.get("matCode"));
+		    }
+
+		    logger.debug("================saveDefPart - END ================");
+		    message.setCode(AppConstants.SUCCESS);
+	    }
 
 	    return ResponseEntity.ok(message);
 	  }

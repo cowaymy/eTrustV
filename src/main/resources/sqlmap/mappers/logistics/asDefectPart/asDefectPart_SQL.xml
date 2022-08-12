@@ -10,7 +10,7 @@
 		A.PROD_TYPE AS PROD_TYPE_ID,
 		C.CODE_NAME AS PROD_TYPE,
 		A.MAT_CODE,
-		A.MAT_NAME,
+		F.STK_DESC AS MAT_NAME,
 		A.DEF_PART_CODE,
 		A.DEF_PART_NAME,
 		A.STUS AS STUS_ID,
@@ -23,6 +23,7 @@
 	JOIN SYS0013M C ON A.PROD_TYPE = C.CODE_ID AND C.CODE_MASTER_ID = 15
 	JOIN SYS0038M D ON A.STUS = D.STUS_CODE_ID
 	JOIN SYS0047M E ON A.CRT_USER_ID = E.USER_ID
+    JOIN SYS0026M F ON A.MAT_ID = F.STK_ID
     WHERE 1 = 1
 
            <if test='arrProductCtgry != null and arrProductCtgry != ""'>
@@ -41,7 +42,7 @@
              AND A.MAT_CODE = #{stkCd}
            </if>
            <if test='stkNm != null and stkNm != ""'>
-             AND A.MAT_NAME LIKE UPPER('%' || #{stkNm} || '%')
+             AND F.STK_DESC LIKE UPPER('%' || #{stkNm} || '%')
            </if>
     ORDER BY A.DEF_PART_ID ASC
   </select>
@@ -52,11 +53,12 @@
 		, A.PROD_CAT AS PROD_CAT_ID
 		, A.PROD_TYPE AS PROD_TYPE_ID
 		, A.MAT_CODE
-		, A.MAT_NAME
+		, B.STK_DESC AS MAT_NAME
 		, A.DEF_PART_CODE
 		, A.DEF_PART_NAME
 		, A.STUS
 	FROM GBSLCVD.SVC0131D A
+    JOIN SYS0026M B ON A.MAT_ID = B.STK_ID
 	WHERE DEF_PART_ID = #{defPartId}
   </select>
 
@@ -65,8 +67,8 @@
 			DEF_PART_ID,
 			PROD_CAT,
 			PROD_TYPE,
+			MAT_ID,
 			MAT_CODE,
-			MAT_NAME,
 			DEF_PART_CODE,
 			DEF_PART_NAME,
 			STUS,
@@ -77,8 +79,8 @@
 		    SVC0131D_DEF_PART_ID_SEQ.NEXTVAL,
 			#{productCtgry},
 			#{matType},
+			#{matId},
 			#{matCode},
-			#{matName},
 			#{defPartCode},
 			#{defPartName},
 			#{stus},
@@ -92,8 +94,8 @@
     SET
         PROD_CAT = #{productCtgry} ,
         PROD_TYPE = #{matType},
+        MAT_ID = #{matId},
         MAT_CODE = #{matCode},
-        MAT_NAME = #{matName},
         DEF_PART_CODE = #{defPartCode},
         DEF_PART_NAME = #{defPartName},
 	    UPD_DT = SYSDATE,
@@ -109,5 +111,14 @@
             UPD_USER_ID = #{updator}
         WHERE DEF_PART_ID = #{defPartId}
       </update>
+
+      <select id="getStkInfo" parameterType="Map" resultType="egovMap">
+	    SELECT
+	    STK_ID
+	    , STK_CODE
+	    , STK_DESC
+	FROM SYS0026M
+	where STK_CODE =  #{matCode}
+  </select>
 
 </mapper>

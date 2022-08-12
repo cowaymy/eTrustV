@@ -102,6 +102,18 @@
         $('#search3').val("");
       }
 
+     var defCode = [];
+     if ($('#callPrgm').val() == "DP"){
+    	if('${matchMatDefCode}' != "" && '${matchMatDefCode}' != null ){
+    		defCode = JSON.parse('${matchMatDefCode}');
+    		if (defCode.length > 0) {
+                $('#search4').val(defCode);
+            } else {
+                $('#search4').val("");
+            }
+    	}
+    }
+
     Common.ajax("GET", "/services/as/getDftTyp.do", $("#dftSearchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridIDDftTyp, result);
     });
@@ -144,10 +156,11 @@
     <input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
     <input id="prodCde" name="prodCde" value="${prodCde}" type="hidden" />
     <input id="ddCde" name="ddCde" value="${ddCde}" type="hidden" />
-     <input id="dtCde" name="dtCde" value="${dtCde}" type="hidden" />
+    <input id="dtCde" name="dtCde" value="${dtCde}" type="hidden" />
     <input id="search1" name="search1" type="hidden" />
     <input id="search2" name="search2" type="hidden" />
     <input id="search3" name="search3" type="hidden" />
+    <input id="search4" name="search4" type="hidden" />
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>

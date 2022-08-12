@@ -2888,18 +2888,23 @@
   </select>
 
   <select id="getDftTyp" parameterType="Map" resultType="egovMap">
-    SELECT DEFECT_ID AS ID,
-           DEFECT_CODE AS CODE,
-           DEFECT_DESC AS DESCP,
-           NVL(DEFECT_RMK, '-') AS RMK
-    FROM SYS0100M
-    WHERE DEFECT_TYP = #{callPrgm}
-      AND PROD_CAT IN ('*', (SELECT B.CODE
+    SELECT DISTINCT
+	       A.DEFECT_ID AS ID,
+	       A.DEFECT_CODE AS CODE,
+	       A.DEFECT_DESC AS DESCP,
+           NVL(A.DEFECT_RMK, '-') AS RMK
+    FROM SYS0100M A
+    <if test="callPrgm == 'DP' ">
+    JOIN SVC0131D B ON A.DEFECT_CODE = B.DEF_PART_CODE
+    LEFT JOIN SYS0026M C ON B.MAT_CODE = C.STK_CODE
+    </if>
+    WHERE A.DEFECT_TYP = #{callPrgm}
+      AND A.PROD_CAT IN ('*', (SELECT B.CODE
                             FROM SYS0026M A
                             JOIN SYS0013M B ON B.CODE_MASTER_ID = 11 AND B.CODE_ID = A.STK_CTGRY_ID
                             WHERE A.STK_CODE = #{prodCde}))
-      AND DEFECT_STATUS = 1
-      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+      AND A.DEFECT_STATUS = 1
+      AND SYSDATE BETWEEN A.EFF_DT AND A.EXP_DT
 
       <if test="ddCde != null and ddCde != '' ">
         AND ( DEFECT_GRP = #{ddCde} )
@@ -2920,6 +2925,15 @@
       <if test="search3 != null and search3 != '' ">
         AND ( DEFECT_RMK LIKE UPPER(#{search3}) )
       </if>
+
+	  <if test="search4 != null and search4 != '' ">
+	       <if test="callPrgm == 'DP'">
+	        AND C.STK_ID IN
+	        <foreach item="item" collection="matchMatDefCodeP" index="index" open="(" separator="," close=")">
+	                    #{item}
+	                  </foreach>
+	       </if>
+	  </if>
 
     ORDER BY LPAD(DEFECT_CODE, 10)
 

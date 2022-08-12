@@ -26,6 +26,7 @@
   var currentStatus;
   var asRslt;
   var ops;
+  var matchMatDefCode = [];
 
   $(document).ready(function() {
     createCFilterAUIGrid();
@@ -147,6 +148,8 @@
   }
 
   function auiAddRowHandler(event) {
+	 //Added by keyi - restructure AS result 202208
+     matchMatDefCode.push(event.items[0].filterId);
   }
 
   function auiRemoveRowHandler(event) {
@@ -161,6 +164,11 @@
         $("#txtFilterCharge").val(fChage);
         $("#txtTotalCharge").val(totchrge);
       }
+    }
+    //Added by keyi - restructure AS result 202208
+    var index = matchMatDefCode.indexOf(event.items[0].filterId);
+    if (index >= 0) {
+        matchMatDefCode.splice(index,1);
     }
   }
 
@@ -2136,11 +2144,13 @@
         dtCde = $("#def_type_id").val();
       }
     }
+
     Common.popupDiv("/services/as/dftTypPop.do", {
       callPrgm : dftTyp,
       prodCde : $("#PROD_CDE").val(),
       ddCde : ddCde,
-      dtCde : dtCde
+      dtCde : dtCde,
+      matchMatDefCode : JSON.stringify(matchMatDefCode)
     }, null, true);
   }
 
@@ -2562,42 +2572,6 @@
         </table>
         <!-- table end -->
       </dd>
-      <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
-        <a href="#"><spring:message code='service.title.asDefEnt' /></a>
-      </dt>
-      <dd id='defEvt_div' style="display: none">
-        <table class="type1">
-          <!-- table start -->
-          <caption>table</caption>
-          <colgroup>
-            <col style="width: 140px" />
-            <col style="width: *" />
-          </colgroup>
-          <tbody>
-            <tr>
-              <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display: none">*</span></th>
-              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DP" name="DP" onclick="fn_dftTyp('DP')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" /> <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width: 60%;" /></td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display: none">*</span></th>
-              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DD" name="DD" onclick="fn_dftTyp('DD')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" /> <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width: 60%;" /></td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display: none">*</span></th>
-              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DC" name="DC" onclick="fn_dftTyp('DC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" /> <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" disabled style="width: 60%;" /></td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display: none">*</span></th>
-              <td><input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DT" name="DT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" /> <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width: 60%;" /></td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display: none">*</span></th>
-              <td><input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="SC" name="SC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' /> <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width: 60%;" /></td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- table end -->
-      </dd>
       <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
         <a href="#"><spring:message code='service.title.asPrtChr' /></a>
       </dt>
@@ -2688,6 +2662,42 @@
   margin: 0 auto;"></div>
         </article>
         <!-- grid_wrap end -->
+      </dd>
+       <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
+        <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+      </dt>
+      <dd id='defEvt_div' style="display: none">
+        <table class="type1">
+          <!-- table start -->
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 140px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DD" name="DD" onclick="fn_dftTyp('DD')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" /> <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DC" name="DC" onclick="fn_dftTyp('DC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" /> <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DT" name="DT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" /> <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="SC" name="SC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' /> <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width: 60%;" /></td>
+            </tr>
+             <tr>
+              <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DP" name="DP" onclick="fn_dftTyp('DP')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" /> <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
       </dd>
       <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
       <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
