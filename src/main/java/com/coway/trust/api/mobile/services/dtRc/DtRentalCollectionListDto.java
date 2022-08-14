@@ -15,6 +15,9 @@ public class DtRentalCollectionListDto {
 	@ApiModelProperty(value = "")
 	private String rcPrct;
 
+	@ApiModelProperty(value = "")
+	private String adRatio;
+
 	public String getMemCode() {
 		return memCode;
 	}
@@ -29,6 +32,14 @@ public class DtRentalCollectionListDto {
 
 	public void setRcPrct(String rcPrct) {
 		this.rcPrct = rcPrct;
+	}
+
+	public String getAdRatio() {
+		return adRatio;
+	}
+
+	public void setAdRatio(String adRatio) {
+		this.adRatio = adRatio;
 	}
 
 	public static DtRentalCollectionListDto create(EgovMap egvoMap) {

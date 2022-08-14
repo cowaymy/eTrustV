@@ -5901,6 +5901,7 @@ SELECT MST.*
       SELECT
                 MEM_CODE
               , TO_CHAR(RC_PRCT)  AS RC_PRCT
+              , TO_CHAR(AD_RATIO) AS AD_RATIO
       FROM REP0085S
       WHERE MEM_CODE =  #{userId}
   </select>
