@@ -102,6 +102,7 @@ public class AutoDebitApiController {
         if(insertResult > 0){
             result.setResponseCode(1);
 			autoDebitService.sendEmail(resultparams);
+			//autoDebitService.sendSms(resultparams);
 		 }
         else{
             result.setResponseCode(0);

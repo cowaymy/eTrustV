@@ -265,7 +265,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
 
     if (insertPay0333M > 0) {
-    	//this.sendEmail(params);
 	  params.put("result", "1");
       return params;
     } else {
@@ -361,7 +360,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     }
   }
 
-  // NOT COMPLETED
   @SuppressWarnings("unchecked")
   @Override
   public void sendEmail(Map<String, Object> params) {
