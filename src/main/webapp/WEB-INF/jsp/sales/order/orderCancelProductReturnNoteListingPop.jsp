@@ -235,7 +235,7 @@
 			if ($("#SortBy").val() == "1") {
 				orderBy = "ORDER BY rc.SO_REQ_NO ";
 			} else if ($("#SortBy").val() == "2") {
-				orderBy = "ORDER BY re.RET_NO ";
+				orderBy = "ORDER BY re.RETN_NO ";
 			} else if ($("#SortBy").val() == "3") {
 				orderBy = "ORDER BY som.SALES_ORD_NO ";
 			} else if ($("#SortBy").val() == "4") {
