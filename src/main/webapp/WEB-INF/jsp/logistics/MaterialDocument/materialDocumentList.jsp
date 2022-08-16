@@ -163,6 +163,9 @@ $(document).ready(function(){
     	var reqstNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "stockTrnsfrReqst");
     	var reqstNoItm = AUIGrid.getCellValue(myGridID, event.rowIndex, "stockTrnsfrReqstItmNo");
     	var ordno = AUIGrid.getCellValue(myGridID, event.rowIndex, "ordno");
+    	var refDocNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
+    	var invntryMovType = AUIGrid.getCellValue(myGridID, event.rowIndex, "invntryMovType");
+    	var matrlNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "matrlNo");
 
     	var qty = AUIGrid.getCellValue(myGridID, event.rowIndex, "qty");
     	var trnscTypeCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "trnscTypeCode");
@@ -181,7 +184,8 @@ $(document).ready(function(){
     		ordno = "";
     	}
 
-        var subParam = {"delvryNo":delvryNo, "delvryNoItm":delvryItmNo, "reqstNo":reqstNo, "reqstNoItm":reqstNoItm, "ordno":ordno, "trnscTypeCode":trnscTypeCode, "ioType":ioType};
+        var subParam = {"delvryNo":delvryNo, "delvryNoItm":delvryItmNo, "reqstNo":reqstNo, "reqstNoItm":reqstNoItm, "ordno":ordno, "trnscTypeCode":trnscTypeCode, "ioType":ioType
+        		,"refDocNo":refDocNo,"invntryMovType":invntryMovType,"matrlNo":matrlNo};
 
         Common.ajax("GET", "/logistics/materialDoc/selectMaterialDocSerialList.do"
                 , subParam
