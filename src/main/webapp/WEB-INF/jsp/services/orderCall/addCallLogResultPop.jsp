@@ -67,9 +67,17 @@
       if ($("#requestDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>";
       }
+
+      var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+      var chkMobileNo = custMobileNo.substring(0, 2);
+      if (chkMobileNo == '60'){
+    	  custMobileNo = custMobileNo.substring(1);
+      }
+      $("#custMobileNo").val(custMobileNo);
       if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
         }
+
     } else if ($("#callStatus").val() == 19) {
       if ($("#recallDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Recall Date' htmlEscape='false'/> </br>";

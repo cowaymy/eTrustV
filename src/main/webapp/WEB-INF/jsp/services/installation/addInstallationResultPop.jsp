@@ -375,6 +375,12 @@
   function fn_saveInstall() {
     console.log("addInstallationResultPop :: fn_saveInstall");
     var msg = "";
+    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+    var chkMobileNo = custMobileNo.substring(0, 2);
+    if (chkMobileNo == '60'){
+        custMobileNo = custMobileNo.substring(1);
+    }
+    $("#custMobileNo").val(custMobileNo);
 
     if ($("#addInstallForm #installStatus").val() == 4) {
       // COMPLETED
@@ -481,6 +487,10 @@
     	  console.log("appointment Dt: " + $("#hidAppntDt").val());
       }
 
+      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
+      }
+
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -554,6 +564,9 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           }
         }
+      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
+      }
 
       if (msg != "") {
         Common.alert(msg);
