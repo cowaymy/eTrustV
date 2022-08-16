@@ -3,34 +3,59 @@
 
 <script type="text/javaScript">
 
+var batchId;
+
 function fn_uploadFile() {
+
+	var flag= true;
+
+	if($("#batchMthYear").val() == null || $("#batchMthYear").val() == ""){
+	        Common.alert("Please select the Month.");
+	        flag= false;
+	        return;
+	}
+
+    if($("#batchMemType").val() == null || $("#batchMemType").val() == ""){
+            Common.alert("Please select the Member Type.");
+            flag= false;
+            return;
+    }
 
     if($("#uploadfile").val() == null || $("#uploadfile").val() == ""){
         Common.alert("File not found. Please upload the file.");
-    } else {
+        flag= false;
+        return;
+    }
 
-    var formData = new FormData();
-    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
-    formData.append("batchMthYear", $("#batchMthYear").val());
-    formData.append("batchMemType", $("#batchMemType").val());
-    Common.ajaxFile("/attendance/csvUpload.do", formData, function (result) {
-    	$("#batchId").val("${batchId}".trim());
-        Common.alert(result.message);
+
+    if(flag){
+
+        var formData = new FormData();
+        formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+        formData.append("batchMthYear", $("#batchMthYear").val());
+        formData.append("batchMemType", $("#batchMemType").val());
+        Common.ajaxFile("/attendance/csvUpload.do", formData, function (result) {
+            batchId=result.data;
+            Common.alert(result.message,fn_reload);
         });
     }
+
+}
+
+function fn_reload(){
+	location.reload();
 }
 
 function fn_submitApproval(){
-// 	if($("#batchId").val()=="0"){
-// 		Common.alert("Please upload Attendance File before submit approval.");
-// 	}
-// 	else{
+	if(FormUtil.isEmpty(batchId)){
+		Common.alert("Please upload Attendance File before submit approval.");
+	}
+	else{
 		var param = {
-				batchId : $("#batchId").val()
+				batchId : batchId
 		       };
-
-		Common.popupDiv("/attendance/attendanceSubmitApproval.do", param, null, true, 'attendanceSubmitApproval');
-// 	}
+		Common.popupDiv("/attendance/attendanceSubmitApproval.do", param, null, true, null);
+	}
 }
 
 
@@ -41,6 +66,7 @@ function fn_submitApproval(){
   <!-- pop_header start -->
   <h1>Attendance - File Upload</h1>
   <ul class="right_opt">
+
    <li><p class="btn_blue2">
      <a href="#"><spring:message code='expense.CLOSE'/></a>
     </p></li>
@@ -72,10 +98,7 @@ function fn_submitApproval(){
                          <td colspan='5'>
                             <select class="" id="batchMemType" name="batchMemType">
                                 <option value="">Choose One</option>
-<!--                                 <option value="1">Health Planner</option> -->
-<!--                                 <option value="2">Coway Lady</option> -->
                                 <option value="4">Staff</option>
-<!--                                 <option value="7">Homecare Technician</option> -->
                                 <option value="6677">Manager</option>
                             </select>
                          </td>
@@ -94,12 +117,11 @@ function fn_submitApproval(){
                     </tr>
                 </tbody>
             </table><!-- table end -->
-            <input type="hidden" id="batchId" name="batchId" value="0" />
         </form>
         <ul class="center_btns mt20">
             <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
             <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/attendance/AttendanceUploadFormat.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
-            <li><p class="btn_blue2 big"><a href="javascript:fn_submitApproval();"><spring:message code='sys.btn.submit'/></a></p></li>
+<%--             <li><p class="btn_blue2 big"><a href="javascript:fn_submitApproval();"><spring:message code='sys.btn.submit'/></a></p></li> --%>
         </ul>
     </section>
 

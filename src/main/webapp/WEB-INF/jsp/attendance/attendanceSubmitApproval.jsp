@@ -168,14 +168,18 @@ function fn_reqstSubmit() {
             }
         }
     }
-    console.log(checkMemCode);
+
     if(checkMemCode) {
-        Common.popupDiv("/attendance/registrationMsgPop.do", null, null, true, "registrationMsgPop");
+
+    	var param = {
+                batchId : '${batchId}'
+        };
+        Common.popupDiv("/attendance/registrationMsgPop.do", param, null, true, "registrationMsgPop");
     }
 }
 </script>
 
-<div id="popup_wrap" class="popup_wrap size_mid2"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="approveLine.title" /></h1>

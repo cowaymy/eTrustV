@@ -15,35 +15,28 @@ function fn_closePop() {
 function fn_approveLineSubmit() {
     $("#registrationMsgPop").remove();
 
-    console.log("fn_approveLineSubmit ======");
-    var data = AUIGrid.getGridData(approveLineGridID);
-    console.log(data);
-    console.log("fn_approveLineSubmit 2======");
+    var data = AUIGrid.getOrgGridData(approveLineGridID);
 
-//     var newGridList = AUIGrid.getOrgGridData(newGridID);
-//     var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
-//     console.log(clmNo);
-//     var obj = {
-//             newGridList : newGridList,
-//             apprGridList : apprGridList,
-//             clmNo : clmNo,
-//             allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
-//     };
-//     console.log(obj);
+    var obj = {
+            apprGridList : data,
+            batchId : '${batchId}'
+    };
 
+    Common.ajax("POST", "/attendance/approveLineSubmit.do", obj, function(result) {
+        Common.alert("Success to submit. Pending to Approval.",fn_reload);
+    });
 
-//     Common.ajax("POST", "/attendance/approveLineSubmit.do", obj, function(result) {
-//         console.log(result);
-//         Common.alert("Success to submit. Pending to Approval.");
-//     });
+}
 
+function fn_reload(){
+	location.reload();
 }
 
 </script>
 
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="newRgistStaffClaim.title" /></h1>
+<h1>Attendance Upload Approval Form</h1>
 <p class="pop_close"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p>
 </header><!-- pop_header end -->
 

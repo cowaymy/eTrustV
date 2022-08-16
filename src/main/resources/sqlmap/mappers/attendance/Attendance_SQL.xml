@@ -102,5 +102,94 @@
 	    WHERE CLM_NO = #{clmNo}
     </update>
 
+    <insert id="insertApproveLineDetail" parameterType="Map">
+        INSERT INTO ATD0003D (
+		                      BATCH_ID
+							, APPV_USER_ID
+							, APPV_LINE_CNT
+							, APPV_STATUS
+							, CRT_USER_ID
+							, CRT_DT
+             )VALUES (
+                             #{batchId}
+                           , #{memCode}
+                           , #{approveNo}
+                           , 1
+                           , #{userId}
+                           , SYSDATE
+            )
+    </insert>
+
+    <select id="searchAtdManagementList" parameterType="Map" resultType="egovMap">
+		SELECT
+		      A.BATCH_ID
+		    , FN_GET_STUS_DESC(A.BATCH_STUS_ID,1) AS STUS
+		    , FN_GET_CODE_DESC(A.BATCH_MEM_TYPE) AS MEM_TYPE
+		    , A.BATCH_MEM_TYPE
+		    , A.BATCH_MTH_YEAR
+		    , CRT_DT
+		    , B.USER_NAME
+		FROM ATD0001M A
+		LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+		WHERE 1=1
+		AND A.BATCH_STUS_ID  <![CDATA[ <> ]]> 8
+
+        <if test="calMonthYear != null and calMonthYear != '' ">
+            AND ( A.BATCH_MTH_YEAR = #{calMonthYear} )
+        </if>
+
+        <if test="calMemType != null and calMemType != '' ">
+             AND ( A.BATCH_MEM_TYPE = #{calMemType} )
+         </if>
+            ORDER BY 1 DESC
+    </select>
+
+     <select id="checkDup" parameterType="Map" resultType="int">
+            SELECT
+                    COUNT(*)
+            FROM ATD0001M
+            WHERE BATCH_MEM_TYPE = #{batchMemType}
+            AND BATCH_MTH_YEAR = #{batchMthYear}
+     </select>
+
+      <update id="disableBatchCalMst" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                    BATCH_STUS_ID = 8
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_MEM_TYPE = #{batchMemType}
+          AND BATCH_MTH_YEAR = #{batchMthYear}
+    </update>
+
+     <update id="deleteUploadBatch" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                    BATCH_STUS_ID = 8
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_ID = #{batchId}
+    </update>
+
+    <update id="disableBatchCalDtl" parameterType="Map">
+           UPDATE ATD0002D
+           SET
+                    DISAB = 1
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_ID = #{batchId}
+    </update>
+
+    <update id="approveUploadBatch" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                    BATCH_STUS_ID = 4
+                  , CNFM_STUS_ID = 77
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_ID = #{batchId}
+    </update>
+
+
 
   </mapper>

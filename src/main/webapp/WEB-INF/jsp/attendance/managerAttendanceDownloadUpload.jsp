@@ -1,18 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<!--
- DATE        BY     VERSION        REMARK
- ----------------------------------------------------------------
- 21/04/2021  YONGJH  1.0.0      Initial creation. Note: Ajax is not used for populating calendar search result because each non-Ajax
-                                           search request will "automatically" clear the calendar contents (this is desired). If I use Ajax to populate
-                                           calendar search result, it will require additional Javascript for clearing and resetting calendar contents.
-                                           Refactor to use Ajax if required in the future.
- 04/06/2021  YONGJH  1.0.1      Move inline styling to <style> tag. Add CSS to show pop up for calendar events.
- 01/07/2021  YONGJH  1.0.1      Refactored to use Ajax (refer first remark). Due to authorization issues
-
--->
-
 <style type="text/css">
 
 :root .event-text {
@@ -94,166 +82,142 @@ td:nth-child(6) .cal-tooltip, td:nth-child(7) .cal-tooltip {
 .cal-event-list:hover .cal-tooltip:not(:empty) {
     visibility: visible;
 }
-
 </style>
 
 <script type="text/javaScript" language="javascript">
+
+var myGridID;
+
+var gridPros = {
+	      //showRowCheckColumn : true,
+	      usePaging : true,
+	      pageRowCount : 20,
+	      //showRowAllCheckBox : true,
+	      editable : false,
+	      selectionMode : "multipleCells"
+	    };
 
 $(document).ready(function(){
 
     // *** set initial values when Calendar first loaded - start
     var eventList = JSON.parse('${eventListJsonStr}');
 
-    var initData = {
-             "eventList" : eventList ,
-             "dayOfWeekFirstDt" : "${dayOfWeekFirstDt}" ,
-             "lastDateOfMonth" : "${lastDateOfMonth}" ,
-             "displayMth" : "${displayMth}" ,
-             "displayYear" : "${displayYear}" ,
-             "calMemType" : "${calMemType}"
-             };
-
-    fn_setupCalendar(initData);
-    fn_setSearchAttr();
-    // *** set initial values when Calendar first loaded - end
+    atdManagementGrid();
+    searchAtdManagementList();
 
 });
 
-function fn_searchCalendar() {
-    if (fn_validateSearch()) {
-        var param =  $("#calSearchForm").serialize();
-        Common.ajax("GET", "/logistics/calendar/selectCalendarEvents.do", param, function(result) {
-            console.log("result.eventList JSON stringify:" +JSON.stringify(result.eventList));
-            fn_setupCalendar(result);
-        });
-    }
-}
-
-function fn_setupCalendar(result) {
-    $(".cal-row").remove();
-    fn_populateCalendarHeader(result);
-    fn_constructCalendar(result);
-    fn_populateCalendarEvents(result);
-    fn_setMemTypeVisibility();
-}
-
-function fn_populateCalendarHeader(rData) {
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"];
-
-    $("#displayMth").text(monthNames[rData.displayMth - 1]);
-    $("#displayYear").text(rData.displayYear);
-
-}
-
-function fn_populateCalendarEvents(rData) {
-    var i;
-    var j = rData.eventList.length;
-    for (i = 0; i < j; i++) {
-        var selectorDt = '#calDt' + rData.eventList[i].dayOfMonth;
-        $(selectorDt).append("- " + rData.eventList[i].eventDesc + "<br>");
-
-        var selectorDtHidden = '#calDtHidden' + rData.eventList[i].dayOfMonth;
-        $(selectorDtHidden).append("- " + rData.eventList[i].eventDesc + "<br>");
-    }
-}
-
-function fn_constructCalendar(rData) {
-    var dateCounter = 1;
-    var createNewRow = true;
-
-    // *********  create the first row - start
-    var calRowFirstHtml = "<tr class='cal-row'>";
-    for (var columnCounter = 1; columnCounter < 8; columnCounter++) {
-        if ((rData.dayOfWeekFirstDt == 0 && columnCounter == 7)
-                || (columnCounter == rData.dayOfWeekFirstDt)){
-            calRowFirstHtml = calRowFirstHtml + fn_constructHTML(dateCounter);
-        } else if ((rData.dayOfWeekFirstDt != 0) && (columnCounter > rData.dayOfWeekFirstDt)) {
-            dateCounter += 1;
-            calRowFirstHtml = calRowFirstHtml + fn_constructHTML(dateCounter);
-        } else {
-            calRowFirstHtml = calRowFirstHtml + "<td class='empty-cell'/>";
+function atdManagementGrid() {
+    var columnLayout = [
+        {
+          dataField : "batchId",
+          headerText : "Upload Batch No",
+          editable : false,
+          width : 200
+        },
+        {
+          dataField : "batchMthYear",
+          headerText : "Month Year",
+          editable : false,
+          width : 200
+        },
+        {
+          dataField : "memType",
+          headerText : "Member Type",
+          editable : false,
+          width : 200
+          },
+        {
+          dataField : "stus",
+          headerText : "Approval Status",
+          width : 200
+        },
+        {
+          dataField : "crtDt",
+          headerText : "Upload Date",
+          dataType : "date",
+          formatString : "dd/mm/yyyy",
+          width : 200
+        },
+        {
+            dataField : "userName",
+            headerText : "Creator",
+            width : 200
         }
-    }
-    calRowFirstHtml = calRowFirstHtml + "</tr>";
-    document.getElementById("calTable").innerHTML = document.getElementById("calTable").innerHTML + calRowFirstHtml;
-    // *********  create the first row - end
+    ];
 
-    // *********  create subsequent rows - start
-    for (var rowCounter = 0; rowCounter < 5; rowCounter++) {
+    myGridID = AUIGrid.create("#grid_wrap_atdList", columnLayout, gridPros);
 
-        if (createNewRow){
-            var calRowNextHtml = "<tr class='cal-row'>";
-            for (var columnCounter = 1; columnCounter < 8; columnCounter++) {
-                dateCounter += 1;
-                if (dateCounter <= rData.lastDateOfMonth) {
-                    calRowNextHtml = calRowNextHtml + fn_constructHTML(dateCounter);
-                    if (dateCounter == rData.lastDateOfMonth) {
-                        createNewRow = false;
-                    }
-                } else {
-                    calRowNextHtml = calRowNextHtml + "<td class='empty-cell'/>";
-                }
-            }
-            calRowNextHtml = calRowNextHtml + "</tr>";
-            document.getElementById("calTable").innerHTML = document.getElementById("calTable").innerHTML + calRowNextHtml;
-        }
-    }
-    // *********  create subsequent rows - end
+  }
 
-}
-
-function fn_constructHTML(dateCounterVal) {
-    var htmlString = "<td class='cal-date'>"
-        + "<div class='cal-date-number'>" + dateCounterVal + "</div>"
-        + "<div class='cal-event-list'>"
-        + "<span class='event-text' id='calDt" + dateCounterVal + "'></span>"
-        + "<span class='cal-tooltip' id='calDtHidden" + dateCounterVal + "'></span>"
-        + "</div></td>";
-    return htmlString;
-}
-
-function fn_validateSearch() {
-    if ($("#calMonthYear").val() == "") {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Month' htmlEscape='false'/>");
-        return false;
-    }
-
-    if ($("#calMemType").is(":visible") && $("#calMemType").val() == "") {
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Type' htmlEscape='false'/>");
-        return false;
-    }
-    return true;
-}
+ function searchAtdManagementList(){
+	  Common.ajax("GET", "/attendance/searchAtdManagementList.do", $("#calSearchForm").serialize(), function(result) {
+          AUIGrid.setGridData(myGridID, result);
+      });
+ }
 
 function fn_eventUploadPopup() {
-    Common.popupDiv("/attendance/attendanceFileUploadPop.do", null, fn_searchCalendar, true, 'eventUploadPopup');
+    Common.popupDiv("/attendance/attendanceFileUploadPop.do", null, '', true, '');
 }
 
 function fn_eventEditDeletePopup() {
-    Common.popupDiv("/logistics/calendar/calendarEventEditDeletePop.do", null, fn_searchCalendar, true, 'eventEditDeletePopup');
+    Common.popupDiv("/attendance/attendanceFileEditDeletePop.do", null, '', true, '');
 }
 
-function fn_setSearchAttr() {
-    if("${calMemType}" != null && "${calMemType}" != "") {
-        $("#calMemType").val("${calMemType}");
-    }
 
-    if(("${displayMth}" != null && "${displayMth}" != "")
-            && ("${displayYear}" != null && "${displayYear}" != "")) {
-        var searchedCalMthYear = "${displayMth}" + "/" + "${displayYear}";
-        $("#calMonthYear").val(searchedCalMthYear);
-    }
-}
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password'  || tag === 'textarea'){
+            if($("#"+this.id).hasClass("readonly")){
 
-function fn_setMemTypeVisibility() {
-    var userType = '${SESSION_INFO.userTypeId}';
+            }else{
+                this.value = '';
+            }
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
 
-    if(userType == 4 || userType == 6) {       //Staff || Sales Admin
-        $("#rowMemType").show();
-    } else {
-        $("#calMemType").val(userType);
-    }
+        }else if (tag === 'select'){
+            if($("#memType").val() != "7"){ //check not HT level
+                 this.selectedIndex = 0;
+            }
+        }
+    });
+};
+
+
+$(function() {
+
+    $("#btnApproval").click(function(e){
+    	  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+    	  var param;
+
+    	     if(selIdx > -1) {
+
+    	         var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
+
+    	         if( stus != "Active"){
+    	        	 Common.alert('* Please check the status "ACT" status is only available.');
+    	         }
+    	         else{
+    	             param = {batchId : AUIGrid.getCellValue(myGridID, selIdx, "batchId")};
+    	             var confirmApprovalMsg = "Are you sure want to confirm this Upload Batch No : " + AUIGrid.getCellValue(myGridID, selIdx, "batchId") + "?";
+                     Common.confirm(confirmApprovalMsg, x=function() { confirmApproval(param)});
+    	         }
+    	     }else{
+    	         Common.alert('Attendance Upload Batch' + DEFAULT_DELIMITER + 'No Order Selected');
+    	     }
+
+    });
+});
+
+function confirmApproval(param){
+    Common.ajax("POST", "/attendance/approveUploadBatch.do", param, function(result) {
+    	Common.alert(result.message, searchAtdManagementList);
+    });
 }
 
 </script>
@@ -266,9 +230,13 @@ function fn_setMemTypeVisibility() {
 
   <aside class="title_line"><!-- title_line start -->
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-    <h2>Atendance</h2>
+    <h2>Attendance</h2>
     <ul class="right_btns">
-      <li><p class="btn_blue"><a href="#" onClick="fn_searchCalendar()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+        <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
+     </c:if>
+      <li><p class="btn_blue"><a href="#" onClick="searchAtdManagementList()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+      <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#calSearchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
     </ul>
   </aside><!-- title_line end -->
 
@@ -285,15 +253,12 @@ function fn_setMemTypeVisibility() {
             <th scope="row"><spring:message code='cal.search.month'/></th>
             <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2" placeholder="Choose one" /></td>
           </tr>
-          <tr id = "rowMemType" style="display:none;">
+          <tr id = "rowMemType">
             <th scope="row"><spring:message code='cal.search.memType'/></th>
             <td colspan='3'>
               <select class="" id="calMemType" name="calMemType">
                 <option value="">Choose One</option>
-<!--                 <option value="1">Health Planner</option> -->
-<!--                 <option value="2">Coway Lady</option> -->
-<!--                 <option value="4">Staff</option> -->
-<!--                 <option value="7">Homecare Technician</option> -->
+                <option value="4">Staff</option>
                 <option value="6677">Manager</option>
               </select>
             </td>
@@ -319,22 +284,9 @@ function fn_setMemTypeVisibility() {
   </aside><!-- link_btns_wrap end -->
   <br>
   <section class="search_result"><!-- search_result start -->
-    <c:set var="dateCounter" value="1"/>
-    <c:set var="createNewRow" value="true"/>
-    <table class="type1 cal-result" id="calTable">
-      <tr>
-        <th class="cal-header-month" id="displayMth" scope="column"></th>
-        <th class="cal-header-year" id="displayYear" scope="column" colspan="6"></th>
-      </tr>
-      <tr>
-        <th class="day-of-week">Monday</th>
-        <th class="day-of-week">Tuesday</th>
-        <th class="day-of-week">Wednesday</th>
-        <th class="day-of-week">Thursday</th>
-        <th class="day-of-week">Friday</th>
-        <th class="day-of-week">Saturday</th>
-        <th class="day-of-week">Sunday</th>
-      </tr>
-    </table>
+   <article class="grid_wrap">
+    <!-- grid_wrap start -->
+    <div id="grid_wrap_atdList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+   </article>
   </section><!-- search_result end -->
 </section><!-- content end -->

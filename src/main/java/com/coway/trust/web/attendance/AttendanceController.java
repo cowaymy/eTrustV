@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -110,26 +112,28 @@ public class AttendanceController {
 
 		}
 
+
 		@RequestMapping(value = "/attendanceFileUploadPop.do")
 		public String calendarEventFileUploadPop(@RequestParam Map<String, Object> params, ModelMap model) {
 			return "/attendance/attendanceFileUploadPop";
 		}
 
+
+		@Transactional
 		@RequestMapping(value = "/csvUpload.do", method = RequestMethod.POST)
 		public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, ModelMap model, SessionVO sessionVO) throws IOException, InvalidFormatException  {
 			ReturnMessage message = new ReturnMessage();
 
+			String batchId= request.getParameter("batchId");
 			String batchMthYear = request.getParameter("batchMthYear");
 			String batchMemType = request.getParameter("batchMemType");
+			int result = 0;
 
-			LOGGER.debug("==== Request Param - batchMthYear : " + batchMthYear);
-			LOGGER.debug("==== Request Param - batchMemType : " + batchMemType);
 
 			Map<String, MultipartFile> fileMap = request.getFileMap();
 			MultipartFile multipartFile = fileMap.get("csvFile");
 
 			List<CalendarEventVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CalendarEventVO::create);
-
 
 			List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
 			for (CalendarEventVO vo : vos) {
@@ -144,22 +148,39 @@ public class AttendanceController {
 				detailList.add(hm);
 			}
 
-			Map<String, Object> master = new HashMap<String, Object>();
-			master.put("crtUserId", sessionVO.getUserId());
-			master.put("batchStatusId", 1);
-			master.put("batchMthYear", batchMthYear);
-			master.put("batchMemType", batchMemType);
+			if (StringUtils.isNotEmpty(batchId)) {
+				HashMap<String, Object> details = new HashMap<String, Object>();
+				details.put("crtUserId", sessionVO.getUserId());
+				details.put("batchId", batchId);
+				details.put("batchId", batchId);
+				int disableUploadDtl = attendanceService.disableBatchCalDtl(details);
+				LOGGER.debug("==== batchMemType: " + batchMemType);
+				if(disableUploadDtl > 0){
+					result = attendanceService.saveCsvUpload2(detailList, batchId, batchMemType);
+				}
+			}
+			else{
+				Map<String, Object> master = new HashMap<String, Object>();
+				master.put("crtUserId", sessionVO.getUserId());
+				master.put("batchStatusId", 1);
+				master.put("batchMthYear", batchMthYear);
+				master.put("batchMemType", batchMemType);
 
-			LOGGER.debug("==== Request Param - master : " + master);
 
-			LOGGER.debug("==== Request Param - detailList : " + detailList);
+				int duplicateUploadCount = attendanceService.checkDup(master);
 
-			int result = attendanceService.saveCsvUpload(master, detailList);
+			    if(duplicateUploadCount > 0)
+			    {
+			    	 attendanceService.disableBatchCalMst(master);
+			    }
+
+				result = attendanceService.saveCsvUpload(master, detailList);
+			}
 
 			if (result > 0) {
-				model.put("batchId", result);
 				message.setMessage("Attendance file successfully uploaded.<br/>Batch ID : " + result);
 				message.setCode(AppConstants.SUCCESS);
+				message.setData(result);
 			} else {
 				message.setMessage("Failed to upload Attendance file. Please try again later.");
 				message.setCode(AppConstants.FAIL);
@@ -168,17 +189,23 @@ public class AttendanceController {
 			return ResponseEntity.ok(message);
 		}
 
+
 		@RequestMapping(value = "/attendanceSubmitApproval.do")
 		public String attendanceSubmitApproval(@RequestParam Map<String, Object> params, ModelMap model) {
 			LOGGER.debug("==== attendanceSubmitApproval : " + params);
-			return "/attendance/attendanceSubmitApproval";
+
+			model.put("batchId", params.get("batchId"));
+			return "attendance/attendanceSubmitApproval";
 		}
+
 
 		@RequestMapping(value = "/registrationMsgPop.do")
-		public String registrationMsgPop(ModelMap model) {
-			return "eAccounting/staffClaim/registrationMsgPop";
+		public String registrationMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+			model.put("batchId", params.get("batchId"));
+			return "attendance/registrationMsgPop";
 		}
 
+		@Transactional
 		@RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
 		public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
@@ -186,6 +213,8 @@ public class AttendanceController {
 
 			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 			params.put("userName", sessionVO.getUserName());
+
+			//model.put("batchId", getUserInfo.get("memCode"));
 
 			// TODO
 			attendanceService.insertApproveLine(params);
@@ -197,4 +226,68 @@ public class AttendanceController {
 
 			return ResponseEntity.ok(message);
 		}
+
+
+	   @RequestMapping(value = "/searchAtdManagementList.do", method = RequestMethod.GET)
+	   public ResponseEntity<List<EgovMap>> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		LOGGER.debug("===========================/searchAtdManagementList.do===============================");
+		LOGGER.debug("== params heres" + params.toString());
+
+	    List<EgovMap> AtdList = attendanceService.searchAtdManagementList(params);
+
+	    LOGGER.debug("===========================/searchPreASManagementList.do===============================");
+	    return ResponseEntity.ok(AtdList);
+	  }
+
+
+	  @RequestMapping(value = "/attendanceFileEditDeletePop.do")
+		public String attendanceFileEditDeletePop(@RequestParam Map<String, Object> params, ModelMap model) {
+			return "/attendance/attendanceFileEditDeletePop";
+	  }
+
+
+	  @Transactional
+	  @RequestMapping(value = "/deleteUploadBatch.do")
+	  public ResponseEntity<ReturnMessage> deleteUploadBatch(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
+
+			params.put("crtUserId", session.getUserId());
+
+			int result = attendanceService.deleteUploadBatch(params);
+
+			ReturnMessage message = new ReturnMessage();
+
+			if (result > 0) {
+		    	message.setCode(AppConstants.SUCCESS);
+		    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			} else {
+				message.setMessage("Failed to delete Attendance file. Please try again later.");
+				message.setCode(AppConstants.FAIL);
+			}
+
+			return ResponseEntity.ok(message);
+	  }
+
+
+	  @Transactional
+	  @RequestMapping(value = "/approveUploadBatch.do")
+	  public ResponseEntity<ReturnMessage> approveUploadBatch(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
+
+			params.put("crtUserId", session.getUserId());
+
+			int result = attendanceService.approveUploadBatch(params);
+
+			ReturnMessage message = new ReturnMessage();
+
+			if (result > 0) {
+		    	message.setCode(AppConstants.SUCCESS);
+		    	message.setMessage("Success to approve.");
+			} else {
+				message.setMessage("Failed to approve this attendance. Please try again later.");
+				message.setCode(AppConstants.FAIL);
+			}
+
+			return ResponseEntity.ok(message);
+	  }
+
+
 }

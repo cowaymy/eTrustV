@@ -16,11 +16,22 @@ public interface AttendanceMapper {
 
 	int updateBatchCalMst(Map<String, Object> params);
 
+	int disableBatchCalDtl(Map<String, Object> params);
+
+	int deleteUploadBatch(Map<String, Object> params);
+
+	int approveUploadBatch(Map<String, Object> params);
+
 	int selectCurrentBatchId();
 
     void insertApproveLineDetail(Map<String, Object> params);
 
     void updateAttendanceBatch(Map<String, Object> params);
 
+    List<EgovMap> searchAtdManagementList(Map<String, Object> params);
+
+    int checkDup(Map<String, Object> params);
+
+    void disableBatchCalMst(Map<String, Object> params);
 
 }
