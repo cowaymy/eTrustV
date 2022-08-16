@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.coway.trust.biz.services.serviceDashboardApi.impl.ServiceDashboardApiMapper">
+
+<select id="selectCsStatusDashboard" resultType="egovMap">
+<![CDATA[
+
+SELECT
+case when B.STK_CTGRY_ID = '54' Then 'WP'
+when B.STK_CTGRY_ID = '55' Then 'AP'
+when B.STK_CTGRY_ID = '5706' Then 'MATTRESS'
+when B.STK_CTGRY_ID = '400' Then 'POE'
+when B.STK_CTGRY_ID = '57' Then 'SOFTENER'
+when B.STK_CTGRY_ID = '56' Then 'BIDET'
+else 'OTHERS' END AS CS_TYPE ,
+B.OUTST      AS ACT_COUNT,
+B.STK_CTGRY_ID  AS COM_COUNT,
+B.OUTST AS CANCEL_COUNT,
+B.USAGE_MTH AS FAIL_COUNT,
+100 AS TOTAL_COUNT
+
+FROM    SAL0271D A JOIN SAL0284D B
+ON A.LOYALTY_ID = B.LOYALTY_ID
+
+WHERE   A.HP_CODE = '604333'
+and A.SALES_ORD_NO = '1005622'
+ORDER BY    CS_TYPE;
+]]>
+</select>
+
+</mapper>
