@@ -926,7 +926,8 @@ SELECT T.BANK_DTL_ID
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
                         WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
                         WHEN T4.IND = 'CHGCARD' THEN
-                                                    CASE WHEN T2.CTRL_IS_CRC != 0 THEN 'Transaction Not Allowed'
+                                                    CASE WHEN T2.CTRL_IS_CRC = 1 THEN
+                                                        CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Change Card' END
                                                     ELSE  'Change Account' END
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
                         ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
