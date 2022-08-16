@@ -3,36 +3,40 @@
 <mapper namespace="com.coway.trust.biz.services.as.impl.PreASManagementListMapper">
 
 	<select id="selectPreASManagementList" parameterType="Map" resultType="egovMap">
-    SELECT DISTINCT
-                  Extent1.SALES_ORDER_NO
-                , Extent2.SALES_ORD_ID
-                , NVL(Extent1.AS_NO,'-') AS AS_NO
-                , Extent10.AS_ID
-                , Extent1.APPV_REMARK
-                , Extent1.CUST_NAME
-                , NVL(Extent11.CODE, '-') BRNCH_CODE
-                , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
-                , Extent5.TEL_M1 AS CONTACT_NO
-                , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
-                , Extent6.NAME AS STUS
-                , Extent1.STUS AS STUS_ID
-                , Extent1.DEFECT_CODE
-                , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
-                , Extent1.REG_ID AS CREATOR
-                , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
-        FROM SVC0130D Extent1
-        JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
-        LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
-        LEFT JOIN SYS0005M Extent3 ON Extent3.BRNCH_ID = Extent9.BRNCH
-        LEFT JOIN SAL0029D Extent4 ON Extent4.NAME =  Extent1.CUST_NAME AND Extent2.CUST_ID = Extent4.CUST_ID
-        LEFT JOIN SAL0027D Extent5 ON Extent5.CUST_ID =  Extent4.CUST_ID AND Extent5.STUS_CODE_ID = 9
-        LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
-        LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
-        LEFT JOIN SYS0026M Extent8 ON Extent1.PRODUCT_CODE = Extent8.STK_CODE
-        LEFT JOIN SVC0001D Extent10 ON Extent1.AS_NO = Extent10.AS_NO
-        LEFT JOIN SYS0005M Extent11 ON Extent10.AS_BRNCH_ID = Extent11.BRNCH_ID
+	    SELECT DISTINCT
+	                  Extent1.SALES_ORDER_NO
+	                , Extent2.SALES_ORD_ID
+	                , NVL(Extent1.AS_NO,'-') AS AS_NO
+	                , Extent10.AS_ID
+	                , Extent1.APPV_REMARK
+	                , Extent1.CUST_NAME
+	                , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
+	                , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
+	                , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
+	                , Extent5.TEL_M1 AS CONTACT_NO
+	                , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
+	                , Extent6.NAME AS STUS
+	                , Extent1.STUS AS STUS_ID
+	                , Extent1.DEFECT_CODE
+	                , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
+	                , Extent1.REG_ID AS CREATOR
+	                , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
+	        FROM SVC0130D Extent1
+	        JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
+	        LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
+	        LEFT JOIN SYS0005M Extent3 ON Extent3.BRNCH_ID = Extent9.BRNCH
+	        LEFT JOIN SAL0029D Extent4 ON Extent4.NAME =  Extent1.CUST_NAME AND Extent2.CUST_ID = Extent4.CUST_ID
+	        LEFT JOIN SAL0027D Extent5 ON Extent5.CUST_ID =  Extent4.CUST_ID AND Extent5.STUS_CODE_ID = 9
+	        LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
+	        LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
+	        LEFT JOIN SYS0026M Extent8 ON Extent1.PRODUCT_CODE = Extent8.STK_CODE
+	        LEFT JOIN SVC0001D Extent10 ON Extent1.AS_NO = Extent10.AS_NO
+	        LEFT JOIN SYS0005M Extent11 ON Extent10.AS_BRNCH_ID = Extent11.BRNCH_ID
+	        LEFT JOIN SAL0045D Extent12 ON Extent12.SALES_ORD_ID = Extent2.SALES_ORD_ID
+	        JOIN SAL0046D Extent13 ON Extent13.SALES_ORD_ID = Extent2.SALES_ORD_ID AND Extent13.STUS_CODE_ID =4
+	        LEFT JOIN SYS0005M Extent14 ON Extent14.BRNCH_ID = Extent12.BRNCH_ID
 
-		WHERE 1=1
+			WHERE 1=1
 
 		<if test="asStatusList != null and asStatusList != '' ">
             AND Extent1.STUS IN
@@ -42,8 +46,15 @@
        </if>
 
         <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
-            AND Extent3.CODE IN
+            AND Extent11.CODE IN
             <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+             #{item}
+            </foreach>
+       </if>
+
+         <if test="cmbInsBranchIdList != null and cmbInsBranchIdList != '' ">
+            AND Extent14.CODE IN
+            <foreach item="item" collection="cmbInsBranchIdList" index="index" open="(" separator="," close=")">
              #{item}
             </foreach>
        </if>

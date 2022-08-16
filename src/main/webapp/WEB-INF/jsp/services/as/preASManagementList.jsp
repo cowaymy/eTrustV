@@ -28,7 +28,7 @@
       function() {
         asManagementGrid();
         doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
-
+        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbInsBranchId', 'M', 'f_multiCombo'); // DSC BRANCH
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
 
         	var index = AUIGrid.getSelectedIndex(myGridID)[0];
@@ -98,9 +98,14 @@
           headerText : "AS No",
           editable : false,
           width : 150
-          },
+        },
         {
-          dataField : "brnchCode",
+              dataField : "insBrnchCode",
+              headerText : "INS Branch",
+              width : 100
+        },
+        {
+          dataField : "asBrnchCode",
           headerText : "AS Branch",
           width : 80
         },
@@ -227,6 +232,14 @@
             selectAll : true, // 전체선택
             width : '80%'
         });
+
+        $('#cmbInsBranchId').change(function() {
+
+        }).multipleSelect({
+            selectAll : true, // 전체선택
+            width : '80%'
+        });
+
     });
 }
 
@@ -253,6 +266,7 @@
 
           $("#asStatus").multipleSelect("uncheckAll");
           $("#cmbbranchId").multipleSelect("uncheckAll");
+          $("#cmbInsBranchId").multipleSelect("uncheckAll");
           $("#asProduct").multipleSelect("uncheckAll");
       });
   };
@@ -412,12 +426,17 @@
          </c:choose>
         </c:forEach>
       </select></td>
-           <th scope="row"><spring:message code='service.title.ASBrch'/></th>
+
+      <th scope="row"><spring:message code='service.title.ASBrch'/></th>
       <td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td>
 
      </tr>
      <tr>
-         <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
+
+     <th scope="row">INS Branch</th>
+     <td><select class="multy_select w100p" multiple="multiple" id="cmbInsBranchId" name="cmbInsBranchId"></select></td>
+
+      <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
       <td><input type="text" title="" placeholder="<spring:message code='service.grid.CustomerName'/>" class="w100p" id="custName" name="custName" /></td>
      <th scope="row"><spring:message code='service.grid.registerDt'/></th>
       <td>
@@ -435,12 +454,25 @@
         </p>
        </div>
       </td>
-            <th scope="row"><spring:message code='service.grid.Product'/></th>
-      <td><select class="multy_select w100p" multiple="multiple" id="asProduct" name="asProduct">
+
+     </tr>
+
+     <tr>
+       <th scope="row"><spring:message code='service.grid.Product'/></th>
+      <td>
+      <select class="multy_select w100p" multiple="multiple" id="asProduct" name="asProduct">
         <c:forEach var="list" items="${asProduct}" varStatus="status">
           <option value="${list.stkId}">${list.stkDesc}</option>
         </c:forEach>
-      </select></td>
+      </select>
+      </td>
+
+      <th></th>
+      <td></td>
+
+      <th></th>
+      <td></td>
+
      </tr>
 
 

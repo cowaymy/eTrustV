@@ -107,11 +107,13 @@ public class PreASManagementListController {
     String[] asProductList = request.getParameterValues("asProduct");
     String[] asStatusList = request.getParameterValues("asStatus");
     String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
+    String[] cmbInsBranchIdList = request.getParameterValues("cmbInsBranchId");
 
     // String cmbctId = request.getParameter("cmbctId");
 
     params.put("asStatusList", asStatusList);
     params.put("cmbbranchIdList", cmbbranchIdList);
+    params.put("cmbInsBranchIdList", cmbInsBranchIdList);
     params.put("asProductList", asProductList);
 
     List<EgovMap> PreASMList = PreASManagementListService.selectPreASManagementList(params);
