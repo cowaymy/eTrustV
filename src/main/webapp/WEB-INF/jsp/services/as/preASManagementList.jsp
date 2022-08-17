@@ -122,7 +122,7 @@
         },
         {
            dataField : "contactNo",
-           headerText : "Conatct No",
+           headerText : "Contact No",
            editable : false,
            width : 100
         },
@@ -147,7 +147,7 @@
            width : 150
         },
         {
-            dataField : "appvRemark",
+            dataField : "remark",
             headerText : "Remark",
             editable : false,
             width : 150
@@ -360,7 +360,7 @@
   <p class="fav">
    <a href="#" class="click_add_on">My menu</a>
   </p>
-  <h2>Pre-Register</h2>
+  <h2>Pre-AS Register</h2>
   <form action="#" id="inHOForm">
    <div style="display: none">
     <input type="text" id="in_asId" name="in_asId" />

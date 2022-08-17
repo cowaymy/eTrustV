@@ -8,6 +8,7 @@
 	                , Extent2.SALES_ORD_ID
 	                , NVL(Extent1.AS_NO,'-') AS AS_NO
 	                , Extent10.AS_ID
+	                , Extent1.REMARK
 	                , Extent1.APPV_REMARK
 	                , Extent1.CUST_NAME
 	                , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
