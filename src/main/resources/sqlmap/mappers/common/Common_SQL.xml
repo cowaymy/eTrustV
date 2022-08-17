@@ -1459,6 +1459,27 @@
         ORDER BY 1
     </select>
 
+     <select id="selectUniformSizeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
+
+    <select id="selectMuslimahScarftList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
+
+    <select id="selectInnerTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
+
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
         SELECT <choose>
                   <when test='groupCode == "0"'>

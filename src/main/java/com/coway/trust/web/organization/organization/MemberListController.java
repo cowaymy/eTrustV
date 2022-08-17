@@ -42,6 +42,7 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.ctDutyAllowance.CtDutyAllowanceApplication;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.logistics.organization.LocationService;
@@ -118,6 +119,7 @@ public class MemberListController {
 
 	@Autowired
 	private WebInvoiceService webInvoiceService;
+
 
 	/**
 	 * Call commission rule book management Page
@@ -2680,7 +2682,113 @@ public class MemberListController {
 		return ResponseEntity.ok(positionList);
 	}
 
+	@RequestMapping(value = "/attachFileMemberUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
 
+		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
 
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
+		logger.debug("params =====================================>>  " + params);
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "organisation" + File.separator + "MemberDocuments", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+		logger.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		memberListService.insertMemberListAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs );
+
+		code = AppConstants.SUCCESS;
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		List<EgovMap> fileInfo = webInvoiceService.selectAttachList(params.get("fileGroupKey").toString());
+
+		if(fileInfo != null){
+			params.put("atchFileId", fileInfo.get(0).get("atchFileId"));
+		}
+
+		params.put("attachFiles", list);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+
+		}catch(ApplicationException e){
+
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.FAIL));
+
+			return ResponseEntity.ok(message);
+		}
+	}
+
+	@RequestMapping(value = "/attachFileMemberUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
+
+		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
+		logger.debug("params =====================================>>  " + params);
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "organisation" + File.separator + "MemberDocuments", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+		logger.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		memberListService.updateMemberListAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, seqs);
+
+		params.put("attachFiles", list);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+		}catch(ApplicationException e){
+
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.FAIL));
+
+			return ResponseEntity.ok(message);
+		}
+	}
 }
 

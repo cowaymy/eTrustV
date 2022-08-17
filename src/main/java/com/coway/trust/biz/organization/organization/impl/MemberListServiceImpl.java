@@ -41,6 +41,7 @@ import com.coway.trust.biz.api.LMSApiService;
 import com.coway.trust.biz.application.impl.FileApplicationImpl;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileGroupVO;
+import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
@@ -54,12 +55,13 @@ import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
+import com.coway.trust.biz.common.FileService;
+import com.coway.trust.biz.common.impl.FileMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("memberListService")
-
 
 public class MemberListServiceImpl extends EgovAbstractServiceImpl implements MemberListService{
 	private static final Logger logger = LoggerFactory.getLogger(MemberListController.class);
@@ -72,6 +74,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Resource(name = "commonApiService")
 	  private CommonApiService commonApiService;
+
+	@Autowired
+	private FileService fileService;
+
+	@Autowired
+	private FileMapper fileMapper;
 
 	@Autowired
     private LMSApiService lmsApiService;
@@ -288,6 +296,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             params.put("spouseOcc", params.get("spouseOcc").toString().trim() != null ? params.get("spouseOcc").toString().trim() : "");
             params.put("spouseDob", params.get("spouseDob").toString().equals("") ? "01/01/1900" : params.get("spouseDob").toString().trim());
             params.put("spouseContat", params.get("spouseContat").toString().trim() != null ? params.get("spouseContat").toString().trim() : "");
+
+            // Member UniformSize
+            params.put("uniformSize", params.get("uniformSize") != null ? params.get("uniformSize").toString() : "");
+            params.put("muslimahScarft", params.get("muslimahScarft") != null ? params.get("muslimahScarft").toString() : "");
+            params.put("innerType", params.get("innerType") != null ? params.get("innerType").toString() : "");
+
+            // Emergency Contact
+            params.put("emergencyCntcNm", params.get("emergencyCntcNm") != null ? params.get("emergencyCntcNm").toString() : "");
+            params.put("emergencyCntcNo", params.get("emergencyCntcNo") != null ? params.get("emergencyCntcNo").toString() : "");
+            params.put("cmbInitials", params.get("cmbInitials") != null ? params.get("cmbInitials").toString() : "");
+            params.put("cmbInitials", params.get("cmbInitials") != null ? params.get("cmbInitials").toString() : "");
+
+            // Attach File
+            params.put("atchFileGrpId", params.get("atchFileGrpId") != null ? params.get("atchFileGrpId").toString() : "");
+            params.put("atchFileId", params.get("atchFileId") != null ? params.get("atchFileId").toString() : "");
 
             Boolean success = false;
 
@@ -2805,4 +2828,103 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public List<EgovMap> selectPositionList(Map<String, Object> params) {
         return memberListMapper.selectPositionList(params);
     }
+
+	public void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params,String seq) {
+
+        int atchFlId = memberListMapper.selectNextFileId();
+
+        FileGroupVO fileGroupVO = new FileGroupVO();
+
+        Map<String, Object> flInfo = new HashMap<String, Object>();
+        flInfo.put("atchFileId", atchFlId);
+        flInfo.put("atchFileName", flVO.getAtchFileName());
+        flInfo.put("fileSubPath", flVO.getFileSubPath());
+        flInfo.put("physiclFileName", flVO.getPhysiclFileName());
+        flInfo.put("fileExtsn", flVO.getFileExtsn());
+        flInfo.put("fileSize", flVO.getFileSize());
+        flInfo.put("filePassword", flVO.getFilePassword());
+        flInfo.put("fileUnqKey", params.get("claimUn"));
+        flInfo.put("fileKeySeq", seq);
+        memberListMapper.insertFileDetail(flInfo);
+        fileGroupVO.setAtchFileGrpId(fileGroupKey);
+        fileGroupVO.setAtchFileId(atchFlId);
+        fileGroupVO.setChenalType(flType.getCode());
+        fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
+        fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
+        memberListMapper.insertFileGroup(fileGroupVO);
+
+    }
+
+	@Override
+	public void insertMemberListAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs) {
+		// TODO Auto-generated method stub
+
+		int fileGroupKey = fileMapper.selectFileGroupKey();
+		AtomicInteger i = new AtomicInteger(0); // get seq key.
+
+		logger.debug("insertMemberListAttachBiz :: Start");
+
+		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
+		params.put("fileGroupKey", fileGroupKey);
+	}
+
+	@Override
+	public void updateMemberListAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs) {
+		// TODO Auto-generated method stub
+		logger.debug("params =====================================>>  " + params.toString());
+		logger.debug("list.size : {}", list.size());
+		String update = (String) params.get("update");
+		String remove = (String) params.get("remove");
+		String[] updateList = null;
+		String[] removeList = null;
+		if(!StringUtils.isEmpty(update)) {
+			updateList = params.get("update").toString().split(",");
+			logger.debug("updateList.length : {}", updateList.length);
+		}
+		if(!StringUtils.isEmpty(remove)) {
+			removeList = params.get("remove").toString().split(",");
+			logger.debug("removeList.length : {}", removeList.length);
+		}
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		if (list.size() > 0) {
+			for(int i = 0; i < list.size(); i++) {
+				if(updateList != null && i < updateList.length && removeList != null && removeList.length > 0) {
+					String atchFileId = updateList[i];
+					String removeAtchFileId = removeList[i];
+					if(atchFileId.equals(removeAtchFileId))
+					{
+						fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
+					}
+					else {
+						int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
+						this.insertFile(fileGroupId, list.get(i), type,params, seqs.get(i));
+					}
+				}
+				else if(updateList != null && i < updateList.length) {
+					String atchFileId = updateList[i];
+					fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
+				}
+				else {
+					int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
+					this.insertFile(fileGroupId, list.get(i), type,params, seqs.get(i));
+				}
+			}
+		}
+		if(updateList == null && removeList != null && removeList.length > 0){
+			for(String id : removeList){
+				logger.info(id);
+				String atchFileId = id;
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
+			}
+		}
+	}
+
+	@Override
+	public void deleteMemberListAttachBiz(FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		logger.debug("params =====================================>>  " + params);
+		fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+	}
+
+
 }

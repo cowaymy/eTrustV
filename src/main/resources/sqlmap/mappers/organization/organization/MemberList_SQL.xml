@@ -639,7 +639,8 @@ SELECT row_number,
        Limit1.NO_TBB
        ,Limit1.INC_TAX,
        Limit1.FB_LINK,
-       Limit1.IG_LINK
+       Limit1.IG_LINK,
+       Limit1.ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID_DOC
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -986,7 +987,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.NO_TBB
                 ,Extent1.INC_TAX,
                 Extent1.FB_LINK,
-                Extent1.IG_LINK
+                Extent1.IG_LINK,
+                Extent1.ATCH_FILE_GRP_ID
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1294,6 +1296,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , RELIGION
         , MOBILE_USE_YN
          , INC_TAX
+         , UNIFORM_SIZE
+         , MUSLIMAH_SCARFT
+         , INNER_TYPE
+         , EMRGCY_CNTC_NAME
+         , EMRGCY_CNTC_NO
+         , EMRGCY_CNTC_INIT
+         , ATCH_FILE_GRP_ID
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1357,6 +1366,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              , #{religion}
              , NVL(#{mobileUseYn}, 'N')
              , #{incomeTaxNo}
+             , #{uniformSize}
+             , #{muslimahScarft}
+             , #{innerType}
+             , #{emergencyCntcNm}
+             , #{emergencyCntcNo}
+             , #{cmbInitials}
+             , #{atchFileGrpId}
              )
     </insert>
 
@@ -5111,7 +5127,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           , APLICNT_SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
         </if>
         <if test="educationLvlUpd != null and educationLvlUpd != '' ">
-          , APLICNT_EDC_LEV = #{educationLvlUpd}
+          , APLICNT_EDU_LEV = #{educationLvlUpd}
         </if>
         <if test="languageUpd != null and languageUpd != '' ">
           , APLICNT_LANG = #{languageUpd}
@@ -5705,5 +5721,51 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
 		WHERE CODE_MASTER_ID=504
       </select>
 
+      <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+       </select>
 
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+        <insert id="insertFileGroup" parameterType="fileGroupVO">
+        INSERT INTO SYS0070M (
+        ATCH_FILE_GRP_ID
+        , ATCH_FILE_ID
+        , CHENAL_TYPE
+        , CRT_USER_ID
+        , CRT_DT
+        , UPD_USER_ID
+        , UPD_DT
+        )VALUES (
+        #{atchFileGrpId}
+        ,#{atchFileId}
+        ,#{chenalType}
+        ,#{crtUserId}
+        ,SYSDATE
+        ,#{crtUserId}
+        ,SYSDATE
+        )
+        </insert>
 </mapper>

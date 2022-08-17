@@ -258,5 +258,10 @@ public interface MemberListService {
 
 	List<EgovMap> selectPositionList(Map<String, Object> params);
 
+	void insertMemberListAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs);
+
+	void updateMemberListAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs);
+
+	void deleteMemberListAttachBiz(FileType type, Map<String, Object> params);
 
 }

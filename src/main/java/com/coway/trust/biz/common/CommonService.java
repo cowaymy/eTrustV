@@ -428,4 +428,10 @@ public interface CommonService {
 	// Homecare Unit Type list
 	List<EgovMap> selectUnitTypeList(Map<String, Object> params);
 
+	// Member Uniform list
+	List<EgovMap> selectUniformSizeList(Map<String, Object> params);
+
+	// Inner Type list
+	List<EgovMap> selectInnerTypeList(Map<String, Object> params);
+
 }

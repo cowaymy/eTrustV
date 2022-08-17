@@ -11,6 +11,28 @@ var myGridID6;
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
+var codyAppFileId = 0;
+var nricCopyFileId = 0;
+var driveCopyFileId = 0;
+var bankStateCopyFileId = 0;
+var vaccDigCertFileId = 0;
+var fileNameId = 0;
+var codyPaCopyFileId = 0;
+var compConsCodyFileId = 0;
+var codyExtCheckFileId = 0;
+
+var codyAppFileName = "";
+var nricCopyFileName = "";
+var driveCopyFileName = "";
+var bankStateCopyFileName = "";
+var vaccDigCertFileName = "";
+var fileNameName = "";
+var codyPaCopyFileName = "";
+var compConsCodyFileName = "";
+var compConsCodyFileName = "";
+var myFileCaches = {};
+var checkFileValid = true;
+
 //Start AUIGrid
 $(document).ready(function() {
 console.log("ter-res-pro-dem pop");
@@ -21,9 +43,15 @@ console.log("ter-res-pro-dem pop");
     createAUIGrid3();
     createAUIGrid5();
     createAUIGrid6();
-
     fn_selectPromote();
     fn_selectDocSubmission();
+
+    if(($("#memtype").val() == 5 && "${memberView.traineeType}"  == 2) || ($("#memtype").val() == 2)){
+        $("#attachmentTab").show();
+        if( "${memberView.atchFileGrpIdDoc}" != 0 &&  "${memberView.atchFileGrpIdDoc}" != null){
+        	  fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
+       }
+    }
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
     fn_selectTraining();
@@ -805,6 +833,103 @@ $("#HP_img").dblclick(function(){
        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
    });
 });
+
+   function fn_loadAtchment(atchFileGrpId) {
+	   console.log("atchFileGrpId : " + atchFileGrpId);
+        Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+           console.log(result);
+          if(result) {
+               if(result.length > 0) {
+                   $("#attachTd").html("");
+                   for ( var i = 0 ; i < result.length ; i++ ) {
+                       switch (result[i].fileKeySeq){
+                       case '1':
+                    	   codyAppFileId = result[i].atchFileId;
+                           codyAppFileName = result[i].atchFileName;
+                           $(".input_text[id='codyAppFileTxt']").val(codyAppFileName);
+                           break;
+                       case '2':
+                    	   nricCopyFileId = result[i].atchFileId;
+                           nricCopyFileName = result[i].atchFileName;
+                           $(".input_text[id='nricCopyFileTxt']").val(nricCopyFileName);
+                           break;
+                       case '3':
+                    	   driveCopyFileId = result[i].atchFileId;
+                           driveCopyFileName = result[i].atchFileName;
+                           $(".input_text[id='driveCopyFileTxt']").val(driveCopyFileName);
+                           break;
+                       case '4':
+                    	   bankStateCopyFileId = result[i].atchFileId;
+                    	   bankStateCopyFileName = result[i].atchFileName;
+                           $(".input_text[id='bankStateCopyFileTxt']").val(bankStateCopyFileName);
+                           break;
+                       case '5':
+                    	   vaccDigCertFileId = result[i].atchFileId;
+                           vaccDigCertFileName = result[i].atchFileName;
+                           $(".input_text[id='vaccDigCertFileTxt']").val(vaccDigCertFileName);
+                           break;
+                       case '6':
+                    	   fileNameId = result[i].atchFileId;
+                           fileNameName = result[i].atchFileName;
+                           $(".input_text[id='fileNameTxt']").val(fileNameName);
+                           break;
+                       case '7':
+                    	   codyPaCopyFileId = result[i].atchFileId;
+                           codyPaCopyFileName = result[i].atchFileName;
+                           $(".input_text[id='codyPaCopyFileTxt']").val(codyPaCopyFileName);
+                           break;
+                       case '8':
+                    	   compConsCodyFileId = result[i].atchFileId;
+                           compConsCodyFileName = result[i].atchFileName;
+                           $(".input_text[id='compConsCodyFileTxt']").val(compConsCodyFileName);
+                           break;
+                       case '9':
+                    	   codyExtCheckFileId = result[i].atchFileId;
+                           codyExtCheckFileName = result[i].atchFileName;
+                           $(".input_text[id='codyExtCheckFileTxt']").val(codyExtCheckFileName);
+                           break;
+                        default:
+                            Common.alert("no files");
+                       }
+                   }
+
+                    // 파일 다운
+                   $(".input_text").dblclick(function() {
+                       var oriFileName = $(this).val();
+                       var fileGrpId;
+                       var fileId;
+                       for(var i = 0; i < result.length; i++) {
+                           if(result[i].atchFileName == oriFileName) {
+                               fileGrpId = result[i].atchFileGrpId;
+                               fileId = result[i].atchFileId;
+                           }
+                       }
+                       if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                   });
+               }
+           }
+      });
+   }
+
+   function fn_atchViewDown(fileGrpId, fileId) {
+       var data = {
+               atchFileGrpId : fileGrpId,
+               atchFileId : fileId
+       };
+       Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+           console.log(result)
+           var fileSubPath = result.fileSubPath;
+           fileSubPath = fileSubPath.replace('\', '/'');
+
+           if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+               console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+               window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+           } else {
+               console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+               window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+           }
+       });
+   }
 </script>
 
 <style>
@@ -849,6 +974,7 @@ $("#HP_img").dblclick(function(){
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
     <li><a href="#" >Training</a></li>
     <li><a href="#" >HP Loyalty Status</a></li>
+    <li id="attachmentTab" style="display:none;"><a href="#" >Attachment</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1396,6 +1522,141 @@ $("#HP_img").dblclick(function(){
 <div id="grid_wrap6" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+<h2>Attachment</h2>
+<table class="type1 mt10" id="attachmentDiv"><!-- table start -->
+<colgroup>
+    <col style="width:190px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr><th scope="row"></th>
+    <td colspan="3" id="attachTd">
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody Application Form</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyAppFile" accept="application/pdf"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly'  id="codyAppFileTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("CAF")'>Remove</a></span> -->
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">NRIC Copy</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="nricCopyFileTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Driving License Copy</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="driveCopyFileTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("DLC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Bank Passbook / Statement Copy</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="bankStateCopyFileTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("BPSC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Vaccination Digital Certificate</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2 ">
+            <input type="file" title="file add" id="vaccDigCertFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' accept="application/pdf" id="vaccDigCertFileTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("VDC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Passport Size Photo (white background)</th>
+    <td colspan="3" id="attachTd">
+    <div class="auto_file2" >
+    <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg"/>
+        <label>
+                <input type='text' class='input_text' readonly='readonly' id="fileNameTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("PSP")'>Remove</a></span> -->
+        </label>
+    </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody PA Copy</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyPaCopyFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="codyPaCopyFileTxt"/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("CPC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Company Consigment Cody Item, Tools, Filter Stock, Spare part</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="compConsCodyFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="compConsCodyFileTxt"/>
+                <!-- <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
+                <span class='label_text' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody Exit Checklist</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyExtCheckFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="codyExtCheckFileTxt"/>
+                <!-- <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
+                <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("CEC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
 </article><!-- tap_area end -->
 
 

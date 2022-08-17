@@ -167,6 +167,10 @@ public interface CommonMapper {
 
     List<EgovMap> selectUnitTypeList(Map<String, Object> params);
 
+    List<EgovMap> selectUniformSizeList(Map<String, Object> params);
+
+    List<EgovMap> selectInnerTypeList(Map<String, Object> params);
+
     /**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
 	 * @param params

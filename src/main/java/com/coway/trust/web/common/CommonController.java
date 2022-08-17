@@ -413,6 +413,18 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectUniformSizeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectUniformSizeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectUniformSizeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+	@RequestMapping(value = "/selectInnerTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectInnerTypeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectInnerTypeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	/**
 	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
 	 *

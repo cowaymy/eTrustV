@@ -1,99 +1,208 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style type="text/css">
 
+    /* 커스텀 스타일 정의 */
+    .auto_file2 {
+        width:100%!important;
+    }
+    .auto_file2 > label {
+        width:100%!important;
+    }
+   .auto_file2 label input[type=text]{width:40%!important; float:left}
+
+</style>
 <script type="text/javaScript">
 var optionState = {chooseMessage: " 1.States "};
 var optionCity = {chooseMessage: "2. City"};
 var optionPostCode = {chooseMessage: "3. Post Code"};
 var optionArea = {chooseMessage: "4. Area"};
-
+var myFileCaches = {};
+var atchFileGrpId = '';
+var atchFileId = '';
 var issuedBankTxt;
+var checkFileValid = true;
 
 var myGridID_Doc;
 function fn_memberSave(){
 
-                if( $("#userType").val() == "1") {
-                    $('#memberType').attr("disabled", false);
-                    $('#searchdepartment').attr("disabled", false);
-                    $('#searchSubDept').attr("disabled", false);
-                }
 
-                $("#streetDtl1").val(insAddressForm.streetDtl.value);
-                $("#addrDtl1").val(insAddressForm.addrDtl.value);
-                $("#traineeType").val(($("#traineeType1").value));
-                $("#subDept").val(($("#searchSubDept").value));
-                var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-                jsonObj.form = $("#memberAddForm").serializeJSON();
+	 if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") { //if cody trainee only need attachment
+			   var formData = new FormData();
+			    $.each(myFileCaches, function(n, v) {
+			        console.log("n : " + n + " v.file : " + v.file);
+			        formData.append(n, v.file);
+			    });
 
-                console.log("-------------------------" + JSON.stringify(jsonObj));
-                Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
-                    console.log("message : " + result.message );
+			        Common.ajaxFile("/organization/attachFileMemberUpload.do", formData, function(result) {
+			            console.log(result);
+			            atchFileGrpId = result.data.fileGroupKey;
+			            atchFileId = result.data.atchFileId;
+			            isAttach = 'Yes';
 
-                    if(result.message == "Email has been used"){
-                        Common.alert(result.message);
-                    }else{
-                        // Only applicable to HP Applicant
-                        if($("#memberType").val() == "2803") {
-                            $("#aplcntNRIC").val($("#nric").val());
-                            $("#aplcntName").val($("#memberNm").val());
-                            $("#aplcntMobile").val($("#mobileNo").val());
+		                $("#atchFileGrpId").val(atchFileGrpId);
+		                $("#atchFileId").val(atchFileId);
 
-                            console.log("NRIC :: " + $("#aplcntNRIC").val());
-                            console.log("Name :: " + $("#aplcntName").val());
-                            console.log("Mobile :: " + $("#aplcntMobile").val());
-
-                            // Get ID and identification
-                            Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
-                                console.log("saving member details");
-                                console.log(result);
-
-                                var aplcntId = result.id;
-                                var idntfc = result.idntfc;
-
-                                // Construct Agreement URL via SMS
-                                var cnfmSms = " COWAY: COMPULSORY click " +
-                                                     "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                                     " for confirmation of HP agreement. TQ!";
-
-                                if($("#mobileNo").val() != "") {
-                                    var rTelNo = $("#mobileNo").val();
-
-                                    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
-                                        console.log("sms.");
-                                        console.log( result);
-                                    });
-                                }
-
-                                if($("#email").val() != "") {
-                                    var recipient = $("#email").val();
-
-                                    var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
-
-                                    // Send Email file, recipient
-                                    Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
-                                        console.log("email.");
-                                        console.log(result);
-                                    })
-                                }
-
-                            });
-                        /*}else if($("#memberType").val() == "5") {
-                            if($("#email").val() != "") {
-                                var recipient = $("#email").val();
-
-                                var url = "http://etrust.my.coway.com/";
-
-                                // Send Email file, recipient
-                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
-                                    console.log("email.");
-                                    console.log(result);
-                                })
-                            }*/
+                        if( $("#userType").val() == "1") {
+                            $('#memberType').attr("disabled", false);
+                            $('#searchdepartment').attr("disabled", false);
+                            $('#searchSubDept').attr("disabled", false);
                         }
-                        Common.alert(result.message,fn_close);
-                    }
 
-        });
+                        $("#streetDtl1").val(memberAddForm.streetDtl.value);
+                        $("#addrDtl1").val(memberAddForm.addrDtl.value);
+                        $("#traineeType").val(($("#traineeType1").value));
+                        $("#subDept").val(($("#searchSubDept").value));
+
+                        var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+
+                        jsonObj.form = $("#memberAddForm").serializeJSON();
+
+                        console.log("-------------------------" + JSON.stringify(jsonObj));
+                        Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+                            console.log("message : " + result.message );
+
+                            if(result.message == "Email has been used"){
+                                Common.alert(result.message);
+                            }else{
+                                // Only applicable to HP Applicant
+                                if($("#memberType").val() == "2803") {
+                                    $("#aplcntNRIC").val($("#nric").val());
+                                    $("#aplcntName").val($("#memberNm").val());
+                                    $("#aplcntMobile").val($("#mobileNo").val());
+
+                                    console.log("NRIC :: " + $("#aplcntNRIC").val());
+                                    console.log("Name :: " + $("#aplcntName").val());
+                                    console.log("Mobile :: " + $("#aplcntMobile").val());
+
+                                    // Get ID and identification
+                                    Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
+                                        console.log("saving member details");
+                                        console.log(result);
+
+                                        var aplcntId = result.id;
+                                        var idntfc = result.idntfc;
+
+                                        // Construct Agreement URL via SMS
+                                        var cnfmSms = " COWAY: COMPULSORY click " +
+                                                             "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+                                                             " for confirmation of HP agreement. TQ!";
+
+                                        if($("#mobileNo").val() != "") {
+                                            var rTelNo = $("#mobileNo").val();
+
+                                            Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                                console.log("sms.");
+                                                console.log( result);
+                                            });
+                                        }
+
+                                        if($("#email").val() != "") {
+                                            var recipient = $("#email").val();
+
+                                            var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+
+                                            // Send Email file, recipient
+                                            Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                                console.log("email.");
+                                                console.log(result);
+                                            })
+                                        }
+
+                                    });
+
+                                }
+                                Common.alert(result.message,fn_close);
+                            }
+                   });
+          });
+	 }else{
+		 //others than cody trainee no need attachment
+		 if( $("#userType").val() == "1") {
+             $('#memberType').attr("disabled", false);
+             $('#searchdepartment').attr("disabled", false);
+             $('#searchSubDept').attr("disabled", false);
+         }
+
+         $("#streetDtl1").val(memberAddForm.streetDtl.value);
+         $("#addrDtl1").val(memberAddForm.addrDtl.value);
+         $("#traineeType").val(($("#traineeType1").value));
+         $("#subDept").val(($("#searchSubDept").value));
+
+         var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+
+         jsonObj.form = $("#memberAddForm").serializeJSON();
+
+         console.log("-------------------------" + JSON.stringify(jsonObj));
+         Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+             console.log("message : " + result.message );
+
+             if(result.message == "Email has been used"){
+                 Common.alert(result.message);
+             }else{
+                 // Only applicable to HP Applicant
+                 if($("#memberType").val() == "2803") {
+                     $("#aplcntNRIC").val($("#nric").val());
+                     $("#aplcntName").val($("#memberNm").val());
+                     $("#aplcntMobile").val($("#mobileNo").val());
+
+                     console.log("NRIC :: " + $("#aplcntNRIC").val());
+                     console.log("Name :: " + $("#aplcntName").val());
+                     console.log("Mobile :: " + $("#aplcntMobile").val());
+
+                     // Get ID and identification
+                     Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
+                         console.log("saving member details");
+                         console.log(result);
+
+                         var aplcntId = result.id;
+                         var idntfc = result.idntfc;
+
+                         // Construct Agreement URL via SMS
+                         var cnfmSms = " COWAY: COMPULSORY click " +
+                                              "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+                                              " for confirmation of HP agreement. TQ!";
+
+                         if($("#mobileNo").val() != "") {
+                             var rTelNo = $("#mobileNo").val();
+
+                             Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                 console.log("sms.");
+                                 console.log( result);
+                             });
+                         }
+
+                         if($("#email").val() != "") {
+                             var recipient = $("#email").val();
+
+                             var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+
+                             // Send Email file, recipient
+                             Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                 console.log("email.");
+                                 console.log(result);
+                             })
+                         }
+
+                     });
+                 /*}else if($("#memberType").val() == "5") {
+                     if($("#email").val() != "") {
+                         var recipient = $("#email").val();
+
+                         var url = "http://etrust.my.coway.com/";
+
+                         // Send Email file, recipient
+                         Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                             console.log("email.");
+                             console.log(result);
+                         })
+                     }*/
+                 }
+                 Common.alert(result.message,fn_close);
+             }
+    });
+
+	 }
 }
 
 function fn_close(){
@@ -101,17 +210,35 @@ function fn_close(){
 }
 function fn_saveConfirm(){
 
-    if(fn_saveValidation()){
-        if($("#memberType").val() == 2803){
-            Common.confirm($("#memberNm").val() + "</br>" +
-                                   $("#nric").val() + "</br>" +
-                                   issuedBankTxt + "</br>" +
-                                   "A/C : " + $("#bankAccNo").val() + "</br></br>" +
-                                   "Do you want to save with above information (for commission purpose)?", fn_memberSave);
-        } else {
-            Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
-        }
-    }
+	if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+	    if(fn_validFile()) {
+	    	fn_memberSave();
+			//	      if(fn_saveValidation()){
+			//	         if($("#memberType").val() == 2803){
+			//	             Common.confirm($("#memberNm").val() + "</br>" +
+			//	                                    $("#nric").val() + "</br>" +
+			//	                                    issuedBankTxt + "</br>" +
+			//	                                    "A/C : " + $("#bankAccNo").val() + "</br></br>" +
+			//	                                    "Do you want to save with above information (for commission purpose)?", fn_memberSave);
+			//	         } else {
+			//	             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+			//	         }
+			//	     }
+	    }
+	}else{
+
+			//     if(fn_saveValidation()){
+			//         if($("#memberType").val() == 2803){
+			//             Common.confirm($("#memberNm").val() + "</br>" +
+			//                                    $("#nric").val() + "</br>" +
+			//                                    issuedBankTxt + "</br>" +
+			//                                    "A/C : " + $("#bankAccNo").val() + "</br></br>" +
+			//                                    "Do you want to save with above information (for commission purpose)?", fn_memberSave);
+			//         } else {
+			//             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+			//         }
+			//     }
+	}
 }
 function fn_docSubmission(){
         Common.ajax("GET", "/organization/selectHpDocSubmission", { memType : $("#memberType").serialize() , trainType : $("#traineeType1").val()}, function(result) {
@@ -512,9 +639,12 @@ console.log("ready");
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '');
     //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
+    doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
 
     //$("#issuedBank option[value='MBF']").remove();
     //$("#issuedBank option[value='OTH']").remove();
+
+    setInputFile2();
 
     $("#deptCd").change(function (){
         //modify hgham 2017-12-25  주석 처리
@@ -523,6 +653,7 @@ console.log("ready");
     createAUIGridDoc();
     fn_docSubmission();
     fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
+    fn_changeDetails();
 
     $("#state").change(function (){
         var state = $("#state").val();
@@ -688,6 +819,10 @@ console.log("ready");
         fmtNumber("#mobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
      });
 });
+
+function setInputFile2(){//인풋파일 세팅하기
+    //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+}
 
 // 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
 function onclickIssuedBank() {
@@ -947,6 +1082,11 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
         return false;
     }
 
+    if($("#streetDtl").val() == ''){
+        Common.alert("Please key in the street detail.");
+        return false;
+    }
+
     if($("#mArea").val() == ''){
             Common.alert("Please key in the area.");
             return false;
@@ -1040,6 +1180,54 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
     if(!regIncTax.test($("#incomeTaxNo").val())){
         Common.alert("Invalid Income Tax Format");
         return false;
+    }
+
+    if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+
+    	if($("#uniformSize").val() == ''){
+            Common.alert("Please select Uniform Size");
+            return false;
+        }
+
+        if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" && $("#cmbRace").val() == "10" ) {
+        	 if($('input[name=muslimahScarft]:checked', '#memberAddForm').val() == null){
+                Common.alert("Please select Scarft");
+                return false;
+            }
+
+            if($("#innerType").val() == ''){
+                Common.alert("Please select Inner Type");
+                return false;
+            }
+        }
+
+        if($("#emergencyCntcNm").val() == ''){
+            Common.alert("Please key  in Emergency Contact Name");
+            return false;
+        }
+
+   	  var regIncEmerngcyCntcNo = /^[0-9]*$/;
+
+   	  if($("#emergencyCntcNo").val() == '') {
+             Common.alert("Please key in Emergency Contact No.");
+             return false;
+         }else{
+       	  if(!regIncEmerngcyCntcNo.test($("#emergencyCntcNo").val())){
+       	        Common.alert("Invalid Emergency Contact No Number");
+       	        return false;
+       	    }
+             if($("#emergencyCntcNo").val().length < 10 || $("#emergencyCntcNo").val().length > 12){
+                 Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLengthMember" />');
+                 return false;
+             }
+             if($("#emergencyCntcNo").val().substring(0,3) == "015"){
+                 Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                 return false;
+             }else if($("#emergencyCntcNo").val().substring(0,2) != "01"){
+                 Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                 return false;
+             }
+         }
     }
 
     return true;
@@ -1302,8 +1490,20 @@ function autofilledbyNRIC(){
 
         if (parseInt(autoGender)%2 == 0) {
             $("input:radio[name='gender']:radio[value='F']").prop("checked", true);
+            $('.chkScarft').show();
+//             $('#muslimahScarftYes').show();
+//             $('#muslimahScarftNo').show();
+            $('#muslimahScarftLbl').show();
+            $('#innerType').show();
+            $('#innerTypeLbl').show();
         } else {
             $("input:radio[name='gender']:radio[value='M']").prop("checked", true);
+            $('.chkScarft').hide();
+//             $('#muslimahScarftYes').hide();
+//             $('#muslimahScarftNo').hide();
+            $('#muslimahScarftLbl').hide();
+            $('#innerType').hide();
+            $('#innerTypeLbl').hide();
         }
 
         if (parseInt(autoDOB_year) < 20) {
@@ -1336,6 +1536,12 @@ function fn_onchangeMarrital() {
 function fn_checkMobileNo() {
     if(event.keyCode == 13) {
         fmtNumber("#mobileNo");
+    }
+}
+
+function fn_checkEmergencyCntcNo() {
+    if(event.keyCode == 13) {
+        fmtNumber("#emergencyCntcNo");
     }
 }
 
@@ -1411,6 +1617,417 @@ function checkBankAccNo() {
     }
 }
 
+function fn_changeDetails(){
+    var uniformSizeId;
+    var muslimahScarftId;
+    var innerTypeId;
+
+    if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+
+    	 if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" ) {
+    		 if($("#cmbRace").val() == "10"){
+    		        innerTypeId = 524 ;
+    		        uniformSizeId = 522 ;
+    		 }
+    		 uniformSizeId = 522 ;
+
+    	 }else{
+    		 uniformSizeId = 523 ;
+    	 }
+
+    }
+
+    CommonCombo.make("uniformSize", "/common/selectUniformSizeList.do", {groupCode : uniformSizeId}, "", {
+        id: "codeId",
+        name: "codeName",
+        type:"S"
+    });
+
+    CommonCombo.make("innerType", "/common/selectInnerTypeList.do", {groupCode : innerTypeId}, "", {
+        id: "codeId",
+        name: "codeName",
+        type:"S"
+    });
+
+    if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+	    	$('#uniformSize').show();
+	    	$('#uniformSizeLbl').show();
+	    	$('#emergencyTabHeader').show();
+	    	$('#emergencyTabDetails').show();
+	    	$("#attachmentTab").show();
+	    	$('.chkScarft').hide();
+            $('#muslimahScarftLbl').hide();
+            $('#innerType').hide();
+            $('#innerTypeLbl').hide();
+        if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" && $("#cmbRace").val() == "10" ) {
+        	 $('.chkScarft').show();
+	        $('#muslimahScarftLbl').show();
+	        $('#innerType').show();
+	        $('#innerTypeLbl').show();
+            }else
+                {
+	            	$('#innerType').hide();
+	                $('#innerTypeLbl').hide();
+	                $('.chkScarft').hide();
+	                $('#muslimahScarftLbl').hide();
+            	}
+        }else
+            {
+        	    $("#attachmentTab").hide();
+        	    myFileCaches = {};
+	        	$('#uniformSize').hide();
+	            $('#uniformSizeLbl').hide();
+	            $('.chkScarft').hide();
+	            $('#muslimahScarftLbl').hide();
+	            $('#innerType').hide();
+	            $('#innerTypeLbl').hide();
+	            $('#emergencyTabHeader').hide();
+	            $('#emergencyTabDetails').hide();
+            }
+}
+
+$(function(){
+    $('#codyAppFile').change(function(evt) {
+
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[1] != null){
+            delete myFileCaches[1];
+        }else if(file != null){
+            myFileCaches[1] = {file:file};
+        }
+
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[1].file['checkFileValid'] = false;
+            delete myFileCaches[1];
+            $('#codyAppFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[1].file['checkFileValid'] = true;
+        }
+    });
+
+    $('#nricCopyFile').change(function(evt) {
+
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[2] != null){
+            delete myFileCaches[2];
+        }else if(file != null){
+            myFileCaches[2] = {file:file};
+        }
+
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[2].file['checkFileValid'] = false;
+            delete myFileCaches[2];
+            $('#nricCopyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[2].file['checkFileValid'] = true;
+        }
+
+    });
+    $('#driveCopyFile').change(function(evt) {
+
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[3] != null){
+            delete myFileCaches[3];
+        }else if(file != null){
+            myFileCaches[3] = {file:file};
+        }
+
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[3].file['checkFileValid'] = false;
+            delete myFileCaches[3];
+            $('#driveCopyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[3].file['checkFileValid'] = true;
+        }
+
+    });
+    $('#bankStateCopyFile').change(function(evt) {
+
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[4] != null){
+            delete myFileCaches[4];
+        }else if(file != null){
+            myFileCaches[4] = {file:file};
+        }
+
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[4].file['checkFileValid'] = false;
+            delete myFileCaches[4];
+            $('#bankStateCopyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[4].file['checkFileValid'] = true;
+        }
+    });
+    $('#vaccDigCertFile').change(function(evt) {
+
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[5] != null){
+            delete myFileCaches[5];
+        }else if(file != null){
+            myFileCaches[5] = {file:file};
+        }
+
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[5].file['checkFileValid'] = false;
+            delete myFileCaches[5];
+            $('#vaccDigCertFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[5].file['checkFileValid'] = true;
+        }
+    });
+    $('#fileName').change(function(evt) {
+
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[6] != null){
+            delete myFileCaches[6];
+        }else if(file != null){
+        	myFileCaches[6] = {file:file};
+        }
+
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg'){
+            msg += "*Only allow attachment format (JPG, JPEG).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[6].file['checkFileValid'] = false;
+            delete myFileCaches[6];
+            $('#fileName').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[6].file['checkFileValid'] = true;
+        }
+    });
+    $('#codyPaCopyFile').change(function(evt) {
+    	var msg = '';
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[7] != null){
+        	msg += "*Not Allowed to Upload.<br>";
+        }else if(file != null){
+        	myFileCaches[7] = {file:file};
+        	msg += "*Not Allowed to Upload.<br>";
+        }
+
+        if(msg != null && msg != ''){
+        	myFileCaches[7].file['checkFileValid'] = false;
+            delete myFileCaches[7];
+            $('#codyPaCopyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[7].file['checkFileValid'] = true;
+        }
+
+    });
+    $('#compConsCodyFile').change(function(evt) {
+    	var msg = '';
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[8] != null){
+            msg += "*Not Allowed to Upload.<br>";
+        }else if(file != null){
+            myFileCaches[8] = {file:file};
+            msg += "*Not Allowed to Upload.<br>";
+        }
+
+        if(msg != null && msg != ''){
+        	myFileCaches[8].file['checkFileValid'] = false;
+            delete myFileCaches[8];
+            $('#compConsCodyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[8].file['checkFileValid'] = true;
+        }
+
+    });
+    $('#codyExtCheckFile').change(function(evt) {
+    	var msg = '';
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[9] != null){
+            msg += "*Not Allowed to Upload.<br>";
+        }else if(file != null){
+            myFileCaches[9] = {file:file};
+            msg += "*Not Allowed to Upload.<br>";
+        }
+
+        if(msg != null && msg != ''){
+            myFileCaches[9].file['checkFileValid'] = false;
+            delete myFileCaches[9];
+            $('#codyExtCheckFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[9].file['checkFileValid'] = true;
+        }
+    });
+});
+
+function fn_removeFile(name){
+    if(name == "CAF") {
+         $("#codyAppFile").val("");
+         $('#codyAppFile').change();
+	}else if(name == "NRIC") {
+	    $("#nricCopyFile").val("");
+	    $('#nricCopyFile').change();
+	}else if(name == "DLC") {
+	   $("#driveCopyFile").val("");
+	   $('#driveCopyFile').change();
+	}else if(name == "BPSC") {
+	   $("#bankStateCopyFile").val("");
+	   $('#bankStateCopyFile').change();
+	}else if(name == "VDC") {
+	   $("#vaccDigCertFile").val("");
+	   $('#vaccDigCertFile').change();
+	}else if(name == "PSP") {
+	    $("#fileName").val("");
+	    $('#fileName').change();
+	}else if(name == "CPC") {
+	    $("#codyPaCopyFile").val("");
+	    $('#codyPaCopyFile').change();
+	}else if(name == "CCCI") {
+	    $("#compConsCodyFile").val("");
+	    $('#compConsCodyFile').change();
+	}else if(name == "CEC") {
+	    $("#codyExtCheckFile").val("");
+	    $('#codyExtCheckFile').change();
+	}
+}
+
+function fn_validFile() {
+    var isValid = true, msg = "";
+    if(FormUtil.isEmpty($('#codyAppFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Cody Application File<br>";
+    }
+    if(FormUtil.isEmpty($('#nricCopyFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of NRIC<br>";
+    }
+    if(FormUtil.isEmpty($('#driveCopyFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Driving License<br>";
+    }
+    if(FormUtil.isEmpty($('#bankStateCopyFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Bank Passbook/Statement<br>";
+    }
+    if(FormUtil.isEmpty($('#vaccDigCertFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Vaccination Digital Certificate<br>";
+    }
+    if(FormUtil.isEmpty($('#fileName').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Passport Size Photo<br>";
+    }
+    if(FormUtil.isNotEmpty($('#codyPaCopyFile').val().trim())) {
+        isValid = false;
+        msg += "* Not allowed to upload Cody PA<br>";
+    }
+    if(FormUtil.isNotEmpty($('#compConsCodyFile').val().trim())) {
+        isValid = false;
+        msg += "* Not allowed to upload Cody Consignment<br>";
+    }
+    if(FormUtil.isNotEmpty($('#codyExtCheckFile').val().trim())) {
+        isValid = false;
+        msg += "* Not allowed to upload Cody Exist Checklist<br>";
+    }
+
+    $.each(myFileCaches, function(i, j) {
+         if(myFileCaches[i].file.checkFileValid == false){
+             isValid = false;
+            msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
+        }
+    });
+
+    if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+    return isValid;
+}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1439,7 +2056,8 @@ function checkBankAccNo() {
 <input type="hidden" id="subDept" name="subDept">
 <input type="hidden" id="userType" name="userType" value="${userType}">
 <input type="hidden" id="memType" name="memType" value="${memType}">
-
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
+<input type="hidden" id="atchFileId" name="atchFileId">
 <!--<input type="hidden" id = "memberType" name="memberType"> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1451,7 +2069,7 @@ function checkBankAccNo() {
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="w100p" id="memberType" name="memberType">
+    <select class="w100p" id="memberType" name="memberType" onchange = "fn_changeDetails()">
         <!-- <option value="1">Health Planner (HP)</option> -->
      <%--    <option value="2">Coway Lady (Cody)</option>
         <option value="3">Coway Technician (CT)</option>--%>
@@ -1468,8 +2086,9 @@ function checkBankAccNo() {
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">Spouse Info</a></li>
-    <li><a href="#">Document Submission</a></li>
     <li><a href="#">Member Address</a></li>
+    <li><a href="#">Document Submission</a></li>
+    <li id="attachmentTab" style="display:none;"><a href="#">Attachment</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1507,8 +2126,8 @@ function checkBankAccNo() {
 <tr>
     <th scope="row">Gender<span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="gender" id="gender" value="M" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="gender" value="F"/><span>Female</span></label>
+    <label><input type="radio" name="gender" id="gender" value="M" onchange = "fn_changeDetails()" /><span>Male</span></label>
+    <label><input type="radio" name="gender" id="gender" value="F" onchange = "fn_changeDetails()" /><span>Female</span></label>
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
@@ -1516,7 +2135,7 @@ function checkBankAccNo() {
     </td>
     <th scope="row">Race<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmbRace" name="cmbRace">
+    <select class="w100p" id="cmbRace" name="cmbRace"  onchange = "fn_changeDetails()">
          <option value="">Choose One</option>
         <c:forEach var="list" items="${race}" varStatus="status">
             <option value="${list.detailcodeid}">${list.detailcodename } </option>
@@ -1727,7 +2346,7 @@ function checkBankAccNo() {
 <tr id = "trTrainee" >
     <th scope="row">Trainee Type </th>
     <td colspan="2">
-        <select class= "w100p" id="traineeType1" name="traineeType1">
+        <select class= "w100p" id="traineeType1" name="traineeType1" onchange = "fn_changeDetails()">
         <option value="">Choose One</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
@@ -1759,6 +2378,31 @@ function checkBankAccNo() {
         </c:forEach>  --%>
     </select>
     </td>
+</tr>
+<tr>
+    <th scope="row"  id = "uniformSizeLbl">Uniform Size<span class="must">*</span></th>
+    <td colspan="2">
+    <select class="w100p" id="uniformSize" name="uniformSize"  >
+            <option value="">Choose One</option>
+    </select>
+    </td>
+    <th scope="row" id = "muslimahScarftLbl">Muslimah Scarft<span class="must">*</span></th>
+    <td colspan="2">
+        <label class="chkScarft"><input type="radio" id="muslimahScarftYes" name="muslimahScarft" value="Y"/><span>Y</span></label>
+        <label class="chkScarft"><input type="radio" id="muslimahScarftNo" name="muslimahScarft" value="N"/><span>N</span></label>
+    </select>
+    </td>
+</tr>
+<tr>
+<th scope="row"></th>
+   <td colspan="2">
+   </td>
+<th scope="row" id = "innerTypeLbl">Inner<span class="must">*</span></th>
+   <td colspan="2">
+    <select class="w100p" id="innerType" name="innerType">
+             <option value="">Choose One</option>
+    </select>
+   </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1814,6 +2458,39 @@ function checkBankAccNo() {
     <td>
     <select class="w100p" id="language" name="language">
     </select>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line" id="emergencyTabHeader"><!-- title_line start -->
+<h2>Emergency Contact</h2>
+</aside><!-- title_line end -->
+
+<table class="type1" id="emergencyTabDetails"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Name <span class="must">*</span></th>
+    <td colspan="3">
+        <input type="text" title="" id="emergencyCntcNm" name="emergencyCntcNm" placeholder="Emergency Contact Name" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.initial" /><span class="must">*</span></th>
+    <td>
+        <select class="w100p" id="_cmbInitials_" name="cmbInitials"></select>
+    </td>
+    <th scope="row">Contact No<span class="must">*</span></th>
+    <td>
+        <input type="text" title="" placeholder="Numeric Only" class="w100p" id="emergencyCntcNo" name="emergencyCntcNo" maxlength="11" onKeyDown="fn_checkEmergencyCntcNo()"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
 </tbody>
@@ -1918,17 +2595,6 @@ function checkBankAccNo() {
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-<div id="grid_wrap_doc" style="width: 100%; height:430px; margin: 0 auto;"></div>
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
-</article><!-- tap_area end -->
-
-
-</form>
-<article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Installation Address</h2>
@@ -1946,47 +2612,46 @@ function checkBankAccNo() {
     </colgroup>
          <tbody>
             <tr>
-                <th scope="row">Area search<span class="must">*</span></th>
+                <th scope="row" >Address Line 1<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p"  maxlength="50"/>
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Address Detail<span class="must">*</span></th>
+                <th scope="row" >Address Line 2<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  maxlength="50"/>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" >Street</th>
-                <td colspan="3">
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Street" class="w100p" maxlength="50"/>
-                </td>
-            </tr>
-            <tr>
-               <th scope="row">Area(4)<span class="must">*</span></th>
-                <td colspan="3">
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
-                </td>
-            </tr>
-            <tr>
-                 <th scope="row">City(2)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
-                </td>
-                <th scope="row">PostCode(3)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p" maxlength="50"/>
                 </td>
             </tr>
             <tr>
                 <th scope="row">State(1)<span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                <select class="w100p" id="mState"  name="mState" placeholder="eg. SABAH" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
                 <th scope="row">Country<span class="must">*</span></th>
                 <td>
-                <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                <input type="text" title="" id="mCountry" name="mCountry" placeholder="eg. MALAYSIA" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                </td>
+            </tr>
+
+            <tr>
+                 <th scope="row">City(2)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mCity"  name="mCity" placeholder="eg. KOTA KINABALU" onchange="javascript : fn_selectCity(this.value)"></select>
+                </td>
+                <th scope="row">PostCode(3)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mPostCd"  name="mPostCd" placeholder="eg. 88450" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Area search<span class="must">*</span></th>
+                <td >
+                <input type="text" title="" id="searchSt" name="searchSt" placeholder="eg. TAMAN RIMBA" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
+               <th scope="row">Area(4)<span class="must">*</span></th>
+                <td >
+                <select class="w100p" id="mArea"  name="mArea" placeholder="eg. TAMAN RIMBA" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
         </tbody>
@@ -1998,6 +2663,148 @@ function checkBankAccNo() {
 </ul>
 
 </article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+<div id="grid_wrap_doc" style="width: 100%; height:430px; margin: 0 auto;"></div>
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+</ul>
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+<h2>Attachment</h2>
+<table class="type1 mt10" id="attachmentDiv"><!-- table start -->
+<colgroup>
+    <col style="width:190px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Cody Application Form<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyAppFile" accept="application/pdf"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("CAF")'>Remove</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">NRIC Copy<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Driving License Copy<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("DLC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Bank Passbook / Statement Copy<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("BPSC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Vaccination Digital Certificate<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2 ">
+            <input type="file" title="file add" id="vaccDigCertFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' accept="application/pdf"/>
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("VDC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Passport Size Photo (white background)<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+    <div class="auto_file2" >
+    <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg"/>
+        <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("PSP")'>Remove</a></span>
+        </label>
+    </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody PA Copy</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyPaCopyFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("CPC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Company Consigment Cody Item, Tools, Filter Stock, Spare part</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="compConsCodyFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
+                <span class='label_text' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody Exit Checklist</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyExtCheckFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
+                <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("CEC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</article><!-- tap_area end -->
+
+</form>
 
 </section><!-- tap_wrap end -->
 
