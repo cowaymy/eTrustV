@@ -375,6 +375,15 @@ function fn_excelDown(){
     GridCommon.exportTo("list_grid_wrap", "xlsx", "Care Service Order");
 }
 
+function changeToUpperCase(el) {
+	el.value =el.value.toUpperCase();
+}
+
+function changeToTrimUpperCase(el)
+{
+    el.value =el.value.trim().toUpperCase();
+}
+
 
 </script>
 
@@ -413,8 +422,8 @@ function fn_excelDown(){
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
-        <input type="hidden" name="memType" id="memType" value="${memType }"/>
-    <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
+        <input type="hidden" name="memType" id="memType" value="${memType}"/>
+    <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode}"/>
     <input type="hidden" name="memCode" id="memCode" />
 
 <table class="type1"><!-- table start -->
@@ -431,7 +440,7 @@ function fn_excelDown(){
 <tr>
     <th scope="row">Service Order No.</th>
     <td>
-    <input id="listOrdNo" name="ordNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
+    <input id="listOrdNo" name="ordNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p"/>
     </td>
     <th scope="row"><spring:message code='sales.AppType2'/></th>
     <td>
@@ -471,7 +480,7 @@ function fn_excelDown(){
     </td>
     <th scope="row"><spring:message code='sales.Creator'/></th>
     <td>
-    <input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
+    <input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" onkeyup="changeToUpperCase(this)"/>
     </td>
 </tr>
 <tr>
@@ -481,7 +490,7 @@ function fn_excelDown(){
     </td>
     <th scope="row"><spring:message code='sales.cusName'/></th>
     <td>
-    <input id="listCustName" name="custName" type="text" title="Customer Name" placeholder="<spring:message code='sales.cusName'/>" class="w100p" />
+    <input id="listCustName" name="custName" type="text" title="Customer Name" placeholder="<spring:message code='sales.cusName'/>" class="w100p" onkeyup="changeToUpperCase(this)"/>
     </td>
     <th scope="row"><spring:message code='sales.NRIC2'/></th>
     <td>
@@ -513,11 +522,11 @@ function fn_excelDown(){
 
     <th scope="row"><spring:message code='sales.salesman'/></th>
     <td>
-    <input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="<spring:message code='sales.salesman'/>" class="w100p" />
+    <input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="<spring:message code='sales.salesman'/>" class="w100p"  onkeyup="changeToUpperCase(this)"/>
     </td>
     <th scope="row"><spring:message code='sales.refNo3'/></th>
     <td>
-    <input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="<spring:message code='sales.refNo3'/>" class="w100p" />
+    <input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="<spring:message code='sales.refNo3'/>" class="w100p" onkeyup="changeToUpperCase(this)"/>
     </td>
     <th scope="row"><spring:message code='sales.ContactNo'/></th>
     <td>
@@ -528,25 +537,25 @@ function fn_excelDown(){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
-    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
+    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode}" placeholder="Organization Code" class="w100p" onkeyup="changeToTrimUpperCase(this)"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
     <td>
-    <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
+    <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" onkeyup="changeToTrimUpperCase(this)""/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
     <td>
-    <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
+    <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" onkeyup="changeToTrimUpperCase(this)"/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='sales.poNum'/></th>
     <td>
-    <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
+    <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" onkeyup="changeToUpperCase(this)"/>
     </td>
     <th scope="row"><spring:message code='sales.promoCd'/></th>
     <td>
-    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
+    <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" onkeyup="changeToUpperCase(this)"/>
     </td>
 
 </tr>
