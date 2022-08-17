@@ -22,20 +22,19 @@
                   #{item.0},
                   regexp_replace(#{item.1}, '(\d+)\.(\d+)(\d)(.+)', '\1\2'),
                   #{item.5},
-                  REGEXP_REPLACE(#{item.6}, '[^a-zA-Z/ ]', ''),
+                  #{item.6},
                   replace(#{item.8},'-',''),
                   TO_CHAR(TO_DATE(#{item.9},'Mon-YY'),'MMYY'),
                   case
                     when #{item.10} = 'Credit Card' then 1241
                     when #{item.10} = 'Debit Card' then 1240
-                  end as Card_Type
-                  ,
+                  end as Card_Type,
                   c1.bank_id,
                   d.crc_type
                   FROM dual a
                   left join sal0029d b on b.cust_id =#{item.0}
                   left join sal0029d b1 on b1.cust_id = #{item.0} and  b1.nric like '%'||regexp_replace(#{item.1}, '(\d+)\.(\d+)(\d)(.+)', '\1\2')||'%'
-                  left join sal0029d b2 on UPPER(trim(b2.name)) =  UPPER(REGEXP_REPLACE(#{item.6}, '[^a-zA-Z/ ]', '')) and b2.cust_id = #{item.0}
+                  left join sal0029d b2 on UPPER(trim(b2.name)) =  #{item.6} and b2.cust_id = #{item.0}
                   left join sys0109m c on SELFCARE_BANK_NAME = #{item.11}
                   left join sys0004m c1 on c1.code = c.etrust_bank_name
                   left join (select case
