@@ -327,11 +327,9 @@
 	          else{
 	        	  param = {
 	                      preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
-	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "brnchCode"),
+	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
 	                      preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
 	               }
-
-	        	  console.log(param);
 
 	        	  Common.popupDiv("/services/as/rejectPreASOrder.do", param, null  , true, 'rejectPreASOrderPop');
 	          }
