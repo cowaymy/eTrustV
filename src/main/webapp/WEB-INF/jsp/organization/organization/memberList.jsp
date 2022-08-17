@@ -581,32 +581,53 @@ function createAUIGrid() {
             headerText : "Status",
             editable : false,
             width : 130
-        }, {
+        },
+        {
+            dataField : "uniformSize",
+            headerText : "Uniform Size",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "muslimahScarft",
+            headerText : "Muslimah Scarft",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "innerType",
+            headerText : "Inner Type",
+            editable : false,
+            width : 130
+        },
+        {
             dataField : "testResult",
             headerText : "Test Result",
             editable : false,
             width : 0,
             visible : false
 
-        }, {
+        },
+        {
             dataField : "hpType",
             headerText : "HP Type",
             editable : false,
             width : 130,
             visible : false
-        },{
+        },
+        {
             dataField : "neoProStatus",
             headerText : "Neo Pro",
             editable : false,
             width : 130
         },
-
         {
             dataField : "updated",
             headerText : "Last Update",
             editable : false,
             width : 130
-        }, {
+        },
+        {
             dataField : "lastActDt",
             headerText : "Last Active Date",
             editable : false,

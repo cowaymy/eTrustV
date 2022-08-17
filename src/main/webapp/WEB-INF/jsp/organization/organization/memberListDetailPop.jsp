@@ -29,7 +29,7 @@ var vaccDigCertFileName = "";
 var fileNameName = "";
 var codyPaCopyFileName = "";
 var compConsCodyFileName = "";
-var compConsCodyFileName = "";
+var codyExtCheckFileName = "";
 var myFileCaches = {};
 var checkFileValid = true;
 
@@ -48,9 +48,15 @@ console.log("ter-res-pro-dem pop");
 
     if(($("#memtype").val() == 5 && "${memberView.traineeType}"  == 2) || ($("#memtype").val() == 2)){
         $("#attachmentTab").show();
+        $('#emergencyTabHeader').show();
+        $('#emergencyTabDetails').show();
         if( "${memberView.atchFileGrpIdDoc}" != 0 &&  "${memberView.atchFileGrpIdDoc}" != null){
         	  fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
        }
+    }else{
+    	$("#attachmentTab").hide();
+        $('#emergencyTabHeader').hide();
+        $('#emergencyTabDetails').hide();
     }
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
@@ -921,13 +927,10 @@ $("#HP_img").dblclick(function(){
            var fileSubPath = result.fileSubPath;
            fileSubPath = fileSubPath.replace('\', '/'');
 
-           if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
-               console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-               window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-           } else {
+
                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-           }
+
        });
    }
 </script>
@@ -1364,6 +1367,38 @@ $("#HP_img").dblclick(function(){
     <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
 </ul>
  --%>
+
+<aside class="title_line" id="emergencyTabHeader"><!-- title_line start -->
+<h2>Emergency Contact</h2>
+</aside><!-- title_line end -->
+
+<table class="type1" id="emergencyTabDetails"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Name</th>
+    <td colspan="3">
+        <span><c:out value="${memberView.emrgcyCntcName}"/></span>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
+    <td>
+        <span><c:out value="${memberView.emrgcyCntcInit}"/></span>
+    </td>
+    <th scope="row">Contact No</th>
+    <td>
+        <span><c:out value="${memberView.emrgcyCntcNo}"/></span>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->

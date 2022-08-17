@@ -150,7 +150,14 @@ SELECT row_number,
              project1.VACCINE_STATUS,
              project1.REASON_ID,
              project1.NEO_PRO_STATUS,
-             project1.HP_TYPE
+             project1.HP_TYPE,
+             project1.ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID_DOC,
+			project1.UNIFORM_SIZE,
+			project1.MUSLIMAH_SCARFT,
+			project1.INNER_TYPE,
+			project1.EMRGCY_CNTC_NAME,
+			project1.EMRGCY_CNTC_NO,
+			project1.EMRGCY_CNTC_INIT
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
@@ -181,7 +188,14 @@ SELECT row_number,
 
 
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number,
-                     project1.HP_TYPE
+                     project1.HP_TYPE,
+                     project1.ATCH_FILE_GRP_ID ,
+		            project1.UNIFORM_SIZE,
+		            project1.MUSLIMAH_SCARFT,
+		            project1.INNER_TYPE,
+		            project1.EMRGCY_CNTC_NAME,
+		            project1.EMRGCY_CNTC_NO,
+		            project1.EMRGCY_CNTC_INIT
 
                      FROM ( SELECT DISTINCT
                     GroupBy1.A1 C1,
@@ -231,7 +245,14 @@ SELECT row_number,
                     V.VACCINE_STATUS,
                     V.REASON_ID,
                     CASE WHEN Extent16.HP_CODE is not null THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS,
-                    extent17.code_name HP_TYPE
+                    extent17.code_name HP_TYPE,
+                    Extent1.ATCH_FILE_GRP_ID,
+		            Extent1.UNIFORM_SIZE,
+		            Extent1.MUSLIMAH_SCARFT,
+		            Extent1.INNER_TYPE,
+		            Extent1.EMRGCY_CNTC_NAME,
+		            Extent1.EMRGCY_CNTC_NO,
+		            Extent1.EMRGCY_CNTC_INIT
 
                     FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -640,7 +661,13 @@ SELECT row_number,
        ,Limit1.INC_TAX,
        Limit1.FB_LINK,
        Limit1.IG_LINK,
-       Limit1.ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID_DOC
+       Limit1.ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID_DOC,
+       Limit1.UNIFORM_SIZE,
+       Limit1.MUSLIMAH_SCARFT,
+       Limit1.INNER_TYPE,
+       Limit1.EMRGCY_CNTC_NAME,
+       Limit1.EMRGCY_CNTC_NO,
+       Limit1.EMRGCY_CNTC_INIT
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -988,7 +1015,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 ,Extent1.INC_TAX,
                 Extent1.FB_LINK,
                 Extent1.IG_LINK,
-                Extent1.ATCH_FILE_GRP_ID
+                Extent1.ATCH_FILE_GRP_ID,
+                Extent1.UNIFORM_SIZE,
+				Extent1.MUSLIMAH_SCARFT,
+				Extent1.INNER_TYPE,
+				Extent1.EMRGCY_CNTC_NAME,
+				Extent1.EMRGCY_CNTC_NO,
+				Extent1.EMRGCY_CNTC_INIT
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
