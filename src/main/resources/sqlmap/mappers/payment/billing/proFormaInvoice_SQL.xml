@@ -154,4 +154,18 @@
         WHERE PRO_FORMA_ID = #{proFormaId}
       </update>
 
+    <select id="chkProForma" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SALES_ORD_ID,
+            B.STUS_ID PROFORMA_STUS,
+            C.NAME STUS_NAME,
+            TO_CHAR(B.ADV_START_DT, 'DD/MM/YYYY') ADV_START_DT,
+            TO_CHAR(B.ADV_END_DT, 'DD/MM/YYYY') ADV_END_DT
+        FROM SAL0001D A
+        JOIN PAY0334D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+        LEFT JOIN SYS0038M C ON B.STUS_ID = C.STUS_CODE_ID
+        WHERE 1=1
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+
 </mapper>

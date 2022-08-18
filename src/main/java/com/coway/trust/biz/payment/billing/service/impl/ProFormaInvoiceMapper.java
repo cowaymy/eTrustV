@@ -18,4 +18,6 @@ public interface ProFormaInvoiceMapper {
     void saveNewProForma(Map<String, Object> params);
 
     void farCheckConvertFn(Map<String, Object> params);
+
+    List<EgovMap> chkProForma(Map<String, Object> params);
 }

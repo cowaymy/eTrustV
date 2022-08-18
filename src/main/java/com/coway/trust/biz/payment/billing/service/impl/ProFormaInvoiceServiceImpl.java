@@ -55,4 +55,9 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 
 		 logger.debug("================farCheckConvertFn - END ================");
 	  }
+
+	@Override
+	public List<EgovMap> chkProForma(Map<String, Object> params) {
+		return proFormaInvoiceMapper.chkProForma(params);
+	}
 }

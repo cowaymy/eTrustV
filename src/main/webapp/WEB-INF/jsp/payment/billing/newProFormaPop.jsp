@@ -20,6 +20,7 @@ var resultSrvconfigObject;
 var resultInstallationObject;
 var defaultcTPackage = "9";
 var myGridIDBillGroup;
+var orderArr = [];
 
 var columnLayoutBill =[
                        {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
@@ -40,7 +41,11 @@ var columnLayoutBill =[
                                     labelText : "Select",
                                     onclick : function(rowIndex, columnIndex, value, item) {
                                         $("#orderId").val(item.salesOrdId);
+                                        if (fn_chkProForma(item.salesOrdId)) {
+                                            return;
+                                        }
                                         fn_SelectPO(item.salesOrdId);
+
                                   }
                            }
                        }
@@ -681,14 +686,10 @@ $(document).ready(function(){
 
             Common.ajax("POST", "/payment/saveNewProForma.do", saveForm,
                       function(result) {
-                        Common.alert(result.message, fn_saveclose);
+                        Common.alert(result.message);
                         $("#popup_wrap").remove();
                         fn_selectListAjax();
             });
-    }
-
-    function fn_saveclose() {
-        newProFormaPopupId.remove();
     }
 
     function fn_loadOrderPO(orderId){
@@ -718,6 +719,35 @@ $(document).ready(function(){
              $("#sale_searchbt").hide();
              fn_goSalesConfirm();
          }
+    }
+
+    function fn_chkProForma(){
+    	 var rtnVAL = false;
+
+         Common.ajaxSync("GET", "/payment/chkProForma", {
+             ordNo : $("#ORD_NO").val()
+         }, function(result) {
+
+        	 var today = new Date();
+        	 var startDt = result[0].advStartDt;
+        	 var endDt = result[0].advEndDt;
+
+        	 today = Date.parse(today);
+        	 var parseStart = Date.parse(startDt);
+        	 var parseEnd = Date.parse(endDt);
+
+        	 if((today <= parseEnd && today >= parseStart)) {
+        		 rtnVAL = true;
+                 Common.alert("This order is still within the date of invoice period <br /> Invoice Period: " + result[0].advStartDt + " - " + result[0].advEndDt);
+                 return true;
+        	 }
+        	 else if(result[0].proformaStus != "5" || result[0].proformaStus != "8"){ //invoice generated or inactive
+                     rtnVAL = true;
+                     Common.alert("This order is already created Pro-Forma Invoice and under " + result[0].stusName + " status");
+                     return true;
+             }
+         });
+         return rtnVAL;
     }
 </script>
 

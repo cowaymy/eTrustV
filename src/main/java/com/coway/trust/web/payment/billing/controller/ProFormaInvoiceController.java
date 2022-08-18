@@ -205,4 +205,16 @@ public class ProFormaInvoiceController {
 	    return ResponseEntity.ok(message);
 	  }
 
+	@RequestMapping(value = "/chkProForma", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> chkProForma(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		logger.debug("chkProForma param:" + params.toString());
+		logger.debug("chkProForma end////");
+
+		List<EgovMap> list = proFormaInvoiceService.chkProForma(params);
+
+		return ResponseEntity.ok(list);
+	}
+
 }
