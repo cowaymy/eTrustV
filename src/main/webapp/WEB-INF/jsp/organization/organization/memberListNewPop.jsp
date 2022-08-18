@@ -961,7 +961,7 @@ var gridPros = {
 
 //Validation Check
 function fn_saveValidation(){
-console.log("validation");
+
 var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if($("#memberNm").val() == ''){
         Common.alert("Please key  in Member Name");
@@ -1736,8 +1736,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -1769,8 +1769,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -1802,8 +1802,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -1866,8 +1866,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg'){
-            msg += "*Only allow attachment format (JPG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, JPEG,PNG,PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -2707,7 +2707,7 @@ function fn_validFile() {
     <th scope="row">NRIC Copy<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2720,7 +2720,7 @@ function fn_validFile() {
     <th scope="row">Driving License Copy<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2733,7 +2733,7 @@ function fn_validFile() {
     <th scope="row">Bank Passbook / Statement Copy<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2759,7 +2759,7 @@ function fn_validFile() {
     <th scope="row">Passport Size Photo (white background)<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
     <div class="auto_file2" >
-    <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg"/>
+    <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg,application/pdf"/>
         <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2772,7 +2772,7 @@ function fn_validFile() {
     <th scope="row">Cody PA Copy</th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="codyPaCopyFile"/>
+            <input type="file" title="file add" id="codyPaCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2785,7 +2785,7 @@ function fn_validFile() {
     <th scope="row">Company Consigment Cody Item, Tools, Filter Stock, Spare part</th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="compConsCodyFile"/>
+            <input type="file" title="file add" id="compConsCodyFile" accept="image/jpg, image/jpeg,application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
@@ -2798,7 +2798,7 @@ function fn_validFile() {
     <th scope="row">Cody Exit Checklist</th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="codyExtCheckFile"/>
+            <input type="file" title="file add" id="codyExtCheckFile" accept="image/jpg, image/jpeg,application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
