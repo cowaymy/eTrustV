@@ -687,7 +687,6 @@ $(document).ready(function(){
             Common.ajax("POST", "/payment/saveNewProForma.do", saveForm,
                       function(result) {
                         Common.alert(result.message);
-                        $("#popup_wrap").remove();
                         fn_selectListAjax();
             });
     }
@@ -727,25 +726,30 @@ $(document).ready(function(){
          Common.ajaxSync("GET", "/payment/chkProForma", {
              ordNo : $("#ORD_NO").val()
          }, function(result) {
+        	 console.log(result.length);
+
+            if(result.length > 0){
+                console.log(result[0]);
 
         	 var today = new Date();
-        	 var startDt = result[0].advStartDt;
-        	 var endDt = result[0].advEndDt;
+             var startDt = result[0].advStartDt;
+             var endDt = result[0].advEndDt;
 
-        	 today = Date.parse(today);
-        	 var parseStart = Date.parse(startDt);
-        	 var parseEnd = Date.parse(endDt);
+             today = Date.parse(today);
+             var parseStart = Date.parse(startDt);
+             var parseEnd = Date.parse(endDt);
 
-        	 if((today <= parseEnd && today >= parseStart)) {
-        		 rtnVAL = true;
-                 Common.alert("This order is still within the date of invoice period <br /> Invoice Period: " + result[0].advStartDt + " - " + result[0].advEndDt);
-                 return true;
-        	 }
-        	 else if(result[0].proformaStus != "5" || result[0].proformaStus != "8"){ //invoice generated or inactive
+
+        		 if((today <= parseEnd && today >= parseStart)) {
                      rtnVAL = true;
+                     Common.alert("This order is still within the date of invoice period <br /> Invoice Period: " + result[0].advStartDt + " - " + result[0].advEndDt);
+                     return true;
+        		 }else{
+        			 rtnVAL = true;
                      Common.alert("This order is already created Pro-Forma Invoice and under " + result[0].stusName + " status");
                      return true;
-             }
+        		 }
+        	 }
          });
          return rtnVAL;
     }
