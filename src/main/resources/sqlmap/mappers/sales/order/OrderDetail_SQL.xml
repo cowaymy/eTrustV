@@ -1421,7 +1421,7 @@ SELECT T.BANK_DTL_ID
                             THEN M.CHS_RSN ELSE '-' END AS PREV_4_MONTH
                         , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND M.CHS_STUS = 'YELLOW'
                             THEN M.CHS_RSN ELSE '-' END AS PREV_5_MONTH
-               FROM SAL0264D M
+               FROM SAL0262D M
                JOIN SAL0001D SOM ON M.CUST_ID = SOM.CUST_ID
                WHERE SOM.SALES_ORD_ID = #{salesOrdId}
                    AND TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM')
