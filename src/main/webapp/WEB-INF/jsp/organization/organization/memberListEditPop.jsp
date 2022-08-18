@@ -1750,8 +1750,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -1786,8 +1786,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -1822,8 +1822,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
         }
 
         if(file.size > 2000000){

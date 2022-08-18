@@ -1866,8 +1866,8 @@ $(function(){
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (JPG, JPEG,PNG,PDF).<br>";
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg'){
+            msg += "*Only allow attachment format (JPG, JPEG).<br>";
         }
 
         if(file.size > 2000000){
