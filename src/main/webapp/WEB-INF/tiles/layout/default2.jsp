@@ -6,6 +6,7 @@
 <html lang="ko">
 <head>
 	<meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="robots" content="noindex">
 	<title>eTrust system</title>
 
     <tiles:insertAttribute name="var" />
