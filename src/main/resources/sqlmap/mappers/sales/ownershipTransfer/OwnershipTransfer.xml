@@ -863,8 +863,10 @@ SELECT
         /* CONTACT INFO */
         JOIN SAL0027D G
             ON B.ROT_CNT_ID = G.CUST_CNTC_ID
+        JOIN SAL0001D GG
+            ON GG.SALES_ORD_ID = A.ROT_ORD_ID
         JOIN SAL0027D G1
-            ON B.ROT_OLD_CUST_ID = G1.CUST_ID AND G1.STUS_CODE_ID = 9
+            ON G1.CUST_CNTC_ID = GG.CUST_CNT_ID
         /* INSTALLATION INFO */
         JOIN SAL0282D H
             ON A.ROT_ID = H.ROT_ID
