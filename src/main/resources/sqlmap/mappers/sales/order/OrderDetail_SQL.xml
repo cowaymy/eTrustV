@@ -1697,17 +1697,17 @@ SELECT T.BANK_DTL_ID
     ORDER BY HSNO.NO
   </select>
 
-<!--   <select id="selectMobileAutoDebitInfo" parameterType="Map" resultType="egovMap"> -->
-<!--         SELECT * FROM (SELECT p0333m.PAD_NO, p0333m.UPT_DT || ' (' || s0047m.USER_NAME || ')' AS UPDATOR -->
-<!-- 	    FROM PAY0333M p0333m -->
-<!-- 	    INNER JOIN SAL0001D s0001d -->
-<!-- 	    ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO -->
-<!--         LEFT JOIN SYS0047M s0047m -->
-<!--         ON s0047m.USER_ID = p0333m.UPT_BY -->
-<!--         WHERE s0001d.SALES_ORD_ID = #{salesOrderId} -->
-<!--         ORDER BY p0333m.CRT_DT DESC) -->
-<!--         WHERE ROWNUM = 1 -->
-<!--   </select> -->
+  <select id="selectMobileAutoDebitInfo" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (SELECT p0333m.PAD_NO, p0333m.UPT_DT || ' (' || s0047m.USER_NAME || ')' AS UPDATOR
+	    FROM PAY0333M p0333m
+	    INNER JOIN SAL0001D s0001d
+	    ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
+        LEFT JOIN SYS0047M s0047m
+        ON s0047m.USER_ID = p0333m.UPT_BY
+        WHERE s0001d.SALES_ORD_ID = #{salesOrderId}
+        ORDER BY p0333m.CRT_DT DESC)
+        WHERE ROWNUM = 1
+  </select>
 
   <select id="selectRenAgrList" parameterType="Map" resultType="egovMap">
     SELECT Project1.GOV_AG_ID   ,
