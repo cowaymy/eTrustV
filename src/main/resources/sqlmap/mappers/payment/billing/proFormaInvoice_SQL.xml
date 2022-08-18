@@ -166,6 +166,7 @@
         LEFT JOIN SYS0038M C ON B.STUS_ID = C.STUS_CODE_ID
         WHERE 1=1
             AND A.SALES_ORD_NO = #{ordNo}
+            AND B.STUS_ID NOT IN (5,8)
     </select>
 
 </mapper>
