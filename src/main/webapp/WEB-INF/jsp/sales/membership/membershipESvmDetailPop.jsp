@@ -799,7 +799,7 @@
             checkResult = false;
             return checkResult;
 
-        } else if(FormUtil.isEmpty($("#specialInstruction").val()) && SpecInstr == 1) {
+        } else if(FormUtil.isEmpty($("#specialInstruction").val()) || SpecInstr == 1) {
             Common.alert('Please choose a Special Instruction.');
             checkResult = false;
             return checkResult;
