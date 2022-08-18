@@ -667,7 +667,8 @@ SELECT row_number,
        Limit1.INNER_TYPE,
        Limit1.EMRGCY_CNTC_NAME,
        Limit1.EMRGCY_CNTC_NO,
-       Limit1.EMRGCY_CNTC_INIT
+       Limit1.EMRGCY_CNTC_INIT,
+       Limit1.EMRGCY_CNTC_RLTSHP
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -1021,7 +1022,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 				Extent1.INNER_TYPE,
 				Extent1.EMRGCY_CNTC_NAME,
 				Extent1.EMRGCY_CNTC_NO,
-				Extent1.EMRGCY_CNTC_INIT
+				Extent34.CODE_NAME EMRGCY_CNTC_INIT,
+				Extent1.EMRGCY_CNTC_RLTSHP
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1067,6 +1069,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 LEFT JOIN SYS0039M Extent32   ON Extent1.STATE = Extent32.AREA_STATE_ID
                     AND Extent1.AREA = Extent32.AREA_ID
                 LEFT JOIN SYS0064M Extent33   ON Extent1.POSTCODE = Extent33.POSTCODE
+                LEFT JOIN SYS0013M Extent34   ON Extent1.EMRGCY_CNTC_INIT = Extent34.CODE_ID AND Extent34.CODE_MASTER_ID = '17'
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
@@ -1336,6 +1339,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
          , EMRGCY_CNTC_NO
          , EMRGCY_CNTC_INIT
          , ATCH_FILE_GRP_ID
+         , EMRGCY_CNTC_RLTSHP
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1406,6 +1410,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              , #{emergencyCntcNo}
              , #{cmbInitials}
              , #{atchFileGrpId}
+             , #{emergencyCntcRelationship}
              )
     </insert>
 

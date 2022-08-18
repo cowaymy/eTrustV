@@ -212,32 +212,23 @@ function fn_saveConfirm(){
 
 	if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
 	    if(fn_validFile()) {
-	    	fn_memberSave();
-			//	      if(fn_saveValidation()){
-			//	         if($("#memberType").val() == 2803){
-			//	             Common.confirm($("#memberNm").val() + "</br>" +
-			//	                                    $("#nric").val() + "</br>" +
-			//	                                    issuedBankTxt + "</br>" +
-			//	                                    "A/C : " + $("#bankAccNo").val() + "</br></br>" +
-			//	                                    "Do you want to save with above information (for commission purpose)?", fn_memberSave);
-			//	         } else {
-			//	             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
-			//	         }
-			//	     }
+			 	      if(fn_saveValidation()){
+				             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+				     }
 	    }
 	}else{
 
-			//     if(fn_saveValidation()){
-			//         if($("#memberType").val() == 2803){
-			//             Common.confirm($("#memberNm").val() + "</br>" +
-			//                                    $("#nric").val() + "</br>" +
-			//                                    issuedBankTxt + "</br>" +
-			//                                    "A/C : " + $("#bankAccNo").val() + "</br></br>" +
-			//                                    "Do you want to save with above information (for commission purpose)?", fn_memberSave);
-			//         } else {
-			//             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
-			//         }
-			//     }
+			     if(fn_saveValidation()){
+			         if($("#memberType").val() == 2803){
+			             Common.confirm($("#memberNm").val() + "</br>" +
+			                                    $("#nric").val() + "</br>" +
+			                                    issuedBankTxt + "</br>" +
+			                                    "A/C : " + $("#bankAccNo").val() + "</br></br>" +
+			                                    "Do you want to save with above information (for commission purpose)?", fn_memberSave);
+			         } else {
+			             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+			         }
+			     }
 	}
 }
 function fn_docSubmission(){
@@ -1201,8 +1192,18 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
             }
         }
 
+        if($("#cmbInitials").val() == ''){
+            Common.alert("Please select  Emergency Contact Initial");
+            return false;
+        }
+
         if($("#emergencyCntcNm").val() == ''){
             Common.alert("Please key  in Emergency Contact Name");
+            return false;
+        }
+
+        if($("#emergencyCntcRelationship").val() == ''){
+            Common.alert("Please key  in Emergency Contact Relationship");
             return false;
         }
 
@@ -2477,20 +2478,26 @@ function fn_validFile() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.initial"/><span class="must">*</span></th>
+    <td colspan="3">
+        <select class="w100p" id="_cmbInitials_" name="cmbInitials"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Name<span class="must">*</span></th>
     <td colspan="3">
         <input type="text" title="" id="emergencyCntcNm" name="emergencyCntcNm" placeholder="Emergency Contact Name" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.initial" /><span class="must">*</span></th>
-    <td>
-        <select class="w100p" id="_cmbInitials_" name="cmbInitials"></select>
-    </td>
     <th scope="row">Contact No<span class="must">*</span></th>
     <td>
         <input type="text" title="" placeholder="Numeric Only" class="w100p" id="emergencyCntcNo" name="emergencyCntcNo" maxlength="11" onKeyDown="fn_checkEmergencyCntcNo()"
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+    </td>
+    <th scope="row">Relationship<span class="must">*</span></th>
+    <td>
+        <input type="text" title="" id="emergencyCntcRelationship" name="emergencyCntcRelationship" placeholder="Relationship" class="w100p" />
     </td>
 </tr>
 </tbody>
@@ -2802,6 +2809,10 @@ function fn_validFile() {
 </tr>
 </tbody>
 </table><!-- table end -->
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+</ul>
 </article><!-- tap_area end -->
 
 </form>

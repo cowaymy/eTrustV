@@ -1382,19 +1382,25 @@ $("#HP_img").dblclick(function(){
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
+    <td colspan="3">
+        <span><c:out value="${memberView.emrgcyCntcInit}"/></span>
+    </td>
+</tr>
+<tr>
     <th scope="row">Name</th>
     <td colspan="3">
         <span><c:out value="${memberView.emrgcyCntcName}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.initial" /></th>
-    <td>
-        <span><c:out value="${memberView.emrgcyCntcInit}"/></span>
-    </td>
     <th scope="row">Contact No</th>
     <td>
         <span><c:out value="${memberView.emrgcyCntcNo}"/></span>
+    </td>
+    <th scope="row">Relationship</th>
+    <td>
+        <span><c:out value="${memberView.emrgcyCntcRltshp}"/></span>
     </td>
 </tr>
 </tbody>
