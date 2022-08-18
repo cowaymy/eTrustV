@@ -2709,7 +2709,7 @@ function fn_removeFile(name){
 				    <th scope="row">NRIC Copy</th>
 				    <td colspan="3" id="attachTd">
 				        <div class="auto_file2">
-				            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+				            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
 				            <label>
 				                <input type='text' class='input_text' readonly='readonly' id="nricCopyFileTxt"/>
 				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
@@ -2722,7 +2722,7 @@ function fn_removeFile(name){
 				    <th scope="row">Driving License Copy</th>
 				    <td colspan="3" id="attachTd">
 				        <div class="auto_file2">
-				            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+				            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
 				            <label>
 				                <input type='text' class='input_text' readonly='readonly' id="driveCopyFileTxt"/>
 				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
@@ -2735,7 +2735,7 @@ function fn_removeFile(name){
 				    <th scope="row">Bank Passbook / Statement Copy</th>
 				    <td colspan="3" id="attachTd">
 				        <div class="auto_file2">
-				            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png"/>
+				            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
 				            <label>
 				                <input type='text' class='input_text' readonly='readonly' id="bankStateCopyFileTxt"/>
 				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
