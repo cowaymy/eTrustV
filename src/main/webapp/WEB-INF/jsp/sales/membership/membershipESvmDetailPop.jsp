@@ -781,7 +781,7 @@
         console.log("SAFlg: " + SAFlg);
         console.log("payMode: " + '${paymentInfo.payMode}');
         console.log("payMode: " + '${preSalesInfo.packageAmt}');
-
+        console.log("ttest111---" + SpecInstr);
         if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
             Common.alert('Please enter SA Reference No.');
             checkResult = false;
@@ -799,12 +799,14 @@
             checkResult = false;
             return checkResult;
 
-        } else if(FormUtil.isEmpty($("#specialInstruction").val()) || SpecInstr == 1) {
-            Common.alert('Please choose a Special Instruction.');
-            checkResult = false;
-            return checkResult;
-
-        } else if($("#action").val() == '5') { //rejected and active with instruction action no need to check transaction ID
+        } else if(($("#action").val() == '1' || $("#action").val() == '6')  && FormUtil.isEmpty($("#specialInstruction").val())){
+        	//if(FormUtil.isEmpty($("#specialInstruction").val()) || SpecInstr == 1) {
+                     Common.alert('Please choose a Special Instruction.');
+                     checkResult = false;
+                     return checkResult;
+           // }
+        }
+        else if($("#action").val() == '5') { //rejected and active with instruction action no need to check transaction ID
             if('${preSalesInfo.packageAmt}' == '0') {
                 Common.alert('Please enter Package Amount.');
                 checkResult = false;
