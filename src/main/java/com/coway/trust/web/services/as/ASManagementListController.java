@@ -1455,10 +1455,14 @@ public class ASManagementListController {
       ModelMap model) {
     logger.debug("===========================/getDftTyp.do===============================");
     logger.debug("== params " + params.toString());
+    logger.debug("== true false " + CommonUtils.nvl(params.get("search4")).toString().equals(null));
 
-    String[] matchMatDefCodeP = params.get("search4").toString().split(",");
 
-    params.put("matchMatDefCodeP", matchMatDefCodeP);
+    if(!CommonUtils.nvl(params.get("search4")).toString().equals("")){
+    	String[] matchMatDefCodeP = params.get("search4").toString().split(",");
+    	params.put("matchMatDefCodeP", matchMatDefCodeP);
+    }
+
     List<EgovMap> dftCde = ASManagementListService.getDftTyp(params);
 
     logger.debug("== dftCde : {}", dftCde);

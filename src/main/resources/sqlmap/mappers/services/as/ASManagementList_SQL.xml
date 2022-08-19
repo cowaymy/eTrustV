@@ -2894,10 +2894,12 @@
 	       A.DEFECT_DESC AS DESCP,
            NVL(A.DEFECT_RMK, '-') AS RMK
     FROM SYS0100M A
-    <if test="callPrgm == 'DP' ">
-    JOIN SVC0131D B ON A.DEFECT_CODE = B.DEF_PART_CODE
-    LEFT JOIN SYS0026M C ON B.MAT_CODE = C.STK_CODE
-    </if>
+    <if test="search4 != null and search4 != '' ">
+	    <if test="callPrgm == 'DP'">
+	    JOIN SVC0131D B ON A.DEFECT_CODE = B.DEF_PART_CODE
+	    LEFT JOIN SYS0026M C ON B.MAT_CODE = C.STK_CODE
+	    </if>
+     </if>
     WHERE A.DEFECT_TYP = #{callPrgm}
       AND A.PROD_CAT IN ('*', (SELECT B.CODE
                             FROM SYS0026M A
