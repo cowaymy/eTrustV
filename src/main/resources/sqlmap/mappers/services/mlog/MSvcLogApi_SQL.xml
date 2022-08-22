@@ -2504,7 +2504,7 @@ SELECT MST.*
             AND B.SALES_ORD_ID = H.SALES_ORD_ID
             AND G.STK_ID = H.ITM_STK_ID
             AND G.STK_CODE = BOM_DTL.MATRL_NO(+)
-            AND B.SALES_ORD_ID = H.AS_SO_ID
+            AND H.AS_ID = S.AS_ENTRY_ID
             AND B.SALES_ORD_NO = #{salesOrderNo}
             AND ROWNUM <![CDATA[ < ]]> 4)
 
