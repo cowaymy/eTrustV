@@ -169,6 +169,8 @@ public interface CommonMapper {
 
     List<EgovMap> selectUniformSizeList(Map<String, Object> params);
 
+    List<EgovMap> selectMuslimahScarftList(Map<String, Object> params);
+
     List<EgovMap> selectInnerTypeList(Map<String, Object> params);
 
     /**

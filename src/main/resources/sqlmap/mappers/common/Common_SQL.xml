@@ -1460,24 +1460,24 @@
     </select>
 
      <select id="selectUniformSizeList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        SELECT  CODE_ID as ID, CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
         FROM SYS0013M
         WHERE CODE_MASTER_ID = #{groupCode}
-        ORDER BY 1
+        ORDER BY ID
     </select>
 
     <select id="selectMuslimahScarftList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        SELECT  CODE_ID as ID, CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
         FROM SYS0013M
         WHERE CODE_MASTER_ID = #{groupCode}
-        ORDER BY 1
+        ORDER BY ID
     </select>
 
     <select id="selectInnerTypeList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        SELECT CODE_ID AS ID ,CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
         FROM SYS0013M
         WHERE CODE_MASTER_ID = #{groupCode}
-        ORDER BY 1
+        ORDER BY ID
     </select>
 
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">

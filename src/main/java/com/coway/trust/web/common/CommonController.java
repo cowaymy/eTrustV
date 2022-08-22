@@ -419,6 +419,12 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectMuslimahScarftList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMuslimahScarftList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = commonService.selectMuslimahScarftList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	@RequestMapping(value = "/selectInnerTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectInnerTypeList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> codeList = commonService.selectInnerTypeList(params);

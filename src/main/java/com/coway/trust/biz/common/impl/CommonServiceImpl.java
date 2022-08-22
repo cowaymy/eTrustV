@@ -1621,6 +1621,11 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectMuslimahScarftList(Map<String, Object> params) {
+		return commonMapper.selectMuslimahScarftList(params);
+	}
+
+	@Override
 	public List<EgovMap> selectInnerTypeList(Map<String, Object> params) {
 		return commonMapper.selectInnerTypeList(params);
 	}
