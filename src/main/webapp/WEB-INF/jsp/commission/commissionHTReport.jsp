@@ -34,6 +34,11 @@
         // search member confirm
         $('#confirm').click(function() {
             $("#searchForm [name=confirmChk]").val("N");
+            var cmmDt = $("#searchForm #cmmDt").val(); //commission date
+            var monthConf = Number(cmmDt.substring(0, 2));
+            var yearConf = Number(cmmDt.substring(3));
+            var taskIDConf = monthConf + (yearConf * 12) - 24157; //taskId
+            $("#searchForm #taskIDConf").val(taskIDConf);
             var salesPersonCd = $("#searchForm [name=salesPersonCd]").val();
             if (salesPersonCd == "") {
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Code' htmlEscape='false'/>");
@@ -42,11 +47,12 @@
             Common.ajax("GET", "/commission/report/selectMemberCount", $("#searchForm").serialize(), function(result) {
                 console.log("<spring:message code='sys.msg.success'/>");
                 console.log("mem_type: " + $("#searchForm [name=memType]").val());
-                if (result < 1) {
+                if (result.cnt < 1) {
                     Common.alert("Unable to find [" + salesPersonCd + "] in HT Code .<br />Please ensure you key in the correct member code.");
                     //Common.alert("<spring:message code='commission.alert.common.unableCtCode' arguments='"+salesPersonCd+"' htmlEscape='false' />");
                     $("#searchForm [name=salesPersonCd]").val("");
                 } else {
+                	$("#searchForm #memberLevel").val(result.emplyLev);
                     $("#searchForm [name=confirmChk]").val("Y");
                     Common.alert("<spring:message code='sys.msg.success'/>");
                 }
@@ -83,6 +89,7 @@
             var month = Number(cmmDt.substring(0, 2));
             var year = Number(cmmDt.substring(3));
             var taskID = month + (year * 12) - 24157; //taskId
+            var memLvl = $("#searchForm #memberLevel").val();
 
             if (type == "1") {
                 var confirmChk = $("#searchForm [name=confirmChk]").val();
@@ -96,24 +103,33 @@
                     return;
                 }
 
-                if(year >= 2022 && month >=01 || year > 2022)
+                if(memLvl == '3')
                 {
-                	reportFileName = "/commission/HTCommission_PDF_202201.rpt"; //reportFileName
-                    reportDownFileName = "HTCommission_" + today; //report name
-                    reportViewType = "PDF"; //viewType
-                }
-                else if(year >= 2021 && month >=12 || year > 2021)
-                {
-                	reportFileName = "/commission/HTCommission_PDF_2022.rpt"; //reportFileName
-                    reportDownFileName = "HTCommission_" + today; //report name
+                	reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
+                    reportDownFileName = "HTMCommission_" + today; //report name
                     reportViewType = "PDF"; //viewType
                 }
                 else
-                {
-                	reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
-                    reportDownFileName = "HTCommission_" + today; //report name
-                    reportViewType = "PDF"; //viewType
-                }
+               	{
+                	if(year >= 2022 && month >=01 || year > 2022)
+                    {
+                        reportFileName = "/commission/HTCommission_PDF_202201.rpt"; //reportFileName
+                        reportDownFileName = "HTCommission_" + today; //report name
+                        reportViewType = "PDF"; //viewType
+                    }
+                    else if(year >= 2021 && month >=12 || year > 2021)
+                    {
+                        reportFileName = "/commission/HTCommission_PDF_2022.rpt"; //reportFileName
+                        reportDownFileName = "HTCommission_" + today; //report name
+                        reportViewType = "PDF"; //viewType
+                    }
+                    else
+                    {
+                        reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
+                        reportDownFileName = "HTCommission_" + today; //report name
+                        reportViewType = "PDF"; //viewType
+                    }
+               	}
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
@@ -276,6 +292,8 @@
         <form name="searchForm" id="searchForm" method="post">
             <input type="hidden" id="confirmChk" name="confirmChk" value="N" />
             <input type="hidden" id="memType" name="memType" value="7" />
+            <input type="hidden" id="taskIDConf" name="taskIDConf"/>
+            <input type="hidden" id="memberLevel" name="memberLevel"/>
             <table class="type1">
                 <!-- table start -->
                 <caption>table</caption>

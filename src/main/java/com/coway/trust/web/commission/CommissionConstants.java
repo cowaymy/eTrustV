@@ -157,6 +157,8 @@ public class CommissionConstants {
 	public static final String COMIS_HTN_P01 = "HTN-P01"; 					//7001HT
 	public static final String COMIS_HTN_P02	 = "HTN-P02";						//7002HT
 	public static final String COMIS_HTX_P02	 = "HTX-P02";						//7002HT
+	public static final String COMIS_HTM_P01	 = "HTM-P01";					//7001HTM
+	public static final String COMIS_HTM_P02	 = "HTM-P02";					//7002HTM
 
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
 

@@ -620,6 +620,10 @@ public class CommissionCalculationController {
 			popName = "calculationData7002HTN_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTX_P02)){
 			popName = "calculationData7002HTX_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P01)) {
+			popName = "calculationData7001HTM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P02)) {
+			popName = "calculationData7002HTM_Pop";
 		}
 
 
@@ -989,6 +993,9 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
 			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
 		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P01))
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTM_LEV);
+
 
 		List<EgovMap> dataList = commissionCalculationService.selectData7001(params);
 
@@ -1019,6 +1026,8 @@ public class CommissionCalculationController {
 		if((params.get("code")).equals(CommissionConstants.COMIS_HTX_P02) ){
 			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
 		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P02))
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTM_LEV);
 
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
 
@@ -1035,6 +1044,9 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
 			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
 		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P01))
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTM_LEV);
+
 
 		int cnt = commissionCalculationService.cntCMM0028D(params);
 		return ResponseEntity.ok(cnt);
@@ -1050,6 +1062,8 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
 			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
 		}
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTM_P02))
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTM_LEV);
 
 		int cnt = commissionCalculationService.cntCMM0029D(params);
 		return ResponseEntity.ok(cnt);
