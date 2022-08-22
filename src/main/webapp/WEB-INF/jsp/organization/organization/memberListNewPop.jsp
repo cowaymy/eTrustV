@@ -1240,7 +1240,7 @@ function fn_addrSearch(){
         Common.alert("Please search.");
         return false;
     }
-    Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
+    Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#memberAddForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
 }
 function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
 
