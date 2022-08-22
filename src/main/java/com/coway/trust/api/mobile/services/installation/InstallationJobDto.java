@@ -271,6 +271,8 @@ public class InstallationJobDto {
 
   private String instChkLst;
 
+  private String instNoteChk;
+
   private String boosterPump;
 
   private String aftPsi;
@@ -385,6 +387,14 @@ public String getVoltage() {
 
   public void setInstChkLst(String instChkLst) {
     this.instChkLst = instChkLst;
+  }
+
+  public String getInstNoteChk() {
+    return instNoteChk;
+  }
+
+  public void setInstNoteChk(String instNoteChk) {
+    this.instNoteChk = instNoteChk;
   }
 
   public String getProdcat() {
