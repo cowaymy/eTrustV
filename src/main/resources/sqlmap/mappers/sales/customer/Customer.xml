@@ -36,6 +36,7 @@
          <if test='basicNric != null and basicNric !=0 and basicNric !=""'>
            AND T1.NRIC = #{basicNric}
            AND T1.NRIC not in (#{basicNricOld})
+           AND T1.STUS_CODE_ID = 1
          </if>
 
     </select>
