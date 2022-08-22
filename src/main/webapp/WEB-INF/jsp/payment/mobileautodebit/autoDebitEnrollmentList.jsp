@@ -9,7 +9,7 @@
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
 var myGridID;
-
+var excelListGridID;
 var option = {
         width : "1200px",   // 창 가로 크기
         height : "500px"    // 창 세로 크기
@@ -26,6 +26,7 @@ $(document).ready(function(){
 	f_multiCombo();
 
 	createAUIGrid();
+    createExcelAUIGrid();
 	AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
 		  fn_setDetail(myGridID, event.rowIndex);
 	});
@@ -70,6 +71,15 @@ $(document).ready(function(){
             }
             return false;
         }
+    });
+
+  //Excel Download
+    $('#excelDown').click(function() {
+        var excelProps = {
+            fileName     : "Auto Debit Enroll List",
+           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
+        };
+        AUIGrid.exportToXlsx(excelListGridID, excelProps);
     });
 });
 
@@ -229,6 +239,7 @@ function createAUIGrid() {
 function selectList(){
     Common.ajax("GET","/payment/mobileautodebit/selectAutoDebitEnrollmentList",$("#searchForm").serialize(), function(result){
         AUIGrid.setGridData(myGridID, result);
+        AUIGrid.setGridData(excelListGridID, result);
     });
 }
 
@@ -242,6 +253,110 @@ function fn_setDetail(gridID, rowIdx){
     		{ padId : AUIGrid.getCellValue(gridID, rowIdx, "padId"),
     	salesOrdNo : AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo"),
     	custCrcId:  AUIGrid.getCellValue(gridID, rowIdx, "custCrcId")}, null, true, "_divAutoDebitDetailPop");
+}
+
+function createExcelAUIGrid(){
+    //AUIGrid 칼럼 설정
+    var excelColumnLayout = [ {
+        	dataField : "padId",
+	        headerText : 'PAD ID.',
+	        width : 140,
+	        editable : false,
+	        visible: false
+	    },{
+        	dataField : "custCrcId",
+	        headerText : 'Credit Card Id',
+	        width : 140,
+	        editable : false,
+	        visible: false
+	    },{
+            dataField : "padNo",
+            headerText : 'PAD No.',
+            width : 140,
+            editable : false
+        }, {
+            dataField : "keyInDate",
+            headerText : 'PAD Key-in Date',
+            width : 160,
+            editable : false
+        }, {
+            dataField : "keyInTimestamp",
+            headerText : 'PAD Key-in Time',
+            width : 170,
+            editable : false
+        }, {
+            dataField : "statusDesc",
+            headerText : 'Status',
+            width : 150,
+            editable : false
+        }, {
+            dataField : "salesOrdNo",
+            headerText : 'Order Number',
+            width : 170,
+            editable : false
+        },{
+            dataField : "custName",
+            headerText : 'Customer Name',
+            width : 170,
+            editable : false
+        },{
+            dataField : "creator",
+            headerText : 'Creator',
+            width : 170,
+            editable : false
+        },{
+            dataField : "userBranch",
+            headerText : 'User Branch',
+            width : 170,
+            editable : false
+        },{
+            dataField : "resnDesc",
+            headerText : 'Fail Reason',
+            width : 170,
+            editable : false
+        },{
+            dataField : "remarks",
+            headerText : 'Fail Remark',
+            width : 170,
+            editable : false
+        },{
+            dataField : "lastUpdatedDate",
+            headerText : 'Last Update At(By)',
+            width : 170,
+            editable : false,
+            labelFunction : function(rowIndex, columnIndex, value,
+                    headerText, item, dataField) {
+				var formatString = "";
+				var valueArray = value.split(",");
+
+				if(valueArray.length > 0){
+					for(var i = 0; i< valueArray.length;i++){
+						if(i==1){
+							formatString = formatString + "(" + valueArray[i] + ")";
+						}
+						else{
+							formatString = formatString + valueArray[i] + "\n";
+						}
+					}
+				}
+				return formatString;
+            }
+        }];
+
+    //그리드 속성 설정
+    var excelGridPros = {
+         enterKeyColumnBase : true,
+         useContextMenu : true,
+         enableFilter : true,
+         showStateColumn : true,
+         displayTreeOpen : true,
+         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+         groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+         exportURL : "/common/exportGrid.do"
+     };
+
+    excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
+
 }
 </script>
 <!-- html content -->
@@ -368,11 +483,17 @@ function fn_setDetail(gridID, rowIdx){
 			</table>
 		</form>
     </section>
+    <ul class="right_btns">
+    	<li><p class="btn_grid"><a href="#" id="excelDown">Exel DW</a></p></li>
+	</ul>
     <!-- search_table end -->
     <!-- search_result start -->
     <section class="search_result">
         <!-- grid_wrap start -->
-        <article id="grid_wrap" class="grid_wrap"></article>
+        <article class="grid_wrap"><!-- grid_wrap start -->
+    		<div id="grid_wrap"></div>
+       	 	<div id="excel_list_grid_wrap" style="display: none;"></div>
+		</article><!-- grid_wrap end -->
         <!-- grid_wrap end -->
     </section>
     <!-- search_result end -->
