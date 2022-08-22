@@ -1790,13 +1790,7 @@
             }
             $('#txtRentalFees').val("${orderDetail.basicInfo.ordMthRental}");
 
-            var vCurrentOutstanding = fn_getOrderOutstandingInfo();
-
-            if(FormUtil.isNotEmpty(vCurrentOutstanding)) {
-                $('#txtCurrentOutstanding').val(vCurrentOutstanding);
-            }
-
-            fn_calculatePenaltyAndTotalAmount();
+            fn_getOrderOutstandingInfo();
         }
     }
 
@@ -1855,6 +1849,11 @@
                 console.log('result.outSuts[0].ordTotOtstnd:'+result[0].ordTotOtstnd);
 
                 vCurrentOutstanding = result[0].ordTotOtstnd;
+                if(FormUtil.isNotEmpty(vCurrentOutstanding)) {
+                    $('#txtCurrentOutstanding').val(vCurrentOutstanding);
+                }
+
+                fn_calculatePenaltyAndTotalAmount();
             }
        });
 
