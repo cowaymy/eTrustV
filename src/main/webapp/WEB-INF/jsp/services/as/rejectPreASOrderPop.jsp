@@ -5,7 +5,7 @@
 
     $(document).ready(function() {
     	$("#branchCode").val('${branchCode}');
-    	$("#creator").val('${creator}');
+    	$("#creator").val('${SESSION_INFO.userMemCode}');
         doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5550', '','', 'ddlFailReason', 'S', '');
     });
 

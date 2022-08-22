@@ -53,6 +53,16 @@ public class LoginVO {
 	private String diffVacDay;
 	private int bizType;
 
+	private String userMemCode;
+
+	public String getUserMemCode() {
+		return userMemCode;
+	}
+
+	public void setUserMemCode(String userMemCode) {
+		this.userMemCode = userMemCode;
+	}
+
 	public String getVacStatus() {
 		return vacStatus;
 	}

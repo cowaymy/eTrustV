@@ -42,6 +42,16 @@ public class SessionVO implements Serializable {
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
+	private String userMemCode;
+
+	public String getUserMemCode() {
+		return userMemCode;
+	}
+
+	public void setUserMemCode(String userMemCode) {
+		this.userMemCode = userMemCode;
+	}
+
 	public int getBizType() {
 		return bizType;
 	}
@@ -249,6 +259,7 @@ public class SessionVO implements Serializable {
 		SessionVO sessionVO = new SessionVO();
 
 		if (loginVO != null) {
+			sessionVO.setUserMemCode(loginVO.getUserMemCode());
 			sessionVO.setUserId(loginVO.getUserId());
 			sessionVO.setUserName(loginVO.getUserName());
 			sessionVO.setUserFullname(loginVO.getUserFullname());
