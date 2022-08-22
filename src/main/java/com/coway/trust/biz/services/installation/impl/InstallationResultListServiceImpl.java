@@ -1841,6 +1841,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     installResult.put("instChklstCheckBox",
         ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
+    installResult.put("instNoteChk",
+            ("Y".equals(CommonUtils.nvl(params.get("instNoteChk")).toString())) ? "Y" : "N");
     installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
     //Added by keyi installation note phase1 20220401
