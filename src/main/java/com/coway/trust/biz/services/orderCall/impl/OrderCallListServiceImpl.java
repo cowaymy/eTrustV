@@ -13,13 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
@@ -225,10 +223,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       boolean stat = false;
       String pType = "";
       String pPrgm = "";
-      int logStat = 0;
+      String smsMessage = "";
 
       if (Integer.parseInt(params.get("callStatus").toString()) == 20) {
-
         installMaster = getSaveInstallMaster(params, sessionVO);
         orderLogList = getSaveOrderLogList(params, sessionVO);
 
@@ -298,6 +295,32 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           stat = true;
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
         }
+
+        smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
+        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
+
+        params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
+
+        logger.debug("//SMS params");
+        logger.debug(params.toString());
+
+       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
+       {
+    	   logger.debug("//IN SMS1");
+
+    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+
+	       	       Map<String, Object> smsList = new HashMap<>();
+	               smsList.put("userId", sessionVO.getUserId());
+	               smsList.put("smsType", 975);
+	               smsList.put("smsMessage", smsMessage);
+	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+
+	               sendSms(smsList);
+    	   }
+      }
+
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL
       }
@@ -305,45 +328,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       if (stat) {
         resultValue = orderCallLogSave_2(callMaster, callDetails, installMaster, orderLogList,
             params.get("salesOrdNo").toString(), params);
-
-        try{
-        String smsMessage = "";
-		  smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
-	        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
-
-	        params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
-
-	        logger.debug("//SMS params");
-	        logger.debug(params.toString());
-
-	        if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
-	        {
-	     	   logger.debug("//IN SMS1");
-
-	     	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
-	     			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-
-	 	       	       Map<String, Object> smsList = new HashMap<>();
-	 	               smsList.put("userId", sessionVO.getUserId());
-	 	               smsList.put("smsType", 975);
-	 	               smsList.put("smsMessage", smsMessage);
-	 	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
-
-	 	               logger.debug("sendSms111");
-	 	               sendSms(smsList);
-	     	   }
-	       }
-	      }catch (Exception e){
-	    	  logStat = 3;
-	      }
       }
-      logger.debug("logStat111" + logStat);
       if (stat) {
-    	  if(logStat == 3){
-    		  resultValue.put("logStat", "3");
-    	  }else{
-    		  resultValue.put("logStat", "0");
-    	  }
+        resultValue.put("logStat", "0");
       } else {
         resultValue.put("logStat", "1");
       }
