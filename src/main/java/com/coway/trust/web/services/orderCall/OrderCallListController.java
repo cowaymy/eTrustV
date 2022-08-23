@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.logistics.organization.impl.LocationMapper;
 import com.coway.trust.biz.sales.order.OrderDetailService;
@@ -310,9 +311,14 @@ public class OrderCallListController {
                     message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
                     message.setCode("99");
                   } else {
-                    message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
+                	  String msg = "Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo");
+                	  if("3".equals(resultValue.get("logStat"))){
+                    	  msg += "<br/>" + AppConstants.FAIL +  "Fail to send SMS to " + params.get("custMobileNo").toString();
+                      }
+                    message.setMessage(msg);
                     message.setCode("1");
                   }
+
                 } else {
                   message.setMessage("Record updated successfully.</br> ");
                   message.setCode("1");
