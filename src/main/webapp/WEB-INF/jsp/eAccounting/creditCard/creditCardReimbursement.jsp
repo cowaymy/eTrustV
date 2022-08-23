@@ -664,7 +664,7 @@ function fn_addRow() {
                         data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
                         data.gridData.add[i].taxCode = "VB";
                         data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
-                        if(fn_checkCreditLimit())
+                        if(fn_checkCreditLimit(data.gridData.add[i]))
                         {
                             AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                             fn_clearData();
@@ -713,7 +713,7 @@ function fn_addRow() {
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = atchFileGrpId;
-                        if(fn_checkCreditLimit())
+                        if(fn_checkCreditLimit(data.gridData.add[i]))
                         {
                         	AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                         }
@@ -744,7 +744,7 @@ function fn_addRow() {
                         data.gridData.update[i].invcTypeName = data.invcTypeName;
                         data.gridData.update[i].cur = data.cur;
                         data.gridData.update[i].expDesc = data.expDesc;
-                        if(fn_checkCreditLimit())
+                        if(fn_checkCreditLimit(data.gridData.update[i]))
                         {
                         	AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                         }
@@ -859,8 +859,9 @@ function fn_getItemTotal() {
     return allTotAmt
 }
 
-function fn_checkCreditLimit() {
+function fn_checkCreditLimit(v) {
     // To check if limit exceeded
+    const {totAmt, cntrlExp} = v
     var allTotAmt = fn_getItemTotal();
     var limitFlg = true;
     var clmDt = $("#clmMonth").val(); //claim date
@@ -888,12 +889,11 @@ function fn_checkCreditLimit() {
 	        }
 	        if($("#cardControlYN").val() == "Y")
 	        {
-	            if($("#cntrlExp").val() == "Y")
+	            if(cntrlExp == "Y")
 	            {
 	                var totalExpAmtSmall = 0;
 	                var totalCntrlSpentAmt = result1[0].cntrlSpentAmt;
-	                console.log(result1);
-	                totalExpAmtSmall = Number(AUIGrid.getColumnValues(myGridID, "totAmt", true));
+	                totalExpAmtSmall = totAmt;
 	                totalExpAmt = totalExpAmt + totalExpAmtSmall;
 	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmtSmall;
 	                if(totalCntrlSpentAmt > planAmt)
