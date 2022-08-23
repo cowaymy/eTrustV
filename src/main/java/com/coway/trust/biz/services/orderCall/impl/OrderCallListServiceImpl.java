@@ -784,7 +784,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     SmsResult smsResult = adaptorService.sendSMS(sms);
 
     int logStat = 0;
-    if (smsResult.getErrorCount() > 0){
+    if (smsResult.getFailCount() > 0){
     	logStat = 3;
     }else{
     	logStat = 0;
