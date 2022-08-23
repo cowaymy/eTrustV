@@ -52,5 +52,5 @@ public interface OrderCallListService {
 
   List<EgovMap> selectPromotionList();
 
-  int sendSms(Map<String, Object> smsList);
+  void sendSms(Map<String, Object> smsList);
 }
