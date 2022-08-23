@@ -305,10 +305,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       if (stat) {
         resultValue = orderCallLogSave_2(callMaster, callDetails, installMaster, orderLogList,
             params.get("salesOrdNo").toString(), params);
-      }
 
-      try{
-		  String smsMessage = "";
+        String smsMessage = "";
 		  smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
 	        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
 
@@ -330,12 +328,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	 	               smsList.put("smsMessage", smsMessage);
 	 	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
 
-	 	               sendSms(smsList);
+	 	               logStat = sendSms(smsList);
 	     	   }
 	       }
-	  }catch (Exception e){
-		  logStat = 3;
-	  }
+      }
 
       if (stat) {
     	  if(logStat == 3){
@@ -778,7 +774,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
   }
 
   @Override
-  public void sendSms(Map<String, Object> smsList){
+  public int sendSms(Map<String, Object> smsList){
     int userId = (int) smsList.get("userId");
     SmsVO sms = new SmsVO(userId, 975);
 
@@ -786,6 +782,16 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
+
+    int logStat = 0;
+    if (smsResult.getErrorCount() > 0){
+    	logStat = 3;
+    }else{
+    	logStat = 0;
+    }
+
+
+	return logStat;
   }
 
 
