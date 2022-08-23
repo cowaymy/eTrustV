@@ -225,11 +225,12 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       boolean stat = false;
       String pType = "";
       String pPrgm = "";
-      String smsMessage = "";
+      int logStat = 0;
 
       if (Integer.parseInt(params.get("callStatus").toString()) == 20) {
 
     	  try{
+    		  String smsMessage = "";
     		  smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
     	        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
 
@@ -255,7 +256,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     	     	   }
     	       }
     	  }catch (Exception e){
-    		  throw new ApplicationException(AppConstants.FAIL, "Fail to send SMS to " + params.get("custMobileNo").toString());
+    		  logStat = 3;
     	  }
 
         installMaster = getSaveInstallMaster(params, sessionVO);
@@ -336,7 +337,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
             params.get("salesOrdNo").toString(), params);
       }
       if (stat) {
-        resultValue.put("logStat", "0");
+    	  if(logStat == 3){
+    		  resultValue.put("logStat", "3");
+    	  }else{
+    		  resultValue.put("logStat", "0");
+    	  }
       } else {
         resultValue.put("logStat", "1");
       }
