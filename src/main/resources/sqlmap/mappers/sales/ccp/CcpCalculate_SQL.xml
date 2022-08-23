@@ -1812,10 +1812,10 @@ AND T1.CNT = 1
                 ,SALES_ORD_ID
                 , CCP_ID
                 , STUS_ID
-                , CRT_DT
-                , CRT_USER_ID
-                , UPD_DT
-                , UPD_USER_ID
+                , SYSDATE
+                , #{userId}
+                , SYSDATE
+                , #{userId}
                 , ATCH_FILE_GRP_ID
                 , REMARKS
                 FROM SAL0304D
@@ -1975,7 +1975,7 @@ SELECT
    EXT1.CCP_ID,
   SYC.NAME AS STUS_ID,
    EXT1.ATCH_FILE_GRP_ID,
-   TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY') CRT_DT,
+   TO_CHAR(EXT1.CRT_DT,'DD/MM/YYYY') CRT_DT,
    SYS.USER_NAME,
    EXT1.REMARKS
    FROM SAL0317D EXT1
