@@ -79,6 +79,7 @@ public class InstallationResultForm {
   private String waterSourceTemp;
   private String adptUsed;
   private String instChklstCheckBox;
+  private String instNoteChk;
 
   private String boosterPump;
   private String aftPsi;
@@ -233,6 +234,14 @@ public String getLpmRcd() {
 
   public void setInstChklstCheckBox(String instChklstCheckBox) {
     this.instChklstCheckBox = instChklstCheckBox;
+  }
+
+  public String getInstNoteChk() {
+    return instNoteChk;
+  }
+
+  public void setInstNoteChk(String instNoteChk) {
+    this.instNoteChk = instNoteChk;
   }
 
   public String getSerialRequireChkYn() {
