@@ -330,7 +330,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	 	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
 
 	 	               logger.debug("sendSms111");
-	 	               logStat = sendSms(smsList);
+	 	               sendSms(smsList);
 	     	   }
 	       }
 	      }catch (Exception e){
@@ -779,7 +779,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
   }
 
   @Override
-  public int sendSms(Map<String, Object> smsList){
+  public void sendSms(Map<String, Object> smsList){
     int userId = (int) smsList.get("userId");
     SmsVO sms = new SmsVO(userId, 975);
 
@@ -787,17 +787,6 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
-
-    logger.debug("smsresult111===" + smsResult);
-    int logStat = 0;
-    if (smsResult.getFailCount() > 0){
-    	logStat = 3;
-    }else{
-    	logStat = 0;
-    }
-
-
-	return logStat;
   }
 
 
