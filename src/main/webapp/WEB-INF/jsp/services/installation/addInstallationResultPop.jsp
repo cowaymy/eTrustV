@@ -487,9 +487,9 @@
     	  console.log("appointment Dt: " + $("#hidAppntDt").val());
       }
 
-      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      } */
+      }
 
       if (msg != "") {
         Common.alert(msg);
@@ -564,9 +564,9 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           }
         }
-      /* if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-      } */
+      }
 
       if (msg != "") {
         Common.alert(msg);
@@ -1930,8 +1930,7 @@
             <th scope="row">Mobile</th>
 	        <td>
 	          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
-	          <!-- <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked> -->
-	          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" disabled>
+	          <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
 	        </td>
           </tr>
         </tbody>
