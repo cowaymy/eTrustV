@@ -524,38 +524,38 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
         updateSrvMembershipSale(srvMembershipSale);
 
 
-        Map<String, Object> srvConfiguration = new HashMap();
-        srvConfiguration.put("SrvConfigID", configID);
-        srvConfiguration.put("SrvStatusID", 8);
-        srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
-        srvConfiguration.put("userId", userId);
-
-        updateSrvConfiguration(srvConfiguration);
-
-
-        Map<String,Object> srvConfigSetting = new HashMap();
-        srvConfigSetting.put("SrvConfigID", configID);
-        srvConfigSetting.put("SrvSettStatusID", 8);
-        srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
-
-        updateSrvConfigSetting(srvConfigSetting);
-
-
-        Map<String,Object> srvConfigPeriod = new HashMap();
-        srvConfigPeriod.put("SrvConfigID", configID);
-        srvConfigPeriod.put("SrvPrdStatusID", 8);
-        srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
-        srvConfigPeriod.put("userId", userId);
-
-        updateSrvConfigPeriod(srvConfigPeriod);
-
-        Map<String,Object> srvConfigFilter = new HashMap();
-        srvConfigFilter.put("SrvConfigID",configID);
-        srvConfigFilter.put("SrvFilterStatusID",8);
-        srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
-        srvConfigFilter.put("userId",userId);
-
-        updateSrvConfigFilter(srvConfigFilter);
+//        Map<String, Object> srvConfiguration = new HashMap();
+//        srvConfiguration.put("SrvConfigID", configID);
+//        srvConfiguration.put("SrvStatusID", 8);
+//        srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
+//        srvConfiguration.put("userId", userId);
+//
+//        updateSrvConfiguration(srvConfiguration);
+//
+//
+//        Map<String,Object> srvConfigSetting = new HashMap();
+//        srvConfigSetting.put("SrvConfigID", configID);
+//        srvConfigSetting.put("SrvSettStatusID", 8);
+//        srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
+//
+//        updateSrvConfigSetting(srvConfigSetting);
+//
+//
+//        Map<String,Object> srvConfigPeriod = new HashMap();
+//        srvConfigPeriod.put("SrvConfigID", configID);
+//        srvConfigPeriod.put("SrvPrdStatusID", 8);
+//        srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
+//        srvConfigPeriod.put("userId", userId);
+//
+//        updateSrvConfigPeriod(srvConfigPeriod);
+//
+//        Map<String,Object> srvConfigFilter = new HashMap();
+//        srvConfigFilter.put("SrvConfigID",configID);
+//        srvConfigFilter.put("SrvFilterStatusID",8);
+//        srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
+//        srvConfigFilter.put("userId",userId);
+//
+//        updateSrvConfigFilter(srvConfigFilter);
 
 
         Map<String,Object> happyCallM = new HashMap();
@@ -2007,38 +2007,38 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
     		updateSrvMembershipSale(srvMembershipSale);
 
 
-    		Map<String, Object> srvConfiguration = new HashMap();
-    		srvConfiguration.put("SrvConfigID", configID);
-    		srvConfiguration.put("SrvStatusID", 8);
-    		srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
-    		srvConfiguration.put("userId", params.get("userId"));
-
-    		updateSrvConfiguration(srvConfiguration);
-
-
-    		Map<String,Object> srvConfigSetting = new HashMap();
-    		srvConfigSetting.put("SrvConfigID", configID);
-    		srvConfigSetting.put("SrvSettStatusID", 8);
-    		srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
-
-    		updateSrvConfigSetting(srvConfigSetting);
-
-
-    		Map<String,Object> srvConfigPeriod = new HashMap();
-    		srvConfigPeriod.put("SrvConfigID", configID);
-    		srvConfigPeriod.put("SrvPrdStatusID", 8);
-    		srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
-    		srvConfigPeriod.put("userId", params.get("userId"));
-
-    		updateSrvConfigPeriod(srvConfigPeriod);
-
-    		Map<String,Object> srvConfigFilter = new HashMap();
-    		srvConfigFilter.put("SrvConfigID",configID);
-    		srvConfigFilter.put("SrvFilterStatusID",8);
-    		srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
-    		srvConfigFilter.put("userId",params.get("userId"));
-
-    		updateSrvConfigFilter(srvConfigFilter);
+//    		Map<String, Object> srvConfiguration = new HashMap();
+//    		srvConfiguration.put("SrvConfigID", configID);
+//    		srvConfiguration.put("SrvStatusID", 8);
+//    		srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
+//    		srvConfiguration.put("userId", params.get("userId"));
+//
+//    		updateSrvConfiguration(srvConfiguration);
+//
+//
+//    		Map<String,Object> srvConfigSetting = new HashMap();
+//    		srvConfigSetting.put("SrvConfigID", configID);
+//    		srvConfigSetting.put("SrvSettStatusID", 8);
+//    		srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
+//
+//    		updateSrvConfigSetting(srvConfigSetting);
+//
+//
+//    		Map<String,Object> srvConfigPeriod = new HashMap();
+//    		srvConfigPeriod.put("SrvConfigID", configID);
+//    		srvConfigPeriod.put("SrvPrdStatusID", 8);
+//    		srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
+//    		srvConfigPeriod.put("userId", params.get("userId"));
+//
+//    		updateSrvConfigPeriod(srvConfigPeriod);
+//
+//    		Map<String,Object> srvConfigFilter = new HashMap();
+//    		srvConfigFilter.put("SrvConfigID",configID);
+//    		srvConfigFilter.put("SrvFilterStatusID",8);
+//    		srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
+//    		srvConfigFilter.put("userId",params.get("userId"));
+//
+//    		updateSrvConfigFilter(srvConfigFilter);
 
 
     		Map<String,Object> happyCallM = new HashMap();
