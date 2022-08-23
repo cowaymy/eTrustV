@@ -73,10 +73,10 @@
       if (chkMobileNo == '60'){
     	  custMobileNo = custMobileNo.substring(1);
       }
-      /* $("#custMobileNo").val(custMobileNo);
+      $("#custMobileNo").val(custMobileNo);
       if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
           msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
-        } */
+        }
 
     } else if ($("#callStatus").val() == 19) {
       if ($("#recallDate").val() == '') {
@@ -729,8 +729,7 @@
      <th scope="row">Mobile<span name="m2" id="m2" class="must">*</span></th>
       <td colspan="3">
           <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" />
-          <!-- <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked> -->
-          <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" disabled>
+          <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
           <!-- <br><br>
           <span>Total SMS Count :</span><input type="text" id="smsCount" name="smsCount" class="readonly" readonly="readonly" style="width:10%;"> -->
      </td>
