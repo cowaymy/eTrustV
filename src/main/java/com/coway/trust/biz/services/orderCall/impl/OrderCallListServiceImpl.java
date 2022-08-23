@@ -328,11 +328,12 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	 	               smsList.put("smsMessage", smsMessage);
 	 	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
 
+	 	               logger.debug("sendSms111");
 	 	               logStat = sendSms(smsList);
 	     	   }
 	       }
       }
-
+      logger.debug("logStat111" + logStat);
       if (stat) {
     	  if(logStat == 3){
     		  resultValue.put("logStat", "3");
@@ -783,6 +784,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
 
+    logger.debug("smsresult111===" + smsResult);
     int logStat = 0;
     if (smsResult.getFailCount() > 0){
     	logStat = 3;
