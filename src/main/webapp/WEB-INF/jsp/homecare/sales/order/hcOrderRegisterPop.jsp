@@ -1862,7 +1862,9 @@ console.log(orderVO);
             }
         }
 
-        if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() <= 0) {
+        const ordProd1 = $("#ordProduct1");
+        const ordProd2 = $("#ordProduct2");
+        if((ordProd1.find("option").length > 1 && ordProd1.find("option:selected").index() <= 0) || (ordProd2.find("option").length > 1 && ordProd2.find("option:selected").index() <= 0)){
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
         }
