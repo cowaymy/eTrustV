@@ -306,6 +306,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         resultValue = orderCallLogSave_2(callMaster, callDetails, installMaster, orderLogList,
             params.get("salesOrdNo").toString(), params);
 
+        try{
         String smsMessage = "";
 		  smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
 	        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
@@ -332,6 +333,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	 	               logStat = sendSms(smsList);
 	     	   }
 	       }
+	      }catch (Exception e){
+	    	  logStat = 3;
+	      }
       }
       logger.debug("logStat111" + logStat);
       if (stat) {
