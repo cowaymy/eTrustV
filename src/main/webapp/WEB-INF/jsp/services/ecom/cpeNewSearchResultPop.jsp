@@ -85,7 +85,6 @@
                 			SubReq = 1;
                 		}
                 	}
-					console.log(SubReq);
                     var check = doGetCombo('/services/ecom/selectIssueType.do', SubReq, '', '_inputIssueSelect', 'S', '');
                     //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
