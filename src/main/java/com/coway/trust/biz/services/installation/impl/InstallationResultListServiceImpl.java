@@ -2461,10 +2461,11 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
     String maxId = "";
     EgovMap maxIdValue = new EgovMap();
-
+    logger.debug("===========================CHKSMS111================================");
     // INSERT SAL0047D RESULT
     installationResultListMapper.insertInstallResult(installResult);
 
+    logger.debug("===========================CHKSMS222================================");
     EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
     logger.debug("===========================INSTALLATION ENTRY================================");
     logger.debug("INSTALLATION ENTRY : {}", entry);
