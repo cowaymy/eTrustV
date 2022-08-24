@@ -29,7 +29,9 @@
     		$("#updateTitle").show();
     	}
         fn_setAutoFile2();
-
+		//Set Default Main Department
+		$("#_inputMainDeptSelect").val('MD20');
+        doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), 'SD299','_inputSubDeptSelect', 'S' ,  '');
         //Populate Sub Department in-charge
         $("#_inputMainDeptSelect").change(function(){
             doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '','_inputSubDeptSelect', 'S' ,  '');
