@@ -75,14 +75,17 @@
                     $("#_inputIssueSelect").find("option").remove();
                   } else {
                 	var SubReq = $("#_inputSubReqTypeSelect").val();
-                	if(SubReq < 6300 && SubReq != 6210 && SubReq != 6211)
-                		if(SubReq == 6212 || SubReq == 6213 || SubReq == 6214 || SubReq == 6215){
+                	if(SubReq < 6300 && SubReq != 6210 && SubReq != 6211 && SubReq != 6212
+                			&& SubReq != 6213 && SubReq != 6999 && SubReq != 6218 && SubReq != 6516 && SubReq != 6520)
+                	{
+                		if(SubReq == 6214 || SubReq == 6215){
                 			SubReq = 2;
                 		}
                 		else{
                 			SubReq = 1;
                 		}
-
+                	}
+					console.log(SubReq);
                     var check = doGetCombo('/services/ecom/selectIssueType.do', SubReq, '', '_inputIssueSelect', 'S', '');
                     //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
@@ -451,9 +454,9 @@
                         <th scope="row">Sub Request<span class="must">*</span></th>
                         <td><select class="w100p" name="inputSubReqTypeSelect" id="_inputSubReqTypeSelect"></select></td>
 
-                        <th scope="row">AS No.</th>
-                        <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.grid.asNo'/>"
-                            class="w100p" id="asNo" name="asNo" /></td>
+<!--                         <th scope="row">AS No.</th> -->
+<%--                         <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.grid.asNo'/>" --%>
+<!--                             class="w100p" id="asNo" name="asNo" /></td> -->
                     </tr>
                     <tr>
                         <th scope="row">Issue<span class="must">*</span></th>
