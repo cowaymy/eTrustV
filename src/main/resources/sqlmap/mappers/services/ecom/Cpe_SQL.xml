@@ -28,7 +28,9 @@
     <if test = "groupCode != null and groupCode != '' ">
       AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{groupCode})
     </if>
-
+    <if test = "groupCode != null and groupCode != '' and groupCode =='MD20'">
+    AND CODE != 'SD52'
+    </if>
     ORDER BY CODE_NAME
   </select>
 
