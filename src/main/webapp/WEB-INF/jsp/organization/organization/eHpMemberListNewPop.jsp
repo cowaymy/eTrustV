@@ -1002,7 +1002,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
 
         // 2018-07-26 - LaiKW - Added Meeting Point and Branch
         if($('#eHPmeetingPoint').val() == '') {
-            Common.alert("Please select reporting branch");
+            Common.alert("Please select Business Area");
             return false;
         }
 
@@ -1688,7 +1688,7 @@ function fn_eHPmarritalCallBack(){
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row" id="eHPmeetingPointLbl">Reporting Branch</th>
+                        <th scope="row" id="eHPmeetingPointLbl">Business Area</th>
                         <td colspan="5">
                             <select class="w100p" id="eHPmeetingPoint" name="meetingPoint"></select>
                         </td>

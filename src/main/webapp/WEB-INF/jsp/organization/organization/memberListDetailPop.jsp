@@ -1104,7 +1104,7 @@ $("#HP_img").dblclick(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Reporting Branch</th>
+    <th scope="row">Business Area</th>
     <td colspan="3">
         <span><c:out value="${memberView.aplicntMeetpoint}"/></span>
     </td>

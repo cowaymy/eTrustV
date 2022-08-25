@@ -1530,7 +1530,7 @@ function fn_selectFailedRemarkList() {
     </td>
 </tr>
 <tr>
-    <th scope="row" id="eHPmeetingPointLbl">Reporting Branch</th>
+    <th scope="row" id="eHPmeetingPointLbl">Business Area</th>
     <td colspan="5">
         <select class="w100p" id="eHPmeetingPoint" name="meetingPoint"></select>
     </td>

@@ -1126,7 +1126,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
              if($("#memberType").val() == "2803") {
                  // 2018-07-26 - LaiKW - Added Meeting Point and Branch
                  if($('#meetingPoint').val() == '') {
-                     Common.alert("Please select reporting branch");
+                     Common.alert("Please select Business Area");
                      return false;
                  }
              }
@@ -2288,7 +2288,7 @@ function fn_validFile() {
     </td>
 </tr>
 <tr>
-    <th scope="row" id="meetingPointLbl">Reporting Branch</th>
+    <th scope="row" id="meetingPointLbl">Business Area</th>
     <td colspan="5">
         <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
     </td>

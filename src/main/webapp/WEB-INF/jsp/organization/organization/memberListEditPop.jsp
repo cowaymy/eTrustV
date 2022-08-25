@@ -2303,7 +2303,7 @@ function fn_removeFile(name){
                                 </td>
                             </tr>
                             <tr id="editRow1_9">
-                                <th scope="row" id="meetingPointLbl">Reporting Branch</th>
+                                <th scope="row" id="meetingPointLbl">Business Area</th>
                                 <td colspan="5">
                                     <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
                                 </td>
