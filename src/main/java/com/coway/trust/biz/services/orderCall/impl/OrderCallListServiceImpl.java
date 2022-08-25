@@ -13,15 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovBasicLogger;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -210,9 +213,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     return resultValue;
   }
 
-  @Override
+@Override
   public Map<String, Object> insertCallResult_2(Map<String, Object> params, SessionVO sessionVO) {
     Map<String, Object> resultValue = new HashMap<String, Object>();
+
     if (sessionVO != null) {
       Map<String, Object> callMaster = getSaveCallCenter(params, sessionVO);
       Map<String, Object> callDetails = getSaveCallDetails(params, sessionVO);
@@ -223,7 +227,6 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       boolean stat = false;
       String pType = "";
       String pPrgm = "";
-      String smsMessage = "";
 
       if (Integer.parseInt(params.get("callStatus").toString()) == 20) {
         installMaster = getSaveInstallMaster(params, sessionVO);
@@ -296,31 +299,6 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
         }
 
-        smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
-        		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
-
-        params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
-
-        logger.debug("//SMS params");
-        logger.debug(params.toString());
-
-       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
-       {
-    	   logger.debug("//IN SMS1");
-
-    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
-    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
-
-	       	       Map<String, Object> smsList = new HashMap<>();
-	               smsList.put("userId", sessionVO.getUserId());
-	               smsList.put("smsType", 975);
-	               smsList.put("smsMessage", smsMessage);
-	               smsList.put("smsMobileNo", params.get("custMobileNo").toString());
-
-	               sendSms(smsList);
-    	   }
-      }
-
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL
       }
@@ -329,14 +307,14 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         resultValue = orderCallLogSave_2(callMaster, callDetails, installMaster, orderLogList,
             params.get("salesOrdNo").toString(), params);
       }
+
       if (stat) {
         resultValue.put("logStat", "0");
       } else {
         resultValue.put("logStat", "1");
       }
     }
-
-    return resultValue;
+	return resultValue;
   }
 
   @Transactional
@@ -776,5 +754,46 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 
+	@Override
+	public Map<String, Object> callLogSendSMS(Map<String, Object> params, SessionVO sessionVO) {
+		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+		String smsMessage = "";
 
+		try{
+		  //SMS for OrderCal Appointment
+		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
+		    		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
+
+		    params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
+
+		    logger.debug("//SMS params" + params.toString());
+
+		       if(params.get("appType").equals("REN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
+		       {
+		    	   logger.debug("//IN SMS1");
+
+		    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+		    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+
+		           	       Map<String, Object> smsList = new HashMap<>();
+		                   smsList.put("userId", sessionVO.getUserId());
+		                   smsList.put("smsType", 975);
+		                   smsList.put("smsMessage", smsMessage);
+		                   smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+		                   //smsList.put("smsMobileNo", "+6017-5977 998");
+
+		                   sendSms(smsList);
+		    	   }
+		      }
+		    }catch(Exception e){
+		    	logger.info("Fail to send SMS to " + params.get("custMobileNo").toString());
+		    	smsResultValue.put("smsLogStat", "3");
+		    }finally{
+				logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
+		    }
+
+		smsResultValue.put("smsLogStat", "0");//if success
+		logger.info("===resultValue===" + smsResultValue.toString());
+		return smsResultValue;
+	}
 }

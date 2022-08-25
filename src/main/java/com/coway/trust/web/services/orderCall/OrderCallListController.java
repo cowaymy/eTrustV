@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -273,6 +274,7 @@ public class OrderCallListController {
    * @return
    * @throws Exception
    */
+
   @RequestMapping(value = "/addCallLogResult_2.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> insertCallResult_2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
@@ -282,6 +284,7 @@ public class OrderCallListController {
     logger.debug("==================/insertCallResult_2.do=======================");
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
+    Map<String, Object> smsResultValue = new HashMap<String, Object>();
     int noRcd = orderCallListService.chkRcdTms(params);
 
     if (noRcd == 1) { // RECORD ABLE TO UPDATE
@@ -302,7 +305,7 @@ public class OrderCallListController {
           logger.debug("CHECK QUANTITY~~");
           if (rdcStock != null) {
             if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
-              resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+            	resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
 
               if (null != resultValue) {
                 if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
@@ -310,8 +313,19 @@ public class OrderCallListController {
                     message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
                     message.setCode("99");
                   } else {
-                    message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
-                    message.setCode("1");
+                	  params.put("logStat", resultValue.get("logStat"));
+                	  String msg = "Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo");
+
+                	  try{
+                		  smsResultValue = orderCallListService.callLogSendSMS(params, sessionVO);
+                	  }catch (Exception e){
+                		  logger.info("===smsResultValue===" + smsResultValue.toString());
+                	  }
+                	  if(smsResultValue.isEmpty()){
+                		  msg += "</br> Failed to send SMS to " + params.get("custMobileNo").toString();
+                	  }
+                	  message.setMessage(msg);
+                      message.setCode("1");
                   }
                 } else {
                   message.setMessage("Record updated successfully.</br> ");
