@@ -118,6 +118,17 @@
     ]]>
 </select>
 
+ <resultMap id="reuploadB2BMap1" type="egovMap" ></resultMap>
+ <resultMap id="reuploadB2BMap2" type="egovMap" ></resultMap>
+ <select id="getReuploadB2B"  statementType="CALLABLE"   parameterType="Map">
+    <![CDATA[
+      {
+          call SP_UPD_CTOS_FICO_UPD_RERUN (#{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=reuploadB2BMap1},
+          #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=reuploadB2BMap2})
+       }
+    ]]>
+</select>
+
 <update id="savePromoB2BUpdate" parameterType="Map">
 
   UPDATE SAL0017D
