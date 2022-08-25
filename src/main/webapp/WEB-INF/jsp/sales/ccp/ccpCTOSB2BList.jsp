@@ -376,6 +376,18 @@ function fn_displayReport(viewType, batchId, ordNo){
 	}
 }
 
+function fn_reuploadB2B() {
+    console.log("Calling Backend");
+
+	   Common.ajax("GET", "/sales/ccp/reuploadCTOSB2BList.do",
+		function(result) {
+		   console.log("Success");
+		   console.log(result);
+		   Common.alert(result.message);
+       }
+	   );
+}
+
 </script>
 
 
@@ -395,9 +407,10 @@ function fn_displayReport(viewType, batchId, ordNo){
     <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+        <li><p class="btn_blue"><a id="_reupload" onclick ="fn_reuploadB2B()">Re-Upload</a></p></li>
+
 </ul>
 </aside><!-- title_line end -->
-
 
 <section class="search_table"><!-- search_table start -->
 <form id="_searchForm">
