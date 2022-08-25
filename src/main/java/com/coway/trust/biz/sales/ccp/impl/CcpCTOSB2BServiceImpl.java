@@ -170,4 +170,15 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 			return o ;
 		}
 
+	  @Override
+		public int  reuploadCTOSB2BList() {
+
+		  int rslt = -1;
+			/* TODO
+
+*/
+			return rslt ;
+		}
+
+
 }
