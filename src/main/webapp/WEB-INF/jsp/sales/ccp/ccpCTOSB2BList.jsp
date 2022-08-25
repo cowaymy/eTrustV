@@ -379,7 +379,7 @@ function fn_displayReport(viewType, batchId, ordNo){
 function fn_reuploadB2B() {
     console.log("Calling Backend");
 
-	   Common.ajax("GET", "/sales/ccp/reuploadCTOSB2BList.do",
+	   Common.ajax("GET", "/sales/ccp/reuploadCTOSB2BList.do",null,
 		function(result) {
 		   console.log("Success");
 		   console.log(result);
