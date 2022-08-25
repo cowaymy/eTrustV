@@ -212,14 +212,15 @@ public class CcpCTOSB2BController {
 			if (resltCode == 0){
 				message = "<b>Successfully Reupload</b>";
 			}
-			else {
+			else if(resltCode == -1) {
 				message = "<b>Failed to reupload.<br />Please try again later.</b>";
+			}
+			else {
+				message = "<b>Fail</b>";
 			}
 
 			mes.setCode(AppConstants.SUCCESS);
 			mes.setMessage(message);
-
-			LOGGER.info(" Uploaded: " + mes.getCode() + "and" + mes.getMessage());
 
 			return ResponseEntity.ok(mes);
 		}
