@@ -3824,6 +3824,13 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		 LOGGER.debug("================INSMS111================");
 		 LOGGER.debug("ApptypeID===" + ApptypeID);
 		 LOGGER.debug("InstallationResult====" + installResult.toString());
+		 LOGGER.debug("userId====" + installResult.get("userId").toString());
+		 LOGGER.debug("CTID====" + installResult.get("CTID").toString());
+		 LOGGER.debug("customerType====" + installResult.get("customerType").toString());
+		 LOGGER.debug("chkSms====" + installResult.get("chkSms").toString());
+		 LOGGER.debug("installStatus====" + installResult.get("installStatus").toString());
+		 LOGGER.debug("installDate====" + installResult.get("installDate").toString());
+		 LOGGER.debug("salesOrderNo====" + installResult.get("salesOrderNo").toString());
 
 		 if(CommonUtils.nvl(installResult.get("userId").toString()) != ""){ //from Mobile
 			 installResult.put("ctCode", installResult.get("userId"));
@@ -3832,6 +3839,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		 if(CommonUtils.nvl(installResult.get("CTID").toString()) != ""){//from Mobile
 			 installResult.put("creator", installResult.get("CTID"));
 		 }
+
+		 LOGGER.debug("ctCode====" + installResult.get("ctCode").toString());
+		 LOGGER.debug("creator====" + installResult.get("creator").toString());
+
+
+		 LOGGER.debug("================beforeSMS================");
 
 		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
 	    if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
