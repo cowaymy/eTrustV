@@ -23,7 +23,7 @@ public interface CcpCTOSB2BMapper {
 	int  savePromoCHSUpdate(Map<String, Object> params);
 
 	int  savePromoCHSUpdate2(Map<String, Object> params);
-	
-	EgovMap getReuploadB2B();
+
+	Map<String, Object> getReuploadB2B(Map<String, Object> param);
 
 }

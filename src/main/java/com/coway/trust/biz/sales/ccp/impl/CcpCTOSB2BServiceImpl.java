@@ -171,14 +171,9 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 		}
 
 	  @Override
-		public int  reuploadCTOSB2BList() {
+		public Map<String, Object>  reuploadCTOSB2BList(Map<String, Object> params) {
 
-		  int rslt = 0;
-
-		  EgovMap updateItemList = ccpCTOSB2BMapper.getReuploadB2B();
-		  rslt = Integer.parseInt(String.valueOf(updateItemList.get("p1")));
-
-		  return rslt;
+		  return ccpCTOSB2BMapper.getReuploadB2B(params);
 		}
 
 
