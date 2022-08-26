@@ -1362,673 +1362,569 @@
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
     	$('#ordPromo'+tagNum).removeAttr("disabled");
 
-    	var isSrvPac = 'Y';
-    	//if(appTypeVal == "66") isSrvPac = "Y";
+    	var isSrvPac = null;
+    	if(appTypeVal == "66") isSrvPac = "Y";
 
         doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 
         /* if(appTypeVal !=66){
-            doGetC
-	omboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:'Y'}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
-		} else {
-		    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
-		} */
-	}
-
-	//LoadProductPrice
-	function fn_loadProductPrice(appTypeVal, stkId, srvPacId, tagNum) {
-
-		/* if($('#gstChk').val() == '1') {
-		    $('#pBtnCal').removeClass("blind");
-
-		} else {
-		    $('#pBtnCal').addClass("blind");
-		} */
-
-		var appTypeId = 0;
-
-		appTypeId = appTypeVal == '68' ? '67' : appTypeVal;
-
-		$("#searchAppTypeId").val(appTypeId);
-		$("#searchStkId").val(stkId);
-		$("#searchSrvPacId").val(srvPacId);
-
-		Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {
-			appTypeId : appTypeId,
-			stkId : stkId,
-			srvPacId : srvPacId
-		}, function(stkPriceInfo) {
-			if (stkPriceInfo != null) {
-				var pvVal = stkPriceInfo.orderPV;
-				var pvValGst = Math.floor(pvVal * (1 / 1.06))
-
-				$("#ordPrice" + tagNum).val(stkPriceInfo.orderPrice);
-				$("#ordPv" + tagNum).val(pvVal);
-				$("#ordPvGST" + tagNum).val(pvValGst);
-				$("#ordRentalFees" + tagNum).val(stkPriceInfo.orderRentalFees);
-				$("#ordPriceId" + tagNum).val(stkPriceInfo.priceId);
-				$("#normalOrdPrice" + tagNum).val(stkPriceInfo.orderPrice);
-
-				$("#promoDiscPeriodTp" + tagNum).val('');
-				$("#promoDiscPeriod" + tagNum).val('');
-
-				// 합계
-				totSumPrice();
-			}
-		});
-	}
-
-	// 합계
-	function totSumPrice() {
-		// 합계
-		var totOrdPrice = js.String.naNcheck($("#ordPrice1").val())
-				+ js.String.naNcheck($("#ordPrice2").val());
-		var totOrdRentalFees = js.String.naNcheck($("#ordRentalFees1").val())
-				+ js.String.naNcheck($("#ordRentalFees2").val());
-		var totOrdPv = js.String.naNcheck($("#ordPv1").val())
-				+ js.String.naNcheck($("#ordPv2").val());
-
-		$("#totOrdPrice").val(totOrdPrice.toFixed(2));
-		$("#totOrdRentalFees").val(totOrdRentalFees.toFixed(2));
-		$("#totOrdPv").val(totOrdPv.toFixed(2));
-	}
-
-	function fn_setOptGrpClass() {
-		$("optgroup").attr("class", "optgroup_text")
-	}
-
-	function fn_setDefaultSrvPacId() {
-		$('#srvPacId option[value="2"]').attr('selected', 'selected');
-
-		// product comboBox 생성
-		fn_setProductCombo();
-	}
-
-	// product comboBox 생성
-	function fn_setProductCombo() {
-		var stkType = $("#appType").val() == '66' ? '1' : '2';
-
-		// StkCategoryID - Mattress(5706)
-		doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do',
-				{
-					stkType : stkType,
-					srvPacId : $('#srvPacId').val(),
-					stkCtgryId : '5706'
-				}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
-		// StkCategoryID - Frame(5707)
-		doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do',
-				{
-					stkType : stkType,
-					srvPacId : $('#srvPacId').val(),
-					stkCtgryId : '5707'
-				}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
-	}
-
-	function fn_clearSales() {
-		$('#installDur').val('');
-		$('#relatedNo').val('');
-
-		$('#ordProduct1').val('');
-		$('#ordPromo1').val('');
-		$('#ordPrice1').val('');
-		$('#ordPriceId1').val('');
-		$('#ordPv1').val('');
-		$('#ordRentalFees1').val('');
-		$('#compType1').addClass("blind");
-
-		$('#ordProduct2').val('');
-		$('#ordPromo2').val('');
-		$('#ordPrice2').val('');
-		$('#ordPriceId2').val('');
-		$('#ordPv2').val('');
-		$('#ordRentalFees2').val('');
-		$('#compType2').addClass("blind");
-	}
-
-	//ClearControl_BillGroup
-	function fn_clearBillGroup() {
-
-		$('#sctBillMthd').addClass("blind");
-		$('#sctBillAddr').addClass("blind");
-		$('#sctBillPrefer').addClass("blind");
-		$('#sctBillSel').addClass("blind");
-
-		$('#grpOpt1').removeAttr("checked");
-		$('#grpOpt2').removeAttr("checked");
-
-		$('#billMthdPost').val('');
-		$('#billMthdSms').val('');
-		$('#billMthdSms1').val('');
-		$('#billMthdSms2').val('');
-		$('#billMthdEstm').val('');
-		$('#billMthdEmail1').val('');
-		$('#billMthdEmail2').val('');
-		$('#billMthdEmailTxt1').val('');
-		$('#billMthdEmailTxt2').val('');
-		$('#billGrpWebUrl').val('');
-
-		$('#billPreferInitial').val('');
-		$('#billPreferName').val('');
-		$('#billPreferTelO').val('');
-		$('#billPreferExt').val('');
-
-		$('#billGrp').val('');
-		$('#hiddenBillGrpId').val('');
-		$('#billType').val('');
-		$('#billAddr').val('');
-	}
-
-	//ClearControl_RentPaySet_ThirdParty
-	function fn_clearRentPayMode() {
-		$('#rentPayMode').val('');
-		$('#rentPayIC').val('');
-	}
-
-	//ClearControl_RentPaySet_ThirdParty
-	function fn_clearRentPay3thParty() {
-		$('#thrdPartyId').val('');
-		$('#hiddenThrdPartyId').val('');
-		$('#thrdPartyType').val('');
-		$('#thrdPartyName').val('');
-		$('#thrdPartyNric').val('');
-	}
-
-	//ClearControl_RentPaySet_DD
-	function fn_clearRentPaySetDD() {
-		$('#sctDirectDebit').addClass("blind");
-
-		$('#rentPayBankAccNo').val('');
-		$('#hiddenRentPayBankAccID').val('');
-		$('#rentPayBankAccType').val('');
-		$('#accName').val('');
-		$('#accBranch').val('');
-		$('#accBank').val('');
-		$('#hiddenAccBankId').val('');
-	}
-
-	//ClearControl_RentPaySet_CRC
-	function fn_clearRentPaySetCRC() {
-		$('#sctCrCard').addClass("blind");
-
-		$('#rentPayCRCNo').val('');
-		$('#hiddenRentPayCRCId').val('');
-		$('#hiddenRentPayEncryptCRCNoId').val('');
-		$('#rentPayCRCType').val('');
-		$('#rentPayCRCName').val('');
-		$('#rentPayCRCExpiry').val('');
-		$('#rentPayCRCBank').val('');
-		$('#hiddenRentPayCRCBankId').val('');
-		$('#rentPayCRCCardType').val('');
-	}
-
-	function fn_checkRc(nric) {
-		Common
-				.ajax(
-						"GET",
-						"/sales/order/checkRC.do",
-						{
-							nric : nric
-						},
-						function(result) {
-							if (result != null) {
-								if (result.rookie == 1) {
-									if (result.rcPrct != null) {
-										if (result.opCnt == 0
-												&& result.rcPrct <= 55) {
-											Common
-													.alert(result.memCode
-															+ " ("
-															+ result.memCode
-															+ ") is not allowed to key in due to Individual SHI below 55%");
-											return false;
-										} else if (result.opCnt > 0) {
-											// Own Purchase
-											if (result.flg12Month == 0) {
-												Common
-														.alert(result.name
-																+ " ("
-																+ result.memCode
-																+ ") is not allowed for own purchase due member join less than 12 months.");
-												return false;
-											}
-											if (result.rcPrct <= 55) {
-												Common
-														.alert(result.name
-																+ " ("
-																+ result.memCode
-																+ ") is not allowed for own purchase key in due to RC below 55%.");
-												return false;
-											}
-										}
-									}
-								} else {
-									Common
-											.alert(result.memCode
-													+ " ("
-													+ result.memCode
-													+ ") is still a rookie, no key in is allowed.");
-									return false;
-								}
-							}
-
-							fn_loadCustomer(null, nric);
-						});
-	}
-
-	function fn_loadCustomer(custId, nric) {
-		Common
-				.ajax(
-						"GET",
-						"/sales/customer/selectCustomerJsonList",
-						{
-							custId : custId,
-							nric : nric
-						},
-						function(result) {
-							Common.removeLoader();
-							if (result != null && result.length >= 1) {
-
-								$('#scPreOrdArea').removeClass("blind");
-
-								var custInfo = result[0];
-								var dob = custInfo.dob;
-								var dobY = dob.split("/")[2];
-								var nowDt = new Date();
-								var nowDtY = nowDt.getFullYear();
-
-								if (dobY != 1900) {
-									if ((nowDtY - dobY) < 18) {
-										Common
-												.alert("Pre-Order Summary"
-														+ DEFAULT_DELIMITER
-														+ "<b>* Member must 18 years old and above.</b>");
-										$('#scPreOrdArea').addClass("blind");
-										return false;
-									}
-								}
-
-								$("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
-								$("#custTypeNm").val(custInfo.codeName1); //Customer Name
-								$("#hiddenTypeId").val(custInfo.typeId); //Type
-								$("#name").val(custInfo.name); //Name
-								$("#nric").val(custInfo.nric); //NRIC/Company No
-
-								$("#nationNm").val(custInfo.name2); //Nationality
-								$("#race").val(custInfo.codeName2); //
-								$("#dob").val(
-										custInfo.dob == '01/01/1900' ? ''
-												: custInfo.dob); //DOB
-								$("#gender").val(custInfo.gender); //Gender
-								$("#pasSportExpr")
-										.val(
-												custInfo.pasSportExpr == '01/01/1900' ? ''
-														: custInfo.pasSportExpr); //Passport Expiry
-								$("#visaExpr").val(
-										custInfo.visaExpr == '01/01/1900' ? ''
-												: custInfo.visaExpr); //Visa Expiry
-								$("#custEmail").val(custInfo.email); //Email
-
-								if (custInfo.corpTypeId > 0) {
-									$("#corpTypeNm").val(custInfo.codeName); //Industry Code
-								} else {
-									$("#corpTypeNm").val(""); //Industry Code
-								}
-
-								if (custInfo.custAddId > 0) {
-									//----------------------------------------------------------
-									// [Billing Detail] : Billing Address SETTING
-									//----------------------------------------------------------
-									fn_loadBillAddr(custInfo.custAddId);
-
-									//----------------------------------------------------------
-									// [Installation] : Installation Address SETTING
-									//----------------------------------------------------------
-									fn_loadInstallAddr(custInfo.custAddId);
-								}
-
-								if (custInfo.custCntcId > 0) {
-									//----------------------------------------------------------
-									// [Master Contact] : Owner & Purchaser Contact
-									//                    Additional Service Contact
-									//----------------------------------------------------------
-									fn_loadMainCntcPerson(custInfo.custCntcId);
-									fn_loadCntcPerson(custInfo.custCntcId);
-								}
-
-								if (custInfo.codeName == 'Government') {
-									Common.alert('<b>Goverment Customer</b>');
-								}
-
-							} else {
-								Common
-										.confirm(
-												'<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>',
-												fn_createCustomerPop,
-												fn_closePreOrdRegPop2);
-							}
-						});
-	}
-
-	function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType,
-			billAddrFull, custBillRem, custBillAddId) {
-		$('#hiddenBillGrpId').removeClass("readonly").val(billGrpId);
-		$('#billGrp').removeClass("readonly").val(custBillGrpNo);
-		$('#billType').removeClass("readonly").val(billType);
-		$('#billAddr').removeClass("readonly").val(billAddrFull);
-		$('#billRem').removeClass("readonly").val(custBillRem);
-
-		fn_loadBillAddr(custBillAddId);
-	}
-
-	function fn_loadBillAddr(custAddId) {
-		Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {
-			custAddId : custAddId,
-			'isHomecare' : 'Y'
-		}, function(billCustInfo) {
-
-			if (billCustInfo != null) {
-				$("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
-				$("#billAddrDtl").val(billCustInfo.addrDtl); //Address
-				$("#billStreet").val(billCustInfo.street); //Street
-				$("#billArea").val(billCustInfo.area); //Area
-				$("#billCity").val(billCustInfo.city); //City
-				$("#billPostCode").val(billCustInfo.postcode); //Post Code
-				$("#billState").val(billCustInfo.state); //State
-				$("#billCountry").val(billCustInfo.country); //Country
-
-				$("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
-			}
-		});
-	}
-
-	function fn_loadInstallAddr(custAddId) {
-		Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {
-			custAddId : custAddId,
-			'isHomecare' : 'Y'
-		}, function(custInfo) {
-
-			if (custInfo != null) {
-				$("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
-				$("#instAddrDtl").val(custInfo.addrDtl); //Address
-				$("#instStreet").val(custInfo.street); //Street
-				$("#instArea").val(custInfo.area); //Area
-				$("#instCity").val(custInfo.city); //City
-				$("#instPostCode").val(custInfo.postcode); //Post Code
-				$("#instState").val(custInfo.state); //State
-				$("#instCountry").val(custInfo.country); //Country
-
-				$("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-				if (MEM_TYPE == 2)
-					$("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
-				else if (MEM_TYPE == 7)
-					$("#keyinBrnchId").val(284); //Posting Branch
-				else
-					$("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
-
-				/* if(custInfo.gstChk == '1') {
-				    $("#gstChk").val('1').prop("disabled", true);
-				} else {
-				    $("#gstChk").val('0').removeAttr("disabled");
-				} */
-			}
-		});
-	}
-
-	function fn_createCustomerPop() {
-		Common.popupWin("frmCustSearch",
-				"/sales/customer/customerRegistPopESales.do", {
-					width : "1220px",
-					height : "690",
-					resizable : "no",
-					scrollbars : "no"
-				});
-	}
-
-	function fn_loadMainCntcPerson(custCntcId) {
-		Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {
-			custCntcId : custCntcId
-		}, function(custCntcInfo) {
-
-			if (custCntcInfo != null) {
-				$("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
-				$("#custInitial").val(custCntcInfo.code);
-				$("#custEmail").val(custCntcInfo.email);
-			}
-		});
-	}
-
-	function fn_loadSrvCntcPerson(custCareCntId) {
-		Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {
-			custCareCntId : custCareCntId
-		}, function(srvCntcInfo) {
-
-			if (srvCntcInfo != null) {
-				//hiddenBPCareId
-				$("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
-				$("#custCntcName").val(srvCntcInfo.name);
-				$("#custCntcInitial").val(srvCntcInfo.custInitial);
-				$("#custCntcEmail").val(srvCntcInfo.email);
-				$("#custCntcTelM").val(srvCntcInfo.telM);
-				$("#custCntcTelR").val(srvCntcInfo.telR);
-				$("#custCntcTelO").val(srvCntcInfo.telO);
-				$("#custCntcTelF").val(srvCntcInfo.telf);
-				$("#custCntcExt").val(srvCntcInfo.ext);
-			}
-		});
-	}
-
-	function fn_loadCntcPerson(custCntcId) {
-		Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {
-			custCntcId : custCntcId
-		}, function(custCntcInfo) {
-
-			if (custCntcInfo != null) {
-				$("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
-				$("#custCntcInitial").val(custCntcInfo.code);
-				$("#custCntcName").val(custCntcInfo.name1);
-				$("#custCntcEmail").val(custCntcInfo.email);
-				$("#custCntcTelM").val(custCntcInfo.telM1);
-				$("#custCntcTelR").val(custCntcInfo.telR);
-				$("#custCntcTelO").val(custCntcInfo.telO);
-				$("#custCntcTelF").val(custCntcInfo.telf);
-				$("#custCntcExt").val(custCntcInfo.ext);
-			}
-		});
-	}
-
-	function chgTab(tabNm) {
-		switch (tabNm) {
-		case 'ord': // Order Info
-			if (MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
-				$('#memBtn').addClass("blind");
-				$('#salesmanCd').prop("readonly", true).addClass("readonly");
-				;
-				$('#salesmanCd').val("${SESSION_INFO.userName}");
-				$('#salesmanCd').change();
-			}
-			$('#appType').val("66");
-			//     $('#appType').prop("disabled", true);
-
-			if ($('#ordProduct1').val() == null) {
-				$('#appType').change();
-			}
-			$('[name="advPay"]').prop("disabled", true);
-			$('#advPayNo').prop("checked", true);
-			//      $('#poNo').prop("disabled", true);
-
-			break;
-
-		case 'pay': // Payment Info
-			if ($('#appType').val() == '66') {
-				$('#rentPayMode').val('131');
-				$('#rentPayMode').change();
-				//        $('#rentPayMode').prop("disabled", true);
-				$('#thrdParty').prop("disabled", true);
-			}
-			$('[name="grpOpt"]').prop("disabled", true);
-			fn_setBillGrp("new"); // default set billing group option to new
-
-			break;
-		case 'sal':
-
-			var todayDD = Number(TODAY_DD.substr(0, 2));
-			var todayYY = Number(TODAY_DD.substr(6, 4));
-
-			var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
-
-			var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
-			if ($("#exTrade").val() == 1) {
-
-				if (todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
-					var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
-					Common.alert(
-							'<spring:message code="sal.alert.msg.actionRestriction" />'
-									+ DEFAULT_DELIMITER + "<b>" + msg + "</b>",
-							'');
-					return;
-				}
-			}
-
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	function encryptIc(nric) {
-		$('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g, "*"));
-	}
-
-	function fn_removeFile(name) {
-		if (name == "PAY") {
-			$("#payFile").val("");
-			$('#payFile').change();
-
-		} else if (name == "TRF") {
-			$("#trFile").val("");
-			$('#trFile').change();
-
-		} else if (name == "OTH") {
-			$("#otherFile").val("");
-			$('#otherFile').change();
-
-		} else if (name == "OTH2") {
-			$("#otherFile2").val("");
-			$('#otherFile2').change();
-
-		} else if (name == "TNC") {
-			$("#sofTncFile").val("");
-			$('#sofTncFile').change();
-
-		} else if (name == "MSOF") {
-			$("#msofFile").val("");
-			$('#msofFile').change();
-
-		} else if (name == "MSOFTNC") {
-			$("#msofTncFile").val("");
-			$('#msofTncFile').change();
-		}
-	}
-
-	function fn_clearAddCpnt() {
-		$('#trCpntId').css("visibility", "collapse");
-		$('#compType option').remove();
-	}
-
-	function fn_loadProductComponent(appTyp, stkId, tagNum) {
-		$('#compType' + tagNum + ' option').remove();
-		$('#compType' + tagNum).removeClass("blind");
-		$('#compType' + tagNum).removeClass("disabled");
-
-		doGetComboData('/sales/order/selectProductComponent.do', {
-			appTyp : appTyp,
-			stkId : stkId
-		}, '', 'compType' + tagNum, 'S', '');
-	}
-
-	function fn_check(a, tagNum) {
-		if ($('#compType' + tagNum + ' option').length <= 0) {
-			if (a == 3) {
-				return;
-			} else {
-				setTimeout(function() {
-					fn_check(parseInt(a) + 1, tagNum)
-				}, 500);
-			}
-		} else if ($('#compType' + tagNum + ' option').length <= 1) {
-			$('#trCpntId' + tagNum).css("visibility", "collapse");
-			$('#compType' + tagNum + ' option').remove();
-			$('#compType' + tagNum).addClass("blind");
-			$('#compType' + tagNum).prop("disabled", true);
-
-		} else if ($('#compType' + tagNum + ' option').length > 1) {
-			$('#trCpntId' + tagNum).css("visibility", "visible");
-			$('#compType' + tagNum).removeClass("blind");
-			$('#compType' + tagNum).removeAttr("disabled");
-
-			var key = 0;
-
-			Common.ajax("GET",
-					"/sales/order/selectProductComponentDefaultKey.do", {
-						stkId : $("#ordProduct" + tagNum).val()
-					}, function(defaultKey) {
-						if (defaultKey != null) {
-							key = defaultKey.code;
-							$('#compType' + tagNum).val(key).change();
-							fn_reloadPromo(tagNum);
-						}
-					});
-		}
-	}
-
-	function fn_reloadPromo(tagNum) {
-		$('#ordPromo' + tagNum + ' option').remove();
-		$('#ordPromo' + tagNum).removeClass("blind");
-		$('#ordPromo' + tagNum).removeClass("disabled");
-
-		var appTyp = $("#appType").val();
-		var stkId = $("#ordProduct" + tagNum).val();
-		var cpntId = $("#compType" + tagNum).val();
-		var empInd = 0;
-		var exTrade = $("#exTrade").val();
-
-		doGetComboData('/sales/order/selectPromoBsdCpntESales.do', {
-			appTyp : appTyp,
-			stkId : stkId,
-			cpntId : cpntId,
-			empInd : empInd,
-			exTrade : exTrade
-		}, '', 'ordPromo' + tagNum, 'S', '');
-	}
-
-	$('#exTrade')
-			.change(
-					function() {
-
-						if ($('#exTrade').val() == '1') {
-							var todayDD = Number(TODAY_DD.substr(0, 2));
-							var todayYY = Number(TODAY_DD.substr(6, 4));
-
-							var strBlockDtFrom = blockDtFrom
-									+ BEFORE_DD.substr(2);
-							var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
-
-							console.log("todayDD: " + todayDD);
-							console.log("blockDtFrom : " + blockDtFrom);
-							console.log("blockDtTo : " + blockDtTo);
-
-							if (todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
-								var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
-								Common.alert(
-										'<spring:message code="sal.alert.msg.actionRestriction" />'
-												+ DEFAULT_DELIMITER + "<b>"
-												+ msg + "</b>", '');
-								return;
-							}
-						}
-
-					});
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:'Y'}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        } else {
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        } */
+    }
+
+    //LoadProductPrice
+    function fn_loadProductPrice(appTypeVal, stkId, srvPacId, tagNum) {
+
+        /* if($('#gstChk').val() == '1') {
+            $('#pBtnCal').removeClass("blind");
+
+        } else {
+            $('#pBtnCal').addClass("blind");
+        } */
+
+        var appTypeId = 0;
+
+        appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
+
+        $("#searchAppTypeId").val(appTypeId);
+        $("#searchStkId").val(stkId);
+        $("#searchSrvPacId").val(srvPacId);
+
+        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
+            if(stkPriceInfo != null) {
+                var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal*(1/1.06))
+
+                $("#ordPrice"+tagNum).val(stkPriceInfo.orderPrice);
+                $("#ordPv"+tagNum).val(pvVal);
+                $("#ordPvGST"+tagNum).val(pvValGst);
+                $("#ordRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
+                $("#ordPriceId"+tagNum).val(stkPriceInfo.priceId);
+                $("#normalOrdPrice"+tagNum).val(stkPriceInfo.orderPrice);
+
+                $("#promoDiscPeriodTp"+tagNum).val('');
+                $("#promoDiscPeriod"+tagNum).val('');
+
+                // 합계
+                totSumPrice();
+            }
+        });
+    }
+
+    // 합계
+    function totSumPrice() {
+        // 합계
+        var totOrdPrice = js.String.naNcheck($("#ordPrice1").val()) + js.String.naNcheck($("#ordPrice2").val());
+        var totOrdRentalFees = js.String.naNcheck($("#ordRentalFees1").val()) + js.String.naNcheck($("#ordRentalFees2").val());
+        var totOrdPv = js.String.naNcheck($("#ordPv1").val()) + js.String.naNcheck($("#ordPv2").val());
+
+        $("#totOrdPrice").val(totOrdPrice.toFixed(2));
+        $("#totOrdRentalFees").val(totOrdRentalFees.toFixed(2));
+        $("#totOrdPv").val(totOrdPv.toFixed(2));
+    }
+
+    function fn_setOptGrpClass() {
+        $("optgroup").attr("class" , "optgroup_text")
+    }
+
+    function fn_setDefaultSrvPacId() {
+        $('#srvPacId option[value="2"]').attr('selected', 'selected');
+
+        // product comboBox 생성
+        fn_setProductCombo();
+    }
+
+    // product comboBox 생성
+    function fn_setProductCombo(){
+         var stkType = $("#appType").val() == '66' ? '1' : '2';
+
+         // StkCategoryID - Mattress(5706)
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5706'}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
+         // StkCategoryID - Frame(5707)
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5707'}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
+    }
+
+    function fn_clearSales() {
+        $('#installDur').val('');
+        $('#relatedNo').val('');
+
+        $('#ordProduct1').val('');
+        $('#ordPromo1').val('');
+        $('#ordPrice1').val('');
+        $('#ordPriceId1').val('');
+        $('#ordPv1').val('');
+        $('#ordRentalFees1').val('');
+        $('#compType1').addClass("blind");
+
+        $('#ordProduct2').val('');
+        $('#ordPromo2').val('');
+        $('#ordPrice2').val('');
+        $('#ordPriceId2').val('');
+        $('#ordPv2').val('');
+        $('#ordRentalFees2').val('');
+        $('#compType2').addClass("blind");
+    }
+
+    //ClearControl_BillGroup
+    function fn_clearBillGroup() {
+
+        $('#sctBillMthd').addClass("blind");
+        $('#sctBillAddr').addClass("blind");
+        $('#sctBillPrefer').addClass("blind");
+        $('#sctBillSel').addClass("blind");
+
+        $('#grpOpt1').removeAttr("checked");
+        $('#grpOpt2').removeAttr("checked");
+
+        $('#billMthdPost').val('');
+        $('#billMthdSms').val('');
+        $('#billMthdSms1').val('');
+        $('#billMthdSms2').val('');
+        $('#billMthdEstm').val('');
+        $('#billMthdEmail1').val('');
+        $('#billMthdEmail2').val('');
+        $('#billMthdEmailTxt1').val('');
+        $('#billMthdEmailTxt2').val('');
+        $('#billGrpWebUrl').val('');
+
+        $('#billPreferInitial').val('');
+        $('#billPreferName').val('');
+        $('#billPreferTelO').val('');
+        $('#billPreferExt').val('');
+
+        $('#billGrp').val('');
+        $('#hiddenBillGrpId').val('');
+        $('#billType').val('');
+        $('#billAddr').val('');
+    }
+
+    //ClearControl_RentPaySet_ThirdParty
+    function fn_clearRentPayMode() {
+        $('#rentPayMode').val('');
+        $('#rentPayIC').val('');
+    }
+
+    //ClearControl_RentPaySet_ThirdParty
+    function fn_clearRentPay3thParty() {
+        $('#thrdPartyId').val('');
+        $('#hiddenThrdPartyId').val('');
+        $('#thrdPartyType').val('');
+        $('#thrdPartyName').val('');
+        $('#thrdPartyNric').val('');
+    }
+
+    //ClearControl_RentPaySet_DD
+    function fn_clearRentPaySetDD() {
+        $('#sctDirectDebit').addClass("blind");
+
+        $('#rentPayBankAccNo').val('');
+        $('#hiddenRentPayBankAccID').val('');
+        $('#rentPayBankAccType').val('');
+        $('#accName').val('');
+        $('#accBranch').val('');
+        $('#accBank').val('');
+        $('#hiddenAccBankId').val('');
+    }
+
+    //ClearControl_RentPaySet_CRC
+    function fn_clearRentPaySetCRC() {
+        $('#sctCrCard').addClass("blind");
+
+        $('#rentPayCRCNo').val('');
+        $('#hiddenRentPayCRCId').val('');
+        $('#hiddenRentPayEncryptCRCNoId').val('');
+        $('#rentPayCRCType').val('');
+        $('#rentPayCRCName').val('');
+        $('#rentPayCRCExpiry').val('');
+        $('#rentPayCRCBank').val('');
+        $('#hiddenRentPayCRCBankId').val('');
+        $('#rentPayCRCCardType').val('');
+    }
+
+    function fn_checkRc(nric) {
+        Common.ajax("GET", "/sales/order/checkRC.do", {nric : nric}, function(result) {
+            if(result != null) {
+                if(result.rookie == 1) {
+                    if(result.rcPrct != null) {
+                        if(result.opCnt == 0 && result.rcPrct <= 50) {
+                            Common.alert(result.memCode + " (" + result.memCode + ") is not allowed to key in due to Individual SHI below 55%");
+                            return false;
+                        } else if(result.opCnt > 0) {
+                            // Own Purchase
+                            if(result.flg12Month == 0) {
+                                Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase due member join less than 12 months.");
+                                return false;
+                            }
+                            if(result.rcPrct <= 55) {
+                                Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                                return false;
+                            }
+                        }
+                    }
+                } else {
+                    Common.alert(result.memCode + " (" + result.memCode + ") is still a rookie, no key in is allowed.");
+                    return false;
+                }
+            }
+
+            fn_loadCustomer(null, nric);
+        });
+    }
+
+    function fn_loadCustomer(custId, nric){
+        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
+            Common.removeLoader();
+            if(result != null && result.length >= 1) {
+
+                $('#scPreOrdArea').removeClass("blind");
+
+                var custInfo = result[0];
+                var dob = custInfo.dob;
+                var dobY = dob.split("/")[2];
+                var nowDt = new Date();
+                var nowDtY = nowDt.getFullYear();
+
+                if(dobY != 1900) {
+                    if((nowDtY - dobY) < 18) {
+                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+                        $('#scPreOrdArea').addClass("blind");
+                        return false;
+                    }
+                }
+
+                $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
+                $("#custTypeNm").val(custInfo.codeName1); //Customer Name
+                $("#hiddenTypeId").val(custInfo.typeId); //Type
+                $("#name").val(custInfo.name); //Name
+                $("#nric").val(custInfo.nric); //NRIC/Company No
+
+                $("#nationNm").val(custInfo.name2); //Nationality
+                $("#race").val(custInfo.codeName2); //
+                $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
+                $("#gender").val(custInfo.gender); //Gender
+                $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+                $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
+                $("#custEmail").val(custInfo.email); //Email
+
+                if(custInfo.corpTypeId > 0) {
+                    $("#corpTypeNm").val(custInfo.codeName); //Industry Code
+                } else {
+                    $("#corpTypeNm").val(""); //Industry Code
+                }
+
+                if(custInfo.custAddId > 0) {
+                    //----------------------------------------------------------
+                    // [Billing Detail] : Billing Address SETTING
+                    //----------------------------------------------------------
+                    fn_loadBillAddr(custInfo.custAddId);
+
+                    //----------------------------------------------------------
+                    // [Installation] : Installation Address SETTING
+                    //----------------------------------------------------------
+                    fn_loadInstallAddr(custInfo.custAddId);
+                }
+
+                if(custInfo.custCntcId > 0) {
+                    //----------------------------------------------------------
+                    // [Master Contact] : Owner & Purchaser Contact
+                    //                    Additional Service Contact
+                    //----------------------------------------------------------
+                    fn_loadMainCntcPerson(custInfo.custCntcId);
+                    fn_loadCntcPerson(custInfo.custCntcId);
+                }
+
+                if(custInfo.codeName == 'Government') {
+                    Common.alert('<b>Goverment Customer</b>');
+                }
+
+            } else {
+                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop, fn_closePreOrdRegPop2);
+            }
+        });
+    }
+
+    function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
+        $('#hiddenBillGrpId').removeClass("readonly").val(billGrpId);
+        $('#billGrp').removeClass("readonly").val(custBillGrpNo);
+        $('#billType').removeClass("readonly").val(billType);
+        $('#billAddr').removeClass("readonly").val(billAddrFull);
+        $('#billRem').removeClass("readonly").val(custBillRem);
+
+        fn_loadBillAddr(custBillAddId);
+    }
+
+    function fn_loadBillAddr(custAddId){
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(billCustInfo) {
+
+        	if(billCustInfo != null) {
+                $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
+                $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
+                $("#billStreet").val(billCustInfo.street); //Street
+                $("#billArea").val(billCustInfo.area); //Area
+                $("#billCity").val(billCustInfo.city); //City
+                $("#billPostCode").val(billCustInfo.postcode); //Post Code
+                $("#billState").val(billCustInfo.state); //State
+                $("#billCountry").val(billCustInfo.country); //Country
+
+                $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
+            }
+        });
+    }
+
+    function fn_loadInstallAddr(custAddId){
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(custInfo) {
+
+            if(custInfo != null) {
+                $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
+                $("#instAddrDtl").val(custInfo.addrDtl); //Address
+                $("#instStreet").val(custInfo.street); //Street
+                $("#instArea").val(custInfo.area); //Area
+                $("#instCity").val(custInfo.city); //City
+                $("#instPostCode").val(custInfo.postcode); //Post Code
+                $("#instState").val(custInfo.state); //State
+                $("#instCountry").val(custInfo.country); //Country
+
+                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+                if(MEM_TYPE == 2)
+                    $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else if (MEM_TYPE == 7)
+                	$("#keyinBrnchId").val(284); //Posting Branch
+                else
+                    $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+
+                /* if(custInfo.gstChk == '1') {
+                    $("#gstChk").val('1').prop("disabled", true);
+                } else {
+                    $("#gstChk").val('0').removeAttr("disabled");
+                } */
+            }
+        });
+    }
+
+    function fn_createCustomerPop() {
+        Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : "1220px", height : "690", resizable: "no", scrollbars: "no"});
+    }
+
+    function fn_loadMainCntcPerson(custCntcId){
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
+
+            if(custCntcInfo != null) {
+                $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
+                $("#custInitial").val(custCntcInfo.code);
+                $("#custEmail").val(custCntcInfo.email);
+            }
+        });
+    }
+
+    function fn_loadSrvCntcPerson(custCareCntId) {
+        Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
+
+            if(srvCntcInfo != null) {
+                //hiddenBPCareId
+                $("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
+                $("#custCntcName").val(srvCntcInfo.name);
+                $("#custCntcInitial").val(srvCntcInfo.custInitial);
+                $("#custCntcEmail").val(srvCntcInfo.email);
+                $("#custCntcTelM").val(srvCntcInfo.telM);
+                $("#custCntcTelR").val(srvCntcInfo.telR);
+                $("#custCntcTelO").val(srvCntcInfo.telO);
+                $("#custCntcTelF").val(srvCntcInfo.telf);
+                $("#custCntcExt").val(srvCntcInfo.ext);
+            }
+        });
+    }
+
+    function fn_loadCntcPerson(custCntcId){
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
+
+            if(custCntcInfo != null) {
+                $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
+                $("#custCntcInitial").val(custCntcInfo.code);
+                $("#custCntcName").val(custCntcInfo.name1);
+                $("#custCntcEmail").val(custCntcInfo.email);
+                $("#custCntcTelM").val(custCntcInfo.telM1);
+                $("#custCntcTelR").val(custCntcInfo.telR);
+                $("#custCntcTelO").val(custCntcInfo.telO);
+                $("#custCntcTelF").val(custCntcInfo.telf);
+                $("#custCntcExt").val(custCntcInfo.ext);
+            }
+        });
+    }
+
+    function chgTab(tabNm) {
+        switch(tabNm) {
+            case 'ord' :    // Order Info
+            	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+                    $('#memBtn').addClass("blind");
+                    $('#salesmanCd').prop("readonly",true).addClass("readonly");;
+                    $('#salesmanCd').val("${SESSION_INFO.userName}");
+                    $('#salesmanCd').change();
+                }
+                $('#appType').val("66");
+          //     $('#appType').prop("disabled", true);
+
+                if($('#ordProduct1').val() == null){
+                    $('#appType').change();
+                }
+                $('[name="advPay"]').prop("disabled", true);
+                $('#advPayNo').prop("checked", true);
+          //      $('#poNo').prop("disabled", true);
+
+                break;
+
+            case 'pay' :    // Payment Info
+                if($('#appType').val() == '66'){
+                    $('#rentPayMode').val('131');
+                    $('#rentPayMode').change();
+            //        $('#rentPayMode').prop("disabled", true);
+                    $('#thrdParty').prop("disabled", true);
+                }
+                $('[name="grpOpt"]').prop("disabled", true);
+                fn_setBillGrp("new"); // default set billing group option to new
+
+                break;
+                case 'sal' :
+
+                    var todayDD = Number(TODAY_DD.substr(0, 2));
+                    var todayYY = Number(TODAY_DD.substr(6, 4));
+
+                    var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+
+                    var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+                    if ($("#exTrade").val() == 1) {
+
+                        if (todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                               var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
+                               Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />'+ DEFAULT_DELIMITER + "<b>" + msg + "</b>",'');
+                        return;
+                    }
+                }
+
+                break;
+
+            default :
+                break;
+        }
+    }
+
+    function encryptIc(nric){
+        $('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
+    }
+
+    function fn_removeFile(name) {
+        if(name == "PAY") {
+             $("#payFile").val("");
+             $('#payFile').change();
+
+        } else if(name == "TRF") {
+            $("#trFile").val("");
+            $('#trFile').change();
+
+        } else if(name == "OTH") {
+            $("#otherFile").val("");
+            $('#otherFile').change();
+
+        } else if(name == "OTH2") {
+            $("#otherFile2").val("");
+            $('#otherFile2').change();
+
+        } else if(name == "TNC"){
+            $("#sofTncFile").val("");
+            $('#sofTncFile').change();
+
+        } else if(name == "MSOF"){
+            $("#msofFile").val("");
+            $('#msofFile').change();
+
+        }else if(name == "MSOFTNC"){
+            $("#msofTncFile").val("");
+            $('#msofTncFile').change();
+        }
+    }
+
+    function fn_clearAddCpnt() {
+        $('#trCpntId').css("visibility","collapse");
+        $('#compType option').remove();
+    }
+
+    function fn_loadProductComponent(appTyp, stkId, tagNum) {
+    	$('#compType'+tagNum+' option').remove();
+        $('#compType'+tagNum).removeClass("blind");
+        $('#compType'+tagNum).removeClass("disabled");
+
+        doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId }, '', 'compType'+tagNum, 'S', '');
+    }
+
+    function fn_check(a, tagNum) {
+    	if ($('#compType'+tagNum+' option').length <= 0) {
+            if (a == 3) {
+                return;
+            } else {
+                setTimeout(function() { fn_check( parseInt(a) + 1, tagNum) }, 500);
+            }
+        } else if ($('#compType'+tagNum+' option').length <= 1) {
+            $('#trCpntId'+tagNum).css("visibility","collapse");
+            $('#compType'+tagNum+' option').remove();
+            $('#compType'+tagNum).addClass("blind");
+            $('#compType'+tagNum).prop("disabled", true);
+
+        } else if ($('#compType'+tagNum+' option').length > 1) {
+            $('#trCpntId'+tagNum).css("visibility","visible");
+            $('#compType'+tagNum).removeClass("blind");
+            $('#compType'+tagNum).removeAttr("disabled");
+
+            var key = 0;
+
+            Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProduct"+tagNum).val()}, function(defaultKey) {
+                if(defaultKey != null) {
+                	  key = defaultKey.code;
+                	  $('#compType'+tagNum).val(key).change();
+                	  fn_reloadPromo(tagNum);
+                }
+            });
+        }
+    }
+
+    function fn_reloadPromo(tagNum) {
+        $('#ordPromo'+tagNum+' option').remove();
+        $('#ordPromo'+tagNum).removeClass("blind");
+        $('#ordPromo'+tagNum).removeClass("disabled");
+
+        var appTyp = $("#appType").val();
+        var stkId = $("#ordProduct"+tagNum).val();
+        var cpntId = $("#compType"+tagNum).val();
+        var empInd = 0;
+        var exTrade = $("#exTrade").val();
+
+        doGetComboData('/sales/order/selectPromoBsdCpntESales.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo'+tagNum, 'S', '');
+    }
+
+    $('#exTrade').change(function() {
+
+
+            if($('#exTrade').val()=='1'){
+                var todayDD = Number(TODAY_DD.substr(0, 2));
+                var todayYY = Number(TODAY_DD.substr(6, 4));
+
+                var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+                var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+                console.log("todayDD: " + todayDD);
+                console.log("blockDtFrom : " + blockDtFrom);
+                console.log("blockDtTo : " + blockDtTo);
+
+                 if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                     var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
+                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                     return;
+                 }
+           }
+
+    });
+
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
