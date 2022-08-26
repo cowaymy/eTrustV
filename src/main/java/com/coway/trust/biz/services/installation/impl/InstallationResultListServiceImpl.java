@@ -1841,8 +1841,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     installResult.put("instChklstCheckBox",
         ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
-    installResult.put("instNoteChk",
-            ("Y".equals(CommonUtils.nvl(params.get("instNoteChk")).toString())) ? "Y" : "N");
+/*    installResult.put("instNoteChk",
+            ("Y".equals(CommonUtils.nvl(params.get("instNoteChk")).toString())) ? "Y" : "N");*/
     installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
     //Added by keyi installation note phase1 20220401
@@ -2490,6 +2490,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     else{
     	chkSMS = "N";
     }
+    installResult.put("chkSMS", chkSMS);
 
     // Rental || Sponsor || Education || AUX
     if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID) || "145".equals(ApptypeID)) { //add on Free Trial
@@ -2708,37 +2709,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     LOGGER.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
     LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
-
-    // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19 //UNDER UAT
-    String smsMessage = "";
-
-    if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-    		&& (installResult.get("custType").equals("Individual") || installResult.get("custTypeMobile").equals("964"))&& chkSMS.equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
-    {
-        LOGGER.debug("================INSMS================");
-
-    	if(installResult.get("statusCodeId").toString().equals("4")){ //COMPLETE
-    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
-    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
-    	    }else{ //FAIL
-    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
-    	    }
-    }
-
-
-    Map<String, Object> smsList = new HashMap<>();
-    smsList.put("userId", installResult.get("creator"));
-    smsList.put("smsType", 975);
-    smsList.put("smsMessage", smsMessage);
-    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
-
-    if(smsMessage != "")
-    {
-    	sendSms(smsList); // rollback for SMS triggering due to UAT not completely buyoff
-    }
-
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
-
     //this.sendEmail();
 
     return true;
@@ -3667,6 +3638,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     sms.setMessage(smsList.get("smsMessage").toString());
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
+    LOGGER.debug("smsmsg111===" + smsList.toString());
+
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 
@@ -3842,5 +3815,49 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    }
 	  }
 
+  	@Override
+	public Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult) {
+  		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+		String smsMessage = "";
+		smsResultValue.put("smsLogStat", "0");//if success
 
+		 LOGGER.debug("================INSMS111================");
+		 LOGGER.debug("ApptypeID===" + ApptypeID);
+		 LOGGER.debug("InstallationResult====" + installResult.toString());
+
+		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
+	    if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
+	    		&& (installResult.get("custType").equals("Individual") || installResult.get("custTypeMobile").equals("964"))&& installResult.get("chkSms").equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
+	    {
+	        LOGGER.debug("================INSMS================");
+
+	    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
+		        smsMessage = "COWAY: Order " + installResult.get("salesOrdNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
+	    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
+	    	}else{ //FAIL
+	    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+	    	}
+	    }
+
+	    Map<String, Object> smsList = new HashMap<>();
+	    smsList.put("userId", installResult.get("creator"));
+	    smsList.put("smsType", 975);
+	    smsList.put("smsMessage", smsMessage);
+	    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
+
+		try{
+		    if(smsMessage != "")
+		    {
+		    	sendSms(smsList);
+		    }
+		}catch(Exception e){
+			logger.info("Fail to send SMS to " + installResult.get("custMobileNo").toString());
+	    	smsResultValue.put("smsLogStat", "3");//if fail
+		}finally{
+			logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
+		}
+
+		logger.info("===resultValue===" + smsResultValue.toString());
+		return smsResultValue;
+	}
 }

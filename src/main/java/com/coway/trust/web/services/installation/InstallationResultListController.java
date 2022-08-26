@@ -38,6 +38,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.PreOrderService;
+import com.coway.trust.biz.sales.order.vo.InstallResultVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
@@ -653,7 +654,7 @@ public class InstallationResultListController {
       } else {
         resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
         if (null != resultValue) {
-          HashMap spMap = (HashMap) resultValue.get("spMap");
+          HashMap<String, Object> spMap = (HashMap<String, Object>) resultValue.get("spMap");
           logger.debug("spMap :" + spMap.toString());
           if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
             resultValue.put("logerr", "Y");
@@ -683,7 +684,7 @@ public class InstallationResultListController {
         resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
 
         if (null != resultValue) {
-          HashMap spMap = (HashMap) resultValue.get("spMap");
+          HashMap<String, Object> spMap = (HashMap<String, Object>) resultValue.get("spMap");
           logger.debug("spMap :" + spMap.toString());
           if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
 
@@ -715,19 +716,21 @@ public class InstallationResultListController {
    * @throws ParseException
    * @throws Exception
    */
-  @RequestMapping(value = "/addInstallation_2.do", method = RequestMethod.POST)
+  @SuppressWarnings("unchecked")
+@RequestMapping(value = "/addInstallation_2.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> insertInstallationResult_2(@RequestBody Map<String, Object> params,
       SessionVO sessionVO) throws ParseException {
     ReturnMessage message = new ReturnMessage();
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> resultValuePexRtn = new HashMap<String, Object>();
+    Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
     logger.debug("==========================/addInstallation_2.do=================================");
     logger.debug("params : {}", params);
     logger.debug("==========================/addInstallation_2.do=================================");
 
     List<EgovMap> add = (List<EgovMap>) params.get("add");
-    Map<String, Object> param = (Map)params.get("installForm");
+    Map<String, Object> param = (Map<String, Object>)params.get("installForm");
 
     List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
 
@@ -735,6 +738,7 @@ public class InstallationResultListController {
 
     if (noRcd == 1) {
       EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(param);
+
       logger.debug("INSTALLATION RESULT : {}" + installResult);
 
       param.put("EXC_CT_ID", installResult.get("ctId"));
@@ -768,7 +772,7 @@ public class InstallationResultListController {
           }
 
           if (null != resultValue && !resultValue.isEmpty()) {
-            HashMap spMap = (HashMap) resultValue.get("spMap");
+            HashMap<String, Object> spMap = (HashMap<String, Object>) resultValue.get("spMap");
             logger.debug("spMap :" + spMap.toString());
             if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
                 && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
@@ -791,7 +795,7 @@ public class InstallationResultListController {
                       resultValue = installationResultListService.runInstSp(param, sessionVO, "2");
 
                       if (null != resultValue) {
-                        spMap = (HashMap) resultValue.get("spMap");
+                        spMap = (HashMap<String, Object>) resultValue.get("spMap");
                         logger.debug("spMap :" + spMap.toString());
                         if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
                             && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
@@ -853,15 +857,38 @@ public class InstallationResultListController {
 
               message.setCode("1");
               message.setData("Y");
+              String msg = "";
               if (Integer.parseInt(param.get("installStatus").toString()) == 21) {
-                message
-                    .setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
-                        + resultValue.get("value") + ". Please proceed to Calllog function.");
+                msg = "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
+                        + resultValue.get("value") + ". Please proceed to Calllog function.";
               } else {
+            	  msg = "Installation No. (" + resultValue.get("installEntryNo")
+                  + ") successfully updated to " + resultValue.get("value") + ".";
+
                 message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
-                message.setMessage("Installation No. (" + resultValue.get("installEntryNo")
-                    + ") successfully updated to " + resultValue.get("value") + ".");
               }
+
+              String chksms = "";
+              if (param.get("chkSms").equals("on")){
+            	  chksms = "Y";
+              }else{
+            	  chksms = "N";
+              }
+              param.put("chkSms", chksms);
+              param.put("ctCode", installResult.get("ctMemCode"));
+              param.put("salesOrdNo", installResult.get("salesOrdNo"));
+              param.put("creator", sessionVO.getUserId());
+
+        	  try{
+        		  smsResultValue = installationResultListService.installationSendSMS(param.get("hidAppTypeId").toString(), param);
+        	  }catch (Exception e){
+        		  logger.info("===smsResultValue111===" + smsResultValue.toString());
+        	  }
+        	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
+        		  msg += "</br> Failed to send SMS to " + param.get("custMobileNo").toString();
+        	  }
+
+        	  message.setMessage(msg);
             }
           }
         }

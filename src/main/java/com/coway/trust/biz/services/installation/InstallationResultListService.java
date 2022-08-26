@@ -151,4 +151,7 @@ public interface InstallationResultListService {
   void sendSms(Map<String, Object> smsList);
 
   //void sendEmail();
+
+  Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult);
+
 }
