@@ -385,10 +385,12 @@ function fn_reuploadB2B() {
 		   console.log(result);
 		   Common.alert(result.message);
 
-           $('#search').click();
-       }
+		   fn_installationListSearch();
+		   }
 	   );
 }
+
+
 
 </script>
 
