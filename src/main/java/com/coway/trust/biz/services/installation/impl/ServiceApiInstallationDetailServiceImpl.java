@@ -325,7 +325,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             	smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
 	      	}catch (Exception e){
 	      		logger.info("===smsResultValue===" + smsResultValue.toString());
-	      		logger.info("***Failed to send SMS to" + params.get("custMobileNo").toString() + "***");
+	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
 	      	}
           }
 
