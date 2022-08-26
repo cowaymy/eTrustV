@@ -318,6 +318,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               // SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
               servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
             }
+
+            //send sms
+            Map<String, Object> smsResultValue = new HashMap<String, Object>();
+            try{
+            	smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
+	      	}catch (Exception e){
+	      		logger.info("===smsResultValue===" + smsResultValue.toString());
+	      		logger.info("***Failed to send SMS to" + params.get("custMobileNo").toString() + "***");
+	      	}
           }
 
           logger.info("###insApiresult.get(chkCrtAs): " + insApiresult.get("chkCrtAs"));
