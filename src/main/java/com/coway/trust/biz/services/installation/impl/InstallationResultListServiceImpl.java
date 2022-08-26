@@ -3843,22 +3843,28 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		 LOGGER.debug("ctCode====" + installResult.get("ctCode").toString());
 		 LOGGER.debug("creator====" + installResult.get("creator").toString());
 
-
-		 LOGGER.debug("================beforeSMS================");
-
 		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
-	    if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-	    		&& (installResult.get("custType").equals("Individual") || installResult.get("customerType").equals("964"))&& installResult.get("chkSms").equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
-	    {
-	        LOGGER.debug("================INSMS================");
+		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
 
-	    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
-		        smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
-	    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
-	    	}else{ //FAIL
-	    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
-	    	}
-	    }
+			 boolean chkAppType = ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68");
+			 LOGGER.debug("chkAppType111===" + chkAppType);
+			 boolean chkcusttype = installResult.get("custType").equals("Individual") || installResult.get("customerType").equals("964");
+			 LOGGER.debug("chkcusttype111===" + chkcusttype);
+
+			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
+			    		&& (installResult.get("custType").equals("Individual") || installResult.get("customerType").equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
+			    {
+			        LOGGER.debug("================INSMS================");
+
+			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
+				        smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
+			    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
+			    	}else{ //FAIL
+			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+			    	}
+			    }
+
+		 }
 
 	    Map<String, Object> smsList = new HashMap<>();
 	    smsList.put("userId", installResult.get("creator"));
