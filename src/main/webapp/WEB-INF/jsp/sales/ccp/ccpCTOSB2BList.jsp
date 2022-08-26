@@ -384,6 +384,8 @@ function fn_reuploadB2B() {
 		   console.log("Success");
 		   console.log(result);
 		   Common.alert(result.message);
+
+           $('#search').click();
        }
 	   );
 }
@@ -404,6 +406,7 @@ function fn_reuploadB2B() {
 <h2>CCP Auto-Approve Config</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="_reupload" onclick ="fn_reuploadB2B()">Re-Upload</a></p></li>
+
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
