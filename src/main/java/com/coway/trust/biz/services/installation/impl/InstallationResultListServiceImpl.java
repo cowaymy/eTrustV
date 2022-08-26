@@ -3824,13 +3824,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		 LOGGER.debug("================INSMS111================");
 		 LOGGER.debug("ApptypeID===" + ApptypeID);
 		 LOGGER.debug("InstallationResult====" + installResult.toString());
-		 LOGGER.debug("userId====" + installResult.get("userId").toString());
-		 LOGGER.debug("CTID====" + installResult.get("CTID").toString());
-		 LOGGER.debug("customerType====" + installResult.get("customerType").toString());
-		 LOGGER.debug("chkSms====" + installResult.get("chkSms").toString());
-		 LOGGER.debug("installStatus====" + installResult.get("installStatus").toString());
-		 LOGGER.debug("installDate====" + installResult.get("installDate").toString());
-		 LOGGER.debug("salesOrderNo====" + installResult.get("salesOrderNo").toString());
 
 		 if(CommonUtils.nvl(installResult.get("userId").toString()) != ""){ //from Mobile
 			 installResult.put("ctCode", installResult.get("userId"));
@@ -3840,17 +3833,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			 installResult.put("creator", installResult.get("CTID"));
 		 }
 
-		 LOGGER.debug("ctCode====" + installResult.get("ctCode").toString());
-		 LOGGER.debug("creator====" + installResult.get("creator").toString());
-
 		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
 		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
-
-			 boolean chkAppType = ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68");
-			 LOGGER.debug("chkAppType111===" + chkAppType);
-			 boolean chkcusttype = CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964");
-			 LOGGER.debug("chkcusttype111===" + chkcusttype);
-
 			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
 			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
 			    {
@@ -3870,7 +3854,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    smsList.put("userId", installResult.get("creator"));
 	    smsList.put("smsType", 975);
 	    smsList.put("smsMessage", smsMessage);
-	    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
+	    //smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
+	    smsList.put("smsMobileNo", "+6017-5977 998");
+
 
 		try{
 		    if(smsMessage != "")
