@@ -29,7 +29,7 @@ $(document).ready(function() {
 
 
 	//Search
-	$("#_search").click(function() {
+/* 	$("#_search").click(function() {
 
 		//Validation
 		if( null == $("#_sDate").val() || '' == $("#_sDate").val()){
@@ -42,12 +42,12 @@ $(document).ready(function() {
 		    return;
 		} */
 
-		Common.ajax("GET", "/sales/ccp/selectCTOSB2BList", $("#_searchForm").serialize(), function(result){
+/* 		Common.ajax("GET", "/sales/ccp/selectCTOSB2BList", $("#_searchForm").serialize(), function(result){
 			//set Grid
-			AUIGrid.setGridData(ctosListGridID, result);
+			AUIGrid.setGridData(ctosListGridID, result); */
 
-		});
-	});
+/* 		});
+	});  */
 
 	//Cell Double Click
 	AUIGrid.bind(ctosListGridID, "cellDoubleClick", function(event){
@@ -376,6 +376,26 @@ function fn_displayReport(viewType, batchId, ordNo){
 	}
 }
 
+function fn_search(){
+	//Validation
+	if( null == $("#_sDate").val() || '' == $("#_sDate").val()){
+	    Common.alert('<spring:message code="sal.alert.msg.plzKeyInFromDt" />');
+	    return;
+	}
+
+	/* if(null == $("#_eDate").val() || '' == $("#_eDate").val()){
+	    Common.alert("* please key in to Date");
+	    return;
+	} */
+
+	Common.ajax("GET", "/sales/ccp/selectCTOSB2BList", $("#_searchForm").serialize(), function(result){
+	    //set Grid
+	    AUIGrid.setGridData(ctosListGridID, result);
+	});
+}
+
+
+ /*****************************Reupload B2B**********************************************/
 function fn_reuploadB2B() {
     console.log("Calling Backend");
 
@@ -385,7 +405,7 @@ function fn_reuploadB2B() {
 		   console.log(result);
 		   Common.alert(result.message);
 
-		   fn_installationListSearch();
+		   fn_search();
 		   }
 	   );
 }
@@ -410,7 +430,7 @@ function fn_reuploadB2B() {
     <li><p class="btn_blue"><a id="_reupload" onclick ="fn_reuploadB2B()">Re-Upload</a></p></li>
 
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a id="_search" onclick ="fn_search()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 
