@@ -3825,14 +3825,22 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		 LOGGER.debug("ApptypeID===" + ApptypeID);
 		 LOGGER.debug("InstallationResult====" + installResult.toString());
 
+		 if(CommonUtils.nvl(installResult.get("userId").toString()) != ""){ //from Mobile
+			 installResult.put("ctCode", installResult.get("userId"));
+		 }
+
+		 if(CommonUtils.nvl(installResult.get("CTID").toString()) != ""){//from Mobile
+			 installResult.put("creator", installResult.get("CTID"));
+		 }
+
 		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
 	    if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-	    		&& (installResult.get("custType").equals("Individual") || installResult.get("custTypeMobile").equals("964"))&& installResult.get("chkSms").equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
+	    		&& (installResult.get("custType").equals("Individual") || installResult.get("customerType").equals("964"))&& installResult.get("chkSms").equals("Y"))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE) , IF SMS CHECKBOX IS CHECKED
 	    {
 	        LOGGER.debug("================INSMS================");
 
 	    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
-		        smsMessage = "COWAY: Order " + installResult.get("salesOrdNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
+		        smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
 	    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
 	    	}else{ //FAIL
 	    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";

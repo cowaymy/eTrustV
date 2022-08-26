@@ -876,7 +876,7 @@ public class InstallationResultListController {
               }
               param.put("chkSms", chksms);
               param.put("ctCode", installResult.get("ctMemCode"));
-              param.put("salesOrdNo", installResult.get("salesOrdNo"));
+              param.put("salesOrderNo", installResult.get("salesOrdNo"));
               param.put("creator", sessionVO.getUserId());
 
         	  try{
