@@ -5,7 +5,7 @@
 
 </style>
 <script type="text/javascript">
-    var advGridId, settlementGridId, approveLineGridID, budgetGridID, glAccGridID;
+    var advGridId, settlementGridId, approveLineGridID, budgetGridID, glAccGridID , advGridCostCenter;
     var selectRowIdx, gRowIndex;
     var advGridSelectRowId, advGridClmNo, advGridAdvType, advAppvPrcssNo, advGridAppvPrcssStus, advGridRepayStus;
     var gAtchFileGrpId;
@@ -601,6 +601,7 @@
             advAppvPrcssNo = event.item.appvPrcssNo;
             advGridAppvPrcssStus = event.item.appvPrcssStus; // Current claim number's approval status
             advGridRepayStus = event.item.settlementStus;
+            advGridCostCenter = event.item.costCenter;
         });
 
         AUIGrid.bind(advGridId, "cellDoubleClick", function(event) {
@@ -814,6 +815,9 @@
                     appvPrcssStus : advGridAppvPrcssStus
             };
 
+            console.log("advGridAdvType " + advGridAdvType);
+            console.log("advGridAppvPrcssStus " + advGridAppvPrcssStus);
+            console.log("advGridCostCenter " + advGridCostCenter);
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
                 console.log(result);
 
@@ -829,7 +833,7 @@
                         }
 
                         if(FormUtil.isEmpty($("#settlementCostCenter").val())) {
-                            $("#settlementCostCenter").val(gCostCenter);
+                            $("#settlementCostCenter").val(advGridCostCenter);
                         }
 
                         $("#settlementAdvRefdNo").val(advGridClmNo);
