@@ -157,7 +157,7 @@ function createCtosGrid(){
 	                     {dataField : "gt501", headerText : '<spring:message code="sal.title.text.gt500" />', width : "6%" , editable : false},
 	                     {dataField : "stus", headerText : '<spring:message code="sal.title.status" />', width : "6%" , editable : false},
 	                     {dataField : "updDt", headerText : '<spring:message code="sal.title.text.uploadTime" />', width : "15%" , editable : false},
-	                     {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.uploadUser" />', width : "9%" , editable : false},
+	                     {dataField : "username", headerText : '<spring:message code="sal.title.text.uploadUser" />', width : "9%" , editable : false},
 	                     {
 	                         dataField : "",
 	                         headerText : "",
@@ -207,7 +207,7 @@ function createCtosDetailGrid(){
                          {dataField : "codeName", headerText : '<spring:message code="sal.title.text.bankrupt" />', width : "8%" , editable : false},
                          {dataField : "ctosDt", headerText : '<spring:message code="sal.title.text.updateTime" />', width : "9%" , editable : false},
                          {dataField : "confirmEntity", headerText : '<spring:message code="sal.text.confirmEntity" />', width : "9%" , editable : false},
-                         {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.updateUser" />', width : "9%" , editable : false, visible : false},
+                         {dataField : "username", headerText : '<spring:message code="sal.title.text.updateUser" />', width : "9%" , editable : false, visible : false},
                          {
                              dataField : "undefined",
                              headerText : '<spring:message code="sal.title.text.ficoReport" />',
@@ -403,11 +403,11 @@ function fn_reuploadB2B() {
 <!--  <h2><spring:message code="sal.title.text.ctosB2BResult" /></h2>-->
 <h2>CCP Auto-Approve Config</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a id="_reupload" onclick ="fn_reuploadB2B()">Re-Upload</a></p></li>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
-        <li><p class="btn_blue"><a id="_reupload" onclick ="fn_reuploadB2B()">Re-Upload</a></p></li>
 
 </ul>
 </aside><!-- title_line end -->
