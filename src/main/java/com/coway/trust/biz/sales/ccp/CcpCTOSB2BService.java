@@ -15,6 +15,6 @@ public interface CcpCTOSB2BService {
 	Map<String, Object> getResultRowForCTOSDisplay(Map<String, Object> params)throws Exception;
 
 	int  savePromoB2BUpdate(Map<String, Object> params);
-	
-	int reuploadCTOSB2BList();
+
+	Map<String, Object> reuploadCTOSB2BList(Map<String, Object> params);
 }
