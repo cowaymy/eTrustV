@@ -832,7 +832,9 @@
                             $("#settlementCrtUserName").val(gUsername);
                         }
 
+                        console.log('$("#settlementCostCenter").val() ' + $("#settlementCostCenter").val());
                         if(FormUtil.isEmpty($("#settlementCostCenter").val())) {
+
                             $("#settlementCostCenter").val(advGridCostCenter);
                         }
 
@@ -2482,7 +2484,7 @@
                         <tr>
                             <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
                             <td>
-                                <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="settlementCostCenter" name="settlementCostCenter" value="${costCentr}"/>
+                                <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="settlementCostCenter" name="settlementCostCenter" />
                             </td>
                             <th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
                             <td>
