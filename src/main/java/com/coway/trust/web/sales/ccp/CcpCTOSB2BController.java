@@ -202,22 +202,23 @@ public class CcpCTOSB2BController {
 
 			LOGGER.info("######################  Reupload CTOS B2B List ###################");
 
-			int resltCode = 0;
+		    Map<String, Object> resltCode = new HashMap<String, Object>();
+		    Map<String, Object> returnMap = new HashMap<String, Object>();
+
 			ReturnMessage mes = new ReturnMessage();
 			String message = "";
 
 
-			resltCode = ccpCTOSB2BService.reuploadCTOSB2BList();
+			ccpCTOSB2BService.reuploadCTOSB2BList(resltCode);
+			int rslt = 0;
+		    rslt = (int) resltCode.get("p1");
 
-			if (resltCode == 0){
-				message = "<b>Successfully Reupload</b>";
-			}
-			else if(resltCode == -1) {
-				message = "<b>Failed to reupload.<br />Please try again later.</b>";
-			}
-			else {
-				message = "<b>Fail</b>";
-			}
+		    if(rslt == -1){
+					message = "<b>Failed to reupload.<br />Please try again later.</b>";
+		    	  }
+		    else {
+					message = "<b>Successfully Reupload</b>";
+		    	  }
 
 			mes.setCode(AppConstants.SUCCESS);
 			mes.setMessage(message);
