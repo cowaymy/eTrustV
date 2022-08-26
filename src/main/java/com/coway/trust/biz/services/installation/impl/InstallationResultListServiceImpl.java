@@ -3848,11 +3848,11 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 			 boolean chkAppType = ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68");
 			 LOGGER.debug("chkAppType111===" + chkAppType);
-			 boolean chkcusttype = installResult.get("custType").equals("Individual") || installResult.get("customerType").equals("964");
+			 boolean chkcusttype = CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964");
 			 LOGGER.debug("chkcusttype111===" + chkcusttype);
 
 			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
-			    		&& (installResult.get("custType").equals("Individual") || installResult.get("customerType").equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
+			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
 			    {
 			        LOGGER.debug("================INSMS================");
 
