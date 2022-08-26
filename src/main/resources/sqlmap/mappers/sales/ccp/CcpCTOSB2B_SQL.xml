@@ -15,7 +15,7 @@
 				    Extent2.LT500,
 				    TO_CHAR(Extent1.UPD_DT , 'DD/MM/YYYY HH24:MI:SS') UPD_DT,
 				    Extent2.CODE STUS,
-				    Extent1.UPD_USER_ID
+				    Extent3.USER_NAME USERNAME
 				FROM SAL0106D Extent1 JOIN ( SELECT
 				                                Project1.BATCH_ID,
 				                                SUM(Project1.COMPL) COMPLE,
@@ -38,6 +38,7 @@
 				                             GROUP BY Project1.BATCH_ID) Extent2 ON Extent1.BATCH_ID = Extent2.BATCH_ID
 				                             ]]>
                 JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.STUS
+                JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.UPD_USER_ID
 				WHERE 1= 1
 				<if test=" null != sDate and '' != sDate">
 				                     AND Extent1.UPD_DT >= TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
@@ -121,12 +122,10 @@
  <resultMap id="reuploadB2BMap1" type="egovMap" ></resultMap>
  <resultMap id="reuploadB2BMap2" type="egovMap" ></resultMap>
  <select id="getReuploadB2B"  statementType="CALLABLE"   parameterType="Map">
-    <![CDATA[
       {
           call SP_UPD_CTOS_FICO_UPD_RERUN (#{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=reuploadB2BMap1},
           #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=reuploadB2BMap2})
        }
-    ]]>
 </select>
 
 <update id="savePromoB2BUpdate" parameterType="Map">
