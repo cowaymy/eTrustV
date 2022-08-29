@@ -3,6 +3,22 @@
 
 <script type="text/javaScript" language="javascript">
 
+var susListData = [
+     {"codeId": "RAW","codeName": "Raw"}
+    ,{"codeId": "AGING","codeName": "Aging"}
+    ,{"codeId": "SUS_COUNT","codeName": "SUS : SUS Count"}
+    ,{"codeId": "LAST_SUS","codeName": "SUS : Last SUS"}
+    ,{"codeId": "SUS_SUM_YM","codeName": "SUS : Sum of Last SUS by Year and Month"}
+];
+var retTerListData = [
+     {"codeId": "RAW","codeName": "Raw"}
+    ,{"codeId": "AGING","codeName": "Aging"}
+    ,{"codeId": "LAST_TER","codeName": "TER : Last TER"}
+    ,{"codeId": "TER_SUM_YM","codeName": "TER : Sum of Last TER by Year and Month"}
+    ,{"codeId": "LAST_RET_TER","codeName": "RET to TER : Last RET to TER"}
+    ,{"codeId": "RET_TER_SUM_YM","codeName": "RET to TER : Sum of Last RET to TER by Year and Month"}
+];
+
 function fn_report() {
 
     if($("#listProductId").val() == null || $("#listProductId").val() == ''){
@@ -30,6 +46,12 @@ function fn_report() {
       $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
       $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
       $("#dataForm #V_RENTSTUS").val(rentStus);
+
+    } else if (reportType == 'AGING') {
+
+        $("#dataForm #reportFileName").val("/sales/PLTV_Aging.rpt");
+        $("#dataForm #reportDownFileName").val("PLTV_Aging_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #V_RENTSTUS").val(rentStus);
 
     } else if (rentStus == 'SUS' && reportType == 'SUS_COUNT') {
 
@@ -70,6 +92,8 @@ function fn_report() {
 
     $("#dataForm #V_STKID").val(stkId);
     $("#dataForm #viewType").val("EXCEL");
+    $("#dataForm #V_WHERESQL").val(fn_whereSQL());
+
 
     var option = {
         isProcedure : true
@@ -78,10 +102,40 @@ function fn_report() {
     Common.report("dataForm", option);
 }
 
-$(function(){
+function fn_whereSQL() {
 
+	let isExtrade = $("#dataForm #listExtrade option:selected").val();
+	let listRentalType = $("#dataForm #listRentalType option:selected").val();
+
+	let whereSQL = '';
+
+	if( !FormUtil.isEmpty(isExtrade) ){
+		whereSQL += ' AND A.EX_TRADE = ' + isExtrade;
+	}
+
+    if( !FormUtil.isEmpty(listRentalType) ){
+    	whereSQL += " AND A.RENTAL_TYPE = '" + listRentalType + "'";
+    }
+
+	return whereSQL;
+}
+
+$(function(){
 	 doGetComboAndGroup2('/sales/analysis/selectPltvProductCodeList.do', null, '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 
+	  $('#listRentStus').change(function() {
+	        switch(this.value){
+            case "SUS" :
+            	doDefCombo(susListData, '' ,'listPltvReportType', 'S', '');
+            	break;
+            case "RET_TER" :
+            	doDefCombo(retTerListData, '' ,'listPltvReportType', 'S', '');
+                break;
+            default :
+                doDefCombo('', '' ,'listPltvReportType', 'S', '');
+                break;
+           }
+	    });
 });
 
 function fn_setOptGrpClass() {
@@ -109,6 +163,7 @@ function fn_setOptGrpClass() {
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
     <input type="hidden" id="V_STKID" name="V_STKID" />
     <input type="hidden" id="V_RENTSTUS" name="V_RENTSTUS" />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -135,16 +190,26 @@ function fn_setOptGrpClass() {
 <tr>
     <th scope="row"><spring:message code="sales.pltv.ReportType" /></th>
     <td>
-        <select class="w100p" id="listPltvReportType" name="listPltvReportType" >
+        <select class="w100p" id="listPltvReportType" name="listPltvReportType" ></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sales.extrade" /></th>
+    <td>
+        <select class="w50p" id="listExtrade" name="listExtrade" >
             <option value="">Choose One</option>
-            <option value="RAW">Raw</option>
-            <option value="SUS_COUNT">SUS : SUS Count</option>
-            <option value="LAST_SUS">SUS : Last SUS</option>
-            <option value="SUS_SUM_YM">SUS : Sum of Last SUS by Year and Month</option>
-            <option value="LAST_TER">TER : Last TER</option>
-            <option value="TER_SUM_YM">TER : Sum of Last TER by Year and Month</option>
-            <option value="LAST_RET_TER">RET to TER : Last RET to TER</option> <%--temporary disabled due to long query time --%>
-            <option value="RET_TER_SUM_YM">RET to TER : Sum of Last RET to TER by Year and Month</option> <%--temporary disabled due to long query time --%>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sales.rentalType" /></th>
+    <td>
+        <select class="w50p" id="listRentalType" name="listRentalType" >
+            <option value="">Choose One</option>
+            <option value="OL">OL</option>
+            <option value="FL">FL</option>
         </select>
     </td>
 </tr>
