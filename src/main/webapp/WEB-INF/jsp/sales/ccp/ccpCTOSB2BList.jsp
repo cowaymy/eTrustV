@@ -27,28 +27,6 @@ $(document).ready(function() {
 	createCtosGrid();
 	createCtosDetailGrid();
 
-
-	//Search
-/* 	$("#_search").click(function() {
-
-		//Validation
-		if( null == $("#_sDate").val() || '' == $("#_sDate").val()){
-			Common.alert('<spring:message code="sal.alert.msg.plzKeyInFromDt" />');
-			return;
-		}
-
-		/* if(null == $("#_eDate").val() || '' == $("#_eDate").val()){
-		    Common.alert("* please key in to Date");
-		    return;
-		} */
-
-/* 		Common.ajax("GET", "/sales/ccp/selectCTOSB2BList", $("#_searchForm").serialize(), function(result){
-			//set Grid
-			AUIGrid.setGridData(ctosListGridID, result); */
-
-/* 		});
-	});  */
-
 	//Cell Double Click
 	AUIGrid.bind(ctosListGridID, "cellDoubleClick", function(event){
 
