@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.ccp;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CcpCTOSB2BService {
@@ -16,5 +18,5 @@ public interface CcpCTOSB2BService {
 
 	int  savePromoB2BUpdate(Map<String, Object> params);
 
-	Map<String, Object> reuploadCTOSB2BList(Map<String, Object> params);
+	Map<String, Object> reuploadCTOSB2BList(Map<String, Object> params, SessionVO sessionVO);
 }
