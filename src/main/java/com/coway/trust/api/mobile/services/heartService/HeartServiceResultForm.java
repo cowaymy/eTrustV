@@ -11,6 +11,7 @@ import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 //import com.coway.trust.api.mobile.common.MalfunctionCodeForm;
 import com.coway.trust.util.BeanConverter;
 import com.crystaldecisions.Utilities.Logger;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,6 +26,7 @@ import io.swagger.annotations.ApiModelProperty;
  *********************************************************************************************/
 
 @ApiModel(value = "HeartServiceResultForm", description = "HeartServiceResultForm")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HeartServiceResultForm {
 
 	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
