@@ -21,6 +21,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.ccp.CcpCTOSB2BService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -171,7 +172,12 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 		}
 
 	  @Override
-		public Map<String, Object>  reuploadCTOSB2BList(Map<String, Object> params) {
+		public Map<String, Object>  reuploadCTOSB2BList(Map<String, Object> params, SessionVO sessionVO) {
+
+		  int userId = sessionVO.getUserId();
+		  LOGGER.info("########################### UPDATE USER ID : " + userId);
+
+		  params.put("userId",userId);
 
 		  return ccpCTOSB2BMapper.getReuploadB2B(params);
 		}
