@@ -752,6 +752,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
       EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
 
+      insertHSNewContact.put("userId", params.get("hidCodyId").toString());
       insertHSNewContact.put("hsrNo", useFilterList.get("no".toString()));
       insertHSNewContact.put("hsNo", params.get("serviceNo".toString()));
       insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo".toString()));
