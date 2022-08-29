@@ -198,7 +198,7 @@ public class CcpCTOSB2BController {
 	//experian
 
 		@RequestMapping(value = "/reuploadCTOSB2BList.do", method = RequestMethod.GET)
-		public ResponseEntity<ReturnMessage> reuploadCTOSB2BList () throws Exception{
+		public ResponseEntity<ReturnMessage> reuploadCTOSB2BList (SessionVO sessionVO) throws Exception{
 
 			LOGGER.info("######################  Reupload CTOS B2B List ###################");
 
@@ -209,16 +209,15 @@ public class CcpCTOSB2BController {
 			String message = "";
 
 
-			ccpCTOSB2BService.reuploadCTOSB2BList(resltCode);
+			ccpCTOSB2BService.reuploadCTOSB2BList(resltCode, sessionVO);
 			int rslt = 0;
 		    rslt = (int) resltCode.get("p1");
 
 		    if(rslt == -1){
 					message = "<b>Failed to reupload.<br />Please try again later.</b>";
-		    	  }
-		    else {
+		    } else {
 					message = "<b>Successfully Reupload</b>";
-		    	  }
+		    }
 
 			mes.setCode(AppConstants.SUCCESS);
 			mes.setMessage(message);
