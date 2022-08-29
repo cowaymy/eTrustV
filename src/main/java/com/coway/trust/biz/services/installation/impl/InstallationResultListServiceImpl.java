@@ -3824,12 +3824,14 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		 LOGGER.debug("================INSMS111================");
 		 LOGGER.debug("ApptypeID===" + ApptypeID);
 		 LOGGER.debug("InstallationResult====" + installResult.toString());
+		 LOGGER.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
+		 LOGGER.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("CTID")).toString());
 
-		 if(CommonUtils.nvl(installResult.get("userId").toString()) != ""){ //from Mobile
+		 if(CommonUtils.nvl(installResult.get("userId")).toString() != ""){ //from Mobile
 			 installResult.put("ctCode", installResult.get("userId"));
 		 }
 
-		 if(CommonUtils.nvl(installResult.get("CTID").toString()) != ""){//from Mobile
+		 if(CommonUtils.nvl(installResult.get("CTID")).toString() != ""){//from Mobile
 			 installResult.put("creator", installResult.get("CTID"));
 		 }
 
