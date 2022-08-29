@@ -103,9 +103,9 @@ public class HeartServiceResultForm {
 	private String switchChkLst;
 
 	//20220826: Celeste : Edit Customer Info [s]
-	private String newHpNo;
-	private String newHomeNo;
-	private String newOfficeNo;
+	private String newHandphoneTel;
+	private String newHomeTel;
+	private String newOfficeTel;
 	private String newEmail;
 	//20220826: Celeste : Edit Customer Info [e]
 
@@ -417,28 +417,12 @@ public class HeartServiceResultForm {
 		return list;
 	}
 
-	public String getNewHpNo() {
-		return newHpNo;
+	public String getNewHandphoneTel() {
+		return newHandphoneTel;
 	}
 
-	public void setNewHpNo(String newHpNo) {
-		this.newHpNo = newHpNo;
-	}
-
-	public String getNewHomeNo() {
-		return newHomeNo;
-	}
-
-	public void setNewHomeNo(String newHomeNo) {
-		this.newHomeNo = newHomeNo;
-	}
-
-	public String getNewOfficeNo() {
-		return newOfficeNo;
-	}
-
-	public void setNewOfficeNo(String newOfficeNo) {
-		this.newOfficeNo = newOfficeNo;
+	public void setNewHandphoneTel(String newHandphoneTel) {
+		this.newHandphoneTel = newHandphoneTel;
 	}
 
 	public String getNewEmail() {
@@ -449,4 +433,19 @@ public class HeartServiceResultForm {
 		this.newEmail = newEmail;
 	}
 
+	public String getNewHomeTel() {
+		return newHomeTel;
+	}
+
+	public void setNewHomeTel(String newHomeTel) {
+		this.newHomeTel = newHomeTel;
+	}
+
+	public String getNewOfficeTel() {
+		return newOfficeTel;
+	}
+
+	public void setNewOfficeTel(String newOfficeTel) {
+		this.newOfficeTel = newOfficeTel;
+	}
 }

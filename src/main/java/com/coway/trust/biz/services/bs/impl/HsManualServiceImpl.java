@@ -759,10 +759,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo".toString()));
         insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo".toString()));
         insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail".toString()));
-        insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
-        insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
-        insertHSNewContact.put("newHomeNo", params.get("newHomeNo".toString()));
-        insertHSNewContact.put("newOfficeNo", params.get("newOfficeNo".toString()));
+        insertHSNewContact.put("newHpNo", params.get("newHandphoneTel".toString()));
+        insertHSNewContact.put("newHomeNo", params.get("newHomeTel".toString()));
+        insertHSNewContact.put("newOfficeNo", params.get("newOfficeTel".toString()));
         insertHSNewContact.put("newEmail", params.get("newEmail".toString()));
         insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
         insertHSNewContact.put("brnchId",brnchDt.get("brnchId").toString());
