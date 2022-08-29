@@ -771,6 +771,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         insertHSNewContact.put("orgCode",brnchDt.get("orgCode").toString());
         insertHSNewContact.put("status","A");
 
+        logger.debug("==================== insertHSNewContact ========================");
+        logger.debug(" insertHSNewContact: " + insertHSNewContact);
+        logger.debug("==================== brnchDt========================");
+        logger.debug(" brnchDt: " + brnchDt);
+        logger.debug("==================== oldContDt========================");
+        logger.debug(" oldContDt: " + oldContDt);
         hsManualMapper.insertSAL0329D(insertHSNewContact);
 
         // CELESTE: Added for edit customer contact on 25/08/2022 [e]
