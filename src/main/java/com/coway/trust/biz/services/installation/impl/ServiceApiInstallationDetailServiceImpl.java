@@ -566,6 +566,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           String errorMsg = "PRODUCT LOC NO DATA";
           throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
         }
+
+        //send sms
+        Map<String, Object> smsResultValue = new HashMap<String, Object>();
+        try{
+        	smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
+      	}catch (Exception e){
+      		logger.info("===smsResultValue===" + smsResultValue.toString());
+      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
+      	}
       }
     } else {
       if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
