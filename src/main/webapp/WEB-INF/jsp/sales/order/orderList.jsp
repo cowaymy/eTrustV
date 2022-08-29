@@ -380,10 +380,22 @@
         return day;
     }
 
+
+
+
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+
+            if(prodCat == '5706' || prodCat == '5707')
+            {
+                Common.alert('* Please proceed to Request at HC Module for this order');
+            }
+            else{
+            	Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+            }
+
         }
         else {
             Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
@@ -407,10 +419,22 @@
         }
     }
 
+
+
+
     function fn_orderSimulPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
+        console.log(prodCat, "here")
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+        	if(prodCat == '5706' || prodCat == '5707')
+            {
+                Common.alert('* Please proceed to Request at HC Module for this order');
+            }
+        	else{
+        		Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+        	}
+
         }
         else {
             Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordId : '' }, null, true);
