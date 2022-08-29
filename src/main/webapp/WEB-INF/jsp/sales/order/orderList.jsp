@@ -390,7 +390,7 @@
 
             if(prodCat == '5706' || prodCat == '5707')
             {
-                Common.alert('* Please proceed to Request at HC Module for this action');
+                Common.alert('* Please proceed to HC Module for this action');
             }
             else{
             	Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
@@ -408,7 +408,7 @@
         if(selIdx > -1) {
         	if(prodCat == '5706' || prodCat == '5707')
         	{
-                Common.alert('* Please proceed to Request at HC Module for this action');
+                Common.alert('* Please proceed to HC Module for this action');
         	}
         	else{
                 Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
@@ -429,7 +429,7 @@
         if(selIdx > -1) {
         	if(prodCat == '5706' || prodCat == '5707')
             {
-                Common.alert('* Please proceed to Request at HC Module for this action');
+                Common.alert('* Please proceed to HC Module for this action');
             }
         	else{
         		Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
