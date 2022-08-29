@@ -5550,4 +5550,90 @@ SELECT DISTINCT A.ORD_ID FROM (
         and LAST_LOC_ID = #{lastLocId}
     </update>
 
+    <select id="selectBrchDt" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH.BRNCH_ID, T9.DEPT_CODE, T9.GRP_CODE, T9.ORG_CODE
+        FROM SYS0005M BRNCH
+        LEFT JOIN SYS0047M USR ON USR.USER_BRNCH_ID = BRNCH.BRNCH_ID
+        LEFT JOIN ORG0001D ORG ON ORG.MEM_CODE = USR.HR_CODE
+        LEFT JOIN ORG1001V T9  ON T9.MEM_CODE = USR.USER_NAME
+        WHERE 1 = 1
+        AND USR.USER_BRNCH_ID = (SELECT USER_BRNCH_ID FROM SYS0047M WHERE USER_ID = #{userId})
+        AND USR.USER_ID = #{userId}
+    </select>
+
+    <select id="selectOldContactDt" parameterType="Map" resultType="egovMap">
+        SELECT CUST.CUST_CNTC_ID,
+        CUST.TEL_M1 OLD_HP_NO,
+        CUST.TEL_O OLD_OFFICE_NO,
+        CUST.TEL_R OLD_HOME_NO,
+        CUST.EMAIL OLD_EMAIL
+        FROM SAL0001D SAL
+        JOIN SAL0027D CUST ON SAL.CUST_ID = CUST.CUST_ID AND SAL.CUST_CNT_ID = CUST.CUST_CNTC_ID
+        JOIN SVC0008D HS   ON HS.SALES_ORD_ID = SAL.SALES_ORD_ID
+        WHERE HS.SALES_ORD_ID = #{orderId} AND HS.NO = #{hsNo}
+    </select>
+
+    <insert id="insertSAL0329D" parameterType="Map">
+        INSERT INTO SAL0329D SET
+        TICKET_NO
+        , HS_NO
+        , HSR_NO
+        , ORDER_ID
+        , ORDER_NO
+        , CUST_ID
+        , CUST_NAME
+        , STATUS
+        , OLD_CNTC_ID
+        , NEW_CNTC_ID
+        , REQST_DT
+        , OLD_HP_NO
+        , OLD_HOME_NO
+        , OLD_OFFICE_NO
+        , OLD_EMAIL
+        , NEW_HP_NO
+        , NEW_HOME_NO
+        , NEW_OFFICE_NO
+        , NEW_EMAIL
+        , POSTING_BRCH
+        , DEPT_CODE
+        , ORG_CODE
+        , GRP_CODE
+        , REM
+        , CRT_DT
+        , CRT_USER_ID
+        , UPD_DT
+        , UPD_USER_ID
+        VALUES
+        SAL0329D_TICKET_NO_SEQ.NEXTVAL
+        , #{hsNo}
+        , #{hsrNo}
+        , #{orderId}
+        , #{orderNo}
+        , #{custId}
+        , #{custName}
+        , #{status}
+        , #{oldCntcId}
+        , #{newCntcId}
+        , SYSDATE
+        , #{oldHpNo}
+        , #{oldHomeNo}
+        , #{oldOfficeNo}
+        , #{oldEmail}
+        , #{newHpNo}
+        , #{newHomeNo}
+        , #{newOfficeNo}
+        , #{newEmail}
+        , #{postingBrch}
+        , #{deptCode}
+        , #{orgCode}
+        , #{grpCode}
+        , #{rem}
+        , SYSDATE
+        , #{userId}
+        , SYSDATE
+        , #{userId}
+
+
+    </insert>
+
 </mapper>

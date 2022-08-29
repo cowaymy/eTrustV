@@ -163,6 +163,8 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
           Map<String, Object> asResultInsert = new HashMap();
           logger.debug("### HS INSERT [BEFORE] : " + asResultInsert.toString());
 
+
+          // Add HS Result Entry
           Map rtnValue = hsManualService.addIHsResult(params, paramsDetailList, sessionVO);
           logger.debug("### HS INSERT RESULT : " + rtnValue.toString());
 

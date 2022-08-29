@@ -102,6 +102,13 @@ public class HeartServiceResultForm {
 
 	private String switchChkLst;
 
+	//20220826: Celeste : Edit Customer Info [s]
+	private String newHpNo;
+	private String newHomeNo;
+	private String newOfficeNo;
+	private String newEmail;
+	//20220826: Celeste : Edit Customer Info [e]
+
 	public String getCheckInDate() {
 		return checkInDate;
 	}
@@ -408,6 +415,38 @@ public class HeartServiceResultForm {
 		}
 
 		return list;
+	}
+
+	public String getNewHpNo() {
+		return newHpNo;
+	}
+
+	public void setNewHpNo(String newHpNo) {
+		this.newHpNo = newHpNo;
+	}
+
+	public String getNewHomeNo() {
+		return newHomeNo;
+	}
+
+	public void setNewHomeNo(String newHomeNo) {
+		this.newHomeNo = newHomeNo;
+	}
+
+	public String getNewOfficeNo() {
+		return newOfficeNo;
+	}
+
+	public void setNewOfficeNo(String newOfficeNo) {
+		this.newOfficeNo = newOfficeNo;
+	}
+
+	public String getNewEmail() {
+		return newEmail;
+	}
+
+	public void setNewEmail(String newEmail) {
+		this.newEmail = newEmail;
 	}
 
 }

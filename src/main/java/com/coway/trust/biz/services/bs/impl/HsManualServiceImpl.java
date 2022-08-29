@@ -743,6 +743,37 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
           logger.debug("==================== saveASTaxInvoice [End] ========================");
         }
+
+        // INSERT EDITTED CONTACT INFO FOR APPROVAL
+        // CELESTE: Added for edit customer contact on 25/08/2022 [s]
+
+        EgovMap insertHSNewContact = new EgovMap();
+        EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
+        EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
+
+        insertHSNewContact.put("hsrNo", useFilterList.get("no".toString()));
+        insertHSNewContact.put("hsNo", params.get("serviceNo".toString()));
+        insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo".toString()));
+        insertHSNewContact.put("salesOrderId", params.get("salesOrderId".toString()));
+        insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo".toString()));
+        insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo".toString()));
+        insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo".toString()));
+        insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail".toString()));
+        insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
+        insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
+        insertHSNewContact.put("newHomeNo", params.get("newHomeNo".toString()));
+        insertHSNewContact.put("newOfficeNo", params.get("newOfficeNo".toString()));
+        insertHSNewContact.put("newEmail", params.get("newEmail".toString()));
+        insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
+        insertHSNewContact.put("brnchId",brnchDt.get("brnchId").toString());
+        insertHSNewContact.put("deptCode",brnchDt.get("deptCode").toString());
+        insertHSNewContact.put("grpCode",brnchDt.get("grpCode").toString());
+        insertHSNewContact.put("orgCode",brnchDt.get("orgCode").toString());
+        insertHSNewContact.put("status","A");
+
+        hsManualMapper.insertSAL0329D(insertHSNewContact);
+
+        // CELESTE: Added for edit customer contact on 25/08/2022 [e]
       }
     }
     return resultValue;
