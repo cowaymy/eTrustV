@@ -748,12 +748,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
    // INSERT EDITTED CONTACT INFO FOR APPROVAL
       // CELESTE: Added for edit customer contact on 25/08/2022 [s]
 
+      logger.debug("==================== editContactInfo [start] ========================");
       EgovMap insertHSNewContact = new EgovMap();
-      params.put("userId", params.get("hidCodyId").toString());
+      params.put("userId", sessionVO.getUserId());
       EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
       EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
 
-      insertHSNewContact.put("userId", params.get("hidCodyId").toString());
+      insertHSNewContact.put("userId", sessionVO.getUserId());
       insertHSNewContact.put("hsrNo", useFilterList.get("no".toString()));
       insertHSNewContact.put("hsNo", params.get("serviceNo".toString()));
       insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo".toString()));
@@ -781,6 +782,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       logger.debug(" oldContDt: " + oldContDt);
       hsManualMapper.insertSAL0329D(insertHSNewContact);
 
+      logger.debug("==================== editContactInfo [end] ========================");
       // CELESTE: Added for edit customer contact on 25/08/2022 [e]
 
     }
