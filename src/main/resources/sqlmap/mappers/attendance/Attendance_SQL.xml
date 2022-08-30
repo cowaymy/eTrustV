@@ -47,7 +47,7 @@
 	            , #{item.batchMemType} memType
 	            , TO_DATE(#{item.dateFrom}, 'DD/MM/RRRR') dateFrom
 	            , TO_DATE(#{item.dateTo}, 'DD/MM/RRRR') dateTo
-	            , #{item.time} time
+	            , #TO_TIMESTAMP({item.time}, 'HH24:MI') time
 	            , '0' disab
 	            , #{item.crtUserId} crtUserId
 	            , SYSDATE crtDt
@@ -67,27 +67,26 @@
     </update>
 
      <update id="updateMemberInfo" parameterType="Map">
-                MERGE INTO ATD0002D A
+        MERGE INTO ATD0002D A
         USING (
-              SELECT DISTINCT
-                    A.BATCH_ID
-                  , A.MEM_CODE
-                  , C.MEM_ID
-                  , C.MEM_LVL
-                  , C.DEPT_CODE
-                  , C.GRP_CODE
-                  , C.ORG_CODE
-              FROM ATD0002D A
-              JOIN ATD0001M B ON A.BATCH_ID = B.BATCH_ID
-              JOIN ORG1002V C ON A.MEM_CODE = C.MEM_CODE AND TO_CHAR (TO_DATE(C.HIST_MONTH||HIST_YEAR,'MM/YYYY'), 'MM/YYYY') = B.BATCH_MTH_YEAR
-            )SRC
-            ON ( A.MEM_CODE = SRC.MEM_CODE AND A.BATCH_ID =SRC.BATCH_ID )
+	              SELECT DISTINCT
+	                    A.BATCH_ID
+	                  , A.MEM_CODE
+	                  , C.MEM_ID
+	                  , C.MEM_LVL
+	                  , C.DEPT_CODE
+	                  , C.GRP_CODE
+	                  , C.ORG_CODE
+	              FROM ATD0002D A
+	              JOIN ATD0001M B ON A.BATCH_ID = B.BATCH_ID
+	              JOIN ORG1002V C ON A.MEM_CODE = C.MEM_CODE AND TO_CHAR (TO_DATE(C.HIST_MONTH||HIST_YEAR,'MM/YYYY'), 'MM/YYYY') = B.BATCH_MTH_YEAR
+        )SRC ON ( A.MEM_CODE = SRC.MEM_CODE AND A.BATCH_ID =SRC.BATCH_ID )
         WHEN MATCHED THEN UPDATE
         SET A.MEM_ID = SRC.MEM_ID
-            ,A.MEM_LVL = SRC.MEM_LVL
-            ,A.DEPT_CODE = SRC.DEPT_CODE
-            ,A.GRP_CODE = SRC.GRP_CODE
-            ,A.ORG_CODE = SRC.ORG_CODE
+             ,A.MEM_LVL = SRC.MEM_LVL
+             ,A.DEPT_CODE = SRC.DEPT_CODE
+             ,A.GRP_CODE = SRC.GRP_CODE
+             ,A.ORG_CODE = SRC.ORG_CODE
     </update>
 
     <select id="selectCurrentBatchId" resultType="int">
@@ -120,7 +119,7 @@
             )
     </insert>
 
-    <select id="searchAtdManagementList" parameterType="Map" resultType="egovMap">
+    <select id="searchAtdUploadList" parameterType="Map" resultType="egovMap">
 		SELECT
 		      A.BATCH_ID
 		    , FN_GET_STUS_DESC(A.BATCH_STUS_ID,1) AS STUS
@@ -190,6 +189,184 @@
           WHERE BATCH_ID = #{batchId}
     </update>
 
+     <select id="selectManagerCode" parameterType="Map" resultType="egovMap">
+
+		   SELECT  DISTINCT
+		  <if test="memLvl != null and memLvl != '' ">
+            <choose>
+                  <when test="memLvl == 1">
+	                    A.ORG_CODE AS CODE_ID
+	                  , A.ORG_CODE AS CODE_NAME
+                   </when>
+                   <when test="memLvl == 2">
+                        A.GRP_CODE AS CODE_ID
+                      , A.GRP_CODE AS CODE_NAME
+                   </when>
+                    <when test="memLvl == 3">
+                        A.DEPT_CODE AS CODE_ID
+                      , A.DEPT_CODE AS CODE_NAME
+                   </when>
+             </choose>
+        </if>
+		FROM ORG1001V A
+		JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+		WHERE 1=1
+		AND B.MEM_TYPE =1
+		<if test="memLvl != null and memLvl != '' ">
+            <choose>
+                  <when test="memLvl == 1">
+                        AND A.ORG_CODE <![CDATA[ <> ]]> ' '
+                   </when>
+                   <when test="memLvl == 2">
+                        AND A.GRP_CODE  <![CDATA[ <> ]]> ' '
+                   </when>
+                    <when test="memLvl == 3">
+                        AND A.DEPT_CODE <![CDATA[ <> ]]> ' '
+                   </when>
+             </choose>
+        </if>
+		ORDER BY 1 DESC
+
+    </select>
+
+
+	<select id="searchAtdManagementList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT ATD_DATE, ATD_DAY,  YEAR, MONTH
+          <if test="rank != null and rank != '' ">
+               <choose>
+                     <when test="rank == 6988">
+                          , ORG_CODE
+                      </when>
+                      <when test="rank == 6989">
+                          , GRP_CODE
+                      </when>
+                      <when test="rank == 6990">
+                          , DEPT_CODE
+                      </when>
+                </choose>
+           </if>
+          , NVL(INFO_TECH,0) AS INFO_TECH, NVL(OUT_OF_OFFICE,0 )OUT_OF_OFFICE, NVL(E_LEAVE,0) E_LEAVE, NVL(PUBLIC_HOLIDAY,0) PUBLIC_HOLIDAY, NVL(TRAINING,0) TRAINING, TIME
+          , CASE WHEN TRIM(ATD_DAY) NOT IN ('SATURDAY','SUNDAY')  THEN '1' ELSE '0' END AS WORKING_DAY
+          , CASE WHEN ATD_DAY NOT IN ('SATURDAY','SUNDAY') AND ( NVL(INFO_TECH,0)  <![CDATA[ <> ]]> 0 OR NVL(E_LEAVE,0) =1 OR NVL(TRAINING,0) =1 ) THEN '1' ELSE '0' END AS ATTENDANCE
+            FROM
+        (SELECT ATD_DATE, ATD_DAY, YEAR, MONTH
+          <if test="rank != null and rank != '' ">
+               <choose>
+                     <when test="rank == 6988">
+                          , ORG_CODE
+                      </when>
+                      <when test="rank == 6989">
+                          , GRP_CODE
+                      </when>
+                      <when test="rank == 6990">
+                          , DEPT_CODE
+                      </when>
+                </choose>
+           </if>
+            ,  INFO_TECH, OUT_OF_OFFICE, E_LEAVE, PUBLIC_HOLIDAY, TRAINING
+            , CASE WHEN to_char(TIME, 'hh24:mi') >  to_char(to_timestamp('09:00', 'hh24:mi'), 'hh24:mi') THEN 'LATE' ELSE '-' END AS TIME
+        FROM (
+            SELECT * FROM
+                 (
+	                WITH DAY_LIST AS (
+	                    SELECT TO_CHAR(TO_DATE(ATD_DATE,'DD/MM/YYYY'),'YYYY/MM/DD') AS ATD_DATE FROM
+	                    (
+	                        SELECT
+	                            TO_CHAR(LEVEL) || '/' || TO_CHAR(#{calMonthYear})  AS ATD_DATE
+	                        FROM DUAL CONNECT BY LEVEL  <![CDATA[ <= ]]>   TO_CHAR(LAST_DAY(TO_DATE(#{calMonthYear}, 'MM/YYYY')),'DD')
+	                    )
+	                ),
+	                    ATD_LIST AS (
+	                    SELECT
+	                          A.BATCH_ID
+	                        , B.TIME
+	                        , EXTRACT (YEAR FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) YEAR
+	                        , EXTRACT (MONTH FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) MONTH
+	                        , B.MEM_CODE
+	                        , B.ATD_TYPE
+	                        , B.DT_FROM
+	                        , B.DT_TO
+	                    FROM ATD0001M A
+	                    JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
+	                    WHERE 1=1
+	                    AND A.BATCH_STUS_ID = 4
+	                    AND NVL(B.DISAB,0) = 0
+	                    AND BATCH_MTH_YEAR = #{calMonthYear}
+
+	                )
+	                SELECT
+	                       A.ATD_DATE
+	                     , TO_CHAR(TO_DATE(A.ATD_DATE,'YYYY/MM/DD'), 'DAY') AS ATD_DAY
+	--                   , D.CODE
+	                     , D.CODE_DESC TYPE
+	                     , B.TIME
+	                     , B.YEAR
+	                     , B.MONTH
+	--                   , B.MEM_CODE
+
+					   <if test="rank != null and rank != '' ">
+				            <choose>
+				                  <when test="rank == 6988">
+				                       , E.ORG_CODE
+				                   </when>
+				                   <when test="rank == 6989">
+				                        , E.GRP_CODE
+				                   </when>
+				                    <when test="rank == 6990">
+				                         , E.DEPT_CODE
+				                   </when>
+				             </choose>
+				        </if>
+	                     , COUNT(B.MEM_CODE) AS ATD_CHECK
+	                FROM DAY_LIST A
+	                LEFT JOIN ATD_LIST B ON A.ATD_DATE BETWEEN TO_CHAR(B.DT_FROM,'YYYY/MM/DD') AND TO_CHAR(B.DT_TO,'YYYY/MM/DD')
+	                LEFT JOIN SYS0013M D ON B.ATD_TYPE = D.CODE
+	                LEFT JOIN ORG1001V E ON B.MEM_CODE = E.MEM_CODE
+
+	                GROUP BY A.ATD_DATE, TO_CHAR(TO_DATE(A.ATD_DATE,'YYYY/MM/DD'), 'DAY'), D.CODE, D.CODE_DESC , B.TIME, B.YEAR, B.MONTH
+
+	                <if test="rank != null and rank != '' ">
+                            <choose>
+                                  <when test="rank == 6988">
+                                       , E.ORG_CODE
+                                   </when>
+                                   <when test="rank == 6989">
+                                       , E.GRP_CODE
+                                   </when>
+                                    <when test="rank == 6990">
+                                       , E.DEPT_CODE
+                                   </when>
+                             </choose>
+                     </if>
+
+        ) PIVOT (SUM(ATD_CHECK) FOR TYPE IN ('Info Tech' AS Info_Tech, 'Out of Office' AS Out_of_Office, 'E Leave' AS E_Leave,'Public Holiday' AS Public_Holiday,'Training' AS Training )))
+            WHERE 1=1
+
+            <if test="rank != null and rank != '' ">
+                 <choose>
+                    <when test="rank == 6988">
+                          AND ORG_CODE = #{managerCode} OR ORG_CODE IS NULL
+                     </when>
+                     <when test="rank == 6989">
+                          AND GRP_CODE = #{managerCode} OR GRP_CODE IS NULL
+                     </when>
+                      <when test="rank == 6990">
+                          AND DEPT_CODE = #{managerCode} OR DEPT_CODE IS NULL
+                     </when>
+                </choose>
+            </if>
+        )
+        ORDER BY 1
+	</select>
+
+
+	<resultMap id="rtnCode" type="egovMap" />
+
+    <select id="install_Active_SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
 
 
   </mapper>

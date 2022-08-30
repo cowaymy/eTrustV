@@ -75,8 +75,6 @@ public class AttendanceController {
 	    @RequestMapping(value = "/managerAttendanceDownloadUpload.do")
 		public String managerAttendanceDownloadUpload(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
 
-			LOGGER.debug("==== initCalendar Params: " + params.toString());
-
 			// set calendar to default displaying current month's events
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -112,10 +110,20 @@ public class AttendanceController {
 
 		}
 
+	    @RequestMapping(value = "/managerAttendanceListing.do")
+		public String managerAttendanceListing(@RequestParam Map<String, Object> params, ModelMap model) {
+			return "/attendance/managerAttendanceListing";
+		}
+
 
 		@RequestMapping(value = "/attendanceFileUploadPop.do")
 		public String calendarEventFileUploadPop(@RequestParam Map<String, Object> params, ModelMap model) {
 			return "/attendance/attendanceFileUploadPop";
+		}
+
+		@RequestMapping(value = "/attendanceFileDownloadPop.do")
+		public String calendarEventFileDownloadPop(@RequestParam Map<String, Object> params, ModelMap model) {
+			return "/attendance/attendanceFileDownloadPop";
 		}
 
 
@@ -124,9 +132,9 @@ public class AttendanceController {
 		public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, ModelMap model, SessionVO sessionVO) throws IOException, InvalidFormatException  {
 			ReturnMessage message = new ReturnMessage();
 
-			String batchId= request.getParameter("batchId");
-			String batchMthYear = request.getParameter("batchMthYear");
-			String batchMemType = request.getParameter("batchMemType");
+			String batchId= request.getParameter("batchId").trim();
+			String batchMthYear = request.getParameter("batchMthYear").trim();
+			String batchMemType = request.getParameter("batchMemType").trim();
 			int result = 0;
 
 
@@ -138,11 +146,11 @@ public class AttendanceController {
 			List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
 			for (CalendarEventVO vo : vos) {
 				HashMap<String, Object> hm = new HashMap<String, Object>();
-				hm.put("atdType", vo.getAttendanceType());
-				hm.put("memCode", vo.getMemCode());
-				hm.put("dateFrom", vo.getDateFrom());
+				hm.put("atdType", vo.getAttendanceType().trim());
+				hm.put("memCode", vo.getMemCode().trim());
+				hm.put("dateFrom", vo.getDateFrom().trim());
 				hm.put("dateTo", vo.getDateTo());
-				hm.put("time", vo.getTime());
+				hm.put("time", vo.getTime().trim());
 				hm.put("crtUserId", sessionVO.getUserId());
 
 				detailList.add(hm);
@@ -228,16 +236,15 @@ public class AttendanceController {
 		}
 
 
-	   @RequestMapping(value = "/searchAtdManagementList.do", method = RequestMethod.GET)
-	   public ResponseEntity<List<EgovMap>> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-		LOGGER.debug("===========================/searchAtdManagementList.do===============================");
-		LOGGER.debug("== params heres" + params.toString());
+	   @RequestMapping(value = "/searchAtdUploadList.do", method = RequestMethod.GET)
+	   public ResponseEntity<List<EgovMap>> searchAtdUploadList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
-	    List<EgovMap> AtdList = attendanceService.searchAtdManagementList(params);
+	    List<EgovMap> AtdList = attendanceService.searchAtdUploadList(params);
 
-	    LOGGER.debug("===========================/searchPreASManagementList.do===============================");
 	    return ResponseEntity.ok(AtdList);
 	  }
+
+
 
 
 	  @RequestMapping(value = "/attendanceFileEditDeletePop.do")
@@ -288,6 +295,30 @@ public class AttendanceController {
 
 			return ResponseEntity.ok(message);
 	  }
+
+	  @RequestMapping(value = "/selectManagerCode.do", method = RequestMethod.GET)
+	   public ResponseEntity<List<EgovMap>> selectManagerCode(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	    List<EgovMap> managerCodeList = attendanceService.selectManagerCode(params);
+
+	    return ResponseEntity.ok(managerCodeList);
+	  }
+
+
+	  @RequestMapping(value = "/searchAtdManagementList.do", method = RequestMethod.GET)
+	   public ResponseEntity<List<EgovMap>> searchAtdManagementList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		  LOGGER.debug("params =====================================>>  " + params);
+	    List<EgovMap> AtdList = attendanceService.searchAtdManagementList(params);
+
+	    return ResponseEntity.ok(AtdList);
+	  }
+
+	  @RequestMapping(value = "/downloadManagerYearlyAttendance.do")
+		public String downloadManagerYearlyAttendance(@RequestParam Map<String, Object> params, ModelMap model) {
+			model.addAttribute("ind", params.get("ind"));
+			return "/attendance/downloadManagerYearlyAttendancePop";
+		}
+
 
 
 }

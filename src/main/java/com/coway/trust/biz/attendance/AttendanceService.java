@@ -25,8 +25,12 @@ public interface AttendanceService {
 
 	void insertApproveLine(Map<String, Object> params);
 
+	List<EgovMap> searchAtdUploadList(Map<String, Object> params);
+
 	List<EgovMap> searchAtdManagementList(Map<String, Object> params);
 
 	void disableBatchCalMst(Map<String, Object> params);
+
+	List<EgovMap> selectManagerCode(Map<String, Object> params);
 
 }

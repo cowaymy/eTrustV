@@ -103,7 +103,7 @@ $(document).ready(function(){
     var eventList = JSON.parse('${eventListJsonStr}');
 
     atdManagementGrid();
-    searchAtdManagementList();
+    searchAtdUploadList();
 
 });
 
@@ -150,8 +150,8 @@ function atdManagementGrid() {
 
   }
 
- function searchAtdManagementList(){
-	  Common.ajax("GET", "/attendance/searchAtdManagementList.do", $("#calSearchForm").serialize(), function(result) {
+ function searchAtdUploadList(){
+	  Common.ajax("GET", "/attendance/searchAtdUploadList.do", $("#calSearchForm").serialize(), function(result) {
           AUIGrid.setGridData(myGridID, result);
       });
  }
@@ -162,6 +162,10 @@ function fn_eventUploadPopup() {
 
 function fn_eventEditDeletePopup() {
     Common.popupDiv("/attendance/attendanceFileEditDeletePop.do", null, '', true, '');
+}
+
+function fn_eventDownloadPopup() {
+    Common.popupDiv("/attendance/attendanceFileDownloadPop.do", null, '', true, '');
 }
 
 
@@ -216,7 +220,7 @@ $(function() {
 
 function confirmApproval(param){
     Common.ajax("POST", "/attendance/approveUploadBatch.do", param, function(result) {
-    	Common.alert(result.message, searchAtdManagementList);
+    	Common.alert(result.message, searchAtdUploadList);
     });
 }
 
@@ -235,7 +239,7 @@ function confirmApproval(param){
      <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
      </c:if>
-      <li><p class="btn_blue"><a href="#" onClick="searchAtdManagementList()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+      <li><p class="btn_blue"><a href="#" onClick="searchAtdUploadList()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
       <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#calSearchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
     </ul>
   </aside><!-- title_line end -->
@@ -276,7 +280,7 @@ function confirmApproval(param){
           <ul class="btns">
             <li><p class="link_btn"><a href="javascript:fn_eventUploadPopup();">Upload Attendance</a></p></li>
             <li><p class="link_btn"><a href="javascript:fn_eventEditDeletePopup();">Edit / Delete Attendance</a></p></li>
-            <li><p class="link_btn"><a href="javascript:fn_eventEditDeletePopup();">Download Attendance</a></p></li>
+            <li><p class="link_btn"><a href="javascript:fn_eventDownloadPopup();">Download Attendance</a></p></li>
           </ul>
           <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>

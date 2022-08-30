@@ -120,7 +120,7 @@ function fn_submitApproval(){
         </form>
         <ul class="center_btns mt20">
             <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
-            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/attendance/AttendanceUploadFormat.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
+            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/attendance/AttendanceUploadFormat.csv">Download Template</a></p></li>
 <%--             <li><p class="btn_blue2 big"><a href="javascript:fn_submitApproval();"><spring:message code='sys.btn.submit'/></a></p></li> --%>
         </ul>
     </section>

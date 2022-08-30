@@ -24,7 +24,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Resource(name = "AttendanceMapper")
     private AttendanceMapper attendanceMapper;
 
-    @Transactional
+    //@Transactional
 	@Override
 	public int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
 
@@ -50,7 +50,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return masterSeq;
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public int saveCsvUpload2( List<Map<String, Object>> detailList, String batchId, String batchMemType) {
 
@@ -81,7 +81,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return mResult;
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public int disableBatchCalDtl(Map<String, Object> params) {
 
@@ -90,7 +90,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return mResult;
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public void insertApproveLine(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -118,17 +118,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	 @Override
-	  public List<EgovMap> searchAtdManagementList(Map<String, Object> params) {
-	    return attendanceMapper.searchAtdManagementList(params);
+	  public List<EgovMap> searchAtdUploadList(Map<String, Object> params) {
+	    return attendanceMapper.searchAtdUploadList(params);
 	  }
 
-	 @Transactional
+	 //@Transactional
 	 @Override
 	  public void disableBatchCalMst(Map<String, Object> params) {
 	      attendanceMapper.disableBatchCalMst(params);
 	  }
 
-	 @Transactional
+	 //@Transactional
 	 @Override
 	  public int deleteUploadBatch(Map<String, Object> params) {
 
@@ -137,7 +137,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			return result;
 	  }
 
-	 @Transactional
+	 //@Transactional
 	 @Override
 	 public int approveUploadBatch(Map<String, Object> params) {
 
@@ -145,6 +145,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 			return result;
 	 }
+
+	 @Override
+	  public List<EgovMap> selectManagerCode(Map<String, Object> params) {
+	    return attendanceMapper.selectManagerCode(params);
+	 }
+
+	 @Override
+	  public List<EgovMap> searchAtdManagementList(Map<String, Object> params) {
+	    return attendanceMapper.searchAtdManagementList(params);
+	  }
+
 
 
 

@@ -14,7 +14,7 @@
     });
 
     function fn_getCalSearchResultJsonList() {
-        Common.ajax("GET", "/attendance/searchAtdManagementList.do", $("#calSearchEditDeleteForm").serialize(), function(result){
+        Common.ajax("GET", "/attendance/searchAtdUploadList.do", $("#calSearchEditDeleteForm").serialize(), function(result){
             AUIGrid.setGridData(calGridID, result);
         });
     }
@@ -114,7 +114,7 @@
 
 </script>
 
-<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
+<div id="popup_wrap_update" class="popup_wrap size_mid"><!-- popup_wrap start -->
  <header class="pop_header">
   <!-- pop_header start -->
   <h1>Edit / Delete Attendance</h1>
