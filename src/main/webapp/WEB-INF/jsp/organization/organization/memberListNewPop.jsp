@@ -1182,10 +1182,10 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
 
         if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" && $("#cmbRace").val() == "10" ) {
 
-        	 if($("#muslimahScarftType").val() == ''){
-                 Common.alert("Please select Scarft");
-                 return false;
-             }
+        	 if($('input[name=muslimahScarft]:checked', '#memberAddForm').val() == null){
+                Common.alert("Please select Scarft");
+                return false;
+            }
 
             if($("#innerType").val() == ''){
                 Common.alert("Please select Inner Type");
@@ -1492,14 +1492,14 @@ function autofilledbyNRIC(){
 
         if (parseInt(autoGender)%2 == 0) {
             $("input:radio[name='gender']:radio[value='F']").prop("checked", true);
+            $('.chkScarft').show();
             $('#muslimahScarftLbl').show();
-            $('#muslimahScarftType').show();
             $('#innerType').show();
             $('#innerTypeLbl').show();
         } else {
             $("input:radio[name='gender']:radio[value='M']").prop("checked", true);
+             $('.chkScarft').hide();
             $('#muslimahScarftLbl').hide();
-            $('#muslimahScarftType').hide();
             $('#innerType').hide();
             $('#innerTypeLbl').hide();
         }
@@ -1626,7 +1626,6 @@ function fn_changeDetails(){
     		 if($("#cmbRace").val() == "10"){
     		        innerTypeId = 524 ;
     		        uniformSizeId = 522 ;
-    		        muslimahScarftId = 528;
     		 }
     		 uniformSizeId = 522 ;
 
@@ -1637,12 +1636,6 @@ function fn_changeDetails(){
     }
 
     CommonCombo.make("uniformSize", "/common/selectUniformSizeList.do", {groupCode : uniformSizeId}, "", {
-        id: "codeId",
-        name: "codeName",
-        type:"S"
-    });
-
-    CommonCombo.make("muslimahScarftType", "/common/selectMuslimahScarftList.do", {groupCode : muslimahScarftId}, "", {
         id: "codeId",
         name: "codeName",
         type:"S"
@@ -1660,21 +1653,21 @@ function fn_changeDetails(){
 	    	$('#emergencyTabHeader').show();
 	    	$('#emergencyTabDetails').show();
 	    	$("#attachmentTab").show();
+	    	$('.chkScarft').show();
             $('#muslimahScarftLbl').hide();
-            $('#muslimahScarftType').hide();
             $('#innerType').hide();
             $('#innerTypeLbl').hide();
         if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" && $("#cmbRace").val() == "10" ) {
+	        $('.chkScarft').show();
 	        $('#muslimahScarftLbl').show();
-	        $('#muslimahScarftType').show();
 	        $('#innerType').show();
 	        $('#innerTypeLbl').show();
             }else
                 {
 	            	$('#innerType').hide();
 	                $('#innerTypeLbl').hide();
+	                $('.chkScarft').hide();
 	                $('#muslimahScarftLbl').hide();
-	                $('#muslimahScarftType').hide();
             	}
         }else
             {
@@ -1682,8 +1675,8 @@ function fn_changeDetails(){
         	    myFileCaches = {};
 	        	$('#uniformSize').hide();
 	            $('#uniformSizeLbl').hide();
+	            $('.chkScarft').hide();
 	            $('#muslimahScarftLbl').hide();
-	            $('#muslimahScarftType').hide();
 	            $('#innerType').hide();
 	            $('#innerTypeLbl').hide();
 	            $('#emergencyTabHeader').hide();
@@ -2393,9 +2386,8 @@ function fn_validFile() {
     </td>
     <th scope="row" id = "muslimahScarftLbl">Muslimah Scarft<span class="must">*</span></th>
    <td colspan="2">
-    <select class="w100p" id="muslimahScarftType" name="muslimahScarftType">
-             <option value="">Choose One</option>
-    </select>
+        <label class="chkScarft"><input type="radio" id="muslimahScarftYes" name="muslimahScarft" value="Y"/><span>Y</span></label>
+        <label class="chkScarft"><input type="radio" id="muslimahScarftNo" name="muslimahScarft" value="N"/><span>N</span></label>
    </td>
 </tr>
 <tr>
