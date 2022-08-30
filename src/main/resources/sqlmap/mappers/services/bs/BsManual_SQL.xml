@@ -5557,8 +5557,8 @@ SELECT DISTINCT A.ORD_ID FROM (
         LEFT JOIN ORG0001D ORG ON ORG.MEM_CODE = USR.HR_CODE
         LEFT JOIN ORG1001V T9  ON T9.MEM_CODE = USR.USER_NAME
         WHERE 1 = 1
-        AND USR.USER_BRNCH_ID = (SELECT USER_BRNCH_ID FROM SYS0047M WHERE USER_ID = #{userId})
-        AND USR.USER_ID = #{userId}
+        AND USR.USER_BRNCH_ID = (SELECT BRNCH FROM ORG0001D WHERE USER_ID = #{memCode})
+        AND USR.USER_NAME = #{memCode}
     </select>
 
     <select id="selectOldContactDt" parameterType="Map" resultType="egovMap">
@@ -5607,8 +5607,8 @@ SELECT DISTINCT A.ORD_ID FROM (
         SAL0329D_TICKET_NO_SEQ.NEXTVAL
         , #{hsNo}
         , #{hsrNo}
-        , #{orderId}
-        , #{orderNo}
+        , #{salesOrderId}
+        , #{salesOrderNo}
         , #{custId}
         , #{custName}
         , #{status}
@@ -5629,10 +5629,9 @@ SELECT DISTINCT A.ORD_ID FROM (
         , #{grpCode}
         , #{rem}
         , SYSDATE
-        , #{userId}
+        , (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId})
         , SYSDATE
-        , #{userId}
-
+        ,  (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId})
 
     </insert>
 
