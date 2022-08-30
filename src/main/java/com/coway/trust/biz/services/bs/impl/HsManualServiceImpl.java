@@ -751,13 +751,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       logger.debug("==================== editContactInfo [start] ========================");
       logger.debug("params: " + params);
       EgovMap insertHSNewContact = new EgovMap();
-      params.put("userId", sessionVO.getUserId());
       params.put("orderId", params.get("hidSalesOrdId").toString());
       params.put("hsNo", params.get("serviceNo").toString());
       EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
       EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
 
-      insertHSNewContact.put("userId", sessionVO.getUserId());
       insertHSNewContact.put("hsrNo", useFilterList.get("no").toString());
       insertHSNewContact.put("hsNo", params.get("serviceNo").toString());
       insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo").toString());
