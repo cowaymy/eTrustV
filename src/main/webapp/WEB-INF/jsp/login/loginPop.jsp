@@ -116,7 +116,7 @@ function fn_AcceptAgreement() {
                 } else if(userType == "2") {
                     successMsg = "Thank you for signing up as Coway Malaysia Lady(Cody). <br /><br />";// +
                 }else if(userType == "7") {
-                    successMsg = "Thank you for signing up as Coway Malaysia Home Technician (HT). <br /><br />";// +
+                    successMsg = "Thank you for signing up as Coway Malaysia Homecare Technician (HT). <br /><br />";// +
                 }
                 // Redirect to login page
                 if($("#loginForm #surveyStus").val() <= 0 && $("#loginForm surveyTypeId").val() > 0){
