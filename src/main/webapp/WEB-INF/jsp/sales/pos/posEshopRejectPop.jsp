@@ -62,7 +62,7 @@ function updateStatus() {
        	  if(result.code == "00") {        //successful update
        	      Common.alert(" This ESN No: " +  '${esnNo}' + " has been rejected.",fn_reloadList());
        	  } else {
-                 Common.alert(result.message,fn_reloadList());
+                 Common.alert(result.message,fn_reloadList);
              }
        });
 }
