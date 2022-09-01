@@ -779,8 +779,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		                   smsList.put("userId", sessionVO.getUserId());
 		                   smsList.put("smsType", 975);
 		                   smsList.put("smsMessage", smsMessage);
-		                   smsList.put("smsMobileNo", params.get("custMobileNo").toString());
-		                   //smsList.put("smsMobileNo", "+6017-5977 998");
+		                   //smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+		                   smsList.put("smsMobileNo", "+6017-5977 998");
 
 		                   sendSms(smsList);
 		    	   }
