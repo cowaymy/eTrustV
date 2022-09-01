@@ -686,7 +686,7 @@
                                                         CASE    WHEN ( sL01.SRV_MEM_DT_TM IS NOT NULL ) THEN  sL01.SRV_MEM_DT_TM   ELSE  TO_DATE('1900-01-01 00:00:00' ,'yyyy-mm-dd hh24:mi:ss')  END C3  ,
                                                         CASE    WHEN ( sL01.SRV_MEM_AMT >= UTILS.CONVERT_TO_FLOAT(0,53) ) THEN sL01.SRV_MEM_AMT  ELSE UTILS.CONVERT_TO_FLOAT(0,53)  END C4  ,
                                                         CASE    WHEN ( sL01.SRV_MEM_AMT < UTILS.CONVERT_TO_FLOAT(0,53) ) THEN UTILS.CONVERT_TO_FLOAT(-1,53) * sL01.SRV_MEM_AMT ELSE UTILS.CONVERT_TO_FLOAT(0,53) END C5  ,
-                                                        CASE    WHEN ( sL01.SRV_MEM_DOC_NO LIKE '%CB%' ) THEN pay31d.TAX_INVC_REF_NO  ELSE sL01.SRV_MEM_DOC_NO  END C6
+                                                        CASE    WHEN ( pay31d.TAX_INVC_REF_NO is not null ) THEN pay31d.TAX_INVC_REF_NO  ELSE sL01.SRV_MEM_DOC_NO  END C6
                                         FROM ( SELECT 1 X
                                                  FROM DUAL  ) SingleRowTable1
                                                LEFT JOIN ( SELECT pay24d.SRV_MEM_LG_ID   ,
