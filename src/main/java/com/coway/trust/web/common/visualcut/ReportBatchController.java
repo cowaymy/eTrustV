@@ -2426,7 +2426,7 @@ public class ReportBatchController {
 
 // Accumulated Operating Lease Details Other Raw Report - Added by TPY 20/07/2020 requested by Finance Department
   @RequestMapping(value = "/RentalOptLeaseDetailsOthRaw_Excel.do")
-  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  //@Scheduled(cron = " 0 0 9 1 * ?")//Monthly (Day 1) 9:00am
   public void RentalOptLeaseDetailsOthRaw() {
     LOGGER.info("[START] RentalOptLeaseDetailsOthRaw_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -2445,7 +2445,7 @@ public class ReportBatchController {
 
 // Accumulated Finance Lease Details Other Raw Report - Added by TPY 20/07/2020 requested by Finance Department
   @RequestMapping(value = "/RentalFinLeaseDetailsOthRaw_Excel.do")
-  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  //@Scheduled(cron = " 0 0 9 1 * ?")//Monthly (Day 1) 9:00am
   public void RentalFinLeaseDetailsOthRaw() {
     LOGGER.info("[START] RentalFinLeaseDetailsOthRaw_Excel...");
     Map<String, Object> params = new HashMap<>();
