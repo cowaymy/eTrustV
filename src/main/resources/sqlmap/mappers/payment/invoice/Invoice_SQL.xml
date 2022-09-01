@@ -135,95 +135,93 @@
 
 	<select id="selecteStatementRawList" parameterType="Map"
 		resultType="egovMap">
-		SELECT
-		INVC_ID
-		, CUST_NAME
-		, CUST_EMAIL
-		, INVC_DATE
-		, TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS  CURR_CHARG
-		, TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS PREV_BAL
-		, TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS TOT_OUT
-		, VIRTUAL_ACC
-		, INVC_NO
-		, BILL_CODE
-		, REF_NO_1
-		, REF_NO_2
-		, COWAY_EMAIL
-		FROM (
-		SELECT
-		TAX_INVC_ID AS INVC_ID
-		, TAX_INVC_CUST_NAME AS CUST_NAME
-		, CASE WHEN S24.CUST_BILL_EMAIL_ADD IS NOT NULL THEN
-		CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]>
-		S24.CUST_BILL_EMAIL THEN S24.CUST_BILL_EMAIL
-		ELSE S24.CUST_BILL_EMAIL END
-		ELSE S24.CUST_BILL_EMAIL END AS CUST_EMAIL
-		, TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON') || ' ' ||
-		EXTRACT (YEAR FROM TAX_INVC_REF_DT) AS INVC_DATE
-		, TAX_INVC_CHRG
-		, TAX_INVC_OVERDU
-		, TAX_INVC_AMT_DUE
-		, TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
-		, TAX_INVC_REF_NO AS INVC_NO
-		, '9928' AS BILL_CODE
-		, TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
-		, TAX_INVC_REF_NO AS REF_NO_2
-		, 'billing@coway.com.my' AS COWAY_EMAIL
-		FROM REP0099D R99
-		JOIN SAL0024D S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
-		JOIN PAY0047D P47 ON P47.TASK_ID = R99.TAX_INVC_TASK_ID
-		LEFT JOIN ( SELECT CUST_BILL_ID, CUST_BILL_GRP_NO
-		, CASE WHEN VALID_EMAIL = 'VALID' THEN 1 ELSE 0 END AS RES
-		FROM SAL0024D_VERIFICATION
-		GROUP BY CUST_BILL_ID, CUST_BILL_GRP_NO, VALID_EMAIL ) A ON A.CUST_BILL_ID
-		= S24.CUST_BILL_ID
-		WHERE
-		CUST_BILL_IS_ESTM = 1
-		AND CUST_BILL_EMAIL IS NOT NULL
-		AND TASK_TYPE IN ( 'BILL', 'EARLY BILL')
-		AND TAX_INVC_YEAR = #{year}
-		AND TAX_INVC_MONTH = #{month}
-		AND (A.RES <![CDATA[<>]]>
-		0 OR A.RES IS NULL)
+		WITH
+            R99 AS (
+                SELECT * FROM REP0099D WHERE TAX_INVC_YEAR = #{year} AND TAX_INVC_MONTH = #{month}
+            ),
+            P47 AS (
+                SELECT * FROM PAY0047D WHERE TASK_TYPE IN ( 'BILL', 'EARLY BILL')
+            ),
+            S24 AS (
+                SELECT * FROM SAL0024D WHERE CUST_BILL_IS_ESTM = 1 AND CUST_BILL_EMAIL IS NOT NULL
+            )
+            SELECT
+                INVC_ID
+                , CUST_NAME
+                , CUST_EMAIL
+                , INVC_DATE
+                , TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS  CURR_CHARG
+                , TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS PREV_BAL
+                , TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS TOT_OUT
+                , VIRTUAL_ACC
+                , INVC_NO
+                , BILL_CODE
+                , REF_NO_1
+                , REF_NO_2
+                , COWAY_EMAIL
+            FROM (
+                SELECT
+                    TAX_INVC_ID AS INVC_ID
+                    , TAX_INVC_CUST_NAME AS CUST_NAME
+                    , CASE WHEN S24.CUST_BILL_EMAIL_ADD IS NOT NULL THEN
+                    CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]>
+                    S24.CUST_BILL_EMAIL THEN S24.CUST_BILL_EMAIL
+                    ELSE S24.CUST_BILL_EMAIL END
+                    ELSE S24.CUST_BILL_EMAIL END AS CUST_EMAIL
+                    , TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON YYYY') AS INVC_DATE
+                    , TAX_INVC_CHRG
+                    , TAX_INVC_OVERDU
+                    , TAX_INVC_AMT_DUE
+                    , TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
+                    , TAX_INVC_REF_NO AS INVC_NO
+                    , '9928' AS BILL_CODE
+                    , TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
+                    , TAX_INVC_REF_NO AS REF_NO_2
+                    , 'billing@coway.com.my' AS COWAY_EMAIL
+                FROM R99
+                    JOIN S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
+                    JOIN P47 ON P47.TASK_ID = R99.TAX_INVC_TASK_ID
+                    LEFT JOIN (
+                        SELECT
+                            CUST_BILL_ID,
+                            CASE WHEN VALID_EMAIL = 'VALID' THEN 1 ELSE 0 END AS RES
+                        FROM SAL0024D_VERIFICATION
+                        GROUP BY CUST_BILL_ID, CUST_BILL_GRP_NO, VALID_EMAIL
+                    ) A ON A.CUST_BILL_ID = S24.CUST_BILL_ID
+                WHERE (A.RES <![CDATA[<>]]> 0 OR A.RES IS NULL)
 
-		UNION ALL
+                UNION ALL
 
-		SELECT
-		TAX_INVC_ID AS INVC_ID
-		, TAX_INVC_CUST_NAME AS CUST_NAME
-		, CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]>
-		S24.CUST_BILL_EMAIL THEN S24.CUST_BILL_EMAIL_ADD END AS CUST_EMAIL
-		, TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON') || ' ' ||
-		EXTRACT (YEAR FROM TAX_INVC_REF_DT) AS INVC_DATE
-		, TAX_INVC_CHRG
-		, TAX_INVC_OVERDU
-		, TAX_INVC_AMT_DUE
-		, TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
-		, TAX_INVC_REF_NO AS INVC_NO
-		, '9928' AS BILL_CODE
-		, TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
-		, TAX_INVC_REF_NO AS REF_NO_2
-		, 'billing@coway.com.my' AS COWAY_EMAIL
-		FROM REP0099D R99
-		JOIN SAL0024D S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
-		JOIN PAY0047D P47 ON P47.TASK_ID = R99.TAX_INVC_TASK_ID
-		LEFT JOIN ( SELECT CUST_BILL_ID, CUST_BILL_GRP_NO
-		, CASE WHEN VALID_EMAIL = 'VALID' THEN 1 ELSE 0 END AS RES
-		FROM SAL0024D_VERIFICATION
-		GROUP BY CUST_BILL_ID, CUST_BILL_GRP_NO, VALID_EMAIL ) A ON A.CUST_BILL_ID
-		= S24.CUST_BILL_ID
-		WHERE
-		CUST_BILL_IS_ESTM = 1
-		AND CUST_BILL_EMAIL IS NOT NULL
-		AND CUST_BILL_EMAIL_ADD IS NOT NULL
-		AND TASK_TYPE IN ( 'BILL', 'EARLY BILL')
-		AND TAX_INVC_YEAR = #{year}
-		AND TAX_INVC_MONTH = #{month}
-		AND (A.RES <![CDATA[<>]]>
-		0 OR A.RES IS NULL) )
-		WHERE
-		CUST_EMAIL IS NOT NULL
-		ORDER BY INVC_ID
+                SELECT
+                    TAX_INVC_ID AS INVC_ID
+                    , TAX_INVC_CUST_NAME AS CUST_NAME
+                    , CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]>
+                    S24.CUST_BILL_EMAIL THEN S24.CUST_BILL_EMAIL_ADD END AS CUST_EMAIL
+                    , TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON YYYY') AS INVC_DATE
+                    , TAX_INVC_CHRG
+                    , TAX_INVC_OVERDU
+                    , TAX_INVC_AMT_DUE
+                    , TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
+                    , TAX_INVC_REF_NO AS INVC_NO
+                    , '9928' AS BILL_CODE
+                    , TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
+                    , TAX_INVC_REF_NO AS REF_NO_2
+                    , 'billing@coway.com.my' AS COWAY_EMAIL
+                FROM R99
+                    JOIN S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
+                    JOIN P47 ON P47.TASK_ID = R99.TAX_INVC_TASK_ID
+                    LEFT JOIN (
+                        SELECT
+                            CUST_BILL_ID,
+                            CASE WHEN VALID_EMAIL = 'VALID' THEN 1 ELSE 0 END AS RES
+                        FROM SAL0024D_VERIFICATION
+                        GROUP BY CUST_BILL_ID, CUST_BILL_GRP_NO, VALID_EMAIL
+                    ) A ON A.CUST_BILL_ID = S24.CUST_BILL_ID
+                WHERE S24.CUST_BILL_EMAIL_ADD IS NOT NULL
+                    AND (A.RES <![CDATA[<>]]> 0 OR A.RES IS NULL)
+            ) WHERE
+                CUST_EMAIL IS NOT NULL
+                ORDER BY INVC_ID
 	</select>
 
 	<select id="getUploadSeq" parameterType="Map" resultType="egovMap">
