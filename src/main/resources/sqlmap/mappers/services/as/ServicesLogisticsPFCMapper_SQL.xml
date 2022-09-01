@@ -46,10 +46,11 @@
       }
      </select>
 
+<resultMap id="rtnCode2" type="egovMap" />
      <select id="SP_LOGISTIC_REQUEST_SERIAL" parameterType="Map"  statementType="CALLABLE" >
       /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL] 20191216 - KR OHK*/
       {
-          call SP_LOGISTIC_REQUEST_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+          call SP_LOGISTIC_REQUEST_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode2} )
       }
      </select>
 
