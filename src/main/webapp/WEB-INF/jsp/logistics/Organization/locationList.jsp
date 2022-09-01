@@ -541,7 +541,8 @@ $(document).ready(function(){
     		   return false;
     	   }
 
-    	 } else if (locType == '05') { // CDC&RDC type
+    	 }
+    	/*  else if (locType == '05') { // CDC&RDC type
     		 console.log("hcChk: " + hcChk  + " \nhaChk: " + haChk);
 
     		 console.log("hcChk value : " +  $("#hcChk").val()  + " \nhaChk value: " + $("#haChk").val());
@@ -550,7 +551,7 @@ $(document).ready(function(){
     			  Common.alert('Please select Business Type for CDC&RDC type of location.');
                   return false;
     		  }
-    	 }
+    	 } */
 
      } else {
     	 if((warebranch1 == null || warebranch1 == "") && (warebranch2 == null || warebranch2 == "") && (warebranch3 == null || warebranch3 == "")){
