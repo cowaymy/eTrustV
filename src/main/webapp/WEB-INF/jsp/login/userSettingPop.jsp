@@ -24,19 +24,10 @@ function removePopupCallback(){
 }
 
 function chkPwd(str){
-    var regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
-    //var regPwd =/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
+    var regPwd = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
     if(regPwd.test(str)){
-        // LaiKW - 20211202 - ITGC Password configuration, special character required for new passwords
-        var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-        if(format.test(str)) {
-            return true;
-        } else {
-            Common.alert("Special character is required.");
-            return false;
-        }
+        return true;
     } else {
-        Common.alert("6 ~ 20 digits in English and numbers");
         return false;
     }
 }
@@ -107,6 +98,7 @@ function fn_updateUserPasswd(){
         return;
     }
     if(chkPwd($("#passwordForm #confirmPasswd").val()) == false){
+    	Common.alert("<b>Password must be 6-20 characters and contain both numbers and letters/special chracters</b>");
         return;
     }
 
