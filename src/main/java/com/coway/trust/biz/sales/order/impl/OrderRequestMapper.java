@@ -257,5 +257,25 @@ public interface OrderRequestMapper {
 
   void insertFileDetail(Map<String, Object> flInfo);
 
+  EgovMap selectAccRentLedgerFrame(Map<String, Object> params);
+
+  EgovMap selectAccRentLedgerFrame2(Map<String, Object> params);
+
+  EgovMap selectAccRentLedgerFrame3(Map<String, Object> params);
+
+  EgovMap selectTotalDNBillFrame(Map<String, Object> params);
+
+  EgovMap selectTotalCNBillFrame(Map<String, Object> params);
+
+  EgovMap selectTotalDNBillFrame2(Map<String, Object> params);
+
+  EgovMap selectTotalCNBillFrame2(Map<String, Object> params);
+
+  EgovMap selectRentalInstFrame(Map<String, Object> params);
+
+  EgovMap selectRentalInstFrame2(Map<String, Object> params);
+
+  EgovMap selectLastBillFrame(Map<String, Object> params);
+
 
 }

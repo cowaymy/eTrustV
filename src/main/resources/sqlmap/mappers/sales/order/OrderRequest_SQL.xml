@@ -1242,6 +1242,64 @@
       AND ROWNUM &lt;= 1
   </select>
 
+   <select id="selectRentalInstFrame" parameterType="Map" resultType="egovMap">
+    SELECT SALES_ORD_ID
+         , RENT_INST_NO
+         , RENT_INST_DT
+         , RENT_INST_TYPE_ID
+         , RENT_INST_AMT
+         , RENT_INST_INSERT_MONTH
+         , RENT_INST_INSERT_YEAR
+         , RENT_INST_ID
+         , RENT_NOR_AMT
+         , RENT_DISC_AMT
+         , CRT_USER_ID
+         , CRT_DT
+         , UPD_USER_ID
+         , UPD_DT
+    FROM
+    ( SELECT T1.SALES_ORD_ID
+           , T1.RENT_INST_NO
+           , TO_CHAR(T1.RENT_INST_DT, 'YYYYMMDD') RENT_INST_DT
+           , T1.RENT_INST_TYPE_ID
+           , T1.RENT_INST_AMT
+           , T1.RENT_INST_INSERT_MONTH
+           , T1.RENT_INST_INSERT_YEAR
+           , T1.RENT_INST_ID
+           , T1.RENT_NOR_AMT
+           , T1.RENT_DISC_AMT
+           , T1.CRT_USER_ID
+           , T1.CRT_DT
+           , T1.UPD_USER_ID
+           , T1.UPD_DT
+    FROM SAL0070D T1
+    WHERE T1.SALES_ORD_ID = #{fraSalesOrdId}
+    ORDER BY T1.RENT_INST_NO DESC
+    )
+    WHERE ROWNUM &lt;= 1
+  </select>
+
+   <select id="selectRentalInstFrame2" parameterType="Map" resultType="egovMap">
+    SELECT T1.SALES_ORD_ID
+         , T1.RENT_INST_NO
+         , TO_CHAR(T1.RENT_INST_DT, 'YYYYMMDD') RENT_INST_DT
+         , T1.RENT_INST_TYPE_ID
+         , T1.RENT_INST_AMT
+         , T1.RENT_INST_INSERT_MONTH
+         , T1.RENT_INST_INSERT_YEAR
+         , T1.RENT_INST_ID
+         , T1.RENT_NOR_AMT
+         , T1.RENT_DISC_AMT
+         , T1.CRT_USER_ID
+         , T1.CRT_DT
+         , T1.UPD_USER_ID
+         , T1.UPD_DT
+    FROM SAL0070D T1
+    WHERE T1.SALES_ORD_ID = #{fraSalesOrdId}
+      AND TO_CHAR(T1.RENT_INST_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
+      AND ROWNUM &lt;= 1
+  </select>
+
   <select id="selectInstallResult" parameterType="Map" resultType="egovMap">
     SELECT T.INSTALL_ENTRY_ID
          , T.INSTALL_DT
@@ -1436,6 +1494,33 @@
       AND T1.RENT_AMT > 0
   </select>
 
+  <select id="selectAccRentLedgerFrame" parameterType="Map" resultType="egovMap">
+  SELECT COUNT(1) AS CNT
+         , SUM(RENT_AMT) AS RENT_AMT
+    FROM PAY0022D T1
+    WHERE T1.RENT_SO_ID = #{fraSalesOrdId}
+      AND 161 != T1.RENT_DOC_TYPE_ID
+      AND 157 != T1.RENT_DOC_TYPE_ID
+      AND 160 != T1.RENT_DOC_TYPE_ID
+      AND T1.RENT_AMT > 0
+  </select>
+
+  <select id="selectAccRentLedgerFrame2" parameterType="Map" resultType="egovMap">
+  SELECT COUNT(1) AS CNT
+         , SUM(RENT_AMT) AS RENT_AMT
+    FROM PAY0022D T1
+    WHERE T1.RENT_SO_ID = #{fraSalesOrdId}
+      AND 161 = T1.RENT_DOC_TYPE_ID
+      AND T1.RENT_AMT > 0
+  </select>
+
+    <select id="selectAccRentLedgerFrame3" parameterType="Map" resultType="egovMap">
+    SELECT COUNT(1) AS CNT
+         , SUM(RENT_AMT) AS RENT_AMT
+    FROM PAY0022D T1
+    WHERE T1.RENT_SO_ID = #{fraSalesOrdId}
+  </select>
+
   <select id="selectTotalDNBill" parameterType="Map" resultType="egovMap">
     SELECT COUNT(D1.C1) AS CNT
          , SUM(D1.RENT_AMT) AS RENT_AMT
@@ -1467,6 +1552,64 @@
   </select>
 
   <select id="selectTotalDNBill2" parameterType="Map" resultType="egovMap">
+    SELECT COUNT(D1.C1) AS CNT
+         , SUM(D1.RENT_AMT) AS RENT_AMT
+    FROM ( SELECT DISTINCT U1.C1 C1
+                , U1.RENT_AMT
+    FROM ( SELECT 1 C1
+                , T1.RENT_AMT RENT_AMT
+    FROM PAY0022D T1
+    JOIN PAY0002D T2 ON T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO
+                    AND 43 = T2.ADJ_ENTRY_DR_ACC_ID
+    WHERE T1.RENT_SO_ID = #{salesOrdId}
+      AND 157 = T1.RENT_DOC_TYPE_ID
+      AND T1.RENT_AMT > 0
+
+    UNION ALL
+
+    SELECT 1 C1
+         , T4.MEMO_ADJ_TOT_AMT
+    FROM PAY0022D T3
+    JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
+                    AND 1294 = T4.MEMO_ADJ_TYPE_ID
+                    AND 4 = T4.MEMO_ADJ_STUS_ID
+    WHERE T3.RENT_SO_ID = #{salesOrdId}
+    AND 161 = T3.RENT_DOC_TYPE_ID
+    AND T3.RENT_AMT > 0
+    ) U1 ) D1
+  </select>
+
+  <select id="selectTotalDNBillFrame" parameterType="Map" resultType="egovMap">
+    SELECT COUNT(D1.C1) AS CNT
+         , SUM(D1.RENT_AMT) AS RENT_AMT
+    FROM ( SELECT DISTINCT U1.C1 C1
+                         , U1.RENT_AMT
+           FROM ( SELECT 1 C1
+                       , T1.RENT_AMT RENT_AMT
+                  FROM PAY0022D T1
+                  JOIN PAY0002D T2 ON T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO AND 43 != T2.ADJ_ENTRY_DR_ACC_ID
+                  WHERE T1.RENT_SO_ID = #{fraSalesOrdId}
+                    AND 157 = T1.RENT_DOC_TYPE_ID
+                    AND T1.RENT_AMT > 0
+
+                  UNION ALL
+
+                  SELECT 1 C1
+                       , T4.MEMO_ADJ_TOT_AMT
+                  FROM PAY0022D T3
+                  JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
+                                  AND 1294 = T4.MEMO_ADJ_TYPE_ID
+                                  AND 4 = T4.MEMO_ADJ_STUS_ID
+                   WHERE T3.RENT_SO_ID = #{fraSalesOrdId}
+                     AND 161 != T3.RENT_DOC_TYPE_ID
+                     AND 157 != T3.RENT_DOC_TYPE_ID
+                     AND 155 != T3.RENT_DOC_TYPE_ID
+                     AND 160 != T3.RENT_DOC_TYPE_ID
+                     AND T3.RENT_AMT > 0
+    ) U1 ) D1
+  </select>
+
+  <select id="selectTotalDNBillFrame2" parameterType="Map" resultType="egovMap">
     SELECT COUNT(D1.C1) AS CNT
          , SUM(D1.RENT_AMT) AS RENT_AMT
     FROM ( SELECT DISTINCT U1.C1 C1
@@ -1570,6 +1713,82 @@
     ) D1
   </select>
 
+  <select id="selectTotalCNBillFrame" parameterType="Map" resultType="egovMap">
+    SELECT COUNT(D1.C1) AS CNT
+         , SUM(D1.CN_AMOUNT) AS CN_AMOUNT
+    FROM ( SELECT DISTINCT U1.C1 C1
+                         , U1.C2 C2
+                         , U1.CN_AMOUNT
+    FROM ( SELECT 1 C1
+                , 0 C2
+                , T1.RENT_AMT * -1 AS CN_AMOUNT
+            FROM PAY0022D T1
+            JOIN PAY0002D T2 ON ((T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO )
+                     OR ((T2.ADJ_ENTRY_SO_ID = T1.RENT_SO_ID )
+                   AND (T1.RENT_DOC_NO LIKE 'INS%' )))
+                            AND (43 != T2.ADJ_ENTRY_CR_ACC_ID)
+                            AND (155 = T2.ADJ_ENTRY_NOTE_TYPE_ID)
+            WHERE (T1.RENT_SO_ID = #{fraSalesOrdId} )
+              AND (155 = T1.RENT_DOC_TYPE_ID )
+              AND (T1.RENT_AMT &lt; 0 )
+
+    UNION ALL
+
+    SELECT 1 C1
+         , T4.MEMO_ADJ_ID MEMO_ADJ_ID
+         , T4.MEMO_ADJ_TOT_AMT AS CN_AMOUNT
+    FROM PAY0022D T3
+    JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
+                    AND 1293 = T4.MEMO_ADJ_TYPE_ID
+                    AND 4 = T4.MEMO_ADJ_STUS_ID
+    JOIN PAY0012D T5 ON T5.MEMO_ADJ_ID = T4.MEMO_ADJ_ID
+    JOIN PAY0030D T6 ON T6.INVC_ITM_ID = T5.MEMO_ITM_INVC_ITM_ID
+    JOIN SAL0001D T7 on T7.SALES_ORD_NO = T6.INVC_ITM_ORD_NO AND T7.SALES_ORD_ID = T3.RENT_SO_ID
+    WHERE ( T3.RENT_SO_ID = #{fraSalesOrdId} )
+      AND ( 161 != T3.RENT_DOC_TYPE_ID )
+      AND ( 157 != T3.RENT_DOC_TYPE_ID )
+      AND ( 155 != T3.RENT_DOC_TYPE_ID )
+      AND ( 160 != T3.RENT_DOC_TYPE_ID )
+      AND ( T3.RENT_AMT > 0 )
+    ) U1
+    ) D1
+  </select>
+
+   <select id="selectTotalCNBillFrame2" parameterType="Map" resultType="egovMap">
+    SELECT COUNT(D1.C1) AS CNT
+         , SUM(D1.CN_AMOUNT) AS CN_AMOUNT
+    FROM ( SELECT DISTINCT U1.C1 C1
+                         , U1.C2 C2
+                         , U1.CN_AMOUNT
+           FROM ( SELECT 1 C1
+                       , 0 C2
+                       , T1.RENT_AMT * -1 AS CN_AMOUNT
+                  FROM PAY0022D T1
+                  JOIN PAY0002D T2 ON ((T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO )
+                                   OR ((T2.ADJ_ENTRY_SO_ID = T1.RENT_SO_ID )
+                                  AND (T1.RENT_DOC_NO LIKE 'INS%' )))
+                                  AND (43 = T2.ADJ_ENTRY_CR_ACC_ID)
+                                  AND (155 = T2.ADJ_ENTRY_NOTE_TYPE_ID)
+                  WHERE (T1.RENT_SO_ID = #{salesOrdId} )
+                    AND (155 = T1.RENT_DOC_TYPE_ID )
+                    AND (T1.RENT_AMT &lt; 0 )
+
+    UNION ALL
+
+    SELECT 1 C1
+         , T4.MEMO_ADJ_ID MEMO_ADJ_ID
+         , T4.MEMO_ADJ_TOT_AMT AS CN_AMOUNT
+    FROM PAY0022D T3
+    JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
+                    AND 1293 = T4.MEMO_ADJ_TYPE_ID
+                    AND 4 = T4.MEMO_ADJ_STUS_ID
+    WHERE ( T3.RENT_SO_ID = #{salesOrdId} )
+      AND ( 161 = T3.RENT_DOC_TYPE_ID )
+      AND ( T3.RENT_AMT > 0 )
+    ) U1
+    ) D1
+  </select>
+
   <select id="selectLastBill" parameterType="Map" resultType="egovMap">
     SELECT T.RENT_RUN_ID
          , T.RENT_ID
@@ -1604,6 +1823,48 @@
            , T1.R02
     FROM PAY0022D T1
     WHERE T1.RENT_SO_ID = #{salesOrdId}
+      AND T1.RENT_DOC_TYPE_ID IN (158, 159)
+      AND T1.RENT_AMT >= 0
+      AND T1.RENT_INST_NO > 0
+    ORDER BY T1.RENT_DT_TM DESC , T1.RENT_INST_NO DESC
+    ) T
+    WHERE ROWNUM &lt;= 1
+  </select>
+
+    <select id="selectLastBillFrame" parameterType="Map" resultType="egovMap">
+    SELECT T.RENT_RUN_ID
+         , T.RENT_ID
+         , T.RENT_SO_ID
+         , T.RENT_DOC_NO
+         , T.RENT_DOC_TYPE_ID
+         , T.RENT_DT_TM
+         , T.RENT_AMT
+         , T.RENT_BATCH_NO
+         , T.RENT_INST_NO
+         , T.RENT_UPD_USER_ID
+         , T.RENT_UPD_DT
+         , T.RENT_IS_SYNC
+         , T.RENT_BILL_RUNNG_TOT
+         , T.R01 R01
+         , T.R02 R02
+    FROM
+    ( SELECT T1.RENT_RUN_ID
+           , T1.RENT_ID
+           , T1.RENT_SO_ID
+           , T1.RENT_DOC_NO
+           , T1.RENT_DOC_TYPE_ID
+           , T1.RENT_DT_TM
+           , T1.RENT_AMT
+           , T1.RENT_BATCH_NO
+           , T1.RENT_INST_NO
+           , T1.RENT_UPD_USER_ID
+           , T1.RENT_UPD_DT
+           , T1.RENT_IS_SYNC
+           , T1.RENT_BILL_RUNNG_TOT
+           , T1.R01
+           , T1.R02
+    FROM PAY0022D T1
+    WHERE T1.RENT_SO_ID = #{fraSalesOrdId}
       AND T1.RENT_DOC_TYPE_ID IN (158, 159)
       AND T1.RENT_AMT >= 0
       AND T1.RENT_INST_NO > 0

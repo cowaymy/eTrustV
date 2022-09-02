@@ -383,9 +383,9 @@
     function fn_orderSimulPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+            Common.popupDiv("/homecare/sales/order/hcOrderRentToOutrSimulPop.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
         } else {
-            Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordId : '' }, null, true);
+            Common.popupDiv("/homecare/sales/order/hcOrderRentToOutrSimulPop.do", { ordId : '' }, null, true);
         }
     }
 

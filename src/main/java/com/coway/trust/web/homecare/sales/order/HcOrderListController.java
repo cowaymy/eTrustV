@@ -170,4 +170,23 @@ public class HcOrderListController {
 		return ResponseEntity.ok(hcOrderListService.selectHcOrderList(params));
 	}
 
+	@RequestMapping(value = "/hcOrderRentToOutrSimulPop.do")
+	public String orderRentToOutrSimulPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
+
+		model.put("ordNo", params.get("ordNo"));
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3));
+
+		//Report Param
+		model.put("userName", session.getUserId());
+		model.put("brnchCode", session.getBranchName());  //AS-IS Brnch Code
+
+		return "homecare/sales/order/hcOrderRentToOutrSimulPop";
+	}
+
+	@RequestMapping(value = "/selectOrderSimulatorViewByOrderNo.do", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> selectOrderSimulatorViewByOrderNo(@RequestParam Map<String, Object> params) {
+	    EgovMap rslt = hcOrderListService.selectOrderSimulatorViewByOrderNo(params);
+	    return ResponseEntity.ok(rslt);
+	  }
+
 }
