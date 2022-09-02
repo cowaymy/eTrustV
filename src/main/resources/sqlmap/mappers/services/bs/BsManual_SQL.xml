@@ -5583,8 +5583,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , CUST_ID
         , CUST_NAME
         , STATUS
-        , OLD_CNTC_ID
-        , NEW_CNTC_ID
+        , CNTC_ID
         , REQST_DT
         , OLD_HP_NO
         , OLD_HOME_NO
@@ -5614,7 +5613,6 @@ SELECT DISTINCT A.ORD_ID FROM (
         , #{custName}
         , #{status}
         , #{oldCntcId}
-        , #{newCntcId}
         , SYSDATE
         , #{oldHpNo}
         , #{oldHomeNo}
