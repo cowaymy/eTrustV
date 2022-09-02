@@ -767,11 +767,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
           insertHSNewContact.put("hsrNo", docNo);
           insertHSNewContact.put("hsNo", params.get("serviceNo").toString());
+          insertHSNewContact.put("userId", params.get("userId").toString());
           insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo").toString());
           insertHSNewContact.put("salesOrderId", params.get("hidSalesOrdId").toString());
           logger.debug("==================== line 1========================");
-
-
           insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo") == null ? "" : oldContDt.get("oldHpNo").toString());
           insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo") == null ? "" : oldContDt.get("oldHomeNo").toString());
           insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo") == null ? "" : oldContDt.get("oldOfficeNo").toString());
