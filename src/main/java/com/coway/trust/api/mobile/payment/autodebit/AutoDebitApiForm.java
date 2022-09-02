@@ -26,6 +26,7 @@ public class AutoDebitApiForm {
     private String sms2;
     private String email1;
     private String email2;
+    private String userName;
 
 	public static Map<String, Object> createMap(AutoDebitApiForm vo){
 		Map<String, Object> params = new HashMap<>();
@@ -51,6 +52,7 @@ public class AutoDebitApiForm {
 		params.put("sms2", vo.getSms2());
 		params.put("email1", vo.getEmail1());
 		params.put("email2", vo.getEmail2());
+		params.put("userName", vo.getUserName());
 		return params;
 	}
 
@@ -188,5 +190,13 @@ public class AutoDebitApiForm {
 
 	public void setEmail2(String email2) {
 		this.email2 = email2;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }
