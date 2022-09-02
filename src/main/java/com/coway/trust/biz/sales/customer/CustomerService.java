@@ -587,7 +587,9 @@ public interface CustomerService {
 
   int updateCustStatus(Map<String, Object> params);
 
-boolean checkCreditCardValidity(String tokenId);
+  List<EgovMap> searchCreditCard(String tokenId);
+
+  boolean checkCreditCardValidity(String tokenId);
 
 
 }
