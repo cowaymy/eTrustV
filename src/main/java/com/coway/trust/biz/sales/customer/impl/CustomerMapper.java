@@ -631,5 +631,7 @@ public interface CustomerMapper {
   void updateCustomerStatus(Map<String, Object> params);
   void deactivateCustomerCreditCard(Map<String, Object> params);
 
-int checkCreditCardValidity(String tokenId);
+  int checkCreditCardValidity(String tokenId);
+
+  List<EgovMap> getCreditCardDetails(String tokenId);
 }

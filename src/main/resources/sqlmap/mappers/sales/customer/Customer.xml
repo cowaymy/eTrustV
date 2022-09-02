@@ -2981,5 +2981,16 @@
 
     WHERE CUST_ID = #{custId}
   </update>
+  <select id="getCreditCardDetails" resultType="egovMap">
+    select a.cust_id, c.sales_ord_no,a.cust_crc_owner,cust_crc_token,e.name as stus,d.user_name,g.code || ' - ' || g.name as Branch_Name,a.CUST_CRC_UPD_DT from sal0028d a
+		left join sal0074d b on a.cust_crc_id = b.cust_crc_id
+		left join sal0001d c on b.sales_Ord_id = c.sales_ord_id
+		left join sys0047m d on d.user_id = a.CUST_CRC_CRT_USER_ID
+		left join sys0038m e on c.STUS_CODE_ID = e.STUS_CODE_ID
+		left join org0001d f on f.mem_code = d.hr_code
+		left join sys0005m g on g.brnch_id = f.brnch
+        where 1=1
+        AND cust_crc_token = #{tokenId}
+  </select>
 
 </mapper>

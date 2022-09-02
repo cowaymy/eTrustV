@@ -2739,4 +2739,20 @@ public class CustomerController {
 
     return ResponseEntity.ok(message);
   }
+
+  //Jonathan Ting Credit Card Check Module start
+	@RequestMapping(value = "/checkCreditCard.do")
+	public String checkCreditCardOwner(@RequestParam Map<String, Object>params, ModelMap model) {
+		model.put("mcPaymentUrl", mcPaymentUrl);
+		return "/sales/customer/checkCreditCard";
+	}
+
+	@RequestMapping(value = "/searchCreditCard.do")
+	public ResponseEntity<List<EgovMap>> searchCreditCard(@RequestParam Map<String, Object>params, ModelMap model) {
+		List<EgovMap> result = null;
+		result = customerService.searchCreditCard(params.get("tokenID").toString());
+		return ResponseEntity.ok(result);
+	}
+//Credit Card Check Module end
+
 }
