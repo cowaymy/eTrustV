@@ -13,7 +13,7 @@
     <th scope="row">Action<span class="must">*</span></th>
     <td colspan='3'>
          <select class="w100p"  id="action" name="action" placeholder="Active/Approved/Rejected">
-            <option value="">Active/Approved/Rejected</option>
+            <option value="">Choose One</option>
             <option value="5">Approved</option>
             <option value="6">Rejected</option>
             <option value="1">Active</option>

@@ -197,7 +197,7 @@ function createAUIGrid() {
         },{
             dataField : "lastUpdatedDate",
             headerText : 'Last Update At(By)',
-            width : 170,
+            width : 200,
             editable : false,
             labelFunction : function(rowIndex, columnIndex, value,
                     headerText, item, dataField) {
@@ -207,7 +207,9 @@ function createAUIGrid() {
 				if(valueArray.length > 0){
 					for(var i = 0; i< valueArray.length;i++){
 						if(i==1){
-							formatString = formatString + "(" + valueArray[i] + ")";
+							if(valueArray[i].length > 0){
+								formatString = formatString + " (" + valueArray[i] + ")";
+							}
 						}
 						else{
 							formatString = formatString + valueArray[i] + "\n";

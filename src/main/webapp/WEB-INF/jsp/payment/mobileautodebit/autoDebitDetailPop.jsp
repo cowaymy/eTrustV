@@ -294,18 +294,11 @@ function setRejectReasonCode(){
 	}
 }
 
-function formatDate(date){
-	var year = date.getFullYear();
-	var month = (1 + date.getMonth()).toString().padStart(2, "0");
-	var day = date.getDate().toString().padStart(2, "0");
-	return month + "/" + day + "/" + year;
-}
-
 function loadGeneralInfoData(){
 	$('#preAutoDebitNo').val("${mobileAutoDebitDetail.padNo}");
-	$('#padKeyInDate').val(formatDate(new Date("${mobileAutoDebitDetail.crtDt}")));
+	$('#padKeyInDate').val("${mobileAutoDebitDetail.crtDt}");
 	$('#orderNumber').val("${mobileAutoDebitDetail.salesOrdNo}");
-	$('#orderDate').val(formatDate(new Date("${mobileAutoDebitDetail.salesDt}")));
+	$('#orderDate').val("${mobileAutoDebitDetail.salesDt}");
 	$('#custType').val("${mobileAutoDebitDetail.custType}");
 	$('#productName').val("${mobileAutoDebitDetail.stkDesc}");
 	$('#customerName').val("${mobileAutoDebitDetail.name}");
