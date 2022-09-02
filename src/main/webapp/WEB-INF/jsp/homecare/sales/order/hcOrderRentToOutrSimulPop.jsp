@@ -27,6 +27,11 @@
             fn_reselect();
         });
         $('#btnViewLedgerSimulMat').click(function() {
+        	$('#hiddenOrderID').val($('#hiddenOrderID').val());
+            Common.popupWin("formApprv", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+        });
+        $('#btnViewLedgerSimulFrame').click(function() {
+        	$('#hiddenOrderID').val($('#hiddenOrderIDFrame').val());
             Common.popupWin("formApprv", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnGenerate').click(function() {
@@ -164,6 +169,7 @@
                         console.log('result.totalbillrpf:'+result.totalcnrpfFrame);
 
                         $('#hiddenOrderID').val(result.salesOrdId);
+                        $('#hiddenOrderIDFrame').val(result.fraOrdId);
                         $('#hiddenStockID').val(result.itmStkId);
                         $('#hiddenOrderDate').val(result.ordDt2);
                         $('#hiddenInstallDate').val(result.installDt2);
@@ -217,6 +223,7 @@
         $('#txtOrderNoFrame').val('').removeAttr("disabled");
 
         $('#hiddenOrderID').val('');
+        $('#hiddenOrderIDFrame').val('');
         $('#hiddenOrderDate').val('');
         $('#hiddenStockID').val('');
         $('#hiddenTotalBillRPF').val('');
@@ -359,6 +366,7 @@
 <form id="formApprv" action="#" method="post">
 
 <input id="hiddenOrderID" name="ordId" type="hidden" />
+<input id="hiddenOrderIDFrame" name="ordIdFrame" type="hidden" />
 <input id="hiddenStockID"           type="hidden" />
 <input id="hiddenOrderDate"         type="hidden" />
 <input id="hiddenTotalBillRPF"      type="hidden" />
