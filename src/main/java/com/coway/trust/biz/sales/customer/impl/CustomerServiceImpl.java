@@ -991,7 +991,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return true;
   }
 
-  @Override
+  
   public List<EgovMap> searchCreditCard(String tokenId) {
     return customerMapper.getCreditCardDetails(tokenId);
   }
