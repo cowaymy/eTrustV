@@ -750,37 +750,44 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
    // INSERT EDITTED CONTACT INFO FOR APPROVAL
       // CELESTE: Added for edit customer contact on 25/08/2022 [s]
 
-      EgovMap insertHSNewContact = new EgovMap();
-      EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
-      EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
+      if(params.get("newHandphoneTel") != null || params.get("newHomeTel") != null || params.get("newOfficeTel") != null || params.get("newEmail") != null)
+      {
+    	  logger.debug("==================== editContactInfo [start] ========================");
+          logger.debug("params: " + params);
+          EgovMap insertHSNewContact = new EgovMap();
+          params.put("orderId", params.get("hidSalesOrdId").toString());
+          params.put("hsNo", params.get("serviceNo").toString());
+          EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
+          EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
 
-      insertHSNewContact.put("userId", params.get("hidCodyId").toString());
-      insertHSNewContact.put("hsrNo", useFilterList.get("no".toString()));
-      insertHSNewContact.put("hsNo", params.get("serviceNo".toString()));
-      insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo".toString()));
-      insertHSNewContact.put("salesOrderId", params.get("salesOrderId".toString()));
-      insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo".toString()));
-      insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo".toString()));
-      insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo".toString()));
-      insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail".toString()));
-      insertHSNewContact.put("newHpNo", params.get("newHandphoneTel".toString()));
-      insertHSNewContact.put("newHomeNo", params.get("newHomeTel".toString()));
-      insertHSNewContact.put("newOfficeNo", params.get("newOfficeTel".toString()));
-      insertHSNewContact.put("newEmail", params.get("newEmail".toString()));
-      insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
-      insertHSNewContact.put("brnchId",brnchDt.get("brnchId").toString());
-      insertHSNewContact.put("deptCode",brnchDt.get("deptCode").toString());
-      insertHSNewContact.put("grpCode",brnchDt.get("grpCode").toString());
-      insertHSNewContact.put("orgCode",brnchDt.get("orgCode").toString());
-      insertHSNewContact.put("status","A");
+          insertHSNewContact.put("userId", params.get("hidCodyId").toString());
+          insertHSNewContact.put("hsrNo", useFilterList.get("no".toString()));
+          insertHSNewContact.put("hsNo", params.get("serviceNo".toString()));
+          insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo".toString()));
+          insertHSNewContact.put("salesOrderId", params.get("salesOrderId".toString()));
+          insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo".toString()));
+          insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo".toString()));
+          insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo".toString()));
+          insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail".toString()));
+          insertHSNewContact.put("newHpNo", params.get("newHandphoneTel".toString()));
+          insertHSNewContact.put("newHomeNo", params.get("newHomeTel".toString()));
+          insertHSNewContact.put("newOfficeNo", params.get("newOfficeTel".toString()));
+          insertHSNewContact.put("newEmail", params.get("newEmail".toString()));
+          insertHSNewContact.put("newHpNo", params.get("newHpNo".toString()));
+          insertHSNewContact.put("brnchId",brnchDt.get("brnchId").toString());
+          insertHSNewContact.put("deptCode",brnchDt.get("deptCode").toString());
+          insertHSNewContact.put("grpCode",brnchDt.get("grpCode").toString());
+          insertHSNewContact.put("orgCode",brnchDt.get("orgCode").toString());
+          insertHSNewContact.put("status","A");
 
-      logger.debug("==================== insertHSNewContact ========================");
-      logger.debug(" insertHSNewContact: " + insertHSNewContact);
-      logger.debug("==================== brnchDt========================");
-      logger.debug(" brnchDt: " + brnchDt);
-      logger.debug("==================== oldContDt========================");
-      logger.debug(" oldContDt: " + oldContDt);
-      hsManualMapper.insertSAL0329D(insertHSNewContact);
+          logger.debug("==================== insertHSNewContact ========================");
+          logger.debug(" insertHSNewContact: " + insertHSNewContact);
+          logger.debug("==================== brnchDt========================");
+          logger.debug(" brnchDt: " + brnchDt);
+          logger.debug("==================== oldContDt========================");
+          logger.debug(" oldContDt: " + oldContDt);
+          hsManualMapper.insertSAL0329D(insertHSNewContact);
+      }
 
       // CELESTE: Added for edit customer contact on 25/08/2022 [e]
 
