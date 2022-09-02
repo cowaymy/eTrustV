@@ -664,6 +664,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
 
+      logger.debug("= HSCOM params ===>" +params);
+
       // KR-OHK Serial check add start
       if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
         servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
@@ -748,7 +750,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
    // INSERT EDITTED CONTACT INFO FOR APPROVAL
       // CELESTE: Added for edit customer contact on 25/08/2022 [s]
 
-      /*EgovMap insertHSNewContact = new EgovMap();
+      EgovMap insertHSNewContact = new EgovMap();
       EgovMap brnchDt = hsManualMapper.selectBrchDt(params);
       EgovMap oldContDt = hsManualMapper.selectOldContactDt(params);
 
@@ -778,7 +780,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       logger.debug(" brnchDt: " + brnchDt);
       logger.debug("==================== oldContDt========================");
       logger.debug(" oldContDt: " + oldContDt);
-      hsManualMapper.insertSAL0329D(insertHSNewContact);*/
+      hsManualMapper.insertSAL0329D(insertHSNewContact);
 
       // CELESTE: Added for edit customer contact on 25/08/2022 [e]
 
