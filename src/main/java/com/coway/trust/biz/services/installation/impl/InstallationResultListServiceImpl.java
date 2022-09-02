@@ -3856,9 +3856,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    smsList.put("userId", installResult.get("creator"));
 	    smsList.put("smsType", 975);
 	    smsList.put("smsMessage", smsMessage);
-	    //smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
-	    smsList.put("smsMobileNo", "+6017-5977 998");
-
+	    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
 
 		try{
 		    if(smsMessage != "")
