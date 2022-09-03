@@ -104,6 +104,9 @@
             formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
             formData.append("batchId", $("#uploadBatchId").val());
             formData.append("batchMemType", $("#uploadMemType").val());
+            formData.append("batchMthYear", '');
+
+            console.log(formData);
 
             Common.ajaxFile("/attendance/csvUpload.do", formData, function (result) {
                 Common.alert(result.message,fn_getCalSearchResultJsonList);

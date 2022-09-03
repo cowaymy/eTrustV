@@ -157,8 +157,8 @@ public class AttendanceController {
 
 				detailList.add(hm);
 			}
-
-			//LOGGER.debug("details =====================================>>  " + detailList);
+			LOGGER.debug("details request =====================================>>  " + request);
+			LOGGER.debug("details batchId =====================================>>  " + request.getParameter("batchId").trim());
 
 			if (StringUtils.isNotEmpty(request.getParameter("batchId").trim())) {
 				String batchId= request.getParameter("batchId").trim();
