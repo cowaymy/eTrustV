@@ -142,9 +142,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 public int approveUploadBatch(Map<String, Object> params) {
 
 			int result =	attendanceMapper.approveUploadBatch(params);
+			try{
+				attendanceMapper.atdRateCalculation(params);
+			}catch(Throwable ex){
 
+			}
 			return result;
 	 }
+
 
 	 @Override
 	  public List<EgovMap> selectManagerCode(Map<String, Object> params) {
@@ -155,6 +160,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	  public List<EgovMap> searchAtdManagementList(Map<String, Object> params) {
 	    return attendanceMapper.searchAtdManagementList(params);
 	  }
+
+	 @Override
+	  public List<EgovMap> selectYearList(Map<String, Object> params) {
+	    return attendanceMapper.selectYearList(params);
+	 }
 
 
 

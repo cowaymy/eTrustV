@@ -32,12 +32,14 @@ public interface AttendanceMapper {
 
     List<EgovMap> searchAtdManagementList(Map<String, Object> params);
 
+    List<EgovMap> selectYearList(Map<String, Object> params);
+
     int checkDup(Map<String, Object> params);
 
     void disableBatchCalMst(Map<String, Object> params);
 
     List<EgovMap> selectManagerCode(Map<String, Object> params);
 
-    Map<String, Object>  SP_ATD_RATE_CALCULATION (Map<String, Object> param);
+    Map<String, Object> atdRateCalculation (Map<String, Object> param);
 
 }

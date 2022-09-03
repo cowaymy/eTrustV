@@ -132,14 +132,16 @@ public class AttendanceController {
 		public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, ModelMap model, SessionVO sessionVO) throws IOException, InvalidFormatException  {
 			ReturnMessage message = new ReturnMessage();
 
-			String batchId= request.getParameter("batchId").trim();
+
 			String batchMthYear = request.getParameter("batchMthYear").trim();
 			String batchMemType = request.getParameter("batchMemType").trim();
 			int result = 0;
+			int dup = 0;
 
 
 			Map<String, MultipartFile> fileMap = request.getFileMap();
 			MultipartFile multipartFile = fileMap.get("csvFile");
+
 
 			List<CalendarEventVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CalendarEventVO::create);
 
@@ -156,13 +158,16 @@ public class AttendanceController {
 				detailList.add(hm);
 			}
 
-			if (StringUtils.isNotEmpty(batchId)) {
+			//LOGGER.debug("details =====================================>>  " + detailList);
+
+			if (StringUtils.isNotEmpty(request.getParameter("batchId").trim())) {
+				String batchId= request.getParameter("batchId").trim();
 				HashMap<String, Object> details = new HashMap<String, Object>();
 				details.put("crtUserId", sessionVO.getUserId());
 				details.put("batchId", batchId);
 				details.put("batchId", batchId);
 				int disableUploadDtl = attendanceService.disableBatchCalDtl(details);
-				LOGGER.debug("==== batchMemType: " + batchMemType);
+
 				if(disableUploadDtl > 0){
 					result = attendanceService.saveCsvUpload2(detailList, batchId, batchMemType);
 				}
@@ -179,17 +184,23 @@ public class AttendanceController {
 
 			    if(duplicateUploadCount > 0)
 			    {
-			    	 attendanceService.disableBatchCalMst(master);
+			    	dup=1;
 			    }
-
-				result = attendanceService.saveCsvUpload(master, detailList);
+			    else{
+			    	result = attendanceService.saveCsvUpload(master, detailList);
+			    }
 			}
 
-			if (result > 0) {
+			if (result >0 && dup == 0) {
 				message.setMessage("Attendance file successfully uploaded.<br/>Batch ID : " + result);
 				message.setCode(AppConstants.SUCCESS);
 				message.setData(result);
-			} else {
+			}
+			else if(dup == 1) {
+				message.setMessage("Failed to upload Attendance file due to duplicated Member Type and Month.");
+				message.setCode(AppConstants.FAIL);
+			}
+			else {
 				message.setMessage("Failed to upload Attendance file. Please try again later.");
 				message.setCode(AppConstants.FAIL);
 			}
@@ -318,6 +329,15 @@ public class AttendanceController {
 			model.addAttribute("ind", params.get("ind"));
 			return "/attendance/downloadManagerYearlyAttendancePop";
 		}
+
+	  @RequestMapping(value = "/selectYearList.do", method = RequestMethod.GET)
+	   public ResponseEntity<List<EgovMap>> selectYearList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	    List<EgovMap> yearList = attendanceService.selectYearList(params);
+
+	    return ResponseEntity.ok(yearList);
+	  }
+
 
 
 

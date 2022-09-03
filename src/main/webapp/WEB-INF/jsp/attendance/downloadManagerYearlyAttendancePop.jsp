@@ -17,6 +17,7 @@
   $(document).ready(function() {
 	    var rankParam = {groupCode : 527, codeIn :[6988,6989,6990]};
         CommonCombo.make('rankReport', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption);
+        CommonCombo.make('yearReport', "/attendance/selectYearList.do", null , '', ItmOption);
   });
 
   $(function() {
@@ -47,28 +48,28 @@
   function fn_validation(){
       var isVal = true;
 
-      if(FormUtil.isEmpty($('#rankRepsort').val())) {
+      if(FormUtil.isEmpty($('#rankReport').val())) {
           Common.alert("Please choose the Rank.");
           return false;
        }
 
-//       if(FormUtil.isEmpty($('#managerCodeReport').val())) {
-//           Common.alert("Please choose the Manager Code.");
-//           return false;
-//        }
-
-      if(FormUtil.isEmpty($('#calMonthYearReport').val())) {
-          Common.alert("Please choose the Month");
+      if(FormUtil.isEmpty($('#yearReport').val())) {
+          Common.alert("Please choose the Year");
           return false;
        }
   }
 
 
 
+  function fn_openGenerateYearlyData() {
 
-  function fn_openGenerate() {
-    if (fn_validation()) {
+	var isVal = true;
 
+    isVal = fn_validation();
+
+    if(isVal == false){
+        return;
+    }else{
         var date = new Date();
         var month = date.getMonth() + 1;
         var day = date.getDate();
@@ -78,48 +79,44 @@
 
         var rankReport, managerCodeReport, calMonthYearReport;
 
-        if(FormUtil.isEmpty($('#rankReport').val())) {
-        	rankReport = null;
-         }
+        var runCnt = 0;
+        var managerCodeStr = '';
+        if($("#managerCodeReport :selected").length > 0){
+            $("#managerCodeReport :selected").each(function(idx, el) {
+                if(runCnt > 0){
+                	managerCodeStr += ",'" +$(el).val() + "'";
+                }else{
+                	managerCodeStr += "'" + $(el).val() + "'";
+                }
+                runCnt++;
+            });
+        }
+        var managerCode = '';
+        if(managerCodeStr != null && managerCodeStr != ''){
+        	managerCode += ' B.MANAGER_CODE IN ('+managerCodeStr+')';
+            runCnt = 0;
+        }
         else{
-        	rankReport = $('#rankReport').val();
+        	managerCode = null;
         }
 
-        if(FormUtil.isEmpty($('#managerCodeReport').val())) {
-        	managerCodeReport = null;
-         }
-        else{
-        	managerCodeReport = $('#managerCodeReport').val();
-        }
+        rankReport = $('#rankReport').val();
+        calMonthYearReport = $('#yearReport').val();
 
-        if(FormUtil.isEmpty($('#calMonthYearReport').val())) {
-        	calMonthYearReport = null;
-         }
-        else{
-        	calMonthYearReport = $('#calMonthYearReport').val();
-        }
+        $("#reportForm2 #v_rankReport").val(rankReport);
+        $("#reportForm2 #v_managerCodeReport").val(managerCode);
+        $("#reportForm2 #v_yearReport").val(calMonthYearReport);
 
 
-        $("#reportForm1 #v_rankReport").val(rankReport);
-        $("#reportForm1 #v_managerCodeReport").val(managerCodeReport);
-        $("#reportForm1 #v_calMonthYearReport").val(calMonthYearReport);
-
-
-        $("#reportForm1 #V_SELECTSQL").val(" ");
-        $("#reportForm1 #V_ORDERBYSQL").val(" ");
-        $("#reportForm1 #V_FULLSQL").val(" ");
-        $("#reportForm1 #V_WHERESQL").val(whereSql);
-        $("#reportForm1 #V_WHERESQL2").val(whereSql2);
-        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
-        $("#reportForm1 #reportFileName").val('/services/PreASRawDataKOR.rpt');
-        $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("PREASRawData_" + day + month + date.getFullYear());
+        $("#reportForm2 #reportFileName").val('/attendance/AttendanceYearlyDataList.rpt');
+        $("#reportForm2 #viewType").val("EXCEL");
+        $("#reportForm2 #reportDownFileName").val("AttendanceYearlyDataList" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
 
-        Common.report("reportForm1", option);
+        Common.report("reportForm2", option);
       }
 
   }
@@ -160,12 +157,14 @@
   <!-- pop_body start -->
   <section class="search_table">
    <!-- search_table start -->
-   <form action="#" id="reportForm1">
+   <form action="#" id="reportForm2">
     <!--reportFileName,  viewType 모든 레포트 필수값 -->
     <input type="hidden" id="reportFileName" name="reportFileName" />
     <input type="hidden" id="viewType" name="viewType" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
-    <input type="hidden" id="ind" name="ind" value="${ind}"/>
+    <input type="hidden" id="v_rankReport" name="v_rankReport" />
+    <input type="hidden" id="v_managerCodeReport" name="v_managerCodeReport" />
+    <input type="hidden" id="v_yearReport" name="v_yearReport" />
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
@@ -193,8 +192,8 @@
       <th scope="row">Manager Code</th>
       <td><select class="w100p" id="managerCodeReport"  name="managerCodeReport"></td>
 
-      <th scope="row">Month</th>
-      <td><input type="text" id="calMonthYearReport" name="calMonthYearReport" title="Month" class="j_date2 w100p" placeholder="Choose one" /></td>
+      <th scope="row">Year</th>
+      <td><select class="w100p" id="yearReport"  name="yearReport"></td>
       </tr>
 
      </tbody>
@@ -205,10 +204,10 @@
   <!-- search_table end -->
   <ul class="center_btns">
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="javascript:fn_openGenerate()">Generate</a>
+     <a href="#" onclick="javascript:fn_openGenerateYearlyData()">Generate</a>
     </p></li>
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="$('#reportForm1').clearForm();">Clear</a>
+     <a href="#" onclick="$('#reportForm2').clearForm();">Clear</a>
     </p></li>
   </ul>
  </section>

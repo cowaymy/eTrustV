@@ -47,7 +47,7 @@
 	            , #{item.batchMemType} memType
 	            , TO_DATE(#{item.dateFrom}, 'DD/MM/RRRR') dateFrom
 	            , TO_DATE(#{item.dateTo}, 'DD/MM/RRRR') dateTo
-	            , #TO_TIMESTAMP({item.time}, 'HH24:MI') time
+	            , TO_TIMESTAMP(#{item.time}, 'HH24:MI') time
 	            , '0' disab
 	            , #{item.crtUserId} crtUserId
 	            , SYSDATE crtDt
@@ -149,6 +149,7 @@
             FROM ATD0001M
             WHERE BATCH_MEM_TYPE = #{batchMemType}
             AND BATCH_MTH_YEAR = #{batchMthYear}
+            AND BATCH_STUS_ID <![CDATA[ <> ]]> 8
      </select>
 
       <update id="disableBatchCalMst" parameterType="Map">
@@ -190,44 +191,26 @@
     </update>
 
      <select id="selectManagerCode" parameterType="Map" resultType="egovMap">
-
 		   SELECT  DISTINCT
-		  <if test="memLvl != null and memLvl != '' ">
-            <choose>
-                  <when test="memLvl == 1">
-	                    A.ORG_CODE AS CODE_ID
-	                  , A.ORG_CODE AS CODE_NAME
-                   </when>
-                   <when test="memLvl == 2">
-                        A.GRP_CODE AS CODE_ID
-                      , A.GRP_CODE AS CODE_NAME
-                   </when>
-                    <when test="memLvl == 3">
-                        A.DEPT_CODE AS CODE_ID
-                      , A.DEPT_CODE AS CODE_NAME
-                   </when>
-             </choose>
-        </if>
-		FROM ORG1001V A
-		JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
-		WHERE 1=1
-		AND B.MEM_TYPE =1
-		<if test="memLvl != null and memLvl != '' ">
-            <choose>
-                  <when test="memLvl == 1">
-                        AND A.ORG_CODE <![CDATA[ <> ]]> ' '
-                   </when>
-                   <when test="memLvl == 2">
-                        AND A.GRP_CODE  <![CDATA[ <> ]]> ' '
-                   </when>
-                    <when test="memLvl == 3">
-                        AND A.DEPT_CODE <![CDATA[ <> ]]> ' '
-                   </when>
-             </choose>
-        </if>
-		ORDER BY 1 DESC
-
-    </select>
+	                    A.MANAGER_CODE AS CODE_ID
+	                  , A.MANAGER_CODE AS CODE_NAME
+			FROM ATD0005D A
+			WHERE NVL(A.DISAB,0) = 0
+			<if test="memLvl != null and memLvl != '' ">
+	            <choose>
+	                  <when test="memLvl == 1">
+	                        AND A.RANK = 6988
+	                   </when>
+	                   <when test="memLvl == 2">
+	                        AND A.RANK = 6989
+	                   </when>
+	                    <when test="memLvl == 3">
+	                        AND A.RANK = 6990
+	                   </when>
+	             </choose>
+	        </if>
+			ORDER BY 1
+	</select>
 
 
 	<select id="searchAtdManagementList" parameterType="Map" resultType="egovMap">
@@ -247,7 +230,10 @@
            </if>
           , NVL(INFO_TECH,0) AS INFO_TECH, NVL(OUT_OF_OFFICE,0 )OUT_OF_OFFICE, NVL(E_LEAVE,0) E_LEAVE, NVL(PUBLIC_HOLIDAY,0) PUBLIC_HOLIDAY, NVL(TRAINING,0) TRAINING, TIME
           , CASE WHEN TRIM(ATD_DAY) NOT IN ('SATURDAY','SUNDAY')  THEN '1' ELSE '0' END AS WORKING_DAY
-          , CASE WHEN ATD_DAY NOT IN ('SATURDAY','SUNDAY') AND ( NVL(INFO_TECH,0)  <![CDATA[ <> ]]> 0 OR NVL(E_LEAVE,0) =1 OR NVL(TRAINING,0) =1 ) THEN '1' ELSE '0' END AS ATTENDANCE
+          , CASE WHEN ATD_DAY NOT IN ('SATURDAY','SUNDAY') AND (
+            (NVL(INFO_TECH,0)  <![CDATA[ <> ]]> 0 AND TIME  <![CDATA[ <> ]]> 'LATE')
+            OR NVL(E_LEAVE,0) =1 OR NVL(TRAINING,0) =1 ) THEN '1'
+            ELSE '0' END AS ATTENDANCE
             FROM
         (SELECT ATD_DATE, ATD_DAY, YEAR, MONTH
           <if test="rank != null and rank != '' ">
@@ -264,7 +250,7 @@
                 </choose>
            </if>
             ,  INFO_TECH, OUT_OF_OFFICE, E_LEAVE, PUBLIC_HOLIDAY, TRAINING
-            , CASE WHEN to_char(TIME, 'hh24:mi') >  to_char(to_timestamp('09:00', 'hh24:mi'), 'hh24:mi') THEN 'LATE' ELSE '-' END AS TIME
+            , CASE WHEN to_char(TIME, 'hh24:mi') >  to_char(to_timestamp('09:01', 'hh24:mi'), 'hh24:mi') THEN 'LATE' ELSE to_char(TIME, 'hh24:mi') END AS TIME
         FROM (
             SELECT * FROM
                  (
@@ -360,13 +346,22 @@
 	</select>
 
 
-	<resultMap id="rtnCode" type="egovMap" />
+	<resultMap id="atdRate" type="egovMap" />
 
-    <select id="install_Active_SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+    <select id="atdRateCalculation" parameterType="Map"  statementType="CALLABLE" >
       {
-            call SP_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+            call SP_ATD_RATE_CALCULATION(#{batchId},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=atdRate})
       }
      </select>
+
+     <select id="selectYearList" parameterType="Map" resultType="egovMap">
+           SELECT  DISTINCT
+                        A.CODE AS CODE_ID
+                      , A.CODE AS CODE_NAME
+            FROM SYS0013M A
+            WHERE A.CODE_MASTER_ID = 531
+            ORDER BY 1
+    </select>
 
 
   </mapper>

@@ -33,4 +33,7 @@ public interface AttendanceService {
 
 	List<EgovMap> selectManagerCode(Map<String, Object> params);
 
+	List<EgovMap> selectYearList(Map<String, Object> params);
+
+
 }
