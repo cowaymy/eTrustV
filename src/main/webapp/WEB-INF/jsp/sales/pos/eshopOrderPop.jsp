@@ -611,10 +611,10 @@
 
                                   renderer : {
                                       type : "ImageRenderer",
-                                      imgHeight : 30,
+//                                       imgHeight : auto,
                                       altField : null,
                                   }},
-                                {dataField: "stkCode" ,headerText :"Item" , width:100 ,height:200 , visible:true, editable : true},
+                                {dataField: "stkCode" ,headerText :"Item" , width:120 ,height:200 , visible:true, editable : true},
                                 {dataField: "itemPrice" ,headerText :"Unit Price" ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
                                 {dataField: "totalQty" ,headerText :"Total Quantity (pcs)"  ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
                                 {dataField: "itemOrdQty" ,headerText :"Total Carton" ,width:100 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
