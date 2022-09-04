@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -156,7 +157,7 @@ public class PosEshopController {
     return ResponseEntity.ok(rInfo);
   }
 
-
+  @Transactional
   @RequestMapping(value = "/insertPosEshopItemList.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> insertPosEshopItemList(@RequestBody Map<String, Object> params) throws Exception {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -169,21 +170,24 @@ public class PosEshopController {
 
     LOGGER.debug(" params insertPosEshopItemList==dd=>"+params.toString());
 
-    posEshopService.insertPosEshopItemList(params);
+    int result = posEshopService.insertPosEshopItemList(params);
 
-
-    // Return MSG
     ReturnMessage message = new ReturnMessage();
 
-    message.setCode(AppConstants.SUCCESS);
-    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    if(result > 0){
+    	 message.setCode(AppConstants.SUCCESS);
+    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    }else{
+    	message.setCode(AppConstants.FAIL);
+   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+    }
 
     return ResponseEntity.ok(message);
 
   }
 
 
-
+  @Transactional
   @RequestMapping(value = "/eShopItemUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<FileDto> eShopItemUpload(MultipartHttpServletRequest request,	@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
@@ -226,6 +230,7 @@ public class PosEshopController {
 
 	}
 
+	@Transactional
     @RequestMapping(value = "/removeEshopItemList.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> removeEshopItemList(@RequestBody Map<String, Object> params,Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -240,22 +245,26 @@ public class PosEshopController {
 
       LOGGER.debug(" params removeEshopItemList==dd=>"+params.toString());
 
-      Map<String, Object> retunMap = null;
-
       params.put("userId",  sessionVO.getUserId());
 
-      retunMap = posEshopService.removeEshopItemList(params);
+      int result = posEshopService.removeEshopItemList(params);
 
       // Return MSG
       ReturnMessage message = new ReturnMessage();
 
-      message.setCode(AppConstants.SUCCESS);
-      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+      if(result > 0){
+     	 message.setCode(AppConstants.SUCCESS);
+     	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+     }else{
+     	message.setCode(AppConstants.FAIL);
+    	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+     }
 
       return ResponseEntity.ok(message);
 
     }
 
+	@Transactional
     @RequestMapping(value = "/updatePosEshopItemList.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> updatePosEshopItemList(@RequestBody Map<String, Object> params) throws Exception {
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -267,44 +276,50 @@ public class PosEshopController {
 
       LOGGER.debug(" params insertPosEshopItemList==dd=>"+params.toString());
 
-      retunMap = posEshopService.updatePosEshopItemList(params);
-
+      int result = posEshopService.updatePosEshopItemList(params);
 
       // Return MSG
       ReturnMessage message = new ReturnMessage();
 
-      message.setCode(AppConstants.SUCCESS);
-      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-      message.setData(retunMap.get("scnNo"));
+      if(result > 0){
+     	 message.setCode(AppConstants.SUCCESS);
+     	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+     }else{
+     	message.setCode(AppConstants.FAIL);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+     }
 
       return ResponseEntity.ok(message);
 
     }
 
-
+	@Transactional
     @RequestMapping(value = "/insUpdPosEshopShipping.do")
 	public ResponseEntity<ReturnMessage> insUpdPosEshopShipping(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
 
 		params.put("crtUserId", session.getUserId());
 
+		LOGGER.debug("param insUpdPosEshopShipping===================>>  " + params.toString());
 
-		 LOGGER.debug("param insUpdPosEshopShipping===================>>  " + params.toString());
-
-		 posEshopService.insUpdPosEshopShipping(params);
+		int result = posEshopService.insUpdPosEshopShipping(params);
 
 		//Return Message
 		ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
+		 if(result > 0){
+	    	 message.setCode(AppConstants.SUCCESS);
+	    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    }else{
+	    	message.setCode(AppConstants.FAIL);
+	   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	    }
 
 		return ResponseEntity.ok(message);
 	}
 
 
 	@RequestMapping(value = "/selectShippingList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectShippingList (@RequestParam Map<String, Object> params,
-			HttpServletRequest request, ModelMap model) throws Exception{
+	public ResponseEntity<List<EgovMap>> selectShippingList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
@@ -316,6 +331,7 @@ public class PosEshopController {
 
 	}
 
+	 @Transactional
 	 @RequestMapping(value = "/updatePosEshopShipping.do", method = RequestMethod.POST)
 	    public ResponseEntity<ReturnMessage> updatePosEshopShipping(@RequestBody Map<String, Object> params) throws Exception {
 	      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -327,19 +343,22 @@ public class PosEshopController {
 
 	      LOGGER.debug(" params updatePosEshopShipping==dd=>"+params.toString());
 
-	      retunMap = posEshopService.updatePosEshopShipping(params);
-
+	      int result = posEshopService.updatePosEshopShipping(params);
 
 	      // Return MSG
 	      ReturnMessage message = new ReturnMessage();
 
-	      message.setCode(AppConstants.SUCCESS);
-	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-	      message.setData(retunMap.get("scnNo"));
+	      if(result > 0){
+	     	 message.setCode(AppConstants.SUCCESS);
+	     	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	     }else{
+	     	message.setCode(AppConstants.FAIL);
+	    	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	     }
 
 	      return ResponseEntity.ok(message);
 
-	    }
+	  }
 
 
 	  @RequestMapping(value = "/eshopOrderPop.do")
@@ -353,7 +372,6 @@ public class PosEshopController {
 
   		LOGGER.debug(" params eshopOrderPop getGrpSeqSAL0327T==dd=>"+seq);
 
-
 		model.put("userFullName", sessionVO.getUserFullname());
 		model.put("cartGrpId",seq);
 
@@ -361,9 +379,9 @@ public class PosEshopController {
 
 	  }
 
+
 	  @RequestMapping(value = "/selectItemImageList", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectItemImageList (@RequestParam Map<String, Object> params,
-			HttpServletRequest request, ModelMap model) throws Exception{
+	  public ResponseEntity<List<EgovMap>> selectItemImageList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
@@ -373,9 +391,9 @@ public class PosEshopController {
 
 	}
 
-	  @RequestMapping(value = "/selectCatalogList", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectCatalogList (@RequestParam Map<String, Object> params,
-			  HttpServletRequest request, ModelMap model) throws Exception{
+
+	@RequestMapping(value = "/selectCatalogList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCatalogList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
@@ -385,34 +403,35 @@ public class PosEshopController {
 
 	}
 
-	  @RequestMapping(value = "/insertItemToCart.do", method = RequestMethod.POST)
-	    public ResponseEntity<ReturnMessage> insertItemToCart(@RequestBody Map<String, Object> params) throws Exception {
+	 @Transactional
+	 @RequestMapping(value = "/insertItemToCart.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> insertItemToCart(@RequestBody Map<String, Object> params) throws Exception {
 	      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 	      params.put("userId", sessionVO.getUserId());
 	      params.put("userDeptId", sessionVO.getUserDeptId());
 	      params.put("userName", sessionVO.getUserName());
 
-	      Map<String, Object> retunMap = null;
-
 	      LOGGER.debug(" params insertItemToCart==dd=>"+params.toString());
 
-	      retunMap = posEshopService.insertItemToCart(params);
-
+	      int result = posEshopService.insertItemToCart(params);
 
 	      // Return MSG
 	      ReturnMessage message = new ReturnMessage();
 
-	      message.setCode(AppConstants.SUCCESS);
-	      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-	      message.setData(retunMap.get("scnNo"));
+	      if(result > 0){
+	     	 message.setCode(AppConstants.SUCCESS);
+	     	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	     }else{
+	     	message.setCode(AppConstants.FAIL);
+	    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	     }
 
 	      return ResponseEntity.ok(message);
 
-	    }
+	  }
 
 	  @RequestMapping(value = "/selectItemCartList", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectItemCartList (@RequestParam Map<String, Object> params,
-			  HttpServletRequest request, ModelMap model) throws Exception{
+	  public ResponseEntity<List<EgovMap>> selectItemCartList (@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
@@ -423,8 +442,7 @@ public class PosEshopController {
 	}
 
 	  @RequestMapping(value = "/selectItemCartList2", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectItemCartList2 (@RequestParam Map<String, Object> params,
-			  HttpServletRequest request, ModelMap model) throws Exception{
+	  public ResponseEntity<List<EgovMap>> selectItemCartList2 (@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
@@ -435,8 +453,7 @@ public class PosEshopController {
 	}
 
 	  @RequestMapping(value = "/selectTotalPrice", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectTotalPrice (@RequestParam Map<String, Object> params,
-			  HttpServletRequest request, ModelMap model) throws Exception{
+	  public ResponseEntity<List<EgovMap>> selectTotalPrice (@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) throws Exception{
 
 		List<EgovMap> itemList = null;
 
@@ -469,6 +486,7 @@ public class PosEshopController {
 
 	}
 
+	 @Transactional
 	 @RequestMapping(value = "/insertPosEshop.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> insertPosEshop(@RequestBody Map<String, Object> params) throws Exception {
 	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -478,7 +496,6 @@ public class PosEshopController {
 
 
 	    Map<String, Object> retunMap = null;
-//	    params.put("scnMoveType", "I");
 	    retunMap = posEshopService.insertPosEshop(params);
 
 
@@ -494,7 +511,7 @@ public class PosEshopController {
 	  }
 
 
-
+	@Transactional
 	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
@@ -610,6 +627,7 @@ public class PosEshopController {
 
 	}
 
+	  @Transactional
 	  @RequestMapping(value = "/insertPos.do", method = RequestMethod.POST)
 	  public ResponseEntity<Map<String, Object>> insertPos(@RequestBody Map<String, Object> params) throws Exception {
 	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -623,6 +641,7 @@ public class PosEshopController {
 
 	  }
 
+
 	  @RequestMapping(value = "/rejectPosEshopPop.do")
 	  public String rejectPosEshopPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
@@ -631,6 +650,7 @@ public class PosEshopController {
 
 	  }
 
+	  @Transactional
 	  @RequestMapping(value = "/rejectPos.do", method = RequestMethod.POST)
 		public ResponseEntity<ReturnMessage> rejectPos(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
@@ -665,7 +685,7 @@ public class PosEshopController {
 	    return "sales/pos/posEshopUpdateInfoPop";
 	  }
 
-
+	  @Transactional
 	  @RequestMapping(value = "/eshopUpdateCourierSvc.do", method = RequestMethod.POST)
 		public ResponseEntity<ReturnMessage> eshopUpdateCourierSvc(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
@@ -686,6 +706,8 @@ public class PosEshopController {
 		    return ResponseEntity.ok(message);
 		}
 
+
+	  @Transactional
 	  @RequestMapping(value = "/completePos.do", method = RequestMethod.POST)
 		public ResponseEntity<ReturnMessage> completePos(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
@@ -738,17 +760,25 @@ public class PosEshopController {
 
 	}
 
+
+	  @Transactional
 	  @RequestMapping(value = "/deleteCartItem.do")
 		public ResponseEntity<ReturnMessage> deleteCartItem(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
 
 			params.put("crtUserId", session.getUserId());
 
-			posEshopService.deleteCartItem(params);
+			int result = posEshopService.deleteCartItem(params);
 
 			//Return Message
 			ReturnMessage message = new ReturnMessage();
-	    	message.setCode(AppConstants.SUCCESS);
-	    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+			 if(result > 0){
+		    	 message.setCode(AppConstants.SUCCESS);
+		    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		    }else{
+		    	message.setCode(AppConstants.FAIL);
+		   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		    }
 
 
 			return ResponseEntity.ok(message);
@@ -775,6 +805,18 @@ public class PosEshopController {
 	    List<EgovMap> codeList = null;
 
 	    codeList = posEshopService.selectEshopWhSOBrnchList();
+
+	    return ResponseEntity.ok(codeList);
+
+	  }
+
+
+	  @RequestMapping(value = "/selectWhSOBrnchItemList")
+	  public ResponseEntity<List<EgovMap>> selectWhSOBrnchItemList() throws Exception {
+
+	    List<EgovMap> codeList = null;
+
+	    codeList = posEshopService.selectWhSOBrnchItemList();
 
 	    return ResponseEntity.ok(codeList);
 

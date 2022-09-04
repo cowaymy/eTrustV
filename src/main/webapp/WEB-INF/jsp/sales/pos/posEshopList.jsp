@@ -217,7 +217,7 @@ $(document).ready(function(){
             Common.popupDiv("/sales/posstock/eshopResultViewPop.do?esnNo="+esnNo, '' , null , true , '');
         }
         else{
-            Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
+            Common.alert('EShop Order Missing' + DEFAULT_DELIMITER + 'No Order Selected');
         }
     });
 

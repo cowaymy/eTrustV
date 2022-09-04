@@ -61,10 +61,11 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 	@Override
 	@Transactional
-	public void insertPosEshopItemList(Map<String, Object> params) throws Exception {
+	public int insertPosEshopItemList(Map<String, Object> params) throws Exception {
 
 			List<Object> addList = (List<Object>)params.get("add");
 			int seq = 0;
+			int result = 0;
 
 			if(addList != null && addList.size() > 0){
 
@@ -92,50 +93,12 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 			  		heardMap.put("totalWeight", insMap.get("weightPerCarton_addItem"));
 			  		heardMap.put("crtId", params.get("userId"));
 
-			  	   posMapper.insertEshopItemList(heardMap);
+			  	   result= posMapper.insertEshopItemList(heardMap);
 				}
 			}
+			return result;
 	}
 
-
-//  @Override
-//  public Map<String, Object> insertPosEshopItemList(Map<String, Object> params) throws Exception {
-//
-//  		int seq = 0;
-//
-//  		seq=posMapper.getSeqSAL0321D();
-//
-//  		Map<String, Object>  heardMap  = null;
-//
-//  		LOGGER.debug(" params insertPosEshopItemList===>"+params.toString());
-//
-//  		heardMap= new HashMap<String, Object>();
-//
-//  		heardMap.put("id", seq);
-//  		heardMap.put("posType", params.get("posType_addItem"));
-//  		heardMap.put("sellingType", params.get("sellingType_addItem"));
-//  		heardMap.put("itemId", params.get("purcItems_addItem"));
-//  		heardMap.put("itemCtgryId", params.get("category_addItem"));
-//  		heardMap.put("itemType", params.get("itemType_addItem"));
-//  		heardMap.put("itemQty", params.get("qtyPerCarton_addItem"));
-//  		heardMap.put("itemWeight", params.get("unitWeight_addItem"));
-//  		heardMap.put("itemPrice", params.get("sellingPrice_addItem"));
-//  		heardMap.put("itemSize", params.get("size_addItem"));
-//  		heardMap.put("itemAttachGrpId", params.get("attachGrpId_addItem"));
-//  		heardMap.put("totalPrice", params.get("pricePerCarton_addItem"));
-//  		heardMap.put("totalWeight", params.get("weightPerCarton_addItem"));
-//  		heardMap.put("crtId", params.get("userId"));
-//
-//  	   LOGGER.debug(" addList insertPosEshopItemList===>"+heardMap.toString());
-//
-//  	   posMapper.insertEshopItemList(heardMap);
-//
-//  	   //Return Message
-//	   Map<String, Object> rtnMap = new HashMap<String, Object>();
-//	   rtnMap.put("scnNo", "ok");
-//	   return rtnMap;
-//
-//  }
 
 	@Override
 	public List<EgovMap> selectItemList(Map<String, Object> params) {
@@ -148,19 +111,16 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	}
 
 	@Override
-	public Map<String, Object> removeEshopItemList(Map<String, Object> params) throws Exception {
+	public int removeEshopItemList(Map<String, Object> params) throws Exception {
 
-	   posMapper.removeEshopItemList(params);
+	   int result = posMapper.removeEshopItemList(params);
 
-	   Map<String, Object> rtnMap = new HashMap<String, Object>();
-	   rtnMap.put("isOk", "OK");
-
-	   return rtnMap;
+	   return result;
 	}
 
 
 	  @Override
-	  public Map<String, Object> updatePosEshopItemList(Map<String, Object> params) throws Exception {
+	  public int updatePosEshopItemList(Map<String, Object> params) throws Exception {
 
 	  		Map<String, Object>  heardMap  = null;
 
@@ -178,22 +138,20 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	  		heardMap.put("totalWeight", params.get("weightPerCarton_editItem"));
 	  		heardMap.put("updId", params.get("userId"));
 
-	  	   posMapper.updateEshopItemList(heardMap);
+	  	    int result = posMapper.updateEshopItemList(heardMap);
 
-	  	   //Return Message
-		   Map<String, Object> rtnMap = new HashMap<String, Object>();
-		   rtnMap.put("scnNo", "ok");
-		   return rtnMap;
+		    return result;
 
 	  }
 
 
 	  @Override
 	  @Transactional
-	  public void insUpdPosEshopShipping(Map<String, Object> params) throws Exception {
+	  public int insUpdPosEshopShipping(Map<String, Object> params) throws Exception {
 
 			List<Object> addList = (List<Object>)params.get("add");
 			List<Object> removeList = (List<Object>)params.get("remove");
+			int result = 0;
 
 			LOGGER.debug("removeList insUpdPosEshopShipping===>"+removeList.toString());
 
@@ -221,7 +179,7 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 					insMap.put("shippingFee", addMap.get("totalShippingFee"));
 					insMap.put("crtId",  params.get("crtUserId"));
 
-					posMapper.insertEshopShippingList(insMap);
+					result = posMapper.insertEshopShippingList(insMap);
 
 				}
 			}
@@ -239,10 +197,12 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 					Map<String, Object> delMap = new HashMap<String, Object>();
 					delMap.put("id", removeMap.get("id"));
 
-					posMapper.removeEshopShippingList(delMap);
+					result = posMapper.removeEshopShippingList(delMap);
 
 				}
 			}
+
+			return result;
 		}
 
 
@@ -252,7 +212,7 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 		}
 
 	  @Override
-	  public Map<String, Object> updatePosEshopShipping(Map<String, Object> params) throws Exception {
+	  public int updatePosEshopShipping(Map<String, Object> params) throws Exception {
 
 	  		Map<String, Object>  heardMap  = null;
 
@@ -269,12 +229,9 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	  		heardMap.put("shippingFee", params.get("shippingFee_edit"));
 	  		heardMap.put("updId", params.get("userId"));
 
-	  	   posMapper.updatePosEshopShipping(heardMap);
+	  	   int result = posMapper.updatePosEshopShipping(heardMap);
 
-	  	   //Return Message
-		   Map<String, Object> rtnMap = new HashMap<String, Object>();
-		   rtnMap.put("scnNo", "ok");
-		   return rtnMap;
+		   return result;
 
 	  }
 
@@ -289,12 +246,11 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	  }
 
 	  @Override
-	  public Map<String, Object> insertItemToCart(Map<String, Object> params) throws Exception {
+	  public int insertItemToCart(Map<String, Object> params) throws Exception {
 
 	  		Map<String, Object>  heardMap  = null;
 
 	  		heardMap= new HashMap<String, Object>();
-
 
 	  		int seq = 0;
 			seq=posMapper.getSeqSAL0327T();
@@ -306,12 +262,9 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	  		heardMap.put("locId", params.get("cartItemLocId"));
 	  		heardMap.put("crtId", params.get("userId"));
 
-	  	   posMapper.insertItemToCart(heardMap);
+	  	   int result = posMapper.insertItemToCart(heardMap);
 
-	  	   //Return Message
-		   Map<String, Object> rtnMap = new HashMap<String, Object>();
-		   rtnMap.put("scnNo", "ok");
-		   return rtnMap;
+		   return result;
 
 	  }
 
@@ -725,6 +678,11 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	 @Override
 		public int rejectPos(Map<String, Object> params) {
 	        int result = posMapper.rejectPos(params);
+
+	        if (result > 0) {
+	        	posMapper.reverseFloatingStockLOG0106M(params);
+	        }
+
 			return result;
 		}
 
@@ -733,9 +691,6 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 	        int result = posMapper.eshopUpdateCourierSvc(params);
 
-	        if (result > 0) {
-	        	posMapper.reverseFloatingStockLOG0106M(params);
-	        }
 			return result;
 		}
 
@@ -752,9 +707,10 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 	 @Override
 	  @Transactional
-	  public void deleteCartItem(Map<String, Object> params) throws Exception {
+	  public int deleteCartItem(Map<String, Object> params) throws Exception {
 
 			List<Object> removeList = (List<Object>)params.get("remove");
+			int result = 0;
 
 			LOGGER.debug(" removeList deleteCartItem===>"+removeList.toString());
 
@@ -770,10 +726,12 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
 					LOGGER.debug(" delMap deleteCartItem===>"+delMap.toString());
 
-					posMapper.deleteCartItem(delMap);
+					result = posMapper.deleteCartItem(delMap);
 
 				}
 			}
+
+			return result;
 		}
 
 	 @Override
@@ -781,11 +739,9 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 	    return posMapper.selectEshopWhSOBrnchList();
 	  }
 
-
-
-
-
-
-
+	 @Override
+	  public List<EgovMap> selectWhSOBrnchItemList() throws Exception {
+	    return posMapper.selectWhSOBrnchItemList();
+	  }
 
 }

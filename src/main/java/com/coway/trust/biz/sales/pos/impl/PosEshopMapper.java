@@ -13,31 +13,31 @@ public interface PosEshopMapper {
 
 	int getSeqSAL0321D();
 
-	void insertEshopItemList(Map<String, Object> params);
+	int insertEshopItemList(Map<String, Object> params);
 
 	List<EgovMap> selectItemList(Map<String, Object> params);
 
 	List<EgovMap> selectItemList2(Map<String, Object> params);
 
-	void removeEshopItemList(Map<String, Object> params);
+	int removeEshopItemList(Map<String, Object> params);
 
-	void updateEshopItemList(Map<String, Object> params);
+	int updateEshopItemList(Map<String, Object> params);
 
 	int getSeqSAL0322D();
 
 	List<EgovMap> selectShippingList(Map<String, Object> params);
 
-	void insertEshopShippingList(Map<String, Object> params);
+	int insertEshopShippingList(Map<String, Object> params);
 
-	void removeEshopShippingList(Map<String, Object> params);
+	int removeEshopShippingList(Map<String, Object> params);
 
-	void updatePosEshopShipping(Map<String, Object> params);
+	int updatePosEshopShipping(Map<String, Object> params);
 
 	List<EgovMap> selectItemImageList(Map<String, Object> params);
 
 	List<EgovMap> selectCatalogList(Map<String, Object> params);
 
-	void insertItemToCart(Map<String, Object> params);
+	int insertItemToCart(Map<String, Object> params);
 
 	int getSeqSAL0327T();
 
@@ -115,9 +115,11 @@ public interface PosEshopMapper {
 
 	List<EgovMap> selectEshopWhBrnchList(Map<String, Object> params);
 
-	void deleteCartItem(Map<String, Object> params);
+	int deleteCartItem(Map<String, Object> params);
 
 	List<EgovMap> selectEshopWhSOBrnchList();
+
+	List<EgovMap> selectWhSOBrnchItemList();
 
 
 }

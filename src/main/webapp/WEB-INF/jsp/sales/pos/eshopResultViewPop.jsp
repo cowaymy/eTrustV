@@ -238,7 +238,7 @@ function fn_rejectEshop(){
 
 <section>
         <aside class="title_line">
-                <h3>Shopping Address Info</h3>
+                <h3>Shipping Address Info</h3>
         </aside>
 
         <section>

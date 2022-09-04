@@ -151,7 +151,7 @@
           </if>
     </select>
 
-     <update id="removeEshopItemList"  parameterType="java.util.Map">
+     <update id="removeEshopItemList"  parameterType="Map">
               UPDATE SAL0321D
                 SET DISAB  = 1
                      ,UPD_ID  = #{userId}
@@ -162,7 +162,7 @@
             </foreach>
     </update>
 
-    <update id="updateEshopItemList"  parameterType="java.util.Map">
+    <update id="updateEshopItemList"  parameterType="Map">
               UPDATE SAL0321D
                 SET
                         ITEM_QTY = #{itemQty}
@@ -251,7 +251,7 @@
         SELECT SAL0322D_ID_SEQ.NEXTVAL FROM DUAL
     </select>
 
-    <update id="removeEshopShippingList"  parameterType="java.util.Map">
+    <update id="removeEshopShippingList"  parameterType="Map">
               UPDATE SAL0322D
                 SET DISAB  = 1
                      ,UPD_ID  = #{userId}
@@ -259,7 +259,7 @@
             WHERE ID = #{id}
     </update>
 
-    <update id="updatePosEshopShipping"  parameterType="java.util.Map">
+    <update id="updatePosEshopShipping"  parameterType="Map">
               UPDATE SAL0322D
                 SET
                         REGIONAL_TYPE           = #{regionalType}
@@ -303,6 +303,9 @@
             </if>
             <if test="sellingType != null and sellingType != '' ">
                     AND A.SELLING_TYPE = #{sellingType}
+            </if>
+             <if test="itemFromLocId != null and itemFromLocId != '' ">
+                    AND A.ID IN #{sellingType}
             </if>
     </select>
 
@@ -1094,7 +1097,7 @@
             WHERE ITEM_ID = #{purcItems_addItem}
      </select>
 
-      <update id="deleteCartItem"  parameterType="java.util.Map">
+      <update id="deleteCartItem"  parameterType="Map">
               DELETE FROM SAL0327T WHERE ID = #{id}
      </update>
 
@@ -1113,6 +1116,25 @@
             AND S28.WH_LOC_GB IN ('08')
             AND S5.STUS_ID = 1
         ORDER BY S5.CODE
+   </select>
+
+
+   <select id="selectWhSOBrnchItemList" resultType="egovMap">
+        <![CDATA[
+        SELECT
+                              A.ID AS CODE_ID
+                            , E.STK_CODE || ' - ' || E.STK_DESC AS CODE_NAME
+         FROM SAL0321D A
+         LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
+         LEFT JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+         LEFT JOIN LOG0106M D ON A.ITEM_ID = D.ITEM_CODE
+         LEFT JOIN SYS0026M E ON D.ITEM_CODE = E.STK_ID
+         WHERE 1=1
+         AND NVL(A.DISAB,0) = 0
+         AND NVL(D.LOC_ID,0)  <> 0
+         AND NVL(D.ITEM_INV_QTY,0) <> 0
+        AND D.LOC_ID = #{branchId}
+        ]]>
    </select>
 
 

@@ -86,6 +86,7 @@ function fn_getApprovalDataListAjax  () {
 
 function fn_close(){
     $("#popup_wrapAppv").remove();
+    fn_selectEshopList();
 }
 
 
@@ -103,11 +104,10 @@ function fn_approveEshop(){
 
 	    Common.ajax("POST", "/sales/posstock/insertPos.do", data, function(result) {
               if(result.logError == "000"){
-                      Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />',fn_close());
-                      setTimeout(fn_selectEshopList(), 1000);
+                      Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />',fn_close);
               }
               else{
-                    Common.alert("fail : Contact Logistics Team")
+                    Common.alert("fail : Contact Sales Support Department")
               }
         });
 
@@ -169,7 +169,7 @@ function fn_rejectEshop(){
 
 <section>
         <aside class="title_line">
-                <h3>Shopping Address Info</h3>
+                <h3>Shipping Address Info</h3>
         </aside>
 
         <section>

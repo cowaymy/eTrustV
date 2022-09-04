@@ -118,7 +118,7 @@ function fn_reloadList(){
                 <option value="1392">GDEX</option>
                 <option value="1393">ABX</option>
                 <option value="1394">POSLAJU</option>
-                <option value="1395">CITI-LINK</option>
+                <option value="1395">CITY-LINK</option>
                 <option value="1396">BY HAND</option>
               </select>
             </td>

@@ -25,6 +25,11 @@
 		isCheckAll : false
 	};
 
+    var ItmOption_M = {
+	             type : "M",
+	             isCheckAll : false
+	};
+
 	var myGridIDCartItem;
 
 	  //Combo Box Choose Message
@@ -463,11 +468,10 @@
     	   var param = {imgId: id, locId: locId};
 
     	   Common.ajax("GET", "/sales/posstock/selectItemList2", param, function(result) {
-//                console.log(result);
                var elem = document.createElement("img");
                elem.setAttribute("src", "\\resources\\WebShare"+ result[0].filepath);
-               elem.setAttribute("height", "200px");
-               elem.setAttribute("width", "200px");
+               elem.setAttribute("height", "350px");
+               elem.setAttribute("width", "350px");
                elem.setAttribute("class", "centerImg");
 
                $("#imgItem").html("");
@@ -493,27 +497,27 @@
 
     	   $("#table_addToCart").hide();
            $("#catalogImgList").html("");
+
 		   Common.ajax("GET", "/sales/posstock/selectCatalogList", $("#eshopForm").serializeJSON(), function(result) {
-			   if(result.length==0){
-				   Common.alert('Please choose another Branch / Warehouse due to default SO out of stock ');
-				     $("#scnFromLocId").attr({"disabled" : false  , "class" : "w100p"});
-			   }
-			   else
-			   {
-		            for(var i=0 ; i<result.length;i++){
-		                   var elem = document.createElement("img");
-		                   elem.setAttribute("src", "\\resources\\WebShare"+ result[i].filepath);
-		                   elem.setAttribute("height", "150px");
-		                   elem.setAttribute("width", "150px");
-		                   elem.setAttribute("id", result[i].id);
-		                   elem.setAttribute("onclick", "imageDtl(" + result[i].id + "," + result[i].locId+ ")");
-		                   elem.setAttribute("class", "marginImg");
+				   if(result.length==0){
+					   Common.alert('Please choose another Branch / Warehouse due to default SO out of stock ');
+					     $("#scnFromLocId").attr({"disabled" : false  , "class" : "w100p"});
+				   }
+				   else
+				   {
+			            for(var i=0 ; i<result.length;i++){
+			                   var elem = document.createElement("img");
+			                   elem.setAttribute("src", "\\resources\\WebShare"+ result[i].filepath);
+			                   elem.setAttribute("height", "150px");
+			                   elem.setAttribute("width", "150px");
+			                   elem.setAttribute("id", result[i].id);
+			                   elem.setAttribute("onclick", "imageDtl(" + result[i].id + "," + result[i].locId+ ")");
+			                   elem.setAttribute("class", "marginImg");
 
-		                   document.getElementById("catalogImgList").appendChild(elem);
-		               }
-			   }
-
-		   });
+			                   document.getElementById("catalogImgList").appendChild(elem);
+			               }
+				   }
+			   });
     }
 
     $(function() {
@@ -872,7 +876,7 @@
 
 		<section>
 			<aside class="title_line">
-				<h3>Shopping Address Info</h3>
+				<h3>Shipping Address Info</h3>
 			</aside>
 			<!-- title_line end -->
 
@@ -976,7 +980,7 @@
 
 						<tr>
 						      <th scope="row">Selling Type</th>
-                               <td colspan="3"><select class="w100p" id="sellingType"  name="sellingType"></select></td>
+                              <td colspan="3"><select class="w100p" id="sellingType"  name="sellingType"></select></td>
                         </tr>
 					</tbody>
 				</table>

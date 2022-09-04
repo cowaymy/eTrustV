@@ -13,27 +13,27 @@ public interface PosEshopService {
 
 	EgovMap  selectItemPrice(Map<String, Object> params)throws Exception;
 
-	void insertPosEshopItemList(Map<String, Object> params) throws Exception;
+	int insertPosEshopItemList(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectItemList(Map<String, Object> params);
 
 	List<EgovMap> selectItemList2(Map<String, Object> params);
 
-	Map<String, Object> removeEshopItemList(Map<String, Object> params) throws Exception;
+	int removeEshopItemList(Map<String, Object> params) throws Exception;
 
-	Map<String, Object> updatePosEshopItemList(Map<String, Object> params) throws Exception;
+	int updatePosEshopItemList(Map<String, Object> params) throws Exception;
 
-	void insUpdPosEshopShipping(Map<String, Object> params) throws Exception;
+	int insUpdPosEshopShipping(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectShippingList(Map<String, Object> params);
 
-	Map<String, Object> updatePosEshopShipping(Map<String, Object> params) throws Exception;
+	int updatePosEshopShipping(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectItemImageList(Map<String, Object> params);
 
 	List<EgovMap> selectCatalogList(Map<String, Object> params);
 
-	Map<String, Object> insertItemToCart(Map<String, Object> params) throws Exception;
+	int insertItemToCart(Map<String, Object> params) throws Exception;
 
 	int getGrpSeqSAL0327T();
 
@@ -69,9 +69,13 @@ public interface PosEshopService {
 
 	List<EgovMap> selectEshopWhBrnchList(Map<String, Object> params);
 
-	void deleteCartItem(Map<String, Object> params) throws Exception;
+	int deleteCartItem(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectEshopWhSOBrnchList() throws Exception;
+
+	List<EgovMap> selectWhSOBrnchItemList() throws Exception;
+
+
 
 
 }
