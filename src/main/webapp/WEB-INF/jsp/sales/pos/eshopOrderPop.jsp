@@ -602,7 +602,8 @@
                     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                     showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
                     showRowCheckColumn : true, //checkBox
-                    softRemoveRowMode : false
+                    softRemoveRowMode : false,
+                    wordWrap: true
             };
 
 
@@ -614,7 +615,7 @@
 //                                       imgHeight : 30,
                                       altField : null,
                                   }},
-                                {dataField: "stkCode" ,headerText :"Item" , width:120 ,height:200 , visible:true, editable : true},
+                                {dataField: "stkCode" ,headerText :"Item" , width:100 ,height:200 , visible:true, editable : true},
                                 {dataField: "itemPrice" ,headerText :"Unit Price" ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0"},
                                 {dataField: "totalQty" ,headerText :"Total Quantity (pcs)"  ,width:120 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
                                 {dataField: "itemOrdQty" ,headerText :"Total Carton" ,width:100 ,height:200 , visible:true, editable : false, dataType : "numeric", formatString : "#,##0.00"},
