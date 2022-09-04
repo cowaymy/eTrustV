@@ -602,8 +602,7 @@
                     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                     showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
                     showRowCheckColumn : true, //checkBox
-                    softRemoveRowMode : false,
-                    wordWrap: true
+                    softRemoveRowMode : false
             };
 
 
@@ -612,7 +611,7 @@
 
                                   renderer : {
                                       type : "ImageRenderer",
-//                                       imgHeight : 30,
+                                      imgHeight : 30,
                                       altField : null,
                                   }},
                                 {dataField: "stkCode" ,headerText :"Item" , width:100 ,height:200 , visible:true, editable : true},
