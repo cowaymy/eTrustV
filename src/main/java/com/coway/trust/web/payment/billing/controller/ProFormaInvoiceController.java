@@ -1,6 +1,7 @@
 package com.coway.trust.web.payment.billing.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -152,35 +153,22 @@ public class ProFormaInvoiceController {
 	}
 
 	@RequestMapping(value = "/saveNewProForma.do", method = RequestMethod.POST)
-	  public ResponseEntity<ReturnMessage> saveNewProForma(@RequestBody Map<String, Object> params, Model model,
-	      HttpServletRequest request, SessionVO sessionVO) {
+	  public ResponseEntity<ReturnMessage> saveNewProForma(@RequestBody Map<String, ArrayList<Object>> params, ModelMap mode, SessionVO sessionVO) {
 	    logger.debug("===========================/saveNewProForma.do===============================");
 	    logger.debug("==params " + params.toString());
 	    logger.debug("===========================/saveNewProForma.do===============================");
 
-	    Map<?, ?> pay0334map = (Map<?, ?>) params.get("ProFormaM");
-	    logger.debug("==pay0334map " + pay0334map.toString());
-
-	    params.put("orderId",pay0334map.get("orderId"));
-	    params.put("packType",pay0334map.get("packType"));
-	    params.put("memCode",pay0334map.get("memCode"));
-	    params.put("adStartDt",pay0334map.get("adStartDt"));
-	    params.put("adEndDt",pay0334map.get("adEndDt"));
-	    params.put("totalAmt",pay0334map.get("totalAmt"));
-	    params.put("packPrice",pay0334map.get("packPrice"));
-	    params.put("remark",pay0334map.get("remark"));
-	    params.put("discount",pay0334map.get("discount"));
-	    params.put("stus","1"); //new pro forma = Active
-	    params.put("creator", sessionVO.getUserId());
-
 	    ReturnMessage message = new ReturnMessage();
 
-    	proFormaInvoiceService.saveNewProForma(params);
-	    message.setMessage("Successfully create Pro Forma for order " + pay0334map.get("orderNo"));
+	    List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+
+    	proFormaInvoiceService.saveNewProForma(formList, gridList,  sessionVO);
 
 	    logger.debug("================saveNewProForma - END ================");
-	    message.setCode(AppConstants.SUCCESS);
 
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage("Sucess.");
 
 	    return ResponseEntity.ok(message);
 	  }
@@ -213,6 +201,23 @@ public class ProFormaInvoiceController {
 		logger.debug("chkProForma end////");
 
 		List<EgovMap> list = proFormaInvoiceService.chkProForma(params);
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/selectInvoiceBillGroupListProForma.do")
+	public ResponseEntity<List<EgovMap>> selectInvoiceBillGroupListProForma(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> list = null;
+
+		logger.debug("params : {}", params);
+
+		String getCustId = invoicePOService.selectCustBillId(params);
+
+		if(getCustId != null){
+        	getCustId = getCustId != null ? getCustId : "";
+        	params.put("custBillId", getCustId);
+        	list = proFormaInvoiceService.selectInvoiceBillGroupListProForma(params);
+		}
 
 		return ResponseEntity.ok(list);
 	}

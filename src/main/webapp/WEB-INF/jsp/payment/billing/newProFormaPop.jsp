@@ -1,18 +1,6 @@
-
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
-
-<style>
-
-/* 커스텀 행 스타일 */
-.my-row-style {
-    background:#FFB2D9;
-    font-weight:bold;
-    color:#22741C;
-}
-</style>
 <script type="text/javaScript" language="javascript">
 
 var resultBasicObject;
@@ -24,7 +12,7 @@ var orderArr = [];
 
 var columnLayoutBill =[
                        {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
-                       {dataField:"salesOrdId", headerText:"Sales Ord Id", visible:false },
+                       {dataField:"salesOrdId", headerText:"Sales Ord Id", visible:false},
                        {dataField:"refNo", headerText:"Ref No."},
                        {dataField:"orderDate", headerText:"Order Date", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
                        {dataField:"status", headerText:"Status"},
@@ -32,6 +20,9 @@ var columnLayoutBill =[
                        {dataField:"product", headerText:"Product"},
                        {dataField:"custName", headerText:"Customer"},
                        {dataField:"custBillId", headerText:"Bill ID"},
+                       {dataField:"proformaStus", headerText:"proformaStus", visible:false},
+                       {dataField:"advStartDt", headerText:"advStartDt", visible:false},
+                       {dataField:"advEndDt", headerText:"advEndDt", visible:false},
                        {
                            dataField : "undefined",
                            headerText : " ",
@@ -53,8 +44,36 @@ var columnLayoutBill =[
 
 var gridProsBill = {
         editable: false,
+        showRowCheckColumn : true,
         showStateColumn: false,
-        pageRowCount : 5
+        pageRowCount : 5,
+        rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+        	 var today = new Date();
+             var tYear = today.getFullYear();
+             var tMonth = today.getMonth() + 1;
+
+             if(tMonth < 10){
+                 tMonth = "0" + tMonth;
+             }
+
+            var today = tMonth + "/" + tYear;
+        	var startDt = item.advStartDt;
+            var endDt = item.advEndDt;
+            var proformaStus = item.proformaStus;
+            today = Date.parse(today);
+	        var parseStart = Date.parse(startDt);
+	        var parseEnd = Date.parse(endDt);
+
+	        if((today <= parseEnd && today >= parseStart)) {
+	            return false;
+	        }
+
+        	if(proformaStus != '5' && proformaStus != '8' && proformaStus != '' && proformaStus != null){
+        		return false;
+        	}
+
+            return true;
+        }
 };
 
 $(document).ready(function(){
@@ -662,38 +681,80 @@ $(document).ready(function(){
 
     function fn_DoSaveProcess(_saveOption) {
 
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDBillGroup);
+    	var data = {};
+/*
     	var ProFormaM = {
 
-    			orderId : $("#ORD_ID").val(),
-    			packType : $("#packType").val(),
-    			memCode : $("#SALES_PERSON").val(),
-    			adStartDt : $("#adStartDt").val(),
-    			adEndDt : $("#adEndDt").val(),
-    			totalAmt : $("#txtPackagePrice").html(),
-    			packPrice : $("#hiddenPacOriPrice").val(),
+                //orderId : $("#ORD_ID").val(),
+                packType : $("#packType").val(),
+                memCode : $("#SALES_PERSON").val(),
+                adStartDt : $("#adStartDt").val(),
+                adEndDt : $("#adEndDt").val(),
+                totalAmt : $("#txtPackagePrice").html(),
+                packPrice : $("#hiddenPacOriPrice").val(),
                 remark : $("#txtRemark").val(),
                 discount : $("#discount").val(),
-                orderNo : $("#ORD_NO").val()
+                //orderNo : $("#ORD_NO").val()
 
             }
 
             var saveForm = {
                 "ProFormaM" : ProFormaM
+            } */
+
+        console.log("checked ahhhh");
+        console.log(checkedItems);
+        console.log(checkedItems.length);
+
+        if(checkedItems.length > 0){
+
+            var item = new Object();
+            var rowList = [];
+
+            for (var i = 0 ; i < checkedItems.length ; i++){
+	            rowList[i] = {
+	                    salesOrdNo : checkedItems[i].salesOrdNo,
+	                    salesOrdId : checkedItems[i].salesOrdId
+	            }
             }
 
-    	console.log("save ahhhh");
-    	console.log(saveForm);
+            data.all = rowList;
+            data.form = [{packType : $("#packType").val(),
+                memCode : $("#SALES_PERSON").val(),
+                adStartDt : $("#adStartDt").val(),
+                adEndDt : $("#adEndDt").val(),
+                totalAmt : $("#txtPackagePrice").html(),
+                packPrice : $("#hiddenPacOriPrice").val(),
+                remark : $("#txtRemark").val(),
+                discount : $("#discount").val()}]
 
-            Common.ajax("POST", "/payment/saveNewProForma.do", saveForm,
-                      function(result) {
-                        Common.alert(result.message);
-                        fn_selectListAjax();
-            });
+        }
+        else {
+        	Common.alert("Choose at least 1 order no for Pro Forma Invoice");
+            return;
+        }
+
+        console.log("data ahhhh");
+        console.log(data);
+
+    	 if(checkedItems != undefined){
+	        Common.ajax("POST", "/payment/saveNewProForma.do", data,
+	                  function(result) {
+	                    Common.alert(result.message, fn_saveclose);
+	                    $("#popup_wrap").remove();
+	                    fn_selectListAjax();
+	        });
+    	}
+    }
+
+    function fn_saveclose() {
+        newProFormaPopupId.remove();
     }
 
     function fn_loadOrderPO(orderId){
 
-        Common.ajax("GET","/payment/selectInvoiceBillGroupList.do", {"orderId" : orderId} , function(result){
+        Common.ajax("GET","/payment/selectInvoiceBillGroupListProForma.do", {"orderId" : orderId} , function(result){
             if(result != null){
                 $("#billGroupNo").val(result[0].custBillGrpNo);
                 AUIGrid.setGridData(myGridIDBillGroup, result);
@@ -720,11 +781,15 @@ $(document).ready(function(){
          }
     }
 
-    function fn_chkProForma(){
+     function fn_chkProForma(){
     	 var rtnVAL = false;
+    	 var selectedItems = AUIGrid.getSelectedItems(myGridIDBillGroup);
+
+    	 console.log("selected");
+    	 console.log(selectedItems);
 
          Common.ajaxSync("GET", "/payment/chkProForma", {
-             ordNo : $("#ORD_NO").val()
+             ordNo :  selectedItems[0].item.salesOrdNo
          }, function(result) {
         	 console.log(result.length);
 

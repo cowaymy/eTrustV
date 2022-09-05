@@ -15,9 +15,13 @@ public interface ProFormaInvoiceMapper {
 
 	String selectDocNo(int docNoId);
 
+	int selectPFGroupID();
+
     void saveNewProForma(Map<String, Object> params);
 
     void farCheckConvertFn(Map<String, Object> params);
 
     List<EgovMap> chkProForma(Map<String, Object> params);
+
+    List<EgovMap> selectInvoiceBillGroupListProForma(Map<String, Object> params);
 }
