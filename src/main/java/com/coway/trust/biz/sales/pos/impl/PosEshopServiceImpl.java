@@ -298,6 +298,12 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 			return posMapper.selectShippingFee(params);
 	  }
 
+
+	 @Override
+		public List<EgovMap> checkAvailableQtyStock(Map<String, Object> params) {
+			return posMapper.checkAvailableQtyStock(params);
+	  }
+
 	 @Override
 	 public Map<String, Object> insertPosEshop(Map<String, Object> params) throws Exception {
 
@@ -334,14 +340,12 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 			    addMap.put("itemQty", addMap.get("itemQty"));
 			    addMap.put("eshopItemId", addMap.get("eshopItemId"));
 
-
 				posMapper.insertSAL0326D(addMap);
 
 			}
 		}
 
 		posMapper.updateFloatingStockLOG0106M(params);
-
 
 
 	 	   // retrun Map
@@ -447,7 +451,7 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 				        addMap.put("posDetailSeq", posDetailSeq);
 				        addMap.put("posMasterSeq", posMasterSeq);
                         addMap.put("stkId", String.valueOf(addMap.get("itemCode")));
-                        addMap.put("inputQty", String.valueOf(addMap.get("itemOrdQty")));
+                        addMap.put("inputQty", String.valueOf(addMap.get("itemQty")));
                         addMap.put("amt", String.valueOf(addMap.get("itemPrice")));
                         addMap.put("totalAmt", String.valueOf(addMap.get("totalPrice")));
                         addMap.put("subTotal", String.valueOf(addMap.get("totalPrice")));
@@ -631,7 +635,7 @@ public class PosEshopServiceImpl extends EgovAbstractServiceImpl implements PosE
 
                   		      invDetailMap.put("stkCode", String.valueOf(invDetailMap.get("stkCode1")));
                   		      invDetailMap.put("stkDesc", String.valueOf(invDetailMap.get("stkDesc")));
-                  		      invDetailMap.put("inputQty", String.valueOf(invDetailMap.get("itemOrdQty")));
+                  		      invDetailMap.put("inputQty", String.valueOf(invDetailMap.get("itemQty")));
 
                   		      invDetailMap.put("amt", String.valueOf(invDetailMap.get("price")));
                   		      invDetailMap.put("subChng", String.valueOf(invDetailMap.get("totalPrice")));

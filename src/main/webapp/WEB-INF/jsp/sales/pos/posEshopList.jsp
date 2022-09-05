@@ -79,17 +79,25 @@ function createAUIGrid(){
 
         mstGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "", auiGridProps);
 
-        var whBrnchParam = {branchId :  '${branchId}'};
-        if('${branchId}' !='' && '${branchId}' !=null){
-              //branch List
-             doGetCombo('/sales/posstock/selectEshopWhBrnchList.do?branchId=' + '${branchId}', '', '', 'branch', 'S', 'fn_selectEshopList');
-        }
-        else{
-              //branch List
-             doGetCombo('/sales/posstock/selectEshopWhBrnchList.do' , '', '', 'branch', 'S', 'fn_selectEshopList');
-        }
+//         var whBrnchParam = {branchId :  '${branchId}'};
+//         if('${branchId}' !='' && '${branchId}' !=null){
+//               //branch List
+//              doGetCombo('/sales/posstock/selectEshopWhBrnchList.do?branchId=' + '${branchId}', '', '', 'branch', 'S', 'fn_selectEshopList');
+//         }
+//         else{
+//               //branch List
+             doGetCombo('/sales/posstock/selectEshopWhBrnchList.do' , '', '', 'branch', 'S', 'fn_selectedBranch');
+//         }
 
 
+}
+
+function fn_selectedBranch(){
+    if('${branchId}' !='' && '${branchId}' !=null){
+        $("#branch").val("${branchId}".trim());
+        $("#branch").attr("class", "w100p");
+     }
+    fn_selectEshopList();
 }
 
 
@@ -116,7 +124,7 @@ function fn_selectPosEshopApprovalPop(){
 }
 
 function fn_close(){
-
+    location.reload();
 }
 
 
@@ -330,16 +338,9 @@ function fn_reloadList() {
 
 function fn_selectEshopList(){
 
-	 if('${branchId}' !='' && '${branchId}' !=null){
-         $("#branch").val("${branchId}".trim());
-         $("#branch").attr("class", "w100p readonly disabled");
-         $("#branch").attr("readonly", "readonly");
-      }
-
 	Common.ajax("GET", "/sales/posstock/selectEshopList2", $("#searchForm").serialize(), function(result) {
 	    AUIGrid.setGridData(mstGridID, result);
 	});
-
 
 }
 

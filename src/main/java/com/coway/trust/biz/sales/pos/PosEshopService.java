@@ -49,6 +49,8 @@ public interface PosEshopService {
 
 	Map<String, Object> insertPosEshop(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> checkAvailableQtyStock(Map<String, Object> params);
+
 	List<EgovMap> checkDiffWarehouse(Map<String, Object> params);
 
 	List<EgovMap> checkDuplicatedStock(Map<String, Object> params);

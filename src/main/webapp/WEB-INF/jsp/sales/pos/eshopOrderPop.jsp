@@ -774,20 +774,28 @@
             Common.ajaxFile("/sales/posstock/attachFileUpload.do", formData, function(result) {
                 if(result != 0 && result.code == 00){
                      $("#hiddenAttachmentPaySlip").val(result.data.fileGroupKey);
-                    Common.ajax("POST", "/sales/posstock/insertPosEshop.do", $("#eshopForm").serializeJSON(), function(result) {
-                        Common.confirm('ESN Number is : '+result.data,reloadList);
-                       }, function(jqXHR, textStatus, errorThrown) {
-                           try {
-                               console.log("status : " + jqXHR.status);
-                               console.log("code : " + jqXHR.responseJSON.code);
-                               console.log("message : " + jqXHR.responseJSON.message);
-                               console.log("detailMessage : "
-                                       + jqXHR.responseJSON.detailMessage);
-                           } catch (e) {
-                               console.log(e);
-                           }
-                       });
 
+                     Common.ajax("GET", "/sales/posstock/checkAvailableQtyStock", $("#eshopForm").serializeJSON() , function(result) {
+                    	 console.log(result);
+                         if(result.code == "99"){
+                        	 Common.alert('Item(s) : '+result.message+" currently do not have enough stock. Kindly please check with Sales Support Department.",reloadList);
+                         }
+                         else{
+                          Common.ajax("POST", "/sales/posstock/insertPosEshop.do", $("#eshopForm").serializeJSON(), function(result) {
+                          Common.confirm('ESN Number is : '+result.data,reloadList);
+                         }, function(jqXHR, textStatus, errorThrown) {
+                             try {
+                                 console.log("status : " + jqXHR.status);
+                                 console.log("code : " + jqXHR.responseJSON.code);
+                                 console.log("message : " + jqXHR.responseJSON.message);
+                                 console.log("detailMessage : "
+                                         + jqXHR.responseJSON.detailMessage);
+                             } catch (e) {
+                                 console.log(e);
+                             }
+                         });
+                         }
+                     });
                 }else{
                     Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
                 }

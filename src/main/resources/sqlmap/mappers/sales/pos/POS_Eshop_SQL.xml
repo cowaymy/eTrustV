@@ -283,12 +283,39 @@
 			WHERE 1=1 AND NVL(A.DISAB,0) = 0
     </select>
 
+    <select id="checkAvailableQtyStock" parameterType="Map" resultType="egovMap">
+             <![CDATA[
+                    SELECT
+                              A.ESHOP_ITEM_ID
+                            , D.ITEM_DESC
+                            , A.LOC_ID
+                            , D.ITEM_INV_QTY
+                            , E.ITEM_QTY
+                            , A.ITEM_ORD_QTY * E.ITEM_QTY AS BOOKING_QTY
+                            , ITEM_INV_QTY - (A.ITEM_ORD_QTY *E.ITEM_QTY) AS REMAINING_QTY
+                    FROM   GBSLCVD.SAL0327T   A
+                    LEFT JOIN SAL0321D E ON E.ID = A.ESHOP_ITEM_ID
+                    LEFT JOIN LOG0106M D ON e.ITEM_ID = D.ITEM_CODE and D.LOC_ID =  A.loc_id
+                    WHERE 1=1
+                    AND NVL(E.DISAB,0) = 0
+                    AND NVL(D.LOC_ID,0) <> 0
+                    AND NVL(D.ITEM_INV_QTY,0) <> 0
+                    AND ITEM_INV_QTY - (A.ITEM_ORD_QTY * E.ITEM_QTY) <= 0
+              ]]>
+            <if test="grpId != null and grpId != '' ">
+                    AND A.GRP_ID = #{grpId}
+            </if>
+    </select>
+
     <select id="selectCatalogList" parameterType="Map" resultType="egovMap">
 		     <![CDATA[
 		            SELECT
 		                      A.ID
 		                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
 		                    , D.LOC_ID
+		                    , D.ITEM_INV_QTY
+                            , A.ITEM_QTY
+                            , FLOOR(D.ITEM_INV_QTY/A.ITEM_QTY) AS AVAILABLE_QTY
 		            FROM SAL0321D A
 		            LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
 		            LEFT JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
@@ -297,6 +324,7 @@
 		            AND NVL(A.DISAB,0) = 0
 		            AND NVL(D.LOC_ID,0) <> 0
 		            AND NVL(D.ITEM_INV_QTY,0) <> 0
+		            AND FLOOR(D.ITEM_INV_QTY/A.ITEM_QTY) > 0
 		      ]]>
             <if test="esnFromLocId != null and esnFromLocId != '' ">
                     AND D.LOC_ID = #{esnFromLocId}

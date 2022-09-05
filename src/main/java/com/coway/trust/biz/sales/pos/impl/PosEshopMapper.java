@@ -77,6 +77,8 @@ public interface PosEshopMapper {
 
 	List<EgovMap> checkDuplicatedStock(Map<String, Object> params);
 
+	List<EgovMap> checkAvailableQtyStock(Map<String, Object> params);
+
 	void  updateFloatingStockLOG0106M(Map<String, Object> params);
 
 	void  reverseFloatingStockLOG0106M(Map<String, Object> params);

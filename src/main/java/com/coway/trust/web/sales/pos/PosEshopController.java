@@ -486,6 +486,7 @@ public class PosEshopController {
 
 	}
 
+
 	 @Transactional
 	 @RequestMapping(value = "/insertPosEshop.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> insertPosEshop(@RequestBody Map<String, Object> params) throws Exception {
@@ -493,6 +494,8 @@ public class PosEshopController {
 	    params.put("userId", sessionVO.getUserId());
 	    params.put("userDeptId", sessionVO.getUserDeptId());
 	    params.put("userName", sessionVO.getUserName());
+
+
 
 
 	    Map<String, Object> retunMap = null;
@@ -760,6 +763,42 @@ public class PosEshopController {
 
 	}
 
+	  @RequestMapping(value = "/checkAvailableQtyStock", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> checkAvailableQtyStock (@RequestParam Map<String, Object> params,  HttpServletRequest request, ModelMap model) throws Exception{
+
+		params.put("grpId", params.get("cartGrpId"));
+
+		List<EgovMap> itemList = posEshopService.checkAvailableQtyStock(params);
+
+		String msg="";
+
+		if(itemList !=null && itemList.size()>0){
+			for (int i = 0; i < itemList.size(); i++) {
+				Map<String, Object> addMap = (Map<String, Object>)itemList.get(i);
+
+				if(i==0){
+					msg += addMap.get("itemDesc").toString();
+				}
+				else{
+					msg += ", " + addMap.get("itemDesc").toString();
+				}
+			}
+		}
+
+		//Return Message
+		ReturnMessage message = new ReturnMessage();
+
+		 if(itemList !=null && itemList.size()>0){
+			message.setCode(AppConstants.FAIL);
+		   	message.setMessage(messageAccessor.getMessage(msg));
+	    }else{
+	    	message.setCode(AppConstants.SUCCESS);
+	    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    }
+
+		return ResponseEntity.ok(message);
+	}
+
 
 	  @Transactional
 	  @RequestMapping(value = "/deleteCartItem.do")
@@ -779,7 +818,6 @@ public class PosEshopController {
 		    	message.setCode(AppConstants.FAIL);
 		   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		    }
-
 
 			return ResponseEntity.ok(message);
 		}
