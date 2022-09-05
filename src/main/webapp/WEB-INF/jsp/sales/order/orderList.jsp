@@ -301,17 +301,7 @@
         });
 
         $('#btnCreditDebitAuthorization').click(function() {
-            var gridObj = AUIGrid.getSelectedItems(listMyGridID);
-
-            if(gridObj == null || gridObj.length <= 0 ){
-              Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
-              return;
-            }
-
-            var ordNo =  gridObj[0].item.ordNo;
-            var ordId = gridObj[0].item.ordId;
-            Common.popupDiv("/payment/mobileautodebit/autoDebitAuthorizationForm.do",
-            		{ salesOrdNo : ordNo, salesOrderId: ordId },
+            Common.popupDiv("/payment/mobileautodebit/autoDebitAuthorizationFormPop.do",null,
             		null , true);
           });
     });

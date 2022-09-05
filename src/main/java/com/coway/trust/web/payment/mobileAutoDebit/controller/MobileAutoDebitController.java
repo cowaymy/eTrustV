@@ -70,10 +70,8 @@ public class MobileAutoDebitController {
 		return "payment/mobileautodebit/autoDebitEnrollmentList";
 	}
 
-	@RequestMapping(value = "/autoDebitAuthorizationForm.do")
+	@RequestMapping(value = "/autoDebitAuthorizationFormPop.do")
 	public String autoDebitAuthorizationForm(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
-
-		model.put("params", params);
 		return "payment/mobileautodebit/autoDebitAuthorizationFormPop";
 	}
 

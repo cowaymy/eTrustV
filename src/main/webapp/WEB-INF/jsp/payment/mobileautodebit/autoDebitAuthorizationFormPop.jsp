@@ -14,7 +14,6 @@ var option = {
 var basicAuth = false;
 
 $(document).ready(function(){
-	$('#orderNo').val('${params.salesOrdNo}');
 	if($('#orderNo').val() != ""){
 		selectList();
 	}
