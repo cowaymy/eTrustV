@@ -95,7 +95,7 @@
         console.log("_printOutrightPrice : " + $("#txtOutrightPrice").val());
         console.log("_printLastBillMth : " + $("#hiddenLastBillMth").val());
         console.log("_printTotalBillAmt : " + $("#txtTotalBillAmtMat").val());
-        console.log("_printTotalOutstanding : " + $("#txtCurrentOutstandingMat").val());
+        console.log("_printTotalOutstanding : " + $("#hiddenTotalOutstandingTotal").val());
         console.log("_printAdjPercent : " + $("#hiddenAdjPercent").val());
         console.log("_printAdjPercentAmt : "+ $("#hiddenAdjPercentAmt").val());
         console.log("_printAdjFixAmt : " + $("#hiddenAdjFixAmt").val());
@@ -114,7 +114,7 @@
         $("#_printLastBillMthFrame").val($("#hiddenLastBillMthFrame").val());  //int LastBillMth = int.Parse(hiddenLastBillMth.Value);
         $("#_printTotalBillAmt").val($("#txtTotalBillAmtMat").val()); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
         $("#_printTotalBillFrame").val($("#txtTotalBillAmtFrame").val()); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
-        $("#_printTotalOutstanding").val($("#txtCurrentOutstandingMat").val());  //decimal TotalOutstanding = decimal.Parse(txtCurrentOutstanding.Text.Trim());
+        $("#_printTotalOutstanding").val($("#hiddenTotalOutstandingTotal").val());  //decimal TotalOutstanding = decimal.Parse(txtCurrentOutstanding.Text.Trim());
         $("#_printAdjPercent").val($("#hiddenAdjPercent").val());  //decimal AdjPercent = decimal.Parse(hiddenAdjPercent.Value);
         $("#_printAdjPercentAmt").val($("#hiddenAdjPercentAmt").val()); //decimal AdjPercentAmt = decimal.Parse(hiddenAdjPercentAmt.Value);
         $("#_printAdjFixAmt").val($("#hiddenAdjFixAmt").val());  //decimal AdjFixAmt = decimal.Parse(hiddenAdjFixAmt.Value);
@@ -160,13 +160,6 @@
                             totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
                             totalBillAmtFrame = (result.totalbillamtFrame + result.totaldnbillFrame - result.totalcnbillFrame) + (result.totalbillrpfFrame + result.totaldnrpfFrame - result.totalcnrpfFrame);
                         }
-                        console.log('totalBillAmtFrame'+result.totalbillamtFrame);
-                        console.log('totaldnbillFrame'+result.totaldnbillFrame);
-                        console.log('result.totalbillrpf:'+result.totalcnbillFrame);
-
-                        console.log('result.totaldnrpf:'+result.totalbillrpfFrame);
-                        console.log('result.totalcnrpf:'+result.totaldnrpfFrame);
-                        console.log('result.totalbillrpf:'+result.totalcnrpfFrame);
 
                         $('#hiddenOrderID').val(result.salesOrdId);
                         $('#hiddenOrderIDMat').val(result.salesOrdId);
@@ -179,6 +172,11 @@
                         $('#hiddenLastBillMthFrame').val(result.lastbillmthFrame);
                         $('#hiddenDiffInstallMonth').val(monthDiff);
                         $('#txtOrderNoFrame').val(result.fraOrdNo);
+                        $('#hiddenTotalOutstandingTotal').val(result.totaloutstanding + result.totaloutstandingFrame);
+
+                        console.log('result.totaloutstandingFrame:'+result.totaloutstandingFrame);
+                        console.log('result.totaloutstanding:'+result.totaloutstanding);
+                        console.log('hiddenTotalOutstandingTotal:'+ $('#hiddenTotalOutstandingTotal').val());
 
                         $('#txtOutrightPrice').val(result.outrightprice);
                         $('#txtTotalBillAmtMat').val(totalBillAmt);
@@ -382,6 +380,7 @@
 <input id="hiddenAdjFixAmt"         type="hidden" />
 <input id="hiddenAdjFixInd"         type="hidden" />
 <input id="hiddenDiffInstallMonth"  type="hidden" />
+<input id="hiddenTotalOutstandingTotal"  type="hidden" />
 
 <aside class="title_line"><!-- title_line start -->
 <h3 style="margin-right:170px">Order Information (Mattress Only/ Mattress Set)</h3>
