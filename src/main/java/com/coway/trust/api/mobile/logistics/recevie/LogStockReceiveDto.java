@@ -45,6 +45,9 @@ public class LogStockReceiveDto {
 	private String fromLocId;
 
 	@ApiModelProperty(value = "")
+	private String scanQty;
+
+	@ApiModelProperty(value = "")
 	private String toLocId;
 	private List<LogStockPartsReceiveDto> partsList = null;
 
@@ -157,6 +160,14 @@ public class LogStockReceiveDto {
 
 	public void setToLocId(String toLocId) {
 		this.toLocId = toLocId;
+	}
+
+	public String getScanQty() {
+		return scanQty;
+	}
+
+	public void setScanQty(String scanQty) {
+		this.scanQty = scanQty;
 	}
 
 	/*public int getScanQty() {
