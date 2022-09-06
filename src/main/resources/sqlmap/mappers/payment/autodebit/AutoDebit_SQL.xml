@@ -312,4 +312,38 @@
 		ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
 		WHERE p0333m.PAD_ID = #{padId}
 	</select>
+
+	<select id="getPadDetail" parameterType="Map" resultType="egovMap">
+		SELECT * FROM PAY0333M WHERE PAD_ID = #{padId}
+	</select>
+
+	<select id="getCreditDebitCardDetail" parameterType="Map" resultType="egovMap">
+		SELECT * FROM SAL0028D WHERE CUST_CRC_ID = #{custCrcId}
+	</select>
+
+	<select id="getCurrentPaymentChannelDetail" parameterType="Map" resultType="egovMap">
+		SELECT s0074d.* FROM SAL0074D s0074d
+		INNER JOIN SAL0001D s0001d
+		ON s0001d.SALES_ORD_ID = s0074d.SALES_ORD_ID
+		WHERE s0001d.SALES_ORD_NO = #{salesOrdNo}
+		AND SVC_CNTRCT_ID = 0
+	</select>
+
+	<update id="updatePaymentChannel" parameterType="Map">
+        UPDATE SAL0074D
+           SET MODE_ID         = #{modeId}
+             , CUST_CRC_ID     = #{custCrcId}
+             , BANK_ID         = #{bankId}
+             , CUST_ACC_ID     = #{custAccId}
+             , DD_APPLY_DT     = SYSDATE
+             , DD_SUBMIT_DT    = TO_DATE(#{ddSubmitDt}, 'DD/MM/YYYY')
+             , DD_START_DT     = TO_DATE(#{ddStartDt}, 'DD/MM/YYYY')
+             , DD_REJCT_DT     = TO_DATE(#{ddRejctDt}, 'DD/MM/YYYY')
+             , UPD_USER_ID     = #{updator}
+             , UPD_DT          = SYSDATE
+             , IS_3RD_PARTY    = #{is3rdParty}
+             , CUST_ID         = #{custId}
+             , LAST_APPLY_USER = #{lastApplyUser}
+         WHERE RENT_PAY_ID     = #{rentPayId}
+    </update>
 </mapper>

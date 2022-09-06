@@ -850,7 +850,9 @@
     <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
       <li><p class="link_btn"><a href="#" id="btnUnbindCboPromOrd">Unlink Combo Promo. Order</a></p></li>
     </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
     <li><p class="link_btn"><a href="#" id="btnCreditDebitAuthorization">Credit/Debit Card Auto Debit Authorization (Customer Sign)</a></p></li>
+    </c:if>
   </ul>
 	<ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine21 == 'Y'}">

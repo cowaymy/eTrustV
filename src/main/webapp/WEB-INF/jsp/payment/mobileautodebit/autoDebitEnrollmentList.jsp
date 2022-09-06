@@ -135,69 +135,67 @@ function createAUIGrid() {
 	var columnLayout = [ {
         	dataField : "padId",
 	        headerText : 'PAD ID.',
-	        width : 140,
 	        editable : false,
 	        visible: false
 	    },{
         	dataField : "custCrcId",
 	        headerText : 'Credit Card Id',
-	        width : 140,
 	        editable : false,
 	        visible: false
 	    },{
             dataField : "padNo",
             headerText : 'PAD No.',
-            width : 140,
+            width : 120,
             editable : false
         }, {
             dataField : "keyInDate",
             headerText : 'PAD Key-in Date',
-            width : 160,
+            width : 120,
             editable : false
         }, {
             dataField : "keyInTimestamp",
             headerText : 'PAD Key-in Time',
-            width : 170,
+            width : 120,
             editable : false
         }, {
             dataField : "statusDesc",
             headerText : 'Status',
-            width : 150,
+            width : 120,
             editable : false
         }, {
             dataField : "salesOrdNo",
             headerText : 'Order Number',
-            width : 170,
+            width : 100,
             editable : false
         },{
             dataField : "custName",
             headerText : 'Customer Name',
-            width : 170,
+            width : 180,
             editable : false
         },{
             dataField : "creator",
             headerText : 'Creator',
-            width : 170,
+            width : 110,
             editable : false
         },{
             dataField : "userBranch",
             headerText : 'User Branch',
-            width : 170,
+            width : 110,
             editable : false
         },{
             dataField : "resnDesc",
             headerText : 'Fail Reason',
-            width : 170,
+            width : 130,
             editable : false
         },{
             dataField : "remarks",
             headerText : 'Fail Remark',
-            width : 170,
+            width : 140,
             editable : false
         },{
             dataField : "lastUpdatedDate",
             headerText : 'Last Update At(By)',
-            width : 200,
+            width : 220,
             editable : false,
             labelFunction : function(rowIndex, columnIndex, value,
                     headerText, item, dataField) {

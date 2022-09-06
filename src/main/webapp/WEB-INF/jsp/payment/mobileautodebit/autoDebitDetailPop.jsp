@@ -268,6 +268,7 @@ function doSave(){
 			Common.ajax("POST", "/payment/mobileautodebit/updateAction.do", data, function(result1) {
 				console.log("result1 :: " + result1);
 				 if(result1.code == 00){
+					 selectList();
 					 fn_close();
 				 }
 				 else{
@@ -280,7 +281,6 @@ function doSave(){
 
 function fn_close() {
     $("#popup_wrap").remove();
-    $('#_listSearchBtn').click();
 }
 
 function getRejectReasonCodeOption(){

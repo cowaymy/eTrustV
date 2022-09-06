@@ -234,13 +234,50 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
   @Override
   public int updateAction(Map<String, Object> params) {
-    int updatePay0333m = autoDebitMapper.updateAction(params);
+	int statusCodeId = Integer.parseInt(params.get("statusCodeId").toString());
+	//If approve, update SAL0074D credit card info
+	if(statusCodeId == 5){
+		EgovMap padDetail = autoDebitMapper.getPadDetail(params);
+		params.put("custCrcId", Integer.parseInt(padDetail.get("custCrcId").toString()));
+		params.put("salesOrdNo", padDetail.get("salesOrdNo").toString());
+		params.put("is3rdParty", Integer.parseInt(padDetail.get("isThirdPartyPayment").toString()));
+		params.put("custId", Integer.parseInt(padDetail.get("custId").toString()));
 
-    if (updatePay0333m > 0) {
-      return 1;
-    } else {
-      return 0;
-    }
+		EgovMap currentPaymentChannel = autoDebitMapper.getCurrentPaymentChannelDetail(params);
+		params.put("rentPayId", Integer.parseInt(currentPaymentChannel.get("rentPayId").toString()));
+
+		EgovMap creditCardDetail = autoDebitMapper.getCreditDebitCardDetail(params);
+		params.put("bankId", Integer.parseInt(creditCardDetail.get("custCrcBankId").toString()));
+		params.put("ddSubmitDt","01/01/1900");
+		params.put("ddStartDt","01/01/1900");
+		params.put("ddRejctDt","01/01/1900");
+		params.put("modeId",131);
+		params.put("custAccId",0);
+		params.put("editTypeId",0);
+		params.put("lastApplyUser", Integer.parseInt(padDetail.get("crtBy").toString()));
+		params.put("svcCntrctId",0);
+
+		int updateSal0074d = autoDebitMapper.updatePaymentChannel(params);
+		if(updateSal0074d > 0){
+		    int updatePay0333m = autoDebitMapper.updateAction(params);
+		    if (updatePay0333m > 0) {
+		      return 1;
+		    } else {
+		      return 0;
+		    }
+		}
+		else{
+			return 0;
+		}
+	}
+	else{
+		int updatePay0333m = autoDebitMapper.updateAction(params);
+	    if (updatePay0333m > 0) {
+	      return 1;
+	    } else {
+	      return 0;
+	    }
+	}
   }
 
   @Override
