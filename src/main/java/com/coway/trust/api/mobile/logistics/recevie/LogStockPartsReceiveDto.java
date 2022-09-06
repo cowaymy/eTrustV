@@ -30,6 +30,9 @@ public class LogStockPartsReceiveDto {
 	@ApiModelProperty(value = "시리얼 체크 여부")
 	private String serialChk;
 
+	@ApiModelProperty(value = "시리얼 체크 여부")
+	private String sumReqstQty;
+
 	public static LogStockPartsReceiveDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, LogStockPartsReceiveDto.class);
 	}
@@ -88,6 +91,14 @@ public class LogStockPartsReceiveDto {
 
 	public void setSerialChk(String serialChk) {
 		this.serialChk = serialChk;
+	}
+
+	public String getSumReqstQty() {
+		return sumReqstQty;
+	}
+
+	public void setSumReqstQty(String sumReqstQty) {
+		this.sumReqstQty = sumReqstQty;
 	}
 
 }
