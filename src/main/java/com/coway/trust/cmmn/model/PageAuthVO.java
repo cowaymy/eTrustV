@@ -33,6 +33,11 @@ public class PageAuthVO implements Serializable {
 	private String funcUserDefine23;
 	private String funcUserDefine24;
 	private String funcUserDefine25;
+	private String funcUserDefine26;
+	private String funcUserDefine27;
+	private String funcUserDefine28;
+	private String funcUserDefine29;
+	private String funcUserDefine30;
 
 	public String getFuncView() {
 		return funcView;
@@ -256,5 +261,45 @@ public class PageAuthVO implements Serializable {
 
 	public void setFuncUserDefine25(String funcUserDefine25) {
 		this.funcUserDefine25 = funcUserDefine25;
+	}
+
+	public String getFuncUserDefine26() {
+		return funcUserDefine26;
+	}
+
+	public void setFuncUserDefine26(String funcUserDefine26) {
+		this.funcUserDefine26 = funcUserDefine26;
+	}
+
+	public String getFuncUserDefine27() {
+		return funcUserDefine27;
+	}
+
+	public void setFuncUserDefine27(String funcUserDefine27) {
+		this.funcUserDefine27 = funcUserDefine27;
+	}
+
+	public String getFuncUserDefine28() {
+		return funcUserDefine28;
+	}
+
+	public void setFuncUserDefine28(String funcUserDefine28) {
+		this.funcUserDefine28 = funcUserDefine28;
+	}
+
+	public String getFuncUserDefine29() {
+		return funcUserDefine29;
+	}
+
+	public void setFuncUserDefine29(String funcUserDefine29) {
+		this.funcUserDefine29 = funcUserDefine29;
+	}
+
+	public String getFuncUserDefine30() {
+		return funcUserDefine30;
+	}
+
+	public void setFuncUserDefine30(String funcUserDefine30) {
+		this.funcUserDefine30 = funcUserDefine30;
 	}
 }
