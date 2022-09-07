@@ -355,8 +355,10 @@
      </select>
 
      <select id="selectYearList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
            SELECT (TO_CHAR(SYSDATE,'YYYY') - 5) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'YYYY') - 5) + (LEVEL-1) CODE_NAME  FROM DUAL
            CONNECT BY LEVEL <= (TO_CHAR(SYSDATE,'RRRR') - (TO_CHAR(SYSDATE,'YYYY') - 5) + 1 )
+      ]]>
     </select>
 
 
