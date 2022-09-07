@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javaScript">
+/*<![CDATA[*/
+    console.log("customerCreditCardPop");
+
+    function fn_validateExpiry(f) {
+        if(f == "MM") {
+            var expMonth = $("#_expMonth_").val();
+            
+            if(expMonth.length == "") {
+                alert("Please key in expiry month.");
+                return false;
+            } else {
+                if(expMonth.length < 2) {
+                    $("#_expMonth_").val("0" + expMonth);
+                } else {
+                    if(parseInt(expMonth) > 12) {
+                        $("#_expMonth_").val('');
+                        alert("Please rekey expiry month");
+                        return false;
+                    }
+                }
+            }
+        }
+        
+        if(f == "YY") {
+            var expYear = $("#_expYear_").val();
+            
+            if(expYear.length == "") {
+                alert("Please key in expiry year.");
+                return false;
+            } else {
+                if(expYear.length < 4) {
+                    alert("Please rekey expiry year");
+                    $("#_expYear_").val('');
+                    return false;
+                }
+            }
+        }
+    }
+
+    function fn_addCreditCard(){
+
+        var cardNo = $("#_cardNo_").val();
+        var expYear = $("#_expYear_").val();
+        var expMonth = $("#_expMonth_").val();
+        
+        if(cardNo == ""){
+            alert("Please key in credit card number.");
+            return false;
+        }else{
+            //digit 16
+            if(16 != $("#_cardNo_").val().length){
+                alert("Credit card number must be 16 digits.");
+                $("#_cardNo_").val('');
+                return false;
+            }
+        }
+        
+        if(expYear.length == "") {
+            alert("Please key in expiry year.");
+            return false;
+        } else {
+            if(expYear.length < 4) {
+                alert("Please rekey expiry year");
+                $("#_expYear_").val('');
+                return false;
+            }
+        }
+        
+        if(expMonth.length == "") {
+            alert("Please key in expiry month.");
+            return false;
+        } else {
+            if(expMonth.length < 2) {
+                $("#_expMonth_").val("0" + expMonth);
+            } else {
+                if(parseInt(expMonth) > 12) {
+                    alert("Please rekey expiry month");
+                    $("#_expMonth_").val('');
+                    return false;
+                }
+            }
+        }
+        
+        $("#insCardForm").submit();
+    }
+/*]]>*/
+</script>
+
+<div id="popup_wrap" class="popup_wrap pop_win" style="max-height: 792px;"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Customer New Credit Card</h1>
+<style>
+    html,body,div,span,applet,object,iframe,
+    h1,h2,h3,h4,h5,h6,p,blockquote,pre,
+    a,abbr,acronym,address,big,cite,code,
+    del,dfn,em,img,ins,kbd,q,s,samp,
+    small,strike,strong,sub,sup,tt,var,
+    b,u,i,center,
+    dl,dt,dd,ol,ul,li,
+    fieldset,form,label,legend,
+    table,caption,tbody,tfoot,thead,tr,th,td,
+    article,aside,canvas,details,embed,
+    figure,figcaption,footer,header,hgroup,
+    menu,nav,output,ruby,section,summary,
+    time,mark,audio,video{margin:0; padding:0; border:0 none; vertical-align:baseline; font-size:12px; font-family:Verdana,"돋움",Dotum,sans-serif; color:#444; line-height:1;}
+    ol,ul{list-style:none;}
+    blockquote,q{quotes:none;}
+    blockquote:before,blockquote:after,q:before,q:after{content:""; content:none;}
+    table{border-collapse:collapse; border-spacing:0; width:100%; table-layout:fixed;}
+
+    html{overflow-y:auto;}    /* 20190911 KR-MIN : for grid resizing */
+    a{cursor:pointer; text-decoration:none;}
+    a:hover,
+    a:focus{text-decoration:none;}
+    hr{display:none;}
+    legend,caption{width:1px; height:1px; padding:0; margin-top:-1px; font-size:0; line-height:0; text-indent:-999px; overflow:hidden;}
+    button,label{cursor:pointer;}
+    .blind{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
+    input[type=text],
+    input[type=password]{font-size:12px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
+    input[type=text]:focus,
+    input[type=password]:focus,
+    textarea:focus,
+    select:focus,
+    .ms-choice:focus{border:1px solid #06a7e2!important; outline:0!important;}
+    textarea{width:100%; height:80px; border:1px solid #ddd; padding:5px; box-sizing:border-box; font-size:12px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif; line-height:1.5;}
+    img,th,td{vertical-align:middle;}
+
+    .popup_wrap{position:absolute; top:20px; left:50%; z-index:1001; margin-left:-477px; width:700px; background:#fff; border:1px solid #ccc;}
+    .pop_header{padding:10px; background:#e5e5e5; border-bottom:2px solid #25527c;cursor: move}
+    .pop_header h1{position:relative; float:left; height:28px; line-height:28px; padding-left:14px; font-size:20px; color:#111; font-weight:normal;}
+    .pop_header h1:before{content:""; display:block; position:absolute; top:5px; left:0; width:3px; height:18px; background:#25527c;}
+    .pop_header .right_opt{float:right;}
+    .pop_header .right_opt:after{content:""; display:block; clear:both;}
+    .pop_header .right_opt li{float:left; margin-left:5px;}
+    .pop_body{max-height:500px; padding:10px; background:#fff; overflow-y:scroll;}
+    .pop_body.win_popup{max-height:100%;overflow-y:auto;}
+    .popup_wrap.no_scroll .pop_body{max-height:100%;}
+    .popup_wrap.size_small .pop_body{max-height:350px;}
+    .pop_body > *:first-child{margin-top:0!important;}
+    .pop_body form > *:first-child{margin-top:0!important;}
+    .pop_body h2{padding:10px 0 0 0; font-size:12px; color:#25527c;}
+    .pop_body .title_line:first-child h2{padding-top:0;}
+    .pop_body h3{margin:0; line-height:22px; font-size:11px; color:#333;}
+    .popup_wrap .ms-drop ul {max-height:275px !important;}
+
+    /* Popup Window*/
+    .popup_wrap.pop_win{position:relative;left: 0;top: 0; margin-left:0!important; width:100%!important; border:0 none!important;}
+    .popup_wrap.pop_win:after{display:none;}
+    .popup_wrap.pop_win .pop_header{cursor: default;position: fixed;width:100%;z-index:10}
+    .popup_wrap.pop_win .pop_header .right_opt{margin-right:20px;}
+    .popup_wrap.pop_win .pop_body{max-height:none; padding:10px; background:#fff; overflow-y:auto;padding-top: 60px}
+
+    .w100p{width:100%!important;}
+    table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
+    table.type1 tbody th{height:24px; padding:0 0 0 15px; color:#333; font-weight:normal; background:#e9f0f4; text-align:left; border-bottom:1px solid #d3d9dd; vertical-align:top; line-height:15px; vertical-align:middle;}
+    table.type1 tbody th .must{color:#ff0000; margin-left:5px;}
+    table.type1 tbody th.border_right{border-right:1px solid #d3d9dd;}
+    table.type1 tbody td{padding:2px 6px; border-bottom:1px solid #d3d9dd; vertical-align:middle; word-wrap:break-word;height:20px;}
+    table.type1 tbody td.disa{background:#f2f2f2;}
+    table.type1 tbody td > *{float:left; margin-right:4px;}
+    table.type1 tbody td > .grid_wrap {width:100%;}
+    table.type1 tbody td.al_center,
+    table.type1 tbody th.al_center{text-align:center;}
+    table.type1 tbody td.al_center > *{float:none; display:inline-block; margin:0 3px;}
+    table.type1 tbody td > span{line-height:15px;}
+    table.type1 tbody td > p span{line-height:20px;}
+    table.type1 tbody td input[type=text],
+    table.type1 tbody td input[type=password]{width:237px; height:20px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
+    input[type=text].readonly,
+    select.disabled,
+    textarea.readonly{background:#f2f2f2;cursor:no-drop;}
+    table.type1 tbody td select,
+    .select_solo{width:237px; height:20px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:12px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
+    table.type1 td > label{margin:0 5px!important;}
+    table.type1 td > label input[type=checkbox]{position:relative; top:2px; margin:0 5px 0 0; padding:0; border:1px solid #d2d2d2;}
+    table.type1 td > label input[type=radio]{position:relative; top:2px; margin:0 5px 0 0; padding:0;}
+    table.type1 td > label span,
+    table.type1 tbody td.col_all > span{line-height:20px;}
+    table.type1 tbody td.bg-black {background:black;}
+    table.type1 tbody td.bg-black > span {color:#fff;}
+    table.type1 .ms-drop ul {max-height:436px !important;}
+
+    table+.title_line{margin-top:10px;}
+    /* input의 placeholder속성 칼라 */
+    input[type=text]::-webkit-input-placeholder {color:#ccc; font-style:italic;}
+    input[type=text]::-moz-placeholder {color:#ccc; font-style:italic;}
+    input[type=text]:-ms-input-placeholder {color:#ccc; font-style:italic;}
+    input[type=text]:-webkit-input-placeholder {color:#ccc; font-style:italic;}
+
+    /* 각종 버튼 */
+    .btn_blue2 a{display:inline-block; min-width:57px; height:28px; line-height:28px; padding:0 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
+    .btn_blue2.big a{min-width:80px; height:26px; line-height:26px; font-size:12px;}
+    .center_btns{text-align:center;}
+    .center_btns li{display:inline-block; vertical-align:top;}
+    table+.center_btns{padding-top:5px;}
+    .grid_wrap{margin:5px 0 10px 0;}
+    .grid_wrap table{table-layout: auto}
+    .grid_wrap.h220{height:220px;}
+    .center_btns li input[type=text],
+    .center_btns li > p,
+    .center_btns li > strong
+</style>
+
+</header><!-- pop_header end -->
+<section class="pop_body" style="max-height: 200px;"><!-- pop_body start -->
+
+<form action="/registerNewCard" id="insCardForm" name="insCardForm" method="POST">
+
+	<!-- NRIC/Company registration No (12) + Customer ID (12) + Credit Card ID (12) + Token sequence (10) -->
+    <input type="hidden" id="refNo" name="refNo" value="5802250252460000003404760000000000000000451483"/>
+    <input type="hidden" id="apiKey" name="apiKey" value="3fdgsTZ_COWAY_dsaAZ6E"/>
+
+    <table class="type1"><!-- table start -->
+        <caption>Input Table</caption>
+        <tbody>
+            <tr>
+                <th scope="row" style="width:180px">Credit Card No.<span class="must">*</span></th>
+                <td colspan="3">
+                    <input class="w100p" id="_cardNo_" name ="cardNo" type="text" size="20" placeholder="Credit Card No" maxlength="16" onKeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" required=""/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="width:180px">Expiry Month<span class="must">*</span></th>
+                <td style="width:*">
+                    <input class="w100p" id="_expMonth_" name="expMonth" type="text" size="20" placeholder="Expiry Month (MM)" maxlength="2" onKeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" onblur="fn_validateExpiry('MM')" required=""/>
+                </td>
+                <th scope="row" style="width:180px">Expiry Year<span class="must">*</span></th>
+                <td style="width:*">
+                    <input class="w100p" id="_expYear_" name="expYear" type="text" size="20" placeholder="Expiry Year (YYYY)" min="4" onKeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" onblur="fn_validateExpiry('YY')" maxlength="4" required=""/>
+                </td>
+            </tr>
+        </tbody>
+    </table><!-- table end -->
+    </form>
+    <ul class="center_btns">
+        <li><p class="btn_blue2 big"><a href="#" onclick="fn_addCreditCard()">Add Credit Card</a></p></li>
+    </ul>
+</section><!-- pop_body end -->
+</div>
+
+</html>
