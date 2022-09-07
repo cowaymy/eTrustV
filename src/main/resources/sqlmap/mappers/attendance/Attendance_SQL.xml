@@ -355,12 +355,8 @@
      </select>
 
      <select id="selectYearList" parameterType="Map" resultType="egovMap">
-           SELECT  DISTINCT
-                        A.CODE AS CODE_ID
-                      , A.CODE AS CODE_NAME
-            FROM SYS0013M A
-            WHERE A.CODE_MASTER_ID = 531
-            ORDER BY 1
+           SELECT (TO_CHAR(SYSDATE,'YYYY') - 5) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'YYYY') - 5) + (LEVEL-1) CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= (TO_CHAR(SYSDATE,'RRRR') - (TO_CHAR(SYSDATE,'YYYY') - 5) + 1 )
     </select>
 
 
