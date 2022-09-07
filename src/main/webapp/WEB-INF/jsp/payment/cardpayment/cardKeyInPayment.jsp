@@ -681,7 +681,7 @@ function fn_changeMerchantBank(){
 
   if(keyInMerBank == 102 || keyInMerBank == 104){        //HSBC OR CIMB
     doDefCombo(tenureTypeData1, '' ,'keyInTenure', 'S', '');
-  }else if(keyInMerBank == 100 || keyInMerBank == 106 || keyInMerBank == 553){        // MBB OR AMB OR UOB
+  }else if(keyInMerBank == 100 || keyInMerBank == 106 || keyInMerBank == 553 || keyInMerBank == 871){        // MBB OR AMB OR UOB
         doDefCombo(tenureTypeData2, '' ,'keyInTenure', 'S', '');
     }else if(keyInMerBank == 105){        //HLB
         doDefCombo(tenureTypeData3, '' ,'keyInTenure', 'S', '');
@@ -690,6 +690,7 @@ function fn_changeMerchantBank(){
     }else if(keyInMerBank == 563){        //SCB
         doDefCombo(tenureTypeData5, '' ,'keyInTenure', 'S', '');
     }else {        //OTHER
+    	console.log('else')
         doDefCombo(tenureTypeData, '' ,'keyInTenure', 'S', '');
     }
 }
