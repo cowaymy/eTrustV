@@ -5580,8 +5580,8 @@ SELECT DISTINCT A.ORD_ID FROM (
     </select>
 
     <insert id="insertSAL0329D" parameterType="Map">
-        INSERT INTO SAL0329D SET
-        TICKET_NO
+        INSERT INTO SAL0329D
+        (TICKET_NO
         , HS_NO
         , HSR_NO
         , ORDER_ID
@@ -5589,8 +5589,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , CUST_ID
         , CUST_NAME
         , STATUS
-        , OLD_CNTC_ID
-        , NEW_CNTC_ID
+        , CNTC_ID
         , REQST_DT
         , OLD_HP_NO
         , OLD_HOME_NO
@@ -5609,8 +5608,9 @@ SELECT DISTINCT A.ORD_ID FROM (
         , CRT_USER_ID
         , UPD_DT
         , UPD_USER_ID
+        )
         VALUES
-        SAL0329D_TICKET_NO_SEQ.NEXTVAL
+        (SAL0329D_TICKET_NO_SEQ.NEXTVAL
         , #{hsNo}
         , #{hsrNo}
         , #{salesOrderId}
@@ -5619,7 +5619,6 @@ SELECT DISTINCT A.ORD_ID FROM (
         , #{custName}
         , #{status}
         , #{oldCntcId}
-        , #{newCntcId}
         , SYSDATE
         , #{oldHpNo}
         , #{oldHomeNo}
@@ -5638,6 +5637,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId})
         , SYSDATE
         ,  (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId})
+        )
 
     </insert>
 
