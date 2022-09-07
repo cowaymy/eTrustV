@@ -75,16 +75,6 @@
                     $("#_inputIssueSelect").find("option").remove();
                   } else {
                 	var SubReq = $("#_inputSubReqTypeSelect").val();
-                	if(SubReq < 6300 && SubReq != 6210 && SubReq != 6211 && SubReq != 6212
-                			&& SubReq != 6213 && SubReq != 6999 && SubReq != 6218 && SubReq != 6516 && SubReq != 6520)
-                	{
-                		if(SubReq == 6214 || SubReq == 6215){
-                			SubReq = 2;
-                		}
-                		else{
-                			SubReq = 1;
-                		}
-                	}
                     var check = doGetCombo('/services/ecom/selectIssueType.do', SubReq, '', '_inputIssueSelect', 'S', '');
                     //doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
@@ -188,7 +178,7 @@
 
     function fn_checkApprovalRequired() {
     	var reqSubType = $("#_inputSubReqTypeSelect").val();
-    	if(reqSubType == "6212" || reqSubType == "6213") { // 6212 - Change Promotion Code, 6213 - Request Product Exchange
+    	if(reqSubType == "7114" || reqSubType == "7113") { // 7113 - Change Promotion Code, 7114 - Request Product Exchange
     		$("#_approvalRequired").val('1'); //1 represents true
     		return true;
     	}

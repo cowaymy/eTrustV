@@ -240,7 +240,7 @@
 
      <select id="selectRequestType" resultType="egovMap">
      SELECT CODE_MASTER_ID AS CODE_ID, CODE_MASTER_NAME AS CODE_NAME FROM SYS0012M
-                WHERE CODE_MASTER_ID IN (462, 463, 464, 465,489) AND DISAB = 0
+                WHERE CODE_MASTER_ID IN (532, 533, 534) AND DISAB = 0
      </select>
 
      <select id="getSubRequestTypeList" parameterType="Map" resultType="egovMap">
@@ -593,19 +593,9 @@
   <select id="selectIssueTypeList" parameterType="Map" resultType="egovMap">
         SELECT CODE_ID,CODE_NAME
         FROM SYS0013M
-        WHERE
-        <if test='groupCode == "2" '>
-            CODE = '1'
-        </if>
-        <if test='groupCode != "2"'>
-            (CODE = #{groupCode}
-            <if test='groupCode != "6210" and groupCode != "6211" and groupCode != "6212" and groupCode != "6213" and groupCode != "6999" and groupCode != "6516" and groupCode != "6218" and groupCode != "6520"' >
-                OR CODE = '0'
-            </if>
-            )
-        </if>
-
-        AND CODE_MASTER_ID = 468 AND DISAB = 0
+        WHERE 1=1
+        AND CODE = #{groupCode}
+        AND CODE_MASTER_ID = 535 AND DISAB = 0
         ORDER BY CODE DESC,CODE_ID
   </select>
 
