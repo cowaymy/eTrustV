@@ -106,8 +106,7 @@
 
                 $('#empChk').val('${preOrderInfo.empChk}');
                 $('#gstChk').val('${preOrderInfo.gstChk}');
-
-                $('#exTrade').val('${preOrderInfo.exTrade}');
+                doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'},'${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
 
                 $('#relatedNo').val('${preOrderInfo.relatedNo}');
                 $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');

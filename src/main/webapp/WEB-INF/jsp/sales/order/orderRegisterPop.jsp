@@ -32,7 +32,7 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
 
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '${preOrderInfo.empChk}',  'empChk',  'S'); //EMP_CHK
         createAUIGrid();
 
         fn_selectDocSubmissionList();
@@ -1218,7 +1218,7 @@
                      if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
                          var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-                         return;
+                         //return;
                      }
                }
 
@@ -1874,7 +1874,7 @@ console.log("vBindingNo" + vBindingNo);
 
         if($("#empChk option:selected").index() <=0) {
             isValid = false;
-            msg = '<spring:message code="sal.alert.msg.plzSelEmpl" />';
+            msg = 'test';
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
