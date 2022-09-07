@@ -1300,11 +1300,13 @@
                            distinct1.SERIAL_CHK,
                            c.BS_RESULT_ITM_ID,
                            c.SERIAL_NO,
+                           c.SERIAL_NO as s_serial_no,
                            CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID
                                    THEN C.BS_RESULT_PART_QTY
                                    ELSE 0
                                    END AS NAME,
                            distinct1.IS_RETURN
+                           ,C.FILTER_SRL_UNMATCH_RSN FILTER_SERIAL_UNMATCH_REASON
                FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
                            f.STK_CODE,
                            f.STK_DESC,
@@ -1319,7 +1321,7 @@
                       AND D.SRV_CONFIG_ID = E.SRV_CONFIG_ID
                       AND E.SRV_FILTER_STK_ID = F.STK_ID
                       AND E.SRV_FILTER_STUS_ID = '1'
-                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, Y.SERIAL_NO, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY
+                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, Y.SERIAL_NO, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY,Y.FILTER_SRL_UNMATCH_RSN
                                                                   from SVC0007D Y ,(SELECT SCHDUL_ID,
                                                                                    MAX(X.RESULT_ID) AS RESULT_ID
                                                                                    FROM SVC0006D X
@@ -3646,6 +3648,7 @@
 		,BS_RESULT_CRT_USER_ID
 		,BS_RESULT_FILTER_CLM
 		,SERIAL_NO
+		,FILTER_SRL_UNMATCH_RSN
 		)
 		values
 		(
@@ -3659,6 +3662,7 @@
 		,#{BSResultCreateBy}
 		,nvl(#{BSResultFilterClaim},0)
 		,nvl(#{SerialNo}, '')
+		,nvl(#{filterSerialUnmatchReason}, '')
 		)
 	</insert>
 
@@ -5263,6 +5267,7 @@ SELECT Distinct1.C1 C1  ,
 		,STK_ID
 		,QTY
 		,OLD_SERIAL
+		,NEW_SERIAL
 		,MEM_ID
 		,RESULT_ID
 		)
@@ -5274,6 +5279,7 @@ SELECT Distinct1.C1 C1  ,
 		,sysdate
 		,#{bsResultPartId}
 		,#{bsResultPartQty}
+		,nvl(#{oldSerialNo}, '')
 		,nvl(#{serialNo}, '')
 		,#{bsCodyId}
 		,#{bsResultId}
@@ -5574,8 +5580,8 @@ SELECT DISTINCT A.ORD_ID FROM (
     </select>
 
     <insert id="insertSAL0329D" parameterType="Map">
-        INSERT INTO SAL0329D
-        (TICKET_NO
+        INSERT INTO SAL0329D SET
+        TICKET_NO
         , HS_NO
         , HSR_NO
         , ORDER_ID
@@ -5583,7 +5589,8 @@ SELECT DISTINCT A.ORD_ID FROM (
         , CUST_ID
         , CUST_NAME
         , STATUS
-        , CNTC_ID
+        , OLD_CNTC_ID
+        , NEW_CNTC_ID
         , REQST_DT
         , OLD_HP_NO
         , OLD_HOME_NO
@@ -5602,9 +5609,8 @@ SELECT DISTINCT A.ORD_ID FROM (
         , CRT_USER_ID
         , UPD_DT
         , UPD_USER_ID
-        )
         VALUES
-        (SAL0329D_TICKET_NO_SEQ.NEXTVAL
+        SAL0329D_TICKET_NO_SEQ.NEXTVAL
         , #{hsNo}
         , #{hsrNo}
         , #{salesOrderId}
@@ -5613,6 +5619,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , #{custName}
         , #{status}
         , #{oldCntcId}
+        , #{newCntcId}
         , SYSDATE
         , #{oldHpNo}
         , #{oldHomeNo}
@@ -5631,7 +5638,6 @@ SELECT DISTINCT A.ORD_ID FROM (
         , (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId})
         , SYSDATE
         ,  (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId})
-        )
 
     </insert>
 

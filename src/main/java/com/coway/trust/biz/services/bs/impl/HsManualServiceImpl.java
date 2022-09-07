@@ -466,6 +466,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             if(srcform.equals("WEB")){
             	docSub.put("filterBarcdNewSerialNo",docSub.get("serialNo"));
             }else{
+            	docSub.put("oldSerialNo", docSub.get("filterBarcdSerialNoOld"));
             	docSub.put("serialNo", docSub.get("filterBarcdNewSerialNo"));
             	docSub.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason"));
             }
@@ -488,13 +489,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             docSub2.put("serialNo", docSub3.get("serialNo"));
             docSub2.put("bsCodyId", codyId);
             docSub2.put("bsResultId", nextSeq);
+            docSub2.put("oldSerialNo", docSub3.get("filterBarcdSerialNoOld"));
 
             // docSub2.put("bsResultCrtDt");
 
             String vstkId = String.valueOf(docSub.get("stkId"));
+            String filterBarcdSerialNoOld = String.valueOf(docSub.get("filterBarcdSerialNoOld"));
             String filterBarcdNewSerialNo = String.valueOf(docSub.get("filterBarcdNewSerialNo"));
             String filterBarcdNewSerialNoWeb = String.valueOf(docSub.get("serialNo"));
             logger.debug("= STOCK ID : {}", vstkId);
+            logger.debug("= filterBarcdSerialNoOld : {}", filterBarcdSerialNoOld);
             logger.debug("= filterBarcdNewSerialNo : {}", filterBarcdNewSerialNo);
 
             /*
@@ -1873,6 +1877,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       bsd.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
       bsd.put("BSResultFilterClaim", String.valueOf(1));
       bsd.put("SerialNo", docSub.get("serialNo") != null ? String.valueOf(docSub.get("serialNo")) : "");
+      bsd.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason") != null ? String.valueOf(docSub.get("filterSerialUnmatchReason")) : "");
+      bsd.put("sSerialNo", docSub.get("sSerialNo") != null ? String.valueOf(docSub.get("sSerialNo")) : "");
 
       bsResultDet.add(bsd);
     }
@@ -2288,6 +2294,38 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           }
 
         }
+
+
+      //September 2022 start - HLTANG - filter barcode scanner - update log0100m after serial has been used
+        //check current key in serial no with last time key in serial no whether match
+        /*if(row.get("serialNo").toString() != ""){
+        	//previous have key in serial no, but key in diff with this time
+        	if(row.get("sSerialNo").toString() != ""
+        			&& (row.get("sSerialNo").toString() != row.get("sSerialNo").toString() )){
+
+
+        	}
+        	//previous didnt key in serial, but this time have
+        	else if(row.get("sSerialNo").toString() == ""){
+        		String filterBarcdNewSerialNo = row.get("serialNo").toString();
+              	Map<String, Object> filter = new HashMap<String, Object>();
+              	filter.put("serialNo", filterBarcdNewSerialNo);
+              	filter.put("salesOrdId",  String.valueOf(bsResultMas.get("SalesOrderId")));
+              	filter.put("serviceNo", String.valueOf(qryUsedFilter.get(0).get("no")));
+              	int LocationID_Rev = 0;
+                  if (Integer.parseInt(usedFilter.get("CodyId").toString()) != 0) {
+                  	filter.put("codyId", usedFilter.get("CodyId"));
+                  	LocationID_Rev = hsManualMapper.getMobileWarehouseByMemID(filter);
+                  }
+                  filter.put("lastLocId", LocationID_Rev);
+                  int filterCnt = hsManualMapper.selectFilterSerial(filter);
+              	if (filterCnt == 0) {
+            	   throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "HS Result Error : Cody did not have this serial on hand "+ filter.get("serialNo").toString());
+        	    }
+              	hsManualMapper.updateHsFilterSerial(filter);
+        	}
+        }*/
+      //September 2022 end - HLTANG
       }
 
       if (cnt != 0) { // 0이 아닐 경우 인서트
