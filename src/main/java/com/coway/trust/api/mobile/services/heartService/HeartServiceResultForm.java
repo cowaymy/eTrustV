@@ -388,6 +388,7 @@ public class HeartServiceResultForm {
 				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
 				map.put("filterBarcdNewSerialNo", dtl.getFilterBarcdNewSerialNo());
 				map.put("filterSerialUnmatchReason", dtl.getFilterSerialUnmatchReason());
+				map.put("sysFilterBarcdSerialNo", dtl.getSysFilterBarcdSerialNo());
 
 				list.add(map);
 			}
@@ -411,6 +412,7 @@ public class HeartServiceResultForm {
 				map.put("filterBarcdSerialNo", obj.getFilterBarcdSerialNo());
 				map.put("filterBarcdNewSerialNo", obj.getFilterBarcdNewSerialNo());
 				map.put("filterSerialUnmatchReason", obj.getFilterSerialUnmatchReason());
+				map.put("sysFilterBarcdSerialNo", obj.getSysFilterBarcdSerialNo());
 
 				list.add(map);
 			}

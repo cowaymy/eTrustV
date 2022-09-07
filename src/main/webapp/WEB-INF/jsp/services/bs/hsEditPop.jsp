@@ -24,7 +24,12 @@ var myDetailGridData = null;
   var myDetailGridID;
   var myDetailGridID2;
   var myDetailGridID3;
-
+  var unmatchRsnList = [];
+  var unmatchRsnObj = {};
+  <c:forEach var="obj" items="${unmatchRsnList}">
+  unmatchRsnList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", codeNames:"("+"${obj.code}"+")"+"${obj.codeName}"});
+  unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
+  </c:forEach>
   var option = {
     width : "1000px", // 창 가로 크기
     height : "600px" // 창 세로 크기
@@ -86,6 +91,11 @@ var myDetailGridData = null;
 	                           }
 	                        </c:if>
                          }, {
+                             dataField : "sSerialNo",
+                             headerText : "System Serial No",
+                             width : 100
+                             ,visible:false
+                         }, {
                              dataField : "serialChk",
                              headerText : "Serial Check",
                              width : 100,
@@ -108,7 +118,19 @@ var myDetailGridData = null;
                            }, {
                                dataField : "filterSerialUnmatchReason",
                                headerText : "Unmatched Reason",
-                               width : 150
+                               width : 150,
+                               editRenderer : {
+                                   type : "DropDownListRenderer",
+                                   //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                   list : unmatchRsnList,
+                                   keyField : "codeId",        // key 에 해당되는 필드명
+                                   valueField : "codeNames"    // value 에 해당되는 필드명
+                              }
+                             }, {
+                                 dataField : "sOldSerialNo",
+                                 headerText : "System Old Serial No",
+                                 width : 100,
+                                 visible:false
                              }
                          ];
 
@@ -135,7 +157,7 @@ var myDetailGridData = null;
     myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
 
     AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
-	  if (event.columnIndex == 4 || event.columnIndex == 5){
+	  if (event.columnIndex == 4 || event.columnIndex == 5 || event.columnIndex == 7 || event.columnIndex == 8){
         if ($("#cmbStatusType2").val() == 4) {    // Completed
           return true;
         } else if ($("#cmbStatusType2").val() == 21) {    // Failed
@@ -204,6 +226,40 @@ var myDetailGridData = null;
           AUIGrid.setCellValue(myDetailGridID, event.rowIndex, event.dataField, "");
         }
       }*/
+
+      if (event.columnIndex == 4) {
+          console.log("event.item.name :: " + event.item.name);
+          if(event.item.name > 1){
+              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "serialNo", "");
+          }
+      }
+
+      if (event.columnIndex == 7) { //7-old serial number
+
+          console.log("event.item.name :: " + event.item.name);
+          if(event.item.name > 1){
+              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "oldSerialNo", "");
+          }else{
+              var sOldSerialNo = '';
+              if(event.item.sOldSerialNo != undefined){
+                  sOldSerialNo = event.item.sOldSerialNo;
+              }
+              if(sOldSerialNo != event.item.oldSerialNo){
+                  Common.alert('* Old Serial Number for <b>' + event.item.stkDesc + '<br>is not same as previous.</b>');
+                  AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "oldSerialNo", "");
+              }
+          }
+      }
+
+      if (event.columnIndex == 8) {
+          console.log("event.item.name :: " + event.item.name);
+          if(event.item.name > 1){
+              Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
+              AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "filterSerialUnmatchReason", "");
+          }
+      }
     });
   }
 

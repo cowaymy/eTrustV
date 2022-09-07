@@ -19,8 +19,8 @@
   var unmatchRsnList = [];
   var unmatchRsnObj = {};
   <c:forEach var="obj" items="${unmatchRsnList}">
-  unmatchRsnList.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", codeNames:"("+"${obj.codeId}"+")"+"${obj.codeName}"});
-  unmatchRsnObj["${obj.codeId}"] = "${obj.codeName}";
+  unmatchRsnList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", codeNames:"("+"${obj.code}"+")"+"${obj.codeName}"});
+  unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
   </c:forEach>
   //installation checklist- order stock category
   var stkCtgry;
@@ -119,7 +119,7 @@
                                 type : "DropDownListRenderer",
                                 //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                 list : unmatchRsnList,
-                                keyField : "codeId",        // key 에 해당되는 필드명
+                                keyField : "code",        // key 에 해당되는 필드명
                                 valueField : "codeNames"    // value 에 해당되는 필드명
                            }
                           }, {
@@ -154,7 +154,7 @@
     myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
 
     AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
-      if (event.columnIndex == 3 || event.columnIndex == 4){
+      if (event.columnIndex == 3 || event.columnIndex == 4 || event.columnIndex == 7 || event.columnIndex == 8){
         if ($("#cmbStatusType1").val() == 4) {    // Completed
           return true;
         } else if ($("#cmbStatusType1").val() == 21) {    // Failed

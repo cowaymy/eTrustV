@@ -38,6 +38,9 @@ public class HeartServiceResultDetailForm {
   @ApiModelProperty(value = "교체 필터 바코드", example = "")
   private String filterSerialUnmatchReason;
 
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String sysFilterBarcdSerialNo;
+
   public int getAlternativeFilterCode() {
     return alternativeFilterCode;
   }
@@ -100,6 +103,14 @@ public void setFilterBarcdNewSerialNo(String filterBarcdNewSerialNo) {
 
 public void setFilterSerialUnmatchReason(String filterSerialUnmatchReason) {
 	this.filterSerialUnmatchReason = filterSerialUnmatchReason;
+}
+
+public String getSysFilterBarcdSerialNo() {
+	return sysFilterBarcdSerialNo;
+}
+
+public void setSysFilterBarcdSerialNo(String sysFilterBarcdSerialNo) {
+	this.sysFilterBarcdSerialNo = sysFilterBarcdSerialNo;
 }
 
 public static List<Map<String, Object>> createMaps(List<HeartServiceResultDetailForm> heartServiceResultDetailForms) {

@@ -400,7 +400,8 @@ public class HsManualController {
     model.addAttribute("MOD", params.get("MOD"));
     // model.addAttribute("serMemList", serMemList);
     model.addAttribute("ROW", params.get("ROW"));
-
+    params.put("groupCode", "511");
+    model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
     return "services/bs/hsEditPop";
 
   }

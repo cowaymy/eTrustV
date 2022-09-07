@@ -80,6 +80,9 @@ public class HeartServicePartsDto {
 	@ApiModelProperty(value = "Is Fill Filter Info Detail")
 	private String isFillFilterInfo;
 
+	@ApiModelProperty(value = "System Existing Filter Serial No")
+	private String sysFilterBarcdSerialNoOld;
+
 
 	public String getSalesOrderNo() {
 		return salesOrderNo;
@@ -264,6 +267,14 @@ public class HeartServicePartsDto {
 
 	public void setIsFillFilterInfo(String isFillFilterInfo) {
 		this.isFillFilterInfo = isFillFilterInfo;
+	}
+
+	public String getSysFilterBarcdSerialNoOld() {
+		return sysFilterBarcdSerialNoOld;
+	}
+
+	public void setSysFilterBarcdSerialNoOld(String sysFilterBarcdSerialNoOld) {
+		this.sysFilterBarcdSerialNoOld = sysFilterBarcdSerialNoOld;
 	}
 
 	public static HeartServicePartsDto create(EgovMap egvoMap) {
