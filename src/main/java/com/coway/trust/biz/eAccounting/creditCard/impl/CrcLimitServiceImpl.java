@@ -218,9 +218,40 @@ public class CrcLimitServiceImpl implements CrcLimitService {
     public String editRequest(Map<String, Object> params, SessionVO sessionVO) {
         LOGGER.debug("========== editRequest ==========");
         LOGGER.debug("params :: {}", params);
+        String sPeriod = params.get("sPeriod").toString();
+        String rPeriod = params.get("rPeriod").toString();
+
+        params.put("userId", sessionVO.getUserId());
+        params.put("sPeriodMonth",sPeriod.substring(0,2));
+        params.put("sPeriodYear",sPeriod.substring(3));
+        params.put("rPeriodMonth",rPeriod.substring(0,2));
+        params.put("rPeriodYear",rPeriod.substring(3));
+
+        crcLimitMapper.updateSenderApp_FCM33D(params);
+        crcLimitMapper.updateReceiverApp_FCM33D(params);
 
         String docNo = (String) params.get("adjNo");
+        return docNo;
+    }
 
+    @Override
+    public String deleteRequest(Map<String, Object> params, SessionVO sessionVO) {
+        LOGGER.debug("========== deleteRequest ==========");
+        LOGGER.debug("params :: {}", params);
+
+        EgovMap attachmentDetail = crcLimitMapper.selectAtchFile(params);
+
+        if(attachmentDetail != null){
+            String atchFileGrpId = params.get("atchFileGrpId").toString();
+            String atchFileId = attachmentDetail.get("atchFileId").toString();
+
+            params.put("atchFileId", atchFileId);
+            crcLimitMapper.deleteAttachment_SYS71D(params);
+            crcLimitMapper.deleteAttachment_SYS70M(params);
+        }
+
+        String docNo = (String) params.get("adjNo");
+        crcLimitMapper.deleteApp_FCM33D(params);
         return docNo;
     }
 
@@ -285,4 +316,22 @@ public class CrcLimitServiceImpl implements CrcLimitService {
 
         return appCnt;
     }
+
+    @Override
+	public List<EgovMap> selectCardholderPendingAmountList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return crcLimitMapper.selectCardholderPendingAmountList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCardholderUtilisedAmountList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return crcLimitMapper.selectCardholderUtilisedAmountList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCardholderApprovedAdjustmentLimitList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return crcLimitMapper.selectCardholderApprovedAdjustmentLimitList(params);
+	}
 }

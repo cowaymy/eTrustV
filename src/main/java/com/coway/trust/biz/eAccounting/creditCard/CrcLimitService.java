@@ -36,4 +36,8 @@ public interface CrcLimitService {
     List<EgovMap> selectAdjustmentAppvList(Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO);
 
     int approvalUpdate(Map<String, Object> params, SessionVO sessionVO);
+	String deleteRequest(Map<String, Object> params, SessionVO sessionVO);
+	List<EgovMap> selectCardholderPendingAmountList(Map<String, Object> params);
+	List<EgovMap> selectCardholderUtilisedAmountList(Map<String, Object> params);
+	List<EgovMap> selectCardholderApprovedAdjustmentLimitList(Map<String, Object> params);
 }

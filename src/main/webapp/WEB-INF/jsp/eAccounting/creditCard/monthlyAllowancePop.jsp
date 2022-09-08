@@ -32,6 +32,38 @@
         $("#pendAppvAmt").text(comma(result[0].pendingAmt));
         $("#consumAppvAmt").text(comma(result[0].utilizedAmt));
         $("#availableAmt").text(comma(result[0].availableAmt));
+
+        $("#adjustAmt").click(function() {
+        	var data = {
+        		clmMonth : clmMm,
+        		yearMonth : clmYyyy + clmMm,
+                year : clmYyyy,
+                crcId : $("#hiddenCrcId").val(),
+                type: 'adjustment'
+        	};
+            $("#type").val("adjustment");
+            Common.popupDiv("/eAccounting/creditCard/monthlyAllowanceDetailDisplayPop.do",data, null, true, "monthlyAllowanceDetailDisplayPop");
+        });
+        $("#pendAppvAmt").click(function() {
+        	var data = {
+            		clmMonth : clmMm,
+            		yearMonth : clmYyyy + clmMm,
+                    year : clmYyyy,
+                    crcId : $("#hiddenCrcId").val(),
+                    type: 'pending'
+            	};
+             Common.popupDiv("/eAccounting/creditCard/monthlyAllowanceDetailDisplayPop.do",data, null, true, "monthlyAllowanceDetailDisplayPop");
+        });
+        $("#consumAppvAmt").click(function() {
+        	var data = {
+            		clmMonth : clmMm,
+            		yearMonth : clmYyyy + clmMm,
+                    year : clmYyyy,
+                    crcId : $("#hiddenCrcId").val(),
+                    type: 'utilised'
+            	};
+             Common.popupDiv("/eAccounting/creditCard/monthlyAllowanceDetailDisplayPop.do",data, null, true, "monthlyAllowanceDetailDisplayPop");
+        });
     });
 
     function comma(str) {
@@ -124,9 +156,9 @@
 	                <tbody>
 	                    <tr>
 	                        <td><span id='allowanceAmt'></span></td>
-	                        <td><span id='adjustAmt'></span></td>
-	                        <td><span id="pendAppvAmt"></span></td>
-	                        <td><span id="consumAppvAmt"></span></td>
+	                        <td><a href="#" id='adjustAmt'></a></td>
+	                        <td><a href="#" id="pendAppvAmt"></a></td>
+	                        <td><a href="#" id="consumAppvAmt"></a></td>
 	                        <td><span id="availableAmt"></span></td>
 	                    </tr>
 	                </tbody>

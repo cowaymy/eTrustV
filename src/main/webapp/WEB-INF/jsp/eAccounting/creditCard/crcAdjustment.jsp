@@ -27,44 +27,44 @@
         {
             dataField : "adjStus",
             headerText : "Status",
-            width : 150,
+            width : 60,
             cellMerge : true,
             mergeRef : "adjNo",
             mergePolicy : "restrict"
         },{
             dataField : "adjNo",
             headerText : "Adjustment No",
-            width : 130,
+            width : 90,
             cellMerge : true
         }, {
             dataField : "submissionDate",
             headerText : "Submission Date",
-            width : 130,
+            width : 90,
             cellMerge : true,
             mergeRef : "adjNo",
             mergePolicy : "restrict"
         }, {
             dataField : "crcName",
             headerText : "Cardholder Name",
-            width : 220,
+            width : 180,
             cellMerge : true,
             mergeRef : "adjNo",
             mergePolicy : "restrict"
         }, {
             dataField : "crcNo",
             headerText : "Card Number",
-            width : 160,
+            width : 150,
             cellMerge : true,
             mergeRef : "adjNo",
             mergePolicy : "restrict"
         }, {
             dataField : "period",
             headerText : "Month /Year",
-            width : 120
+            width : 80
         }, {
             dataField : "adjType",
             headerText : "Adjustment Type",
-            width : 270,
+            width : 150,
             style : "aui-grid-user-custom-left",
             cellMerge : true,
             mergeRef : "adjNo",
@@ -76,7 +76,7 @@
             colSpan : 2
         }, {
             dataField : "adjAmt",
-            width : 100,
+            width : 70,
             dataType: "numeric",
             formatString : "#,##0.00",
             style : "aui-grid-user-custom-right",
@@ -84,7 +84,7 @@
         }, {
             dataField : "requestor",
             headerText : "Requestor",
-            width : 200,
+            width : 100,
             cellMerge : true,
             mergeRef : "adjNo",
             mergePolicy : "restrict"
@@ -94,7 +94,7 @@
         }, {
             dataField : "appvStusName",
             headerText : "Approval Status",
-            width : 130,
+            width : 110,
             cellMerge : true,
             mergeRef : "adjNo",
             mergePolicy : "restrict"

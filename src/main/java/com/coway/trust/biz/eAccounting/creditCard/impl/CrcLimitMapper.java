@@ -35,4 +35,20 @@ public interface CrcLimitMapper {
     List<EgovMap> selectAdjustmentAppvList(Map<String, Object> params);
 
     int updateApp_FCM34D(Map<String, Object> params);
+
+    int updateSenderApp_FCM33D(Map<String, Object> params);
+
+    int updateReceiverApp_FCM33D(Map<String, Object> params);
+
+    int deleteApp_FCM33D(Map<String, Object> params);
+
+    EgovMap selectAtchFile(Map<String, Object> params);
+
+    int deleteAttachment_SYS70M(Map<String, Object> params);
+
+    int deleteAttachment_SYS71D(Map<String, Object> params);
+	List<EgovMap> selectCardholderApprovedAdjustmentLimitList(Map<String, Object> params);
+	List<EgovMap> selectCardholderUtilisedAmountList(Map<String, Object> params);
+	List<EgovMap> selectCardholderPendingAmountList(Map<String, Object> params);
+
 }

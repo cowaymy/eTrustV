@@ -175,6 +175,7 @@ var reimbursementGridID;
 var excelGridID;
 
 $(document).ready(function () {
+    $("#appvPrcssStus").multipleSelect("checkAll");
 	reimbursementGridID = AUIGrid.create("#reimbursement_grid_wrap", reimbursementColumnLayout, reimbursementGridPros);
 	excelGridID = AUIGrid.create("#excel_grid_wrap", excelColumnLayout, excelGridPros);
 
@@ -228,8 +229,6 @@ $(document).ready(function () {
     });
 
     $("#editRejBtn").click(fn_editRejected);
-
-    $("#appvPrcssStus").multipleSelect("checkAll");
 
     fn_setToDay();
 
@@ -301,11 +300,11 @@ function fn_setCostCenter() {
 
 function fn_selectReimbursementList() {
     Common.ajax("GET", "/eAccounting/creditCard/selectReimbursementList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result) {
-            Common.ajax("GET", "/eAccounting/creditCard/selectExcelList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result2) {
+            //Common.ajax("GET", "/eAccounting/creditCard/selectExcelList.do?_cacheId=" + Math.random(), $("#form_reimbursement").serialize(), function(result2) {
 		        console.log(result);
 		        AUIGrid.setGridData(reimbursementGridID, result);
-		        AUIGrid.setGridData(excelGridID, result2);
-            });
+		        //AUIGrid.setGridData(excelGridID, result2);
+            //});
     });
 }
 
@@ -1326,7 +1325,9 @@ function fn_editRejected() {
 
 function fn_excelDown(){
 	// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("excel_grid_wrap", "xlsx", "Credit Card Expense");
+ //Common.popupDiv("/eAccounting/creditCard/newReimbursementPop.do", {callType:"new"}, null, true, "newReimbursementPop");
+    Common.popupDiv("/eAccounting/creditCard/creditCardReimbursementExcelDownPop.do", {callType:"new"}, null, true, "creditCardReimbursementExcelDownPop");
+    //GridCommon.exportTo("excel_grid_wrap", "xlsx", "Credit Card Expense");
 }
 
 </script>
@@ -1437,7 +1438,7 @@ function fn_excelDown(){
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_excelDown()">Excel Download</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">Excel Filter</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="crditCardReim.newExpClm" /></a></p></li>

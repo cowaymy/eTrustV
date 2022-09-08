@@ -72,9 +72,9 @@ public class CrcLimitController {
     @Autowired
     private MessageSourceAccessor messageAccessor;
 
-    @RequestMapping(value = "/crcAllowancePlan.do")
+    @RequestMapping(value = "/crcAllowanceSummary.do")
     public String crcAllowancePlan(@RequestParam Map<String, Object> params, ModelMap model) {
-        LOGGER.debug("========== crcAllowancePlan ==========");
+        LOGGER.debug("========== crcAllowanceSummary ==========");
 
         List<EgovMap> crcHolder = crcLimitService.selectAllowanceCardList();
         List<EgovMap> crcPic = crcLimitService.selectAllowanceCardPicList();
@@ -82,12 +82,12 @@ public class CrcLimitController {
         model.addAttribute("crcHolder", crcHolder);
         model.addAttribute("crcPic", crcPic);
 
-        return "eAccounting/creditCard/crcAllowancePlan";
+        return "eAccounting/creditCard/crcAllowanceSummary";
     }
 
-    @RequestMapping(value = "/selectAllowancePlan.do")
+    @RequestMapping(value = "/selectAllowanceSummary.do")
     public ResponseEntity<List<EgovMap>> selectAllowancePlan(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
-        LOGGER.debug("========== crcAllowancePlan ==========");
+        LOGGER.debug("========== crcAllowanceSummary ==========");
         LOGGER.debug("params ========== :: " + params);
 
         List<EgovMap> allowancePlanList = crcLimitService.selectAllowanceList(params, request, sessionVO);
@@ -197,6 +197,12 @@ public class CrcLimitController {
 
         if(list.size() > 0) {
             creditCardApplication.insertReimbursementAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+
+
+    		List<EgovMap> fileInfo = webInvoiceService.selectAttachList(params.get("fileGroupKey").toString());
+    		if(fileInfo != null){
+    			params.put("atchFileId", fileInfo.get(0).get("atchFileId"));
+    		}
         }
 
         ReturnMessage message = new ReturnMessage();
@@ -263,6 +269,27 @@ public class CrcLimitController {
         LOGGER.debug("params ========== :: " + params);
 
         String docNo = crcLimitService.editRequest(params, sessionVO);
+
+        ReturnMessage message = new ReturnMessage();
+        if(!"".equals(docNo)) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(docNo);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(docNo);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/deleteRequest.do")
+    public ResponseEntity<ReturnMessage> deleteRequest(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+        LOGGER.debug("========== deleteRequest ==========");
+        LOGGER.debug("params ========== :: " + params);
+
+        String docNo = crcLimitService.deleteRequest(params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
         if(!"".equals(docNo)) {
@@ -347,5 +374,34 @@ public class CrcLimitController {
         model.addAttribute("adjNo", params.get("adjNo"));
 
         return "eAccounting/creditCard/crcAdjustmentRejectPop";
+    }
+
+    @RequestMapping(value = "/monthlyAllowanceDetailDisplayPop.do")
+    public String monthlyAllowanceDetailDisplayPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+        LOGGER.debug("========== monthlyAllowanceDetailDisplayPop ==========");
+        LOGGER.debug("params ========== :: " + params);
+
+        List<EgovMap> result = null;
+        String type = params.get("type").toString();
+        if(type.equals("adjustment")){
+        	result = crcLimitService.selectCardholderApprovedAdjustmentLimitList(params);
+        }
+        else if(type.equals("pending"))
+        {
+        	result = crcLimitService.selectCardholderPendingAmountList(params);
+        }
+        else if(type.equals("utilised")){
+        	result = crcLimitService.selectCardholderUtilisedAmountList(params);
+        }
+
+        if(result != null){
+            model.addAttribute("result", new Gson().toJson(result));
+        }
+        else{
+            model.addAttribute("result", null);
+        }
+        model.addAttribute("item", params);
+
+        return "eAccounting/creditCard/monthlyAllowanceDetailDisplayPop";
     }
 }

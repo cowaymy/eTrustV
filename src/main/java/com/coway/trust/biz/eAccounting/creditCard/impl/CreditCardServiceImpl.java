@@ -394,4 +394,34 @@ public class CreditCardServiceImpl implements CreditCardService {
     	// TODO Auto-generated method stub
     	return creditCardMapper.selectTotalCntrlSpentAmt(params);
     }
+
+	@Override
+	public EgovMap selectCurrentActiveMasterAllowanceLimit(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectCurrentActiveMasterAllowanceLimit(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCostCenterList() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectCostCenterList();
+	}
+
+	@Override
+	public List<EgovMap> selectCreditCardholderDetailList() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectCreditCardholderDetailList();
+	}
+
+	@Override
+	public List<EgovMap> selectAllowanceCardPicList() {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectAllowanceCardPicList();
+	}
+
+	@Override
+    public List<EgovMap> selectExcelListNew(Map<String, Object> params) {
+    	// TODO Auto-generated method stub
+    	return creditCardMapper.selectExcelListNew(params);
+    }
 }

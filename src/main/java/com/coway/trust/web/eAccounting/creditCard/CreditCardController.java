@@ -150,6 +150,10 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 
 		EgovMap crditCardInfo = creditCardService.selectCrditCardInfo(params);
+		EgovMap currentMasterAllowanceLimit = creditCardService.selectCurrentActiveMasterAllowanceLimit(params);
+		if(currentMasterAllowanceLimit != null){
+			model.addAttribute("currentMasterAllowanceLimit", currentMasterAllowanceLimit);
+		}
 
 		String atchFileGrpId = String.valueOf(crditCardInfo.get("atchFileGrpId"));
 		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
@@ -602,4 +606,37 @@ public class CreditCardController {
 		return ResponseEntity.ok(totalCntrlSpendAmt);
 	}
 
+	@RequestMapping(value = "/creditCardReimbursementExcelDownPop.do")
+	public String creditCardReimbursementExcelDownPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		 List<EgovMap> costCenterList = creditCardService.selectCostCenterList();
+	     List<EgovMap> creditCardHolderList = creditCardService.selectCreditCardholderDetailList();
+	     List<EgovMap> picList = creditCardService.selectAllowanceCardPicList();
+
+        model.addAttribute("crcHolder", creditCardHolderList);
+        model.addAttribute("costCenter", costCenterList);
+        model.addAttribute("pic", picList);
+		return "eAccounting/creditCard/creditCardReimbursementExcelDownPop";
+	}
+
+	 @RequestMapping(value = "/selectExcelListNew.do")
+		public ResponseEntity<List<EgovMap>> selectExcelListNew(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+			LOGGER.debug("params =====================================>>  " + params);
+
+			String[] status = request.getParameterValues("statusList");
+			String[] costCenterList = request.getParameterValues("costCenterList");
+			String[] crcHolderCardNo = request.getParameterValues("crcHolderCardNo");
+			String[] crcHolderName = request.getParameterValues("crcHolderName");
+			String[] pic = request.getParameterValues("pic");
+
+			params.put("status", status);
+			params.put("costCenterList", costCenterList);
+			params.put("crcHolderCardNo", crcHolderCardNo);
+			params.put("crcHolderName", crcHolderName);
+			params.put("pic", pic);
+
+			List<EgovMap> excelList = creditCardService.selectExcelListNew(params);
+
+			return ResponseEntity.ok(excelList);
+		}
 }

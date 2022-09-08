@@ -30,81 +30,94 @@
         }, {
             dataField : "crcHolderNm",
             headerText : "Cardholder Name",
-            width : 300
+            width : 160
         }, {
             dataField : "crcNo",
             headerText : "Card No.",
-            width : 200
+            width : 150
         }, {
             dataField : "crcPic",
             headerText : "Person-In-Charge Name",
-            width : 200
+            width : 160
         }, {
             dataField : "crcCostCenter",
             headerText : "Cost Center",
-            width : 120
+            width : 80
         }, {
             dataField : "crcCostCenterDesc",
             headerText : "Cost Center Description",
-            width : 250
+            width : 150
         }, {
             dataField : "m1",
             headerText : "Jan",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m2",
             headerText : "Feb",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m3",
             headerText : "Mar",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m4",
             headerText : "Apr",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m5",
             headerText : "May",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m6",
             headerText : "Jun",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m7",
             headerText : "Jul",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m8",
             headerText : "Aug",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m9",
             headerText : "Sep",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m10",
             headerText : "Oct",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m11",
             headerText : "Nov",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }, {
             dataField : "m12",
             headerText : "Dec",
-            width : 75
+            width : 75,
+            labelFunction : currencyCellFormatText
         }
     ];
 
     var allowancePlanGridPros = {
             usePaging : false,
-            showStateColumn : false
+            showStateColumn : false,
+            fixedColumnCount : 6
     };
 
     $(document).ready(function () {
-        console.log("crcAllowancePlan.jsp");
+        console.log("crcAllowanceSummary.jsp");
         allowancePlanGridID = AUIGrid.create("#allowancePlan_grid_wrap", allowancePlanColLayout, allowancePlanGridPros);
 
         // Default year
@@ -142,7 +155,7 @@
             return false;
         }
 
-        Common.ajax("GET", "/eAccounting/creditCard/selectAllowancePlan.do?", $("#allowanceForm").serialize(), function(result) {
+        Common.ajax("GET", "/eAccounting/creditCard/selectAllowanceSummary.do?", $("#allowanceForm").serialize(), function(result) {
             console.log(result);
             AUIGrid.setGridData(allowancePlanGridID, result);
         });
@@ -162,6 +175,17 @@
         console.log("fn_excelDown");
         GridCommon.exportTo("allowancePlan_grid_wrap", "xlsx", "AllowancePlan");
     }
+
+    function currencyCellFormatText(rowIndex, columnIndex, value, headerText, item, dataField){
+    	if(value != null && value != ""){
+        	var data = parseFloat(value).toFixed(2);
+        	var text = data.toString().replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, '$1,');
+            return text;
+    	}
+    	else{
+    		return "0.00";
+    	}
+    }
 </script>
 
 <section id="content">
@@ -171,7 +195,7 @@
 
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
-        <h2>Allowance Limit Plan</h2>
+        <h2>Allowance Limit Summary</h2>
         <ul class="right_btns">
         <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_adjustmentPop()"><span class="search"></span>New Adjustment</a></p></li> -->
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_listAllowancePln()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
@@ -211,9 +235,9 @@
                     <tr>
                         <th scope="row">Month</th>
                         <td>
-                            <p class=""><input type="text" id="stMonth" name="stMonth" title="" placeholder="" class="w100p" value="1" /></p>
+                            <p class=""><input style="background-color: #edebeb;" type="text" id="stMonth" name="stMonth" title="" placeholder="" class="w100p" value="1" readonly/></p>
                             <span>~</span>
-                            <p class=""><input type="text" id="edMonth" name="edMonth" title="" placeholder="" class="w100p" value="12" /></p>
+                            <p class=""><input style="background-color: #edebeb;" type="text" id="edMonth" name="edMonth" title="" placeholder="" class="w100p" value="12" readonly/></p>
                         </td>
                         <th scope="row">Person-In-Charge Name</th>
                         <td>

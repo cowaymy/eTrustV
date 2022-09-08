@@ -159,6 +159,10 @@ function fn_setValues() {
 
     var appvCrditLimit = "${crditCardInfo.appvCrditLimit}";
     $("#appvCrditLimit").val(appvCrditLimit.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+	var entertainmentAllowanceLimit = "${currentMasterAllowanceLimit.planLimitAmt}";
+    console.log(appvCrditLimit);
+    console.log(entertainmentAllowanceLimit);
+    $("#entertainmentAllowanceLimit").val(entertainmentAllowanceLimit.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 }
 
 function fn_atchViewDown(fileGrpId, fileId) {
@@ -282,6 +286,10 @@ function fn_saveViewMgmt() {
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="crditCardRem" name="crditCardRem" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>>${crditCardInfo.crditCardRem}</textarea></td>
+</tr>
+<tr>
+	<th scope="row">Entertainment Allowance Limit</th>
+	<td colspan="3"><input id="entertainmentAllowanceLimit" type="text" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

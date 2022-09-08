@@ -84,4 +84,14 @@ public interface CreditCardMapper {
 	List<EgovMap> selectExcelList(Map<String, Object> params);
 
 	List<EgovMap> selectTotalCntrlSpentAmt(Map<String, Object> params);
+
+	EgovMap selectCurrentActiveMasterAllowanceLimit(Map<String, Object> params);
+
+	List<EgovMap> selectCostCenterList();
+
+	List<EgovMap> selectCreditCardholderDetailList();
+
+	List<EgovMap> selectAllowanceCardPicList();
+
+	List<EgovMap> selectExcelListNew(Map<String, Object> params);
 }

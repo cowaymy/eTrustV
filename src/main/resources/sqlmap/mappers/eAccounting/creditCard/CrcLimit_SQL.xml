@@ -8,9 +8,15 @@
             A.CRDIT_CARD_USER_NAME || ' - ' || SUBSTR(A.CRDIT_CARD_NO, 1, 6) || '******' || SUBSTR(A.CRDIT_CARD_NO, -4) CRC_INFO
         FROM FCM0016M A
         JOIN (
-            SELECT DISTINCT CRDIT_CARD_NO, CRDIT_CARD_USER_ID
-            FROM FCM0032D
-            WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY')
+<!--             SELECT DISTINCT CRDIT_CARD_NO, CRDIT_CARD_USER_ID -->
+<!--             FROM FCM0032D -->
+<!--             WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') -->
+ 			SELECT DISTINCT CRDIT_CARD_NO, CRDIT_CARD_USER_ID
+            FROM FCM0038D f0038d
+            INNER JOIN FCM0016M f0016m
+            ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+            WHERE TO_CHAR(f0038d.START_DATE, 'YYYY') <![CDATA[ = ]]> TO_CHAR(SYSDATE, 'YYYY')
+            AND f0038d.STUS_CODE_ID = 1
         ) B
             ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
             AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
@@ -23,9 +29,16 @@
             A.CHRG_USER_ID || ' - ' || C.NAME CRC_PIC
         FROM FCM0016M A
         JOIN (
-            SELECT DISTINCT CRDIT_CARD_NO, CRDIT_CARD_USER_ID
-            FROM FCM0032D
-            WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY')
+<!--             SELECT DISTINCT CRDIT_CARD_NO, CRDIT_CARD_USER_ID -->
+<!--             FROM FCM0032D -->
+<!--             WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') -->
+ 			SELECT DISTINCT CRDIT_CARD_NO, CRDIT_CARD_USER_ID
+            FROM FCM0038D f0038d
+            INNER JOIN FCM0016M f0016m
+            ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+            WHERE 1=1
+            AND TO_CHAR(f0038d.START_DATE, 'YYYY') <![CDATA[ = ]]> TO_CHAR(SYSDATE, 'YYYY')
+            AND f0038d.STUS_CODE_ID = 1
         ) B
             ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
             AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
@@ -103,67 +116,147 @@
             )
             PIVOT (SUM(TOTAL)
                 FOR CRC_LIMIT_ADJ_MM IN (
-                    '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
-                    '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
+ 						'01' AS M1, '02' AS M2, '03' AS M3, '04' AS M4, '05' AS M5, '06' AS M6,
+                        '07' AS M7, '08' AS M8, '09' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
                 )
             )
+
+<!--             UNION ALL -->
+
+<!--             SELECT -->
+<!--                 CRDIT_CARD_NO, -->
+<!--                 CRC_LIMIT_YYYY, -->
+<!--                 NVL(M1, 0) M1, -->
+<!--                 NVL(M2, 0) M2, -->
+<!--                 NVL(M3, 0) M3, -->
+<!--                 NVL(M4, 0) M4, -->
+<!--                 NVL(M5, 0) M5, -->
+<!--                 NVL(M6, 0) M6, -->
+<!--                 NVL(M7, 0) M7, -->
+<!--                 NVL(M8, 0) M8, -->
+<!--                 NVL(M9, 0) M9, -->
+<!--                 NVL(M10, 0) M10, -->
+<!--                 NVL(M11, 0) M11, -->
+<!--                 NVL(M12, 0) M12 -->
+<!--             FROM ( -->
+<!--                 SELECT -->
+<!--                     * -->
+<!--                 FROM ( -->
+<!--   					SELECT * -->
+<!--                     FROM FCM0032D -->
+<!--                     WHERE 1=1 -->
+<!--                     <if test="(stMonth != null and stMonth != '') or (edMonth != null and edMonth != '')"> -->
+<!--                         <if test="stMonth != null and stMonth != '' "> -->
+<!--                             <![CDATA[ -->
+<!--                             AND CRC_LIMIT_MM >= #{stMonth} -->
+<!--                             ]]> -->
+<!--                         </if> -->
+<!--                         <if test="edMonth != null and edMonth != '' "> -->
+<!--                             <![CDATA[ -->
+<!--                             AND CRC_LIMIT_MM <= #{edMonth} -->
+<!--                             ]]> -->
+<!--                         </if> -->
+<!--                     </if> -->
+<!--                     <if test="(stMonth == null or stMonth == '') and (edMonth == null or edMonth == '')"> -->
+<!--                         empty month(s) filter -->
+<!--                         <![CDATA[ -->
+<!--                         AND (CRC_LIMIT_MM >= 1 AND CRC_LIMIT_MM <= 12) -->
+<!--                         ]]> -->
+<!--                     </if> -->
+<!--                     <if test="year != null and year != '' "> -->
+<!--                         AND CRC_LIMIT_YYYY = #{year} -->
+<!--                     </if> -->
+<!--                     <if test="year == null or year == '' "> -->
+<!--                         AND CRC_LIMIT_YYYY = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) -->
+<!--                     </if> -->
+<!--                 ) -->
+<!--                 PIVOT(MAX(PLAN_AMT) -->
+<!--                     FOR CRC_LIMIT_MM IN ( -->
+<!--  						'01' AS M1, '02' AS M2, '03' AS M3, '04' AS M4, '05' AS M5, '06' AS M6, -->
+<!--                         '07' AS M7, '08' AS M8, '09' AS M9, '10' AS M10, '11' AS M11, '12' AS M12 -->
+<!--                     ) -->
+<!--                 ) -->
+<!--             ) -->
 
             UNION ALL
 
             SELECT
+			CRDIT_CARD_NO,
+			CRC_LIMIT_YYYY,
+            SUM(M1) M1,
+            SUM(M2) M2,
+            SUM(M3) M3,
+            SUM(M4) M4,
+            SUM(M5) M5,
+            SUM(M6) M6,
+            SUM(M7) M7,
+            SUM(M8) M8,
+            SUM(M9) M9,
+            SUM(M10) M10,
+            SUM(M11) M11,
+            SUM(M12) M12
+            FROM(
+                SELECT
                 CRDIT_CARD_NO,
                 CRC_LIMIT_YYYY,
-                NVL(M1, 0) M1,
-                NVL(M2, 0) M2,
-                NVL(M3, 0) M3,
-                NVL(M4, 0) M4,
-                NVL(M5, 0) M5,
-                NVL(M6, 0) M6,
-                NVL(M7, 0) M7,
-                NVL(M8, 0) M8,
-                NVL(M9, 0) M9,
-                NVL(M10, 0) M10,
-                NVL(M11, 0) M11,
-                NVL(M12, 0) M12
-            FROM (
-                SELECT
-                    *
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('01'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]> TO_DATE('01'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M1,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('02'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('02'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M2,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('03'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('03'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M3,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('04'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('04'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M4,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE('05'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('05'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M5,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('06'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('06'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M6,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('07'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('07'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M7,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('08'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('08'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M8,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('09'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('09'||'/'||#{year},'MM/YYYY')
+                )  THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M9,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('10'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('10'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M10,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('11'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('11'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M11,
+                NVL(CASE WHEN (
+                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('12'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(END_DATE,'DD/MM/YYYY') <![CDATA[ >= ]]> TO_DATE('12'||'/'||#{year},'MM/YYYY')
+                ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M12
                 FROM (
-                    SELECT *
-                    FROM FCM0032D
+                    SELECT f0038d.*,f0016m.CRDIT_CARD_NO AS CRDIT_CARD_NO,TO_CHAR(f0038d.START_DATE,'MM') AS CRC_LIMIT_MM,TO_NUMBER(TO_CHAR(f0038d.START_DATE,'YYYY')) AS CRC_LIMIT_YYYY
+                    FROM FCM0038D f0038d
+                    INNER JOIN FCM0016M f0016m
+                    ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
                     WHERE 1=1
-                    <if test="(stMonth != null and stMonth != '') or (edMonth != null and edMonth != '')">
-                        <if test="stMonth != null and stMonth != '' ">
-                            <![CDATA[
-                            AND CRC_LIMIT_MM >= #{stMonth}
-                            ]]>
-                        </if>
-                        <if test="edMonth != null and edMonth != '' ">
-                            <![CDATA[
-                            AND CRC_LIMIT_MM <= #{edMonth}
-                            ]]>
-                        </if>
-                    </if>
-                    <if test="(stMonth == null or stMonth == '') and (edMonth == null or edMonth == '')">
-                        <!-- empty month(s) filter -->
-                        <![CDATA[
-                        AND (CRC_LIMIT_MM >= 1 AND CRC_LIMIT_MM <= 12)
-                        ]]>
-                    </if>
-                    <if test="year != null and year != '' ">
-                        AND CRC_LIMIT_YYYY = #{year}
-                    </if>
-                    <if test="year == null or year == '' ">
-                        AND CRC_LIMIT_YYYY = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))
-                    </if>
+                    AND f0038d.STUS_CODE_ID = 1
+                    AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(START_DATE,'YYYY'))
                 )
-                PIVOT(MAX(PLAN_AMT)
-                    FOR CRC_LIMIT_MM IN (
-                        '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
-                        '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
-                    )
-                )
-            )
+            ) GROUP BY CRDIT_CARD_NO, CRC_LIMIT_YYYY
 
             UNION ALL
 
@@ -195,18 +288,31 @@
                             AND CLM_TYPE = 'J3'
                         )
                     WHERE A.CRDIT_CARD_NO IN (
-                        SELECT DISTINCT CRDIT_CARD_NO
-                        FROM FCM0032D
-                        WHERE 1=1
-                            <if test="year != null and year != '' ">
-                                AND CRC_LIMIT_YYYY = #{year}
-                            </if>
-                            <if test="year == null or year == '' ">
-                                AND CRC_LIMIT_YYYY = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))
-                            </if>
+<!--                         SELECT DISTINCT CRDIT_CARD_NO -->
+<!--                         FROM FCM0032D -->
+<!--                         WHERE 1=1 -->
+<!--                             <if test="year != null and year != '' "> -->
+<!--                                 AND CRC_LIMIT_YYYY = #{year} -->
+<!--                             </if> -->
+<!--                             <if test="year == null or year == '' "> -->
+<!--                                 AND CRC_LIMIT_YYYY = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) -->
+<!--                             </if> -->
+							SELECT DISTINCT CRDIT_CARD_NO
+							FROM FCM0038D f0038d
+							INNER JOIN FCM0016M f0016m
+							ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+							WHERE 1=1
+							AND f0038d.STUS_CODE_ID = 1
+                    		AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(START_DATE,'YYYY'))
+<!-- 							<if test="year != null and year != '' "> -->
+<!--                                 AND TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY')) =#{year} -->
+<!--                             </if> -->
+<!--                             <if test="year == null or year == '' "> -->
+<!--                                 AND TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY')) = TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) -->
+<!--                             </if> -->
                     )
-    --                    AND B.CLM_MONTH = '202201'
-                        AND SUBSTR(B.CLM_MONTH, 1, 4) = '2022'
+<!--                         AND B.CLM_MONTH = '202201' -->
+<!--                         AND SUBSTR(B.CLM_MONTH, 1, 4) = '2022' -->
                         <if test="year != null and year != '' ">
                             AND SUBSTR(B.CLM_MONTH, 1, 4) = #{year}
                         </if>
@@ -244,8 +350,8 @@
                     CLM_MM
             ) PIVOT (SUM(TOTAL)
                 FOR CLM_MM IN (
-                    '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
-                    '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
+ 						'01' AS M1, '02' AS M2, '03' AS M3, '04' AS M4, '05' AS M5, '06' AS M6,
+                        '07' AS M7, '08' AS M8, '09' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
                 )
             )
         ) A
@@ -475,7 +581,16 @@
             C.ADJ_REM,
             C.ATCH_FILE_GRP_ID,
             C.ATCH_FILE_ID,
-            C.ATCH_FILE_NAME
+            C.ATCH_FILE_NAME,
+            CASE WHEN F.APPV_PRCSS_STUS IS NULL THEN 'Draft'
+                     WHEN F.APPV_PRCSS_STUS = 'R' THEN 'Requested'
+                     WHEN F.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                     WHEN F.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+            END AS APPV_PRCSS_STUS,
+            F.APPV_PRCSS_USER_ID,
+            G.USER_FULL_NAME,
+            TO_CHAR(F.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT,
+            F.REJCT_RESN
         FROM (
             SELECT DISTINCT CRDIT_CARD_ADJ_NO
             FROM FCM0033D
@@ -551,6 +666,10 @@
                 ON A.COST_CENTR = B.COST_CENTER
         ) E
         ON B.R_CRDIT_CARD_ID = E.CRDIT_CARD_SEQ
+        LEFT JOIN FCM0034D F
+        ON F.CRDIT_CARD_ADJ_NO = MAIN.CRDIT_CARD_ADJ_NO
+        LEFT JOIN SYS0047M G
+        ON F.APPV_PRCSS_USER_ID = G.USER_ID
     </select>
 
     <select id="getAdjDocNo" resultType="String">
@@ -801,4 +920,209 @@
             UPD_USER_ID = #{userId}
         WHERE CRDIT_CARD_ADJ_NO = #{adjNo}
     </update>
+
+    <update  id="updateSenderApp_FCM33D" parameterType="Map">
+    	UPDATE FCM0033D
+    	SET ATCH_FILE_GRP_ID = #{atchFileGrpId},
+    		ADJ_TYPE = #{adjType},
+    		CRC_LIMIT_ADJ_MM = #{sPeriodMonth},
+    		CRC_LIMIT_ADJ_YYYY = #{sPeriodYear},
+    		ADJ_AMT = #{sAmt},
+    		ADJ_REM = #{adjRem},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE CRDIT_CARD_ADJ_NO = #{adjNo}
+        AND CRDIT_CARD_ID = #{sCrcId_h}
+    </update>
+
+    <update  id="updateReceiverApp_FCM33D" parameterType="Map">
+    	UPDATE FCM0033D
+    	SET ATCH_FILE_GRP_ID = #{atchFileGrpId},
+    		ADJ_TYPE = #{adjType},
+    		CRC_LIMIT_ADJ_MM = #{rPeriodMonth},
+    		CRC_LIMIT_ADJ_YYYY = #{rPeriodYear},
+    		ADJ_AMT = #{rAmt},
+    		ADJ_REM = #{adjRem},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE CRDIT_CARD_ADJ_NO = #{adjNo}
+        AND CRDIT_CARD_ID = #{rCrcId_h}
+    </update>
+
+    <delete id="deleteApp_FCM33D" parameterType="Map">
+    	DELETE FROM FCM0033D
+        WHERE CRDIT_CARD_ADJ_NO = #{adjNo}
+    </delete>
+
+    <select id="selectAtchFile" parameterType="Map" resultType="egovMap">
+    	SELECT * FROM SYS0071D sys0071d
+    	INNER JOIN SYS0070M sys0070m
+    	ON sys0070m.ATCH_FILE_ID = sys0071d.ATCH_FILE_ID
+        WHERE ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
+
+    <delete id="deleteAttachment_SYS70M" parameterType="Map">
+    	DELETE FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </delete>
+
+    <delete id="deleteAttachment_SYS71D" parameterType="Map">
+    	DELETE FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </delete>
+
+    <select id="selectCardholderPendingAmountList" parameterType="Map" resultType="egovMap">
+SELECT
+   A.CRDIT_CARD_SEQ,
+   A.CRDIT_CARD_USER_ID,
+   A.CRDIT_CARD_USER_NAME,
+   A.CRDIT_CARD_NO,
+   C.APPV_REQ_KEY_NO,
+   C.APPV_PRCSS_STUS,
+   C.CRT_USER_ID,
+   C.REQST_USER_ID AS REQUESTOR,
+   TO_CHAR(C.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+   TO_CHAR(C.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT,
+   D.APPV_AMT,
+   D.EXP_DESC
+FROM FCM0016M A
+JOIN FCM0017M B
+    ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+JOIN FCM0004M C
+    ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+    AND C.APPV_PRCSS_STUS IN ('A','R','P')
+JOIN FCM0015D D
+    ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+    AND D.EXP_TYPE IN (
+        SELECT EXP_TYPE
+        FROM FCM0001M
+        WHERE CNTRL_EXP = 'Y'
+        AND CLM_TYPE = 'J3'
+    )
+WHERE A.CRDIT_CARD_NO IN (
+			SELECT DISTINCT CRDIT_CARD_NO
+			FROM FCM0038D f0038d
+			INNER JOIN FCM0016M f0016m
+			ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+			WHERE 1=1
+			<if test="year != null and year != '' ">
+                AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
+			</if>
+			AND f0038d.STUS_CODE_ID = 1
+<!--     SELECT DISTINCT CRDIT_CARD_NO -->
+<!--     FROM FCM0032D -->
+<!--     WHERE 1=1 -->
+<!--     <if test="year != null and year != '' "> -->
+<!--     AND CRC_LIMIT_YYYY = #{year} -->
+<!--     </if> -->
+)
+    <if test="clmMonth != null and clmMonth != '' ">
+    AND B.CLM_MONTH = #{yearMonth}
+    </if>
+    AND C.APPV_PRCSS_STUS IN ('R', 'P')
+    AND A.CRDIT_CARD_SEQ = #{crcId}
+</select>
+
+<select id="selectCardholderUtilisedAmountList" parameterType="Map" resultType="egovMap">
+SELECT
+   A.CRDIT_CARD_SEQ,
+   A.CRDIT_CARD_USER_ID,
+   A.CRDIT_CARD_USER_NAME,
+   A.CRDIT_CARD_NO,
+   C.APPV_REQ_KEY_NO,
+   C.APPV_PRCSS_STUS,
+   C.CRT_USER_ID,
+   C.REQST_USER_ID AS REQUESTOR,
+   TO_CHAR(C.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+   TO_CHAR(C.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT,
+   D.APPV_AMT,
+   D.EXP_DESC
+FROM FCM0016M A
+JOIN FCM0017M B
+    ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+JOIN FCM0004M C
+    ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+    AND C.APPV_PRCSS_STUS IN ('A','R','P')
+JOIN FCM0015D D
+    ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+    AND D.EXP_TYPE IN (
+        SELECT EXP_TYPE
+        FROM FCM0001M
+        WHERE CNTRL_EXP = 'Y'
+        AND CLM_TYPE = 'J3'
+    )
+WHERE A.CRDIT_CARD_NO IN (
+			SELECT DISTINCT CRDIT_CARD_NO
+			FROM FCM0038D f0038d
+			INNER JOIN FCM0016M f0016m
+			ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+			WHERE 1=1
+			<if test="year != null and year != '' ">
+                AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
+			</if>
+			AND f0038d.STUS_CODE_ID = 1
+<!--     SELECT DISTINCT CRDIT_CARD_NO -->
+<!--     FROM FCM0032D -->
+<!--     WHERE 1=1 -->
+<!--     <if test="year != null and year != '' "> -->
+<!--     AND CRC_LIMIT_YYYY = #{year} -->
+<!--     </if> -->
+)
+    <if test="clmMonth != null and clmMonth != '' ">
+    AND B.CLM_MONTH = #{yearMonth}
+    </if>
+    AND C.APPV_PRCSS_STUS IN ('A')
+    AND A.CRDIT_CARD_SEQ = #{crcId}
+</select>
+
+<select id="selectCardholderApprovedAdjustmentLimitList" parameterType="Map" resultType="egovMap">
+SELECT
+    A.CRDIT_CARD_NO,
+    A.CRDIT_CARD_USER_ID,
+    B.CRDIT_CARD_ADJ_NO,
+    B.CRC_LIMIT_ADJ_YYYY,
+    B.CRC_LIMIT_ADJ_MM,
+    B.ADJ_TYPE,
+    (CASE B.ADJ_TYPE
+        WHEN 1 THEN 'Transfer between Credit Card Holder'
+        WHEN 2 THEN 'Transfer between Period'
+        WHEN 3 THEN 'Addition'
+        WHEN 4 THEN 'Deduction'
+      END) AS ADJ_TYPE_DESC,
+    B.SIGNAL,
+    B.ADJ_AMT,
+    B.ADJ_REM,
+    TO_CHAR(C.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT
+FROM FCM0016M A
+LEFT JOIN FCM0033D B
+    ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
+    AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+    <if test="year != null and year != '' ">
+        AND B.CRC_LIMIT_ADJ_YYYY = #{year}
+     </if>
+    <if test="clmMonth != null and clmMonth != '' ">
+        AND B.CRC_LIMIT_ADJ_MM = #{clmMonth}
+     </if>
+LEFT JOIN FCM0034D C
+    ON B.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
+WHERE A.CRDIT_CARD_NO IN (
+			SELECT DISTINCT CRDIT_CARD_NO
+			FROM FCM0038D f0038d
+			INNER JOIN FCM0016M f0016m
+			ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+			WHERE 1=1
+			<if test="year != null and year != '' ">
+                AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
+			</if>
+			AND f0038d.STUS_CODE_ID = 1
+<!--     SELECT DISTINCT CRDIT_CARD_NO -->
+<!--     FROM FCM0032D -->
+<!--     WHERE 1=1 -->
+<!--     <if test="year != null and year != '' "> -->
+<!--         AND CRC_LIMIT_YYYY = #{year} -->
+<!--      </if> -->
+)
+AND C.APPV_PRCSS_STUS = 'A'
+AND A.CRDIT_CARD_SEQ = #{crcId}
+</select>
 </mapper>

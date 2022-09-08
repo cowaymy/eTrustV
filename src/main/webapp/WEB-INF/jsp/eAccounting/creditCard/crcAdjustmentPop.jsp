@@ -12,8 +12,103 @@
     var cnt = 0;
     var fileClick = 0; // For edit purpose only
 
+    //AUIGRID
+       var myFileCaches = {};
+	var myGridID;
+
+	var myGridColumnLayout = [
+	{
+	    dataField : "adjType",
+	    visible: false
+	}, {
+	    dataField : "adjTypeDesc",
+	    headerText : 'Adjustment Type'
+	}, {
+	    dataField : "sPeriod",
+	    headerText : 'Sender Period'
+	}, {
+	    dataField : "sCrcHolder",
+	    visible:false
+	}, {
+	    dataField : "sCrcHolderName",
+	    headerText : 'Sender Credit Cardholder Name'
+	}, {
+	    dataField : "sAmt",
+	    headerText : "Sender Amount"
+	}, {
+	    dataField : "rPeriod",
+	    headerText : 'Receiver Period'
+	}, {
+	    dataField : "rCrcHolder",
+	    visible:false
+	}, {
+	    dataField : "rCrcHolderName",
+	    headerText : 'Receiver Credit Cardholder Name'
+	}, {
+	    dataField : "rAmt",
+	    headerText : "Receiver Amount"
+	}, {
+	    dataField : "adjRem",
+	    headerText : 'Remarks'
+	}, {
+	    dataField : "atchFileGrpId",
+	    visible : false // Color 칼럼은 숨긴채 출력시킴
+	}
+	, {
+	    dataField : "isAttach",
+	    visible : false // Color 칼럼은 숨긴채 출력시킴
+	}
+	, {dataField : "atchFileId",  headerText : 'Attachment', width : '10%', styleFunction : cellStyleFunction,
+	    renderer : {
+	      type : "ButtonRenderer",
+	      labelText : "Download",
+	      onclick : function(rowIndex, columnIndex, value, item) {
+
+	          Common.showLoader();
+	           var fileId = value;
+	           console.log('file path ' + '${pageContext.request.contextPath}');
+	         $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+	              httpMethod: "POST",
+	              contentType: "application/json;charset=UTF-8",
+	              data: {
+	                  fileId: fileId
+	              },
+	              failCallback: function (responseHtml, url, error) {
+	                  Common.alert($(responseHtml).find("#errorMessage").text());
+	              }
+	          }).done(function () {
+	                  Common.removeLoader();
+	                  console.log('File download a success!');
+	          }).fail(function () {
+	                  Common.alert('<spring:message code="sal.alert.msg.fileMissing" />');
+	                  Common.removeLoader();
+	          });
+	      }
+	    }
+	}
+	];
+
+	//그리드 속성 설정
+	var myGridPros = {
+			usePaging : true,
+	    softRemoveRowMode : false,
+	    rowIdField : "adjSeq",
+	    headerHeight : 40,
+	    height : 160,
+	    // 셀 선택모드 (기본값: singleCell)
+	    selectionMode : "multipleCells"
+	};
+    //AUIGRID
+
     $(document).ready(function(){
-        console.log("crcAdjustmentPop.jsp")
+        console.log("crcAdjustmentPop.jsp");
+
+        //Grid Table Enhancement
+		myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
+	    $("#add_row").click(fn_addMyGridRow);
+	    $("#remove_row").click(fn_removeMyGridRow);
+	    fn_setEvent();
+        //Grid Table Enhancement
 
         // Default views
         $("#sPeriod").prop("disabled", true);
@@ -27,6 +122,7 @@
         $("#rCrcHolder").prop("disabled", true);
         $("#rAmt").prop("disabled", true);
         $("#adjRem").prop("disabled", true);
+		$('#approverSection').hide();
 
         // setInputFile2()
         $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Delete</a></span>");
@@ -38,21 +134,33 @@
 
         // View/Approval/Edit Mode :: View Set - Start
         if("${item.mode}" != "N") {
+			$('#newSubmitButton').hide();
+			$('#grid_section_new').hide();
             if("${item.mode}" == "A") {
                 $("#appBtns").show();
                 $("#reqBtns").hide();
-
+				$('#approverSection').hide();
             } else if("${item.mode}" == "V") {
                 $("#appBtns").hide();
                 $("#reqBtns").hide();
-
+				$('#approverSection').show();
             } else if("${item.mode}" == "E") {
                 $("#appBtns").hide();
                 $("#reqBtns").show();
+				$('#approverSection').hide();
             }
 
             var adjItems = $.parseJSON('${adjItems}');
 
+            if("${item.mode}" == "V"){
+	            if(adjItems[0].appvPrcssStus == "Rejected" || adjItems[0].appvPrcssStus == "Approved"){
+	                $("#approverMessage").text(adjItems[0].appvPrcssStus + " By " + adjItems[0].userFullName);
+	                $("#approverDate").text("[" + adjItems[0].appvPrcssDt + "]");
+	                $("#rejectReasonMessage").text(adjItems[0].rejctResn);
+	            }
+            }
+
+            $("#adjRem").val(adjItems[0].adjRem);
             $("#adjNo").val(adjItems[0].adjNo);
             $("#atchFileGrpId").val(adjItems[0].atchFileGrpId);
             $("#sCrcId_h").val(adjItems[0].sCrditCardId);
@@ -75,7 +183,14 @@
             $("#sCostCenter").val(adjItems[0].sCostCenter);
             $("#sCostCenterName").val(adjItems[0].sCostCenterName);
             $("#sCrcHolder option[value=" + adjItems[0].sCrditCardId + "]").attr('selected', 'selected');
-            $("#sAmt").val(adjItems[0].sAdjAmt);
+
+            if(undefinedCheck(adjItems[0].sAdjAmt) != ""){
+                var senderAdjAmt = adjItems[0].sAdjAmt.toFixed(2);
+                $("#sAmt").val(senderAdjAmt);
+            }
+            else{
+                $("#sAmt").val(adjItems[0].sAdjAmt);
+            }
 
             if(adjType == "1" || adjType == "2" || adjType == "3") {
                 mm = adjItems[0].rCrcLimitAdjMm;
@@ -89,9 +204,15 @@
             $("#rCostCenter").val(adjItems[0].rCostCenter);
             $("#rCostCenterName").val(adjItems[0].rCostCenterName);
             $("#rCrcHolder option[value=" + adjItems[0].rCrditCardId + "]").attr('selected', 'selected');
-            $("#rAmt").val(adjItems[0].rAdjAmt);
 
-            $("#adjRem").val(adjItems[0].adjRem);
+            if(undefinedCheck(adjItems[0].rAdjAmt) != "") {
+                var receiverAdjAmt = adjItems[0].rAdjAmt.toFixed(2);
+                $("#rAmt").val(receiverAdjAmt);
+            }
+            else{
+                $("#rAmt").val(adjItems[0].rAdjAmt);
+            }
+
 
             // Attachment Related Setting & Functionalities - Start
             $("#attachTd").html("");
@@ -151,8 +272,14 @@
             // Attachment Related Setting & Functionalities - End
         } else {
             $("#appBtns").hide();
-            $("#reqBtns").show();
+            $("#reqBtns").hide();
+            $('#deleteBtn').hide();
+			$('#newSubmitButton').show();
+			$('#grid_section_new').show();
         }
+		//Disable cardholder changes for edit mode
+        $('#sCrcHolder').prop("disabled", true);
+        $('#rCrcHolder').prop("disabled", true);
         // View/Approval/Edit Mode :: View Set - End
     });
 
@@ -311,8 +438,8 @@
             console.log(result);
             console.log("adjType :: " + $("#adjType").val());
 
-            if($("#adjType").val() == "2") {
-                // Transfer between Card Holder
+            if($("#adjType").val() != "1") {
+                //Not Transfer between Card Holder
                 $("#sCrcId_h").val(val);
                 $("#rCrcId_h").val(val);
 
@@ -321,12 +448,12 @@
 
                 $("#rCostCenter").val(result.data.costCentr);
                 $("#rCostCenterName").val(result.data.costCenterText);
-
                 // $("#sCrcHolder option[value=" + val + "]").attr('selected', 'selected');
-                $("#rCrcHolder option[value=" + val + "]").attr('selected', 'selected');
+                //$("#rCrcHolder option[value=" + val + "]").attr('selected', 'selected');
+                $("#rCrcHolder").val(val);
 
             } else {
-                // Not Transfer between Card Holder Adjustment Type
+                // Transfer between Card Holder Adjustment Type
                 if(type == "SC") {
                     console.log("getCardInfo :: SC");
                     $("#sCrcId_h").val(val);
@@ -387,94 +514,130 @@
 
     function fn_validation() {
         console.log("fn_validation");
-
         var flg = true;
+
+        if($("#adjType").val() == "0"){
+            Common.alert("Please select an adjustment type.");
+        	return false;
+        }
 
         if($("#adjType").val() == "1" || $("#adjType").val() == "2") {
             // Adjustment between Card Holder/Adjustment between Period
-            if($("sPeriod").val() == "" && $("sPeriod").val() == null) {
+            if($("#sPeriod").val() == null || $("#sPeriod").val() == "") {
                 Common.alert("Sender Period cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("sCrcHolder").val() == "" && $("sCrcHolder").val() == null) {
+            if($("#sCrcHolder").val() == null || $("#sCrcHolder").val() == "") {
                 Common.alert("Sending Card Holder cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("sAmt").val() == "" && $("sAmt").val() == null) {
+            if($("#sAmt").val() == null || $("#sAmt").val() == "") {
                 Common.alert("Sending Amount cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("rPeriod").val() == "" && $("rPeriod").val() == null) {
+            if(checkMaximum2DecimalAmount($("#sAmt").val()) == false){
+                Common.alert("Amount must be only maximum 2 decimal places.");
+                return false;
+            }
+
+            if($("#rPeriod").val() == null || $("#rPeriod").val() == "") {
                 Common.alert("Receiver Period cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("rCrcHolder").val() == "" && $("rCrcHolder").val() == null) {
+            if($("#rCrcHolder").val() == null && $("#rCrcHolder").val() == "") {
                 Common.alert("Receiving Card Holder cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("rAmt").val() == "" && $("rAmt").val() == null) {
+            if($("#rAmt").val() == null || $("#rAmt").val() == "") {
                 Common.alert("Receiving Amount cannot be empty.");
-                flg = false;
+                return false;
+            }
+
+            if(checkMaximum2DecimalAmount($("#rAmt").val()) == false){
+                Common.alert("Amount must be only maximum 2 decimal places.");
+                return false;
             }
 
         } else if($("#adjType").val() == "3") {
             // Addition
-            if($("rPeriod").val() == "" && $("rPeriod").val() == null) {
+            if($("#rPeriod").val() == null || $("#rPeriod").val() == "") {
                 Common.alert("Receiver Period cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("rCrcHolder").val() == "" && $("rCrcHolder").val() == null) {
+            if($("#rCrcHolder").val() == null || $("#rCrcHolder").val() == "") {
                 Common.alert("Receiving Card Holder cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("rAmt").val() == "" && $("rAmt").val() == null) {
+            if($("#rAmt").val() == null || $("#rAmt").val() == "") {
                 Common.alert("Receiving Amount cannot be empty.");
-                flg = false;
+                return false;
+            }
+
+            if(checkMaximum2DecimalAmount($("#rAmt").val()) == false){
+                Common.alert("Amount must be only maximum 2 decimal places.");
+                return false;
             }
 
         } else if($("#adjType").val() == "4") {
             // Deduction
-            if($("sPeriod").val() == "" && $("sPeriod").val() == null) {
+            if($("#sPeriod").val() == null || $("#sPeriod").val() == "") {
                 Common.alert("Sender Period cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("sCrcHolder").val() == "" && $("sCrcHolder").val() == null) {
+            if($("#sCrcHolder").val() == null || $("#sCrcHolder").val() == "") {
                 Common.alert("Sending Card Holder cannot be empty.");
-                flg = false;
+                return false;
             }
 
-            if($("sAmt").val() == "" && $("sAmt").val() == null) {
+            if($("#sAmt").val() == null || $("#sAmt").val() == "") {
                 Common.alert("Sending Amount cannot be empty.");
-                flg = false;
+                return false;
+            }
+
+            if(checkMaximum2DecimalAmount($("#sAmt").val()) == false){
+                Common.alert("Amount must be only maximum 2 decimal places.");
+                return false;
             }
         }
 
         if(FormUtil.isEmpty($("#adjRem").val())) {
             Common.alert("Remark is required.");
-            flg = false;
+            return false;
         }
 
         if(mode == "N") {
             if($("input[name=attachment]")[0].files[0] == "" || $("input[name=attachment]")[0].files[0] == null) {
                 Common.alert("Attachment required.");
-                flg = false;
+                return false;
             }
         } else {
             if(fileClick > 0 && (update.length === 0 || remove.length === 0)) {
                 Common.alert("Attachment required.");
-                flg = false;
+                return false;
             }
         }
 
         return flg;
+    }
+
+    function checkMaximum2DecimalAmount(value) {
+    	if(value.includes(".")){
+	    	var decimalCounter = value.substring(value.indexOf(".") + 1);
+			console.log(decimalCounter);
+	    	if(decimalCounter.length > 2) {
+	    		return false;
+	    	}
+	    	return true;
+    	}
+    	return true;
     }
 
     /* Save/Edit Functionalities
@@ -484,7 +647,21 @@
     function fn_reqAdjustment(val) {
         console.log("fn_reqAdjustment");
 
-        if(fn_validation()) {
+        if(val == "Delete") {
+        	 Common.ajax("POST", "/eAccounting/creditCard/deleteRequest.do", $("#adjForm").serializeJSON(), function(result) {
+        		 if(result.code == "00"){
+                     $("#crcAdjustmentPop").remove();
+                     Common.alert("Draft record has been deleted for document number : " + result.data);
+                     //refresh grid list
+                     fn_listAdjPln();
+        		 }
+        		 else{
+                     Common.alert("Error occurs on deletion. Please try again.");
+        		 }
+        	 });
+        }
+
+        if(fn_validation() == true) {
             var formData = Common.getFormData("adjForm");
 
             if(FormUtil.isEmpty($("#adjNo").val())) {
@@ -522,7 +699,8 @@
                                 });
                             } else if(result2.code == "00" && val == "D") {
                                 Common.alert("Allowance adjustment drafted document number : " + result2.data);
-
+                                //refresh grid list
+                                fn_listAdjPln();
                             } else if(result2.code == "99") {
                                 Common.alert("Allowance adjustment failed to save.");
                             }
@@ -574,6 +752,8 @@
 
                     if(result3.code == "00") {
                         Common.alert("Allowance adjustment submitted document number : " + result2.data);
+                        //refresh grid list
+                        fn_listAdjPln();
                     } else {
                         Common.alert("Allowance adjustment fail to submit.");
                     }
@@ -606,6 +786,8 @@
 
                     if(result2.code == "00") {
                         Common.alert("Allowance adjustment successfully approved");
+                        //refresh grid list
+                        fn_listAdjPln();
                     } else {
                         Common.alert("Allowance adjustment failed to approve");
                     }
@@ -645,6 +827,8 @@
 
                 if(result.code == "00") {
                     Common.alert("Allowance adjustment successfully rejected");
+                    //refresh grid list
+                    fn_listAdjPln();
                 } else {
                     Common.alert("Allowance adjustment fail to reject");
                 }
@@ -657,6 +841,131 @@
     }
     // ========== Approve/Reject - End ==========
 
+
+     function undefinedCheck(value, type){
+    	var retVal;
+
+    	if (value == undefined || value == "undefined" || value == null || value == "null" || $.trim(value).length == 0) {
+    		if (type && type == "number") {
+    			retVal = 0;
+    		} else {
+    			retVal = "";
+    		}
+    	} else {
+    		if (type && type == "number") {
+    			retVal = Number(value);
+    		}else{
+    			retVal = value;
+    		}
+    	}
+
+    	return retVal;
+    }
+
+    function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
+  	    if(item.isAttach == 'Yes'){
+  	        return '';
+  	    }else{
+  	        return "edit-column";
+  	    }
+    }
+
+    function fn_addMyGridRow(){
+    	if(!fn_validation()){
+    		return false;
+    	}
+
+   		var formData = Common.getFormData("adjForm");
+    	Common.ajaxFile("/eAccounting/creditCard/adjFileUpload.do", formData, function(result) {
+             $("#atchFileGrpId").val(result.data.fileGroupKey);
+             $("#atchFileId").val(result.data.atchFileId);
+
+        	 console.log('atchGroupFileId' + $("#atchFileGrpId").val());
+        	 console.log('atchFileId' + $("#atchFileId").val());
+
+        	AUIGrid.addRow(myGridID,
+                    {
+    					adjType: $('#adjType').val(),
+    					adjTypeDesc: $('#adjType option:selected').text(),
+    					sPeriod: $('#sPeriod').val(),
+    					//sCostCenter: $('#sCostCenter').val(),
+    					//sCostCenterName: $('#sCostCenterName').val(),
+    					sCrcHolder: $('#sCrcHolder option:selected').val(),
+    					sCrcHolderName:$('#sCrcHolder option:selected').text(),
+    					sAmt: $('#sAmt').val(),
+    					rPeriod: $('#rPeriod').val(),
+    					//rCostCenter: $('#rCostCenter').val(),
+    					//rCostCenterName: $('#rCostCenterName').val(),
+    					rCrcHolder: $('#rCrcHolder option:selected').val(),
+    					rCrcHolderName:$('#rCrcHolder option:selected').text(),
+    					rAmt: $('#rAmt').val(),
+    					adjRem: $('#adjRem').val(),
+    					atchFileGrpId: $("#atchFileGrpId").val(),
+    					atchFileId: $("#atchFileId").val()
+                    }
+                , "last");
+        	fn_clearData();
+    	 });
+    }
+
+    function fn_removeMyGridRow(){
+    	// Grid Row 삭제
+        AUIGrid.removeRow(myGridID, selectRowIdx);
+    }
+
+    function fn_clearData() {
+        $('#adjType').val('0');
+        fn_chgAdjType($('#adjType').val());
+    }
+
+    function fn_saveAppAdjustment(val){
+        var gridDataList = AUIGrid.getOrgGridData(myGridID);
+        var documentNumber = "";
+		if(gridDataList.length > 0){
+			for(var i = 0; i < gridDataList.length; i++){
+				var data = gridDataList[i];
+		         Common.ajaxSync("POST", "/eAccounting/creditCard/saveRequest.do", data, function(result2) {
+	             // Submit
+	             if(result2.code == "00" && val ==  "S") {
+	                 Common.ajaxSync("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
+	                     console.log(result3);
+
+	                     if(result3.code == "00") {
+	                         var documentNo = result2.data + " ";
+	                         documentNumber += documentNo;
+	                     } else {
+	                         Common.alert("Allowance adjustment fail to submit.");
+	                     }
+	                 });
+	             } else if(result2.code == "00" && val == "D") {
+                     var documentNo = result2.data + " ";
+                     documentNumber += documentNo;
+	             } else if(result2.code == "99") {
+	                 Common.alert("Allowance adjustment failed to save.");
+	             }
+	         });
+			}
+
+			if(val ==  "S"){
+                $("#crcAdjustmentPop").remove();
+                Common.alert("Allowance adjustment submitted document number : " + documentNumber);
+			}
+			else if(val ==  "D"){
+                $("#crcAdjustmentPop").remove();
+                Common.alert("Allowance adjustment drafted document number : " + documentNumber);
+			}
+            //refresh grid list
+            fn_listAdjPln();
+		}
+    }
+
+    function fn_setEvent() {
+    	AUIGrid.bind(myGridID, "cellClick", function( event )
+        {
+            console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+            selectRowIdx = event.rowIndex;
+        });
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -674,6 +983,7 @@
                 <input type="hidden" id="sCrcId_h" name="sCrcId_h" />
                 <input type="hidden" id="rCrcId_h" name="rCrcId_h" />
                 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
+                <input type="hidden" id="atchFileId" name="atchFileId" />
 
                 <section class="search_table">
                     <table class="type1">
@@ -835,9 +1145,52 @@
                     </table>
                 </section>
 
+                 <section class="search_table" id="approverSection">
+                    <table class="type1">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:130px" />
+                            <col style="width:*" />
+                        </colgroup>
+
+                        <tbody>
+                            <tr>
+                                <th scope="row">Approver</th>
+                                <td>
+                                    <p id="approverMessage"></p>
+                                    <p id="approverDate"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Reject Reason</th>
+                                <td>
+                                    <p id="rejectReasonMessage"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="grid_section_new">
+					<aside class="title_line" id="myGird_btn"><!-- title_line start -->
+					<ul class="right_btns">
+					    <li><p class="btn_grid"><a href="#" id="add_row"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+					    <li><p class="btn_grid"><a href="#" id="remove_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+					</ul>
+					</aside><!-- title_line end -->
+
+					<article class="grid_wrap" id="my_grid_wrap"><!-- grid_wrap start -->
+					</article><!-- grid_wrap end -->
+                </section>
+
                 <ul class="center_btns" id="reqBtns">
                     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_reqAdjustment('D')">Save Draft</a></p></li>
                     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_reqAdjustment('S')">Submit</a></p></li>
+                    <li><p class="btn_blue"><a href="#" id="deleteBtn" onclick="javascript:fn_reqAdjustment('Delete')">Delete Draft</a></p></li>
+                </ul>
+                <ul class="center_btns" id="newSubmitButton">
+                    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_saveAppAdjustment('D')">Save Draft</a></p></li>
+                    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_saveAppAdjustment('S')">Submit</a></p></li>
                 </ul>
 
                 <ul class="center_btns" id="appBtns">
