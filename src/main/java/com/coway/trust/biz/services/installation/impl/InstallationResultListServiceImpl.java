@@ -3843,11 +3843,13 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			        LOGGER.debug("================INSMS================");
 
 			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
+
 				        smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh " + installResult.get("ctCode").toString()
 			    	    		  + " pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di http://forms.gle/XfFjgNqk27hU9Zj56" ;
 			    	}else{ //FAIL
 			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
 			    	}
+			    	LOGGER.debug("================SMS MESSAGE================" + smsMessage);
 			    }
 
 		 }
@@ -3861,6 +3863,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		try{
 		    if(smsMessage != "")
 		    {
+		    	LOGGER.debug("================SENDSMS================");
 		    	sendSms(smsList);
 		    }
 		}catch(Exception e){
