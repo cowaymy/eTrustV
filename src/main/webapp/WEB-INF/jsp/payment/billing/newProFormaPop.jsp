@@ -893,7 +893,7 @@ var gridProsProForma = {
 
     function fn_DoSaveProcess(_saveOption) {
 
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDBillGroup);
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
     	var data = {};
 /*
     	var ProFormaM = {
