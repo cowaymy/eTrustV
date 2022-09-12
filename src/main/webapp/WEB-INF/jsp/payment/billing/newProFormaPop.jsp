@@ -8,7 +8,10 @@ var resultSrvconfigObject;
 var resultInstallationObject;
 var defaultcTPackage = "9";
 var myGridIDBillGroup;
-var orderArr = [];
+var myGridIDProForma;
+var defaultOrd = "0";
+var sortingInfo = [];
+sortingInfo[0] = { dataField : "salesOrdNo", sortType : 1 }; // 오름차순 1
 
 var columnLayoutBill =[
                        {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
@@ -23,6 +26,25 @@ var columnLayoutBill =[
                        {dataField:"proformaStus", headerText:"proformaStus", visible:false},
                        {dataField:"advStartDt", headerText:"advStartDt", visible:false},
                        {dataField:"advEndDt", headerText:"advEndDt", visible:false},
+                       {dataField:"stkId", headerText:"stkId", visible:false},
+                       {dataField:"hidPacPrice", headerText:"hidPacPrice", visible:false}
+                   ];
+
+var columnLayoutProForma =[
+                       {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+                       {dataField:"salesOrdId", headerText:"Sales Ord Id", visible:false},
+                       {dataField:"refNo", headerText:"Ref No."},
+                       {dataField:"orderDate", headerText:"Order Date", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+                       {dataField:"status", headerText:"Status"},
+                       {dataField:"appType", headerText:"App Type"},
+                       {dataField:"product", headerText:"Product"},
+                       {dataField:"custName", headerText:"Customer"},
+                       {dataField:"custBillId", headerText:"Bill ID"},
+                       {dataField:"proformaStus", headerText:"proformaStus", visible:false},
+                       {dataField:"advStartDt", headerText:"advStartDt", visible:false},
+                       {dataField:"advEndDt", headerText:"advEndDt", visible:false},
+                       {dataField:"stkId", headerText:"stkId", visible:false},
+                       {dataField:"hidPacPrice", headerText:"hidPacPrice", visible:false},
                        {
                            dataField : "undefined",
                            headerText : " ",
@@ -31,12 +53,12 @@ var columnLayoutBill =[
                                     type : "ButtonRenderer",
                                     labelText : "Select",
                                     onclick : function(rowIndex, columnIndex, value, item) {
+                                    	console.log("item111===" + item)
                                         $("#orderId").val(item.salesOrdId);
                                         if (fn_chkProForma(item.salesOrdId)) {
                                             return;
                                         }
                                         fn_SelectPO(item.salesOrdId);
-
                                   }
                            }
                        }
@@ -47,6 +69,40 @@ var gridProsBill = {
         showRowCheckColumn : true,
         showStateColumn: false,
         pageRowCount : 5,
+        showRowAllCheckBox : true,
+        softRemoveRowMode:false,
+        rowCheckableFunction : function(rowIndex, isChecked, item) {
+        	 var today = new Date();
+             var tYear = today.getFullYear();
+             var tMonth = today.getMonth() + 1;
+
+             if(tMonth < 10){
+                 tMonth = "0" + tMonth;
+             }
+
+            var today = tMonth + "/" + tYear;
+            var startDt = item.advStartDt;
+            var endDt = item.advEndDt;
+            today = Date.parse(today);
+            var parseStart = Date.parse(startDt);
+            var parseEnd = Date.parse(endDt);
+
+            if((today <= parseEnd && today >= parseStart)) {
+                return false;
+            }
+
+        	var ordStatus = item.status;
+            if(ordStatus != 'Completed'){
+               return false;
+            }
+
+            var proformaStus = item.proformaStus;
+            if(proformaStus != '5' && proformaStus != '8' && proformaStus != '' && proformaStus != null){
+                return false;
+            }
+
+            return true;
+        },
         rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
         	 var today = new Date();
              var tYear = today.getFullYear();
@@ -72,29 +128,48 @@ var gridProsBill = {
         		return false;
         	}
 
+        	var ordStatus = item.status;
+        	 if(ordStatus != 'Completed'){
+                return false;
+            }
+
             return true;
         }
 };
 
-$(document).ready(function(){
+var gridProsProForma = {
+        editable: false,
+        showRowCheckColumn : true,
+        showStateColumn: false,
+        pageRowCount : 5,
+        showRowAllCheckBox : true,
+        independentAllCheckBox : false,
+        softRemoveRowMode:false
+};
 
-	 myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
-	 $("#grid_wrap_billGroup").hide();
-	 AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
+	$(document).ready(function(){
 
-     $("#rbt").attr("style","display:none");
-     $("#ORD_NO_RESULT").attr("style","display:none");
+	    myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
+	    myGridIDProForma = AUIGrid.create("#grid_wrap_ProForma", columnLayoutProForma, gridProsProForma);
 
-     $("#ORD_NO").keydown(function(key)  {
-            if (key.keyCode == 13) {
-                fn_doConfirm();
-            }
-     });
-});
+	    $("#grid_wrap_billGroup").hide();
+	    $("#grid_wrap_ProForma").hide();
+	    $("#btnAddToProForma").hide();
+	    $("#btnRemoveProForma").hide();
+	    AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
+
+	    $("#rbt").attr("style","display:none");
+	    $("#ORD_NO_RESULT").attr("style","display:none");
+	    $("#txtTotalOrd").val(defaultOrd);
+
+	    $("#ORD_NO").keydown(function(key)  {
+	           if (key.keyCode == 13) {
+	               fn_doConfirm();
+	           }
+	    });
+	});
 
     function fn_doConfirm() {
-
-
 
          Common.ajax("GET", "/sales/membership/selectMembershipFreeConF", $("#sForm").serialize(), function(result) {
 
@@ -115,7 +190,7 @@ $(document).ready(function(){
             else if (result[0].stkId == '1' || result[0].stkId == '651' || result[0].stkId == '218' || result[0].stkId == '689' || result[0].stkId == '216' || result[0].stkId == '687'
                     || result[0].stkId == '3' || result[0].stkId == '653') {
 
-                Common.alert("Product have been discontinued. Therefore, create new quotation is not allowed");
+                Common.alert("Product have been discontinued. Therefore, create new Pro-Forma invoice is not allowed");
                 return;
             }
             else {
@@ -136,6 +211,139 @@ $(document).ready(function(){
             }
         });
     }
+
+    function fn_loadOrderPO(orderId){
+
+        Common.ajax("GET","/payment/selectInvoiceBillGroupListProForma.do", {"orderId" : orderId} , function(result){
+            if(result != null){
+                $("#billGroupNo").val(result[0].custBillGrpNo);
+                AUIGrid.setGridData(myGridIDBillGroup, result);
+            }
+         });
+        $("#grid_wrap_billGroup").show();
+        $("#btnAddToProForma").show();
+    }
+
+    $("#btnAddToProForma").click(function(){
+
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDBillGroup);
+        var proFormaItems = AUIGrid.getGridData(myGridIDProForma);
+
+        if(checkedItems != undefined){
+
+            var allItems = AUIGrid.getGridData(myGridIDBillGroup);
+            var valid = true;
+
+            if(checkedItems.length > 0){
+
+                var item = new Object();
+                var rowList = [];
+
+                for (var i = 0 ; i < checkedItems.length ; i++){
+	               rowList[i] = {
+	                       salesOrdNo : checkedItems[i].salesOrdNo,
+	                       salesOrdId : checkedItems[i].salesOrdId,
+	                       refNo : checkedItems[i].refNo,
+	                       orderDate : checkedItems[i].orderDate,
+	                       status : checkedItems[i].status,
+	                       appType : checkedItems[i].appType,
+	                       product : checkedItems[i].product,
+	                       custName : checkedItems[i].custName,
+	                       custBillId : checkedItems[i].custBillId,
+	                       proformaStus : checkedItems[i].proformaStus,
+	                       advStartDt : checkedItems[i].advStartDt,
+	                       advEndDt : checkedItems[i].advEndDt,
+	                       stkId : checkedItems[i].stkId,
+	                       hidPacPrice : checkedItems[i].hidPacPrice
+	               }
+               }
+
+               if(rowList.length > 0){
+
+                   var chkRow = true;
+
+                   for (var i = 0 ; i  < rowList.length ; i++){
+
+                       var salesOrdNo = rowList[i].salesOrdNo;
+
+                       for (var j = 0 ; j  < proFormaItems.length ; j++){
+                           if(salesOrdNo ==  proFormaItems[j].salesOrdNo){
+                            chkRow = false;
+                           }
+                       }
+
+                       if(chkRow){
+                           AUIGrid.addRow(myGridIDProForma, rowList[i], "first");
+                           $("#grid_wrap_ProForma").show();
+                           $("#btnRemoveProForma").show();
+                           AUIGrid.removeCheckedRows(myGridIDBillGroup);
+                       }
+                   }
+               }
+            }
+        }
+    });
+
+    $("#btnRemoveProForma").click(function(){
+
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
+        var allItems = AUIGrid.getGridData(myGridIDProForma);
+        var billGroupItems = AUIGrid.getGridData(myGridIDBillGroup);
+
+		 if (checkedItems.length > 0){
+		     var item = new Object();
+		     var rowList = [];
+		     var index = 0;
+		     for (var i = checkedItems.length-1 ; i >= 0; i--){
+
+		    	 rowList[index] = {
+                         salesOrdNo : checkedItems[i].salesOrdNo,
+                         salesOrdId : checkedItems[i].salesOrdId,
+                         refNo : checkedItems[i].refNo,
+                         orderDate : checkedItems[i].orderDate,
+                         status : checkedItems[i].status,
+                         appType : checkedItems[i].appType,
+                         product : checkedItems[i].product,
+                         custName : checkedItems[i].custName,
+                         custBillId : checkedItems[i].custBillId,
+                         proformaStus : checkedItems[i].proformaStus,
+                         advStartDt : checkedItems[i].advStartDt,
+                         advEndDt : checkedItems[i].advEndDt,
+                         stkId : checkedItems[i].stkId,
+                         hidPacPrice : checkedItems[i].hidPacPrice
+		    	 }
+	             index++;
+			 }
+
+	         if(rowList.length > 0){
+
+	             var chkRow = true;
+	             for (var i = 0 ; i  < rowList.length ; i++){
+
+	            	 var salesOrdNo = rowList[i].salesOrdNo;
+
+	                 for (var j = 0 ; j  < billGroupItems.length ; j++){
+	                	 if(salesOrdNo ==  billGroupItems[j].salesOrdNo){
+	                         chkRow = false;
+	                     }
+	                 }
+
+	                 if(chkRow){
+	                     AUIGrid.addRow(myGridIDBillGroup, rowList[i], "first");
+	                 }
+
+	             }
+	             AUIGrid.setSorting(myGridIDBillGroup, sortingInfo);
+	         }
+
+		     AUIGrid.removeCheckedRows(myGridIDProForma);
+
+		     }else{
+		         Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
+		     }
+
+
+    });
 
     function fn_isActiveMembershipQuotationInfoByOrderNo() {
         var rtnVAL = false;
@@ -297,20 +505,12 @@ $(document).ready(function(){
     }
 
     function setPackgCombo() {
-        //doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID=' + $("#ORD_ID").val(), '', defaultcTPackage, 'packType', 'S', '');
-        fn_cTPackage_onchangeEvt();
-
-    }
-
-    function fn_cTPackage_onchangeEvt() {
-
-        $("#txtPackagePrice").html("");
+    	$("#txtPackagePrice").html("");
 
         $("#packpro").attr("checked", false);
         $("#cPromoCombox").attr("checked", false);
 
         fn_packType_onChageEvent();
-
     }
 
     function fn_packType_onChageEvent(){
@@ -387,6 +587,18 @@ $(document).ready(function(){
             }
 
             $("#packpro").removeAttr("disabled");
+
+            //ahh
+             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDBillGroup);
+             var totalPackPrice = 0;
+            $("#txtTotalOrd").val(checkedItems.length);
+            if(checkedItems.length > 0){
+            	for (var i = 0 ; i < checkedItems.length ; i++){
+            	    totalPackPrice += checkedItems[i].hidPacPrice;
+            	}
+            }
+
+            $("#txtTotalAmt").val(totalPackPrice);
 
             if($("#discount").val() != "0"){
                 fn_discount_onChageEvent();
@@ -752,17 +964,6 @@ $(document).ready(function(){
         newProFormaPopupId.remove();
     }
 
-    function fn_loadOrderPO(orderId){
-
-        Common.ajax("GET","/payment/selectInvoiceBillGroupListProForma.do", {"orderId" : orderId} , function(result){
-            if(result != null){
-                $("#billGroupNo").val(result[0].custBillGrpNo);
-                AUIGrid.setGridData(myGridIDBillGroup, result);
-            }
-         });
-    	$("#grid_wrap_billGroup").show();
-    }
-
     function fn_SelectPO(orderId)
     {
          $("#resultcontens").show();
@@ -783,7 +984,7 @@ $(document).ready(function(){
 
      function fn_chkProForma(){
     	 var rtnVAL = false;
-    	 var selectedItems = AUIGrid.getSelectedItems(myGridIDBillGroup);
+    	 var selectedItems = AUIGrid.getSelectedItems(myGridIDProForma);
 
     	 console.log("selected");
     	 console.log(selectedItems);
@@ -818,6 +1019,9 @@ $(document).ready(function(){
          });
          return rtnVAL;
     }
+
+
+
 </script>
 
 
@@ -872,6 +1076,14 @@ $(document).ready(function(){
 <section>
   <!-- grid_wrap start -->
   <article id="grid_wrap_billGroup" class="grid_wrap"></article>
+  <p class="btn_blue2"><a href="#" id="btnAddToProForma">Add to Pro Forma</a></p>
+  <!-- grid_wrap end -->
+</section>
+
+<section>
+  <!-- grid_wrap start -->
+  <article id="grid_wrap_ProForma" class="grid_wrap"></article>
+  <p class="btn_blue2"><a href="#" id="btnRemoveProForma">Remove from Pro Forma</a></p>
   <!-- grid_wrap end -->
 </section>
 
@@ -949,7 +1161,8 @@ $(document).ready(function(){
         <tr>
             <th scope="row"><spring:message code="sal.text.remark" /></th>
             <td><textarea rows="5" id='txtRemark' name=''></textarea></td>
-            <th scope="row"></th><td></td>
+            <th scope="row">Total Amount(Total Orders)</th>
+            <td><span id='txtTotalAmt' ></span> (<span id='txtTotalOrd' ></span>)</td>
         </tr>
         </tbody>
         </table><!-- table end -->
