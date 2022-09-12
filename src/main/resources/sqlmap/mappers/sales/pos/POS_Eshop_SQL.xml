@@ -671,6 +671,7 @@
                       , A.POS_NO
                       , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS SALES_DT
                       , K.CODE || '-' || K.NAME BRANCH
+                      , A.ESN_RJT_REMARK
              FROM SAL0325M A
              JOIN SAL0326D B ON A.ESN_NO = B.ESN_NO
              LEFT JOIN SYS0070M C ON A.PAY_ATTACH_ID = C.ATCH_FILE_GRP_ID

@@ -51,7 +51,7 @@ function createAUIGrid(){
         Common.ajax("GET", "/sales/posstock/selectPosEshopApprovalViewList.do?esnNo="+'${esnNo}', null, function(result) {
 
             AUIGrid.setGridData(myRetrunGridIDPOSEshop, result);
-            $("#contactName").val(result[0].esnContactPic);
+            $("#contactName").val(result[0].hpName);
             $("#contactNo").val(result[0].esnContactNo);
             $("#addrDtl").val(result[0].esnAddr1);
             $("#streetDtl").val(result[0].esnAddr2);

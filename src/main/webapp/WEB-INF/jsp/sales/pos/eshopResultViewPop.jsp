@@ -79,6 +79,7 @@ function createAUIGrid(){
             $("#totalShippingFee").val(result[0].shippingFee);
             $("#courierSvc").val(result[0].courierSvc);
             $("#waybillNo").val(result[0].waybillNo);
+            $("#remark").val(result[0].esnRjtRemark);
 
             for(var i=0; i<result.length;i++){
                 grandTotal +=Number(result[i].totalPrice);
@@ -196,6 +197,11 @@ function fn_rejectEshop(){
 
                             <th scope="row">Waybill No.</th>
                             <td colspan="3"><input id="waybillNo" name="waybillNo" type="text" class="w100p readonly" readonly /></td>
+                        </tr>
+
+                        <tr>
+                        <th scope="row">Remark</th>
+                        <td colspan="7"><input id="remark" name="remark" type="text" class="w100p readonly" readonly /></td>
                         </tr>
                     </tbody>
                 </table>
