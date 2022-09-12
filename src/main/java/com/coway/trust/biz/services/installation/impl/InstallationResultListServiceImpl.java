@@ -2702,12 +2702,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     	installResult.put("ctCode", String.valueOf(installResult.get("userId")));
     }
 
-    LOGGER.debug("================TEMP ALEX FOR DEV/LOCAL DEBUG - START ================");
-    LOGGER.debug("PARAMS111 :" + installResult.toString());
-    LOGGER.debug("================chkSMS================" + chkSMS);
-    LOGGER.debug("================ApptypeID================" + ApptypeID);
-    LOGGER.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
-    LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
+    logger.debug("================TEMP ALEX FOR DEV/LOCAL DEBUG - START ================");
+    logger.debug("PARAMS111 :" + installResult.toString());
+    logger.debug("================chkSMS================" + chkSMS);
+    logger.debug("================ApptypeID================" + ApptypeID);
+    logger.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
+    logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
     // IMPLEMENT SEND EMAIL FOR INST NOTE 31/12/2021
     //this.sendEmail();
@@ -3632,13 +3632,18 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
   @Override
   public void sendSms(Map<String, Object> smsList){
-    int userId = (int) smsList.get("userId");
+	  logger.debug("====inSendSMS111=====" + smsList.toString());
+	  logger.debug("====inSendSMS111=====" + smsList.get("userId"));
+	  logger.debug("====inSendSMS111=====" + Integer.parseInt(smsList.get("userId").toString()));
+    int userId = Integer.parseInt(smsList.get("userId").toString());
     SmsVO sms = new SmsVO(userId, 975);
+
+    logger.debug("====inSendSMS111=====");
 
     sms.setMessage(smsList.get("smsMessage").toString());
     sms.setMobiles(smsList.get("smsMobileNo").toString());
     //send SMS
-    LOGGER.debug("smsmsg111===" + smsList.toString());
+    logger.debug("smsmsg111===" + smsList.toString());
 
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
@@ -3693,7 +3698,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		e.printStackTrace();
 	}
 
-    LOGGER.info("[END] HelloWorld...");
+    logger.info("[END] HelloWorld...");
 
 
     email.setTo(emailNo);
@@ -3730,8 +3735,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
   @Autowired
   private ReportBatchService reportBatchService;
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ReportBatchController.class);
 
   @Value("${report.datasource.driver-class-name}")
   private String reportDriverClass;
@@ -3798,7 +3801,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	            params);
 	      }
 	    } catch (Exception ex) {
-	      LOGGER.error(CommonUtils.printStackTraceToString(ex));
+	    	logger.error(CommonUtils.printStackTraceToString(ex));
 	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
 
 	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
@@ -3821,11 +3824,11 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		String smsMessage = "";
 		smsResultValue.put("smsLogStat", "0");//if success
 
-		 LOGGER.debug("================INSMS111================");
-		 LOGGER.debug("ApptypeID===" + ApptypeID);
-		 LOGGER.debug("InstallationResult====" + installResult.toString());
-		 LOGGER.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
-		 LOGGER.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("CTID")).toString());
+		logger.debug("================INSMS111================");
+		logger.debug("ApptypeID===" + ApptypeID);
+		logger.debug("InstallationResult====" + installResult.toString());
+		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
+		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("CTID")).toString());
 
 		 if(CommonUtils.nvl(installResult.get("userId")).toString() != ""){ //from Mobile
 			 installResult.put("ctCode", installResult.get("userId"));
@@ -3840,7 +3843,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
 			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
 			    {
-			        LOGGER.debug("================INSMS================");
+				 logger.debug("================INSMS================");
 
 			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
 
@@ -3849,7 +3852,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			    	}else{ //FAIL
 			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
 			    	}
-			    	LOGGER.debug("================SMS MESSAGE================" + smsMessage);
+			    	logger.debug("================SMS MESSAGE================" + smsMessage);
 			    }
 
 		 }
@@ -3863,7 +3866,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		try{
 		    if(smsMessage != "")
 		    {
-		    	LOGGER.debug("================SENDSMS================");
+		    	logger.debug("================SENDSMS================");
+		    	logger.debug(smsList.toString());
 		    	sendSms(smsList);
 		    }
 		}catch(Exception e){
