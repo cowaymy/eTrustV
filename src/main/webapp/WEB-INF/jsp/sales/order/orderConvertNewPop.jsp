@@ -17,11 +17,11 @@ var cnvrListGrid;
 		setInputFile();
 		creatGrid();
 		$("#uploadGrid").hide();
-		
+
 		fn_changeCombo("REG");
-		
+
 	});
-	
+
 	function creatGrid(){
 
 		var upColLayout = [ {
@@ -29,7 +29,7 @@ var cnvrListGrid;
 	        headerText : "order no",
 	        width : 100
 	    }];
-		
+
 	    var cnvrColLayout = [ {
 	        dataField : "ordNo",
 	        headerText : "<spring:message code='sal.text.ordNo' />",
@@ -62,19 +62,19 @@ var cnvrListGrid;
            dataField : "chkSaveRow",
            visible : false
        }];
-	    
+
 	    var upOptions = {
 	               showStateColumn:false,
 	               showRowNumColumn    : true,
 	               usePaging : false,
 	               editable : false,
 	               softRemoveRowMode:false
-	         }; 
-	    
+	         };
+
 	    uploadGrid = GridCommon.createAUIGrid("#uploadGrid", upColLayout, "", upOptions);
 	    cnvrListGrid = GridCommon.createAUIGrid("#cnvrListGrid", cnvrColLayout, "", upOptions);
 	}
-	
+
 	//**************************************************
     //** 업로드 파일 내용을 Grid에 적용하기
     //**************************************************
@@ -86,21 +86,21 @@ var cnvrListGrid;
             if (typeof file == "undefined") {
                 return;
             }
-            
+
             var reader = new FileReader();
             //reader.readAsText(file); // 파일 내용 읽기
             reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
             reader.onload = function(event) {
                 if (typeof event.target.result != "undefined") {
-                                        
+
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
-                    
+
                     //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                     AUIGrid.removeRow(uploadGrid,0);
-                    
+
                     fn_checkNewCnvr();
-                    
+
                 } else {
                     alert('No data to import!');
                 }
@@ -111,7 +111,7 @@ var cnvrListGrid;
             };
 
     });
-	
+
     function fn_checkNewCnvr(){
         var data = GridCommon.getGridData(uploadGrid);
         data.form = $("#newCnvrForm").serializeJSON();
@@ -120,12 +120,12 @@ var cnvrListGrid;
 
 
             console.log("성공." + JSON.stringify(result));
-            console.log("data : " + result.data);              
-                                    
+            console.log("data : " + result.data);
+
             AUIGrid.setGridData(cnvrListGrid, result.data);
-                    
+
             AUIGrid.setProp(cnvrListGrid, "rowStyleFunction", function(rowIndex, item) {
-                if(item.rentalStus != $("#pRsCnvrStusFrom").val()) { 
+                if(item.rentalStus != $("#pRsCnvrStusFrom").val()) {
                 	item.chkSaveRow = "N";
                     return "my-row-style";
                 }
@@ -135,11 +135,11 @@ var cnvrListGrid;
                 }
                 return "";
 
-            }); 
+            });
 
             // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
             AUIGrid.update(cnvrListGrid);
-                    
+
             }
         , function(jqXHR, textStatus, errorThrown){
              try {
@@ -156,19 +156,19 @@ var cnvrListGrid;
          });
 
     }
-	
+
 	function setInputFile(){//인풋파일 세팅하기
 		$(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 	}
 
 	function fn_changeCombo(value){
-	    
+
 	    var targetObj = document.getElementById("pRsCnvrStusTo");
-	    
+
 	    for (var i = targetObj.length - 1; i >= 0; i--) {
 	        targetObj.remove(i);
 	    }
-	    
+
 	    if(value=="REG"){
 	        $('<option />', { value: "INV", text: "Investigate"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
 	        $('<option />', {value: "SUS", text: "Suspend" }).appendTo($("#pRsCnvrStusTo"));
@@ -193,7 +193,7 @@ var cnvrListGrid;
 	        $('<option />', { value: "WOF", text: "Write Off"}).appendTo($("#pRsCnvrStusTo")).attr("selected", "true");
 	    }
 	}
-	
+
 	function fn_saveNewCnvr(){
 	    var data = GridCommon.getGridData(cnvrListGrid);
 	    data.form = $("#newCnvrForm").serializeJSON();
@@ -201,12 +201,12 @@ var cnvrListGrid;
 	    var idx = AUIGrid.getRowCount(cnvrListGrid);
 	    var cnt = 0;
 	    var rsCnvrFeesApplyChk = 0;
-	    for(var i=0; i < idx; i++){     
+	    for(var i=0; i < idx; i++){
 	        if(AUIGrid.getCellValue(cnvrListGrid, i, "chkSaveRow") == "N"){
 	            cnt++;
-	        }           
+	        }
 	    }
-	    
+
 	    if(cnt > 0){
 	    	//Common.alert("There are "+cnt+"invalid item(s) in this conversion batch</br> Confirm conversion batch is disallowed.");
 	    	alert($('input:checkbox[id="rsCnvrReactFeesApply"]').is(":checked"));
@@ -218,15 +218,15 @@ var cnvrListGrid;
             return false;
         }
 
-	    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){         
-	            
+	    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+
 	        Common.ajax("POST", "/sales/order/saveNewConvertList", data, function(result){
 
 	            console.log("성공." + JSON.stringify(result));
 	            console.log("data : " + result.data);
-	            
+
 	            Common.alert("<spring:message code='sal.alert.msg.newConversionBatchSuccessfully' />", fn_end);       // 메시지 다시 만들어야함.
-	          
+
 	        }
 	        , function(jqXHR, textStatus, errorThrown){
 	            try {
@@ -244,7 +244,7 @@ var cnvrListGrid;
 
 	    }));
 	}
-	
+
 	function fn_end(){
 		$("#_closeNew").click();
 	}
@@ -298,7 +298,7 @@ var cnvrListGrid;
 </tr>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox" id="rsCnvrReactFeesApply" name="rsCnvrReactFeesApply" value="1" checked/><span><spring:message code="sal.text.reactiveFeesApply" /> ?</span></label>
+    <label><input type="checkbox" id="rsCnvrReactFeesApply" name="rsCnvrReactFeesApply" value="1" checked disabled="disabled"/><span><spring:message code="sal.text.reactiveFeesApply" /> ?</span></label>
     </td>
 </tr>
 <tr>
