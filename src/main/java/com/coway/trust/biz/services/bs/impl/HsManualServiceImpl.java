@@ -1879,6 +1879,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       bsd.put("SerialNo", docSub.get("serialNo") != null ? String.valueOf(docSub.get("serialNo")) : "");
       bsd.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason") != null ? String.valueOf(docSub.get("filterSerialUnmatchReason")) : "");
       bsd.put("sSerialNo", docSub.get("sSerialNo") != null ? String.valueOf(docSub.get("sSerialNo")) : "");
+      bsd.put("oldSerialNo", docSub.get("oldSerialNo") != null ? String.valueOf(docSub.get("oldSerialNo")) : "");
 
       bsResultDet.add(bsd);
     }

@@ -1307,12 +1307,14 @@
                                    END AS NAME,
                            distinct1.IS_RETURN
                            ,C.FILTER_SRL_UNMATCH_RSN FILTER_SERIAL_UNMATCH_REASON
+                           ,distinct1.SRV_FILTER_prev_SERIAL AS old_serial_no
                FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
                            f.STK_CODE,
                            f.STK_DESC,
                            f.SERIAL_CHK,
                            e.SRV_FILTER_STK_ID,
                            e.IS_RETURN
+                           ,e.SRV_FILTER_prev_SERIAL
                      FROM SVC0008D A,
                               SAL0090D D,
                               SAL0087D E,
@@ -1991,6 +1993,7 @@
         SERIAL_NO
         ,FILTER_BARCD_SERIAL_NO
         , FILTER_SRL_UNMATCH_RSN
+        ,OLD_FILTER_BARCD_SERIAL_NO
         ) VALUES ( SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
         ,
         #{bsResultId}
@@ -2006,6 +2009,7 @@
         , nvl(#{serialNo}, '')
         ,nvl(#{serialNo}, '')
         ,nvl(#{filterSerialUnmatchReason}, '')
+        ,nvl(#{oldSerialNo}, '')
         )
     </insert>
 
@@ -3648,7 +3652,9 @@
 		,BS_RESULT_CRT_USER_ID
 		,BS_RESULT_FILTER_CLM
 		,SERIAL_NO
+		,FILTER_BARCD_SERIAL_NO
 		,FILTER_SRL_UNMATCH_RSN
+		,OLD_FILTER_BARCD_SERIAL_NO
 		)
 		values
 		(
@@ -3662,7 +3668,9 @@
 		,#{BSResultCreateBy}
 		,nvl(#{BSResultFilterClaim},0)
 		,nvl(#{SerialNo}, '')
+		,nvl(#{SerialNo}, '')
 		,nvl(#{filterSerialUnmatchReason}, '')
+		,nvl(#{oldSerialNo}, '')
 		)
 	</insert>
 
@@ -5194,7 +5202,7 @@ SELECT Distinct1.C1 C1  ,
 		,sysdate
 		,#{BSResultPartID}
 		,#{BSResultPartQty}
-		,nvl(#{SerialNo}, '')
+		,nvl(#{oldSerialNo}, '')
 		,#{CodyId}
 		,#{ResultId}
 

@@ -157,7 +157,7 @@ var myDetailGridData = null;
     myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
 
     AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
-	  if (event.columnIndex == 4 || event.columnIndex == 5 || event.columnIndex == 7 || event.columnIndex == 8){
+	  if (event.columnIndex == 4 || event.columnIndex == 5 || event.columnIndex == 9 || event.columnIndex == 10){
         if ($("#cmbStatusType2").val() == 4) {    // Completed
           return true;
         } else if ($("#cmbStatusType2").val() == 21) {    // Failed
@@ -227,7 +227,7 @@ var myDetailGridData = null;
         }
       }*/
 
-      if (event.columnIndex == 4) {
+      if (event.columnIndex == 5) {
           console.log("event.item.name :: " + event.item.name);
           if(event.item.name > 1){
               Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
@@ -235,7 +235,7 @@ var myDetailGridData = null;
           }
       }
 
-      if (event.columnIndex == 7) { //7-old serial number
+      if (event.columnIndex == 9) { //7-old serial number
 
           console.log("event.item.name :: " + event.item.name);
           if(event.item.name > 1){
@@ -253,7 +253,7 @@ var myDetailGridData = null;
           }
       }
 
-      if (event.columnIndex == 8) {
+      if (event.columnIndex == 10) {
           console.log("event.item.name :: " + event.item.name);
           if(event.item.name > 1){
               Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
