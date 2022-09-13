@@ -126,6 +126,7 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 	    BigDecimal TotalDNRPFFrame = BigDecimal.ZERO;
 	    BigDecimal TotalCNRPF = BigDecimal.ZERO;
 	    BigDecimal TotalCNRPFFrame = BigDecimal.ZERO;
+	    int fraSalesOrdId = 0;
 
 	    if (view != null) {
 	      int salesOrdId = Integer.parseInt(String.valueOf(view.get("salesOrdId")));
@@ -134,10 +135,13 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 	      String rentalStatus = String.valueOf(view.get("stusCodeId1"));
 	      int bndlId = Integer.parseInt(String.valueOf(view.get("bndlId")));
 	      int pacId = 3;
-	      int fraSalesOrdId = Integer.parseInt(String.valueOf(view.get("fraOrdId")));
 
 	      params.put("salesOrdId", salesOrdId);
-	      params.put("fraSalesOrdId", fraSalesOrdId);
+
+	      if(CommonUtils.nvl(view.get("fraOrdId").toString()) != "" && CommonUtils.nvl(view.get("fraOrdId").toString())!= null){
+	    	  fraSalesOrdId =  Integer.parseInt(String.valueOf(view.get("fraOrdId")));
+	    	  params.put("fraSalesOrdId", fraSalesOrdId);
+	      }
 
 	      if (appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderStatusID == SalesConstants.STATUS_COMPLETED) {
 
@@ -252,63 +256,13 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 	          TotalOutstanding = (BigDecimal) rlMap.get("rentAmt");
 	        }
 
-	     	//GET Frame
-	        EgovMap frameRlMap = orderRequestMapper.selectAccRentLedgerFrame3(params);
-
-	        if (CommonUtils.intNvl(frameRlMap.get("cnt")) > 0) {
-
-	          EgovMap frameTbMap = orderRequestMapper.selectAccRentLedgerFrame(params);
-
-	          if (CommonUtils.intNvl(frameTbMap.get("cnt")) > 0) {
-	            TotalBillAmtFrame = (BigDecimal) frameTbMap.get("rentAmt");
-	          }
-
-	          EgovMap frameDnMap = orderRequestMapper.selectTotalDNBillFrame(params);
-
-	          if (CommonUtils.intNvl(frameDnMap.get("cnt")) > 0) {
-	            TotalDNBillFrame = (BigDecimal) frameDnMap.get("rentAmt");
-	          }
-
-	          EgovMap frameCnMap = orderRequestMapper.selectTotalCNBillFrame(params);
-
-	          if (CommonUtils.intNvl(frameCnMap.get("cnt")) > 0) {
-	            TotalCNBillFrame = (BigDecimal) frameCnMap.get("cnAmount");
-	          }
-
-	          EgovMap frameTbMap2 = orderRequestMapper.selectAccRentLedgerFrame2(params);
-
-	          if (CommonUtils.intNvl(frameTbMap2.get("cnt")) > 0) {
-	            TotalBillRPFFrame = (BigDecimal) frameTbMap2.get("rentAmt");
-	          }
-
-	          EgovMap frameDnMap2 = orderRequestMapper.selectTotalDNBillFrame2(params);
-
-	          if (CommonUtils.intNvl(frameDnMap2.get("cnt")) > 0) {
-	            TotalDNRPFFrame = (BigDecimal) frameDnMap2.get("rentAmt");
-	          }
-
-	          EgovMap FrameCnMap2 = orderRequestMapper.selectTotalCNBillFrame2(params);
-
-	          if (CommonUtils.intNvl(FrameCnMap2.get("cnt")) > 0) {
-	            TotalCNRPFFrame = (BigDecimal) FrameCnMap2.get("cnAmount");
-	          }
-
-	          TotalOutstandingFrame = (BigDecimal) frameRlMap.get("rentAmt");
-	        }
-
 	        // Get Last Bill Month
 	        if (CommonUtils.intNvl(rlMap.get("cnt")) > 0) {
-	          EgovMap lbMap = orderRequestMapper.selectLastBill(params);
+	            EgovMap lbMap = orderRequestMapper.selectLastBill(params);
 
-	          if (lbMap != null) {
-	            LastBillMth = CommonUtils.intNvl(lbMap.get("rentInstNo"));
-	          }
-
-	          EgovMap frameLbMap = orderRequestMapper.selectLastBillFrame(params);
-
-	          if (frameLbMap != null) {
-	            LastBillMthFrame = CommonUtils.intNvl(frameLbMap.get("rentInstNo"));
-	          }
+		        if (lbMap != null) {
+		          LastBillMth = CommonUtils.intNvl(lbMap.get("rentInstNo"));
+		        }
 	        }
 
 	        // Get Current Bill Month
@@ -327,20 +281,81 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 	          }
 	        }
 
-	        EgovMap qryMaxBillMonthFrame = orderRequestMapper.selectRentalInstFrame(params);
+	        logger.debug("fraSOID111===" + view.toString());
+	        logger.debug("fraSOID111===" + fraSalesOrdId);
+	    	logger.debug("fraSOID111===" + params.get("fraSalesOrdId").toString());
 
-	        if (qryMaxBillMonthFrame != null) {
-	          if (Integer.parseInt(((String) qryMaxBillMonthFrame.get("rentInstDt")).substring(0, 6) + "01") <= CommonUtils
-	              .intNvl(CommonUtils.getNowDate())) {
-	            CurrentBillMthFrame = CommonUtils.intNvl(qryMaxBillMonthFrame.get("rentInstNo"));
-	          } else {
-	            EgovMap qryCurrentBillMonthFrame = orderRequestMapper.selectRentalInstFrame2(params);
+	        //FRAME
+		    if(CommonUtils.intNvl(fraSalesOrdId) > 0){
+		     	//GET Frame
+		        EgovMap frameRlMap = orderRequestMapper.selectAccRentLedgerFrame3(params);
 
-	            if (qryCurrentBillMonthFrame != null) {
-	            	CurrentBillMthFrame = CommonUtils.intNvl(qryCurrentBillMonthFrame.get("rentInstNo"));
-	            }
-	          }
-	        }
+		        if (CommonUtils.intNvl(frameRlMap.get("cnt")) > 0) {
+
+		          EgovMap frameTbMap = orderRequestMapper.selectAccRentLedgerFrame(params);
+
+		          if (CommonUtils.intNvl(frameTbMap.get("cnt")) > 0) {
+		            TotalBillAmtFrame = (BigDecimal) frameTbMap.get("rentAmt");
+		          }
+
+		          EgovMap frameDnMap = orderRequestMapper.selectTotalDNBillFrame(params);
+
+		          if (CommonUtils.intNvl(frameDnMap.get("cnt")) > 0) {
+		            TotalDNBillFrame = (BigDecimal) frameDnMap.get("rentAmt");
+		          }
+
+		          EgovMap frameCnMap = orderRequestMapper.selectTotalCNBillFrame(params);
+
+		          if (CommonUtils.intNvl(frameCnMap.get("cnt")) > 0) {
+		            TotalCNBillFrame = (BigDecimal) frameCnMap.get("cnAmount");
+		          }
+
+		          EgovMap frameTbMap2 = orderRequestMapper.selectAccRentLedgerFrame2(params);
+
+		          if (CommonUtils.intNvl(frameTbMap2.get("cnt")) > 0) {
+		            TotalBillRPFFrame = (BigDecimal) frameTbMap2.get("rentAmt");
+		          }
+
+		          EgovMap frameDnMap2 = orderRequestMapper.selectTotalDNBillFrame2(params);
+
+		          if (CommonUtils.intNvl(frameDnMap2.get("cnt")) > 0) {
+		            TotalDNRPFFrame = (BigDecimal) frameDnMap2.get("rentAmt");
+		          }
+
+		          EgovMap FrameCnMap2 = orderRequestMapper.selectTotalCNBillFrame2(params);
+
+		          if (CommonUtils.intNvl(FrameCnMap2.get("cnt")) > 0) {
+		            TotalCNRPFFrame = (BigDecimal) FrameCnMap2.get("cnAmount");
+		          }
+
+		          TotalOutstandingFrame = (BigDecimal) frameRlMap.get("rentAmt");
+		        }
+
+		        // Get Last Bill Month
+		        if (CommonUtils.intNvl(rlMap.get("cnt")) > 0) {
+
+		        	EgovMap frameLbMap = orderRequestMapper.selectLastBillFrame(params);
+
+		        	if (frameLbMap != null) {
+		        		LastBillMthFrame = CommonUtils.intNvl(frameLbMap.get("rentInstNo"));
+		        	}
+		        }
+
+		        EgovMap qryMaxBillMonthFrame = orderRequestMapper.selectRentalInstFrame(params);
+
+		        if (qryMaxBillMonthFrame != null) {
+		          if (Integer.parseInt(((String) qryMaxBillMonthFrame.get("rentInstDt")).substring(0, 6) + "01") <= CommonUtils
+		              .intNvl(CommonUtils.getNowDate())) {
+		            CurrentBillMthFrame = CommonUtils.intNvl(qryMaxBillMonthFrame.get("rentInstNo"));
+		          } else {
+		            EgovMap qryCurrentBillMonthFrame = orderRequestMapper.selectRentalInstFrame2(params);
+
+		            if (qryCurrentBillMonthFrame != null) {
+		            	CurrentBillMthFrame = CommonUtils.intNvl(qryCurrentBillMonthFrame.get("rentInstNo"));
+		            }
+		          }
+		        }
+		    }
 	      }
 	    }
 
@@ -364,7 +379,9 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 	    view.put("totalcnbillFrame", TotalCNBillFrame);
 	    view.put("totaldnrpfFrame", TotalDNRPFFrame);
 	    view.put("totalcnrpfFrame", TotalCNRPFFrame);
+
 	    System.out.println(view.toString());
+        logger.debug("fraSOID111===" + view.toString());
 
 	    return view;
   }

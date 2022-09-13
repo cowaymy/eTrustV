@@ -82,10 +82,10 @@
         if(date.toString().length == 1){
             date = "0" + date;
         }
-        var downFileName = "hcRentalToOutright_"+$("#txtOrderNoMat").val().trim() + " _ " +  date+(new Date().getMonth()+1)+new Date().getFullYear();
-        $("#downFileName").val(downFileName);
+        var downFileName = "hcRentalToOutright_"+$("#txtOrderNoMat").val().trim() + "_" +  date+(new Date().getMonth()+1)+new Date().getFullYear();
+        $("#reportDownFileName").val(downFileName);
 
-        console.log($("#downFileName").val());
+        console.log($("#reportDownFileName").val());
 
         console.log("reportFileName : " + $("#reportFileName").val());
 
@@ -111,9 +111,7 @@
         $("#_printBranchCode").val('${brnchCode}');  //string BranchCode = li.BranchCode;
         $("#_printOutrightPrice").val($("#txtOutrightPrice").val());  // decimal OutrightPrice = decimal.Parse(txtOutrightPrice.Text.Trim());
         $("#_printLastBillMth").val($("#hiddenLastBillMth").val());  //int LastBillMth = int.Parse(hiddenLastBillMth.Value);
-        $("#_printLastBillMthFrame").val($("#hiddenLastBillMthFrame").val());  //int LastBillMth = int.Parse(hiddenLastBillMth.Value);
         $("#_printTotalBillAmt").val($("#txtTotalBillAmtMat").val()); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
-        $("#_printTotalBillFrame").val($("#txtTotalBillAmtFrame").val()); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
         $("#_printTotalOutstanding").val($("#hiddenTotalOutstandingTotal").val());  //decimal TotalOutstanding = decimal.Parse(txtCurrentOutstanding.Text.Trim());
         $("#_printAdjPercent").val($("#hiddenAdjPercent").val());  //decimal AdjPercent = decimal.Parse(hiddenAdjPercent.Value);
         $("#_printAdjPercentAmt").val($("#hiddenAdjPercentAmt").val()); //decimal AdjPercentAmt = decimal.Parse(hiddenAdjPercentAmt.Value);
@@ -122,6 +120,22 @@
         $("#_printAdjFixInd").val($("#hiddenAdjFixInd").val());  //string AdjFixInd = hiddenAdjFixInd.Value;
         $("#_printConversionAmt").val($("#txtConvertAmt").val());  //decimal ConversionAmt = decimal.Parse(txtConvertAmt.Text.Trim());
         $("#_printTotalAmt").val($("#txtTotalAmt").val());  //decimal TotalAmt = decimal.Parse(txtTotalAmt.Text.Trim()); */
+
+        if($('#txtOrderNoFrame').val() != '' && $('#txtOrderNoFrame').val() != null){
+            console.log("NOTempty111");
+        	 $("#_printLastBillMthFrame").val($("#hiddenLastBillMthFrame").val());  //int LastBillMth = int.Parse(hiddenLastBillMth.Value);
+             $("#_printTotalBillFrame").val($("#txtTotalBillAmtFrame").val()); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
+        }
+        else{
+        	console.log("empty111");
+        	var zero = "0";
+        	 $("#_printLastBillMthFrame").val(zero);  //int LastBillMth = int.Parse(hiddenLastBillMth.Value);
+             $("#_printTotalBillFrame").val(zero); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
+        }
+
+        console.log("txtOrderNoFrame : " + $("#txtOrderNoFrame").val());
+        console.log("_printLastBillMthFrame : " + $("#hiddenLastBillMthFrame").val());
+        console.log("_printTotalBillFrame : " + $("#txtTotalBillAmtFrame").val());
 
         //Generate Report
         var option = { isProcedure : false};
@@ -136,73 +150,96 @@
         if(!FormUtil.checkReqValue($('#txtOrderNoMat'))) {
 
                 Common.ajax("GET", "/homecare/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : $('#txtOrderNoMat').val()}, function(result) {
-                    if(fn_validInfoSimul()) {
-                    	console.log("result111");
-                    	console.log(result);
+                	if(result!= null){
+	                    if(fn_validInfoSimul()) {
+	                    	console.log("result111");
+	                    	console.log(result);
 
-                        var installdate = result.installdate;
-                        var today = '${toDay}';
-                      //var today = Number(todayYMD.substr(0, 4)) * 12;
+	                        var installdate = result.installdate;
+	                        var today = '${toDay}';
+	                      //var today = Number(todayYMD.substr(0, 4)) * 12;
 
-                        console.log('installdate:'+installdate);
-                        console.log('today:'+today);
+	                        console.log('installdate:'+installdate);
+	                        console.log('today:'+today);
 
-                        var monthDiff = ((Number(today.substr(0, 4)) * 12) + Number(today.substr(4, 2))) - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
-                        var totalBillAmt, totalBillAmtFrame;
+	                        var monthDiff = ((Number(today.substr(0, 4)) * 12) + Number(today.substr(4, 2))) - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
+	                        var totalBillAmt,
+	                        totalBillAmtFrame = 0;
 
-                        console.log('monthDiff:'+monthDiff);
+	                        console.log('monthDiff:'+monthDiff);
 
-                        if(monthDiff >= 1) {
-                            totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
-                            totalBillAmtFrame = (result.totalbillamtFrame + result.totaldnbill - result.totalcnbill);
-                        }
-                        else {
-                            totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
-                            totalBillAmtFrame = (result.totalbillamtFrame + result.totaldnbillFrame - result.totalcnbillFrame) + (result.totalbillrpfFrame + result.totaldnrpfFrame - result.totalcnrpfFrame);
-                        }
+	                        console.log('framNo111:'+ $('#txtOrderNoFrame').val());
+	                        if(monthDiff >= 1) {
+	                            totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
+	                        }
+	                        else {
+	                            totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
+	                        }
 
-                        $('#hiddenOrderID').val(result.salesOrdId);
-                        $('#hiddenOrderIDMat').val(result.salesOrdId);
-                        $('#hiddenOrderIDFrame').val(result.fraOrdId);
-                        $('#hiddenStockID').val(result.itmStkId);
-                        $('#hiddenOrderDate').val(result.ordDt2);
-                        $('#hiddenInstallDate').val(result.installDt2);
-                        $('#hiddenTotalBillRPF').val(result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
-                        $('#hiddenLastBillMth').val(result.lastbillmth);
-                        $('#hiddenLastBillMthFrame').val(result.lastbillmthFrame);
-                        $('#hiddenDiffInstallMonth').val(monthDiff);
-                        $('#txtOrderNoFrame').val(result.fraOrdNo);
-                        $('#hiddenTotalOutstandingTotal').val(result.totaloutstanding + result.totaloutstandingFrame);
+	                        $('#hiddenOrderID').val(result.salesOrdId);
+	                        $('#hiddenOrderIDMat').val(result.salesOrdId);
+	                        $('#hiddenStockID').val(result.itmStkId);
+	                        $('#hiddenOrderDate').val(result.ordDt2);
+	                        $('#hiddenInstallDate').val(result.installDt2);
+	                        $('#hiddenTotalBillRPF').val(result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
+	                        $('#hiddenLastBillMth').val(result.lastbillmth);
+	                        $('#hiddenDiffInstallMonth').val(monthDiff);
 
-                        console.log('result.totaloutstandingFrame:'+result.totaloutstandingFrame);
-                        console.log('result.totaloutstanding:'+result.totaloutstanding);
-                        console.log('hiddenTotalOutstandingTotal:'+ $('#hiddenTotalOutstandingTotal').val());
+	                        $('#txtOutrightPrice').val(result.outrightprice);
+                            $('#txtTotalBillAmtMat').val(totalBillAmt);
+                            $('#txtCurrentBillMthMat').val(result.currentbillmth);
+                            $('#txtCurrentOutstandingMat').val(result.totaloutstanding);
 
-                        $('#txtOutrightPrice').val(result.outrightprice);
-                        $('#txtTotalBillAmtMat').val(totalBillAmt);
-                        $('#txtCurrentBillMthMat').val(result.currentbillmth);
-                        $('#txtCurrentOutstandingMat').val(result.totaloutstanding);
+                            $('#cmbPercentageInd').removeAttr("disabled");
+                            $('#txtPercentage').val('0');
+                            $('#txtPercentage').removeAttr("disabled");
+                            $('#cmbFixAmountInd').removeAttr("disabled");
+                            $('#txtFixAmount').val('0');
+                            $('#txtFixAmount').removeAttr("disabled");
 
-                        $('#txtTotalBillAmtFrame').val(totalBillAmtFrame);
-                        $('#txtCurrentBillMthFrame').val(result.currentbillmthFrame);
-                        $('#txtCurrentOutstandingFrame').val(result.totaloutstandingFrame);
+                            //FRAME
+                            if(result.fraOrdNo != '0'){
+                            	if(monthDiff >= 1) {
+                            	    totalBillAmtFrame = (result.totalbillamtFrame + result.totaldnbill - result.totalcnbill);
+                                }
+                                else {
+                                    totalBillAmtFrame = (result.totalbillamtFrame + result.totaldnbillFrame - result.totalcnbillFrame) + (result.totalbillrpfFrame + result.totaldnrpfFrame - result.totalcnrpfFrame);
+                                }
 
-                        $('#cmbPercentageInd').removeAttr("disabled");
-                        $('#txtPercentage').val('0');
-                        $('#txtPercentage').removeAttr("disabled");
-                        $('#cmbFixAmountInd').removeAttr("disabled");
-                        $('#txtFixAmount').val('0');
-                        $('#txtFixAmount').removeAttr("disabled");
+                            	$('#txtOrderNoFrame').val(result.fraOrdNo);
+                                $('#hiddenOrderIDFrame').val(result.fraOrdId);
+                                $('#hiddenLastBillMthFrame').val(result.lastbillmthFrame);
+                                $('#hiddenTotalOutstandingTotal').val(result.totaloutstanding + result.totaloutstandingFrame);
 
-                        $('#txtOrderNoMat').prop("disabled", true);
-                        $('#txtOrderNoFrame').prop("disabled", true);
-                        $('#btnConfirmSimulMat').addClass("blind");
-                        $('#btnReselectSimulMat').removeClass("blind");
-                        $('#btnViewLedgerSimulMat').removeClass("blind");
-                        //$('#btnPrintSimulMat').removeClass("blind");
+                                $('#txtTotalBillAmtFrame').val(totalBillAmtFrame);
+                                $('#txtCurrentBillMthFrame').val(result.currentbillmthFrame);
+                                $('#txtCurrentOutstandingFrame').val(result.totaloutstandingFrame);
+                            }
+                            else{
+                            	$('#txtOrderNoFrame').val('');
+                                $('#hiddenOrderIDFrame').val('');
+                                $('#hiddenLastBillMthFrame').val('');
+                                $('#hiddenTotalOutstandingTotal').val(result.totaloutstanding);
 
-                        fn_calcConvAmountMat();
-                    }
+                                $('#txtTotalBillAmtFrame').val('');
+                                $('#txtCurrentBillMthFrame').val('');
+                                $('#txtCurrentOutstandingFrame').val('');
+                            }
+
+	                        console.log('result.totaloutstandingFrame:'+result.totaloutstandingFrame);
+	                        console.log('result.totaloutstanding:'+result.totaloutstanding);
+	                        console.log('hiddenTotalOutstandingTotal:'+ $('#hiddenTotalOutstandingTotal').val());
+
+	                        $('#txtOrderNoMat').prop("disabled", true);
+	                        $('#txtOrderNoFrame').prop("disabled", true);
+	                        $('#btnConfirmSimulMat').addClass("blind");
+	                        $('#btnReselectSimulMat').removeClass("blind");
+	                        $('#btnViewLedgerSimulMat').removeClass("blind");
+	                        //$('#btnPrintSimulMat').removeClass("blind");
+
+	                        fn_calcConvAmountMat();
+	                    }
+	                }
                 });
 
         }
@@ -332,7 +369,7 @@
     <!--essential Params -->
     <input type="hidden" id="reportFileName" name="reportFileName" value="/homecare/hcRentalToOutrightSimulatorForm.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
-    <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
 
     <!-- params -->
     <input type="hidden" id="_printOrdId" name="OrderID" />

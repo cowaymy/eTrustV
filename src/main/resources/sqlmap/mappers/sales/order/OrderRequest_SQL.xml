@@ -1619,7 +1619,7 @@
     FROM PAY0022D T1
     JOIN PAY0002D T2 ON T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO
                     AND 43 = T2.ADJ_ENTRY_DR_ACC_ID
-    WHERE T1.RENT_SO_ID = #{salesOrdId}
+    WHERE T1.RENT_SO_ID = #{fraSalesOrdId}
       AND 157 = T1.RENT_DOC_TYPE_ID
       AND T1.RENT_AMT > 0
 
@@ -1631,7 +1631,7 @@
     JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
                     AND 1294 = T4.MEMO_ADJ_TYPE_ID
                     AND 4 = T4.MEMO_ADJ_STUS_ID
-    WHERE T3.RENT_SO_ID = #{salesOrdId}
+    WHERE T3.RENT_SO_ID = #{fraSalesOrdId}
     AND 161 = T3.RENT_DOC_TYPE_ID
     AND T3.RENT_AMT > 0
     ) U1 ) D1
@@ -1769,7 +1769,7 @@
                                   AND (T1.RENT_DOC_NO LIKE 'INS%' )))
                                   AND (43 = T2.ADJ_ENTRY_CR_ACC_ID)
                                   AND (155 = T2.ADJ_ENTRY_NOTE_TYPE_ID)
-                  WHERE (T1.RENT_SO_ID = #{salesOrdId} )
+                  WHERE (T1.RENT_SO_ID = #{fraSalesOrdId} )
                     AND (155 = T1.RENT_DOC_TYPE_ID )
                     AND (T1.RENT_AMT &lt; 0 )
 
@@ -1782,7 +1782,7 @@
     JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
                     AND 1293 = T4.MEMO_ADJ_TYPE_ID
                     AND 4 = T4.MEMO_ADJ_STUS_ID
-    WHERE ( T3.RENT_SO_ID = #{salesOrdId} )
+    WHERE ( T3.RENT_SO_ID = #{fraSalesOrdId} )
       AND ( 161 = T3.RENT_DOC_TYPE_ID )
       AND ( T3.RENT_AMT > 0 )
     ) U1
