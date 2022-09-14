@@ -2667,10 +2667,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           LOGGER
               .info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT param : " + revDetailMap.toString());
           posMapper.insertPosReversalDetail(revDetailMap);
-
-          if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK)) {
-            posMapper.updateLOG0106MDetail(revDetailMap);
-          }
+          posMapper.updateLOG0106MDetail(revDetailMap);
           LOGGER.info("############### 2 - [" + idx + "]  POS DETAIL REVERSAL INSERT END  ################");
         }
       }
