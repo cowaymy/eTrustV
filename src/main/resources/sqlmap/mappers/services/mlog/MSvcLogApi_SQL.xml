@@ -1568,6 +1568,7 @@
                   NULL AS is_Fill_Filter_Info, /* Hui Ding - Added previous used filter serial 2021-11-24 */
                   S08A.CODY_ID,
                   S26B.STK_CODE
+                  ,S08A.STUS_CODE_ID
            FROM SAL0001D S01A
            INNER JOIN SAL0002D S02A ON S02A.SALES_ORD_ID = S01A.SALES_ORD_ID
            INNER JOIN SYS0026M S26A ON S26A.STK_ID = S02A.ITM_STK_ID
