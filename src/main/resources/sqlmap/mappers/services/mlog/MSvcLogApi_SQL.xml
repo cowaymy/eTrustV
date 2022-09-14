@@ -1516,11 +1516,12 @@
            S07A.BS_RESULT_PART_QTY,
            CASE WHEN TO_NUMBER(S07A.BS_RESULT_PART_QTY, '99999') > 0
                   THEN 'Y'
-                  WHEN A.STUS_CODE_ID = 1 THEN
-                  'Y'
                   ELSE 'N' END AS chg_Y_N,
            '' AS ex_Chgid,
-           TO_CHAR(S07A.BS_RESULT_PART_QTY) AS chg_Qty,
+           case WHEN A.STUS_CODE_ID = 1 THEN
+           TO_CHAR(A.quanity)
+           else
+           TO_CHAR(S07A.BS_RESULT_PART_QTY) end AS chg_Qty,
            TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_Y_N,
            1
            ,TO_CHAR(NVL(S07A.FILTER_BARCD_SERIAL_NO,'')) filter_Barcd_Serial_No /*  Hui Ding - Added previous used filter serial 2021-11-24 */
@@ -1567,7 +1568,6 @@
                   NULL AS is_Fill_Filter_Info, /* Hui Ding - Added previous used filter serial 2021-11-24 */
                   S08A.CODY_ID,
                   S26B.STK_CODE
-                  ,S08A.STUS_CODE_ID /* Hui Ding - Added previous used filter serial 2021-11-24 */
            FROM SAL0001D S01A
            INNER JOIN SAL0002D S02A ON S02A.SALES_ORD_ID = S01A.SALES_ORD_ID
            INNER JOIN SYS0026M S26A ON S26A.STK_ID = S02A.ITM_STK_ID
