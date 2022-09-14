@@ -49,7 +49,8 @@
 			               T1.UPD_DT,
 			               T4.PLAN_AMT,
                            T4.CRC_LIMIT_YYYY,
-                           T4.CRC_LIMIT_MM
+                           T4.CRC_LIMIT_MM,
+                           T5.USER_ID AS CARDHOLDER_USER_ID
 			        FROM   FCM0016M T1
 			               LEFT JOIN ORG0001D T2
 			                      ON T1.CHRG_USER_ID = T2.MEM_CODE
@@ -74,21 +75,23 @@
 			                                                   F2.ATCH_FILE_ID) F
 			                          WHERE  F.RNUM = 1) T3
 			                      ON T1.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID
-			      	LEFT JOIN (
-<!-- 			      SELECT * FROM FCM0032D WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') AND CRC_LIMIT_MM = TO_CHAR(SYSDATE, 'MM') -->
-							SELECT f0038d.*, f0038d.PLAN_LIMIT_AMT AS PLAN_AMT,
-                            f0016m.CRDIT_CARD_NO AS CRDIT_CARD_NO,TO_CHAR(f0038d.START_DATE,'MM') AS CRC_LIMIT_MM,
-                            TO_NUMBER(TO_CHAR(f0038d.START_DATE,'YYYY')) AS CRC_LIMIT_YYYY,
-                            f0016m.CRDIT_CARD_USER_ID
-                            FROM FCM0038D f0038d
-                            INNER JOIN FCM0016M f0016m
-                            ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
-                            WHERE 1=1
-                            AND f0038d.STUS_CODE_ID = 1
-			      	) T4
-                                  ON T1.CRDIT_CARD_NO = T4.CRDIT_CARD_NO AND T1.CRDIT_CARD_USER_ID = T4.CRDIT_CARD_USER_ID
+					      	LEFT JOIN (
+		<!-- 			      SELECT * FROM FCM0032D WHERE CRC_LIMIT_YYYY = TO_CHAR(SYSDATE, 'YYYY') AND CRC_LIMIT_MM = TO_CHAR(SYSDATE, 'MM') -->
+									SELECT f0038d.*, f0038d.PLAN_LIMIT_AMT AS PLAN_AMT,
+		                            f0016m.CRDIT_CARD_NO AS CRDIT_CARD_NO,TO_CHAR(f0038d.START_DATE,'MM') AS CRC_LIMIT_MM,
+		                            TO_NUMBER(TO_CHAR(f0038d.START_DATE,'YYYY')) AS CRC_LIMIT_YYYY,
+		                            f0016m.CRDIT_CARD_USER_ID
+		                            FROM FCM0038D f0038d
+		                            INNER JOIN FCM0016M f0016m
+		                            ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
+		                            WHERE 1=1
+		                            AND f0038d.STUS_CODE_ID = 1
+					      	) T4
+                             ON T1.CRDIT_CARD_NO = T4.CRDIT_CARD_NO AND T1.CRDIT_CARD_USER_ID = T4.CRDIT_CARD_USER_ID
+                             LEFT JOIN SYS0047M T5
+                             ON T1.CRDIT_CARD_USER_ID = T5.HR_CODE
 			      <if test="loginUserId != null and loginUserId != ''">
-			        WHERE T1.CRT_USER_ID = #{loginUserId}
+			        WHERE T1.CRT_USER_ID = #{loginUserId}  OR T5.USER_ID = #{loginUserId}
 			      </if>
 			        ) T
 			WHERE 1=1
@@ -342,8 +345,10 @@ WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
 			                 ON        T1.CHRG_USER_ID = T2.MEM_CODE
 			                 LEFT JOIN FCM0004M T3
 			                 ON        T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+			                 LEFT JOIN SYS0047M T4
+                             ON T1.CRDIT_CARD_USER_ID = T4.HR_CODE
 			               <if test="loginUserId != null and loginUserId != ''">
-			                 WHERE T1.CRT_USER_ID = #{loginUserId}
+			                 WHERE T1.CRT_USER_ID = #{loginUserId} OR T4.USER_ID = #{loginUserId}
 			               </if>
 			           ) T
 			WHERE 1=1
