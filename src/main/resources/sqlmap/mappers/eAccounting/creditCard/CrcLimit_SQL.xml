@@ -198,7 +198,7 @@
             FROM(
                 SELECT
                 CRDIT_CARD_NO,
-                2022 AS CRC_LIMIT_YYYY,
+                TO_NUMBER(#{year}) AS CRC_LIMIT_YYYY,
                 NVL(CASE WHEN (
                 TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('01'||'/'||#{year},'MM/YYYY')
                 AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]> TO_DATE('01'||'/'||#{year},'MM/YYYY')
@@ -255,7 +255,6 @@
                     WHERE 1=1
                     AND f0038d.STUS_CODE_ID = 1
                     AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE,'YYYY'))
-                    AND #{year}  <![CDATA[ <= ]]> TO_NUMBER(TO_CHAR(f0038d.END_DATE,'YYYY'))
                 )
             ) GROUP BY CRDIT_CARD_NO, CRC_LIMIT_YYYY
 
