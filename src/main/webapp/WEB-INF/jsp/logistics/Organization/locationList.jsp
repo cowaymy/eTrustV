@@ -304,6 +304,8 @@ $(document).ready(function(){
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch1'),'mwarebranch1', 'S' , '');
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch2'),'mwarebranch2', 'S' , '');
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch3'),'mwarebranch3', 'S' , '');
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch4'),'mwarebranch4', 'S' , '');
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch5'),'mwarebranch5', 'S' , '');
 
     	if (AUIGrid.getCellValue(myGridID ,rowid,'serialpdchk') == "Y"){
     		$("#pdchk").prop("checked" , true);
@@ -383,6 +385,8 @@ $(document).ready(function(){
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch1', 'S' , ''); //브런치 등록
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch2', 'S' , ''); //브런치 등록
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch3', 'S' , ''); //브런치 등록
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch4', 'S' , ''); //브런치 등록
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch5', 'S' , ''); //브런치 등록
 
         $("#irem").val('');
 
@@ -423,6 +427,8 @@ $(document).ready(function(){
 	   var warebranch1;
 	   var warebranch2;
 	   var warebranch3;
+	   var warebranch4;
+       var warebranch5;
 	   var contact1;
 	   var contact2;
 	   var plant;
@@ -447,6 +453,8 @@ $(document).ready(function(){
 		   warebranch1 = $("#inwarebranch1").val().trim();
 		   warebranch2 = $("#inwarebranch2").val().trim();
 		   warebranch3 = $("#inwarebranch3").val().trim();
+		   warebranch4 = $("#inwarebranch4").val().trim();
+           warebranch5 = $("#inwarebranch5").val().trim();
 		   contact1 = $("#incontact1").val().trim();
 		   contact2 = $("#incontact2").val().trim();
 		   country = $("#iCountry").val().trim();
@@ -489,6 +497,8 @@ $(document).ready(function(){
            warebranch1 = $("#mwarebranch1").val().trim();
            warebranch2 = $("#mwarebranch2").val().trim();
            warebranch3 = $("#mwarebranch3").val().trim();
+           warebranch4 = $("#mwarebranch4").val().trim();
+           warebranch5 = $("#mwarebranch5").val().trim();
            contact1 = $("#mcontact1").val().trim();
            contact2 = $("#mcontact2").val().trim();
            plant = $("#plant").val();
@@ -582,6 +592,8 @@ $(document).ready(function(){
         item.locbranch1 = $("#mwarebranch1").val();
         item.locbranch2 = $("#mwarebranch2").val();
         item.locbranch3 = $("#mwarebranch3").val();
+        item.locbranch4 = $("#mwarebranch4").val();
+        item.locbranch5 = $("#mwarebranch5").val();
         item.whlocgb = $("#locationtype").val();
         item.locstus = $("#mstatus").val();
         item.loclane = $("#loclane").val();
@@ -932,7 +944,9 @@ $(document).ready(function(){
 </tr>
 <tr>
     <th scope="row">Branch</th>
-    <td colspan='3'><select id="mwarebranch1" style="width: 273px!important"  ></select><select id="mwarebranch2" style="width: 273px!important" class="ml5"></select><select id="mwarebranch3" style="width: 273px!important" class="ml5"></select></td>
+    <td colspan='3'><select id="mwarebranch1" style="width: 273px!important"  ></select><select id="mwarebranch2" style="width: 273px!important" class="ml5"></select><select id="mwarebranch3" style="width: 273px!important"></select>
+    <select id="mwarebranch4" style="width: 273px!important"  ></select><select id="mwarebranch5" style="width: 273px!important"  ></select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Contact No (1)<span class="must">*</span></th>
@@ -1092,7 +1106,8 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Branch</th>
     <td colspan="3">
-        <select id="inwarebranch1" name="inwarebranch1" style="width: 273px!important" ></select> <select id="inwarebranch2" name="inwarebranch2"  style="width: 273px!important" class="ml5"></select> <select id="inwarebranch3" name="inwarebranch3" style="width: 273px!important" class="ml5"></select>
+        <select id="inwarebranch1" name="inwarebranch1" style="width: 273px!important" ></select> <select id="inwarebranch2" name="inwarebranch2"  style="width: 273px!important" class="ml5"></select> <select id="inwarebranch3" name="inwarebranch3" style="width: 273px!important"></select>
+        <select id="inwarebranch4" name="inwarebranch4" style="width: 273px!important"></select> <select id="inwarebranch5" name="inwarebranch5" style="width: 273px!important"></select>
     </td>
 </tr>
 <tr>

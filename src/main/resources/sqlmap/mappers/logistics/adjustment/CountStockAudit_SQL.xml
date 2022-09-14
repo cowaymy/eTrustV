@@ -159,6 +159,14 @@
                              <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
                                #{item}
                              </foreach>
+                       OR E.WH_LOC_BRNCH_ID4  IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID5  IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
                       )
            </if>
        </if>

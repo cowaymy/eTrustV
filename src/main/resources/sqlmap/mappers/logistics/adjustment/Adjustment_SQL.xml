@@ -4,14 +4,14 @@
     <select id="selectNewAdjNo" resultType="String">
         SELECT  'AD'||LPAD(LOG0071M_INVNTRY_NO_SEQ.NEXTVAL, 8, '0') FROM  DUAL
     </select>
-    
-    
+
+
     <insert id="insertNewAdjustment" parameterType="Map">
         INSERT INTO LOG0071M (
 										INVNTRY_NO,
 										BASE_DT,
-										CNFM1_DT,  
-										CNFM2_DT,  
+										CNFM1_DT,
+										CNFM2_DT,
 										<!-- CNFM1,
 										CNFM2,
 										FILE_LOC,
@@ -25,8 +25,8 @@
 										<!-- DEL_FLAG, -->
 										CRT_USER,
 										CRT_DATE
-										) 
-										VALUES 
+										)
+										VALUES
 										(
 										#{adjNo} ,
 										TO_CHAR(SYSDATE, 'YYYYMMDD'),
@@ -34,17 +34,17 @@
 										NULL,
 										#{doctext},
 									    #{event},
-										#{item},  
-										#{catagory},  
+										#{item},
+										#{catagory},
 										#{auto_manual},
-									     #{loginId}, 
-									     SYSDATE             
-									   )                   
-    
+									     #{loginId},
+									     SYSDATE
+									   )
+
     </insert>
-    
+
     <select id="selectAdjustmentList" parameterType="Map" resultType="EgovMap">
-        SELECT 
+        SELECT
                 INVNTRY_NO,
                 BASE_DT,
                 CNFM1,
@@ -79,14 +79,14 @@
             <if test="oderby !=null and oderby !=''">
                 DESC
             </if>
-             
-    </select>   
+
+    </select>
     <update id="updateAuditToClose" parameterType="Map">
        UPDATE LOG0071M
                 SET  DEL_FLAG = 'D'
                 WHERE INVNTRY_NO =  #{adjNo}
     </update>
-     
+
      <select id="selectAdjustmentLocationList" parameterType="Map" resultType="EgovMap">
         SELECT
                 ROWNUM rnum,
@@ -110,6 +110,8 @@
               sy28m.STREET,
               sy28m.WH_LOC_BRNCH_ID2,
               sy28m.WH_LOC_BRNCH_ID3,
+              sy28m.WH_LOC_BRNCH_ID4,
+              sy28m.WH_LOC_BRNCH_ID5,
               sy28m.WH_LOC_GB,
               (SELECT CODE FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) CODE,
               (SELECT CODE_NAME FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) CODE_NAME,
@@ -128,7 +130,7 @@
 		          ORDER BY WH_LOC_ID, WH_LOC_CODE
      </select>
      <select id="selectAdjustmentLocationReqList" parameterType="Map" resultType="EgovMap">
-        SELECT 
+        SELECT
 				lg72m.INVNTRY_LOC_ID,
 				lg72m.INVNTRY_NO,
 				lg72m.DOC_DT,
@@ -157,6 +159,8 @@
 				sy28m.STREET adjSTREET,
 				sy28m.WH_LOC_BRNCH_ID2 adjWH_LOC_BRNCH_ID2,
 				sy28m.WH_LOC_BRNCH_ID3 adjWH_LOC_BRNCH_ID3,
+				sy28m.WH_LOC_BRNCH_ID4 adjWH_LOC_BRNCH_ID4,
+                sy28m.WH_LOC_BRNCH_ID5 adjWH_LOC_BRNCH_ID5,
 				sy28m.WH_LOC_GB adjWH_LOC_GB,
 			    (SELECT CODE FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) adjCODE,
                 (SELECT CODE_NAME FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) adjCODE_NAME,
@@ -165,24 +169,24 @@
 				sy28m.SERIAL_PT_CHK adjSERIAL_PT_CHK,
 				sy28m.COMMON_CR_CHK adjCOMMON_CR_CHK
 			FROM LOG0072M lg72m, SYS0028M sy28m
-			WHERE 1=1 
+			WHERE 1=1
 					AND lg72m.INVNTRY_NO =#{adjno}
 					AND lg72m.LOC_ID = sy28m.WH_LOC_ID
               ORDER BY  sy28m.WH_LOC_ID
-     </select>   
-     
+     </select>
+
      <select id="selectAdjustmentNo" parameterType="Map" resultType="Integer">
-      SELECT COUNT(1) 
+      SELECT COUNT(1)
                 FROM LOG0072M
 				WHERE INVNTRY_NO = #{invntryNo}
      </select>
-     
+
         <select id="selectCodeList" parameterType="Map" resultType="EgovMap">
-        SELECT 
-              CODE_ID , 
-              CODE , 
-              CODE_NAME , 
-              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION 
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
         FROM SYS0013M
         WHERE DISAB = 0
         <if test="groupCode != null and groupCode !=''">
@@ -200,14 +204,14 @@
         </if>
         <choose>
           <when test="orderValue !=null and orderValue !=''">
-              ORDER BY ${orderValue} 
+              ORDER BY ${orderValue}
           </when>
           <otherwise>
               ORDER BY CODE_NAME
           </otherwise>
         </choose>
     </select>
-      
+
       <insert id="insertAdjustmentLoc" parameterType="Map">
       INSERT INTO LOG0072M
                 (
@@ -219,7 +223,7 @@
                 SERIAL_FT_CHK,
                 SERIAL_PT_CHK
                 )
-                SELECT 
+                SELECT
 					    TO_CHAR(SYSTIMESTAMP , 'yyyymmddhh24missff') +     ROWNUM,
 					    #{invntryNo},
 					    TO_CHAR(SYSDATE, 'YYYYMMDD'),
@@ -227,12 +231,12 @@
 					    SERIAL_PD_CHK,
 					    SERIAL_FT_CHK,
 					    SERIAL_PT_CHK
-					  FROM SYS0028M 
+					  FROM SYS0028M
 					  WHERE 1=1
 							   AND WH_LOC_ID = #{adjwhLocId}
-                  
-      </insert>  
-      
+
+      </insert>
+
       <insert id="insertAdjustmentLocItem" parameterType="Map">
        INSERT INTO LOG0073D
 			      SELECT lg72m.INVNTRY_LOC_ID,
@@ -256,7 +260,7 @@
 				        AND lg56m.STK_CTGRY_ID IN
 					   <foreach item="item" collection="catagoryList" index="index" open="(" separator="," close=")">
                        #{item}
-                      </foreach> 
+                      </foreach>
       </insert>
       <insert id="insertAdjustmentLocSerial" parameterType="Map">
       INSERT INTO LOG0074D
@@ -273,8 +277,8 @@
 							AND SEQ = #{adjItemPop}
       </insert>
       <select id="selectInsertSerialCount" parameterType="Map" resultType="int">
-      SELECT 
-                COUNT(L74D.INVNTRY_LOC_ID) 
+      SELECT
+                COUNT(L74D.INVNTRY_LOC_ID)
             FROM LOG0074D L74D, LOG0073D L73D
               WHERE 1=1
               AND L74D.INVNTRY_LOC_ID=L73D.INVNTRY_LOC_ID
@@ -328,12 +332,14 @@
                 sy28m.STREET,
                 sy28m.WH_LOC_BRNCH_ID2,
                 sy28m.WH_LOC_BRNCH_ID3,
+                sy28m.WH_LOC_BRNCH_ID4,
+                sy28m.WH_LOC_BRNCH_ID5,
                 sy28m.WH_LOC_GB,
                 sy28m.SERIAL_PD_CHK,
                 sy28m.SERIAL_FT_CHK,
                 sy28m.SERIAL_PT_CHK,
                 sy28m.COMMON_CR_CHK
-			FROM LOG0056M lg56m JOIN LOG0072M lg72m 
+			FROM LOG0056M lg56m JOIN LOG0072M lg72m
 			     ON lg56m.LOC_ID = lg72m.LOC_ID
 			JOIN LOG0073d lg73d
 			     ON lg73d.INVNTRY_LOC_ID = lg72m.INVNTRY_LOC_ID
@@ -341,15 +347,15 @@
 			     ON lg56m.STK_CODE = sy26m.STK_CODE
 			JOIN SYS0028M sy28m
                   ON  lg56m.LOC_ID = sy28m.WH_LOC_ID
-                        AND   lg72m.LOC_ID = sy28m.WH_LOC_ID  
+                        AND   lg72m.LOC_ID = sy28m.WH_LOC_ID
 			WHERE 1=1
 						AND lg56m.STK_TYPE_ID = lg73d.ITM_TYPE
 						AND sy26m.STK_ID =lg73d.ITM_ID
 						AND lg72m.INVNTRY_NO = #{adjNo}
 			            AND lg72m.LOC_ID = #{adjLocation}
-			            
-			 ORDER BY lg72m.INVNTRY_LOC_ID ,lg72m.LOC_ID ,lg73d.SEQ           
-      </select> 
+
+			 ORDER BY lg72m.INVNTRY_LOC_ID ,lg72m.LOC_ID ,lg73d.SEQ
+      </select>
       <select id="selectAdjustmentDetailLoc" parameterType="Map" resultType="EgovMap">
      SELECT
                 lg72m.INVNTRY_LOC_ID,
@@ -391,13 +397,15 @@
                 sy28m.STREET,
                 sy28m.WH_LOC_BRNCH_ID2,
                 sy28m.WH_LOC_BRNCH_ID3,
+                sy28m.WH_LOC_BRNCH_ID4,
+                sy28m.WH_LOC_BRNCH_ID5,
                 sy28m.WH_LOC_GB,
                 sy28m.SERIAL_PD_CHK,
                 sy28m.SERIAL_FT_CHK,
                 sy28m.SERIAL_PT_CHK,
                 sy28m.COMMON_CR_CHK
-            FROM 
-             LOG0072M lg72m JOIN LOG0073d lg73d 
+            FROM
+             LOG0072M lg72m JOIN LOG0073d lg73d
                  ON lg73d.INVNTRY_LOC_ID = lg72m.INVNTRY_LOC_ID
              JOIN SYS0028M sy28m
                   ON  lg72m.LOC_ID = sy28m.WH_LOC_ID
@@ -406,7 +414,7 @@
                  <if test="invntryLocId !=null and invntryLocId !=''">
                  AND lg72m.INVNTRY_LOC_ID = #{invntryLocId}
                  </if>
-                ORDER BY  lg72m.INVNTRY_LOC_ID,  lg72m.LOC_ID    , lg73d.SEQ     
+                ORDER BY  lg72m.INVNTRY_LOC_ID,  lg72m.LOC_ID    , lg73d.SEQ
       </select>
       <select id="selectCheckSerial" parameterType="Map" resultType="EgovMap">
 			SELECT MAX (SERIAL_NO) SERIAL_NO
@@ -426,9 +434,9 @@
 			            FROM LOG0062M L62, SYS0026M S26
 			           WHERE L62.MATNR = S26.STK_CODE
 			             AND L62.SERIAL_NO = #{serial}
-			             AND L62.MATNR = #{mtrCdPop} 
+			             AND L62.MATNR = #{mtrCdPop}
 			        GROUP BY SERIAL_NO, MATNR, STK_DESC
-<!-- 이동중 인 serial check 제외  	
+<!-- 이동중 인 serial check 제외
 		        UNION
 			        SELECT   L61.SERIAL_NO
 			                ,'' MATNR
@@ -453,7 +461,7 @@
 			            FROM LOG0063D L63
 			           WHERE L63.SERIAL_NO = #{serial}
 			             AND L63.LOC_ID = #{locPop}
-			             AND L63.MATNR = #{mtrCdPop} 
+			             AND L63.MATNR = #{mtrCdPop}
 			        GROUP BY L63.SERIAL_NO
 			        UNION
 			        SELECT  L74.SERIAL
@@ -462,12 +470,12 @@
 			                ,0 L62CNT
 			                ,0 L61CNT
 			                ,0 L63CNT
-			                ,COUNT (1) L74CNT 
+			                ,COUNT (1) L74CNT
 			            FROM LOG0074D L74
 			           WHERE L74.SERIAL = #{serial}
 			             AND L74.INVNTRY_LOC_ID = #{adjLocIdPop}
-			        GROUP BY L74.SERIAL           
-			                
+			        GROUP BY L74.SERIAL
+
 			        )
       </select>
       <update id="updateSaveYn" parameterType="Map">
@@ -501,7 +509,7 @@
         ORDER BY LOC_ID
       </select>
       <select id="selectAdjustmentApprovalCnt"  parameterType="Map" resultType="EgovMap">
-		SELECT 
+		SELECT
 				COUNT(CASE WHEN INVNTRY_NO=#{invntryNo} THEN 1 END) TOTAL,
 				COUNT(CASE WHEN SAVE_YN='Y' THEN 1 END) Y
 		FROM LOG0072M
@@ -509,7 +517,7 @@
       </select>
       <select id="selectAdjustmentApprovalLineCheck" parameterType="Map" resultType="EgovMap">
       SELECT
-      
+
             lg71m.INVNTRY_NO,
             lg71m.BASE_DT,
             lg71m.CNFM1,
@@ -550,7 +558,7 @@
                             CNFM1_DT = ''
             </if>
             <if test="status eq 'R2'.toString() ">
-                      SET 
+                      SET
                             CNFM1='',
                             CNFM1_DT = '',
                             CNFM2='',
@@ -558,15 +566,15 @@
             </if>
                 WHERE  1=1
                 AND INVNTRY_NO= #{invntryNo}
-      
+
       </update>
-      
+
       <update id="updateApprovalStatus" parameterType="Map">
      UPDATE  LOG0072M
                 SET SAVE_YN=NULL
       WHERE  1=1
                 AND INVNTRY_NO= #{invntryNo}
-      
+
       </update>
       <update id="updateDoc" parameterType="Map">
         UPDATE LOG0071M
@@ -584,7 +592,7 @@
                 AND INVNTRY_LOC_ID = #{invntryLocId}
                 AND SEQ             =#{seq}
                <!--  AND ITM_ID         =#{itmId} -->
-      </update> 
+      </update>
       <resultMap type="EgovMap" id="RETURNCODE" />
       <resultMap type="EgovMap" id="RETURNMSG" />
       <select id="updateStock" statementType="CALLABLE" parameterType="Map">
@@ -597,7 +605,7 @@
                 )
        }
       </select>
-      
-      
-    
+
+
+
 </mapper>

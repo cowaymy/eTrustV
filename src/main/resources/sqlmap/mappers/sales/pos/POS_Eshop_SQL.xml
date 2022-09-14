@@ -709,7 +709,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05', '08')
             AND S5.BRNCH_ID = (SELECT DISTINCT ESN_LOC_ID from SAL0325M WHERE ESN_NO = #{esnNo})
@@ -1109,7 +1109,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05' , '08')
             <if test="branchId != null and branchId != '' ">
@@ -1140,7 +1140,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('08')
             AND S5.STUS_ID = 1

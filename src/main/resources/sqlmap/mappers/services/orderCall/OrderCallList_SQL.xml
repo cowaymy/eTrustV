@@ -549,7 +549,10 @@
                   WHERE 1 = 1
                     AND s05.BRNCH_ID IN (s28.WH_LOC_BRNCH_ID
                                        , s28.WH_LOC_BRNCH_ID2
-                                       , s28.WH_LOC_BRNCH_ID3)
+                                       , s28.WH_LOC_BRNCH_ID3
+                                       , s28.WH_LOC_BRNCH_ID4
+                                       , s28.WH_LOC_BRNCH_ID5
+                                       )
                     AND s28.WH_LOC_STK_GRAD = 'A'
                     AND s28.WH_LOC_GB = '01'
                     AND s05.code in (SELECT D.CT_BRNCH_CODE
@@ -596,7 +599,7 @@
       <!-- and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2 ,s28.wh_loc_brnch_id3)
       and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D
       C, SYS0064M D -->
-                    AND s05.BRNCH_ID IN (s28.WH_LOC_BRNCH_ID ,s28.WH_LOC_BRNCH_ID2 ,s28.WH_LOC_BRNCH_ID3)
+                    AND s05.BRNCH_ID IN (s28.WH_LOC_BRNCH_ID ,s28.WH_LOC_BRNCH_ID2 ,s28.WH_LOC_BRNCH_ID3 ,s28.WH_LOC_BRNCH_ID4 ,s28.WH_LOC_BRNCH_ID5)
       <choose>
         <when test="stock eq 'B'.toString()">
           AND s28.WH_LOC_STK_GRAD = 'B'
@@ -665,7 +668,7 @@
                       WHERE WH_LOC_CODE = A.CDC_CODE ) CDC
                FROM SYS0028M A ,
                     SYS0005M T
-               WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)
+               WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3, A.WH_LOC_BRNCH_ID4, A.WH_LOC_BRNCH_ID5)
                 AND T.BRNCH_ID = #{dscBrnchId}
                  <choose>
                     <when test="superCtInd != null and superCtInd != ''">

@@ -1886,7 +1886,7 @@
              AND S28M.WH_LOC_STK_GRAD = #{stkGrade}
            </if>
            <if test="searchBranch != null and searchBranch !=''">
-          AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+          AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
         </if>
          ORDER BY WH_LOC_GB , CODE_NAME
     </select>

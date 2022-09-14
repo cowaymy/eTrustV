@@ -88,7 +88,7 @@
          </if>
 
         <if test="searchBranch != null and searchBranch !=''">
-          AND #{searchBranch} in(wh_loc_brnch_id , wh_loc_brnch_id2 , wh_loc_brnch_id3)
+          AND #{searchBranch} in(wh_loc_brnch_id , wh_loc_brnch_id2 , wh_loc_brnch_id3,wh_loc_brnch_id4,wh_loc_brnch_id5)
         </if>
 
         <if test="searchCDC != null and searchCDC !=''">

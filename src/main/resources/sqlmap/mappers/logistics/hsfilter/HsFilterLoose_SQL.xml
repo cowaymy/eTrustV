@@ -141,7 +141,7 @@
            </if>
 
          <if test="searchBranch != null and searchBranch !=''">
-          AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+          AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3,WH_LOC_BRNCH_ID4,WH_LOC_BRNCH_ID5)
         </if>
 
 		ORDER BY

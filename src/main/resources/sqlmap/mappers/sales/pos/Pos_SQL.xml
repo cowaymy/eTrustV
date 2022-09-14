@@ -46,7 +46,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05' , '08')
             ORDER BY   S5.CODE
@@ -67,7 +67,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05', '08')
             AND S5.BRNCH_ID = #{brnchId}
@@ -3632,7 +3632,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('08','02','09')
 
@@ -3650,7 +3650,7 @@
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
-                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S5.BRNCH_ID = 250
             ) ORDER BY CODE

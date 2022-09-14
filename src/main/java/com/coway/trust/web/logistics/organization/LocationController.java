@@ -184,6 +184,8 @@ public class LocationController {
 		String inwarebranch1 = (String) params.get("inwarebranch1");
 		String inwarebranch2 = (String) params.get("inwarebranch2");
 		String inwarebranch3 = (String) params.get("inwarebranch3");
+		String inwarebranch4 = (String) params.get("inwarebranch4");
+		String inwarebranch5 = (String) params.get("inwarebranch5");
 
 		String iareaId       = (String) params.get("iareaId");
 		String iaddrdtl      = (String) params.get("iaddrdtl");
@@ -251,6 +253,9 @@ public class LocationController {
 		insmap.put("branch1"     , inwarebranch1);
 		insmap.put("branch2"     , inwarebranch2);
 		insmap.put("branch3"     , inwarebranch3);
+		insmap.put("branch4"     , inwarebranch4);
+		insmap.put("branch5"     , inwarebranch5);
+
 
 		insmap.put("pdchk"       , ipdchk);
 		insmap.put("ftchk"       , iftchk);
