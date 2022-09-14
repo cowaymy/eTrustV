@@ -195,6 +195,9 @@ var cnvrListGrid;
 	}
 
 	function fn_saveNewCnvr(){
+
+	     $("#rsCnvrReactFeesApply").val("1");
+
 	    var data = GridCommon.getGridData(cnvrListGrid);
 	    data.form = $("#newCnvrForm").serializeJSON();
 
@@ -248,6 +251,7 @@ var cnvrListGrid;
 	function fn_end(){
 		$("#_closeNew").click();
 	}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -263,7 +267,7 @@ var cnvrListGrid;
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="newCnvrForm" name="newCnvrForm">
-
+<input type="hidden" id=rsCnvrReactFeesApply name="rsCnvrReactFeesApply">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -298,7 +302,7 @@ var cnvrListGrid;
 </tr>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox" id="rsCnvrReactFeesApply" name="rsCnvrReactFeesApply" value="1" checked disabled="disabled"/><span><spring:message code="sal.text.reactiveFeesApply" /> ?</span></label>
+    <label><input type="checkbox" disabled="disabled"  id="rsCnvrReactFeesApply" name="rsCnvrReactFeesApply" value="1" checked /><span><spring:message code="sal.text.reactiveFeesApply" /> ?</span></label>
     </td>
 </tr>
 <tr>
