@@ -187,6 +187,9 @@
                                  FROM LOG0099D T
                                WHERE T.REQST_NO = l60.STOCK_TRNSFR_REQST
                                    AND T.SERIAL_NO = #{serialNo}
+
+                                   union
+                                    select 1 from log0100m where HS_NO = l60.sales_ord_no AND SERIAL_NO = #{serialNo}
                              )
         </if>
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
