@@ -200,52 +200,52 @@
                 CRDIT_CARD_NO,
                 TO_NUMBER(#{year}) AS CRC_LIMIT_YYYY,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('01'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]> TO_DATE('01'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('01'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]> TO_DATE('01'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M1,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('02'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('02'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('02'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('02'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M2,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('03'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('03'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('03'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('03'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M3,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('04'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('04'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('04'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')  <![CDATA[ >= ]]>  TO_DATE('04'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M4,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE('05'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('05'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE('05'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('05'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M5,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('06'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('06'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('06'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('06'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M6,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('07'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('07'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('07'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')  <![CDATA[ >= ]]>  TO_DATE('07'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M7,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('08'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('08'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('08'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('08'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M8,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('09'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('09'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('09'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')  <![CDATA[ >= ]]>  TO_DATE('09'||'/'||#{year},'MM/YYYY')
                 )  THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M9,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('10'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('10'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('10'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('10'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M10,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('11'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>  TO_DATE('11'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('11'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')  <![CDATA[ >= ]]>  TO_DATE('11'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M11,
                 NVL(CASE WHEN (
-                TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('12'||'/'||#{year},'MM/YYYY')
-                AND TO_DATE(END_DATE,'DD/MM/YYYY') <![CDATA[ >= ]]> TO_DATE('12'||'/'||#{year},'MM/YYYY')
+                TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('12'||'/'||#{year},'MM/YYYY')
+                AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ >= ]]> TO_DATE('12'||'/'||#{year},'MM/YYYY')
                 ) THEN PLAN_LIMIT_AMT ELSE 0 END, 0) M12
                 FROM (
                     SELECT f0038d.*,f0016m.CRDIT_CARD_NO AS CRDIT_CARD_NO,TO_CHAR(f0038d.START_DATE,'MM') AS CRC_LIMIT_MM,TO_NUMBER(TO_CHAR(f0038d.START_DATE,'YYYY')) AS CRC_LIMIT_YYYY
