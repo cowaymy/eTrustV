@@ -173,7 +173,7 @@
 
     function fn_excelDown() {
         console.log("fn_excelDown");
-        GridCommon.exportTo("allowancePlan_grid_wrap", "xlsx", "AllowancePlan");
+        GridCommon.exportTo("allowancePlan_grid_wrap", "xlsx", "AllowancePlanSummary");
     }
 
     function currencyCellFormatText(rowIndex, columnIndex, value, headerText, item, dataField){
