@@ -198,7 +198,7 @@
             FROM(
                 SELECT
                 CRDIT_CARD_NO,
-                TO_NUMBER(#{year}) AS CRC_LIMIT_YYYY,
+                CRC_LIMIT_YYYY,
                 NVL(CASE WHEN (
                 TO_DATE(START_DATE,'DD/MM/YYYY') <![CDATA[ <= ]]>  TO_DATE('01'||'/'||#{year},'MM/YYYY')
                 AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]> TO_DATE('01'||'/'||#{year},'MM/YYYY')
