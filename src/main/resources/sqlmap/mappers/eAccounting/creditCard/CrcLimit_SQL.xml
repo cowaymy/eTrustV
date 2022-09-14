@@ -304,7 +304,7 @@
 							ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
 							WHERE 1=1
 							AND f0038d.STUS_CODE_ID = 1
-                    		AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(START_DATE,'YYYY'))
+                    		AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE,'YYYY'))
 <!-- 							<if test="year != null and year != '' "> -->
 <!--                                 AND TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY')) =#{year} -->
 <!--                             </if> -->
