@@ -9,20 +9,16 @@
   };
 
   var myGridID;
+
   var gridPros = {
-    usePaging : true,
-    pageRowCount : 20,
-    editable : true,
-    fixedColumnCount : 1,
-    showStateColumn : true,
-    displayTreeOpen : true,
-    selectionMode : "singleRow",
-    headerHeight : 30,
-    useGroupingPanel : true,
-    skipReadonlyColumns : true,
-    wrapSelectionMove : true,
-    showRowNumColumn : false,
-  };
+	      //showRowCheckColumn : true,
+	      usePaging : true,
+	      pageRowCount : 20,
+	      //showRowAllCheckBox : true,
+	      editable : false,
+	      selectionMode : "multipleCells",
+	      wordWrap: true
+	    };
 
   $(document).ready(
       function() {
@@ -100,9 +96,9 @@
           width : 150
         },
         {
-              dataField : "insBrnchCode",
-              headerText : "INS Branch",
-              width : 100
+          dataField : "insBrnchCode",
+          headerText : "INS Branch",
+          width : 100
         },
         {
           dataField : "asBrnchCode",
@@ -121,18 +117,16 @@
           width : 250
         },
         {
-           dataField : "contactNo",
-           headerText : "Contact No",
-           editable : false,
-           width : 100
+          dataField : "contactNo",
+          headerText : "Contact No",
+          editable : false,
+          width : 100
         },
         {
        	  dataField : "regDt",
           headerText : "Register Date",
           editable : false,
-          width : 150,
-          dataType : "date",
-          formatString : "dd/mm/yyyy"
+          width : 150
         },
         {
           dataField : "defectDesc",
@@ -141,65 +135,80 @@
           width : 150
         },
         {
-           dataField : "stus",
-           headerText : "Status",
-           editable : false,
-           width : 150
+          dataField : "stus",
+          headerText : "Status",
+          editable : false,
+          width : 150
         },
         {
-            dataField : "remark",
-            headerText : "Remark",
-            editable : false,
-            width : 150
+          dataField : "remark",
+          headerText : "Remark",
+          editable : false,
+          width : 350
         },
         {
           dataField : "updDt",
           headerText : "Last Update Date",
           editable : false,
-          width : 150,
-          dataType : "date",
-          formatString : "dd/mm/yyyy"
+          width : 150
         },
         {
-            dataField : "defectCode",
-            headerText : "Defect Code",
+          dataField : "appvRemark",
+          headerText : "AS Register Remark",
+          editable : false,
+          width : 350
+        },
+        {
+          dataField : "instCity",
+          headerText : "City",
+          editable : false,
+          width : 100
+        },
+        {
+          dataField : "instArea",
+          headerText : "Area",
+          editable : false,
+          width : 100
+        },
+        {
+          dataField : "instPostcode",
+          headerText : "Post Code",
+          editable : false,
+          width : 100
+        },
+        {
+          dataField : "defectCode",
+          headerText : "Defect Code",
+          editable : false,
+          width : 150,
+          visible:false
+         },
+         {
+           dataField : "asId",
+           headerText : "AS Id",
+           editable : false,
+           width : 150,
+           visible:false
+          },
+          {
+           dataField : "salesOrdId",
+           headerText : "Sales Order Id",
+           editable : false,
+           width : 150,
+           visible:false
+          },
+          {
+            dataField : "creator",
+            headerText : "Creator",
             editable : false,
             width : 150,
             visible:false
-         },
-         {
-              dataField : "asId",
-              headerText : "AS Id",
-              editable : false,
-              width : 150,
-              visible:false
-          },
-          {
-                  dataField : "salesOrdId",
-                  headerText : "Sales Order Id",
-                  editable : false,
-                  width : 150,
-                  visible:false
-          },
-          {
-              dataField : "creator",
-              headerText : "Creator",
-              editable : false,
-              width : 150,
-              visible:false
       }
 
 
     ];
 
-    var gridPros = {
-      //showRowCheckColumn : true,
-      usePaging : true,
-      pageRowCount : 20,
-      //showRowAllCheckBox : true,
-      editable : false,
-      selectionMode : "multipleCells"
-    };
+
 
     myGridID = AUIGrid.create("#grid_wrap_asList", columnLayout, gridPros);
   }
@@ -278,15 +287,11 @@
 
 	   if(selIdx > -1) {
 
+		  var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
 
-		   var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
+		   if( stus == "Active" || stus == "Pending" ){
 
-           if( stus != "Active"){
-               Common.alert("Approve Order only allow in Active Status");
-           }
-           else{
-
-               param = {
+                param = {
                 preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
                 preAsDefectCode : AUIGrid.getCellValue(myGridID, selIdx, "defectCode"),
                 preAsType : "PREAS",
@@ -295,6 +300,10 @@
 
                Common.popupDiv("/services/as/ASReceiveEntryPop.do", param, null, true, '_NewEntryPopDiv1');
            }
+
+		   else{
+			   Common.alert("Approve Order only allow in Active/ Pending Status")
+		   }
 
 
 	   }else{
@@ -313,31 +322,58 @@
       Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '_resultNewEntryPopDiv1');
     }
 
-   function fn_rejectPreASPop(){
-		  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
-		  var param;
+//    function fn_rejectPreASPop(){
+// 		  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+// 		  var param;
 
-	      if(selIdx > -1) {
+// 	      if(selIdx > -1) {
 
-	          var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
+// 	          var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
 
-	          if( stus != "Active"){
-	        	  Common.alert("Reject Approval only allow in Active Status");
-	          }
-	          else{
-	        	  param = {
-	                      preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
-	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
-	                      preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
-	               }
+// 	          if( stus != "Active"){
+// 	        	  Common.alert("Reject Approval only allow in Active Status");
+// 	          }
+// 	          else{
+// 	        	  param = {
+// 	                      preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
+// 	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
+// 	                      preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
+// 	               }
 
-	        	  Common.popupDiv("/services/as/rejectPreASOrder.do", param, null  , true, 'rejectPreASOrderPop');
-	          }
-	      }
-	      else{
-	          Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
-	      }
-    }
+// 	        	  Common.popupDiv("/services/as/rejectPreASOrder.do", param, null  , true, 'rejectPreASOrderPop');
+// 	          }
+// 	      }
+// 	      else{
+// 	          Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
+// 	      }
+//     }
+
+   function fn_updPreASPop(){
+       var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+       var param;
+
+       if(selIdx > -1) {
+
+           var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
+
+           if( stus == "Active" || stus == "Pending" ){
+               param = {
+                       preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
+                       preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
+                       preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
+                }
+
+               Common.popupDiv("/services/as/updPreASOrder.do", param, null  , true, '');
+           }
+           else{
+        	   Common.alert("Update Status only allow in Active / Pending Status");
+           }
+       }
+       else{
+           Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
+       }
+ }
+
 
    function fn_asRawData(ind) {
 	    Common.popupDiv("/services/as/preAsRawDataPop.do", {ind: ind}, null, true, '');
@@ -373,12 +409,9 @@
   </form>
   <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-     <li><p class="btn_blue">
-      <a href="#" onclick="fn_rejectPreASPop()">Reject</a>
-     </p></li>
-    <li><p class="btn_blue">
-      <a href="#" onclick="fn_newASPop()">Approve</a>
-     </p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_updPreASPop()">Update Status</a></p></li>
+<!--      <li><p class="btn_blue"><a href="#" onclick="fn_rejectPreASPop()">Reject</a></p></li> -->
+<!--     <li><p class="btn_blue"><a href="#" onclick="fn_newASPop()">Approve</a></p></li> -->
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
@@ -408,20 +441,12 @@
     <tbody>
      <tr>
      <th scope="row"><spring:message code='service.title.OrderNumber'/></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber'/>"
-       class="w100p" id="orderNum" name="orderNum" /></td>
+     <td><input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber'/>" class="w100p" id="orderNum" name="orderNum" /></td>
 
       <th scope="row"><spring:message code='service.title.Status'/></th>
       <td><select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
         <c:forEach var="list" items="${asStat}" varStatus="status">
-         <c:choose>
-           <c:when test="${list.codeId=='1'}">
              <option value="${list.codeId}" selected>${list.codeName}</option>
-           </c:when>
-           <c:otherwise>
-             <option value="${list.codeId}" selected>${list.codeName}</option>
-           </c:otherwise>
-         </c:choose>
         </c:forEach>
       </select></td>
 
@@ -429,6 +454,7 @@
       <td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td>
 
      </tr>
+
      <tr>
 
      <th scope="row">INS Branch</th>
@@ -437,19 +463,12 @@
       <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
       <td><input type="text" title="" placeholder="<spring:message code='service.grid.CustomerName'/>" class="w100p" id="custName" name="custName" /></td>
      <th scope="row"><spring:message code='service.grid.registerDt'/></th>
+
       <td>
        <div class="date_set w100p">
-        <p>
-         <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="registerDtFrm"
-          name="registerDtFrm" />
-        </p>
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtFrm" name="registerDtFrm" /></p>
         <span><spring:message code='pay.text.to'/></span>
-        <p>
-         <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="registerDtTo"
-          name="registerDtTo" />
-        </p>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtTo" name="registerDtTo" /></p>
        </div>
       </td>
 
@@ -465,11 +484,11 @@
       </select>
       </td>
 
-      <th></th>
-      <td></td>
+      <th>City</th>
+      <td><input type="text" class="w100p" id="instCity" name="instCity" /></td>
 
-      <th></th>
-      <td></td>
+      <th>Area</th>
+      <td><input type="text" class="w100p" id="instArea" name="instArea" /></td>
 
      </tr>
 

@@ -271,7 +271,7 @@
                                  , T1.CALL_CRT_DT CALL_CRT_DT_2
                                  , TO_CHAR(T1.CALL_CRT_DT, 'yyyy-MM-dd hh24:mi') CALL_CRT_DT
                                  , T1.CALL_CRT_USER_ID
-                                 , T1.CALL_REM
+                                 , CASE WHEN T13.AS_NO IS NULL THEN T1.CALL_REM ELSE  TO_CLOB('1) Pre-AS Register Creator : '|| T13.REG_ID || ' 2) Pre-AS Register Remark : ' || T13.REMARK || '  3) AS Remark : ' || T1.CALL_REM)  END AS CALL_REM
                                  , T2.TYPE_ID
                                  , T3.CODE
                                  , T3.CODE_NAME
@@ -313,6 +313,8 @@
                         LEFT JOIN SYS0100M FC ON I.FAIL_ID = FC.DEFECT_ID and I.FAIL_LOC = FC.DEFECT_GRP
                         LEFT JOIN SYS0038M T10 ON T10.STUS_CODE_ID = T9.STUS_CODE_ID
                         LEFT JOIN SYS0032M T11 ON T1.CALL_FDBCK_ID = T11.RESN_ID
+                        LEFT JOIN SAL0001D T12 ON T2.SALES_ORD_ID = T12.SALES_ORD_ID
+                        LEFT JOIN SVC0130D T13 ON T12.SALES_ORD_NO = T13.SALES_ORDER_NO AND T13.STUS = 5
 
                         WHERE 8 != T1.CALL_STUS_ID
                             AND T2.SALES_ORD_ID = #{salesOrderId}

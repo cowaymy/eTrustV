@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,9 +74,6 @@ public class PreASManagementListController {
 
   @RequestMapping(value = "/initPreASManagementList.do")
   public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
-    logger.debug("===========================/initPreASManagementList.do===============================");
-    logger.debug("== params " + params.toString());
-    logger.debug("===========================/initPreASManagementList.do===============================");
 
     // GET SEARCH DATE RANGE
     String range = ASManagementListService.getSearchDtRange();
@@ -89,8 +87,7 @@ public class PreASManagementListController {
     model.put("asStat", asStat);
     model.put("asProduct", asProduct);
 
-    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
-        SalesConstants.DEFAULT_DATE_FORMAT1);
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
     String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
     model.put("bfDay", bfDay);
@@ -99,17 +96,13 @@ public class PreASManagementListController {
   }
 
   @RequestMapping(value = "/searchPreASManagementList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> selectPreASManagementList(@RequestParam Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) {
-    logger.debug("===========================/searchPreASManagementList.do===============================");
-    logger.debug("== params heres" + params.toString());
+  public ResponseEntity<List<EgovMap>> selectPreASManagementList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
     String[] asProductList = request.getParameterValues("asProduct");
     String[] asStatusList = request.getParameterValues("asStatus");
     String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
     String[] cmbInsBranchIdList = request.getParameterValues("cmbInsBranchId");
 
-    // String cmbctId = request.getParameter("cmbctId");
 
     params.put("asStatusList", asStatusList);
     params.put("cmbbranchIdList", cmbbranchIdList);
@@ -118,36 +111,71 @@ public class PreASManagementListController {
 
     List<EgovMap> PreASMList = PreASManagementListService.selectPreASManagementList(params);
 
-    // logger.debug("== ASMList : {}", ASMList);
-    logger.debug("===========================/searchPreASManagementList.do===============================");
     return ResponseEntity.ok(PreASMList);
   }
 
   @RequestMapping(value = "/rejectPreASOrder.do")
 	public String rejectPreASOrder(@RequestParam Map<String, Object> params, ModelMap model) {
 
-	  logger.debug("== params rejectPreASOrder" + params.toString());
 	  	model.put("salesOrdNo", params.get("preAsSalesOrderNo").toString());
 	  	model.put("branchCode",  params.get("preAsBranch").toString());
 	  	model.put("creator",  params.get("preAsCreator").toString());
 		return "services/as/rejectPreASOrderPop";
 	}
 
-  @RequestMapping(value = "/updateRejectedPreAS.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> updatePosEshopItemList(@RequestBody Map<String, Object> params) throws Exception {
+  @RequestMapping(value = "/updPreASOrder.do")
+	public String updPreASOrder(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    List<EgovMap> preasStat = PreASManagementListService.selectPreAsUpd();
+
+	    model.put("preasStat", preasStat);
+	  	model.put("salesOrdNo", params.get("preAsSalesOrderNo").toString());
+	  	model.put("branchCode",  params.get("preAsBranch").toString());
+	  	model.put("creator",  params.get("preAsCreator").toString());
+		return "services/as/updPreASOrderPop";
+	}
+
+//  @RequestMapping(value = "/updateRejectedPreAS.do", method = RequestMethod.POST)
+//  public ResponseEntity<ReturnMessage> updateRejectedPreAS(@RequestBody Map<String, Object> params) throws Exception {
+//    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+//    params.put("userId", sessionVO.getUserId());
+//    params.put("userDeptId", sessionVO.getUserDeptId());
+//    params.put("userName", sessionVO.getUserName());
+//
+//    Map<String, Object> retunMap = null;
+//
+//    retunMap = PreASManagementListService.updateRejectedPreAS(params);
+//
+//	//Return Message
+//	ReturnMessage message = new ReturnMessage();
+//	message.setCode(AppConstants.SUCCESS);
+//	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//
+//    return ResponseEntity.ok(message);
+//
+//  }
+
+
+  @Transactional
+  @RequestMapping(value = "/updatePreAsStatus.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updatePreAsStatus(@RequestBody Map<String, Object> params) throws Exception {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
     params.put("userDeptId", sessionVO.getUserDeptId());
     params.put("userName", sessionVO.getUserName());
 
-    Map<String, Object> retunMap = null;
 
-    retunMap = PreASManagementListService.updateRejectedPreAS(params);
+    int result = PreASManagementListService.updatePreAsStatus(params);
 
-	//Return Message
-	ReturnMessage message = new ReturnMessage();
-	message.setCode(AppConstants.SUCCESS);
-	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    ReturnMessage message = new ReturnMessage();
+
+    if(result > 0){
+    	 message.setCode(AppConstants.SUCCESS);
+    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    }else{
+    	message.setCode(AppConstants.FAIL);
+   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+    }
 
     return ResponseEntity.ok(message);
 

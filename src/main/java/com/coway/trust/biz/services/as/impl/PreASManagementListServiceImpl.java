@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
@@ -69,16 +70,30 @@ public class PreASManagementListServiceImpl extends EgovAbstractServiceImpl impl
   }
 
   @Override
-  public Map<String, Object> updateRejectedPreAS(Map<String, Object> params) throws Exception {
-
-	  PreASManagementListMapper.updateRejectedPreAS(params);
-
-  	   //Return Message
-	   Map<String, Object> rtnMap = new HashMap<String, Object>();
-	   rtnMap.put("scnNo", "ok");
-	   return rtnMap;
-
+  public List<EgovMap> selectPreAsUpd() {
+    return PreASManagementListMapper.selectPreAsUpd();
   }
+
+//  @Override
+//  public Map<String, Object> updateRejectedPreAS(Map<String, Object> params) throws Exception {
+//
+//	  PreASManagementListMapper.updateRejectedPreAS(params);
+//
+//  	   //Return Message
+//	   Map<String, Object> rtnMap = new HashMap<String, Object>();
+//	   rtnMap.put("scnNo", "ok");
+//	   return rtnMap;
+//
+//  }
+
+  	@Override
+	@Transactional
+	public int updatePreAsStatus(Map<String, Object> params) throws Exception {
+
+	  int result= PreASManagementListMapper.updatePreAsStatus(params);
+
+	  return result;
+	}
 
 
 

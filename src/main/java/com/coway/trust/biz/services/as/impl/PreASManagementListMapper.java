@@ -15,6 +15,10 @@ public interface PreASManagementListMapper {
 
 	List<EgovMap> selectPreAsStat();
 
-	void updateRejectedPreAS(Map<String, Object> params);
+	List<EgovMap> selectPreAsUpd();
+
+	//void updateRejectedPreAS(Map<String, Object> params);
+
+	int updatePreAsStatus(Map<String, Object> params);
 
 }

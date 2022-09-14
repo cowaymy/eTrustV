@@ -16,6 +16,10 @@ public interface PreASManagementListService {
 
 	List<EgovMap> selectPreAsStat();
 
-	Map<String, Object> updateRejectedPreAS(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectPreAsUpd();
+
+	//Map<String, Object> updateRejectedPreAS(Map<String, Object> params) throws Exception;
+
+	int updatePreAsStatus(Map<String, Object> params) throws Exception;
 
 }
