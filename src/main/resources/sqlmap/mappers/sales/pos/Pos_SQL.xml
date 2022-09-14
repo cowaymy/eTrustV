@@ -1569,6 +1569,8 @@
 	           LOG0106M
 	     SET
 	           ITEM_INV_QTY = ITEM_INV_QTY - #{posDetailQty}
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{userId}
 	     WHERE LOC_ID = #{locId} AND ITEM_CODE = #{posItmStockId}
      </update>
 
