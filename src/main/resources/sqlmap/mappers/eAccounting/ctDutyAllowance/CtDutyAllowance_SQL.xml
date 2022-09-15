@@ -52,6 +52,7 @@ FROM   (
                       ON T7.APPV_PRCSS_NO = T4.APPV_PRCSS_NO AND T7.APPV_STUS = 'R'
                LEFT JOIN ORG0001D T8 ON T8.MEM_CODE = T7.APPV_LINE_USER_ID
                WHERE 1=1
+               AND T6.STUS_ID = 1
           <if test="loginUserId != null and loginUserId != ''">
             AND T1.CRT_USER_ID = #{loginUserId}
           </if>
