@@ -80,154 +80,80 @@ var gridProsProForma = {
         softRemoveRowMode:false
 };
 
-	$(document).ready(function(){
+$(document).ready(function(){
 
-	    myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
-	    myGridIDProForma = AUIGrid.create("#grid_wrap_ProForma", columnLayoutProForma, gridProsProForma);
+    myGridIDBillGroup = AUIGrid.create("#grid_wrap_billGroup", columnLayoutBill, gridProsBill);
+    myGridIDProForma = AUIGrid.create("#grid_wrap_ProForma", columnLayoutProForma, gridProsProForma);
 
-	    $("#grid_wrap_billGroup").hide();
-	    $("#grid_wrap_ProForma").hide();
-	    $("#btnAddToProForma").hide();
-	    $("#divBtnProForma").hide();
-	    AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
+    $("#grid_wrap_billGroup").hide();
+    $("#grid_wrap_ProForma").hide();
+    $("#btnAddToProForma").hide();
+    $("#divBtnProForma").hide();
+    AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
 
-	    $("#rbt").attr("style","display:none");
-	    $("#ORD_NO_RESULT").attr("style","display:none");
+    $("#rbt").attr("style","display:none");
+    $("#ORD_NO_RESULT").attr("style","display:none");
 
-	    $("#ORD_NO").keydown(function(key)  {
-	           if (key.keyCode == 13) {
-	               fn_doConfirm();
-	           }
-	    });
-	});
+    $("#ORD_NO").keydown(function(key)  {
+           if (key.keyCode == 13) {
+               fn_doConfirm();
+           }
+    });
+});
 
-    function fn_doConfirm() {
+function fn_doConfirm() {
 
-         Common.ajax("GET", "/sales/membership/selectMembershipFreeConF", $("#sForm").serialize(), function(result) {
+     Common.ajax("GET", "/sales/membership/selectMembershipFreeConF", $("#sForm").serialize(), function(result) {
 
-            if (result == 0) {
+        if (result == 0) {
 
-                $("#cbt").attr("style", "display:inline");
-                $("#ORD_NO").attr("style", "display:inline");
-                $("#sbt").attr("style", "display:inline");
-                $("#rbt").attr("style", "display:none");
-                $("#ORD_NO_RESULT").attr("style", "display:none");
+            $("#cbt").attr("style", "display:inline");
+            $("#ORD_NO").attr("style", "display:inline");
+            $("#sbt").attr("style", "display:inline");
+            $("#rbt").attr("style", "display:none");
+            $("#ORD_NO_RESULT").attr("style", "display:none");
 
-                $("#resultcontens").attr("style", "display:none");
+            $("#resultcontens").attr("style", "display:none");
 
-                Common.alert("No order found or this order is not under complete status or activation status.");
-                return;
-
-            }
-            else if (result[0].stkId == '1' || result[0].stkId == '651' || result[0].stkId == '218' || result[0].stkId == '689' || result[0].stkId == '216' || result[0].stkId == '687'
-                    || result[0].stkId == '3' || result[0].stkId == '653') {
-
-                Common.alert("Product have been discontinued. Therefore, create new Pro-Forma invoice is not allowed");
-                return;
-            }
-            else {
-
-                if (fn_isActiveMembershipQuotationInfoByOrderNo()) {
-                    return;
-                }
-
-                if (fn_chkCustType()) {
-                    return;
-                }
-
-                $("#ORD_ID").val(result[0].ordId);
-                $("#ORD_NO_RESULT").val(result[0].ordNo);
-
-                fn_loadOrderPO($("#ORD_ID").val());
-
-            }
-        });
-    }
-
-    function fn_loadOrderPO(orderId){
-
-        Common.ajax("GET","/payment/selectInvoiceBillGroupListProForma.do", {"orderId" : orderId} , function(result){
-            if(result != null){
-                $("#billGroupNo").val(result[0].custBillGrpNo);
-                AUIGrid.setGridData(myGridIDBillGroup, result);
-            }
-         });
-        $("#grid_wrap_billGroup").show();
-    }
-
-    $("#btnAddToProForma").click(function(){
-        //ahhhh
-        var billMonth = getOrderCurrentBillMonth();
-
-        if (fn_validRequiredField_Save() == false)
+            Common.alert("No order found or this order is not under complete status or activation status.");
             return;
-        if (fn_CheckRentalOrder(billMonth)) {
-            if (fn_CheckSalesPersonCode()) {
-                fn_unconfirmSalesPerson();
+
+        }
+        else if (result[0].stkId == '1' || result[0].stkId == '651' || result[0].stkId == '218' || result[0].stkId == '689' || result[0].stkId == '216' || result[0].stkId == '687'
+                || result[0].stkId == '3' || result[0].stkId == '653') {
+
+            Common.alert("Product have been discontinued. Therefore, create new Pro-Forma invoice is not allowed");
+            return;
+        }
+        else {
+
+            if (fn_isActiveMembershipQuotationInfoByOrderNo()) {
+                return;
             }
+
+            if (fn_chkCustType()) {
+                return;
+            }
+
+            $("#ORD_ID").val(result[0].ordId);
+            $("#ORD_NO_RESULT").val(result[0].ordNo);
+
+            fn_loadOrderPO($("#ORD_ID").val());
+
         }
     });
+}
 
-    $("#btnRemoveProForma").click(function(){
+function fn_loadOrderPO(orderId){
 
-        var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
-        var allItems = AUIGrid.getGridData(myGridIDProForma);
-        var billGroupItems = AUIGrid.getGridData(myGridIDBillGroup);
-
-		 if (checkedItems.length > 0){
-		     var item = new Object();
-		     var rowList = [];
-		     var index = 0;
-		     for (var i = checkedItems.length-1 ; i >= 0; i--){
-
-		    	 rowList[index] = {
-                         salesOrdNo : checkedItems[i].salesOrdNo,
-                         salesOrdId : checkedItems[i].salesOrdId,
-                         refNo : checkedItems[i].refNo,
-                         orderDate : checkedItems[i].orderDate,
-                         status : checkedItems[i].status,
-                         appType : checkedItems[i].appType,
-                         product : checkedItems[i].product,
-                         custName : checkedItems[i].custName,
-                         custBillId : checkedItems[i].custBillId,
-                         proformaStus : checkedItems[i].proformaStus,
-                         advStartDt : checkedItems[i].advStartDt,
-                         advEndDt : checkedItems[i].advEndDt,
-                         stkId : checkedItems[i].stkId,
-		    	 }
-	             index++;
-			 }
-
-	         if(rowList.length > 0){
-
-	             var chkRow = true;
-	             for (var i = 0 ; i  < rowList.length ; i++){
-
-	            	 var salesOrdNo = rowList[i].salesOrdNo;
-
-	                 for (var j = 0 ; j  < billGroupItems.length ; j++){
-	                	 if(salesOrdNo ==  billGroupItems[j].salesOrdNo){
-	                         chkRow = false;
-	                     }
-	                 }
-
-	                 if(chkRow){
-	                     AUIGrid.addRow(myGridIDBillGroup, rowList[i], "first");
-	                 }
-
-	             }
-	             AUIGrid.setSorting(myGridIDBillGroup, sortingInfo);
-	         }
-
-		     AUIGrid.removeCheckedRows(myGridIDProForma);
-		     fn_calTotalPackPrice();
-
-		     }else{
-		         Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
-		     }
-
-
-    });
+    Common.ajax("GET","/payment/selectInvoiceBillGroupListProForma.do", {"orderId" : orderId} , function(result){
+        if(result != null){
+            $("#billGroupNo").val(result[0].custBillGrpNo);
+            AUIGrid.setGridData(myGridIDBillGroup, result);
+        }
+     });
+    $("#grid_wrap_billGroup").show();
+}
 
     function fn_isActiveMembershipQuotationInfoByOrderNo() {
         var rtnVAL = false;
@@ -942,7 +868,74 @@ var gridProsProForma = {
          return rtnVAL;
     }
 
+$("#btnAddToProForma").click(function(){
+    var billMonth = getOrderCurrentBillMonth();
 
+    if (fn_validRequiredField_Save() == false)
+        return;
+    if (fn_CheckRentalOrder(billMonth)) {
+        if (fn_CheckSalesPersonCode()) {
+            fn_unconfirmSalesPerson();
+        }
+    }
+});
+
+$("#btnRemoveProForma").click(function(){
+
+var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
+var allItems = AUIGrid.getGridData(myGridIDProForma);
+var billGroupItems = AUIGrid.getGridData(myGridIDBillGroup);
+
+if (checkedItems.length > 0){
+    var item = new Object();
+    var rowList = [];
+    var index = 0;
+    for (var i = checkedItems.length-1 ; i >= 0; i--){
+
+        rowList[index] = {
+	                      salesOrdNo : checkedItems[i].salesOrdNo,
+	                      salesOrdId : checkedItems[i].salesOrdId,
+	                      refNo : checkedItems[i].refNo,
+	                      orderDate : checkedItems[i].orderDate,
+	                      status : checkedItems[i].status,
+	                      appType : checkedItems[i].appType,
+	                      product : checkedItems[i].product,
+	                      custName : checkedItems[i].custName,
+	                      custBillId : checkedItems[i].custBillId,
+	                      proformaStus : checkedItems[i].proformaStus,
+	                      advStartDt : checkedItems[i].advStartDt,
+	                      advEndDt : checkedItems[i].advEndDt,
+	                      stkId : checkedItems[i].stkId,
+                      }
+        index++;
+   }
+
+   if(rowList.length > 0){
+	    var chkRow = true;
+        for (var i = 0 ; i  < rowList.length ; i++){
+            var salesOrdNo = rowList[i].salesOrdNo;
+
+            for (var j = 0 ; j  < billGroupItems.length ; j++){
+                if(salesOrdNo ==  billGroupItems[j].salesOrdNo){
+                    chkRow = false;
+                }
+            }
+
+            if(chkRow){
+                AUIGrid.addRow(myGridIDBillGroup, rowList[i], "first");
+            }
+
+       }
+       AUIGrid.setSorting(myGridIDBillGroup, sortingInfo);
+    }
+
+    AUIGrid.removeCheckedRows(myGridIDProForma);
+    fn_calTotalPackPrice();
+
+    }else{
+        Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
+    }
+ });
 
 </script>
 

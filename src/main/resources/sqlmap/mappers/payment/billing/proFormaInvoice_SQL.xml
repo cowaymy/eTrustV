@@ -73,7 +73,7 @@
 		          AND  B.SALES_ORD_NO = #{ordNo}
 		     </if>
 		     <if test='startDt != null and startDt != "" and endDt != null and endDt != ""'>
-                AND A.CRT_DT BETWEEN TO_DATE(#{startDt}, 'DD/MM/YYYY') AND TO_DATE(#{endDt}, 'DD/MM/YYYY')
+                AND A.CRT_DT BETWEEN TO_DATE(#{startDt}, 'DD/MM/YYYY') AND TO_DATE(#{endDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
              </if>
 		     <if test='arrStatus != null and arrStatus != ""'>
 	             AND A.STUS_ID IN

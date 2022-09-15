@@ -59,6 +59,7 @@
    }
 
    function fn_selectListAjax() {
+
 	   Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", $("#listSForm").serialize(), function(result) {
 		      AUIGrid.setGridData(gridID, result);
 	   });
@@ -144,8 +145,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id='listSForm' name='listSForm'>
-<!-- <input type="hidden" id="deActQuotNo" name="srvMemQuotNo" />
-<input type="hidden" id="deActOrdNo" name="ordNo" /> -->
+<input type="hidden" id="hiddenPackType" name="hiddenPackType"  value=""/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -171,8 +171,8 @@
     <td>
         <select id="listAdvPay" name="advPayId" class="w100p">
                <option value="">Select One</option>
-		       <option value="1">Yes</option>
-               <option value="0">No</option>
+		       <option value="Y">Yes</option>
+               <option value="N">No</option>
         </select>
     </td>
 </tr>
@@ -219,8 +219,8 @@
     <td>
         <select id="listPackageType" name="packageType" class="w100p" >
                <option value="">Select One</option>
-               <option value="1">1 Year</option>
-               <option value="2">2 Year</option>
+               <option value="12">1 Year</option>
+               <option value="24">2 Year</option>
         </select>
     </td>
     <th scope="row"></th><td></td>

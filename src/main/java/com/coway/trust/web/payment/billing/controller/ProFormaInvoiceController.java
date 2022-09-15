@@ -66,7 +66,7 @@ public class ProFormaInvoiceController {
 		String[] arrBrnchCode = request.getParameterValues("brnchCode");
 		String[] arrStatus = request.getParameterValues("status");
 
-		params.put("arrBrnchCode", arrStatus);
+		params.put("arrStatus", arrStatus);
 		params.put("arrBrnchCode", arrBrnchCode);
 
 		params.put("userTypeId", sessionVO.getUserTypeId());
