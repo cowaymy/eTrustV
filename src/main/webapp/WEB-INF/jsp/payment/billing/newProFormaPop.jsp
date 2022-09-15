@@ -27,114 +27,47 @@ var columnLayoutBill =[
                        {dataField:"advStartDt", headerText:"advStartDt", visible:false},
                        {dataField:"advEndDt", headerText:"advEndDt", visible:false},
                        {dataField:"stkId", headerText:"stkId", visible:false},
-                       {dataField:"hidPacPrice", headerText:"hidPacPrice", visible:false}
+                       {
+	                       dataField : "undefined",
+	                       headerText : " ",
+	                       width : '10%',
+	                       renderer : {
+	                                type : "ButtonRenderer",
+	                                labelText : "Select",
+	                                onclick : function(rowIndex, columnIndex, value, item) {
+	                                    console.log("item111===" + item)
+	                                    $("#orderId").val(item.salesOrdId);
+	                                    if (fn_chkProForma(item.salesOrdId)) {
+	                                        return;
+	                                    }
+	                                    fn_SelectPO(item.salesOrdId);
+	                                    $("#grid_wrap_ProForma").show();
+	                                    $("#divBtnProForma").show();
+	                                    $("#btnAddToProForma").show();
+	                              }
+	                       }
+	                   }
                    ];
 
 var columnLayoutProForma =[
-                       {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
-                       {dataField:"salesOrdId", headerText:"Sales Ord Id", visible:false},
-                       {dataField:"refNo", headerText:"Ref No."},
-                       {dataField:"orderDate", headerText:"Order Date", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
-                       {dataField:"status", headerText:"Status"},
-                       {dataField:"appType", headerText:"App Type"},
-                       {dataField:"product", headerText:"Product"},
-                       {dataField:"custName", headerText:"Customer"},
-                       {dataField:"custBillId", headerText:"Bill ID"},
-                       {dataField:"proformaStus", headerText:"proformaStus", visible:false},
-                       {dataField:"advStartDt", headerText:"advStartDt", visible:false},
-                       {dataField:"advEndDt", headerText:"advEndDt", visible:false},
-                       {dataField:"stkId", headerText:"stkId", visible:false},
-                       {dataField:"hidPacPrice", headerText:"hidPacPrice", visible:false},
-                       {
-                           dataField : "undefined",
-                           headerText : " ",
-                           width : '10%',
-                           renderer : {
-                                    type : "ButtonRenderer",
-                                    labelText : "Select",
-                                    onclick : function(rowIndex, columnIndex, value, item) {
-                                    	console.log("item111===" + item)
-                                        $("#orderId").val(item.salesOrdId);
-                                        if (fn_chkProForma(item.salesOrdId)) {
-                                            return;
-                                        }
-                                        fn_SelectPO(item.salesOrdId);
-                                  }
-                           }
-                       }
+						{dataField :"salesOrdId",  headerText : "SalesOrdId",      width: 150 ,editable : false, visible : false},
+						{dataField :"salesOrdNo", headerText : "<spring:message code="pay.head.orderNO" />",   width: 150, editable : false },
+						{dataField :"packType", headerText : "<spring:message code="sal.text.typeOfPack" />", width: 150, editable : false },
+						{dataField :"advPeriod", headerText : "Advance Period", width: 150, editable : false },
+						{dataField :"disc", headerText : "Discount", width: 150, editable : false },
+						{dataField :"packPrice", headerText : "Package Price", width: 150, editable : false },
+						{dataField :"salesmanCode", headerText : "Salesman Code", width: 150, editable : false },
+						{dataField :"finalRentalFee", headerText : "Final Rental Fee", width: 150, editable : false },
+						{dataField :"orderDt", headerText : "Order Date", width: 150, editable : false },
+						{dataField :"orderStus", headerText : "Order Status", width: 150, editable : false },
+						{dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 140 ,editable : false }
                    ];
 
 var gridProsBill = {
         editable: false,
-        showRowCheckColumn : true,
         showStateColumn: false,
         pageRowCount : 5,
-        showRowAllCheckBox : true,
-        softRemoveRowMode:false,
-        rowCheckableFunction : function(rowIndex, isChecked, item) {
-        	 var today = new Date();
-             var tYear = today.getFullYear();
-             var tMonth = today.getMonth() + 1;
 
-             if(tMonth < 10){
-                 tMonth = "0" + tMonth;
-             }
-
-            var today = tMonth + "/" + tYear;
-            var startDt = item.advStartDt;
-            var endDt = item.advEndDt;
-            today = Date.parse(today);
-            var parseStart = Date.parse(startDt);
-            var parseEnd = Date.parse(endDt);
-
-            if((today <= parseEnd && today >= parseStart)) {
-                return false;
-            }
-
-        	var ordStatus = item.status;
-            if(ordStatus != 'Completed'){
-               return false;
-            }
-
-            var proformaStus = item.proformaStus;
-            if(proformaStus != '5' && proformaStus != '8' && proformaStus != '' && proformaStus != null){
-                return false;
-            }
-
-            return true;
-        },
-        rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-        	 var today = new Date();
-             var tYear = today.getFullYear();
-             var tMonth = today.getMonth() + 1;
-
-             if(tMonth < 10){
-                 tMonth = "0" + tMonth;
-             }
-
-            var today = tMonth + "/" + tYear;
-        	var startDt = item.advStartDt;
-            var endDt = item.advEndDt;
-            var proformaStus = item.proformaStus;
-            today = Date.parse(today);
-	        var parseStart = Date.parse(startDt);
-	        var parseEnd = Date.parse(endDt);
-
-	        if((today <= parseEnd && today >= parseStart)) {
-	            return false;
-	        }
-
-        	if(proformaStus != '5' && proformaStus != '8' && proformaStus != '' && proformaStus != null){
-        		return false;
-        	}
-
-        	var ordStatus = item.status;
-        	 if(ordStatus != 'Completed'){
-                return false;
-            }
-
-            return true;
-        }
 };
 
 var gridProsProForma = {
@@ -155,12 +88,11 @@ var gridProsProForma = {
 	    $("#grid_wrap_billGroup").hide();
 	    $("#grid_wrap_ProForma").hide();
 	    $("#btnAddToProForma").hide();
-	    $("#btnRemoveProForma").hide();
+	    $("#divBtnProForma").hide();
 	    AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
 
 	    $("#rbt").attr("style","display:none");
 	    $("#ORD_NO_RESULT").attr("style","display:none");
-	    $("#txtTotalOrd").val(defaultOrd);
 
 	    $("#ORD_NO").keydown(function(key)  {
 	           if (key.keyCode == 13) {
@@ -221,65 +153,17 @@ var gridProsProForma = {
             }
          });
         $("#grid_wrap_billGroup").show();
-        $("#btnAddToProForma").show();
     }
 
     $("#btnAddToProForma").click(function(){
+        //ahhhh
+        var billMonth = getOrderCurrentBillMonth();
 
-        var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDBillGroup);
-        var proFormaItems = AUIGrid.getGridData(myGridIDProForma);
-
-        if(checkedItems != undefined){
-
-            var allItems = AUIGrid.getGridData(myGridIDBillGroup);
-            var valid = true;
-
-            if(checkedItems.length > 0){
-
-                var item = new Object();
-                var rowList = [];
-
-                for (var i = 0 ; i < checkedItems.length ; i++){
-	               rowList[i] = {
-	                       salesOrdNo : checkedItems[i].salesOrdNo,
-	                       salesOrdId : checkedItems[i].salesOrdId,
-	                       refNo : checkedItems[i].refNo,
-	                       orderDate : checkedItems[i].orderDate,
-	                       status : checkedItems[i].status,
-	                       appType : checkedItems[i].appType,
-	                       product : checkedItems[i].product,
-	                       custName : checkedItems[i].custName,
-	                       custBillId : checkedItems[i].custBillId,
-	                       proformaStus : checkedItems[i].proformaStus,
-	                       advStartDt : checkedItems[i].advStartDt,
-	                       advEndDt : checkedItems[i].advEndDt,
-	                       stkId : checkedItems[i].stkId,
-	                       hidPacPrice : checkedItems[i].hidPacPrice
-	               }
-               }
-
-               if(rowList.length > 0){
-
-                   var chkRow = true;
-
-                   for (var i = 0 ; i  < rowList.length ; i++){
-
-                       var salesOrdNo = rowList[i].salesOrdNo;
-
-                       for (var j = 0 ; j  < proFormaItems.length ; j++){
-                           if(salesOrdNo ==  proFormaItems[j].salesOrdNo){
-                            chkRow = false;
-                           }
-                       }
-
-                       if(chkRow){
-                           AUIGrid.addRow(myGridIDProForma, rowList[i], "first");
-                           $("#grid_wrap_ProForma").show();
-                           $("#btnRemoveProForma").show();
-                           AUIGrid.removeCheckedRows(myGridIDBillGroup);
-                       }
-                   }
-               }
+        if (fn_validRequiredField_Save() == false)
+            return;
+        if (fn_CheckRentalOrder(billMonth)) {
+            if (fn_CheckSalesPersonCode()) {
+                fn_unconfirmSalesPerson();
             }
         }
     });
@@ -310,7 +194,6 @@ var gridProsProForma = {
                          advStartDt : checkedItems[i].advStartDt,
                          advEndDt : checkedItems[i].advEndDt,
                          stkId : checkedItems[i].stkId,
-                         hidPacPrice : checkedItems[i].hidPacPrice
 		    	 }
 	             index++;
 			 }
@@ -337,6 +220,7 @@ var gridProsProForma = {
 	         }
 
 		     AUIGrid.removeCheckedRows(myGridIDProForma);
+		     fn_calTotalPackPrice();
 
 		     }else{
 		         Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
@@ -430,13 +314,18 @@ var gridProsProForma = {
         resultBasicObject = result.basic;
         resultSrvconfigObject = result.srvconfig;
 
+        $("#ORD_ID").val(result.basic.ordId);
         $("#orderNo").html(result.basic.ordNo);
         $("#finalRentalFee").html(result.basic.ordMthRental);
 
         $("#custId").html(result.basic.custId);
         $("#customerName").html(result.basic.custName);
         $("#STOCK_ID").val(result.basic.stockId);
-
+        $("#hiddenOrderDt").val(result.basic.ordDt);
+        $("#hiddenOrderStus").val(result.basic.ordStusName);
+        console.log("hello111");
+        console.log(result.basic.ordDt);
+        console.log(result.basic.ordStusName);
     }
 
     function fn_goCustSearch() {
@@ -588,18 +477,6 @@ var gridProsProForma = {
 
             $("#packpro").removeAttr("disabled");
 
-            //ahh
-             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDBillGroup);
-             var totalPackPrice = 0;
-            $("#txtTotalOrd").val(checkedItems.length);
-            if(checkedItems.length > 0){
-            	for (var i = 0 ; i < checkedItems.length ; i++){
-            	    totalPackPrice += checkedItems[i].hidPacPrice;
-            	}
-            }
-
-            $("#txtTotalAmt").val(totalPackPrice);
-
             if($("#discount").val() != "0"){
                 fn_discount_onChageEvent();
             }
@@ -729,16 +606,9 @@ var gridProsProForma = {
     }
 
     function fn_save() {
+        //ahhhh
 
-        var billMonth = getOrderCurrentBillMonth();
-
-        if (fn_validRequiredField_Save() == false)
-            return;
-        if (fn_CheckRentalOrder(billMonth)) {
-            if (fn_CheckSalesPersonCode()) {
-                fn_unconfirmSalesPerson();
-            }
-        }
+    	fn_DoSaveProcess();
     }
 
     function fn_validRequiredField_Save() {
@@ -887,13 +757,64 @@ var gridProsProForma = {
 
         }
         else {
-            fn_DoSaveProcess();
+        	//ahhh
+
+        	 var pfItem = new Object();
+
+       	     pfItem.salesOrdId = $("#ORD_ID").val();
+       	     pfItem.salesOrdNo = $("#orderNo").html();
+       	     pfItem.packType = $("#packType").val();
+       	     pfItem.advPeriod = $("#adStartDt").val() + " - " + $("#adEndDt").val();
+       	     pfItem.disc = $("#discount").val();
+       	     pfItem.packPrice = $("#txtPackagePrice").html();
+       	     pfItem.salesmanCode = $("#SALES_PERSON").val();
+       	     pfItem.finalRentalFee = $("#finalRentalFee").html();
+       	     pfItem.orderDt = $("#hiddenOrderDt").val();
+       	     pfItem.orderStus = $("#hiddenOrderStus").val();
+       	     pfItem.custName = $("#customerName").html();
+       	     //ahhh
+       	     console.log("hello222");
+	         console.log($("#hiddenOrderDt").val());
+	         console.log($("#hiddenOrderStus").val());
+
+
+            if (AUIGrid.isUniqueValue(myGridIDProForma, "salesOrdId", pfItem.salesOrdId)) {
+		      fn_addRow(pfItem);
+		      fn_calTotalPackPrice(pfItem);
+		    } else {
+		      Common.alert("<spring:message code='service.msg.rcdExist'/>");
+		      return;
+		    }
+
         }
     }
 
+    function fn_addRow(gItem) {
+        AUIGrid.addRow(myGridIDProForma, gItem, "first");
+      }
+
+    function fn_calTotalPackPrice(){
+    	//ahh
+    	var totalPackPrice = 0;
+        var totalPriceAllItems = AUIGrid.getGridData(myGridIDProForma);
+
+       console.log("total Price ahh");
+       console.log(totalPriceAllItems);
+
+       var ordCount = totalPriceAllItems.length;
+       if(totalPriceAllItems.length > 0){
+           for (var i = 0 ; i < totalPriceAllItems.length ; i++){
+        	   totalPackPrice += parseFloat(totalPriceAllItems[i].packPrice);
+           }
+       }
+
+       $("#txtTotalAmt").html(totalPackPrice + '(' + totalPriceAllItems.length + ')');
+    }
+
+
     function fn_DoSaveProcess(_saveOption) {
 
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
+    	var allItems = AUIGrid.getGridData(myGridIDProForma);
     	var data = {};
 /*
     	var ProFormaM = {
@@ -916,18 +837,18 @@ var gridProsProForma = {
             } */
 
         console.log("checked ahhhh");
-        console.log(checkedItems);
-        console.log(checkedItems.length);
+        console.log(allItems);
+        console.log(allItems.length);
 
-        if(checkedItems.length > 0){
+        if(allItems.length > 0){
 
             var item = new Object();
             var rowList = [];
 
-            for (var i = 0 ; i < checkedItems.length ; i++){
+            for (var i = 0 ; i < allItems.length ; i++){
 	            rowList[i] = {
-	                    salesOrdNo : checkedItems[i].salesOrdNo,
-	                    salesOrdId : checkedItems[i].salesOrdId
+	                    salesOrdNo : allItems[i].salesOrdNo,
+	                    salesOrdId : allItems[i].salesOrdId
 	            }
             }
 
@@ -939,7 +860,8 @@ var gridProsProForma = {
                 totalAmt : $("#txtPackagePrice").html(),
                 packPrice : $("#hiddenPacOriPrice").val(),
                 remark : $("#txtRemark").val(),
-                discount : $("#discount").val()}]
+                discount : $("#discount").val(),
+                }]
 
         }
         else {
@@ -950,7 +872,7 @@ var gridProsProForma = {
         console.log("data ahhhh");
         console.log(data);
 
-    	 if(checkedItems != undefined){
+    	 if(allItems != undefined){
 	        Common.ajax("POST", "/payment/saveNewProForma.do", data,
 	                  function(result) {
 	                    Common.alert(result.message, fn_saveclose);
@@ -984,7 +906,7 @@ var gridProsProForma = {
 
      function fn_chkProForma(){
     	 var rtnVAL = false;
-    	 var selectedItems = AUIGrid.getSelectedItems(myGridIDProForma);
+    	 var selectedItems = AUIGrid.getSelectedItems(myGridIDBillGroup);
 
     	 console.log("selected");
     	 console.log(selectedItems);
@@ -1033,6 +955,8 @@ var gridProsProForma = {
     <input type="text" name="SELPACKAGE_ID"  id="SELPACKAGE_ID"/>
     <input type="text" name="DUR"  id="DUR"/>
     <input type="text" name="hiddenPacOriPrice"  id="hiddenPacOriPrice"/>
+    <input type="text" name="hiddenOrderDt"  id="hiddenOrderDt"/>
+    <input type="text" name="hiddenOrderStus"  id="hiddenOrderStus"/>
 </div>
 </form>
 
@@ -1076,14 +1000,6 @@ var gridProsProForma = {
 <section>
   <!-- grid_wrap start -->
   <article id="grid_wrap_billGroup" class="grid_wrap"></article>
-  <p class="btn_blue2"><a href="#" id="btnAddToProForma">Add to Pro Forma</a></p>
-  <!-- grid_wrap end -->
-</section>
-
-<section>
-  <!-- grid_wrap start -->
-  <article id="grid_wrap_ProForma" class="grid_wrap"></article>
-  <p class="btn_blue2"><a href="#" id="btnRemoveProForma">Remove from Pro Forma</a></p>
   <!-- grid_wrap end -->
 </section>
 
@@ -1162,20 +1078,33 @@ var gridProsProForma = {
             <th scope="row"><spring:message code="sal.text.remark" /></th>
             <td><textarea rows="5" id='txtRemark' name=''></textarea></td>
             <th scope="row">Total Amount(Total Orders)</th>
-            <td><span id='txtTotalAmt' ></span> (<span id='txtTotalOrd' ></span>)</td>
+            <td><span id='txtTotalAmt' ></span></td>
         </tr>
         </tbody>
         </table><!-- table end -->
         </form>
         </section><!-- search_table end -->
 
-
         <ul class="center_btns">
-            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()"><spring:message code="sal.btn.save" /></a></p></li>
-        </ul>
+            <li><p class="btn_blue2"><a href="#" id="btnAddToProForma">Add to Pro Forma</a></p></li>
+        </ul><br />
 </form>
 
 </div>
+</section>
+
+<section>
+  <!-- grid_wrap start -->
+  <article id="grid_wrap_ProForma" class="grid_wrap"></article>
+  <div id='divBtnProForma'>
+   <ul class="center_btns mt20">
+    <li><p class="btn_blue2"><a href="#" id="btnRemoveProForma">Remove from Pro Forma</a></p></li>
+    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
+   </ul>
+   </div>
+
+
+  <!-- grid_wrap end -->
 </section>
 
 </section><!-- content end -->
