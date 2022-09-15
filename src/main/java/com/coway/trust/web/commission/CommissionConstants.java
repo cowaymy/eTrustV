@@ -45,6 +45,7 @@ public class CommissionConstants {
 	public static final String COMIS_HP_HM_LEV = "3";				//HM
 	public static final String COMIS_HP_HP_LEV = "4";					//HPP, HPF
 
+	public static final String COMIS_CD_SGCM_LEV = "0";				//CDSG
 	public static final String COMIS_CD_GCM_LEV = "1";				//CDG
 	public static final String COMIS_CD_SCM_LEV = "2";				//CDS
 	public static final String COMIS_CD_CM_LEV = "3";				//CM
@@ -67,6 +68,7 @@ public class CommissionConstants {
 	public static final String COMIS_HP_HPP_CD = "HPP";
 	public static final String COMIS_HP_HPF_CD = "HPF";
 
+	public static final String COMIS_CD_SGCM_CD = "CDT";
 	public static final String COMIS_CD_GCM_CD = "CDG";
 	public static final String COMIS_CD_SCM_CD = "CDS";
 	public static final String COMIS_CD_CM_CD = "CDM";
@@ -105,12 +107,16 @@ public class CommissionConstants {
 	public static final String COMIS_CDM_P01 = "CDM-P01";					//
 	public static final String COMIS_CDN_P01 = "CDN-P01";					//
 	public static final String COMIS_CDS_P01 = "CDS-P01";					//
+	public static final String COMIS_CDP_P01 = "CDP-P01";				// GCM_CORPRT
+	public static final String COMIS_CDT_P01 = "CDT-P01";				// SGCM
 	public static final String COMIS_CDC_P02 = "CDC-P02";					//
 	public static final String COMIS_CDG_P02 = "CDG-P02";					//
 	public static final String COMIS_CDM_P02 = "CDM-P02";					//
 	public static final String COMIS_CDN_P02 = "CDN-P02";					//
 	public static final String COMIS_CDS_P02 = "CDS-P02";					//
 	public static final String COMIS_CDX_P02 = "CDX-P02";					//
+	public static final String COMIS_CDP_P02 = "CDP-P02";				// GCM_CORPRT
+	public static final String COMIS_CDT_P02 = "CDT-P02";				// SGCM
 
 	public static final String COMIS_HPF_P01 = "HPF-P01";					//
 	public static final String COMIS_HPG_P01 = "HPG-P01";					//
