@@ -678,6 +678,32 @@ var myDetailGridData = null;
          }
     	   }
       }
+
+       var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
+       var returnParam = true;
+       for (var i = 0; i < rsnGridDataList.length; i++) {
+    	   /* console.log('rsnGridDataList[i]["name"] ' + i + ' '+ rsnGridDataList[i]["name"]);
+    	   console.log('rsnGridDataList[i]["serialChk"] ' + i + ' '+ rsnGridDataList[i]["serialChk"]);
+    	   console.log('rsnGridDataList[i]["filterSerialUnmatchReason"] ' + i + ' '+ rsnGridDataList[i]["filterSerialUnmatchReason"]);
+    	   console.log('rsnGridDataList[i]["oldSerialNo"] ' + i + ' '+ rsnGridDataList[i]["oldSerialNo"]); */
+
+           if((rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null) && rsnGridDataList[i]["serialChk"] == "Y"){
+        	   if (rsnGridDataList[i]["serialNo"] == null || rsnGridDataList[i]["serialNo"] == "") {
+			     Common.alert("* Please choose the serial number. ");
+			     returnParam = false;
+			     }
+
+               if ((rsnGridDataList[i]["filterSerialUnmatchReason"] == "" || rsnGridDataList[i]["filterSerialUnmatchReason"] == null )
+            				   && (rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")) {
+             Common.alert("* Please choose the unmatched reason for Filter with no old serial number. ");
+             returnParam = false;
+             }
+           }
+
+           if(returnParam == false){
+               return returnParam;
+           }
+       }
     } else if ($("#cmbStatusType2").val() == 21) {    // Failed
       if ($("#failReason").val() == '' || $("#failReason").val() == null) {
         Common.alert("Please Select 'Fail Reason'.");
