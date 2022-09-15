@@ -8,17 +8,21 @@
         $("#creator").val('${SESSION_INFO.userMemCode}');
         getReasonList();
 
+
     });
 
     function getReasonList(){
         if ($("#updPreAsStatus").val() == 44) {
             doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=6853', '','', 'ddlReason', 'S', '');
+            $("#remarkRow").show();
         }
         else if($("#updPreAsStatus").val() == 6){
             doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=6854', '','', 'ddlReason', 'S', '');
+            $("#remarkRow").show();
         }
         else{
         	doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '','', 'ddlReason', 'S', '');
+        	$("#remarkRow").hide();
         }
 
     }
@@ -41,7 +45,7 @@
             return false;
         }
 
-        if (FormUtil.isEmpty($("#updPreAsRemark").val())) {
+        if (($("#updPreAsStatus").val() ==44 || $("#updPreAsStatus").val()  == 6 ) && FormUtil.isEmpty($("#updPreAsRemark").val())) {
             Common.alert("Please fill in Remark.");
             return false;
         }
@@ -138,7 +142,7 @@
            <td><input type="text" class="readonly" name="creator" id="creator"  readonly=readonly /> </td>
           </tr>
 
-          <tr>
+          <tr id="remarkRow">
             <th scope="row">Remark</th>
             <td><textarea cols="20" rows="2" type="text" id="updPreAsRemark" name="updPreAsRemark" maxlength="150" placeholder="Remark"/></td>
           </tr>
