@@ -1307,7 +1307,7 @@
                                    END AS NAME,
                            distinct1.IS_RETURN
                            ,C.FILTER_SRL_UNMATCH_RSN FILTER_SERIAL_UNMATCH_REASON
-                           ,distinct1.SRV_FILTER_prev_SERIAL AS old_serial_no
+                           ,c.OLD_FILTER_BARCD_SERIAL_NO AS old_serial_no
                FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
                            f.STK_CODE,
                            f.STK_DESC,
@@ -1323,7 +1323,7 @@
                       AND D.SRV_CONFIG_ID = E.SRV_CONFIG_ID
                       AND E.SRV_FILTER_STK_ID = F.STK_ID
                       AND E.SRV_FILTER_STUS_ID = '1'
-                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, Y.SERIAL_NO, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY,Y.FILTER_SRL_UNMATCH_RSN
+                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, Y.SERIAL_NO, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY,Y.FILTER_SRL_UNMATCH_RSN,Y.OLD_FILTER_BARCD_SERIAL_NO
                                                                   from SVC0007D Y ,(SELECT SCHDUL_ID,
                                                                                    MAX(X.RESULT_ID) AS RESULT_ID
                                                                                    FROM SVC0006D X
