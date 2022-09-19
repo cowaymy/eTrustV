@@ -869,23 +869,23 @@ public class InstallationResultListController {
               }
 
               String chksms = "";
-              if (param.get("chkSms").equals("on")){
+              if (CommonUtils.nvl(param.get("chkSms")).equals("on")){
             	  chksms = "Y";
               }else{
             	  chksms = "N";
               }
               param.put("chkSms", chksms);
-              param.put("ctCode", installResult.get("ctMemCode"));
-              param.put("salesOrderNo", installResult.get("salesOrdNo"));
+              param.put("ctCode", CommonUtils.nvl(installResult.get("ctMemCode")));
+              param.put("salesOrderNo", CommonUtils.nvl(installResult.get("salesOrdNo")));
               param.put("creator", sessionVO.getUserId());
 
         	  try{
-        		  smsResultValue = installationResultListService.installationSendSMS(param.get("hidAppTypeId").toString(), param);
+        		  smsResultValue = installationResultListService.installationSendSMS(CommonUtils.nvl(param.get("hidAppTypeId").toString()), param);
         	  }catch (Exception e){
         		  logger.info("===smsResultValue111===" + smsResultValue.toString());
         	  }
         	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
-        		  msg += "</br> Failed to send SMS to " + param.get("custMobileNo").toString();
+        		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(param.get("custMobileNo")).toString();
         	  }
 
         	  message.setMessage(msg);
