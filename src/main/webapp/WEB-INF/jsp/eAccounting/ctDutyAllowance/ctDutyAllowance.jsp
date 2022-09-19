@@ -298,10 +298,10 @@ function fn_approvalSubmit() {
         date = "0" + date;
     }
     console.log("what day? " + date);
-    if(date > 15){
+    /* if(date > 15){
     	Common.alert('Before 15th of the month just able to APPROVE Claims.');
         return;
-    }
+    } */
 
 	var checkedItems = AUIGrid.getItemsByValue(ctDutyClaimGridID, "isActive", "Active");
 	if(checkedItems.length <= 0) {

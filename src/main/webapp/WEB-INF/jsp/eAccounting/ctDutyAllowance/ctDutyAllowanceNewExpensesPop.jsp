@@ -236,10 +236,10 @@ $(document).ready(function () {
             date = "0" + date;
         }
         console.log("what day? " + date);
-        if(date > 15){
+        /* if(date > 15){
             Common.alert('Before 15th of the month just able to SUBMIT Claim.');
             return;
-        }
+        } */
     	fn_approveLinePop($("#newMemAccId").val(), $("#newClmMonth").val());
     });
 
