@@ -2,50 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.as.impl.PreASManagementListMapper">
 
-	<select id="selectPreASManagementList" parameterType="Map" resultType="egovMap">
-	    SELECT DISTINCT
-	                  Extent1.SALES_ORDER_NO
-	                , Extent2.SALES_ORD_ID
-	                , NVL(Extent1.AS_NO,'-') AS AS_NO
-	                , Extent10.AS_ID
-	                , Extent1.REMARK
-	                , Extent1.APPV_REMARK
-	                , Extent1.CUST_NAME
-	                , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
-	                , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
-	                , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
-	                , Extent5.TEL_M1 AS CONTACT_NO
-	                , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
-	                , Extent6.NAME AS STUS
-	                , Extent1.STUS AS STUS_ID
-	                , Extent1.DEFECT_CODE
-	                , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
-	                , Extent1.REG_ID AS CREATOR
-	                , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
-	                , NVL (Extent16.AREA, ' ') AS INST_AREA
-                    , NVL (Extent16.POSTCODE, ' ') AS INST_POSTCODE
-                    , NVL (Extent16.CITY, ' ') AS INST_CITY
-	        FROM SVC0130D Extent1
-	        JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
-	        LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
-	        LEFT JOIN SYS0005M Extent3 ON Extent3.BRNCH_ID = Extent9.BRNCH
-	        LEFT JOIN SAL0029D Extent4 ON Extent4.NAME =  Extent1.CUST_NAME AND Extent2.CUST_ID = Extent4.CUST_ID
-	        LEFT JOIN SAL0027D Extent5 ON Extent5.CUST_ID =  Extent4.CUST_ID AND Extent5.STUS_CODE_ID = 9
-	        LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
-	        LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
-	        LEFT JOIN SYS0026M Extent8 ON Extent1.PRODUCT_CODE = Extent8.STK_CODE
-	        LEFT JOIN SVC0001D Extent10 ON Extent1.AS_NO = Extent10.AS_NO
-	        LEFT JOIN SYS0005M Extent11 ON Extent10.AS_BRNCH_ID = Extent11.BRNCH_ID
-	        LEFT JOIN SAL0045D Extent12 ON Extent12.SALES_ORD_ID = Extent2.SALES_ORD_ID
-	        JOIN SAL0046D Extent13 ON Extent13.SALES_ORD_ID = Extent2.SALES_ORD_ID AND Extent13.STUS_CODE_ID =4
-	        LEFT JOIN SYS0005M Extent14 ON Extent14.BRNCH_ID = Extent12.BRNCH_ID
-	        LEFT JOIN SAL0023D Extent15 ON Extent15.CUST_ADD_ID = Extent12.ADD_ID
+    <select id="selectPreASManagementList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+                      Extent1.SALES_ORDER_NO
+                    , Extent2.SALES_ORD_ID
+                    , NVL(Extent1.AS_NO,'-') AS AS_NO
+                    , Extent10.AS_ID
+                    , Extent1.REMARK
+                    , Extent1.APPV_REMARK
+                    , Extent1.CUST_NAME
+                    , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
+                    , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
+                    , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
+                    , CASE WHEN Extent2.APP_TYPE_ID = 66 THEN NVL (Extent18.TEL_R, ' ') ELSE NVL (Extent19.TEL_R, ' ') END CONTACT_NO
+                    , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
+                    , Extent6.NAME AS STUS
+                    , Extent1.STUS AS STUS_ID
+                    , Extent1.DEFECT_CODE
+                    , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
+                    , Extent1.REG_ID AS CREATOR
+                    , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
+            FROM SVC0130D Extent1
+            JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
+            LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
+            LEFT JOIN SYS0005M Extent3 ON Extent3.BRNCH_ID = Extent9.BRNCH
+            LEFT JOIN SAL0029D Extent4 ON Extent4.NAME =  Extent1.CUST_NAME AND Extent2.CUST_ID = Extent4.CUST_ID
+            LEFT JOIN SAL0027D Extent5 ON Extent5.CUST_ID =  Extent4.CUST_ID AND Extent5.STUS_CODE_ID = 9
+            LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
+            LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
+            LEFT JOIN SYS0026M Extent8 ON Extent1.PRODUCT_CODE = Extent8.STK_CODE
+            LEFT JOIN SVC0001D Extent10 ON Extent1.AS_NO = Extent10.AS_NO
+            LEFT JOIN SYS0005M Extent11 ON Extent10.AS_BRNCH_ID = Extent11.BRNCH_ID
+            LEFT JOIN SAL0045D Extent12 ON Extent12.SALES_ORD_ID = Extent2.SALES_ORD_ID
+            JOIN SAL0046D Extent13 ON Extent13.SALES_ORD_ID = Extent2.SALES_ORD_ID AND Extent13.STUS_CODE_ID =4
+            LEFT JOIN SYS0005M Extent14 ON Extent14.BRNCH_ID = Extent12.BRNCH_ID
+            LEFT JOIN SAL0023D Extent15 ON Extent15.CUST_ADD_ID = Extent12.ADD_ID
             LEFT JOIN SYS0064M Extent16 ON Extent16.AREA_ID = Extent15.AREA_ID
+            LEFT JOIN SAL0024D Extent17 ON Extent17.CUST_BILL_ID = Extent2.CUST_BILL_ID AND Extent2.APP_TYPE_ID = 66
+            LEFT JOIN SAL0027D Extent18 ON Extent18.CUST_CNTC_ID = Extent17.CUST_BILL_CNT_ID AND Extent2.APP_TYPE_ID = 66
+            LEFT JOIN SAL0027D Extent19 ON Extent19.CUST_CNTC_ID = Extent2.CUST_CNT_ID AND Extent2.APP_TYPE_ID  <![CDATA[<>]]> 66
 
+            WHERE 1=1
 
-			WHERE 1=1
-
-		<if test="asStatusList != null and asStatusList != '' ">
+        <if test="asStatusList != null and asStatusList != '' ">
             AND Extent1.STUS IN
            <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
             #{item}
@@ -86,54 +85,27 @@
         </if>
 
         <if test="orderNum != null and orderNum != '' ">
-             AND Extent1.SALES_ORDER_NO = #{orderNum}
+             AND ( Extent1.SALES_ORDER_NO = #{orderNum} )
          </if>
 
-         <if test="instCity != null and instCity != '' ">
-             AND ( Extent16.CITY LIKE '%'||#{instCity}||'%')
-         </if>
+    </select>
 
-         <if test="instArea != null and instArea != '' ">
-             AND ( Extent16.AREA LIKE '%'||#{instArea}||'%')
-         </if>
-
-	</select>
-
-	 <select id="selectPreAsStat"  parameterType="Map" resultType="egovMap">
-	    SELECT CODE AS CODE_ID,
-	           CODE_NAME AS CODE_NAME
-	    FROM SYS0094M
-	    WHERE IND = 'PREAS_STAT'
-	      AND DISB = 0
-	    ORDER BY LPAD(CODE,4)
-  </select>
-
-
-   <select id="selectPreAsUpd"  parameterType="Map" resultType="egovMap">
+     <select id="selectPreAsStat"  parameterType="Map" resultType="egovMap">
         SELECT CODE AS CODE_ID,
                CODE_NAME AS CODE_NAME
         FROM SYS0094M
-        WHERE IND = 'PREAS_UPD'
+        WHERE IND = 'PREAS_STAT'
           AND DISB = 0
         ORDER BY LPAD(CODE,4)
   </select>
 
-<!--   <update id="updateRejectedPreAS" parameterType="java.util.Map"> -->
-<!--     UPDATE SVC0130D SET STUS = 6 -->
-<!--                       , UPD_USER_ID = #{userId} -->
-<!--                       , UPD_DT = SYSDATE -->
-<!--                       , APPV_REMARK = #{remark} -->
-<!--                       , FAIL_REASON = #{failReason} -->
-<!--     WHERE SALES_ORDER_NO = #{orderNo} AND STUS=1 -->
-<!--   </update> -->
-
-  <update id="updatePreAsStatus" parameterType="java.util.Map">
-    UPDATE SVC0130D SET STUS = #{stus}
+  <update id="updateRejectedPreAS" parameterType="java.util.Map">
+    UPDATE SVC0130D SET STUS = 6
                       , UPD_USER_ID = #{userId}
                       , UPD_DT = SYSDATE
                       , APPV_REMARK = #{remark}
-                      , FAIL_REASON = #{reason}
-    WHERE SALES_ORDER_NO = #{orderNo} AND STUS in (1,44)
+                      , FAIL_REASON = #{failReason}
+    WHERE SALES_ORDER_NO = #{orderNo} AND STUS=1
   </update>
 
 
