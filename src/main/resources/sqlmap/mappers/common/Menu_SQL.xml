@@ -220,6 +220,11 @@
                     ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN23', FUNC_YN) ) AS funcUserDefine23
                     ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN24', FUNC_YN) ) AS funcUserDefine24
                     ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN25', FUNC_YN) ) AS funcUserDefine25
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN26', FUNC_YN) ) AS funcUserDefine26
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN27', FUNC_YN) ) AS funcUserDefine27
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN28', FUNC_YN) ) AS funcUserDefine28
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN29', FUNC_YN) ) AS funcUserDefine29
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN30', FUNC_YN) ) AS funcUserDefine30
             FROM (SELECT I.MENU_CODE
                         ,I.PGM_TRN_CODE
                         ,I.VALID_DT_FROM

@@ -93,7 +93,12 @@
                                              WHEN C.PGM_TRN_CODE = 'USER_DFN22' THEN b.DESC_user_dfn22
                                              WHEN C.PGM_TRN_CODE = 'USER_DFN23' THEN b.DESC_user_dfn23
                                              WHEN C.PGM_TRN_CODE = 'USER_DFN24' THEN b.DESC_user_dfn24
-                                             WHEN C.PGM_TRN_CODE = 'USER_DFN25' THEN b.DESC_user_dfn25 END  AS PGM_TRN_NAME,
+                                             WHEN C.PGM_TRN_CODE = 'USER_DFN25' THEN b.DESC_user_dfn25
+                                             WHEN C.PGM_TRN_CODE = 'USER_DFN26' THEN b.DESC_user_dfn26
+                                             WHEN C.PGM_TRN_CODE = 'USER_DFN27' THEN b.DESC_user_dfn27
+                                             WHEN C.PGM_TRN_CODE = 'USER_DFN28' THEN b.DESC_user_dfn28
+                                             WHEN C.PGM_TRN_CODE = 'USER_DFN29' THEN b.DESC_user_dfn29
+                                             WHEN C.PGM_TRN_CODE = 'USER_DFN30' THEN b.DESC_user_dfn30 END  AS PGM_TRN_NAME,
 									  CASE WHEN C.PGM_TRN_CODE = 'VIEW' THEN b.func_view
 									       WHEN C.PGM_TRN_CODE = 'CHNG' THEN b.func_chng
 									       WHEN C.PGM_TRN_CODE = 'PRNT' THEN b.func_prt
@@ -121,7 +126,12 @@
 									       WHEN C.PGM_TRN_CODE = 'USER_DFN22' THEN b.func_user_dfn22
 									       WHEN C.PGM_TRN_CODE = 'USER_DFN23' THEN b.func_user_dfn23
 									       WHEN C.PGM_TRN_CODE = 'USER_DFN24' THEN b.func_user_dfn24
-									       WHEN C.PGM_TRN_CODE = 'USER_DFN25' THEN b.func_user_dfn25 END AS TRANSACTION_YN
+									       WHEN C.PGM_TRN_CODE = 'USER_DFN25' THEN b.func_user_dfn25
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN26' THEN b.func_user_dfn26
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN27' THEN b.func_user_dfn27
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN28' THEN b.func_user_dfn28
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN29' THEN b.func_user_dfn29
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN30' THEN b.func_user_dfn30 END AS TRANSACTION_YN
                             FROM SYS0050M b ,
                             ( SELECT CODE AS PGM_TRN_CODE FROM SYS0013M WHERE CODE_MASTER_ID = 314 AND CODE <![CDATA[<>]]> 'MENU') c) d
 		                WHERE NVL(d.transaction_yn,'N') = 'Y') b
