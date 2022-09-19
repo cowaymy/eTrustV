@@ -65,9 +65,9 @@ function updateStatus() {
 
        Common.ajax("POST", "/sales/posstock/eshopUpdateCourierSvc.do", updateEshopData, function(result) {
           if(result.code == "00") {        //successful update
-              Common.alert(" This ESN No: " +  '${esnNo}' + " has been updated.",fn_reloadList());
+              Common.alert(" This ESN No: " +  '${esnNo}' + " has been updated.",fn_reloadList);
           } else {
-                 Common.alert(result.message,fn_reloadList());
+                 Common.alert(result.message,fn_reloadList);
              }
        });
 }

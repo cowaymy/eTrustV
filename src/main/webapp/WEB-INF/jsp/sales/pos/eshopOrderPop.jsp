@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+$fun<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%-- <%@ include file="/WEB-INF/jsp/sales/order/convertToOrderInc.jsp"%> --%>
 <%-- <%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp"%> --%>

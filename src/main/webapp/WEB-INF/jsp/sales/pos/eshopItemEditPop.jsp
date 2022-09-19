@@ -14,8 +14,6 @@
 </style>
 <script type="text/javascript">
 
-console.log(window.location.pathname);
-
 var myGridIDItem;
 
 //Init Option
