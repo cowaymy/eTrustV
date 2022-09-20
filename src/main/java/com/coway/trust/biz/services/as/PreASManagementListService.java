@@ -22,4 +22,8 @@ public interface PreASManagementListService {
 
 	int updatePreAsStatus(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> getCityList(Map<String, Object> params);
+
+	List<EgovMap> getAreaList(Map<String, Object> params);
+
 }

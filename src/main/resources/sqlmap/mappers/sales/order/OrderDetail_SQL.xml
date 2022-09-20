@@ -271,7 +271,7 @@
                                  , T1.CALL_CRT_DT CALL_CRT_DT_2
                                  , TO_CHAR(T1.CALL_CRT_DT, 'yyyy-MM-dd hh24:mi') CALL_CRT_DT
                                  , T1.CALL_CRT_USER_ID
-                                 , CASE WHEN T13.AS_NO IS NULL THEN T1.CALL_REM ELSE  TO_CLOB('1) Pre-AS Register Creator : '|| T13.REG_ID || ' 2) Pre-AS Register Remark : ' || T13.REMARK || '  3) AS Remark : ' || T1.CALL_REM)  END AS CALL_REM
+                                 , CASE WHEN T13.AS_NO IS NOT NULL AND T4.STUS_CODE_ID = '40'  THEN TO_CLOB('1) Pre-AS Register Creator : '|| T13.REG_ID || ' 2) Pre-AS Requestor Remark : ' || T13.REMARK || '  3) AS Register Remark : ' || T1.CALL_REM)   ELSE T1.CALL_REM   END AS CALL_REM
                                  , T2.TYPE_ID
                                  , T3.CODE
                                  , T3.CODE_NAME

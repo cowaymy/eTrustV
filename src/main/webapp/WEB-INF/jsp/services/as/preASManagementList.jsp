@@ -8,23 +8,55 @@
     height : "500px"
   };
 
+  var optionSystem = {
+	        type: "M",
+	        isShowChoose: false
+	};
+
   var myGridID;
 
   var gridPros = {
-	      //showRowCheckColumn : true,
+	      showRowCheckColumn : true,
 	      usePaging : true,
 	      pageRowCount : 20,
-	      //showRowAllCheckBox : true,
-	      editable : false,
-	      selectionMode : "multipleCells",
-	      wordWrap: true
-	    };
+	      showRowAllCheckBox : true,
+	      editable : false
+   };
 
-  $(document).ready(
-      function() {
+
+  $(function(){
+
+
+      $("#ordState").change(function() {
+           var param = {stateCode :$('#ordState').val()}
+           doGetCombo('/services/as/getCityList.do',$('#ordState').val(), '', 'ordCity', 'S', '');
+       });
+
+      $("#ordCity").change(function() {
+          if ($('#ordCity').val() != null && $('#ordCity').val() != "" ){
+                 var areaParam = {stateCode :$('#ordState').val(), cityCode : $('#ordCity').val()}
+                 doGetComboData('/services/as/getAreaList.do', areaParam , '', 'ordArea', 'M','f_multiComboType');
+           }
+      });
+  });
+
+  function f_multiComboType() {
+	    $(function() {
+	        $('#ordArea').change(function() {
+            }).multipleSelect({
+                selectAll : false
+            });
+	    });
+	}
+
+  $(document).ready(function() {
         asManagementGrid();
         doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
         doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbInsBranchId', 'M', 'f_multiCombo'); // DSC BRANCH
+        doGetCombo('/callCenter/getstateList.do', '', '', 'ordState', 'S', '');
+        doGetCombo('/services/as/getCityList.do',$('#ordState').val(), '', 'ordCity', 'S', '');
+
+
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
 
         	var index = AUIGrid.getSelectedIndex(myGridID)[0];
@@ -58,28 +90,6 @@
             }
         });
       });
-  /* By KV - AS Mobile Failure Listing*/
-  function fn_ASMobileFailureListing(){
-      var date = new Date();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-
-      if (date.getDate() < 10) {
-        day = "0" + date.getDate();
-      }
-
-      $("#reportFormASLst #reportFileName").val('/services/AS_Mobile_Fail_excel.rpt');
-      $("#reportFormASLst #viewType").val("EXCEL");
-      $("#reportFormASLst #V_TEMP").val("");
-      $("#reportFormASLst #reportDownFileName").val(
-          "ASMobileFailureListing_" + day + month + date.getFullYear());
-
-      var option = {
-                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-              };
-
-    Common.report("reportFormASLst", option);
-  }
 
   function asManagementGrid() {
     var columnLayout = [
@@ -144,7 +154,7 @@
           dataField : "remark",
           headerText : "Remark",
           editable : false,
-          width : 350
+          width : 150
         },
         {
           dataField : "updDt",
@@ -156,7 +166,7 @@
           dataField : "appvRemark",
           headerText : "AS Register Remark",
           editable : false,
-          width : 350
+          width : 150
         },
         {
           dataField : "instCity",
@@ -204,11 +214,7 @@
             width : 150,
             visible:false
       }
-
-
     ];
-
-
 
     myGridID = AUIGrid.create("#grid_wrap_asList", columnLayout, gridPros);
   }
@@ -248,7 +254,6 @@
             selectAll : true, // 전체선택
             width : '80%'
         });
-
     });
 }
 
@@ -484,13 +489,29 @@
       </select>
       </td>
 
-      <th>City</th>
-      <td><input type="text" class="w100p" id="instCity" name="instCity" /></td>
 
-      <th>Area</th>
-      <td><input type="text" class="w100p" id="instArea" name="instArea" /></td>
+       <th><spring:message code='service.title.State' /></th>
+       <td><select class="w100p" id="ordState" name="ordState"></select></td>
+
+       <th scope="row">City</th>
+       <td><select class="w100p" id="ordCity" name="ordCity"></select></td>
+
+
 
      </tr>
+
+     <tr>
+       <th scope="row"><spring:message code='service.title.Area' /></th>
+       <td><select class="w100p multy_select" id="ordArea" name="ordArea" multiple = "multiple"></select></td>
+
+       <th></th>
+       <td></td>
+
+       <th></th>
+       <td></td>
+
+     </tr>
+
 
 
     </tbody>

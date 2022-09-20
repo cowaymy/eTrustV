@@ -102,12 +102,14 @@ public class PreASManagementListController {
     String[] asStatusList = request.getParameterValues("asStatus");
     String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
     String[] cmbInsBranchIdList = request.getParameterValues("cmbInsBranchId");
+    String[] areaList = request.getParameterValues("ordArea");
 
 
     params.put("asStatusList", asStatusList);
     params.put("cmbbranchIdList", cmbbranchIdList);
     params.put("cmbInsBranchIdList", cmbInsBranchIdList);
     params.put("asProductList", asProductList);
+    params.put("areaList", areaList);
 
     List<EgovMap> PreASMList = PreASManagementListService.selectPreASManagementList(params);
 
@@ -186,5 +188,25 @@ public class PreASManagementListController {
 		model.addAttribute("ind", params.get("ind"));
 		return "services/as/preAsRawDataPop";
 	}
+
+
+  @RequestMapping(value = "/getCityList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getCityList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+     List<EgovMap> cityList = PreASManagementListService.getCityList(params);
+     return ResponseEntity.ok(cityList);
+  }
+
+  @RequestMapping(value = "/getAreaList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getAreaList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	String searchcity = (String) params.get("cityCode");
+	String[] searchcityvalue = searchcity.split("∈");
+	logger.debug("cityCode"+searchcityvalue);
+	params.put("cityList", searchcityvalue);
+
+	 List<EgovMap> areaList = PreASManagementListService.getAreaList(params);
+     return ResponseEntity.ok(areaList);
+  }
 
 }

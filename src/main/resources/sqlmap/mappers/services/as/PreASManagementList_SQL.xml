@@ -22,6 +22,9 @@
                     , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
                     , Extent1.REG_ID AS CREATOR
                     , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
+                    , NVL (Extent16.AREA, ' ') AS INST_AREA
+                    , NVL (Extent16.POSTCODE, ' ') AS INST_POSTCODE
+                    , NVL (Extent16.CITY, ' ') AS INST_CITY
             FROM SVC0130D Extent1
             JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
             LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
@@ -41,6 +44,7 @@
             LEFT JOIN SAL0024D Extent17 ON Extent17.CUST_BILL_ID = Extent2.CUST_BILL_ID AND Extent2.APP_TYPE_ID = 66
             LEFT JOIN SAL0027D Extent18 ON Extent18.CUST_CNTC_ID = Extent17.CUST_BILL_CNT_ID AND Extent2.APP_TYPE_ID = 66
             LEFT JOIN SAL0027D Extent19 ON Extent19.CUST_CNTC_ID = Extent2.CUST_CNT_ID AND Extent2.APP_TYPE_ID  <![CDATA[<>]]> 66
+
 
             WHERE 1=1
 
@@ -85,8 +89,19 @@
         </if>
 
         <if test="orderNum != null and orderNum != '' ">
-             AND ( Extent1.SALES_ORDER_NO = #{orderNum} )
+             AND Extent1.SALES_ORDER_NO = #{orderNum}
          </if>
+
+         <if test="ordCity != null and ordCity != '' ">
+             AND UPPER(Extent16.CITY) =#{ordCity}
+         </if>
+
+          <if test="areaList != null and areaList != '' ">
+             AND Extent16.AREA IN
+             <foreach item="item" collection="areaList" index="index" open="(" separator="," close=")">
+             #{item}
+              </foreach>
+       </if>
 
     </select>
 
@@ -99,14 +114,58 @@
         ORDER BY LPAD(CODE,4)
   </select>
 
-  <update id="updateRejectedPreAS" parameterType="java.util.Map">
-    UPDATE SVC0130D SET STUS = 6
+
+   <select id="selectPreAsUpd"  parameterType="Map" resultType="egovMap">
+        SELECT CODE AS CODE_ID,
+               CODE_NAME AS CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'PREAS_UPD'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+  </select>
+
+<!--   <update id="updateRejectedPreAS" parameterType="java.util.Map"> -->
+<!--     UPDATE SVC0130D SET STUS = 6 -->
+<!--                       , UPD_USER_ID = #{userId} -->
+<!--                       , UPD_DT = SYSDATE -->
+<!--                       , APPV_REMARK = #{remark} -->
+<!--                       , FAIL_REASON = #{failReason} -->
+<!--     WHERE SALES_ORDER_NO = #{orderNo} AND STUS=1 -->
+<!--   </update> -->
+
+  <update id="updatePreAsStatus" parameterType="java.util.Map">
+    UPDATE SVC0130D SET STUS = #{stus}
                       , UPD_USER_ID = #{userId}
                       , UPD_DT = SYSDATE
                       , APPV_REMARK = #{remark}
-                      , FAIL_REASON = #{failReason}
-    WHERE SALES_ORDER_NO = #{orderNo} AND STUS=1
+                      , FAIL_REASON = #{reason}
+    WHERE SALES_ORDER_NO = #{orderNo} AND STUS in (1,44)
   </update>
+
+    <select id="getCityList" parameterType="Map" resultType="egovMap">
+    SELECT TRIM(CITY) AS CODE_ID,
+           INITCAP(TRIM(CITY)) as CODE_NAME
+    FROM SYS0064M
+    WHERE UPPER(STATE) = UPPER(#{groupCode})
+    AND CITY IS NOT NULL
+    GROUP BY CITY
+    ORDER BY CITY
+  </select>
+
+    <select id="getAreaList" parameterType="Map" resultType="egovMap">
+    SELECT TRIM(AREA) AS CODE_ID,
+           INITCAP(TRIM(AREA)) as CODE_NAME
+    FROM SYS0064M
+    WHERE UPPER(STATE) = UPPER(#{stateCode})
+    AND CITY IS NOT NULL
+
+    <if test="cityCode != null and cityCode != '' ">
+     AND UPPER(CITY) = UPPER(#{cityCode})
+    </if>
+
+    GROUP BY AREA
+    ORDER BY AREA
+  </select>
 
 
 </mapper>

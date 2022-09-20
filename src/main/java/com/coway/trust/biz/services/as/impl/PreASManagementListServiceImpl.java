@@ -95,6 +95,16 @@ public class PreASManagementListServiceImpl extends EgovAbstractServiceImpl impl
 	  return result;
 	}
 
+  	 @Override
+  	  public List<EgovMap> getCityList(Map<String, Object> params) {
+  	    return PreASManagementListMapper.getCityList(params);
+  	 }
+
+  	 @Override
+ 	  public List<EgovMap> getAreaList(Map<String, Object> params) {
+ 	    return PreASManagementListMapper.getAreaList(params);
+ 	 }
+
 
 
 

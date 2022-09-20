@@ -21,4 +21,8 @@ public interface PreASManagementListMapper {
 
 	int updatePreAsStatus(Map<String, Object> params);
 
+	List<EgovMap> getCityList(Map<String, Object> params);
+
+	List<EgovMap> getAreaList(Map<String, Object> params);
+
 }
