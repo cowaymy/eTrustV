@@ -271,7 +271,7 @@
       <a href="javascript:fn_cpeRequestPop()">Request</a>
      </p></li>
    </c:if>
-   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+   <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue">
       <a href="javascript:fn_cpeUpdateApprove()"><spring:message code='cpe.text.updateApprove'/></a>
      </p></li>
