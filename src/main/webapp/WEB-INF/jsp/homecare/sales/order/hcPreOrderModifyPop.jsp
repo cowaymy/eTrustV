@@ -151,6 +151,61 @@ var blockDtTo = "${hsBlockDtTo}";
 	     });
 	 }
 
+  function disableSaveButton() {
+	  $('#btnSave').unbind()
+  }
+
+  function setupSaveButton() {
+	  $('#btnSave').click(function() {
+	      var preOrdId = $('#frmPreOrdReg #hiddenPreOrdId').val();
+	      var rcdTms = $('#hiddenRcdTms').val();
+
+	      if (!fn_validCustomer()) {
+	        $('#aTabCS').click();
+	        return false;
+	      }
+
+	      if (!fn_validOrderInfo()) {
+	        $('#aTabOI').click();
+	        return false;
+	      }
+
+	      if (!fn_validPaymentInfo()) {
+	        $('#aTabBD').click();
+	        return false;
+	      }
+
+	      if (!fn_validFile()) {
+	        $('#aTabFL').click();
+	        return false;
+	      }
+
+	      if (!fn_validRcdTms(preOrdId, rcdTms, '#popup_wrap')) {
+	        $('#aTabBD').click();
+	        return false;
+	      }
+
+	      if ($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
+	        // product size check
+	        Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {
+	          product1 : $("#ordProduct1 option:selected").val(),
+	          product2 : $("#ordProduct2 option:selected").val()
+	        }, function(result) {
+	          if (result.code != '00') {
+	            $('#aTabOI').click();
+	            Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>" + result.message + "</b>");
+	            return false;
+
+	          } else {
+	            fn_doSavePreOrder();
+	          }
+	        });
+	      } else {
+	        fn_doSavePreOrder();
+	      }
+	    });
+  }
+
   $(function() {
     $('#btnConfirm').click(function() {
       if (!fn_validConfirm())
@@ -450,6 +505,7 @@ var blockDtTo = "${hsBlockDtTo}";
     });
 
     $('#ordProduct1, #ordProduct2').change(function(event) {
+      disableSaveButton()
       var _tagObj = $(event.target);
       var _tagId = _tagObj.attr('id');
       var _tagNum = _tagId.replace(/[^0-9]/g, "");
@@ -498,6 +554,7 @@ var blockDtTo = "${hsBlockDtTo}";
     });
 
     $('#ordPromo1, #ordPromo2').change(function(event) {
+      disableSaveButton()
       AUIGrid.clearGridData(listGiftGridID);
 
       var _tagObj = $(event.target);
@@ -551,55 +608,7 @@ var blockDtTo = "${hsBlockDtTo}";
       fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
     });
 
-    $('#btnSave').click(function() {
-
-      var preOrdId = $('#frmPreOrdReg #hiddenPreOrdId').val();
-      var rcdTms = $('#hiddenRcdTms').val();
-
-      if (!fn_validCustomer()) {
-        $('#aTabCS').click();
-        return false;
-      }
-
-      if (!fn_validOrderInfo()) {
-        $('#aTabOI').click();
-        return false;
-      }
-
-      if (!fn_validPaymentInfo()) {
-        $('#aTabBD').click();
-        return false;
-      }
-
-      if (!fn_validFile()) {
-        $('#aTabFL').click();
-        return false;
-      }
-
-      if (!fn_validRcdTms(preOrdId, rcdTms, '#popup_wrap')) {
-        $('#aTabBD').click();
-        return false;
-      }
-
-      if ($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
-        // product size check
-        Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {
-          product1 : $("#ordProduct1 option:selected").val(),
-          product2 : $("#ordProduct2 option:selected").val()
-        }, function(result) {
-          if (result.code != '00') {
-            $('#aTabOI').click();
-            Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>" + result.message + "</b>");
-            return false;
-
-          } else {
-            fn_doSavePreOrder();
-          }
-        });
-      } else {
-        fn_doSavePreOrder();
-      }
-    });
+    setupSaveButton()
 
     $('#addCreditCardBtn').click(function() {
       var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
@@ -1487,6 +1496,7 @@ var blockDtTo = "${hsBlockDtTo}";
     $("#totOrdPrice").val(totOrdPrice.toFixed(2));
     $("#totOrdRentalFees").val(totOrdRentalFees.toFixed(2));
     $("#totOrdPv").val(totOrdPv.toFixed(2));
+    setupSaveButton()
   }
 
   function fn_setOptGrpClass() {
