@@ -66,6 +66,7 @@
     }
 
     function setupSaveButton() {
+    	disableSaveButton()
     	$('#btnSave').click(function() {
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
