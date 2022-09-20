@@ -321,12 +321,21 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
             //send sms
             Map<String, Object> smsResultValue = new HashMap<String, Object>();
+            Map<String, Object> emailResultValue = new HashMap<String, Object>();
+
             try{
             	smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
 	      	}catch (Exception e){
 	      		logger.info("===smsResultValue===" + smsResultValue.toString());
 	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
 	      	}
+
+            try{
+            	emailResultValue = installationResultListService.installationSendEmail(params);
+          	}catch (Exception e){
+          		logger.info("===emailResultValue===" + emailResultValue.toString());
+          		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
+          	}
           }
 
           logger.info("###insApiresult.get(chkCrtAs): " + insApiresult.get("chkCrtAs"));
@@ -569,6 +578,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
         //send sms
         Map<String, Object> smsResultValue = new HashMap<String, Object>();
+
         try{
         	smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
       	}catch (Exception e){

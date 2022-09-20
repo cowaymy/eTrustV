@@ -3852,9 +3852,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			    	}else{ //FAIL
 			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
 			    	}
-			    	logger.debug("================SMS MESSAGE================" + smsMessage);
 			    }
-
 		 }
 
 	    Map<String, Object> smsList = new HashMap<>();
@@ -3866,8 +3864,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		try{
 		    if(smsMessage != "")
 		    {
-		    	logger.debug("================SENDSMS================");
-		    	logger.debug(smsList.toString());
 		    	sendSms(smsList);
 		    }
 		}catch(Exception e){
@@ -3879,5 +3875,54 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 		logger.info("===resultValue===" + smsResultValue.toString());
 		return smsResultValue;
+	}
+
+  	@Override
+	public Map<String, Object> installationSendEmail(Map<String, Object> params) {
+  		Map<String, Object> emailResultValue = new HashMap<String, Object>();
+
+  		emailResultValue.put("smsLogStat", "0");//if success
+
+		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
+	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+	    params.put("V_WHERESQL", params.get("installEntryId").toString());// parameter
+	    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+	        "AutoDebitAuthorisationForm_" + CommonUtils.getNowDate());
+
+	    String emailSubject = "COWAY: Credit/Debit Card Auto Debit Authorisation";
+
+	    List<String> emailNo = new ArrayList<String>();
+
+	    if (!"".equals(CommonUtils.nvl(params.get("resultReportEmailNo")))) {
+	        emailNo.add(CommonUtils.nvl(params.get("resultReportEmailNo")));
+	    }
+	    emailNo.add("keyi.por@coway.com.my"); //for self test only
+
+	    String content = "";
+	    content += "Dear Customer\n\n";
+	    content += "Congratulation for your New Coway Product !!\n";
+	    content += "Kindly refer an attachment for your Installation Notes.\n";
+	    content += "Your co-operation are highly appreciated.\n";
+	    content += "Thank You.\n\n\n\n";
+	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
+	    content += "Regards,\n\n";
+	    content += "Coway (Malaysia) Sdn Bhd\n\n";
+
+	    params.put(EMAIL_SUBJECT, emailSubject);
+	    params.put(EMAIL_TO, emailNo);
+	    params.put(EMAIL_TEXT, content);
+
+		try{
+			this.view(null, null, params); //Included sending email
+		}catch(Exception e){
+			logger.debug(" Installation notes email result : {}", e.toString());
+			e.printStackTrace();
+			emailResultValue.put("smsLogStat", "3");//if fail
+		}finally{
+			logger.info("===resultValueFail===" + emailResultValue.toString()); //when failed to send sms
+		}
+
+		logger.info("===resultValue===" + emailResultValue.toString());
+		return emailResultValue;
 	}
 }
