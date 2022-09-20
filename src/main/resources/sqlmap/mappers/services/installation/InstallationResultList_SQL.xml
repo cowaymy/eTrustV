@@ -3639,6 +3639,7 @@
                         ,AFT_LPM
                         ,TURB_LVL
                         ,WATER_SRC_TYPE
+                        ,INST_NOTECHK
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3676,6 +3677,7 @@
             , #{aftLpm}
             , #{turbLvl}
             , #{waterSrcType}
+            , #{instNoteChk}
     )
   </insert>
 
