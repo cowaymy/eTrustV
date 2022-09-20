@@ -156,6 +156,7 @@ var blockDtTo = "${hsBlockDtTo}";
   }
 
   function setupSaveButton() {
+	  disableSaveButton()
 	  $('#btnSave').click(function() {
 	      var preOrdId = $('#frmPreOrdReg #hiddenPreOrdId').val();
 	      var rcdTms = $('#hiddenRcdTms').val();
