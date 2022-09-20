@@ -3883,6 +3883,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
   		emailResultValue.put("smsLogStat", "0");//if success
   		logger.debug("params1111 : {}", params.toString());
+  		logger.debug("installEntryId1111 : {}", params.get("installEntryId").toString());
 
 		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
@@ -3899,11 +3900,11 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    emailNo.add("keyi.por@coway.com.my"); //for self test only
 
 	    String content = "";
-	    content += "Dear Customer\n\n";
-	    content += "Congratulation for your New Coway Product !!\n";
+	    content += "Dear Customer,\n\n";
+	    content += "Congratulation for your New Coway Product !!\n\n";
 	    content += "Kindly refer an attachment for your Installation Notes.\n";
 	    content += "Your co-operation are highly appreciated.\n";
-	    content += "Thank You.\n\n\n\n";
+	    content += "Thank You.\n\n\n";
 	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
 	    content += "Regards,\n\n";
 	    content += "Coway (Malaysia) Sdn Bhd\n\n";
