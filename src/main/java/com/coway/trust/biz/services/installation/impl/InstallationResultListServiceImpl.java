@@ -3877,7 +3877,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		return smsResultValue;
 	}
 
-  	@Override
+  	/*@Override
 	public Map<String, Object> installationSendEmail(Map<String, Object> params) {
   		Map<String, Object> emailResultValue = new HashMap<String, Object>();
 
@@ -3885,7 +3885,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   		logger.debug("params1111 : {}", params.toString());
   		logger.debug("installEntryId1111 : {}", params.get("installEntryId").toString());
 
-		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
+		params.put(REPORT_FILE_NAME, "/dev/services/InstallationNoteDigitalization.rpt");// visualcut
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
 	    params.put("V_WHERESQL", params.get("installEntryId").toString());// parameter
 	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
@@ -3925,5 +3925,47 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 		logger.info("===resultValue===" + emailResultValue.toString());
 		return emailResultValue;
+	}*/
+  	@SuppressWarnings("unchecked")
+	@Override
+	public void installationSendEmail(Map<String, Object> params) {
+
+		logger.debug("params1111 : {}", params.toString());
+		logger.debug("installEntryId1111 : {}", params.get("installEntryId").toString());
+
+		params.put(REPORT_FILE_NAME, "/dev/services/InstallationNoteDigitalization.rpt");// visualcut
+	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+	    params.put("V_WHERESQL", params.get("installEntryId").toString());// parameter
+	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
+
+	    String emailSubject = "COWAY: Congratulation For New Coway Product";
+
+	    List<String> emailNo = new ArrayList<String>();
+
+	    if (!"".equals(CommonUtils.nvl(params.get("resultReportEmailNo")))) {
+	        emailNo.add(CommonUtils.nvl(params.get("resultReportEmailNo")));
+	    }
+	    emailNo.add("keyi.por@coway.com.my"); //for self test only
+
+	    String content = "";
+	    content += "Dear Customer,\n\n";
+	    content += "Congratulation for your New Coway Product !!\n\n";
+	    content += "Kindly refer an attachment for your Installation Notes.\n";
+	    content += "Your co-operation are highly appreciated.\n";
+	    content += "Thank You.\n\n\n";
+	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
+	    content += "Regards,\n\n";
+	    content += "Coway (Malaysia) Sdn Bhd\n\n";
+
+	    params.put(EMAIL_SUBJECT, emailSubject);
+	    params.put(EMAIL_TO, emailNo);
+	    params.put(EMAIL_TEXT, content);
+
+		try{
+			this.view(null, null, params); //Included sending email
+		}catch(Exception e){
+			logger.debug(" Installation notes email result : {}", e.toString());
+			e.printStackTrace();
+		}
 	}
 }
