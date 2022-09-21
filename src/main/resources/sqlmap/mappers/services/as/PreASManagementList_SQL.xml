@@ -14,7 +14,7 @@
                     , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
                     , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
                     , Extent1.PRODUCT_CODE || ' - ' || Extent1.PRODUCT_NAME AS PRODUCT
-                    , CASE WHEN Extent2.APP_TYPE_ID = 66 THEN NVL (Extent18.TEL_R, ' ') ELSE NVL (Extent19.TEL_R, ' ') END CONTACT_NO
+                    , CASE WHEN Extent2.APP_TYPE_ID = 66 THEN NVL (Extent18.TEL_M1, ' ') ELSE NVL (Extent19.TEL_M1, ' ') END CONTACT_NO
                     , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
                     , Extent6.NAME AS STUS
                     , Extent1.STUS AS STUS_ID
