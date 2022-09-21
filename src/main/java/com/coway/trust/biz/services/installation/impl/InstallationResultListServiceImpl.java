@@ -3886,7 +3886,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
-	    params.put("V_WHERESQL", " AND Extent1.INSTALL_ENTRY_ID = " + params.get("installEntryId").toString());// parameter
+	    params.put("V_WHERESQL", params.get("installEntryId").toString());// parameter
 	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
 
 	    String emailSubject = "COWAY: Congratulation For New Coway Product";
