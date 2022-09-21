@@ -3767,7 +3767,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 	    String reportName = reportFilePath + reportFile;
-	    String prodName = "view";
+	    String prodName = "SP_CR_GEN_INST_NOTES";
 	    int maxLength = 0;
 	    String msg = "Completed";
 
@@ -3877,55 +3877,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		return smsResultValue;
 	}
 
-  	/*@Override
-	public Map<String, Object> installationSendEmail(Map<String, Object> params) {
-  		Map<String, Object> emailResultValue = new HashMap<String, Object>();
-
-  		emailResultValue.put("smsLogStat", "0");//if success
-  		logger.debug("params1111 : {}", params.toString());
-  		logger.debug("installEntryId1111 : {}", params.get("installEntryId").toString());
-
-		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
-	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
-	    params.put("V_WHERESQL", params.get("installEntryId").toString());// parameter
-	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
-
-	    String emailSubject = "COWAY: Congratulation For New Coway Product";
-
-	    List<String> emailNo = new ArrayList<String>();
-
-	    if (!"".equals(CommonUtils.nvl(params.get("resultReportEmailNo")))) {
-	        emailNo.add(CommonUtils.nvl(params.get("resultReportEmailNo")));
-	    }
-	    emailNo.add("keyi.por@coway.com.my"); //for self test only
-
-	    String content = "";
-	    content += "Dear Customer,\n\n";
-	    content += "Congratulation for your New Coway Product !!\n\n";
-	    content += "Kindly refer an attachment for your Installation Notes.\n";
-	    content += "Your co-operation are highly appreciated.\n";
-	    content += "Thank You.\n\n\n";
-	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
-	    content += "Regards,\n\n";
-	    content += "Coway (Malaysia) Sdn Bhd\n\n";
-
-	    params.put(EMAIL_SUBJECT, emailSubject);
-	    params.put(EMAIL_TO, emailNo);
-	    params.put(EMAIL_TEXT, content);
-
-		try{
-			this.view(null, null, params); //Included sending email
-		}catch(Exception e){
-			logger.debug(" Installation notes email result : {}", e.toString());
-			e.printStackTrace();
-			emailResultValue.put("smsLogStat", "3");//if fail
-		}finally{
-			logger.info("===resultValueFail===" + emailResultValue.toString()); //when failed to send sms
-		}
-
-		logger.info("===resultValue===" + emailResultValue.toString());
-		return emailResultValue;
-	}*/
   	@SuppressWarnings("unchecked")
 	@Override
 	public void installationSendEmail(Map<String, Object> params) {
@@ -3933,7 +3884,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		logger.debug("params1111 : {}", params.toString());
 		logger.debug("installEntryId1111 : {}", params.get("installEntryId").toString());
 
-		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization_copy.rpt");// visualcut
+		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
 	    params.put("V_WHERESQL", " AND Extent1.INSTALL_ENTRY_ID = " + params.get("installEntryId").toString());// parameter
 	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
