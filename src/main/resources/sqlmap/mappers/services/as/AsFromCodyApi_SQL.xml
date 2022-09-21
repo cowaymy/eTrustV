@@ -134,7 +134,6 @@ ORDER BY A.CRT_DT DESC
 		            LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
 
 		          WHERE A.SALES_ORD_NO = #{salesOrderNo}
-		          AND C.STUS_CODE_ID = 9
 		          order by Membership_Contract_Expiry desc
 		)
 		where ROWNUM < 2
