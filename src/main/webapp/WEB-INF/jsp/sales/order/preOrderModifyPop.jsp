@@ -144,6 +144,56 @@ var blockDtTo = "${hsBlockDtTo}";
      });
  }
 
+ function disableSaveButton() {
+	 $('#btnSave').unbind()
+ }
+
+ function enableSaveButton() {
+	 disableSaveButton()
+	 $('#btnSave').click(function() {
+
+
+         if(!fn_validCustomer()) {
+             $('#aTabCS').click();
+             return false;
+         }
+         if(!fn_validOrderInfo()) {
+
+             $('#aTabBD').click();
+             return false;
+         }
+
+         if(!fn_validPaymentInfo()) {
+             $('#aTabBD').click();
+             return false;
+         }
+
+         if(!fn_validFile()) {
+             $('#aTabFL').click();
+             return false;
+         }
+
+         if(!fn_validRcdTms()) {
+             $('#aTabBD').click();
+             return false;
+         }
+
+         var formData = new FormData();
+         formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+         formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+         formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+         console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+         console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+         $.each(myFileCaches, function(n, v) {
+             console.log(v.file);
+             formData.append(n, v.file);
+         });
+
+         fn_doSavePreOrder();
+
+     });
+ }
+
     $(function(){
         $('#btnRltdNoEKeyIn').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
@@ -442,7 +492,7 @@ var blockDtTo = "${hsBlockDtTo}";
             }
         });
         $('#ordProudct').change(function() {
-
+            disableSaveButton()
             console.log('ordProudct change event start');
 
             if(FormUtil.checkReqValue($('#exTrade'))) {
@@ -492,7 +542,7 @@ var blockDtTo = "${hsBlockDtTo}";
             setTimeout(function() { fn_check(0) }, 200);
         });
         $('#ordPromo').change(function() {
-
+            disableSaveButton()
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
 //          $('#trialNoChk').prop("checked", false).prop("disabled", true);
 //          $('#trialNo').val('').addClass("readonly");
@@ -549,48 +599,7 @@ var blockDtTo = "${hsBlockDtTo}";
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
-        $('#btnSave').click(function() {
 
-
-            if(!fn_validCustomer()) {
-                $('#aTabCS').click();
-                return false;
-            }
-            if(!fn_validOrderInfo()) {
-
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validPaymentInfo()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validFile()) {
-                $('#aTabFL').click();
-                return false;
-            }
-
-            if(!fn_validRcdTms()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            var formData = new FormData();
-            formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
-            formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-            formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-            console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-            console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-            $.each(myFileCaches, function(n, v) {
-                console.log(v.file);
-                formData.append(n, v.file);
-            });
-
-            fn_doSavePreOrder();
-
-        });
         $('#btnCal').click(function() {
 
             var appTypeName  = $('#appType').val();
@@ -951,6 +960,8 @@ var blockDtTo = "${hsBlockDtTo}";
                 myFileCaches[9].file['checkFileValid'] = true;
             }
         });
+
+        enableSaveButton()
     });
 
     function fn_loadBankAccountPop(bankAccId) {
@@ -1650,7 +1661,9 @@ var blockDtTo = "${hsBlockDtTo}";
 
                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+
             }
+            enableSaveButton()
         });
     }
 
@@ -1720,6 +1733,7 @@ var blockDtTo = "${hsBlockDtTo}";
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
             }
+            enableSaveButton()
         });
     }
 
