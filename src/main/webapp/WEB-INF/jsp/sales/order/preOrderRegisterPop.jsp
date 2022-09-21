@@ -135,6 +135,41 @@
         /* listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros); */
     }
 
+    function disableSaveButton() {
+    	$('#btnSave').unbind()
+    }
+
+    function enableSaveButton() {
+    	disableSaveButton()
+    	$('#btnSave').click(function() {
+
+            if(!fn_validCustomer()) {
+                $('#aTabCS').click();
+                return false;
+            }
+
+            if(!fn_validOrderInfo()) {
+                $('#aTabOI').click();
+                return false;
+            }
+
+            if(!fn_validPaymentInfo()) {
+                $('#aTabBD').click();
+                return false;
+            }
+
+            if(!fn_validFile()) {
+                $('#aTabFL').click();
+                return false;
+            }
+
+            if(fn_isExistESalesNo() == 'true') return false;
+
+            Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
+            //fn_doSavePreOrder();
+        });
+    }
+
     $(function(){
     	$('#btnRltdNoEKeyIn').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
@@ -455,6 +490,7 @@
         $('#ordProudct').change(function() {
 
             console.log('ordProudct change event start');
+            disableSaveButton()
 
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>* Please select an Ex-Trade.</b>");
@@ -510,6 +546,7 @@
 
         });
         $('#ordPromo').change(function() {
+        	disableSaveButton()
 
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
 //          $('#trialNoChk').prop("checked", false).prop("disabled", true);
@@ -567,33 +604,7 @@
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
-        $('#btnSave').click(function() {
 
-            if(!fn_validCustomer()) {
-                $('#aTabCS').click();
-                return false;
-            }
-
-            if(!fn_validOrderInfo()) {
-                $('#aTabOI').click();
-                return false;
-            }
-
-            if(!fn_validPaymentInfo()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validFile()) {
-                $('#aTabFL').click();
-                return false;
-            }
-
-			if(fn_isExistESalesNo() == 'true') return false;
-
-            Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
-            //fn_doSavePreOrder();
-        });
         $('#btnCal').click(function() {
 
             var appTypeName  = $('#appType').val();
@@ -932,6 +943,8 @@
             }
             console.log(myFileCaches);
         });
+
+        enableSaveButton()
     });
 
     function fn_loadBankAccountPop(bankAccId) {
@@ -1638,6 +1651,7 @@
                 $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
+            enableSaveButton()
         });
     }
 
@@ -1693,7 +1707,9 @@
 
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
+
             }
+            enableSaveButton()
         });
     }
 
