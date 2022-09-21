@@ -3626,20 +3626,21 @@
                         , MOBILE_ID
                         , PSI
                         , LPM
-                        ,VOLT
-                        ,TDS
-                        ,ROOM_TEMP
-                        ,WATER_SRC_TEMP
-                        ,ADPT_USED
-                        ,FAIL_LOC
-                        ,INST_CHKLST
-                        ,FAIL_DEPT_CHK
-                        ,BOOSTER_PUMP
-                        ,AFT_PSI
-                        ,AFT_LPM
-                        ,TURB_LVL
-                        ,WATER_SRC_TYPE
-                        ,INST_NOTECHK
+                        , VOLT
+                        , TDS
+                        , ROOM_TEMP
+                        , WATER_SRC_TEMP
+                        , ADPT_USED
+                        , FAIL_LOC
+                        , INST_CHKLST
+                        , FAIL_DEPT_CHK
+                        , BOOSTER_PUMP
+                        , AFT_PSI
+                        , AFT_LPM
+                        , TURB_LVL
+                        , WATER_SRC_TYPE
+                        , INST_NOTECHK
+                        , SGN_DT
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3678,6 +3679,7 @@
             , #{turbLvl}
             , #{waterSrcType}
             , #{instNoteChk}
+            , #{signData}
     )
   </insert>
 
