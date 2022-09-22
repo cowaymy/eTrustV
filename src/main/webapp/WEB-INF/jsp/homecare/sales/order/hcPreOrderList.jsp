@@ -16,6 +16,13 @@
     var selectRowIdx;
     var popupObj;
 
+    var brnchType = "${branchType}";
+    if (brnchType == 45) {
+        memTypeData = memTypeData.filter(d => d.codeId == "1")
+    } else if (brnchType == 42 || brnchType == 48) {
+        memTypeData = memTypeData.filter(d => d.codeId == "2" || d.codeId == "7")
+    }
+
     var branchCdList = [];
     <c:forEach var="obj" items="${branchCdList}">
     branchCdList.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
