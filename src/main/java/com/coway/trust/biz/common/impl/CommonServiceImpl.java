@@ -53,6 +53,11 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectCodeGroup(Map<String, Object> params) {
+		return commonMapper.selectCodeGroup(params);
+	}
+
+	@Override
 	public List<EgovMap> selectHCMaterialCtgryList(Map<String, Object> params) {
 		 // Homecare material category list in MDN
 		return commonMapper.selectHCMaterialCtgryList(params);
