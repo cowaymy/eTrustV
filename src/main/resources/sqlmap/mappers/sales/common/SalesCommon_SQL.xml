@@ -24,4 +24,12 @@ WHERE usr.USER_NAME = B.MEM_CODE
 	AND usr.USER_ID =  #{userId}
 </select>
 
+<select id="getUserBranchType" parameterType="Map" resultType="egovMap">
+    SELECT C.CODE, C.CODE_ID FROM SYS0047M U
+	JOIN ORG0001D A ON A.MEM_CODE = U.HR_CODE
+	JOIN SYS0005M B ON BRNCH_ID = BRNCH
+	JOIN SYS0013M C ON C.CODE_ID = B.TYPE_ID AND CODE_MASTER_ID = 45
+	WHERE U.USER_ID = #{userId}
+</select>
+
 </mapper>
