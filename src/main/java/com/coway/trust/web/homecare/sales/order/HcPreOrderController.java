@@ -71,9 +71,9 @@ public class HcPreOrderController {
     @RequestMapping(value = "/hcPreOrderList.do")
     public String hcPreOrderList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 
+    	params.put("userId", sessionVO.getUserId());
         if (sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7) {
 
-            params.put("userId", sessionVO.getUserId());
             EgovMap result = salesCommonService.getUserInfo(params);
 
             model.put("orgCode", result.get("orgCode"));
@@ -106,6 +106,10 @@ public class HcPreOrderController {
         model.put("toDay", toDay);
         model.put("isAdmin", "true");
         model.put("isAdmin", "true");
+        EgovMap branchTypeRes = salesCommonService.getUserBranchType(params);
+		if (branchTypeRes != null) {
+			model.put("branchType", branchTypeRes.get("codeId"));
+		}
         model.put("userTypeId", userTypeId);
 
         model.put("branchCdList", branchCdList);
