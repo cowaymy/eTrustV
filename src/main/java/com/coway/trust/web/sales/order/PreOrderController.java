@@ -78,9 +78,9 @@ public class PreOrderController {
 	@RequestMapping(value = "/preOrderList.do")
 	public String preOrderList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
+		params.put("userId", sessionVO.getUserId());
 		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
 
-			params.put("userId", sessionVO.getUserId());
 			EgovMap result =  salesCommonService.getUserInfo(params);
 
 			model.put("orgCode", result.get("orgCode"));
@@ -93,6 +93,10 @@ public class PreOrderController {
 
 		model.put("toDay", toDay);
 		model.put("isAdmin", "true");
+		EgovMap branchTypeRes = salesCommonService.getUserBranchType(params);
+		if (branchTypeRes != null) {
+			model.put("branchType", branchTypeRes.get("codeId"));
+		}
 		model.addAttribute("userRoleId", sessionVO.getRoleId());
 
 		return "sales/order/preOrderList";
