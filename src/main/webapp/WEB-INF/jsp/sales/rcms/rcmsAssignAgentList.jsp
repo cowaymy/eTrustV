@@ -538,6 +538,15 @@
 				null, true, "assignSummaryListReportPop");
 	}
 
+	function fn_summaryDailyCollectionReport() {
+        Common.popupDiv("/sales/rcms/summaryDailyCollectionReportPop.do", null,
+                null, true, "summaryDailyCollectionReportPop");
+    }
+
+	function fn_dailyCollectionOrderReport() {
+		Common.popupDiv("/sales/rcms/dailyCollectionOrderReportPop.do", null, null, true, "dailyCollectionOrderReportPop")
+	}
+
 	/* Report End*/
 
 	function viewRentalLedger() {
@@ -787,6 +796,20 @@
 										<a onclick="javascript: fn_assignSummaryListReport()"><spring:message
 												code="sal.title.text.assignSummaryListRaw" /></a>
 									</p></li>
+								<li>
+								    <p class="link_btn type2">
+								        <a onclick="javascript: fn_summaryDailyCollectionReport()">
+								            <spring:message code="sal.title.text.summaryDailyCollectionReport" />
+								        </a>
+								    </p>
+								</li>
+								<li>
+                                    <p class="link_btn type2">
+                                        <a onclick="javascript: fn_dailyCollectionOrderReport()">
+                                            <spring:message code="sal.title.text.dailyCollectionOrderReport" />
+                                        </a>
+                                    </p>
+                                </li>
 							</c:if>
 						</ul>
 						<ul class="btns">
