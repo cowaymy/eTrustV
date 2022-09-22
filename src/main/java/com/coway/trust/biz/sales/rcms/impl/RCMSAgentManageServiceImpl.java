@@ -160,6 +160,12 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 		return rcmsAgentManageMapper.selectAgentList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectAgentGrpList(Map<String, Object> params) throws Exception {
+		LOGGER.debug("HERE -> {}", params);
+		return rcmsAgentManageMapper.selectAgentGrpList(params);
+	}
+
 
 
 	@Override
