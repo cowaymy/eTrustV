@@ -963,6 +963,14 @@
         </choose>
     </select>
 
+    <select id="selectCodeGroup" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS0094M
+        WHERE 1=1
+        <if test='ind !=null and ind != "" '>
+        AND IND = #{ind}
+        </if>
+    </select>
+
     <select id="selectHCMaterialCtgryList" parameterType="Map" resultType="egovMap">
      <![CDATA[
         SELECT S13M.CODE_ID CODE_ID,
