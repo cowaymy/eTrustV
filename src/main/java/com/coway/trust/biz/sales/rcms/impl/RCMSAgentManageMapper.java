@@ -29,6 +29,8 @@ public interface RCMSAgentManageMapper {
 
 	List<EgovMap> selectAgentList(Map<String, Object> updateMap);
 
+	List<EgovMap> selectAgentGrpList(Map<String, Object> params);
+
 	void updateCompany(Map<String, Object> updateMap);
 
 	int checkOrderNo(Map<String, Object> params);
