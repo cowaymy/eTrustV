@@ -96,7 +96,13 @@
 
 				doGetComboCodeId('/common/selectReasonCodeList.do',
 					    {typeId : '6242', separator : ' - ', inputId : ''}, '', 'rotFeedbackCode', 'M', 'fn_multiCombo'); //Feedback Code
-
+					    console.log("${user_info}","helheo")
+				if("${user_info.User_Role}" == "121" || "${user_info.User_Role}" == "114" || "${user_info.User_Role}" == "127"){ //block CM CTM HM to access function in ROOT - BY JONATHAN
+				    $('.hidefunction').hide()
+				    $('#search_requestorInfo').val("${user_info.Mem_code}");
+				}else{
+					fn_setGridEvent();
+				}
 				$("#search").click(fn_searchROT);
 				$("#requestROT").click(fn_requestROTSearchOrder);
 				$("#updateROT").click(fn_updateROT);
@@ -108,7 +114,7 @@
 			        //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
 			        Common.popupDiv("/common/memberPop.do", $("#root_searchForm").serializeJSON(), null, true);
 			    });
-				fn_setGridEvent();
+
 			});
 
 
@@ -426,11 +432,11 @@
 					<a href="#" id="search"><span class="search"></span>
 					<spring:message code="sal.btn.search" /></a>
 				</p></li>
-			<li><p class="btn_blue">
+			<li><p class="btn_blue hidefunction">
 					<a href="#" id="requestROT">Request</a>
 				</p></li>
 			<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-				<li><p class="btn_blue">
+				<li><p class="btn_blue hidefunction">
 						<a href="#" id="updateROT">Update</a>
 					</p></li>
 			</c:if>
@@ -512,7 +518,7 @@
 						<th scope="row">ROT Requestor</th>
 						<td><input type="text" title="" placeholder="Requestor ID"
 							class="" style="width: 93%" id="search_requestorInfo" name="reqInfo"
-							readonly /> <a href="#" class="search_btn"
+							readonly /> <a href="#" class="search_btn hidefunction"
 							id="search_requestor_btn"><img
 								src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
 								alt="search" /></a></td>
@@ -538,7 +544,7 @@
 	<!-- search_table end -->
 
 	<!-- Link Wrap Start -->
-	<article class="link_btns_wrap">
+	<article class="link_btns_wrap hidefunction" >
 		<p class="show_btn">
 			<a href="#"><img
 				src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"

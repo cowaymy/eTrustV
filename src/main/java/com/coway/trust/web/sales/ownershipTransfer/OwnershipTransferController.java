@@ -71,6 +71,11 @@ public class OwnershipTransferController {
 
 		LOGGER.info("===== rootList.do =====");
 
+
+		params.put("Mem_code",sessionVO.getUserName());
+		params.put("User_Role", sessionVO.getRoleId());
+		model.addAttribute("user_info", params);
+
 		return "sales/ownershipTransfer/rootList";
 
 	}

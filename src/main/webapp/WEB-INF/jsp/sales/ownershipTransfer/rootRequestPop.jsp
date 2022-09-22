@@ -1829,7 +1829,136 @@
                 </aside>
 
                 <article class="tap_area">
-                    <header>
+
+                    <!-- title_line end -->
+
+                    <!-- tap_wrap start -->
+                    <section class="tap_wrap">
+                        <ul class="tap_type1 num4">
+                            <li id="tabCT"><a href="#" class="on"><spring:message
+                                        code="sal.title.text.customer" /></a></li>
+                             <li id="tabRQ"><a href="#" ><spring:message
+                                          code="sal.text.requestor" /></a></li>
+                            <li id="tabMA"><a href="#"><spring:message
+                                        code="sal.title.text.mailingAddr" /></a></li>
+                            <li id="tabCP"><a href="#"><spring:message
+                                        code="sal.tap.title.contactPerson" /></a></li>
+                            <li id="tabRP" class="blind"><a href="#"><spring:message
+                                        code="sal.title.text.paymentChnnl" /></a></li>
+                            <li id="tabBG" class="blind"><a href="#"><spring:message
+                                        code="sal.page.subtitle.rentalBillingGroup" /></a></li>
+                            <li id="tabIN"><a href="#"><spring:message
+                                        code="sal.text.inst" /></a></li>
+                        </ul>
+
+                        <!-- tap_area start -->
+                        <article class="tap_area">
+                            <ul class="right_btns mb10">
+                                <li><p class="btn_grid">
+                                        <a id="addCustBtn" href="#"><spring:message
+                                                code="sal.btn.addNewCust" /></a>
+                                    </p></li>
+                            </ul>
+
+                            <section class="search_table">
+                                <!-- search_table start -->
+                                <table class="type1">
+                                    <!-- table start -->
+                                    <caption>table</caption>
+                                    <colgroup>
+                                        <col style="width: 140px" />
+                                        <col style="width: *" />
+                                        <col style="width: 170px" />
+                                        <col style="width: *" />
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"><spring:message
+                                                    code="sal.text.customerId" /><span class="must">*</span></th>
+                                            <td><input id="custIdOwnt" name="txtCustID" type="text"
+                                                title="" placeholder="Customer ID" class="" /> <a
+                                                class="search_btn" id="custBtnOwnt"><img
+                                                    src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+                                                    alt="search" /></a></td>
+                                            <th scope="row"><spring:message code="sal.text.type" /></th>
+                                            <td><input id="custTypeNmOwnt" name="txtCustType"
+                                                type="text" title="" placeholder="Customer Type"
+                                                class="w100p" readonly /> <input id="typeIdOwnt"
+                                                name="hiddenCustTypeID" type="hidden" /></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message code="sal.text.name" /></th>
+                                            <td><input id="nameOwnt" name="txtCustName" type="text"
+                                                title="" placeholder="Customer Name" class="w100p" readonly />
+                                            </td>
+                                            <th scope="row"><spring:message
+                                                    code="sal.text.nricCompanyNo" /></th>
+                                            <td><input id="nricOwnt" name="txtCustIC" type="text"
+                                                title="" placeholder="NRIC/Company No" class="w100p"
+                                                readonly /></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message
+                                                    code="sal.text.nationality" /></th>
+                                            <td><input id="nationNmOwnt" name="txtCustNationality"
+                                                type="text" title="" placeholder="Nationality" class="w100p"
+                                                readonly /></td>
+                                            <th scope="row"><spring:message code="sal.text.race" /></th>
+                                            <td><input id="raceOwnt" name="txtCustRace" type="text"
+                                                title="" placeholder="Race" class="w100p" readonly /> <input
+                                                id="raceIdOwnt" name="hiddenCustRaceID" type="hidden" /></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message code="sal.text.dob" /></th>
+                                            <td><input id="dobOwnt" name="txtCustDOB" type="text"
+                                                title="" placeholder="DOB" class="w100p" readonly /></td>
+                                            <th scope="row"><spring:message code="sal.text.gender" /></th>
+                                            <td><input id="genderOwnt" name="txtCustGender"
+                                                type="text" title="" placeholder="Gender" class="w100p"
+                                                readonly /></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message
+                                                    code="sal.text.passportExpire" /></th>
+                                            <td><input id="pasSportExprOwnt"
+                                                name="txtCustPassportExpiry" type="text" title=""
+                                                placeholder="Passport Expiry" class="w100p" readonly /></td>
+                                            <th scope="row"><spring:message
+                                                    code="sal.text.visaExpire" /></th>
+                                            <td><input id="visaExprOwnt" name="txtCustVisaExpiry"
+                                                type="text" title="" placeholder="Visa Expiry" class="w100p"
+                                                readonly /></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message code="sal.text.email" /></th>
+                                            <td><input id="emailOwnt" name="txtCustEmail"
+                                                type="text" title="" placeholder="Email Address"
+                                                class="w100p" readonly /></td>
+                                            <th scope="row"><spring:message
+                                                    code="sal.text.indutryCd" /></th>
+                                            <td><input id="corpTypeNmOwnt" name="corpTypeNm"
+                                                type="text" title="" placeholder="Industry Code"
+                                                class="w100p" readonly /></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message code="sal.text.employee" /><span
+                                                class="must">*</span></th>
+                                            <td colspan="3"><select id="empChkOwnt" name="empChk"
+                                                class="w100p"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><spring:message code="sal.text.remark" /></th>
+                                            <td colspan="3"><textarea id="custRemOwnt"
+                                                    name="txtCustRemark" cols="20" rows="5"
+                                                    placeholder="Remark" readonly></textarea></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- table end -->
+                            </section>
+                            <!-- search_table end -->
+
+                            <header>
                         <h1>Ownership Transfer Information</h1>
                     </header>
                     <section class="search_table">
@@ -2028,133 +2157,6 @@
                             </tbody>
                         </table>
                     </section>
-                    <!-- title_line end -->
-
-                    <!-- tap_wrap start -->
-                    <section class="tap_wrap">
-                        <ul class="tap_type1 num4">
-                            <li id="tabCT"><a href="#" class="on"><spring:message
-                                        code="sal.title.text.customer" /></a></li>
-                             <li id="tabRQ"><a href="#" ><spring:message
-                                          code="sal.text.requestor" /></a></li>
-                            <li id="tabMA"><a href="#"><spring:message
-                                        code="sal.title.text.mailingAddr" /></a></li>
-                            <li id="tabCP"><a href="#"><spring:message
-                                        code="sal.tap.title.contactPerson" /></a></li>
-                            <li id="tabRP" class="blind"><a href="#"><spring:message
-                                        code="sal.title.text.paymentChnnl" /></a></li>
-                            <li id="tabBG" class="blind"><a href="#"><spring:message
-                                        code="sal.page.subtitle.rentalBillingGroup" /></a></li>
-                            <li id="tabIN"><a href="#"><spring:message
-                                        code="sal.text.inst" /></a></li>
-                        </ul>
-
-                        <!-- tap_area start -->
-                        <article class="tap_area">
-                            <ul class="right_btns mb10">
-                                <li><p class="btn_grid">
-                                        <a id="addCustBtn" href="#"><spring:message
-                                                code="sal.btn.addNewCust" /></a>
-                                    </p></li>
-                            </ul>
-
-                            <section class="search_table">
-                                <!-- search_table start -->
-                                <table class="type1">
-                                    <!-- table start -->
-                                    <caption>table</caption>
-                                    <colgroup>
-                                        <col style="width: 140px" />
-                                        <col style="width: *" />
-                                        <col style="width: 170px" />
-                                        <col style="width: *" />
-                                    </colgroup>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row"><spring:message
-                                                    code="sal.text.customerId" /><span class="must">*</span></th>
-                                            <td><input id="custIdOwnt" name="txtCustID" type="text"
-                                                title="" placeholder="Customer ID" class="" /> <a
-                                                class="search_btn" id="custBtnOwnt"><img
-                                                    src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                                                    alt="search" /></a></td>
-                                            <th scope="row"><spring:message code="sal.text.type" /></th>
-                                            <td><input id="custTypeNmOwnt" name="txtCustType"
-                                                type="text" title="" placeholder="Customer Type"
-                                                class="w100p" readonly /> <input id="typeIdOwnt"
-                                                name="hiddenCustTypeID" type="hidden" /></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message code="sal.text.name" /></th>
-                                            <td><input id="nameOwnt" name="txtCustName" type="text"
-                                                title="" placeholder="Customer Name" class="w100p" readonly />
-                                            </td>
-                                            <th scope="row"><spring:message
-                                                    code="sal.text.nricCompanyNo" /></th>
-                                            <td><input id="nricOwnt" name="txtCustIC" type="text"
-                                                title="" placeholder="NRIC/Company No" class="w100p"
-                                                readonly /></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message
-                                                    code="sal.text.nationality" /></th>
-                                            <td><input id="nationNmOwnt" name="txtCustNationality"
-                                                type="text" title="" placeholder="Nationality" class="w100p"
-                                                readonly /></td>
-                                            <th scope="row"><spring:message code="sal.text.race" /></th>
-                                            <td><input id="raceOwnt" name="txtCustRace" type="text"
-                                                title="" placeholder="Race" class="w100p" readonly /> <input
-                                                id="raceIdOwnt" name="hiddenCustRaceID" type="hidden" /></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message code="sal.text.dob" /></th>
-                                            <td><input id="dobOwnt" name="txtCustDOB" type="text"
-                                                title="" placeholder="DOB" class="w100p" readonly /></td>
-                                            <th scope="row"><spring:message code="sal.text.gender" /></th>
-                                            <td><input id="genderOwnt" name="txtCustGender"
-                                                type="text" title="" placeholder="Gender" class="w100p"
-                                                readonly /></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message
-                                                    code="sal.text.passportExpire" /></th>
-                                            <td><input id="pasSportExprOwnt"
-                                                name="txtCustPassportExpiry" type="text" title=""
-                                                placeholder="Passport Expiry" class="w100p" readonly /></td>
-                                            <th scope="row"><spring:message
-                                                    code="sal.text.visaExpire" /></th>
-                                            <td><input id="visaExprOwnt" name="txtCustVisaExpiry"
-                                                type="text" title="" placeholder="Visa Expiry" class="w100p"
-                                                readonly /></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message code="sal.text.email" /></th>
-                                            <td><input id="emailOwnt" name="txtCustEmail"
-                                                type="text" title="" placeholder="Email Address"
-                                                class="w100p" readonly /></td>
-                                            <th scope="row"><spring:message
-                                                    code="sal.text.indutryCd" /></th>
-                                            <td><input id="corpTypeNmOwnt" name="corpTypeNm"
-                                                type="text" title="" placeholder="Industry Code"
-                                                class="w100p" readonly /></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message code="sal.text.employee" /><span
-                                                class="must">*</span></th>
-                                            <td colspan="3"><select id="empChkOwnt" name="empChk"
-                                                class="w100p"></select></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><spring:message code="sal.text.remark" /></th>
-                                            <td colspan="3"><textarea id="custRemOwnt"
-                                                    name="txtCustRemark" cols="20" rows="5"
-                                                    placeholder="Remark" readonly></textarea></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <!-- table end -->
-                            </section>
-                            <!-- search_table end -->
                         </article>
 
                         <!-- tap_area end Requestor Tab-->
