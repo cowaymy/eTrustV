@@ -148,6 +148,18 @@ public class RCMSAgentManageController {
 
 	}
 
+	@RequestMapping(value = "/selectAgentGrpList")
+	public ResponseEntity<List<EgovMap>> selectAgentGrpList (@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception {
+		List<EgovMap> agentGrpList = null;
+
+		String typeList[] =  request.getParameterValues("agentType");
+		if(typeList      != null && !CommonUtils.containsEmpty(typeList))      params.put("typeList", typeList);
+
+		agentGrpList = rcmsAgentService.selectAgentGrpList(params);
+
+
+		return ResponseEntity.ok(agentGrpList);
+	}
 
 	@RequestMapping(value = "/selectRosCaller")
 	public ResponseEntity<List<EgovMap>> selectRosCaller (@RequestParam Map<String, Object> params) throws Exception{
@@ -345,6 +357,18 @@ public class RCMSAgentManageController {
 	@RequestMapping(value = "/assignSummaryListReportPop.do")
     public String assignSummaryListReportPop(@RequestParam Map<String, Object> params) throws Exception{
         return "sales/rcms/assignSummaryListReportPop";
+    }
+
+	@RequestMapping(value = "/summaryDailyCollectionReportPop.do")
+    public String summaryDailyCollectionReportPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		model.put("type", 0);
+        return "sales/rcms/collectionReportPop";
+    }
+
+	@RequestMapping(value = "/dailyCollectionOrderReportPop.do")
+    public String dailyCollectionOrderReportPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		model.put("type", 1);
+        return "sales/rcms/collectionReportPop";
     }
 
 	@RequestMapping(value = "/rentalStatusListForBadAcc")
