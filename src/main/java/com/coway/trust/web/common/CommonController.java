@@ -75,6 +75,12 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectCodeGroup.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeGroup(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeGroup = commonService.selectCodeGroup(params);
+		return ResponseEntity.ok(codeGroup);
+	}
+
 	@RequestMapping(value = "/selectHCMaterialCtgryList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHCMaterialCtgryList(@RequestParam Map<String, Object> params) {
 		// Homecare material category list in MDN
