@@ -93,7 +93,7 @@
          </if>
 
          <if test="ordCity != null and ordCity != '' ">
-             AND UPPER(Extent16.CITY) =#{ordCity}
+             AND Extent16.CITY =#{ordCity}
          </if>
 
           <if test="areaList != null and areaList != '' ">
