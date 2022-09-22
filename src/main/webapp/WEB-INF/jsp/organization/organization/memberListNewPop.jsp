@@ -2703,7 +2703,7 @@ function fn_validFile() {
     <th scope="row">NRIC Copy<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <input type="file" title="file add" id="nricCopyFile" accept="image/jpeg/application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2716,7 +2716,7 @@ function fn_validFile() {
     <th scope="row">Driving License Copy<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg/application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2729,7 +2729,7 @@ function fn_validFile() {
     <th scope="row">Bank Passbook / Statement Copy<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpeg/application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2755,7 +2755,7 @@ function fn_validFile() {
     <th scope="row">Passport Size Photo (white background)<span class="must">*</span></th>
     <td colspan="3" id="attachTd">
     <div class="auto_file2" >
-    <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg,application/pdf"/>
+    <input type="file" title="file add" id="fileName" accept="image/jpg"/>
         <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2768,7 +2768,7 @@ function fn_validFile() {
     <th scope="row">Cody PA Copy</th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="codyPaCopyFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <input type="file" title="file add" id="codyPaCopyFile" accept="image/jpeg/application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
@@ -2781,7 +2781,7 @@ function fn_validFile() {
     <th scope="row">Company Consigment Cody Item, Tools, Filter Stock, Spare part</th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="compConsCodyFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <input type="file" title="file add" id="compConsCodyFile" accept="image/jpeg/application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
@@ -2794,7 +2794,7 @@ function fn_validFile() {
     <th scope="row">Cody Exit Checklist</th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
-            <input type="file" title="file add" id="codyExtCheckFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <input type="file" title="file add" id="codyExtCheckFile" accept="image/jpeg/application/pdf"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
