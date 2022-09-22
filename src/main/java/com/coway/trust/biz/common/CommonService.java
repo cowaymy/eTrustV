@@ -12,6 +12,8 @@ public interface CommonService {
 
 	List<EgovMap> selectCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectCodeGroup(Map<String, Object> params);
+
 	List<EgovMap> getCommonCodes(Map<String, Object> params);
 
 	List<EgovMap> getAllCommonCodes(Map<String, Object> params);
