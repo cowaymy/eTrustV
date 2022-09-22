@@ -16,6 +16,13 @@ console.log("preOrderList");
 	var selectRowIdx;
 	var popupObj;
 
+	var brnchType = "${branchType}";
+	if (brnchType == 45) {
+		memTypeData = memTypeData.filter(d => d.codeId == "1")
+	} else if (brnchType == 42 || brnchType == 48) {
+		memTypeData = memTypeData.filter(d => d.codeId == "2" || d.codeId == "7")
+	}
+
 /*     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
     }
