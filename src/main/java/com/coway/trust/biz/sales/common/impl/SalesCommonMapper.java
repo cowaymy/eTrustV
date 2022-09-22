@@ -27,7 +27,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @since 2014.01.24
  * @version 1.0
  * @see
- * 
+ *
  *      <pre>
  *  == 개정이력(Modification Information) ==
  *
@@ -40,6 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("salesCommonMapper")
 public interface SalesCommonMapper {
 
-	EgovMap  getUserInfo(Map<String, Object> params);	
-	
+	EgovMap  getUserInfo(Map<String, Object> params);
+	EgovMap getUserBranchType(Map<String, Object> params);
+
 }
