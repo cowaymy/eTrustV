@@ -19,20 +19,25 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SalesCommonServiceImpl extends EgovAbstractServiceImpl implements SalesCommonService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SalesCommonServiceImpl.class);
-	
+
 	@Resource(name = "salesCommonMapper")
 	private SalesCommonMapper salesCommonMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
+
 	/**
 	 */
 	@Override
 	public EgovMap getUserInfo(Map<String, Object> params) {
-		
+
 		return salesCommonMapper.getUserInfo(params);
 	}
 
-	
+	@Override
+	public EgovMap getUserBranchType(Map<String, Object> params) {
+		return salesCommonMapper.getUserBranchType(params);
+	}
+
+
 }
