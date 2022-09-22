@@ -120,6 +120,19 @@
 			    </if>
 </select>
 
+<select id="selectAgentGrpList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT B.AGENT_GRP_NAME, B.AGENT_GRP_ID, A.AGENT_TYPE FROM SAL0148M A
+    JOIN SAL0324M B ON A.AGENT_GRP_ID = B.AGENT_GRP_ID
+    AND A.STUS_ID = 1
+    WHERE 1=1
+    <if test="typeList != null and typeList.length > 0 ">
+        AND A.AGENT_TYPE IN
+        <foreach collection="typeList" item="item" open="(" separator="," close=")">
+             #{item}
+        </foreach>
+    </if>
+</select>
+
 <select id="selectRosCaller" parameterType="Map"  resultType="egovMap">
 	SELECT distinct A.AGENT_GRP_ID
                ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
