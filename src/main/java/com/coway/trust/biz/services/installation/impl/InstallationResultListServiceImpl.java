@@ -3769,7 +3769,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 	    String reportName = reportFilePath + reportFile;
-	    String prodName = "view";
+	    String prodName = params.get("prodName").toString();
 	    int maxLength = 0;
 	    String msg = "Completed";
 
@@ -3890,6 +3890,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
 	    params.put("V_WHERE", params.get("installEntryId").toString());// parameter
 	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
+	    params.put("prodName", "SP_CR_GEN_INST_NOTES");
 
 	    String emailSubject = "COWAY: Congratulation For New Coway Product";
 
