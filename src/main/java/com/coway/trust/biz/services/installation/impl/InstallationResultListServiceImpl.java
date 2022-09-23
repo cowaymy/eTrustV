@@ -3832,6 +3832,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    String reportName = reportFilePath + reportFile;
 	    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    String prodName;
+	    int maxLength = 0;
+	    String msg = "Completed";
 
 	    try {
 	      ReportAppSession ra = new ReportAppSession();
@@ -3843,12 +3846,11 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      clientDoc.setReportAppServer(ra.getReportAppServer());
 	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
 
-	      logger.debug(" open reportUserName]" + reportUserName + "]reportPassword[" + reportPassword + "]");
-	      logger.debug(" close  reportUserName]" + reportUserName + "]reportPassword[" + reportPassword + "]");
-
 	      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
-	      logger.debug(" clientDoc ========>" + clientDoc.toString());
+	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
+
+	      params.put("repProdName", prodName);
 
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
@@ -3858,7 +3860,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
 	      }
 	    } catch (Exception ex) {
-	      logger.error(CommonUtils.printStackTraceToString(ex));
+	    	logger.error(CommonUtils.printStackTraceToString(ex));
 	      throw new ApplicationException(ex);
 	    } finally {
 	      endTime = Calendar.getInstance();
