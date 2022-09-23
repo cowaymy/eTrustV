@@ -16,7 +16,7 @@
   var myGridID;
 
   var gridPros = {
-	      showRowCheckColumn : true,
+	      showRowCheckColumn : false,
 	      usePaging : true,
 	      pageRowCount : 20,
 	      showRowAllCheckBox : true,
