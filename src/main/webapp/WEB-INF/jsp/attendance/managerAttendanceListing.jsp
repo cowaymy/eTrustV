@@ -90,7 +90,7 @@
     var columnLayout = [
         {
           dataField : "atdDate",
-          headerText : "Date / Day",
+          headerText : "Date",
           editable : false,
           width : 150
         },
