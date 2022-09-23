@@ -73,23 +73,23 @@
                           headerText : "Serial No",
                           width : 200
                           <c:if test="${orderDetail.codyInfo.serialRequireChkYn == 'Y' }">
-                         , renderer : {
-                              type : "IconRenderer",
-                              iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                              iconHeight : 24,
-                              iconPosition : "aisleRight",
-                              iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" //
-                              },
-                              onclick : function(rowIndex, columnIndex, value, item)
-                              {
-                            	  gSelMainRowIdx = rowIndex;
-                             	  gSelMainColIdx = columnIndex;
+                        , renderer : {
+                             type : "IconRenderer",
+                             iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                             iconHeight : 24,
+                             iconPosition : "aisleRight",
+                             iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                                 "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" //
+                             },
+                             onclick : function(rowIndex, columnIndex, value, item)
+                             {
+                                 gSelMainRowIdx = rowIndex;
+                                 gSelMainColIdx = columnIndex;
 
-                            	  fn_serialSearchPop(item);
-                              }
-                           }
-                        </c:if>
+                                 fn_serialSearchPop(item);
+                             }
+                          }
+                       </c:if>
                         }, {
                           dataField : "serialChk",
                           headerText : "Serial Check",
@@ -119,7 +119,7 @@
                                 type : "DropDownListRenderer",
                                 //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                 list : unmatchRsnList,
-                                keyField : "code",        // key 에 해당되는 필드명
+                                keyField : "codeId",        // key 에 해당되는 필드명
                                 valueField : "codeNames"    // value 에 해당되는 필드명
                            }
                           }, {
@@ -487,16 +487,27 @@
         var rsnGridDataList = AUIGrid.getGridData(myDetailGridID);
         var returnParam = true;
         for (var i = 0; i < rsnGridDataList.length; i++) {
-        	if(rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null){
-        		if ((rsnGridDataList[i]["filterSerialUnmatchReason"] == "" || rsnGridDataList[i]["filterSerialUnmatchReason"] == null ) && (rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")) {
+            /* console.log('rsnGridDataList[i]["name"] ' + i + ' '+ rsnGridDataList[i]["name"]);
+            console.log('rsnGridDataList[i]["serialChk"] ' + i + ' '+ rsnGridDataList[i]["serialChk"]);
+            console.log('rsnGridDataList[i]["filterSerialUnmatchReason"] ' + i + ' '+ rsnGridDataList[i]["filterSerialUnmatchReason"]);
+            console.log('rsnGridDataList[i]["oldSerialNo"] ' + i + ' '+ rsnGridDataList[i]["oldSerialNo"]); */
+
+            if((rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null) && rsnGridDataList[i]["serialChk"] == "Y"){
+                if (rsnGridDataList[i]["serialNo"] == null || rsnGridDataList[i]["serialNo"] == "") {
+                  Common.alert("* Please choose the serial number. ");
+                  returnParam = false;
+                  }
+
+                if ((rsnGridDataList[i]["filterSerialUnmatchReason"] == "" || rsnGridDataList[i]["filterSerialUnmatchReason"] == null )
+                                && (rsnGridDataList[i]["oldSerialNo"] == null || rsnGridDataList[i]["oldSerialNo"] == "")) {
               Common.alert("* Please choose the unmatched reason for Filter with no old serial number. ");
               returnParam = false;
               }
-        	}
+            }
 
-        	if(returnParam == false){
-        		return returnParam;
-        	}
+            if(returnParam == false){
+                return returnParam;
+            }
         }
 
     } else if ($("#cmbStatusType1").val() == 21) {    // Failed
@@ -693,8 +704,8 @@ function SearchListAjax(obj){
 
 function fn_serialSearchPop(item){
 
-	//$("#pLocationType").val('${orderDetail.codyInfo.whLocGb}');
-    //$('#pLocationCode').val('${orderDetail.codyInfo.ctWhLocId}');
+	$("#pLocationType").val('${orderDetail.codyInfo.whLocGb}');
+    $('#pLocationCode').val('${orderDetail.codyInfo.ctWhLocId}');
 	$("#pItemCodeOrName").val(item.stkCode);
 
     if (FormUtil.isEmpty(item.stkCode)) {
