@@ -358,6 +358,29 @@ function createExcelAUIGrid(){
     excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
 
 }
+
+function fn_clear(){
+	$('#padNo').val('');
+	$('#requestDateFrom').val('');
+	$('#requestDateTo').val('');
+	$('#orderNo').val('');
+
+    $('#status').multipleSelect("uncheckAll");
+    $('#branchId').multipleSelect("uncheckAll");
+    $('#region').multipleSelect("uncheckAll");
+    $('#cardTypeId').multipleSelect("uncheckAll");
+    $('#custTypeId').multipleSelect("uncheckAll");
+
+	$('#requestTimeFrom').val('');
+	$('#requestTimeTo').val('');
+	$('#_memId').val('');
+	$('#_memCode').val('');
+	$('#_memName').val('');
+	$('#nricCompanyNo').val('');
+	$('#orgCode').val('');
+	$('#grpCode').val('');
+	$('#deptCode').val('');
+}
 </script>
 <!-- html content -->
 <section id="content">
