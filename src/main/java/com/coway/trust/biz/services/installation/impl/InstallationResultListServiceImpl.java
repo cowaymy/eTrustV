@@ -4,6 +4,7 @@ import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
 import static com.coway.trust.AppConstants.EMAIL_TEXT;
 import static com.coway.trust.AppConstants.EMAIL_TO;
 import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
 import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
@@ -63,6 +64,7 @@ import com.coway.trust.web.services.installation.InstallationResultListControlle
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
 import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
@@ -3769,7 +3771,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 	    String reportName = reportFilePath + reportFile;
-	    String prodName = params.get("prodName").toString();
+	    String prodName = "view";
 	    int maxLength = 0;
 	    String msg = "Completed";
 
@@ -3804,6 +3806,61 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      }
 	    } catch (Exception ex) {
 	    	logger.error(CommonUtils.printStackTraceToString(ex));
+	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
+	      throw new ApplicationException(ex);
+	    } finally{
+	      // Insert Log
+	      endTime = Calendar.getInstance();
+	      params.put("msg", msg);
+	      params.put("startTime", fmt.format(startTime.getTime()));
+	      params.put("endTime", fmt.format(endTime.getTime()));
+	      params.put("userId", 349);
+
+	      reportBatchService.insertLog(params);
+	    }
+	  }
+
+   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
+
+	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    Calendar startTime = Calendar.getInstance();
+	    Calendar endTime = null;
+
+	    String reportFile = (String) params.get(REPORT_FILE_NAME);
+	    String reportName = reportFilePath + reportFile;
+	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    String prodName;
+	    int maxLength = 0;
+	    String msg = "Completed";
+
+	    try {
+	      ReportAppSession ra = new ReportAppSession();
+	      ra.createService(REPORT_CLIENT_DOCUMENT);
+
+
+	      ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
+	      ra.initialize();
+	      ReportClientDocument clientDoc = new ReportClientDocument();
+	      clientDoc.setReportAppServer(ra.getReportAppServer());
+	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+
+	      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
+
+	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
+
+	      params.put("repProdName", prodName);
+
+	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+	      ReportUtils.setReportParameter(params, paramController, fields);
+	      {
+	        this.viewHandle(request, response, viewType, clientDoc,
+	            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+	      }
+	    } catch (Exception ex) {
+	      logger.error(CommonUtils.printStackTraceToString(ex));
 	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
 
 	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
@@ -3890,7 +3947,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
 	    params.put("V_WHERE", params.get("installEntryId").toString());// parameter
 	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNotes_" + CommonUtils.getNowDate());
-	    params.put("prodName", "SP_CR_GEN_INST_NOTES");
 
 	    String emailSubject = "COWAY: Congratulation For New Coway Product";
 
@@ -3916,7 +3972,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(EMAIL_TEXT, content);
 
 		try{
-			this.view(null, null, params); //Included sending email
+			this.viewProcedure(null, null, params); //Included sending email
 		}catch(Exception e){
 			logger.debug(" Installation notes email result : {}", e.toString());
 			e.printStackTrace();
