@@ -5030,7 +5030,7 @@
                       , UPD_DT = SYSDATE
                       , AS_NO = #{AS_NO}
                       , APPV_REMARK = #{CALL_REM}
-    WHERE SALES_ORDER_NO = #{ORDNO} AND STUS=1
+    WHERE SALES_ORDER_NO = #{ORDNO} AND STUS in (1,44)
   </update>
 
 </mapper>
