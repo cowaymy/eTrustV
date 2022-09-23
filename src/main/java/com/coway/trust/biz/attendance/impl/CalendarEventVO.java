@@ -9,14 +9,16 @@ public class CalendarEventVO {
 	private String dateTo;
 	private String time;
 	private String atdType;
+	private String managerCode;
 
 	public static CalendarEventVO create(CSVRecord CSVRecord) {
 		CalendarEventVO vo = new CalendarEventVO();
 		vo.setMemCode(CSVRecord.get(0));
-		vo.setDateFrom(CSVRecord.get(1));
-		vo.setDateTo(CSVRecord.get(2));
-		vo.setTime(CSVRecord.get(3));
-		vo.setAttendanceType(CSVRecord.get(4));
+		vo.setManagerCode(CSVRecord.get(1));
+		vo.setDateFrom(CSVRecord.get(2));
+		vo.setDateTo(CSVRecord.get(3));
+		vo.setTime(CSVRecord.get(4));
+		vo.setAttendanceType(CSVRecord.get(5));
 		return vo;
 
 	}
@@ -59,5 +61,13 @@ public class CalendarEventVO {
 
 	public void setAttendanceType(String atdType) {
 		this.atdType = atdType;
+	}
+
+	public String getManagerCode() {
+		return managerCode;
+	}
+
+	public void setManagerCode(String managerCode) {
+		this.managerCode = managerCode;
 	}
 }

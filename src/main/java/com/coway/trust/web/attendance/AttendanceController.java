@@ -132,16 +132,13 @@ public class AttendanceController {
 		public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, ModelMap model, SessionVO sessionVO) throws IOException, InvalidFormatException  {
 			ReturnMessage message = new ReturnMessage();
 
-
 			String batchMthYear = request.getParameter("batchMthYear").trim();
-			String batchMemType = request.getParameter("batchMemType").trim();
+
 			int result = 0;
 			int dup = 0;
 
-
 			Map<String, MultipartFile> fileMap = request.getFileMap();
 			MultipartFile multipartFile = fileMap.get("csvFile");
-
 
 			List<CalendarEventVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CalendarEventVO::create);
 
@@ -150,6 +147,7 @@ public class AttendanceController {
 				HashMap<String, Object> hm = new HashMap<String, Object>();
 				hm.put("atdType", vo.getAttendanceType().trim());
 				hm.put("memCode", vo.getMemCode().trim());
+				hm.put("managerCode", vo.getManagerCode());
 				hm.put("dateFrom", vo.getDateFrom().trim());
 				hm.put("dateTo", vo.getDateTo());
 				hm.put("time", vo.getTime().trim());
@@ -165,11 +163,10 @@ public class AttendanceController {
 				HashMap<String, Object> details = new HashMap<String, Object>();
 				details.put("crtUserId", sessionVO.getUserId());
 				details.put("batchId", batchId);
-				details.put("batchId", batchId);
 				int disableUploadDtl = attendanceService.disableBatchCalDtl(details);
 
 				if(disableUploadDtl > 0){
-					result = attendanceService.saveCsvUpload2(detailList, batchId, batchMemType);
+					result = attendanceService.saveCsvUpload2(detailList, batchId);
 				}
 			}
 			else{
@@ -177,7 +174,6 @@ public class AttendanceController {
 				master.put("crtUserId", sessionVO.getUserId());
 				master.put("batchStatusId", 1);
 				master.put("batchMthYear", batchMthYear);
-				master.put("batchMemType", batchMemType);
 
 
 				int duplicateUploadCount = attendanceService.checkDup(master);
@@ -197,7 +193,7 @@ public class AttendanceController {
 				message.setData(result);
 			}
 			else if(dup == 1) {
-				message.setMessage("Failed to upload Attendance file due to duplicated Member Type and Month.");
+				message.setMessage("Failed to upload Attendance file due to duplicated Month.");
 				message.setCode(AppConstants.FAIL);
 			}
 			else {
@@ -270,11 +266,13 @@ public class AttendanceController {
 
 			params.put("crtUserId", session.getUserId());
 
-			int result = attendanceService.deleteUploadBatch(params);
+			int disableMasterResult = attendanceService.deleteUploadBatch(params);
+
+			int disableDetailsResult = attendanceService.disableBatchCalDtl(params);
 
 			ReturnMessage message = new ReturnMessage();
 
-			if (result > 0) {
+			if (disableMasterResult > 0 && disableDetailsResult >0) {
 		    	message.setCode(AppConstants.SUCCESS);
 		    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 			} else {

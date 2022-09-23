@@ -39,20 +39,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 			for (int i=0; i < detailList.size(); i++) {
 				detailList.get(i).put("batchId", master.get("batchId"));
-				detailList.get(i).put("batchMemType", master.get("batchMemType"));
-
 			}
-
 			attendanceMapper.saveBatchCalDetailList(detailList);  // INSERT INTO ATD0002D
-			//attendanceMapper.updateBatchCalMst(master);
 		}
+
+
 
 		return masterSeq;
 	}
 
 	//@Transactional
 	@Override
-	public int saveCsvUpload2( List<Map<String, Object>> detailList, String batchId, String batchMemType) {
+	public int saveCsvUpload2( List<Map<String, Object>> detailList, String batchId) {
 
 		int result = 0;
 
@@ -60,7 +58,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 			for (int i=0; i < detailList.size(); i++) {
 				detailList.get(i).put("batchId", batchId);
-				detailList.get(i).put("batchMemType", batchMemType);
 			}
 
 			result =	attendanceMapper.saveBatchCalDetailList(detailList);  // INSERT INTO ATD0002D
@@ -143,6 +140,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 			int result =	attendanceMapper.approveUploadBatch(params);
 			try{
+				attendanceMapper.updateManagerCode(params);
 				attendanceMapper.atdRateCalculation(params);
 			}catch(Throwable ex){
 

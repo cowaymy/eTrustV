@@ -15,11 +15,6 @@ function fn_uploadFile() {
 	        return;
 	}
 
-    if($("#batchMemType").val() == null || $("#batchMemType").val() == ""){
-            Common.alert("Please select the Member Type.");
-            flag= false;
-            return;
-    }
 
     if($("#uploadfile").val() == null || $("#uploadfile").val() == ""){
         Common.alert("File not found. Please upload the file.");
@@ -33,7 +28,6 @@ function fn_uploadFile() {
         var formData = new FormData();
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("batchMthYear", $("#batchMthYear").val());
-        formData.append("batchMemType", $("#batchMemType").val());
         formData.append("batchId", '');
         Common.ajaxFile("/attendance/csvUpload.do", formData, function (result) {
             batchId=result.data;
@@ -91,27 +85,17 @@ function fn_submitApproval(){
                     <tr>
                         <th scope="row">Month</th>
                         <td colspan='5'>
-                        <input type="text" id="batchMthYear" name="batchMthYear" title="Month" class="j_date2" placeholder="Choose one" />
+                        <input type="text" id="batchMthYear" name="batchMthYear" title="Month" class="j_date2 w100p" placeholder="Choose one" />
                         </td>
-                    </tr>
-                    <tr>
-                         <th scope="row">Member Type</th>
-                         <td colspan='5'>
-                            <select class="" id="batchMemType" name="batchMemType">
-                                <option value="">Choose One</option>
-                                <option value="4">Staff</option>
-                                <option value="6677">Manager</option>
-                            </select>
-                         </td>
                     </tr>
                     <tr>
                         <th scope="row">File</th>
                         <td colspan='5'>
-                        <div class="auto_file"><!-- auto_file start -->
+                        <div class="auto_file w100p"><!-- auto_file start -->
                            <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
 
                                 <input title="file add" type="file" id="uploadfile" name="uploadfile">
-                                <label><span class="label_text"><a id = "txtFileInput" href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
+                                <label><span class="label_text "><a id = "txtFileInput" href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
                            </form>
                         </div><!-- auto_file end -->
                         </td>
@@ -122,7 +106,6 @@ function fn_submitApproval(){
         <ul class="center_btns mt20">
             <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
             <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/attendance/AttendanceUploadFormat.csv">Download Template</a></p></li>
-<%--             <li><p class="btn_blue2 big"><a href="javascript:fn_submitApproval();"><spring:message code='sys.btn.submit'/></a></p></li> --%>
         </ul>
     </section>
 

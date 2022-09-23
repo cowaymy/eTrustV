@@ -42,4 +42,6 @@ public interface AttendanceMapper {
 
     Map<String, Object> atdRateCalculation (Map<String, Object> param);
 
+    void updateManagerCode(Map<String, Object> params);
+
 }

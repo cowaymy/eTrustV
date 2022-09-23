@@ -13,7 +13,7 @@ public interface AttendanceService {
 
 	int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
 
-	int saveCsvUpload2(List<Map<String, Object>> detailList, String batchId, String batchMemType);
+	int saveCsvUpload2(List<Map<String, Object>> detailList, String batchId);
 
 	int deleteUploadBatch(Map<String, Object> params);
 

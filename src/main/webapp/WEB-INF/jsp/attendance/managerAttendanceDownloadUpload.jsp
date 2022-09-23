@@ -99,9 +99,6 @@ var gridPros = {
 
 $(document).ready(function(){
 
-    // *** set initial values when Calendar first loaded - start
-    var eventList = JSON.parse('${eventListJsonStr}');
-
     atdManagementGrid();
     searchAtdUploadList();
 
@@ -121,12 +118,12 @@ function atdManagementGrid() {
           editable : false,
           width : 200
         },
-        {
-          dataField : "memType",
-          headerText : "Member Type",
-          editable : false,
-          width : 200
-          },
+//         {
+//           dataField : "memType",
+//           headerText : "Member Type",
+//           editable : false,
+//           width : 200
+//           },
         {
           dataField : "stus",
           headerText : "Approval Status",
@@ -207,7 +204,7 @@ $(function() {
     	        	 Common.alert('* Please check the status "ACT" status is only available.');
     	         }
     	         else{
-    	             param = {batchId : AUIGrid.getCellValue(myGridID, selIdx, "batchId")};
+    	             param = {batchId : AUIGrid.getCellValue(myGridID, selIdx, "batchId"),batchMthYear : AUIGrid.getCellValue(myGridID, selIdx, "batchMthYear")};
     	             var confirmApprovalMsg = "Are you sure want to confirm this Upload Batch No : " + AUIGrid.getCellValue(myGridID, selIdx, "batchId") + "?";
                      Common.confirm(confirmApprovalMsg, x=function() { confirmApproval(param)});
     	         }
@@ -236,9 +233,7 @@ function confirmApproval(param){
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
     <h2>Attendance</h2>
     <ul class="right_btns">
-     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-        <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
-     </c:if>
+      <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
       <li><p class="btn_blue"><a href="#" onClick="searchAtdUploadList()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
       <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#calSearchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
     </ul>
@@ -255,17 +250,7 @@ function confirmApproval(param){
         <tbody>
           <tr>
             <th scope="row"><spring:message code='cal.search.month'/></th>
-            <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2" placeholder="Choose one" /></td>
-          </tr>
-          <tr id = "rowMemType">
-            <th scope="row"><spring:message code='cal.search.memType'/></th>
-            <td colspan='3'>
-              <select class="" id="calMemType" name="calMemType">
-                <option value="">Choose One</option>
-                <option value="4">Staff</option>
-                <option value="6677">Manager</option>
-              </select>
-            </td>
+            <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2 w100p" placeholder="Choose one" /></td>
           </tr>
         </tbody>
       </table><!-- table end -->

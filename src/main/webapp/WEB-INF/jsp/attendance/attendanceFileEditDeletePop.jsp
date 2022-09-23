@@ -40,10 +40,8 @@
                       }
                  }
                },
-               {dataField: "batchId", headerText: "Upload Batch No", visible: true, editable: false},
-               {dataField: "batchMthYear", headerText: "Month Year", editable: false, width: "15%"},
-               {dataField: "memType", headerText: "Member Type", editable: false, width: "20%"},
-               {dataField: "batchMemType", headerText: "Member Type", visible:false ,editable: false, width: "20%"},
+               {dataField: "batchId", headerText: "Upload Batch No", visible: true, width: 150, editable: false},
+               {dataField: "batchMthYear", headerText: "Month Year", editable: false, width: 150},
                {dataField: "atchFileName",headerText :"Attachement"      ,width:180   ,height:30 , visible:true,editable : false,
                    renderer :
                    {
@@ -85,7 +83,6 @@
     	  }
     	   else{
                $("#uploadBatchId").val(AUIGrid.getCellValue(calGridID, rowIndex, "batchId"));
-               $("#uploadMemType").val(AUIGrid.getCellValue(calGridID, rowIndex, "batchMemType"));
     		   reuploadFile(rowIndex);
     	   }
     	}
@@ -103,7 +100,6 @@
             var formData = new FormData();
             formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
             formData.append("batchId", $("#uploadBatchId").val());
-            formData.append("batchMemType", $("#uploadMemType").val());
             formData.append("batchMthYear", '');
 
             console.log(formData);
@@ -133,7 +129,6 @@
             <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
                <input type="file" title="file add"  id="uploadfile" name="uploadfile"/>
                <input type="text"  id="uploadBatchId" name="uploadBatchId"/>
-               <input type="text"  id="uploadMemType" name="uploadMemType"/>
             </form>
    </div>
    <ul class="right_btns mb10">
@@ -150,17 +145,7 @@
          <tbody>
            <tr>
              <th scope="row"><spring:message code='cal.search.month'/></th>
-             <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2" placeholder="Choose one" /></td>
-           </tr>
-           <tr id="rowMemType">
-             <th scope="row"><spring:message code='cal.search.memType'/></th>
-             <td colspan='3'>
-               <select class="" id="calMemType" name="calMemType">
-                 <option value="">Choose One</option>
-                 <option value="4">Staff</option>
-                 <option value="6677">Manager</option>
-               </select>
-             </td>
+             <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2 w100p" placeholder="Choose one" /></td>
            </tr>
          </tbody>
        </table><!-- table end -->

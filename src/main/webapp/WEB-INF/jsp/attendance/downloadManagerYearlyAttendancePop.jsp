@@ -93,7 +93,7 @@
         }
         var managerCode = '';
         if(managerCodeStr != null && managerCodeStr != ''){
-        	managerCode += ' B.MANAGER_CODE IN ('+managerCodeStr+')';
+        	managerCode += ' AND MANAGER_CODE IN ('+managerCodeStr+')';
             runCnt = 0;
         }
         else{

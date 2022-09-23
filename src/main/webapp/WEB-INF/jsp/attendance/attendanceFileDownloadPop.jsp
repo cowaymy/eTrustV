@@ -21,15 +21,7 @@ function fn_openGenerate() {
     	  batchMthYear = $('#batchMthYear_download').val();
       }
 
-      if(FormUtil.isEmpty($('#batchMemType_download').val())) {
-    	  batchMemType = null;
-       }
-      else{
-    	  batchMemType = $('#batchMemType_download').val();
-      }
 
-
-     $("#reportForm1 #v_batchMemType").val(batchMemType);
      $("#reportForm1 #v_batchMthYear").val(batchMthYear);
 
      $("#reportForm1 #reportFileName").val('/attendance/AttendanceRawData.rpt');
@@ -69,7 +61,6 @@ function fn_reload(){
         <input type="hidden" id="reportFileName" name="reportFileName" />
         <input type="hidden" id="viewType" name="viewType" />
         <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
-        <input type="hidden" id="v_batchMemType" name="v_batchMemType" />
         <input type="hidden" id="v_batchMthYear" name="v_batchMthYear" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
@@ -85,18 +76,8 @@ function fn_reload(){
                     <tr>
                         <th scope="row">Month</th>
                         <td colspan='5'>
-                        <input type="text" id="batchMthYear_download" name="batchMthYear_download" title="Month" class="j_date2" placeholder="Choose one" />
+                        <input type="text" id="batchMthYear_download" name="batchMthYear_download" title="Month" class="j_date2 w100p" placeholder="Choose one" />
                         </td>
-                    </tr>
-                    <tr>
-                         <th scope="row">Member Type</th>
-                         <td colspan='5'>
-                            <select class="" id="batchMemType_download" name="batchMemType_download">
-                                <option value="">Choose One</option>
-                                <option value="4">Staff</option>
-                                <option value="6677">Manager</option>
-                            </select>
-                         </td>
                     </tr>
                 </tbody>
             </table><!-- table end -->
