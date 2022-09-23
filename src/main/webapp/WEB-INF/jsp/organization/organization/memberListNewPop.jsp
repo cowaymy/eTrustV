@@ -1887,7 +1887,6 @@ $(function(){
         	msg += "*Not Allowed to Upload.<br>";
         }else if(file != null){
         	myFileCaches[7] = {file:file};
-        	msg += "*Not Allowed to Upload.<br>";
         }
 
         if(msg != null && msg != ''){
