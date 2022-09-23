@@ -687,7 +687,7 @@ var myDetailGridData = null;
     	   console.log('rsnGridDataList[i]["filterSerialUnmatchReason"] ' + i + ' '+ rsnGridDataList[i]["filterSerialUnmatchReason"]);
     	   console.log('rsnGridDataList[i]["oldSerialNo"] ' + i + ' '+ rsnGridDataList[i]["oldSerialNo"]); */
 
-           if((rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null) && rsnGridDataList[i]["serialChk"] == "Y"){
+           if((rsnGridDataList[i]["name"] != "" && rsnGridDataList[i]["name"] != null) && (rsnGridDataList[i]["serialChk"] == "Y" && $("#hidSerialRequireChkYn").val() == 'Y')){
         	   if (rsnGridDataList[i]["serialNo"] == null || rsnGridDataList[i]["serialNo"] == "") {
 			     Common.alert("* Please choose the serial number. ");
 			     returnParam = false;
@@ -740,7 +740,7 @@ var myDetailGridData = null;
     var serialChkName = new Array();
     var j = 0;
     for (var i = 0; i < editedRowItems.length; i++) {
-      if (parseInt(editedRowItems[i]["name"]) > 0 && editedRowItems[i]["serialChk"] == "Y" && (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
+      if (parseInt(editedRowItems[i]["name"]) > 0 && (editedRowItems[i]["serialChk"] == "Y" && $("#hidSerialRequireChkYn").val() == 'Y') && (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
         serialChkCode[j] = editedRowItems[i]["stkCode"];
         serialChkName[j] = editedRowItems[i]["stkDesc"];
         j++;
