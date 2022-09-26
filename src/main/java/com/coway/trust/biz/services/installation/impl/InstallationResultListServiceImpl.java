@@ -3824,26 +3824,24 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  }
 
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
-	  Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
-		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
-		    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
-		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
-
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    String succYn = "E";
 	    Calendar startTime = Calendar.getInstance();
 	    Calendar endTime = null;
 
+	    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
+	            messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+	        Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
+	            messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    String reportName = reportFilePath + reportFile;
-	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 	    String prodName;
-	    int maxLength = 0;
-	    String msg = "Completed";
 
 	    try {
 	      ReportAppSession ra = new ReportAppSession();
 	      ra.createService(REPORT_CLIENT_DOCUMENT);
-
 
 	      ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
 	      ra.initialize();
@@ -3866,19 +3864,18 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      }
 	    } catch (Exception ex) {
 	      logger.error(CommonUtils.printStackTraceToString(ex));
-	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
-
-	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
 	      throw new ApplicationException(ex);
-	    } finally{
-	      // Insert Log
+	    } finally {
 	      endTime = Calendar.getInstance();
-	      params.put("msg", msg);
-	      params.put("startTime", fmt.format(startTime.getTime()));
-	      params.put("endTime", fmt.format(endTime.getTime()));
-	      params.put("userId", 349);
+	      long tot = endTime.getTimeInMillis() - startTime.getTimeInMillis();
+	      logger.info("resultInfo : succYn={}, {}={}, {}={}, time={}~{}, total={}"
+	              , succYn
+	              , REPORT_FILE_NAME, params.get(REPORT_FILE_NAME)
+	              , REPORT_VIEW_TYPE, params.get(REPORT_VIEW_TYPE)
+	              , fmt.format(startTime.getTime()), fmt.format(endTime.getTime())
+	              , tot
+	      );
 
-	      reportBatchService.insertLog(params);
 	    }
 	  }
 
