@@ -179,8 +179,8 @@
             Common.popupDiv("/homecare/sales/order/hcOrderRegisterPop.do");
         });
         $('#btnEdit').click(function() {
-        	var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
-        	var appTypeCd = AUIGrid.getCellValue(listMyGridID, selIdx, "appTypeCode")
+            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+            var appTypeCd = AUIGrid.getCellValue(listMyGridID, selIdx, "appTypeCode")
 
             if(appTypeCd == 'AUX') {
                 Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Auxiliary products are not allowed to view</b>");
@@ -221,32 +221,6 @@
             $("#downFileName").val("CustomerVALetter_"+custID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
             fn_letter_report();
-
-        });
-        $('#btnEtrReleaseLetter').click(function() {
-
-            $("#dataForm4").show();
-            //Param Set
-            var gridObj = AUIGrid.getSelectedItems(listMyGridID);
-
-            if(gridObj == null || gridObj.length <= 0 ){
-                Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
-                return;
-            }
-
-            var ordNO = gridObj[0].item.ordNo;
-            var custName = gridObj[0].item.custName;
-            var custID = gridObj[0].item.custId;
-
-            $("#dataForm4 #_ordNo_V2").val(ordNO);
-            $("#dataForm4 #_CustId_V2").val(custID);
-
-            $("#dataForm4 #downFileName_V3").val("eTR Release Letter - "+ordNO+" "+custName);
-
-            console.log(ordNO);
-            console.log(custID);
-
-            fn_letter_report_V3();
 
         });
         $('#btnExport').click(function() {
@@ -334,12 +308,7 @@
         };
         Common.report("dataForm", option);
     }
-    function fn_letter_report_V3() {
-        var option = {
-            isProcedure : false
-        };
-        Common.report("dataForm4", option);
-    }
+
     function fn_validSearchList() {
         var isValid = true, msg = "";
 
@@ -689,15 +658,6 @@
             <!-- params -->
             <input type="hidden" id="_repCustId" name="@CustID" />
         </form>
-        <form id="dataForm4">
-		    <input type="hidden" id="fileName" name="reportFileName" value="/sales/EtrLetterRelease_V1.rpt" /><!-- Report Name  -->
-		    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
-		    <input type="hidden" id="downFileName_V3" name="reportDownFileName" value="" /> <!-- Download Name -->
-
-		    <!-- params -->
-		    <input type="hidden" id="_ordNo_V2" name="@OrdNO" />
-		    <input type="hidden" id="_CustId_V2" name="@CustID" />
-		</form>
 
         <!-- order overview report Form -->
         <form id="dataForm2">
@@ -832,7 +792,7 @@
                         <th scope="row">Bundle Number</th>
                         <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
                         <th scope="row">is e-Commerce</th>
-					    <td><input id="isECommerce" name="isECommerce" type="checkbox"/></td>
+                        <td><input id="isECommerce" name="isECommerce" type="checkbox"/></td>
                     </tr>
                     <tr>
                         <th scope="row" colspan="6"><span class="must"><spring:message code='sales.msg.ordlist.keyin' /></span></th>
@@ -911,11 +871,7 @@
                                     <a href="#" id="btnOrderOverview">Order Overview</a>
                                 </p></li>
                         </c:if>
-                        <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
-					        <li><p class="link_btn type2">
-					               <a href="#" id="btnEtrReleaseLetter">ETR Release Letter</a>
-					              </p></li>
-					     </c:if>
+
                     </ul>
                     <p class="hide_btn">
                         <a href="#"><img
