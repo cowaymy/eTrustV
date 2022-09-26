@@ -11,6 +11,9 @@ import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -3824,20 +3827,14 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  }
 
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
-	    SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
-	    String succYn = "E";
-	    Calendar startTime = Calendar.getInstance();
-	    Calendar endTime = null;
 
-	    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
-	            messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
-	        Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
-	            messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
-
+	  Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
+		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+		    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
+		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    String reportName = reportFilePath + reportFile;
-	    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
-	    String prodName;
+	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 
 	    try {
 	      ReportAppSession ra = new ReportAppSession();
@@ -3851,31 +3848,31 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 	      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
-	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
-
-	      params.put("repProdName", prodName);
-
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
 	      ReportUtils.setReportParameter(params, paramController, fields);
 	      {
-	        this.viewHandle(request, response, viewType, clientDoc,
-	            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+
+	        //Download File
+	        Path file = Paths.get(reportFilePath, reportFile);
+	        if (Files.exists(file))
+	        {
+	            response.setContentType("application/pdf");
+	            response.addHeader("Content-Disposition", "attachment; filename="+reportFile);
+	            try
+	            {
+	                Files.copy(file, response.getOutputStream());
+	                response.getOutputStream().flush();
+	            }
+	            catch (IOException ex) {
+	                ex.printStackTrace();
+	            }
+	        }
 	      }
 	    } catch (Exception ex) {
 	      logger.error(CommonUtils.printStackTraceToString(ex));
 	      throw new ApplicationException(ex);
-	    } finally {
-	      endTime = Calendar.getInstance();
-	      long tot = endTime.getTimeInMillis() - startTime.getTimeInMillis();
-	      logger.info("resultInfo : succYn={}, {}={}, {}={}, time={}~{}, total={}"
-	              , succYn
-	              , REPORT_FILE_NAME, params.get(REPORT_FILE_NAME)
-	              , REPORT_VIEW_TYPE, params.get(REPORT_VIEW_TYPE)
-	              , fmt.format(startTime.getTime()), fmt.format(endTime.getTime())
-	              , tot
-	      );
-
 	    }
 	  }
 
