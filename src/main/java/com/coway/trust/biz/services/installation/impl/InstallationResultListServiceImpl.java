@@ -3860,6 +3860,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
 
 	      params.put("repProdName", prodName);
+	      logger.debug("viewProdParams1111===" + params.toString());
+
 
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
@@ -3980,8 +3982,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(EMAIL_SUBJECT, emailSubject);
 	    params.put(EMAIL_TO, emailNo);
 	    params.put(EMAIL_TEXT, content);
-
-		logger.debug("rptParams1111=====", params.toString());
 
 		try{
 			this.viewProcedure(null, null, params); //Included sending email
