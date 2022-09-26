@@ -9,6 +9,7 @@ import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -3827,18 +3828,26 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	  }
 
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
-
 	  Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
 		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
 		    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
 		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
+	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    Calendar startTime = Calendar.getInstance();
+	    Calendar endTime = null;
+
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    String reportName = reportFilePath + reportFile;
 	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    String prodName;
+	    int maxLength = 0;
+	    String msg = "Completed";
 
 	    try {
 	      ReportAppSession ra = new ReportAppSession();
 	      ra.createService(REPORT_CLIENT_DOCUMENT);
+
 
 	      ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
 	      ra.initialize();
@@ -3848,31 +3857,32 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 	      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
+	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
+
+	      params.put("repProdName", prodName);
+
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
 	      ReportUtils.setReportParameter(params, paramController, fields);
 	      {
-	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
-
-	        //Download File
-	        Path file = Paths.get(reportFilePath, reportFile);
-	        if (Files.exists(file))
-	        {
-	            response.setContentType("application/pdf");
-	            response.addHeader("Content-Disposition", "attachment; filename="+reportFile);
-	            try
-	            {
-	                Files.copy(file, response.getOutputStream());
-	                response.getOutputStream().flush();
-	            }
-	            catch (IOException ex) {
-	                ex.printStackTrace();
-	            }
-	        }
+	        this.viewHandle(request, response, viewType, clientDoc,
+	            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
 	      }
 	    } catch (Exception ex) {
 	      logger.error(CommonUtils.printStackTraceToString(ex));
+	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
 	      throw new ApplicationException(ex);
+	    } finally{
+	      // Insert Log
+	      endTime = Calendar.getInstance();
+	      params.put("msg", msg);
+	      params.put("startTime", fmt.format(startTime.getTime()));
+	      params.put("endTime", fmt.format(endTime.getTime()));
+	      params.put("userId", 349);
+
+	      reportBatchService.insertLog(params);
 	    }
 	  }
 
@@ -3946,7 +3956,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
 	    params.put("V_WHERE", params.get("installEntryId").toString());// parameter
 	    //params.put("V_INS_ID", params.get("installEntryId").toString());// parameter
-	    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "InstallationNoteDigitalization_" + CommonUtils.getNowDate());
+	    params.put(AppConstants.REPORT_DOWN_FILE_NAME,  "INS" + File.separator + "InstallationNoteDigitalization_" + CommonUtils.getNowDate() + ".pdf");
 
 	    String emailSubject = "COWAY: Congratulation For New Coway Product";
 
@@ -3970,6 +3980,8 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    params.put(EMAIL_SUBJECT, emailSubject);
 	    params.put(EMAIL_TO, emailNo);
 	    params.put(EMAIL_TEXT, content);
+
+		logger.debug("rptParams1111=====", params.toString());
 
 		try{
 			this.viewProcedure(null, null, params); //Included sending email
