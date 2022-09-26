@@ -328,12 +328,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	      		logger.info("===smsResultValue===" + smsResultValue.toString());
 	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
 	      	}
-
-            try{
-            	installationResultListService.installationSendEmail(params);
-          	}catch (Exception e){
-          		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
-          	}
           }
 
           logger.info("###insApiresult.get(chkCrtAs): " + insApiresult.get("chkCrtAs"));
@@ -412,6 +406,13 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     	  }
           // End of inserting charge out filters and spare parts at AS
 
+    	  if (null != rtnValue) {
+    		  try{
+    			  installationResultListService.installationSendEmail(params);
+    		  }catch (Exception e){
+        		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
+    		  }
+    	  }
         } catch (Exception e) {
           String procTransactionId = transactionId;
           String procName = "Installation";
@@ -434,6 +435,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE.";
       throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
     }
+
 
     logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
 
