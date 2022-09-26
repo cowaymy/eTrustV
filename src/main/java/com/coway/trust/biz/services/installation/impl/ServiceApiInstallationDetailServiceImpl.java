@@ -407,6 +407,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           // End of inserting charge out filters and spare parts at AS
 
     	  if (null != rtnValue) {
+    		  logger.info("Send email: " + params.toString());
     		  try{
     			  installationResultListService.installationSendEmail(params);
     		  }catch (Exception e){
