@@ -349,9 +349,9 @@ public interface HsManualMapper {
   void updateHsFilterSerial(Map<String, Object> params);
 
   //CELESTE : 25/08/2022 : EDIT CUSTOMER INFO[S]
-  EgovMap selectBrchDt(Map<String, Object> params);
+  /*EgovMap selectBrchDt(Map<String, Object> params);
   EgovMap selectOldContactDt(Map<String, Object> params);
-  void insertSAL0329D(Map<String, Object> params);
+  void insertSAL0329D(Map<String, Object> params);*/
   //CELESTE : 25/08/2022 : EDIT CUSTOMER INFO[E]
 
 }
