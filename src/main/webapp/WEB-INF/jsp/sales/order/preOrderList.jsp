@@ -17,10 +17,14 @@ console.log("preOrderList");
 	var popupObj;
 
 	var brnchType = "${branchType}";
+	var memTypeFiltered = false;
 	if (brnchType == 45) {
 		memTypeData = memTypeData.filter(d => d.codeId == "1")
+		memTypeFiltered = true;
 	} else if (brnchType == 42 || brnchType == 48) {
-		memTypeData = memTypeData.filter(d => d.codeId == "2" || d.codeId == "7")
+		let data = memTypeData.filter(d => d.codeId == "2" || d.codeId == "7")
+        memTypeData = brnchType == 48 ? data.reverse() : data
+		memTypeFiltered = true
 	}
 
 /*     if(MEM_TYPE == '1') { //HP
@@ -110,7 +114,12 @@ console.log("preOrderList");
         doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
-        doDefCombo(memTypeData, '', 'memType', 'S', '');
+        if (memTypeFiltered) {
+        	doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
+        } else {
+	        doDefCombo(memTypeData, '', 'memType', 'S', '');
+
+        }
 
 
         //excel Download
