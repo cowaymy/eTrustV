@@ -17,10 +17,14 @@
     var popupObj;
 
     var brnchType = "${branchType}";
+    var memTypeFiltered = false;
     if (brnchType == 45) {
         memTypeData = memTypeData.filter(d => d.codeId == "1")
+        memTypeFiltered = true;
     } else if (brnchType == 42 || brnchType == 48) {
-        memTypeData = memTypeData.filter(d => d.codeId == "2" || d.codeId == "7")
+    	let data = memTypeData.filter(d => d.codeId == "2" || d.codeId == "7")
+        memTypeData = brnchType == 48 ? data.reverse() : data
+        memTypeFiltered = true;
     }
 
     var branchCdList = [];
@@ -105,7 +109,11 @@
 //         doDefCombo(branchCdList, '' ,'_brnchId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doDefCombo(codeList_8, '' ,'_typeId', 'M', 'fn_multiCombo');
-        doDefCombo(memTypeData, '', 'memType', 'S', '');
+        if (memTypeFiltered) {
+            doDefComboAndMandatory(memTypeData, '', 'memType', 'S', '');
+        } else {
+            doDefCombo(memTypeData, '', 'memType', 'S', '');
+        }
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
 //         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
 //         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
