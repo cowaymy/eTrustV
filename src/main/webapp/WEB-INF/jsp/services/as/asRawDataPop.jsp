@@ -262,7 +262,7 @@
       if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
           && $("#settleDateFr").val() != null
           && $("#settleDateTo").val() != null) {
-          whereSql2 = " AND (TO_CHAR(B.AS_SETL_DT,'YYYY-MM-DD')) >= '" + settleDateFrom + "' AND (TO_CHAR(B.AS_SETL_DT,'YYYY-MM-DD')) <= '" + settleDateTo + "' ";
+          whereSql2 = " AND B.AS_SETL_DT between to_Date('" + settleDateFrom + "','YYYY-MM-DD') AND to_Date('" + settleDateTo + "','YYYY-MM-DD')+1";
       } else {
           whereSql2LeftJoin = " LEFT ";
       }
