@@ -27,10 +27,10 @@ $(document).ready(function(){
 
 	//Search
 	$("#_listSearchBtn").click(function() {
-		if($('#orderNo').val() == "" && $("#padNo").val() == ""){
-			Common.alert("Order Number or Pad Number is required");
-			return false;
-		}
+// 		if($('#orderNo').val() == "" && $("#padNo").val() == ""){
+// 			Common.alert("Order Number or Pad Number is required");
+// 			return false;
+// 		}
 
 	    //Validation start
 	    selectList();
