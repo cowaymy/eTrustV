@@ -1,13 +1,13 @@
 <script type="text/javaScript" language="javascript">
 	//Masking pen (display last 4)
-	var oriMailNric = '${orderDetail.mailingInfo.mailCntNric}';
-	var oriMailMobileNo = '${orderDetail.mailingInfo.mailCntTelM}';
-	var oriMailEmail = '${orderDetail.mailingInfo.mailCntEmail}';
-	var oriMailFaxNo = '${orderDetail.mailingInfo.mailCntTelF}';
-	var oriMailOfficeNo = '${orderDetail.mailingInfo.mailCntTelO}';
-	var oriMailHouseNo = '${orderDetail.mailingInfo.mailCntTelR}';
-	var oriMailMainEmail = '${orderDetail.mailingInfo.mailCntEmail}';
-	var oriMailAddEmail = '${orderDetail.mailingInfo.mailCntEmailAdd}';
+	var oriMailNric = "${orderDetail.mailingInfo.mailCntNric}";
+	var oriMailMobileNo = "${orderDetail.mailingInfo.mailCntTelM}";
+	var oriMailEmail = "${orderDetail.mailingInfo.mailCntEmail}";
+	var oriMailFaxNo = "${orderDetail.mailingInfo.mailCntTelF}";
+	var oriMailOfficeNo = "${orderDetail.mailingInfo.mailCntTelO}";
+	var oriMailHouseNo = "${orderDetail.mailingInfo.mailCntTelR}";
+	var oriMailMainEmail = "${orderDetail.mailingInfo.mailCntEmail}";
+	var oriMailAddEmail = "${orderDetail.mailingInfo.mailCntEmailAdd}";
 
 	$(document).ready(function(){
 
