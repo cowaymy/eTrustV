@@ -35,10 +35,10 @@
 		LEFT JOIN SYS0047M s0047m
 		ON s0047m.USER_ID = p0333m.CRT_BY
 		WHERE 1=1
-		<if test='fromDate != null and toDate != null'>
-			<if test='fromDate != "" and toDate != ""'>
+		<if test='dateFrom != null and dateTo != null'>
+			<if test='dateFrom != "" and dateTo != ""'>
 				<![CDATA[
-					AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'DD/MM/YYYY') AND TO_DATE(p0333m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'DD/MM/YYYY')
+					AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{dateFrom},'DD/MM/YYYY') AND TO_DATE(p0333m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{dateTo},'DD/MM/YYYY')
 				]]>
 			</if>
 		</if>
