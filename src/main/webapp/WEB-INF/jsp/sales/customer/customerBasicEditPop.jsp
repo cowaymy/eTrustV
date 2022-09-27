@@ -114,6 +114,9 @@ $(document).ready(function(){
                 if('${result.nation}' == '1')
 	                $("#basicDob").val(nricToDob(ic));
 
+                if('${result.nation}' == '1')
+                    $("#basicGender").val(nricToGender(ic));
+
 
                 console.log('existNric:' + existNric);
                 console.log('lastDigit:' + lastDigit);
@@ -288,6 +291,27 @@ $(document).ready(function(){
 
         return exCustNric;
       }
+
+    function nricToGender(ic){
+        var lastDigit = parseInt(ic.charAt(ic.length - 1));
+         let gender = "";
+        if ( ic.length == 12) {
+                       if (lastDigit % 2 != 0) {
+                            isValid = false;
+                            console.log('Male');
+                            $('input:radio[name="basicGender"][value="M"]').prop('checked', true);
+                            gender = "M";
+                            return gender;
+                        }
+                      if (lastDigit % 2 == 0) {
+                          isValid = false;
+                          console.log('Female');
+                          $('input:radio[name="basicGender"][value="F"]').prop('checked', true);
+                          gender = "F";
+                          return gender;
+                    }
+         }
+    }
 
     function nricToDob(nric){
     	let currentYear = new Date().getFullYear();
