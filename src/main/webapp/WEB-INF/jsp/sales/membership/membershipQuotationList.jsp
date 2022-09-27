@@ -291,7 +291,7 @@ function fn_doPrint(){
 
 
 	if("1" != selectedItems[0].item.validStusId ){
-		  Common.alert("cat not print["+selectedItems[0].item.validStusId+"]");
+		  Common.alert("Only active quotation can be generated["+selectedItems[0].item.validStusId+"]");
 		return ;
 	}
 
