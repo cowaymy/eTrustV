@@ -495,7 +495,9 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 	@Override
 	public void saveSerialNo(Map<String, Object> params, SessionVO sessionVo) throws Exception{ // HLTANG 202111 - filter barcode scan
-		List<EgovMap> grListmain = serialMgmtNewMapper.selectSerialInfo(params);
+		String[] arrReqstNo = params.get("reqstNo").toString().split(",");
+		params.put("arrReqstNo", arrReqstNo);
+		List<EgovMap> grListmain = serialMgmtNewMapper.selectSerialInfoMul(params);
 
 		Map<String, Object> mainMap = null;
 		for (Object obj : grListmain) {

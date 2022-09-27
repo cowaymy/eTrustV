@@ -63,4 +63,5 @@ public interface SerialMgmtNewMapper{
 	public List<EgovMap> selectDeliveryGrHist(Map<String, Object> obj) throws Exception;
 	public void updateDeliveryGrHist(Map<String, Object> obj) throws Exception;
 	public int deleteTempSerialMaster(Map<String, Object> obj) throws Exception;
+	public List<EgovMap> selectSerialInfoMul(Map<String, Object> obj) throws Exception;
 }

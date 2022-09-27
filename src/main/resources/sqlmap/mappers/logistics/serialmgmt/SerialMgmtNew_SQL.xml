@@ -487,4 +487,46 @@
         WHERE serial_no = #{serialNo}
         AND SEQ = #{seq}
     </update>
+
+    <select id="selectSerialInfoMul" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectSerialInfo] - HLTANG */
+            SELECT X.*
+              FROM (
+                    SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
+                         , A.SERIAL_NO
+                         , A.SCAN_NO
+                         , A.ITM_CODE
+                         , A.SCAN_STUS_CODE
+                         , A.REQST_NO                   -- GR NO
+                         , A.REQST_NO_ITM               -- GR SEQ
+                         , NVL(A.DELVRY_NO,'') DELVRY_NO
+                         , A.DELVRY_NO_ITM
+                         , A.FROM_LOC_ID
+                         , A.TO_LOC_ID                  -- TO CDC
+                         , A.TRNSC_TYPE                 -- (HP)
+                         , A.IO_TYPE
+                      FROM LOG0099D A
+                   ) X
+              WHERE X.RN = 1
+              <if test="arrReqstNo != null ">
+                AND (
+                X.DELVRY_NO in
+                    <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                or
+                X.REQST_NO in
+                    <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                )
+                </if>
+                <if test="arrReqstNo == null ">
+                AND X.DELVRY_NO = ''
+               </if>
+                <if test="zIoType !=null and zIoType !=''">
+                and X.IO_TYPE = #{zIoType}
+               </if>
+
+    </select>
 </mapper>
