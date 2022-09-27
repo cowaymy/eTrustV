@@ -555,7 +555,7 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 			// LOG0100M -- State : N - update
 			oMap.put("stusCode", "N");
-			serialMgmtNewMapper.deleteSerialMaster(oMap);
+			//serialMgmtNewMapper.deleteSerialMaster(oMap);
 
 			serialMgmtNewMapper.deleteTempSerialMaster(oMap);
 
