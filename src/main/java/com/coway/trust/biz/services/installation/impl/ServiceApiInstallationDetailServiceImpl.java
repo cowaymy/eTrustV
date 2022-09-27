@@ -429,15 +429,13 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
     }
 
-      logger.info("Send email: " + params.toString());
+    logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
+
 	  try{
 		  installationResultListService.installationSendEmail(params);
 	  }catch (Exception e){
 		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
 	  }
-
-
-    logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
 
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
