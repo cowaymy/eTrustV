@@ -406,12 +406,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     	  }
           // End of inserting charge out filters and spare parts at AS
 
-    	  try{
-    		  installationResultListService.installationSendEmail(params);
-    	  }catch (Exception e){
-    		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
-    	  }
-
         } catch (Exception e) {
           String procTransactionId = transactionId;
           String procName = "Installation";
@@ -420,6 +414,12 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           String errorMsg = "[API] " + e.toString();
           throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
         }
+
+          try{
+  		  	installationResultListService.installationSendEmail(params);
+	  	  }catch (Exception e){
+	  		logger.info("===Failed to send e-mail to" + params.get("resultReportEmailNo").toString() + "===");
+	  	  }
       } else {
         // 대상이 없다면 정상 완료 처리
         if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
