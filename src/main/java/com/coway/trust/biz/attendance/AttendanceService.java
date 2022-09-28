@@ -23,6 +23,8 @@ public interface AttendanceService {
 
 	int disableBatchCalDtl(Map<String, Object> master);
 
+	int disableBatchAtdRate(Map<String, Object> master);
+
 	void insertApproveLine(Map<String, Object> params);
 
 	List<EgovMap> searchAtdUploadList(Map<String, Object> params);

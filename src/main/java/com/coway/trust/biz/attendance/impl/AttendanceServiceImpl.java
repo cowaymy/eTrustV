@@ -87,6 +87,13 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return mResult;
 	}
 
+	public int disableBatchAtdRate(Map<String, Object> params) {
+
+		int mResult = attendanceMapper.disableBatchAtdRate(params);
+
+		return mResult;
+	}
+
 	//@Transactional
 	@Override
 	public void insertApproveLine(Map<String, Object> params) {

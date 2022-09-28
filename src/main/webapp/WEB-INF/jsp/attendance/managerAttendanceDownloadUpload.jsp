@@ -233,7 +233,9 @@ function confirmApproval(param){
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
     <h2>Attendance</h2>
     <ul class="right_btns">
-      <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
+	   <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
+	      <li><p class="btn_blue"><a href="#" id="btnApproval">Approval</a></p></li>
+	   </c:if>
       <li><p class="btn_blue"><a href="#" onClick="searchAtdUploadList()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
       <li><p class="btn_blue"><a id="btnClear" href="#" onclick="javascript:$('#calSearchForm').clearForm();"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
     </ul>

@@ -16,6 +16,8 @@ public interface AttendanceMapper {
 
 	int updateBatchCalMst(Map<String, Object> params);
 
+	int disableBatchAtdRate(Map<String, Object> params);
+
 	int disableBatchCalDtl(Map<String, Object> params);
 
 	int deleteUploadBatch(Map<String, Object> params);
