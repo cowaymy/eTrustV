@@ -3962,7 +3962,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    if (!"".equals(CommonUtils.nvl(params.get("resultReportEmailNo")))) {
 	        emailNo.add(CommonUtils.nvl(params.get("resultReportEmailNo")));
 	    }
-	    emailNo.add("keyi.por@coway.com.my"); //for self test only
+	    //emailNo.add("keyi.por@coway.com.my"); //for self test only
 
 	    String content = "";
 	    content += "Dear Customer,\n\n";
