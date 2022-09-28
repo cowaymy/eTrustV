@@ -908,7 +908,7 @@
              , T.CRT_DT_DD
              , T.BATCH_MODE
              , T.CODE
-             , CASE WHEN t.ctrl_stus_id <> 4 THEN '-'
+             , CASE WHEN t.ctrl_stus_id <![CDATA[<>]]> 4 THEN '-'
                        ELSE T.CODE_NAME END AS is_approve_str
                        ,T.BANK_DTL_APPR_CODE
     FROM ( SELECT T1.BANK_DTL_ID
