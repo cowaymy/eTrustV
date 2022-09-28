@@ -803,4 +803,21 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
+
+  @Override
+  public ResponseEntity<InstallationResultDto> installationSendEmail(Map<String, Object> insApiresult)
+      throws Exception {
+	  Map<String, Object> params = insApiresult;
+	  EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
+      params.put("installEntryId", installResult.get("installEntryId"));
+      String transactionId = String.valueOf(params.get("transactionId"));
+
+      try{
+		  installationResultListService.installationSendEmail(params);
+	  }catch (Exception e){
+		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
+	  }
+
+      return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+  }
 }
