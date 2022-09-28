@@ -45,6 +45,7 @@ public class UserProfileApiDto {
         params.put("deptCode", vo.getDeptCode());
         params.put("bankName", vo.getBankName());
         params.put("bankAccNo", vo.getBankAccNo());
+        params.put("agExprDt", vo.getAgExprDt());
         return params;
     }
 
@@ -61,6 +62,7 @@ public class UserProfileApiDto {
 	private String deptCode;
 	private String bankName;
 	private String bankAccNo;
+	private String agExprDt;
 
 
 
@@ -151,4 +153,14 @@ public class UserProfileApiDto {
     public void setBankAccNo(String bankAccNo) {
         this.bankAccNo = bankAccNo;
     }
+
+	public String getAgExprDt() {
+		return agExprDt;
+	}
+
+	public void setAgExprDt(String agExprDt) {
+		this.agExprDt = agExprDt;
+	}
+
+
 }
