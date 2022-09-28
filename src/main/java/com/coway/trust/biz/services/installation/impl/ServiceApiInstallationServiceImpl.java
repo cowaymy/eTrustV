@@ -135,11 +135,6 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
         throw new ApplicationException(AppConstants.FAIL, "Fail");
       }
     }
-    try{
-        serviceApiInstallationDetailService.installationSendEmail(insApiresult);
-    }catch (Exception e){
-
-    }
 
     logger.debug(
         "==================================[MB]INSTALLATION RESULT REGISTRATION - END - ====================================");
