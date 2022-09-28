@@ -3943,6 +3943,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		return smsResultValue;
 	}
 
+  	@SuppressWarnings("unchecked")
 	@Override
 	public void installationSendEmail(Map<String, Object> params) {
 
