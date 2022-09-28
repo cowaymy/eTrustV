@@ -270,6 +270,8 @@ public class AttendanceController {
 
 			int disableDetailsResult = attendanceService.disableBatchCalDtl(params);
 
+			int disableBatchAtdRate = attendanceService.disableBatchAtdRate(params);
+
 			ReturnMessage message = new ReturnMessage();
 
 			if (disableMasterResult > 0 && disableDetailsResult >0) {
