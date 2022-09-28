@@ -406,11 +406,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     	  }
           // End of inserting charge out filters and spare parts at AS
 
-    	  try{
+    	 /* try{
     		  installationResultListService.installationSendEmail(params);
     	  }catch (Exception e){
     		logger.info("===Failed to send e-mail to" + params.get("custMobileNo").toString() + "===");
-    	  }
+    	  }*/
 
         } catch (Exception e) {
           String procTransactionId = transactionId;
