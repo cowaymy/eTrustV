@@ -1012,44 +1012,45 @@
     </select>
 
     <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
-        SELECT T.BANK_DTL_ID
-        , T.BANK_DTL_AMT
-        , T.CTRL_ID
-        , T.CRT_DT_MM
-        , T.CRT_DT_DD
-        , T.BATCH_MODE
-        , T.CODE
-        , CASE
-        WHEN t.ctrl_stus_id = 1 THEN '-'
-        WHEN t.BANK_DTL_APPR_CODE IS NULL OR t.BANK_DTL_APPR_CODE = 00 THEN
-        'Success'
-        WHEN t.BANK_DTL_APPR_CODE = 51 THEN 'Insufficient Fund'
-        ELSE 'Others'
-        END is_approve_str
-        FROM
-        ( SELECT T1.BANK_DTL_ID
-        , T1.BANK_DTL_AMT
-        , T2.CTRL_ID
-        , TO_CHAR(T2.CRT_DT, 'MM-YYYY') CRT_DT_MM
-        , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') CRT_DT_DD
-        , CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'CRC'
-        WHEN T2.CTRL_IS_CRC = 0 THEN 'DD'
-        ELSE 'FPX'
-        END BATCH_MODE
-        , DECODE(T3.BANK_ID, NULL, '', T3.CODE) CODE
-        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
-        , NVL(T1.BANK_APPV, 0) BANK_APPV
-        , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
-        FROM PAY0042D T1
-        JOIN PAY0041D T2
-        ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
-        AND 8 != T2.CTRL_STUS_ID
-        LEFT
-        JOIN SYS0004M T3
-        ON T3.BANK_ID = T2.CTRL_BANK_ID
-        WHERE T1.SALES_ORD_ID = #{salesOrderId}
-        ) T
-        ORDER BY T.BANK_DTL_ID DESC
+    SELECT T.BANK_DTL_ID
+             , T.BANK_DTL_AMT
+             , T.CTRL_ID
+             , T.CRT_DT_MM
+             , T.CRT_DT_DD
+             , T.BATCH_MODE
+             , T.CODE
+             , CASE WHEN t.ctrl_stus_id <> 4 THEN '-'
+                       ELSE T.CODE_NAME END AS is_approve_str
+                       ,T.BANK_DTL_APPR_CODE
+    FROM ( SELECT T1.BANK_DTL_ID
+                        , T1.BANK_DTL_AMT
+                        , T2.CTRL_ID
+                        , TO_CHAR(T2.CRT_DT, 'MM-YYYY') CRT_DT_MM
+                        , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') CRT_DT_DD
+                        , CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'CRC'
+                                  WHEN T2.CTRL_IS_CRC = 0 THEN 'DD'
+                                  ELSE 'FPX' END BATCH_MODE
+                        , DECODE(T3.BANK_ID, NULL, '', T3.CODE) CODE
+                        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
+                        , NVL(T1.BANK_APPV, 0) BANK_APPV
+                        , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
+                        , T2.CTRL_IS_CRC CTRL_IS_CRC
+                        , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
+                        WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
+                        WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+                        WHEN T4.IND = 'CHGCARD' THEN
+                                                    CASE WHEN T2.CTRL_IS_CRC = 1 THEN
+                                                        CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Change Card' END
+                                                    ELSE  'Change Account' END
+                        WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
+               FROM PAY0042D T1
+               JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
+                                        AND 8 != T2.CTRL_STUS_ID
+               LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+               LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+               WHERE T1.SALES_ORD_ID = #{salesOrderId}
+    ) T ORDER BY T.BANK_DTL_ID DESC
     </select>
 
     <select id="selectEcashList" parameterType="Map" resultType="egovMap">

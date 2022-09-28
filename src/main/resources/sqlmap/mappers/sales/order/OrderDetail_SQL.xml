@@ -901,14 +901,14 @@
   </select>
 
   <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
-SELECT T.BANK_DTL_ID
+    SELECT T.BANK_DTL_ID
              , T.BANK_DTL_AMT
              , T.CTRL_ID
              , T.CRT_DT_MM
              , T.CRT_DT_DD
              , T.BATCH_MODE
              , T.CODE
-             , CASE WHEN t.ctrl_stus_id = 1 THEN '-'
+             , CASE WHEN t.ctrl_stus_id <> 4 THEN '-'
                        ELSE T.CODE_NAME END AS is_approve_str
                        ,T.BANK_DTL_APPR_CODE
     FROM ( SELECT T1.BANK_DTL_ID
