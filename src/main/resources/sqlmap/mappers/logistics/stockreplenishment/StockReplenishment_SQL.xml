@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.stockReplenishment.impl.StockReplenishmentMapper">
+
+    <select id="selectWeekList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+              SELECT 'W' || LEVEL CODE_ID,  'W' || LEVEL CODE_NAME  FROM DUAL
+              CONNECT BY LEVEL <= 4
+      ]]>
+    </select>
+
+     <select id="selectSroForecastHistoryList" parameterType="Map" resultType="egovMap">
+            SELECT
+                  SRO_CRT_YYYY  FORE_YYYY
+                , SRO_CRT_MM    FORE_MM
+                , SRO_CRT_WW    FORE_WW
+                , C.WH_LOC_CODE RDC_CODE
+                , C.WH_LOC_DESC RDC_DESC
+                , C.WH_LOC_ID   RDC_LOC_ID
+                , D.WH_LOC_CODE CODY_CODE
+                , D.WH_LOC_DESC CODY_DESC
+                , D.WH_LOC_ID   CODY_LOC_ID
+                , E.STK_CODE
+                , E.STK_DESC
+                , B.SRO_FORE_QTY
+                , B.SRO_REQ_DEVLI_QTY
+                , B.SRO_CODY_AVA_QTY
+                , B.SRO_CDC_AVA_QTY
+                , A.SRO_REF_SMO_NO
+                , DECODE (A.SRO_STATUS_CD, 'A', 'Active','C', 'Completed') AS SRO_STATUS_CD
+            FROM LOG0117M A
+            JOIN LOG0118D B ON A.SRO_NO = B.SRO_NO
+            JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
+            JOIN SYS0028M D ON B.SRO_CODY_CODE = D.WH_LOC_CODE
+            JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
+            JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            WHERE 1=1
+            <if test="searchWeek != null and searchWeek != '' ">
+            AND  A.SRO_CRT_WW = #{searchWeek}
+            </if>
+            <if test="searchCDC != null and searchCDC != '' ">
+            AND  A.SRO_CDC_CODE = #{searchCDC}
+            </if>
+            <if test="searchBranch != null and searchBranch != '' ">
+            AND #{searchBranch} IN (D.WH_LOC_BRNCH_ID , D.WH_LOC_BRNCH_ID2 , D.WH_LOC_BRNCH_ID3, D.WH_LOC_BRNCH_ID4, D.WH_LOC_BRNCH_ID5)
+            </if>
+            <if test="searchMatCode != null and searchMatCode !=''">
+            AND (E.STK_CODE = #{searchMatCode} OR E.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+            </if>
+            <if test="searchLoc != null and searchLoc !=''">
+            AND D.WH_LOC_CODE IN
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+            <if test="searchStatus != null and searchStatus !=''">
+            AND A.SRO_STATUS_CD IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+           <if test="searchType != null and searchType !=''">
+            AND E.STK_TYPE_ID IN
+            <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            </if>
+            <if test="searchCtgry != null and searchCtgry !=''">
+            AND E.STK_CTGRY_ID IN
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="searchlocgb != null and searchlocgb !=''">
+            AND D.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="sstocknm != null and sstocknm !=''">
+            AND (UPPER(E.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(E.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+            </if>
+
+    </select>
+
+
+    <select id="selectSroSafetyLvlList" parameterType="Map" resultType="egovMap">
+		SELECT
+			      B.WH_LOC_CODE BRANCH_CODE
+			    , B.WH_LOC_DESC BRANCH_NAME
+			    , A.SAFETY_QTY
+			    , C.STK_CODE
+			    , C.STK_DESC
+			    , C.STK_CTGRY_ID
+			    , C.STK_TYPE_ID
+			    , D.CODE_NAME CATEGORY
+			    , E.CODE_NAME TYPE
+			    , A.UPD_DT
+		FROM LOG0119M A
+		LEFT JOIN SYS0028M B ON A.WH_LOC_CODE = B.WH_LOC_CODE
+		LEFT JOIN SYS0026M C ON A.STK_CODE = C.STK_CODE
+		LEFT JOIN SYS0013M D ON C.STK_CTGRY_ID = D.CODE_ID
+		LEFT JOIN SYS0013M E ON C.STK_TYPE_ID = E.CODE_ID
+		WHERE NVL(A.DISAB,0) = 0
+		<if test="searchCDC != null and searchCDC != '' ">
+        AND  B.CDC_CODE = #{searchCDC}
+        </if>
+
+        <if test="searchBranch != null and searchBranch != '' ">
+         AND  #{searchBranch} IN (B.WH_LOC_BRNCH_ID , B.WH_LOC_BRNCH_ID2 , B.WH_LOC_BRNCH_ID3, B.WH_LOC_BRNCH_ID4, B.WH_LOC_BRNCH_ID5)
+         </if>
+
+    </select>
+
+
+    <update id="updateMergeLOG0119M" parameterType="Map">
+        MERGE INTO LOG0119M A
+        USING
+        (
+                  SELECT
+                          #{branchCode} as WH_LOC_CODE
+                        , #{stkCode}  as STK_CODE
+                        , #{safetyQty} as SAFETY_QTY
+                        , #{userId} as  USER_ID
+                   FROM DUAL
+            ) SRC ON (  A.WH_LOC_CODE = SRC.WH_LOC_CODE AND A.STK_CODE = SRC.STK_CODE)
+            WHEN MATCHED THEN
+            UPDATE
+            SET   A.SAFETY_QTY  = SRC.SAFETY_QTY
+                  , A.UPD_USER_ID = SRC.USER_ID
+                  , A.UPD_DT      = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT (
+                          WH_LOC_CODE
+                        , STK_CODE
+                        , SAFETY_QTY
+                        , DISAB
+                        , CRT_USER_ID
+                        , CRT_DT
+                   )
+             VALUES (
+                          SRC.WH_LOC_CODE
+                        , SRC.STK_CODE
+                        , SRC.SAFETY_QTY
+                        , 0
+                        , SRC.USER_ID
+                        , SYSDATE
+           )
+    </update>
+
+
+    <select id="selectSroLocationType"  parameterType="Map" resultType="egovMap">
+        SELECT CODE,
+               CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'SRO_LOCGB'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+    </select>
+
+
+    <select id="selectSroStatus"  parameterType="Map" resultType="egovMap">
+        SELECT CODE,
+               CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'SRO_STUS'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+    </select>
+
+
+
+</mapper>
