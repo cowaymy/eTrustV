@@ -2008,7 +2008,7 @@
         , #{bsResultFilterClm}
         , nvl(#{serialNo}, '')
         ,nvl(#{serialNo}, '')
-        ,nvl(#{filterSerialUnmatchReason}, '')
+        ,nvl(#{filterSerialUnmatchReason}, 0)
         ,nvl(#{oldSerialNo}, '')
         )
     </insert>
