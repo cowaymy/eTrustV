@@ -53,7 +53,7 @@ FROM   (
                LEFT JOIN ORG0001D T8 ON T8.MEM_CODE = T7.APPV_LINE_USER_ID
                WHERE 1=1
                AND T6.STUS_ID = 1
-          <if test="loginUserId != null and loginUserId != ''">
+          <if test="loginUserId != null ">
             AND T1.CRT_USER_ID = #{loginUserId}
           </if>
           <if test="apprvUserId != null and apprvUserId != ''">
@@ -946,7 +946,7 @@ WHERE  T1.CLM_NO = #{clmNo}
         WHERE A1.APPV_PRCSS_NO = #{appvPrcssNo}
         GROUP BY A1.APPV_PRCSS_NO
     ) T9 ON T1.APPV_PRCSS_NO = T9.APPV_PRCSS_NO
-    LEFT JOIN SYS0005M T10 ON T10.CODE = T2.DSC_CODE AND T10.STUS_ID = 1
+    LEFT JOIN SYS0005M T10 ON T10.CODE = T2.DSC_CODE
     WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
     ORDER BY APPV_ITM_SEQ
     </select>
