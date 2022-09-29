@@ -298,10 +298,10 @@ function fn_approvalSubmit() {
         date = "0" + date;
     }
     console.log("what day? " + date);
-    /* if(date > 15){
+    if(date > 15){
     	Common.alert('Before 15th of the month just able to APPROVE Claims.');
         return;
-    } */
+    }
 
 	var checkedItems = AUIGrid.getItemsByValue(ctDutyClaimGridID, "isActive", "Active");
 	if(checkedItems.length <= 0) {
@@ -434,6 +434,9 @@ function fn_appvRejctSubmit(type, rejctResn) {
 </c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <input type="hidden" id="apprvUserId" name="apprvUserId" value='${SESSION_INFO.memId}'>
+</c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine5  != 'Y'}"> <!-- 'N' see own claim only,'Y' can see all ppl claim -->
+    <input type="hidden" id="loginUserId" name="loginUserId" value='${SESSION_INFO.userId}'>
 </c:if>
 </tbody>
 </table><!-- table end -->

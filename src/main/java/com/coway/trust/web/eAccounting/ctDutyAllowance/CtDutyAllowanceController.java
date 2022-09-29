@@ -78,9 +78,9 @@ public class CtDutyAllowanceController {
 			params.put("loginUserId", sessionVO.getUserId());
 		}*/
 
-		if(sessionVO.getRoleId() == 127){
+		/*if(sessionVO.getRoleId() == 127){
 			params.put("loginUserId", sessionVO.getUserId());
-		}
+		}*/
 		LOGGER.debug("params =====================================>>  " + params);
 
 		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
