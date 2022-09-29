@@ -432,9 +432,11 @@
 					<a href="#" id="search"><span class="search"></span>
 					<spring:message code="sal.btn.search" /></a>
 				</p></li>
+			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 			<li><p class="btn_blue hidefunction">
 					<a href="#" id="requestROT">Request</a>
 				</p></li>
+			</c:if>
 			<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 				<li><p class="btn_blue hidefunction">
 						<a href="#" id="updateROT">Update</a>
@@ -543,38 +545,46 @@
 	</section>
 	<!-- search_table end -->
 
-	<!-- Link Wrap Start -->
-	<article class="link_btns_wrap hidefunction" >
-		<p class="show_btn">
-			<a href="#"><img
-				src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
-				alt="link show" /></a>
-		</p>
-		<dl class="link_list">
-			<dt>
-				<spring:message code="sal.title.text.link" />
-			</dt>
-			<dd>
-				<ul class="btns">
-					<li><p class="link_btn">
-							<a href="#" id="newAS">New AS</a>
-						</p></li>
-				    <li><p class="link_btn">
-                            <a href="#" id="rootRawData">ROOT Raw Data</a>
-                        </p></li>
-                    <li><p class="link_btn">
-                            <a href="#" id="rootPerformanceData">Performance</a>
-                        </p></li>
-				</ul>
-				<p class="hide_btn">
-					<a href="#"><img
-						src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
-						alt="hide" /></a>
-				</p>
-			</dd>
-		</dl>
-	</article>
-	<!-- Link Wrap End -->
+	<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+		<!-- Link Wrap Start -->
+		<article class="link_btns_wrap hidefunction" >
+			<p class="show_btn">
+				<a href="#"><img
+					src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
+					alt="link show" /></a>
+			</p>
+			<dl class="link_list">
+				<dt>
+					<spring:message code="sal.title.text.link" />
+				</dt>
+				<dd>
+					<ul class="btns">
+						<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+						<li><p class="link_btn">
+								<a href="#" id="newAS">New AS</a>
+							</p></li>
+						</c:if>
+						<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+					    <li><p class="link_btn">
+	                            <a href="#" id="rootRawData">ROOT Raw Data</a>
+	                        </p></li>
+						</c:if>
+						<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+	                    <li><p class="link_btn">
+	                            <a href="#" id="rootPerformanceData">Performance</a>
+	                        </p></li>
+						</c:if>
+					</ul>
+					<p class="hide_btn">
+						<a href="#"><img
+							src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+							alt="hide" /></a>
+					</p>
+				</dd>
+			</dl>
+		</article>
+		<!-- Link Wrap End -->
+	</c:if>
 
 	<!-- search_result start -->
 	<section class="search_result">
