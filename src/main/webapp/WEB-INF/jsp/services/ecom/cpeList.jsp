@@ -399,25 +399,21 @@
    <!-- table end -->
   </form>
 
-  <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-	  <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	   <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-	   <dl class="link_list">
-	    <dt>Link</dt>
-	    <dd>
-	     <ul class="btns">
-	     	<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
-	       		<li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li>
-  			</c:if>
-  			<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
-		       <li><p class="link_btn"> <a href="javascript:fn_generateCpeEnquiryRaw()" id="genCpeEnqRaw">Enquiry Raw Data</a> </p></li>
-		    </c:if>
-	     </ul>
-	     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	    </dd>
-	   </dl>
-	  </aside><!-- link_btns_wrap end -->
-  </c:if>
+  <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+   <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+   <dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+     <ul class="btns">
+      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+       <li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li>
+       <li><p class="link_btn"> <a href="javascript:fn_generateCpeEnquiryRaw()" id="genCpeEnqRaw">Enquiry Raw Data</a> </p></li>
+      </c:if>
+     </ul>
+     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+   </dl>
+  </aside><!-- link_btns_wrap end -->
 
  </section>
  <!-- search_table end -->
