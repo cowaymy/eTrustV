@@ -137,6 +137,7 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 				m.put("ERR_MSG", exception.toString());
 				m.put("TRNSC_ID", transactionId);
 
+				logger.error("### HS PARAM FILTER : " + paramsDetailList.toString());
 				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
 				MSvcLogApiService.insert_SVC0066T(m);
 
