@@ -2007,9 +2007,9 @@
         #{bsResultCrtUserId}
         , #{bsResultFilterClm}
         , nvl(#{serialNo}, '')
-        ,#{serialNo}
-        ,#{filterSerialUnmatchReason}
-        ,#{oldSerialNo}
+        ,nvl(#{serialNo}, '')
+        ,nvl(trim(#{filterSerialUnmatchReason}), 0)
+        ,nvl(#{oldSerialNo}, '')
         )
     </insert>
 
