@@ -975,6 +975,35 @@ $(function() {
 
     });
 
+    $('#paExpiry').click(function() {
+    	 var date = new Date();
+    	 var whereSeq = "";
+         var month = date.getMonth() + 1;
+         var day = date.getDate();
+
+         if (date.getDate() < 10) {
+           day = "0" + date.getDate();
+         }
+
+    	 if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
+    	        whereSeq += $("#grpCode").val() ;
+    	   }
+
+    	 console.log(whereSeq);
+
+
+    	 $("#PAExpiryReport #V_WHERESQL").val(whereSeq);
+    	 $("#PAExpiryReport #reportFileName").val('/organization/PAExpiry.rpt');
+         $("#PAExpiryReport #viewType").val("EXCEL");
+         $("#PAExpiryReport #reportDownFileName").val("PAExpiry_" + day + month + date.getFullYear());
+
+         var option = {
+        	        isProcedure : true,
+        	      };
+
+         Common.report("PAExpiryReport", option);
+    });
+
     function btnGeneratePDF_Click(username){
         console.log("report2: " + username);
             var memType = "";
@@ -1126,6 +1155,14 @@ function fn_socialMediaInfo(){
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
     <input type="hidden" id="username" name="username" value="" />
+
+</form>
+<form id="PAExpiryReport" name="PAExpiryReport">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
 
 </form>
 
@@ -1302,7 +1339,9 @@ function fn_socialMediaInfo(){
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine14 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="cdPwReset">CD Password Reset</a></li>
+                 <li><p class="link_btn"><a href="#" id="paExpiry">PA Expiry Date</a></li>
             </c:if>
+
             <c:if test="${PAGE_AUTH.funcUserDefine15 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="htPwReset">HT Password Reset</a></li>
                 <li><p class="link_btn"><a href="#" id="htContactList">HT Contact List</a></li>
