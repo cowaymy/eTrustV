@@ -1640,7 +1640,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         String oldMemCode = params.get("memberCode").toString();
         String formattedDate = "";
 
-        if("2".equals(params.get("traineeType"))) {
+        if("2".equals(params.get("traineeType")) || "7".equals(params.get("traineeType"))) {
             try{
                 String joinDate = "";
                 String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
