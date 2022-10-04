@@ -686,7 +686,7 @@
                  WHEN (VENDOR_GRP = 'VM03') THEN '0022200100'
                  WHEN (VENDOR_GRP = 'VM11') THEN '0022200400'
                  ELSE ''
-        END AKONT
+        END AKONT,
         '' SPERR
         FROM FCM0029D
         WHERE APPV_PRCSS_NO = #{appvPrcssNo}
