@@ -11,7 +11,7 @@
                     , Extent10.AS_ID
                     , Extent1.REMARK
                     , Extent1.APPV_REMARK
-                    , Extent4.NAME
+                    , Extent4.NAME CUST_NAME
                     , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
                     , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
                     , Extent21.STK_CODE || ' - ' || Extent21.STK_DESC AS PRODUCT
