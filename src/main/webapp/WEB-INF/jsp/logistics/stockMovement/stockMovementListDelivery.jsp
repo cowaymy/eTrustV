@@ -313,6 +313,14 @@
         height : 30,
         visible:true
       }
+	  ,
+	     {
+	        dataField : "fromSerialRequireChkYn",
+	        headerText : "From Serial Required Check Y/N",
+	        width : 200,
+	        height : 30,
+	        visible:false
+	      }
       ];
   var reqcolumnLayout;
 
@@ -1000,7 +1008,11 @@
 
           // KR-OHK Serial Require Check
           if (rowItem.item.serialRequireChkYn == 'Y') {
-        	serialRequireChkYn = true;
+        	    //temporary checking 202210 - checking for from location also need check then just need scan serial
+        	    var fromSerialRequireChkYn = rowItem.item.fromSerialRequireChkYn;
+        	    if(fromSerialRequireChkYn == 'Y')
+        	    	serialRequireChkYn = true;
+
           }
 
           // Added by Hui Ding to block SMO per DVR > 5

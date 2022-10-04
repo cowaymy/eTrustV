@@ -58,6 +58,7 @@
                       FROM SYS0013M
                      WHERE CODE_ID = s26.STK_CTGRY_ID)
                       stk_ctgry_name
+              , NVL(s28c.SERIAL_REQUIRE_CHK_YN, 'N') AS FROM_SERIAL_REQUIRE_CHK_YN
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran
@@ -428,6 +429,7 @@
              , CASE WHEN (SELECT MEM_TYPE FROM ORG0001D OK WHERE s28q.wh_loc_code = OK.MEM_CODE) = '4' THEN 'Y'
               WHEN (SELECT MEM_TYPE FROM ORG0001D OK WHERE s28q.wh_loc_code = OK.MEM_CODE) IS NULL THEN 'G'
               ELSE 'N' END AS ADMINCHECK
+              , NVL(s28c.SERIAL_REQUIRE_CHK_YN, 'N') AS FROM_SERIAL_REQUIRE_CHK_YN
           from log0047m l47
              , log0048d l48
              , log0054m l54

@@ -101,6 +101,7 @@ var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.h
                      {dataField: "grcmplt",headerText :"GR Complt."                   ,width:120    ,height:30 , visible:true},
                      {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>" ,width:130, height:30 , visible:true},
                      {dataField: "rcvSerialRequireChkYn", headerText :"Serial Required Check Y/N", width:90, height:30, visible:true}
+                     ,{dataField: "serialReqYn", headerText :"To Serial Required Check Y/N", width:90, height:30, visible:false}
                      // Added for avoiding double process (duplicate GI/GR) issue. By Hui Ding, 2020-07-17
                      //{dataField: "rcdTms", headerText:"Record Timestamp", width:150, visible:true}
                      ];
@@ -404,8 +405,16 @@ $(function(){
         $("#zReqloc").val(checkedItems[0].item.reqloc);
         $("#zRcvloc").val(checkedItems[0].item.rcvloc);
 
+        var serialchk = checkedItems[0].item.rcvSerialRequireChkYn;
+        var toSerialRequireChkYn = checkedItems[0].item.serialReqYn;
+        if(toSerialRequireChkYn == "Y" && serialchk == "Y"){
+            serialchk = 'Y';
+        }else{
+            serialchk = 'N';
+        }
+
         // No Serial Logic ( Old version )
-        if(checkedItems[0].item.rcvSerialRequireChkYn == "N"){
+        if(serialchk == "N"){
         	$("#gissue").click();
         }else{
         	// Serial Logic ( New version )

@@ -80,6 +80,7 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "reqstno",headerText :"SMO No."        ,width:120    ,height:30},
                      {dataField: "serialRequireChkYn", headerText : "Serial Required Check Y/N", width : 200, height : 30},
                      {dataField: "delvryNoItm",headerText :"delvryNoItm" ,width:20    ,height:30, visible:false}
+                     ,{dataField: "fromSerialRequireChkYn", headerText : "From Serial Required Check Y/N", width : 200, height : 30, visible:false}
                      ];
 
 
@@ -402,7 +403,10 @@ $(function(){
 
         		// KR-OHK Serial Require Check
                 if (checkedItems[i].serialRequireChkYn == 'Y') {
-                  serialRequireChkYn = true;
+                	//temporary checking 202210 - checking for from location also need check then just need scan serial
+                    var fromSerialRequireChkYn = checkedItems[i].fromSerialRequireChkYn;
+                    if(fromSerialRequireChkYn == 'Y')
+                        serialRequireChkYn = true;
                 }
         	}
         	if(serialRequireChkYn) { // KR-OHK Serial Require Check

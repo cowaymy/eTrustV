@@ -84,6 +84,7 @@
         {dataField: "serialchk",          headerText:"serialchk",                                                                        width:0},
         {dataField: "delvryNoItm",          headerText:"delvry_no_itm",                                                                        width:0,visible:false},
         {dataField: "whLocBrnchId",          headerText:"whLocBrnchId",                                                                        width:0,visible:false}
+        ,{dataField: "rcvSerialRequireChkYn",      headerText :"From Serial Chk",                                                                     width:100, visible:false},
     ];
 
     var resop = {
@@ -224,6 +225,12 @@
 
             if(checkedItems.length > 0) {
             var serialchk = checkedItems[0].serialReqYn
+	            var fromSerialRequireChkYn = checkedItems[0].rcvSerialRequireChkYn;
+	            if(fromSerialRequireChkYn == "Y" && serialchk == "Y"){
+	                serialchk = 'Y';
+	            }else{
+	                serialchk = 'N';
+	            }
             }
 
            //console.log("userroleId : " + "${SESSION_INFO.roleId}");
