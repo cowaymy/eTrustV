@@ -353,7 +353,7 @@
             if(file == null) {
                 remove.push(otherFileId2);
             } else if(file.name != otherFileName2) {
-                 myFileCaches[8] = {file:file};
+                 myFileCaches[9] = {file:file};
                  if(otherFileName2 != "") {
                      update.push(otherFileId2);
                  }
@@ -365,7 +365,7 @@
             if(file == null) {
                 remove.push(otherFileId3);
             } else if(file.name != otherFileName3) {
-                 myFileCaches[8] = {file:file};
+                 myFileCaches[10] = {file:file};
                  if(otherFileName3 != "") {
                      update.push(otherFileId3);
                  }
