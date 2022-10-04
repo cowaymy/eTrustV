@@ -1026,7 +1026,6 @@
                    , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS water_Src_Temp
                    , TO_CHAR (SAL0047D.ADPT_USED) AS adpt_Used
                    , TO_CHAR (SAL0047D.INST_CHKLST) AS inst_Chk_Lst
-                   , TO_CHAR (SAL0047D.INST_NOTECHK) AS inst_Note_Chk
                    , TO_CHAR (SAL0047D.BOOSTER_PUMP) AS booster_Pump
                    , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
                    , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
@@ -1198,7 +1197,6 @@
          , TO_CHAR(WATER_SRC_TEMP) AS water_Src_Temp
          , TO_CHAR(ADPT_USED) AS adpt_Used
          , TO_CHAR(INST_CHKLST) AS inst_Chk_Lst
-         , TO_CHAR(INST_NOTECHK) AS inst_Note_Chk
          , TO_CHAR(BOOSTER_PUMP) AS booster_Pump
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
@@ -1773,7 +1771,8 @@ SELECT MST.*
                 LEFT OUTER JOIN ( SELECT S26.STK_CODE,
                                                      S26.IS_SMO,
                                                      S26.IS_SERIAL_REPLC,
-                                               NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+                                               <!-- NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK -->
+                                               CASE WHEN STK_TYPE_ID = '62' THEN 'N' ELSE NVL(S26.SERIAL_CHK , 'N') END AS SERIALCHK
                                         FROM SYS0026M S26
                                         WHERE 1 = 1
                                           AND S26.STUS_CODE_ID = 1

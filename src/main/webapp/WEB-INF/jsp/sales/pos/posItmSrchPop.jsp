@@ -312,10 +312,11 @@ $(document).ready(function() {
 		var filterChkFlag = false;
 
 		$(typeArr).each(function(idx, el) {
-			if(typeArr[idx] == 62){ //filter
+			/* 20221003 - hltang - close for serial scan filter checking*/
+			/* if(typeArr[idx] == 62){ //filter
 				filterChkFlag = true;
 		        return false;
-	        }
+	        } */
 		});
 		if(filterChkFlag ==true){ //필터가 있을 때
 			//6 - 1. 필터인데 reason 선택했는지 체크
