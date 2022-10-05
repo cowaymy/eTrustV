@@ -821,6 +821,13 @@ console.log("searchColorGrid");
         <option value="0">Choose One</option>
         <option value="1">Yes</option>
         <option value="2">No</option>
+    </td><!-- Added by Gaspar -->
+      <th scope="row">Mattress Package</th>
+    <td>
+    <select class="w100p" id="matPack" name="matPack">
+        <option >Choose One</option>
+        <option value="set">Mattress set</option>
+        <option value="mat">Mattress only</option>
     </td>
 </tr>
 <tr>
