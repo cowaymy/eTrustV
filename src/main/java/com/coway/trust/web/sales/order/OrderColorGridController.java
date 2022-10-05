@@ -116,6 +116,7 @@ public class OrderColorGridController {
 			params.put("neoProStus", "");
 		}
 
+
 		params.put("cmbAppTypeList", cmbAppTypeList);
 		params.put("cmbCorpTypeId", cmbCorpTypeId);
 		params.put("cmbSalesType", cmbSalesType);
