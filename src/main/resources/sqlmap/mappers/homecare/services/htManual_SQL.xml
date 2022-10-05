@@ -547,6 +547,8 @@ FROM
                         , Project2.Name Name
                         , Project2.cust_id
                         , Project2.HT_STATUS
+                        , Project2.SETL_DT
+                        , Project2.REMARKS
                         , Project2.BRNCH_ID as BRNCH_ID
                         , Project2.SCHDUL_ID SCHDUL_ID
                         , Project2.SALES_ORD_ID
@@ -581,6 +583,8 @@ FROM
                               , MG.AREA
                               , CU.CUST_ID AS CUST_ID
                               , STUS.CODE AS HT_STATUS
+                              , HR.SETL_DT
+                              , REM.CODE_NAME AS REMARKS
                               , BR.BRNCH_ID AS BRNCH_ID
                               , HS.SCHDUL_ID SCHDUL_ID
                               , SO.SRV_ORD_ID AS SALES_ORD_ID
@@ -614,6 +618,12 @@ FROM
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG1001V T6 ON T6.MEM_ID = OG.MEM_ID
+                LEFT JOIN (
+                SELECT FR.RESN_ID AS CODE_ID,
+                FR.CODE  || '-' || FR.RESN_DESC AS CODE_NAME
+                FROM SYS0032M FR
+                WHERE  ( 167 = FR.RESN_TYPE_ID )
+                AND ( 1 = FR.STUS_CODE_ID )) REM ON REM.CODE_ID = HR.FAIL_RESN_ID
                 LEFT JOIN SYS0013M SRT ON SO.SRV_TYPE = SRT.CODE_ID
                 WHERE
                 CD.MEM_ID IS NOT NULL
@@ -657,6 +667,8 @@ FROM
                               , MG.AREA
                               , CU.CUST_ID AS CUST_ID
                               , STUS.CODE AS HT_STATUS
+                              , HR.SETL_DT
+                              , REM.CODE_NAME AS REMARKS
                               , BR.BRNCH_ID AS BRNCH_ID
                               , HS.SCHDUL_ID SCHDUL_ID
                               , SO.SRV_ORD_ID AS SALES_ORD_ID
@@ -690,6 +702,12 @@ FROM
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN ORG1001V T6 ON T6.MEM_ID = OG.MEM_ID
+                LEFT JOIN (
+                SELECT FR.RESN_ID AS CODE_ID,
+                FR.CODE  || '-' || FR.RESN_DESC AS CODE_NAME
+                FROM SYS0032M FR
+                WHERE  ( 167 = FR.RESN_TYPE_ID )
+                AND ( 1 = FR.STUS_CODE_ID )) REM ON REM.CODE_ID = HR.FAIL_RESN_ID
                 LEFT JOIN SYS0013M SRT ON SO.SRV_TYPE = SRT.CODE_ID
                 WHERE
                   CD.MEM_ID IS NULL
