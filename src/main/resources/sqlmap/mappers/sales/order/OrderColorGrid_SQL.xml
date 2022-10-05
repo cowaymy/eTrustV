@@ -44,7 +44,8 @@
            D1.C9,
            D1.STATE,
            D1.CHS_STUS,
-           D1.NEO_PRO_STATUS
+           D1.NEO_PRO_STATUS,
+           D1.BNDL_ID
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
                            F1.ORD_NO ,
                            F1.APP_TYPE_CODE ,
@@ -96,7 +97,8 @@
                            F1.TOT_OTSTND C9,
                            F1.STATE,
                            F1.CHS_STUS,
-                           F1.NEO_PRO_STATUS
+                           F1.NEO_PRO_STATUS,
+                           F1.BNDL_ID
            FROM ( SELECT E1.ORD_ID OrderID1 ,
                          E1.ORD_NO  ,
                          E1.ORD_DT  ,
@@ -129,7 +131,8 @@
                          1,
                          E1.STATE,
                          E1.CHS_STUS,
-                         E1.NEO_PRO_STATUS
+                         E1.NEO_PRO_STATUS,
+                         E1.BNDL_ID
                     <!-- E2.MAIL_CNT_TEL_M  ,
                          E2.MAIL_CNT_TEL_O  ,
                          E2.MAIL_CNT_TEL_R  ,
@@ -203,7 +206,8 @@
                           stk.STK_CTGRY_ID
                             ,adr.NAME STATE
                             , NVL(CHS.CHS_STUS,'-') CHS_STUS,
-                             CASE WHEN ORG11.HP_CODE IS NOT NULL THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS
+                             CASE WHEN ORG11.HP_CODE IS NOT NULL THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS,
+                             som.BNDL_ID
                          FROM SAL0001D som
                               JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                               JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
@@ -373,12 +377,22 @@
                             </foreach>
                           </if>
                          ) E
+                           WHERE 1=1
                          <if test="cmbSalesType != null and cmbSalesType != ''">
-                          WHERE E.SALES_TYPE IN
+                          AND E.SALES_TYPE IN
                             <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
                               #{item}
                             </foreach>
                         </if>
+                          <if test="matPack != null and matPack != ''">
+                                AND
+                                <if test="matPack == 'set' ">
+                                E.BNDL_ID  is not null
+                                </if>
+                                <if test="matPack == 'mat' ">
+                                E.BNDL_ID  is null
+                                </if>
+                          </if>
 
                          <!-- SELECT vC.ORD_ID ,
                                        vC.ORD_NO ,
