@@ -198,7 +198,15 @@ var TODAY_DD      = "${toDay}";
         dataField : "code",
         headerText : "CS Status",
         width : 120
-      },
+      },{
+          dataField : "setl_dt",
+          headerText : "Settle Date",
+          width : 120
+        }, {
+          dataField : "remarks",
+          headerText : "Remarks",
+          width : 120
+        },
       {
         dataField : "htBrnchCode",
         headerText : "Branch CD",
@@ -268,10 +276,10 @@ var TODAY_DD      = "${toDay}";
               return false;
             }
 
-            if(item.hsDate != todayMM + "/" + todayYYYY) {
+/*             if(item.hsDate != todayMM + "/" + todayYYYY) {
             	Common.alert("Not able to EDIT previous month CS Order.");
             	return false;
-            }
+            } */
 
             $("#_schdulId").val(item.schdulId);
             $("#_salesOrdId").val(item.salesOrdId);
