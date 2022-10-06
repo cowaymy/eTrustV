@@ -365,7 +365,7 @@
             if(file == null) {
                 remove.push(otherFileId3);
             } else if(file.name != otherFileName3) {
-                 myFileCaches[10] = {file:file};
+                 myFileCaches[10]  = {file:file};
                  if(otherFileName3 != "") {
                      update.push(otherFileId3);
                  }
