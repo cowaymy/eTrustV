@@ -459,7 +459,7 @@ public class CcpRentalAgreementServiceImpl extends EgovAbstractServiceImpl imple
 
 		//Params Set ( 1. Message Log // 2. Agreement)
 		if(params.get("govAgTypeId") == null || "".equals(params.get("govAgTypeId"))){
-			params.put("govAgTypeId", "949");
+			params.put("govAgTypeId", "");
 		}
 		params.put("govAgrPreUpdator", "0"); // PreUpdator
 		params.put("govAgrPrgId", resultPrg); // Agreement Progress Id
