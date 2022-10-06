@@ -699,7 +699,7 @@
     	$("#_isThirdReview").val('${infoMap.isGovAgThirdRev}');
     	$("#_thirdReview").val('${infoMap.govAgThirdRevDt}');
     	$("#_isFirstFeedback").val('${infoMap.isGovAgFirstFeed}');
-    	$("#_firstFeedback").val('${infoMap.govAgFirstFeedDtDt}');
+    	$("#_firstFeedback").val('${infoMap.govAgFirstFeedDt}');
     	$("#_isSecFeedback").val('${infoMap.isGovAgSecFeed}');
     	$("#_secFeedback").val('${infoMap.govAgSecFeedDt}');
     	$("#_isLatestFwd").val('${infoMap.isGovAgOthDept}');
