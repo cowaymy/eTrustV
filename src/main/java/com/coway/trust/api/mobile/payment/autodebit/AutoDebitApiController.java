@@ -81,14 +81,18 @@ public class AutoDebitApiController {
 
 	@ApiOperation(value = "orderNumberCheckActiveExist", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/orderNumberCheckActiveExist", method = RequestMethod.GET)
-	public ResponseEntity<Boolean> orderNumberCheckActiveExist(@ModelAttribute AutoDebitApiForm autoDebitApiForm) throws Exception {
+	public ResponseEntity<AutoDebitApiDto> orderNumberCheckActiveExist(@ModelAttribute AutoDebitApiForm autoDebitApiForm) throws Exception {
        Map<String, Object> params = autoDebitApiForm.createMap(autoDebitApiForm);
        int orderCount = 0;
        orderCount = autoDebitService.orderNumberSearchMobileCheckActiveCount(params);
+       AutoDebitApiDto result = null;
        if(orderCount > 0){
-           return ResponseEntity.ok(true);
+    	   result.setResponseCode(1);
        }
-       return ResponseEntity.ok(false);
+       else{
+    	   result.setResponseCode(0);
+       }
+       return ResponseEntity.ok(result);
 	}
 
 	@ApiOperation(value = "autoDebitHistoryList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
