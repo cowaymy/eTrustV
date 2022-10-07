@@ -376,6 +376,22 @@
                               #{item}
                             </foreach>
                           </if>
+                          <if test="matPack != null and matPack != ''">
+                                AND EXISTS   (
+                                    SELECT 1 FROM HMC0011D WHERE ORD_SEQ_NO = SOM.BNDL_ID
+                                <if test="matPack == 'set' ">
+
+                                    AND FRA_ORD_NO IS NOT NULL
+
+                                </if>
+                                <if test="matPack == 'mat' ">
+
+                                    AND FRA_ORD_NO IS NULL
+
+                                </if>
+                                )
+                          </if>
+
                          ) E
                            WHERE 1=1
                          <if test="cmbSalesType != null and cmbSalesType != ''">
@@ -384,15 +400,6 @@
                               #{item}
                             </foreach>
                         </if>
-                          <if test="matPack != null and matPack != ''">
-                                AND
-                                <if test="matPack == 'set' ">
-                                E.BNDL_ID  is not null
-                                </if>
-                                <if test="matPack == 'mat' ">
-                                E.BNDL_ID  is null
-                                </if>
-                          </if>
 
                          <!-- SELECT vC.ORD_ID ,
                                        vC.ORD_NO ,
