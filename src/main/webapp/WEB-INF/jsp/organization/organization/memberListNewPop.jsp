@@ -22,12 +22,14 @@ var atchFileGrpId = '';
 var atchFileId = '';
 var issuedBankTxt;
 var checkFileValid = true;
+var isRejoinMem =  $("#isRejoinMem").val();
 
 var myGridID_Doc;
+
 function fn_memberSave(){
 
 
-	 if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") { //if cody trainee only need attachment
+	 if($("#memberType").val() == "5" && $("#traineeType1").val() == "2" || isRejoinMem == true) { //if cody trainee only need attachment
 			   var formData = new FormData();
 			    $.each(myFileCaches, function(n, v) {
 			        console.log("n : " + n + " v.file : " + v.file);
@@ -209,27 +211,43 @@ function fn_close(){
     $("#popup_wrap").remove();
 }
 function fn_saveConfirm(){
+    if(isRejoinMem == true){
+   	   if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+	   		 if(fn_validFile()) {
+   			     if(fn_saveValidation()){
+                        Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+                }
+	        }
+   	   }else{
+	   		 if(fn_validTerminateFile()) {
+	             if(fn_saveValidation()){
+	                    Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+	            }
+	        }
+   	   }
+     } else {
 
-	if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
-	    if(fn_validFile()) {
-			 	      if(fn_saveValidation()){
-				             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
-				     }
-	    }
-	}else{
+    	    if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+    	        if(fn_validFile()) {
+                      if(fn_saveValidation()){
+                             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+                     }
+    	        }
+    	    }else{
 
-			     if(fn_saveValidation()){
-			         if($("#memberType").val() == 2803){
-			             Common.confirm($("#memberNm").val() + "</br>" +
-			                                    $("#nric").val() + "</br>" +
-			                                    issuedBankTxt + "</br>" +
-			                                    "A/C : " + $("#bankAccNo").val() + "</br></br>" +
-			                                    "Do you want to save with above information (for commission purpose)?", fn_memberSave);
-			         } else {
-			             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
-			         }
-			     }
-	}
+                 if(fn_saveValidation()){
+                     if($("#memberType").val() == 2803){
+                         Common.confirm($("#memberNm").val() + "</br>" +
+                                                $("#nric").val() + "</br>" +
+                                                issuedBankTxt + "</br>" +
+                                                "A/C : " + $("#bankAccNo").val() + "</br></br>" +
+                                                "Do you want to save with above information (for commission purpose)?", fn_memberSave);
+                     } else {
+                         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+                     }
+                 }
+    	    }
+     }
 }
 function fn_docSubmission(){
         Common.ajax("GET", "/organization/selectHpDocSubmission", { memType : $("#memberType").serialize() , trainType : $("#traineeType1").val()}, function(result) {
@@ -1232,6 +1250,13 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
          }
     }
 
+    if($("#salOrgRejoin").val() != "" && $("#salOrgRejoin").val() != null){
+    	if($("#salOrgRejoin").val() != $("#traineeType1").val()){
+    		  Common.alert("Please select the correct organization that is approved to rejoin.");
+    	        return false;
+    	}
+    }
+
     return true;
 }
 
@@ -1426,58 +1451,115 @@ function checkNRICEnter(){
 }
 
 
+function fn_requiredfield(){
+	if(isRejoinMem == true){
+		$(".commonRequired").hide();
+	    $(".join").show();
+	    if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+	    	 $(".commonRequired").show();
+	    }
+	}else{
+		$(".commonRequired").show();
+	    $(".join").hide();
+	}
+}
 
 function checkNRIC(){
     var returnValue;
-
     var jsonObj = { "nric" : $("#nric").val() };
 
+    isRejoinMem = false;
+    $("#isRejoinMem").val(false);
+    $("#salOrgRejoin").val('');
+    $("#traineeType1").val('');
+    $("#attachmentTab").hide();
+    myFileCaches = {};
+    fn_requiredfield();
+    fn_changeDetails();
+
     if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '7' || $("#memberType").val() == '5758' ) {
-        Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
-               console.log("data : " + result);
-               if (result.message != "pass") {
-                Common.alert(result.message);
-                $("#nric").val('');
-                returnValue = false;
-                return false;
-               } else {    // 조건1 통과 -> 조건2 수행
+                    Common.ajax("GET", "/organization/memberRejoinChecking.do", jsonObj, function(result) {
+                         //Qualified rejoin member
+                        if (result.message == "pass - rejoin") {
+                            if(result.data.salOrgRejoin != "1"){
+                                isRejoinMem = true;
+                                $("#isRejoinMem").val(true);
+                                $("#memId").val(result.data.memId);
+                                $("#salOrgRejoin").val(result.data.salOrgRejoin);
+                                $("#attachmentTab").show();
+                                fn_requiredfield();
 
-                Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
-                       console.log("data : " + result);
-                       if (result.message != "pass") {
-                           Common.alert(result.message);
-                           $("#nric").val('');
-                           returnValue = false;
-                           return false;
-                       } else {    // 조건2 통과 -> 조건3 수행
+                                Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+                                    console.log("data : " + result);
+                                    if (result.message != "pass") {
+                                        Common.alert(result.message);
+                                        $("#nric").val('');
+                                        returnValue = false;
+                                        return false;
+                                    } else {    // 조건3 통과 -> 끝
+                                     //Common.alert("Available NRIC");
+                                         autofilledbyNRIC();
+                                         returnValue = true;
+                                         return true;
+                                    }
+                                });
 
-                        Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
-                               console.log("data : " + result);
-                               if (result.message != "pass") {
-                                   Common.alert(result.message);
-                                   $("#nric").val('');
-                                   returnValue = false;
-                                   return false;
-                               } else {    // 조건3 통과 -> 끝
-                                //Common.alert("Available NRIC");
-                                autofilledbyNRIC();
-                                returnValue = true;
-                                   return true;
-                               }
+                            }else {
+                            	  Common.alert("This applicant approved to rejoin as HP.");
+                            }
 
-                           });
-                       }
+                            // new member or member is not in ORG0001D or not apply member rejoin in member eligibility
+                        } else if (result.message == "pass"){
+                        	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+                                console.log("data : " + result);
+                                if (result.message != "pass") {
+	                                 Common.alert(result.message);
+	                                 $("#nric").val('');
+	                                 returnValue = false;
+	                                 return false;
 
-                });
-               }
-           });
+                                } else {    // 조건1 통과 -> 조건2 수행
+	                                 Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+	                                        console.log("data : " + result);
+	                                        if (result.message != "pass") {
+	                                            Common.alert(result.message);
+	                                            $("#nric").val('');
+	                                            returnValue = false;
+	                                            return false;
+	                                        } else {    // 조건2 통과 -> 조건3 수행
+
+                                        	   Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+	                                                console.log("data : " + result);
+	                                                if (result.message != "pass") {
+	                                                    Common.alert(result.message);
+	                                                    $("#nric").val('');
+	                                                    returnValue = false;
+	                                                    return false;
+	                                                } else {    // 조건3 통과 -> 끝
+		                                                 //Common.alert("Available NRIC");
+		                                                 autofilledbyNRIC();
+		                                                 returnValue = true;
+	                                                     return true;
+	                                                }
+                                              });
+                                      	  }
+	                                 });
+                                }
+                            });
+
+                        // Not qualified to rejoin
+                        } else {
+                            Common.alert(result.message);
+                            $("#nric").val('');
+                            returnValue = false;
+                            return false;
+                        }
+                    });
     } else {
         autofilledbyNRIC();
     }
 
-
     return returnValue;
-
 }
 
 function autofilledbyNRIC(){
@@ -1592,10 +1674,10 @@ function checkBankAccNo() {
                     if(result.cnt1 == "0" && result.cnt2 == "0") {
                         return true;
                     } else {
-                        Common.alert("Bank account number has been registered.");
-                        //$("#issuedBank").val("");
-                        $("#bankAccNo").val("");
-                        return false;
+                		   Common.alert("Bank account number has been registered.");
+                           //$("#issuedBank").val("");
+                           $("#bankAccNo").val("");
+                           return false;
                     }
                 });
             }
@@ -1606,10 +1688,10 @@ function checkBankAccNo() {
                 if(result.cnt1 == "0" && result.cnt2 == "0") {
                     return true;
                 } else {
-                    Common.alert("Bank account number has been registered.");
-                    //$("#issuedBank").val("");
-                    $("#bankAccNo").val("");
-                    return false;
+            		  Common.alert("Bank account number has been registered.");
+                      //$("#issuedBank").val("");
+                      $("#bankAccNo").val("");
+                      return false;
                 }
             });
     }
@@ -1647,7 +1729,7 @@ function fn_changeDetails(){
         type:"S"
     });
 
-    if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+     if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
 	    	$('#uniformSize').show();
 	    	$('#uniformSizeLbl').show();
 	    	$('#emergencyTabHeader').show();
@@ -1657,6 +1739,8 @@ function fn_changeDetails(){
             $('#muslimahScarftLbl').hide();
             $('#innerType').hide();
             $('#innerTypeLbl').hide();
+            fn_requiredfield();
+
         if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" && $("#cmbRace").val() == "10" ) {
 	        $('.chkScarft').show();
 	        $('#muslimahScarftLbl').show();
@@ -1671,8 +1755,14 @@ function fn_changeDetails(){
             	}
         }else
             {
-        	    $("#attachmentTab").hide();
-        	    myFileCaches = {};
+	            if(isRejoinMem == true){
+	                $("#attachmentTab").show();
+	                fn_requiredfield();
+		         } else {
+		                $("#attachmentTab").hide();
+		                myFileCaches = {};
+		         }
+
 	        	$('#uniformSize').hide();
 	            $('#uniformSizeLbl').hide();
 	            $('.chkScarft').hide();
@@ -1941,6 +2031,72 @@ $(function(){
             myFileCaches[9].file['checkFileValid'] = true;
         }
     });
+
+    $('#terminationAgreeFile').change(function(evt) {
+        var msg = '';
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[10] != null){
+            delete myFileCaches[10];
+        }else if(file != null){
+            myFileCaches[10] = {file:file};
+        }
+
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[10].file['checkFileValid'] = false;
+            delete myFileCaches[10];
+            $('#nricCopyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[10].file['checkFileValid'] = true;
+        }
+
+    });
+
+    $('#terminationAgreeFile').change(function(evt) {
+        var msg = '';
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[10] != null){
+            delete myFileCaches[10];
+        }else if(file != null){
+            myFileCaches[10] = {file:file};
+        }
+
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[10].file['checkFileValid'] = false;
+            delete myFileCaches[10];
+            $('#nricCopyFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[10].file['checkFileValid'] = true;
+        }
+
+    });
 });
 
 function fn_removeFile(name){
@@ -1971,7 +2127,10 @@ function fn_removeFile(name){
 	}else if(name == "CEC") {
 	    $("#codyExtCheckFile").val("");
 	    $('#codyExtCheckFile').change();
-	}
+	}else if(name == "TAF") {
+        $("#terminationAgreeFile").val("");
+        $('#terminationAgreeFile').change();
+    }
 }
 
 function fn_validFile() {
@@ -2012,6 +2171,18 @@ function fn_validFile() {
         isValid = false;
         msg += "* Not allowed to upload Cody Exist Checklist<br>";
     }
+    if(isRejoinMem == false){
+    	   if(FormUtil.isNotEmpty($('#terminationAgreeFile').val().trim())) {
+    	        isValid = false;
+    	        msg += "* Not allowed to upload Termination Agreement<br>";
+    	    }
+    }else {
+        if(FormUtil.isEmpty($('#terminationAgreeFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of Termination Agreement<br>";
+        }
+    }
+
 
     $.each(myFileCaches, function(i, j) {
          if(myFileCaches[i].file.checkFileValid == false){
@@ -2023,6 +2194,72 @@ function fn_validFile() {
     if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
     return isValid;
+}
+
+function fn_validTerminateFile() {
+      var isValid = true, msg = "";
+
+	  if(isRejoinMem == false){
+	          if(FormUtil.isNotEmpty($('#terminationAgreeFile').val().trim())) {
+	               isValid = false;
+	               msg += "* Not allowed to upload Termination Agreement<br>";
+	           }
+	   }else {
+	       if(FormUtil.isEmpty($('#terminationAgreeFile').val().trim())) {
+	           isValid = false;
+	           msg += "* Please upload copy of Termination Agreement<br>";
+	       }
+    }
+    if(isRejoinMem == false){
+    	   if(FormUtil.isNotEmpty($('#terminationAgreeFile').val().trim())) {
+    	        isValid = false;
+    	        msg += "* Not allowed to upload Termination Agreement<br>";
+    	    }
+    }else {
+        if(FormUtil.isEmpty($('#terminationAgreeFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of Termination Agreement<br>";
+        }
+    }
+
+
+    $.each(myFileCaches, function(i, j) {
+	      if(myFileCaches[i].file.checkFileValid == false){
+	          isValid = false;
+	         msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
+	     }
+	 });
+
+	 if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+    return isValid;
+}
+
+function fn_validTerminateFile() {
+      var isValid = true, msg = "";
+
+	  if(isRejoinMem == false){
+	          if(FormUtil.isNotEmpty($('#terminationAgreeFile').val().trim())) {
+	               isValid = false;
+	               msg += "* Not allowed to upload Termination Agreement<br>";
+	           }
+	   }else {
+	       if(FormUtil.isEmpty($('#terminationAgreeFile').val().trim())) {
+	           isValid = false;
+	           msg += "* Please upload copy of Termination Agreement<br>";
+	       }
+	   }
+
+	  $.each(myFileCaches, function(i, j) {
+	      if(myFileCaches[i].file.checkFileValid == false){
+	          isValid = false;
+	         msg += myFileCaches[i].file.name + "<br>* File uploaded only allowed for picture format less than 2MB and 30 wordings<br>";
+	     }
+	 });
+
+	 if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+	 return isValid;
 }
 
 </script>
@@ -2055,6 +2292,9 @@ function fn_validFile() {
 <input type="hidden" id="memType" name="memType" value="${memType}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
 <input type="hidden" id="atchFileId" name="atchFileId">
+<input type="hidden" id="isRejoinMem" name="isRejoinMem">
+<input type="hidden" id="memId" name="memId">
+<input type="hidden" id="salOrgRejoin" name="salOrgRejoin">
 <!--<input type="hidden" id = "memberType" name="memberType"> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -2686,7 +2926,7 @@ function fn_validFile() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Cody Application Form<span class="must">*</span></th>
+    <th scope="row">Cody Application Form<span class="must commonRequired">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
             <input type="file" title="file add" id="codyAppFile" accept="application/pdf"/>
@@ -2699,7 +2939,7 @@ function fn_validFile() {
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC Copy<span class="must">*</span></th>
+    <th scope="row">NRIC Copy<span class="must commonRequired">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
             <input type="file" title="file add" id="nricCopyFile" accept="image/jpeg/application/pdf"/>
@@ -2712,7 +2952,7 @@ function fn_validFile() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Driving License Copy<span class="must">*</span></th>
+    <th scope="row">Driving License Copy<span class="must commonRequired">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
             <input type="file" title="file add" id="driveCopyFile" accept="image/jpg/application/pdf"/>
@@ -2725,7 +2965,7 @@ function fn_validFile() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Bank Passbook / Statement Copy<span class="must">*</span></th>
+    <th scope="row">Bank Passbook / Statement Copy<span class="must commonRequired">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2">
             <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpeg/application/pdf"/>
@@ -2738,7 +2978,7 @@ function fn_validFile() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Vaccination Digital Certificate<span class="must">*</span></th>
+    <th scope="row">Vaccination Digital Certificate<span class="must commonRequired">*</span></th>
     <td colspan="3" id="attachTd">
         <div class="auto_file2 ">
             <input type="file" title="file add" id="vaccDigCertFile"/>
@@ -2751,7 +2991,7 @@ function fn_validFile() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Passport Size Photo (white background)<span class="must">*</span></th>
+    <th scope="row">Passport Size Photo (white background)<span class="must commonRequired">*</span></th>
     <td colspan="3" id="attachTd">
     <div class="auto_file2" >
     <input type="file" title="file add" id="fileName" accept="image/jpg"/>
@@ -2798,6 +3038,32 @@ function fn_validFile() {
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
                 <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("CEC")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Termination Agreement<span class="must join">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="terminationAgreeFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
+                <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("TAF")'>Remove</a></span>
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Termination Agreement<span class="must join">*</span></th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="terminationAgreeFile" accept="image/jpg, image/jpeg,application/pdf"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
+                <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("TAF")'>Remove</a></span>
              </label>
         </div>
     </td>

@@ -438,8 +438,13 @@ public class eHPmemberListController {
 
        String memCode = "";
        ReturnMessage message = new ReturnMessage();
+
+       //Check whether member is rejoin or not
+       Boolean isRejoinMem = Boolean.parseBoolean(params.get("isRejoinMem").toString());
+       String rejoinMemId = params.get("memId").toString();
+
        // To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
-       if (params.get("eHPemail") != null){
+       if (params.get("eHPemail") != null && !isRejoinMem && (rejoinMemId.equals(null) || rejoinMemId.equals(""))){
     	   List<EgovMap> HpExist = eHPmemberListService.selectHpApplByEmail(params);
     	   if(HpExist.size() > 0){
     		   message.setMessage("Email has been used");
@@ -459,6 +464,13 @@ public class eHPmemberListController {
            message.setMessage("Complete to Create eHP Application Code : " + memCode
         		   + "<br><br>Kindly Proceed to complete eHP application within 7 days from application date to avoid auto cancel <br><br>Thank You");
        }
+
+   		//If is rejoin member
+		if(isRejoinMem && !(rejoinMemId.equals(null) || rejoinMemId.equals(""))){
+			params.put("memId", params.get("memId").toString());
+			memberListService.updateMemberStatus(params);
+		}
+
        logger.debug("message : {}", message);
 
        System.out.println("msg   " + success);

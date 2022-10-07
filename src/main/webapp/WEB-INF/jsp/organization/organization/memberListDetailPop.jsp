@@ -8,6 +8,7 @@ var myGridID2;
 var myGridID3;
 var myGridID5; /* Training */
 var myGridID6;
+var myGridID7; /* Working History */
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
@@ -20,6 +21,7 @@ var fileNameId = 0;
 var codyPaCopyFileId = 0;
 var compConsCodyFileId = 0;
 var codyExtCheckFileId = 0;
+var terminationAgreeFileId = 0;
 
 var codyAppFileName = "";
 var nricCopyFileName = "";
@@ -30,6 +32,7 @@ var fileNameName = "";
 var codyPaCopyFileName = "";
 var compConsCodyFileName = "";
 var codyExtCheckFileName = "";
+var terminationAgreeFileName = "";
 var myFileCaches = {};
 var checkFileValid = true;
 
@@ -43,6 +46,7 @@ console.log("ter-res-pro-dem pop");
     createAUIGrid3();
     createAUIGrid5();
     createAUIGrid6();
+    createAUIGrid7();
     fn_selectPromote();
     fn_selectDocSubmission();
 
@@ -54,7 +58,12 @@ console.log("ter-res-pro-dem pop");
         	  fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
        }
     }else{
-    	$("#attachmentTab").hide();
+    	  if( "${memberView.atchFileGrpIdDoc}" != 0 &&  "${memberView.atchFileGrpIdDoc}" != null){
+              fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
+              $("#attachmentTab").show();
+          }else {
+        	  $("#attachmentTab").hide();
+          }
         $('#emergencyTabHeader').hide();
         $('#emergencyTabDetails').hide();
     }
@@ -64,6 +73,7 @@ console.log("ter-res-pro-dem pop");
     fn_selectLoyaltyHPUploadDetailListForMember();
     fn_selectMemberPhoto();
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
+    fn_selectMemberWorkingHistory();
 
     //cody 를 제외하고 Pa Renewal History 와 Cody PA Expired 안보이기 숨긴다
     if($("#memtype").val() != 2){
@@ -894,6 +904,11 @@ $("#HP_img").dblclick(function(){
                            codyExtCheckFileName = result[i].atchFileName;
                            $(".input_text[id='codyExtCheckFileTxt']").val(codyExtCheckFileName);
                            break;
+                       case '10':
+                    	   terminationAgreeFileId = result[i].atchFileId;
+                    	   terminationAgreeFileName = result[i].atchFileName;
+                           $(".input_text[id='terminationAgreeFileTxt']").val(terminationAgreeFileName);
+                           break;
                         default:
                             Common.alert("no files");
                        }
@@ -933,6 +948,74 @@ $("#HP_img").dblclick(function(){
 
        });
    }
+
+   function createAUIGrid7() {
+
+	    var columnLayout = [ {
+	        dataField : "joinDt",
+	        headerText : "Join Date",
+	        editable : false
+	    }, {
+	        dataField : "resignDt",
+	        headerText : "Resign/Terminate Date",
+	        editable : false,
+	        labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+	               // logic processing
+	               // Return value here, reprocessed or formatted as desired.
+	               // The return value of the function is immediately printed in the cell.
+	                if(item.stus == '51') {
+	                       return item.resignDt;
+	                } else {
+	                	 if(item.trmDt != '01/01/1900'){
+	                		  return item.trmDt;
+	                	 }
+	                }
+	            }
+	    }, {
+	        dataField : "statusName",
+	        headerText : "Status",
+	        editable : false,
+	        labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+	                if(item.trmRejoin == 1) {
+	                       return item.statusName + " (Rejoin)";
+	                  } else {
+	                       return item.statusName;
+	                  }
+	            }
+	    }, {
+            dataField : "memType",
+            headerText : "Member Type",
+            editable : false
+        }];
+
+	    var gridPros = {
+	        usePaging : true,
+	        pageRowCount : 20,
+	        editable : true,
+	        showStateColumn : true,
+	        displayTreeOpen : true,
+	        headerHeight : 30,
+	        skipReadonlyColumns : true,
+	        wrapSelectionMove : true,
+	        showRowNumColumn : true
+	    };
+
+	    myGridID7 = AUIGrid.create("#grid_wrap7", columnLayout, gridPros);
+	}
+
+   function fn_selectMemberWorkingHistory(){
+
+	    var jsonObj = {
+	            nric :'${memberView.nric}'
+	    };
+
+	    Common.ajax("GET", "/organization/selectMemberWorkingHistory",jsonObj, function(result) {
+	        console.log("성공.");
+	        console.log("data : " + result);
+	        AUIGrid.setGridData(myGridID7, result);
+	        AUIGrid.resize(myGridID7,1000,400);
+	    });
+	}
 </script>
 
 <style>
@@ -977,6 +1060,7 @@ $("#HP_img").dblclick(function(){
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
     <li><a href="#" >Training</a></li>
     <li><a href="#" >HP Loyalty Status</a></li>
+    <li><a href="#" >Working History</a></li>
     <li id="attachmentTab" style="display:none;"><a href="#" >Attachment</a></li>
 </ul>
 
@@ -1566,6 +1650,12 @@ $("#HP_img").dblclick(function(){
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
+    <article class="grid_wrap"><!-- grid_wrap start -->
+       <div id="grid_wrap7" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    </article><!-- grid_wrap end -->
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
 <h2>Attachment</h2>
 <table class="type1 mt10" id="attachmentDiv"><!-- table start -->
 <colgroup>
@@ -1692,6 +1782,19 @@ $("#HP_img").dblclick(function(){
                 <input type='text' class='input_text' readonly='readonly' id="codyExtCheckFileTxt"/>
                 <!-- <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
                 <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("CEC")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Termination Agreement</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="terminationAgreeFile"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="terminationAgreeFileTxt"/>
+                <!-- <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
+                <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("TAF")'>Remove</a></span> -->
              </label>
         </div>
     </td>

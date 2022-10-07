@@ -18,6 +18,7 @@ var paymentFileId = 0;
 var hpAppFormFileId = 0;
 var otherFileId = 0;
 var otherFileId2 = 0;
+var terminateFileId = 0;
 
 var nricFileName = "";
 var statementFileName = "";
@@ -26,6 +27,7 @@ var paymentFileName = "";
 var hpAppFormFileName = "";
 var otherFileName = "";
 var otherFileName2 = "";
+var terminateFileName = "";
 
 var FailedRemarkGridID;
 
@@ -672,7 +674,11 @@ function fn_loadAtchment(atchFileGrpId) {
                         otherFileName2 = result[i].atchFileName;
                         $(".input_text[id='otherFileTxt2']").val(otherFileName2);
                         break;
-
+                    case '8':
+                        terminateFileId = result[i].atchFileId;
+                        terminateFileName = result[i].atchFileName;
+                        $(".input_text[id='terminateFileTxt']").val(terminateFileName);
+                        break;
                      default:
                          Common.alert("no files");
                     }
@@ -1313,6 +1319,19 @@ function fn_selectFailedRemarkList() {
                <!--  <span class='label_text'><a href='#'>Upload</a></span> -->
             </label>
            <!--   <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Termination Agreement</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="terminateFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'   id='terminateFileTxt' readonly="readonly"/>
+              <!--   <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+               <!--  <span class='label_text'><a href='#' onclick='fn_removeFile("TAF")'>Remove</a></span> -->
         </div>
     </td>
 </tr>

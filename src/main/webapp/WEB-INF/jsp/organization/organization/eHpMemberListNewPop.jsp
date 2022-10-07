@@ -10,6 +10,7 @@ var myFileCaches = {};
 var atchFileGrpId = 0;
 var issuedBankTxt;
 var checkFileValid = true;
+var isRejoinMem =  $("#isRejoinMem").val();
 
 function fn_memberSave(){
 
@@ -83,7 +84,11 @@ function fn_memberSave(){
                     eHPspouseDob : $("#eHPspouseDob").val(),
                     eHPspouseContat : $("#eHPspouseContat").val(),
                     //eHPorientation : $("#course").val(), //20-10-2021 - HLTANG - close for LMS project
-                    atchFileGrpId : atchFileGrpId
+                    atchFileGrpId : atchFileGrpId,
+                    isRejoinMem :  $("#isRejoinMem").val(),
+                    salOrgRejoin : $("#salOrgRejoin").val(),
+                    memId : $("#memId").val()
+
             };
             // jsonObj.form = $("#memberAddForm").serializeJSON();
 
@@ -362,6 +367,36 @@ $(function(){
         else{
             myFileCaches[5].file['checkFileValid'] = true;
         }
+    });
+
+    $('#terminateAgreement').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[8] != null){
+            delete myFileCaches[8];
+        }else if(file != null){
+            myFileCaches[8] = {file:file};
+        }
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+            msg += "*Only allow picture format (JPG, PNG, JPEG, PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow picture with less than 2MB.<br>";
+        }
+        if(msg != null && msg != ''){
+            myFileCaches[8].file['checkFileValid'] = false;
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[8].file['checkFileValid'] = true;
+        }
+        console.log(myFileCaches);
     });
 
 });
@@ -650,6 +685,7 @@ function fn_departmentCode(value){
 
 $(document).ready(function() {
 console.log("ready");
+$(".join").hide();
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
 
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
@@ -1230,45 +1266,87 @@ function checkNRIC(){
 
     var jsonObj = { "nric" : $("#eHPnric").val() };
 
-    if ($("#eHPmemberType").val() == '2803' ) {
-        Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
-               console.log("data : " + result);
-               if (result.message != "pass") {
-                Common.alert(result.message);
-                $("#eHPnric").val('');
-                returnValue = false;
-                return false;
-               } else {    // 조건1 통과 -> 조건2 수행
+    isRejoinMem = false;
+    $("#isRejoinMem").val(false);
+    $("#salOrgRejoin").val('');
+    $(".join").hide();
 
-                Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+    if ($("#eHPmemberType").val() == '2803' ) {
+    	Common.ajax("GET", "/organization/memberRejoinChecking.do", jsonObj, function(result) {
+            //Qualified rejoin member
+           if (result.message == "pass - rejoin") {
+        	   if(result.data.salOrgRejoin == "1"){
+        		   isRejoinMem = true;
+                   $("#isRejoinMem").val(true);
+                   $("#memId").val(result.data.memId);
+                   $("#salOrgRejoin").val(result.data.salOrgRejoin);
+                   $(".join").show();
+
+                   Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
                        console.log("data : " + result);
                        if (result.message != "pass") {
                            Common.alert(result.message);
-                           $("#eHPnric").val('');
+                           $("#nric").val('');
                            returnValue = false;
                            return false;
-                       } else {    // 조건2 통과 -> 조건3 수행
+                       } else {    // 조건3 통과 -> 끝
+                        //Common.alert("Available NRIC");
+                            autofilledbyNRIC();
+                            returnValue = true;
+                            return true;
+                       }
+                   });
+        	   }else {
+        		   Common.alert("This applicant is not approved to rejoin as HP.");
+        	   }
 
-                        Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+               // new member or member is not in ORG0001D or not apply member rejoin in member eligibility
+           } else if (result.message == "pass"){
+               Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+                   console.log("data : " + result);
+                   if (result.message != "pass") {
+                        Common.alert(result.message);
+                        $("#nric").val('');
+                        returnValue = false;
+                        return false;
+
+                   } else {    // 조건1 통과 -> 조건2 수행
+                        Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
                                console.log("data : " + result);
                                if (result.message != "pass") {
                                    Common.alert(result.message);
-                                   $("#eHPnric").val('');
+                                   $("#nric").val('');
                                    returnValue = false;
                                    return false;
-                               } else {    // 조건3 통과 -> 끝
-                                //Common.alert("Available NRIC");
-                                autofilledbyNRIC();
-                                returnValue = true;
-                                   return true;
-                               }
+                               } else {    // 조건2 통과 -> 조건3 수행
 
-                           });
-                       }
+                                  Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+                                       console.log("data : " + result);
+                                       if (result.message != "pass") {
+                                           Common.alert(result.message);
+                                           $("#nric").val('');
+                                           returnValue = false;
+                                           return false;
+                                       } else {    // 조건3 통과 -> 끝
+                                            //Common.alert("Available NRIC");
+                                            autofilledbyNRIC();
+                                            returnValue = true;
+                                            return true;
+                                       }
+                                 });
+                             }
+                        });
+                   }
+               });
 
-                });
-               }
-           });
+           // Not qualified to rejoin
+           } else {
+               Common.alert(result.message);
+               $("#nric").val('');
+               returnValue = false;
+               return false;
+           }
+       });
     } else {
         autofilledbyNRIC();
     }
@@ -1428,6 +1506,9 @@ function fn_removeFile(name){
     }else if(name == "OTH2"){
         $("#otherFile2").val("");
         $('#otherFile2').change();
+    }else if(name == "TAF") {
+        $("#terminateAgreement").val("");
+        $('#terminateAgreement').change();
     }
 }
 
@@ -1450,6 +1531,18 @@ function fn_validFile() {
         isValid = false;
         msg += "* Please upload copy of HP Application Form<br>";
     }
+
+    if(isRejoinMem == false){
+        if(FormUtil.isNotEmpty($('#terminateAgreement').val().trim())) {
+             isValid = false;
+             msg += "* Not allowed to upload Termination Agreement<br>";
+         }
+	 }else {
+	     if(FormUtil.isEmpty($('#terminateAgreement').val().trim())) {
+	         isValid = false;
+	         msg += "* Please upload copy of Termination Agreement<br>";
+	     }
+	 }
 
     $.each(myFileCaches, function(i, j) {
         if(myFileCaches[i].file.checkFileValid == false){
@@ -1511,6 +1604,9 @@ function fn_eHPmarritalCallBack(){
                 <input type="hidden" id="eHPsubDept" name="subDept">
                 <input type="hidden" id="eHPuserType" name="userType" value="${userType}">
                 <input type="hidden" id="eHPmemType" name="memType" value="${memType}">
+                <input type="hidden" id="isRejoinMem" name="isRejoinMem">
+				<input type="hidden" id="memId" name="memId">
+				<input type="hidden" id="salOrgRejoin" name="salOrgRejoin">
 
                 <!--<input type="hidden" id = "memberType" name="memberType"> -->
                 <table class="type1">
@@ -2148,6 +2244,20 @@ function fn_eHPmarritalCallBack(){
                             <span class='label_text'><a href='#'>Upload</a></span>
                             </label>
                             <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Termination Agreement<span class="must join">*</span></th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="terminateAgreement" accept="image/jpg, image/jpeg, image/png, application/pdf"/>
+                        <label>
+                            <input type='text' class='input_text'  />
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                            </label>
+                            <span class='label_text'><a href='#' onclick='fn_removeFile("TAF")'>Remove</a></span>
                         </label>
                     </div>
                 </td>

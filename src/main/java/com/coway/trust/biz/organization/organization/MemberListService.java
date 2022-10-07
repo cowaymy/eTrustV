@@ -127,6 +127,12 @@ public interface MemberListService {
 
 	List<EgovMap> checkNRIC3(Map<String, Object> params);
 
+	List<EgovMap> selectMemberInfo(Map<String, Object> params);
+
+	List<EgovMap> selectMemberApprovalInfo(Map<String, Object> params);
+
+	void updateMemberStatus(Map<String, Object> params);
+
 	// modify jgkim
 	EgovMap checkSponsor(Map<String, Object> params);
 
@@ -264,4 +270,5 @@ public interface MemberListService {
 
 	void deleteMemberListAttachBiz(FileType type, Map<String, Object> params);
 
+	List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params);
 }

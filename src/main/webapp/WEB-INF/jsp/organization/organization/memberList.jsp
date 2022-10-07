@@ -580,7 +580,17 @@ function createAUIGrid() {
             dataField : "statusName",
             headerText : "Status",
             editable : false,
-            width : 130
+            width : 130,
+            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+                // logic processing
+                // Return value here, reprocessed or formatted as desired.
+                // The return value of the function is immediately printed in the cell.
+                 if(item.trmRejoin == 1) {
+                        return item.statusName + " (Rejoin)";
+                   } else {
+                        return item.statusName;
+                   }
+             }
         },
         {
             dataField : "uniformSize",
@@ -971,9 +981,11 @@ $(function() {
              });
 
         }
-
-
     });
+
+    $("#rejoinRawListing").click(function() {
+            Common.popupDiv("/organization/rejoinRawReportPop.do", null, null, true);
+   });
 
     $('#paExpiry').click(function() {
     	 var date = new Date();
@@ -1194,6 +1206,7 @@ function fn_socialMediaInfo(){
          <c:forEach var="list" items="${memberType }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
         </c:forEach>
+        <option value="Rejoin">Rejoin</option>
     </select>
     </td>
     <th scope="row">Code</th>
@@ -1239,6 +1252,7 @@ function fn_socialMediaInfo(){
         <c:forEach var="list" items="${status }" varStatus="status">
            <option value="${list.statuscodeid}">${list.name}</option>
         </c:forEach>
+        <option value="Rejoin">Rejoin</option>
     </select>
     </td>
 </tr>
@@ -1347,6 +1361,7 @@ function fn_socialMediaInfo(){
                 <li><p class="link_btn"><a href="#" id="htContactList">HT Contact List</a></li>
             </c:if>
             <li><p class="link_btn"><a href="#" id="getNonVaccineDeclare">Non-Vaccination Declaration Form</a></li>
+            <li><p class="link_btn"><a href="#" id="rejoinRawListing">Rejoin Raw Listing</a></li>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
