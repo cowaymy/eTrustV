@@ -85,7 +85,7 @@ public class AutoDebitApiController {
        Map<String, Object> params = autoDebitApiForm.createMap(autoDebitApiForm);
        int orderCount = 0;
        orderCount = autoDebitService.orderNumberSearchMobileCheckActiveCount(params);
-       AutoDebitApiDto result = null;
+       AutoDebitApiDto result = new AutoDebitApiDto();
        if(orderCount > 0){
     	   result.setResponseCode(1);
        }
