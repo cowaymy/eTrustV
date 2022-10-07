@@ -23,6 +23,10 @@
 		AND s0001d.SALES_ORD_NO = #{salesOrdNo}
   </select>
 
+  <select id="orderNumberSearchMobileCheckActiveCount" parameterType="Map" resultType="int">
+  		SELECT COUNT(PAD_ID) FROM PAY0333M WHERE SALES_ORD_NO = #{salesOrdNo} AND STUS_CODE_ID = 1
+  </select>
+
   <select id="autoDebitHistoryMobileList" parameterType="Map" resultType="egovMap">
 		SELECT p0333m.PAD_ID,p0333m.PAD_NO,p0333m.SALES_ORD_NO,TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS CREATED_DATE,
 		TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY') AS UPDATED_DATE,p0333m.REMARKS,

@@ -38,4 +38,6 @@ public interface AutoDebitService {
 	void sendEmail(Map<String, Object> params);
 
 	int insertAttachmentMobileUpload(List<FileVO> list, Map<String, Object> param);
+
+	int orderNumberSearchMobileCheckActiveCount(Map<String, Object> params);
 }

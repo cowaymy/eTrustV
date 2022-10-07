@@ -131,6 +131,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   }
 
   @Override
+  public int orderNumberSearchMobileCheckActiveCount(Map<String, Object> params) {
+    return autoDebitMapper.orderNumberSearchMobileCheckActiveCount(params);
+  }
+
+  @Override
   public List<EgovMap> selectAutoDebitDetailInfo(Map<String, Object> params) {
     return autoDebitMapper.selectAutoDebitDetailInfo(params);
   }
