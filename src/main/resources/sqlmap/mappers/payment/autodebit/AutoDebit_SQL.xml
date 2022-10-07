@@ -23,8 +23,10 @@
 		AND s0001d.SALES_ORD_NO = #{salesOrdNo}
   </select>
 
-  <select id="orderNumberSearchMobileCheckActiveCount" parameterType="Map" resultType="int">
-  		SELECT COUNT(PAD_ID) FROM PAY0333M WHERE SALES_ORD_NO = #{salesOrdNo} AND STUS_CODE_ID = 1
+  <select id="orderNumberSearchMobileCheckActivePadNo" parameterType="Map" resultType="EgovMap">
+  		SELECT * FROM (
+			SELECT PAD_NO FROM PAY0333M WHERE SALES_ORD_NO = #{salesOrdNo} AND STUS_CODE_ID = 1 ORDER BY PAD_ID DESC
+		) WHERE ROWNUM = 1
   </select>
 
   <select id="autoDebitHistoryMobileList" parameterType="Map" resultType="egovMap">

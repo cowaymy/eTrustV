@@ -83,10 +83,11 @@ public class AutoDebitApiController {
 	@RequestMapping(value = "/orderNumberCheckActiveExist", method = RequestMethod.GET)
 	public ResponseEntity<AutoDebitApiDto> orderNumberCheckActiveExist(@ModelAttribute AutoDebitApiForm autoDebitApiForm) throws Exception {
        Map<String, Object> params = autoDebitApiForm.createMap(autoDebitApiForm);
-       int orderCount = 0;
-       orderCount = autoDebitService.orderNumberSearchMobileCheckActiveCount(params);
+       EgovMap searchCheck = null;
        AutoDebitApiDto result = new AutoDebitApiDto();
-       if(orderCount > 0){
+       searchCheck = autoDebitService.orderNumberSearchMobileCheckActivePadNo(params);
+       if(searchCheck != null){
+    	   result.setPadNo(searchCheck.get("padNo").toString());
     	   result.setResponseCode(1);
        }
        else{

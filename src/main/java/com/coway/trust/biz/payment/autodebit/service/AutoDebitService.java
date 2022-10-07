@@ -39,5 +39,5 @@ public interface AutoDebitService {
 
 	int insertAttachmentMobileUpload(List<FileVO> list, Map<String, Object> param);
 
-	int orderNumberSearchMobileCheckActiveCount(Map<String, Object> params);
+	EgovMap orderNumberSearchMobileCheckActivePadNo(Map<String, Object> params);
 }
