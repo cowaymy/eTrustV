@@ -110,6 +110,8 @@ function checkStatusForConditionalDisable(){
 		$('#btnSave').hide();
 		$('.upload_btn').hide();
 		$('.remove_btn').hide();
+		$('#btnAddThirdPartyCust').hide();
+		$('#btnThirdPartyCustSearch').hide();
 	}
 }
 
@@ -232,10 +234,12 @@ function saveDataValidation(){
 		$("#rejectReasonCodeList option[value='']").attr("selected", true);
 	}
 
-	if("${mobileAutoDebitDetail.isThirdPartyPayment}" == "1"){
-		if(undefinedCheck($('#thrdPartyId').val()) == ""){
-			Common.alert('Third Party Customer is required');
-	        return;
+	if(action != "6"){
+		if("${mobileAutoDebitDetail.isThirdPartyPayment}" == "1"){
+			if(undefinedCheck($('#thrdPartyId').val()) == ""){
+				Common.alert('Third Party Customer is required');
+		        return;
+			}
 		}
 	}
 
