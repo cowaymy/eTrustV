@@ -195,13 +195,12 @@ function createAUIGrid() {
         },{
             dataField : "lastUpdatedDate",
             headerText : 'Last Update At(By)',
-            width : 220,
+            width : 180,
             editable : false,
             labelFunction : function(rowIndex, columnIndex, value,
                     headerText, item, dataField) {
 				var formatString = "";
 				var valueArray = value.split(",");
-
 				if(valueArray.length > 0){
 					for(var i = 0; i< valueArray.length;i++){
 						if(i==1){
@@ -230,7 +229,8 @@ function createAUIGrid() {
 	    useGroupingPanel : false,
 	    skipReadonlyColumns : true,
 	    wrapSelectionMove : true,
-	    showRowNumColumn : true
+	    showRowNumColumn : true,
+	    wordWrap : true
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 }

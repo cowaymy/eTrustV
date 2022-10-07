@@ -24,14 +24,10 @@ $(document).ready(function(){
         selectAll: true,
         width: '100%'
     });
+	$('#status').multipleSelect("checkAll");
 
 	//Search
 	$("#_listSearchBtn").click(function() {
-// 		if($('#orderNo').val() == "" && $("#padNo").val() == ""){
-// 			Common.alert("Order Number or Pad Number is required");
-// 			return false;
-// 		}
-
 	    //Validation start
 	    selectList();
 	});
@@ -137,6 +133,17 @@ function selectList(){
         console.log(result);
         AUIGrid.setGridData(myGridID, result);
     });
+}
+
+function fn_clear(){
+	$('#padNo').val('');
+	$('#orderNo').val('');
+	$('#crcRequestDateFrom').val('');
+	$('#crcRequestDateTo').val('');
+	$('#requestDateFrom').val('');
+	$('#requestDateTo').val('');
+	$('#memCode').val('');
+    $('#status').multipleSelect("checkAll");
 }
 </script>
 <!-- html content -->
