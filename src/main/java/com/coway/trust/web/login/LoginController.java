@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -51,6 +52,7 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.util.Calendar;
+import com.coway.trust.biz.login.SsoLoginService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -62,6 +64,9 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+
+	@Resource(name = "ssoLoginService")
+	  private SsoLoginService ssoLoginService;
 
 	@Autowired
 	private SurveyService surveyService;
@@ -257,6 +262,12 @@ public class LoginController {
 		LoginVO loginVO = loginService.getLoginInfo(params);
 		HttpSession session = sessionHandler.getCurrentSession();
 		session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+
+		//update password in keycloak
+		Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+		ssoParamsOldMem.put("memCode", sessionVO.getUserName());
+		ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
+		ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();

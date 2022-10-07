@@ -73,6 +73,7 @@
 
 	<section class="pop_body"><!-- pop_body start -->
 		<form action="#" id="pwUpdForm" name="pwUpdForm">
+		    <input type="hidden" id="memberCode" name="memberCode" value="${memberCode}">
 		    <input type="hidden" id="memberID" name="memberID" value="${memberID}">
 		    <input type="hidden" id="updUserId" name="updUserId" value="${updUserId}">
 		    <table class="type1">

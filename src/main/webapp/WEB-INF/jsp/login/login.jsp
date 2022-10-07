@@ -301,7 +301,10 @@
                     fn_configCookies(userId);
 
                     // HP, Cody, CT, Staff, Admin
-                    if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
+                    if(returnUserInfo.userTypeId == "5"){
+                    	fn_goMainExternal();
+                    }
+                    else if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
                     	//var vacPop = "${vaccinationPop}";
 
                     	var vacPop = "N";
@@ -536,6 +539,17 @@
                     // Cody / Service Technician
                     if(returnSearchUserInfo.memStus != "1") {
                         Common.alert("Dear Cody/ST, your account is inactive.");
+                        $("#popup_wrap").remove();
+                        return false;
+                    }
+
+                    fn_showFieldsTmpPwd();
+                }
+
+                if(returnSearchUserInfo.userTypeId == "5") {
+                    // Organization trainee
+                    if(returnSearchUserInfo.memStus != "1") {
+                        Common.alert("Dear Trainee, your account is inactive.");
                         $("#popup_wrap").remove();
                         return false;
                     }

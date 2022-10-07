@@ -852,7 +852,7 @@ $(function() {
     $("#hpPwReset").click(function() {
         if(selRowIndex >= 0 && selRowIndex != null) {
             if(memberType == "1") {
-                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid, memType : "1"}, null, true, 'editPWHP');
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid, memType : "1", memberCode : membercode}, null, true, 'editPWHP');
             } else {
                 Common.alert("Only HP Member is allowed!");
             }
@@ -864,7 +864,7 @@ $(function() {
     $("#cdPwReset").click(function() {
         if(selRowIndex >= 0 && selRowIndex != null) {
             if(memberType == "2") {
-                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "2"}, null, true, 'editPWCD');
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "2", memberCode : membercode}, null, true, 'editPWCD');
             } else {
                 Common.alert("Only CD Member is allowed!");
             }
@@ -877,7 +877,7 @@ $(function() {
     $("#htPwReset").click(function() {
         if(selRowIndex >= 0 && selRowIndex != null) {
             if(memberType == "7") {
-                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "7"}, null, true, 'editPWHT');
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "7", memberCode : membercode}, null, true, 'editPWHT');
             } else {
                 Common.alert("Only HT Member is allowed!");
             }
