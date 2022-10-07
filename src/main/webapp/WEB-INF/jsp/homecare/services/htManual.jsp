@@ -85,7 +85,15 @@ var TODAY_DD      = "${toDay}";
 	    dataField : "code",
 	    headerText : "CS Status",
 	    width : 120
-	  }, {
+	  },{
+          dataField : "setl_dt",
+          headerText : "Settle Date",
+          width : 120
+        }, {
+          dataField : "remarks",
+          headerText : "Remarks",
+          width : 120
+        },{
 	    dataField : "month",
 	    headerText : "Complete HT",
 	    width : 120,
@@ -199,9 +207,11 @@ var TODAY_DD      = "${toDay}";
         headerText : "CS Status",
         width : 120
       },{
-          dataField : "setl_dt",
+          dataField : "setlDt",
           headerText : "Settle Date",
-          width : 120
+          width : 120,
+          dataType : "date",
+          formatString : "dd/mm/yyyy"
         }, {
           dataField : "remarks",
           headerText : "Remarks",
