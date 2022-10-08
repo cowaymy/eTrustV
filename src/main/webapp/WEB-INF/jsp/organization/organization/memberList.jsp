@@ -993,6 +993,10 @@ $(function() {
          var month = date.getMonth() + 1;
          var day = date.getDate();
 
+         $("#grpCode").val("${grpCode}");
+         $("#grpCode").attr("class", "w100p readonly");
+         $("#grpCode").attr("readonly", "readonly");
+
          if (date.getDate() < 10) {
            day = "0" + date.getDate();
          }
@@ -1353,12 +1357,14 @@ function fn_socialMediaInfo(){
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine14 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="cdPwReset">CD Password Reset</a></li>
-                 <li><p class="link_btn"><a href="#" id="paExpiry">PA Expiry Date</a></li>
             </c:if>
 
             <c:if test="${PAGE_AUTH.funcUserDefine15 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="htPwReset">HT Password Reset</a></li>
                 <li><p class="link_btn"><a href="#" id="htContactList">HT Contact List</a></li>
+            </c:if>
+               <c:if test="${PAGE_AUTH.funcUserDefine16 == 'Y'}">
+                 <li><p class="link_btn"><a href="#" id="paExpiry">PA Expiry Date</a></li>
             </c:if>
             <li><p class="link_btn"><a href="#" id="getNonVaccineDeclare">Non-Vaccination Declaration Form</a></li>
             <li><p class="link_btn"><a href="#" id="rejoinRawListing">Rejoin Raw Listing</a></li>
