@@ -303,7 +303,18 @@ public class MembershipESvmController {
                 }
             }
 
-            updAct = membershipESvmService.updateAction(params);
+
+            //CHECK SPECIAL CASE IF == the eSVM already updated by other admin at the same time
+            String checkCurStus = membershipESvmService.checkStatus(params);
+            if("1".equals(checkCurStus)) {  // IF CURRENT STATUS = 1
+            	updAct = membershipESvmService.updateAction(params);
+            } else { // IF CURRENT STATUS IS ALREADY APPROVED/ REJECT
+            	message.setCode(AppConstants.FAIL);
+                message.setMessage("<b>Failed to save. eSVM status already Approved/ Rejected.");
+            }
+
+
+
         }
 
 /*
