@@ -57,12 +57,18 @@
 
 
   <select id="selectSubmissionRecords" parameterType="Map" resultType="egovMap">
-<![CDATA[
-SELECT DISTINCT A.SALES_ORDER_NO FROM SVC0130D A
-LEFT JOIN SVC0001D B ON A.AS_NO = B.AS_NO
-WHERE A.SALES_ORDER_NO = #{salesOrderNo}
-AND ( A.STUS in ( '1','44' ) OR ( B.AS_STUS_ID = '1'))
-]]>
+	<![CDATA[
+	   SELECT DISTINCT
+	         CASE WHEN C.STUS_CODE_ID <> 4     THEN  C.SALES_ORD_NO
+	                 WHEN A.STUS IN ( '1','44' )         THEN A.SALES_ORDER_NO
+	                 WHEN B.AS_STUS_ID = 1           THEN A.SALES_ORDER_NO
+	         END SALES_ORDER_NO
+	    FROM SVC0130D A
+	    LEFT JOIN SVC0001D B ON A.AS_NO = B.AS_NO
+	    LEFT JOIN SAL0001D C ON A.SALES_ORDER_NO = C.SALES_ORD_NO
+	    WHERE A.SALES_ORDER_NO = #{salesOrderNo}
+
+	]]>
 </select>
 
 
