@@ -3055,19 +3055,6 @@ function fn_validTerminateFile() {
         </div>
     </td>
 </tr>
-<tr>
-    <th scope="row">Termination Agreement<span class="must join">*</span></th>
-    <td colspan="3" id="attachTd">
-        <div class="auto_file2">
-            <input type="file" title="file add" id="terminationAgreeFile" accept="image/jpg, image/jpeg,application/pdf"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text' disabled="disabled"><a href='#'>Upload</a></span>
-                <span class='label_text' disabled="disabled"><a href='#' onclick='fn_removeFile("TAF")'>Remove</a></span>
-             </label>
-        </div>
-    </td>
-</tr>
 </tbody>
 </table><!-- table end -->
 <ul class="center_btns">
