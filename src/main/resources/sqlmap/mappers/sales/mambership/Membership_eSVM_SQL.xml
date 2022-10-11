@@ -1322,4 +1322,18 @@
        and BILL_NO = #{srvMemBillNo}
     </select>
 
+    <select id="checkStus298d" parameterType="Map" resultType="String">
+        SELECT
+        CASE
+            WHEN STUS = 5
+            THEN 0
+            WHEN STUS = 6
+            THEN 0
+            WHEN STUS = 1
+            THEN 1
+        END AS STUS
+        FROM SAL0298D
+        WHERE PSM_ID = #{psmId}
+    </select>
+
 </mapper>
