@@ -33,6 +33,8 @@ public interface MembershipESvmService {
 
 	int updateAction(Map<String, Object> params);
 
+	String checkStatus(Map<String, Object> params);
+
 	void updateTR(Map<String, Object> params);
 
 	String SAL0095D_insert(Map<String, Object> params, SessionVO sessionVO);
