@@ -2306,7 +2306,7 @@ var blockDtTo = "${hsBlockDtTo}";
 
                 break;
             case 'pay' :
-                if($('#appType').val() == '66'){
+                if($('#appType').val() == '66' && ('${preOrderInfo.stusId}' != 1 &&  '${preOrderInfo.stusId}' != 104 &&  '${preOrderInfo.stusId}' != 21)){
                     //$('#rentPayMode').val('131') //to show the correct info for rentPayMode
                     $('#rentPayMode').change();
                     $('#rentPayMode').prop("disabled", true);
