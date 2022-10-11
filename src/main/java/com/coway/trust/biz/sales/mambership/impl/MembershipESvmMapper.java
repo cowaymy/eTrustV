@@ -40,6 +40,8 @@ public interface MembershipESvmMapper {
 	int updateAction(Map<String, Object> params);
 	int updateTR(Map<String, Object> params);
 
+	String checkStus298d(Map<String, Object> params);
+
 	EgovMap  getSAL0095D_SEQ(Map<String, Object> params);
 
 	int  SAL0095D_insert(Map<String, Object> params);
