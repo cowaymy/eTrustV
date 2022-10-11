@@ -138,6 +138,13 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     }
 
     @Override
+    public String checkStatus(Map<String, Object> params) {
+        String stus298d = membershipESvmMapper.checkStus298d(params);
+
+        return stus298d;
+    }
+
+    @Override
     public void updateTR(Map<String, Object> params) {
         membershipESvmMapper.updateTR(params);
     }
