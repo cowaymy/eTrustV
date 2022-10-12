@@ -5,10 +5,10 @@
 </style>
 <script  type="text/javascript">
     var clmYyyy, clmMm;
-    var result = JSON.parse('${result}');
 
     $(document).ready(function(){
-        console.log("monthlyAllowancePop.jsp")
+        console.log("monthlyAllowancePop.jsp");
+        var result = JSON.parse('${result}');
 
         console.log(result[0]);
         console.log("${item}");
