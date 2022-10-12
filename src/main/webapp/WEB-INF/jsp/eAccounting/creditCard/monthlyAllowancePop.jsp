@@ -18,7 +18,7 @@
         var clmMonth = "${item.clmMonth}";
         clmYyyy = clmMonth.substring(0, 4);
         clmMm = clmMonth.substring(4);
-		debugger;
+
         var crcNo = result[0].crditCardNo;
 
         $("#monthYear").val(clmMm + "/" + clmYyyy);
