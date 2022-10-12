@@ -2,6 +2,7 @@ package com.coway.trust.web.payment.billing.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +22,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.payment.billing.service.AdvRentalBillingService;
 import com.coway.trust.biz.payment.billing.service.ProFormaInvoiceService;
 import com.coway.trust.biz.payment.invoice.service.InvoicePOService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderListService;
+import com.coway.trust.biz.sales.order.vo.DiscountEntryVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -125,6 +129,8 @@ public class ProFormaInvoiceController {
 	    model.put("refNo", (String) params.get("refNo"));
 	    model.put("proFormaId", (String) params.get("proFormaId"));
 	    model.put("viewType", (String) params.get("viewType")); //view or edit
+	    model.put("stus", (String) params.get("stus"));
+	    model.put("stusId", (String) params.get("stusId"));
 
 	    model.put("USER_ID", sessionVO.getMemId());
 	    model.put("USER_NAME", sessionVO.getUserName());
@@ -136,6 +142,10 @@ public class ProFormaInvoiceController {
 	    EgovMap orderDetail = null;
 	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
 	    model.addAttribute("orderDetail", orderDetail);
+
+	    logger.debug("===========================/ProFormaEditViewPop.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/ProFormaEditViewPop.do===============================");
 
 	    return "payment/billing/ProFormaEditViewPop";
 	  }
@@ -161,9 +171,8 @@ public class ProFormaInvoiceController {
 	    ReturnMessage message = new ReturnMessage();
 
 	    List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
-    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 
-    	proFormaInvoiceService.saveNewProForma(formList, gridList,  sessionVO);
+    	proFormaInvoiceService.saveNewProForma(gridList,  sessionVO);
 
 	    logger.debug("================saveNewProForma - END ================");
 
@@ -173,22 +182,33 @@ public class ProFormaInvoiceController {
 	    return ResponseEntity.ok(message);
 	  }
 
-	@RequestMapping(value = "/farCheckConvertFn.do", method = RequestMethod.POST)
-	  public ResponseEntity<ReturnMessage> farCheckConvertFn(@RequestBody Map<String, Object> params, Model model,
-	      HttpServletRequest request, SessionVO sessionVO) {
-	    logger.debug("===========================/farCheckConvertFn.do===============================");
-	    logger.debug("==params111 " + params.toString());
-	    logger.debug("===========================/farCheckConvertFn.do===============================");
+	@RequestMapping(value = "/updateProForma.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> updateProForma(@RequestBody Map<String, ArrayList<Object>> params, Model model, SessionVO sessionVO) {
+	    Map<String, Object> resultValue = new HashMap<String, Object>();
+	    List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM);
 
-	    params.put("updator", sessionVO.getUserId());
+    	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
+	    Map<String, Object> param = (Map<String, Object>)formMap.get("saveForm");
+
+    	logger.debug("===========================/updateProForma.do===============================");
+ 	    logger.debug("==params111 " + formList.toString());
+ 	    logger.debug("==params111 " + gridList.toString());
+ 	    logger.debug("==params111 " + formMap.toString());
+    	int result = -1;
+
 	    ReturnMessage message = new ReturnMessage();
 
-	    proFormaInvoiceService.farCheckConvertFn(params);
+	    if(param.get("proFormaStatus").toString().equals("81")){ //Status Converted
+		    result = proFormaInvoiceService.createTaxesBills(param, gridList,  sessionVO);
+	    }
 
-	    logger.debug("================farCheckConvertFn - END ================");
+	    resultValue = proFormaInvoiceService.updateProForma(param, sessionVO);
+
+	    logger.debug("================updateProForma - END ================");
 
 	    message.setCode(AppConstants.SUCCESS);
-	    message.setMessage(params.get("orderNo") + " is " );
+	    message.setMessage(param.get("refNo").toString() + " is updated to " + resultValue.get("stusDesc") + " status.");
 
 	    return ResponseEntity.ok(message);
 	  }
@@ -218,6 +238,33 @@ public class ProFormaInvoiceController {
         	params.put("custBillId", getCustId);
         	list = proFormaInvoiceService.selectInvoiceBillGroupListProForma(params);
 		}
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/getDiscPeriod.do" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getDiscPeriod(@RequestParam Map<String, Object> params,HttpServletRequest request,
+			Model mode, SessionVO sessionVO)	throws Exception {
+
+		String[] arrBrnchCode = request.getParameterValues("brnchCode");
+		String[] arrStatus = request.getParameterValues("status");
+
+		params.put("arrStatus", arrStatus);
+		params.put("arrBrnchCode", arrBrnchCode);
+
+		params.put("userTypeId", sessionVO.getUserTypeId());
+
+		String[] arrayCustId =null;
+		if( ! StringUtils.isEmpty(params.get("custName")) ||! StringUtils.isEmpty(params.get("crtUserId"))){
+			arrayCustId =this.getExtCustIdList(params);
+			params.put("arrayCustId", arrayCustId);
+		}
+
+		logger.debug("////////ProFormaList///////");
+		logger.debug(params.toString());
+		logger.debug("////////ProFormaList///////");
+
+		List<EgovMap>  list = proFormaInvoiceService.getDiscPeriod(params);
 
 		return ResponseEntity.ok(list);
 	}

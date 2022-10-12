@@ -43,6 +43,7 @@ var columnLayoutBill =[
 	                                    fn_SelectPO(item.salesOrdId);
 	                                    $("#grid_wrap_ProForma").show();
 	                                    $("#divBtnProForma").show();
+	                                    $("#divTotalProForma").show();
 	                                    $("#btnAddToProForma").show();
 	                              }
 	                       }
@@ -60,7 +61,11 @@ var columnLayoutProForma =[
 						{dataField :"finalRentalFee", headerText : "Final Rental Fee", width: 150, editable : false },
 						{dataField :"orderDt", headerText : "Order Date", width: 150, editable : false },
 						{dataField :"orderStus", headerText : "Order Status", width: 150, editable : false },
-						{dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 140 ,editable : false }
+						{dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 140 ,editable : false },
+						{dataField :"adStartDt",  headerText : "adStartDt",      width: 140 ,visible : false },
+						{dataField :"adEndDt",  headerText : "adEndDt",      width: 140 ,visible : false },
+						{dataField :"packOriPrice",  headerText : "packOriPrice",      width: 140 }, //after discount
+						{dataField :"remark",  headerText : "remark",      width: 140 }
                    ];
 
 var gridProsBill = {
@@ -89,6 +94,7 @@ $(document).ready(function(){
     $("#grid_wrap_ProForma").hide();
     $("#btnAddToProForma").hide();
     $("#divBtnProForma").hide();
+    $("#divTotalProForma").hide();
     AUIGrid.setSelectionMode(myGridIDBillGroup, "singleRow");
 
     $("#rbt").attr("style","display:none");
@@ -686,27 +692,40 @@ function fn_loadOrderPO(orderId){
         	//ahhh
 
         	 var pfItem = new Object();
+        	 var packTypeInd = true;
 
        	     pfItem.salesOrdId = $("#ORD_ID").val();
        	     pfItem.salesOrdNo = $("#orderNo").html();
        	     pfItem.packType = $("#packType").val();
        	     pfItem.advPeriod = $("#adStartDt").val() + " - " + $("#adEndDt").val();
+       	     pfItem.adStartDt = $("#adStartDt").val();
+       	     pfItem.adEndDt = $("#adEndDt").val();
        	     pfItem.disc = $("#discount").val();
        	     pfItem.packPrice = $("#txtPackagePrice").html();
+       	     pfItem.packOriPrice = $("#hiddenPacOriPrice").val();
        	     pfItem.salesmanCode = $("#SALES_PERSON").val();
        	     pfItem.finalRentalFee = $("#finalRentalFee").html();
        	     pfItem.orderDt = $("#hiddenOrderDt").val();
        	     pfItem.orderStus = $("#hiddenOrderStus").val();
        	     pfItem.custName = $("#customerName").html();
-       	     //ahhh
-       	     console.log("hello222");
-	         console.log($("#hiddenOrderDt").val());
-	         console.log($("#hiddenOrderStus").val());
+       	     pfItem.remark = $("#txtRemark").val();
 
+       	     var allItems = AUIGrid.getGridData(myGridIDProForma);
 
             if (AUIGrid.isUniqueValue(myGridIDProForma, "salesOrdId", pfItem.salesOrdId)) {
-		      fn_addRow(pfItem);
-		      fn_calTotalPackPrice(pfItem);
+
+            	for (var i = 0 ; i < allItems.length ; i++){
+            		if(pfItem.packType != allItems[i].packType){
+            			packTypeInd = false;
+            		}
+                }
+
+                if(packTypeInd == false){
+                	Common.alert("Kindly choose same Package Type");
+                }else{
+                	fn_addRow(pfItem);
+                    fn_calTotalPackPrice();
+                }
 		    } else {
 		      Common.alert("<spring:message code='service.msg.rcdExist'/>");
 		      return;
@@ -734,7 +753,7 @@ function fn_loadOrderPO(orderId){
            }
        }
 
-       $("#txtTotalAmt").html(totalPackPrice + '(' + totalPriceAllItems.length + ')');
+       $("#txtTotalAmt").html(totalPackPrice.toFixed(2) + '(' + totalPriceAllItems.length + ')');
     }
 
 
@@ -742,29 +761,6 @@ function fn_loadOrderPO(orderId){
 
     	var allItems = AUIGrid.getGridData(myGridIDProForma);
     	var data = {};
-/*
-    	var ProFormaM = {
-
-                //orderId : $("#ORD_ID").val(),
-                packType : $("#packType").val(),
-                memCode : $("#SALES_PERSON").val(),
-                adStartDt : $("#adStartDt").val(),
-                adEndDt : $("#adEndDt").val(),
-                totalAmt : $("#txtPackagePrice").html(),
-                packPrice : $("#hiddenPacOriPrice").val(),
-                remark : $("#txtRemark").val(),
-                discount : $("#discount").val(),
-                //orderNo : $("#ORD_NO").val()
-
-            }
-
-            var saveForm = {
-                "ProFormaM" : ProFormaM
-            } */
-
-        console.log("checked ahhhh");
-        console.log(allItems);
-        console.log(allItems.length);
 
         if(allItems.length > 0){
 
@@ -774,21 +770,22 @@ function fn_loadOrderPO(orderId){
             for (var i = 0 ; i < allItems.length ; i++){
 	            rowList[i] = {
 	                    salesOrdNo : allItems[i].salesOrdNo,
-	                    salesOrdId : allItems[i].salesOrdId
+	                    salesOrdId : allItems[i].salesOrdId,
+	                    packType : allItems[i].packType,
+	                    memCode :  allItems[i].salesmanCode,
+	                    adStartDt : allItems[i].adStartDt,
+	                    adEndDt : allItems[i].adEndDt,
+	                    totalAmt: allItems[i].packPrice, //afterDiscount
+	                    packPrice: allItems[i].packOriPrice, //Bfore discount  xx
+	                    remark:  allItems[i].remark, //xx
+	                    discount: allItems[i].disc,
 	            }
             }
 
             data.all = rowList;
-            data.form = [{packType : $("#packType").val(),
-                memCode : $("#SALES_PERSON").val(),
-                adStartDt : $("#adStartDt").val(),
-                adEndDt : $("#adEndDt").val(),
-                totalAmt : $("#txtPackagePrice").html(),
-                packPrice : $("#hiddenPacOriPrice").val(),
-                remark : $("#txtRemark").val(),
-                discount : $("#discount").val(),
-                }]
 
+            console.log("dataAll====")
+            console.log(data.all); //see where insert less
         }
         else {
         	Common.alert("Choose at least 1 order no for Pro Forma Invoice");
@@ -1070,8 +1067,8 @@ if (checkedItems.length > 0){
         <tr>
             <th scope="row"><spring:message code="sal.text.remark" /></th>
             <td><textarea rows="5" id='txtRemark' name=''></textarea></td>
-            <th scope="row">Total Amount(Total Orders)</th>
-            <td><span id='txtTotalAmt' ></span></td>
+            <th scope="row"></th>
+            <td></td>
         </tr>
         </tbody>
         </table><!-- table end -->
@@ -1089,6 +1086,24 @@ if (checkedItems.length > 0){
 <section>
   <!-- grid_wrap start -->
   <article id="grid_wrap_ProForma" class="grid_wrap"></article>
+  <div id='divTotalProForma'>
+    <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+             <col style="width: 130px" />
+             <col style="width: 350px" />
+             <col style="width: 170px" />
+             <col style="width: *" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Total Amount<br />(Total Orders)</th>
+            <td><span id='txtTotalAmt' ></span></td>
+            <th scope="row"></th><td></td>
+        </tr>
+        </tbody>
+    </table><!-- table end -->
+  </div>
   <div id='divBtnProForma'>
    <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a href="#" id="btnRemoveProForma">Remove from Pro Forma</a></p></li>

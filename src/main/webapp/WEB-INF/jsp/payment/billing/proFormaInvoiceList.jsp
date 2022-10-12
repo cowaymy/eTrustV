@@ -31,6 +31,7 @@
                  {dataField :"deptCode", headerText : "<spring:message code="sal.title.text.deptCode" />",  width: 150, editable : false },
                  {dataField :"crtDt", headerText : "<spring:message code="service.grid.registerDt" />",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
                  {dataField :"packType", headerText : "<spring:message code="sal.text.typeOfPack" />", width: 130, editable : false },
+                 {dataField :"stusId", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false , visible : false},
                  {dataField :"status", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false },
                  {dataField :"crtUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
                  {dataField :"advPayKey", headerText : "<spring:message code="pay.title.advPayment" />" , width: 100, editable : false ,
@@ -77,10 +78,16 @@
        var proFormaId = selectedItems[0].item.proFormaId;
        var refNo = selectedItems[0].item.refNo;
        var Stus = selectedItems[0].item.status;
+       var stusId = selectedItems[0].item.stusId;
        var salesOrdNo = selectedItems[0].item.salesOrdNo;
        var salesOrdId = selectedItems[0].item.salesOrdId;
 
-       var param = "?salesOrdId=" + salesOrdId + "&salesOrdNo=" + salesOrdNo+ "&refNo=" + refNo + "&proFormaId=" + proFormaId;
+       /* if(stusId != '1') { //Active
+           Common.alert("Pro Forma edit only allowed for Active status");
+           return;
+       } */
+
+       var param = "?salesOrdId=" + salesOrdId + "&salesOrdNo=" + salesOrdNo + "&refNo=" + refNo + "&proFormaId=" + proFormaId + "&stus=" + Stus+ "&stusId=" + stusId;;
 
        if (type == 1 ){
     	  param += "&viewType=1";
@@ -88,16 +95,6 @@
        else{
     	   param += "&viewType=2";
        }
-
-      /*if (asStusId == "ACT") {
-         Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-         return;
-       }
-
-       if (asResultNo == "") {
-         Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-         return;
-       }*/
 
        Common.popupDiv("/payment/ProFormaEditViewPop.do"+ param, null, null,  true, 'editViewProFormaPopupId');
 

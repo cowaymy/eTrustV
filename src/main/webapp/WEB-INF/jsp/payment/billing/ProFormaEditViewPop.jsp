@@ -3,29 +3,34 @@
 
 <script type="text/javaScript">
   $(document).ready(function() {
-
+	  console.log("stusID ===" + '${stusId}')
+	  $("#saveForm #listproFormaStatus").val('${stusId}');
 	  createProFormaAUIGrid();
 	  fn_viewType("${viewType}");
 	  fn_stusOnchange();
 	  fn_getProFormaDetail();
+	  $("#hidActBill").val("Y");
   });
 
   function  fn_viewType(type){
 	  if (type == 1){ //View
-		  $('#sForm').hide();
           $('#btn_save').hide();
           $('#btn_clear').hide();
+          $("#saveForm #listproFormaStatus").attr("disabled",true);
+          fn_stusOnchange();
 	  }
 
 	  if (type == 2){ //Edit
-		  $('#sForm').show();
+		  $('#saveForm').show();
           $('#btn_save').show();
           $('#btn_clear').show();
       }
   }
 
   function fn_stusOnchange(){
-	  if ($("#sForm #listproFormaStatus").val() == 81) { //CONVERTED
+
+	  if ($("#saveForm #listproFormaStatus").val() == 81) { //CONVERTED
+		  fn_getDiscPeriod();
           $("#discPeriod").show();
           $("#advRental").show();
       }
@@ -39,14 +44,15 @@
       var columnLayoutProForma = [
                 {dataField :"proFormaId",  headerText : "proFormaId", width: 140 ,editable : false, visible : false},
                 {dataField :"salesOrdId",  headerText : "SalesOrdId", width: 140 ,editable : false, visible : false},
-                {dataField :"salesOrdNo", headerText : "salesOrdNo",   width: 100,editable : false, visible : false },
+                {dataField :"salesOrdNo", headerText : "salesOrdNo",   width: 100,editable : false},
                 {dataField :"refNo", headerText : "Ref No",   width: 100, editable : false  },
                 {dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 150 ,editable : false },
                 {dataField :"mthRentAmt",  headerText : "<spring:message code="sal.title.text.finalRentalFees" />",      width: 100 ,editable : false },
                 {dataField :"packType",  headerText : "<spring:message code="pay.head.package" />",    width: 100, editable : false },
                 {dataField :"discPeriod", headerText : "<spring:message code="pay.head.discountPeriod" />",  width: 100, editable : false },
                 {dataField :"advPeriod", headerText : "Advance Period",  width: 150, editable : false },
-                {dataField :"packPrice", headerText : "<spring:message code="sal.text.packPrice" />",  width: 150, editable : false }
+                {dataField :"packPrice", headerText : "<spring:message code="sal.text.packPrice" />",  width: 150, editable : false },
+                {dataField :"billType",  headerText : "billType", width: 140 ,editable : false, visible : false}
      ];
 
       //그리드 속성 설정
@@ -63,7 +69,7 @@
   }
 
   function fn_getProFormaDetail() {
-      Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", { proFormaId : '${proFormaId}'}, function(result) {
+      Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", { refNo : '${refNo}'}, function(result) {
     	  console.log("ahhhhhh");
     	  console.log(result);
 
@@ -71,26 +77,86 @@
           $("#customerName").html(result[0].custName);
           $("#typePack").html(result[0].packType);
           $("#salesmanCode").html(result[0].salesmanCode);
-          $("#discount").val(result[0].discPeriod);
+          $("#hidDiscPeriod").val(result[0].discPeriod);
+          $("#hidMthRentAmt").val(result[0].mthRentAmt);
+          $("#discount").val(result[0].discPeriod); //ahhhh
           $("#advStartDt").val(result[0].advStartDt);
           $("#advEndDt").val(result[0].advEndDt);
 
           AUIGrid.setGridData(proFormaGridID, result);
+
+          fn_calTotalPackPrice();
       });
   }
 
-  function fn_doSaveEdit(){
+  function fn_getDiscPeriod(){
+	  Common.ajax("GET", "/payment/getDiscPeriod.do", { refNo : '${refNo}'}, function(result) { //ahhh salesordid multiple
+          console.log("ahhhhhh");
+          console.log(result);
 
-      Common.ajax("POST", "/payment/farCheckConvertFn.do", { proFormaId : '${proFormaId}', stusId: $("#listproFormaStatus").val(), orderNo : $("#ORD_NO").val()},
-              function(result) {
-                Common.alert(result.message, fn_saveclose);
-                $("#popup_wrap").remove();
-                fn_selectListAjax();
-    });
+          if(result[0] != "" && result[0] != null){
+        	  $("#hidDiscStart").val(result[0].installment);
+              var discEnd = parseInt(result[0].installment) + parseInt($("#hidDiscPeriod").val());
+              $("#hidDiscEnd").val(discEnd);
+              $("#discount").val( $("#hidDiscStart").val() + " ~ " + $("#hidDiscEnd").val());
+          }
+          else{
+        	  Common.alert("This billing group does not have Active bill");
+        	  $("#hidActBill").val("N");
+          }
+      });
+
+  }
+
+  function fn_doSaveEdit(){
+	  var data = {};
+	  var billList = AUIGrid.getGridData(proFormaGridID);
+
+	  if( $("#hidActBill").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
+		  Common.alert("This billing group does not have Active bill");
+		  return;
+	  }
+
+	  if(billList.length > 0) {
+             data.all = billList;
+         }else {
+             return;
+         }
+
+         data.form = [{
+                 "saveForm" : $("#saveForm").serializeJSON()
+           }];
+
+         console.log("data111===");
+         console.log(data);
+         Common.ajax("POST", "/payment/updateProForma.do", data ,
+                 function(result) {
+                   Common.alert(result.message, fn_saveclose);
+                   $("#popup_wrap").remove();
+                   fn_selectListAjax();
+       });
   }
 
   function fn_saveclose() {
       editViewProFormaPopupId.remove();
+  }
+
+  function fn_calTotalPackPrice(){
+      //ahh
+      var totalPackPrice = 0;
+      var totalPriceAllItems = AUIGrid.getGridData(proFormaGridID);
+
+     console.log("total Price ahh");
+     console.log(totalPriceAllItems);
+
+     var ordCount = totalPriceAllItems.length;
+     if(totalPriceAllItems.length > 0){
+         for (var i = 0 ; i < totalPriceAllItems.length ; i++){
+             totalPackPrice += parseFloat(totalPriceAllItems[i].packPrice);
+         }
+     }
+
+     $("#txtTotalAmt").html(totalPackPrice.toFixed(2) + '(' + totalPriceAllItems.length + ')');
   }
 
 </script>
@@ -98,15 +164,7 @@
  <!-- popup_wrap start -->
  <section id="content">
   <!-- content start -->
-  <form id="proFormaForm" method="post">
-   <div style="display: none">
-    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
-    <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
-    <input type="text" name="refNo" id="refNo" value="${refNo}" />
-    <input type="text" name="proFormaId" id="proFormaId" value="${proFormaId}" />
-    <input type="text" name="viewType" id="viewType" value="${viewType}" />
-   </div>
-  </form>
+
   <header class="pop_header">
    <!-- pop_header start -->
    <h1>
@@ -161,6 +219,24 @@
 
 	     <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="proForma_grid_wrap" style="width:100%; height:100%; margin:0 auto;"></div>
+            <div id='divTotalProForma'>
+			    <table class="type1"><!-- table start -->
+			        <caption>table</caption>
+			        <colgroup>
+			             <col style="width: 130px" />
+			             <col style="width: 350px" />
+			             <col style="width: 170px" />
+			             <col style="width: *" />
+			        </colgroup>
+			        <tbody>
+			        <tr>
+			            <th scope="row"></th><td></td>
+			            <th scope="row">Total Amount<br />(Total Orders)</th>
+			            <td><span id='txtTotalAmt' ></span></td>
+			        </tr>
+			        </tbody>
+			    </table><!-- table end -->
+		  </div>
         </article>
    </article>
 
@@ -181,10 +257,23 @@
    <section>
     <br>
 
-<form action="#"   id="sForm"  name="saveForm" method="post"   onsubmit="return false;">
+<form action="#"   id="saveForm"  name="saveForm" method="post"   onsubmit="return false;">
 
         <section class="search_table"><!-- search_table start -->
-        <form action="#" method="post"  id='collForm' name ='collForm'>
+        <form action="#" method="post"  id='proFormaEditForm' name ='proFormaEditForm'>
+         <div style="display: none">
+		    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
+		    <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
+		    <input type="text" name="refNo" id="refNo" value="${refNo}" />
+		    <input type="text" name="proFormaId" id="proFormaId" value="${proFormaId}" />
+		    <input type="text" name="viewType" id="viewType" value="${viewType}" />
+		    <input type="text" name="hidDiscPeriod" id="hidDiscPeriod"/>
+		    <input type="text" name="hidDiscStart" id="hidDiscStart"/>
+		    <input type="text" name="hidDiscEnd" id="hidDiscEnd"  />
+            <input type="text" name="hidMthRentAmt" id="hidMthRentAmt"/>
+            <input type="text" name="hidActBill" id="hidActBill"/>
+
+		   </div>
 
         <table class="type1"><!-- table start -->
         <caption>table</caption>
@@ -198,12 +287,13 @@
         <tr>
             <th scope="row"><spring:message code='pay.head.Status'/></th>
             <td>
-		        <select id="listproFormaStatus" name="proFormaStatus" class="w100p" onchange="fn_stusOnchange()">
-		               <option value="1">Active</option><!--ProForma request submitted-->
-		               <option value="44">Pending</option><!--pending payment-->
-		               <option value="36">Closed</option><!--ProForma without payment-->
-		               <option value="81">Converted</option><!--ProFo rma convert to bill-->
-		               <option value="10">Cancelled</option><!--invoice been generate-->
+		        <select id="listproFormaStatus" name="proFormaStatus" class="w100p" onchange="fn_stusOnchange()" >
+		               <option value="0">Choose One</option>
+                       <option value="1">Active</option><!--ProForma request submitted-->
+                       <option value="44">Pending</option><!--pending payment-->
+                       <option value="36">Closed</option><!--ProForma without payment-->
+                       <option value="81">Converted</option><!--ProFo rma convert to bill-->
+                       <option value="10">Cancelled</option><!--invoice been generate-->
 		        </select>
 		    </td>
             <th scope="row"></th><td></td>
@@ -212,13 +302,9 @@
             <h3>Update <spring:message code="pay.head.discountPeriod" /></h3>
         </aside><!-- title_line end -->
         <tr id="discPeriod">
-
             <th scope="row"><spring:message code="pay.head.discountPeriod" /></th>
             <td>
-            <select  id="discount"   name= "discount" disabled="disabled" readonly="readonly">
-                <option value="12" >1</option>
-                <option value="24" >2</option>
-            </select>
+            <input type="text" title="" placeholder="Discount Period" class="w100p"   id="discount"  name="discount" disabled="disabled" readonly="readonly"/>
             <th scope="row"></th><td></td>
         </tr>
         <tr  id="advRental">

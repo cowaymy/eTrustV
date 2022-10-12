@@ -13,12 +13,18 @@ public interface ProFormaInvoiceService{
 
 	List<EgovMap> chkCustType(Map<String, Object> params);
 
-	void saveNewProForma(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO);
+	void saveNewProForma(List<Object> taskBillList, SessionVO sessionVO);
 
-	void farCheckConvertFn(Map<String, Object> params);
 
 	List<EgovMap> chkProForma(Map<String, Object> params);
 
 	List<EgovMap> selectInvoiceBillGroupListProForma(Map<String, Object> params);
+
+	List<EgovMap> getDiscPeriod(Map<String, Object> params) ;
+
+	int createTaxesBills(Map<String, Object> params, List<Object> taskBillList, SessionVO sessionVO);
+
+	Map<String, Object> updateProForma(Map<String, Object> params, SessionVO sessionVO);
+
 
 }

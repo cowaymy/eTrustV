@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.payment.billing.service.impl.ProFormaInvoiceMapper">
 
     <select id="searchProFormaInvoiceList" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT DISTINCT
 		   C.CUST_ID,
 		   C.NAME AS CUST_NAME,
 		   A.PRO_FORMA_ID,
@@ -24,7 +24,7 @@
 		   A.STUS_ID,
 		   G.NAME AS STATUS,
 		   H.USER_NAME AS CRT_USER,
-		   A.ADV_PAY_KEY,
+           CASE WHEN K.TYPE_ID = 92 THEN 'Y' ELSE 'N' END AS ADV_PAY_KEY,
 		   B.MTH_RENT_AMT,
 		   A.PACK_PRICE,
 		   I.ITM_STK_ID STK_ID
@@ -38,6 +38,8 @@
 		    JOIN SYS0047M H ON A.CRT_USER_ID = H.USER_ID
 		    JOIN SAL0002D I ON I.SALES_ORD_ID = B.SALES_ORD_ID
             LEFT JOIN SAL0092M J ON J.SRV_MEM_PAC_ID = 9 AND SRV_MEM_ITM_STUS_ID = 1 AND J.SRV_MEM_ITM_STK_ID = I.ITM_STK_ID
+            JOIN PAY0064D K ON K.SALES_ORD_ID = B.SALES_ORD_ID
+
 		WHERE 1=1
 		      AND A.STUS_ID != 8
 		      <if test="proFormaId != null and proFormaId != ''">
@@ -157,10 +159,10 @@
   <update id="farCheckConvertFn" parameterType="Map">
         UPDATE PAY0334D
         SET
-            STUS_ID = #{stusId},
+            STUS_ID = #{proFormaStatus},
             UPD_DT = SYSDATE,
             UPD_USER_ID = #{updator}
-        WHERE PRO_FORMA_ID = #{proFormaId}
+        WHERE REF_NO = #{refNo}
       </update>
 
     <select id="chkProForma" parameterType="Map" resultType="egovMap">
@@ -253,4 +255,236 @@
           ORDER BY Project2.SALES_ORD_NO ASC )
     </select>
 
+	<select id="getDiscPeriod" parameterType="Map" resultType="egovMap">
+		SELECT
+            INSTALLMENT,
+            SALES_ORD_ID,
+            BILLING_STUS
+        FROM  (
+            SELECT
+                A.INSTALLMENT,
+                A.SALES_ORD_ID,
+                A.BILLING_STUS
+            FROM PAY1002V A
+            JOIN PAY0334D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+            WHERE B.REF_NO = #{refNo}
+            AND A.BILLING_STUS = 'Active'
+            ORDER BY A.INSTALLMENT
+            )
+            WHERE ROWNUM  = 1
+	</select>
+
+	<select id="getStatus" parameterType="Map" resultType="egovMap">
+    SELECT
+		STUS_CODE_ID,
+		NAME STUS_DESC
+	FROM SYS0038M WHERE STUS_CODE_ID = #{proFormaStatus}
+  </select>
+
+  <insert id="insertDiscountEntry" parameterType="discountEntryVO">
+    INSERT INTO PAY0054D
+        (
+        DSCNT_ENTRY_ID,
+        ORD_ID,
+        DC_TYPE,
+        DC_AMT_PER_INSTLMT,
+        DC_START_INSTLMT,
+        DC_END_INSTLMT,
+        REM,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        DC_STUS_ID,
+        CNTRCT_ID )
+        VALUES
+        (
+        PAY0054D_SEQ.NEXTVAL,
+        #{ordId},
+        #{discountType},
+        #{discountAmount},
+        #{hidDiscStart},
+        #{hidDiscEnd},
+        #{remarks},
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId},
+        #{dcStatusId},
+        #{contractId}
+        )
+  </insert>
+
+  <select id="getTaskIdSeq"  resultType="int">
+        SELECT PAY0047D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+    <select id="selectSalesOrderMs" parameterType="Map" resultType="egovMap">
+        SELECT
+               Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+               Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+               Extent1.REF_NO REF_NO  ,
+               Extent1.SALES_DT SALES_DT  ,
+               Extent1.CUST_ID CUST_ID  ,
+               Extent1.CUST_CNT_ID CUST_CNT_ID  ,
+               Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+               Extent1.MEM_ID MEM_ID  ,
+               Extent1.BRNCH_ID BRNCH_ID  ,
+               Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+               <!-- Extent1.DSCNT_AMT DSCNT_AMT  ,
+               Extent1.TAX_AMT TAX_AMT  , -->
+               Extent1.TOT_AMT TOT_AMT  ,
+               Extent1.PROMO_ID PROMO_ID  ,
+               Extent1.BINDING_NO BINDING_NO  ,
+               Extent1.CC_PROMO_ID CC_PROMO_ID  ,
+               Extent1.TOT_PV TOT_PV  ,
+               Extent1.REM REM  ,
+               Extent1.PV_MONTH PV_MONTH  ,
+               Extent1.PV_YEAR PV_YEAR  ,
+               Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+               Extent1.UPD_DT UPD_DT  ,
+               Extent1.UPD_USER_ID UPD_USER_ID  ,
+               Extent1.SYNC_CHK SYNC_CHK  ,
+               Extent1.CUST_PO_NO CUST_PO_NO  ,
+               Extent1.REN_CHK_ID REN_CHK_ID  ,
+               Extent1.INST_PRIOD INST_PRIOD  ,
+               Extent1.DO_NO DO_NO  ,
+               Extent1.DEPT_CODE DEPT_CODE  ,
+               Extent1.GRP_CODE GRP_CODE  ,
+               Extent1.ORG_CODE ORG_CODE  ,
+               Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
+               Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
+               Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+               Extent1.MTH_RENT_AMT MTH_RENT_AMT  ,
+               Extent1.LOK LOK  ,
+               Extent1.AEON_STUS_ID AEON_STUS_ID  ,
+               Extent1.COMM_DT COMM_DT  ,
+               Extent1.CRT_USER_ID CRT_USER_ID  ,
+               Extent1.CRT_DT CRT_DT  ,
+               Extent1.PAY_COM_DT PAY_COM_DT  ,
+               Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
+               Extent1.REF_DOC_ID REF_DOC_ID  ,
+               <!-- Extent1.RENT_PROMO_ID RENT_PROMO_ID  , -->
+               Extent1.SALES_HM_ID SALES_HM_ID  ,
+               Extent1.SALES_SM_ID SALES_SM_ID  ,
+               Extent1.SALES_GM_ID SALES_GM_ID  ,
+               Extent1.ADV_BILL ADV_BILL  ,
+               Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
+               Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID
+          FROM SAL0001D Extent1
+         WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
+         AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <insert id="insTaskLogOrder" parameterType="Map">
+        INSERT INTO PAY0048D
+        (TASK_ID,
+        TASK_BILL_SO_ID,
+        TASK_REF_NO,
+        TASK_BILL_TYPE_ID,
+        TASK_REF_DT_TM,
+        TASK_BILL_AMT,
+        TASK_BILL_INST_NO,
+        TASK_BILL_BATCH_NO,
+        TASK_BILL_GRP_ID,
+        TASK_BILL_REM,
+        TASK_BILL_UPD_DT,
+        TASK_BILL_UPD_USER_ID,
+        TASK_BILL_ZR_LOC_ID,
+        TASK_BILL_RLIEF_CRTFCAT_ID,
+        TASK_BILL_RENTAL_RLIEF_ID,
+        TASK_BILL_CNTRCT_ID,
+        REF_NO )
+        VALUES(
+        #{newTaskId},
+        #{salesOrdId},
+        #{taskReferenceNo},
+        #{taskBillTypeId},
+        SYSDATE,
+        #{taskBillAmt},
+        #{taskBillInstNo},
+        #{taskBillBatchNo},
+        #{taskBillGroupId},
+        #{taskBillRemark},
+        SYSDATE,
+        #{taskBillUpdateBy},
+        #{taskBillZRLocationId},
+        #{taskBillReliefCertificateId},
+        #{taskBillRentalReliefId},
+        #{taskBillCnrctId},
+        #{taskSmqRefNo}
+        )
+    </insert>
+
+    <insert id="insBillTaskLog" parameterType="Map">
+        INSERT INTO PAY0047D
+        (TASK_ID,
+        TASK_TYPE,
+        BILLING_YEAR,
+        BILLING_MONTH,
+        TOT_CNT,
+        TOT_AMT,
+        START_DT,
+        STUS,
+        END_DT,
+        IS_CNFM,
+        IS_INVC_GENRT,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        TASK_REM )
+        VALUES(
+        #{newTaskId},
+        #{taskType},
+        #{billingYear},
+        #{billingMonth},
+        #{taskCount},
+        #{taskTotalAmount},
+        SYSDATE,
+        #{status},
+        SYSDATE,
+        #{isConfirmed},
+        #{isInvoiceGenerate},
+        SYSDATE,
+        #{createdBy},
+        SYSDATE,
+        #{updatedBy},
+        #{taskBillRemark}
+        )
+    </insert>
+
+    <select id="confirmTaxesAdvanceBill" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_ADV(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cTaxesAdvanceBill})}
+    </select>
+
+    <select id="selectRentalBillingSchedule" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.RENT_INST_ID RENT_INST_ID  ,
+               Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+               Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+               Extent1.INSTALLMENT INSTALLMENT  ,
+               Extent1.BILL_TYPE BILL_TYPE  ,
+               TO_CHAR(Extent1.SCHDUL_DT , 'DD/MM/YYYY') SCHDUL_DT,
+               Extent1.BILL_AMT BILL_AMT  ,
+               Extent1.BILL_NO BILL_NO  ,
+               Extent1.BILLING_STUS BILLING_STUS  ,
+               Extent1.UPD_USER_ID UPD_USER_ID  ,
+               Extent1.UPD_DT UPD_DT
+          FROM ( SELECT RentalBillingScheduleView.RENT_INST_ID RENT_INST_ID  ,
+                        RentalBillingScheduleView.SALES_ORD_ID SALES_ORD_ID  ,
+                        RentalBillingScheduleView.SALES_ORD_NO SALES_ORD_NO  ,
+                        RentalBillingScheduleView.INSTALLMENT INSTALLMENT  ,
+                        RentalBillingScheduleView.BILL_TYPE BILL_TYPE  ,
+                        RentalBillingScheduleView.SCHDUL_DT SCHDUL_DT  ,
+                        RentalBillingScheduleView.BILL_AMT BILL_AMT  ,
+                        RentalBillingScheduleView.BILL_NO BILL_NO  ,
+                        RentalBillingScheduleView.BILLING_STUS BILLING_STUS  ,
+                        RentalBillingScheduleView.UPD_USER_ID UPD_USER_ID  ,
+                        RentalBillingScheduleView.UPD_DT UPD_DT
+                 FROM PAY1002V RentalBillingScheduleView ) Extent1
+         WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
+         ORDER BY Extent1.INSTALLMENT
+    </select>
 </mapper>
