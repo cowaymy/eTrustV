@@ -119,7 +119,7 @@
     })
 
     const setVal = (elemId, id) => {
-    	$(id).val($(elemId).multipleSelect("getSelects").join(","))
+    	$(id).val($(elemId).multipleSelect("getSelects").map(v => id == "#V_STATUS" ? "'" + v + "'" : v).join(","))
     }
 
     CommonCombo.make('assignStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 26} , '', {id: "code", name: "codeName", isShowChoose: false,isCheckAll : true,type : 'M'})
