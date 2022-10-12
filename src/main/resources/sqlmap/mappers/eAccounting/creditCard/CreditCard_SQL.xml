@@ -1171,8 +1171,8 @@ WHERE CRDIT_CARD_STUS = 'A'
 <!--                     /* AND A.CRC_LIMIT_MM = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM') */ -->
 <!--                     AND A.CRC_LIMIT_MM = #{month} -->
 
-                	AND TO_DATE(START_DATE,'DD/MM/YYYY')   <![CDATA[ <= ]]>   TO_DATE(#{month}||'/'||#{year},'MM/YYYY')
-                    AND TO_DATE(END_DATE,'DD/MM/YYYY')   <![CDATA[ >= ]]>   TO_DATE(#{month}||'/'||#{year},'MM/YYYY')
+                	AND TO_DATE(TO_CHAR(START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ <= ]]>   TO_DATE(#{month}||'/'||#{year},'MM/YYYY')
+                    AND TO_DATE(TO_CHAR(END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY')   <![CDATA[ >= ]]>   TO_DATE(#{month}||'/'||#{year},'MM/YYYY')
                 </if>
                 AND A.STUS_CODE_ID = 1
         ) A
