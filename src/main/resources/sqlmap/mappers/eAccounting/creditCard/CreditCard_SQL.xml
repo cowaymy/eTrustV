@@ -1212,7 +1212,7 @@ WHERE CRDIT_CARD_STUS = 'A'
 						WHERE 1=1
 						AND f0038d.STUS_CODE_ID = 1
 						<if test="year != null and year != '' ">
-			                AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
+			                AND TO_NUMBER(#{year}) <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
 						</if>
             )
                 AND C.APPV_PRCSS_STUS = 'A'
@@ -1267,7 +1267,7 @@ WHERE CRDIT_CARD_STUS = 'A'
 						WHERE 1=1
 						AND f0038d.STUS_CODE_ID = 1
 						<if test="year != null and year != '' ">
-			                AND #{year} <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
+			                AND TO_NUMBER(#{year}) <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
 						</if>
 				)
                 <if test="clmMonth != null and clmMonth != '' ">
