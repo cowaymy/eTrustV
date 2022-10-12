@@ -255,6 +255,7 @@
                  , V.RETN_NO
          FROM SAL1007V V
         <where>
+                AND REQ_STUS_ID IN (1,19)
             <if test="paramOrdId != null and paramOrdId != ''">
 		        AND V.ORD_ID = #{paramOrdId}
 		    </if>
