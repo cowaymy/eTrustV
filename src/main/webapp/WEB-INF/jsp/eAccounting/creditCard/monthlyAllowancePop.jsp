@@ -5,7 +5,7 @@
 </style>
 <script  type="text/javascript">
     var clmYyyy, clmMm;
-    var result = $.parseJSON('${result}');
+    var result = JSON.parse('${result}');
 
     $(document).ready(function(){
         console.log("monthlyAllowancePop.jsp")
