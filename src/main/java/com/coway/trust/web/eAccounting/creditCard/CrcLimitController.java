@@ -102,8 +102,10 @@ public class CrcLimitController {
 
         //Map result = crcLimitService.selectAvailableAllowanceAmt(params);
         List<EgovMap> result = creditCardService.selectAvailableAllowanceAmt(params);
-        model.put("result", new Gson().toJson(result));
-        model.put("item", params);
+        model.addAttribute("result", new Gson().toJson(result));
+        LOGGER.debug("gsonToJSON result ========== :: " + result);
+        LOGGER.debug("gsonToJSON result model ========== :: " + model);
+        model.addAttribute("item", params);
 
         return "eAccounting/creditCard/monthlyAllowancePop";
     }
