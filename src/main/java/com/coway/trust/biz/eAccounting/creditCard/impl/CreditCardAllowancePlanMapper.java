@@ -14,6 +14,7 @@ public interface CreditCardAllowancePlanMapper {
 	List<EgovMap> checkUpcomingAllowanceLimitDetailExist(Map<String, Object> params);
 	List<EgovMap> checkIfAllowanceLimitDetailStartDateExist(Map<String, Object> params);
 	int updateAllowanceLimitDetail(Map<String, Object> params);
+	int updateAllowanceLimitDetailAmount(Map<String, Object> params);
 	int insertAllowanceLimitDetail(Map<String, Object> params);
 	int removeAllowanceLimitDetail(Map<String, Object> params);
 	EgovMap getCreditCardHolderDetail(Map<String, Object> params);

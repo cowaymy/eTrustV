@@ -235,7 +235,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
             var data = {
                 action : "J",
                 rejResn : $("#rejctResn").val(),
-                adjNo : $("#adjNo").val()
+                adjNo : $("#adjNoAppv").val()
             };
 
             Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
@@ -253,7 +253,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
         } else {
             // v = C (Cancel)
-            $("#rejectAdjPop1").hide();
+            $("#rejectAdjPop1").remove();
         }
     }
 </script>
@@ -290,9 +290,9 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
                     <tr>
                         <th scope="row">Month/Year</th>
                         <td>
-                            <p><input type="text" id="frAdjPeriod" name="frAdjPeriod" title="" placeholder="" class="j_date2 w100p" /></p>
+                            <p><input type="text" id="frAdjPeriod" name="frAdjPeriod" title="" placeholder="" class="j_date2" /></p>
                             <span>~</span>
-                            <p><input type="text" id="toAdjPeriod" name="toAdjPeriod" title="" placeholder="" class="j_date2 w100p" /></p>
+                            <p><input type="text" id="toAdjPeriod" name="toAdjPeriod" title="" placeholder="" class="j_date2" /></p>
                         </td>
                         <th scope="row">Cost Center</th>
                         <td>
@@ -317,7 +317,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
                     <tr>
                         <th scope="row">Adjustment Number</th>
                         <td>
-                            <input type="text" title="Adjustment Number" placeholder="Adjustment Number" class="w100p" id="adjNo" name="adjNo" />
+                            <input type="text" title="Adjustment Number" placeholder="Adjustment Number" class="w100p" id="adjNoAppv" name="adjNo" />
                         </td>
                         <th scope="row">Adjustment Type</th>
                         <td>

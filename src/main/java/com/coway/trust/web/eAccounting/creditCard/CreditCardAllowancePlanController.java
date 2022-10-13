@@ -79,6 +79,15 @@ public class CreditCardAllowancePlanController {
 		return "eAccounting/creditCard/crcAllowancePlanLimit/crcAllowanceMasterPlanAddPop";
 	}
 
+	@RequestMapping(value = "/crcAllowanceMasterPlanEditPop.do")
+	public String crcAllowanceMasterPlanEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		EgovMap cardHolderDetail = creditCardAllowancePlanService.getCreditCardHolderDetail(params);
+		EgovMap limitPlanDetail = creditCardAllowancePlanService.getAllowanceLimitDetailPlan(params);
+		model.addAttribute("cardHolderDetail", cardHolderDetail);
+		model.addAttribute("limitPlanDetail", limitPlanDetail);
+		return "eAccounting/creditCard/crcAllowancePlanLimit/crcAllowanceMasterPlanEditPop";
+	}
+
 	@RequestMapping(value = "/getCreditCardHolderList.do")
     public ResponseEntity<List<EgovMap>> getCreditCardHolderList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 		LOGGER.debug("params =====================================>>  " + params);
@@ -108,6 +117,13 @@ public class CreditCardAllowancePlanController {
     public ResponseEntity<ReturnMessage> createAllowanceDetailLimitPlan(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
         ReturnMessage message = new ReturnMessage();
         message = creditCardAllowancePlanService.createAllowanceDetailLimitPlan(params,sessionVO);
+        return ResponseEntity.ok(message);
+    }
+
+	@RequestMapping(value = "/editAllowanceDetailLimitPlan.do")
+    public ResponseEntity<ReturnMessage> editAllowanceDetailLimitPlan(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		message = creditCardAllowancePlanService.editAllowanceLimitDetailPlan(params,sessionVO);
         return ResponseEntity.ok(message);
     }
 }

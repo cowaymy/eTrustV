@@ -37,7 +37,7 @@
         }, {
             dataField : "crditCardUserName",
             headerText : "Cardholder Name",
-            width : 200
+            width : 150
         }, {
             dataField : "crditCardNo",
             headerText : "Card No.",
@@ -67,11 +67,15 @@
         }, {
             dataField : "personInChargeName",
             headerText : "Person-In-Charge Name",
-            width : 200
+            width : 150
         }, {
             dataField : "crditCardStus",
             headerText : "Card Status",
             width : 110
+        },{
+            dataField : "planLimitAmt",
+            headerText : "Active Limit Plan",
+            width : 85
         }
     ];
 
@@ -136,7 +140,7 @@
                                         }, {
                                             dataField : "status",
                                             headerText : "Status",
-                                            width : 150,
+                                            width : 100,
                                     		styleFunction : cellStyleFunction,
                                             editable:false
                                         }, {
@@ -145,20 +149,35 @@
                                             width : 250,
                                     		styleFunction : cellStyleFunction,
                                             editable:true
-                                        }, {
+                                        },{
                                             dataField : "",
-                                            headerText : "Action",
-                                            width : 120,
+                                            headerText : "",
+                                            width : 80,
+                                            editable:false,
+                                            renderer : {
+                                                    type : "ButtonRenderer",
+                                                    labelText : "Edit",
+                                                    onclick : function(rowIndex, columnIndex, value, item) {
+                                                    	fn_editAllowance(item.allowancePlanId);
+                                                    }
+                                             }
+                                        },{
+                                            dataField : "",
+                                            headerText : "",
+                                            width : 100,
                                             editable:false,
                                             renderer : {
                                                     type : "ButtonRenderer",
                                                     labelText : "Remove",
                                                     onclick : function(rowIndex, columnIndex, value, item) {
-                                                    	if(undefinedCheck(item.remarks) == ""){
-                                                    		Common.alert("Please fill in remarks before remove");
-                                                    		return false;
-                                                    	}
-                                                    	fn_removeAllowancePlanLimitDetail(item.allowancePlanId, item.remarks);
+                                                    	var confirmSaveMsg = "Are you sure want to Delete? Please fill in remarks message if you have not do it.";
+                                                        Common.confirm(confirmSaveMsg, x=function() {
+                                                        	if(undefinedCheck(item.remarks) == ""){
+                                                        		Common.alert("Please fill in remarks before remove");
+                                                        		return false;
+                                                        	}
+                                                        	fn_removeAllowancePlanLimitDetail(item.allowancePlanId, item.remarks);
+                                                        });
                                                     }
                                              }
                                         }
@@ -178,9 +197,13 @@
         multiCombo();
 
         AUIGrid.bind(allowanceMasterPlanGridID, "cellDoubleClick", function(event) {
+            $('#creditCardHolderSelected').text('');
+            $('#creditCardHolderCardNumberSelected').text('');
             var colIndex = event.columnIndex;
             crditCardSeq = event.item.crditCardSeq;
 
+            $('#creditCardHolderSelected').text(event.item.crditCardUserName);
+            $('#creditCardHolderCardNumberSelected').text(event.item.crditCardNo);
             fn_getAllowancePlanLimitDetailList();
         });
         AUIGrid.bind(allowanceMasterDetailPlanGridID, "cellDoubleClick", function(event) {
@@ -229,6 +252,16 @@
     	}
     	else{
             Common.alert("Please select a card holder");
+            return false;
+    	}
+    }
+
+    function fn_editAllowance(id){
+    	if(crditCardSeq > 0){
+    		Common.popupDiv("/eAccounting/creditCardAllowancePlan/crcAllowanceMasterPlanEditPop.do", {allowancePlanId : id, creditCardSeq: crditCardSeq}, null, true, "crcAllowanceMasterPlanEditPop");
+    	}
+    	else{
+            Common.alert("Please select a limit plan");
             return false;
     	}
     }
@@ -355,6 +388,8 @@
 	            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_addAllowance()">New Limit Plan</a></p></li>
         		<li><p class="btn_grid"><a href="javascript:fn_excelDownDetail();">GENERATE</a></p></li>
 	         </ul>
+        	<div style="color:darkgreen;">Current selected credit card holder : <span id="creditCardHolderSelected"></span></div>
+        	<div style="color:darkgreen; margin-bottom:5px;">Current selected credit card number : <span id="creditCardHolderCardNumberSelected"></span></div>
         	<div style="color:green;">*Highlighted Green indicates currently active limit plan</div>
         </div>
 

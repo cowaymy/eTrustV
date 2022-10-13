@@ -9,7 +9,9 @@
 			                   WHEN 'A' THEN 'Active'
 			                   WHEN 'R' THEN 'Removed'
 			                 END ) AS CRDIT_CARD_STUS,
-		o0001d.NAME AS PERSON_IN_CHARGE_NAME
+		o0001d.NAME AS PERSON_IN_CHARGE_NAME,
+		NVL((SELECT PLAN_LIMIT_AMT FROM FCM0038D WHERE CREDIT_CARD_SEQ = f0016m.CRDIT_CARD_SEQ AND STUS_CODE_ID = 1
+        AND SYSDATE BETWEEN TO_DATE(START_DATE,'DD/MM/YYYY') AND TO_DATE(END_DATE,'DD/MM/YYYY')),0) AS PLAN_LIMIT_AMT
 		FROM FCM0016M f0016m
 		LEFT JOIN ORG0001D o0001d
 		ON o0001d.MEM_CODE = f0016m.CHRG_USER_ID
@@ -31,7 +33,7 @@
 				<foreach item="item" collection="crditCardStus" index="index" open="(" separator="," close=")">
 				#{item}
 				</foreach>
-			</if>
+		</if>
 		ORDER BY f0016m.CRDIT_CARD_USER_NAME
     </select>
 
@@ -44,7 +46,7 @@
     </select>
 
     <select id="getAllowanceLimitDetailPlan" parameterType="Map" resultType="egovMap">
-		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE
+		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE, REMARKS
 		FROM FCM0038D
 		WHERE 1=1
 		AND ALLOWANCE_PLAN_ID = #{allowancePlanId}
@@ -132,6 +134,15 @@
 		PLAN_LIMIT_AMT = #{planLimitAmt},
 		START_DATE = TO_DATE(#{startDate},'DD/MM/YYYY'),
 		END_DATE = TO_DATE(#{endDate},'DD/MM/YYYY HH24:MI:SS'),
+		REMARKS = #{remarks},
+		UPD_BY = #{updatedBy},
+		UPD_DT = SYSDATE
+		WHERE ALLOWANCE_PLAN_ID = #{allowancePlanId}
+   	</update>
+
+   	<update id="updateAllowanceLimitDetailAmount" parameterType="Map">
+		UPDATE FCM0038D
+		SET PLAN_LIMIT_AMT = #{planLimitAmt},
 		REMARKS = #{remarks},
 		UPD_BY = #{updatedBy},
 		UPD_DT = SYSDATE

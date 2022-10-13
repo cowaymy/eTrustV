@@ -59,6 +59,11 @@ public class CreditCardAllowancePlanServiceImpl  implements CreditCardAllowanceP
 	}
 
 	@Override
+	public EgovMap getAllowanceLimitDetailPlan(Map<String, Object> params) {
+		return creditCardAllowancePlanMapper.getAllowanceLimitDetailPlan(params);
+	}
+
+	@Override
 	public void updateAllowancePlanList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 	}
@@ -204,6 +209,24 @@ public class CreditCardAllowancePlanServiceImpl  implements CreditCardAllowanceP
 		else{
 	        message.setCode(AppConstants.FAIL);
 			message.setMessage("Unexpected Date Error");
+		}
+
+		return message;
+	}
+
+
+	@Override
+	public ReturnMessage editAllowanceLimitDetailPlan(Map<String, Object> params, SessionVO sessionVO) {
+        ReturnMessage message = new ReturnMessage();
+		params.put("updatedBy", sessionVO.getUserId());
+		int result = creditCardAllowancePlanMapper.updateAllowanceLimitDetailAmount(params);
+
+		if(result > 0){
+	        message.setCode(AppConstants.SUCCESS);
+		}
+		else{
+	        message.setCode(AppConstants.FAIL);
+			message.setMessage("Unexpected Update Error");
 		}
 
 		return message;

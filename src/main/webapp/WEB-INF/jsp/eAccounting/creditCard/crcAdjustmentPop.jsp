@@ -96,7 +96,8 @@
 	    headerHeight : 40,
 	    height : 160,
 	    // 셀 선택모드 (기본값: singleCell)
-	    selectionMode : "multipleCells"
+	    selectionMode : "multipleCells",
+	    wordWrap : true
 	};
     //AUIGRID
 
@@ -132,6 +133,7 @@
         // Default hide Approval Buttons (Approve/Reject)
         //$("#appBtns").hide();
 
+		console.log("${item.mode}");
         // View/Approval/Edit Mode :: View Set - Start
         if("${item.mode}" != "N") {
 			$('#newSubmitButton').hide();
@@ -764,6 +766,9 @@
             } else if(result2.code == "99") {
                 Common.alert("Allowance adjustment failed to update.");
             }
+
+            //refresh grid list
+            fn_listAdjPln();
         });
     }
     // ========== Submit/Draft - End ==========
@@ -794,12 +799,12 @@
                 });
             } else {
                 console.log("fn_appAdjustment :: v = j")
-
-                $("#crcAdjustmentPop").hide();
+				var adjNo = $("#adjNo").val();
+                $("#crcAdjustmentPop").remove();
                 /*
                 $("#rejectAdjPop1").show();
                 */
-                Common.popupDiv("/eAccounting/creditCard/crcAdjustmentRejectPop.do", {adjNo : $("#adjNo").val()}, null, true, "crcAdjustmentRejectPop");
+                Common.popupDiv("/eAccounting/creditCard/crcAdjustmentRejectPop.do", {adjNo : adjNo}, null, true, "crcAdjustmentRejectPop");
             }
         });
     }
@@ -836,7 +841,7 @@
 
         } else {
             // v = C (Cancel)
-            $("#rejectAdjPop1").hide();
+            $("#rejectAdjPop1").remove();
         }
     }
     // ========== Approve/Reject - End ==========

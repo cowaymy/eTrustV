@@ -20,4 +20,8 @@ public interface CreditCardAllowancePlanService {
     ReturnMessage createAllowanceDetailLimitPlan(Map<String, Object> params, SessionVO sessionVO);
 
 	ReturnMessage removeAllowanceLimitDetailPlan(Map<String, Object> params, SessionVO sessionVO);
+
+	EgovMap getAllowanceLimitDetailPlan(Map<String, Object> params);
+
+	ReturnMessage editAllowanceLimitDetailPlan(Map<String, Object> params, SessionVO sessionVO);
 }

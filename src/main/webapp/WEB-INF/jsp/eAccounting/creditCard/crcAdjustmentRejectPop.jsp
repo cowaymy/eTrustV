@@ -7,7 +7,8 @@
     var clmYyyy, clmMm;
 
     $(document).ready(function(){
-        console.log("crcAdjustmentRejectPop.jsp")
+        console.log("crcAdjustmentRejectPop.jsp");
+        $('#adjNo').val('${adjNo}');
     });
 
     $.fn.clearForm = function() {
@@ -30,17 +31,17 @@
         console.log("crcAdjustmentRejectPop :: fn_rejectProceed");
         if(v == "P") {
             // v = P (Proceed)
-            if($("#rejctResn").val() == null && $("#rejctResn").val() == "") {
+            if($("#rejctResn1").val() == null && $("#rejctResn1").val() == "") {
                 Common.alert("Reject reason cannot be empty");
                 return false;
             }
 
             var data = {
                 action : "J",
-                rejResn : $("#rejctResn").val(),
+                rejctResn : $("#rejctResn1").val(),
                 adjNo : $("#adjNo").val()
             };
-
+			console.log(data);
             Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
                 $("#adjForm").clearForm();
                 $("#rejctResn").val("");
@@ -51,12 +52,13 @@
                 } else {
                     Common.alert("Allowance adjustment fail to reject");
                 }
+                fn_listAdjApp();
             });
 
         } else {
             // v = C (Cancel)
             $("#adjForm").clearForm();
-            $("#rejctResn").val("");
+            $("#rejctResn1").val("");
             $("#crcAdjustmentRejectPop").remove();
         }
     }
@@ -76,7 +78,7 @@
         <input type="hidden" id="adjNo" name="adjNo">
         <p class="msg_txt">
             <spring:message code="rejectionWebInvoiceMsg.registMsg" />
-            <textarea cols="20" rows="5" id="rejctResn" placeholder="Reject reason max 400 characters"></textarea>
+            <textarea cols="20" rows="5" id="rejctResn1" placeholder="Reject reason max 400 characters"></textarea>
         </p>
 
         <ul class="center_btns">

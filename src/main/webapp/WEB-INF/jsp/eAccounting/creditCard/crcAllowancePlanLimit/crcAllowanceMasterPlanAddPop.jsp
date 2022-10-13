@@ -12,11 +12,11 @@ $(document).ready(function () {
     $('#maxEndDateCheckButton').click(function() {
     	  if ($(this).is(':checked')) {
 			$('#endDate').val('01/9999');
-			$('#endDate').prop('disabled',true);
+			$('#endDate').prop('readonly',true);
     	  }
     	  else{
 			$('#endDate').val('');
-			$('#endDate').prop('disabled',false);
+			$('#endDate').prop('readonly',false);
     	  }
     	});
 });

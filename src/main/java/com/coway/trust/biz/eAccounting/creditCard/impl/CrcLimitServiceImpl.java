@@ -146,13 +146,13 @@ public class CrcLimitServiceImpl implements CrcLimitService {
                 insMap.put("signal", "+");
                 insMap.put("adjType", params.get("adjType"));
                 insMap.put("amt", params.get("rAmt"));
-                insMap.put("crcId", params.get("rCrcId_h"));
+                insMap.put("crcId", params.get("rCrcHolder"));
 
             } else if("4".equals((String) params.get("adjType"))) {
                 insMap.put("signal", "-");
                 insMap.put("adjType", params.get("adjType"));
                 insMap.put("amt", params.get("sAmt"));
-                insMap.put("crcId", params.get("sCrcId_h"));
+                insMap.put("crcId", params.get("sCrcHolder"));
             }
 
             String sAdjPeriod = ("3".equals((String) params.get("adjType"))) ? (String) params.get("rPeriod") : (String) params.get("sPeriod");
@@ -222,10 +222,14 @@ public class CrcLimitServiceImpl implements CrcLimitService {
         String rPeriod = params.get("rPeriod").toString();
 
         params.put("userId", sessionVO.getUserId());
-        params.put("sPeriodMonth",sPeriod.substring(0,2));
-        params.put("sPeriodYear",sPeriod.substring(3));
-        params.put("rPeriodMonth",rPeriod.substring(0,2));
-        params.put("rPeriodYear",rPeriod.substring(3));
+        if(!CommonUtils.isEmpty(sPeriod)){
+            params.put("sPeriodMonth",sPeriod.substring(0,2));
+            params.put("sPeriodYear",sPeriod.substring(3));
+        }
+        if(!CommonUtils.isEmpty(rPeriod)){
+            params.put("rPeriodMonth",rPeriod.substring(0,2));
+            params.put("rPeriodYear",rPeriod.substring(3));
+        }
 
         crcLimitMapper.updateSenderApp_FCM33D(params);
         crcLimitMapper.updateReceiverApp_FCM33D(params);
