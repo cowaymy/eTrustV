@@ -32,8 +32,34 @@
                     5706,  -- MATTRESS
                     5707   -- FRAME
                )
+               <if test='stkCtgryId != null and stkCtgryId != ""'>
+                AND T1.STK_CTGRY_ID = #{stkCtgryId}
+               </if>
+
+            <if test='stkCtgryId == null or stkCtgryId == "" or stkCtgryId == 9999'>
+            UNION
+            (
+             SELECT 16451646 STK_ID, '800001-800002 - PRIME MATTRESS KING'         C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 16471648 STK_ID, '800003-800004 - PRIME MATTRESS QUEEN'        C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 16491650 STK_ID, '800005-800006 - PRIME MATTRESS SUPER SINGLE' C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 20002001 STK_ID, '800011-800012 - PRIME II MATTRESS KING'      C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 20022003 STK_ID, '800013-800014 - PRIME II MATTRESS QUEEN'     C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL
+            )
+            </if>
         )
         ORDER BY PROD_GROUP DESC, CODE_NAME ASC, STK_ID ASC
+    </select>
+
+    <select id="selectPltvProductCategoryList" resultType="egovMap">
+         SELECT
+            DISTINCT STK_CTGRY_ID CODE_ID , CODE_NAME
+          FROM sys0026m S26
+          JOIN SYS0013M S13 ON S13.CODE_ID = S26.STK_CTGRY_ID
+          WHERE STK_TYPE_ID = 61 AND stus_code_id = 1
+          AND STK_CTGRY_ID NOT IN (924,59)
+          UNION
+          SELECT 9999 CODE_ID, 'Mattress Set/Mattress Only' CODE_NAME
+          FROM DUAL
     </select>
 
     <select id="selectMaxAccYm" resultType="String">

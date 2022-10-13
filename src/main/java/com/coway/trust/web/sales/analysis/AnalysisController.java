@@ -72,11 +72,18 @@ public class AnalysisController {
 	}
 
 	@RequestMapping(value = "/selectPltvProductCodeList")
-	public ResponseEntity<List<EgovMap>> selectPltvProductCodeList() throws Exception {
+	public ResponseEntity<List<EgovMap>> selectPltvProductCodeList(@RequestParam Map<String, Object> params) throws Exception {
 
-		List<EgovMap> productList = null;
-		productList = analysisService.selectPltvProductCodeList();
+		List<EgovMap> productList = analysisService.selectPltvProductCodeList(params);
 
 		return ResponseEntity.ok(productList);
 	}
+
+	 @RequestMapping(value = "/selectPltvProductCategoryList")
+	  public ResponseEntity<List<EgovMap>> selectPltvProductCategoryList(@RequestParam Map<String, Object> params) throws Exception {
+
+	    List<EgovMap> productCategoryList = analysisService.selectPltvProductCategoryList(params);
+
+	    return ResponseEntity.ok(productCategoryList);
+	  }
 }

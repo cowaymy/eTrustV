@@ -106,6 +106,7 @@ function fn_whereSQL() {
 
 	let isExtrade = $("#dataForm #listExtrade option:selected").val();
 	let listRentalType = $("#dataForm #listRentalType option:selected").val();
+	let listMattressType = $("#dataForm #listMattressType option:selected").val();
 
 	let whereSQL = '';
 
@@ -117,23 +118,37 @@ function fn_whereSQL() {
     	whereSQL += " AND A.RENTAL_TYPE = '" + listRentalType + "'";
     }
 
+    if( !FormUtil.isEmpty(listMattressType) ){
+        whereSQL += " AND A.HC_PACK = '" + listMattressType + "'";
+    }
+
 	return whereSQL;
 }
 
 $(function(){
-	 doGetComboAndGroup2('/sales/analysis/selectPltvProductCodeList.do', null, '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
+	doGetComboOrder('/sales/analysis/selectPltvProductCategoryList.do', '', 'CODE_ID', '66', 'listProductCat',  'S');
 
-	  $('#listRentStus').change(function() {
-	        switch(this.value){
-            case "SUS" :
-            	doDefCombo(susListData, '' ,'listPltvReportType', 'S', '');
-            	break;
-            case "RET_TER" :
-            	doDefCombo(retTerListData, '' ,'listPltvReportType', 'S', '');
-                break;
-            default :
-                doDefCombo('', '' ,'listPltvReportType', 'S', '');
-                break;
+	doGetComboAndGroup2('/sales/analysis/selectPltvProductCodeList.do', '' , '', 'listProductId', 'S', 'fn_setOptGrpClass');
+
+	$('#listProductCat').change(function() {
+
+		$('#listProductId').empty();
+		doGetComboAndGroup2('/sales/analysis/selectPltvProductCodeList.do', {stkCtgryId:this.value} , '', 'listProductId', 'S', 'fn_setOptGrpClass');
+		(this.value == 9999 || this.value == 5706) ? $('#mattressPackRow').show() : $('#mattressPackRow').hide();
+
+	});
+
+	$('#listRentStus').change(function() {
+	    switch(this.value){
+	    case "SUS" :
+	        doDefCombo(susListData, '' ,'listPltvReportType', 'S', '');
+	        break;
+	    case "RET_TER" :
+	        doDefCombo(retTerListData, '' ,'listPltvReportType', 'S', '');
+	        break;
+	    default :
+	        doDefCombo('', '' ,'listPltvReportType', 'S', '');
+	        break;
            }
 	    });
 });
@@ -171,6 +186,12 @@ function fn_setOptGrpClass() {
     <col style="width:*" />
 </colgroup>
 <tbody>
+<tr>
+    <th scope="row"><spring:message code="sales.ProductCategory" /></th>
+    <td>
+        <select class="w100p" id="listProductCat" name="listProductCat" />
+    </td>
+</tr>
 <tr>
     <th scope="row"><spring:message code="sales.prod" /></th>
     <td>
@@ -210,6 +231,16 @@ function fn_setOptGrpClass() {
             <option value="">Choose One</option>
             <option value="OL">OL</option>
             <option value="FL">FL</option>
+        </select>
+    </td>
+</tr>
+<tr id="mattressPackRow" style="display:none">
+    <th scope="row">Mattress Package</th>
+    <td>
+        <select class="w50p" id="listMattressType" name="listMattressType" >
+            <option value="">Choose One</option>
+            <option value="2">Mattress Set</option>
+            <option value="1">Mattress Only</option>
         </select>
     </td>
 </tr>

@@ -1,6 +1,7 @@
 package com.coway.trust.biz.sales.analysis.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -24,10 +25,14 @@ public class AnalysisImpl extends EgovAbstractServiceImpl implements AnalysisSer
 	}
 
 	@Override
-	public List<EgovMap> selectPltvProductCodeList() {
-
-		return analysisMapper.selectPltvProductCodeList();
+	public List<EgovMap> selectPltvProductCodeList(Map<String, Object> params) {
+		return analysisMapper.selectPltvProductCodeList(params);
 	}
+
+	 @Override
+	  public List<EgovMap> selectPltvProductCategoryList(Map<String, Object> params) {
+	    return analysisMapper.selectPltvProductCategoryList(params);
+	  }
 
 	@Override
 	public String selectMaxAccYm() {
