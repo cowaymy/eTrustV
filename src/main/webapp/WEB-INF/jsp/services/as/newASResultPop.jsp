@@ -708,20 +708,22 @@
 
 	}
 
-	function getASStockPrice(_PRC_ID) {
+	function getASStockPrice(_PRC_ID, fn) {
 		var ret = 0;
 		Common.ajaxSync("GET", "/services/as/getASStockPrice.do", {
 			PRC_ID : _PRC_ID
 		}, function(result) {
 			try {
 				ret = parseInt(result[0].amt, 10);
+				if (fn) {
+					fn(ret)
+				}
 			} catch (e) {
 				Common.alert("<spring:message code='service.msg.NoStkPrc'/>");
 				ret = 0;
 			}
 		});
 		return ret;
-
 	}
 
 	function fn_chStock() {
@@ -842,35 +844,41 @@
 		fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
 
 		// CHECK PRICE
-		var chargePrice = 0;
-		var chargeTotalPrice = 0;
 
 		if (fitem.filterType == "CHG") {
-			chargePrice = getASStockPrice(fitem.filterID);
-			if (chargePrice == 0) {
-				Common.alert("<spring:message code='service.msg.stkNoPrice'/>");
-				return;
-			}
-		}
-
-		fitem.filterPrice = parseInt(chargePrice, 10).toFixed(2);
-
-		chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number((chargePrice));
-		fitem.filterTotal = Number(chargeTotalPrice).toFixed(2);
-
-		var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
-		$("#txtFilterCharge").val(v.toFixed(2));
-
-		if (AUIGrid.isUniqueValue(myFltGrd10, "filterID", fitem.filterID)) {
-			fn_addRow(fitem);
+			chargePrice = getASStockPrice(fitem.filterID, (price) => {
+				if (price == 0) {
+					Common.alert("<spring:message code='service.msg.stkNoPrice'/>");
+					return;
+				}
+				processPrice(fitem, price)
+			});
 		} else {
-			Common.alert("<spring:message code='service.msg.rcdExist'/>");
-			return;
+			processPrice(fitem, 0)
 		}
+	}
 
-		fn_calculateTotalCharges();
-		fn_filterClear();
+	const processPrice = (item, price) => {
+		var chargePrice = price;
+        var chargeTotalPrice = 0;
 
+        item.filterPrice = parseInt(chargePrice, 10).toFixed(2);
+
+        chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number((chargePrice));
+        item.filterTotal = Number(chargeTotalPrice).toFixed(2);
+
+        var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
+        $("#txtFilterCharge").val(v.toFixed(2));
+
+        if (AUIGrid.isUniqueValue(myFltGrd10, "filterID", item.filterID)) {
+            fn_addRow(item);
+        } else {
+            Common.alert("<spring:message code='service.msg.rcdExist'/>");
+            return;
+        }
+
+        fn_calculateTotalCharges();
+        fn_filterClear();
 	}
 
 	function fn_filterClear() {
