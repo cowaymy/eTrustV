@@ -166,8 +166,16 @@ function fn_reqstSubmit() {
     }
 	console.log(checkMemCode);
 	if(checkMemCode) {
-		var requestGroup = "${requestGroup}";
-		Common.popupDiv("/eAccounting/staffClaim/registrationMsgPop.do", {requestGroup:requestGroup}, null, true, "registrationMsgPop");
+		Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"${clmType}", memAccId: "${memAccId}", clmMonth: "${clmMonth}"}, function(result) {
+	        console.log(result);
+	        if(result.data > 0) {
+	        	Common.alert(result.message);
+	        }
+	        else{
+	    		var requestGroup = "${requestGroup}";
+	    		Common.popupDiv("/eAccounting/staffClaim/registrationMsgPop.do", {requestGroup:requestGroup}, null, true, "registrationMsgPop");
+	        }
+	    });
 	}
 }
 </script>

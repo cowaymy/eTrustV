@@ -266,6 +266,9 @@ public class StaffClaimController {
 
 	@RequestMapping(value = "/approveLinePop.do")
 	public String approveLinePop(@RequestParam Map<String, Object> params,ModelMap model) {
+		model.put("clmType", params.get("clmType").toString());
+		model.put("memAccId", params.get("memAccId").toString());
+		model.put("clmMonth", params.get("clmMonth").toString());
 		return "eAccounting/staffClaim/approveLinePop";
 	}
 

@@ -1231,7 +1231,7 @@ function fn_approveLinePop(memAccId, clmMonth, costCentre) {
                 fn_updateStaffClaimExp("");
             }
 
-            Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+            Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", {clmType:"J4", memAccId:memAccId, clmMonth:clmMonth}, null, true, "approveLineSearchPop");
         }
     });
 }
