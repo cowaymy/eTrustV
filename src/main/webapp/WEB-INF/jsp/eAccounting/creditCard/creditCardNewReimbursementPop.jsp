@@ -496,7 +496,7 @@ function fn_tempSave() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt"/></td>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" readonly/></td>
 	<th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete="off"/></td>
 </tr>

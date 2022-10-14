@@ -807,7 +807,7 @@ function fn_addRow() {
 function fn_getAllTotAmt() {
     // allTotAmt GET, SET
     var allTotAmt = 0.00;
-    var totAmtList = AUIGrid.getColumnValues (newGridID, "totAmt", true);
+    var totAmtList = AUIGrid.getColumnValues(newGridID, "totAmt", true);
     console.log(totAmtList);
     console.log(totAmtList.length);
     for(var i = 0; i < totAmtList.length; i++) {
@@ -860,7 +860,7 @@ function fn_getItemTotal() {
 
 function fn_checkCreditLimit(v) {
     // To check if limit exceeded
-    const {totAmt, cntrlExp} = v
+    const {totAmt, cntrlExp} = v;
     var allTotAmt = fn_getItemTotal();
     var limitFlg = true;
     var clmDt = $("#clmMonth").val(); //claim date
@@ -894,7 +894,7 @@ function fn_checkCreditLimit(v) {
 	                var totalCntrlSpentAmt = result1[0].cntrlSpentAmt;
 	                totalExpAmtSmall = totAmt;
 	                totalExpAmt = totalExpAmt + totalExpAmtSmall;
-	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmtSmall;
+	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmt;
 	                if(totalCntrlSpentAmt > planAmt)
 	                {
 	                    Common.alert('Insufficient Allowance Limit');
