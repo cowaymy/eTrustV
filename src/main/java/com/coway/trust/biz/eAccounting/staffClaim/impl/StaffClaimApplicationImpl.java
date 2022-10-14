@@ -1,9 +1,12 @@
 package com.coway.trust.biz.eAccounting.staffClaim.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,11 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.staffClaim.StaffClaimApplication;
 import com.coway.trust.biz.eAccounting.staffClaim.StaffClaimService;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
+import aj.org.objectweb.asm.Type;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("staffClaimApplication")
 public class StaffClaimApplicationImpl implements StaffClaimApplication {
@@ -35,6 +43,9 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 	private FileMapper fileMapper;
 
 	@Autowired
+	private StaffClaimMapper staffClaimMapper;
+
+	@Autowired
 	private StaffClaimService staffClaimService;
 
 	@Override
@@ -47,58 +58,70 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 	@Override
 	public void updateStaffClaimAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		try {
+    		LOGGER.debug("params =====================================>>  " + params);
 
-		LOGGER.debug("params =====================================>>  " + params);
+    		LOGGER.debug("list.size : {}", list.size());
 
-		LOGGER.debug("list.size : {}", list.size());
+    		// 243,258
+    		JSONArray updateList = null;
+    		String update = params.get("update").toString();
 
-		// 243,258
-		String update = (String) params.get("update");
-		String[] updateList = null;
-		if(!StringUtils.isEmpty(update)) {
-			updateList = params.get("update").toString().split(",");
-			LOGGER.debug("updateList.length : {}", updateList.length);
-		}
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		if (list.size() > 0) {
-			for(int i = 0; i < list.size(); i++) {
-				if(updateList != null && i < updateList.length) {
-					String atchFileId = updateList[i];
-					LOGGER.debug("params.get('atchFileGrpId') =====================================>>  " + params.get("atchFileGrpId"));
-					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
-					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
-					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
-				} else {
-					FileGroupVO fileGroupVO = new FileGroupVO();
+    		if(!StringUtils.isEmpty(update)) {
+				updateList = new JSONArray(update);
+    		}
 
-					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
-					//fileMapper.insertFileDetail(list.get(i));
+    		if (list.size() > 0) {
+    			for(int i = 0; i < list.size(); i++) {
+    				if(updateList != null && i < updateList.length()) {
+    					//Update previous existing data
+    					String atchFileGrpId = updateList.getJSONObject(i).getString("atchFileGrpId").toString();
+    					String atchFileId = updateList.getJSONObject(i).getString("atchFileId").toString();
+    					LOGGER.debug("atchFileId =====================================>>  " + atchFileGrpId);
+    					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
+    					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
+    					fileService.changeFile(Integer.parseInt(atchFileGrpId), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
+    				}
+    				else{
+    					//For Normal Expenses only if no update list found,
+    					//Car mileage will always have update list as it solely use update only and new attachment will call upload instead
+    					String atchFileGrpId = params.get("atchFileGrpId").toString();
+    					FileGroupVO fileGroupVO = new FileGroupVO();
+    					int atchFileId = staffClaimMapper.selectNewAtchFileId();
+    					list.get(i).setAtchFileId(atchFileId);
+    					staffClaimMapper.insertFileDetail(list.get(i));
+    					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
 
-					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
-					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
-					fileGroupVO.setChenalType(type.getCode());
-					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
-					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
+    					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
+    					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
+    					fileGroupVO.setChenalType(type.getCode());
+    					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
+    					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
 
-					LOGGER.debug("fileGroupVO =====================================>>  " + fileGroupVO);
-					fileMapper.insertFileGroup(fileGroupVO);
-				}
-			}
-		}
+    					LOGGER.debug("fileGroupVO =====================================>>  " + fileGroupVO);
+    					fileMapper.insertFileGroup(fileGroupVO);
+    				}
+    			}
+    		}
 
-		String remove = (String) params.get("remove");
-		String[] removeList = null;
-		if(!StringUtils.isEmpty(remove)) {
-			removeList = params.get("remove").toString().split(",");
-			LOGGER.debug("removeList.size : {}", removeList.length);
-		}
-		if(removeList != null && removeList.length > 0) {
-			for(int i = 0; i < removeList.length; i++) {
-				String atchFileId = removeList[i];
-				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
-			}
+    		String remove = params.get("remove").toString();
+    		JSONArray removeList = null;
+
+    		if(!StringUtils.isEmpty(remove)) {
+    			removeList = new JSONArray(remove);
+    		}
+
+    		if(removeList != null && removeList.length() > 0) {
+    			for(int i = 0; i < removeList.length(); i++) {
+    				String atchFileId = removeList.getJSONObject(i).getString("atchFileId").toString();;
+    				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
+    				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
+    			}
+    		}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -111,11 +134,16 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 			// 저장된 파일만 삭제
 			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
 		} else {
-			// Temp. Save
-			// 저장된 파일 삭제 및 테이블 데이터 삭제
-			// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - Start
-			if(params.get("atchFileGrpId") != null) {
-				fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+			int staffClaimDetailCount = staffClaimMapper.selectAttachmentStaffClaimExpItemCount(params);
+			//Logic change explain: Now if detect there are more than 1 detail record in FCM0020D, attachment will not be removed automatically by deletion of 1 record,
+			//instead user will have to manual delete, only if there is 1 detail record left, then attachment will be removed
+			if(staffClaimDetailCount <= 1){
+    			// Temp. Save
+    			// 저장된 파일 삭제 및 테이블 데이터 삭제
+    			// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - Start
+    			if(params.get("atchFileGrpId") != null) {
+    				fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+    			}
 			}
 			// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - End
 			staffClaimService.deleteStaffClaimExpItem(params);
@@ -123,10 +151,8 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 			if("1".equals(params.get("expGrp"))) {
 				staffClaimService.deleteStaffClaimExpMileage(params);
 			}
+
 			staffClaimService.updateStaffClaimExpTotAmt(params);
 		}
 	}
-
-
-
 }

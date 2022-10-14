@@ -3,11 +3,22 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#rejctResn").keyup(function(){
+		  $("#characterCount").text($(this).val().length + " of 900 max characters");
+	});
+
     $("#cancel_btn").click(fn_closePop);
     $("#rejct_btn").click(function() {
     	var rejctResn = $("#rejctResn").val();
     	console.log(rejctResn);
         fn_appvRejctSubmit("rejct", rejctResn);
+        $("#rejectRegistPop").remove();
+        $("#webInvoiceAppvViewPop").remove();
+    });
+    $("#rejct_no_resub_btn").click(function() {
+    	var rejctResn = $("#rejctResn").val();
+    	console.log(rejctResn);
+        fn_appvRejctSubmit("rejctnoresub", rejctResn);
         $("#rejectRegistPop").remove();
         $("#webInvoiceAppvViewPop").remove();
     });
@@ -26,9 +37,11 @@ function fn_closePop() {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt"><spring:message code="rejectionWebInvoiceMsg.registMsg" /><br /><br /><textarea cols="20" rows="5" id="rejctResn"></textarea></p>
+<p class="msg_txt"><spring:message code="rejectionWebInvoiceMsg.registMsg" /><br /><br />
+<textarea cols="20" rows="5" id="rejctResn" maxlength="900"></textarea><span id="characterCount">0 of 900 max characters</span></p>
 <ul class="center_btns mt20">
 	<li><p class="btn_blue2"><a href="#" id="rejct_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="rejct_no_resub_btn"><spring:message code="webInvoice.select.reject" /> No Resubmit</a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="cancel_btn"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->

@@ -18,25 +18,27 @@ function fn_approveLineSubmit() {
 	var newGridList = AUIGrid.getOrgGridData(newGridID);
 	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
 	console.log(clmNo);
+	var requestGroup = "${requestGroup}";
     var obj = {
             newGridList : newGridList,
             apprGridList : apprGridList,
             clmNo : clmNo,
-            allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
+            allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, '')),
+            //For staff claim only, usage is for multiple group approval
+            requestGroup: requestGroup
     };
     console.log(obj);
-
     Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {
         console.log(resultFinAppr);
 
         if(resultFinAppr.code == "99") {
             Common.alert("Please select the relevant final approver.");
         } else {
-            Common.ajax("POST", "/eAccounting/staffClaim/approveLineSubmit.do", obj, function(result) {
-                console.log(result);
-                Common.popupDiv("/eAccounting/staffClaim/completedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
-                //Common.alert("Your authorization request was successful.");
-            });
+//             Common.ajax("POST", "/eAccounting/staffClaim/approveLineSubmit.do", obj, function(result) {
+//                 console.log(result);
+//                 Common.popupDiv("/eAccounting/staffClaim/completedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
+//                 //Common.alert("Your authorization request was successful.");
+//             });
         }
     });
 }

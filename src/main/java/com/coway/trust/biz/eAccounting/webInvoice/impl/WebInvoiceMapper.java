@@ -144,4 +144,6 @@ public interface WebInvoiceMapper {
   List<EgovMap> selectAtchFileData(Map<String, Object> params);
 
   String selectFCM12Data(Map<String, Object> params);
+
+  EgovMap selectUserDetail(Map<String, Object> params);
 }

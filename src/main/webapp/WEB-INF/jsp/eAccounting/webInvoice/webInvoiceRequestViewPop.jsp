@@ -459,6 +459,7 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
         url = "/eAccounting/staffClaim/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
     }
     Common.ajax("POST", url, obj, function(result) {
+    	console.log("STEP 1::")
         console.log(result);
         console.log(result.data);
 
@@ -555,6 +556,7 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
 
             // TODO attachFile
             attachList = result.data.attachList;
+            console.log("ATTACHMENT LIST::");
             console.log(attachList);
             if(attachList) {
                 if(attachList.length > 0) {

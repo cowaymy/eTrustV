@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
 
 <style type="text/css">
 /* 커스텀 칼럼 스타일 정의 */
@@ -51,6 +52,10 @@ var staffClaimColumnLayout = [ {
 }, {
     dataField : "appvPrcssStusCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+},
+{
+	dataField:"isResubmitAllowed",
+	visible:false
 }, {
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />',
@@ -79,7 +84,6 @@ var staffClaimGridID;
 
 $(document).ready(function () {
 	staffClaimGridID = AUIGrid.create("#staffClaim_grid_wrap", staffClaimColumnLayout, staffClaimGridPros);
-
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#registration_btn").click(fn_newStaffClaimPop);
     $("#newExpStaffClaim").click(fn_NewClaimPop);
@@ -134,6 +138,10 @@ $(document).ready(function () {
     /*     Common.ajax("POST", "")
      }
         */
+
+
+    	// Edit rejected staff claim
+    	$("#editRejectBtn").click(fn_editRejected);
 });
 
 function fn_NewClaimPop() {
@@ -158,6 +166,10 @@ function fn_clearData() {
     /* $("#form_newStaffClaim").each(function() {
         this.reset();
     }); */
+
+    update = new Array();
+    remove = new Array();
+    myFileCaches = {}
     if($(":input:radio[name=expGrp]:checked").val() == "1"){
         fn_destroyMileageGrid();
         fn_createMileageAUIGrid();
@@ -254,13 +266,23 @@ function fn_setEvent() {
 	        console.log(recentGridItem);
 
 	        // 서버로 보낼 파일 캐시에 보관
-	        myFileCaches[selectRowIdx + 1  ] = {
+	        myFileCaches[selectRowIdx + 1] = {
 	            file : file
 	        };
 
 	        // 파일 수정이라면 수정하는 파일 아이디 보관
 	        if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
-                update.push(recentGridItem.atchFileId);
+	        	if(update.length > 0){
+	        		if(update[selectRowIdx]) {
+	        			update[selectRowIdx] = {atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId};
+	        		}
+	        		else{
+	                	update.push({atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId});
+	        		}
+	        	}
+	        	else{
+	            	update.push({atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId});
+	        	}
                 console.log(JSON.stringify(update));
             }
 
@@ -371,7 +393,6 @@ function fn_createMileageAUIGrid() {
 
     // 실제로 #grid_wrap 에 그리드 생성
     mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
-
     fn_mileageGridSetEvent();
 
     // AUIGrid 에 데이터 삽입합니다.
@@ -560,281 +581,327 @@ function fn_addMyGridRow() {
 
 function fn_removeMyGridRow() {
     AUIGrid.removeRow(myGridID, selectRowIdx);
+
+	var gridData = GridCommon.getEditData(myGridID);
+	 if(gridData.remove.length > 0) {
+         for(var i = 0; i < gridData.remove.length; i++) {
+        	 console.log(gridData.remove[i].clmSeq);
+         }
+     }
+}
+
+function fn_addCarMilleage(){
+    Common.showLoader();
+	console.log("Car Mileage Expense Add");
+	var gridDataList = AUIGrid.getGridData(mileageGridID);
+    for(var i = 0; i < gridDataList.length; i++) {
+    	// jQuery Ajax Form 사용
+        var formData = new FormData();
+        var data = {
+        		costCentr : $("#newCostCenter").val(),
+                costCentrName : $("#newCostCenterText").val(),
+                memAccId : $("#newMemAccId").val(),
+                bankCode : $("#bankCode").val(),
+                bankAccNo : $("#bankAccNo").val(),
+                clmMonth : $("#newClmMonth").val(),
+                expType : "J4001",
+                expTypeName : "Car Mileage",
+                glAccCode : "61130110",
+                glAccCodeName : "TRAVELLING CLAIM - LOCAL (LAND/SEA TRANSPORT)",
+                budgetCode : "01311",
+                budgetCodeName : "Local travel - Milleage",
+                clamUn : gridDataList[i].clamUn,
+                expGrp : gridDataList[i].expGrp,
+        		carMilagDt : moment(new Date(gridDataList[i].carMilagDt)).format('YYYY/MM/DD'),
+        		locFrom : gridDataList[i].locFrom,
+        		locTo : gridDataList[i].locTo,
+        		cur : "MYR",
+        		carMilag : gridDataList[i].carMilag,
+        		carMilagAmt : gridDataList[i].carMilagAmt,
+        		tollAmt : gridDataList[i].tollAmt,
+        		parkingAmt : gridDataList[i].parkingAmt,
+        		purpose : gridDataList[i].purpose,
+        		expDesc : gridDataList[i].expDesc,
+        		totAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
+        		gstAmt : 0,
+        		taxNonClmAmt : 0,
+                expGrp : "1"
+        }
+
+		Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
+            console.log(result);
+            if(result.data.fileGroupKey){
+                data.atchFileGrpId = result.data.fileGroupKey
+            }
+            console.log(data);
+            AUIGrid.addRow(newGridID, data, "last");
+		});
+    }
+
+    fn_getAllTotAmt();
+
+    // Grid 초기화
+    fn_destroyMileageGrid();
+    fn_createMileageAUIGrid();
+    Common.removeLoader();
+}
+
+function  fn_updateCarMilleage(){
+    Common.showLoader();
+    var formData = new FormData();
+    var updateLength = update.length;
+    $.each(myFileCaches, function(n, v) {
+    	if(n <= updateLength){
+        	console.log("n : " + n + " v.file : " + v.file);
+            formData.append(n, v.file);
+    	}
+    });
+	console.log("Car Mileage Expense Update")
+    formData.append("update", JSON.stringify(update));
+    console.log(JSON.stringify(update));
+    formData.append("remove", JSON.stringify(remove));
+    console.log(JSON.stringify(remove));
+
+	Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
+        console.log(result);
+    });
+        var gridDataList = AUIGrid.getGridData(mileageGridID);
+        for(var i = 0; i < gridDataList.length; i++) {
+            var data = {
+            		costCentr : $("#newCostCenter").val(),
+                    costCentrName : $("#newCostCenterText").val(),
+                    memAccId : $("#newMemAccId").val(),
+                    bankCode : $("#bankCode").val(),
+                    bankAccNo : $("#bankAccNo").val(),
+                    clmMonth : $("#newClmMonth").val(),
+                    expType : "J4001",
+                    expTypeName : "Car Mileage",
+                    glAccCode : "61130110",
+                    glAccCodeName : "TRAVELLING CLAIM - LOCAL (LAND/SEA TRANSPORT)",
+                    budgetCode : "01311",
+                    budgetCodeName : "Local travel - Milleage",
+                    clamUn : gridDataList[i].clamUn,
+                    expGrp : gridDataList[i].expGrp,
+                    carMilagDt : moment(new Date(gridDataList[i].carMilagDt)).format('YYYY/MM/DD'),
+                    locFrom : gridDataList[i].locFrom,
+                    locTo : gridDataList[i].locTo,
+                    cur : "MYR",
+                    carMilag : gridDataList[i].carMilag,
+                    carMilagAmt : gridDataList[i].carMilagAmt,
+                    tollAmt : gridDataList[i].tollAmt,
+                    parkingAmt : gridDataList[i].parkingAmt,
+                    purpose : gridDataList[i].purpose,
+                    expDesc : gridDataList[i].expDesc,
+                    totAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
+                    gstAmt : 0,
+                    taxNonClmAmt : 0,
+                    expGrp : "1"
+            }
+            console.log(data);
+            if(FormUtil.isEmpty(gridDataList[i].clmSeq)) {
+            	//For new detail record under existing detail record
+            	 var formDataAdd = new FormData();
+                 $.each(myFileCaches, function(n, v) {
+                 	console.log("n : " + n + " v.file : " + v.file);
+                 	if(n == (i+1)){
+                 		formDataAdd.append(n, v.file);
+                 	}
+                 });
+
+            	Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpload.do", formDataAdd, function(result) {
+                    console.log(result);
+                    if(result.data.fileGroupKey){
+                        data.atchFileGrpId = result.data.fileGroupKey
+                    }
+                    console.log(data);
+                    AUIGrid.addRow(newGridID, data, "last");
+        		});
+            } else {
+            	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
+            }
+        }
+
+        console.log(data);
+        fn_getAllTotAmt();
+        clmSeq = 0;
+        // Grid 초기화
+        fn_destroyMileageGrid();
+        fn_createMileageAUIGrid();
+        Common.removeLoader();
+}
+
+function fn_addNormalExpenses(){
+	var formData = Common.getFormData("form_newStaffClaim");
+	console.log("Normal Expense Add")
+    var data = {
+            costCentr : $("#newCostCenter").val()
+            ,costCentrName : $("#newCostCenterText").val()
+            ,memAccId : $("#newMemAccId").val()
+            ,bankCode : $("#bankCode").val()
+            ,bankAccNo : $("#bankAccNo").val()
+            ,clmMonth : $("#newClmMonth").val()
+            ,supplir : $("#supplir").val()
+            ,supplirName : $("#supplirName").val()
+            ,invcType : $("#invcType").val()
+            ,invcTypeName : $("#invcType option:selected").text()
+            ,invcNo : $("#invcNo").val()
+            ,invcDt : $("#invcDt").val()
+            ,gstRgistNo : $("#gstRgistNo").val()
+            ,cur : "MYR"
+            ,expDesc : $("#expDesc").val()
+            ,gridData : GridCommon.getEditData(myGridID)
+    };
+
+    Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
+        console.log(result);
+
+        data.atchFileGrpId = result.data.fileGroupKey
+        console.log(data);
+
+        if(data.gridData.add.length > 0) {
+            for(var i = 0; i < data.gridData.add.length; i++) {
+                data.gridData.add[i].costCentr = data.costCentr;
+                data.gridData.add[i].costCentrName = data.costCentrName;
+                data.gridData.add[i].memAccId = data.memAccId;
+                data.gridData.add[i].bankCode = data.bankCode;
+                data.gridData.add[i].bankAccNo = data.bankAccNo;
+                data.gridData.add[i].clmMonth = data.clmMonth;
+                data.gridData.add[i].supplir = data.supplir;
+                data.gridData.add[i].supplirName = data.supplirName;
+                data.gridData.add[i].invcType = data.invcType;
+                data.gridData.add[i].invcTypeName = data.invcTypeName;
+                data.gridData.add[i].invcNo = data.invcNo;
+                data.gridData.add[i].invcDt = data.invcDt;
+                data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+                data.gridData.add[i].cur = data.cur;
+                data.gridData.add[i].expDesc = data.expDesc;
+                data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
+                data.gridData.add[i].taxCode = "VB";
+                data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
+                AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+            }
+        }
+
+        fn_getAllTotAmt();
+    });
+}
+
+function fn_updateNormalExpenses(){
+	var formData = Common.getFormData("form_newStaffClaim");
+	console.log("Normal Expense Update")
+    var data = {
+            costCentr : $("#newCostCenter").val()
+            ,costCentrName : $("#newCostCenterText").val()
+            ,memAccId : $("#newMemAccId").val()
+            ,bankCode : $("#bankCode").val()
+            ,bankAccNo : $("#bankAccNo").val()
+            ,clmMonth : $("#newClmMonth").val()
+            ,supplir : $("#supplir").val()
+            ,supplirName : $("#supplirName").val()
+            ,invcType : $("#invcType").val()
+            ,invcTypeName : $("#invcType option:selected").text()
+            ,invcNo : $("#invcNo").val()
+            ,invcDt : $("#invcDt").val()
+            ,gstRgistNo : $("#gstRgistNo").val()
+            ,cur : "MYR"
+            ,expDesc : $("#expDesc").val()
+            ,gridData : GridCommon.getEditData(myGridID)
+    };
+
+    $("#attachTd").html("");
+    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
+
+    formData.append("atchFileGrpId", atchFileGrpId);
+    formData.append("update", JSON.stringify(update));
+    console.log(JSON.stringify(update));
+    formData.append("remove", JSON.stringify(remove));
+    console.log(JSON.stringify(remove));
+    Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
+        console.log(result);
+
+        console.log(data);
+
+        if(data.gridData.add.length > 0) {
+            for(var i = 0; i < data.gridData.add.length; i++) {
+            	data.gridData.add[i].costCentr = data.costCentr;
+                data.gridData.add[i].costCentrName = data.costCentrName;
+                data.gridData.add[i].memAccId = data.memAccId;
+                data.gridData.add[i].bankCode = data.bankCode;
+                data.gridData.add[i].bankAccNo = data.bankAccNo;
+                data.gridData.add[i].clmMonth = data.clmMonth;
+                data.gridData.add[i].supplir = data.supplir;
+                data.gridData.add[i].supplirName = data.supplirName;
+                data.gridData.add[i].invcType = data.invcType;
+                data.gridData.add[i].invcTypeName = data.invcTypeName;
+                data.gridData.add[i].invcNo = data.invcNo;
+                data.gridData.add[i].invcDt = data.invcDt;
+                data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+                data.gridData.add[i].cur = data.cur;
+                data.gridData.add[i].expDesc = data.expDesc;
+                data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+                data.gridData.add[i].taxCode = "VB";
+                data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
+                AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+            }
+        }
+        if(data.gridData.update.length > 0) {
+            for(var i = 0; i < data.gridData.update.length; i++) {
+            	data.gridData.update[i].costCentr = data.costCentr;
+                data.gridData.update[i].costCentrName = data.costCentrName;
+                data.gridData.update[i].memAccId = data.memAccId;
+                data.gridData.update[i].bankCode = data.bankCode;
+                data.gridData.update[i].bankAccNo = data.bankAccNo;
+                data.gridData.update[i].clmMonth = data.clmMonth;
+                data.gridData.update[i].supplir = data.supplir;
+                data.gridData.update[i].supplirName = data.supplirName;
+                data.gridData.update[i].invcType = data.invcType;
+                data.gridData.update[i].invcTypeName = data.invcTypeName;
+                data.gridData.update[i].invcNo = data.invcNo;
+                data.gridData.update[i].invcDt = data.invcDt;
+                data.gridData.update[i].gstRgistNo = data.gstRgistNo;
+                data.gridData.update[i].cur = data.cur;
+                data.gridData.update[i].expDesc = data.expDesc;
+                data.gridData.update[i].taxCode = "VB";
+                data.gridData.update[i].taxName = "OP (Purchase(0%):Out of scope)";
+                AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+            }
+        }
+        if(data.gridData.remove.length > 0) {
+            for(var i = 0; i < data.gridData.remove.length; i++) {
+                AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+            }
+        }
+
+        fn_getAllTotAmt();
+
+        clmSeq = 0;
+    });
 }
 
 function fn_addRow() {
 	console.log("fn_addRow Action");
     // 파일 업로드 전에 필수 값 체크
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
-    console.log(fn_checkEmpty());
     if(fn_checkEmpty()) {
         // Expense Type Name == Car Mileage Expense
         //$("#expTypeName").val() == "Car Mileage Expense"
         // WebInvoice Test는 Test
         console.log($(":input:radio[name=expGrp]:checked").val());
         if($(":input:radio[name=expGrp]:checked").val() == "1") {
-        	console.log("Car Mileage Expense")
-        	// jQuery Ajax Form 사용
-            var formData = new FormData();
-            $.each(myFileCaches, function(n, v) {
-            	console.log("n : " + n + " v.file : " + v.file);
-                formData.append(n, v.file);
-            });
+        	console.log("Car Mileage Expense");
             console.log(clmSeq);
         	if(clmSeq == 0) {
-        		console.log("Car Mileage Expense Add")
-        		Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
-                    console.log(result);
-
-                    var gridDataList = AUIGrid.getGridData(mileageGridID);
-                    for(var i = 0; i < gridDataList.length; i++) {
-                        var data = {
-                        		costCentr : $("#newCostCenter").val(),
-                                costCentrName : $("#newCostCenterText").val(),
-                                memAccId : $("#newMemAccId").val(),
-                                bankCode : $("#bankCode").val(),
-                                bankAccNo : $("#bankAccNo").val(),
-                                clmMonth : $("#newClmMonth").val(),
-                                expType : "J4001",
-                                expTypeName : "Car Mileage",
-                                glAccCode : "61130110",
-                                glAccCodeName : "TRAVELLING CLAIM - LOCAL (LAND/SEA TRANSPORT)",
-                                budgetCode : "01311",
-                                budgetCodeName : "Local travel - Milleage",
-                                clamUn : gridDataList[i].clamUn,
-                                expGrp : gridDataList[i].expGrp,
-                        		carMilagDt : gridDataList[i].carMilagDt,
-                        		locFrom : gridDataList[i].locFrom,
-                        		locTo : gridDataList[i].locTo,
-                        		cur : "MYR",
-                        		carMilag : gridDataList[i].carMilag,
-                        		carMilagAmt : gridDataList[i].carMilagAmt,
-                        		tollAmt : gridDataList[i].tollAmt,
-                        		parkingAmt : gridDataList[i].parkingAmt,
-                        		purpose : gridDataList[i].purpose,
-                        		expDesc : gridDataList[i].expDesc,
-                        		totAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
-                        		gstAmt : 0,
-                        		taxNonClmAmt : 0
-                        }
-                        data.atchFileGrpId = result.data.fileGroupKey
-                        console.log(data);
-                        AUIGrid.addRow(newGridID, data, "last");
-                    }
-
-                    fn_getAllTotAmt();
-
-                    // Grid 초기화
-                    fn_destroyMileageGrid();
-                    fn_createMileageAUIGrid();
-                });
+        		fn_addCarMilleage();
         	} else {
-        		console.log("Car Mileage Expense Update")
-        		formData.append("atchFileGrpId", atchFileGrpId);
-                formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-                console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-                formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-                console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-
-        		Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
-                    console.log(result);
-
-                    var gridDataList = AUIGrid.getGridData(mileageGridID);
-                    for(var i = 0; i < gridDataList.length; i++) {
-                        var data = {
-                        		costCentr : $("#newCostCenter").val(),
-                                costCentrName : $("#newCostCenterText").val(),
-                                memAccId : $("#newMemAccId").val(),
-                                bankCode : $("#bankCode").val(),
-                                bankAccNo : $("#bankAccNo").val(),
-                                clmMonth : $("#newClmMonth").val(),
-                                expType : "J4001",
-                                expTypeName : "Car Mileage",
-                                glAccCode : "61130110",
-                                glAccCodeName : "TRAVELLING CLAIM - LOCAL (LAND/SEA TRANSPORT)",
-                                budgetCode : "01311",
-                                budgetCodeName : "Local travel - Milleage",
-                                clamUn : gridDataList[i].clamUn,
-                                expGrp : gridDataList[i].expGrp,
-                                carMilagDt : gridDataList[i].carMilagDt,
-                                locFrom : gridDataList[i].locFrom,
-                                locTo : gridDataList[i].locTo,
-                                cur : "MYR",
-                                carMilag : gridDataList[i].carMilag,
-                                carMilagAmt : gridDataList[i].carMilagAmt,
-                                tollAmt : gridDataList[i].tollAmt,
-                                parkingAmt : gridDataList[i].parkingAmt,
-                                purpose : gridDataList[i].purpose,
-                                expDesc : gridDataList[i].expDesc,
-                                totAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
-                                gstAmt : 0,
-                                taxNonClmAmt : 0
-                        }
-                        console.log(data);
-                        if(FormUtil.isEmpty(gridDataList[i].clmSeq)) {
-                        	AUIGrid.addRow(newGridID, data, "last");
-                        } else {
-                        	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
-                        }
-                    }
-
-                    console.log(data);
-
-                    fn_getAllTotAmt();
-
-                    clmSeq = 0;
-
-                    // Grid 초기화
-                    fn_destroyMileageGrid();
-                    fn_createMileageAUIGrid();
-                });
+        		fn_updateCarMilleage();
         	}
         } else {
-        	console.log("Normal Expense")
-        	var formData = Common.getFormData("form_newStaffClaim");
+        	console.log("Normal Expense");
         	console.log(clmSeq);
         	if(clmSeq == 0) {
-        		console.log("Normal Expense Add")
-                var data = {
-                        costCentr : $("#newCostCenter").val()
-                        ,costCentrName : $("#newCostCenterText").val()
-                        ,memAccId : $("#newMemAccId").val()
-                        ,bankCode : $("#bankCode").val()
-                        ,bankAccNo : $("#bankAccNo").val()
-                        ,clmMonth : $("#newClmMonth").val()
-                        ,supplir : $("#supplir").val()
-                        ,supplirName : $("#supplirName").val()
-                        ,invcType : $("#invcType").val()
-                        ,invcTypeName : $("#invcType option:selected").text()
-                        ,invcNo : $("#invcNo").val()
-                        ,invcDt : $("#invcDt").val()
-                        ,gstRgistNo : $("#gstRgistNo").val()
-                        ,cur : "MYR"
-                        ,expDesc : $("#expDesc").val()
-                        ,gridData : GridCommon.getEditData(myGridID)
-                };
-
-                Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
-                    console.log(result);
-
-                    data.atchFileGrpId = result.data.fileGroupKey
-                    console.log(data);
-
-                    if(data.gridData.add.length > 0) {
-                        for(var i = 0; i < data.gridData.add.length; i++) {
-                            data.gridData.add[i].costCentr = data.costCentr;
-                            data.gridData.add[i].costCentrName = data.costCentrName;
-                            data.gridData.add[i].memAccId = data.memAccId;
-                            data.gridData.add[i].bankCode = data.bankCode;
-                            data.gridData.add[i].bankAccNo = data.bankAccNo;
-                            data.gridData.add[i].clmMonth = data.clmMonth;
-                            data.gridData.add[i].supplir = data.supplir;
-                            data.gridData.add[i].supplirName = data.supplirName;
-                            data.gridData.add[i].invcType = data.invcType;
-                            data.gridData.add[i].invcTypeName = data.invcTypeName;
-                            data.gridData.add[i].invcNo = data.invcNo;
-                            data.gridData.add[i].invcDt = data.invcDt;
-                            data.gridData.add[i].gstRgistNo = data.gstRgistNo;
-                            data.gridData.add[i].cur = data.cur;
-                            data.gridData.add[i].expDesc = data.expDesc;
-                            data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
-                            data.gridData.add[i].taxCode = "VB";
-                            data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
-                            AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
-                        }
-                    }
-
-                    fn_getAllTotAmt();
-                });
+        		fn_addNormalExpenses();
             } else {
-            	console.log("Normal Expense Update")
-                var data = {
-                        costCentr : $("#newCostCenter").val()
-                        ,costCentrName : $("#newCostCenterText").val()
-                        ,memAccId : $("#newMemAccId").val()
-                        ,bankCode : $("#bankCode").val()
-                        ,bankAccNo : $("#bankAccNo").val()
-                        ,clmMonth : $("#newClmMonth").val()
-                        ,supplir : $("#supplir").val()
-                        ,supplirName : $("#supplirName").val()
-                        ,invcType : $("#invcType").val()
-                        ,invcTypeName : $("#invcType option:selected").text()
-                        ,invcNo : $("#invcNo").val()
-                        ,invcDt : $("#invcDt").val()
-                        ,gstRgistNo : $("#gstRgistNo").val()
-                        ,cur : "MYR"
-                        ,expDesc : $("#expDesc").val()
-                        ,gridData : GridCommon.getEditData(myGridID)
-                };
-
-                $("#attachTd").html("");
-                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
-
-                formData.append("atchFileGrpId", atchFileGrpId);
-                formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-                console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-                formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-                console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-                Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
-                    console.log(result);
-
-                    console.log(data);
-
-                    if(data.gridData.add.length > 0) {
-                        for(var i = 0; i < data.gridData.add.length; i++) {
-                        	data.gridData.add[i].costCentr = data.costCentr;
-                            data.gridData.add[i].costCentrName = data.costCentrName;
-                            data.gridData.add[i].memAccId = data.memAccId;
-                            data.gridData.add[i].bankCode = data.bankCode;
-                            data.gridData.add[i].bankAccNo = data.bankAccNo;
-                            data.gridData.add[i].clmMonth = data.clmMonth;
-                            data.gridData.add[i].supplir = data.supplir;
-                            data.gridData.add[i].supplirName = data.supplirName;
-                            data.gridData.add[i].invcType = data.invcType;
-                            data.gridData.add[i].invcTypeName = data.invcTypeName;
-                            data.gridData.add[i].invcNo = data.invcNo;
-                            data.gridData.add[i].invcDt = data.invcDt;
-                            data.gridData.add[i].gstRgistNo = data.gstRgistNo;
-                            data.gridData.add[i].cur = data.cur;
-                            data.gridData.add[i].expDesc = data.expDesc;
-                            data.gridData.add[i].atchFileGrpId = atchFileGrpId;
-                            data.gridData.add[i].taxCode = "VB";
-                            data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
-                            AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
-                        }
-                    }
-                    if(data.gridData.update.length > 0) {
-                        for(var i = 0; i < data.gridData.update.length; i++) {
-                        	data.gridData.update[i].costCentr = data.costCentr;
-                            data.gridData.update[i].costCentrName = data.costCentrName;
-                            data.gridData.update[i].memAccId = data.memAccId;
-                            data.gridData.update[i].bankCode = data.bankCode;
-                            data.gridData.update[i].bankAccNo = data.bankAccNo;
-                            data.gridData.update[i].clmMonth = data.clmMonth;
-                            data.gridData.update[i].supplir = data.supplir;
-                            data.gridData.update[i].supplirName = data.supplirName;
-                            data.gridData.update[i].invcType = data.invcType;
-                            data.gridData.update[i].invcTypeName = data.invcTypeName;
-                            data.gridData.update[i].invcNo = data.invcNo;
-                            data.gridData.update[i].invcDt = data.invcDt;
-                            data.gridData.update[i].gstRgistNo = data.gstRgistNo;
-                            data.gridData.update[i].cur = data.cur;
-                            data.gridData.update[i].expDesc = data.expDesc;
-                            data.gridData.update[i].taxCode = "VB";
-                            data.gridData.update[i].taxName = "OP (Purchase(0%):Out of scope)";
-                            AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
-                        }
-                    }
-                    if(data.gridData.remove.length > 0) {
-                        for(var i = 0; i < data.gridData.remove.length; i++) {
-                            AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
-                        }
-                    }
-
-                    fn_getAllTotAmt();
-
-                    clmSeq = 0;
-                });
+            	fn_updateNormalExpenses();
             }
 
             fn_clearData();
@@ -846,7 +913,7 @@ function fn_addRow() {
 function fn_getAllTotAmt() {
     // allTotAmt GET, SET
     var allTotAmt = 0.00;
-    var totAmtList = AUIGrid.getColumnValues (newGridID, "totAmt", true);
+    var totAmtList = AUIGrid.getColumnValues(newGridID, "totAmt", true);
     console.log(totAmtList.length);
     for(var i = 0; i < totAmtList.length; i++) {
         allTotAmt += totAmtList[i];
@@ -903,6 +970,11 @@ function fn_viewStaffClaimPop(clmNo) {
 }
 
 function fn_selectStaffClaimInfo() {
+	if(!Number.isInteger(clmSeq)){
+		Common.alert("This is a new record. Please save before able to view");
+		return false;
+	}
+
     var obj = {
             clmNo : clmNo
             ,clmSeq : clmSeq
@@ -929,7 +1001,7 @@ function fn_setStaffClaimInfo(result) {
         $("#bankCode").val(result.bankCode);
         $("#bankName").val(result.bankName);
         $("#bankAccNo").val(result.bankAccNo);
-        $("#newClmMonth").val(result.clmMonth);
+        //$("#newClmMonth").val(result.clmMonth);
         $("#expType").val(result.expType);
         $("#expTypeName").val(result.expTypeName);
         $("#glAccCode").val(result.glAccCode);
@@ -937,21 +1009,20 @@ function fn_setStaffClaimInfo(result) {
         $("#budgetCode").val(result.budgetCode);
         $("#budgetCodeName").val(result.budgetCodeName);
 
-        // TODO attachFile
-        attachList = result.attachList;
-        console.log(attachList);
-        if(attachList) {
-        	if(attachList.length > 0) {
-                for(var i = 0; i < attachList.length; i++) {
-                    result.itemGrp[i].atchFileId = attachList[i].atchFileId;
-                    result.itemGrp[i].atchFileName = attachList[i].atchFileName;
-                    var str = attachList[i].atchFileName.split(".");
-                    result.itemGrp[i].fileExtsn = str[1];
-                    result.itemGrp[i].fileCnt = 1;
-                }
-            }
+        for(var i = 0; i < result.itemGrp.length; i++) {
+        	if(result.itemGrp[i].attachList){
+                attachList = result.itemGrp[i].attachList;
+        		for(var j = 0; j < attachList.length; j++) {
+        			result.itemGrp[i].atchFileId = attachList[j].atchFileId;
+	                 result.itemGrp[i].atchFileName = attachList[j].atchFileName;
+	                 var str = attachList[j].atchFileName.split(".");
+	                 result.itemGrp[i].fileExtsn = str[1];
+	                 result.itemGrp[i].fileCnt = 1;
+        		}
+        	}
         }
         console.log(result);
+        myFileCaches = {};
 
         AUIGrid.setGridData(mileageGridID, result.itemGrp);
 
@@ -997,7 +1068,6 @@ function fn_setStaffClaimInfo(result) {
     	$("#carMileage_radio").prop("checked", false);
     	$("#normalExp_radio").prop("checked", true);
     	fn_checkExpGrp();
-
         $("#newCostCenter").val(result.costCentr);
         $("#newCostCenterText").val(result.costCentrName);
         $("#newMemAccId").val(result.memAccId);
@@ -1015,9 +1085,8 @@ function fn_setStaffClaimInfo(result) {
         $("#expDesc").val(result.expDesc);
 
         AUIGrid.setGridData(myGridID, result.itemGrp);
-
         // TODO attachFile
-        attachList = result.attachList;
+        attachList = result.itemGrp[0].attachList;
         console.log(attachList);
         if(attachList) {
         	if(attachList.length > 0) {
@@ -1052,7 +1121,7 @@ function fn_setStaffClaimInfo(result) {
                     console.log(oriFileName);
                     for(var i = 0; i < attachList.length; i++) {
                         if(attachList[i].atchFileName == oriFileName) {
-                            update.push(attachList[i].atchFileId);
+                        	update.push({atchFileGrpId:attachList[i].atchFileGrpId,atchFileId:attachList[i].atchFileId});
                             console.log(JSON.stringify(update));
                         }
                     }
@@ -1064,7 +1133,7 @@ function fn_setStaffClaimInfo(result) {
                     console.log(oriFileName);
                     for(var i = 0; i < attachList.length; i++) {
                         if(attachList[i].atchFileName == oriFileName) {
-                            remove.push(attachList[i].atchFileId);
+                        	remove.push({atchFileGrpId:attachList[i].atchFileGrpId,atchFileId:attachList[i].atchFileId});
                             console.log(JSON.stringify(remove));
                         }
                     }
@@ -1106,12 +1175,31 @@ function fn_fileListPop() {
 }
 
 function fn_updateStaffClaimExp(st) {
+	if(FormUtil.isEmpty($("#newCostCenter").val())) {
+	      Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+	      return false;
+	}
+	if(FormUtil.isEmpty($("#newMemAccId").val())) {
+	    Common.alert('<spring:message code="staffClaim.staffCode.msg" />');
+	      return false;
+	}
+	if(FormUtil.isEmpty($("#newClmMonth").val())) {
+	    Common.alert('<spring:message code="pettyCashExp.clmMonth.msg" />');
+	      return false;
+	}
+
     // row의 수가 0개 이상일때만 insert
     var gridDataList = AUIGrid.getOrgGridData(newGridID);
     if(gridDataList.length > 0){
         var gridDataObj = GridCommon.getEditData(newGridID);
         gridDataObj.clmNo = clmNo;
         gridDataObj.allTotAmt = Number($("#allTotAmt_text").text().replace(/,/gi, ""));
+        gridDataObj.costCentr = $("#newCostCenter").val();
+        gridDataObj.costCentrName = $("#newCostCenterText").val();
+        gridDataObj.memAccId = $("#newMemAccId").val();
+        gridDataObj.bankCode = $("#bankCode").val();
+        gridDataObj.bankAccNo = $("#bankAccNo").val();
+        gridDataObj.clmMonth = $("#newClmMonth").val();
         console.log(gridDataObj);
         Common.ajax("POST", "/eAccounting/staffClaim/updateStaffClaimExp.do", gridDataObj, function(result) {
             console.log(result);
@@ -1128,24 +1216,33 @@ function fn_updateStaffClaimExp(st) {
     }
 }
 
-function fn_approveLinePop(memAccId, clmMonth) {
+function fn_approveLinePop(memAccId, clmMonth, costCentre) {
 	// check request - Request once per user per month
-    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J4", memAccId:memAccId, clmMonth:clmMonth}, function(result) {
-        console.log(result);
-        if(result.data > 0) {
-        	Common.alert(result.message);
-        } else {
-        	// tempSave를 하지 않고 바로 submit인 경우
-            if(FormUtil.isEmpty(clmNo)) {
-                fn_insertStaffClaimExp("");
-            } else {
-                // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-                fn_updateStaffClaimExp("");
-            }
+//     Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J4", memAccId:memAccId, clmMonth:clmMonth}, function(result) {
+//         console.log(result);
+//         if(result.data > 0) {
+//         	Common.alert(result.message);
+//         } else {
+//         	// tempSave를 하지 않고 바로 submit인 경우
+//             if(FormUtil.isEmpty(clmNo)) {
+//                 fn_insertStaffClaimExp("");
+//             } else {
+//                 // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+//                 fn_updateStaffClaimExp("");
+//             }
 
-            Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
-        }
-    });
+//             Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+//         }
+//     });
+
+	//TEST Flow
+    if(FormUtil.isEmpty(clmNo)) {
+        fn_insertStaffClaimExp("");
+    } else {
+        // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+        fn_updateStaffClaimExp("");
+    }
+    Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", {requestGroup: costCentre}, null, true, "approveLineSearchPop");
 }
 
 function fn_deleteStaffClaimExp() {
@@ -1331,7 +1428,6 @@ function fn_mileageGridSetEvent() {
             var oriCarMilag = event.item.carMilag;
             var reCarMilag = 0;
             var totCarMilag = fn_getTotCarMilag(event.rowIndex);
-
             // 2019-06-07 - New policy update
             result = oriCarMilag * 0.7;
 
@@ -1409,6 +1505,71 @@ function fn_checkClmMonthAndMemAccId() {
     }
     return checkResult;
 }
+
+function fn_editRejected(){
+    console.log("fn_editRejected");
+
+    var gridObj = AUIGrid.getSelectedItems(staffClaimGridID);
+
+    if(gridObj != "") {
+        var selectedClaimNo;
+        var status;
+        var isResubmitAllowed;
+
+        if(gridObj.length > 0) {
+            status = gridObj[0].item.appvPrcssStus;
+            selectedClaimNo = gridObj[0].item.clmNo;
+            isResubmitAllowed = undefinedCheck(gridObj[0].item.isResubmitAllowed);
+            if(status == "Rejected"){
+           		if(isResubmitAllowed === 0){
+                       Common.alert("Resubmit is not allowed for Claim No: " + selectedClaimNo);
+                       return false;
+           		}
+            	Common.ajax("POST", "/eAccounting/staffClaim/editRejectedClaim.do", {clmNo : selectedClaimNo}, function(result1) {
+                    console.log(result1);
+                    Common.alert("New claim number : " + result1.data.newClmNo);
+                    fn_selectStaffClaimList();
+                });
+            }
+            else{
+            	Common.alert("Please select a record with rejected status only.");
+            	return false;
+            }
+        }
+        else{
+        	Common.alert("No record selected. Please select a record.");
+        	return false;
+        }
+    }
+    else{
+    	Common.alert("No record selected. Please select a record.");
+    	return false;
+    }
+}
+
+function undefinedCheck(value, type){
+	var retVal;
+
+	if (value == undefined || value == "undefined" || value == null || value == "null" || $.trim(value).length == 0) {
+		if (type && type == "number") {
+			retVal = 0;
+		} else {
+			retVal = "";
+		}
+	} else {
+		if (type && type == "number") {
+			retVal = Number(value);
+		}else{
+			retVal = value;
+		}
+	}
+
+	return retVal;
+}
+
+function fn_excelDown(){
+    Common.popupDiv("/eAccounting/staffClaim/staffClaimExcelDownloadPop.do", {callType:"new"}, null, true, "staffClaimExcelDownloadPop");
+}
 </script>
 
 <!-- report Form -->
@@ -1481,6 +1642,8 @@ function fn_checkClmMonthAndMemAccId() {
         <ul class="btns">
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
             <li><p class="link_btn"><a href="#" id="_staffClaimBtn">Staff Claim</a></p></li>
+            <li><p class="link_btn"><a href="#" id="editRejectBtn">Edit Rejected</a></p></li>
+   			 <li><p class="link_btn"><a href="#" onclick="fn_excelDown()">Excel Filter</a></p></li>
             <%-- </c:if> --%>
         </ul>
         <ul class="btns">

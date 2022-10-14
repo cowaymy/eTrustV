@@ -56,6 +56,10 @@ function createAUIGrid(ind) {
         headerText : '<spring:message code="invoiceApprove.clmNo" />',
         width : 90
     },{
+        dataField : "clmMonth",
+        headerText : 'Claim Month',
+        width : 90
+    },{
         dataField : "reqstDt",
         headerText : '<spring:message code="invoiceApprove.reqstDt" />',
         dataType : "date",
@@ -532,6 +536,11 @@ function fn_appvRejctSubmit(type, rejctResn) {
         if(type == "appv") {
         	url = "/eAccounting/webInvoice/approvalSubmit.do";
         }else if(type == "rejct") {
+        	data.isResubmitAllowed = "1";
+        	url = "/eAccounting/webInvoice/rejectionSubmit.do";
+        }
+        else if(type == "rejctnoresub"){
+        	data.isResubmitAllowed = "0";
         	url = "/eAccounting/webInvoice/rejectionSubmit.do";
         }
         console.log(data);
@@ -598,6 +607,11 @@ function fn_makeGrid(){
         {
             dataField : "appvReqKeyNo",
             headerText : 'Claim No',
+            width : 100,
+            cellMerge : true
+        },{
+            dataField : "clmMonth",
+            headerText : 'Claim Month',
             width : 100,
             cellMerge : true
         },{

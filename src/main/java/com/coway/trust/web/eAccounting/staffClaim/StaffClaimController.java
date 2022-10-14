@@ -110,6 +110,11 @@ public class StaffClaimController {
 		return "eAccounting/staffClaim/staffClaimNewExpensesPop";
 	}
 
+	 @RequestMapping(value = "/staffClaimExcelDownloadPop.do")
+		public String staffClaimExcelDownloadPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+			return "eAccounting/staffClaim/staffClaimExcelDownloadPop";
+	 }
+
 	@RequestMapping(value = "/selectTaxCodeStaffClaimFlag.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTaxCodeStaffClaimFlag(Model model) {
 
@@ -128,12 +133,14 @@ public class StaffClaimController {
 
 		LOGGER.debug("list.size : {}", list.size());
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		if(list.size() > 0){
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		staffClaimApplication.insertStaffClaimAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
+			// serivce 에서 파일정보를 가지고, DB 처리.
+			staffClaimApplication.insertStaffClaimAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
 
-		params.put("attachFiles", list);
+			params.put("attachFiles", list);
+		}
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -202,17 +209,15 @@ public class StaffClaimController {
 		EgovMap info = staffClaimService.selectStaffClaimInfo(params);
 		List<EgovMap> itemGrp = staffClaimService.selectStaffClaimItemGrp(params);
 
-		info.put("itemGrp", itemGrp);
-
-		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
-		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
-		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
-		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
-		if(atchFileGrpId != "null") {
-			List<EgovMap> attachList = staffClaimService.selectAttachList(atchFileGrpId);
-			info.put("attachList", attachList);
+		for(int i=0;i < itemGrp.size();i++)
+		{
+			if(itemGrp.get(i).get("atchFileGrpId") != null && itemGrp.get(i).get("atchFileGrpId").toString() != ""){
+				List<EgovMap> attachList = staffClaimService.selectAttachList(itemGrp.get(i).get("atchFileGrpId").toString());
+				itemGrp.get(i).put("attachList", attachList);
+			}
 		}
 
+		info.put("itemGrp", itemGrp);
 		return ResponseEntity.ok(info);
 	}
 
@@ -228,7 +233,6 @@ public class StaffClaimController {
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		// serivce 에서 파일정보를 가지고, DB 처리.
 		staffClaimApplication.updateStaffClaimAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
 
 		params.put("attachFiles", list);
@@ -261,12 +265,14 @@ public class StaffClaimController {
 	}
 
 	@RequestMapping(value = "/approveLinePop.do")
-	public String approveLinePop(ModelMap model) {
+	public String approveLinePop(@RequestParam Map<String, Object> params,ModelMap model) {
+		model.put("requestGroup", params.get("requestGroup").toString());
 		return "eAccounting/staffClaim/approveLinePop";
 	}
 
 	@RequestMapping(value = "/registrationMsgPop.do")
-	public String registrationMsgPop(ModelMap model) {
+	public String registrationMsgPop(@RequestParam Map<String, Object> params,ModelMap model) {
+		model.put("requestGroup", params.get("requestGroup").toString());
 		return "eAccounting/staffClaim/registrationMsgPop";
 	}
 
@@ -364,4 +370,33 @@ public class StaffClaimController {
 		return ResponseEntity.ok(message);
 	}
 
+	 @RequestMapping(value = "/editRejectedClaim.do", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> editRejectedClaim(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+	        LOGGER.debug("params =====================================>>  " + params);
+
+	        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+	        ReturnMessage message = new ReturnMessage();
+	        message = staffClaimService.editRejectedClaimExp(params);
+
+	        return ResponseEntity.ok(message);
+	 }
+
+	 @RequestMapping(value = "/selectExcelListNew.do")
+		public ResponseEntity<List<EgovMap>> selectExcelListNew(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+			LOGGER.debug("params =====================================>>  " + params);
+
+			String[] status = request.getParameterValues("status");
+			params.put("status", status);
+
+			if(params.get("staffMemAccId") != null && params.get("staffMemAccId") != ""){
+				String[] memAccIdList = params.get("staffMemAccId").toString().split(",");
+				params.put("staffMemAccId", memAccIdList);
+			}
+
+			List<EgovMap> excelList = staffClaimService.selectExcelListNew(params);
+
+			return ResponseEntity.ok(excelList);
+		}
 }

@@ -15,7 +15,8 @@ SELECT T.CLM_NO,
        T.APPV_PRCSS_NO,
        T.APPV_PRCSS_STUS_CODE,
        T.APPV_PRCSS_STUS,
-       T.APPV_PRCSS_DT
+       T.APPV_PRCSS_DT,
+       T.IS_RESUBMIT_ALLOWED
 FROM   (SELECT T1.CLM_NO,
                T1.MEM_ACC_ID,
                T2.MEM_ACC_NAME,
@@ -30,7 +31,8 @@ FROM   (SELECT T1.CLM_NO,
                         WHEN 'A' THEN 'Approved'
                         WHEN 'J' THEN 'Rejected'
                       END ), 'Temporary Save') AS APPV_PRCSS_STUS,
-               T4.APPV_PRCSS_DT
+               T4.APPV_PRCSS_DT,
+               T4.IS_RESUBMIT_ALLOWED
         FROM   FCM0019M T1
                LEFT JOIN FCM0006M T2
                       ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
@@ -80,7 +82,6 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 
 <insert id="insertStaffClaimExp" parameterType="Map">
 /* staffClaimMapper.insertStaffClaimExp */
-<!-- CMM0042C_ITEM_SEQ.nextval -->
    INSERT INTO FCM0019M
    (
         CLM_NO
@@ -600,6 +601,10 @@ WHERE  T1.CLM_NO = #{clmNo}
     WHERE CLM_NO = #{clmNo}
 </update>
 
+<select id="selectAttachmentStaffClaimExpItemCount" parameterType="Map" resultType="int">
+	SELECT COUNT(*) FROM FCM0020D WHERE CLM_NO = #{clmNo} AND ATCH_FILE_GRP_ID = #{atchFileGrpId}
+</select>
+
 <delete id="deleteStaffClaimExpItem" parameterType="Map">
 /* staffClaimMapper.deleteStaffClaimExpItem */
    DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq}
@@ -630,5 +635,294 @@ AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
 AND T.MEM_ACC_ID = #{memAccId}
 </select>
 
+<insert id="reinsertRejectedClaimMasterForEdit" parameterType="Map">
+   INSERT INTO FCM0019M
+   (
+        CLM_NO
+        ,CLM_TYPE
+        ,COST_CENTR
+        ,COST_CENTR_NAME
+        ,MEM_ACC_ID
+        ,BANK_CODE
+        ,BANK_ACC_NO
+        ,CLM_MONTH
+        ,TOT_AMT
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+        ,PREV_CLM_NO
+    )
+    SELECT
+        #{newClmNo}
+       ,CLM_TYPE
+       ,UPPER(COST_CENTR)
+       ,COST_CENTR_NAME
+       ,UPPER(MEM_ACC_ID)
+       ,BANK_CODE
+       ,BANK_ACC_NO
+       ,TO_CHAR(SYSDATE, 'YYYYMM')
+       ,TOT_AMT
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+       ,#{clmNo}
+    FROM
+    	FCM0019M
+    WHERE
+        CLM_NO = #{clmNo}
+</insert>
 
+<insert id="reinsertRejectedClaimDetailForEdit" parameterType="Map">
+   INSERT INTO FCM0020D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,INVC_DT
+        ,INVC_TYPE
+        ,INVC_NO
+        ,SUPPLIR
+        ,GST_RGIST_NO
+        ,INVC_REM
+        ,EXP_TYPE
+        ,EXP_TYPE_NAME
+        ,GL_ACC_CODE
+        ,GL_ACC_CODE_NAME
+        ,BUDGET_CODE
+        ,BUDGET_CODE_NAME
+        ,TAX_CODE
+        ,NET_AMT
+        ,TAX_AMT
+        ,TAX_NON_CLM_AMT
+        ,TOT_AMT
+        ,ATCH_FILE_GRP_ID
+        ,EXP_DESC
+        ,CLAM_UN
+        ,EXP_GRP
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    VALUES(
+        #{newClmNo}
+       ,#{clmSeq}
+       ,#{invcDt}
+       ,#{invcType}
+       ,#{invcNo}
+       ,#{supplirName}
+       ,#{gstRgistNo}
+       ,#{invcRem}
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{netAmt}
+       ,#{taxAmt}
+       ,#{taxNonClmAmt}
+       ,#{totAmt}
+       ,#{newAtchFileGrpId}
+       ,#{expDesc}
+       ,#{clamUn}
+       ,#{expGrp}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+     )
+</insert>
+
+<select id="selectRejectedClaimDetail" parameterType="Map" resultType="egovMap">
+	SELECT *
+	FROM FCM0020D
+	WHERE CLM_NO = #{clmNo}
+	ORDER BY ATCH_FILE_GRP_ID
+</select>
+
+<select id="selectRejectedClaimAttachmentMaster" parameterType="Map" resultType="egovMap">
+	SELECT *
+	FROM SYS0070M
+	WHERE ATCH_FILE_GRP_ID = #{atchFileGrpId}
+</select>
+
+<insert  id="reinsertRejectedClaimMasterAttachmentForEdit">
+ 	INSERT INTO SYS0070M (
+        ATCH_FILE_GRP_ID
+        , ATCH_FILE_ID
+        , CHENAL_TYPE
+        , CRT_USER_ID
+        , CRT_DT
+        , UPD_USER_ID
+        , UPD_DT
+        )
+ 		VALUES (
+        #{newAtchFileGrpId}
+        ,#{newAtchFileId}
+        ,'D'
+        ,#{userId}
+        ,SYSDATE
+        ,#{userId}
+        ,SYSDATE
+        )
+</insert>
+
+<select id="selectNewAtchFileId" resultType="int">
+     SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId
+     FROM DUAL
+</select>
+
+<insert id="insertFileDetail" parameterType="fileVO">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        )
+ </insert>
+
+<insert  id="reinsertRejectedClaimDetailAttachmentForEdit">
+ 	   INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        )
+        SELECT
+        #{newAtchFileId}
+        ,ATCH_FILE_NAME
+        ,FILE_SUB_PATH
+        ,PHYSICL_FILE_NAME
+        ,FILE_EXTSN
+        ,FILE_SIZE
+        ,FILE_PASSWORD
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{atchFileId}
+</insert>
+
+<insert id="reinsertRejectedClaimMileageForEdit" parameterType="Map">
+   INSERT INTO FCM0021D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,CAR_MILAG_DT
+        ,LOC_FROM
+        ,LOC_TO
+        ,CAR_MILAG
+        ,CAR_MILAG_AMT
+        ,TOLL_AMT
+        ,PARKING_AMT
+        ,PURPOSE
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    	SELECT
+        #{newClmNo}
+       ,CLM_SEQ
+       ,CAR_MILAG_DT
+       ,LOC_FROM
+       ,LOC_TO
+       ,CAR_MILAG
+       ,CAR_MILAG_AMT
+       ,TOLL_AMT
+       ,PARKING_AMT
+       ,PURPOSE
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    	FROM FCM0021D WHERE CLM_NO = #{clmNo}
+</insert>
+
+<select id="selectStaffClaimListForExcel" parameterType="Map" resultType="egovMap">
+/* staffClaimMapper.selectStaffClaimListForExcel */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T.CLM_NO,
+		T.COST_CENTR,
+		T.COST_CENTR_NAME,
+       T.MEM_ACC_ID,
+       T.MEM_ACC_NAME,
+       TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
+       T.REQST_DT,
+       'MYR' AS CUR,
+       T.TOT_AMT,
+       T.APPV_PRCSS_NO,
+       T.APPV_PRCSS_STUS_CODE,
+       T.APPV_PRCSS_STUS,
+       T.APPV_PRCSS_DT,
+       T.IS_RESUBMIT_ALLOWED
+FROM   (SELECT T1.CLM_NO,
+			   T1.COST_CENTR,
+			   T1.COST_CENTR_NAME,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               T1.CLM_MONTH,
+               T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
+               T4.REQST_DT,
+               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE,
+               Nvl (( CASE T4.APPV_PRCSS_STUS
+                        WHEN 'R' THEN 'Request'
+                        WHEN 'P' THEN 'Approve In-Progress'
+                        WHEN 'A' THEN 'Approved'
+                        WHEN 'J' THEN 'Rejected'
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS,
+               T4.APPV_PRCSS_DT,
+               T4.IS_RESUBMIT_ALLOWED
+        FROM   FCM0019M T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN FCM0004M T4
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J4'
+          <if test="loginUserId != null and loginUserId != ''">
+            AND T1.CRT_USER_ID = #{loginUserId}
+          </if>
+            ) T
+       WHERE 1=1
+<if test="clmMonthFrom != null and clmMonthFrom != '' and clmMonthTo != null and clmMonthTo != ''">
+<![CDATA[
+AND TO_DATE(T.CLM_MONTH,'YYYYMM') BETWEEN TO_DATE(#{clmMonthFrom}, 'MM/YYYY') AND TO_DATE(#{clmMonthTo}, 'MM/YYYY')
+]]>
+</if>
+<if test="requestDateFrom != null and requestDateFrom != '' and requestDateTo != null and requestDateTo != ''">
+<![CDATA[
+AND TO_DATE(TO_CHAR(T.REQST_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{requestDateFrom}, 'DD/MM/YYYY') AND TO_DATE(#{requestDateTo}, 'DD/MM/YYYY')
+]]>
+</if>
+<if test="costCenter != null and costCenter != ''">
+AND T.COST_CENTR = #{costCenter}
+</if>
+<if test="staffMemAccId != null and staffMemAccId != ''">
+AND UPPER(T.MEM_ACC_ID) IN
+	<foreach item="item" collection="staffMemAccId" index="index" open="(" separator="," close=")">
+		UPPER(#{item})
+	</foreach>
+</if>
+<if test="status != null and status != ''">
+AND T.APPV_PRCSS_STUS_CODE IN
+	<foreach item="item" collection="status" index="index" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+</if>
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
+</select>
 </mapper>

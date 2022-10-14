@@ -212,7 +212,7 @@ var myGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "expTypeName",
-    headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" />',
+    headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-left",
     colSpan : 2
 }, {
@@ -315,7 +315,7 @@ var myGridColumnLayout = [ {
     visible : false
 }, {
     dataField : "totAmt",
-    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    headerText : '<spring:message code="newWebInvoice.totalAmount" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
@@ -360,7 +360,7 @@ var mileageGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "carMilagDt",
-    headerText : '<spring:message code="pettyCashNewExp.date" />',
+    headerText : '<spring:message code="pettyCashNewExp.date" /><span style="color:red">*</span>',
     dataType : "date",
     formatString : "dd/mm/yyyy",
     editRenderer : {
@@ -379,11 +379,11 @@ var mileageGridColumnLayout = [ {
     children : [
         {
                 dataField: "locFrom",
-                headerText: '<spring:message code="newStaffClaim.from" />',
+                headerText: '<spring:message code="newStaffClaim.from" /><span style="color:red">*</span>',
                 style : "aui-grid-user-custom-left"
         }, {
                 dataField: "locTo",
-                headerText: '<spring:message code="newStaffClaim.to" />',
+                headerText: '<spring:message code="newStaffClaim.to" /><span style="color:red">*</span>',
                 style : "aui-grid-user-custom-left"
         }
     ]
@@ -393,7 +393,7 @@ var mileageGridColumnLayout = [ {
     editable : false
 }, {
     dataField : "carMilag",
-    headerText : '<spring:message code="newStaffClaim.mileageBrKm" />',
+    headerText : '<spring:message code="newStaffClaim.mileageBrKm" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
@@ -412,7 +412,7 @@ var mileageGridColumnLayout = [ {
     editable : false
 }, {
     dataField : "tollAmt",
-    headerText : '<spring:message code="newStaffClaim.tollsBrRm" />',
+    headerText : '<spring:message code="newStaffClaim.tollsBrRm" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
@@ -424,7 +424,7 @@ var mileageGridColumnLayout = [ {
     }
 }, {
     dataField : "parkingAmt",
-    headerText : '<spring:message code="newStaffClaim.parkingBrRm" />',
+    headerText : '<spring:message code="newStaffClaim.parkingBrRm" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
@@ -436,7 +436,7 @@ var mileageGridColumnLayout = [ {
     }
 }, {
     dataField : "purpose",
-    headerText : '<spring:message code="newStaffClaim.purpose" />',
+    headerText : '<spring:message code="newStaffClaim.purpose" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "expDesc",
@@ -451,7 +451,7 @@ var mileageGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "atchFileName",
-    headerText : '<spring:message code="newWebInvoice.attachment" />',
+    headerText : '<spring:message code="newWebInvoice.attachment" /><span style="color:red">*</span>',
     width : 150,
     editable : false,
     labelFunction : function( rowIndex, columnIndex, value, headerText, item ) {
@@ -509,11 +509,16 @@ var newGridID;
 var mileageGridID;
 
 $(document).ready(function () {
+	$("#expDesc").keyup(function(){
+		  $("#characterCount").text($(this).val().length + " of 100 max characters");
+	});
+
     newGridID = AUIGrid.create("#newStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
 
     setInputFile2();
-
+	var date = new Date();
+	$("#newClmMonth").val((date.getMonth() + 1).toString().padStart(2, '0') + "/" + date.getFullYear());
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
@@ -526,7 +531,7 @@ $(document).ready(function () {
     $("#request_btn").click(function() {
     	var result = fn_checkClmMonthAndMemAccId();
     	if(result) {
-    		fn_approveLinePop($("#newMemAccId").val(), $("#newClmMonth").val());
+    		fn_approveLinePop($("#newMemAccId").val(), $("#newClmMonth").val(), $("#newCostCenter").val());
     	}
     });
     $("#add_row").click(fn_addMyGridRow);
@@ -624,9 +629,9 @@ function fn_tempSave() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /><span style="color:red">*</span></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}" disabled/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row"><spring:message code="staffClaim.staffCode" /></th>
+	<th scope="row"><spring:message code="staffClaim.staffCode" /><span style="color:red">*</span></th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" value="${code}" disabled/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
@@ -636,8 +641,8 @@ function fn_tempSave() {
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo"/></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
-	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth"/></td>
+	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /><span style="color:red">*</span></th>
+	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth" disabled/></td>
 	<!-- 2017/12/03 추가 START -->
 	<th scope="row"><spring:message code="newStaffClaim.expGrp" /></th>
 	<td>
@@ -660,19 +665,19 @@ function fn_tempSave() {
 <tbody>
 <!-- 2017/12/03 추가 START -->
 <tr>
-    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" /></td>
+    <th scope="row"><spring:message code="webInvoice.invoiceDate" /><span style="color:red">*</span></th>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" readonly/></td>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
+    <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /><span style="color:red">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="supplirName" name="supplirName"/></td>
     <th scope="row"></th>
     <td></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+    <th scope="row"><spring:message code="newWebInvoice.attachment" /><span style="color:red">*</span></th>
     <td colspan="3" id="attachTd">
     <div class="auto_file2 auto_file3"><!-- auto_file start -->
     <input type="file" title="file add" />
@@ -681,7 +686,10 @@ function fn_tempSave() {
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="expDesc" name="expDesc" /></td>
+    <td colspan="3">
+    	<textarea type="text" title="" placeholder="" class="w100p" id="expDesc" name="expDesc" maxlength="100"></textarea>
+    	<span id="characterCount">0 of 100 max characters</span>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

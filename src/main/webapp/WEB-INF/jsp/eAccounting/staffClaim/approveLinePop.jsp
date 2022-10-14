@@ -166,7 +166,8 @@ function fn_reqstSubmit() {
     }
 	console.log(checkMemCode);
 	if(checkMemCode) {
-		Common.popupDiv("/eAccounting/staffClaim/registrationMsgPop.do", null, null, true, "registrationMsgPop");
+		var requestGroup = "${requestGroup}";
+		Common.popupDiv("/eAccounting/staffClaim/registrationMsgPop.do", {requestGroup:requestGroup}, null, true, "registrationMsgPop");
 	}
 }
 </script>

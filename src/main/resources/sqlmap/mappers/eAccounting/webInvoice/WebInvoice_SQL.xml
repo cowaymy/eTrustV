@@ -739,6 +739,7 @@ SELECT T.APPV_PRCSS_NO
       ,T.APPV_LINE_SEQ
       ,T.CLM_NO
       ,T.REQST_USER_ID
+      ,T.CLM_MONTH
       ,T.REQST_DT
       ,T.CODE
       ,T.CODE_NAME
@@ -799,6 +800,7 @@ SELECT T.APPV_PRCSS_NO
                 */
                 ,TO_CHAR (T2.APPV_DT, 'DD/MM/YYYY') APPV_PRCSS_DT
                 ,T3.INVC_CUR AS CUR
+                ,T6.CLM_MONTH
             FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO <!-- AND T2.APPV_LINE_SEQ = 1 -->
                  LEFT JOIN (
                     SELECT
@@ -811,6 +813,7 @@ SELECT T.APPV_PRCSS_NO
                  INNER JOIN FCM0015D T3 ON T3M.APPV_PRCSS_NO = T3.APPV_PRCSS_NO and T3M.APPV_ITM_SEQ = T3.APPV_ITM_SEQ <!-- AND T3.APPV_ITM_SEQ = 1 추가 -->
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
                  LEFT JOIN FCM0006M T5 ON T3.MEM_ACC_ID = T5.MEM_ACC_ID
+                 LEFT JOIN FCM0019M T6 ON T1.APPV_REQ_KEY_NO = T6.CLM_NO
            WHERE <!-- T2.APPV_LINE_USER_ID = #{memCode} -->
            <!-- WHERE 1=1 -->
                  (T1.APPV_PRCSS_STUS = 'R' OR T1.APPV_PRCSS_STUS = 'P' OR T1.APPV_PRCSS_STUS = 'A' or T1.APPV_PRCSS_STUS = 'J')
@@ -1186,6 +1189,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
+       ,IS_RESUBMIT_ALLOWED = TO_NUMBER(#{isResubmitAllowed})
     WHERE APPV_PRCSS_NO = #{appvPrcssNo}
 </update>
 
@@ -1740,6 +1744,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         APPR_MEM_CODE
     FROM FCM0023M
     WHERE APPR_MEM_STUS = '1'
+    AND ROWNUM = 1
     <if test="clmType == 'J1' ">
         <![CDATA[
             AND J1 <> '0'
@@ -1759,6 +1764,11 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         <![CDATA[
             AND J4 <> '0'
         ]]>
+	    <if test="requestGroup != null and requestGroup != ''">
+		    <![CDATA[
+		        AND RQST_GRP LIKE '%'||#{requestGroup}||'%'
+		    ]]>
+	    </if>
     </if>
     <if test="clmType == 'J5' ">
         <![CDATA[
@@ -2003,4 +2013,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
 	SELECT ATCH_FILE_GRP_ID FROM FCM0012D WHERE CLM_NO = #{clmNo}
 </select>
 
+<select id="selectUserDetail" parameterType="Map" resultType="egovMap">
+	SELECT * FROM SYS0047M WHERE USER_NAME = #{reqstUserId}
+</select>
 </mapper>

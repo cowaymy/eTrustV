@@ -985,7 +985,13 @@ public class WebInvoiceController {
 
 	                params.put("clmType", params.get("clmNo").toString().substring(0, 2));
 	                EgovMap hm2 = webInvoiceService.getFinApprover(params);
-	                String memCode = hm2.get("apprMemCode").toString();
+	                String memCode = "0";
+	                if(hm2 == null){
+	                	memCode = "0";
+	                }
+	                else{
+	                	memCode = hm2.get("apprMemCode").toString();
+	                }
 	                LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
 
 	                memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
