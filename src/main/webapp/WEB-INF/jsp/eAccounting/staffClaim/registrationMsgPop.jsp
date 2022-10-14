@@ -34,11 +34,11 @@ function fn_approveLineSubmit() {
         if(resultFinAppr.code == "99") {
             Common.alert("Please select the relevant final approver.");
         } else {
-//             Common.ajax("POST", "/eAccounting/staffClaim/approveLineSubmit.do", obj, function(result) {
-//                 console.log(result);
-//                 Common.popupDiv("/eAccounting/staffClaim/completedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
-//                 //Common.alert("Your authorization request was successful.");
-//             });
+            Common.ajax("POST", "/eAccounting/staffClaim/approveLineSubmit.do", obj, function(result) {
+                console.log(result);
+                Common.popupDiv("/eAccounting/staffClaim/completedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
+                //Common.alert("Your authorization request was successful.");
+            });
         }
     });
 }

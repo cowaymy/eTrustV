@@ -1002,7 +1002,6 @@ public class WebInvoiceController {
 	                } else {
 	                    message.setCode(AppConstants.SUCCESS);
 	                    message.setData(params);
-	                    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 	                }
 	            }
 	        }
