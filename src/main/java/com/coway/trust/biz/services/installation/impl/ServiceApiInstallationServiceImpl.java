@@ -97,6 +97,9 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       try {
         serviceApiInstallationDetailService.installationResultProc(insApiresult);
         successCnt = successCnt + 1;
+        Map<String, Object> paramsEmail = insApiresult;
+        serviceApiInstallationDetailService.installationResultProcSendEmail(paramsEmail);
+
       } catch (BizException bizException) {
         logger.debug("### INSTALLATION bizException errorcode : " + bizException.getErrorCode());
         logger.debug("### INSTALLATION bizException errormsg : " + bizException.getErrorMsg());
