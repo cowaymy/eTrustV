@@ -3726,8 +3726,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
 
-	    String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
-
 	    switch (viewType) {
 	      case MAIL_PDF:
 	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
@@ -3760,85 +3758,20 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   @Value("${report.file.path}")
   private String reportFilePath;
 
-  private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
-	      throws IOException {
-
-	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
-		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
-
-	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
-		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
-
-	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
-	    Calendar startTime = Calendar.getInstance();
-	    Calendar endTime = null;
-
-	    String reportFile = (String) params.get(REPORT_FILE_NAME);
-	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
-	    String reportName = reportFilePath + reportFile;
-	    String prodName = "view";
-	    int maxLength = 0;
-	    String msg = "Completed";
-
-	    try {
-
-	      ReportClientDocument clientDoc = new ReportClientDocument();
-
-	      clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
-	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
-	      {
-	        String connectString = reportUrl;
-	        String driverName = reportDriverClass;
-	        String jndiName = "";
-	        String userName = reportUserName;
-	        String password = reportPassword;
-
-
-	        CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
-	        CRJavaHelper.logonDataSource(clientDoc, userName, password);
-	      }
-
-	      Object reportSource = clientDoc.getReportSource();
-
-	      params.put("repProdName", prodName);
-
-	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
-	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
-	      ReportUtils.setReportParameter(params, paramController, fields);
-	      {
-	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
-	            params);
-	      }
-	    } catch (Exception ex) {
-	    	logger.error(CommonUtils.printStackTraceToString(ex));
-	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
-
-	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
-	      throw new ApplicationException(ex);
-	    } finally{
-	      // Insert Log
-	      endTime = Calendar.getInstance();
-	      params.put("msg", msg);
-	      params.put("startTime", fmt.format(startTime.getTime()));
-	      params.put("endTime", fmt.format(endTime.getTime()));
-	      params.put("userId", 349);
-
-	      reportBatchService.insertLog(params);
-	    }
-	  }
-
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
+	  	Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)), messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)), messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
 	    SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
 	    String succYn = "E";
 	    Calendar startTime = Calendar.getInstance();
 	    Calendar endTime = null;
+
 	    String prodName;
 	    int maxLength = 0;
 	    String msg = "Completed";
-	    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
-		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
-		    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
-		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));	    String reportFile = (String) params.get(REPORT_FILE_NAME);
+
+		String reportFile = (String) params.get(REPORT_FILE_NAME);
 	    String reportName = reportFilePath + reportFile;
 	    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 
@@ -3857,14 +3790,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
 
 	      params.put("repProdName", prodName);
-	      logger.debug("viewProdParams1111===" + params.toString());
 
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
 	      ReportUtils.setReportParameter(params, paramController, fields);
 	      {
-	        this.viewHandle(request, response, viewType, clientDoc,
-	            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
 	      }
 	    } catch (Exception ex) {
 	      logger.error(CommonUtils.printStackTraceToString(ex));

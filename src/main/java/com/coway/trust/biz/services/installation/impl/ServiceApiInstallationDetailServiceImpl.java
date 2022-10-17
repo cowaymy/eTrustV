@@ -800,6 +800,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
   @Override
 	public void installationResultProcSendEmail(Map<String, Object> params) {
+	  logger.info("paramsSendEmail1111====" + params.toString() + "===");
+
 	  try{
 	  	installationResultListService.installationSendEmail(params);
   	  }catch (Exception e){
