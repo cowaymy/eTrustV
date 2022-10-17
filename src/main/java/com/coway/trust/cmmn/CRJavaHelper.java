@@ -1001,6 +1001,8 @@ public class CRJavaHelper {
 		String[] to = emailTo.toArray(new String[emailTo.size()]);
 		checkParam2(to, AppConstants.EMAIL_TO);
 		String downFileName = (String) params.get(AppConstants.REPORT_DOWN_FILE_NAME);
+		LOGGER.debug("downFileName111===" + downFileName);
+
 		String text = (String) params.get(AppConstants.EMAIL_TEXT);
 		if (StringUtils.isEmpty(downFileName)) {
 			downFileName = clientDoc.getReportSource().getReportTitle();
