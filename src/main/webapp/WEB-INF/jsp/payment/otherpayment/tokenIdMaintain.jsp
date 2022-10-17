@@ -33,6 +33,23 @@ $(document).ready(function(){
             groupingMessage     : gridMsg["sys.info.grid.groupingMessage"]
         };
 
+    var gridPos = {
+    		usePaging           : true,             //페이징 사용
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable                : false,
+            fixedColumnCount    : 1,
+            displayTreeOpen     : false,
+            selectionMode       : "multipleCells",  //"singleRow",
+            headerHeight        : 30,
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            showStateColumn : false,
+            noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"],
+            groupingMessage     : gridMsg["sys.info.grid.groupingMessage"]
+        };
+
+    historyListId = GridCommon.createAUIGrid("orderListId_grid_wrap", historyColumnLayout,null,gridPos);
+    AUIGrid.resize(historyListId,945, $("orderListId_grid_wrap").innerHeight());
+
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     tokenDetailsItemId = GridCommon.createAUIGrid("#tokenDetailsItem_grid_wrap", tokenDetailsColumnLayout,null,gridProse);
     AUIGrid.resize(tokenDetailsItemId,945, $(".grid_wrap").innerHeight());
@@ -48,6 +65,12 @@ function fn_chgContPerPopClose() {
     $('#chgContPerPop').hide();
     searchList();
 }
+
+var historyColumnLayout= [
+	{dataField : "crtDt", headerText : "Date", width : '15.5%'},
+	{dataField : "totalItems", headerText : "Total Items", width : '15.5%'},
+	{dataField : "updator", headerText : "Updator", width : '15.5%'}
+	];
 
 var columnLayout = [
     { dataField:"custCrcId" ,headerText:"Cust CRC ID",width: '10%'},
@@ -98,9 +121,7 @@ function fn_close(wrap, form) {
 
 $(function(){
     $('#search').click(function() {
-        Common.ajax("GET", "/payment/selectTokenIdMaintain.do", $("#searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(myGridID, result);
-        });
+    	if(fn_validSearchList()) fn_selectListAjax();
     });
 
     $('#clear').click(function() {
@@ -117,6 +138,35 @@ $(function(){
 
 
 });
+
+function fn_selectListAjax() {
+
+	    Common.ajax("GET", "/payment/selectTokenIdMaintain.do", $("#searchForm").serialize(), function(result) {
+	     AUIGrid.setGridData(myGridID, result);
+	 });
+}
+
+function fn_validSearchList() {
+    var isValid = true, msg = "";
+
+     /* if(FormUtil.isEmpty($('#listUpdStartDt').val()) || FormUtil.isEmpty($('#listUpdEndDt').val())) {
+         isValid = false;
+         msg += '<spring:message code="sal.alert.msg.plzKeyInUpdDtFromTo" /><br/>';
+     }
+     else {
+         var diffDay = fn_diffDate($('#listUpdStartDt').val(), $('#listUpdEndDt').val());
+
+         if(diffDay > 91 || diffDay < 0) {
+             isValid = false;
+             msg += '* <spring:message code="sal.alert.msg.srchPeriodDt" />';
+         }
+     }
+
+
+    if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>"); */
+
+    return isValid;
+}
 
 //View Claim Pop-UP
 function fn_openDivPop(val){
@@ -164,6 +214,17 @@ function fn_excelDown(val){
     GridCommon.exportTo("tokenDetailsItem_grid_wrap", "xlsx", "TKM_Details_Result" + "_" + yy + mm + dd );
 
     }
+}
+
+function fn_ordersListPop(){
+
+    Common.ajaxFile("/payment/selectTokenIdMaintainHistoryUpload.do", '', function(result){
+        AUIGrid.setGridData(historyListId, result);
+        AUIGrid.resize(historyListId,945, $("orderListId_grid_wrap").innerHeight());
+    });
+
+    $("#orderList_wrap").show();
+
 }
 
 /* function fn_excelDownDetails(){
@@ -229,6 +290,18 @@ function fn_excelDown(val){
             <th scope="row">Token ID</th>
             <td><input id="tokenIdSearch" name="tokenIdSearch" type="text"/></td>
           </tr>
+           <tr>
+            <th scope="row">Updator</th>
+            <td><input id="updatorCode" name="updatorCode" type="text"/></td>
+            <th scope="row"><spring:message code='sal.title.updateDate'/></th>
+		    <td>
+		    <div class="date_set w100p"><!-- date_set start -->
+		    <p><input id="listUpdStartDt" name="updStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+		    <span>To</span>
+		    <p><input id="listUpdEndDt" name="updEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+		    </div><!-- date_set end -->
+		    </td>
+          </tr>
         </tbody>
       </table>
       <!-- table end -->
@@ -241,6 +314,7 @@ function fn_excelDown(val){
                     <ul class="btns">
                         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_ordersListPop();">Token ID Upload</a></p></li>
                         </c:if>
                     </ul>
                     <ul class="btns">
@@ -336,3 +410,28 @@ function fn_excelDown(val){
     <!-- pop_header end -->
 </div>
 <!-- popup_wrap end -->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="orderList_wrap" style="display: none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>Upload History</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2">
+                    <a href="#" >CLOSE</a>
+                </p></li>
+                  <!-- search_result start -->
+
+                <!-- grid_wrap start -->
+        </ul>
+    </header>
+<section class="pop_body"><!-- pop_body start -->
+    <article class="orderList_wrap"><!-- grid_wrap start -->
+    <div id="orderListId_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+
+     </section><!-- pop_body end -->
+    <!-- pop_header end -->
+</div>
+<!-- popup_wrap end -->
+

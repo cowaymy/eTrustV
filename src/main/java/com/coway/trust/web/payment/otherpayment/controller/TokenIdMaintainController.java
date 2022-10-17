@@ -11,6 +11,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -43,6 +45,13 @@ public class TokenIdMaintainController {
 
   @RequestMapping(value = "/selectTokenIdMaintain.do")
   public ResponseEntity<List<EgovMap>> selectTokenIdMaintain(@RequestParam Map<String, Object> params) {
+
+		if(StringUtils.isEmpty(params.get("updStartDt"))) params.put("updStartDt", "01/01/1900");
+    	if(StringUtils.isEmpty(params.get("updEndDt")))   params.put("updEndDt",   "31/12/9999");
+
+    	params.put("updStartDt", CommonUtils.changeFormat(String.valueOf(params.get("updStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+    	params.put("updEndDt", CommonUtils.changeFormat(String.valueOf(params.get("updEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+
     List<EgovMap> resultList = tokenIdMaintainService.selectTokenIdMaintain(params);
     return ResponseEntity.ok(resultList);
   }
@@ -109,12 +118,22 @@ public class TokenIdMaintainController {
     		 message.setMessage("Failed to upload Token Id Maintenance item(s). Please try again later.");
     }
 
+    params.put("totalCount", result);
+
+    tokenIdMaintainService.saveTokenIdMaintainUploadHistory(params);
+
     return ResponseEntity.ok(message);
   }
 
   @RequestMapping(value = "/selectTokenIdMaintainDetailPop.do")
   public ResponseEntity<List<EgovMap>> selectTokenIdMaintainDetailPop(@RequestParam Map<String, Object> params) {
     List<EgovMap> resultList = tokenIdMaintainService.selectTokenIdMaintainDetailPop(params);
+    return ResponseEntity.ok(resultList);
+  }
+
+  @RequestMapping(value = "/selectTokenIdMaintainHistoryUpload.do")
+  public ResponseEntity<List<EgovMap>> selectTokenIdMaintainHistoryUpload(@RequestParam Map<String, Object> params) {
+    List<EgovMap> resultList = tokenIdMaintainService.selectTokenIdMaintainHistoryUpload(params);
     return ResponseEntity.ok(resultList);
   }
 

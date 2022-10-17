@@ -30,6 +30,16 @@ public class TokenIdMaintainServiceImpl extends EgovAbstractServiceImpl implemen
     return tokenIdMaintainMapper.selectTokenIdMaintainDetailPop(params);
   }
 
+  @Override
+  public List<EgovMap> selectTokenIdMaintainHistoryUpload(Map<String, Object> params) {
+    return tokenIdMaintainMapper.selectTokenIdMaintainHistoryUpload(params);
+  }
+
+  @Override
+  public int saveTokenIdMaintainUploadHistory(Map<String, Object> params) {
+    return tokenIdMaintainMapper.saveTokenIdMaintainUploadHistory(params);
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public int saveTokenIdMaintainUpload(Map<String, Object> params, List<Map<String, Object>> list) {

@@ -10,5 +10,7 @@ public interface TokenIdMaintainMapper {
 
   List<EgovMap> selectTokenIdMaintain(Map<String, Object> params);
   List<EgovMap> selectTokenIdMaintainDetailPop(Map<String, Object> params);
+  List<EgovMap> selectTokenIdMaintainHistoryUpload(Map<String, Object> params);
+  int saveTokenIdMaintainUploadHistory(Map<String, Object> params);
   int saveTokenIdMaintainBulk(Map<String, Object> params);
 }

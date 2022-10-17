@@ -31,11 +31,17 @@
     <if test="creditCardType != null and creditCardType != '' ">
       AND UPPER(CREDIT_CARD_TYPE) = UPPER(#{creditCardType})
     </if>
+    <if test="updatorCode != null and updatorCode != '' ">
+      AND UPPER(EXT5.USER_NAME) = UPPER(#{updatorCode})
+    </if>
+
+    AND EXT1.UPD_DT BETWEEN TO_DATE(#{updStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{updEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+
     ORDER BY EXT1.CUST_CRC_ID ASC
   </select>
 
     <update id="saveTokenIdMaintainBulk" parameterType="Map">
-   MERGE INTO PAY0318D D
+   MERGE INTO GBSLCVD.PAY0318D D
     USING (
       SELECT
        #{uploadStatus} AS STATUS
@@ -101,18 +107,19 @@
     </update>
 
   <select id="selectTokenIdMaintainDetailPop" parameterType="Map" resultType="egovMap">
-   SELECT
-EXTENT1.CUST_CRC_TOKEN
-,EXTENT2.SALES_ORD_NO
-,TO_CHAR(EXTENT4.UPD_DT,'DD/MM/YYYY') AS LAST_UPDATE_DATE
-,EXTENT2.MTH_RENT_AMT AS AMOUNT
-,EXTENT3.NAME AS CUSTOMER_NAME
-,CASE WHEN EXTENT4.IS_3RD_PARTY = '1' THEN 'YES' ELSE 'NO' END AS THIRD_PARTY
-FROM SAL0028D EXTENT1
+    SELECT
+		EXTENT1.CUST_CRC_TOKEN
+		,EXTENT2.SALES_ORD_NO
+		,TO_CHAR(EXTENT4.UPD_DT,'DD/MM/YYYY') AS LAST_UPDATE_DATE
+		,EXTENT2.MTH_RENT_AMT AS AMOUNT
+		,EXTENT3.NAME AS CUSTOMER_NAME
+		,CASE WHEN EXTENT4.IS_3RD_PARTY = '1' THEN 'YES' ELSE 'NO' END AS THIRD_PARTY
+		FROM SAL0028D EXTENT1
 
-LEFT JOIN SAL0001D EXTENT2 ON EXTENT1.CUST_ID = EXTENT2.CUST_ID
-LEFT JOIN SAL0029D EXTENT3 ON EXTENT3.CUST_ID = EXTENT1.CUST_ID
-LEFT JOIN SAL0074D EXTENT4 ON EXTENT2.SALES_ORD_ID = EXTENT4.SALES_ORD_ID
+		LEFT JOIN SAL0001D EXTENT2 ON EXTENT1.CUST_ID = EXTENT2.CUST_ID
+		LEFT JOIN SAL0029D EXTENT3 ON EXTENT3.CUST_ID = EXTENT1.CUST_ID
+		LEFT JOIN SAL0074D EXTENT4 ON EXTENT2.SALES_ORD_ID = EXTENT4.SALES_ORD_ID
+
     WHERE 1 = 1
     <if test="custCrcId != null and custCrcId != '' ">
       AND EXTENT1.CUST_CRC_ID = #{custCrcId}
@@ -123,4 +130,34 @@ LEFT JOIN SAL0074D EXTENT4 ON EXTENT2.SALES_ORD_ID = EXTENT4.SALES_ORD_ID
     ORDER BY 1 ASC
   </select>
 
+<select id="selectTokenIdMaintainHistoryUpload" parameterType="Map" resultType="egovMap">
+    SELECT
+    TO_CHAR(EXT1.CREATE_DATE, 'DD-MM-YYYY') AS CRT_DT,
+    EXT2.USER_NAME AS UPDATOR,
+    EXT1.TOTAL_COUNT AS TOTAL_ITEMS
+
+    FROM PAY0335D EXT1
+        JOIN SYS0047M EXT2 ON EXT2.USER_ID = EXT1.CRT_USER_ID
+
+    WHERE 1 = 1
+
+    ORDER BY 1 ASC
+  </select>
+
+  <insert id="saveTokenIdMaintainUploadHistory" parameterType="Map">
+       INSERT INTO PAY0335D
+       (
+       HIST_SEQUENCE_ID,
+       CREATE_DATE,
+       CRT_USER_ID,
+       TOTAL_COUNT
+       )
+       VALUES
+       (
+       PAY0335D_SEQUENCE_ID_SEQ.NEXTVAL,
+       SYSDATE,
+       #{userId},
+       #{totalCount}
+       )
+  </insert>
 </mapper>
