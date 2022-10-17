@@ -1458,9 +1458,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
            Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
            Extent1.BRNCH_ID BRNCH_ID
       FROM ORG0005D Extent1
+      JOIN ORG0001D Extent2 ON Extent1.MEM_ID = Extent2.MEM_ID
      WHERE  ( 3 = Extent1.MEM_LVL )
           AND ( Extent1.DEPT_CODE =#{deptCode})
         ]]>
+        <if test="traineeType != null and traineeType != ''">
+            AND (Extent2.MEM_TYPE = #{traineeType})
+            AND Extent2.STUS != 8
+        </if>
     </select>
 
       <select id="selectMemberId" parameterType="Map" resultType="String">
@@ -4054,7 +4059,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                  , S38M.NAME
                  , O01D.MEM_TYPE
                  , NVL(O01D.RANK, 0) AS RANK
-                 , NVL(TO_CHAR(O01D.LAST_RANK_CHG_DT, 'YYYYMMDD'),'-') AS  LAST_RANK_CHG_DT
+                 <!-- , NVL(TO_CHAR(O01D.LAST_RANK_CHG_DT, 'YYYYMMDD'),'-') AS  LAST_RANK_CHG_DT -->
                  , NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYYMMDD'),'-') AS RESIGN_DT
              FROM ORG0001D O01D
              LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
