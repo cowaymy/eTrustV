@@ -19,182 +19,184 @@
 		//$('#btnCloseReq').click(fn_back("ordNoSearch"));
 	});
 
+
+
+  function fn_checkActRot(){
+
+	  Common.ajax("GET","/sales/ownershipTransfer/checkActRot.do",$("#ordSearchForm").serialize(),
+          function(result) {
+                  if(result.code == "00" && result.data.actCount !='0'){
+                	  Common.alert("This sales order still in ACT rot request ");
+                      return false;
+                  }
+                  else if(result.code == "99"){
+                	  Common.alert("Fail to check rot request status for this sales order.");
+                      return false;
+                  }
+                  return true;
+         });
+    }
+
+  function fn_selfClose(){
+	  location.reload();
+  }
+
+  function fn_cnfmOrdNo2(){
+	  Common.ajax("GET","/sales/ownershipTransfer/getOrdId.do", $("#ordSearchForm").serialize(),function(result) {
+          /*
+          fn_changeTab
+          - if order status != 4 return false;
+          - if todayYY >= 2018
+            - if todayDD >= 26 || todayDD == 1 return false
+          - fn_loadListOwnt > fn_loadOrderInfoOwnt > fn_isLockOrder
+           */
+
+          if (result.code != 99) {
+              // Success
+              //var userid = fn_getLoginInfo();
+              var todayDD = Number(TODAY_DD.substr(0, 2));
+              var todayYY = Number(TODAY_DD.substr(6, 4));
+
+              var ORD_NO = $("#sOrdNo").val();
+              var ORD_ID = result.data[0].ordId;
+              var ORD_STUS_ID = result.data[0].ordStusId;
+              var ORD_STUS_CODE = result.data[0].ordStusCode;
+
+              if (ORD_STUS_ID != '4') {
+                  var msg = '<spring:message code="sal.msg.underOwnTrans" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
+                  Common.alert(
+                          '<spring:message code="sal.alert.msg.actionRestriction" />'
+                                  + DEFAULT_DELIMITER + "<b>"
+                                  + msg + "</b>",
+                          fn_selfClose);
+                  return false;
+              }
+              /* to remove this section's comment before going live
+               if (todayYY >= 2018) {
+               if (todayDD >= 26 || todayDD == 1) {
+               var msg = '<spring:message code="sal.msg.underOwnTrans2" />';
+               Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+               return false;
+               }
+               }
+               to remove this section's comment
+               */
+              // fn_isLockOrder
+              var isLock = false;
+              var msg = "";
+              if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2)
+                      || "${orderDetail.logView.prgrsId}" == 1) {
+                  if ("${orderDetail.logView.prgrsId}" == 1) {
+                      Common
+                              .ajaxSync(
+                                      "GET",
+                                      "/sales/order/checkeAutoDebitDeduction.do",
+                                      {
+                                          salesOrdId : ORD_ID
+                                      },
+                                      function(rsltInfo) {
+                                          if (rsltInfo.ccpStus == 1
+                                                  || rsltInfo.eCashStus == 1) {
+                                              isLock = true;
+                                              msg = 'This order is under progress [ eCash Deduction ].<br />'
+                                                      + rsltInfo.msg
+                                                      + '.<br/>';
+                                          }
+                                      });
+                  } else {
+                      isLock = true;
+                      msg = 'This order is under progress ['
+                              + "${orderDetail.logView.prgrs}"
+                              + '].<br />';
+                  }
+              }
+
+              // order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
+              Common.ajaxSync( "GET", "/sales/order/validOCRStus.do", { salesOrdId : ORD_ID}, function(result) {
+                   if (result.callLogResult == 1) {
+                       isLock = true;
+                       msg = 'This order is under progress [ Call for Install ].<br />'
+                               + result.msg
+                               + '.<br/>';
+                   }
+               });
+
+              // Waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record */
+              // Valid OCR Status - (CallLog Type - 257, CCR0001D - 1, SAL00046 - NO RECORD  )
+              Common.ajaxSync("GET","/sales/order/validOCRStus2.do",{ salesOrdId : ORD_ID},function(result) {
+                   if (result.callLogResult == 1) {
+                       isLock = true;
+                       msg = 'This order is under progress [ Call for Install ].<br />'
+                               + result.msg
+                               + '.<br/>';
+                   }
+               });
+
+              // Order cancellation no yet complete sal0020d)
+              Common.ajaxSync("GET","/sales/order/validOCRStus3.do",{salesOrdId : ORD_ID},function(result) {
+                  if (result.callLogResult == 1) {
+                      isLock = true;
+                      msg = 'This order is under progress [ Call for Cancel ].<br />'
+                              + result.msg
+                              + '.<br/>';
+                  }
+              });
+
+              // Valid OCR Status - (CallLog Type - 259, SAL0020D - 32 LOG0038D Stus - Active )
+              Common.ajaxSync("GET", "/sales/order/validOCRStus4.do",{salesOrdId : ORD_ID}, function(result) {
+              if (result.callLogResult == 1) {
+                                  isLock = true;
+                                  msg = 'This order is under progress [Confirm To Cancel ].<br />'
+                                          + result.msg
+                                          + '.<br/>';
+                              }
+             });
+
+              if (isLock) {
+                  console
+                          .log("rootRequestOrderSearch :: fn_isLockOrder :: true - [disallowed]");
+                  msg += '<spring:message code="sal.alert.msg.transOwnDisallowed" />';
+                  Common
+                          .alert('<spring:message code="sal.alert.msg.ordLock" />'
+                                  + DEFAULT_DELIMITER
+                                  + "<b>"
+                                  + msg + "</b>");
+                  return false;
+              } else {
+                  console
+                          .log("rootRequestOrderSearch :: fn_isLockOrder :: false - [allowed] ");
+
+                  // TO-DO :: add validation for active ROT request before pop up Request ROT
+                  /*
+                  Common.popupDiv("/sales/ownershipTransfer/requestROT.do", {salesOrderId : ORD_ID}, null, true, "requestROT");
+                  $("#btnCloseReq").click();
+                   */
+
+                  fn_requestROT(ORD_ID);
+              }
+
+          } else {
+              // Failed
+              Common.alert("Order Number does not exist!");
+          }
+      });
+  }
+
 	// Search Order Form functions - Start
 	function fn_cnfmOrdNo() {
-		console.log("fn_cnfmOrdNo");
-
-		Common
-				.ajax(
-						"GET",
-						"/sales/ownershipTransfer/getOrdId.do",
-						$("#ordSearchForm").serialize(),
-						function(result) {
-							console.log(result);
-
-							/*
-							fn_changeTab
-							- if order status != 4 return false;
-							- if todayYY >= 2018
-							  - if todayDD >= 26 || todayDD == 1 return false
-							- fn_loadListOwnt > fn_loadOrderInfoOwnt > fn_isLockOrder
-							 */
-
-							if (result.code != 99) {
-								// Success
-								//var userid = fn_getLoginInfo();
-								var todayDD = Number(TODAY_DD.substr(0, 2));
-								var todayYY = Number(TODAY_DD.substr(6, 4));
-
-								var ORD_NO = $("#sOrdNo").val();
-								var ORD_ID = result.data[0].ordId;
-								var ORD_STUS_ID = result.data[0].ordStusId;
-
-								if (ORD_STUS_ID != '4') {
-									var msg = '<spring:message code="sal.msg.underOwnTrans" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
-									Common.alert(
-											'<spring:message code="sal.alert.msg.actionRestriction" />'
-													+ DEFAULT_DELIMITER + "<b>"
-													+ msg + "</b>",
-											fn_selfClose);
-									return false;
-								}
-								/* to remove this section's comment before going live
-								 if (todayYY >= 2018) {
-								 if (todayDD >= 26 || todayDD == 1) {
-								 var msg = '<spring:message code="sal.msg.underOwnTrans2" />';
-								 Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
-								 return false;
-								 }
-								 }
-								 to remove this section's comment
-								 */
-								// fn_isLockOrder
-								var isLock = false;
-								var msg = "";
-								if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2)
-										|| "${orderDetail.logView.prgrsId}" == 1) {
-									if ("${orderDetail.logView.prgrsId}" == 1) {
-										Common
-												.ajaxSync(
-														"GET",
-														"/sales/order/checkeAutoDebitDeduction.do",
-														{
-															salesOrdId : ORD_ID
-														},
-														function(rsltInfo) {
-															if (rsltInfo.ccpStus == 1
-																	|| rsltInfo.eCashStus == 1) {
-																isLock = true;
-																msg = 'This order is under progress [ eCash Deduction ].<br />'
-																		+ rsltInfo.msg
-																		+ '.<br/>';
-															}
-														});
-									} else {
-										isLock = true;
-										msg = 'This order is under progress ['
-												+ "${orderDetail.logView.prgrs}"
-												+ '].<br />';
-									}
-								}
-
-								// order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
-								Common
-										.ajaxSync(
-												"GET",
-												"/sales/order/validOCRStus.do",
-												{
-													salesOrdId : ORD_ID
-												},
-												function(result) {
-													if (result.callLogResult == 1) {
-														isLock = true;
-														msg = 'This order is under progress [ Call for Install ].<br />'
-																+ result.msg
-																+ '.<br/>';
-													}
-												});
-
-								// Waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record */
-								// Valid OCR Status - (CallLog Type - 257, CCR0001D - 1, SAL00046 - NO RECORD  )
-								Common
-										.ajaxSync(
-												"GET",
-												"/sales/order/validOCRStus2.do",
-												{
-													salesOrdId : ORD_ID
-												},
-												function(result) {
-													if (result.callLogResult == 1) {
-														isLock = true;
-														msg = 'This order is under progress [ Call for Install ].<br />'
-																+ result.msg
-																+ '.<br/>';
-													}
-												});
-
-								// Order cancellation no yet complete sal0020d)
-								Common
-										.ajaxSync(
-												"GET",
-												"/sales/order/validOCRStus3.do",
-												{
-													salesOrdId : ORD_ID
-												},
-												function(result) {
-													if (result.callLogResult == 1) {
-														isLock = true;
-														msg = 'This order is under progress [ Call for Cancel ].<br />'
-																+ result.msg
-																+ '.<br/>';
-													}
-												});
-
-								// Valid OCR Status - (CallLog Type - 259, SAL0020D - 32 LOG0038D Stus - Active )
-								Common
-										.ajaxSync(
-												"GET",
-												"/sales/order/validOCRStus4.do",
-												{
-													salesOrdId : ORD_ID
-												},
-												function(result) {
-													if (result.callLogResult == 1) {
-														isLock = true;
-														msg = 'This order is under progress [Confirm To Cancel ].<br />'
-																+ result.msg
-																+ '.<br/>';
-													}
-												});
-
-								if (isLock) {
-									console
-											.log("rootRequestOrderSearch :: fn_isLockOrder :: true - [disallowed]");
-									msg += '<spring:message code="sal.alert.msg.transOwnDisallowed" />';
-									Common
-											.alert('<spring:message code="sal.alert.msg.ordLock" />'
-													+ DEFAULT_DELIMITER
-													+ "<b>"
-													+ msg + "</b>");
-									return false;
-								} else {
-									console
-											.log("rootRequestOrderSearch :: fn_isLockOrder :: false - [allowed] ");
-
-									// TO-DO :: add validation for active ROT request before pop up Request ROT
-									/*
-									Common.popupDiv("/sales/ownershipTransfer/requestROT.do", {salesOrderId : ORD_ID}, null, true, "requestROT");
-									$("#btnCloseReq").click();
-									 */
-
-									fn_requestROT(ORD_ID);
-								}
-
-							} else {
-								// Failed
-								Common.alert("Order Number does not exist!");
-							}
-						});
+		  Common.ajax("GET","/sales/ownershipTransfer/checkActRot.do",$("#ordSearchForm").serialize(), function(result) {
+                  if(result.code == "00" && result.data.actCount !='0'){
+                      Common.alert("This sales order still in ACT rot request ");
+                      return false;
+                  }
+                  else if(result.code == "99"){
+                      Common.alert("Fail to check rot request status for this sales order.");
+                      return false;
+                  }
+                  else{
+                	  fn_cnfmOrdNo2();
+                  }
+         });
 	}
 
 

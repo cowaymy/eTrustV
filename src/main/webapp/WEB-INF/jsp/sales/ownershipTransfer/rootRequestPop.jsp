@@ -1416,37 +1416,37 @@
                         msg += '* <spring:message code="sal.alert.msg.smsBillingMethod" /><br>';
                     }
 
-                    if ($("#billMthdEstm").is(":checked")) {
-                        if (FormUtil.checkReqValue($('#billMthdEmailTxt1'))) {
-                            isValid = false;
-                            msg += '* <spring:message code="sal.alert.msg.plzKeyInEmailAddr" /><br>';
-                        } else {
-                            if (FormUtil.checkEmail($('#billMthdEmailTxt1')
-                                    .val())) {
-                                isValid = false;
-                                msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
-                            }
-                        }
-                        if (!FormUtil.checkReqValue($('#billMthdEmailTxt2'))
-                                && FormUtil.checkEmail($('#billMthdEmailTxt2')
-                                        .val())) {
-                            isValid = false;
-                            msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
-                        }
-                    } else {
-                        if (!FormUtil.checkReqValue($('#billMthdEmailTxt1'))
-                                && FormUtil.checkEmail($('#billMthdEmailTxt1')
-                                        .val())) {
-                            isValid = false;
-                            msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
-                        }
-                        if (!FormUtil.checkReqValue($('#billMthdEmailTxt2'))
-                                && FormUtil.checkEmail($('#billMthdEmailTxt2')
-                                        .val())) {
-                            isValid = false;
-                            msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
-                        }
-                    }
+//                     if ($("#billMthdEstm").is(":checked")) {
+//                         if (FormUtil.checkReqValue($('#billMthdEmailTxt1'))) {
+//                             isValid = false;
+//                             msg += '* <spring:message code="sal.alert.msg.plzKeyInEmailAddr" /><br>';
+//                         } else {
+//                             if (FormUtil.checkEmail($('#billMthdEmailTxt1')
+//                                     .val())) {
+//                                 isValid = false;
+//                                 msg += '* 111111111<spring:message code="sal.msg.invalidEmail" /><br>';
+//                             }
+//                         }
+//                         if (!FormUtil.checkReqValue($('#billMthdEmailTxt2'))
+//                                 && FormUtil.checkEmail($('#billMthdEmailTxt2')
+//                                         .val())) {
+//                             isValid = false;
+//                             msg += '* 22222222222222<spring:message code="sal.msg.invalidEmail" /><br>';
+//                         }
+//                     } else {
+//                         if (!FormUtil.checkReqValue($('#billMthdEmailTxt1'))
+//                                 && FormUtil.checkEmail($('#billMthdEmailTxt1')
+//                                         .val())) {
+//                             isValid = false;
+//                             msg += '* 333333333333333<spring:message code="sal.msg.invalidEmail" /><br>';
+//                         }
+//                         if (!FormUtil.checkReqValue($('#billMthdEmailTxt2'))
+//                                 && FormUtil.checkEmail($('#billMthdEmailTxt2')
+//                                         .val())) {
+//                             isValid = false;
+//                             msg += '* 44444444444444444444<spring:message code="sal.msg.invalidEmail" /><br>';
+//                         }
+//                     }
                 }
             }
         }

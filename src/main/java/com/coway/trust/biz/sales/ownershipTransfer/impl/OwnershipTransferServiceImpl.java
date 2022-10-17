@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billinggroup.service.impl.BillingGroupMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
@@ -66,11 +67,11 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 		LOGGER.debug("OwnershipTransferServiceImpl :: saveRequest");
 		LOGGER.info("params : {}", params);
 
-		int flg = 1;
-
 		// Obtain ROT sequence number
 		int rotID = ownershipTransferMapper.getRootID();
 		params.put("rotID", rotID);
+
+		int flg = rotID;
 
 		EgovMap rotDocNoMap = ownershipTransferMapper.selectDocNo();
 		String rotDocNo = "";
@@ -400,27 +401,27 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 		LOGGER.debug("custBillCnt_Ex :: " + custBillCnt_Ex);
 		LOGGER.debug("docNoCnt :: " + docNoCnt);
 
-		if (mCnt != 0 && dCnt != 0 && ccpCnt != 0 && instCnt != 0) {
-			// If Order Type = Rental and rpsCnt != 0 [Success]
-			if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == CommonUtils.intNvl(ordDetailsM.get("appTypeId"))
-					&& rpsCnt != 0) {
-
-				// If rental billing group = new, insert SAL0280D > 0, update SAL0276D > 0
-				if ("new".equals(params.get("grpOpt").toString()) && (custBillCnt_New == 0 || custBillCnt_Upd == 0)) {
-					flg = 0;
-				}
-
-				if (billMap != null && custBillCnt_Ex == 0) {
-					flg = 0;
-				}
-			} else {
-				flg = 0;
-			}
-
-			// Else if Master Staging, Detail Master Staging, Installation Staging is empty
-		} else if (mCnt == 0 || dCnt == 0 || ccpCnt == 0 || instCnt == 0) {
-			flg = 0;
-		}
+//		if (mCnt != 0 && dCnt != 0 && ccpCnt != 0 && instCnt != 0) {
+//			// If Order Type = Rental and rpsCnt != 0 [Success]
+//			if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == CommonUtils.intNvl(ordDetailsM.get("appTypeId"))
+//					&& rpsCnt != 0) {
+//
+//				// If rental billing group = new, insert SAL0280D > 0, update SAL0276D > 0
+//				if ("new".equals(params.get("grpOpt").toString()) && (custBillCnt_New == 0 || custBillCnt_Upd == 0)) {
+//					flg = 0;
+//				}
+//
+//				if (billMap != null && custBillCnt_Ex == 0) {
+//					flg = 0;
+//				}
+//			} else {
+//				flg = 0;
+//			}
+//
+//			// Else if Master Staging, Detail Master Staging, Installation Staging is empty
+//		} else if (mCnt == 0 || dCnt == 0 || ccpCnt == 0 || instCnt == 0) {
+//			flg = 0;
+//		}
 
 		return flg;
 	}
@@ -497,12 +498,31 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 
 	@Override
 	public int insCallLog(List<Object> addList, String userId) {
-		int cnt = 0;
+		int cnt = 0, cnt2=0;
 
-		for (Object obj : addList) {
-			((Map<String, Object>) obj).put("userId", userId);
+		try{
+    			for (Object obj : addList) {
+        				((Map<String, Object>) obj).put("userId", userId);
+        				cnt = ownershipTransferMapper.insCallLog((Map<String, Object>) obj);
 
-			cnt = ownershipTransferMapper.insCallLog((Map<String, Object>) obj);
+        				EgovMap checkRootGrpId = ownershipTransferMapper.checkRootGrpId((Map<String, Object>) obj);
+
+        				if(checkRootGrpId!=null){
+        					((Map<String, Object>) obj).put("rotID",  checkRootGrpId.get("rotId").toString());
+        					cnt2 = ownershipTransferMapper.insCallLog((Map<String, Object>) obj);
+
+        					 if(cnt2<0){
+        						 throw new Error("Error");
+        	    			 }
+        				}
+
+        				if(cnt <0){
+        					 throw new Error("Error");
+           			    }
+    			}
+		}
+		catch(Exception e){
+			throw e;
 		}
 
 		return cnt;
@@ -762,11 +782,12 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 			// 6.
 			// Get on request Billing ID + Sales Order ID tied to Billing group
 			EgovMap exCustBillId = ownershipTransferMapper.getExistCustBill_SAL0280D(params);
-			params.put("exCustBillId", exCustBillId.get("custBillId"));
+			params.put("exCustBillId", exCustBillId == null ? 0 : exCustBillId.get("custBillId"));
+
 
 			Map<String, Object> tempParam = new HashMap<String, Object>();
 			Map<String, Object> billParam = new HashMap<String, Object>();
-			billParam.put("custBillId", exCustBillId.get("custBillId"));
+			billParam.put("custBillId", exCustBillId == null ? 0 : exCustBillId.get("custBillId"));
 
 			// Select from SAL0024D based on request billing group ID
 			EgovMap billMap = billingGroupMapper.selectCustBillMaster(billParam);
@@ -876,4 +897,31 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService {
 			return ownershipTransferMapper.selectRequestorInfo(params);
 		}
 
+		public EgovMap checkBundleInfo(Map<String, Object> params) {
+			return ownershipTransferMapper.checkBundleInfo(params);
+		}
+
+		public EgovMap checkBundleInfoCcp(Map<String, Object> params) {
+			return ownershipTransferMapper.checkBundleInfoCcp(params);
+		}
+
+		public EgovMap checkActRot(Map<String, Object> params) {
+			return ownershipTransferMapper.checkActRot(params);
+		}
+
+		@Override
+		public int getRootGrpID() {
+			return ownershipTransferMapper.getRootGrpID();
+		}
+
+		@Override
+		public int updRootGrpId(Map<String, Object> params) {
+			int cnt = ownershipTransferMapper.updRootGrpId(params);
+			return cnt;
+		}
+
+		@Override
+		public EgovMap checkRootGrpId(Map<String, Object> params) {
+			return ownershipTransferMapper.checkRootGrpId(params);
+		}
 }

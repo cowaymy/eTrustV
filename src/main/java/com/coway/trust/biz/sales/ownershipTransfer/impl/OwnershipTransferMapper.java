@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.ownershipTransfer.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -115,4 +117,16 @@ public interface OwnershipTransferMapper {
 	int updateSAL0276D_rotReason(Map<String, Object> params);
 
 	EgovMap selectRequestorInfo(Map<String, Object> params);
+
+	EgovMap checkBundleInfo(Map<String, Object> params);
+
+	EgovMap checkBundleInfoCcp(Map<String, Object> params);
+
+	EgovMap checkActRot(Map<String, Object> params) ;
+
+	int getRootGrpID();
+
+	int updRootGrpId(Map<String, Object> params);
+
+	EgovMap checkRootGrpId(Map<String, Object> params);
 }

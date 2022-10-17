@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -124,6 +125,28 @@ public class OwnershipTransferController {
 		ReturnMessage message = new ReturnMessage();
 
 		List<EgovMap> ordDtls = ownershipTransferService.getSalesOrdId((String) params.get("sOrdNo"));
+
+		if (!ordDtls.isEmpty()) {
+			message.setData(ordDtls);
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/checkActRot.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkActRot(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		LOGGER.info("params : {}", params);
+
+		ReturnMessage message = new ReturnMessage();
+
+		EgovMap ordDtls = ownershipTransferService.checkActRot(params);
+
+		LOGGER.info("checkActRot ordDtls : {}", ordDtls);
 
 		if (!ordDtls.isEmpty()) {
 			message.setData(ordDtls);
@@ -248,21 +271,52 @@ public class OwnershipTransferController {
 		return ResponseEntity.ok(message);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/saveRequest.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveRequest(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) {
 		LOGGER.info("ownershipTransferController :: saveRequest");
 		LOGGER.info("params : {}", params);
-
-		int cnt = ownershipTransferService.saveRequest(params, sessionVO);
-
 		ReturnMessage message = new ReturnMessage();
-		if (cnt != 1) {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		} else {
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		int cnt=0, cnt2=0, rotGrpId = 0, updResult=0;
+
+		try{
+    			cnt = ownershipTransferService.saveRequest(params, sessionVO);
+
+    			EgovMap checkBundleInfo = ownershipTransferService.checkBundleInfo(params);
+
+    			 if(checkBundleInfo != null){
+
+    				 rotGrpId = ownershipTransferService.getRootGrpID();
+    				 params.put("rotId", cnt);
+    				 params.put("grpId", rotGrpId);
+
+    				 updResult = ownershipTransferService.updRootGrpId(params);
+
+    				 params.put("salesOrdId",  checkBundleInfo.get("salesOrdId").toString());
+    				 params.put("salesOrdNo", checkBundleInfo.get("salesOrdNo").toString());
+
+    				 cnt2 = ownershipTransferService.saveRequest(params, sessionVO);
+
+    				 params.put("rotId", cnt2);
+    				 updResult = ownershipTransferService.updRootGrpId(params);
+
+    				 if(cnt2 < 0 || updResult < 0){
+    					 throw new Error("Error");
+    				 }
+    			 }
+
+
+    		     if(cnt > 0){
+					message.setCode(AppConstants.SUCCESS);
+	     	    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+				 }
+				 else{
+    					 throw new Error("Error");
+    			 }
+		}
+		catch(Exception e){
+			throw e;
 		}
 
 		return ResponseEntity.ok(message);
@@ -405,47 +459,63 @@ public class OwnershipTransferController {
 		return ResponseEntity.ok(list);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/saveRotCallLog.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveMeetingPointGrid(@RequestBody Map<String, ArrayList<Object>> params,
 			Model model, SessionVO sessionVO) {
 
-		int cnt = 0;
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD);
-
 		String userId = Integer.toString(sessionVO.getUserId());
-
-		if (addList.size() > 0) {
-			cnt = ownershipTransferService.insCallLog(addList, userId);
-		}
-
 		ReturnMessage message = new ReturnMessage();
-		if (cnt > 0) {
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		} else {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		}
+
+		  try{
+        		if (addList.size() > 0) {
+
+        			int cnt = ownershipTransferService.insCallLog(addList, userId);
+
+        			message.setCode(AppConstants.SUCCESS);
+        			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        		}
+        		else{
+        			message.setCode(AppConstants.FAIL);
+        			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        		}
+		  }
+		  catch (Exception e){
+    		  	    throw e;
+    	  }
 
 		return ResponseEntity.ok(message);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/saveRotCCP.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveRotCCP(@RequestBody Map<String, Object> params, Model model,
-			SessionVO sessionVO) {
-		LOGGER.info("ownershipTransferController :: saveRotCCP");
-		LOGGER.info("params : {}", params);
+			SessionVO sessionVO) throws Exception {
+		LOGGER.info("saveRotCCP saveRotCCP : {}", params);
+    	  ReturnMessage message = new ReturnMessage();
 
-		int cnt = ownershipTransferService.saveRotCCP(params, sessionVO);
+		  try{
 
-		ReturnMessage message = new ReturnMessage();
-		if (cnt != 1) {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		} else {
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}
+				int cnt = ownershipTransferService.saveRotCCP(params, sessionVO);
+				EgovMap checkRootGrpId = ownershipTransferService.checkRootGrpId(params);
+
+				if(checkRootGrpId != null){
+						 params.put("editCcpId",  checkRootGrpId.get("ccpId").toString());
+						 params.put("editOrdId", checkRootGrpId.get("rotOrdId").toString());
+						 params.put("editAppTypeCode",  checkRootGrpId.get("appTypeCode").toString());
+						 params.put("ccpRotId", checkRootGrpId.get("rotId").toString());
+						 params.put("saveCcpId",  checkRootGrpId.get("ccpId").toString());
+						 params.put("saveOrdId", checkRootGrpId.get("rotOrdId").toString());
+
+						 LOGGER.info("saveRotCCP checkRootGrpId params: {}", params);
+
+						 int cnt2 = ownershipTransferService.saveRotCCP(params, sessionVO);
+				}
+    	  }
+		  catch (Exception e){
+    		  	  throw e;
+    	  }
 
 		return ResponseEntity.ok(message);
 	}
@@ -494,22 +564,40 @@ public class OwnershipTransferController {
 	  }
 
 //	until here
+	@Transactional
 	@RequestMapping(value = "/saveRotDetail.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveRotDetail(@RequestBody Map<String, Object> params, Model model, //for rot reason after validation
 			SessionVO sessionVO) {
-		LOGGER.info("ownershipTransferController :: saveRotCCP");
+		LOGGER.info("ownershipTransferController :: saveRotDetail");
 		LOGGER.info("params : {}", params);
-
-		int cnt = ownershipTransferService.saveRotDetail(params, sessionVO);
-
 		ReturnMessage message = new ReturnMessage();
-		if (cnt != 1) {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		} else {
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}
+
+		 try{
+
+			    int cnt = ownershipTransferService.saveRotDetail(params, sessionVO);
+
+				EgovMap checkRootGrpId = ownershipTransferService.checkRootGrpId(params);
+
+				if(checkRootGrpId != null){
+					params.put("ccpRotId",  checkRootGrpId.get("rotId").toString());
+					int cnt2 = ownershipTransferService.saveRotDetail(params, sessionVO);
+
+					if (cnt2 < 0) {
+						throw new Error("Error.");
+					}
+				}
+
+				if (cnt >0) {
+					message.setCode(AppConstants.SUCCESS);
+        			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+				}
+				else{
+					throw new Error("Error.");
+				}
+         }
+         catch (Exception e){
+         		  	throw e;
+         }
 
 		return ResponseEntity.ok(message);
 	}

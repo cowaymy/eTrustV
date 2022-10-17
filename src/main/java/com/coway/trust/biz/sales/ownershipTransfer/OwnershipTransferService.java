@@ -44,4 +44,17 @@ public interface OwnershipTransferService {
 	int saveRotDetail(Map<String, Object> params, SessionVO sessionVO); //for rot reason after validation
 
 	EgovMap selectRequestorInfo(Map<String, Object> params);
+
+	EgovMap checkBundleInfo(Map<String, Object> params) ;
+
+	EgovMap checkBundleInfoCcp(Map<String, Object> params) ;
+
+	EgovMap checkActRot(Map<String, Object> params) ;
+
+	int getRootGrpID();
+
+	int updRootGrpId(Map<String, Object> params);
+
+	EgovMap checkRootGrpId(Map<String, Object> params) ;
+
 }

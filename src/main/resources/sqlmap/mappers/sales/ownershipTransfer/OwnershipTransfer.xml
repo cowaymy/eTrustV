@@ -122,8 +122,9 @@
     </select>
 
     <select id="getSalesOrdId" parameterType="String" resultType="egovMap">
-        SELECT SALES_ORD_ID ORD_ID, STUS_CODE_ID ORD_STUS_ID
-        FROM SAL0001D
+        SELECT A.SALES_ORD_ID ORD_ID, A.STUS_CODE_ID ORD_STUS_ID, B.CODE ORD_STUS_CODE
+        FROM SAL0001D A
+        JOIN SYS0038M B ON A.STUS_CODE_ID = B.STUS_CODE_ID
         WHERE SALES_ORD_NO = #{sOrdNo}
     </select>
 
@@ -1859,5 +1860,88 @@ SELECT CASE WHEN (EXT2.CODE ||' - '|| EXT2.NAME  = ' - ')THEN '' ELSE (EXT2.CODE
         ]]> ) T) EXT3 ON EXT3.MEM_CODE = EXT1.ROT_REQUESTOR_CODE
               where ext1.rot_id = #{rotId}
     </select>
+
+
+    <select id="checkBundleInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+			      SELECT DISTINCT
+			             A.SALES_ORD_NO, A.SALES_ORD_ID
+			       FROM SAL0001D A
+			      JOIN HMC0011D B ON A.SALES_ORD_NO IN (B.MAT_ORD_NO, B.FRA_ORD_NO)
+			      WHERE #{salesOrdNo}  IN (B.MAT_ORD_NO , B.FRA_ORD_NO) AND A.SALES_ORD_NO <> #{salesOrdNo}
+        ]]>
+    </select>
+
+
+    <select id="checkBundleInfoCcp" parameterType="Map" resultType="egovMap">
+                  WITH BNDL_TBL AS (
+                        <if test='editOrdId2 != null and editOrdId2 !=""'>
+		                      SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = #{editOrdId2}
+		                 </if>
+
+                         <if test='ccpRotId != null and ccpRotId !=""'>
+                              SELECT  ROT_ORD_NO AS SALES_ORD_NO FROM SAL0275M WHERE ROT_ID = #{ccpRotId}
+                         </if>
+                    )
+           <![CDATA[
+                    SELECT DISTINCT
+                            A.SALES_ORD_NO
+                        ,   A.SALES_ORD_ID
+                        ,   F.CCP_ID AS EDIT_CCP_ID
+                        ,   D.ROT_ID  AS CCP_ROT_ID
+                        ,   D.ROT_ORD_ID AS EDIT_ORD_ID
+                        ,   G.CODE AS EDIT_APP_TYPE_CODE
+                        ,   F.CCP_ID AS SAVE_CCP_ID
+                        ,   D.ROT_ORD_ID SAVE_ORD_ID
+                    FROM SAL0001D A
+                    JOIN HMC0011D B ON A.SALES_ORD_NO IN (B.MAT_ORD_NO, B.FRA_ORD_NO)
+                    LEFT JOIN BNDL_TBL C ON 1=1
+                    JOIN SAL0275M D ON A.SALES_ORD_NO = D.ROT_ORD_NO AND D.ROT_STUS =1
+                    JOIN SAL0276D E ON D.ROT_ID =E.ROT_ID
+                    JOIN SAL0277D F ON E.ROT_ID =F.ROT_ID
+                    JOIN SYS0013M G ON G.CODE_ID = E.ROT_APP_TYPE
+                    WHERE C.SALES_ORD_NO  IN (B.MAT_ORD_NO , B.FRA_ORD_NO) AND A.SALES_ORD_NO <> C.SALES_ORD_NO
+                    AND ROWNUM = 1
+          ]]>
+    </select>
+
+    <select id="checkActRot" parameterType="Map" resultType="egovMap">
+            SELECT
+                    COUNT(*) AS ACT_COUNT
+            FROM SAL0275M WHERE ROT_ORD_NO = #{sOrdNo} AND ROT_STUS =1
+    </select>
+
+     <select id="getRootGrpID" parameterType="String" resultType="int">
+        SELECT SAL0275M_GROUP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <update id="updRootGrpId" parameterType="Map">
+        UPDATE SAL0275M SET GROUP_ID = #{grpId} WHERE ROT_ID = #{rotId}
+    </update>
+
+	<select id="checkRootGrpId" parameterType="Map" resultType="egovMap">
+	        WITH GRP_TBL AS (
+               <if test='rotID != null and rotID !=""'>
+                         SELECT  ROT_ORD_NO , NVL(GROUP_ID,0) GROUP_ID FROM SAL0275M where rot_id = #{rotID}
+               </if>
+
+               <if test='ccpRotId != null and ccpRotId !=""'>
+                         SELECT  ROT_ORD_NO , NVL(GROUP_ID,0) GROUP_ID FROM SAL0275M where rot_id = #{ccpRotId}
+               </if>
+            )
+          <![CDATA[
+            SELECT
+                      A.ROT_ID
+                    , A.ROT_ORD_ID
+                    , C.CCP_ID
+                    , E.CODE AS APP_TYPE_CODE
+            FROM SAL0275M A
+            JOIN GRP_TBL B ON A.GROUP_ID = B.GROUP_ID
+            JOIN SAL0277D C ON A.ROT_ID = C.ROT_ID
+            JOIN SAL0276D D ON A.ROT_ID = D.ROT_ID
+            JOIN SYS0013M E ON E.CODE_ID = D.ROT_APP_TYPE
+            WHERE A.ROT_ORD_NO <> B.ROT_ORD_NO AND B.GROUP_ID <> 0
+	       ]]>
+	</select>
 
 </mapper>
