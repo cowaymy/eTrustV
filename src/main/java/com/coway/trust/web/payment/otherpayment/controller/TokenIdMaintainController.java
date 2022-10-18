@@ -113,14 +113,16 @@ public class TokenIdMaintainController {
 
     if(result > 0){
         message.setMessage("Token Id Maintenance successfully uploaded.<br />Item(s) uploaded : "+result);
+
+        params.put("totalCount", result);
+
+        tokenIdMaintainService.saveTokenIdMaintainUploadHistory(params);
+
     }else{
     	 if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false)
     		 message.setMessage("Failed to upload Token Id Maintenance item(s). Please try again later.");
     }
 
-    params.put("totalCount", result);
-
-    tokenIdMaintainService.saveTokenIdMaintainUploadHistory(params);
 
     return ResponseEntity.ok(message);
   }
