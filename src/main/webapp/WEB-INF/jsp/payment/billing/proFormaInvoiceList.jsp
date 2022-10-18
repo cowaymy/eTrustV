@@ -14,7 +14,6 @@
 
    function fn_multiCombo(){
        $('#listBrnchCode').change(function() {
-           //console.log($(this).val());
        }).multipleSelect({
            selectAll: true,
            width: '100%'

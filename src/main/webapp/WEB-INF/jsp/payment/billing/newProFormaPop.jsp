@@ -35,7 +35,6 @@ var columnLayoutBill =[
 	                                type : "ButtonRenderer",
 	                                labelText : "Select",
 	                                onclick : function(rowIndex, columnIndex, value, item) {
-	                                    console.log("item111===" + item)
 	                                    $("#orderId").val(item.salesOrdId);
 	                                    if (fn_chkProForma(item.salesOrdId)) {
 	                                        return;
@@ -64,8 +63,8 @@ var columnLayoutProForma =[
 						{dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 140 ,editable : false },
 						{dataField :"adStartDt",  headerText : "adStartDt",      width: 140 ,visible : false },
 						{dataField :"adEndDt",  headerText : "adEndDt",      width: 140 ,visible : false },
-						{dataField :"packOriPrice",  headerText : "packOriPrice",      width: 140 }, //after discount
-						{dataField :"remark",  headerText : "remark",      width: 140 }
+						{dataField :"packOriPrice",  headerText : "packOriPrice",      width: 140 , visible : false}, //after discount
+						{dataField :"remark",  headerText : "remark",      width: 140, visible : false }
                    ];
 
 var gridProsBill = {
@@ -255,9 +254,6 @@ function fn_loadOrderPO(orderId){
         $("#STOCK_ID").val(result.basic.stockId);
         $("#hiddenOrderDt").val(result.basic.ordDt);
         $("#hiddenOrderStus").val(result.basic.ordStusName);
-        console.log("hello111");
-        console.log(result.basic.ordDt);
-        console.log(result.basic.ordStusName);
     }
 
     function fn_goCustSearch() {
@@ -370,7 +366,6 @@ function fn_loadOrderPO(orderId){
 
     }
 
-    /*fn_getMembershipPackageInfo*/
     function fn_getMembershipPackageInfo(_id) {
 
         Common.ajax("GET", "/sales/membership/mPackageInfo", $("#getDataForm").serialize(), function(result) {
@@ -410,7 +405,13 @@ function fn_loadOrderPO(orderId){
             $("#packpro").removeAttr("disabled");
 
             if($("#discount").val() != "0"){
-                fn_discount_onChageEvent();
+            	var discount = $("#discount").val();
+            	var discountPercnt = (100 - parseInt(discount)) / 100;
+                var packPrice = $("#hiddenPacOriPrice").val();
+
+                var discountPrice  = parseInt(packPrice) * discountPercnt
+
+                $("#txtPackagePrice").html(discountPrice.toFixed(2));
             }
         });
     }
@@ -743,9 +744,6 @@ function fn_loadOrderPO(orderId){
     	var totalPackPrice = 0;
         var totalPriceAllItems = AUIGrid.getGridData(myGridIDProForma);
 
-       console.log("total Price ahh");
-       console.log(totalPriceAllItems);
-
        var ordCount = totalPriceAllItems.length;
        if(totalPriceAllItems.length > 0){
            for (var i = 0 ; i < totalPriceAllItems.length ; i++){
@@ -761,6 +759,7 @@ function fn_loadOrderPO(orderId){
 
     	var allItems = AUIGrid.getGridData(myGridIDProForma);
     	var data = {};
+    	var orderIdArr = [];
 
         if(allItems.length > 0){
 
@@ -780,27 +779,24 @@ function fn_loadOrderPO(orderId){
 	                    remark:  allItems[i].remark, //xx
 	                    discount: allItems[i].disc,
 	            }
+	            orderIdArr[i] = {salesOrdId: allItems[i].salesOrdId};
             }
 
             data.all = rowList;
 
-            console.log("dataAll====")
-            console.log(data.all); //see where insert less
         }
         else {
         	Common.alert("Choose at least 1 order no for Pro Forma Invoice");
             return;
         }
 
-        console.log("data ahhhh");
-        console.log(data);
-
     	 if(allItems != undefined){
-	        Common.ajax("POST", "/payment/saveNewProForma.do", data,
-	                  function(result) {
-	                    Common.alert(result.message, fn_saveclose);
-	                    $("#popup_wrap").remove();
-	                    fn_selectListAjax();
+    		  Common.ajax("POST", "/payment/saveNewProForma.do", data, function(result) {
+	              Common.alert(result.message, fn_saveclose);
+	              $("#popup_wrap").remove();
+	              //fn_genPFInvoice(result.data);
+	              fn_selectListAjax();
+
 	        });
     	}
     }
@@ -831,16 +827,11 @@ function fn_loadOrderPO(orderId){
     	 var rtnVAL = false;
     	 var selectedItems = AUIGrid.getSelectedItems(myGridIDBillGroup);
 
-    	 console.log("selected");
-    	 console.log(selectedItems);
-
          Common.ajaxSync("GET", "/payment/chkProForma", {
              ordNo :  selectedItems[0].item.salesOrdNo
          }, function(result) {
-        	 console.log(result.length);
 
             if(result.length > 0){
-                console.log(result[0]);
 
         	 var today = new Date();
              var startDt = result[0].advStartDt;
@@ -865,74 +856,93 @@ function fn_loadOrderPO(orderId){
          return rtnVAL;
     }
 
-$("#btnAddToProForma").click(function(){
-    var billMonth = getOrderCurrentBillMonth();
+	$("#btnAddToProForma").click(function(){
+	    var billMonth = getOrderCurrentBillMonth();
 
-    if (fn_validRequiredField_Save() == false)
-        return;
-    if (fn_CheckRentalOrder(billMonth)) {
-        if (fn_CheckSalesPersonCode()) {
-            fn_unconfirmSalesPerson();
-        }
+	    if (fn_validRequiredField_Save() == false)
+	        return;
+	    if (fn_CheckRentalOrder(billMonth)) {
+	        if (fn_CheckSalesPersonCode()) {
+	            fn_unconfirmSalesPerson();
+	        }
+	    }
+	});
+
+	$("#btnRemoveProForma").click(function(){
+
+	var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
+	var allItems = AUIGrid.getGridData(myGridIDProForma);
+	var billGroupItems = AUIGrid.getGridData(myGridIDBillGroup);
+
+	if (checkedItems.length > 0){
+	    var item = new Object();
+	    var rowList = [];
+	    var index = 0;
+	    for (var i = checkedItems.length-1 ; i >= 0; i--){
+
+	        rowList[index] = {
+		                      salesOrdNo : checkedItems[i].salesOrdNo,
+		                      salesOrdId : checkedItems[i].salesOrdId,
+		                      refNo : checkedItems[i].refNo,
+		                      orderDate : checkedItems[i].orderDate,
+		                      status : checkedItems[i].status,
+		                      appType : checkedItems[i].appType,
+		                      product : checkedItems[i].product,
+		                      custName : checkedItems[i].custName,
+		                      custBillId : checkedItems[i].custBillId,
+		                      proformaStus : checkedItems[i].proformaStus,
+		                      advStartDt : checkedItems[i].advStartDt,
+		                      advEndDt : checkedItems[i].advEndDt,
+		                      stkId : checkedItems[i].stkId,
+	                      }
+	        index++;
+	   }
+
+	   if(rowList.length > 0){
+		    var chkRow = true;
+	        for (var i = 0 ; i  < rowList.length ; i++){
+	            var salesOrdNo = rowList[i].salesOrdNo;
+
+	            for (var j = 0 ; j  < billGroupItems.length ; j++){
+	                if(salesOrdNo ==  billGroupItems[j].salesOrdNo){
+	                    chkRow = false;
+	                }
+	            }
+
+	            if(chkRow){
+	                AUIGrid.addRow(myGridIDBillGroup, rowList[i], "first");
+	            }
+
+	       }
+	       AUIGrid.setSorting(myGridIDBillGroup, sortingInfo);
+	    }
+
+	    AUIGrid.removeCheckedRows(myGridIDProForma);
+	    fn_calTotalPackPrice();
+
+	    }else{
+	        Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
+	    }
+	 });
+
+    function fn_genPFInvoice(refNo) {
+
+    	$("#reportPDFForm #reportFileName").val('/payment/ProformaInvoice_PDF.rpt');
+    	$("#reportPDFForm #v_adv1Boolean").val(0);
+        $("#reportPDFForm #v_adv2Boolean").val(0);
+        $("#reportPDFForm #v_noadv1Boolean").val(0);
+        $("#reportPDFForm #v_noadv2Boolean").val(0);
+        $("#reportPDFForm #v_refNo").val(refNo);
+        //$("#reportPDFForm #v_orderId").val(refNo); //get order id arr
+        $("#reportPDFForm #viewType").val("PDF");
+        $("#reportPDFForm #reportDownFileName").val('PUBLIC_TaxInvoice_Proforma');
+        //packtype
+        if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
+        if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
+        if ($("#no_advance1").is(":checked")) $("#reportPDFForm #v_noadv1Boolean").val(1);
+        if ($("#no_advance2").is(":checked")) $("#reportPDFForm #v_noadv2Boolean").val(1);
+        Common.report("reportPDFForm");
     }
-});
-
-$("#btnRemoveProForma").click(function(){
-
-var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridIDProForma);
-var allItems = AUIGrid.getGridData(myGridIDProForma);
-var billGroupItems = AUIGrid.getGridData(myGridIDBillGroup);
-
-if (checkedItems.length > 0){
-    var item = new Object();
-    var rowList = [];
-    var index = 0;
-    for (var i = checkedItems.length-1 ; i >= 0; i--){
-
-        rowList[index] = {
-	                      salesOrdNo : checkedItems[i].salesOrdNo,
-	                      salesOrdId : checkedItems[i].salesOrdId,
-	                      refNo : checkedItems[i].refNo,
-	                      orderDate : checkedItems[i].orderDate,
-	                      status : checkedItems[i].status,
-	                      appType : checkedItems[i].appType,
-	                      product : checkedItems[i].product,
-	                      custName : checkedItems[i].custName,
-	                      custBillId : checkedItems[i].custBillId,
-	                      proformaStus : checkedItems[i].proformaStus,
-	                      advStartDt : checkedItems[i].advStartDt,
-	                      advEndDt : checkedItems[i].advEndDt,
-	                      stkId : checkedItems[i].stkId,
-                      }
-        index++;
-   }
-
-   if(rowList.length > 0){
-	    var chkRow = true;
-        for (var i = 0 ; i  < rowList.length ; i++){
-            var salesOrdNo = rowList[i].salesOrdNo;
-
-            for (var j = 0 ; j  < billGroupItems.length ; j++){
-                if(salesOrdNo ==  billGroupItems[j].salesOrdNo){
-                    chkRow = false;
-                }
-            }
-
-            if(chkRow){
-                AUIGrid.addRow(myGridIDBillGroup, rowList[i], "first");
-            }
-
-       }
-       AUIGrid.setSorting(myGridIDBillGroup, sortingInfo);
-    }
-
-    AUIGrid.removeCheckedRows(myGridIDProForma);
-    fn_calTotalPackPrice();
-
-    }else{
-        Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
-    }
- });
 
 </script>
 
@@ -948,6 +958,21 @@ if (checkedItems.length > 0){
     <input type="text" name="hiddenOrderDt"  id="hiddenOrderDt"/>
     <input type="text" name="hiddenOrderStus"  id="hiddenOrderStus"/>
 </div>
+</form>
+
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="" />
+    <input type="hidden" id="v_refNo" name="v_refNo" />
+    <input type="hidden" id="v_orderId" name="v_orderId" />
+    <input type="hidden" id="v_adv1Boolean" name="v_adv1Boolean" />
+    <input type="hidden" id="v_adv2Boolean" name="v_adv2Boolean" />
+    <input type="hidden" id="v_noadv1Boolean" name="v_noadv1Boolean" />
+    <input type="hidden" id="v_noadv2Boolean" name="v_noadv2Boolean" />
+    <input type="hidden" id="emailSubject" name="emailSubject" value="" />
+    <input type="hidden" id="emailText" name="emailText" value="" />
+    <input type="hidden" id="emailTo" name="emailTo" value="" />
+    <input type="hidden" id ="reportDownFileName" name="reportDownFileName" value=""/>
 </form>
 
 <div id="popup_wrap" class="popup_wrap "><!-- popup_wrap start -->

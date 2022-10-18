@@ -259,12 +259,14 @@
 		SELECT
             INSTALLMENT,
             SALES_ORD_ID,
-            BILLING_STUS
+            BILLING_STUS,
+            TO_CHAR(SCHDUL_DT,'MM/YYYY') AS SCHDUL_DT
         FROM  (
             SELECT
                 A.INSTALLMENT,
                 A.SALES_ORD_ID,
-                A.BILLING_STUS
+                A.BILLING_STUS,
+                A.SCHDUL_DT
             FROM PAY1002V A
             JOIN PAY0334D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
             WHERE B.REF_NO = #{refNo}

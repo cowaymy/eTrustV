@@ -3,13 +3,14 @@
 
 <script type="text/javaScript">
   $(document).ready(function() {
-	  console.log("stusID ===" + '${stusId}')
 	  $("#saveForm #listproFormaStatus").val('${stusId}');
 	  createProFormaAUIGrid();
 	  fn_viewType("${viewType}");
-	  fn_stusOnchange();
 	  fn_getProFormaDetail();
+	  fn_stusOnchange();
 	  $("#hidActBill").val("Y");
+	  $("#hidPrevMonthInd").val("Y");
+	  $("#hidCurMonthInd").val("Y");
   });
 
   function  fn_viewType(type){
@@ -70,8 +71,6 @@
 
   function fn_getProFormaDetail() {
       Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", { refNo : '${refNo}'}, function(result) {
-    	  console.log("ahhhhhh");
-    	  console.log(result);
 
     	  $("#salesOrdNo").html(result[0].salesOrdNo);
           $("#customerName").html(result[0].custName);
@@ -79,7 +78,7 @@
           $("#salesmanCode").html(result[0].salesmanCode);
           $("#hidDiscPeriod").val(result[0].discPeriod);
           $("#hidMthRentAmt").val(result[0].mthRentAmt);
-          $("#discount").val(result[0].discPeriod); //ahhhh
+          $("#discount").val(result[0].discPeriod);
           $("#advStartDt").val(result[0].advStartDt);
           $("#advEndDt").val(result[0].advEndDt);
 
@@ -91,14 +90,34 @@
 
   function fn_getDiscPeriod(){
 	  Common.ajax("GET", "/payment/getDiscPeriod.do", { refNo : '${refNo}'}, function(result) { //ahhh salesordid multiple
-          console.log("ahhhhhh");
-          console.log(result);
 
           if(result[0] != "" && result[0] != null){
         	  $("#hidDiscStart").val(result[0].installment);
               var discEnd = parseInt(result[0].installment) + parseInt($("#hidDiscPeriod").val());
               $("#hidDiscEnd").val(discEnd);
               $("#discount").val( $("#hidDiscStart").val() + " ~ " + $("#hidDiscEnd").val());
+
+              if($("#advStartDt").val() != result[0].schdulDt){
+
+            	  var year = $("#advStartDt").val().substring(3,7);
+            	  var month = $("#advStartDt").val().substring(0,2) - 1;
+
+            	  if(month < 10 & month  >= 1){
+            		  month = "0" + month;
+            	  }
+            	  if(month < 1){
+            		  year = year - 1;
+            	      month = 12 - Math.abs(month);
+            	  }
+            	  var prevMonth = month + "/" + year;
+            	  $("#hidPrevMonth").val(prevMonth);
+            	  if(prevMonth == result[0].schdulDt){ //prev month active
+            		  $("#hidPrevMonthInd").val("N");
+            	  }else{
+            		  $("#hidCurMonthInd").val("N");
+            	  }
+
+              }
           }
           else{
         	  Common.alert("This billing group does not have Active bill");
@@ -117,6 +136,18 @@
 		  return;
 	  }
 
+	  if( $("#hidPrevMonth").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
+	      Common.alert("Billing for " + $("#hidPrevMonth").val() + " has to be complete" );
+          return;
+      }
+
+	  if( $("#hidCurMonthInd").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
+          Common.alert("Billing Schedule for " + $("#advStartDt").val() + " is not available" );
+          return;
+      }
+
+
+
 	  if(billList.length > 0) {
              data.all = billList;
          }else {
@@ -127,8 +158,6 @@
                  "saveForm" : $("#saveForm").serializeJSON()
            }];
 
-         console.log("data111===");
-         console.log(data);
          Common.ajax("POST", "/payment/updateProForma.do", data ,
                  function(result) {
                    Common.alert(result.message, fn_saveclose);
@@ -145,9 +174,6 @@
       //ahh
       var totalPackPrice = 0;
       var totalPriceAllItems = AUIGrid.getGridData(proFormaGridID);
-
-     console.log("total Price ahh");
-     console.log(totalPriceAllItems);
 
      var ordCount = totalPriceAllItems.length;
      if(totalPriceAllItems.length > 0){
@@ -272,7 +298,9 @@
 		    <input type="text" name="hidDiscEnd" id="hidDiscEnd"  />
             <input type="text" name="hidMthRentAmt" id="hidMthRentAmt"/>
             <input type="text" name="hidActBill" id="hidActBill"/>
-
+            <input type="text" name="hidPrevMonth" id="hidPrevMonth"/>
+            <input type="text" name="hidPrevMonthInd" id="hidPrevMonthInd"/>
+            <input type="text" name="hidCurMonthInd" id="hidCurMonthInd"/>
 		   </div>
 
         <table class="type1"><!-- table start -->
