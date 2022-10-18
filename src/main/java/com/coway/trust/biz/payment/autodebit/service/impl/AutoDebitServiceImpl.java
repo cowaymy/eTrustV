@@ -117,6 +117,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
   @Override
   public List<EgovMap> orderNumberSearchMobile(Map<String, Object> params) {
+	  EgovMap userOrg = autoDebitMapper.getUserOrganization(params);
+
+	  if(userOrg != null){
+		  params.put("memType", userOrg.get("memType"));
+	  }
     return autoDebitMapper.orderNumberSearchMobile(params);
   }
 

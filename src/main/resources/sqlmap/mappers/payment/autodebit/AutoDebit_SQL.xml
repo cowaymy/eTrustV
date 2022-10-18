@@ -20,8 +20,22 @@
 		ON s0001d.CUST_CNT_ID = s0027d.CUST_CNTC_ID
 		WHERE s0001d.APP_TYPE_ID = 66
 		AND s0001d.STUS_CODE_ID = 4
-		AND s0001d.BNDL_ID IS NULL
+		<if test='memType != null and memType != ""'>
+			<if test='memType == "2"'>
+				AND s0001d.BNDL_ID IS NULL
+			</if>
+			<if test='memType == "7"'>
+				AND s0001d.BNDL_ID IS NOT NULL
+			</if>
+		</if>
 		AND s0001d.SALES_ORD_NO = #{salesOrdNo}
+  </select>
+
+  <select id="getUserOrganization" parameterType="Map" resultType="egovMap">
+  	SELECT o0001d.MEM_TYPE FROM ORG0001D o0001d
+  	LEFT JOIN SYS0047M s0047m
+  	ON s0047m.HR_CODE = o0001d.MEM_CODE
+  	WHERE s0047m.USER_NAME = {userName}
   </select>
 
   <select id="orderNumberSearchMobileCheckActivePadNo" parameterType="Map" resultType="EgovMap">

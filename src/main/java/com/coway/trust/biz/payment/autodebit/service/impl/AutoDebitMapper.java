@@ -31,4 +31,5 @@ public interface AutoDebitMapper {
 	EgovMap getCurrentPaymentChannelDetail(Map<String, Object> params);
 	int updatePaymentChannel(Map<String, Object> params);
 	EgovMap orderNumberSearchMobileCheckActivePadNo(Map<String, Object> params);
+	EgovMap getUserOrganization(Map<String, Object> params);
 }
