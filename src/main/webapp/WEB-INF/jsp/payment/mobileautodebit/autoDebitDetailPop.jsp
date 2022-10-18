@@ -218,8 +218,8 @@ function saveDataValidation(){
         return;
 	}
 
-	if(action == "6" && remarks == ""){
-        Common.alert('Remarks is compulsory for Rejected Action');
+	if(action == "6" && rejectReasonCode == "3501" && remarks == ""){
+        Common.alert('Remarks is compulsory for Rejected Action Others');
         return;
 	}
 
