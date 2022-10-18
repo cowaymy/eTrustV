@@ -2263,6 +2263,22 @@ public class ReportBatchController {
    LOGGER.info("[END] CreditCardClaimListDetails...");
  }
 
+  @RequestMapping(value = "/TokenIdMaintenanceRaw.do")
+  //@Scheduled(cron = "0 0 2 * * *")//Daily (2:00am)
+ public void TokenIdMaintenanceRaw() {
+   LOGGER.info("[START] TokenIdMaintenanceRaw...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/TokenIdMaintenanceRawdata_Excel.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "AD Summary Report" + File.separator + "TokenIdMaintenanceRawdata_" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] CreditCardClaimListDetails...");
+  }
   @RequestMapping(value = "/FilterStockLogHSRuturnUsedFilterData.do")
   //@Scheduled(cron = "0 0 5 ? * MON")//5:00 a.m. every monday of the month
  public void FilterStockLogHSRuturnUsedFilterData() {
