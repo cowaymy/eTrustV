@@ -25,7 +25,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Other 1</th>
+    <th scope="row">3rd Party Letter <span class="must">*</span</th>
     <td>
         <div class='auto_file2 auto_file3'>
             <input type='file' title='file add'  id='otherFile1' accept='image/*''/>
@@ -33,12 +33,11 @@
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt1'/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH1")'>Remove</a></span>
         </div>
     </td>
 </tr>
 <tr>
-    <th scope="row">Other 2</th>
+    <th scope="row">3rd Party NRIC Copy <span class="must">*</span</th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="otherFile2" accept="image/*"/>
@@ -46,12 +45,11 @@
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt2'/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
         </div>
     </td>
 </tr>
 <tr>
-    <th scope="row">Other 3</th>
+    <th scope="row">Business Registration Form Copy <span class="must">*</span</th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="otherFile3" accept="image/*"/>
@@ -59,12 +57,11 @@
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt3'/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH3")'>Remove</a></span>
         </div>
     </td>
 </tr>
 <tr>
-    <th scope="row">Other 4</th>
+    <th scope="row">Other 1</th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="otherFile4" accept="image/*"/>

@@ -133,6 +133,7 @@ function fn_attachmentButtonRegister(){
           }
      });
 
+	 //renamed as 3rd party letter
 	 $('#otherFile1').change(function(evt) {
          var file = evt.target.files[0];
          if(file == null) {
@@ -150,6 +151,7 @@ function fn_attachmentButtonRegister(){
           }
      });
 
+	 //renamed as 3rd party nric copy
 	 $('#otherFile2').change(function(evt) {
          var file = evt.target.files[0];
          if(file == null) {
@@ -167,6 +169,7 @@ function fn_attachmentButtonRegister(){
           }
      });
 
+	 //renamed as business registration form copy
 	 $('#otherFile3').change(function(evt) {
          var file = evt.target.files[0];
          if(file == null) {
@@ -207,6 +210,9 @@ function saveDataValidation(){
 	var rejectReasonCode = $('#rejectReasonCodeList').val();
 	var remarks = $('#remarks').val();
 	var cardImageFileAttachment = $('#cardImageFile').val();
+	var thirdPartyLetterAttachment = $('#otherFile1').val();
+	var thirdPartyNricAttachment = $('#otherFile2').val();
+	var businessRegistrationFormAttachment = $('#otherFile3').val();
 
 	if(action == ""){
         Common.alert('Please select an action');
@@ -226,6 +232,27 @@ function saveDataValidation(){
 	if(cardImageFileAttachment == null || cardImageFileAttachment== ""){
 		if(cifId == 0){
 	        Common.alert('Card Image Attachment is required');
+	        return;
+		}
+	}
+
+	if(thirdPartyLetterAttachment == null || thirdPartyLetterAttachment== ""){
+		if(cifId == 0){
+	        Common.alert('3rd Party Letter Attachment is required');
+	        return;
+		}
+	}
+
+	if(thirdPartyNricAttachment == null || thirdPartyNricAttachment== ""){
+		if(cifId == 0){
+	        Common.alert('Third Party NRIC Attachment is required');
+	        return;
+		}
+	}
+
+	if(businessRegistrationFormAttachment == null || businessRegistrationFormAttachment== ""){
+		if(cifId == 0){
+	        Common.alert('Business Registration Form Attachment is required');
 	        return;
 		}
 	}
