@@ -116,6 +116,66 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
             }
           }
 
+          for (int x = 0; x < paramsDetailList.size(); x++) {
+
+                Map<String, Object> paramsDetail = (Map<String, Object>) paramsDetailList.get(x);
+                String filterCode = paramsDetail.get("filterCode").toString();
+
+    			// CHECKING STOCK
+    			if (!("".equals(CommonUtils.nvl(filterCode)))) {
+    				Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+    				locInfoEntry.put("CT_CODE", CommonUtils.nvl(insApiresult.get("userId").toString()));
+    				locInfoEntry.put("STK_CODE", CommonUtils.nvl(filterCode));
+
+    				EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+
+    				logger.debug("LOC. INFO. : {}" + locInfo);
+    				if (locInfo != null) {
+    					if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+    						// FAIL Cody NOT ENOUGH STOCK
+    						MSvcLogApiService.updateErrStatus(transactionId);
+
+    						Map<String, Object> m = new HashMap();
+    						m.put("APP_TYPE", "HS");
+    						m.put("SVC_NO", serviceNo);
+    						m.put("ERR_CODE", "03");
+    						m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+    						m.put("TRNSC_ID", transactionId);
+
+    						MSvcLogApiService.insert_SVC0066T(m);
+
+    						String procTransactionId = transactionId;
+    						String procName = "HeartService";
+    						String procKey = serviceNo;
+    						String procMsg = "PRODUCT STOCK UNAVAILABLE";
+    						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
+    						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    					}
+    				}
+    				else {
+    					// FAIL CT NOT ENOUGH STOCK
+    					MSvcLogApiService.updateErrStatus(transactionId);
+
+    					Map<String, Object> m = new HashMap();
+    					m.put("APP_TYPE", "HS");
+    					m.put("SVC_NO", serviceNo);
+    					m.put("ERR_CODE", "03");
+    					m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. ");
+    					m.put("TRNSC_ID", transactionId);
+
+    					MSvcLogApiService.insert_SVC0066T(m);
+
+    					String procTransactionId = transactionId;
+    					String procName = "HeartService";
+    					String procKey = serviceNo;
+    					String procMsg = "PRODUCT STOCK UNAVAILABLE";
+    					String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. ";
+    					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    				}
+    			}
+          }
+
+
           Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
           logger.debug("### HS BASIC INFO : " + getHsBasic.toString());
 
