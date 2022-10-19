@@ -25,10 +25,13 @@
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
 
+	var excelListGridID;
+
 	$(document).ready(function() {
 
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        createExcelAUIGrid();
 
       //AUIGrid.setSelectionMode(myGridID, "singleRow");
 
@@ -122,6 +125,16 @@
         //CommonCombo.make('cmbCorpTypeId', '/common/selectCodeList.do', {groupCode : 95} , '', {type: 'M'});
         doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
         doGetCombo('/organization/getStateList.do','' , ''   , 'cmbState' , 'M', 'f_multiCombo');//Added by keyi 20211105
+
+
+        //excel download - added by Adib
+        $('#excelDown').click(function() {
+            var excelProps = {
+                fileName     : "color_grid",
+               exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
+            };
+            AUIGrid.exportToXlsx(excelListGridID, excelProps);
+        });
     });
 
 
@@ -342,6 +355,123 @@
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
 
+	  function createExcelAUIGrid() {
+
+		  // added by Adib 19/10/2022
+		   var excelColumnLayout = [ {
+               dataField : "ordNo",
+               headerText : "Order No",
+               width : 80,
+               editable : false
+               }, {
+               dataField : "ordDt",
+               headerText : "Order Date",
+               dataType : "date",
+               formatString : "dd/mm/yyyy" ,
+               width : 90,
+               editable : false
+               }, {
+               dataField : "stusCode",
+               headerText : "Order Status",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "appTypeCode",
+               headerText : "App Type",
+               width : 80,
+               editable : false
+               }, {
+               dataField : "custName",
+               headerText : "Customer Name",
+               width : 120,
+               editable : false
+               }, {
+               dataField : "chsStus",
+               headerText : "CHS Status",
+               width : 120,
+               editable : false,
+               }, {
+               dataField : "stkCode",
+               headerText : "Product",
+               width : 150,
+               editable : false
+               }, {
+               dataField : "salesmanCode",
+               headerText : "Salesman",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "neoProStatus",
+               headerText : "Neo Pro",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "installStus",
+               headerText : "Install Status",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "installFailResn",
+               headerText : "Fail Reason",
+               width : 140,
+               editable : false
+               }, {
+               dataField : "netMonth",
+               headerText : "Net Month",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "orgCode",
+               headerText : "Org Code",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "grpCode",
+               headerText : "Grp Code",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "deptCode",
+               headerText : "Dept Code",
+               width : 100,
+               editable : false
+               }, {
+               dataField : "comDt",
+               headerText : "Com Date",
+               dataType : "date",
+               formatString : "dd/mm/yyyy" ,
+               width : 90,
+               editable : false
+               }, {
+               dataField : "payComDt",
+               headerText : "Pay Date",
+               dataType : "date",
+               formatString : "dd/mm/yyyy" ,
+               width : 90,
+               editable : false
+               }, {
+               dataField : "state",
+               headerText : "State",
+               width : 80,
+               editable : false,
+           }];
+
+
+	        //그리드 속성 설정
+	        var excelGridPros = {
+	             enterKeyColumnBase : true,
+	             useContextMenu : true,
+	             enableFilter : true,
+	             showStateColumn : true,
+	             displayTreeOpen : true,
+	             noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+	             groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+	             exportURL : "/common/exportGrid.do"
+	         };
+
+	        excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
+	    }
+
     function fn_searchListAjax(){
 
     	/*
@@ -440,6 +570,8 @@ console.log("searchColorGrid");
 
 	       	Common.ajax("GET", "/sales/order/orderColorGridJsonList", param, function(result) {
 	            AUIGrid.setGridData(myGridID, result);
+	            AUIGrid.setGridData(excelListGridID, result);
+
 
 	            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
 	                if(item.stusId == 4) {
@@ -891,10 +1023,14 @@ console.log("searchColorGrid");
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
  -->
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
+</ul>
+
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+        <div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
-
 </section><!-- search_result end -->
 
 </section><!-- content end -->
