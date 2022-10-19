@@ -20,7 +20,7 @@
         ) B
             ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
             AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
-        ORDER BY A.CRDIT_CARD_USER_ID
+        ORDER BY A.CRDIT_CARD_USER_NAME
     </select>
 
     <select id="selectAllowanceCardPicList" parameterType="Map" resultType="egovMap">
@@ -44,7 +44,7 @@
             AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
         JOIN ORG0001D C
             ON A.CHRG_USER_ID = C.MEM_CODE
-        ORDER BY A.CRDIT_CARD_USER_ID
+        ORDER BY C.NAME
     </select>
 
     <select id="selectAllowanceList" parameterType="Map" resultType="egovMap">
@@ -993,7 +993,9 @@ SELECT
    TO_CHAR(C.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
    TO_CHAR(C.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT,
    D.APPV_AMT,
-   D.EXP_DESC
+   D.EXP_DESC,
+   D.EXP_TYPE,
+   D.EXP_TYPE_NAME
 FROM FCM0016M A
 JOIN FCM0017M B
     ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
@@ -1045,7 +1047,9 @@ SELECT
    TO_CHAR(C.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
    TO_CHAR(C.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT,
    D.APPV_AMT,
-   D.EXP_DESC
+   D.EXP_DESC,
+   D.EXP_TYPE,
+   D.EXP_TYPE_NAME
 FROM FCM0016M A
 JOIN FCM0017M B
     ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID

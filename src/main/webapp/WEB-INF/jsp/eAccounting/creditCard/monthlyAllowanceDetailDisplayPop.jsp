@@ -200,6 +200,14 @@ $(document).ready(function(){
 	        	 }
 	         }
 	     },{
+	         dataField : "expType",
+	         headerText : 'Expenses Type',
+	         width : 80
+	     },{
+	         dataField : "expTypeName",
+	         headerText : 'Expenses Type Name',
+	         width : 130
+	     },{
 	         dataField : "expDesc",
 	         headerText : 'Remark',
 	         width : 240

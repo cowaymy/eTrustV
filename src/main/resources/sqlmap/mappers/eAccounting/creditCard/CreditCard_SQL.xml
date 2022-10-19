@@ -1316,7 +1316,7 @@ WHERE CRDIT_CARD_STUS = 'A'
 </select>
 
 <select id="selectCreditCardholderDetailList" resultType="egovMap">
-	SELECT DISTINCT CRDIT_CARD_USER_ID,CRDIT_CARD_USER_NAME,CRDIT_CARD_NO FROM FCM0016M
+	SELECT DISTINCT CRDIT_CARD_USER_ID,CRDIT_CARD_USER_NAME,CRDIT_CARD_NO FROM FCM0016M ORDER BY CRDIT_CARD_USER_NAME
 </select>
 
 <select id="selectAllowanceCardPicList" resultType="egovMap">
@@ -1341,7 +1341,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         AND A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
     JOIN ORG0001D C
         ON A.CHRG_USER_ID = C.MEM_CODE
-    ORDER BY A.CRDIT_CARD_USER_ID
+    ORDER BY C.NAME
 </select>
 
 <select id="selectExcelListNew" parameterType="Map" resultType="egovMap">
