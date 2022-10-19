@@ -1023,9 +1023,11 @@ console.log("searchColorGrid");
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
  -->
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
 </ul>
+</c:if>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
