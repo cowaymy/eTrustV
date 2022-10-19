@@ -171,4 +171,7 @@ public interface htManualService {
 
 	int selectTotalCS(Map<String, Object> params);
 
+	EgovMap selectCSOrderView(Map<String, Object> params);
+
+
 }

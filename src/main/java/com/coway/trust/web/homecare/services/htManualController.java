@@ -730,6 +730,7 @@ public class htManualController {
   @RequestMapping(value = "/addSrvFilterID.do")
   public ResponseEntity<List<EgovMap>> addSrvFilterIdCnt(@RequestParam Map<String, Object> params, ModelMap model)
       throws Exception {
+	  logger.debug("params1111 : {}", params.toString());
 
     List<EgovMap> addSrvFilterIdCnt = htManualService.addSrvFilterIdCnt(params);
 
@@ -1343,5 +1344,16 @@ public class htManualController {
   public String cwDisinfSrv(@RequestParam Map<String, Object> params, ModelMap model) {
     // 호출될 화면
     return "homecare/services/htCwDisinfSrvPop";
+  }
+
+  @RequestMapping(value = "/csFilterSettingPop.do")
+  public String cSFilterSettingPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+    logger.debug("params1111 : {}", params.toString());
+
+    EgovMap csOrderView = htManualService.selectCSOrderView(params);
+    model.put("csOrderView", csOrderView);
+
+    return "homecare/services/csFilterSettingPop";
   }
 }

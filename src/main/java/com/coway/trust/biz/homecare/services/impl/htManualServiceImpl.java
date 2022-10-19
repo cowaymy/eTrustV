@@ -1468,4 +1468,10 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
        public int selectTotalCS(Map<String, Object> params) {
          return htManualMapper.selectTotalCS(params);
       }
+
+       @Override
+ 	  public EgovMap selectCSOrderView(Map<String, Object> params) {
+ 	    // TODO Auto-generated method stub
+ 	    return htManualMapper.selectCSOrderView(params);
+ 	  }
 }

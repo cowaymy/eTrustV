@@ -339,4 +339,7 @@ public interface htManualMapper {
 	int selectHsOrderTotal1Year(Map<String, Object> params);
 
 	int selectTotalCS(Map<String, Object> params);
+
+	EgovMap selectCSOrderView(Map<String, Object> params);
+
 }

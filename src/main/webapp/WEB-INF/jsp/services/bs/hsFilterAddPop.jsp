@@ -12,10 +12,9 @@
            var filterCode =  $("#ddlFilterCode option:selected").val();
 
            var  filterCntForm ={
-            "salesOrdId": salesOrdId ,
+            "salesOrdId": "${_salesOrdId}" ,
             "filterCode" : filterCode
             }
-
 
            Common.ajax("GET", "/services/bs/addSrvFilterID.do", filterCntForm, function(result) {
                 console.log("fn_asAddRemark.");
@@ -72,7 +71,7 @@
     function fn_doSaveFilterInfo_Add() {
 
          var  filterSaveForm ={
-            "salesOrdId": salesOrdId ,
+            "salesOrdId": "${_salesOrdId}" ,
             "productID" : $("#stkId").val(),
             "filterCode" : $("#ddlFilterCode option:selected").val(),
             "lastChangeDate" : lastChangeDate,

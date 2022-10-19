@@ -5093,4 +5093,50 @@ FROM
          )
         </select>
 
+<select id="selectCSOrderView" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.ORD_ID ORD_ID ,
+        Extent1.ORD_NO ORD_NO ,
+        Extent1.ORD_STUS_CODE ORD_STUS_CODE ,
+        Extent1.APP_TYPE_CODE APP_TYPE_CODE ,
+        Extent1.STOCK_CODE STOCK_CODE ,
+        Extent1.STOCK_DESC STOCK_DESC ,
+        Extent1.CUST_NAME CUST_NAME ,
+        Extent1.CUST_NRIC CUST_NRIC ,
+
+        Extent2.INST_STATE INST_STATE ,
+        Extent2.INST_AREA INST_AREA ,
+        Extent2.INST_CNT_NAME INST_CNT_NAME ,
+        Extent2.INST_CNT_TEL_M INST_CNT_TEL_M ,
+        Extent2.INST_CNT_TEL_O INST_CNT_TEL_O ,
+        Extent2.INST_CNT_TEL_R INST_CNT_TEL_R ,
+        Extent2.LAST_INSTALL_NO LAST_INSTALL_NO ,
+        Extent2.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
+        Extent2.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
+        Extent2.LAST_INSTALL_DT LAST_INSTALL_DT ,
+        Extent2.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
+        Extent2.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
+        Extent2.INSTCT INSTCT ,
+
+        Extent4.STK_ID STK_ID ,
+        Extent5.CODE_NAME CODE_NAME ,
+        (Extent1.ORD_DT) C1 ,
+        Extent2.LAST_INSTALL_DT C2 ,
+        CASE WHEN ( NOT ( ( Extent3.ORD_ID IS NULL ) AND ( Extent3.CONFIG_SETT_INS IS NULL ) AND ( Extent3.CONFIG_SETT_BS IS NULL )
+                        AND ( Extent3.CONFIG_SETT_AS IS NULL ) AND ( Extent3.CONFIG_BS_GEN IS NULL ) AND ( Extent3.CONFIG_BS_MEM_ID IS NULL )
+                        AND ( Extent3.CONFIG_BS_WEEK IS NULL ) AND ( Extent3.CONFIG_BS_REM IS NULL ) AND ( Extent3.SRV_MEM_ID IS NULL )
+				        AND ( Extent3.SRV_MEM_NO IS NULL ) AND ( Extent3.SRV_MEM_BILL_NO IS NULL ) AND ( Extent3.SRV_MEM_PAC_ID IS NULL )
+				        AND ( Extent3.SRV_MEM_PAC_CODE IS NULL ) AND ( Extent3.SRV_MEM_PAC_NAME IS NULL ) AND ( Extent3.SRV_MEM_FREQ IS NULL )
+				        AND ( Extent3.SRV_MEM_DUR IS NULL ) AND ( Extent3.SRV_MEM_SALESMAN_CODE IS NULL ) AND ( Extent3.SRV_MEM_SALESMAN_NAME IS NULL ) )
+				  ) THEN Extent3.CONFIG_ID ELSE 0 END C3 ,
+        Extent3.SRV_MEM_PAC_NAME SRV_MEM_PAC_NAME ,
+        Extent3.SRV_MEM_EXPR_DT SRV_MEM_EXPR_DT
+
+	FROM ( SELECT * FROM SAL1006V vOrderBasicInfo ) Extent1
+	JOIN ( SELECT * FROM SAL1010V vOrderInstallationInfo ) Extent2 ON Extent1.ORD_ID = Extent2.ORD_ID
+	LEFT JOIN ( SELECT * FROM SAL1014V vOrderSrvMemConfigInfo ) Extent3 ON Extent1.ORD_ID = Extent3.ORD_ID
+	JOIN SYS0026M Extent4 ON ( Extent1.STOCK_CODE = Extent4.STK_CODE ) OR ( ( Extent1.STOCK_CODE IS NULL ) AND ( Extent4.STK_CODE IS NULL ) )
+	JOIN SYS0013M Extent5 ON Extent4.STK_CTGRY_ID = Extent5.CODE_ID
+    <![CDATA[WHERE Extent1.ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]>
+</select>
+
 </mapper>
