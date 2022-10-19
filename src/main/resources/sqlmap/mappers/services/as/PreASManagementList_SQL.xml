@@ -15,7 +15,7 @@
                     , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
                     , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
                     , Extent21.STK_CODE || ' - ' || Extent21.STK_DESC AS PRODUCT
-                    , CASE WHEN Extent2.APP_TYPE_ID = 66 THEN NVL (Extent18.TEL_M1, ' ') ELSE NVL (Extent19.TEL_M1, ' ') END CONTACT_NO
+                    , NVL(Extent18.TEL_M1, ' ') CONTACT_NO
                     , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
                     , Extent6.NAME AS STUS
                     , Extent1.STUS AS STUS_ID
@@ -41,8 +41,7 @@
             LEFT JOIN SAL0023D Extent15 ON Extent15.CUST_ADD_ID = Extent12.ADD_ID
             LEFT JOIN SYS0064M Extent16 ON Extent16.AREA_ID = Extent15.AREA_ID
             LEFT JOIN SAL0024D Extent17 ON Extent17.CUST_BILL_ID = Extent2.CUST_BILL_ID AND Extent2.APP_TYPE_ID = 66
-            LEFT JOIN SAL0027D Extent18 ON Extent18.CUST_CNTC_ID = Extent17.CUST_BILL_CNT_ID AND Extent2.APP_TYPE_ID = 66
-            LEFT JOIN SAL0027D Extent19 ON Extent19.CUST_CNTC_ID = Extent2.CUST_CNT_ID AND Extent2.APP_TYPE_ID   <>  66
+            LEFT JOIN SAL0027D Extent18 ON Extent18.CUST_CNTC_ID = Extent12.CNT_ID
             LEFT JOIN SAL0002D Extent20 ON Extent20.SALES_ORD_ID = Extent2.SALES_ORD_ID
             LEFT JOIN SYS0026M Extent21 ON Extent21.STK_ID = Extent20.ITM_STK_ID
 
