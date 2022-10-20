@@ -38,6 +38,7 @@ import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.OrderRequestService;
+import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -71,6 +72,9 @@ public class OrderRegisterController {
   @Resource(name = "webInvoiceService")
   private WebInvoiceService webInvoiceService;
 
+  @Resource(name = "preOrderService")
+  private PreOrderService preOrderService;
+
   @Autowired
   private MessageSourceAccessor messageAccessor;
 
@@ -88,8 +92,19 @@ public class OrderRegisterController {
 
 
 
-	String dayFrom = "20"; // default 20-{month-1}
-	String dayTo = "02"; // default 2-{month}
+    EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
+
+    String dayFrom = "", dayTo = "";
+
+    if(checkExtradeSchedule!=null){
+    	logger.debug("orderRegisterPop checkExtradeSchedule", checkExtradeSchedule);
+    	dayFrom = checkExtradeSchedule.get("startDate").toString();
+    	dayTo = checkExtradeSchedule.get("endDate").toString();
+    }
+    else{
+    	dayFrom = "20"; // default 20-{month-1}
+   		dayTo = "02"; // default 2-{month}
+    }
 
 	String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
 				SalesConstants.DEFAULT_DATE_FORMAT1);

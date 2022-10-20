@@ -21,6 +21,7 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -58,6 +59,9 @@ public class HcOrderRegisterController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
+    @Resource(name = "preOrderService")
+    private PreOrderService preOrderService;
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
@@ -91,8 +95,18 @@ public class HcOrderRegisterController {
         List<EgovMap> codeList_322 = commonService.selectCodeList(params);
 
 
-    	String dayFrom = "20"; // default 20-{month-1}
-    	String dayTo = "02"; // default 2-{month}
+        EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
+
+        String dayFrom = "", dayTo = "";
+
+        if(checkExtradeSchedule!=null){
+        	dayFrom = checkExtradeSchedule.get("startDate").toString();
+        	dayTo = checkExtradeSchedule.get("endDate").toString();
+        }
+        else{
+        	dayFrom = "20"; // default 20-{month-1}
+       		dayTo = "02"; // default 2-{month}
+        }
 
     	String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
     				SalesConstants.DEFAULT_DATE_FORMAT1);

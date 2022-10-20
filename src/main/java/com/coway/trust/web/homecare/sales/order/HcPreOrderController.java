@@ -167,8 +167,18 @@ public class HcPreOrderController {
         model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
 		model.put("nextDay", CommonUtils.getAddDay(CommonUtils.getDateToFormat(SalesConstants.DEFAULT_DATE_FORMAT1), 1, SalesConstants.DEFAULT_DATE_FORMAT1));
 
-		String dayFrom = "20"; // default 20-{month-1}
-		String dayTo = "02"; // default 2-{month}
+	    EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
+
+        String dayFrom = "", dayTo = "";
+
+        if(checkExtradeSchedule!=null){
+        	dayFrom = checkExtradeSchedule.get("startDate").toString();
+        	dayTo = checkExtradeSchedule.get("endDate").toString();
+        }
+        else{
+        	dayFrom = "20"; // default 20-{month-1}
+       		dayTo = "02"; // default 2-{month}
+        }
 
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
 					SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -273,8 +283,18 @@ public class HcPreOrderController {
 
 		//model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
-		String dayFrom = "20"; // default 20-{month-1}
-		String dayTo = "02"; // default 2-{month}
+	   EgovMap checkExtradeSchedule = preOrderService.checkExtradeSchedule();
+
+        String dayFrom = "", dayTo = "";
+
+        if(checkExtradeSchedule!=null){
+        	dayFrom = checkExtradeSchedule.get("startDate").toString();
+        	dayTo = checkExtradeSchedule.get("endDate").toString();
+        }
+        else{
+        	dayFrom = "20"; // default 20-{month-1}
+       		dayTo = "02"; // default 2-{month}
+        }
 
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
 					SalesConstants.DEFAULT_DATE_FORMAT1);

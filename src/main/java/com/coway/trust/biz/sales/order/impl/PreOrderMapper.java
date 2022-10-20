@@ -58,4 +58,6 @@ public interface PreOrderMapper {
 	int selPreOrdId(Map<String, Object> params);
 
 	void updateKeyinSOF(Map<String, Object> params);
+
+	EgovMap checkExtradeSchedule();
 }

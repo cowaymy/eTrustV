@@ -570,4 +570,15 @@
             </otherwise>
         </choose>
     </update>
+
+
+    <select id="checkExtradeSchedule" parameterType="Map" resultType="egovMap">
+       SELECT * FROM
+          (SELECT
+                CODE IND
+              , CODE_NAME DAY
+              FROM SYS0094M WHERE IND ='EXTRADE'
+          )
+       PIVOT (MAX(DAY) FOR IND IN ('startDate' AS start_Date, 'endDate' AS end_Date))
+    </select>
 </mapper>

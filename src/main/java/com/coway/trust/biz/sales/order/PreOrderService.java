@@ -46,4 +46,6 @@ public interface PreOrderService {
 
 	EgovMap checkOldOrderIdICareEKeyIn(Map<String, Object> params);
 
+	EgovMap checkExtradeSchedule() ;
+
 }

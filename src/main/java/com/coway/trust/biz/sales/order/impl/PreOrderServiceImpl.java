@@ -507,24 +507,29 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		    return result == null ? true : false;
 		  }
 
-		  private boolean isVerifyOldSalesOrderRentalScheme(int getOldOrderID, int iCare) {
-		    Map<String, Object> params = new HashMap<String, Object>();
+	  private boolean isVerifyOldSalesOrderRentalScheme(int getOldOrderID, int iCare) {
+	    Map<String, Object> params = new HashMap<String, Object>();
 
-		    params.put("value", getOldOrderID);
-		    params.put("iCare", iCare);
+	    params.put("value", getOldOrderID);
+	    params.put("iCare", iCare);
 
-		    EgovMap result = orderRegisterMapper.selectSalesOrderRentalScheme(params);
-		    return result != null ? true : false;
-		  }
+	    EgovMap result = orderRegisterMapper.selectSalesOrderRentalScheme(params);
+	    return result != null ? true : false;
+	  }
 
-		  private EgovMap selectSalesOrderM(int getOldOrderID, int appTypeId) {
-		    Map<String, Object> params = new HashMap<String, Object>();
+	  private EgovMap selectSalesOrderM(int getOldOrderID, int appTypeId) {
+	    Map<String, Object> params = new HashMap<String, Object>();
 
-		    params.put("salesOrdId", getOldOrderID);
-		    params.put("appTypeId", appTypeId);
+	    params.put("salesOrdId", getOldOrderID);
+	    params.put("appTypeId", appTypeId);
 
-		    EgovMap result = orderRegisterMapper.selectSalesOrderM(params);
+	    EgovMap result = orderRegisterMapper.selectSalesOrderM(params);
 
-		    return result;
-		  }
+	    return result;
+	  }
+
+
+	public EgovMap checkExtradeSchedule() {
+			return preOrderMapper.checkExtradeSchedule();
+		}
 }
