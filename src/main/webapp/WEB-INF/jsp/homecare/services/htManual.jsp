@@ -1451,7 +1451,9 @@ var TODAY_DD      = "${toDay}";
               <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 
              </c:if>
-        <li><p class="link_btn type2"><a href="javascript:fn_filterSetInfo()" id="btnTopperAS">Topper (AS) Maintenance</a></p></li>
+             <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> <!--for LT and LTL, HDC branch 01-14 -->
+                <li><p class="link_btn type2"><a href="javascript:fn_filterSetInfo()" id="btnTopperAS">Topper (AS) Maintenance</a></p></li>
+             </c:if>
          </ul>
          <!--
            <ul class="btns">
