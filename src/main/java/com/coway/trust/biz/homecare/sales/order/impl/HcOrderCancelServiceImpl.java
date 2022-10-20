@@ -109,6 +109,8 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 				params.put("paramOrdId", paramAnoOrdId);
 				params.put("appTypeId", paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.FRM) ? SalesConstants.APP_TYPE_CODE_ID_RENTAL : SalesConstants.APP_TYPE_CODE_ID_AUX);
 
+
+				params.put("cancellationType", "CAN");
 				EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
 
 				params.put("paramCallEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
@@ -152,6 +154,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 			params.put("paramOrdId", anoOrdId);
 			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
 
+			params.put("cancellationType", "PR");
 			EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
 
 			params.put("hidSalesOrderId", anoOrdId);

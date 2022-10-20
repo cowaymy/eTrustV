@@ -255,12 +255,19 @@
                  , V.RETN_NO
          FROM SAL1007V V
         <where>
-                AND REQ_STUS_ID IN (1,19)
             <if test="paramOrdId != null and paramOrdId != ''">
 		        AND V.ORD_ID = #{paramOrdId}
 		    </if>
 		    <if test="appTypeId != null and appTypeId != ''">
                 AND V.APP_TYPE_ID = #{appTypeId}
+            </if>
+            <if test="cancellationType != null and cancellationType != ''">
+	               <if test="cancellationType == 'CAN'">
+	                     AND REQ_STUS_ID IN (1,19)
+	               </if>
+	               <if test="cancellationType == 'PR'">
+	                     AND REQ_STUS_ID IN (32)
+	               </if>
             </if>
         </where>
 
