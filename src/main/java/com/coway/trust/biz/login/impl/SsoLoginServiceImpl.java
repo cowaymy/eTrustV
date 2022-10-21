@@ -37,6 +37,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +90,23 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 
 	private int ssoApiUserId = 4;
 
+	@Value("${sso.api.url.token}")
+	private String ssoUrlToken;
+
+	@Value("${sso.api.url.api}")
+	private String ssoUrlApi;
+
+	@Value("${sso.api.master.clientSecret}")
+	private String ssoMasterSecret;
+
+	@Value("${sso.api.master.clientId}")
+	private String ssoMasterClient;
+
+	@Value("${sso.api.master.username}")
+	private String ssoMasterUsername;
+
+	@Value("${sso.api.master.password}")
+	private String ssoMasterPasswd;
 
 	@Override
 	public Map<String, Object> ssoCreateUser(Map<String, Object> params)  {
@@ -225,9 +243,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	    stopWatch.reset();
 	    stopWatch.start();
 
-		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/realms/coway-agent/protocol/openid-connect/token/";
-		//String jsonString = params.get("jsonString").toString();
-		//String refNo = params.get("refNo").toString();
+		String ssoUrl = ssoUrlToken + "/protocol/openid-connect/token/";
 		String output1 = "";
 		SsoLoginApiRespForm p = new SsoLoginApiRespForm();
 		try{
@@ -243,11 +259,11 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 	        //conn.setRequestProperty("Authorization", authorization);
-	        conn.setRequestProperty("client_id", "coway-agent-sso");
-	        conn.setRequestProperty("username", "cowayadmin01");
-	        conn.setRequestProperty("password", "admin1234");
+	        conn.setRequestProperty("client_id", ssoMasterClient);
+	        conn.setRequestProperty("username", ssoMasterUsername);
+	        conn.setRequestProperty("password", ssoMasterPasswd);
 	        conn.setRequestProperty("grant_type", "password");
-	        conn.setRequestProperty("client_secret", "dvRSxOEXMBHLGWgxeQh7L7eWjP2KUBDz");
+	        conn.setRequestProperty("client_secret", ssoMasterSecret);
 	        /*if (params != null && params.size() > 0) {
 	        	for(int i = 0 ; i < params.size() ; i++){
 	        		params.get(i)
@@ -262,7 +278,14 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 
 	        conn.connect();
 	        DataOutputStream out = new DataOutputStream(conn.getOutputStream());
-	        String credentialsStr = "client_id=coway-agent-sso&username=cowayadmin01&password=admin1234&grant_type=password&client_secret=dvRSxOEXMBHLGWgxeQh7L7eWjP2KUBDz&";
+	        String credentialsStr = "client_id="
+	        		+ ssoMasterClient
+	        		+ "&username="
+	        		+ ssoMasterUsername
+	        		+ "&password="
+	        		+ ssoMasterPasswd
+	        		+ "&grant_type=password&client_secret="
+	        		+ ssoMasterSecret;
 	        out.writeBytes(credentialsStr);
 	        //OutputStream os = conn.getOutputStream();
 	        //os.write(jsonString.getBytes());
@@ -364,7 +387,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	    stopWatch.reset();
 	    stopWatch.start();
 
-		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/admin/realms/coway-agent/users";
+		String ssoUrl = ssoUrlApi + "/users";
 		String jsonString = "";
 		//String jsonString = params.get("jsonString").toString();
 		//String refNo = params.get("refNo").toString();
@@ -507,7 +530,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	    stopWatch.start();
 
 //		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/admin/realms/coway-agent/users/";
-		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/admin/realms/coway-agent/users/?username=" + params.get("username").toString() + "&exact=true";
+		String ssoUrl = ssoUrlApi + "/users/?username=" + params.get("username").toString() + "&exact=true";
 
 		//String jsonString = params.get("jsonString").toString();
 		//String refNo = params.get("refNo").toString();
@@ -643,7 +666,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	    stopWatch.start();
 
 	    String jsonString ="";
-		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/admin/realms/coway-agent/users/" + params.get("keycloakUserId").toString() + "/reset-password";
+		String ssoUrl = ssoUrlApi + "/users/" + params.get("keycloakUserId").toString() + "/reset-password";
 		//String jsonString = params.get("jsonString").toString();
 		//String refNo = params.get("refNo").toString();
 		String output1 = "";
@@ -789,7 +812,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	    stopWatch.start();
 
 	    String jsonString = "";
-		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/admin/realms/coway-agent/users/" + params.get("keycloakUserId").toString();
+		String ssoUrl = ssoUrlApi + "/users/" + params.get("keycloakUserId").toString();
 		//String jsonString = params.get("jsonString").toString();
 		//String refNo = params.get("refNo").toString();
 		String output1 = "";
@@ -940,7 +963,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	    stopWatch.start();
 
 	    String jsonString = "";
-		String ssoUrl = "https://coway-keycloak-uat.aleph-labs.tech/auth/admin/realms/coway-agent/users/" + params.get("keycloakUserId").toString();
+		String ssoUrl = ssoUrlApi + "/users/" + params.get("keycloakUserId").toString();
 		//String jsonString = params.get("jsonString").toString();
 		//String refNo = params.get("refNo").toString();
 		String output1 = "";
