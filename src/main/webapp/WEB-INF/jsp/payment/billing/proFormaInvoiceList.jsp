@@ -106,9 +106,7 @@
 
    function fn_excelDown() {
 	    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-	    GridCommon
-	        .exportTo("list_grid_wrap", "xlsx",
-	            "<spring:message code='service.title.InstallationResultLogSearch'/>");
+	    GridCommon.exportTo("list_grid_wrap", "xlsx", "ProFormaInvoice_Raw");
 	  }
 </script>
 
