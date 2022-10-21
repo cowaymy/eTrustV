@@ -103,6 +103,13 @@
        $("#listSForm")[0].reset();
        fn_multiCombo();
    }
+
+   function fn_excelDown() {
+	    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	    GridCommon
+	        .exportTo("list_grid_wrap", "xlsx",
+	            "<spring:message code='service.title.InstallationResultLogSearch'/>");
+	  }
 </script>
 
 <form id="reportInvoiceForm" method="post">
@@ -254,6 +261,15 @@
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+     <li><p class="btn_grid">
+       <a href="#" onClick="fn_excelDown()"><spring:message
+         code='service.btn.Generate' /></a>
+      </p></li>
+    </c:if>
+</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:360px; margin:0 auto;"></div>
