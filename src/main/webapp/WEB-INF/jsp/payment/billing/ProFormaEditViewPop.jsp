@@ -115,6 +115,7 @@
             		  $("#hidPrevMonthInd").val("N");
             	  }else{
             		  $("#hidCurMonthInd").val("N");
+            		  $("#hidLastActiveSchdulDt").val(result[0].schdulDt);
             	  }
 
               }
@@ -142,7 +143,7 @@
       }
 
 	  if( $("#hidCurMonthInd").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
-          Common.alert("Billing Schedule for " + $("#advStartDt").val() + " is not available" );
+          Common.alert("Last active billing Schedule : " +  $("#hidLastActiveSchdulDt").val() + "<br>Billing Schedule for " +  $("#advStartDt").val() + " is not available" );
           return;
       }
 
@@ -301,6 +302,7 @@
             <input type="text" name="hidPrevMonth" id="hidPrevMonth"/>
             <input type="text" name="hidPrevMonthInd" id="hidPrevMonthInd"/>
             <input type="text" name="hidCurMonthInd" id="hidCurMonthInd"/>
+            <input type="text" name="hidLastActiveSchdulDt" id="hidLastActiveSchdulDt"/>
 		   </div>
 
         <table class="type1"><!-- table start -->
