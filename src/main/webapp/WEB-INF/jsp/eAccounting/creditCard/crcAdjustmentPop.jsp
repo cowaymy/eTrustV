@@ -33,6 +33,10 @@
 	    dataField : "sCrcHolderName",
 	    headerText : 'Sender Credit Cardholder Name'
 	}, {
+	    dataField : "sSignal",
+	    headerText : "Signal",
+        width : 30
+	}, {
 	    dataField : "sAmt",
 	    headerText : "Sender Amount"
 	}, {
@@ -44,6 +48,10 @@
 	}, {
 	    dataField : "rCrcHolderName",
 	    headerText : 'Receiver Credit Cardholder Name'
+	},{
+	    dataField : "rSignal",
+	    headerText : "Signal",
+        width : 30
 	}, {
 	    dataField : "rAmt",
 	    headerText : "Receiver Amount"
@@ -897,12 +905,14 @@
     					//sCostCenterName: $('#sCostCenterName').val(),
     					sCrcHolder: $('#sCrcHolder option:selected').val(),
     					sCrcHolderName:$('#sCrcHolder option:selected').text(),
+    					sSignal: "(-)",
     					sAmt: $('#sAmt').val(),
     					rPeriod: $('#rPeriod').val(),
     					//rCostCenter: $('#rCostCenter').val(),
     					//rCostCenterName: $('#rCostCenterName').val(),
     					rCrcHolder: $('#rCrcHolder option:selected').val(),
     					rCrcHolderName:$('#rCrcHolder option:selected').text(),
+    					rSignal: "(+)",
     					rAmt: $('#rAmt').val(),
     					adjRem: $('#adjRem').val(),
     					atchFileGrpId: $("#atchFileGrpId").val(),
