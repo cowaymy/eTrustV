@@ -2258,7 +2258,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	    				//call LMS API create user
 	    	    		// DO NOT REMOVE/ COMMENT THIS CODE WHEN COMMITTING CODE INTO SVN -- HUI DING
-	    				Map<String, Object> returnVal = lmsApiService.lmsEHPMemberListInsert(params,memberCode);
+	    	    		params.put("MemberID", MemberId);
+	    				Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(params);
 	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 	    					throw new RuntimeException(e1);
