@@ -4,10 +4,12 @@
 <script type="text/javaScript">
    console.log("payment/billing/proFormaInvoice");
 
-   var  gridID;
+   var gridID;
+   var myGridIDExcel;
 
    $(document).ready(function(){
 	   createAUIGrid();
+	   createAUIExcelGrid()
        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listBrnchCode', 'M', 'fn_multiCombo'); //Branch Code
 
    });
@@ -54,6 +56,33 @@
        gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "" ,gridPros);
    }
 
+   function createAUIExcelGrid() {
+       var columnExcelLayout = [
+                 {dataField :"custName",  headerText : "<spring:message code="pay.head.customerName" />",      width: 140 ,editable : false },
+                 {dataField :"refNo",  headerText : "<spring:message code="pay.head.referenceNo" />",    width: 100, editable : false },
+                 {dataField :"salesOrdNo", headerText : "<spring:message code="pay.head.orderNO" />",   width: 100, editable : false },
+                 {dataField :"brnchName", headerText : "<spring:message code="pay.title.branchCode" />",  width: 150, editable : false },
+                 {dataField :"deptCode", headerText : "<spring:message code="sal.title.text.deptCode" />",  width: 150, editable : false },
+                 {dataField :"crtDt", headerText : "<spring:message code="service.grid.registerDt" />",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
+                 {dataField :"packType", headerText : "<spring:message code="sal.text.typeOfPack" />", width: 130, editable : false },
+                 {dataField :"status", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false },
+                 {dataField :"crtUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
+                 {dataField :"lastUpdDt", headerText : "Last Upd Dt",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
+                 {dataField :"advPayKey", headerText : "<spring:message code="pay.title.advPayment" />" , width: 100, editable : false }
+      ];
+
+       //그리드 속성 설정
+     var gridExcelPros = {
+               usePaging : true,
+               pageRowCount: 20,
+               editable: false,
+               fixedColumnCount : 1,
+               headerHeight     : 30,
+               showRowNumColumn : true};
+
+     myGridIDExcel = GridCommon.createAUIGrid("list_excel_grid_wrap", columnExcelLayout, "" ,gridExcelPros);
+   }
+
    function  fn_goNew(){
        Common.popupDiv("/payment/newProFormaPop.do" ,$("#listSForm").serialize(), null , true , 'newProFormaPopupId');
    }
@@ -62,6 +91,7 @@
 
 	   Common.ajax("GET", "/payment/searchProFormaInvoiceList.do", $("#listSForm").serialize(), function(result) {
 		      AUIGrid.setGridData(gridID, result);
+		      AUIGrid.setGridData(myGridIDExcel, result);
 	   });
    }
 
@@ -106,7 +136,7 @@
 
    function fn_excelDown() {
 	    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-	    GridCommon.exportTo("list_grid_wrap", "xlsx", "ProFormaInvoice_Raw");
+	    GridCommon.exportTo("list_excel_grid_wrap", "xlsx", "ProFormaInvoice_Raw");
 	  }
 </script>
 
@@ -271,6 +301,11 @@
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:360px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="list_grid_wrap" style="width:100%; height:360px; margin:0 auto;"></div>
+    <div id="list_excel_grid_wrap" style="display:none"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
