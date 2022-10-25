@@ -390,7 +390,7 @@
         WHERE CPE_REQ_ID = #{cpeReqId}
     </update>
 
-
+<!-- FRANGO CHECK -->
     <select id="selectCpeRequestList" parameterType="Map" resultType="egovMap">
 <!--     TODO: Yong - Add query parameters for search fields based on CPE main page -->
        SELECT
@@ -418,7 +418,7 @@
         LEFT JOIN SYS0038M T9 ON T9.STUS_CODE_ID = T1.CPE_STUS_ID
         LEFT JOIN SYS0038M T10 ON T10.STUS_CODE_ID = T1.REQ_STAGE_ID
         LEFT JOIN SAL0045D T11 ON T11.SALES_ORD_ID = T1.SALES_ORD_ID
-        LEFT JOIN SYS0005M T6 ON T6.BRNCH_ID = T11.BRNCH_ID
+        LEFT JOIN SYS0005M T6 ON T6.BRNCH_ID = T11.BRNCH_ID  <!-- WHAT DOES SAL0045D do? -->
         WHERE 1=1
     <if test="cpeReqId != null and cpeReqId != '' ">
         AND T1.CPE_REQ_ID = #{cpeReqId}
@@ -455,6 +455,12 @@
       AND T1.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{reqEndDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
     </if>
 
+    <if test='adminFlag != null and adminFlag != "" and adminFlag != "Y"'>
+    	AND (T5.CODE_NAME LIKE '%'||#{userBranchCode}||'%' OR T2.BRNCH_ID = #{userBranchId})
+    </if>
+
+<!-- Only run this query when got admin flag? -->
+<!-- Requester branch is not accurate -->
     <if test="arrRequestorBranch != null and arrRequestorBranch != '' ">
       AND T1.REQUESTOR_BRANCH IN
       <foreach item="item" collection="arrRequestorBranch" index="index" open="(" separator="," close=")">
@@ -462,6 +468,7 @@
       </foreach>
     </if>
 
+<!-- Only run this query when got admin flag? -->
     <if test="main_department != null and main_department != '' ">
       AND T4.CODE = #{main_department}
     </if>
@@ -622,5 +629,9 @@
 		AND EXT1.SALES_ORD_NO = #{salesOrdNo}
 
 		ORDER BY EXT1.CPE_REQ_ID ASC
+  </select>
+
+  <select id="selectUserBranch" parameterType="Map" resultType="egovMap">
+  		SELECT * FROM SYS0005M WHERE BRNCH_ID = #{userBranchId}
   </select>
 </mapper>

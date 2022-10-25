@@ -141,6 +141,13 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 
 	@Override
 	public List<EgovMap> selectCpeRequestList(Map<String, Object> params) {
+		String adminFlag = CommonUtils.nvl(params.get("adminFlag"));
+		params.put("adminFlag", adminFlag.toString());
+		EgovMap userBranch = cpeMapper.selectUserBranch(params);
+
+		params.put("userBranchCode", userBranch.get("code").toString());
+
+
 		return cpeMapper.selectCpeRequestList(params);
 	}
 

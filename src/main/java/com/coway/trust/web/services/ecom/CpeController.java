@@ -257,6 +257,8 @@ public class CpeController {
 		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
 		if(arrReqType   != null && !CommonUtils.containsEmpty(arrReqType))   params.put("arrReqType", arrReqType);
 
+		params.put("userBranchId", sessionVO.getUserBranchId());
+
 		logger.debug("selectCpeRequestList==========================>> " + params);
 		List<EgovMap> cpeRequestList = cpeService.selectCpeRequestList(params);
 		return ResponseEntity.ok(cpeRequestList);

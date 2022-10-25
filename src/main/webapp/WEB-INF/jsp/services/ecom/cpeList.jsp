@@ -289,6 +289,7 @@
  <section class="search_table">
   <!-- search_table start -->
   <form id="cpeForm" name="cpeForm" method="post">
+  <input type="hidden" id="adminFlag" name="adminFlag" value="${PAGE_AUTH.funcUserDefine3}"/>
    <table class="type1">
     <!-- table start -->
     <caption>table</caption>
