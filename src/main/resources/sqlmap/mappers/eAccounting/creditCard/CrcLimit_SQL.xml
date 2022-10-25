@@ -809,7 +809,6 @@
                     AND B.COST_CENTR = #{costCenter}
                 </if>
 		        <if test="loginUserId != null and loginUserId != '' ">
-		            WHERE 1=1
 		            AND (B.CHRG_USER_ID = (
 		                SELECT HR_CODE
 		                FROM SYS0047M
