@@ -67,7 +67,7 @@
                  {dataField :"status", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false },
                  {dataField :"crtUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
                  {dataField :"crtDt", headerText : "<spring:message code="service.grid.registerDt" />",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
-                 {dataField :"lastUpdUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
+                 {dataField :"lastUpdUser", headerText : "Last Update User" , width: 120, editable : false },
                  {dataField :"lastUpdDt", headerText : "Last Upd Dt",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
                  {dataField :"advPayKey", headerText : "<spring:message code="pay.title.advPayment" />" , width: 100, editable : false }
       ];
