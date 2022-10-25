@@ -12,7 +12,7 @@ public interface AttendanceMapper {
 
 	int saveBatchCalMst(Map<String, Object> master);
 
-	int saveBatchCalDetailList(List<Map<String, Object>> detailList);
+	int saveBatchCalDetailList(Map<String, Object> detailList);
 
 	int updateBatchCalMst(Map<String, Object> params);
 
@@ -44,6 +44,6 @@ public interface AttendanceMapper {
 
     Map<String, Object> atdRateCalculation (Map<String, Object> param);
 
-    void updateManagerCode(Map<String, Object> params);
+    int updateManagerCode(Map<String, Object> params);
 
 }

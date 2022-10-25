@@ -11,9 +11,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface AttendanceService {
 
-	int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
+	int saveCsvUpload(Map<String, Object> params);
 
-	int saveCsvUpload2(List<Map<String, Object>> detailList, String batchId);
+	int saveBatchCalMst(Map<String, Object> master);
 
 	int deleteUploadBatch(Map<String, Object> params);
 

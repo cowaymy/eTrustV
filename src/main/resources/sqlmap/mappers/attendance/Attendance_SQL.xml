@@ -34,16 +34,15 @@
             , CRT_USER_ID
             , CRT_DT
         )
-        SELECT ATD0002D_ATD_ID_SEQ.nextval, batchId, atdType, memCode, managerCode, dateFrom, dateTo, time ,disab, crtUserId, crtDt FROM (
+        SELECT ATD0002D_ATD_ID_SEQ.nextval, #{batchId}, atdType, memCode, managerCode, dateFrom, dateTo, time ,disab, crtUserId, crtDt FROM (
 	        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
 	         SELECT
-	              #{item.batchId} batchId
-	            , #{item.atdType} atdType
+	              #{item.atdType} atdType
 	            , #{item.memCode} memCode
 	            , #{item.managerCode} managerCode
 	            , TO_DATE(#{item.dateFrom}, 'DD/MM/RRRR') dateFrom
 	            , TO_DATE(#{item.dateTo}, 'DD/MM/RRRR') dateTo
-	            , TO_TIMESTAMP('1900/01/01 ' || #{item.time}, 'RRRR/MM/DD HH24:MI.SS') time
+	            , TO_DATE(#{item.time}, 'HH:MI.SS PM') time
 	            , '0' disab
 	            , #{item.crtUserId} crtUserId
 	            , SYSDATE crtDt

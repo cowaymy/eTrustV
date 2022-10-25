@@ -1,8 +1,10 @@
 package com.coway.trust.biz.attendance.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.attendance.AttendanceService;
+import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
+import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -26,49 +30,77 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     //@Transactional
 	@Override
-	public int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
+	public int saveCsvUpload(Map<String, Object> cvsParam) {
 
-		int masterSeq =0;
+		try{
 
-		int mResult = attendanceMapper.saveBatchCalMst(master); // INSERT INTO ATD0001M
+			int batchId =0, result = 0;
 
-		if(mResult > 0 && detailList.size() > 0) {
+			batchId = attendanceMapper.selectCurrentBatchId();
 
-			masterSeq = attendanceMapper.selectCurrentBatchId();
-			master.put("batchId", masterSeq);
+			List<CalendarEventVO> vos = (List<CalendarEventVO>) cvsParam.get("voList");
 
-			for (int i=0; i < detailList.size(); i++) {
-				detailList.get(i).put("batchId", master.get("batchId"));
-			}
-			attendanceMapper.saveBatchCalDetailList(detailList);  // INSERT INTO ATD0002D
+		    List<Map> list = vos.stream().map(vo -> {Map<String, Object> hm = BeanConverter.toMap(vo);
+
+		        String dateFrom = vo.getDateFrom().trim();
+				String dateTo = vo.getDateTo().trim();
+				String time = vo.getTime().trim();
+
+				hm.put("atdType", vo.getAttendanceType().trim());
+				hm.put("memCode", vo.getMemCode().trim());
+				hm.put("managerCode", vo.getManagerCode());
+				hm.put("dateFrom",dateFrom);
+				hm.put("dateTo", dateTo);
+				hm.put("time", time);
+				hm.put("crtUserId", cvsParam.get("userId"));
+
+		        return hm;
+		      }).collect(Collectors.toList());
+		    LOGGER.debug("paramslist  list =====================================>>  " + list);
+
+			int size = 1000;
+		    int page = list.size() / size;
+		    int start;
+		    int end;
+
+		    Map<String, Object> bulkMap = new HashMap<>();
+		    for (int i = 0; i <= page; i++) {
+		      start = i * size;
+		      end = size;
+		      if (i == page) {
+		        end = list.size();
+		      }
+
+		      bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+
+		      if(cvsParam.get("type")=="ins"){
+			      bulkMap.put("batchId", batchId);
+		      }else{
+			      bulkMap.put("batchId", cvsParam.get("batchId"));
+		      }
+
+		      result = attendanceMapper.saveBatchCalDetailList(bulkMap);
+
+		      	if(result<0){
+					throw new Error("Unable to upload");
+				}
+		    }
+
+			return batchId;
 		}
-
-
-
-		return masterSeq;
+		catch(Exception e){
+			throw e;
+		}
 	}
 
 	//@Transactional
 	@Override
-	public int saveCsvUpload2( List<Map<String, Object>> detailList, String batchId) {
+	public int saveBatchCalMst( Map<String, Object> master) {
 
-		int result = 0;
-
-		if(detailList.size() > 0) {
-
-			for (int i=0; i < detailList.size(); i++) {
-				detailList.get(i).put("batchId", batchId);
-			}
-
-			result =	attendanceMapper.saveBatchCalDetailList(detailList);  // INSERT INTO ATD0002D
-		}
-
-		if(result > 0){
-			result = Integer.parseInt(batchId);
-		}
-
+		int result = attendanceMapper.saveBatchCalMst(master); // INSERT INTO ATD0001M
 		return result;
 	}
+
 
 	@Override
 	public int checkDup(Map<String, Object> master) {
@@ -136,23 +168,35 @@ public class AttendanceServiceImpl implements AttendanceService {
 	 @Override
 	  public int deleteUploadBatch(Map<String, Object> params) {
 
-			int result =	attendanceMapper.deleteUploadBatch(params);
+		  int result =	attendanceMapper.deleteUploadBatch(params);
 
-			return result;
+		  return result;
+
 	  }
 
 	 //@Transactional
 	 @Override
 	 public int approveUploadBatch(Map<String, Object> params) {
 
-			int result =	attendanceMapper.approveUploadBatch(params);
-			try{
-				attendanceMapper.updateManagerCode(params);
-				attendanceMapper.atdRateCalculation(params);
-			}catch(Throwable ex){
+    		int result =0,updResult = 0, atdRate = 0;
 
-			}
-			return result;
+    		try{
+
+    			result =	attendanceMapper.approveUploadBatch(params);
+    			updResult = attendanceMapper.updateManagerCode(params);
+    			attendanceMapper.atdRateCalculation(params);
+
+    			if(result < 0 || updResult <0){
+    				throw new Error("Unable to approve upload batch");
+    			}
+    			else{
+    				return result;
+    			}
+
+    		}
+    		catch(Throwable ex){
+    			throw ex;
+    		}
 	 }
 
 
