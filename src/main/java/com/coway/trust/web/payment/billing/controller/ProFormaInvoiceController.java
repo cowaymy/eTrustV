@@ -172,13 +172,13 @@ public class ProFormaInvoiceController {
 
 	    List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 
-    	proFormaInvoiceService.saveNewProForma(gridList,  sessionVO);
+    	String pfNo = proFormaInvoiceService.saveNewProForma(gridList,  sessionVO);
 
 	    logger.debug("================saveNewProForma - END ================");
 
     	message.setCode(AppConstants.SUCCESS);
     	message.setMessage("Sucess.");
-
+    	message.setData(pfNo);
 	    return ResponseEntity.ok(message);
 	  }
 

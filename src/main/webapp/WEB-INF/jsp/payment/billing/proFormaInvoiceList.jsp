@@ -63,10 +63,11 @@
                  {dataField :"salesOrdNo", headerText : "<spring:message code="pay.head.orderNO" />",   width: 100, editable : false },
                  {dataField :"brnchName", headerText : "<spring:message code="pay.title.branchCode" />",  width: 150, editable : false },
                  {dataField :"deptCode", headerText : "<spring:message code="sal.title.text.deptCode" />",  width: 150, editable : false },
-                 {dataField :"crtDt", headerText : "<spring:message code="service.grid.registerDt" />",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
                  {dataField :"packType", headerText : "<spring:message code="sal.text.typeOfPack" />", width: 130, editable : false },
                  {dataField :"status", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false },
                  {dataField :"crtUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
+                 {dataField :"crtDt", headerText : "<spring:message code="service.grid.registerDt" />",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
+                 {dataField :"lastUpdUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
                  {dataField :"lastUpdDt", headerText : "Last Upd Dt",width: 120, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
                  {dataField :"advPayKey", headerText : "<spring:message code="pay.title.advPayment" />" , width: 100, editable : false }
       ];
@@ -141,7 +142,6 @@
 </script>
 
 <form id="reportInvoiceForm" method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/membership/MembershipQuotation_20150401.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="V_QUOTID" name="V_QUOTID"  value=""/>
 </form>

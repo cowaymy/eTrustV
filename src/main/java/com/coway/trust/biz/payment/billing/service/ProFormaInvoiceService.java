@@ -13,8 +13,7 @@ public interface ProFormaInvoiceService{
 
 	List<EgovMap> chkCustType(Map<String, Object> params);
 
-	void saveNewProForma(List<Object> taskBillList, SessionVO sessionVO);
-
+	String saveNewProForma(List<Object> taskBillList, SessionVO sessionVO);
 
 	List<EgovMap> chkProForma(Map<String, Object> params);
 

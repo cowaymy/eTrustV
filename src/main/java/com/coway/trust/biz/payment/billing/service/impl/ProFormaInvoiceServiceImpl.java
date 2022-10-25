@@ -43,7 +43,7 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	  public void saveNewProForma(List<Object> pfList, SessionVO sessionVO) {
+	  public String saveNewProForma(List<Object> pfList, SessionVO sessionVO) {
 		 logger.debug("================saveNewProForma - START ================");
 	     Map<String, Object> pfMap = new HashMap<String, Object>();
 	     String pfNo = proFormaInvoiceMapper.selectDocNo(DocTypeConstants.PROFORMA_NO); //doc no 188
@@ -80,6 +80,8 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 		 logger.debug("================saveNewProForma - END ================");
 		 logger.debug(pfMap.toString());
 	     logger.debug("================saveNewProForma - END ================");
+
+	     return pfNo;
 	  }
 
 	@Override
@@ -168,8 +170,6 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 				taskOrderMap.put("newTaskId", newTaskId);
 				taskOrderMap.put("taskBillGroupId", custBillId);
 
-       		 	logger.debug("discPeriod111================" + discPeriod);
-
 				for (int j = 0; j < discPeriod + 1; j++) { //discPeriod 12 = 1 year advance, discPeriod 24 = 2 year advance
 
 					taskCount = taskCount + 1;
@@ -221,6 +221,8 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 
 		 logger.debug("================farCheckConvertFn - START ================");
 		 logger.debug(params.toString());
+
+		 params.put("updator", sessionVO.getUserId());
 
 		 try{
 			 proFormaInvoiceMapper.farCheckConvertFn(params);
