@@ -139,23 +139,27 @@ var mSort = {};
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
+                    	, visible:false
 
               }
               , {dataField:"suplyPrc", headerText:"Supply Price", width:140, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
+                    , visible:false
               }
               , {dataField:"tax", headerText:"Tax", width:120, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
+                    , visible:false
               }
-              , {dataField:"taxName", headerText:"Tax Text", width:100, editable:false}
+              , {dataField:"taxName", headerText:"Tax Text", width:100, editable:false, visible:false}
               , {dataField:"total", headerText:"Total", width:140, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
+                    , visible:false
 
               }
   ];
@@ -227,18 +231,21 @@ var mSort = {};
            , operation : "SUM"
            , formatString : "#,##0.00"
            , style:"aui-grid-user-custom-right"
+           , visible:false
        }
        , {dataField : "suplyPrc"
            , positionField : "suplyPrc"
            , operation : "SUM"
            , formatString : "#,##0.00"
            , style:"aui-grid-user-custom-right"
+           , visible:false
        }
        , {dataField : "total"
            , positionField : "total"
            , operation : "SUM"
            , formatString : "#,##0.00"
            , style:"aui-grid-user-custom-right"
+           , visible:false
        }
 	];
 
