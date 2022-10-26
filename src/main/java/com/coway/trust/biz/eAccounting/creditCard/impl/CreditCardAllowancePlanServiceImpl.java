@@ -186,9 +186,9 @@ public class CreditCardAllowancePlanServiceImpl  implements CreditCardAllowanceP
         EgovMap allowancePlanDetailAfter = creditCardAllowancePlanMapper.getAllowanceLimitDetailPlanAfter(params);
 
         if(allowancePlanDetailBefore == null){
-        	message.setCode(AppConstants.FAIL);
-			message.setMessage("There are no previous limit plan before this, unable to remove");
-			return message;
+//        	message.setCode(AppConstants.FAIL);
+//			message.setMessage("There are no previous limit plan before this, unable to remove");
+//			return message;
         }
         else {
         	//allowancePlanDetailBefore not null, then allowancePlanDetailBefore end date have to change to be start date -1 of allowancePlanDetailAfter
