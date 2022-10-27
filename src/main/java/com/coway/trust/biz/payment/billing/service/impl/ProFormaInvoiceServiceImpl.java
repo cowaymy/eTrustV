@@ -198,7 +198,7 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 
 	        	proFormaInvoiceMapper.insBillTaskLog(taskLogMap);
 
-	    		logger.debug("newTaskId111================" + newTaskId);
+	    		//logger.debug("newTaskId111================" + newTaskId);
 
 	        	if(newTaskId > 0){
 	        		Map<String, Object> confMap = new HashMap<String, Object>();
