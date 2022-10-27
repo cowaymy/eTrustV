@@ -406,7 +406,7 @@
     <dt>Link</dt>
     <dd>
      <ul class="btns">
-      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+      <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
        <li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li>
        <li><p class="link_btn"> <a href="javascript:fn_generateCpeEnquiryRaw()" id="genCpeEnqRaw">Enquiry Raw Data</a> </p></li>
       </c:if>
