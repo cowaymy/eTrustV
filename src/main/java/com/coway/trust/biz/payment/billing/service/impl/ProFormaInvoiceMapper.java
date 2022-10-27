@@ -43,5 +43,4 @@ public interface ProFormaInvoiceMapper {
 
 	void confirmTaxesAdvanceBill(Map<String, Object> params);
 
-
 }
