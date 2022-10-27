@@ -122,7 +122,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 
 		// Order Copy(Change) -> ordSeqNo = 0
-		int ordSeqNo = ("Y".equals(ordChgYn)) ? 0 : CommonUtils.intNvl(orderVO.getOrdSeqNo());
+		int ordSeqNo = ("Y".equals(ordChgYn) && matStkId > 0) ? 0 : CommonUtils.intNvl(orderVO.getOrdSeqNo());
 		if(ordSeqNo <= 0) {
 			ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
 		}
