@@ -5209,6 +5209,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         <if test="Birth != null and Birth != '' ">
           , DOB = TO_DATE(#{Birth}, 'DD/MM/YYYY')
         </if>
+        <if test="atchFileGrpIdNew != null and atchFileGrpIdNew != '' ">
+          , ATCH_FILE_GRP_ID = #{atchFileGrpIdNew}
+        </if>
         WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
     </update>
 

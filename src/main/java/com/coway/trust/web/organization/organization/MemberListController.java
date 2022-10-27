@@ -1056,7 +1056,8 @@ public class MemberListController {
 
         // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
         formMap.put("hsptlz",  params.get("hsptlz"));
-
+        formMap.put("atchFileGrpIdNew",  params.get("atchFileGrpIdNew"));
+        //logger.debug("@@atchFileGrpIdNew : {}", params.get("atchFileGrpIdNew"));
         formMap.put("areaIdUpd",  params.get("areaIdUpd"));
         // LaiKW - Comment starts here
         formMap.put("memberType", formMap.get("memberTypeUpd"));
