@@ -45,7 +45,6 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.ctDutyAllowance.CtDutyAllowanceApplication;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.login.LoginService;
-import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.logistics.organization.LocationService;
 import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
@@ -121,8 +120,6 @@ public class MemberListController {
 	@Autowired
 	private WebInvoiceService webInvoiceService;
 
-	@Resource(name = "ssoLoginService")
-	  private SsoLoginService ssoLoginService;
 
 	/**
 	 * Call commission rule book management Page
@@ -525,17 +522,12 @@ public class MemberListController {
 		//logger.debug("udtList : {}", updList);
 		//logger.debug("formMap : {}", formMap);
 
-//		//Check whether member is rejoin or not
-//		Boolean isRejoinMem = Boolean.parseBoolean(formMap.get("isRejoinMem").toString());
-//		String rejoinMemId = formMap.get("memId").toString();
-
 		try {
     		String memCode = "";
 
     		// To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
-	       //if (formMap.get("email") != null && !isRejoinMem && (rejoinMemId.equals(null) || rejoinMemId.equals(""))){
-    		if (formMap.get("email") != null){
-    		   List<EgovMap> TrExist = memberListService.selectTrApplByEmail(formMap);
+	       if (formMap.get("email") != null){
+	    	   List<EgovMap> TrExist = memberListService.selectTrApplByEmail(formMap);
 	    	   if(TrExist.size() > 0){
 	    		   message.setMessage("Email has been used");
 	    		   return ResponseEntity.ok(message);
@@ -560,12 +552,6 @@ public class MemberListController {
            	if(memCode.equals("") && memCode.equals(null)){
            		message.setMessage("fail saved");
            	}else{
-           		//after success register in eTrust, create info in keycloak
-          	    Map<String,Object> ssoParams = new HashMap<String, Object>();
-          	    ssoParams.put("memCode", memCode);
-          	    ssoParams.put("trainType", trainType);
-          	    ssoLoginService.ssoCreateUser(ssoParams);
-
            		message.setMessage("Compelete to Create a Member Code : " +memCode);
            	}
            	//logger.debug("message : {}", message);
@@ -574,13 +560,6 @@ public class MemberListController {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(e.getMessage());
 		}
-
-//		//If is rejoin member
-//		if(isRejoinMem && !(rejoinMemId.equals(null) || rejoinMemId.equals(""))){
-//			params.put("memId", formMap.get("memId").toString());
-//			memberListService.updateMemberStatus(params);
-//		}
-
     	return ResponseEntity.ok(message);
 	}
 
@@ -896,16 +875,6 @@ public class MemberListController {
     		resultValue = memberListService.traineeUpdate(params,sessionVO);
 
     		if(null != resultValue){
-    			//after success register in eTrust, deactivate old account in keycloak
-    			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-    			ssoParamsOldMem.put("memCode", resultValue.get("oldMemCode").toString());
-    			//ssoParamsOldMem.put("enabled", "false");
-    			ssoLoginService.ssoDeleteUserStatus(ssoParamsOldMem);
-    			//create new account in keycloak
-    	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
-    	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
-    	     	ssoLoginService.ssoCreateUser(ssoParams);
-
     		    trInfo.put("memCode", (String)resultValue.get("memCode"));
     		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
 
@@ -1286,11 +1255,6 @@ public class MemberListController {
     						+ resultValue.get("duplicMemCode").toString());
 
     			} else {
-    				//after success register in eTrust, create info in keycloak
-    		     	Map<String,Object> ssoParams = new HashMap<String, Object>();
-    		     	ssoParams.put("memCode", resultValue.get("memCode").toString());
-    		     	ssoLoginService.ssoCreateUser(ssoParams);
-
     				message.setMessage((String)resultValue.get("memCode"));
     				// doc UPdate
     				params.put("hpMemId",  resultValue.get("memId").toString());
@@ -1505,40 +1469,6 @@ public class MemberListController {
 
     	return ResponseEntity.ok(message);
 	}
-
-//	@RequestMapping(value = "/memberRejoinChecking.do", method = RequestMethod.GET)
-//	public ResponseEntity<ReturnMessage> memberRejoinChecking(@RequestParam Map<String, Object> params, Model model) {
-//
-//		List<EgovMap> memberInfo = memberListService.selectMemberInfo(params);
-//		List<EgovMap> memberApprovalInfo = memberListService.selectMemberApprovalInfo(params);
-//
-//		// 결과 만들기.
-//		ReturnMessage message = new ReturnMessage();
-//
-//		//Check nric is new joiner or existing member
-//		if(memberInfo.size() > 0) {
-//    		// if member's rejoin Approval status = Approved
-//    		if (memberApprovalInfo.size() > 0) {
-//    			if(memberInfo.get(0).get("memId").toString().equals(memberApprovalInfo.get(0).get("memId").toString())){
-//    				if(memberApprovalInfo.get(0).get("apprStus").toString().equals("5")){
-//    						message.setData(memberApprovalInfo.get(0));
-//           				    message.setMessage("pass - rejoin");
-//    				} else {
-//    					message.setMessage("This applicant had been registered.");
-//    				}
-//    			} else {
-//    				message.setMessage("This applicant had been registered.");
-//    			}
-//    		} else {
-//    			message.setMessage("This applicant is in " + memberInfo.get(0).get("name").toString() +" status.");
-//    		}
-//		} else {
-//			//New member
-//			message.setMessage("pass");
-//		}
-//
-//    	return ResponseEntity.ok(message);
-//	}
 
 	@RequestMapping(value = "/checkSponsor.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
@@ -2374,7 +2304,6 @@ public class MemberListController {
 
         String updUserId = memberListService.getUpdUserID(params);
 
-        model.addAttribute("memberCode", params.get("memberCode"));
         model.addAttribute("memberID", params.get("memberID"));
         model.addAttribute("updUserId", updUserId);
 
@@ -2391,13 +2320,6 @@ public class MemberListController {
 
         // add to reset login fail attempt. Hui Ding, 18/03/2022
         loginService.resetLoginFailAttempt(Integer.valueOf(params.get("updUserId").toString()));
-
-
-        //update password in keycloak
-  		Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-  		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
-  		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
-  		ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
 
         ReturnMessage message = new ReturnMessage();
         if(cnt > 0) {
@@ -2869,26 +2791,5 @@ public class MemberListController {
 			return ResponseEntity.ok(message);
 		}
 	}
-
-//	@RequestMapping(value = "/selectMemberWorkingHistory", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectMemberWorkingHistory(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-//
-//		logger.debug("selectMemberWorkingHistory.do");
-//		logger.debug("params :: " + params);
-//
-//		List<EgovMap> memberWorkingHistoryList = null;
-//
-//		if(params.get("nric") != null && params.get("nric") != ""){
-//			memberWorkingHistoryList = memberListService.selectMemberWorkingHistory(params);
-//		}
-//
-//		return ResponseEntity.ok(memberWorkingHistoryList);
-//	}
-//
-//    @RequestMapping(value = "/rejoinRawReportPop.do")
-//    public String rejoinRawReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
-//      // 호출될 화면
-//      return "organization/organization/rejoinRawReportPop";
-//    }
 }
 
