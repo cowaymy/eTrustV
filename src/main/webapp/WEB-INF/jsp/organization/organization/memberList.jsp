@@ -1001,26 +1001,39 @@ $(function() {
 
           if (memLvl == "1"){
               $("#orgCode").val("${orgCode}");
-              $("#orgCode").attr("class", "w100p readonly");
-              $("#orgCode").attr("readonly", "readonly");
 
             if($("#orgCode").val() != '' && $("#orgCode").val() != null) {
              whereSeq += "AND O3.ORG_CODE = '" +  $("#orgCode").val() + "'";
+        }else{
+        	   Common.alert('Missing ORG code <br> download failed <br> ');
+               return;
+
         }
           }
 
 
          if (memLvl == "2") {
+        	 $("#grpCode").val('');
+
+        	 console.log( $("#grpCode").val())
         	 if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
     	        whereSeq += "AND O3.GRP_CODE = '" + $("#grpCode").val() + "'" ;
-    	}
+    	}else{
+            Common.alert('Missing GRP code <br> download failed ');
+            return;
+
+     }
          }
 
 
          if (memLvl == "3") {
         	 if ($("#deptCode").val() != '' && $("#deptCode").val() != null) {
              whereSeq += "AND O3.DEPT_CODE = '" + $("#deptCode").val() +  "'";
-        }
+        }else{
+            Common.alert('Missing DEPT code <br> download failed ');
+            return;
+
+     }
          }
 
 
