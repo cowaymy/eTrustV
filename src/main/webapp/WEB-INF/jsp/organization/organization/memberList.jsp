@@ -992,18 +992,38 @@ $(function() {
     	 var whereSeq = "";
          var month = date.getMonth() + 1;
          var day = date.getDate();
+         var memLvl = "${SESSION_INFO.memberLevel}"
 
-         $("#grpCode").val("${grpCode}");
-         $("#grpCode").attr("class", "w100p readonly");
-         $("#grpCode").attr("readonly", "readonly");
 
          if (date.getDate() < 10) {
            day = "0" + date.getDate();
          }
 
-    	 if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
-    	        whereSeq += $("#grpCode").val() ;
-    	   }
+          if (memLvl == "1"){
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+            if($("#orgCode").val() != '' && $("#orgCode").val() != null) {
+             whereSeq += "AND O3.ORG_CODE = '" +  $("#orgCode").val() + "'";
+        }
+          }
+
+
+         if (memLvl == "2") {
+        	 if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
+    	        whereSeq += "AND O3.GRP_CODE = '" + $("#grpCode").val() + "'" ;
+    	}
+         }
+
+
+         if (memLvl == "3") {
+        	 if ($("#deptCode").val() != '' && $("#deptCode").val() != null) {
+             whereSeq += "AND O3.DEPT_CODE = '" + $("#deptCode").val() +  "'";
+        }
+         }
+
+
 
     	 console.log(whereSeq);
 
