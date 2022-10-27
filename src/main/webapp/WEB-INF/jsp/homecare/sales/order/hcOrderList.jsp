@@ -478,7 +478,7 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
-        //$('#listAppType').multipleSelect("checkAll");
+        $('#listAppType').multipleSelect("checkAll");
     }
 
     function fn_invoicePop() {
