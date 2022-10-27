@@ -2354,20 +2354,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 	}
 
-	@Override
-    public List<EgovMap> selectMemberInfo(Map<String, Object> params) {
-        return memberListMapper.selectMemberInfo(params);
-    }
-
-	@Override
-    public List<EgovMap> selectMemberApprovalInfo(Map<String, Object> params) {
-        return memberListMapper.selectMemberApprovalInfo(params);
-	}
-
-	@Override
-    public void updateMemberStatus(Map<String, Object> params) {
-        memberListMapper.updateMemberStatus(params);
-    }
+//	@Override
+//    public List<EgovMap> selectMemberInfo(Map<String, Object> params) {
+//        return memberListMapper.selectMemberInfo(params);
+//    }
+//
+//	@Override
+//    public List<EgovMap> selectMemberApprovalInfo(Map<String, Object> params) {
+//        return memberListMapper.selectMemberApprovalInfo(params);
+//	}
+//
+//	@Override
+//    public void updateMemberStatus(Map<String, Object> params) {
+//        memberListMapper.updateMemberStatus(params);
+//    }
 
 	// modify jgkim
 	@Override
@@ -2953,8 +2953,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
 	}
 
-	@Override
-    public List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params) {
-        return memberListMapper.selectMemberWorkingHistory(params);
-    }
+//	@Override
+//    public List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params) {
+//        return memberListMapper.selectMemberWorkingHistory(params);
+//    }
 }

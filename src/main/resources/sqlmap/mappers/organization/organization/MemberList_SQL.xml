@@ -157,8 +157,8 @@ SELECT row_number,
 			project1.INNER_TYPE,
 			project1.EMRGCY_CNTC_NAME,
 			project1.EMRGCY_CNTC_NO,
-			project1.EMRGCY_CNTC_INIT,
-			project1.TRM_REJOIN
+			project1.EMRGCY_CNTC_INIT
+
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
@@ -196,8 +196,8 @@ SELECT row_number,
 		            project1.INNER_TYPE,
 		            project1.EMRGCY_CNTC_NAME,
 		            project1.EMRGCY_CNTC_NO,
-		            project1.EMRGCY_CNTC_INIT,
-		            project1.TRM_REJOIN
+		            project1.EMRGCY_CNTC_INIT
+
 
                      FROM ( SELECT DISTINCT
                     GroupBy1.A1 C1,
@@ -254,8 +254,8 @@ SELECT row_number,
 		            Extent1.INNER_TYPE,
 		            Extent1.EMRGCY_CNTC_NAME,
 		            Extent1.EMRGCY_CNTC_NO,
-		            Extent1.EMRGCY_CNTC_INIT,
-		            Extent1.TRM_REJOIN
+		            Extent1.EMRGCY_CNTC_INIT
+
 
                     FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -308,12 +308,12 @@ SELECT row_number,
                            AND  Extent4.RACE =  #{race}
                          </if>
                          <if test="status != null and status != ''">
-	                         <if test="status == 'Rejoin'">
-	                               AND Extent4.STUS =  3 AND Extent4.TRM_REJOIN = 1
-	                         </if>
-	                         <if test="status != 'Rejoin'">
+<!-- 	                         <if test="status == 'Rejoin'"> -->
+<!-- 	                               AND Extent4.STUS =  3 AND Extent4.TRM_REJOIN = 1 -->
+<!-- 	                         </if> -->
+<!-- 	                         <if test="status != 'Rejoin'"> -->
 	                               AND  Extent4.STUS =  #{status}
-	                         </if>
+<!-- 	                         </if> -->
                          </if>
                          <if test="keyUser != null and keyUser != ''">
                            AND  Extent4.CRT_USER_ID =  #{keyUser}
@@ -386,12 +386,12 @@ SELECT row_number,
                            AND Extent1.RACE =  #{race}
                          </if>
                          <if test="status != null and status != ''">
-                             <if test="status == 'Rejoin'">
-                                   AND Extent1.STUS =  3 AND Extent1.TRM_REJOIN = 1
-                             </if>
-                             <if test="status != 'Rejoin'">
+<!--                              <if test="status == 'Rejoin'"> -->
+<!--                                    AND Extent1.STUS =  3 AND Extent1.TRM_REJOIN = 1 -->
+<!--                              </if> -->
+<!--                              <if test="status != 'Rejoin'"> -->
                                    AND  Extent1.STUS =  #{status}
-                             </if>
+<!--                              </if> -->
                          </if>
                          <if test="keyUser != null and keyUser != ''">
                            AND  Extent1.CRT_USER_ID =  #{keyUser}
@@ -468,8 +468,8 @@ SELECT row_number,
             Project1.position_name,
             Project1.brnch_id,
             Project1.ct_sub_grp,
-            Project1.C1 C1,
-            Project1.trm_rejoin
+            Project1.C1 C1
+
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
                      Project1.MEM_CODE MEM_CODE,
@@ -483,7 +483,7 @@ SELECT row_number,
                      Project1.position_name,
                      Project1.brnch_id,
                     Project1.ct_sub_grp,
-                    Project1.trm_rejoin,
+
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
                      FROM ( SELECT
                    '' C1,
@@ -500,8 +500,8 @@ SELECT row_number,
                     '' ct_sub_grp,
                     '' position_name,
                     Extent4.LAST_GRP_CODE GRP_CODE,
-                    Extent4.LAST_ORG_CODE ORG_CODE,
-                    '' trm_rejoin
+                    Extent4.LAST_ORG_CODE ORG_CODE
+
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
@@ -528,12 +528,12 @@ SELECT row_number,
                            AND Extent1.APLICNT_RACE =  #{race}
                          </if>
                          <if test="status != null and status != ''">
-                                <if test="status == 'Rejoin'">
-                                    AND  Extent1.STUS_ID =  0
-                                </if>
-                                <if  test="status != 'Rejoin'">
+<!--                                 <if test="status == 'Rejoin'"> -->
+<!--                                     AND  Extent1.STUS_ID =  0 -->
+<!--                                 </if> -->
+<!--                                 <if  test="status != 'Rejoin'"> -->
                                     AND  Extent1.STUS_ID =  #{status}
-                                </if>
+<!--                                 </if> -->
                          </if>
                          <if test="keyUser != null and keyUser != ''">
                            AND  Extent1.CRT_USER_ID =  #{keyUser}
@@ -1462,7 +1462,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
      WHERE  ( 3 = Extent1.MEM_LVL )
           AND ( Extent1.DEPT_CODE =#{deptCode})
         ]]>
-         <if test="traineeType != null and traineeType != ''">
+        <if test="traineeType != null and traineeType != ''">
             AND (Extent2.MEM_TYPE = #{traineeType})
             AND Extent2.STUS != 8
         </if>
@@ -4039,7 +4039,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             STUS
         FROM ORG0001D
         WHERE NRIC = #{nric}
-        ORDER BY CRT_DT DESC
+
     ]]>
     </select>
 
@@ -4050,43 +4050,42 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         WHERE VALID > TO_CHAR(SYSDATE, 'YYMMDD')
     </select>
 
-    <select id="selectMemberInfo" parameterType="Map" resultType="egovMap">
-            SELECT
-                O01D.MEM_CODE
-                 , O01D.MEM_ID
-                 , O01D.NRIC
-                 , O01D.STUS
-                 , S38M.NAME
-                 , O01D.MEM_TYPE
-                 , NVL(O01D.RANK, 0) AS RANK
-<!--                  , NVL(TO_CHAR(O01D.LAST_RANK_CHG_DT, 'YYYYMMDD'),'-') AS  LAST_RANK_CHG_DT -->
-                 , NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYYMMDD'),'-') AS RESIGN_DT
-             FROM ORG0001D O01D
-             LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
-             WHERE O01D.NRIC = #{nric}
-             ORDER BY O01D.CRT_DT DESC
-     </select>
+<!--     <select id="selectMemberInfo" parameterType="Map" resultType="egovMap"> -->
+<!--             SELECT -->
+<!--                 O01D.MEM_CODE -->
+<!--                  , O01D.MEM_ID -->
+<!--                  , O01D.NRIC -->
+<!--                  , O01D.STUS -->
+<!--                  , S38M.NAME -->
+<!--                  , O01D.MEM_TYPE -->
+<!--                  , NVL(O01D.RANK, 0) AS RANK -->
+<!--                  , NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYYMMDD'),'-') AS RESIGN_DT -->
+<!--              FROM ORG0001D O01D -->
+<!--              LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID -->
+<!--              WHERE O01D.NRIC = #{nric} -->
+<!--              ORDER BY O01D.CRT_DT DESC -->
+<!--      </select> -->
 
-     <select id="selectMemberApprovalInfo" parameterType="Map" resultType="egovMap">
-            SELECT
-                O46D.MEM_ID
-                , O46D.APPR_STUS
-                , S38M.NAME <!-- Approval status name -->
-                , O46D.SAL_ORG_REJOIN
-           FROM ORG0046D O46D
-           LEFT JOIN SYS0038M S38M ON O46D.APPR_STUS = S38M.STUS_CODE_ID
-           WHERE O46D.NRIC = #{nric}
-           ORDER BY O46D.APPR_DT DESC
-     </select>
+<!--      <select id="selectMemberApprovalInfo" parameterType="Map" resultType="egovMap"> -->
+<!--             SELECT -->
+<!--                 O46D.MEM_ID -->
+<!--                 , O46D.APPR_STUS -->
+<!--                 , S38M.NAME Approval status name -->
+<!--                 , O46D.SAL_ORG_REJOIN -->
+<!--            FROM ORG0046D O46D -->
+<!--            LEFT JOIN SYS0038M S38M ON O46D.APPR_STUS = S38M.STUS_CODE_ID -->
+<!--            WHERE O46D.NRIC = #{nric} -->
+<!--            ORDER BY O46D.APPR_DT DESC -->
+<!--      </select> -->
 
-     <insert id="updateMemberStatus" parameterType="Map">
-            UPDATE ORG0001D
-               SET
-                   STUS = 3
-                 , TRM_DT = SYSDATE
-                 , TRM_REJOIN = 1
-            WHERE MEM_ID = #{memId}
-     </insert>
+<!--      <insert id="updateMemberStatus" parameterType="Map"> -->
+<!--             UPDATE ORG0001D -->
+<!--                SET -->
+<!--                    STUS = 3 -->
+<!--                  , TRM_DT = SYSDATE -->
+<!--                  , TRM_REJOIN = 1 -->
+<!--             WHERE MEM_ID = #{memId} -->
+<!--      </insert> -->
 
 
     <select id="checkSponsor"  parameterType="Map" resultType="egovMap">
@@ -4707,32 +4706,48 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
         SELECT
             COUNT(1) CNT
-        <if test="srcM != '' and srcM != null ">
-            <![CDATA[
-                FROM (
-                    SELECT STUS
-                    FROM ORG0001D
-                    WHERE BANK_ACC_NO = #{bankAccNo}
-                        AND STUS <> '51'
-                        AND STUS <> '3'
-                    ORDER BY CRT_DT DESC
-                ) WHERE ROWNUM = 1
-            ]]>
-        </if>
         <if test="srcA != '' and srcA != null ">
             <![CDATA[
-                FROM (
-                    SELECT
-                        B.STUS_ID
-                    FROM ORG0003D B
-	                JOIN ORG0001D A ON A.APLICNT_ID = B.APLCTN_ID
-	                WHERE B.APLICNT_BANK_ACC_NO = #{bankAccNo}
-	                AND B.STUS_ID NOT IN (1, 5)
-	                AND A.STUS NOT IN (51,3)
-	                ORDER BY B.CRT_DT DESC
-                ) WHERE ROWNUM = 1
+                FROM ORG0003D
+                WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
+                AND STUS_ID <> '6'
             ]]>
         </if>
+        <if test="srcM != '' and srcM != null ">
+            <![CDATA[
+                FROM ORG0001D
+                WHERE BANK_ACC_NO = #{bankAccNo}
+                AND STUS <> '51'
+                AND STUS <> '3'
+            ]]>
+        </if>
+
+<!--         <if test="srcM != '' and srcM != null "> -->
+<!--             <![CDATA[ -->
+<!--                 FROM ( -->
+<!--                     SELECT STUS -->
+<!--                     FROM ORG0001D -->
+<!--                     WHERE BANK_ACC_NO = #{bankAccNo} -->
+<!--                         AND STUS <> '51' -->
+<!--                         AND STUS <> '3' -->
+<!--                     ORDER BY CRT_DT DESC -->
+<!--                 ) WHERE ROWNUM = 1 -->
+<!--             ]]> -->
+<!--         </if> -->
+<!--         <if test="srcA != '' and srcA != null "> -->
+<!--             <![CDATA[ -->
+<!--                 FROM ( -->
+<!--                     SELECT -->
+<!--                         B.STUS_ID -->
+<!--                     FROM ORG0003D B -->
+<!-- 	                JOIN ORG0001D A ON A.APLICNT_ID = B.APLCTN_ID -->
+<!-- 	                WHERE B.APLICNT_BANK_ACC_NO = #{bankAccNo} -->
+<!-- 	                AND B.STUS_ID NOT IN (1, 5) -->
+<!-- 	                AND A.STUS NOT IN (51,3) -->
+<!-- 	                ORDER BY B.CRT_DT DESC -->
+<!--                 ) WHERE ROWNUM = 1 -->
+<!--             ]]> -->
+<!--         </if> -->
       </select>
 
       <select id="checkIncomeTax" parameterType="Map" resultType="egovMap">
@@ -5885,25 +5900,25 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
         </insert>
 
 
-     <select id="selectMemberWorkingHistory" parameterType="Map" resultType="egovMap">
-            SELECT
-                  A.MEM_ID
-                , CASE
-	                     WHEN ( A.JOIN_DT IS NOT NULL ) THEN TO_CHAR(A.JOIN_DT,'dd/mm/yyyy')
-	               ELSE '' END AS JOIN_DT
-                , CASE
-                        WHEN ( A.RESIGN_DT IS NOT NULL ) THEN TO_CHAR(A.RESIGN_DT,'dd/mm/yyyy')
-                   ELSE '' END AS RESIGN_DT
-                , CASE
-                        WHEN ( A.TRM_DT IS NOT NULL ) THEN TO_CHAR(A.TRM_DT,'dd/mm/yyyy')
-                   ELSE '' END AS TRM_DT
-                , B.NAME AS STATUS_NAME
-                , A.STUS
-                , A.TRM_REJOIN
-                , C.CODE_NAME AS MEM_TYPE
-            FROM ORG0001D A
-            LEFT JOIN SYS0038M B ON A.STUS = B.STUS_CODE_ID
-            LEFT JOIN SYS0013M C ON A.MEM_TYPE = C.CODE_ID
-            WHERE A.NRIC LIKE '%'|| TRIM(#{nric})
-     </select>
+<!--      <select id="selectMemberWorkingHistory" parameterType="Map" resultType="egovMap"> -->
+<!--             SELECT -->
+<!--                   A.MEM_ID -->
+<!--                 , CASE -->
+<!-- 	                     WHEN ( A.JOIN_DT IS NOT NULL ) THEN TO_CHAR(A.JOIN_DT,'dd/mm/yyyy') -->
+<!-- 	               ELSE '' END AS JOIN_DT -->
+<!--                 , CASE -->
+<!--                         WHEN ( A.RESIGN_DT IS NOT NULL ) THEN TO_CHAR(A.RESIGN_DT,'dd/mm/yyyy') -->
+<!--                    ELSE '' END AS RESIGN_DT -->
+<!--                 , CASE -->
+<!--                         WHEN ( A.TRM_DT IS NOT NULL ) THEN TO_CHAR(A.TRM_DT,'dd/mm/yyyy') -->
+<!--                    ELSE '' END AS TRM_DT -->
+<!--                 , B.NAME AS STATUS_NAME -->
+<!--                 , A.STUS -->
+<!--                 , A.TRM_REJOIN -->
+<!--                 , C.CODE_NAME AS MEM_TYPE -->
+<!--             FROM ORG0001D A -->
+<!--             LEFT JOIN SYS0038M B ON A.STUS = B.STUS_CODE_ID -->
+<!--             LEFT JOIN SYS0013M C ON A.MEM_TYPE = C.CODE_ID -->
+<!--             WHERE A.NRIC LIKE '%'|| TRIM(#{nric}) -->
+<!--      </select> -->
 </mapper>
