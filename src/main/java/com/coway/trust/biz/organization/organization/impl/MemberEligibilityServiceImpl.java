@@ -105,7 +105,7 @@ public class MemberEligibilityServiceImpl extends EgovAbstractServiceImpl implem
 		//List
 		switch(params.get("selectOrgItem").toString()){
     		case "1": // HP
-    			toList.add("shania.abdullah@coway.com.my");
+    			toList.add("asfa.zakaria@coway.com.my");
     			toList.add("sales.pln@coway.com.my");
     			break;
     		case	"2": // CD
