@@ -1013,9 +1013,6 @@ $(function() {
 
 
          if (memLvl == "2") {
-        	 $("#grpCode").val('');
-
-        	 console.log( $("#grpCode").val())
         	 if ($("#grpCode").val() != '' && $("#grpCode").val() != null) {
     	        whereSeq += "AND O3.GRP_CODE = '" + $("#grpCode").val() + "'" ;
     	}else{
