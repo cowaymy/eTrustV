@@ -2657,7 +2657,7 @@ function fn_removeFile(name){
         <article class="tap_area">
             <!-- title_line start -->
             <aside class="title_line">
-               <h2>Installation Address</h2>
+               <h2>Residential Address</h2>
             </aside>
             <!-- title_line end -->
 

@@ -1165,9 +1165,9 @@ $("#HP_img").dblclick(function(){
     <td colspan="3">
      <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>
     </td>
-    <th scope="row">Email</th>
+    <th scope="row" >Email</th>
     <td>
-     <span><c:out value="${memberView.email}"/></span>
+     <span style="inline-size: 150px;overflow-wrap: break-word;"><c:out value="${memberView.email}"/></span>
     </td>
 </tr>
 <tr>
@@ -1224,7 +1224,7 @@ $("#HP_img").dblclick(function(){
 <tr>
     <th scope="row" rowspan="3">Address</th>
     <td colspan="3">
-    <span><c:out value="${memberView.areaId}   ${memberView.city} "/></span>
+    <span><c:out value="${memberView.addrDtl}"/></span>
      </td>
     <th scope="row">Country</th>
     <td>
@@ -1244,7 +1244,7 @@ $("#HP_img").dblclick(function(){
 </tr>
 <tr>
     <td colspan="3">
-    <span><c:out value="${memberView.addrDtl}"/></span>
+    <span><c:out value="${memberView.areaId}   ${memberView.city} "/></span>
    </td>
     <th scope="row">Area<span class="must">*</span></th>
     <td>

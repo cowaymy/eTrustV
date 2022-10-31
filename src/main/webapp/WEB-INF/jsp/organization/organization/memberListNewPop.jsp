@@ -2839,7 +2839,7 @@ function fn_validTerminateFile() {
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
+<h2>Residential Address</h2>
 </aside><!-- title_line end -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
