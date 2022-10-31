@@ -121,7 +121,7 @@ function fn_memberSave(){
                             var idntfc = result.idntfc;
 
                             // Construct Agreement URL via SMS
-                            var cnfmSms = " COWAY: COMPULSORY click " +
+                            var cnfmSms = " click " +
                                           "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
                                           " for confirmation of HP agreement. TQ!";
 
