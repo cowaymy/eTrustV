@@ -4852,7 +4852,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 B.MEM_ID, A.USER_ID
             FROM SYS0047M A
             INNER JOIN ORG0001D B ON A.USER_NAME = B.MEM_CODE
-            WHERE A.USER_NAME =  'HT000001222' AND B.MEM_TYPE = 7
+            WHERE A.USER_NAME =  #{userId} AND B.MEM_TYPE = 7
         ) SRC
         ON (ORG1.MEM_ID = SRC.MEM_ID)
         WHEN MATCHED THEN UPDATE
