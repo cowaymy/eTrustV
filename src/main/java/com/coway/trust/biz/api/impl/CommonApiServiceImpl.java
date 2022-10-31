@@ -1,5 +1,7 @@
 package com.coway.trust.biz.api.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,12 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
 
   @Resource(name = "CommonApiMapper")
   private CommonApiMapper commonApiMapper;
+
+  @Value("${cw.api.auth.username}")
+  private String CWApiAuthUsername;
+
+  @Value("${cw.api.auth.password}")
+  private String CWApiAuthPassword;
 
   @Override
   public EgovMap checkAccess(HttpServletRequest request,CommonApiForm commonApiForm){
@@ -199,5 +208,49 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
 	    return data;
 	  }
 
+  @Override
+  public EgovMap verifyBasicAuth(HttpServletRequest request,Map<String, Object> params)  throws Exception {
+
+    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.reset();
+    stopWatch.start();
+
+    try{
+
+    	String authorization = request.getHeader("Authorization");
+    	String[] values = {"",""};
+
+  	  	if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
+  		  // Authorization: Basic base64credentials
+  		  String base64Credentials = authorization.substring("Basic".length()).trim();
+  		  byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+  		  String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+  		  // credentials = username:password
+  		   values = credentials.split(":", 2);
+  	  	}
+
+  	  	Exception e1 = null;
+  	  	if(CWApiAuthUsername.equals(values[0].toString()) && CWApiAuthUsername.equals(values[0].toString()) ){
+      	  	code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+            message = String.valueOf(AppConstants.RESPONSE_DESC_SUCCESS);
+  	  	}else{
+      	  	e1 = new Exception("Invalid Credentials");
+            throw e1;
+  	  	}
+
+    } catch (Exception e){
+      code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+      message = StringUtils.substring(e.getMessage(), 0, 4000);
+
+    } finally {
+      stopWatch.stop();
+      respTm = stopWatch.toString();
+    }
+
+    return rtnRespMsg(request, code, message, respTm, params, null,apiUserId);
+
+  }
 
 }

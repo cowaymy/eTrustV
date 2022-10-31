@@ -35,4 +35,6 @@ public interface CommonApiService {
 
   String decodeJson(HttpServletRequest request) throws Exception;
 
+  EgovMap verifyBasicAuth(HttpServletRequest request, Map<String, Object> params)  throws Exception ;
+
 }
