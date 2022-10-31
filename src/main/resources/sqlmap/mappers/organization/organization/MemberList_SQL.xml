@@ -4070,7 +4070,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             SELECT
                 O46D.MEM_ID
                 , O46D.APPR_STUS
-                , S38M.NAME Approval status name
+                , S38M.NAME <!--  Approval status name -->
                 , O46D.SAL_ORG_REJOIN
            FROM ORG0046D O46D
            LEFT JOIN SYS0038M S38M ON O46D.APPR_STUS = S38M.STUS_CODE_ID
