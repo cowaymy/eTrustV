@@ -2167,6 +2167,8 @@ public class MemberListController {
         // service
         memberListService.updateCodyCfm(params);
 
+        memberListService.updateMobileUse(params);
+
         if(params.containsKey("consentFlg")) {
             if(!"".equals(params.get("consentFlg"))) {
                 params.put("userId", sessionVO.getUserId());

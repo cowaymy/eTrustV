@@ -283,6 +283,8 @@ public interface MemberListMapper {
 
     void updateCodyCfm(Map<String, Object> params) throws Exception;
 
+    void updateMobileUse(Map<String, Object> params) throws Exception;
+
     EgovMap getCDInfo(Map<String, Object> params);
 
     void updateCodyAplCde(Map<String, Object> params);

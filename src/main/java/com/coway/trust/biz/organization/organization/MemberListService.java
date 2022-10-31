@@ -191,6 +191,8 @@ public interface MemberListService {
 
     void updateCodyCfm(Map<String, Object> params) throws Exception;
 
+    void updateMobileUse(Map<String, Object> params) throws Exception;
+
 	int UpdateMemberValidate(Map<String, Object> params);
 
 	EgovMap getOrgDtls(Map<String, Object> params);

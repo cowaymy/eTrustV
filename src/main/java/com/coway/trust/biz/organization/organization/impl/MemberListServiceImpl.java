@@ -2633,6 +2633,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         memberListMapper.updateCodyCfm(params);
     }
 
+	@Override
+    public void updateMobileUse(Map<String, Object> params) throws Exception {
+        memberListMapper.updateMobileUse(params);
+    }
+
     @Override
     public EgovMap getCDInfo(Map<String, Object> params) {
         return memberListMapper.getCDInfo(params);
