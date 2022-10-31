@@ -1771,18 +1771,8 @@ public class ReportBatchController {
     int minYear = 2020;
 
     for (int year = LocalDate.now().getYear(); year >= minYear; year--) {
-
-      params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
-                                                                // rpt
-                                                                // file
-                                                                // name.
-      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-      params.put("V_TEMP", "TEMP");// parameter
-      params.put("V_YEAR", year);// parameter
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CSP" + File.separator + "CSP_Raw_Data_" + year + "_" + CommonUtils.getNowDate() + ".xls");
-
-      this.viewProcedure(null, null, params);
+      params.put("V_YEAR", year);
+      CSP_Raw_Data_Excel_Manual(params);
     }
 
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
@@ -1903,15 +1893,10 @@ public class ReportBatchController {
 
       int maxYear = minYear+genYear;
 
-      params.put(REPORT_FILE_NAME, "/visualcut/CustHealthScoreRawData.rpt");
-      params.put(REPORT_VIEW_TYPE, "EXCEL");
-      params.put("V_TEMP", "TEMP");
       params.put("V_STARTYEAR", minYear);
       params.put("V_ENDYEAR", maxYear);
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CCP" + File.separator + "CustHealthScoreRawData_" + minYear + "-" + maxYear + "_" + CommonUtils.getNowDate() + ".xls");
 
-      this.viewProcedure(null, null, params);
+      CustomerHealthScoreRaw_Excel_Manual(params);
 
     }
 
@@ -1954,16 +1939,10 @@ public class ReportBatchController {
 
       int maxYear = minYear+genYear;
 
-      params.put(REPORT_FILE_NAME, "/visualcut/CompanyCustHealthScoreRawData.rpt");
-      params.put(REPORT_VIEW_TYPE, "EXCEL");
-      params.put("V_TEMP", "TEMP");
       params.put("V_STARTYEAR", minYear);
       params.put("V_ENDYEAR", maxYear);
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CCP" + File.separator + "CompCustHealthScoreRawData_" + minYear + "-" + maxYear + "_" + CommonUtils.getNowDate() + ".xls");
 
-      this.viewProcedure(null, null, params);
-
+      CompanyCustomerHealthScoreRaw_Excel_Manual(params);
     }
 
     LOGGER.info("[END] CompanyCustomerHealthScoreRaw_Excel...");
@@ -2035,14 +2014,8 @@ public class ReportBatchController {
 
     for (int year = LocalDate.now().getYear(); year >= minYear; year--) {
 
-      params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Daily_2021_Jan_Dec_S.rpt");
-      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-      params.put("V_TEMP", "TEMP");// parameter
-      params.put("V_YEAR", year);// parameter
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "ColorGrid" + File.separator + "ColorGrid_Daily_"+ year +"_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
-
-      this.viewProcedure(null, null, params);
+      params.put("V_YEAR", year);
+      colorGridDailyManual(params);
     }
 
     LOGGER.info("[END] ColorGrid_Daily...");
@@ -2061,7 +2034,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/HC_ColorGrid_Daily.do")
-  //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
+  @Scheduled(cron = "0 12 17 * * *")//Daily (5:00am)
   public void colorGridHcDaily() {
     LOGGER.info("[START] HC_ColorGrid_Daily...");
 
@@ -2070,14 +2043,8 @@ public class ReportBatchController {
 
     for (int year = LocalDate.now().getYear(); year >= minYear; year--) {
 
-      params.put(REPORT_FILE_NAME, "/visualcut/HC_ColorGrid_Daily_2021_Jan_Dec_S.rpt");
-      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-      params.put("V_TEMP", "TEMP");// parameter
-      params.put("V_YEAR", year);// parameter
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "ColorGrid" + File.separator + "HC_ColorGrid_Daily_"+ year +"_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
-
-      this.viewProcedure(null, null, params);
+      params.put("V_YEAR", year);
+      colorGridHcDailyManual(params);
     }
 
     LOGGER.info("[END] HC_ColorGrid_Daily...");
@@ -2566,6 +2533,36 @@ public class ReportBatchController {
    LOGGER.info("[END] rentalStusReport...");
  }
 //GENERATION TIME : 12 00 END
+
+ @RequestMapping(value = "/accuDeductRawToken.do")
+ //@Scheduled(cron = " 0 0 9 * * ?")//Daily 9:00am
+ public void accuDeductRawToken() throws IOException {
+   LOGGER.info("[START] accuDeductRawToken...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/AccumulativeDeductionResultRaw_TokenID.rpt");
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
+          + "Accumulative Deduction Result Raw (Token ID)_" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] accuDeductRawToken...");
+ }
+
+ @RequestMapping(value = "/accuDeductRawOrder.do")
+ //@Scheduled(cron = " 0 0 9 * * ?")//Daily 9:00am
+ public void accuDeductRawOrder() throws IOException {
+   LOGGER.info("[START] accuDeductRawToken...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/AccumulativeDeductionResultRaw_OrderNo.rpt");
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
+          + "Accumulative Deduction Result Raw (Order No)_" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] accuDeductRawToken...");
+ }
 
  // Celeste: Account Health Index Raw Data (No need to set CRON ; manual job)
  @RequestMapping(value = "/accHealthIndexRawData.do")
