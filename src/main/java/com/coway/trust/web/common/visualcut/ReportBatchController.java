@@ -2034,7 +2034,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/HC_ColorGrid_Daily.do")
-  @Scheduled(cron = "0 12 17 * * *")//Daily (5:00am)
+  //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
   public void colorGridHcDaily() {
     LOGGER.info("[START] HC_ColorGrid_Daily...");
 
