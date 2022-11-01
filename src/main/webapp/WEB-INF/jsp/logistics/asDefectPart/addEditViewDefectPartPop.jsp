@@ -110,32 +110,49 @@ function fn_validate(){
     }
 
 	if($("#matCode").val() == ""){
-        msg += "* Please select a material code <br>"
+        msg += "* Please enter a material code <br>"
     }else if( regExpSpecChar.test($("#matCode").val()) == false ){
             msg += "* Material code contains special character <br>";
     }
 
 	if($("#matName").val() == ""){
-        msg += "* Please select a material name <br>"
+        msg += "* Please enter a material name <br>"
     } else if( regExpSpecChar.test($("#matName").val()) == false ){
         msg += "* Material name contains special character <br>";
     }
 
 	if($("#defPartCode").val() == ""){
-        msg += "* Please select a defect part code <br>"
+        msg += "* Please enter a defect part code <br>"
     }else if( regExpSpecChar.test($("#defPartCode").val()) == false ){
         msg += "* Defect part code contains special character <br>";
     }
 
 	if($("#defPartName").val() == ""){
-        msg += "* Please select a defect part name <br>"
+        msg += "* Please enter a defect part name <br>"
     }else if( regExpSpecChar.test($("#defPartName").val()) == false ){
         msg += "* Defect part name contains special character <br>";
     }
 
+	if($("#defPartCode").val() != ""){
+		Common.ajax("GET", "/logistics/asDefectPart/checkDefPart.do?dpCode=" + $("#defPartCode").val(), "", function(result) {
+	        if (result.message == "fail") {
+	        	$("#hidDefPartVal").val('F');
+	          }
+	        if(result.message == "duplicate") {
+	        	$("#hidDefPartVal").val('D');
+            }
+	    });
+	}
+
+	if($("#hidDefPartVal").val() == "F"){
+		msg += "* This Defect Part Code is not available <br>";
+    }
+
+	if($("#hidDefPartVal").val() == "D") {
+	    msg += "* This Defect Part Code has duplicate code in system <br>";
+	}
     return msg;
 }
-
 </script>
 
 
@@ -158,6 +175,9 @@ function fn_validate(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post"  id='collForm' name ='collForm'>
+<div style="display: none">
+<input type="text" name="hidDefPartVal" id="hidDefPartVal"/>
+</div>
 
         <table class="type1"><!-- table start -->
         <caption>table</caption>

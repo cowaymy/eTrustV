@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.asDefectPart.asDefectPartService;
+import com.ibm.icu.util.StringTokenizer;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -70,5 +71,10 @@ public class asDefectPartServiceImpl implements asDefectPartService {
 	 @Override
 		public EgovMap getStkInfo(Map<String, Object> params) {
 		    return asDefectPartMapper.getStkInfo(params);
-		}
+	 }
+
+	 @Override
+	  public int checkDefPart(Map<String, Object> params) {
+	    return asDefectPartMapper.checkDefPart(params);
+	  }
 }

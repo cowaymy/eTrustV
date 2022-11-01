@@ -172,4 +172,24 @@ public class asDefectPartController {
 
 	    return ResponseEntity.ok(message);
 	  }
+
+	@RequestMapping(value = "/checkDefPart.do", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> checkDefPart(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	    ReturnMessage message = new ReturnMessage();
+	    logger.debug("checkDefPart.do : {}", params);
+
+	    int defPartList = asDefectPartService.checkDefPart(params);
+	    logger.debug("checkDefPart.do : {}", defPartList);
+
+	    if (defPartList == 1) {
+	      message.setMessage("success");
+	    } else if(defPartList > 1){
+	    	message.setMessage("duplicate");
+	    }
+	    else{
+	      message.setMessage("fail");
+	    }
+
+	    return ResponseEntity.ok(message);
+	  }
 }

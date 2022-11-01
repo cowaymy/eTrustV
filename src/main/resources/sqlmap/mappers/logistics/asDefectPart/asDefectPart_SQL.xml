@@ -121,4 +121,13 @@
 	where STK_CODE =  #{matCode}
   </select>
 
+  <select id="checkDefPart" parameterType="Map" resultType="int">
+         SELECT
+	         COUNT(*) COUNT
+         FROM SYS0100M
+         WHERE DEFECT_TYP = 'DP'
+            AND DEFECT_CODE = #{dpCode}
+            AND DEFECT_STATUS = 1
+        </select>
+
 </mapper>
