@@ -236,7 +236,7 @@
 		         , HS_LOSE_RCD_CODE
 		  FROM  log0109m A , SYS0026M B
             WHERE A.HS_LOSE_ITEM_CODE  = B.STK_CODE
-              AND HS_LOSE_RCD_CODE LIKE 'C%'
+<!--               AND HS_LOSE_RCD_CODE LIKE 'C%' -->
 
         <if test="searchLocList != null and searchLocList !=''">
               AND A.HS_LOSE_RCD_CODE IN
