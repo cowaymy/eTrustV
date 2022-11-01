@@ -176,7 +176,7 @@
 		         ,HS_LOSE_LOCL_CODE
 		  FROM log0108m A
 		   WHERE  1=1
-              AND HS_LOSE_LOCL_CODE LIKE 'C%'
+<!--               AND HS_LOSE_LOCL_CODE LIKE 'C%' -->
 
             <if test="searchYYYY != null and searchYYYY != ''">
               AND  A.HS_LOSE_YYYY=#{searchYYYY}
@@ -224,7 +224,7 @@
              </if>
 
 
-		 UNION ALL
+		 UNION
 		  SELECT B.STK_DESC AS  HS_LOSE_ITEM_DESC
 		         ,HS_LOSE_ITEM_CODE
 		         ,HS_LOSE_ITEM_CTGRY_ID
