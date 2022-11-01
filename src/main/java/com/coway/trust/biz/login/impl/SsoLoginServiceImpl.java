@@ -247,7 +247,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		String output1 = "";
 		SsoLoginApiRespForm p = new SsoLoginApiRespForm();
 		try{
-			URL url = new URL(ssoUrl);
+			//URL url = new URL(ssoUrl);
+			URL url = new URL(null, ssoUrl, new sun.net.www.protocol.https.Handler());
 
 			//insert to api0004m
 			//
