@@ -173,6 +173,32 @@
                 $("#reportForm #HTM").val("7");
                 $("#reportForm #TaskID").val(taskID);
 
+            } else if (type == '8') {
+
+            	reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
+                reportDownFileName = "ManagerCommissionRawMark" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #HTM").val("7");
+                $("#reportForm #TaskID").val(taskID);
+
+            } else if (type == '9') {
+
+            	reportFileName = "/commission/HTMCommissionRawRate_Excel.rpt"; //reportFileName
+                reportDownFileName = "ManagerCommissionRawRate" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #HTM").val("7");
+                $("#reportForm #TaskID").val(taskID);
+
             } else if (type == "4") {
 
                 reportFileName = "/commission/CommCalHTRawData_Excel.rpt"; //reportFileName
@@ -315,6 +341,8 @@
                                     <option value="2">Homecare Technician Commission Raw (Mark)</option>
                                     <option value="7">Homecare Technician Commission Raw (Rate)</option>
                                     <option value="3">Homecare Technician Manager Commission</option>
+                                    <option value="8">Manager Commission Raw (Mark)</option>
+                                    <option value="9">Manager Commission Raw (Rate)</option>
                                     <option value="4">Homecare Technician Comm Calculation</option>
                                     <option value="5">Homecare Technician Manager Comm Calculation</option>
                                     <option value="6">Homecare Technician Non-Monetary Incentive</option>
