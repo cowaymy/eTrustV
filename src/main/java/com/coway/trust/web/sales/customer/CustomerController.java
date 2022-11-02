@@ -2755,4 +2755,14 @@ public class CustomerController {
 	}
 //Credit Card Check Module end
 
+	@RequestMapping(value = "/checkActTokenByCustCrcId")
+	public ResponseEntity<Boolean> isActTokenId(@RequestParam Map<String, Object> params) throws Exception {
+		boolean result = false;
+
+	    LOGGER.debug("checkActTokenByCustCrcId params : {}", params.toString());
+	    result = customerService.getCountActTokenId(params);
+
+		return ResponseEntity.ok(result);
+	}
+
 }
