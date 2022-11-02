@@ -60,116 +60,163 @@ function fn_memberSave(){
         formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
 
-
         if("${memberView.atchFileGrpIdDoc}" == ""){
-        	Common.ajaxFile("/organization/attachFileMemberUpload.do", formData, function(result) {
-                console.log(result);
-                atchFileGrpIdNew = result.data.fileGroupKey;
-                atchFileIdNew = result.data.atchFileId;
 
+	        	if($("#formData").length > 0){
 
+		        	Common.ajaxFile("/organization/attachFileMemberUpload.do", formData, function(result) {
+		                console.log(result);
+		                atchFileGrpIdNew = result.data.fileGroupKey;
+		                atchFileIdNew = result.data.atchFileId;
 
-                $("#atchFileGrpIdNew").val($("#atchFileGrpIdNew").val());
+		                $("#atchFileGrpIdNew").val($("#atchFileGrpIdNew").val());
 
-		    $("#memberType").attr("disabled",false);
-		    $("#joinDate").attr("disabled",false);
-		    $("#nric").attr("disabled",false);
-		    $("#areaId").val($("#areaId").val());
-		    $("#streetDtl1").val(memberAddForm.streetDtl.value);
-		    $("#addrDtl1").val(memberAddForm.addrDtl.value);
-		    $("#searchSt1").val(memberAddForm.searchSt.value);
-		    $("#traineeType").val(($("#traineeType").value));
-		    $("#spouseDob").val($.trim($("#spouseDob").val()));
+				    $("#memberType").attr("disabled",false);
+				    $("#joinDate").attr("disabled",false);
+				    $("#nric").attr("disabled",false);
+				    $("#areaId").val($("#areaId").val());
+				    $("#streetDtl1").val(memberAddForm.streetDtl.value);
+				    $("#addrDtl1").val(memberAddForm.addrDtl.value);
+				    $("#searchSt1").val(memberAddForm.searchSt.value);
+				    $("#traineeType").val(($("#traineeType").value));
+				    $("#spouseDob").val($.trim($("#spouseDob").val()));
 
-		    $("#memberType").attr("disabled",false);
-		    var jsonObj = GridCommon.getEditData(myGridID_Doc);;
+				    $("#memberType").attr("disabled",false);
+				    var jsonObj = GridCommon.getEditData(myGridID_Doc);;
 
-		    if($("#memberType").val() != "4" && $("#memberType").val() != "6185") {
-		        jsonObj = GridCommon.getEditData(myGridID_Doc);
-		    }
-		    // jsonObj.form = $("#memberAddForm").serializeJSON();
-		    jsonObj.form = $("#memberUpdForm").serializeJSON();
+				    if($("#memberType").val() != "4" && $("#memberType").val() != "6185") {
+				        jsonObj = GridCommon.getEditData(myGridID_Doc);
+				    }
+				    // jsonObj.form = $("#memberAddForm").serializeJSON();
+				    jsonObj.form = $("#memberUpdForm").serializeJSON();
 
-		    //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
-		    if($("#hsptlzCheck").is(":checked") == true){
-		        $.extend(jsonObj, {'hsptlz' : '1'});
-		    }else{
-		        $.extend(jsonObj, {'hsptlz' : '0'});
-		    }
+				    //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
+				    if($("#hsptlzCheck").is(":checked") == true){
+				        $.extend(jsonObj, {'hsptlz' : '1'});
+				    }else{
+				        $.extend(jsonObj, {'hsptlz' : '0'});
+				    }
 
-		    $.extend(jsonObj,{'atchFileGrpIdNew':atchFileGrpIdNew});
-		    //ADDED INCOME TAX NO @AMEER 2021-11-02
-		    if($("#incomeTaxNo").val() != " " || $("#incomeTaxNo").val() != null){
-		    	$.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
-		    }
+				    $.extend(jsonObj,{'atchFileGrpIdNew':atchFileGrpIdNew});
+				    //ADDED INCOME TAX NO @AMEER 2021-11-02
+				    if($("#incomeTaxNo").val() != " " || $("#incomeTaxNo").val() != null){
+				    	$.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
+				    }
 
-		    $.extend(jsonObj, {'Birth' :$("#Birth").val() });
-		    $.extend(jsonObj, {'memberType' : $("#memberType").val()});
-		    $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+				    $.extend(jsonObj, {'Birth' :$("#Birth").val() });
+				    $.extend(jsonObj, {'memberType' : $("#memberType").val()});
+				    $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
 
-		    console.log(JSON.stringify(jsonObj));
-		    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
-		        console.log("message : " + result.message );
-		        Common.alert(result.message, fn_close);
-		    });
+				    console.log(JSON.stringify(jsonObj));
+				    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
+				        console.log("message : " + result.message );
+				        Common.alert(result.message, fn_close);
+				    });
 
-		    $("#memberType").attr("disabled",true);
-		    $("#joinDate").attr("disabled",true);
-		    $("#nric").attr("disabled",true);
+				    $("#memberType").attr("disabled",true);
+				    $("#joinDate").attr("disabled",true);
+				    $("#nric").attr("disabled",true);
 
-			   });
+					   });
+	              }else{
+	            	  $("#memberType").attr("disabled",false);
+	                  $("#joinDate").attr("disabled",false);
+	                  $("#nric").attr("disabled",false);
+	                  $("#areaId").val($("#areaId").val());
+	                  $("#streetDtl1").val(memberAddForm.streetDtl.value);
+	                  $("#addrDtl1").val(memberAddForm.addrDtl.value);
+	                  $("#searchSt1").val(memberAddForm.searchSt.value);
+	                  $("#traineeType").val(($("#traineeType").value));
+	                  $("#spouseDob").val($.trim($("#spouseDob").val()));
+
+	                  $("#memberType").attr("disabled",false);
+	                  var jsonObj = GridCommon.getEditData(myGridID_Doc);;
+
+	                  if($("#memberType").val() != "4" && $("#memberType").val() != "6185") {
+	                      jsonObj = GridCommon.getEditData(myGridID_Doc);
+	                  }
+	                  // jsonObj.form = $("#memberAddForm").serializeJSON();
+	                  jsonObj.form = $("#memberUpdForm").serializeJSON();
+
+	                  //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
+	                  if($("#hsptlzCheck").is(":checked") == true){
+	                      $.extend(jsonObj, {'hsptlz' : '1'});
+	                  }else{
+	                      $.extend(jsonObj, {'hsptlz' : '0'});
+	                  }
+
+	                  $.extend(jsonObj,{'atchFileGrpIdNew':atchFileGrpIdNew});
+	                  //ADDED INCOME TAX NO @AMEER 2021-11-02
+	                  if($("#incomeTaxNo").val() != " " || $("#incomeTaxNo").val() != null){
+	                      $.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
+	                  }
+
+	                  $.extend(jsonObj, {'Birth' :$("#Birth").val() });
+	                  $.extend(jsonObj, {'memberType' : $("#memberType").val()});
+	                  $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+
+	                  console.log(JSON.stringify(jsonObj));
+	                  Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
+	                      console.log("message : " + result.message );
+	                      Common.alert(result.message, fn_close);
+	                  });
+
+	                  $("#memberType").attr("disabled",true);
+	                  $("#joinDate").attr("disabled",true);
+	                  $("#nric").attr("disabled",true);
+	              }
 		   }else{
 			   Common.ajaxFile("/organization/attachFileMemberUpdate.do", formData, function(result) {
 	                 console.log(result);
 	                 atchFileGrpId = result.data.fileGroupKey;
 	                 atchFileId = result.data.atchFileId;
 
-	            $("#memberType").attr("disabled",false);
-	            $("#joinDate").attr("disabled",false);
-	            $("#nric").attr("disabled",false);
-	            $("#areaId").val($("#areaId").val());
-	            $("#streetDtl1").val(memberAddForm.streetDtl.value);
-	            $("#addrDtl1").val(memberAddForm.addrDtl.value);
-	            $("#searchSt1").val(memberAddForm.searchSt.value);
-	            $("#traineeType").val(($("#traineeType").value));
-	            $("#spouseDob").val($.trim($("#spouseDob").val()));
+		            $("#memberType").attr("disabled",false);
+		            $("#joinDate").attr("disabled",false);
+		            $("#nric").attr("disabled",false);
+		            $("#areaId").val($("#areaId").val());
+		            $("#streetDtl1").val(memberAddForm.streetDtl.value);
+		            $("#addrDtl1").val(memberAddForm.addrDtl.value);
+		            $("#searchSt1").val(memberAddForm.searchSt.value);
+		            $("#traineeType").val(($("#traineeType").value));
+		            $("#spouseDob").val($.trim($("#spouseDob").val()));
 
-	            $("#memberType").attr("disabled",false);
-	            var jsonObj = GridCommon.getEditData(myGridID_Doc);;
+		            $("#memberType").attr("disabled",false);
+		            var jsonObj = GridCommon.getEditData(myGridID_Doc);;
 
-	            if($("#memberType").val() != "4" && $("#memberType").val() != "6185") {
-	                jsonObj = GridCommon.getEditData(myGridID_Doc);
-	            }
-	            // jsonObj.form = $("#memberAddForm").serializeJSON();
-	            jsonObj.form = $("#memberUpdForm").serializeJSON();
+		            if($("#memberType").val() != "4" && $("#memberType").val() != "6185") {
+		                jsonObj = GridCommon.getEditData(myGridID_Doc);
+		            }
+		            // jsonObj.form = $("#memberAddForm").serializeJSON();
+		            jsonObj.form = $("#memberUpdForm").serializeJSON();
 
-	            //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
-	            if($("#hsptlzCheck").is(":checked") == true){
-	                $.extend(jsonObj, {'hsptlz' : '1'});
-	            }else{
-	                $.extend(jsonObj, {'hsptlz' : '0'});
-	            }
+		            //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
+		            if($("#hsptlzCheck").is(":checked") == true){
+		                $.extend(jsonObj, {'hsptlz' : '1'});
+		            }else{
+		                $.extend(jsonObj, {'hsptlz' : '0'});
+		            }
 
-	            //ADDED INCOME TAX NO @AMEER 2021-11-02
-	            if($("#incomeTaxNo").val() != " " || $("#incomeTaxNo").val() != null){
-	                $.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
-	            }
+		            //ADDED INCOME TAX NO @AMEER 2021-11-02
+		            if($("#incomeTaxNo").val() != " " || $("#incomeTaxNo").val() != null){
+		                $.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
+		            }
 
-	            $.extend(jsonObj, {'Birth' :$("#Birth").val() });
-	            $.extend(jsonObj, {'memberType' : $("#memberType").val()});
-	            $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+		            $.extend(jsonObj, {'Birth' :$("#Birth").val() });
+		            $.extend(jsonObj, {'memberType' : $("#memberType").val()});
+		            $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
 
-	            console.log(JSON.stringify(jsonObj));
-	            Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
-	                console.log("message : " + result.message );
-	                Common.alert(result.message, fn_close);
+		            console.log(JSON.stringify(jsonObj));
+		            Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
+		                console.log("message : " + result.message );
+		                Common.alert(result.message, fn_close);
+		            });
+
+		            $("#memberType").attr("disabled",true);
+		            $("#joinDate").attr("disabled",true);
+		            $("#nric").attr("disabled",true);
+
 	            });
-
-	            $("#memberType").attr("disabled",true);
-	            $("#joinDate").attr("disabled",true);
-	            $("#nric").attr("disabled",true);
-
-	               });
 		   }
 	}else{
 	      $("#memberType").attr("disabled",false);
@@ -330,7 +377,9 @@ $(document).ready(function() {
      if(("${memberView.memType}" == "5" &&  $("#traineeType").val() == "2") || ("${memberView.memType}" == "2")){
          $("#attachmentTab").show();
          if( "${memberView.atchFileGrpIdDoc}" != 0 &&  "${memberView.atchFileGrpIdDoc}" != null){
-             fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
+
+        	 fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
+
       }
      }
 
