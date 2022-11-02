@@ -22,6 +22,7 @@ public interface asDefectPartService
 
 	EgovMap getStkInfo(Map<String, Object> params);
 
-	int checkDefPart(Map<String, Object> params);
+	List<EgovMap> checkDefPart(Map<String, Object> params);
 
+	List<EgovMap> chkDupLinkage(Map<String, Object> params);
 }

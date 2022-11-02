@@ -14,7 +14,6 @@
 }
 </style>
 <script type="text/javaScript" language="javascript">
-
 var msg = "";
 
 $(document).ready(function(){
@@ -26,8 +25,6 @@ $(document).ready(function(){
 
 function  fn_viewType(type){
 	type = "${viewType}";
-	console.log(type);
-	console.log('${asDefectPartInfo}');
 
     $("#productCtgry").val('${asDefectPartInfo.prodCatId}');
     $("#matType").val('${asDefectPartInfo.prodTypeId}');
@@ -55,15 +52,32 @@ function  fn_viewType(type){
 }
 
 function fn_save(){
+
+	var flag = false;
     if(fn_validate()){
     	if(msg != "") {
             Common.alert(msg);
+            flag = true;
         }
     }
-    else{
-    	//save
 
-    	var asDefPartResultM = {
+   	if(fn_chkDefPart()){
+   		flag = true;
+        return;
+   	}
+
+    if(fn_chkDupLinkage()){
+    	flag = true;
+        return;
+    }
+
+    if(!flag){
+    	fn_saveDefPart();
+    }
+}
+
+function fn_saveDefPart(){
+	var asDefPartResultM = {
             defPartId : '${asDefectPartInfo.defPartId}',
             viewType : '${viewType}',
 
@@ -80,13 +94,12 @@ function fn_save(){
             "asDefPartResultM" : asDefPartResultM
         }
 
-    	Common.ajax("POST", "/logistics/asDefectPart/saveDefPart.do", saveForm,
-    		      function(result) {
-    		        Common.alert(result.message, fn_saveclose);
-    		        $("#popup_wrap").remove();
-    		        fn_selectListAjax();
-    	});
-    }
+        Common.ajax("POST", "/logistics/asDefectPart/saveDefPart.do", saveForm,
+                  function(result) {
+                    Common.alert(result.message, fn_saveclose);
+                    $("#popup_wrap").remove();
+                    fn_selectListAjax();
+        });
 }
 
 function fn_saveclose() {
@@ -96,62 +109,77 @@ function fn_saveclose() {
 function fn_validate(){
 
 	msg = "";
-
 	//checkReges
     var checkRegexResult = true;
     var regExpSpecChar = /^[^*|\":<>[\]{}`\\';@&$]+$/;
 
 	if($("#productCtgry").val() == ""){
-		msg += "* Please select a product category <br>"
+		msg += "* Please select a product category <br>";
 	}
 
 	if($("#matType").val() == ""){
-        msg += "* Please select a product type <br>"
+        msg += "* Please select a product type <br>";
     }
 
 	if($("#matCode").val() == ""){
-        msg += "* Please enter a material code <br>"
+        msg += "* Please enter a material code <br>";
     }else if( regExpSpecChar.test($("#matCode").val()) == false ){
-            msg += "* Material code contains special character <br>";
+        msg += "* Material code contains special character <br>";
     }
 
 	if($("#matName").val() == ""){
-        msg += "* Please enter a material name <br>"
+        msg += "* Please enter a material name <br>";
     } else if( regExpSpecChar.test($("#matName").val()) == false ){
         msg += "* Material name contains special character <br>";
     }
 
 	if($("#defPartCode").val() == ""){
-        msg += "* Please enter a defect part code <br>"
+        msg += "* Please enter a defect part code <br>";
     }else if( regExpSpecChar.test($("#defPartCode").val()) == false ){
         msg += "* Defect part code contains special character <br>";
     }
 
 	if($("#defPartName").val() == ""){
-        msg += "* Please enter a defect part name <br>"
+        msg += "* Please enter a defect part name <br>";
     }else if( regExpSpecChar.test($("#defPartName").val()) == false ){
         msg += "* Defect part name contains special character <br>";
     }
 
-	if($("#defPartCode").val() != ""){
-		Common.ajax("GET", "/logistics/asDefectPart/checkDefPart.do?dpCode=" + $("#defPartCode").val(), "", function(result) {
-	        if (result.message == "fail") {
-	        	$("#hidDefPartVal").val('F');
-	          }
-	        if(result.message == "duplicate") {
-	        	$("#hidDefPartVal").val('D');
-            }
-	    });
-	}
-
-	if($("#hidDefPartVal").val() == "F"){
-		msg += "* This Defect Part Code is not available <br>";
-    }
-
-	if($("#hidDefPartVal").val() == "D") {
-	    msg += "* This Defect Part Code has duplicate code in system <br>";
-	}
     return msg;
+}
+
+function fn_chkDefPart(){
+	var rtnVAL = false;
+    Common.ajaxSync("GET", "/logistics/asDefectPart/checkDefPart.do", {"dpCode" : $("#defPartCode").val()}, function(result) {
+        $("#hidVal").val(result.length);
+        console.log("defPart == " + result.length);
+        console.log("defPart1 == " + $("#hidVal").val());
+
+        if($("#hidVal").val() == 0 ){
+        	rtnVAL = true;
+        	Common.alert("* This Defect Part Code is not available <br>");
+            return true;
+        }
+    });
+
+    return rtnVAL;
+}
+
+function fn_chkDupLinkage(){
+
+    var rtnVAL = false;
+    Common.ajaxSync("GET", "/logistics/asDefectPart/chkDupLinkage.do", {"dpCode" : $("#defPartCode").val(),"matCode" : $("#matCode").val()}, function(result) {
+        $("#hidDup").val(result.length);
+        console.log("link dup == " + result.length);
+
+        if ($("#hidDup").val() >= 1 ){
+        	rtnVAL = true;
+            Common.alert("* This Material already linked with this defect part code in system <br>");
+            return true;
+        }
+    });
+
+    return rtnVAL;
 }
 </script>
 
@@ -175,10 +203,10 @@ function fn_validate(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post"  id='collForm' name ='collForm'>
-<div style="display: none">
-<input type="text" name="hidDefPartVal" id="hidDefPartVal"/>
-</div>
-
+         <div style="display: none">
+            <input type="text" name="hidVal" id="hidVal"/>
+            <input type="text" name="hidDup" id="hidDup"/>
+           </div>
         <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>

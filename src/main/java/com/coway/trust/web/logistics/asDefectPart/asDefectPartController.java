@@ -174,22 +174,19 @@ public class asDefectPartController {
 	  }
 
 	@RequestMapping(value = "/checkDefPart.do", method = RequestMethod.GET)
-	  public ResponseEntity<ReturnMessage> checkDefPart(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-	    ReturnMessage message = new ReturnMessage();
+	  public ResponseEntity<List<EgovMap>> checkDefPart(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> defPartList = asDefectPartService.checkDefPart(params);
+	    return ResponseEntity.ok(defPartList);
+	  }
+
+	@RequestMapping(value = "/chkDupLinkage.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> chkDupLinkage(@RequestParam Map<String, Object> params, ModelMap model) {
 	    logger.debug("checkDefPart.do : {}", params);
 
-	    int defPartList = asDefectPartService.checkDefPart(params);
-	    logger.debug("checkDefPart.do : {}", defPartList);
+		List<EgovMap> linkList = asDefectPartService.chkDupLinkage(params);
 
-	    if (defPartList == 1) {
-	      message.setMessage("success");
-	    } else if(defPartList > 1){
-	    	message.setMessage("duplicate");
-	    }
-	    else{
-	      message.setMessage("fail");
-	    }
+	    logger.debug("==linkList1111 " + linkList.toString());
 
-	    return ResponseEntity.ok(message);
+	    return ResponseEntity.ok(linkList);
 	  }
 }

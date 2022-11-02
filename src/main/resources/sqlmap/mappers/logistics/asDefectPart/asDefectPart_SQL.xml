@@ -121,13 +121,26 @@
 	where STK_CODE =  #{matCode}
   </select>
 
-  <select id="checkDefPart" parameterType="Map" resultType="int">
-         SELECT
-	         COUNT(*) COUNT
-         FROM SYS0100M
-         WHERE DEFECT_TYP = 'DP'
-            AND DEFECT_CODE = #{dpCode}
-            AND DEFECT_STATUS = 1
-        </select>
+  <select id="checkDefPart" parameterType="Map" resultType="egovMap">
+	  SELECT
+	   DEFECT_TYP,
+	   DEFECT_CODE,
+	   DEFECT_DESC
+	  FROM SYS0100M
+	  WHERE DEFECT_TYP = 'DP'
+	     AND DEFECT_CODE = #{dpCode}
+	     AND DEFECT_STATUS = 1
+   </select>
+
+	<select id="chkDupLinkage" parameterType="Map" resultType="egovMap">
+	 SELECT
+        MAT_CODE,
+        DEF_PART_CODE,
+        DEF_PART_NAME
+     FROM svc0131d
+     WHERE DEF_PART_CODE = #{dpCode}
+        AND MAT_CODE = #{matCode}
+        AND STUS = 1
+	</select>
 
 </mapper>

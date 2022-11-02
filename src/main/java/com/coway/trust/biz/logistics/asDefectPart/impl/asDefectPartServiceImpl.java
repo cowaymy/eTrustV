@@ -74,7 +74,12 @@ public class asDefectPartServiceImpl implements asDefectPartService {
 	 }
 
 	 @Override
-	  public int checkDefPart(Map<String, Object> params) {
+	  public List<EgovMap> checkDefPart(Map<String, Object> params) {
 	    return asDefectPartMapper.checkDefPart(params);
+	  }
+
+	 @Override
+	  public List<EgovMap> chkDupLinkage(Map<String, Object> params) {
+	    return asDefectPartMapper.chkDupLinkage(params);
 	  }
 }
