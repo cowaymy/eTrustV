@@ -991,8 +991,24 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return true;
   }
 
-  
+  public boolean getCountActTokenId(Map<String, Object> params)throws Exception {
+
+	int count = 0;
+
+	LOGGER.info("######################################### custCrcId : " + params);
+
+    count = customerMapper.getCountActTokenId(params);
+
+	if(count > 0){
+		return true;
+	}else{
+		return false;
+	}
+  }
+
+
   public List<EgovMap> searchCreditCard(String tokenId) {
     return customerMapper.getCreditCardDetails(tokenId);
   }
+
 }
