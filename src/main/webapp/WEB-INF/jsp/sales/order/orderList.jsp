@@ -210,7 +210,7 @@
             $("#dataForm4 #_ordNo_V2").val(ordNO);
             $("#dataForm4 #_CustId_V2").val(custID);
 
-            $("#dataForm4 #downFileName_V3").val("eTR Release Letter - "+ordNO+" "+custName);
+            $("#dataForm4 #downFileName_V3").val("PUBLIC_eTR Release Letter - "+ordNO+" "+custName);
 
             console.log(ordNO);
             console.log(custID);
