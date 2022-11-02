@@ -44,10 +44,21 @@
         }
         else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
             console.log('callPrgm');
-            fn_loadCreditCardPop(custCrcId);
+
+            console.log(custCrcId);
+            var msg = "";
+
+            Common.ajax("GET", "/sales/customer/checkActTokenByCustCrcId", { custCrcId : custCrcId}, function(result) {
+
+            	if (result == false){
+                    fn_loadCreditCardPop(custCrcId);
+            	}
+            	else {
+                    msg = Common.alert('This card has marked as Transaction Not Allowed. Kindly change a new card');
+            	}
+            });
         }
         else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
-            console.log();
             fn_loadCreditCard(custCrcId);
         }
         $('#custPopCloseBtn').click();
@@ -99,6 +110,8 @@
             AUIGrid.setGridData(crcGridID, result);
         });
     }
+
+
 
 </script>
 </head>
