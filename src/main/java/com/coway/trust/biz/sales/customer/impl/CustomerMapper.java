@@ -634,4 +634,7 @@ public interface CustomerMapper {
   int checkCreditCardValidity(String tokenId);
 
   List<EgovMap> getCreditCardDetails(String tokenId);
+
+  int getCountActTokenId(Map<String, Object> params);
+
 }
