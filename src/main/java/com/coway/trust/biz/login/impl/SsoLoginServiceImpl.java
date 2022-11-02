@@ -253,7 +253,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			//insert to api0004m
 			//
 			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
-	        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	        conn.disconnect();
 
 	        conn.setDoOutput(true);
