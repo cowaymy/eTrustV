@@ -31,6 +31,7 @@
 
     function pendingDisplay(){
         $("#remarkRow").show();
+        $("#recallDtRow").show();
         document.getElementById('recallDt').disabled = false;
         $("#recallDt").attr("class", "w100p j_date");
     }
