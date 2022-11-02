@@ -591,5 +591,6 @@ public interface CustomerService {
 
   boolean checkCreditCardValidity(String tokenId);
 
+  boolean getCountActTokenId(Map<String, Object> params)throws Exception;
 
 }
