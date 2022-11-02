@@ -2992,5 +2992,11 @@
         where 1=1
         AND cust_crc_token = #{tokenId}
   </select>
+  <select id="getCountActTokenId" parameterType="Map" resultType="java.lang.Integer">
+    SELECT COUNT(*) COUNT
+    FROM PAY0318D
+    WHERE CUST_CRC_ID = #{custCrcId}
+    AND STATUS = 1
+  </select>
 
 </mapper>
