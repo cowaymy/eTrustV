@@ -400,7 +400,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			//insert to api0004m
 			//
 			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
-			HttpsURLConnection conn1 = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
 			conn1.disconnect();
 	        conn1.setDoOutput(true);
 	        conn1.setRequestMethod("POST");
@@ -543,7 +543,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			//insert to api0004m
 			//
 			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
-			HttpsURLConnection conn1 = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
 			conn1.disconnect();
 	        conn1.setDoOutput(true);
 	        conn1.setRequestMethod("GET");
@@ -678,7 +678,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			//insert to api0004m
 			//
 			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
-			HttpsURLConnection conn1 = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
 			conn1.disconnect();
 	        conn1.setDoOutput(true);
 	        conn1.setRequestMethod("PUT");
@@ -824,7 +824,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			//insert to api0004m
 			//
 			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
-			HttpsURLConnection conn1 = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
 			conn1.disconnect();
 	        conn1.setDoOutput(true);
 	        conn1.setRequestMethod("PUT");
@@ -975,7 +975,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			//insert to api0004m
 			//
 			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
-			HttpsURLConnection conn1 = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
 			conn1.disconnect();
 	        conn1.setDoOutput(true);
 	        conn1.setRequestMethod("DELETE");
