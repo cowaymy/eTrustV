@@ -181,7 +181,7 @@
       <tr>
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
        <td><select id="reportType" class="w100p">
-         <option value="5" selected>After Service (AS) Raw Data [New]</option>
+         <option value="5" selected>Pre-After Service (AS) Raw Data [New]</option>
        </select></td>
        <th scope="row">Date Option<span id='m3' name='m3' class='must'> *</span></th>
        <td><select id="dateType" class="w100p" >

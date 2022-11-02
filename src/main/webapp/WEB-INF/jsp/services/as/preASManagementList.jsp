@@ -111,9 +111,15 @@
           width : 100
         },
         {
+            dataField : "cdbBrnchCode",
+            headerText : "CDB Branch",
+            width : 100
+         },
+        {
           dataField : "asBrnchCode",
           headerText : "AS Branch",
-          width : 80
+          width : 80,
+          visible: false
         },
         {
           dataField : "product",
@@ -139,6 +145,18 @@
           width : 150
         },
         {
+            dataField : "regTime",
+            headerText : "Register Time",
+            editable : false,
+            width : 150
+        },
+        {
+            dataField : "requestor",
+            headerText : "Requestor",
+            editable : false,
+            width : 150
+        },
+        {
           dataField : "defectDesc",
           headerText : "AS Error Code",
           editable : false,
@@ -149,6 +167,12 @@
           headerText : "Status",
           editable : false,
           width : 150
+        },
+        {
+            dataField : "recallDt",
+            headerText : "Recall Date",
+            editable : false,
+            width : 150
         },
         {
           dataField : "remark",
@@ -162,6 +186,12 @@
           editable : false,
           width : 150
         },
+       {
+           dataField : "updTime",
+           headerText : "Last Update Time",
+           editable : false,
+           width : 150
+         },
         {
           dataField : "appvRemark",
           headerText : "AS Register Remark",
@@ -220,12 +250,55 @@
   }
 
   function fn_searchPreASManagement() { // SEARCH Pre-Register AS
-	    console.log($("#ASForm").serialize());
-        Common.ajax("GET", "/services/as/searchPreASManagementList.do", $("#ASForm").serialize(), function(result) {
-        //console.log(result);
-          AUIGrid.setGridData(myGridID, result);
-        });
+
+	    var isVal = true;
+
+	    isVal = fn_validation();
+
+	    if(isVal == false){
+	        return;
+	    }else{
+		    //console.log($("#ASForm").serialize());
+	        Common.ajax("GET", "/services/as/searchPreASManagementList.do", $("#ASForm").serialize(), function(result) {
+	        //console.log(result);
+	          AUIGrid.setGridData(myGridID, result);
+	        });
+	    }
   }
+
+  function fn_validation() {
+
+	    if ($("#registerDtFrm").val() == '' || $("#registerDtTo").val() == '') {
+	      Common.alert("<spring:message code='sys.common.alert.validation' arguments='register date (From & To)' htmlEscape='false'/>");
+	      return false;
+	    }
+
+	    var dtRange = 31;
+
+		if ($("#registerDtFrm").val() != '' || $("#registerDtTo").val() != '') {
+		        var keyInDateFrom = $("#registerDtFrm").val().substring(3, 5) + "/"
+		                          + $("#registerDtFrm").val().substring(0, 2) + "/"
+		                          + $("#registerDtFrm").val().substring(6, 10);
+
+		        var keyInDateTo = $("#registerDtTo").val().substring(3, 5) + "/"
+		                        + $("#registerDtTo").val().substring(0, 2) + "/"
+		                        + $("#registerDtTo").val().substring(6, 10);
+
+		        var date1 = new Date(keyInDateFrom);
+		        var date2 = new Date(keyInDateTo);
+
+		        var diff_in_time = date2.getTime() - date1.getTime();
+
+		        var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+
+		        if (diff_in_days > dtRange) {
+		          Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+		          return false;
+		        }
+	      }
+	      return true;
+	}
+
 
 
   function fn_excelDown() {
@@ -327,32 +400,6 @@
       Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '_resultNewEntryPopDiv1');
     }
 
-//    function fn_rejectPreASPop(){
-// 		  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
-// 		  var param;
-
-// 	      if(selIdx > -1) {
-
-// 	          var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
-
-// 	          if( stus != "Active"){
-// 	        	  Common.alert("Reject Approval only allow in Active Status");
-// 	          }
-// 	          else{
-// 	        	  param = {
-// 	                      preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
-// 	                      preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
-// 	                      preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
-// 	               }
-
-// 	        	  Common.popupDiv("/services/as/rejectPreASOrder.do", param, null  , true, 'rejectPreASOrderPop');
-// 	          }
-// 	      }
-// 	      else{
-// 	          Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
-// 	      }
-//     }
-
    function fn_updPreASPop(){
        var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
        var param;
@@ -365,7 +412,8 @@
                param = {
                        preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
                        preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
-                       preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator")
+                       preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator"),
+                       preAsRecallDt : AUIGrid.getCellValue(myGridID, selIdx, "recallDt") == "-" ? null :  AUIGrid.getCellValue(myGridID, selIdx, "recallDt")
                 }
 
                Common.popupDiv("/services/as/updPreASOrder.do", param, null  , true, '');
@@ -455,8 +503,19 @@
         </c:forEach>
       </select></td>
 
-      <th scope="row"><spring:message code='service.title.ASBrch'/></th>
-      <td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td>
+
+       <th scope="row"><spring:message code='service.title.codyBranch'/></th>
+       <td><select id="cmdBranchCode" name="cmdBranchCode" class="w100p">
+               <option value="">Choose One</option>
+                   <c:forEach var="list" items="${branchList}"
+                       varStatus="status">
+                       <option value="${list.codeId}">${list.codeName}</option>
+                   </c:forEach>
+              </select>
+        </td>
+
+<%--       <th scope="row"><spring:message code='service.title.ASBrch'/></th> --%>
+<!--       <td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td> -->
 
      </tr>
 
@@ -504,11 +563,17 @@
        <th scope="row"><spring:message code='service.title.Area' /></th>
        <td><select class="w100p multy_select" id="ordArea" name="ordArea" multiple = "multiple"></select></td>
 
-       <th></th>
-       <td></td>
+        <th scope="row"><spring:message code='service.title.recallDt' /></th>
+       <td>
+       <div class="date_set w100p">
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="recallDtFrm" name="recallDtFrm" /></p>
+        <span><spring:message code='pay.text.to'/></span>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="recallDtTo" name="recallDtTo" /></p>
+       </div>
+       </td>
 
-       <th></th>
-       <td></td>
+       <th scope="row"><spring:message code='service.title.requestor' /></th>
+       <td><input type="text" class="w100p" id="requestor" name="requestor" /></td>
 
      </tr>
 

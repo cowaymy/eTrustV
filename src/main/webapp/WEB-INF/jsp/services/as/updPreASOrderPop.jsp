@@ -6,25 +6,42 @@
     $(document).ready(function() {
         $("#branchCode").val('${branchCode}');
         $("#creator").val('${SESSION_INFO.userMemCode}');
+        $("#recallDt").val('${recallDt}');
+
         getReasonList();
-
-
     });
 
     function getReasonList(){
         if ($("#updPreAsStatus").val() == 44) {
             doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=6853', '','', 'ddlReason', 'S', '');
-            $("#remarkRow").show();
+            pendingDisplay();
+
         }
         else if($("#updPreAsStatus").val() == 6){
             doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=6854', '','', 'ddlReason', 'S', '');
-            $("#remarkRow").show();
+            rejectDisplay();
         }
         else{
         	doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '','', 'ddlReason', 'S', '');
         	$("#remarkRow").hide();
+        	$("#recallDtRow").hide();
         }
 
+    }
+
+    function pendingDisplay(){
+        $("#remarkRow").show();
+        document.getElementById('recallDt').disabled = false;
+        $("#recallDt").attr("class", "w100p j_date");
+    }
+
+    function rejectDisplay(){
+    	$("#remarkRow").show();
+    	$("#recallDtRow").show();
+    	var element = document.getElementById("recallDt");
+    	 element.classList.remove("j_date");
+    	 $("#recallDt").attr("class", "readonly");
+         $("#recallDt").attr("disabled", "disabled");
     }
 
     $(function() {
@@ -66,6 +83,7 @@
                        stus :  $("#updPreAsStatus").val(),
                        reason : $("#ddlReason").val(),
                        remark :  $("#updPreAsRemark").val(),
+                       recallDt :  $("#recallDt").val() == null ? null : $("#recallDt").val(),
              }
 
                Common.ajax("POST", "/services/as/updatePreAsStatus.do", param, function(result) {
@@ -87,7 +105,8 @@
 
 
     function fn_reloadList() {
-        location.reload();
+    	$("#btnPopClose").click();
+    	fn_searchPreASManagement();
     }
 
 </script>
@@ -142,9 +161,14 @@
            <td><input type="text" class="readonly" name="creator" id="creator"  readonly=readonly /> </td>
           </tr>
 
+          <tr id="recallDtRow">
+           <th scope="row">Recall Date</th>
+           <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY"  id="recallDt" name="recallDt" /></td>
+          </tr>
+
           <tr id="remarkRow">
             <th scope="row">Remark</th>
-            <td><textarea cols="20" rows="2" type="text" id="updPreAsRemark" name="updPreAsRemark" maxlength="150" placeholder="Remark"/></td>
+            <td><textarea cols="20" rows="2" type="text" id="updPreAsRemark" name="updPreAsRemark" maxlength="300" placeholder="Remark"/></td>
           </tr>
         </tbody>
       </table><!-- table end -->

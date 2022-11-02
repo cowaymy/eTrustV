@@ -73,7 +73,7 @@ public class PreASManagementListController {
   private MessageSourceAccessor messageAccessor;
 
   @RequestMapping(value = "/initPreASManagementList.do")
-  public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
     // GET SEARCH DATE RANGE
     String range = ASManagementListService.getSearchDtRange();
@@ -81,11 +81,17 @@ public class PreASManagementListController {
     List<EgovMap> asTyp = ASManagementListService.selectAsTyp();
     List<EgovMap> asStat = PreASManagementListService.selectPreAsStat();
     List<EgovMap> asProduct = ASManagementListService.asProd();
+	params.put("memberLevel", sessionVO.getMemberLevel());
+	params.put("userName", sessionVO.getUserName());
+	params.put("userType", sessionVO.getUserTypeId());
+
+	List<EgovMap> branchList = hsManualService.selectBranchList(params);
 
     model.put("DT_RANGE", CommonUtils.nvl(range));
     model.put("asTyp", asTyp);
     model.put("asStat", asStat);
     model.put("asProduct", asProduct);
+    model.put("branchList", branchList);
 
     String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
     String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -96,7 +102,7 @@ public class PreASManagementListController {
   }
 
   @RequestMapping(value = "/searchPreASManagementList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> selectPreASManagementList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+  public ResponseEntity<List<EgovMap>> selectPreASManagementList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
     String[] asProductList = request.getParameterValues("asProduct");
     String[] asStatusList = request.getParameterValues("asStatus");
@@ -104,10 +110,9 @@ public class PreASManagementListController {
     String[] cmbInsBranchIdList = request.getParameterValues("cmbInsBranchId");
     String[] areaList = request.getParameterValues("ordArea");
 
-
     params.put("asStatusList", asStatusList);
-    params.put("cmbbranchIdList", cmbbranchIdList);
-    params.put("cmbInsBranchIdList", cmbInsBranchIdList);
+    params.put("cmbbranchIdList", cmbbranchIdList); //as branch list
+    params.put("cmbInsBranchIdList", cmbInsBranchIdList); //ins branch list
     params.put("asProductList", asProductList);
     params.put("areaList", areaList);
 
@@ -134,6 +139,7 @@ public class PreASManagementListController {
 	  	model.put("salesOrdNo", params.get("preAsSalesOrderNo").toString());
 	  	model.put("branchCode",  params.get("preAsBranch").toString());
 	  	model.put("creator",  params.get("preAsCreator").toString());
+	  	model.put("recallDt",  params.get("preAsRecallDt").toString());
 		return "services/as/updPreASOrderPop";
 	}
 

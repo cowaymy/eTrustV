@@ -17,15 +17,20 @@
                     , Extent21.STK_CODE || ' - ' || Extent21.STK_DESC AS PRODUCT
                     , NVL(Extent18.TEL_M1, ' ') CONTACT_NO
                     , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
+                    , TO_CHAR(Extent1.CRT_DT,'HH:MM:SS PM') AS REG_TIME
                     , Extent6.NAME AS STUS
                     , Extent1.STUS AS STUS_ID
                     , Extent1.DEFECT_CODE
                     , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
                     , Extent1.REG_ID AS CREATOR
                     , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
+                    , TO_CHAR(Extent1.UPD_DT,'HH:MM:SS PM') AS UPD_TIME
                     , NVL (Extent16.AREA, ' ') AS INST_AREA
                     , NVL (Extent16.POSTCODE, ' ') AS INST_POSTCODE
                     , NVL (Extent16.CITY, ' ') AS INST_CITY
+                    , Extent1.REG_ID AS REQUESTOR
+                    , NVL(TO_CHAR(Extent1.RECALL_DT,'DD/MM/YYYY'),'-') RECALL_DT
+                    , Extent3.CODE AS CDB_BRNCH_CODE
             FROM SVC0130D Extent1
             JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
             LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
@@ -61,7 +66,7 @@
             </foreach>
        </if>
 
-         <if test="cmbInsBranchIdList != null and cmbInsBranchIdList != '' ">
+       <if test="cmbInsBranchIdList != null and cmbInsBranchIdList != '' ">
             AND Extent14.CODE IN
             <foreach item="item" collection="cmbInsBranchIdList" index="index" open="(" separator="," close=")">
              #{item}
@@ -77,30 +82,46 @@
 
        <if test=" registerDtFrm  != null  and registerDtFrm !=''  ">
             <![CDATA[ AND ( TO_CHAR(Extent1.CRT_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{registerDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
-        </if>
+       </if>
 
-        <if test="registerDtTo != null   and registerDtTo != '' ">
+       <if test="registerDtTo != null   and registerDtTo != '' ">
             <![CDATA[ AND ( TO_CHAR(Extent1.CRT_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{registerDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
-        </if>
+       </if>
 
-        <if test="custName != null and custName != '' ">
+       <if test="custName != null and custName != '' ">
              AND ( Extent1.CUST_NAME LIKE '%'||#{custName}||'%')
+       </if>
+
+       <if test="orderNum != null and orderNum != '' ">
+             AND Extent1.SALES_ORDER_NO = #{orderNum}
         </if>
 
-        <if test="orderNum != null and orderNum != '' ">
-             AND Extent1.SALES_ORDER_NO = #{orderNum}
-         </if>
-
-         <if test="ordCity != null and ordCity != '' ">
+        <if test="ordCity != null and ordCity != '' ">
              AND Extent16.CITY =#{ordCity}
-         </if>
+        </if>
 
-          <if test="areaList != null and areaList != '' ">
+        <if test="areaList != null and areaList != '' ">
              AND Extent16.AREA IN
              <foreach item="item" collection="areaList" index="index" open="(" separator="," close=")">
              #{item}
               </foreach>
-       </if>
+        </if>
+
+        <if test=" recallDtFrm  != null  and recallDtFrm !=''  ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.RECALL_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{recallDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+        </if>
+
+        <if test="recallDtTo != null   and recallDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.RECALL_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{recallDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+        </if>
+
+        <if test="requestor != null and requestor != '' ">
+             AND Extent1.REG_ID = #{requestor}
+        </if>
+
+        <if test="cmdBranchCode != null and cmdBranchCode != ''">
+              AND ( Extent3.BRNCH_ID = #{cmdBranchCode})
+        </if>
 
     </select>
 
@@ -123,21 +144,15 @@
         ORDER BY LPAD(CODE,4)
   </select>
 
-<!--   <update id="updateRejectedPreAS" parameterType="java.util.Map"> -->
-<!--     UPDATE SVC0130D SET STUS = 6 -->
-<!--                       , UPD_USER_ID = #{userId} -->
-<!--                       , UPD_DT = SYSDATE -->
-<!--                       , APPV_REMARK = #{remark} -->
-<!--                       , FAIL_REASON = #{failReason} -->
-<!--     WHERE SALES_ORDER_NO = #{orderNo} AND STUS=1 -->
-<!--   </update> -->
-
   <update id="updatePreAsStatus" parameterType="java.util.Map">
     UPDATE SVC0130D SET STUS = #{stus}
                       , UPD_USER_ID = #{userId}
                       , UPD_DT = SYSDATE
                       , APPV_REMARK = #{remark}
                       , FAIL_REASON = #{reason}
+                      <if test="recallDt != null and recallDt != '' ">
+                      , RECALL_DT  = TO_DATE(#{recallDt},'DD/MM/RRRR')
+                      </if>
     WHERE SALES_ORDER_NO = #{orderNo} AND STUS in (1,44)
   </update>
 
