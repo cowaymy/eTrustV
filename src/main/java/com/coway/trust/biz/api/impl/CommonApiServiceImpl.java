@@ -222,7 +222,8 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
     	String authorization = request.getHeader("Authorization");
     	String[] values = {"",""};
 
-  	  	if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
+  	  	//if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
+    	if (authorization != null && authorization.startsWith("Basic")) {
   		  // Authorization: Basic base64credentials
   		  String base64Credentials = authorization.substring("Basic".length()).trim();
   		  byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
