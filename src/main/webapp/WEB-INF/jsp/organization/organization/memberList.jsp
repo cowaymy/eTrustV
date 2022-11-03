@@ -1393,7 +1393,7 @@ function fn_socialMediaInfo(){
                 <li><p class="link_btn"><a href="#" id="htPwReset">HT Password Reset</a></li>
                 <li><p class="link_btn"><a href="#" id="htContactList">HT Contact List</a></li>
             </c:if>
-               <c:if test="${PAGE_AUTH.funcUserDefine16 == 'Y'}">
+               <c:if test="${PAGE_AUTH.funcUserDefine17 == 'Y'}">
                  <li><p class="link_btn"><a href="#" id="paExpiry">PA Expiry Date</a></li>
             </c:if>
             <li><p class="link_btn"><a href="#" id="getNonVaccineDeclare">Non-Vaccination Declaration Form</a></li>
