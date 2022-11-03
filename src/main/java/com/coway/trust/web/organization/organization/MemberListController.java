@@ -904,12 +904,11 @@ public class MemberListController {
     	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
     	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
     	     	ssoLoginService.ssoCreateUser(ssoParams);
-
-    		    trInfo.put("memCode", (String)resultValue.get("memCode"));
-    		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
-
     			//message.setMessage((String)resultValue.get("memCode"));
     		}
+
+    		trInfo.put("memCode", (String)resultValue.get("memCode"));
+		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
 		} catch (Exception e){
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(e.getMessage());

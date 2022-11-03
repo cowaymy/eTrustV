@@ -362,8 +362,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
 
-		    params.put("responseCode", returnParams.get("status").toString());
-            params.put("responseMessage", returnParams.get("msg").toString());
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
             params.put("reqPrm", "getAdminAccessToken");
             params.put("ipAddr", "");
             params.put("url", ssoUrl);
@@ -503,8 +503,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
 
-		    params.put("responseCode", returnParams.get("status").toString());
-            params.put("responseMessage", returnParams.get("msg").toString());
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
             params.put("reqPrm", jsonString);
             params.put("ipAddr", "");
             params.put("url", ssoUrl);
@@ -639,8 +639,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
 
-		    params.put("responseCode", returnParams.get("status").toString());
-            params.put("responseMessage", returnParams.get("msg").toString());
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
             params.put("reqPrm", "getUserId");
             params.put("ipAddr", "");
             params.put("url", ssoUrl);
@@ -785,8 +785,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
 
-		    params.put("responseCode", returnParams.get("status").toString());
-            params.put("responseMessage", returnParams.get("msg").toString());
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
             params.put("reqPrm", jsonString);
             params.put("ipAddr", "");
             params.put("url", ssoUrl);
@@ -936,8 +936,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
 
-		    params.put("responseCode", returnParams.get("status").toString());
-            params.put("responseMessage", returnParams.get("msg").toString());
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
             params.put("reqPrm", jsonString);
             params.put("ipAddr", "");
             params.put("url", ssoUrl);
@@ -1024,8 +1024,8 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
 
-		    params.put("responseCode", returnParams.get("status").toString());
-            params.put("responseMessage", returnParams.get("msg").toString());
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
             params.put("reqPrm", jsonString);
             params.put("ipAddr", "");
             params.put("url", ssoUrl);
