@@ -201,11 +201,11 @@ public interface MemberListMapper {
 
 	List<EgovMap> checkNRIC3(Map<String, Object> params);
 
-	List<EgovMap> selectMemberInfo(Map<String, Object> params);
-
-	List<EgovMap> selectMemberApprovalInfo(Map<String, Object> params);
-
-	void updateMemberStatus(Map<String, Object> params);
+//	List<EgovMap> selectMemberInfo(Map<String, Object> params);
+//
+//	List<EgovMap> selectMemberApprovalInfo(Map<String, Object> params);
+//
+//	void updateMemberStatus(Map<String, Object> params);
 
 	// modify jgkim
 	EgovMap checkSponsor(Map<String, Object> params);
@@ -378,5 +378,5 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectPositionList(Map<String, Object> params);
 
-	List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params);
+//	List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params);
 }

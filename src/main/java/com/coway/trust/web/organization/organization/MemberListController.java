@@ -525,16 +525,17 @@ public class MemberListController {
 		//logger.debug("udtList : {}", updList);
 		//logger.debug("formMap : {}", formMap);
 
-		//Check whether member is rejoin or not
-		Boolean isRejoinMem = Boolean.parseBoolean(formMap.get("isRejoinMem").toString());
-		String rejoinMemId = formMap.get("memId").toString();
+//		//Check whether member is rejoin or not
+//		Boolean isRejoinMem = Boolean.parseBoolean(formMap.get("isRejoinMem").toString());
+//		String rejoinMemId = formMap.get("memId").toString();
 
 		try {
     		String memCode = "";
 
     		// To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
-	       if (formMap.get("email") != null && !isRejoinMem && (rejoinMemId.equals(null) || rejoinMemId.equals(""))){
-	    	   List<EgovMap> TrExist = memberListService.selectTrApplByEmail(formMap);
+	       //if (formMap.get("email") != null && !isRejoinMem && (rejoinMemId.equals(null) || rejoinMemId.equals(""))){
+    		if (formMap.get("email") != null){
+    			List<EgovMap> TrExist = memberListService.selectTrApplByEmail(formMap);
 	    	   if(TrExist.size() > 0){
 	    		   message.setMessage("Email has been used");
 	    		   return ResponseEntity.ok(message);
@@ -574,11 +575,11 @@ public class MemberListController {
 			message.setMessage(e.getMessage());
 		}
 
-		//If is rejoin member
-		if(isRejoinMem && !(rejoinMemId.equals(null) || rejoinMemId.equals(""))){
-			params.put("memId", formMap.get("memId").toString());
-			memberListService.updateMemberStatus(params);
-		}
+//		//If is rejoin member
+//		if(isRejoinMem && !(rejoinMemId.equals(null) || rejoinMemId.equals(""))){
+//			params.put("memId", formMap.get("memId").toString());
+//			memberListService.updateMemberStatus(params);
+//		}
 
     	return ResponseEntity.ok(message);
 	}
@@ -1506,39 +1507,39 @@ public class MemberListController {
     	return ResponseEntity.ok(message);
 	}
 
-	@RequestMapping(value = "/memberRejoinChecking.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> memberRejoinChecking(@RequestParam Map<String, Object> params, Model model) {
-
-		List<EgovMap> memberInfo = memberListService.selectMemberInfo(params);
-		List<EgovMap> memberApprovalInfo = memberListService.selectMemberApprovalInfo(params);
-
-		// 결과 만들기.
-		ReturnMessage message = new ReturnMessage();
-
-		//Check nric is new joiner or existing member
-		if(memberInfo.size() > 0) {
-    		// if member's rejoin Approval status = Approved
-    		if (memberApprovalInfo.size() > 0) {
-    			if(memberInfo.get(0).get("memId").toString().equals(memberApprovalInfo.get(0).get("memId").toString())){
-    				if(memberApprovalInfo.get(0).get("apprStus").toString().equals("5")){
-    						message.setData(memberApprovalInfo.get(0));
-           				    message.setMessage("pass - rejoin");
-    				} else {
-    					message.setMessage("This applicant had been registered.");
-    				}
-    			} else {
-    				message.setMessage("This applicant had been registered.");
-    			}
-    		} else {
-    			message.setMessage("This applicant is in " + memberInfo.get(0).get("name").toString() +" status.");
-    		}
-		} else {
-			//New member
-			message.setMessage("pass");
-		}
-
-    	return ResponseEntity.ok(message);
-	}
+//	@RequestMapping(value = "/memberRejoinChecking.do", method = RequestMethod.GET)
+//	public ResponseEntity<ReturnMessage> memberRejoinChecking(@RequestParam Map<String, Object> params, Model model) {
+//
+//		List<EgovMap> memberInfo = memberListService.selectMemberInfo(params);
+//		List<EgovMap> memberApprovalInfo = memberListService.selectMemberApprovalInfo(params);
+//
+//		// 결과 만들기.
+//		ReturnMessage message = new ReturnMessage();
+//
+//		//Check nric is new joiner or existing member
+//		if(memberInfo.size() > 0) {
+//    		// if member's rejoin Approval status = Approved
+//    		if (memberApprovalInfo.size() > 0) {
+//    			if(memberInfo.get(0).get("memId").toString().equals(memberApprovalInfo.get(0).get("memId").toString())){
+//    				if(memberApprovalInfo.get(0).get("apprStus").toString().equals("5")){
+//    						message.setData(memberApprovalInfo.get(0));
+//           				    message.setMessage("pass - rejoin");
+//    				} else {
+//    					message.setMessage("This applicant had been registered.");
+//    				}
+//    			} else {
+//    				message.setMessage("This applicant had been registered.");
+//    			}
+//    		} else {
+//    			message.setMessage("This applicant is in " + memberInfo.get(0).get("name").toString() +" status.");
+//    		}
+//		} else {
+//			//New member
+//			message.setMessage("pass");
+//		}
+//
+//    	return ResponseEntity.ok(message);
+//	}
 
 	@RequestMapping(value = "/checkSponsor.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
@@ -2872,25 +2873,25 @@ public class MemberListController {
 		}
 	}
 
-	@RequestMapping(value = "/selectMemberWorkingHistory", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMemberWorkingHistory(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-
-		logger.debug("selectMemberWorkingHistory.do");
-		logger.debug("params :: " + params);
-
-		List<EgovMap> memberWorkingHistoryList = null;
-
-		if(params.get("nric") != null && params.get("nric") != ""){
-			memberWorkingHistoryList = memberListService.selectMemberWorkingHistory(params);
-		}
-
-		return ResponseEntity.ok(memberWorkingHistoryList);
-	}
-
-    @RequestMapping(value = "/rejoinRawReportPop.do")
-    public String rejoinRawReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
-      // 호출될 화면
-      return "organization/organization/rejoinRawReportPop";
-    }
+//	@RequestMapping(value = "/selectMemberWorkingHistory", method = RequestMethod.GET)
+//	public ResponseEntity<List<EgovMap>> selectMemberWorkingHistory(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+//
+//		logger.debug("selectMemberWorkingHistory.do");
+//		logger.debug("params :: " + params);
+//
+//		List<EgovMap> memberWorkingHistoryList = null;
+//
+//		if(params.get("nric") != null && params.get("nric") != ""){
+//			memberWorkingHistoryList = memberListService.selectMemberWorkingHistory(params);
+//		}
+//
+//		return ResponseEntity.ok(memberWorkingHistoryList);
+//	}
+//
+//    @RequestMapping(value = "/rejoinRawReportPop.do")
+//    public String rejoinRawReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+//      // 호출될 화면
+//      return "organization/organization/rejoinRawReportPop";
+//    }
 }
 
