@@ -1472,21 +1472,15 @@
            S.C4 ,
            S.ASR_ITM_PART_QTY filter_Qty ,
            TO_CHAR(S.ASR_ITM_PART_PRC, 'fm9,999,999,999,990.00') filter_Price ,
-           TO_CHAR((S.ASR_ITM_CHRG_AMT), 'fm9,999,999,999,990.00') filter_Total ,
+           TO_CHAR((S.ASR_ITM_PART_PRC * S.ASR_ITM_PART_QTY), 'fm9,999,999,999,990.00') filter_Total ,
            TO_CHAR(S.ASR_ITM_CHRG_AMT, 'fm9,999,999,999,990.00') ASR_ITM_CHRG_AMT,
            S.ASR_ITM_REM
            filter_Remark ,
            S.SERIAL_NO srv_Filter_Last_Serial
            FROM ( SELECT E1.ASR_ITM_ID ,
                          E1.ASR_ITM_PART_QTY ,
-                         CASE WHEN ( 1 = E1.ASR_ITM_CHRG_FOC )
-                                THEN 0
-                                ELSE E1.ASR_ITM_PART_PRC
-                         END ASR_ITM_PART_PRC ,
-                         CASE WHEN ( 1 = E1.ASR_ITM_CHRG_FOC )
-                                THEN 0
-                                ELSE E1.ASR_ITM_CHRG_AMT
-                         END ASR_ITM_CHRG_AMT ,
+                         E1.ASR_ITM_PART_PRC ,
+                         E1.ASR_ITM_CHRG_AMT ,
                          E1.ASR_ITM_REM ,
                          E1.SERIAL_NO,
                          E2.STK_ID ,
