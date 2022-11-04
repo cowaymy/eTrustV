@@ -153,7 +153,12 @@
   }
 
   function auiRemoveRowHandler(event) {
-    if (event.items[0].filterType == "CHG") {
+	const filters = AUIGrid.getOrgGridData(myFltGrd10)
+	const fTotal = filters.reduce((t, f) => f.filterType == "CHG" ? Number(f.filterTotal) + t : t, 0)
+	const cFilter = event.items[0]
+	$("#txtFilterCharge").val((fTotal - (cFilter.filterType == "CHG" ? cFilter.filterTotal : 0)).toFixed(2));
+	fn_calculateTotalCharges()
+    /*if (event.items[0].filterType == "CHG") {
       var fChage = Number($("#txtFilterCharge").val());
       var totchrge = Number($("#txtTotalCharge").val());
 
@@ -164,7 +169,7 @@
         $("#txtFilterCharge").val(fChage);
         $("#txtTotalCharge").val(totchrge);
       }
-    }
+    }*/
     //Added by keyi - restructure AS result 202208
     var index = matchMatDefCode.indexOf(event.items[0].filterId);
     if (index >= 0) {
@@ -303,6 +308,9 @@
       AS_RESULT_NO : $('#asData_AS_RESULT_NO').val()
     }, function(result) {
       AUIGrid.setGridData(myFltGrd10, result);
+      const filters = AUIGrid.getOrgGridData(myFltGrd10)
+      const fTotal = filters.reduce((t, f) => f.filterType == "CHG" ? Number(f.filterTotal) + t : t, 0)
+      $("#txtFilterCharge").val(fTotal.toFixed(2));
     });
   }
 
@@ -314,6 +322,9 @@
       if (result != "") {
         // SUCCESS
         fn_setSVC0004dInfo(result);
+        const filters = AUIGrid.getOrgGridData(myFltGrd10)
+        const fTotal = filters.reduce((t, f) => f.filterType == "CHG" ? Number(f.filterTotal) + t : t, 0)
+        $("#txtFilterCharge").val(fTotal.toFixed(2));
       }
     });
   }
@@ -1296,8 +1307,9 @@
     if (AUIGrid.isUniqueValue(myFltGrd10, "filterId", fitem.filterId)) {
       fn_addRow(fitem);
 
-      var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
-      $("#txtFilterCharge").val(v.toFixed(2));
+      const filters = AUIGrid.getOrgGridData(myFltGrd10)
+      const fTotal = filters.reduce((t, f) => f.filterType == "CHG" ? Number(f.filterTotal) + t : t, 0)
+      $("#txtFilterCharge").val(fTotal.toFixed(2));
     } else {
       Common.alert("<spring:message code='service.msg.rcdExist'/>");
       return;
@@ -1765,7 +1777,7 @@
         });
 
       } else if ($("#requestMod").val() == "RESULTEDIT") {
-        if (addedRowItems != "" || removedRowItems != "") {
+    	if (addedRowItems == "" || removedRowItems == "") {
           saveForm = {
             "asResultM" : asResultM,
             "add" : allRowItems,
