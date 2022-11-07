@@ -150,6 +150,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
         reqPrm.put("apiUserId", apiUserId);
         reqPrm.put("sysUserId", sysUserId);
 
+        System.out.println("apiUserId :" + apiUserId);
         //validation
         String username = p.getUsername().toString();
 
@@ -234,7 +235,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
 
-      System.out.println();
+      System.out.println("exception");
     } finally{
       stopWatch.stop();
       respTm = stopWatch.toString();
@@ -243,6 +244,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
 
 
     System.out.println(memDetails.toString().isEmpty());
+    System.out.println(memDetailsMap.toString());
 
     /*if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(code)){
     	return memDetails;

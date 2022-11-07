@@ -49,14 +49,15 @@ public class CWApiController {
   @ApiOperation(value = "/memDetailsInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/memDetailsInfo", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> memDetailsInfo(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
-	  //EgovMap result = null;
+	  EgovMap result = null;
 	  /*result = commonApiService.verifyBasicAuth(request,params);
 	  if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(result.get("code").toString())){
 		  result = cwApiService.memDetailsInfo(request, params);
 	  }*/
 
-	  //result = cwApiService.memDetailsInfo(request, params);
-    return ResponseEntity.ok(cwApiService.memDetailsInfo(request, params));
+	  result = cwApiService.memDetailsInfo(request, params);
+	  System.out.println("memDetailsInfo end");
+    return ResponseEntity.ok(result);
   }
 
   /*@ApiOperation(value = "/memDetailsInfo1", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
