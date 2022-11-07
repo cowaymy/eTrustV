@@ -222,7 +222,7 @@ function createAUIGrid() {
 	    usePaging : true,
 	    pageRowCount : 20,
 	    editable : true,
-	    fixedColumnCount : 1,
+	    fixedColumnCount : 3,
 	    showStateColumn : false,
 	    displayTreeOpen : true,
 	    headerHeight : 30,
@@ -230,7 +230,8 @@ function createAUIGrid() {
 	    skipReadonlyColumns : true,
 	    wrapSelectionMove : true,
 	    showRowNumColumn : true,
-	    wordWrap : true
+	    wordWrap : true,
+	    height:450
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 }
