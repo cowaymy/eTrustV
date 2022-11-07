@@ -181,6 +181,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
             throw e1;
         }
 
+        System.out.println("memDetails");
         memDetails.setStaffCode(selectMemListlms.get("memCode").toString());
         memDetails.setStaffName(selectMemListlms.get("name1").toString());
         memDetails.setNric(selectMemListlms.get("nric").toString());
@@ -204,6 +205,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
   		}
         memDetails.setAddress(addr);
 
+        System.out.println("memDetailsMap");
         memDetailsMap.put("memCode", selectMemListlms.get("memCode").toString());
         memDetailsMap.put("memName",selectMemListlms.get("name1").toString());
         memDetailsMap.put("nric",selectMemListlms.get("nric").toString());
@@ -243,7 +245,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
     }
 
 
-    System.out.println(memDetails.toString().isEmpty());
+    System.out.println(memDetails.toString());
     System.out.println(memDetailsMap.toString());
 
     /*if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(code)){
