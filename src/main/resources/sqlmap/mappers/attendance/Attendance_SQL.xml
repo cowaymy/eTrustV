@@ -242,23 +242,28 @@
 
                         ),
                             ATD_LIST AS (
-                            SELECT
-                                  A.BATCH_ID
-                                , B.TIME
-                                , EXTRACT (YEAR FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) YEAR
-                                , EXTRACT (MONTH FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) MONTH
-                                , B.MEM_CODE
-                                , B.ATD_TYPE
-                                , B.MANAGER_CODE
-                                , B.DT_FROM
-                                , B.DT_TO
-                            FROM ATD0001M A
-                            JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
-                            WHERE 1=1
-                            AND A.BATCH_STUS_ID = 4
-                            AND NVL(B.DISAB,0) = 0
-                            AND BATCH_MTH_YEAR = #{calMonthYear}
-                            AND MANAGER_CODE =   #{managerCode}
+                             SELECT * FROM
+		                            (
+			                            SELECT
+			                                  A.BATCH_ID
+			                                , B.TIME
+			                                , EXTRACT (YEAR FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) YEAR
+			                                , EXTRACT (MONTH FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) MONTH
+			                                , B.MEM_CODE
+			                                , B.ATD_TYPE
+			                                , B.MANAGER_CODE
+			                                , B.DT_FROM
+			                                , B.DT_TO
+			                                , ROW_NUMBER() OVER(PARTITION BY B.BATCH_ID, B.MEM_CODE, B.ATD_TYPE, B.DT_FROM, B.DT_TO ORDER BY B.TIME ASC) ROW_NUM
+			                            FROM ATD0001M A
+			                            JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
+			                            WHERE 1=1
+			                            AND A.BATCH_STUS_ID = 4
+			                            AND NVL(B.DISAB,0) = 0
+			                            AND BATCH_MTH_YEAR = #{calMonthYear}
+			                            AND MANAGER_CODE =   #{managerCode}
+		                            )
+		                     WHERE ROW_NUM =1
                         )
                         SELECT
                                A.ATD_DATE
