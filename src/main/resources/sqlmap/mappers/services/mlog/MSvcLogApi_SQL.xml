@@ -1525,6 +1525,17 @@
            ,TO_CHAR(NVL(S07A.FILTER_BARCD_SERIAL_NO,'')) filter_Barcd_Serial_No /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            ,TO_CHAR(NVL(S07A.FILTER_SRL_UNMATCH_RSN,'')) filter_Serial_Unmatch_Reason /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            ,TO_CHAR(NVL(S07A.OLD_FILTER_BARCD_SERIAL_NO,'')) filter_Barcd_Serial_No_OLD /*  Hui Ding - Added previous used filter serial 2021-11-24 */
+           /* CELESTE ADDED: 14/9/2022 [S] */
+           ,CUSTDT.OLD_HP_NO
+           ,CUSTDT.OLD_HOME_NO
+           ,CUSTDT.OLD_OFFICE_NO
+           ,CUSTDT.OLD_EMAIL
+           ,CUSTDT.NEW_HP_NO
+           ,CUSTDT.NEW_HOME_NO
+           ,CUSTDT.NEW_OFFICE_NO
+           ,CUSTDT.NEW_EMAIL
+           ,CUSTDT.STATUS AS APPR_STATUS
+           /* CELESTE ADDED: 14/9/2022 [S] */
     FROM ( SELECT ROW_NUMBER () OVER (PARTITION BY S01A.SALES_ORD_NO,
                                                    S08A.NO,
                                                    S26A.STK_CODE,

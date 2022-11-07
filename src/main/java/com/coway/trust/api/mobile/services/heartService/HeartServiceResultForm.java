@@ -105,10 +105,10 @@ public class HeartServiceResultForm {
 	private String switchChkLst;
 
 	//20220826: Celeste : Edit Customer Info [s]
-	/*private String newHandphoneTel;
+	private String newHandphoneTel;
 	private String newHomeTel;
 	private String newOfficeTel;
-	private String newEmail;*/
+	private String newEmail;
 	//20220826: Celeste : Edit Customer Info [e]
 
 	public String getCheckInDate() {
@@ -421,7 +421,7 @@ public class HeartServiceResultForm {
 		return list;
 	}
 
-	/*public String getNewHandphoneTel() {
+	public String getNewHandphoneTel() {
 		return newHandphoneTel;
 	}
 
@@ -451,5 +451,5 @@ public class HeartServiceResultForm {
 
 	public void setNewOfficeTel(String newOfficeTel) {
 		this.newOfficeTel = newOfficeTel;
-	}*/
+	}
 }
