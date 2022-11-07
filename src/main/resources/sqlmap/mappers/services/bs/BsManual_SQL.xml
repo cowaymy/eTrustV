@@ -5636,7 +5636,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , #{newHomeNo}
         , #{newOfficeNo}
         , #{newEmail}
-        , #{postingBrch}
+        , #{brnchId}
         , #{deptCode}
         , #{orgCode}
         , #{grpCode}
