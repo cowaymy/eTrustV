@@ -1600,6 +1600,7 @@
                           WHERE 1 = 1
                             AND S26.STUS_CODE_ID = 1
         ) H ON a.STK_CODE = H.STK_CODE
+        LEFT JOIN SAL0329D CUSTDT ON CUSTDT.ORDER_ID = S06A.SALES_ORD_ID AND CUSTDT.HS_NO = A.SERVICE_NO
     WHERE 1 = 1
       AND rn = 1
   </select>
