@@ -127,6 +127,8 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
     stopWatch.start();
 
     String data = commonApiService.decodeJson(request);
+    System.out.println("data :" + data);
+    System.out.println("data :" + cwApiForm.toString());
     Gson g = new Gson();
     CWGetMemApiForm p = g.fromJson(data, CWGetMemApiForm.class);
 
