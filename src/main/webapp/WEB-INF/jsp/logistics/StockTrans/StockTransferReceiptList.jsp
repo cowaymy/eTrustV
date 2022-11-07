@@ -84,7 +84,6 @@
         {dataField: "serialchk",          headerText:"serialchk",                                                                        width:0},
         {dataField: "delvryNoItm",          headerText:"delvry_no_itm",                                                                        width:0,visible:false},
         {dataField: "whLocBrnchId",          headerText:"whLocBrnchId",                                                                        width:0,visible:false}
-        ,{dataField: "rcvSerialRequireChkYn",      headerText :"From Serial Chk",                                                                     width:100, visible:false},
     ];
 
     var resop = {
@@ -225,12 +224,6 @@
 
             if(checkedItems.length > 0) {
             var serialchk = checkedItems[0].serialReqYn
-	            var fromSerialRequireChkYn = checkedItems[0].rcvSerialRequireChkYn;
-	            if(fromSerialRequireChkYn == "Y" && serialchk == "Y"){
-	                serialchk = 'Y';
-	            }else{
-	                serialchk = 'N';
-	            }
             }
 
            //console.log("userroleId : " + "${SESSION_INFO.roleId}");
@@ -244,21 +237,21 @@
                 Common.alert('No data selected.');
                 return false;
             } else if(("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) ||(checkedItems[0].admincheck  == "N" && "${SESSION_INFO.roleId}" == "256")) {
-            	Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
+                Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
                 return false;
                 } else {
-		                for (var i = 0 ; i < checkedItems.length ; i++) {
-		                    if(checkedItems[i].grcmplt == 'Y') {
-		                        Common.alert('Already processed.');
-		                        return false;
-		                        break;
-		                    }
-		                    if(arrDelyNo.indexOf(checkedItems[i].delyno) == -1) {
-		                        arrDelyNo[arrDelyNoIdx] = checkedItems[i].delyno;
-		                        ++arrDelyNoIdx;
-		                    }
-		                }
-		            }
+                        for (var i = 0 ; i < checkedItems.length ; i++) {
+                            if(checkedItems[i].grcmplt == 'Y') {
+                                Common.alert('Already processed.');
+                                return false;
+                                break;
+                            }
+                            if(arrDelyNo.indexOf(checkedItems[i].delyno) == -1) {
+                                arrDelyNo[arrDelyNoIdx] = checkedItems[i].delyno;
+                                ++arrDelyNoIdx;
+                            }
+                        }
+                    }
 
             if(serialchk == 'N') {   // 시리얼 N인 경우 - 기존logic 호출
                 doSysdate(0 , 'giptdate');

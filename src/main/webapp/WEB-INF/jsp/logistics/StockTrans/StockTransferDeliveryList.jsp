@@ -55,8 +55,8 @@ var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.h
                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30 },
                      {dataField: "itmname",headerText :"Mat. Name" , width:280, height:30, style:"aui-grid-user-custom-left"},
                      {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>", width:120, height:30
-                    	 , style:"aui-grid-user-custom-right", dataType:"numeric", formatString:"#,##0"
-                   		 , editRenderer : {
+                         , style:"aui-grid-user-custom-right", dataType:"numeric", formatString:"#,##0"
+                         , editRenderer : {
                                 type : "InputEditRenderer",
                                 showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                 onlyNumeric : true, // 0~9만 입력가능
@@ -67,16 +67,16 @@ var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.h
                             }
                      },
                      {dataField: "rciptqty",headerText :"<spring:message code='log.head.giqty'/>", width:120    ,height:30 , editalble:true
-                    	 , style:"aui-grid-user-custom-right", dataType:"numeric", formatString:"#,##0"
+                         , style:"aui-grid-user-custom-right", dataType:"numeric", formatString:"#,##0"
 
-                   		 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+                         , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
                                 if(item.serialchk == "Y") {
                                     return "aui-grid-link-renderer1";
                                 }
                                 return "aui-grid-column-right";
                          }
-                    	 /*
-                    	 , renderer :{
+                         /*
+                         , renderer :{
                                type : "LinkRenderer",
                                baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
                                // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
@@ -101,7 +101,6 @@ var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.h
                      {dataField: "grcmplt",headerText :"GR Complt."                   ,width:120    ,height:30 , visible:true},
                      {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>" ,width:130, height:30 , visible:true},
                      {dataField: "rcvSerialRequireChkYn", headerText :"Serial Required Check Y/N", width:90, height:30, visible:true}
-                     ,{dataField: "serialReqYn", headerText :"To Serial Required Check Y/N", width:90, height:30, visible:false}
                      // Added for avoiding double process (duplicate GI/GR) issue. By Hui Ding, 2020-07-17
                      //{dataField: "rcdTms", headerText:"Record Timestamp", width:150, visible:true}
                      ];
@@ -116,10 +115,10 @@ var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message cod
 ];
 
 var resop = {
-		rowIdField : "rnum",
-		editable : true,
-		//fixedColumnCount : 6,
-		//groupingFields : ["delyno"],
+        rowIdField : "rnum",
+        editable : true,
+        //fixedColumnCount : 6,
+        //groupingFields : ["delyno"],
         displayTreeOpen : false,
         showRowCheckColumn : true ,
         showStateColumn : false,
@@ -164,7 +163,7 @@ var paramdata;
 
 $(document).ready(function(){
 
-	/**********************************
+    /**********************************
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
@@ -182,24 +181,24 @@ $(document).ready(function(){
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-    	// serial search Popup
+        // serial search Popup
         if(event.dataField == "rciptqty"){
             var item = event.item;
-        	if(item.serialchk == "Y" && item.rcvSerialRequireChkYn == "Y"){
+            if(item.serialchk == "Y" && item.rcvSerialRequireChkYn == "Y"){
                 fn_scanSearchList(item);
             }
         }
     });
 
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
-    	if (event.dataField != "delyqty"){
-    		return false;
-    	}else{
-    		if (AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno") != null && AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno") != ""){
-    			Common.alert('You can not create a delivery note for the selected item.');
-    			return false;
-    		}
-    	}
+        if (event.dataField != "delyqty"){
+            return false;
+        }else{
+            if (AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno") != null && AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno") != ""){
+                Common.alert('You can not create a delivery note for the selected item.');
+                return false;
+            }
+        }
     });
 
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
@@ -207,27 +206,27 @@ $(document).ready(function(){
         if (event.dataField != "delyqty"){
             return false;
         }else{
-        	var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty");
-        	if (del > 0){
-	        	if (Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty"))){
-	        		Common.alert('Delivery Qty can not be greater than Request Qty.');
-	        		//AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")
-	        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-	        	}else{
-	        		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
-	        	}
-        	}else{
-        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-        		AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
-        	}
+            var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty");
+            if (del > 0){
+                if (Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty"))){
+                    Common.alert('Delivery Qty can not be greater than Request Qty.');
+                    //AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")
+                    AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+                }else{
+                    AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
+                }
+            }else{
+                AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+                AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+            }
         }
     });
 
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-//      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-//      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-//     	document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
-//     	document.searchForm.submit();
+//          $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+//          $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+//      document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
+//      document.searchForm.submit();
     });
 
     AUIGrid.bind(listGrid, "ready", function(event) {
@@ -238,13 +237,13 @@ $(document).ready(function(){
         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
 
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
-        	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
+            AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }else{
-        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+            var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
 
-        	for (var i = 0 ; i < rown.length ; i++){
-        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
-        	}
+            for (var i = 0 ; i < rown.length ; i++){
+                AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+            }
         }
     });
 
@@ -252,13 +251,13 @@ $(document).ready(function(){
         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
 
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
-        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+            var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
 
             for (var i = 0 ; i < rown.length ; i++){
                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
             }
         }else{
-        	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
+            AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
 
@@ -304,15 +303,15 @@ $(document).ready(function(){
     $("#crtedt").val(nextDate);
 });
 function f_change(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
+    paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
 }
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	if(validation()) {
-    	      SearchListAjax();
-    	}
+        if(validation()) {
+              SearchListAjax();
+        }
     });
     $('#clear').click(function() {
         $('#seldelno').val('');
@@ -333,36 +332,36 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
     });
     $('#delivery').click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	if(checkedItems.length <= 0) {
-    		return false;
-    	}else{
-	    	var data = {};
-	    	data.checked = checkedItems;
-	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-	            Common.alert(result.message);
-	            AUIGrid.resetUpdatedItems(listGrid, "all");
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
-	    	for (var i = 0 ; i < checkedItems.length ; i++){
-	    		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
-	    	}
-    	}
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        if(checkedItems.length <= 0) {
+            return false;
+        }else{
+            var data = {};
+            data.checked = checkedItems;
+            Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+                Common.alert(result.message);
+                AUIGrid.resetUpdatedItems(listGrid, "all");
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
+            }
+        }
     });
 
     $("#gissueNew").click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
 
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
         }else{
 
-        	var delynoGroup = "", reqlocGroup = "", rcvlocGroup = "";
+            var delynoGroup = "", reqlocGroup = "", rcvlocGroup = "";
 
             for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].item.gicmplt == 'Y'){
@@ -377,19 +376,19 @@ $(function(){
                 }
 
                 if (i == 0){
-                	delynoGroup = checkedItems[i].item.delyno;
-                	reqlocGroup = checkedItems[i].item.reqloc;
-                	rcvlocGroup = checkedItems[i].item.rcvloc;
+                    delynoGroup = checkedItems[i].item.delyno;
+                    reqlocGroup = checkedItems[i].item.reqloc;
+                    rcvlocGroup = checkedItems[i].item.rcvloc;
                 }
-               	if(checkedItems[i].item.delyno != delynoGroup){
-               		Common.alert("Delivery No must be the same. <br />Please process one by one.");
-               		return false;
-               	}
-               	if(checkedItems[i].item.reqloc != reqlocGroup){
-               		Common.alert("From Location must be the same. <br />Please process one by one.");
+                if(checkedItems[i].item.delyno != delynoGroup){
+                    Common.alert("Delivery No must be the same. <br />Please process one by one.");
+                    return false;
+                }
+                if(checkedItems[i].item.reqloc != reqlocGroup){
+                    Common.alert("From Location must be the same. <br />Please process one by one.");
                     return false;
                 }if(checkedItems[i].item.rcvloc != rcvlocGroup){
-                	Common.alert("To Location must be the same. <br />Please process one by one.");
+                    Common.alert("To Location must be the same. <br />Please process one by one.");
                     return false;
                 }
 
@@ -397,45 +396,37 @@ $(function(){
         }
 
         if(checkedItems[0].item.delyno == null || checkedItems[0].item.delyno == ""){
-        	Common.alert('Already processed.');
-        	return false;
+            Common.alert('Already processed.');
+            return false;
         }
 
         $("#zDelyno").val(checkedItems[0].item.delyno);
         $("#zReqloc").val(checkedItems[0].item.reqloc);
         $("#zRcvloc").val(checkedItems[0].item.rcvloc);
 
-        var serialchk = checkedItems[0].item.rcvSerialRequireChkYn;
-        var toSerialRequireChkYn = checkedItems[0].item.serialReqYn;
-        if(toSerialRequireChkYn == "Y" && serialchk == "Y"){
-            serialchk = 'Y';
-        }else{
-            serialchk = 'N';
-        }
-
         // No Serial Logic ( Old version )
-        if(serialchk == "N"){
-        	$("#gissue").click();
+        if(checkedItems[0].item.rcvSerialRequireChkYn == "N"){
+            $("#gissue").click();
         }else{
-        	// Serial Logic ( New version )
-	        if(Common.checkPlatformType() == "mobile") {
-	            popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/stoIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-	        } else{
-	            Common.popupDiv("/logistics/stocktransfer/stoIssuePop.do", null, null, true, '_divStoIssuePop');
-	        }
+            // Serial Logic ( New version )
+            if(Common.checkPlatformType() == "mobile") {
+                popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/stoIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+            } else{
+                Common.popupDiv("/logistics/stocktransfer/stoIssuePop.do", null, null, true, '_divStoIssuePop');
+            }
         }
     });
 
     $("#gissue").click(function(){
- //   	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
-    	var serialChkfalg;
+ //     var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+        var serialChkfalg;
 
         if(checkedItems.length <= 0) {
-        	Common.alert('No data selected.');
+            Common.alert('No data selected.');
             return false;
         }else{
-        	for (var i = 0 ; i < checkedItems.length ; i++){
+            for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].item.gicmplt == 'Y'){
                     Common.alert('Already processed.');
                     return false;
@@ -466,11 +457,11 @@ $(function(){
              AUIGrid.resize(serialGrid);
              fn_itempopList_T(checkedItems);
          }else{
-        	document.giForm.gtype.value="GI";
+            document.giForm.gtype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
-        	$("#giopenwindow").show();
+            $("#giopenwindow").show();
             $("#giptdate").val("");
             $("#gipfdate").val("");
             $("#doctext").val("");
@@ -486,7 +477,7 @@ $(function(){
             Common.alert('No data selected.');
             return false;
         }else{
-        	for (var i = 0 ; i < checkedItems.length ; i++){
+            for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].grcmplt == 'Y'){
                     Common.alert('Good Receipt already processed. Unable to Issue Cancel.');
                     return false;
@@ -498,7 +489,7 @@ $(function(){
                     break;
                 }
             }
-        	document.giForm.gtype.value="RC";
+            document.giForm.gtype.value="RC";
             $("#dataTitle").text("Issue Cancel Posting Data");
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
@@ -532,7 +523,7 @@ $(function(){
     });
 
     $("#deliverydelete").click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
         console.log(checkedItems);
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
@@ -561,13 +552,13 @@ $(function(){
         }
     });
     $("#print").click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
         }else if(checkedItems.length == 1 ) {
-        	var itm = checkedItems[0];
+            var itm = checkedItems[0];
             $("#V_DELVRYNO").val(itm.delyno);
             Common.report("printForm");
         }else{
@@ -591,12 +582,12 @@ $(function(){
                 return false;
             }
          }
-	 });
+     });
 });
 
 function fn_PopStoIssueClose(){
-	if(popupObj!=null) popupObj.close();
-	$("#search").click();
+    if(popupObj!=null) popupObj.close();
+    $("#search").click();
 }
 
 function fn_itempopList(data){
@@ -615,10 +606,10 @@ function fn_itempopList(data){
 }
 
 function validation() {
-	if($("#crtsdt").val() == "" || ($("#crtedt").val() == "")) {
-		Common.alert('Please enter Dlvd.Req.Date');
-		return false;
-	} if ($("#sttype").val() == ''){
+    if($("#crtsdt").val() == "" || ($("#crtedt").val() == "")) {
+        Common.alert('Please enter Dlvd.Req.Date');
+        return false;
+    } if ($("#sttype").val() == ''){
         Common.alert('Please select Transfer Type.');
         return false;
     }
@@ -626,7 +617,7 @@ function validation() {
     return true;
 }
 function SearchListAjax() {
-	if ($("#flocationnm").val() == ""){
+    if ($("#flocationnm").val() == ""){
         $("#flocation").val('');
     }
     if ($("#tlocationnm").val() == ""){
@@ -676,67 +667,67 @@ function f_getTtype(g , v){
     return rData;
 }
 function giFunc(){
-	var data = {};
-	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-	var check     = AUIGrid.getCheckedRowItems(listGrid);
+    var data = {};
+    var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+    var check     = AUIGrid.getCheckedRowItems(listGrid);
     var serials   = AUIGrid.getAddedRowItems(serialGrid);
     var rowItem;
 
-	 if (check[0].item.serialchk == 'Y'){
-	        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-	            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-	                Common.alert("Please check the serial.")
-	                return false;
-	            }
+     if (check[0].item.serialchk == 'Y'){
+            for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+                if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+                    Common.alert("Please check the serial.")
+                    return false;
+                }
 
-	            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-	                Common.alert("Please check the serial.")
-	                return false;
-	            }
-	        }
+                if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+                    Common.alert("Please check the serial.")
+                    return false;
+                }
+            }
 
-	        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-	            Common.alert("Please check the serial.")
-	            return false;
-	        }
-	    }
+            if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+                Common.alert("Please check the serial.")
+                return false;
+            }
+        }
 
 
-	 if ($("#giptdate").val() == "") {
-	      Common.alert("Please select the GI Posting Date.");
-	      $("#giptdate").focus();
-	      return false;
-	    }
+     if ($("#giptdate").val() == "") {
+          Common.alert("Please select the GI Posting Date.");
+          $("#giptdate").focus();
+          return false;
+        }
 
-	    if ($("#giptdate").val() < today) {
-	        Common.alert("Cannot select back date.");
-	        $("#giptdate").focus();
-	        return false;
-	      }
+        if ($("#giptdate").val() < today) {
+            Common.alert("Cannot select back date.");
+            $("#giptdate").focus();
+            return false;
+          }
 
-	    if ($("#giptdate").val() > today) {
-	        Common.alert("Cannot select future date.");
-	        $("#giptdate").focus();
-	        return false;
-	      }
+        if ($("#giptdate").val() > today) {
+            Common.alert("Cannot select future date.");
+            $("#giptdate").focus();
+            return false;
+          }
 
-	    if ($("#gipfdate").val() == "") {
-	      Common.alert("Please select the GI Doc Date.");
-	      $("#gipfdate").focus();
-	      return false;
-	    }
+        if ($("#gipfdate").val() == "") {
+          Common.alert("Please select the GI Doc Date.");
+          $("#gipfdate").focus();
+          return false;
+        }
 
-	    if ($("#gipfdate").val() < today) {
-	        Common.alert("Cannot select back date.");
-	        $("#gipfdate").focus();
-	        return false;
-	      }
+        if ($("#gipfdate").val() < today) {
+            Common.alert("Cannot select back date.");
+            $("#gipfdate").focus();
+            return false;
+          }
 
-	    if ($("#gipfdate").val() > today) {
-	        Common.alert("Cannot select future date.");
-	        $("#gipfdate").focus();
-	        return false;
-	      }
+        if ($("#gipfdate").val() > today) {
+            Common.alert("Cannot select future date.");
+            $("#gipfdate").focus();
+            return false;
+          }
 
   for (var i = 0 ; i < checkdata.length ; i++){
         if (checkdata[i].delydt == "" || checkdata[i].delydt == null){
@@ -745,20 +736,20 @@ function giFunc(){
        }
     }
 
-	data.check   = check;
-	data.checked = check;
-	data.add = serials;
-	data.form    = $("#giForm").serializeJSON();
+    data.check   = check;
+    data.checked = check;
+    data.add = serials;
+    data.form    = $("#giForm").serializeJSON();
 
-	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
+    Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
 
-		var message =result.message;
+        var message =result.message;
 
-		if("Already processed."== message){
-		 Common.alert(result.message);
-		}else{
-		 Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
-		}
+        if("Already processed."== message){
+         Common.alert(result.message);
+        }else{
+         Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
+        }
 
 //         AUIGrid.setGridData(listGrid, result.data);
         $("#giptdate").val("");
@@ -873,7 +864,7 @@ function f_addrow(){
 
 //Serial Search Pop
 function fn_scanSearchList(item){
-	$("#pDeliveryNo").val(item.delyno);
+    $("#pDeliveryNo").val(item.delyno);
     $("#pDeliveryItem").val(item.delvryNoItm);
     $("#pStatus").val("O");
 
@@ -965,10 +956,10 @@ function fn_scanSearchList(item){
                     <th scope="row">Dlvd.Req.Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-					    <span> To </span>
-					    <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-					    </div><!-- date_set end -->
+                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <span> To </span>
+                        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div><!-- date_set end -->
                     </td>
                     <th scope="row">GI Date</th>
                     <td >
@@ -1031,40 +1022,40 @@ function fn_scanSearchList(item){
 
     <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-		    <h1 id="dataTitle">Good Issue Posting Data</h1>
-		    <ul class="right_opt">
-		        <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-		    </ul>
-		</header><!-- pop_header end -->
+            <h1 id="dataTitle">Good Issue Posting Data</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
 
-		<section class="pop_body"><!-- pop_body start -->
-		    <form id="giForm" name="giForm" method="POST">
-		    <input type="hidden" name="gtype" id="gtype" value="GI">
-		    <input type="hidden" name="serialqty" id="serialqty"/>
+        <section class="pop_body"><!-- pop_body start -->
+            <form id="giForm" name="giForm" method="POST">
+            <input type="hidden" name="gtype" id="gtype" value="GI">
+            <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="reqstno" id="reqstno"/>
-		    <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
-		    <table class="type1">
-		    <caption>search table</caption>
-		    <colgroup>
-		        <col style="width:150px" />
-		        <col style="width:*" />
-		        <col style="width:150px" />
-		        <col style="width:*" />
-		    </colgroup>
-		    <tbody>
-		        <tr>
-		            <th scope="row">GI Posting Date</th>
+            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
+            <table class="type1">
+            <caption>search table</caption>
+            <colgroup>
+                <col style="width:150px" />
+                <col style="width:*" />
+                <col style="width:150px" />
+                <col style="width:*" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">GI Posting Date</th>
                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                     <th scope="row">GI Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                 </tr>
                 <tr>
                     <th scope="row">Header Text</th>
-		            <td colspan='3'><input type="text" name="doctext" id="doctext" maxlength="50" class="w100p"/></td>
-		        </tr>
-		    </tbody>
-		    </table>
-		    <table class="type1">
+                    <td colspan='3'><input type="text" name="doctext" id="doctext" maxlength="50" class="w100p"/></td>
+                </tr>
+            </tbody>
+            </table>
+            <table class="type1">
             <caption>search table</caption>
             <colgroup id="serialcolgroup">
             </colgroup>
@@ -1073,15 +1064,15 @@ function fn_scanSearchList(item){
             </table>
             <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="serial_grid_wrap" class="mt10" style="width:100%;" ></div>
-            </article><!-- grid_wrap end  	  -->
-		    <ul class="center_btns">
+            </article><!-- grid_wrap end      -->
+            <ul class="center_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-		        <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
+                <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
 </c:if>
-		    </ul>
-		    </form>
+            </ul>
+            </form>
 
-		</section>
+        </section>
     </div>
     <form id="printForm" name="printForm">
        <input type="hidden" id="viewType" name="viewType" value="PDF" />
