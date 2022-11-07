@@ -107,17 +107,17 @@
         },
         {
           dataField : "eLeave",
-          headerText : "E Leave - A0003",
+          headerText : "E Leave - A0002",
           width : 200
         },
         {
           dataField : "publicHoliday",
-          headerText : "Public Holiday - A0004",
+          headerText : "Public Holiday - A0003",
           width : 200
         },
         {
           dataField : "training",
-          headerText : "Training - A0005",
+          headerText : "Training - A0004",
           editable : false,
           width : 200
         },

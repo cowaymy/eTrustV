@@ -180,23 +180,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     		int result =0,updResult = 0, atdRate = 0;
 
-    		try{
+//    		try{
 
     			result =	attendanceMapper.approveUploadBatch(params);
     			updResult = attendanceMapper.updateManagerCode(params);
     			attendanceMapper.atdRateCalculation(params);
 
-    			if(result < 0 || updResult <0){
-    				throw new Error("Unable to approve upload batch");
-    			}
-    			else{
-    				return result;
-    			}
+    			return result;
 
-    		}
-    		catch(Throwable ex){
-    			throw ex;
-    		}
+//    			if(result < 0 || updResult <0){
+//    				throw new Error("Unable to approve upload batch");
+//    			}
+//    			else{
+//    				return result;
+//    			}
+//
+//    		}
+//    		catch(Throwable ex){
+//    			throw ex;
+//    		}
 	 }
 
 

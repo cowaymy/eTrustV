@@ -218,7 +218,7 @@
 	<select id="searchAtdManagementList" parameterType="Map" resultType="egovMap">
 	   SELECT
                   ATD_DATE, ATD_DAY, TYPE, YEAR, MONTH, MANAGER_CODE
-                , NVL(INFO_TECH,0) INFO_TECH, NVL(OUT_OF_OFFICE,0) OUT_OF_OFFICE, NVL(E_LEAVE,0) E_LEAVE, NVL(PUBLIC_HOLIDAY,0) PUBLIC_HOLIDAY, NVL(TRAINING,0) TRAINING
+                , NVL(INFO_TECH,0) INFO_TECH, NVL(E_LEAVE,0) E_LEAVE, NVL(PUBLIC_HOLIDAY,0) PUBLIC_HOLIDAY, NVL(TRAINING,0) TRAINING
                 , CASE WHEN INFO_TECH = 1 AND (TO_CHAR(TIME, 'HH24:MI') <![CDATA[ > ]]> TO_CHAR(TO_TIMESTAMP('09:01', 'HH24:MI'), 'HH24:MI')  OR TO_CHAR(TIME, 'HH24:MI') <![CDATA[ < ]]> TO_CHAR(TO_TIMESTAMP('05:00', 'HH24:MI'), 'HH24:MI'))
                        THEN 'LATE'
                        WHEN  INFO_TECH = 1 AND TO_CHAR(TIME, 'HH24:MI')    <![CDATA[ < ]]>  TO_CHAR(TO_TIMESTAMP('09:01', 'HH24:MI'), 'HH24:MI')  THEN  TO_CHAR(TIME, 'HH24:MI:SS')
@@ -278,7 +278,7 @@
                         FROM DAY_LIST A
                         LEFT JOIN ATD_LIST B ON A.ATD_DATE BETWEEN TO_CHAR(B.DT_FROM,'YYYY/MM/DD') AND TO_CHAR(B.DT_TO,'YYYY/MM/DD')
                         GROUP BY A.ATD_DATE, TO_CHAR(TO_DATE(A.ATD_DATE,'YYYY/MM/DD'), 'DAY'), B.ATD_TYPE, B.TIME, B.YEAR, B.MONTH, A.MANAGER_CODE
-                     ) PIVOT (SUM(ATD_CHECK) FOR ATD_TYPE IN ('A0001' AS Info_Tech, 'A0002' AS Out_of_Office, 'A0003' AS E_Leave,'A0004' AS Public_Holiday,'A0005' AS Training ))
+                     ) PIVOT (SUM(ATD_CHECK) FOR ATD_TYPE IN ('A0001' AS Info_Tech, 'A0002' AS E_Leave,'A0003' AS Public_Holiday,'A0004' AS Training ))
         )
         ORDER BY 1
 	</select>
