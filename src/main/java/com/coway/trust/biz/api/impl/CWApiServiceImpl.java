@@ -152,6 +152,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
 
         System.out.println("apiUserId :" + apiUserId);
         //validation
+        System.out.println("data :" + data);
         System.out.println("p.getUsername().toString() :" + p.getUsername().toString());
         String username = p.getUsername().toString();
 
