@@ -156,11 +156,13 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
 
         Exception e1 = null;
 
+        System.out.println("username :" + username);
         if (StringUtils.isBlank(username)){
             e1 = new Exception("username is required");
             throw e1;
         }
 
+        System.out.println("selectMemDetails :");
         Map<String, Object> selectMemDetails = new HashMap<String, Object>();
         selectMemDetails.put("memCode", p.getUsername());
         int isExist = cwApiMapper.cntMemberCheck(selectMemDetails);
@@ -170,11 +172,14 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
             throw e1;
         }
 
+        System.out.println("isExist :" + isExist);
+
         Map<String, Object> userInfo = new HashMap<String, Object>();
         userInfo.put("memCode", username);
         EgovMap userId = cwApiMapper.selectActiveMemberByMemId(userInfo);
         Map<String, Object> memMap = new HashMap<String, Object>();
         memMap.put("MemberID", userId.get("memId"));
+        System.out.println("memMap :" + memMap.toString());
         EgovMap selectMemListlms = memberListMapper.selectMemberListView(memMap);
         if (selectMemListlms.isEmpty()) {
             e1 = new Exception("Invalid Member");
