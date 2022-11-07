@@ -14,7 +14,7 @@
            (
 	            SELECT * FROM
 	            (
-	             SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6605,6607) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
+	             SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
 	                (
 	                SELECT
 	                         CASE  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'A'
@@ -50,22 +50,22 @@
 	       SELECT
 		        TYPE
 		      , CODE_NAME
-		      , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W1)||'%' END ELSE TO_CHAR(A_W1) END A_W1
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W2)||'%' END ELSE TO_CHAR(A_W2) END A_W2
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W3)||'%' END ELSE TO_CHAR(A_W3) END A_W3
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W4)||'%' END ELSE TO_CHAR(A_W4) END A_W4
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W1)||'%' END ELSE TO_CHAR(B_W1) END B_W1
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W2)||'%' END ELSE TO_CHAR(B_W2) END B_W2
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W3)||'%' END ELSE TO_CHAR(B_W3) END B_W3
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W4)||'%' END ELSE TO_CHAR(B_W4) END B_W4
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W1)||'%' END ELSE TO_CHAR(C_W1) END C_W1
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W2)||'%' END ELSE TO_CHAR(C_W2) END C_W2
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W3)||'%' END ELSE TO_CHAR(C_W3) END C_W3
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W4)||'%' END ELSE TO_CHAR(C_W4) END C_W4
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W1)||'%' END ELSE TO_CHAR(D_W1) END D_W1
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W2)||'%' END ELSE TO_CHAR(D_W2) END D_W2
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W3)||'%' END ELSE TO_CHAR(D_W3) END D_W3
-              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W4)||'%' END ELSE TO_CHAR(D_W4) END D_W4
+		      , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W1,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(A_W1) END A_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W2,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(A_W2) END A_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W3,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(A_W3) END A_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(A_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(A_W4,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(A_W4) END A_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W1,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(B_W1) END B_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W2,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(B_W2) END B_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W3,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(B_W3) END B_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(B_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(B_W4,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(B_W4) END B_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W1,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(C_W1) END C_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W2,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(C_W2) END C_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W3,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(C_W3) END C_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(C_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(C_W4,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(C_W4) END C_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W1)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W1,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(D_W1) END D_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W2)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W2,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(D_W2) END D_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W3)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W3,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(D_W3) END D_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(D_W4)||'%' = '0%' THEN '-' ELSE TO_CHAR(D_W4,'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(D_W4) END D_W4
 		      FROM
 		      (
 			        SELECT * FROM (
@@ -127,31 +127,20 @@
           , NVL(NETSALES_W4,0) NETSALES_W4
           , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
           , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
-            WHEN ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2) >= 1000 THEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm0000.00') || '%'
-            WHEN ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2) >= 100 THEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm000.00') || '%'
-            WHEN ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2) >= 10 THEN TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm00.00') || '%'
-            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm0.00') || '%' END NET_RATE
+            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm9,999,999,999,990.00') || '%' END NET_RATE
           , TARGETATMT_NS
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
           , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
             ELSE TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) || '%' END NEW_NEO_ACT_RATE
-          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN TO_CHAR(0, 'fm0.00')
-                    WHEN ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2) >= 1000 THEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm0000.00')
-                    WHEN ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2) >= 100 THEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm000.00')
-                    WHEN ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2) >= 10 THEN TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm00.00')
-            ELSE TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm0.00')  END NEO_PRO_PRODUCTIVITY
-          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN TO_CHAR(0, 'fm0.00')
-                    WHEN ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2) >= 1000 THEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm0000.00')
-                    WHEN ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2) >= 100 THEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm000.00')
-                    WHEN ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2) >= 10 THEN TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm00.00')
-            ELSE TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm0.00')  END PARTTIME_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN TO_CHAR('0', 'fm9,999,999,999,990.00')
+            ELSE TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm9,999,999,999,990.00')  END NEO_PRO_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN TO_CHAR('0', 'fm9,999,999,999,990.00')
+            ELSE TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm9,999,999,999,990.00')  END PARTTIME_PRODUCTIVITY
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
           , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
           , CASE WHEN NVL(SHI,0)= 0 THEN '0%'
-                 WHEN ROUND(SHI,2) >= 100 THEN TO_CHAR(ROUND(SHI,2), 'fm000.00') || '%'
-                 WHEN ROUND(SHI,2) >= 10 THEN TO_CHAR(ROUND(SHI,2), 'fm00.00') || '%'
-            ELSE TO_CHAR(ROUND(SHI,2), 'fm0.00') || '%' END SHI
+            ELSE TO_CHAR(ROUND(SHI,2), 'fm9,999,999,999,990.00') || '%' END SHI
             FROM (
                SELECT * FROM
                         (
@@ -223,13 +212,13 @@
                         </if>
 
                         <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " ) and (orgCode != null and orgCode != "" and orgCode != " ")'>
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
+
                           <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " ) and (orgCode == null or orgCode == "" or orgCode == " ")'>
-                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
-<!--                             AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'YYYYMM') -->
-<!--                             AND UPPER(A.MEM_LVL) NOT IN (4) -->
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
+
                          <if test="netSalesMonth != null and netSalesMonth != ''">
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY')))
                          </if>
@@ -255,7 +244,7 @@
                         )
              )
              WHERE NVL(KEYIN_TOTAL_AMT,0) !=0
-             ORDER BY YEAR, MONTH, ORG_CODE,MEM_LVL,MEM_CODE
+             ORDER BY YEAR DESC, MONTH DESC, ORG_CODE ASC ,MEM_LVL ASC ,MEM_CODE ASC
         </select>
 
         <select id="selectSmfHA" parameterType="Map" resultType="egovMap">
@@ -359,11 +348,10 @@
 		                            AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode_HA})
 		                        </if>
 		                         <if test='(netSalesMonth_HA == null or netSalesMonth_HA == "" or netSalesMonth_HA == " " ) and (orgCode_HA != null and orgCode_HA != "" and orgCode_HA != " ")'>
-                                AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
+                                AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                                 </if>
                                 <if test='(netSalesMonth_HA == null or netSalesMonth_HA == "" or netSalesMonth_HA == " " ) and (orgCode_HA == null or orgCode_HA == "" or orgCode_HA == " ")'>
-                                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
-<!--                                 AND UPPER(A.MEM_LVL) NOT IN (4) -->
+                                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                                 </if>
 	                               <if test="netSalesMonth_HA != null and netSalesMonth_HA != ''">
 	                               AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')))
@@ -493,11 +481,10 @@
                             AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode_HC})
                         </if>
                          <if test='(netSalesMonth_HC == null or netSalesMonth_HC == "" or netSalesMonth_HC == " " ) and (orgCode_HC != null and orgCode_HC != "" and orgCode_HC != " ")'>
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                           <if test='(netSalesMonth_HC == null or netSalesMonth_HC == "" or netSalesMonth_HC == " " ) and (orgCode_HC == null or orgCode_HC == "" or orgCode_HC == " ")'>
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
-<!--                             AND UPPER(A.MEM_LVL) NOT IN (4) -->
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                          <if test="netSalesMonth_HC != null and netSalesMonth_HC != ''">
                             AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')))
@@ -626,7 +613,7 @@
                             AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode_actHP})
                         </if>
                         <if test='(netSalesMonth_actHP == null or netSalesMonth_actHP == "" or netSalesMonth_actHP == " " ) and (orgCode_actHP != null and orgCode_actHP != "" and orgCode_actHP != " ")'>
-                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
+                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM') AND TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
                          </if>
                           <if test='(netSalesMonth_actHP == null or netSalesMonth_actHP == "" or netSalesMonth_actHP == " " ) and (orgCode_actHP == null or orgCode_actHP == "" or orgCode_actHP == " ")'>
                             AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
@@ -727,9 +714,11 @@
                  FROM ORG0044T A
                  WHERE  1=1
 	                    <if test="current == 1">
+	                      AND TO_CHAR(A.SALES_DT,'MM') =  TO_CHAR(ADD_MONTHS(SYSDATE,0),'MM')
 	                      AND TO_CHAR(TO_DATE(A.PV_YEAR || A.PV_MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'YYYYMM')
 	                    </if>
 	                    <if test="current == 0">
+	                       AND TO_CHAR(A.SALES_DT,'MM') =  TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
 	                      AND TO_CHAR(TO_DATE(A.PV_YEAR || A.PV_MONTH,'YYYYMM'),'YYYYMM')  = TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'YYYYMM')
 	                    </if>
                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
