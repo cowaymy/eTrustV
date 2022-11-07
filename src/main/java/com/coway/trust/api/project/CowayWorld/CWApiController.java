@@ -50,10 +50,12 @@ public class CWApiController {
   @RequestMapping(value = "/memDetailsInfo", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> memDetailsInfo(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
 	  EgovMap result = null;
-	  result = commonApiService.verifyBasicAuth(request,params);
+	  /*result = commonApiService.verifyBasicAuth(request,params);
 	  if(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(result.get("code").toString())){
 		  result = cwApiService.memDetailsInfo(request, params);
-	  }
+	  }*/
+
+	  result = cwApiService.memDetailsInfo(request, params);
     return ResponseEntity.ok(result);
   }
 
