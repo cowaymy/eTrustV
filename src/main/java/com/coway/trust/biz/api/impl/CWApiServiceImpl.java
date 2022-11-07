@@ -126,6 +126,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
     stopWatch.reset();
     stopWatch.start();
 
+    String usernameParam = request.getParameter("username").toString();
     String data = commonApiService.decodeJson(request);
     System.out.println("data :" + data);
     System.out.println("data :" + cwApiForm.toString());
@@ -155,20 +156,20 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
         System.out.println("apiUserId :" + apiUserId);
         //validation
         System.out.println("data :" + data);
-        System.out.println("p.getUsername().toString() :" + p.getUsername().toString());
-        String username = p.getUsername().toString();
+        //System.out.println("p.getUsername().toString() :" + p.getUsername().toString());
+        //String username = p.getUsername().toString();
 
         Exception e1 = null;
 
-        System.out.println("username :" + username);
-        if (StringUtils.isBlank(username)){
+        //System.out.println("username :" + username);
+        if (StringUtils.isBlank(usernameParam)){
             e1 = new Exception("username is required");
             throw e1;
         }
 
         System.out.println("selectMemDetails :");
         Map<String, Object> selectMemDetails = new HashMap<String, Object>();
-        selectMemDetails.put("memCode", p.getUsername());
+        selectMemDetails.put("memCode", usernameParam);
         int isExist = cwApiMapper.cntMemberCheck(selectMemDetails);
 
         if(isExist == 0){
@@ -179,7 +180,7 @@ public class CWApiServiceImpl extends EgovAbstractServiceImpl implements CWApiSe
         System.out.println("isExist :" + isExist);
 
         Map<String, Object> userInfo = new HashMap<String, Object>();
-        userInfo.put("memCode", username);
+        userInfo.put("memCode", usernameParam);
         EgovMap userId = cwApiMapper.selectActiveMemberByMemId(userInfo);
         Map<String, Object> memMap = new HashMap<String, Object>();
         memMap.put("MemberID", userId.get("memId"));
