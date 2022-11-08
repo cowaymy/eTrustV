@@ -73,9 +73,9 @@
           (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction,
           A.prodCat
           <!--   20221108 CELESTE [S] Edit Customer Contact Info -->
-          ,A.NEW_HP_NO,
-          A.NEW_HOME_NO,
-          A.NEW_OFFICE_NO,
+          ,A.NEW_HANDPHONE_TEL,
+          A.NEW_HOME_TEL,
+          A.NEW_OFFICE_TEL,
           A.NEW_EMAIL
           <!--   20221108 CELESTE [E] Edit Customer Contact Info -->
         FROM ( SELECT appointment_Date,
@@ -142,9 +142,9 @@
                   IS_VOUCHER,
                   prodCat
                   <!--   20221108 CELESTE [S] Edit Customer Contact Info -->
-                  ,NEW_HP_NO,
-                  NEW_HOME_NO,
-                  NEW_OFFICE_NO,
+                  ,NEW_HANDPHONE_TEL,
+                  NEW_HOME_TEL,
+                  NEW_OFFICE_TEL,
                   NEW_EMAIL
                   <!--   20221108 CELESTE [E] Edit Customer Contact Info -->
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
@@ -221,9 +221,9 @@
                                     TO_CHAR(Y.REDEEM_WARRANTY) AS REDEEM_WARRANTY,
                                     Z.CODE AS prodCat
                                     <!--   20221108 CELESTE [S] Edit Customer Contact Info -->
-                                    ,CUST.NEW_HP_NO AS NEW_HP_NO,
-                                    CUST.NEW_HOME_NO AS NEW_HOME_NO,
-                                    CUST.NEW_OFFICE_NO AS NEW_OFFICE_NO,
+                                    ,CUST.NEW_HP_NO AS NEW_HANDPHONE_TEL,
+                                    CUST.NEW_HOME_NO AS NEW_HOME_TEL,
+                                    CUST.NEW_OFFICE_NO AS NEW_OFFICE_TEL,
                                     CUST.NEW_EMAIL AS NEW_EMAIL
                                     <!--   20221108 CELESTE [E] Edit Customer Contact Info -->
                   FROM (SELECT
