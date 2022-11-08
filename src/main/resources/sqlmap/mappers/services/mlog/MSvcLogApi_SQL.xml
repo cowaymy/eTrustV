@@ -72,10 +72,12 @@
            TO_CHAR( NVL((SELECT FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, FAUCET_EXCH ) ,0)) AS warranty ,
           (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction,
           A.prodCat
-          ,A.NEW_HANDPHONE_TEL AS newHandphoneTel,
+           /*  20221108 CELESTE [S] Edit Customer Contact Info */
+          /*,A.NEW_HANDPHONE_TEL AS newHandphoneTel,
           A.NEW_HOME_TEL AS newHomeTel,
           A.NEW_OFFICE_TEL AS newOfficeTel,
-          A.NEW_EMAIL
+          A.NEW_EMAIL */
+           /*  20221108 CELESTE [E] Edit Customer Contact Info */
         FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -139,10 +141,12 @@
                   VOUCHER_REDEMPTION,
                   IS_VOUCHER,
                   prodCat
-                  ,NEW_HANDPHONE_TEL,
+                  /*  20221108 CELESTE [S] Edit Customer Contact Info */
+                  /*,NEW_HANDPHONE_TEL,
                   NEW_HOME_TEL,
                   NEW_OFFICE_TEL,
-                  NEW_EMAIL
+                  NEW_EMAIL */
+                  /*   20221108 CELESTE [E] Edit Customer Contact Info */
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -216,10 +220,12 @@
                                     ELSE TO_CHAR(Y.REDEEM_MTH || '-' || Y.REDEEM_YEAR) END AS REDEEM_DT,
                                     TO_CHAR(Y.REDEEM_WARRANTY) AS REDEEM_WARRANTY,
                                     Z.CODE AS prodCat
-                                    ,CUST.NEW_HP_NO AS NEW_HANDPHONE_TEL,
+                                    /*  20221108 CELESTE [S] Edit Customer Contact Info */
+                                    /*,CUST.NEW_HP_NO AS NEW_HANDPHONE_TEL,
                                     CUST.NEW_HOME_NO AS NEW_HOME_TEL,
                                     CUST.NEW_OFFICE_NO AS NEW_OFFICE_TEL,
-                                    CUST.NEW_EMAIL AS NEW_EMAIL
+                                    CUST.NEW_EMAIL AS NEW_EMAIL */
+                                    /*  20221108 CELESTE [E] Edit Customer Contact Info */
                   FROM (SELECT
                                  A.NO ,
                                  A.STUS_CODE_ID ,
@@ -316,10 +322,10 @@
                  SYS0013M X ,
                  SAL0261D Y,
                  SYS0013M Z
-
-                 ,(SELECT HS_NO, ORDER_ID, NEW_HP_NO, NEW_HOME_NO, NEW_OFFICE_NO, NEW_EMAIL
-                 FROM SAL0329D) CUST
-
+                 /*  20221108 CELESTE [S] Edit Customer Contact Info */
+                 /*,(SELECT HS_NO, ORDER_ID, NEW_HP_NO, NEW_HOME_NO, NEW_OFFICE_NO, NEW_EMAIL
+                 FROM SAL0329D) CUST */
+                 /*  20221108 CELESTE [E] Edit Customer Contact Info */
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -349,10 +355,10 @@
                     AND B.RESULT_IS_CURR(+) = 1
                     AND C.SALES_ORD_ID = Y.SALES_ORD_ID(+)
                     AND Z.CODE_ID = L.STK_CTGRY_ID(+)
-
-                    AND CUST.ORDER_ID(+) = A.SALES_ORD_ID
-                    AND CUST.HS_NO(+) = A.NO
-
+                    /*  20221108 CELESTE [S] Edit Customer Contact Info */
+                    /* AND CUST.ORDER_ID(+) = A.SALES_ORD_ID
+                    AND CUST.HS_NO(+) = A.NO */
+                     /*  20221108 CELESTE [S] Edit Customer Contact Info */
                   )AA
        ) A LEFT JOIN PAY0053S B ON B.ACC_DEBT_ORD_ID = A.SALES_ORDER_ID AND B.ACC_DEBT_SRV_CNTRCT_ID = A.SRV_MEM_CNTRCT_ID
 
@@ -1546,7 +1552,7 @@
            ,TO_CHAR(NVL(S07A.FILTER_SRL_UNMATCH_RSN,'')) filter_Serial_Unmatch_Reason /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            ,TO_CHAR(NVL(S07A.OLD_FILTER_BARCD_SERIAL_NO,'')) filter_Barcd_Serial_No_OLD /*  Hui Ding - Added previous used filter serial 2021-11-24 */
            <!--   20220914 CELESTE [S] Edit Customer Contact Info -->
-           ,CUSTDT.OLD_HP_NO
+           /*,CUSTDT.OLD_HP_NO
            ,CUSTDT.OLD_HOME_NO
            ,CUSTDT.OLD_OFFICE_NO
            ,CUSTDT.OLD_EMAIL
@@ -1554,7 +1560,7 @@
            ,CUSTDT.NEW_HOME_NO AS NEW_HOME_TEL
            ,CUSTDT.NEW_OFFICE_NO AS NEW_OFFICE_TEL
            ,CUSTDT.NEW_EMAIL
-           ,CUSTDT.STATUS AS APPR_STATUS
+           ,CUSTDT.STATUS AS APPR_STATUS */
            <!--   20220914 CELESTE [E] Edit Customer Contact Info -->
     FROM ( SELECT ROW_NUMBER () OVER (PARTITION BY S01A.SALES_ORD_NO,
                                                    S08A.NO,
@@ -1620,7 +1626,8 @@
                           WHERE 1 = 1
                             AND S26.STUS_CODE_ID = 1
         ) H ON a.STK_CODE = H.STK_CODE
-        LEFT JOIN SAL0329D CUSTDT ON CUSTDT.ORDER_ID = S06A.SALES_ORD_ID AND CUSTDT.HS_NO = A.SERVICE_NO
+        <!--   20220914 CELESTE [S] Edit Customer Contact Info -->
+        /*LEFT JOIN SAL0329D CUSTDT ON CUSTDT.ORDER_ID = S06A.SALES_ORD_ID AND CUSTDT.HS_NO = A.SERVICE_NO */
     WHERE 1 = 1
       AND rn = 1
   </select>
