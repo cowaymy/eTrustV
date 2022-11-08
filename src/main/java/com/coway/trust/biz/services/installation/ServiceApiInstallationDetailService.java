@@ -21,5 +21,5 @@ public interface ServiceApiInstallationDetailService {
 
   ResponseEntity<InstallationResultDto> installationDtResultProc(Map<String, Object> insApiresult) throws Exception;
 
-  void installationResultProcSendEmail(Map<String, Object> params);
+  //void installationResultProcSendEmail(Map<String, Object> params);
 }

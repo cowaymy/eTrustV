@@ -3874,7 +3874,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		return smsResultValue;
 	}
 
-  	@SuppressWarnings("unchecked")
+  	/*@SuppressWarnings("unchecked")
 	@Override
 	public void installationSendEmail(Map<String, Object> params) {
 
@@ -3915,5 +3915,5 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			logger.debug(" Installation notes email result : {}", e.toString());
 			e.printStackTrace();
 		}
-	}
+	}*/
 }

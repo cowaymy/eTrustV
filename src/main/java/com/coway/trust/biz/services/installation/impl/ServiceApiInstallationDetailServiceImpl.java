@@ -798,7 +798,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
 
-  @Override
+  /*@Override
 	public void installationResultProcSendEmail(Map<String, Object> params) {
 	  logger.info("paramsSendEmail1111====" + params.toString() + "===");
 
@@ -807,6 +807,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   	  }catch (Exception e){
   		logger.info("===Failed to send e-mail to" + params.get("resultReportEmailNo").toString() + "===");
   	  }
-   }
+   }*/
 
 }
