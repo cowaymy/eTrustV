@@ -75,7 +75,7 @@
           <!--   20221108 CELESTE [S] Edit Customer Contact Info -->
           ,A.NEW_HP_NO AS NEW_HANDPHONE_TEL,
           A.NEW_HOME_TEL AS NEW_HOME_TEL,
-          A.NEW_OFFICE_TEL AS NEW_OFFICE_TEL
+          A.NEW_OFFICE_TEL AS NEW_OFFICE_TEL,
           A.NEW_EMAIL
           <!--   20221108 CELESTE [E] Edit Customer Contact Info -->
         FROM ( SELECT appointment_Date,
