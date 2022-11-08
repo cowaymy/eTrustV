@@ -73,9 +73,9 @@
           (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction,
           A.prodCat
           <!--   20221108 CELESTE [S] Edit Customer Contact Info -->
-          ,A.NEW_HANDPHONE_TEL,
-          A.NEW_HOME_TEL,
-          A.NEW_OFFICE_TEL,
+          ,A.NEW_HP_NO AS NEW_HANDPHONE_TEL,
+          A.NEW_HOME_TEL AS NEW_HOME_TEL,
+          A.NEW_OFFICE_TEL AS NEW_OFFICE_TEL
           A.NEW_EMAIL
           <!--   20221108 CELESTE [E] Edit Customer Contact Info -->
         FROM ( SELECT appointment_Date,
@@ -1556,9 +1556,9 @@
            ,CUSTDT.OLD_HOME_NO
            ,CUSTDT.OLD_OFFICE_NO
            ,CUSTDT.OLD_EMAIL
-           ,CUSTDT.NEW_HANDPHONE_TEL
-           ,CUSTDT.NEW_HOME_TEL
-           ,CUSTDT.NEW_OFFICE_TEL
+           ,CUSTDT.NEW_HP_NO
+           ,CUSTDT.NEW_HOME_NO
+           ,CUSTDT.NEW_OFFICE_NO
            ,CUSTDT.NEW_EMAIL
            ,CUSTDT.STATUS AS APPR_STATUS
            <!--   20220914 CELESTE [E] Edit Customer Contact Info -->
