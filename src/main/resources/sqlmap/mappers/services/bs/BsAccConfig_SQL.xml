@@ -789,6 +789,8 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = so.sales_ord_id
                 LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
                 WHERE 1=1
+
+                AND sal09.SRV_STUS_ID  <![CDATA[ <> ]]>  8
                 <choose>
                      <when test="myInstallMonth != ''  and myBSMonth != ''">
                             <if test="myInstallMonth != null and myInstallMonth != ''">
