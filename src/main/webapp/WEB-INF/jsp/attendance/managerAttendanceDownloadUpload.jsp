@@ -222,7 +222,7 @@ function confirmApproval(param){
         try {
         	 console.log("status : " + jqXHR.status);
              if(jqXHR.status =="504"){
-            	 Common.alert("Success to approve", searchAtdUploadList);
+            	 Common.alert("Success to approve. Total Attendance Rate % will be reflected after 3 minutes");
              }else{
                  Common.alert("Fail : Unable to approve");
              }
