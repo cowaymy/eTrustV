@@ -1556,9 +1556,9 @@
            ,CUSTDT.OLD_HOME_NO
            ,CUSTDT.OLD_OFFICE_NO
            ,CUSTDT.OLD_EMAIL
-           ,CUSTDT.NEW_HP_NO
-           ,CUSTDT.NEW_HOME_NO
-           ,CUSTDT.NEW_OFFICE_NO
+           ,CUSTDT.NEW_HANDPHONE_TEL
+           ,CUSTDT.NEW_HOME_TEL
+           ,CUSTDT.NEW_OFFICE_TEL
            ,CUSTDT.NEW_EMAIL
            ,CUSTDT.STATUS AS APPR_STATUS
            <!--   20220914 CELESTE [E] Edit Customer Contact Info -->
