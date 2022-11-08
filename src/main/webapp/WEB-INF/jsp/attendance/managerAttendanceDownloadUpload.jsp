@@ -86,6 +86,31 @@ td:nth-child(6) .cal-tooltip, td:nth-child(7) .cal-tooltip {
 
 <script type="text/javaScript" language="javascript">
 
+var nowYear = new Date().getFullYear();
+var monthOptions = {//년월달력 세팅
+    pattern: 'mm/yyyy',
+    selectedYear: nowYear,
+    selectedMonth: '10',
+    startYear: 2022,
+    finalYear: 2027,
+    disabledMonths: nowYear == 2022 ? [1,2,3,4,5,6,7,8,9] : []
+};
+
+function setMonthPicker(monthOptions) {
+	$('.j_date2').monthpicker(monthOptions).bind('monthpicker-change-year', (e, year) => {
+        if (year == 2022) {
+        	$(e.target).monthpicker('disableMonths', [1,2,3,4,5,6,7,8,9]);
+        } else {
+        	$(e.target).monthpicker('disableMonths', []);
+        }
+	})
+}
+
+$(document).on("focus", ".j_date2", function(){
+	  setMonthPicker(monthOptions);
+});
+
+
 var myGridID;
 
 var gridPros = {
