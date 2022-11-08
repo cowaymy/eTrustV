@@ -47,22 +47,22 @@ var myGridID_Doc;
 function fn_memberSave(){
 
 	if(("${memberView.memType}" == "5" &&  $("#traineeType").val() == "2") || ("${memberView.memType}" == "2")){
-
+		var filecount = 0;
         var formData = new FormData();
         $.each(myFileCaches, function(n, v) {
             console.log("n : " + n + " v.file : " + v.file);
             formData.append(n, v.file);
+            filecount++
         });
+
         var atchFileGrpId = "${memberView.atchFileGrpIdDoc}";
         formData.append("atchFileGrpId", atchFileGrpId);
         formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
         console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
         formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-
         if("${memberView.atchFileGrpIdDoc}" == ""){
-
-	        	if($("#formData").length > 0){
+	        	if(filecount > 0){
 
 		        	Common.ajaxFile("/organization/attachFileMemberUpload.do", formData, function(result) {
 		                console.log(result);
@@ -816,7 +816,6 @@ function fn_getMemInfo(){
         console.log(result);
         if(result != null ){
         	fn_setMemInfo(result[0]);
-        	console.log("1111111111");
         	console.log(result[0]);
         }else{
         	console.log("========result null=========");
