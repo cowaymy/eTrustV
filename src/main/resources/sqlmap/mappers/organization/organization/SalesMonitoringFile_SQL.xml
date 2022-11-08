@@ -14,7 +14,7 @@
            (
 	            SELECT * FROM
 	            (
-	             SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6605,6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
+	             SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
 	                (
 	                SELECT
 	                         CASE  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'A'
@@ -125,11 +125,11 @@
           , NVL(NETSALES_W2,0) NETSALES_W2
           , NVL(NETSALES_W3,0) NETSALES_W3
           , NVL(NETSALES_W4,0) NETSALES_W4
-<!--           , NVL(NETSALES_W4,0) NETSALES_TOTAL_AMT -->
-          , CASE WHEN NVL(NETSALES_W4,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W4,0)
-                                        WHEN NVL(NETSALES_W3,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W3,0)
-                                        WHEN NVL(NETSALES_W2,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W2,0)
-                                   ELSE NVL(NETSALES_W1,0) END NETSALES_TOTAL_AMT
+          , NVL(NETSALES_W4,0) NETSALES_TOTAL_AMT
+<!--           , CASE WHEN NVL(NETSALES_W4,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W4,0) -->
+<!--                                         WHEN NVL(NETSALES_W3,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W3,0) -->
+<!--                                         WHEN NVL(NETSALES_W2,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W2,0) -->
+<!--                                    ELSE NVL(NETSALES_W1,0) END NETSALES_TOTAL_AMT -->
           , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
             ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm9,999,999,999,990.00') || '%' END NET_RATE
           , TARGETATMT_NS
@@ -193,7 +193,7 @@
                         LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
                         LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
                         LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
-                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
+                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
                         WHERE 1 = 1
                         AND E.MEM_TYPE = 1
                          <if test='orgCode != null and orgCode != "" and orgCode != " "'>
@@ -338,7 +338,7 @@
 		                        LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
 		                        LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
 		                        LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
-		                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
+		                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS=1
 		                        WHERE 1 = 1
 		                        AND B.STK_CTGRY_ID NOT IN ('5706','5707')
 		                        AND E.MEM_TYPE = 1
@@ -471,7 +471,7 @@
                         LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
                         LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
                         LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
-                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
+                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
                         WHERE 1 = 1
                         AND B.STK_CTGRY_ID IN ('5706')
                         AND E.MEM_TYPE = 1
@@ -604,7 +604,7 @@
                         LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
                         LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
                         LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
-                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID
+                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
                         WHERE 1 = 1
                         AND E.MEM_TYPE = 1
                         <if test='orgCode_actHP != null and orgCode_actHP != "" and orgCode_actHP != " "'>
