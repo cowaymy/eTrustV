@@ -111,7 +111,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         LOGGER.debug("reqPrm=======================>" + reqPrm);
         // To check duplicate order coming in from Ascentis
         int duplicateOrdCount = ecommApiMapper.checkDuplicateOrder(reqPrm);
-        if(duplicateOrdCount > 1)
+        if(duplicateOrdCount >= 1)
         {
         	code = String.valueOf(AppConstants.RESPONSE_CODE_FORBIDDEN);
             message = AppConstants.RESPONSE_DESC_DUP;
