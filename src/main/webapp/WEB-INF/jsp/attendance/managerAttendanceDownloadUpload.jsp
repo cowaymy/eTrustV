@@ -216,8 +216,29 @@ $(function() {
 });
 
 function confirmApproval(param){
+	var code = 0;
     Common.ajax("POST", "/attendance/approveUploadBatch.do", param, function(result) {
+    	console.log(result);
     	Common.alert(result.message, searchAtdUploadList);
+    	code = result.code;
+    }, function(jqXHR, textStatus, errorThrown) {
+        try {
+        	 console.log("status : " + jqXHR.status);
+             console.log("code : " + jqXHR.responseJSON.code);
+             console.log("message : " + jqXHR.responseJSON.message);
+             console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+             if(code =="00"){
+            	 Common.alert("Success to approve", searchAtdUploadList);
+             }else{
+            	 Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+             }
+
+        }
+        catch (e) {
+        	console.log(e);
+            Common.alert("Fail : " + e);
+        }
     });
 }
 
