@@ -221,14 +221,10 @@ function confirmApproval(param){
     }, function(jqXHR, textStatus, errorThrown) {
         try {
         	 console.log("status : " + jqXHR.status);
-             console.log("code : " + jqXHR.responseJSON.code);
-             console.log("message : " + jqXHR.responseJSON.message);
-             console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
              if(jqXHR.status =="504"){
             	 Common.alert("Success to approve", searchAtdUploadList);
              }else{
-            	 Common.setMsg("Fail : " + jqXHR.responseJSON.message);
-                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+                 Common.alert("Fail : Unable to approve");
              }
         }
         catch (e) {
