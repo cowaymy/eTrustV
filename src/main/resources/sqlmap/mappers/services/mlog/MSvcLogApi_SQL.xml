@@ -72,9 +72,9 @@
            TO_CHAR( NVL((SELECT FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, FAUCET_EXCH ) ,0)) AS warranty ,
           (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction,
           A.prodCat
-          ,A.NEW_HANDPHONE_TEL,
-          A.NEW_HOME_TEL,
-          A.NEW_OFFICE_TEL,
+          ,A.NEW_HANDPHONE_TEL AS newHandphoneTel,
+          A.NEW_HOME_TEL AS newHomeTel,
+          A.NEW_OFFICE_TEL AS newOfficeTel,
           A.NEW_EMAIL
         FROM ( SELECT appointment_Date,
                   service_No,
