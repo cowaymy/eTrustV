@@ -15,20 +15,19 @@
     <th scope="row">Card Image <span class="must">*</span></th>
     <td>
         <div class='auto_file2 auto_file3'>
-            <input type='file' title='file add'  id='cardImageFile' accept='image/*''/>
+            <input type='file' title='file add'  id='cardImageFile' accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='cardImageFileTxt'  name=''/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
             </label>
-<!--             <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("CIF")'>Remove</a></span> -->
         </div>
     </td>
 </tr>
 <tr>
-    <th scope="row">3rd Party Letter <span class="must">*</span</th>
+    <th scope="row">3rd Party Letter <span class="must optional">*</span</th>
     <td>
         <div class='auto_file2 auto_file3'>
-            <input type='file' title='file add'  id='otherFile1' accept='image/*''/>
+            <input type='file' title='file add'  id='otherFile1' accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt1'/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
@@ -37,7 +36,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">3rd Party NRIC Copy <span class="must">*</span</th>
+    <th scope="row">3rd Party NRIC Copy <span class="must optional">*</span</th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="otherFile2" accept="image/*"/>
@@ -49,7 +48,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Business Registration Form Copy <span class="must">*</span</th>
+    <th scope="row">Business Registration Form Copy <span class="must optional">*</span</th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="otherFile3" accept="image/*"/>

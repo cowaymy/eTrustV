@@ -17,6 +17,7 @@ var otherFileName2 = "";
 var otherFileName3 = "";
 var otherFileName4 = "";
 var attachmentInfoList;
+var custType = "${mobileAutoDebitDetail.custType}";
 
 
 $(document).ready(function() {
@@ -203,6 +204,13 @@ function fn_attachmentButtonRegister(){
               }
           }
      });
+
+	 if(custType.toUpperCase() == "COMPANY"){
+		 $('.optional').show();
+	 }
+	 else{
+		 $('.optional').hide();
+	 }
 }
 
 function saveDataValidation(){
@@ -235,25 +243,27 @@ function saveDataValidation(){
 	        return;
 		}
 	}
-
-	if(thirdPartyLetterAttachment == null || thirdPartyLetterAttachment== ""){
-		if(cifId == 0){
-	        Common.alert('3rd Party Letter Attachment is required');
-	        return;
+	debugger;
+	if(custType.toUpperCase() == "COMPANY"){
+		if(thirdPartyLetterAttachment == null || thirdPartyLetterAttachment== ""){
+			if(cifId == 0){
+		        Common.alert('3rd Party Letter Attachment is required');
+		        return;
+			}
 		}
-	}
 
-	if(thirdPartyNricAttachment == null || thirdPartyNricAttachment== ""){
-		if(cifId == 0){
-	        Common.alert('Third Party NRIC Attachment is required');
-	        return;
+		if(thirdPartyNricAttachment == null || thirdPartyNricAttachment== ""){
+			if(cifId == 0){
+		        Common.alert('Third Party NRIC Attachment is required');
+		        return;
+			}
 		}
-	}
 
-	if(businessRegistrationFormAttachment == null || businessRegistrationFormAttachment== ""){
-		if(cifId == 0){
-	        Common.alert('Business Registration Form Attachment is required');
-	        return;
+		if(businessRegistrationFormAttachment == null || businessRegistrationFormAttachment== ""){
+			if(cifId == 0){
+		        Common.alert('Business Registration Form Attachment is required');
+		        return;
+			}
 		}
 	}
 
