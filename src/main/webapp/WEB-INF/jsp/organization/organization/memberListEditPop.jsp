@@ -1,17 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<style type="text/css">
 
-    /* 커스텀 스타일 정의 */
-    .auto_file2 {
-        width:100%!important;
-    }
-    .auto_file2 > label {
-        width:100%!important;
-    }
-   .auto_file2 label input[type=text]{width:40%!important; float:left}
-
-</style>
 <script type="text/javaScript">
 console.log("memberListEditPop");
 
@@ -25,12 +14,23 @@ var dup = false;
 var atchFileGrpId = '';
 var atchFileGrpIdNew = '';
 var atchFileId = '';
-atchFileIdNew = '';
+var atchFileIdNew = '';
 var myFileCaches = {};
 var checkFileValid = true;
 
 var update = new Array();
 var remove = new Array();
+
+var codyAppFileId = 0;
+var nricCopyFileId = 0;
+var driveCopyFileId = 0;
+var bankStateCopyFileId = 0;
+var vaccDigCertFileId = 0;
+var fileNameId = 0;
+var codyPaCopyFileId = 0;
+var compConsCodyFileId = 0;
+var codyExtCheckFileId = 0;
+var terminationAgreeFileId = 0;
 
 var codyAppFileName = "";
 var nricCopyFileName = "";
@@ -42,6 +42,8 @@ var codyPaCopyFileName = "";
 var compConsCodyFileName = "";
 var codyExtCheckFileName = "";
 //var jsonObj1;
+
+var fileName = "";
 
 var myGridID_Doc;
 function fn_memberSave(){
@@ -809,7 +811,6 @@ $(document).ready(function() {
 });
 
 function fn_getMemInfo(){
-	console.log("fn_setMemInfo. sss");
 	$("#memberType").attr("disabled",false);
     Common.ajax("GET", "/organization/getMemberListMemberView", $("#memberAddForm").serialize(), function(result) {
         console.log("fn_setMemInfo.");
@@ -1809,43 +1810,43 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 $(function(){
     $('#codyAppFile').change(function(evt) {
-
+        var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(codyAppFileId);
-        } else if(file.name != codyAppFileName){
+        }else if(file.name != codyAppFileName){
             myFileCaches[1] = {file:file};
             if(codyAppFileName != ""){
                 update.push(codyAppFileId);
             }
         }
 
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        if(file != null) {
+	        if(file.name.length > 30){
+	            msg += "*File name wording should be not more than 30 alphabet.<br>";
+	        }
+
+	        var fileType = file.type.split('/');
+	        if(fileType[1] != 'pdf'){
+	            msg += "*Only allow attachment format (PDF).<br>";
+	        }
+
+	        if(file.size > 2000000){
+	            msg += "*Only allow attachment with less than 2MB.<br>";
+	        }
+	        if(msg != null && msg != ''){
+	            myFileCaches[1].file['checkFileValid'] = false;
+	            delete myFileCaches[1];
+	            $('#codyAppFile').val("");
+	            Common.alert(msg);
+	        }
         }
 
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (PDF).<br>";
-        }
-
-        if(file.size > 2000000){
-            msg += "*Only allow attachment with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[1].file['checkFileValid'] = false;
-            delete myFileCaches[1];
-            $('#codyAppFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[1].file['checkFileValid'] = true;
-        }
     });
 
     $('#nricCopyFile').change(function(evt) {
 
+        var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(nricCopyFileId);
@@ -1856,32 +1857,32 @@ $(function(){
             }
         }
 
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        if(file != null) {
+	        if(file.name.length > 30){
+	            msg += "*File name wording should be not more than 30 alphabet.<br>";
+	        }
+
+	        var fileType = file.type.split('/');
+	        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+	            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
+	        }
+
+	        if(file.size > 2000000){
+	            msg += "*Only allow attachment with less than 2MB.<br>";
+	        }
+	        if(msg != null && msg != ''){
+	            myFileCaches[2].file['checkFileValid'] = false;
+	            delete myFileCaches[2];
+	            $('#nricCopyFile').val("");
+	            Common.alert(msg);
+	        }
         }
 
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
-        }
-
-        if(file.size > 2000000){
-            msg += "*Only allow attachment with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[2].file['checkFileValid'] = false;
-            delete myFileCaches[2];
-            $('#nricCopyFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[2].file['checkFileValid'] = true;
-        }
 
     });
     $('#driveCopyFile').change(function(evt) {
 
+    	var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(driveCopyFileId);
@@ -1892,32 +1893,31 @@ $(function(){
             }
         }
 
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
-        }
+        if(file != null) {
+	        if(file.name.length > 30){
+	            msg += "*File name wording should be not more than 30 alphabet.<br>";
+	        }
 
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
-        }
+	        var fileType = file.type.split('/');
+	        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+	            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
+	        }
 
-        if(file.size > 2000000){
-            msg += "*Only allow attachment with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[3].file['checkFileValid'] = false;
-            delete myFileCaches[3];
-            $('#driveCopyFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[3].file['checkFileValid'] = true;
+	        if(file.size > 2000000){
+	            msg += "*Only allow attachment with less than 2MB.<br>";
+	        }
+	        if(msg != null && msg != ''){
+	            myFileCaches[3].file['checkFileValid'] = false;
+	            delete myFileCaches[3];
+	            $('#driveCopyFile').val("");
+	            Common.alert(msg);
+	        }
         }
 
     });
     $('#bankStateCopyFile').change(function(evt) {
 
+        var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(bankStateCopyFileId);
@@ -1928,32 +1928,30 @@ $(function(){
             }
         }
 
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
-        }
+        if(file != null) {
+	        if(file.name.length > 30){
+	            msg += "*File name wording should be not more than 30 alphabet.<br>";
+	        }
 
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
-        }
+	        var fileType = file.type.split('/');
+	        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
+	            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
+	        }
 
-        if(file.size > 2000000){
-            msg += "*Only allow attachment with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[4].file['checkFileValid'] = false;
-            delete myFileCaches[4];
-            $('#bankStateCopyFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[4].file['checkFileValid'] = true;
+	        if(file.size > 2000000){
+	            msg += "*Only allow attachment with less than 2MB.<br>";
+	        }
+	        if(msg != null && msg != ''){
+	            myFileCaches[4].file['checkFileValid'] = false;
+	            delete myFileCaches[4];
+	            $('#bankStateCopyFile').val("");
+	            Common.alert(msg);
+	        }
         }
 
     });
     $('#vaccDigCertFile').change(function(evt) {
-
+    	var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(vaccDigCertFileId);
@@ -1964,31 +1962,31 @@ $(function(){
             }
         }
 
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        if(file != null) {
+
+	        if(file.name.length > 30){
+	            msg += "*File name wording should be not more than 30 alphabet.<br>";
+	        }
+
+	        var fileType = file.type.split('/');
+	        if(fileType[1] != 'pdf'){
+	            msg += "*Only allow attachment format (PDF).<br>";
+	        }
+
+	        if(file.size > 2000000){
+	            msg += "*Only allow attachment with less than 2MB.<br>";
+	        }
+	        if(msg != null && msg != ''){
+	            myFileCaches[5].file['checkFileValid'] = false;
+	            delete myFileCaches[5];
+	            $('#vaccDigCertFile').val("");
+	            Common.alert(msg);
+	        }
         }
 
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (PDF).<br>";
-        }
-
-        if(file.size > 2000000){
-            msg += "*Only allow attachment with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[5].file['checkFileValid'] = false;
-            delete myFileCaches[5];
-            $('#vaccDigCertFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[5].file['checkFileValid'] = true;
-        }
     });
     $('#fileName').change(function(evt) {
-
+        var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(fileNameId);
@@ -1999,47 +1997,39 @@ $(function(){
             }
         }
 
-        var msg = '';
-        if(file.name.length > 30){
-            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        if(file != null) {
+        	if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'jpg' && fileType[1] != 'jpeg'){
+                msg += "*Only allow attachment format (JPG, JPEG).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow attachment with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[6].file['checkFileValid'] = false;
+                delete myFileCaches[6];
+                $('#fileName').val("");
+                Common.alert(msg);
+            }
         }
 
-        var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg'){
-            msg += "*Only allow attachment format (JPG, JPEG).<br>";
-        }
-
-        if(file.size > 2000000){
-            msg += "*Only allow attachment with less than 2MB.<br>";
-        }
-        if(msg != null && msg != ''){
-            myFileCaches[6].file['checkFileValid'] = false;
-            delete myFileCaches[6];
-            $('#fileName').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[6].file['checkFileValid'] = true;
-        }
     });
     $('#codyPaCopyFile').change(function(evt) {
+
         var msg = '';
         var file = evt.target.files[0];
-        if(file.name != codyPaCopyFileName){
+        if(file == null) {
+            remove.push(codyPaCopyFileId);
+        }else if(file.name != codyPaCopyFileName){
             myFileCaches[7] = {file:file};
             if(codyPaCopyFileName != ""){
                 update.push(codyPaCopyFileId);
             }
-        }
-
-        if(msg != null && msg != ''){
-            myFileCaches[7].file['checkFileValid'] = false;
-            delete myFileCaches[7];
-            $('#codyPaCopyFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[7].file['checkFileValid'] = true;
         }
 
     });
@@ -2055,16 +2045,6 @@ $(function(){
             }
         }
 
-        if(msg != null && msg != ''){
-            myFileCaches[8].file['checkFileValid'] = false;
-            delete myFileCaches[8];
-            $('#compConsCodyFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[8].file['checkFileValid'] = true;
-        }
-
     });
     $('#codyExtCheckFile').change(function(evt) {
         var msg = '';
@@ -2078,22 +2058,13 @@ $(function(){
             }
         }
 
-        if(msg != null && msg != ''){
-            myFileCaches[9].file['checkFileValid'] = false;
-            delete myFileCaches[9];
-            $('#codyExtCheckFile').val("");
-            Common.alert(msg);
-        }
-        else{
-            myFileCaches[9].file['checkFileValid'] = true;
-        }
     });
 });
 
 function fn_removeFile(name){
     if(name == "CAF") {
          $("#codyAppFile").val("");
-         $(".input_text[id='codyAppFileTxt']").val("");
+         //$(".input_text[id='codyAppFileTxt']").val("");
          $('#codyAppFile').change();
     }else if(name == "NRIC") {
         $("#nricCopyFile").val("");
@@ -2809,118 +2780,127 @@ function fn_removeFile(name){
 				<tr>
 				    <th scope="row">Cody Application Form</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2 auto_file3">
-				            <input type="file" title="file add" id="codyAppFile" accept="application/pdf"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly'  id="codyAppFileTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("CAF")'>Remove</a></span>
-				            </label>
-				        </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="codyAppFile" accept="application/pdf"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="codyAppFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("CAF")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">NRIC Copy</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2">
-				            <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' id="nricCopyFileTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span>
-				             </label>
-				        </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="nricCopyFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Driving License Copy</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2">
-				            <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' id="driveCopyFileTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("DLC")'>Remove</a></span>
-				             </label>
-				        </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="driveCopyFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("DLC")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Bank Passbook / Statement Copy</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2">
-				            <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' id="bankStateCopyFileTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("BPSC")'>Remove</a></span>
-				             </label>
-				        </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="bankStateCopyFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("BPSC")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Vaccination Digital Certificate</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2 ">
-				            <input type="file" title="file add" id="vaccDigCertFile"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' accept="application/pdf" id="vaccDigCertFileTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("VDC")'>Remove</a></span>
-				             </label>
-				        </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="vaccDigCertFile" accept="application/pdf" />
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="vaccDigCertFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("VDC")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Passport Size Photo (white background)</th>
 				    <td colspan="3" id="attachTd">
-				    <div class="auto_file2" >
-				    <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg"/>
-				        <label>
-				                <input type='text' class='input_text' readonly='readonly' id="fileNameTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("PSP")'>Remove</a></span>
-				        </label>
-				    </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="fileName" accept="image/jpg, image/jpeg"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="fileNameTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("PSP")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Cody PA Copy</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2">
-				            <input type="file" title="file add" id="codyPaCopyFile"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' id="codyPaCopyFileTxt"/>
-				                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("CPC")'>Remove</a></span>
-				             </label>
-				        </div>
-				    </td>
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="codyPaCopyFile"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="codyPaCopyFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("CPC")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Company Consigment Cody Item, Tools, Filter Stock, Spare part</th>
-				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2">
-				            <input type="file" title="file add" id="compConsCodyFile"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' id="compConsCodyFileTxt"/>
-				                <span class='label_text attach_mod' cursor='default'><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span>
-				             </label>
-				        </div>
-				    </td>
+                    <td colspan="3" id="attachTd">
+                        <div class="auto_file2">
+                             <input type="file" title="file add" id="compConsCodyFile"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="compConsCodyFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
 				</tr>
 				<tr>
 				    <th scope="row">Cody Exit Checklist</th>
 				    <td colspan="3" id="attachTd">
-				        <div class="auto_file2">
-				            <input type="file" title="file add" id="codyExtCheckFile"/>
-				            <label>
-				                <input type='text' class='input_text' readonly='readonly' id="codyExtCheckFileTxt"/>
-				                <span class='label_text attach_mod' disabled="disabled"><a href='#'>Upload</a></span>
-				                <span class='label_text attach_mod' disabled="disabled"><a href='#' onclick='fn_removeFile("CEC")'>Remove</a></span>
-				             </label>
-				        </div>
+	                    <div class="auto_file2">
+	                         <input type="file" title="file add" id="codyExtCheckFile"/>
+	                        <label>
+	                            <input type='text' class='input_text'  readonly='readonly' id="codyExtCheckFileTxt"/>
+	                            <span class='label_text'><a href='#'>Upload</a></span>
+	                            </label>
+	                          <span class='label_text'><a href='#' onclick='fn_removeFile("CEC")'>Remove</a></span>
+	                        </label>
+	                    </div>
 				    </td>
 				</tr>
 				</tbody>
