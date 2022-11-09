@@ -25,8 +25,6 @@ public interface AttendanceService {
 
 	int disableBatchAtdRate(Map<String, Object> master);
 
-	void insertApproveLine(Map<String, Object> params);
-
 	List<EgovMap> searchAtdUploadList(Map<String, Object> params);
 
 	List<EgovMap> searchAtdManagementList(Map<String, Object> params);

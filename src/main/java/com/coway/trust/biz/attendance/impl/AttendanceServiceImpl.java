@@ -126,32 +126,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return mResult;
 	}
 
-	//@Transactional
-	@Override
-	public void insertApproveLine(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		LOGGER.debug("params  insertApproveLine =====================================>>  " + params);
-
-		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
-
-		params.put("appvLineCnt", apprGridList.size());
-
-		if (apprGridList.size() > 0) {
-			Map hm = null;
-
-			for (Object map : apprGridList) {
-				hm = (HashMap<String, Object>) map;
-				hm.put("batchId", params.get("batchId"));
-				hm.put("userId", params.get("userId"));
-				hm.put("userName", params.get("userName"));
-				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
-				// TODO appvLineDetailTable Insert
-				attendanceMapper.insertApproveLineDetail(hm);
-			}
-
-			attendanceMapper.updateBatchCalMst(params);
-		}
-	}
 
 	 @Override
 	  public List<EgovMap> searchAtdUploadList(Map<String, Object> params) {

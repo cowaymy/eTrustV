@@ -24,7 +24,6 @@ function fn_uploadFile() {
 
 
     if(flag){
-
         var formData = new FormData();
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("batchMthYear", $("#batchMthYear").val());
@@ -52,7 +51,6 @@ function fn_submitApproval(){
 		Common.popupDiv("/attendance/attendanceSubmitApproval.do", param, null, true, null);
 	}
 }
-
 
 </script>
 

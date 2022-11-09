@@ -26,10 +26,6 @@ public interface AttendanceMapper {
 
 	int selectCurrentBatchId();
 
-    void insertApproveLineDetail(Map<String, Object> params);
-
-    void updateAttendanceBatch(Map<String, Object> params);
-
     List<EgovMap> searchAtdUploadList(Map<String, Object> params);
 
     List<EgovMap> searchAtdManagementList(Map<String, Object> params);

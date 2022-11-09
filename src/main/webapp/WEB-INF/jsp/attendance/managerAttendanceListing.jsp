@@ -1,9 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
 <script type="text/javaScript">
-
 
 var nowYear = new Date().getFullYear();
 var monthOptions = {//년월달력 세팅
@@ -81,12 +79,10 @@ $(document).on("focus", ".j_date2", function(){
 
 
   $(document).ready(function() {
-
     	var rankParam = {groupCode : 527, codeIn :[6988,6989,6990]};
         CommonCombo.make('rank', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption);
 
         atdManagementGrid();
-
    });
 
   /* By KV - AS Mobile Failure Listing*/

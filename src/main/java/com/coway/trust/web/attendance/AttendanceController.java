@@ -216,43 +216,6 @@ public class AttendanceController {
 		}
 
 
-		@RequestMapping(value = "/attendanceSubmitApproval.do")
-		public String attendanceSubmitApproval(@RequestParam Map<String, Object> params, ModelMap model) {
-			LOGGER.debug("==== attendanceSubmitApproval : " + params);
-
-			model.put("batchId", params.get("batchId"));
-			return "attendance/attendanceSubmitApproval";
-		}
-
-
-		@RequestMapping(value = "/registrationMsgPop.do")
-		public String registrationMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
-			model.put("batchId", params.get("batchId"));
-			return "attendance/registrationMsgPop";
-		}
-
-		@Transactional
-		@RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
-		public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-
-			LOGGER.debug("params =====================================>>  " + params);
-
-			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-			params.put("userName", sessionVO.getUserName());
-
-			//model.put("batchId", getUserInfo.get("memCode"));
-
-			// TODO
-			attendanceService.insertApproveLine(params);
-
-			ReturnMessage message = new ReturnMessage();
-			message.setCode(AppConstants.SUCCESS);
-			message.setData(params);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-			return ResponseEntity.ok(message);
-		}
-
 
 	   @RequestMapping(value = "/searchAtdUploadList.do", method = RequestMethod.GET)
 	   public ResponseEntity<List<EgovMap>> searchAtdUploadList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {

@@ -88,7 +88,6 @@
     	}
 
     function reuploadFile(rowIndex){
-
         attchIndex = rowIndex;
         $("#uploadfile").click();
 

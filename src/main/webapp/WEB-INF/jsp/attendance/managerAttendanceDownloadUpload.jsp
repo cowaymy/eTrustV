@@ -123,7 +123,6 @@ var gridPros = {
 	    };
 
 $(document).ready(function(){
-
     atdManagementGrid();
     searchAtdUploadList();
 
@@ -143,12 +142,6 @@ function atdManagementGrid() {
           editable : false,
           width : 200
         },
-//         {
-//           dataField : "memType",
-//           headerText : "Member Type",
-//           editable : false,
-//           width : 200
-//           },
         {
           dataField : "stus",
           headerText : "Approval Status",

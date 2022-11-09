@@ -13,7 +13,6 @@
 	         isCheckAll : false
 	};
 
-
   $(document).ready(function() {
 	    var rankParam = {groupCode : 527, codeIn :[6988,6989,6990]};
         CommonCombo.make('rankReport', "/sales/pos/selectPosModuleCodeList", rankParam , '', ItmOption);

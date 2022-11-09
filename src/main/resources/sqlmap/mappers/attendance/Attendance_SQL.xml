@@ -86,31 +86,6 @@
             SELECT NVL(MAX(BATCH_ID), 1) AS BATCH_ID FROM ATD0001M
     </select>
 
-    <update id="updateAttendanceBatch" parameterType="Map">
-	   UPDATE FCM0019M
-	   SET APPV_PRCSS_NO = #{appvPrcssNo}
-	       ,UPD_DT = SYSDATE
-	       ,UPD_USER_ID = #{userId}
-	    WHERE CLM_NO = #{clmNo}
-    </update>
-
-    <insert id="insertApproveLineDetail" parameterType="Map">
-        INSERT INTO ATD0003D (
-		                      BATCH_ID
-							, APPV_USER_ID
-							, APPV_LINE_CNT
-							, APPV_STATUS
-							, CRT_USER_ID
-							, CRT_DT
-             )VALUES (
-                             #{batchId}
-                           , #{memCode}
-                           , #{approveNo}
-                           , 1
-                           , #{userId}
-                           , SYSDATE
-            )
-    </insert>
 
     <select id="searchAtdUploadList" parameterType="Map" resultType="egovMap">
 		<![CDATA[

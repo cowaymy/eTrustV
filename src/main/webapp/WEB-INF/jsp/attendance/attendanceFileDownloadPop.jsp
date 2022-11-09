@@ -84,7 +84,6 @@ function fn_reload(){
         </form>
         <ul class="center_btns mt20">
             <li><p class="btn_blue2 big"><a href="javascript:fn_openGenerate();">Download File</a></p></li>
-
         </ul>
     </section>
 
