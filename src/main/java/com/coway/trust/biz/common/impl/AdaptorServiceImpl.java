@@ -202,7 +202,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 			try {
 				smsUrl = "https://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
-						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
+						+ URLEncoder.encode("RM0 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
 //								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
 //								.replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%3A", ":")
 //								.replaceAll("%28", "(").replaceAll("%2F", "/").replaceAll("%29", ")")
