@@ -179,4 +179,7 @@ public interface MlogApiMapper {
 	void updateDeliveryMovementQty(Map<String, Object> tmpMap);
 
 	public List<EgovMap> getHiCareInventory(Map<String, Object> params);
+
+	int getSMOReceiveCntList(Map<String, Object> params);
+	int getSMOMoveOutCntList(Map<String, Object> params);
 }

@@ -2166,4 +2166,54 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
         where 1=1
         and loc_id = #{userNm}
   </select>
+
+  <select id="getSMOReceiveCntList" parameterType="Map" resultType="integer">
+        select
+            count(1) cnt
+        from log0054m l54
+         , log0047m l47
+         , sys0028m s28q
+         , sys0047m s47
+         , (select distinct l48.reqst_no ,l55.delvry_no
+             from log0048d l48 , log0055d l55
+             where L48.REQST_NO = l55.reqst_no
+               and l48.itm_code= l55.itm_code
+               AND NVL (l55.DEL_FLAG, 'N') <![CDATA[ <> ]]> 'Y'
+            ) rd
+     where 1 = 1
+       and l47.reqst_no   =  rd.reqst_no
+       and l54.delvry_no  = rd.delvry_no
+       AND L54.CRT_USER_ID = S47.user_id(+)
+       and L47.REQST_CDC_RDC = s28q.wh_loc_id
+       AND l47.trnsc_type = 'UM'
+       AND NVL (L54.DEL_FLAG, 'N') <> 'Y'
+       AND NVL (L54.DELVRY_GI_CMPLT, 'N')  <![CDATA[ <> ]]> 'N'
+       and s28q.wh_loc_code = #{userId}
+       and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y'
+       <if test="searchFromDate !=null and searchFromDate !=''">
+        AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYYMMDD'),'yyyymmdd')
+        </if>
+        <if test="searchToDate !=null and searchToDate !=''">
+        AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYYMMDD'),'yyyymmdd')
+        </if>
+    </select>
+
+    <select id="getSMOMoveOutCntList" parameterType="Map" resultType="integer">
+        SELECT
+            count(1) cnt
+        FROM LOG0047M L47 , SYS0028M S28
+        WHERE 1 = 1
+          AND L47.RCIV_CDC_RDC = TO_CHAR(S28.WH_LOC_ID)
+          AND L47.TRNSC_TYPE = 'UM'
+          AND  NVL(L47.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
+          AND WH_LOC_CODE = #{userId}
+          AND L47.REQST_STUS='O'
+        <if test="searchFromDate !=null and searchFromDate !=''">
+            AND TO_CHAR( L47.REQST_CRT_DT,'YYYYMMDD')
+            BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'YYYYMMDD'), 'YYYYMMDD')
+         </if>
+         <if test="searchToDate !=null and searchToDate !=''">
+            AND TO_CHAR(TO_DATE(#{searchToDate},'YYYYMMDD'), 'YYYYMMDD')
+         </if>
+</select>
 </mapper>

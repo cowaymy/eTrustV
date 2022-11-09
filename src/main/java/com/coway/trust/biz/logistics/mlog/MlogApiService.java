@@ -137,4 +137,6 @@ public interface MlogApiService {
 	/* Woongjin Han */
 
 	List<EgovMap> getHiCareInventory(Map<String, Object> params);
+
+	Map<String, Object> getSMOCntList(Map<String, Object> params);
 }

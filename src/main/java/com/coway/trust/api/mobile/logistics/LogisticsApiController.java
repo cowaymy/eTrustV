@@ -93,6 +93,7 @@ import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferRejectSMO
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusDListDto;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusListForm;
 import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferReqStatusMListDto;
+import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferSMOCntRespForm;
 import com.coway.trust.api.mobile.logistics.usedparts.UsedPartsDto;
 import com.coway.trust.api.mobile.logistics.usedparts.UsedPartsListForm;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
@@ -1376,5 +1377,24 @@ public class LogisticsApiController {
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(list);
+	}
+
+	@ApiOperation(value = "Stock Movement - In Out Qty List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/smoInOutQtyList", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getSmoInOutQtyList(
+			@ModelAttribute LogStockReceiveForm LogStockReceiveForm) throws Exception {
+
+		Map<String, Object> params = LogStockReceiveForm.createMap(LogStockReceiveForm);
+
+		Map<String, Object>  details = MlogApiService.getSMOCntList(params);
+
+		/*List<StockTransferSMOCntRespForm> hList = new ArrayList<>();
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("Request Status headerList1111 값 : {}", headerList.get(i));
+		}*/
+
+	//StockTransferSMOCntRespForm cntdetails = headerList.stream().map(r -> StockTransferSMOCntRespForm.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(details);
 	}
 }
