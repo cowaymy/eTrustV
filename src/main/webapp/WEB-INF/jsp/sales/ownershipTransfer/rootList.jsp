@@ -4,7 +4,7 @@
 <script type="text/javaScript">
 	var rotID, rotNo, rotOrdId, rotOrdNo, ccpID;
 	var search_rootGridID;
-	var ownershipTransferColumn = [ {
+	var ownershipTransferColumn1 = [ {
 		dataField : "rotId",
 		visible : false,
 	}, {
@@ -57,11 +57,67 @@
 		dataField : "ccpRem",
 		headerText : "ROT<Br> Remark",
 		width : 140
-	}, {
-		dataField : "rotUpdDt",
-		headerText : "Last Update<Br> At (By)",
-		width : 140
+	},
+	   {
+        dataField : "rotUpdDt",
+        headerText : "Last Update<Br> At (By)",
+        width : 140
 	} ];
+
+	var ownershipTransferColumn2 = [ {
+        dataField : "rotId",
+        visible : false,
+    }, {
+        dataField : "rotOrdId",
+        visible : false
+    }, {
+        dataField : "ccpId",
+        visible : false
+    }, {
+        dataField : "rotNo",
+        headerText : "ROT<Br> No",
+        width : 90
+    }, {
+        dataField : "rotOrdNo",
+        headerText : "Order<Br> No",
+        width : 90
+    }, {
+        dataField : "rotAppType",
+        headerText : "Application<br> Type",
+        width : 90
+    }, {
+        dataField : "rotOldCustId",
+        headerText : "Original CID",
+        width : 110
+    }, {
+        dataField : "oldCustName",
+        headerText : "Original<Br> Customer Name",
+        width: 180
+    }, {
+        dataField : "rotNewCustId",
+        headerText : "New CID",
+        width : 90
+    }, {
+        dataField : "newCustName",
+        headerText : "New<Br> Customer Name",
+        width :150
+    }, {
+        dataField : "rotStus",
+        headerText : "Status",
+        width : 70
+    }, {
+        dataField : "rotReqDt",
+        headerText : "Request Date<Br> (ROOT Key In <Br>User)",
+        width : 140
+    }, {
+        dataField : "rotFeedbackCode",
+        headerText : "ROT<Br> FB Code",
+        width : 140
+    }, {
+        dataField : "ccpRem",
+        headerText : "ROT<Br> Remark",
+        width : 140
+    } ];
 
 	var ownershipTransferGridPros = {
             usePaging           : true,         //페이징 사용
@@ -83,8 +139,15 @@
 			function() {
 				console.log("ready :: rotList");
 				//rootGridID = GridCommon.createAUIGrid("grid_wrap", ownershipTransferColumn, '', ownershipTransferGridPros);
-				search_rootGridID = AUIGrid.create("#search_grid_wrap",
-						ownershipTransferColumn, ownershipTransferGridPros);
+
+				if("${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7"){
+	                search_rootGridID = AUIGrid.create("#search_grid_wrap",
+	                        ownershipTransferColumn2, ownershipTransferGridPros);
+	            }
+				else {
+	                search_rootGridID = AUIGrid.create("#search_grid_wrap",
+	                        ownershipTransferColumn1, ownershipTransferGridPros);
+	            }
 
 
 				doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ',
@@ -97,7 +160,9 @@
 				doGetComboCodeId('/common/selectReasonCodeList.do',
 					    {typeId : '6242', separator : ' - ', inputId : ''}, '', 'rotFeedbackCode', 'M', 'fn_multiCombo'); //Feedback Code
 					    console.log("${user_info}","helheo")
-				if("${user_info.User_Role}" == "121" || "${user_info.User_Role}" == "114" || "${user_info.User_Role}" == "127"){ //block CM CTM HM to access function in ROOT - BY JONATHAN
+				if("${user_info.User_Role}" == "121" || "${user_info.User_Role}" == "114" || "${user_info.User_Role}" == "127" //block CM CTM HM to access function in ROOT - BY JONATHAN
+				|| "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7"  // enhancement to set requestor
+				){
 				    $('.hidefunction').hide()
 				    $('#search_requestorInfo').val("${user_info.Mem_code}");
 				}else{
