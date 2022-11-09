@@ -2186,7 +2186,7 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
        AND L54.CRT_USER_ID = S47.user_id(+)
        and L47.REQST_CDC_RDC = s28q.wh_loc_id
        AND l47.trnsc_type = 'UM'
-       AND NVL (L54.DEL_FLAG, 'N') <> 'Y'
+       AND NVL (L54.DEL_FLAG, 'N') <![CDATA[ <> ]]> 'Y'
        AND NVL (L54.DELVRY_GI_CMPLT, 'N')  <![CDATA[ <> ]]> 'N'
        and s28q.wh_loc_code = #{userId}
        and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y'
