@@ -1021,10 +1021,13 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	@Override
 	public Map<String, Object> getSMOCntList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		logger.debug("getSMOCntList   getSMOCntList : {}", params.toString());
 		Map<String, Object> mainMap = null;
 		int recCnt = MlogApiMapper.getSMOReceiveCntList(params);
 		int moveCnt = MlogApiMapper.getSMOMoveOutCntList(params);
 
+		logger.debug("getSMOCntList   recCnt : {}", recCnt);
+		logger.debug("getSMOCntList   moveCnt : {}", moveCnt);
 		mainMap.put("toRecCnt", recCnt);
 		mainMap.put("toMoveOutCnt", moveCnt);
 
