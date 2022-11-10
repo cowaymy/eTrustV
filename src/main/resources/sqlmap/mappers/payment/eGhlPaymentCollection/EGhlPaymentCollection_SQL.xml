@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.eGhlPaymentCollection.service.impl.EGhlPaymentCollectionMapper">
+	<select  id="orderNumberBillMobileSearch" parameterType="Map" resultType="egovMap">
+		SELECT
+		    X.ORD_ID SALES_ORD_ID
+		    , X.ORD_NO SALES_ORD_NO
+		    , SUM(X.PRD_OTSTND_AMT) PRODUCT_OUTSTANDING_AMOUNT
+		    , X.TYPE_ID PRODUCT_TYPE_ID
+		    , V.CODE_NAME PRODUCT_TYPE_NAME
+		    , V.CODE PRODUCT_TYPE_CODE
+		    , SUM(X.MEMSHIP_OTSTND_AMT) MEMBERSHIP_OUTSTANDING_AMOUNT
+		    , X.MEMBERSHIP
+		    , X.CUST_ID
+		    , X.NRIC
+		    , W.EMAIL
+		    , W.TEL_M1 TEL_NO
+		    , Y.ITM_STK_ID PRODUCT_ID
+		    , Z.STK_CODE PRODUCT_CODE
+		    , Z.STK_DESC PRODUCT_NAME
+		FROM (
+		    <!-- RENTAL MEMBERSHIP [SP_SELT_SVC_CNTRCT_LDGR_OTSTND - OUTSTANDING AMOUNT] -->
+		    SELECT
+		        A.SRV_SALES_ORD_ID ORD_ID
+		        , B.SALES_ORD_NO ORD_NO
+		        , 0 PRD_OTSTND_AMT
+		        , B.APP_TYPE_ID TYPE_ID
+		        , NVL(ROUND(SUM(A.SRV_LDGR_AMT),2), 0.00) MEMSHIP_OTSTND_AMT
+		        , 'RENTAL MEMBERSHIP' MEMBERSHIP
+		        , B.CUST_ID CUST_ID
+		        , C.NRIC
+		    FROM PAY0023D A
+		    LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.SRV_SALES_ORD_ID
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+		    WHERE 1=1
+		        <if test='custId != null and custId != ""'>
+		            AND C.CUST_ID = #{custId}
+		        </if>
+		        <if test='custIc != null and custIc != ""'>
+		            AND C.NRIC = #{custIc}
+		        </if>
+		    GROUP BY
+		        A.SRV_SALES_ORD_ID,
+		        B.MEM_ID, B.APP_TYPE_ID, B.SALES_ORD_NO, B.CUST_ID,
+		        C.NRIC,
+		        0, 'RENTAL MEMBERSHIP'
+		    HAVING NVL(ROUND(SUM(A.SRV_LDGR_AMT),2), 0.00) > 0
+
+		    UNION ALL
+
+		    <!--  OUTRIGHT MEMBERSHIP [SAL1002V a] -->
+		    SELECT
+		        E.SRV_MEM_ORD_ID ORD_ID
+		        , K.SALES_ORD_NO ORD_NO
+		        , 0 PRD_OTSTND_AMT
+		        , K.APP_TYPE_ID TYPE_ID
+		        , NVL(ROUND(SUM (E.SRV_MEM_AMT),2), 0.00) MEMSHIP_OTSTND_AMT
+		        , 'OUTRIGHT MEMBERSHIP' MEMBERSHIP
+		        , K.CUST_ID CUST_ID
+		        , F.NRIC
+		    FROM SAL0095D D
+		    LEFT JOIN PAY0024D E ON D.SRV_MEM_ID = E.SRV_MEM_ID
+		    LEFT JOIN SAL0001D K ON K.SALES_ORD_ID = D.SRV_SALES_ORD_ID
+		    LEFT JOIN SAL0029D F ON F.CUST_ID = K.CUST_ID
+		    WHERE 1=1
+		       	<if test='custId != null and custId != ""'>
+		            AND F.CUST_ID = #{custId}
+		        </if>
+		        <if test='custIc != null and custIc != ""'>
+		            AND F.NRIC = #{custIc}
+			    </if>
+		    GROUP BY
+		        D.SRV_MEM_ID,
+		        E.SRV_MEM_ORD_ID,
+		        K.APP_TYPE_ID, K.SALES_ORD_NO, K.CUST_ID,
+		        F.NRIC,
+		        0, 'OUTRIGHT MEMBERSHIP'
+		    HAVING NVL(ROUND(SUM (E.SRV_MEM_AMT),2), 0.00) > 0
+
+		    UNION ALL
+
+		     <!-- Product : Rental [[SP_GET_ORD_OTSTND_INFO] 1st ORD_TOT_OTSTND] -->
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID
+		        , A.SALES_ORD_NO ORD_NO
+		        , NVL(ROUND(SUM(B.RENT_AMT),2) , 0.00) PRD_OTSTND_AMT
+		        , A.APP_TYPE_ID TYPE_ID
+		        , 0 MEMSHIP_OTSTND_AMT
+		        , '-' MEMBERSHIP
+		        , A.CUST_ID CUST_ID
+		        , C.NRIC
+		    FROM PAY0022D B
+		    LEFT JOIN SAL0001D A ON B.RENT_SO_ID = A.SALES_ORD_ID
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    WHERE 1=1
+		        AND A.APP_TYPE_ID = 66
+		        <if test='custId != null and custId != ""'>
+		            AND C.CUST_ID = #{custId}
+		        </if>
+		        <if test='custIc != null and custIc != ""'>
+		            AND C.NRIC = #{custIc}
+		        </if>
+		    GROUP BY
+		        A.SALES_ORD_ID, A.SALES_ORD_NO, A.APP_TYPE_ID, A.CUST_ID,
+		        C.NRIC,
+		        0, '-'
+		    HAVING NVL(ROUND(SUM(B.RENT_AMT),2) , 0.00) > 0
+
+		    UNION ALL
+
+		    <!-- Product : OutRight [[SP_GET_ORD_OTSTND_INFO] 2nd ORD_TOT_OTSTND] -->
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID
+		        , A.SALES_ORD_NO ORD_NO
+		        , NVL(ROUND(SUM(B.TRADE_AMT),2), 0.00) PRD_OTSTND_AMT
+		        , A.APP_TYPE_ID TYPE_ID
+		        , 0 MEMSHIP_OTSTND_AMT
+		        , '-' MEMBERSHIP
+		        , A.CUST_ID CUST_ID
+		        , C.NRIC
+		    FROM PAY0035D B
+		    LEFT JOIN SAL0001D A ON B.TRADE_SO_ID = A.SALES_ORD_ID
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    WHERE 1=1
+		        AND A.APP_TYPE_ID IN (67, 1412)
+		        <if test='custId != null and custId != ""'>
+		            AND C.CUST_ID = #{custId}
+		        </if>
+		        <if test='custIc != null and custIc != ""'>
+		            AND C.NRIC = #{custIc}
+		        </if>
+		    GROUP BY
+		        A.SALES_ORD_ID, A.SALES_ORD_NO, A.APP_TYPE_ID, A.CUST_ID,
+		        C.NRIC,
+		        0, '-'
+		    HAVING NVL(ROUND(SUM(B.TRADE_AMT),2), 0.00) > 0
+		)X
+		LEFT JOIN SAL0002D Y ON Y.SALES_ORD_ID = X.ORD_ID
+		LEFT JOIN SYS0026M Z ON Z.STK_ID = Y.ITM_STK_ID
+		LEFT JOIN SAL0027D W ON W.CUST_ID = X.CUST_ID AND W.STUS_CODE_ID = 9
+		LEFT JOIN SYS0013M V ON V.CODE_ID = X.TYPE_ID
+		GROUP BY
+		    X.ORD_ID, X.ORD_NO, X.TYPE_ID, X.MEMBERSHIP, X.CUST_ID, X.NRIC,
+		    W.EMAIL, W.TEL_M1,
+		    V.CODE_NAME,
+            V.CODE,
+		    Y.ITM_STK_ID,
+		    Z.STK_CODE, Z.STK_DESC
+	</select>
+</mapper>
