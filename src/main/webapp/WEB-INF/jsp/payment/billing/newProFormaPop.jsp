@@ -381,7 +381,8 @@ function fn_loadOrderPO(orderId){
             else {
 
                 var pacYear = parseInt($("#DUR").val(), 10) / 12;
-                var pacPrice = Math.round((result.packageInfo.srvMemItmPrc * pacYear));
+                //var pacPrice = Math.round((result.packageInfo.srvMemItmPrc * pacYear));
+                var pacPrice = parseInt($("#finalRentalFee").html(), 10) * 12;
 
                 $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
                 $("#eurCertYn").val(result.packageInfo.eurCertYn);
