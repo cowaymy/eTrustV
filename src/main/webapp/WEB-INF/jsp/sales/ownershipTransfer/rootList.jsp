@@ -117,7 +117,12 @@
         dataField : "ccpRem",
         headerText : "ROT<Br> Remark",
         width : 140
-    } ];
+    }, {
+        dataField : "rotUpdDt2",
+        headerText : "Last Update<Br> At",
+        width : 140
+    }
+    ];
 
 	var ownershipTransferGridPros = {
             usePaging           : true,         //페이징 사용
