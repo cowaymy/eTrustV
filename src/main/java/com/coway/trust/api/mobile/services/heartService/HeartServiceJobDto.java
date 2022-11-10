@@ -242,6 +242,15 @@ public class HeartServiceJobDto {
 
   private String switchChkLst;
 
+//Celeste : Edit Contact Info[s]
+  private String newHandphoneTel;
+
+  private String newHomeTel;
+
+  private String newOfficeTel;
+
+  private String newEmail;
+//Celeste : Edit Contact Info[e]
   @ApiModelProperty(value = "PRODCAT")
   private String prodcat;
 
@@ -921,5 +930,38 @@ public String getProdcat() {
 public void setProdcat(String prodcat) {
 	this.prodcat = prodcat;
 }
+//Celeste : Edit Contact Info[s]
+public String getNewHandphoneTel() {
+	return newHandphoneTel;
+}
 
+public void setNewHandphoneTel(String newHandphoneTel) {
+	this.newHandphoneTel = newHandphoneTel;
+}
+
+public String getNewHomeTel() {
+	return newHomeTel;
+}
+
+public void setNewHomeTel(String newHomeTel) {
+	this.newHomeTel = newHomeTel;
+}
+
+
+public String getNewOfficeTel() {
+	return newOfficeTel;
+}
+
+public void setNewOfficeTel(String newOfficeTel) {
+	this.newOfficeTel = newOfficeTel;
+}
+
+public String getNewEmail() {
+	return newEmail;
+}
+
+public void setNewEmail(String newEmail) {
+	this.newEmail = newEmail;
+}
+//Celeste : Edit Contact Info[e]
 }
