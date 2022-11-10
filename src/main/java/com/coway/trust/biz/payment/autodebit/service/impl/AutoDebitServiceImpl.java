@@ -113,7 +113,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   @Resource(name = "autoDebitMapper")
   private AutoDebitMapper autoDebitMapper;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ClaimServiceImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AutoDebitServiceImpl.class);
 
   @Override
   public List<EgovMap> orderNumberSearchMobile(Map<String, Object> params) {

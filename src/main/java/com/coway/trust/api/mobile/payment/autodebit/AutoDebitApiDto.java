@@ -19,9 +19,9 @@ public class AutoDebitApiDto {
 	private String custNric;
 	private String statusDesc;
 	private String userType;
-	private int totalOutstanding;
+	private double totalOutstanding;
 	private String createdDate;
-	private int monthlyRentalAmount;
+	private double monthlyRentalAmount;
 	private String custEmail;
 	private String custMobile;
 
@@ -187,7 +187,7 @@ public class AutoDebitApiDto {
 		this.custMobile = custMobile;
 	}
 
-	public int getTotalOutstanding() {
+	public double getTotalOutstanding() {
 		return totalOutstanding;
 	}
 
@@ -195,7 +195,7 @@ public class AutoDebitApiDto {
 		this.totalOutstanding = totalOutstanding;
 	}
 
-	public int getMonthlyRentalAmount() {
+	public double getMonthlyRentalAmount() {
 		return monthlyRentalAmount;
 	}
 
