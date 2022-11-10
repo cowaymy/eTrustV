@@ -16,7 +16,6 @@ $(document).ready(function() {
     doGetCombo('/logistics/agreement/getMemStatus', null, '' ,'memStusCmb' , 'S');
 
     console.log($("#userRole").val());
-    console.log("here");
 
     //$("#consentDownload").hide();
 
@@ -1045,7 +1044,7 @@ function fn_consentRawDownload() {
                                 <p>
                                     <input type="text" title="Contract End Date"
                                         placeholder="DD/MM/YYYY" class="j_date" id="endDt"
-                                        name="endDt" disabled />
+                                        name="endDt" />
                                 </p>
                             </div> <!-- date_set end -->
                         </td>
