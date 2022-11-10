@@ -380,16 +380,15 @@ function fn_loadOrderPO(orderId){
             else {
 
                 var pacYear = parseInt($("#DUR").val(), 10) / 12;
-                var pacPrice = 0;
+                var pacPrice = 0 ;
                 //var pacPrice = Math.round((result.packageInfo.srvMemItmPrc * pacYear));
+                if(pacYear == "1"){
+                	pacPrice = parseInt($("#finalRentalFee").html(), 10) * 12;
+                }else{
+                	pacPrice = parseInt($("#finalRentalFee").html(), 10) * 24;
+                }
 
                 console.log(pacYear);
-                if(pacYear == 1){
-                	pacPrice = parseInt($("#finalRentalFee").val(), 10) * 12;
-                }
-                else{
-                    pacPrice = parseInt($("#finalRentalFee").val(), 10) * 24;
-                }
 
                 $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
                 $("#eurCertYn").val(result.packageInfo.eurCertYn);
@@ -1078,7 +1077,7 @@ function fn_loadOrderPO(orderId){
         <tr>
             <th scope="row"><spring:message code="sal.title.text.discount" /></th>
             <td>
-            <select  id="discount"   name= "discount" onChange="fn_discount_onChageEvent()" disabled="disabled"  >
+            <select  id="discount"   name= "discount" onChange="fn_discount_onChageEvent()" disabled="disabled" >
                 <option value="0" >Not Eligible</option>
                 <option value="5" >5%</option>
                 <option value="10" >10%</option>
