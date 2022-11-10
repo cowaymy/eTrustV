@@ -191,7 +191,7 @@ public class AutoDebitApiDto {
 		return totalOutstanding;
 	}
 
-	public void setTotalOutstanding(int totalOutstanding) {
+	public void setTotalOutstanding(double totalOutstanding) {
 		this.totalOutstanding = totalOutstanding;
 	}
 
@@ -199,7 +199,7 @@ public class AutoDebitApiDto {
 		return monthlyRentalAmount;
 	}
 
-	public void setMonthlyRentalAmount(int monthlyRentalAmount) {
+	public void setMonthlyRentalAmount(double monthlyRentalAmount) {
 		this.monthlyRentalAmount = monthlyRentalAmount;
 	}
 
