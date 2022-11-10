@@ -19,4 +19,8 @@ public interface CcpCTOSB2BService {
 	int  savePromoB2BUpdate(Map<String, Object> params);
 
 	Map<String, Object> reuploadCTOSB2BList(Map<String, Object> params, SessionVO sessionVO);
+
+	EgovMap getCurrentTower(Map<String, Object> params)throws Exception;
+
+	int  updateCurrentTower(Map<String, Object> params);
 }

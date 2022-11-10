@@ -1,3 +1,5 @@
+
+
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
@@ -388,6 +390,10 @@ function fn_reuploadB2B() {
 	   );
 }
 
+function fn_switchTower(){
+	Common.popupDiv("/sales/ccp/ccpSwitchTower.do", '', null, true, 'savePop');
+}
+
 
 
 </script>
@@ -405,8 +411,10 @@ function fn_reuploadB2B() {
 <!--  <h2><spring:message code="sal.title.text.ctosB2BResult" /></h2>-->
 <h2>CCP Auto-Approve Config</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <li><p class="btn_blue"><a id="_switchTower" onclick ="fn_switchTower()"><spring:message code="sales.btn.switchTower"/></a></p></li>
     <li><p class="btn_blue"><a id="_reupload" onclick ="fn_reuploadB2B()">Re-Upload</a></p></li>
-
+    </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_search" onclick ="fn_search()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>

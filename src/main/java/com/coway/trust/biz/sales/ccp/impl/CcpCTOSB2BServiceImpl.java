@@ -182,5 +182,15 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 		  return ccpCTOSB2BMapper.getReuploadB2B(params);
 		}
 
+	  @Override
+	  public EgovMap getCurrentTower(Map<String, Object> params) throws Exception {
+
+	    return ccpCTOSB2BMapper.getCurrentTower(params);
+	  }
+
+	  public int  updateCurrentTower(Map<String, Object> params) {
+	    return ccpCTOSB2BMapper.updateCurrentTower(params);
+	  }
+
 
 }

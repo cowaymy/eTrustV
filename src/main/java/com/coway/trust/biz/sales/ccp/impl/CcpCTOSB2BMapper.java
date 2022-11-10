@@ -26,4 +26,7 @@ public interface CcpCTOSB2BMapper {
 
 	Map<String, Object> getReuploadB2B(Map<String, Object> param);
 
+	EgovMap getCurrentTower(Map<String, Object> params)throws Exception;
+
+	int updateCurrentTower(Map<String, Object> params);
 }

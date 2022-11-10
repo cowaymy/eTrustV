@@ -224,4 +224,31 @@ public class CcpCTOSB2BController {
 
 			return ResponseEntity.ok(mes);
 		}
+
+		@RequestMapping(value = "/ccpSwitchTower.do")
+    public String ccpSwitchTower(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		  EgovMap currentTower = ccpCTOSB2BService.getCurrentTower(params);
+		  model.put("currentTower", currentTower);
+
+		  System.out.println(model);
+        return "sales/ccp/ccpSwitchTower";
+    }
+
+    @RequestMapping(value = "/updateCurrentTower.do")
+    public ResponseEntity<ReturnMessage> updateCurrentTower(@RequestParam Map<String, Object> params, SessionVO sessionVO) throws Exception{
+
+      System.out.println(params);
+
+      params.put("userId", sessionVO.getUserId());
+      ccpCTOSB2BService.updateCurrentTower(params);
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      message.setData("");
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+      return ResponseEntity.ok(message);
+    }
+
+
 }
