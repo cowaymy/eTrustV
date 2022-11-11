@@ -376,6 +376,8 @@
                 in_ordNo : ""
                }
 
+                console.log(param);
+
                Common.popupDiv("/services/as/ASReceiveEntryPop.do", param, null, true, '_NewEntryPopDiv1');
            }
 
@@ -573,10 +575,9 @@
        </td>
 
        <th scope="row"><spring:message code='service.title.requestor' /></th>
-       <td><input type="text" class="w100p" id="requestor" name="requestor" /></td>
+       <td><input type="text" class="w100p" id="requestor2" name="requestor" /></td>
 
      </tr>
-
 
 
     </tbody>
