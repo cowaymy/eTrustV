@@ -607,9 +607,18 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 	public Map<String, Object> getOderOutsInfo(Map<String, Object> params) {
 		//orderListMapper.selectOrderId(params);
 		EgovMap orderDetails = orderListMapper.selectOrderId(params);
+
+		if(CommonUtils.nvl(orderDetails) == "") {
+			throw new ApplicationException(AppConstants.FAIL, "Order No. does not exist.");
+		}
+
 		params.put("ordId", orderDetails.get("ordId"));
 
 		orderListMapper.getOderOutsInfo(params);
+
+		if(CommonUtils.nvl(params.get("p1"))  == "") {
+			throw new ApplicationException(AppConstants.FAIL, "System error. Outstanding Not Found.");
+		}
 		params.put("ordDtl", orderDetails);
 		params.put("p1", (List<EgovMap>) params.get("p1"));
 
