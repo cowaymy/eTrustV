@@ -3,6 +3,10 @@
  */
 package com.coway.trust.biz.sales.order.impl;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +25,11 @@ import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.sales.order.OrderListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -596,4 +602,25 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }
+
+	@Override
+	public Map<String, Object> getOderOutsInfo(Map<String, Object> params) {
+		//orderListMapper.selectOrderId(params);
+		EgovMap orderDetails = orderListMapper.selectOrderId(params);
+		params.put("ordId", orderDetails.get("ordId"));
+
+		orderListMapper.getOderOutsInfo(params);
+		params.put("ordDtl", orderDetails);
+		params.put("p1", (List<EgovMap>) params.get("p1"));
+
+		 return params;
+	}
+
+	  @Override
+	  public EgovMap selectOrderId(Map<String, Object> params) throws Exception {
+
+	    EgovMap orderIdInfo = orderListMapper.selectOrderId(params);
+
+	    return orderIdInfo;
+	  };
 }

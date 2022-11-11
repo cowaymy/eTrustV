@@ -121,4 +121,8 @@ public interface OrderListMapper {
 	EgovMap selectPRFailReason(Map<String, Object> params);
 
 	int selectCustBillId(Map<String, Object> params);
+
+	List<EgovMap> getOderOutsInfo(Map<String, Object> params);
+
+	EgovMap selectOrderId(Map<String, Object> params); // Basic Info
 }

@@ -1819,4 +1819,42 @@
         WHERE  Extent1.CUST_BILL_GRP_NO = #{billGroupNo}
     </select>
 
+    <select id="selectOrderId" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID
+	 ,A.SALES_ORD_NO AS SALES_ORD_NO
+	 ,C.NAME AS CUST_NAME
+	 ,NVL (E.ADDR_DTL, ' ') AS INST_ADDR_DTL
+	 ,NVL (E.STREET, ' ') AS INST_STREET
+	 ,NVL (J.AREA_NAME, ' ') AS INST_AREA
+	 ,NVL (F.POSTCODE, ' ') AS INST_POSTCODE
+	 ,NVL (F.CITY, ' ') AS INST_CITY
+	 ,NVL (F.STATE, ' ') AS INST_STATE
+	 ,NVL (F.COUNTRY, ' ') AS INST_COUNTRY
+	 ,H.STK_DESC AS PRODUCT_TYPE
+	 ,C.CUST_VA_NO AS VA_NO
+	 ,I.cust_bill_pay_ref_no1 AS JOMPAY
+	 ,A.APP_TYPE_ID AS APP_TYPE_ID
+	 ,B.STUS_CODE_ID AS CURR_RENTAL_STUS
+	FROM SAL0001D A
+	JOIN SAL0002D G ON G.SALES_ORD_ID = A.SALES_ORD_ID
+	LEFT JOIN SAL0071D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+	JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+	JOIN SAL0045D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+	JOIN SAL0024D I ON I.CUST_BILL_ID = A.CUST_BILL_ID
+	LEFT JOIN SAL0023D E ON E.CUST_ADD_ID = D.ADD_ID
+	LEFT JOIN SYS0064M F ON F.AREA_ID = E.AREA_ID
+	LEFT JOIN SYS0026M H ON H.STK_ID = G.ITM_STK_ID
+	LEFT JOIN SYS0039M J ON J.AREA_ID = E.AREAID
+	WHERE
+	A.SALES_ORD_NO = #{otOrdNo}
+    </select>
+
+    <resultMap id="outStndInfoList" type="egovMap" ></resultMap>
+    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+        <![CDATA[
+        {
+              call SP_GET_ORD_OTSTND_INFO ( #{ordId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfoList})
+        }
+        ]]>
+    </select>
 </mapper>

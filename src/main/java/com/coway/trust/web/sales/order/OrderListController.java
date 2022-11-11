@@ -38,6 +38,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -265,6 +266,12 @@ public class OrderListController {
 	public String orderSalesYSListingPop(){
 
 		return "sales/order/orderSalesYSListingPop";
+	}
+
+	@RequestMapping(value="/outstandingLetterPop.do")
+	public String outstandingLetterPop(){
+
+		return "sales/order/outstandingLetterPop";
 	}
 
 	@RequestMapping(value="/getOrgCodeList")
@@ -778,5 +785,16 @@ public class OrderListController {
 
        return "sales/order/mcoRemPop";
    }
+
+	@RequestMapping(value = "/selectOrderOutstandingList.do" , method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectOrderOutstandingList(@RequestParam Map<String, Object>params, ModelMap model, HttpServletRequest request) throws Exception{
+
+		logger.debug("params ======================================>>> " + params);
+
+		Map<String, Object> result = orderListService.getOderOutsInfo(params);
+
+		return ResponseEntity.ok(result);
+	}
+
 
 }

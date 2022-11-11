@@ -59,7 +59,6 @@ public interface OrderListService {
 
 	List<EgovMap> selectCboPckLinkOrdSub2(Map<String, Object> params);
 
-
 	//add by leo.ham
 	List<EgovMap> getCustIdOfOrderList(Map<String, Object> params);
 
@@ -73,4 +72,7 @@ public interface OrderListService {
 
 	int selectCustBillId(Map<String, Object> params);
 
+	Map<String, Object> getOderOutsInfo(Map<String, Object> params);
+
+	public EgovMap selectOrderId(Map<String, Object> params) throws Exception;
 }

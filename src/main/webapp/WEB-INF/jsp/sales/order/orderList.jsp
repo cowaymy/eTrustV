@@ -69,7 +69,7 @@
 
         //if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
 
-        Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#listSearchForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/order/selectOrderJsonList.do", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
 
@@ -248,6 +248,9 @@
         });
         $('#btnYsListing').click(function() {
         	Common.popupDiv("/sales/order/orderSalesYSListingPop.do", null, null, true);
+        });
+        $('#btnOutstndLetter').click(function() {
+            Common.popupDiv("/sales/order/outstandingLetterPop.do", null, null, true);
         });
         $('#_btnLedger1').click(function() {
             var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
@@ -915,6 +918,9 @@
       </c:if>
       <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnEtrReleaseLetter">ETR Release Letter</a></p></li>
+      </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" id="btnOutstndLetter">Outstanding Letter</a></p></li>
       </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
