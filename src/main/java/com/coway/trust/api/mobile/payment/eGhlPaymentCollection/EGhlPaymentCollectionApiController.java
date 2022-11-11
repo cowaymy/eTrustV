@@ -47,6 +47,7 @@ public class EGhlPaymentCollectionApiController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
 	@ApiOperation(value = "orderNumberBillSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/orderNumberBillSearch", method = RequestMethod.GET)
 	public ResponseEntity<List<EGhlPaymentCollectionApiDto>> orderNumberBillSearch(@ModelAttribute EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
