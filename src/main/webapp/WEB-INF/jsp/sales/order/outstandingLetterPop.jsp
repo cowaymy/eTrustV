@@ -63,25 +63,25 @@ function btnGeneratePDF_Click(){
             date = "0" + date;
         }
         $("#reportDownFileName").val("PUBLIC_Outstanding Letter-"+orderNum+" "+custNm);
-        $("#SearchForm #viewType").val("PDF");
-        $("#SearchForm #reportFileName").val("/sales/outstandingLetter_V1.rpt");
+        $("#ReportForm #viewType").val("PDF");
+        $("#ReportForm #reportFileName").val("/sales/outstandingLetter_V1.rpt");
 
 
-        $("#SearchForm #V_ORDERNO").val(orderNum);
-        $("#SearchForm #V_CUSTNAME").val(custNm);
-        $("#SearchForm #V_ADDRDTL").val(addrDtl);
-        $("#SearchForm #V_ADDRSTR").val(addrStr);
-        $("#SearchForm #V_POSTCODE").val(postCode);
-        $("#SearchForm #V_AREA").val(area);
-        $("#SearchForm #V_CITY").val(city);
-        $("#SearchForm #V_STATE").val(state);
-        $("#SearchForm #V_COUNTRY").val(country);
-        $("#SearchForm #V_PRODUCTTYPE").val(productName);
-        $("#SearchForm #V_AMTAFTDIS").val(amtAftDisc);
-        $("#SearchForm #V_CUSTVANO").val(custVaNo);
-        $("#SearchForm #V_JOMPAY").val(jomPayNo);
-        $("#SearchForm #V_UBLDISC").val(unbillDiscAmt);
-        $("#SearchForm #V_DATE").val(date);
+        $("#ReportForm #V_ORDERNO").val(orderNum);
+        $("#ReportForm #V_CUSTNAME").val(custNm);
+        $("#ReportForm #V_ADDRDTL").val(addrDtl);
+        $("#ReportForm #V_ADDRSTR").val(addrStr);
+        $("#ReportForm #V_POSTCODE").val(postCode);
+        $("#ReportForm #V_AREA").val(area);
+        $("#ReportForm #V_CITY").val(city);
+        $("#ReportForm #V_STATE").val(state);
+        $("#ReportForm #V_COUNTRY").val(country);
+        $("#ReportForm #V_PRODUCTTYPE").val(productName);
+        $("#ReportForm #V_AMTAFTDIS").val(amtAftDisc);
+        $("#ReportForm #V_CUSTVANO").val(custVaNo);
+        $("#ReportForm #V_JOMPAY").val(jomPayNo);
+        $("#ReportForm #V_UBLDISC").val(unbillDiscAmt);
+        $("#ReportForm #V_DATE").val(date);
 
 
         // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
@@ -89,7 +89,7 @@ function btnGeneratePDF_Click(){
                 isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
         };
 
-        Common.report("SearchForm", option);
+        Common.report("ReportForm", option);
 
     }else{
         return false;
@@ -122,7 +122,6 @@ function fn_selectListAjaxs() {
 	    		 $("#totOtstnd").val(result.p1[0].ordTotOtstnd);
 	             $("#ordId").val(result.ordId);
 	             $("#odUblAmt").val(result.p1[0].ordUnbillAmt);
-	             $('#totOtstnd').change();
 	             $("#custName").val(result.ordDtl.custName);
 	             $("#addrDtl").val(result.ordDtl.instAddrDtl);
 	             $("#addrStr").val(result.ordDtl.instStreet);
@@ -135,6 +134,9 @@ function fn_selectListAjaxs() {
 	             $("#salesOrdNo").val(result.ordDtl.salesOrdNo);
 	             $("#custVaNo").val(result.ordDtl.vaNo);
 	             $("#ctJompay").val(result.ordDtl.jompay);
+
+	               $('#totOtstnd').change();
+	               $('#unbillDisc').change();
 	    	 }
 	    	 else{
 	    		 $("#totOtstnd").val("");
@@ -180,7 +182,7 @@ function validRequiredField() {
         message += 'Please search order.|!|';
     }
 
-    if ($("#totOtstnd").val() == null || $("#totOtstnd").val().length == 0 || $("#totOtstnd").val() <= 0) {
+    if ($("#totOtstnd").val() == null || $("#totOtstnd").val().length == 0) {
         valid = false;
         message += 'Invalid Bill Outstanding Amount.|!|';
     }
@@ -358,6 +360,12 @@ $(function(){
 </tbody>
 </table><!-- table end -->
 
+<input type="hidden" id="ordId" name="ordId">
+
+</form>
+
+<form id="ReportForm" name="ReportForm" form action="#" method="post" >
+
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
 <input type="hidden" id="viewType" name="viewType" value="" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
@@ -390,9 +398,9 @@ $(function(){
 <input type="hidden" id="V_UBLDISC" name="V_UBLDISC" value="" />
 <input type="hidden" id="V_DATE" name="V_DATE" value="" />
 
-<input type="hidden" id="ordId" name="ordId">
-
 </form>
+
+
 
 </section><!-- content end -->
 
