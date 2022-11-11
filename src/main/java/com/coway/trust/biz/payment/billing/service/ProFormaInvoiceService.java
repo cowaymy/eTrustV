@@ -25,4 +25,5 @@ public interface ProFormaInvoiceService{
 
 	Map<String, Object> updateProForma(Map<String, Object> params, SessionVO sessionVO);
 
+	EgovMap chkEligible(Map<String, Object> params);
 }

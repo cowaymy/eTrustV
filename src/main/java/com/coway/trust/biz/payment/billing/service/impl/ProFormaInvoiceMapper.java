@@ -43,4 +43,6 @@ public interface ProFormaInvoiceMapper {
 
 	void confirmTaxesAdvanceBill(Map<String, Object> params);
 
+	EgovMap chkEligible(Map<String, Object> params);
+
 }

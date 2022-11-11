@@ -269,4 +269,22 @@ public class ProFormaInvoiceController {
 		return ResponseEntity.ok(list);
 	}
 
+
+	@RequestMapping(value = "/chkEligible" ,method = RequestMethod.GET)
+	public ResponseEntity<Map> chkEligible(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+
+		EgovMap promoEligible = null;
+
+		promoEligible = proFormaInvoiceService.chkEligible(params);
+
+		logger.debug("////////chkEligible///////");
+		logger.debug(promoEligible.toString());
+
+		Map<String, Object> map = new HashMap();
+		map.put("promoEligible", promoEligible);
+
+		return ResponseEntity.ok(map);
+	}
+
 }

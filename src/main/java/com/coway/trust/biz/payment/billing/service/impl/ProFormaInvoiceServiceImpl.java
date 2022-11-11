@@ -238,4 +238,16 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 		 return resultValue;
 	  }
 
+	@Override
+	public  EgovMap chkEligible(Map<String, Object> params) {
+
+		EgovMap result = proFormaInvoiceMapper.chkEligible(params);
+
+		if(result == null){
+			result = new EgovMap();
+		}
+
+		return result;
+	}
+
 }

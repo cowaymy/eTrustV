@@ -326,7 +326,28 @@ function fn_loadOrderPO(orderId){
         $("#packpro").attr("checked", false);
         $("#cPromoCombox").attr("checked", false);
 
+
+        if(fn_chkEligible()){
+        	$("#hiddenEligible").val("Y");
+        }else{
+        	$("#hiddenEligible").val("N");
+        }
         fn_packType_onChageEvent();
+    }
+
+    function fn_chkEligible(){
+
+    	var rtnVAL = false;
+        Common.ajaxSync("GET", "/payment/chkEligible", {ordNo : $("#ORD_NO").val()}, function(result) {
+        	console.log("eligi" + result.promoEligible.advDisc);
+            if (result.promoEligible.advDisc == 1 ){
+                rtnVAL = true;
+            }else{
+            	rtnVAL = false;
+            }
+        });
+
+        return rtnVAL;
     }
 
     function fn_packType_onChageEvent(){
@@ -358,14 +379,22 @@ function fn_loadOrderPO(orderId){
         var adDate = adMonth + "/" + adYear;
         $("#adEndDt").val(adDate);
 
-        var discountVal = adPeriod == "1" ? "5" : "10";
-        $("#discount").val(discountVal);
+        if($("#hiddenEligible").val() == "Y"){
+        	var discountVal = adPeriod == "1" ? "5" : "10";
+            $("#discount").val(discountVal);
+        }else{
+        	 $("#discount").val("0");
+        }
 
         fn_getMembershipPackageInfo(packType);
 
     }
 
     function fn_getMembershipPackageInfo(_id) {
+
+        console.log("discount");
+        console.log($("#hiddenEligible").val());
+        console.log($("#discount").val());
 
         Common.ajax("GET", "/sales/membership/mPackageInfo", $("#getDataForm").serialize(), function(result) {
 
@@ -387,8 +416,6 @@ function fn_loadOrderPO(orderId){
                 }else{
                 	pacPrice = parseInt($("#finalRentalFee").html(), 10) * 24;
                 }
-
-                console.log(pacYear);
 
                 $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
                 $("#eurCertYn").val(result.packageInfo.eurCertYn);
@@ -963,6 +990,7 @@ function fn_loadOrderPO(orderId){
     <input type="text" name="hiddenPacOriPrice"  id="hiddenPacOriPrice"/>
     <input type="text" name="hiddenOrderDt"  id="hiddenOrderDt"/>
     <input type="text" name="hiddenOrderStus"  id="hiddenOrderStus"/>
+    <input type="text" name="hiddenEligible"  id="hiddenEligible"/>
 </div>
 </form>
 
