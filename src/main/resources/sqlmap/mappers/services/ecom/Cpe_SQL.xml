@@ -455,7 +455,7 @@
       AND T1.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{reqEndDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
     </if>
 
-    <if test='adminFlag != null and adminFlag != "" and adminFlag != "Y"'>
+    <if test='adminFlag == null or adminFlag == "" or adminFlag != "Y"'>
     	AND (T5.CODE_NAME LIKE '%'||#{userBranchCode}||'%' OR T2.BRNCH_ID = #{userBranchId})
     </if>
 
