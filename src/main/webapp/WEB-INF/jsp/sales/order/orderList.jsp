@@ -919,7 +919,7 @@
       <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnEtrReleaseLetter">ETR Release Letter</a></p></li>
       </c:if>
-            <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
+            <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnOutstndLetter">Outstanding Letter</a></p></li>
       </c:if>
 	</ul>
