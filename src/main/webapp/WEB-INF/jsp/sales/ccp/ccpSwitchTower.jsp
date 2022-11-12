@@ -30,7 +30,7 @@ function fn_closePop() {
 }
 
 $(document).ready(function(){
-	doGetComboData('/common/selectCodeList.do', {groupCode:'536',orderValue:'CODE'}, '${currentTower.code}', 'towerChannel', 'S');
+	doGetComboData('/common/selectCodeList.do', {groupCode:'537',orderValue:'CODE'}, '${currentTower.code}', 'towerChannel', 'S');
 });
 
 
