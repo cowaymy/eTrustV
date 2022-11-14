@@ -54,6 +54,8 @@ function  fn_viewType(type){
 function fn_save(){
 
 	var flag = false;
+	var type = "${viewType}";
+
     if(fn_validate()){
     	if(msg != "") {
             Common.alert(msg);
@@ -66,10 +68,12 @@ function fn_save(){
         return;
    	}
 
-    if(fn_chkDupLinkage()){
-    	flag = true;
-        return;
-    }
+   	if(type == 1){//New
+   		if(fn_chkDupLinkage()){
+   	        flag = true;
+   	        return;
+   	    }
+   	}
 
     if(!flag){
     	fn_saveDefPart();
