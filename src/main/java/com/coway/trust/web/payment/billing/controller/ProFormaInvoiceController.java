@@ -131,6 +131,7 @@ public class ProFormaInvoiceController {
 	    model.put("viewType", (String) params.get("viewType")); //view or edit
 	    model.put("stus", (String) params.get("stus"));
 	    model.put("stusId", (String) params.get("stusId"));
+	    model.put("disc", (String) params.get("disc"));
 
 	    model.put("USER_ID", sessionVO.getMemId());
 	    model.put("USER_NAME", sessionVO.getUserName());

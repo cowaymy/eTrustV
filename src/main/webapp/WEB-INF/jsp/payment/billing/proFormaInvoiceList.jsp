@@ -34,6 +34,7 @@
                  {dataField :"packType", headerText : "<spring:message code="sal.text.typeOfPack" />", width: 130, editable : false },
                  {dataField :"stusId", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false , visible : false},
                  {dataField :"status", headerText : "<spring:message code="pay.head.Status" />",width: 100, editable : false },
+                 {dataField :"disc",  headerText : "disc",      width: 140 ,editable : false, visible : false},
                  {dataField :"crtUser", headerText : "<spring:message code="sal.title.creator" />" , width: 120, editable : false },
                  {dataField :"advPayKey", headerText : "<spring:message code="pay.title.advPayment" />" , width: 100, editable : false ,
                      renderer : {
@@ -111,13 +112,14 @@
        var stusId = selectedItems[0].item.stusId;
        var salesOrdNo = selectedItems[0].item.salesOrdNo;
        var salesOrdId = selectedItems[0].item.salesOrdId;
+       var disc = selectedItems[0].item.disc;
 
        /* if(stusId != '1') { //Active
            Common.alert("Pro Forma edit only allowed for Active status");
            return;
        } */
 
-       var param = "?salesOrdId=" + salesOrdId + "&salesOrdNo=" + salesOrdNo + "&refNo=" + refNo + "&proFormaId=" + proFormaId + "&stus=" + Stus+ "&stusId=" + stusId;;
+       var param = "?salesOrdId=" + salesOrdId + "&salesOrdNo=" + salesOrdNo + "&refNo=" + refNo + "&proFormaId=" + proFormaId + "&stus=" + Stus + "&stusId=" + stusId + "&disc=" + disc;
 
        if (type == 1 ){
     	  param += "&viewType=1";

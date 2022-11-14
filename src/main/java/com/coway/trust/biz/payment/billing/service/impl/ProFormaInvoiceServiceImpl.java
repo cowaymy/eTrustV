@@ -121,25 +121,29 @@ public class ProFormaInvoiceServiceImpl extends EgovAbstractServiceImpl implemen
 
     			hm = (HashMap) taskBillList.get(i);
 
-    	    	logger.debug("map111================" + hm.toString());
-
+    	    	logger.debug("map111================" + params.toString());
+    	    	logger.debug("discount truefalse === " + !CommonUtils.nvl(params.get("hidDisc").toString()).equals("0"));
        		 	//Insert Discount Management
-	       		 if(CommonUtils.nvl(params.get("hidDiscPeriod").toString()).equals("12")){ //1 year advance
-					 discountAmt = mthRentAmt * 0.05;
-				 }else{ //2 year advance
-					 discountAmt = mthRentAmt * 0.10;
-				 }
+    	    	if(!CommonUtils.nvl(params.get("hidDisc").toString()).equals("0")){
+    	    		logger.debug("in insert");
+    	    		if(CommonUtils.nvl(params.get("hidDiscPeriod").toString()).equals("12")){ //1 year advance
+   					 discountAmt = mthRentAmt * 0.05;
+   				 }else{ //2 year advance
+   					 discountAmt = mthRentAmt * 0.10;
+   				 }
 
-				 //Param for insert discount
-		    	 params.put("ordId", Integer.parseInt(hm.get("salesOrdId").toString()));
-		    	 params.put("discountType", discountTypeId);
-		    	 params.put("discountAmount", discountAmt);
-		    	 params.put("remarks", "Proforma auto convert");
-				 params.put("userId", sessionVO.getUserId());
-				 params.put("dcStatusId", SalesConstants.STATUS_ACTIVE);
-				 params.put("contractId", 0);
+    	    		logger.debug("discountAmt === " + discountAmt);
+   				 //Param for insert discount
+   		    	 params.put("ordId", Integer.parseInt(hm.get("salesOrdId").toString()));
+   		    	 params.put("discountType", discountTypeId);
+   		    	 params.put("discountAmount", discountAmt);
+   		    	 params.put("remarks", "Proforma auto convert");
+   				 params.put("userId", sessionVO.getUserId());
+   				 params.put("dcStatusId", SalesConstants.STATUS_ACTIVE);
+   				 params.put("contractId", 0);
 
-		    	 proFormaInvoiceMapper.insertDiscountEntry(params);
+   		    	 proFormaInvoiceMapper.insertDiscountEntry(params);
+    	    	}
 
 		    	 //Convert Bill to Complete
     			int discPeriod = Integer.parseInt(CommonUtils.nvl(hm.get("discPeriod")).toString());

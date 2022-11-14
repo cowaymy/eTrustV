@@ -573,8 +573,6 @@ function fn_loadOrderPO(orderId){
     }
 
     function fn_save() {
-        //ahhhh
-
     	fn_DoSaveProcess();
     }
 

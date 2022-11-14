@@ -142,10 +142,10 @@
           return;
       }
 
-	  if( $("#hidCurMonthInd").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
+	  /* if( $("#hidCurMonthInd").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
           Common.alert("Last active billing Schedule : " +  $("#hidLastActiveSchdulDt").val() + "<br>Billing Schedule for " +  $("#advStartDt").val() + " is not available" );
           return;
-      }
+      } */
 
 
 
@@ -172,7 +172,6 @@
   }
 
   function fn_calTotalPackPrice(){
-      //ahh
       var totalPackPrice = 0;
       var totalPriceAllItems = AUIGrid.getGridData(proFormaGridID);
 
@@ -303,6 +302,7 @@
             <input type="text" name="hidPrevMonthInd" id="hidPrevMonthInd"/>
             <input type="text" name="hidCurMonthInd" id="hidCurMonthInd"/>
             <input type="text" name="hidLastActiveSchdulDt" id="hidLastActiveSchdulDt"/>
+            <input type="text" name="hidDisc" id="hidDisc" value="${disc}"/>
 		   </div>
 
         <table class="type1"><!-- table start -->
