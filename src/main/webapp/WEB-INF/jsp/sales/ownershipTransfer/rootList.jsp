@@ -119,7 +119,7 @@
         width : 140
     }, {
         dataField : "rotUpdDt2",
-        headerText : "Last Update<Br> At",
+        headerText : "Last Update<Br> At", // Enhancement ROOT 4.0 - hide updator name
         width : 140
     }
     ];
@@ -168,7 +168,7 @@
 				if("${user_info.User_Role}" == "121" || "${user_info.User_Role}" == "114" || "${user_info.User_Role}" == "127" //block CM CTM HM to access function in ROOT - BY JONATHAN
 				|| "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7"  // enhancement to set requestor
 				){
-				    $('.hidefunction').hide()
+				    $('.hidefunction').hide();
 				    $('#search_requestorInfo').val("${user_info.Mem_code}");
 				}else{
 					fn_setGridEvent();
