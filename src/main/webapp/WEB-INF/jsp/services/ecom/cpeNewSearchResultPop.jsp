@@ -85,7 +85,8 @@
         fn_setKeyInDate();
 
         //Auto-populate Sub Department during initial pop up load
-        doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '${orderDscCodeSys}', '_inputSubDeptSelect', 'S', '');
+        doGetCombo('/services/ecom/selectSubDept.do',  'MD20', 'SD299', '_inputSubDeptSelect', 'S', '');
+
 
         //Populate Sub Department in-charge when Main Dept is changed
         $("#_inputMainDeptSelect").change(function(){
@@ -253,7 +254,8 @@
     }
 
 </script>
-
+<input type="hidden" />
+<input type="hidden" />
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
     <header class="pop_header"><!-- pop_header start -->
         <h1><spring:message code="sal.title.text.cpeNewSrch" /></h1>
@@ -420,15 +422,15 @@
                         </td>
                         <th scope="row"><spring:message code="service.grid.mainDept" /><span class="must">*</span></th>
                         <td colspan="3">
-                            <select class="w100p" name="mainDept" id="_inputMainDeptSelect">
+                            <select class="w100p" name="mainDept" id="_inputMainDeptSelect" disabled>
                                 <c:forEach var="list" items="${mainDeptList}" varStatus="status">
                                     <c:choose>
-                                         <c:when test="${list.codeId == 'MD11'}"> <%-- Customer Service Support --%>
+                                         <c:when test="${list.codeId == 'MD20'}">
                                             <option value="${list.codeId}" selected="selected">${list.codeName} </option>
                                         </c:when>
-                                        <c:otherwise>
-                                            <option value="${list.codeId}">${list.codeName} </option>
-                                        </c:otherwise>
+<%--                                         <c:otherwise> --%>
+<%--                                             <option value="${list.codeId}">${list.codeName} </option> --%>
+<%--                                         </c:otherwise> --%>
                                     </c:choose>
                                 </c:forEach>
                             </select></td>
@@ -437,7 +439,7 @@
                         <th scope="row"><spring:message code="log.label.rqstTyp" /><span class="must">*</span></th>
                         <td><select class="w100p" name="inputReqTypeSelect" id="_inputReqTypeSelect"></select></td>
                         <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
-                        <td colspan="3"><select class="w100p" name="subDept" id="_inputSubDeptSelect"></select></td>
+                        <td colspan="3"><select  disabled class="w100p" name="subDept" id="_inputSubDeptSelect"></select></td>
                     </tr>
                     <tr>
                         <th scope="row">Sub Request<span class="must">*</span></th>

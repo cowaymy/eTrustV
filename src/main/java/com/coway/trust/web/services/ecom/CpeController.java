@@ -258,6 +258,8 @@ public class CpeController {
 		if(arrReqType   != null && !CommonUtils.containsEmpty(arrReqType))   params.put("arrReqType", arrReqType);
 
 		params.put("userBranchId", sessionVO.getUserBranchId());
+		params.put("userName", sessionVO.getUserName());
+		params.put("userId", sessionVO.getUserId());
 
 		logger.debug("selectCpeRequestList==========================>> " + params);
 		List<EgovMap> cpeRequestList = cpeService.selectCpeRequestList(params);

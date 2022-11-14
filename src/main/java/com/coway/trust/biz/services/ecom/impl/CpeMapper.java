@@ -56,4 +56,6 @@ public interface CpeMapper {
 	public List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params);
 
 	public EgovMap selectUserBranch(Map<String, Object> params);
+
+	public EgovMap selectUserMemberLevel(Map<String, Object> params);
 }

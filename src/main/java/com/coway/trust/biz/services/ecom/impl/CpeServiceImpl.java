@@ -143,10 +143,17 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 	public List<EgovMap> selectCpeRequestList(Map<String, Object> params) {
 		String adminFlag = CommonUtils.nvl(params.get("adminFlag"));
 		params.put("adminFlag", adminFlag.toString());
-		EgovMap userBranch = cpeMapper.selectUserBranch(params);
+		//EgovMap userBranch = cpeMapper.selectUserBranch(params);
+		EgovMap userMemberLevel = cpeMapper.selectUserMemberLevel(params);
 
-		params.put("userBranchCode", userBranch.get("code").toString());
+//		params.put("userBranchCode", userBranch.get("code").toString());
 
+		if(userMemberLevel != null){
+			params.put("memLvl", userMemberLevel.get("memLvl").toString());
+			params.put("deptCode", userMemberLevel.get("deptCode").toString());
+			params.put("grpCode", userMemberLevel.get("grpCode").toString());
+			params.put("orgCode", userMemberLevel.get("orgCode").toString());
+		}
 
 		return cpeMapper.selectCpeRequestList(params);
 	}

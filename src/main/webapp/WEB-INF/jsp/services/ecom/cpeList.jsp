@@ -168,17 +168,17 @@
            cpeReqId = AUIGrid.getCellValue(gridID, event.rowIndex, "cpeReqId");
        });
 
-       $("#main_department").change(
-            function() {
-              if ($("#main_department").val() == '') {
-                $("#sub_department").val('');
-                $("#sub_department").find("option").remove();
-              } else {
-                doGetCombo('/services/ecom/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', '');
-              }
-        });
+//        $("#main_department").change(
+//             function() {
+//               if ($("#main_department").val() == '') {
+//                 $("#sub_department").val('');
+//                 $("#sub_department").find("option").remove();
+//               } else {
+//                 doGetCombo('/services/ecom/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', '');
+//               }
+//         });
 
-       doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
+//        doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dsc_branch', 'M', 'fn_multiCombo'); //Branch Code
        doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','requestorBranch', 'M' , 'fn_multiCombo');
        doGetCombo("/services/ecom/selectRequestTypeJsonList", '', '', 'reqType', 'M', 'fn_multiCombo');
@@ -309,10 +309,28 @@
       <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>
       <td><input type="text" id="nric_company_no" name="nric_company_no"
        placeholder="<spring:message code='service.title.NRIC_CompanyNo'/>" class="w100p" /></td>
-      <th scope="row"><spring:message code='service.grid.mainDept'/></th>
-      <td><select class="w100p" id="main_department" name="main_department">
-        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-      </select></td>
+		<th scope="row"><spring:message code='service.grid.Status'/></th>
+		<td><select class="multy_select w100p" multiple="multiple"
+		 id="statusList" name="statusList">
+
+		  <c:forEach var="list" items="${cpeStat}" varStatus="status">
+		    <option value="${list.code}" selected>${list.codeName}</option>
+		  </c:forEach>
+
+		  <!-- <option value="1">Active</option>
+		  <option value="5">Approved</option>
+		  <option value="6">Rejected</option>
+		  <option value="44">Pending</option>
+		  <option value="34">Solved</option>
+		  <option value="35">Unsolved</option>
+		  <option value="36">Closed</option>
+		  <option value="10">Cancelled</option> -->
+
+		</select></td>
+<%--       <th scope="row"><spring:message code='service.grid.mainDept'/></th> --%>
+<!--       <td><select class="w100p" id="main_department" name="main_department"> -->
+<%--         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option> --%>
+<!--       </select></td> -->
      </tr>
      <tr>
       <th scope="row"><spring:message code='cpe.grid.asNo'/></th>
@@ -321,11 +339,14 @@
       <th scope="row"><spring:message code='cpe.grid.requestId'/></th>
       <td><input type="text" id="cpeReqId" name="cpeReqId"
        placeholder="<spring:message code='cpe.grid.requestId'/>" class="w100p" /></td>
-      <th scope="row"><spring:message code='service.grid.subDept'/></th>
-      <td><select class="w100p" id="sub_department"
-       name="sub_department">
-       <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-       </select></td>
+	  <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
+      <td><select class="multy_select w100p" id="dsc_branch" name="dsc_branch" multiple="multiple"></select>
+      </td>
+<%--       <th scope="row"><spring:message code='service.grid.subDept'/></th> --%>
+<!--       <td><select class="w100p" id="sub_department" -->
+<!--        name="sub_department"> -->
+<%--        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option> --%>
+<!--        </select></td> -->
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.CustomerName'/></th>
@@ -350,24 +371,9 @@
        </div>
        <!-- date_set end -->
       </td>
-      <th scope="row"><spring:message code='service.grid.Status'/></th>
-      <td><select class="multy_select w100p" multiple="multiple"
-       id="statusList" name="statusList">
+      		<th scope="row"><spring:message code="cpe.title.text.requestType" /></th>
+      <td><select class="multy_select w100p" id="reqType" name="reqType" multiple="multiple"></select>
 
-        <c:forEach var="list" items="${cpeStat}" varStatus="status">
-          <option value="${list.code}" selected>${list.codeName}</option>
-        </c:forEach>
-
-        <!-- <option value="1">Active</option>
-        <option value="5">Approved</option>
-        <option value="6">Rejected</option>
-        <option value="44">Pending</option>
-        <option value="34">Solved</option>
-        <option value="35">Unsolved</option>
-        <option value="36">Closed</option>
-        <option value="10">Cancelled</option> -->
-
-      </select></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code="sal.title.text.requestStage" /></th>
@@ -380,21 +386,17 @@
       <td><select class="multy_select w100p" id="requestorBranch" name="requestorBranch">
        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
        </select></td>
-      <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
-      <td><select class="multy_select w100p" id="dsc_branch" name="dsc_branch" multiple="multiple"></select>
-      </td>
-      </td>
-     </tr>
-     <tr>
-      <th scope="row"><spring:message code="cpe.title.text.requestType" /></th>
-      <td><select class="multy_select w100p" id="reqType" name="reqType" multiple="multiple"></select>
-      <th scope="row">
+      <th></th>
       <td></td>
-      </th>
-      <th scope="row">
-      <td></td>
-      </th>
      </tr>
+<!--      <tr> -->
+<!--       <th scope="row"> -->
+<!--       <td></td> -->
+<!--       </th> -->
+<!--       <th scope="row"> -->
+<!--       <td></td> -->
+<!--       </th> -->
+<!--      </tr> -->
     </tbody>
    </table>
    <!-- table end -->
