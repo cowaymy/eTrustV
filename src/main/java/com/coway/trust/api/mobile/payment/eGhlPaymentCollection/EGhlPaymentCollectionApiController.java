@@ -61,9 +61,11 @@ public class EGhlPaymentCollectionApiController {
 
 	@ApiOperation(value = "paymentCollectionRunningNumberGet", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/paymentCollectionRunningNumberGet", method = RequestMethod.GET)
-	public ResponseEntity<String> paymentCollectionRunningNumberGet() throws Exception {
+	public ResponseEntity<EGhlPaymentCollectionApiDto> paymentCollectionRunningNumberGet() throws Exception {
 		String paymentRunningNo = eGhlPaymentCollectionService.paymentCollectionRunningNumberGet();
 
-		return ResponseEntity.ok(paymentRunningNo);
+		EGhlPaymentCollectionApiDto result = new EGhlPaymentCollectionApiDto();
+		result.setPaymentCollectionRunningNumber(paymentRunningNo);
+		return ResponseEntity.ok(result);
 	}
 }
