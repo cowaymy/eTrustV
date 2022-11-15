@@ -59,11 +59,11 @@ public class EGhlPaymentCollectionApiController {
 		return ResponseEntity.ok(orderListResult);
 	}
 
-//	@ApiOperation(value = "paymentCollectionRunningNumberGet", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@RequestMapping(value = "/paymentCollectionRunningNumberGet", method = RequestMethod.GET)
-//	public ResponseEntity<String> paymentCollectionRunningNumberGet() throws Exception {
-//		String paymentRunningNo = eGhlPaymentCollectionService.paymentCollectionRunningNumberGet();
-//
-//		return ResponseEntity.ok(paymentRunningNo);
-//	}
+	@ApiOperation(value = "paymentCollectionRunningNumberGet", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/paymentCollectionRunningNumberGet", method = RequestMethod.GET)
+	public ResponseEntity<String> paymentCollectionRunningNumberGet() throws Exception {
+		String paymentRunningNo = eGhlPaymentCollectionService.paymentCollectionRunningNumberGet();
+
+		return ResponseEntity.ok(paymentRunningNo);
+	}
 }
