@@ -28,6 +28,9 @@ public class EGhlPaymentCollectionApiDto {
 	private String productCode;
 	private String productName;
 
+	//Running number
+	private String paymentCollectionRunningNumber;
+
 	//Result
 	private int responseCode;
 
@@ -55,6 +58,8 @@ public class EGhlPaymentCollectionApiDto {
 		params.put("productId",vo.getProductId());
 		params.put("productCode",vo.getProductCode());
 		params.put("productName",vo.getProductName());
+
+		params.put("paymentCollectionRunningNumber",vo.getPaymentCollectionRunningNumber());
 
 		params.put("responseCode", vo.getResponseCode());
 		return params;
@@ -194,5 +199,13 @@ public class EGhlPaymentCollectionApiDto {
 
 	public void setProductTypeCode(String productTypeCode) {
 		this.productTypeCode = productTypeCode;
+	}
+
+	public String getPaymentCollectionRunningNumber() {
+		return paymentCollectionRunningNumber;
+	}
+
+	public void setPaymentCollectionRunningNumber(String paymentCollectionRunningNumber) {
+		this.paymentCollectionRunningNumber = paymentCollectionRunningNumber;
 	}
 }
