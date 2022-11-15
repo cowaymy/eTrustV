@@ -27,6 +27,7 @@ public class EGhlPaymentCollectionApiDto {
 	private int productId;
 	private String productCode;
 	private String productName;
+	private String customerName;
 
 	//Running number
 	private String paymentCollectionRunningNumber;
@@ -58,6 +59,7 @@ public class EGhlPaymentCollectionApiDto {
 		params.put("productId",vo.getProductId());
 		params.put("productCode",vo.getProductCode());
 		params.put("productName",vo.getProductName());
+		params.put("customerName",vo.getCustomerName());
 
 		params.put("paymentCollectionRunningNumber",vo.getPaymentCollectionRunningNumber());
 
@@ -207,5 +209,13 @@ public class EGhlPaymentCollectionApiDto {
 
 	public void setPaymentCollectionRunningNumber(String paymentCollectionRunningNumber) {
 		this.paymentCollectionRunningNumber = paymentCollectionRunningNumber;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 }
