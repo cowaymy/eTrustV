@@ -25,4 +25,20 @@ public interface PreASManagementListMapper {
 
 	List<EgovMap> getAreaList(Map<String, Object> params);
 
+	EgovMap checkOrder(Map<String, Object> params);
+
+	EgovMap checkSubmissionRecords(Map<String, Object> params);
+
+	EgovMap selectOrderInfo(Map<String, Object> params);
+
+	List<EgovMap> getErrorCodeList(Map<String, Object> params);
+
+	int submitPreAsSubmission(Map<String, Object> params);
+
+	List<EgovMap> searchPreAsSubmissionList(Map<String, Object> params);
+
+	List<EgovMap> asProd(Map<String, Object> params);
+
+	List<EgovMap> searchBranchList(Map<String, Object> params);
+
 }

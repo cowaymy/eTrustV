@@ -42,16 +42,22 @@
     fn_setComboBox1();
 
     fn_getErrMstList('${orderDetail.basicInfo.ordNo}');
+    $("#ordNo").val('${orderDetail.basicInfo.ordNo}');
 
     <c:if test="${MOD eq 'VIEW'}">
     fn_setEditValue();
     createASCallLogAUIGrid();
     </c:if>
 
+
     if ('${mafuncId}' != "undefined" && '${mafuncId}' != "") {
       $("#errorCode").val('${mafuncId}');
       $("#errorDesc").val('${mafuncResnId}');
       $("#ISRAS").val("RAS");
+    }
+
+    if ('${preAsType}' != "undefined" ) {
+        $("#preAsType").val('${preAsType}');
     }
 
     $("#checkComm").prop("checked", true);
@@ -83,6 +89,7 @@
 });
 
   function fn_getErrMstList(_ordNo) {
+
     var SALES_ORD_NO = _ordNo;
     $("#errorCode option").remove();
     doGetCombo('/homecare/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO, '', '', 'errorCode', 'S', 'fn_errCde_SetVal');
@@ -103,7 +110,19 @@
   }
 
   function fn_errCde_SetVal() {
-    $("#errorCode").val(asErrorCde);
+  if ('${mafuncId}' != "undefined" && '${mafuncId}' != "") {
+      $("#errorCode").val('${mafuncId}');
+      $("#errorDesc").val('${mafuncResnId}');
+      $("#ISRAS").val("RAS");
+    }
+
+    if ('${preAsType}' != "undefined" ) {
+        $("#preAsType").val('${preAsType}');
+    }
+
+    if(asErrorCde!=null && asErrorCde !=""){
+    	$("#errorCode").val(asErrorCde);
+    }
     fn_errMst_SelectedIndexChanged();
   }
 
@@ -774,7 +793,9 @@
                        "CALL_REM" : $("#callRem").val(),
                        "PIC_NAME" : $("#perIncharge").val(),
                        "PIC_CNTC" : $("#perContact").val(),
-                       "ISRAS" : $("#ISRAS").val()
+                       "ISRAS" : $("#ISRAS").val(),
+                       "PREASTYPE" : $("#preAsType").val(),
+                       "ORDNO" : $("#ordNo").val()
                      }
 
       Common.ajax("POST", "/services/as/saveASEntry.do", saveForm, function(result) {
@@ -899,8 +920,16 @@
                     $("#save_bt_div").hide();
                     $("#_resultNewEntryPopDiv1").remove();
 
-                    if (smsck_1)
-                      Common.popupDiv("/services/as/sendSMSPop.do", null, null, true, '_dosmsmDiv');
+                    if (smsck_1){
+                    	Common.popupDiv("/services/as/sendSMSPop.do", null, null, true, '_dosmsmDiv');
+                    }
+
+                    if ('${preAsType}' != "undefined" ) {
+                        fn_selfClose();
+                        $("#popup_wrap").remove();
+                        fn_searchPreASManagement();
+                    }
+
                   });
                 }
               }, 'callbackClose');
@@ -1537,6 +1566,8 @@
        <input type="text" title="" placeholder="IN_AsResultId" id="IN_AsResultId" name="IN_AsResultId" value="${IN_AsResultId}" />
        <input type="text" title="" placeholder="mafuncResnId" id="mafuncResnId" name="mafuncResnId" value="${mafuncResnId}" />
        <input type="text" title="" placeholder="mafuncId" id="mafuncId" name="mafuncId" value="${mafuncId}" />
+       <input type="text" title="" placeholder="preAsType" id="preAsType" name="preAsType" value="${preAsType}"/>
+       <input type="text" title="" placeholder="ordNo" id="ordNo" name="ordNo" value="${ordNo}"/>
       </div>
       <ul class="center_btns" id='save_bt_div'>
        <li><p class="btn_blue2 big">

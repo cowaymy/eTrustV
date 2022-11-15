@@ -27,14 +27,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.services.as.HcASManagementListService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.as.PreASManagementListService;
+import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import com.coway.trust.config.handler.SessionHandler;
 
 /*********************************************************************************************
  * DATE          PIC        VERSION     COMMENT
@@ -58,6 +62,18 @@ public class HcASManagementListController {
 
     @Resource(name = "serialMgmtNewService")
     private SerialMgmtNewService serialMgmtNewService;
+
+    @Resource(name = "PreASManagementListService")
+    private PreASManagementListService PreASManagementListService;
+
+    @Resource(name = "salesCommonService")
+    private SalesCommonService salesCommonService;
+
+    @Resource(name = "hsManualService")
+    private HsManualService hsManualService;
+
+    @Autowired
+    private SessionHandler sessionHandler;
 
 
   /*
@@ -203,6 +219,10 @@ public class HcASManagementListController {
     model.put("AS_ResultNO", (String) params.get("asResultNo"));
     model.put("AS_ResultId", (String) params.get("in_asResultId"));
 
+    model.put("PREAS_ORDNO", (String) params.get("preAsSalesOrderNo"));
+    model.put("PREAS_DEFECTCODE", (String) params.get("preAsDefectCode"));
+    model.put("PREAS_TYPE", (String) params.get("preAsType"));
+
     //if (!"".equals((String) params.get("in_ordId"))) {
     //  return "services/as/ASReceiveEntryPop";
     //} else {
@@ -221,7 +241,7 @@ public class HcASManagementListController {
   public String resultASReceiveEntryPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
       throws Exception {
     logger.debug("===========================/resultASReceiveEntryPop.do===============================");
-    logger.debug("== params " + params.toString());
+    logger.debug("== resultASReceiveEntryPop params " + params.toString());
     logger.debug("===========================/resultASReceiveEntryPop.do===============================");
 
     params.put("orderNo", params.get("ordNo"));
@@ -246,6 +266,8 @@ public class HcASManagementListController {
     model.put("USER_NAME", sessionVO.getUserName());
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
+
+    model.put("preAsType", (String) params.get("preAsType"));
 
      //*
      //* if("VIEW".equals(params.get("mod"))){ asentryInfo =
@@ -704,4 +726,56 @@ public class HcASManagementListController {
       return ResponseEntity.ok(message);
 
     }
+
+    @RequestMapping(value = "/initPreAsSubmissionList.do")
+  	public String initPreAsSubmissionList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+  	  	SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+  		params.put("userId", sessionVO.getUserId());
+
+  		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+  			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+  			model.put("memType", getUserInfo.get("memType"));
+  			model.put("orgCode", getUserInfo.get("orgCode"));
+  			model.put("grpCode", getUserInfo.get("grpCode"));
+  			model.put("deptCode", getUserInfo.get("deptCode"));
+  			model.put("memCode", getUserInfo.get("memCode"));
+  			logger.info("memType ##### " + getUserInfo.get("memType"));
+  		}
+
+
+      	List<EgovMap> asStat = PreASManagementListService.selectPreAsStat();
+      	params.put("errorType", "HC");
+      	List<EgovMap> hcErrorCodeList = PreASManagementListService.getErrorCodeList(params);
+      	model.put("asStat", asStat);
+      	model.put("hcErrorCodeList", hcErrorCodeList);
+  		return "homecare/services/as/hcPreAsSubmissionList";
+  	}
+
+
+    @RequestMapping(value = "/hcPreAsSubmissionRegister.do")
+	public String hcPreAsSubmissionRegister(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "homecare/services/as/hcPreAsSubmissionRegister";
+	}
+
+    @RequestMapping(value = "/initPreASManagementList.do")
+    public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+      // GET SEARCH DATE RANGE
+      String range = ASManagementListService.getSearchDtRange();
+
+      List<EgovMap> asTyp = ASManagementListService.selectAsTyp();
+      List<EgovMap> asStat = PreASManagementListService.selectPreAsStat();
+      List<EgovMap> asProduct = PreASManagementListService.asProd(params);
+      List<EgovMap> branchList = hsManualService.selectBranchList(params);
+
+      model.put("DT_RANGE", CommonUtils.nvl(range));
+      model.put("asTyp", asTyp);
+      model.put("asStat", asStat);
+      model.put("asProduct", asProduct);
+      model.put("branchList", branchList);
+
+      return "homecare/services/as/hcPreASManagementList";
+    }
+
 }

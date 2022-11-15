@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.PreASManagementListService;
 import com.coway.trust.biz.services.as.ASManagementListService;
@@ -63,6 +64,9 @@ public class PreASManagementListController {
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
+
   @Autowired
   private AdaptorService adaptorService;
 
@@ -80,12 +84,8 @@ public class PreASManagementListController {
 
     List<EgovMap> asTyp = ASManagementListService.selectAsTyp();
     List<EgovMap> asStat = PreASManagementListService.selectPreAsStat();
-    List<EgovMap> asProduct = ASManagementListService.asProd();
-	params.put("memberLevel", sessionVO.getMemberLevel());
-	params.put("userName", sessionVO.getUserName());
-	params.put("userType", sessionVO.getUserTypeId());
-
-	List<EgovMap> branchList = hsManualService.selectBranchList(params);
+    List<EgovMap> asProduct = PreASManagementListService.asProd(params);
+    List<EgovMap> branchList = hsManualService.selectBranchList(params);
 
     model.put("DT_RANGE", CommonUtils.nvl(range));
     model.put("asTyp", asTyp);
@@ -93,11 +93,6 @@ public class PreASManagementListController {
     model.put("asProduct", asProduct);
     model.put("branchList", branchList);
 
-    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
-    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
-
-    model.put("bfDay", bfDay);
-    model.put("toDay", toDay);
     return "services/as/preASManagementList";
   }
 
@@ -115,6 +110,8 @@ public class PreASManagementListController {
     params.put("cmbInsBranchIdList", cmbInsBranchIdList); //ins branch list
     params.put("asProductList", asProductList);
     params.put("areaList", areaList);
+
+    logger.debug("searchPreASManagementList params"+params);
 
     List<EgovMap> PreASMList = PreASManagementListService.selectPreASManagementList(params);
 
@@ -142,26 +139,6 @@ public class PreASManagementListController {
 	  	model.put("recallDt",  params.get("preAsRecallDt").toString());
 		return "services/as/updPreASOrderPop";
 	}
-
-//  @RequestMapping(value = "/updateRejectedPreAS.do", method = RequestMethod.POST)
-//  public ResponseEntity<ReturnMessage> updateRejectedPreAS(@RequestBody Map<String, Object> params) throws Exception {
-//    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-//    params.put("userId", sessionVO.getUserId());
-//    params.put("userDeptId", sessionVO.getUserDeptId());
-//    params.put("userName", sessionVO.getUserName());
-//
-//    Map<String, Object> retunMap = null;
-//
-//    retunMap = PreASManagementListService.updateRejectedPreAS(params);
-//
-//	//Return Message
-//	ReturnMessage message = new ReturnMessage();
-//	message.setCode(AppConstants.SUCCESS);
-//	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-//
-//    return ResponseEntity.ok(message);
-//
-//  }
 
 
   @Transactional
@@ -213,6 +190,192 @@ public class PreASManagementListController {
 
 	 List<EgovMap> areaList = PreASManagementListService.getAreaList(params);
      return ResponseEntity.ok(areaList);
+  }
+
+
+  @RequestMapping(value = "/initPreAsSubmissionList.do")
+	public String initPreAsSubmissionList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	  	SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+			logger.info("memType ##### " + getUserInfo.get("memType"));
+		}
+
+
+    	List<EgovMap> asStat = PreASManagementListService.selectPreAsStat();
+    	params.put("errorType", "HA");
+    	List<EgovMap> haErrorCodeList = PreASManagementListService.getErrorCodeList(params);
+    	model.put("asStat", asStat);
+    	model.put("haErrorCodeList", haErrorCodeList);
+		return "services/as/preAsSubmissionList";
+	}
+
+  @RequestMapping(value = "/preAsSubmissionRegister.do")
+	public String preAsSubmissionRegister(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "services/as/preAsSubmissionRegister";
+	}
+
+  @RequestMapping(value = "/checkOrder.do")
+  public ResponseEntity<ReturnMessage> checkOrder(@RequestParam Map<String, Object> params, SessionVO sessionVO) throws Exception{
+
+	    ReturnMessage message = new ReturnMessage();
+
+	    String orderType = params.get("orderType").toString();
+
+	    int flag=0;
+
+		params.put("memLvl", sessionVO.getMemberLevel());
+		params.put("memId", sessionVO.getMemId());
+		params.put("memType", sessionVO.getUserTypeId());
+
+		EgovMap checkOrder = PreASManagementListService.checkOrder(params);
+		EgovMap checkSubmissionRecords = PreASManagementListService.checkSubmissionRecords(params);
+		EgovMap checkOutstanding = PreASManagementListService.selectOrderInfo(params);
+
+		if(checkOrder == null){
+			params.put("prodCat", "0");
+		}
+		else{
+			params.put("prodCat", checkOrder.get("prodCat").toString() ==null ? "0":checkOrder.get("prodCat").toString());
+		}
+
+		message.setData(params);
+
+		if(checkOrder == null){
+			flag=1;
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("This Order Number is not belong to you. Please key in your own sales order number.");
+			return ResponseEntity.ok(message);
+		}
+
+		if(checkOrder != null){
+
+			if(Integer.parseInt(checkOrder.get("stusCodeId").toString()) !=4){
+				flag=1;
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("Thos order is not under Completed status therefore it not allowed to register. Please key in others sales order number.");
+				return ResponseEntity.ok(message);
+			}
+
+			if(orderType=="HA" && (checkOrder.get("stkCtgryId").toString() == "5706" || checkOrder.get("stkCtgryId").toString() == "5707")){
+				flag=1;
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("This Order Number is under Home Appliance. Please proceed to HA Module for this action");
+				return ResponseEntity.ok(message);
+			}
+
+			if(orderType=="HC" && (checkOrder.get("stkCtgryId").toString() != "5706" || checkOrder.get("stkCtgryId").toString() != "5707")){
+				flag=1;
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("This Order Number is under Homecare. Please proceed to HC Module for this action");
+				return ResponseEntity.ok(message);
+			}
+		}
+
+
+		if(checkSubmissionRecords != null){
+			flag=1;
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("This Order Number has been submitted. It is not allowed to register again.");
+			return ResponseEntity.ok(message);
+		}
+
+		if(checkOutstanding !=null){
+
+			if(Integer.parseInt(checkOutstanding.get("membershipExpiry").toString()) == 1){
+				flag=1;
+				message.setCode(AppConstants.FAIL);
+		   	    message.setMessage("Membership is expired. It is not allowed to register.");
+		   		return ResponseEntity.ok(message);
+			}
+
+			if(Integer.parseInt(checkOutstanding.get("outstanding").toString()) > 3){
+				flag=1;
+				message.setCode(AppConstants.FAIL);
+		   	    message.setMessage("This order consist of outstanding payment. Please check with Finance Dept before proceed to register.");
+		   	    return ResponseEntity.ok(message);
+			}
+		}
+
+
+		if(flag==0){
+			message.setCode(AppConstants.SUCCESS);
+	    	message.setMessage("This Order Number is allow to be registered. Please proceed to choose Error Code for register.");
+	    	return ResponseEntity.ok(message);
+		}
+
+		return ResponseEntity.ok(message);
+
+	}
+
+
+  @RequestMapping(value = "/getErrorCodeList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getErrorCodeList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	  logger.info("getErrorCodeList" + params);
+	 params.put("prodCat",params.get("groupCode[prodCat]"));
+     List<EgovMap> errorCodeList = PreASManagementListService.getErrorCodeList(params);
+     return ResponseEntity.ok(errorCodeList);
+  }
+
+  @Transactional
+  @RequestMapping(value = "/submitPreAsSubmission.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> submitPreAsSubmission(@RequestBody Map<String, Object> params) throws Exception {
+
+	  try{
+		    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		    params.put("userId", sessionVO.getUserId());
+		    params.put("userDeptId", sessionVO.getUserDeptId());
+		    params.put("regId", sessionVO.getUserName());
+
+		    int result = PreASManagementListService.submitPreAsSubmission(params);
+
+		    ReturnMessage message = new ReturnMessage();
+
+		    if(result > 0){
+		    	 message.setCode(AppConstants.SUCCESS);
+		    	 message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		    }else{
+		    	message.setCode(AppConstants.FAIL);
+		   	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		    }
+
+		    return ResponseEntity.ok(message);
+	  }
+	  catch(Exception e){
+		  	throw e;
+	  }
+  }
+
+
+  @RequestMapping(value = "/searchPreAsSubmissionList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> searchPreAsSubmissionList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+    String[] statusList = request.getParameterValues("preAsSubmissionStatus");
+    String[] errorCodeList = request.getParameterValues("preAsErrorCode");
+
+    params.put("statusList", statusList);
+    params.put("errorCodeList", errorCodeList);
+
+    List<EgovMap> preAsSubmissionList = PreASManagementListService.searchPreAsSubmissionList(params);
+
+    return ResponseEntity.ok(preAsSubmissionList);
+  }
+
+  @RequestMapping(value = "/searchBranchList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> searchBranchList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	 params.put("orderType",params.get("groupCode"));
+
+	 List<EgovMap> branchList = PreASManagementListService.searchBranchList(params);
+     return ResponseEntity.ok(branchList);
   }
 
 }

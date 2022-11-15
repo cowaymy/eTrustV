@@ -74,37 +74,64 @@ public class PreASManagementListServiceImpl extends EgovAbstractServiceImpl impl
     return PreASManagementListMapper.selectPreAsUpd();
   }
 
-//  @Override
-//  public Map<String, Object> updateRejectedPreAS(Map<String, Object> params) throws Exception {
-//
-//	  PreASManagementListMapper.updateRejectedPreAS(params);
-//
-//  	   //Return Message
-//	   Map<String, Object> rtnMap = new HashMap<String, Object>();
-//	   rtnMap.put("scnNo", "ok");
-//	   return rtnMap;
-//
-//  }
+  @Override
+  @Transactional
+  public int updatePreAsStatus(Map<String, Object> params) throws Exception {
+    int result= PreASManagementListMapper.updatePreAsStatus(params);
+    return result;
+  }
 
-  	@Override
-	@Transactional
-	public int updatePreAsStatus(Map<String, Object> params) throws Exception {
+  @Override
+  public List<EgovMap> getCityList(Map<String, Object> params) {
+    return PreASManagementListMapper.getCityList(params);
+  }
 
-	  int result= PreASManagementListMapper.updatePreAsStatus(params);
+  @Override
+   public List<EgovMap> getAreaList(Map<String, Object> params) {
+    return PreASManagementListMapper.getAreaList(params);
+  }
 
-	  return result;
-	}
+  @Override
+  public EgovMap checkOrder(Map<String, Object> params) throws Exception {
+	return PreASManagementListMapper.checkOrder(params);
+  }
 
-  	 @Override
-  	  public List<EgovMap> getCityList(Map<String, Object> params) {
-  	    return PreASManagementListMapper.getCityList(params);
-  	 }
+  @Override
+  public EgovMap checkSubmissionRecords(Map<String, Object> params) throws Exception {
+	return PreASManagementListMapper.checkSubmissionRecords(params);
+  }
 
-  	 @Override
- 	  public List<EgovMap> getAreaList(Map<String, Object> params) {
- 	    return PreASManagementListMapper.getAreaList(params);
- 	 }
+  @Override
+  public EgovMap selectOrderInfo(Map<String, Object> params) throws Exception {
+	return PreASManagementListMapper.selectOrderInfo(params);
+  }
 
+  @Override
+  public List<EgovMap> getErrorCodeList(Map<String, Object> params) {
+    return PreASManagementListMapper.getErrorCodeList(params);
+  }
+
+  @Override
+  @Transactional
+  public int submitPreAsSubmission(Map<String, Object> params) throws Exception {
+    int result= PreASManagementListMapper.submitPreAsSubmission(params);
+    return result;
+  }
+
+  @Override
+  public List<EgovMap> searchPreAsSubmissionList(Map<String, Object> params) {
+    return PreASManagementListMapper.searchPreAsSubmissionList(params);
+  }
+
+  @Override
+  public List<EgovMap> asProd(Map<String, Object> params) {
+    return PreASManagementListMapper.asProd(params);
+  }
+
+  @Override
+  public List<EgovMap> searchBranchList(Map<String, Object> params) {
+    return PreASManagementListMapper.searchBranchList(params);
+  }
 
 
 

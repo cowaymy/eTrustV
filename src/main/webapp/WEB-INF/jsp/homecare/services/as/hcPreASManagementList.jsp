@@ -9,18 +9,18 @@
   };
 
   var optionSystem = {
-	        type: "M",
-	        isShowChoose: false
-	};
+            type: "M",
+            isShowChoose: false
+    };
 
   var myGridID;
 
   var gridPros = {
-	      showRowCheckColumn : false,
-	      usePaging : true,
-	      pageRowCount : 20,
-	      showRowAllCheckBox : true,
-	      editable : false
+          showRowCheckColumn : false,
+          usePaging : true,
+          pageRowCount : 20,
+          showRowAllCheckBox : true,
+          editable : false
    };
 
 
@@ -41,25 +41,25 @@
   });
 
   function f_multiComboType() {
-	    $(function() {
-	        $('#ordArea').change(function() {
+        $(function() {
+            $('#ordArea').change(function() {
             }).multipleSelect({
                 selectAll : false
             });
-	    });
-	}
+        });
+    }
 
   $(document).ready(function() {
         asManagementGrid();
-        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
-        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbInsBranchId', 'M', 'f_multiCombo'); // DSC BRANCH
+        //doGetCombo('/services/as/searchBranchList', "HC", '', 'cmbbranchId', 'M', 'f_multiCombo'); // HDC BRANCH
+        doGetCombo('/services/as/searchBranchList.do', "HC", '', 'cmbInsBranchId', 'M', 'f_multiCombo'); // HDC BRANCH
         doGetCombo('/callCenter/getstateList.do', '', '', 'ordState', 'S', '');
         doGetCombo('/services/as/getCityList.do',$('#ordState').val(), '', 'ordCity', 'S', '');
 
 
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
 
-        	var index = AUIGrid.getSelectedIndex(myGridID)[0];
+            var index = AUIGrid.getSelectedIndex(myGridID)[0];
             var param;
 
             if(index > -1) {
@@ -112,7 +112,7 @@
         },
         {
             dataField : "cdbBrnchCode",
-            headerText : "CDB Branch",
+            headerText : "HDC Branch",
             width : 100
          },
         {
@@ -139,7 +139,7 @@
           width : 100
         },
         {
-       	  dataField : "regDt",
+          dataField : "regDt",
           headerText : "Register Date",
           editable : false,
           width : 150
@@ -251,53 +251,52 @@
 
   function fn_searchPreASManagement() { // SEARCH Pre-Register AS
 
-	    var isVal = true;
+        var isVal = true;
 
-	    isVal = fn_validation();
+        isVal = fn_validation();
 
-	    if(isVal == false){
-	        return;
-	    }else{
-		    //console.log($("#preAsRegisterForm").serialize());
-	        Common.ajax("GET", "/services/as/searchPreASManagementList.do", $("#preAsRegisterForm").serialize(), function(result) {
-	        //console.log(result);
-	          AUIGrid.setGridData(myGridID, result);
-	        });
-	    }
+        if(isVal == false){
+            return;
+        }else{
+            Common.ajax("GET", "/services/as/searchPreASManagementList.do", $("#preAsRegisterForm").serialize(), function(result) {
+            //console.log(result);
+              AUIGrid.setGridData(myGridID, result);
+            });
+        }
   }
 
   function fn_validation() {
 
-	    if ($("#registerDtFrm").val() == '' || $("#registerDtTo").val() == '') {
-	      Common.alert("<spring:message code='sys.common.alert.validation' arguments='register date (From & To)' htmlEscape='false'/>");
-	      return false;
-	    }
+        if ($("#registerDtFrm").val() == '' || $("#registerDtTo").val() == '') {
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='register date (From & To)' htmlEscape='false'/>");
+          return false;
+        }
 
-	    var dtRange = 31;
+        var dtRange = 31;
 
-		if ($("#registerDtFrm").val() != '' || $("#registerDtTo").val() != '') {
-		        var keyInDateFrom = $("#registerDtFrm").val().substring(3, 5) + "/"
-		                          + $("#registerDtFrm").val().substring(0, 2) + "/"
-		                          + $("#registerDtFrm").val().substring(6, 10);
+        if ($("#registerDtFrm").val() != '' || $("#registerDtTo").val() != '') {
+                var keyInDateFrom = $("#registerDtFrm").val().substring(3, 5) + "/"
+                                  + $("#registerDtFrm").val().substring(0, 2) + "/"
+                                  + $("#registerDtFrm").val().substring(6, 10);
 
-		        var keyInDateTo = $("#registerDtTo").val().substring(3, 5) + "/"
-		                        + $("#registerDtTo").val().substring(0, 2) + "/"
-		                        + $("#registerDtTo").val().substring(6, 10);
+                var keyInDateTo = $("#registerDtTo").val().substring(3, 5) + "/"
+                                + $("#registerDtTo").val().substring(0, 2) + "/"
+                                + $("#registerDtTo").val().substring(6, 10);
 
-		        var date1 = new Date(keyInDateFrom);
-		        var date2 = new Date(keyInDateTo);
+                var date1 = new Date(keyInDateFrom);
+                var date2 = new Date(keyInDateTo);
 
-		        var diff_in_time = date2.getTime() - date1.getTime();
+                var diff_in_time = date2.getTime() - date1.getTime();
 
-		        var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+                var diff_in_days = diff_in_time / (1000 * 3600 * 24);
 
-		        if (diff_in_days > dtRange) {
-		          Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
-		          return false;
-		        }
-	      }
-	      return true;
-	}
+                if (diff_in_days > dtRange) {
+                  Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+                  return false;
+                }
+          }
+          return true;
+    }
 
 
 
@@ -360,14 +359,14 @@
 
   function fn_newASPop() { // CREATE AS
 
-	  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
-	  var param;
+      var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+      var param;
 
-	   if(selIdx > -1) {
+       if(selIdx > -1) {
 
-		  var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
+          var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
 
-		   if( stus == "Active" || stus == "Pending" ){
+//            if( stus == "Active" || stus == "Pending" ){
 
                 param = {
                 preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
@@ -378,28 +377,28 @@
 
                 console.log(param);
 
-               Common.popupDiv("/services/as/ASReceiveEntryPop.do", param, null, true, '_NewEntryPopDiv1');
-           }
+               Common.popupDiv("/homecare/services/as/hcASReceiveEntryPop.do", param, null, true, '_NewEntryPopDiv1');
+//            }
 
-		   else{
-			   Common.alert("Approve Order only allow in Active/ Pending Status")
-		   }
+//            else{
+//                Common.alert("Approve Order only allow in Active/ Pending Status")
+//            }
 
 
-	   }else{
-		   Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
-	   }
+       }else{
+           Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
+       }
   }
 
   function fn_resultASPop(ordId, ordNo) {
 
-	  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+      var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
       var mafuncId = AUIGrid.getCellValue(myGridID, selIdx, "defectCode");
       var preAsType = "PREAS";
 
       var pram = "?salesOrderId=" + ordId + "&ordNo=" + ordNo + "&mafuncId=" + mafuncId + "&preAsType=" + preAsType +"&IND= 1";
-
-      Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '_resultNewEntryPopDiv1');
+      ;
+      Common.popupDiv("/homecare/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '');
     }
 
    function fn_updPreASPop(){
@@ -410,7 +409,7 @@
 
            var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
 
-           if( stus == "Active" || stus == "Pending" ){
+//            if( stus == "Active" || stus == "Pending" ){
                param = {
                        preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
                        preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
@@ -419,10 +418,10 @@
                 }
 
                Common.popupDiv("/services/as/updPreASOrder.do", param, null  , true, '');
-           }
-           else{
-        	   Common.alert("Update Status only allow in Active / Pending Status");
-           }
+//            }
+//            else{
+//                Common.alert("Update Status only allow in Active / Pending Status");
+//            }
        }
        else{
            Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
@@ -430,9 +429,9 @@
  }
 
 
-   function fn_asRawData() {
-	    Common.popupDiv("/services/as/preAsRawDataPop.do", {ind: ind}, null, true, '');
-	  }
+   function fn_asRawData(ind) {
+        Common.popupDiv("/services/as/preAsRawDataPop.do", {ind: ind}, null, true, '');
+      }
 
 
 
@@ -451,7 +450,7 @@
   <p class="fav">
    <a href="#" class="click_add_on">My menu</a>
   </p>
-  <h2>Pre-AS Register</h2>
+  <h2>Pre-AS Register (HC)</h2>
   <form action="#" id="inHOForm">
    <div style="display: none">
     <input type="text" id="in_asId" name="in_asId" />
@@ -464,7 +463,7 @@
    </div>
   </form>
   <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="fn_updPreASPop()">Update Status</a></p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
@@ -481,7 +480,7 @@
  <section class="search_table">
   <!-- search_table start -->
   <form action="#" method="post" id="preAsRegisterForm">
-   <input type="hidden" name="orderType" id="orderType" value="HA"/>
+  <input type="hidden" name="orderType" id="orderType" value="HC"/>
    <table class="type1">
     <!-- table start -->
     <caption>table</caption>
@@ -509,8 +508,7 @@
        <th scope="row"><spring:message code='service.title.codyBranch'/></th>
        <td><select id="cmdBranchCode" name="cmdBranchCode" class="w100p">
                <option value="">Choose One</option>
-                   <c:forEach var="list" items="${branchList}"
-                       varStatus="status">
+                   <c:forEach var="list" items="${branchList}" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
                    </c:forEach>
               </select>
@@ -594,10 +592,10 @@
       <ul class="btns">
       </ul>
       <ul class="btns">
-        <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
          <li>
           <p class="link_btn type2">
-           <a href="#" onclick="fn_asRawData('HA')">Pre-AS Register Raw</a>
+           <a href="#" onclick="fn_asRawData('HC')">Pre-AS Register Raw (HC)</a>
           </p>
          </li>
         </c:if>
@@ -612,7 +610,7 @@
    </aside>
    <!-- link_btns_wrap end -->
    <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
      <li><p class="btn_grid">
        <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
       </p></li>

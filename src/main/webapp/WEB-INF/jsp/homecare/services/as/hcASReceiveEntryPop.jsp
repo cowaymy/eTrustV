@@ -45,6 +45,13 @@
       fn_checkASReceiveEntryConfirmation()
     }
 
+    if('${PREAS_ORDNO}' != ""){
+        $("#entry_orderNo").attr("class", "readonly");
+        $("#entry_orderNo").attr("readonly", "readonly");
+        $("#entry_orderNo").val('${PREAS_ORDNO}');
+        fn_checkASReceiveEntryConfirmation();
+    }
+
   });
 
   function fn_getOrderDetailListAjax() {

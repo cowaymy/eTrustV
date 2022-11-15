@@ -884,8 +884,16 @@
                     $("#save_bt_div").hide();
                     $("#_resultNewEntryPopDiv1").remove();
 
-                    if (smsck_1)
-                      Common.popupDiv("/services/as/sendSMSPop.do", null, null, true, '_dosmsmDiv');
+                    if (smsck_1){
+                    	Common.popupDiv("/services/as/sendSMSPop.do", null, null, true, '_dosmsmDiv');
+                    }
+
+                    if ('${preAsType}' != "undefined" ) {
+                        fn_selfClose();
+                        $("#popup_wrap").remove();
+                        fn_searchPreASManagement();
+                    }
+
                   });
                 }
               }, 'callbackClose');

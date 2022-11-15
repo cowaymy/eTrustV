@@ -23,13 +23,13 @@
       return false;
     }
 
-    var dtRange = 0;
+    var dtRange = 31;
 
-    if ($("#ind").val() == 1) {
-      dtRange = 31;
-    } else {
-      dtRange = 7;
-    }
+//     if ($("#ind").val() == 1) {
+//       dtRange = 31;
+//     } else {
+//       dtRange = 7;
+//     }
 
 
       if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
@@ -61,8 +61,6 @@
     if (fn_validation()) {
 
       var whereSql = "";
-      var whereSql2 = "";
-      var whereSql2LeftJoin = "";
 
       var keyInDateFrom1 = $("#reqstDateFr").val().substring(6, 10) + "-"
                          + $("#reqstDateFr").val().substring(3, 5) + "-"
@@ -71,16 +69,16 @@
                        + $("#reqstDateTo").val().substring(3, 5) + "-"
                        + $("#reqstDateTo").val().substring(0, 2);
 
-      if ($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''
-       && $("#reqstDateFr").val() != null
-       && $("#reqstDateTo").val() != null) {
-
-
-       whereSql += " AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
-
+      if ($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''&& $("#reqstDateFr").val() != null&& $("#reqstDateTo").val() != null) {
+    	    whereSql += " AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
       }
 
-     whereSql2LeftJoin = " LEFT ";
+      if('{ind}'=="HA"){
+    	  whereSql += " AND B.STK_CTGRY_ID NOT IN (5706,5707) ";
+      }
+      else{
+    	  whereSql += " AND B.STK_CTGRY_ID IN (5706,5707) ";
+      }
 
 
         var date = new Date();
@@ -93,8 +91,6 @@
 
         $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
@@ -102,8 +98,6 @@
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
-        $("#reportForm1 #V_WHERESQL2").val(whereSql2);
-        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
         $("#reportForm1 #reportFileName").val('/services/PreASRawDataKOR.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("PREASRawData_" + day + month + date.getFullYear());
@@ -142,14 +136,7 @@
  <header class="pop_header">
   <!-- pop_header start -->
   <h1>Pre-AS Raw Data
-   <c:choose>
-    <c:when test="${ind=='1'}">
      <span style="color:red">( <spring:message code='service.message.dtRange31'/> )</span>
-    </c:when>
-    <c:otherwise>
-     <span style="color:red">( <spring:message code='service.message.dtRange7'/> )</span>
-    </c:otherwise>
-   </c:choose>
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">

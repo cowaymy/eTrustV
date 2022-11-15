@@ -18,12 +18,26 @@ public interface PreASManagementListService {
 
 	List<EgovMap> selectPreAsUpd();
 
-	//Map<String, Object> updateRejectedPreAS(Map<String, Object> params) throws Exception;
-
 	int updatePreAsStatus(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> getCityList(Map<String, Object> params);
 
 	List<EgovMap> getAreaList(Map<String, Object> params);
+
+	EgovMap checkOrder(Map<String, Object> params) throws Exception;
+
+	EgovMap checkSubmissionRecords(Map<String, Object> params) throws Exception;
+
+	EgovMap selectOrderInfo(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> getErrorCodeList(Map<String, Object> params);
+
+	int submitPreAsSubmission(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> searchPreAsSubmissionList(Map<String, Object> params);
+
+	List<EgovMap> asProd(Map<String, Object> params);
+
+	List<EgovMap> searchBranchList(Map<String, Object> params);
 
 }
