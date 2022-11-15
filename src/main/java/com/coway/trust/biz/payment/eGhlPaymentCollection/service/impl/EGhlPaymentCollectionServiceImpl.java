@@ -35,10 +35,10 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 		  return eGhlPaymentCollectionMapper.orderNumberBillMobileSearch(params);
 	  }
 
-	  @Override
-	  public String paymentCollectionRunningNumberGet(){
-		    String pcNo = commonMapper.selectDocNo("189");
-
-		    return pcNo;
-	  }
+//	  @Override
+//	  public String paymentCollectionRunningNumberGet(){
+//		    String pcNo = commonMapper.selectDocNo("189");
+//
+//		    return pcNo;
+//	  }
 }
