@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.payment.eGhlPaymentCollection.service.EGhlPaymentCollectionService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -24,10 +25,20 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 	  @Resource(name = "eGhlPaymentCollectionMapper")
 	  private EGhlPaymentCollectionMapper eGhlPaymentCollectionMapper;
 
+	  @Resource(name = "commonMapper")
+	  private CommonMapper commonMapper;
+
 	  private static final Logger LOGGER = LoggerFactory.getLogger(EGhlPaymentCollectionServiceImpl.class);
 
 	  @Override
 	  public List<EgovMap> orderNumberBillMobileSearch(Map<String,Object> params){
 		  return eGhlPaymentCollectionMapper.orderNumberBillMobileSearch(params);
+	  }
+
+	  @Override
+	  public String paymentCollectionRunningNumberGet(){
+		    String pcNo = commonMapper.selectDocNo("189");
+
+		    return pcNo;
 	  }
 }
