@@ -142,10 +142,10 @@
           return;
       }
 
-	  /* if( $("#hidCurMonthInd").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
+	  if( $("#hidCurMonthInd").val() == "N" && $("#saveForm #listproFormaStatus").val() == 81){
           Common.alert("Last active billing Schedule : " +  $("#hidLastActiveSchdulDt").val() + "<br>Billing Schedule for " +  $("#advStartDt").val() + " is not available" );
           return;
-      } */
+      }
 
 
 

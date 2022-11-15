@@ -114,10 +114,10 @@
        var salesOrdId = selectedItems[0].item.salesOrdId;
        var disc = selectedItems[0].item.disc;
 
-       /* if(stusId != '1') { //Active
+       if(stusId != '1') { //Active
            Common.alert("Pro Forma edit only allowed for Active status");
            return;
-       } */
+       }
 
        var param = "?salesOrdId=" + salesOrdId + "&salesOrdNo=" + salesOrdNo + "&refNo=" + refNo + "&proFormaId=" + proFormaId + "&stus=" + Stus + "&stusId=" + stusId + "&disc=" + disc;
 
