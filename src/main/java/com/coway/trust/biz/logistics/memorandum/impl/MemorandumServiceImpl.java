@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.logistics.memorandum.MemorandumService;
 
@@ -33,6 +34,11 @@ public class MemorandumServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
+	public List<EgovMap> selectMemoType() {
+		return memo.selectMemoType();
+	}
+
+	@Override
 	public Map<String, Object> memoSave(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		Map<String, Object> data = new HashMap();
@@ -52,4 +58,27 @@ public class MemorandumServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	}
 
+	@Override
+	public int updatePassWord(Map<String, Object> params, Integer crtUserId) {
+		int saveCnt = 0;
+
+		params.put("crtUserId", crtUserId);
+		params.put("updUserId", crtUserId);
+
+		saveCnt++;
+
+		memo.updatePassWord(params);
+
+
+		return saveCnt;
+	}
+
+	@Override
+	@Transactional
+	public void memoHistSave(Map<String, Object> params) throws Exception {
+
+		memo.updateMemoHistory(params);
+
+		memo.insertMemoHistory(params);
+	}
 }

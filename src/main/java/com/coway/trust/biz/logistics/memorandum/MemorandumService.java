@@ -10,7 +10,13 @@ public interface MemorandumService {
 
 	List<EgovMap> selectDeptSearchList();
 
+	List<EgovMap> selectMemoType();
+
 	Map<String, Object> memoSave(Map<String, Object> params);
 
 	void memoDelete(Map<String, Object> params);
+
+	int updatePassWord(Map<String, Object> params, Integer crtUserId);
+
+	void memoHistSave (Map<String, Object> params) throws Exception;
 }

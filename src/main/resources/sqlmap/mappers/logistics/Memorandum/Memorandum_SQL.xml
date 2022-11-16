@@ -69,6 +69,15 @@
 	    ORDER BY ID
     </select>
 
+        <select id="selectMemoType" resultType="egovMap">
+	        SELECT
+	            CODE_NAME CODE_NAME,
+	            CODE_ID CODE_ID
+	        FROM SYS0013M
+	        WHERE CODE_MASTER_ID  = '536'
+	        ORDER BY CODE_ID
+        </select>
+
     <insert id="memoSave" parameterType="Map">
          INSERT
 INTO    MSC0010D                                                                --
@@ -147,5 +156,50 @@ INTO    MSC0010D                                                                
            AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
            AND M10.MEMO_ID = #{memoid}
     </select>
+
+    <update id="updatePassWord" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{newPasswordConfirmTxt}
+        ,USER_PASSWD_LAST_UPD_DT = SYSDATE
+        <choose>
+            <when test=' newUserIdTxt != null and newUserIdTxt != "" '>
+                WHERE USER_ID = #{newUserIdTxt}
+            </when>
+            <otherwise>
+                WHERE USER_ID = #{searchLoginId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateMemoHistory" parameterType="Map">
+       UPDATE SYS0091M SET POP_FLG = 'D'
+
+       where POP_ID = (SELECT MAX(POP_ID) FROM SYS0091M WHERE POP_NEW_FL_NM = #{newFileName} AND POP_FLG = 'A')
+</update>
+
+    <insert id="insertMemoHistory" parameterType="Map">
+        insert into SYS0091M
+		select
+		(select MAX(POP_ID) + 1 from SYS0091M),
+		#{orgFileName},
+		POP_NEW_FL_NM,
+		POP_TYPE,
+		POP_MEM_TYPE,
+		POP_EXCEPTION_MEMROLE,
+		POP_EXCEPTION_USER,
+		'A' ,
+		POP_REJECT_FLG,
+		POP_ACK1,
+		POP_ACK2,
+		POP_ACK3,
+		SYSDATE,
+		#{userId},
+		SYSDATE,
+		#{userId},
+		#{crtsdt},
+		#{crtedt}
+		from SYS0091M
+		where POP_ID = (SELECT MAX(POP_ID) FROM SYS0091M WHERE POP_NEW_FL_NM = #{newFileName} AND POP_FLG = 'D')
+    </insert>
 
 </mapper>

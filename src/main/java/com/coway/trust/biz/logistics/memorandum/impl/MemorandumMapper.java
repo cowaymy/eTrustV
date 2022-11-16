@@ -12,6 +12,8 @@ public interface MemorandumMapper {
 
 	List<EgovMap> selectDeptSearchList();
 
+	List<EgovMap> selectMemoType();
+
 	void memoSave(Map<String, Object> params);
 
 	void memoUpdate(Map<String, Object> params);
@@ -19,4 +21,10 @@ public interface MemorandumMapper {
 	Map<String, Object> selectMemoRandumData(Map<String, Object> params);
 
 	void memoDelete(Map<String, Object> params);
+
+	int updatePassWord(Map<String, Object> params);
+
+	void updateMemoHistory(Map<String, Object> params) throws Exception;
+
+	void insertMemoHistory(Map<String, Object> params) throws Exception;
 }

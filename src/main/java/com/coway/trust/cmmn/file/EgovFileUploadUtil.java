@@ -513,5 +513,85 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
     return list;
   }
 
+	/**
+	 * 파일을 Upload 처리한다.
+	 *
+	 * @param request
+	 * @param uploadPath
+	 * @param subPath
+	 * @param maxFileSize
+	 * @param addExtension
+	 *            : application-xxx.properties 의 web.resource.upload.file(resource 접근 가능 파일 경로) 를 참조한 경우 확장자가 있어야지만 바로 열
+	 *            수 있다.
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<EgovFormBasedFileVo> uploadMemoFiles(HttpServletRequest request, String uploadPath, String subPath,
+			final long maxFileSize, boolean addExtension) throws Exception {
+		List<EgovFormBasedFileVo> list = new ArrayList<>();
+
+		MultipartHttpServletRequest mptRequest = (MultipartHttpServletRequest) request;
+		Iterator<?> fileIter = mptRequest.getFileNames();
+
+		while (fileIter.hasNext()) {
+			MultipartFile mFile = mptRequest.getFile((String) fileIter.next());
+
+			if (mFile.getSize() > maxFileSize) {
+				throw new ApplicationException(AppConstants.FAIL,
+						CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class).getMessage(
+								AppConstants.MSG_FILE_MAX_LIMT,
+								new Object[] { CommonUtils.formatFileSize(maxFileSize) }));
+			}
+
+			EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
+
+			String tmp = mFile.getOriginalFilename();
+
+			if (tmp.lastIndexOf("\\") >= 0) {
+				tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
+			}
+
+			String blackUploadPath = EgovWebUtil.filePathBlackList(uploadPath);
+			String blackSubPath = EgovWebUtil.filePathBlackList(subPath);
+
+			vo.setFileName(tmp);
+			vo.setContentType(mFile.getContentType());
+			vo.setServerPath(blackUploadPath);
+			vo.setServerSubPath(blackSubPath);
+
+			String physicalName = tmp;
+
+/*			if (addExtension) {
+				physicalName = physicalName + "." + FilenameUtils.getExtension(tmp).toLowerCase();
+			}*/
+
+			vo.setPhysicalName(physicalName);
+			vo.setSize(mFile.getSize());
+			vo.setExtension(FilenameUtils.getExtension(tmp).toLowerCase());
+
+			if (mFile.getSize() > 0) {
+				InputStream is = null;
+
+				try {
+					is = mFile.getInputStream();
+
+					if (MimeTypeUtil.isNotAllowFile(is)) {
+						throw new ApplicationException(AppConstants.FAIL,
+								mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
+					}
+
+					saveFile(is, new File(EgovWebUtil.filePathBlackList(vo.getServerPath() + SEPERATOR
+							+ vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
+				} finally {
+					if (is != null) {
+						is.close();
+					}
+				}
+				list.add(vo);
+			}
+		}
+
+		return list;
+	}
 
 }
