@@ -280,6 +280,7 @@ var orgFileName = '';
     		    Common.ajax("POST", "/logistics/memorandum/memoHistSave", $("#searchForm").serializeJSON() , function(result) {
 	                if(result != 0){
 	                	   console.log(result);
+	                	   Common.alert("Done Upload");
 	                }else{
 	                    Common.alert("Fail to insert History Log" + DEFAULT_DELIMITER + result.message);
 	                }
