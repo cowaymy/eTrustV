@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.htOrderDetailService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.homecare.services.htManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -51,6 +52,9 @@ public class htManualController {
 
   @Resource(name = "salesCommonService")
   private SalesCommonService salesCommonService;
+
+  @Resource(name = "hcOrderListService")
+  private HcOrderListService hcOrderListService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -805,6 +809,10 @@ public class htManualController {
     logger.debug("params : {}", params);
     String srvCodyId = "";
 
+    int resultValueMat = 1;
+    int resultValueFra = 1;
+
+    //Mattress
     LinkedHashMap hsResultM = (LinkedHashMap) params.get("hsResultM");
     hsResultM.put("hscodyId", hsResultM.get("cmbServiceMem"));
     srvCodyId = htManualService.getSrvCodyIdbyMemcode(hsResultM);
@@ -818,9 +826,10 @@ public class htManualController {
     // params.get(AppConstants.AUIGRID_REMOVE);
     String schdulId = (String) hsResultM.get("schdulId");
 
+
     logger.debug("hsResultM ===>" + hsResultM.toString());
 
-    int resultValue = htManualService.updateHsConfigBasic(params, sessionVO);
+    resultValueMat = htManualService.updateHsConfigBasic(params, sessionVO);
 
     // ADDED BY TPY FOR ASSIGN HT CODY_ID IN SVC0008D
     logger.debug("schdulId ===>" + hsResultM.get("schdulId"));
@@ -832,7 +841,47 @@ public class htManualController {
       htManualService.updateAssignHT(params);
     }
 
-    if (resultValue > 0) {
+    //Frame
+    LinkedHashMap hsResultM1 = (LinkedHashMap) params.get("hsResultM");
+    hsResultM1.put("srvOrdId",hsResultM1.get("salesOrderId"));
+
+	EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(hsResultM1);
+	String fraOrdId = CommonUtils.nvl(hcOrder.get("anoOrdId"));
+
+	    params.put("hscodyId", hsResultM1.get("cmbServiceMem"));
+	    hsResultM.put("srvOrdId", hcOrder.get("anoOrdId"));
+	    hsResultM.put("salesOrderId", hcOrder.get("anoOrdId"));
+	    srvCodyId = htManualService.getSrvCodyIdbyMemcode(hsResultM);
+	    logger.debug("srvCodyId : " + srvCodyId);
+	    params.put("cmbServiceMem", srvCodyId);
+	    params.put("hscodyId", srvCodyId);
+	    logger.debug("hsResultM2 : {}", params);
+	    // htManualService.updateSrvCodyId(hsResultM);
+	    // logger.debug("params111111111 : {}", params);
+	    // List<Object> remList = (List<Object>)
+	    // params.get(AppConstants.AUIGRID_REMOVE);
+	    String schdulIdFra = (String) hsResultM1.get("schdulId");
+
+	if(fraOrdId != "" && fraOrdId != null ){
+
+
+		    logger.debug("hsResultM ===>" + hsResultM.toString());
+
+		    resultValueFra = htManualService.updateHsConfigBasic(params, sessionVO);
+
+		    // ADDED BY TPY FOR ASSIGN HT CODY_ID IN SVC0008D
+		    logger.debug("schdulId ===>" + hsResultM.get("schdulId"));
+
+		    if (schdulId != null && schdulId != "") {
+		      params.put("updator", sessionVO.getUserId());
+		      params.put("codyId", srvCodyId);
+		      params.put("schdulId", schdulId);
+		      htManualService.updateAssignHT(params);
+		    }
+	}
+
+
+    if (resultValueMat > 0 && resultValueFra > 0 ) {
       message.setCode(AppConstants.SUCCESS);
       message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     } else {
