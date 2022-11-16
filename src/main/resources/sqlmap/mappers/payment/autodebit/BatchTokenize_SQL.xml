@@ -5,46 +5,58 @@
         DELETE FROM SAL0323T
     </delete>
 
-     <insert id="insertSAL0323T" parameterType="Map">
+      <insert id="insertSAL0323T" parameterType="Map">
               INSERT INTO SAL0323T (FAIL_RESN_ID,CUST_ID,NRIC,ORDER_NO,CARD_HOLDER,CARD_NO,CARD_EXP,CARD_TYPE,BANKNAME,CRC_TYPE)
-              <foreach item="item" collection="all" index="index" separator= "union">
-              <![CDATA[
               select
                   case
                         when b.cust_id is null then 3488
                         when b1.cust_id is null then 3490
                         when b2.cust_id is null then 3489
-                        when length(replace(#{item.8},'-','')) <> 16 then 3491
+                        when length(replace(a.CardNumber,'-','')) <![CDATA[ <>]]> 16 then 3491
                         when c1.bank_id is null then 3492
                         when d1.code_id is null then 3493
                   else 0
                   end as fail_resn,
-                  #{item.0},
-                  regexp_replace(#{item.1}, '(\d+)\.(\d+)(\d)(.+)', '\1\2'),
-                  #{item.5},
-                  #{item.6},
-                  replace(#{item.8},'-',''),
+                  a.CowayCustId,
+                  regexp_replace(a.NricOrPassport, '(\d+)\.(\d+)(\d)(.+)', '\1\2'),
+                  a.OrderNo,
+                  a.FullName,
+                  replace(a.CardNumber,'-',''),
                   TO_CHAR(TO_DATE(#{item.9},'Mon-YY'),'MMYY'),
                   case
-                    when #{item.10} = 'Credit Card' then 1241
-                    when #{item.10} = 'Debit Card' then 1240
+                    when a.CardType = 'Credit Card' then 1241
+                    when a.CardType = 'Debit Card' then 1240
                   end as Card_Type,
                   c1.bank_id,
-                  d.crc_type
-                  FROM dual a
-                  left join sal0029d b on b.cust_id =#{item.0}
-                  left join sal0029d b1 on b1.cust_id = #{item.0} and  b1.nric like '%'||regexp_replace(#{item.1}, '(\d+)\.(\d+)(\d)(.+)', '\1\2')||'%'
-                  left join sal0029d b2 on UPPER(trim(b2.name)) =  #{item.6} and b2.cust_id = #{item.0}
-                  left join sys0109m c on SELFCARE_BANK_NAME = #{item.11}
+                  a.crc_type
+                  FROM (
+                        <foreach collection="list" item="item" index="index" separator= "union">
+                        select
+                          #{item.0} CowayCustId,
+                          #{item.1} NricOrPassport,
+                          #{item.2} Status,
+                          #{item.3} DocumentPath,
+                          #{item.4} DateCreated,
+                          #{item.5} OrderNo,
+                          #{item.6} FullName,
+                          #{item.7} AccHolderName,
+                          #{item.8} CardNumber,
+                          #{item.9} CardEXP,
+                          #{item.10} CardType,
+                          #{item.11} BankName,
+                          CASE WHEN substr(#{item.8},0,1) = 4 THEN 112
+                               WHEN substr(#{item.8},0,1) = 5 THEN 111 ELSE 0 END crc_type
+                        FROM DUAL
+                         </foreach>
+                  ) a
+                  left join sal0029d b on b.cust_id = a.CowayCustId
+                  left join sal0029d b1 on b1.cust_id = a.CowayCustId and  b1.nric like '%'||regexp_replace(a.NricOrPassport, '(\d+)\.(\d+)(\d)(.+)', '\1\2')||'%'
+                  left join sal0029d b2 on UPPER(trim(b2.name)) =  a.FullName and b2.cust_id = a.CowayCustId
+                  left join sys0109m c on SELFCARE_BANK_NAME = A.BankName
                   left join sys0004m c1 on c1.code = c.etrust_bank_name
-                  left join (select case
-                                        when substr(replace(#{item.8},'-',''),0,1) = 4 then 112
-                                        when substr(replace(#{item.8},'-',''),0,1) = 5 then 111
-                                       else 0
-                                    end as crc_type from dual) d on 1=1
-                  left join sys0013m d1 on d.crc_type = d1.code_id]]>
-               </foreach>
+                  left join sys0013m d1 on a.crc_type = d1.code_id
     </insert>
+
 
     <select id="displayRecord" resultType="egovMap">
         select A.CUST_ID,A.ORDER_NO,A.CARD_HOLDER,C.NAME,CASE WHEN A.FAIL_RESN_ID = 0 THEN NULL ELSE B.RESN_DESC END AS FAIL_REASON   from SAL0323T A
