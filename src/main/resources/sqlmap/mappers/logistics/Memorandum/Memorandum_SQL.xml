@@ -196,8 +196,9 @@ INTO    MSC0010D                                                                
 		#{userId},
 		SYSDATE,
 		#{userId},
-		#{crtsdt},
-		#{crtedt}
+		TO_CHAR(#{crtsdt},'yyyy/mm/dd'),
+		TO_CHAR(#{crtedt},'yyyy/mm/dd')
+
 		from SYS0091M
 		where POP_ID = (SELECT MAX(POP_ID) FROM SYS0091M WHERE POP_NEW_FL_NM = #{newFileName} AND POP_FLG = 'D')
     </insert>
