@@ -71,6 +71,8 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 	}
 	@Override
 	public void insertCpe(Map<String, Object> params) {
+		params.put("mainDept","MD20");
+		params.put("subDept","SD299");
 
 		int ordStatusId = Integer.parseInt((String) params.get("ordStusId"));
 		int reqStageId = ordStatusId == 1 ? 24 : 25;

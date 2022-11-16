@@ -280,8 +280,8 @@
             ,#{salesOrdNo}
             ,#{custId}
             ,#{reqStageId}
-            ,'MD20'
-            ,'SD299'
+            ,#{mainDept}
+            ,#{subDept}
             ,1
             ,SYSDATE
             ,#{userId}
@@ -371,8 +371,8 @@
     (
        SVC0121D_SEQ.NEXTVAL
        ,#{cpeReqId}
-       ,'MD20'
-       ,'SD299'
+       ,#{mainDept}
+       ,#{subDept}
        ,#{inputRemark}
        ,#{status}
        ,SYSDATE
