@@ -687,7 +687,7 @@ SELECT
                    NAME CODE_NAME
         FROM
                    SYS0038M
-        WHERE  STUS_CODE_ID IN (1, 5 , 6)
+        WHERE  STUS_CODE_ID IN (1, 5)
 </select>
 
 <select id="getCcpRejectCodeList"  resultType="egovMap">
