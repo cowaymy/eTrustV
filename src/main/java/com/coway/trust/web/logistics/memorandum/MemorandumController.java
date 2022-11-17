@@ -5,7 +5,7 @@
  * @author methree
  *
  */
-package com.coway.trust.web.logistics.memoradum;
+package com.coway.trust.web.logistics.memorandum;
 
 import java.io.File;
 import java.util.ArrayList;
