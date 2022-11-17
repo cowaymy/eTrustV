@@ -67,7 +67,7 @@ public class MemorandumController {
 	@Autowired
 	private SessionHandler sessionHandler;
 
-	@Value("${web.resource.upload..memo.file}")
+	@Value("${web.resource.upload.memo.file}")
 	private String uploadDir;
 
 	@RequestMapping(value = "/MemoList.do")
