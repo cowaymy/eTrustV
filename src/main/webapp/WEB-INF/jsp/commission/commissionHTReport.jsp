@@ -103,7 +103,7 @@
                     return;
                 }
 
-                if(memLvl == '3')
+                /* if(memLvl == '3')
                 {
                 	reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
                     reportDownFileName = "HTMCommission_" + today; //report name
@@ -129,7 +129,20 @@
                         reportDownFileName = "HTCommission_" + today; //report name
                         reportViewType = "PDF"; //viewType
                     }
-               	}
+               	} */
+
+                if(memLvl == '3')
+                {
+                    reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
+                    reportDownFileName = "HTMCommission_" + salesPersonCd + "_" + today;  //report name
+                    reportViewType = "PDF"; //viewType
+                }
+                else
+                {
+                    reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
+                    reportViewType = "PDF"; //viewType
+                    reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                }
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
