@@ -13,6 +13,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,7 +73,7 @@ public class EGhlPaymentCollectionApiController {
 
 	@ApiOperation(value = "paymentCollectionCreate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/paymentCollectionCreate", method = RequestMethod.POST)
-	public ResponseEntity<EGhlPaymentCollectionApiDto> paymentCollectionCreate(@ModelAttribute EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
+	public ResponseEntity<EGhlPaymentCollectionApiDto> paymentCollectionCreate(@RequestBody EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
 		Map<String, Object> params = eGhlPaymentCollectionApiForm.createMap(eGhlPaymentCollectionApiForm);
 		LOGGER.debug("paymentcollection  params  값 : {}", params);
         Gson g = new Gson();
