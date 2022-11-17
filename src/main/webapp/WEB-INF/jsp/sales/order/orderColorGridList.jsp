@@ -324,6 +324,18 @@
                 width : 80,
                 editable : false,
                 style: 'left_style'
+            },{
+                dataField : "ccpStus",
+                headerText : "CCP Status",
+                width : 80,
+                editable : false,
+                style: 'left_style'
+            },{
+                dataField : "ccpRemark",
+                headerText : "CCP Remark",
+                width : 80,
+                editable : false,
+                style: 'left_style'
             }]; //added by keyi 20211105
 
      // 그리드 속성 설정
@@ -454,7 +466,17 @@
                headerText : "State",
                width : 80,
                editable : false,
-           }];
+               }, {
+               dataField : "ccpStus",
+               headerText : "CCP Status",
+               width : 80,
+               editable : false
+               }, {
+               dataField : "ccpRemark",
+               headerText : "CCP Remark",
+               width : 150,
+               editable : false
+               }];
 
 
 	        //그리드 속성 설정
@@ -962,6 +984,20 @@ console.log("searchColorGrid");
         <option value="mat">Mattress only</option>
     </td>
 </tr>
+<tr>
+    <th scope="row">CCP Status</th>
+    <td>
+    <select class="w100p" id="ccpStus" name="ccpStus">
+        <option value="">Choose One</option>
+        <option value="appv">Approved</option>
+        <option value="act">Active</option>
+        <option value="rjct">Rejected</option>
+    </td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
+ </tr>
 <tr>
     <th scope="row" colspan="6" ><spaxn class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
 </tr>
