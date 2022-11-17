@@ -9,4 +9,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("eGhlPaymentCollectionMapper")
 public interface EGhlPaymentCollectionMapper {
 	List<EgovMap> orderNumberBillMobileSearch(Map<String, Object> params);
+
+	int insertPaymentCollectionMaster(Map<String, Object> params);
+
+	int insertPaymentCollectionDetail(Map<String, Object> params);
+
+	EgovMap getUserByUserName(Map<String, Object> params);
 }

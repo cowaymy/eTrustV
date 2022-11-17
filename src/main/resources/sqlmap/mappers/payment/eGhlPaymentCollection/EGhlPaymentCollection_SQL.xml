@@ -177,4 +177,27 @@
 			LEFT JOIN SAL0027D Y ON Y.CUST_ID = V.CUST_ID AND Y.STUS_CODE_ID = 9
 			LEFT JOIN SYS0013M Z ON Z.CODE_ID = V.TYPE_ID
 	</select>
+
+	<insert id="insertPaymentCollectionMaster" parameterType="Map">
+		INSERT INTO PAY0336M (ID,CUST_ID,CUST_EMAIL,CUST_CONTACT,PAYMENT_LINK,STATUS_CODE_ID,ORDER_DESC,TOT_AMT,
+		EXP_DT,CRT_DT,CRT_BY)
+		VALUES
+		(#{paymentRunningNumber}, TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},#{statusCodeId},#{orderDescription},
+		#{totalAmountPayable},TO_DATE(SYSDATE+7,'DD/MM/YYYY'),SYSDATE,#{userId})
+	</insert>
+
+		<insert id="insertPaymentCollectionDetail" parameterType="Map">
+		INSERT INTO PAY0337D (DETAIL_ID,ID,SALES_ORD_ID,SALES_ORD_NO,PRODUCT_TYPE_CODE,PRODUCT_TYPE_NAME,AMOUNT,CRT_DT,CRT_BY)
+		VALUES
+		(PAY0337D_ID_SEQ.NEXTVAL, #{paymentRunningNumber},#{salesOrdId},#{salesOrdNo},#{productTypeCode},#{productTypeName},#{amount},SYSDATE,#{userId})
+	</insert>
+
+	 <select id="getUserByUserName" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM
+            SYS0047M
+        WHERE
+        	USER_NAME = #{userName}
+    </select>
 </mapper>

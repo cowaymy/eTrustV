@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.eGhlPaymentCollection.service.EGhlPaymentCollectionService;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -67,5 +68,21 @@ public class EGhlPaymentCollectionApiController {
 		EGhlPaymentCollectionApiDto result = new EGhlPaymentCollectionApiDto();
 		result.setPaymentCollectionRunningNumber(paymentRunningNo);
 		return ResponseEntity.ok(result);
+	}
+
+	@ApiOperation(value = "paymentCollectionCreate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/paymentCollectionCreate", method = RequestMethod.POST)
+	public ResponseEntity<EGhlPaymentCollectionApiDto> paymentCollectionCreate(@ModelAttribute EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
+		Map<String, Object> params = eGhlPaymentCollectionApiForm.createMap(eGhlPaymentCollectionApiForm);
+
+        Gson g = new Gson();
+		EGhlPaymentCollectionApiForm[] detailInfo = g.fromJson((String) params.get("detailInfo"), EGhlPaymentCollectionApiForm[].class);
+		List<Map<String, Object>> paramDetails = eGhlPaymentCollectionApiForm.createMap2(detailInfo);
+
+		int createResponse = eGhlPaymentCollectionService.paymentCollectionMobileCreation(params,paramDetails);
+
+		EGhlPaymentCollectionApiDto reponse = new EGhlPaymentCollectionApiDto();
+		reponse.setResponseCode(createResponse);
+		return ResponseEntity.ok(reponse);
 	}
 }

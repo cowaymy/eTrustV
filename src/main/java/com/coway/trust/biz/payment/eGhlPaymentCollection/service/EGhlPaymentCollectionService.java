@@ -10,4 +10,6 @@ public interface EGhlPaymentCollectionService {
 	public List<EgovMap> orderNumberBillMobileSearch(Map<String,Object> params);
 
 	String paymentCollectionRunningNumberGet();
+
+	int paymentCollectionMobileCreation(Map<String, Object> params, List<Map<String, Object>> paramDetails);
 }

@@ -1,5 +1,6 @@
 package com.coway.trust.biz.payment.eGhlPaymentCollection.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +41,53 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 		    String pcNo = commonMapper.selectDocNo("189");
 
 		    return pcNo;
+	  }
+
+	  @Override
+	  public int paymentCollectionMobileCreation(Map<String,Object> params, List<Map<String,Object>> paramDetails) {
+		  EgovMap user = eGhlPaymentCollectionMapper.getUserByUserName(params);
+
+		  if(user != null){
+			  params.put("userId", user.get("userId"));
+		  }
+		  //master table data add
+		  int masterResult =  eGhlPaymentCollectionMapper.insertPaymentCollectionMaster(params);
+
+		  if(masterResult > 0){
+			  //detail add
+			  for(int i=0; i < paramDetails.size(); i++){
+				  Map<String,Object> detail = paramDetails.get(i);
+				  detail.put("userId", user.get("userId"));
+				  detail.put("paymentRunningNumber", params.get("paymentRunningNumber").toString());
+
+				  boolean productBillChecked = Boolean.parseBoolean(detail.get("productBillChecked").toString());
+				  boolean svmBillChecked = Boolean.parseBoolean(detail.get("svmBillChecked").toString());
+
+				  Map<String,Object> newDetailParam = new HashMap();
+				  newDetailParam.put("id", detail.get("paymentRunningNumber").toString());
+				  newDetailParam.put("salesOrdId", Integer.parseInt(detail.get("salesOrdId").toString()));
+				  newDetailParam.put("salesOrdNo", detail.get("salesOrdNo").toString());
+				  newDetailParam.put("userId", detail.get("userId"));
+				  if(productBillChecked){
+					  newDetailParam.put("productTypeCode", detail.get("productTypeCode").toString());
+					  newDetailParam.put("productTypeName", detail.get("productTypeName").toString());
+					  newDetailParam.put("amount", Double.parseDouble(detail.get("productOutstandingAmount").toString()));
+
+					  eGhlPaymentCollectionMapper.insertPaymentCollectionDetail(newDetailParam);
+				  }
+
+				  if(svmBillChecked){
+					  newDetailParam.put("productTypeCode", "SVM");
+					  newDetailParam.put("productTypeName", detail.get("membership").toString());
+					  newDetailParam.put("amount", Double.parseDouble(detail.get("membershipOutstandingAmount").toString()));
+
+					  eGhlPaymentCollectionMapper.insertPaymentCollectionDetail(newDetailParam);
+				  }
+			  }
+		  }
+		  else{
+			  return 0;
+		  }
+		  return 1;
 	  }
 }
