@@ -103,7 +103,8 @@
                            F1.BNDL_ID,
                            CASE WHEN F1.CCP_STUS_ID = 1 THEN 'Active'
                            WHEN ( F1.CCP_STUS_ID = 5 ) THEN 'Approved'
-                           ELSE 'Rejected'
+                           WHEN ( F1.CCP_STUS_ID = 6 ) THEN 'Rejected'
+                           ELSE ''
                            END CCP_STUS,
                            F1.CCP_REMARK
            FROM ( SELECT E1.ORD_ID OrderID1 ,
@@ -407,13 +408,13 @@
                           </if>
                           <if test="ccpStus != null and ccpStus != ''">
                             <if test="ccpStus == 'appv'">
-                                AND CCP_STUS_ID = 5
+                                AND CCP.CCP_STUS_ID = 5
                             </if>
                             <if test="ccpStus == 'act'">
-                                AND CCP_STUS_ID = 1
+                                AND CCP.CCP_STUS_ID = 1
                             </if>
                             <if test="ccpStus == 'rjct'">
-                                AND CCP_STUS_ID = 6
+                                AND CCP.CCP_STUS_ID = 6
                             </if>
                           </if>
 
