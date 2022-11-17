@@ -255,8 +255,19 @@
                 width : 100,
                 editable : false,
                 style: 'left_style'
-            },
-            {
+            }, {
+                dataField : "ccpStus",
+                headerText : "CCP Status",
+                width : 80,
+                editable : false,
+                style: 'left_style'
+            }, {
+                dataField : "ccpRemark",
+                headerText : "CCP Remark",
+                width : 80,
+                editable : false,
+                style: 'left_style'
+            }, {
                 dataField : "neoProStatus",
                 headerText : "Neo Pro",
                 width : 100,
@@ -321,18 +332,6 @@
             },{
                 dataField : "state",
                 headerText : "State",
-                width : 80,
-                editable : false,
-                style: 'left_style'
-            },{
-                dataField : "ccpStus",
-                headerText : "CCP Status",
-                width : 80,
-                editable : false,
-                style: 'left_style'
-            },{
-                dataField : "ccpRemark",
-                headerText : "CCP Remark",
                 width : 80,
                 editable : false,
                 style: 'left_style'
@@ -413,6 +412,16 @@
                width : 100,
                editable : false
                }, {
+               dataField : "ccpStus",
+               headerText : "CCP Status",
+               width : 80,
+               editable : false
+               }, {
+               dataField : "ccpRemark",
+               headerText : "CCP Remark",
+               width : 150,
+               editable : false
+               }, {
                dataField : "neoProStatus",
                headerText : "Neo Pro",
                width : 100,
@@ -466,16 +475,6 @@
                headerText : "State",
                width : 80,
                editable : false,
-               }, {
-               dataField : "ccpStus",
-               headerText : "CCP Status",
-               width : 80,
-               editable : false
-               }, {
-               dataField : "ccpRemark",
-               headerText : "CCP Remark",
-               width : 150,
-               editable : false
                }];
 
 
