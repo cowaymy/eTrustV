@@ -74,11 +74,11 @@ public class EGhlPaymentCollectionApiController {
 	@RequestMapping(value = "/paymentCollectionCreate", method = RequestMethod.POST)
 	public ResponseEntity<EGhlPaymentCollectionApiDto> paymentCollectionCreate(@ModelAttribute EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
 		Map<String, Object> params = eGhlPaymentCollectionApiForm.createMap(eGhlPaymentCollectionApiForm);
-
+		LOGGER.debug("paymentcollection  params  값 : {}", params);
         Gson g = new Gson();
 		EGhlPaymentCollectionApiForm[] detailInfo = g.fromJson((String) params.get("detailInfo"), EGhlPaymentCollectionApiForm[].class);
 		List<Map<String, Object>> paramDetails = eGhlPaymentCollectionApiForm.createMap2(detailInfo);
-
+		LOGGER.debug("paymentcollection  paramDetails 값 : {}", paramDetails);
 		int createResponse = eGhlPaymentCollectionService.paymentCollectionMobileCreation(params,paramDetails);
 
 		EGhlPaymentCollectionApiDto reponse = new EGhlPaymentCollectionApiDto();
