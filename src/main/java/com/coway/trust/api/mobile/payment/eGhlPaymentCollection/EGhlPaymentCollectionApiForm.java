@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "EGhlPaymentCollectionApiForm", description = "EGhlPaymentCollectionApiForm")
 public class EGhlPaymentCollectionApiForm {
-	private String detailInfo;
+	private List<Map<String,Object>> detailInfo;
 	private String custIc;
 	private String custId;
 	private String userName;
@@ -55,24 +55,25 @@ public class EGhlPaymentCollectionApiForm {
     	return params;
 	}
 
-	public static List<Map<String, Object>> createMap2(EGhlPaymentCollectionApiForm[] vo){
+	public static List<Map<String, Object>> createMap2(List<EGhlPaymentCollectionApiForm> vo){
 		List<Map<String, Object>> paramList = new ArrayList<>();
-    	for(int i=0; i<vo.length;i++){
+    	for(int i=0; i<vo.size();i++){
     		Map<String, Object> params = new HashMap<>();
-        	params.put("userName", vo[i].getUserName());
-        	params.put("salesOrdId", vo[i].getSalesOrdId());
-        	params.put("salesOrdNo", vo[i].getSalesOrdNo());
-        	params.put("productOutstandingAmount", vo[i].getProductOutstandingAmount());
-        	params.put("productTypeName", vo[i].getProductTypeName());
-        	params.put("productTypeCode", vo[i].getProductTypeCode());
-        	params.put("membershipOutstandingAmount", vo[i].getMembershipOutstandingAmount());
-        	params.put("membership", vo[i].getMembership());
-        	params.put("productId", vo[i].getProductId());
-        	params.put("productCode", vo[i].getProductCode());
-        	params.put("productName", vo[i].getProductName());
-        	params.put("productBillChecked", vo[i].getProductBillChecked());
-        	params.put("svmBillChecked", vo[i].getSvmBillChecked());
-        	params.put("payingAmount", vo[i].getPayingAmount());
+
+        	params.put("userName", vo.get(i).getUserName());
+        	params.put("salesOrdId", vo.get(i).getSalesOrdId());
+        	params.put("salesOrdNo", vo.get(i).getSalesOrdNo());
+        	params.put("productOutstandingAmount", vo.get(i).getProductOutstandingAmount());
+        	params.put("productTypeName", vo.get(i).getProductTypeName());
+        	params.put("productTypeCode", vo.get(i).getProductTypeCode());
+        	params.put("membershipOutstandingAmount", vo.get(i).getMembershipOutstandingAmount());
+        	params.put("membership", vo.get(i).getMembership());
+        	params.put("productId", vo.get(i).getProductId());
+        	params.put("productCode", vo.get(i).getProductCode());
+        	params.put("productName", vo.get(i).getProductName());
+        	params.put("productBillChecked", vo.get(i).getProductBillChecked());
+        	params.put("svmBillChecked", vo.get(i).getSvmBillChecked());
+        	params.put("payingAmount", vo.get(i).getPayingAmount());
 
         	paramList.add(params);
     	}
@@ -104,11 +105,11 @@ public class EGhlPaymentCollectionApiForm {
 		this.userName = userName;
 	}
 
-	public String getDetailInfo() {
+	public List<Map<String,Object>> getDetailInfo() {
 		return detailInfo;
 	}
 
-	public void setDetailInfo(String detailInfo) {
+	public void setDetailInfo(List<Map<String,Object>> detailInfo) {
 		this.detailInfo = detailInfo;
 	}
 
