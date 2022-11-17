@@ -179,10 +179,10 @@
 	</select>
 
 	<insert id="insertPaymentCollectionMaster" parameterType="Map">
-		INSERT INTO PAY0336M (ID,CUST_ID,CUST_EMAIL,CUST_CONTACT,PAYMENT_LINK,STATUS_CODE_ID,ORDER_DESC,TOT_AMT,
+		INSERT INTO PAY0336M (ID,PAY_NO,CUST_ID,CUST_EMAIL,CUST_CONTACT,PAYMENT_LINK,STATUS_CODE_ID,ORDER_DESC,TOT_AMT,
 		EXP_DT,CRT_DT,CRT_BY)
 		VALUES
-		(#{paymentRunningNumber}, TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},#{statusCodeId},#{orderDescription},
+		(PAY0336M_ID_SEQ.NEXTVAL,#{paymentRunningNumber},TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},#{statusCodeId},#{orderDescription},
 		#{totalAmountPayable},TO_DATE(SYSDATE+7,'DD/MM/YYYY'),SYSDATE,#{userId})
 	</insert>
 
