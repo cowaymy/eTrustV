@@ -9,6 +9,13 @@
  -->
 
 <script type="text/javaScript">
+
+var myFileCaches = {};
+
+var update = new Array();
+var remove = new Array();
+var fileGroupKey ="";
+
   $(document).ready(
     function() {
     var allcom = ${installInfo.c1};
@@ -56,6 +63,21 @@
   function fn_saveInstall() {
     if (fn_validate()) {
 
+    	var formData = new FormData();
+        formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        $.each(myFileCaches, function(n, v) {
+            console.log(v.file);
+            formData.append(n, v.file);
+
+            if (v.file > 0 || v.file != null) {
+            fn_doSaveHCAttachment();
+            }
+        });
+
       // KR-OHK Serial Check add
       Common.ajax("POST", "/homecare/services/install/hceditInstallationSerial.do", $("#editInstallForm").serializeJSON(), function(result) {
         Common.alert(result.message);
@@ -66,6 +88,64 @@
       });
     }
   }
+
+  function fn_doSaveHCAttachment() {
+
+      var orderVO = {
+              SalesOrderNo       :  $('#hidSalesOrderNo').val(),
+              //hidStkId               : $('#editInstallForm #hidStkId').val().trim(),
+              resultId               : $("#editInstallForm #resultId").val().trim(),
+              atchFileGrpId        : '${installInfo.atchFileGrpId}',
+              installdt              : $('#editInstallForm #installdt').val(),
+              installEntryId        : $('#entryId').val()
+          };
+
+            var formData = new FormData();
+            formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
+            formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+            console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+
+            $.each(myFileCaches, function(n, v) {
+                console.log(v.file);
+                formData.append(n, v.file);
+            });
+
+            Common.ajaxFile("/homecare/services/install/attachFileUploadEdit.do", formData, function(result) {
+
+
+            var resultId = ${installInfo.resultId}
+            fileGroupKey = result.data.fileGroupKey
+
+            console.log ("resultId value :" + resultId );
+            console.log ("fileGroupKey value :" + fileGroupKey );
+
+            $("#editInstallForm #resultId").val(resultId);
+            $("#editInstallForm #fileGroupKey").val(fileGroupKey);
+
+            if(result != 0 && result.code == 00){
+
+                Common.ajax("POST", "/homecare/services/install/updateFileKey.do", orderVO, function(result) {
+
+                        Common.alert(result.message);
+                },
+                function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                        Common.removeLoader();
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                });
+            }else{
+                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+            }
+            },function(result){
+                Common.alert("Upload Failed. Please check with System Administrator.");
+            });
+        }
 
   function fn_validate() {
     var msg = "";
@@ -134,6 +214,17 @@
 
       Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
   }
+
+  $('#photo1').change(function(evt) {
+      var file = evt.target.files[0];
+      console.log("file:::" + file);
+      if(file == null && myFileCaches[1] != null){
+          delete myFileCaches[1];
+      }else if(file != null){
+          myFileCaches[1] = {file:file};
+      }
+      console.log(myFileCaches);
+  });
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -259,6 +350,22 @@
        </td>
        <th scope="row"></th>
        <td></td>
+      </tr>
+      <tr>
+      <th scope="row">Attach Picture</th>
+            <td>
+                <div class="auto_file2 auto_file3 w50p" >
+                    <input type="file" title="file add" id="photo1" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' id='photo1Txt'  value=" <c:out value="${installInfo.atchFileGrpId}"/>"/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                            <!-- <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span>ATCH_FILE_GRP_ID -->
+                        </label>
+                </div>
+            </td>
+      </tr>
+      <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Remark' /></th>

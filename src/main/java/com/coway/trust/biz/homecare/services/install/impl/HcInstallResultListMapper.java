@@ -73,4 +73,6 @@ public interface HcInstallResultListMapper {
 	int updateInstallResultFail(Map<String, Object> params);
 
 	void updateInstallEntryEdit(Map<String, Object> params);
+
+	public EgovMap selectFrmInstInfo(EgovMap hcOrder);
 }

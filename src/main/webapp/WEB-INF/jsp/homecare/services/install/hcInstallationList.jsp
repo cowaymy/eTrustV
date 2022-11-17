@@ -29,12 +29,25 @@
 	    });
 
 	    AUIGrid.bind(myGridID, "cellClick", function(event) {
-	        installEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId");
-	        codeid1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1");
-	        orderId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-	        docId = AUIGrid.getCellValue(myGridID, event.rowIndex, "c1");
-	        statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
-	        salesOrderId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+	    	if( event.dataField != "attchmentDownload" ){
+		        installEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId");
+		        codeid1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1");
+		        orderId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+		        docId = AUIGrid.getCellValue(myGridID, event.rowIndex, "c1");
+		        statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
+		        salesOrderId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+	    	}
+            else if( event.dataField == "attchmentDownload" ){
+	            if( FormUtil.isEmpty(event.value) == false){
+	            	   var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+
+	            	   console.log("helloooo");
+		               console.log(rowVal);
+		               if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
+		            	   window.open("/file/fileDownWeb.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+		               }
+	            }
+            }
 	    });
 
     });
@@ -128,7 +141,19 @@
 	        {dataField : "bndlNo",           headerText : 'Bundle No',                                                             editable : false,     width : 120},
 	        {dataField : "brnchCode",        headerText : '<spring:message code="service.grid.BranchCode" />',   editable : false,     width : 100},
 	        {dataField : "code1",            headerText : '<spring:message code="service.grid.Status" />',            width : 100},
- 	        {dataField : "allowCommision",     headerText:'Allow Commision',width: 150}, //Added by Keyi
+	        {
+                dataField : "attchmentDownload",
+                width:100,
+                headerText : "<spring:message code='pay.head.attachment'/>",
+                renderer : { type : "ImageRenderer",
+                             width : 20,
+                             height : 20,
+                             imgTableRef : {
+                               "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                             }
+                }
+            },
+	        {dataField : "allowCommision",     headerText:'Allow Commision',width: 150}, //Added by Keyi
 	        {dataField : "serialRequireChkYn",headerText : 'Serial Require Check Y/N',width : 180}, //Added by Keyi
 	        {dataField : "lstUpd",           headerText : '<spring:message code="service.grid.UpdateBy" />',       width : 130},
 	        {dataField : "brnchId",          width : 0},

@@ -45,7 +45,12 @@
                       , S28.SERIAL_REQUIRE_CHK_YN
                       , CASE WHEN IR.ALLOW_COMM IS NOT NULL
                            THEN IR.ALLOW_COMM
-                           ELSE 0 END AS ALLOW_COMMISION
+                           ELSE 0 END AS ALLOW_COMMISION,
+	                  IR.ATCH_FILE_GRP_ID ,
+	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN 'DOWN' ELSE NULL END AS ATTCHMENT_DOWNLOAD,
+	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN AT2.FILE_SUB_PATH ELSE NULL END AS FILE_SUB_PATH,
+	                  AT2.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+	                  AT2.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -67,7 +72,8 @@
 		LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = MEM.MEM_CODE
 		LEFT JOIN SAL0027D CN ON CN.CUST_CNTC_ID = SOM.CUST_CNT_ID
 		LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
-
+        LEFT JOIN SYS0070M AT ON IR.ATCH_FILE_GRP_ID = AT.ATCH_FILE_GRP_ID
+        LEFT JOIN SYS0071D AT2 ON AT.ATCH_FILE_ID = AT2.ATCH_FILE_ID
         WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                    WHERE AA.CODE = BB.CODE
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
@@ -263,6 +269,20 @@
 	      FROM SAL0047D
 	     WHERE ENTRY_ID = #{installEntryId}
 	       AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectFrmInstInfo" parameterType="Map" resultType="egovMap">
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+             , C.RESULT_ID
+          FROM SAL0001D a
+             , SAL0046D b
+             , SAL0047D c
+          WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+            AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+            AND A.SALES_ORD_NO = #{salesOrdNo}
     </select>
 
     <select id="selectFrmSerialInfo" parameterType="Map" resultType="egovMap">

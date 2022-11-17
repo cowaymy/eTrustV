@@ -98,4 +98,8 @@ public interface HcInstallResultListService {
 
 	//Added by keyi HC Fail INS 20220120
 	int hcFailInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException, Exception;
+
+	EgovMap getFileID(Map<String, Object> params);
+
+	public int updateInstallFileKey(Map<String, Object> params, SessionVO sessionVO) throws ParseException, Exception;
 }

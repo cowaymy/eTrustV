@@ -1,10 +1,13 @@
 package com.coway.trust.web.homecare.services.install;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,16 +25,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
+import com.coway.trust.biz.services.installation.InstallationApplication;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -66,6 +79,12 @@ public class HcInstallResultListController {
 
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+	@Autowired
+	private InstallationApplication installationApplication; //attachmentm
+
+	@Value("${web.resource.upload.file}") // attachmentm
+	private String uploadDir;
 
 	/**
 	 * Homecare Install List 화면호출
@@ -635,4 +654,75 @@ public class HcInstallResultListController {
 
       return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/attachFileUploadEdit.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUploadEdit(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
+
+		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Services" + File.separator + "installationComp", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
+		logger.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+
+		params.put("attachFiles", list);
+		code = AppConstants.SUCCESS;
+		}catch(ApplicationException e){
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setData(params);
+		message.setMessage(err);
+
+		return ResponseEntity.ok(message);
+	}
+
+    @RequestMapping(value = "/updateFileKey.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> updateFileKey(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+	    ReturnMessage message = new ReturnMessage();
+	    int resultValue = 0;
+
+	    EgovMap fileID = new EgovMap();
+
+	    Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+	    int userId = sessionVO.getUserId();
+	    params.put("user_id", userId);
+	    params.put("resultId", CommonUtils.nvl(params.get("resultId")));
+	    params.put("StkId", CommonUtils.nvl(params.get("hidStkId")));
+	    params.put("atchFileGrpId", CommonUtils.nvl(params.get("fileGroupKey")));
+	    params.put("SalesOrderId", CommonUtils.nvl(params.get("SalesOrderId")));
+	    params.put("installDt", CommonUtils.nvl(params.get("installdt")));
+	    params.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")));
+
+	    locInfoEntry.put("userId", sessionVO.getUserId());
+
+	    EgovMap locInfo = (EgovMap) installationResultListService.getFileID(locInfoEntry);
+
+	    logger.debug("params : {}", params);
+	    logger.debug("params ================================>>  " + locInfo);
+	    params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
+	    logger.debug("params ================================>>  " + params);
+
+	    resultValue = hcInstallResultListService.updateInstallFileKey(params, sessionVO);
+
+	    return ResponseEntity.ok(message);
+	  }
 }
