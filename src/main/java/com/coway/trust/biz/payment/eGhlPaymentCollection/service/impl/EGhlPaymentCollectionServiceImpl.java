@@ -66,7 +66,7 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 				  boolean svmBillChecked = Boolean.parseBoolean(detail.get("svmBillChecked").toString());
 
 				  Map<String,Object> newDetailParam = new HashMap();
-				  newDetailParam.put("id", detail.get("paymentRunningNumber").toString());
+				  newDetailParam.put("id",  Integer.parseInt(detail.get("id").toString()));
 				  newDetailParam.put("salesOrdId", Integer.parseInt(detail.get("salesOrdId").toString()));
 				  newDetailParam.put("salesOrdNo", detail.get("salesOrdNo").toString());
 				  newDetailParam.put("userId", detail.get("userId"));
