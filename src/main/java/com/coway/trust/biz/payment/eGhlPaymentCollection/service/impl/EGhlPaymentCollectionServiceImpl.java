@@ -50,6 +50,8 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 		  if(user != null){
 			  params.put("userId", user.get("userId"));
 		  }
+		  int masterId = eGhlPaymentCollectionMapper.selectNextPay0336mId();
+		  params.put("id", masterId);
 		  //master table data add
 		  int masterResult =  eGhlPaymentCollectionMapper.insertPaymentCollectionMaster(params);
 
@@ -58,7 +60,7 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 			  for(int i=0; i < paramDetails.size(); i++){
 				  Map<String,Object> detail = paramDetails.get(i);
 				  detail.put("userId", user.get("userId"));
-				  detail.put("paymentRunningNumber", params.get("paymentRunningNumber").toString());
+				  detail.put("id", params.get("id"));
 
 				  boolean productBillChecked = Boolean.parseBoolean(detail.get("productBillChecked").toString());
 				  boolean svmBillChecked = Boolean.parseBoolean(detail.get("svmBillChecked").toString());

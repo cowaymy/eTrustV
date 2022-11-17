@@ -10,6 +10,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface EGhlPaymentCollectionMapper {
 	List<EgovMap> orderNumberBillMobileSearch(Map<String, Object> params);
 
+	int selectNextPay0336mId();
+
 	int insertPaymentCollectionMaster(Map<String, Object> params);
 
 	int insertPaymentCollectionDetail(Map<String, Object> params);
