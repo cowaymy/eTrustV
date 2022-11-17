@@ -45,7 +45,9 @@
            D1.STATE,
            D1.CHS_STUS,
            D1.NEO_PRO_STATUS,
-           D1.BNDL_ID
+           D1.BNDL_ID,
+           D1.CCP_STUS,
+           D1.CCP_REMARK
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
                            F1.ORD_NO ,
                            F1.APP_TYPE_CODE ,
@@ -98,7 +100,12 @@
                            F1.STATE,
                            F1.CHS_STUS,
                            F1.NEO_PRO_STATUS,
-                           F1.BNDL_ID
+                           F1.BNDL_ID,
+                           CASE WHEN F1.CCP_STUS_ID = 1 THEN 'Active'
+                           WHEN ( F1.CCP_STUS_ID = 5 ) THEN 'Approved'
+                           ELSE 'Rejected'
+                           END CCP_STUS,
+                           F1.CCP_REMARK
            FROM ( SELECT E1.ORD_ID OrderID1 ,
                          E1.ORD_NO  ,
                          E1.ORD_DT  ,
@@ -132,7 +139,9 @@
                          E1.STATE,
                          E1.CHS_STUS,
                          E1.NEO_PRO_STATUS,
-                         E1.BNDL_ID
+                         E1.BNDL_ID,
+                         E1.CCP_STUS_ID,
+                         E1.CCP_REMARK
                     <!-- E2.MAIL_CNT_TEL_M  ,
                          E2.MAIL_CNT_TEL_O  ,
                          E2.MAIL_CNT_TEL_R  ,
@@ -207,7 +216,9 @@
                             ,adr.NAME STATE
                             , NVL(CHS.CHS_STUS,'-') CHS_STUS,
                              CASE WHEN ORG11.HP_CODE IS NOT NULL THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS,
-                             som.BNDL_ID
+                             som.BNDL_ID,
+                             CCP.CCP_STUS_ID,
+                             CCPRESN.RESN_DESC AS CCP_REMARK
                          FROM SAL0001D som
                               JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                               JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
@@ -233,7 +244,10 @@
                               LEFT JOIN ORG0011D ORG11 ON mem.MEM_CODE = ORG11.HP_CODE
                                AND TO_CHAR(ADD_MONTHS(TO_DATE(ORG11.PV_YEAR|| '/' || LPAD(ORG11.PV_MONTH,2,'0'), 'YYYY/MM'), -1), 'YYYY/MM') =
                                som.PV_YEAR|| '/' || LPAD(som.PV_MONTH,2,'0')
-                              and NVL(IS_NW,1)= 0                             WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
+                              and NVL(IS_NW,1)= 0
+                              LEFT JOIN SAL0102D CCP ON CCP.CCP_SALES_ORD_ID = SOM.SALES_ORD_ID
+                              LEFT JOIN SYS0032M CCPRESN ON CCPRESN.RESN_ID = CCP.CCP_RESN_ID
+                              WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
                               AND som.APP_TYPE_ID <![CDATA[<>]]> 5764
 
                         <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
@@ -390,6 +404,17 @@
 
                                 </if>
                                 )
+                          </if>
+                          <if test="ccpStus != null and ccpStus != ''">
+                            <if test="ccpStus == 'appv'">
+                                AND CCP_STUS_ID = 5
+                            </if>
+                            <if test="ccpStus == 'act'">
+                                AND CCP_STUS_ID = 1
+                            </if>
+                            <if test="ccpStus == 'rjct'">
+                                AND CCP_STUS_ID = 6
+                            </if>
                           </if>
 
                          ) E
