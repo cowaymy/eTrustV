@@ -286,7 +286,7 @@ function fn_editUser(){
     }else{
     	saveParam = $("#userEditForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl;
     }
-debugger;
+//debugger;
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
@@ -354,6 +354,8 @@ function fn_updateUserPasswd(){
                 //UserPasswdLastUpdDt doesn't matter anything for updating
                 //"userId="+$("#userEditForm #userId").val()+"&userPasswd="+$("#passwdEditForm #userPasswdConfirm").val()+"&userPasswdLastUpdDt=today"+"&userDfltPassWd="+$("#passwdEditForm #userPasswdConfirm").val() ,
                 {"userId" : $("#userEditForm #userId").val(),
+                	"username" : $("#userEditForm #userName").text(),
+                	"userType" : $("#userEditForm #userTypeId").val(),
                     "userPasswd" : $("#passwdEditForm #userPasswdConfirm").val(),
                     "userDfltPassWd" : $("#passwdEditForm #userPasswdConfirm").val()} ,
                 function(data, textStatus, jqXHR){ // Success
@@ -402,7 +404,7 @@ function fn_searchUser(_userId){
             "/common/userManagement/selectUserList.do",
             "userIdForEdit="+_userId,
             function(data, textStatus, jqXHR){ // Success
-                debugger;
+                //debugger;
                 $("#userEditForm #userId").val(data[0].userId);
                 $("#userEditForm #userStusId").val(data[0].userStusId);
 

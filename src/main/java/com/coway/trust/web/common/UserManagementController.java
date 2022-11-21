@@ -1,7 +1,11 @@
 package com.coway.trust.web.common;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.UserManagementService;
+import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -26,6 +31,9 @@ public class UserManagementController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
+
+	@Resource(name = "ssoLoginService")
+	  private SsoLoginService ssoLoginService;
 
 	@RequestMapping(value = "/userManagementMain.do")
 	public String userManagement(@RequestParam Map<String, Object> params, SessionVO sessionVO,
@@ -110,6 +118,19 @@ public class UserManagementController {
 	public ResponseEntity<ReturnMessage> editUserManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		userManagementsService.editUserManagementList(params, sessionVO);
+
+		//update password in keycloak
+		if(params.get("userType") != null){
+			if(params.get("userType").toString().equals("1") || params.get("userType").toString().toString().equals("2") || params.get("userType").toString().toString().equals("3")
+					|| params.get("userType").toString().toString().equals("5") || params.get("userType").toString().toString().equals("7")){
+				Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+				ssoParamsOldMem.put("memCode", params.get("username"));
+				ssoParamsOldMem.put("password", params.get("userPasswd"));
+				ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+			}
+		}
+
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		return ResponseEntity.ok(message);
