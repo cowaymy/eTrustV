@@ -174,8 +174,9 @@
 				|| "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7" || "${SESSION_INFO.userTypeId}" == "6"  // enhancement to set requestor
 				|| !isCpd
 				){
+
 				    $('.hidefunction').hide();
-				    $('#search_requestorInfo').val("${user_info.Mem_code}");
+				    $('#search_requestorInfo').val("${SESSION_INFO.userMemCode}");
 				}else{
 					fn_setGridEvent();
 				}
