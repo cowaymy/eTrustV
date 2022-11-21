@@ -755,8 +755,13 @@
 								<option value="131" >Auto Debit</option>
 								<option value="132" >Direct Debit</option>
 						</select></td>
-						<th scope="row"></th>
-						<td></td>
+						<th scope="row"><spring:message code="sales.ownPurchase" /></th>
+                        <td><select id="ownPurchase" name="ownPurchase"
+                            class="select w100p">
+                                <option value="">Choose One</option>
+                                <option value="Y" >YES</option>
+                                <option value="N" >NO</option>
+                        </select></td>
 					</tr>
 
 				</tbody>

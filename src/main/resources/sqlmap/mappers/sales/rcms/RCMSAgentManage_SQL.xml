@@ -234,6 +234,9 @@
         LEFT JOIN SYS0013M M ON M.CODE_ID = L.STK_CTGRY_ID
 
         WHERE 1=1
+        <if test="ownPurchase != null and ownPurchase !=''">
+            AND cD.OWN_PURC = #{ownPurchase}
+        </if>
         <choose>
             <when test="orderNo != null and orderNo !=''">
                 AND C.SALES_ORD_NO = #{orderNo}
