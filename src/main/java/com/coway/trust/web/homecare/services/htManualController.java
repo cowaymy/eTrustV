@@ -1405,4 +1405,12 @@ public class htManualController {
 
     return "homecare/services/csFilterSettingPop";
   }
+
+
+  @RequestMapping(value = "/checkMatFra.do", method = RequestMethod.GET)
+  public ResponseEntity <EgovMap> checkMatOrFra(@RequestParam Map<String, Object> params, ModelMap model) {
+    logger.debug("selectHTCodeList - params : " + params);
+    EgovMap CheckFra = htManualService.checkMatOrFra(params);
+    return ResponseEntity.ok(CheckFra);
+  }
 }
