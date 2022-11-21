@@ -31,9 +31,14 @@
                        AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
                        AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                        AND T5.CODE_MASTER_ID = '381'
-                       <if test='stkCtgryId != null and stkCtgryId != ""'>
-                           AND T1.STK_CTGRY_ID = #{stkCtgryId}         /* StkCategoryID */
-                       </if>
+                        <if test='stkCtgryId != null and stkCtgryId != ""'>
+                             <if test="stkCtgryId == '5706'">
+                                AND T1.STK_CTGRY_ID != '5707'         /* StkCategoryID */
+                             </if>
+                             <if test="stkCtgryId != '5706'">
+                                AND T1.STK_CTGRY_ID = #{stkCtgryId}          /* StkCategoryID */
+                             </if>
+                        </if>
                 </when>
                 <otherwise>
                     SELECT DISTINCT T1.STK_ID
@@ -57,7 +62,12 @@
                         AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                         AND T5.CODE_MASTER_ID = '381'
                         <if test='stkCtgryId != null and stkCtgryId != ""'>
-                           AND T1.STK_CTGRY_ID = #{stkCtgryId}          /* StkCategoryID */
+                            <if test="stkCtgryId == '5706'">
+                                AND T1.STK_CTGRY_ID != '5707'         /* StkCategoryID */
+                             </if>
+                             <if test="stkCtgryId != '5706'">
+                                AND T1.STK_CTGRY_ID = #{stkCtgryId}          /* StkCategoryID */
+                             </if>
                         </if>
                 </otherwise>
             </choose>
