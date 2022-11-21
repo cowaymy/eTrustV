@@ -832,6 +832,13 @@ FROM
                   </foreach>
                 </if>
 
+                <if test="startDate != '' and startDate != '' ">
+		            <![CDATA[ AND  Project2.SETL_DT >= TO_DATE(#{startDate}, 'DD/MM/YYYY') ]]>
+		        </if>
+		        <if test="endDate != '' and endDate != '' ">
+		            <![CDATA[  AND Project2.SETL_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+		        </if>
+
         ) Project3
     <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 50000 ]]>
           </select>

@@ -4,6 +4,10 @@
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script>
+    document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
+</script>
 <script type="text/javaScript" language="javascript">
 var TODAY_DD      = "${toDay}";
 
@@ -87,7 +91,7 @@ var TODAY_DD      = "${toDay}";
 	    width : 120
 	  },{
           dataField : "setl_dt",
-          headerText : "Settle Date",
+          headerText : "Complete Date",
           width : 120
         }, {
           dataField : "remarks",
@@ -208,7 +212,7 @@ var TODAY_DD      = "${toDay}";
         width : 120
       },{
           dataField : "setlDt",
-          headerText : "Settle Date",
+          headerText : "Complete Date",
           width : 120,
           dataType : "date",
           formatString : "dd/mm/yyyy"
@@ -366,7 +370,16 @@ var TODAY_DD      = "${toDay}";
 
       }
 
+      if ($("#startDate").val() != '' && $("#endDate").val() != ''){
+          var startDt = $("#startDate").val();
+          var endDt = $("#endDate").val();
 
+           if (!js.date.checkDateRange(startDt,endDt,"Complete Date", "3"))
+              valid = false;
+          /* if (!fn_checkDateRange(startDt,endDt,"Appointment"))
+              valid = false; */
+
+      }
 
 
       if ($("#userType").val() == "2") {
@@ -380,8 +393,7 @@ var TODAY_DD      = "${toDay}";
         }
       }
 
-      Common.ajax("GET", "/homecare/services/selectHsAssiinlList.do", $(
-      "#searchForm").serialize(), function(result) {
+      Common.ajax("GET", "/homecare/services/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
       });
 
@@ -1376,10 +1388,16 @@ var TODAY_DD      = "${toDay}";
         <option value="68">Installment</option>
          <option value="142">Sponsor</option>
       </select></td>
+      <th scope="row">Complete Date</th>
+      <td>
+       <div class="date_set w100p">
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="startDate" name="startDate" /></p>
+        <span>To</span>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="endDate" name="endDate" /></p>
+       </div>
+      </td>
       <th scope="row"></th>
-      <td></td>
-      <th scope="row"></th>
-<td></td>
+        <td></td>
         </tr>
         <tr>
         <th scope="row">Service Type</th>
