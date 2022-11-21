@@ -1581,7 +1581,7 @@
                 // Check budget
                 var rowVar = {
                         costCentr : $("#settlementCostCenter").val(),
-                        stYearMonth : $("#settlementKeyDate").val(),
+                        stYearMonth : $("#settlementKeyDate").val().substring(3),
                         stBudgetCode : AUIGrid.getCellValue(settlementGridId, event.rowIndex, "budgetCode"),
                         stGlAccCode : AUIGrid.getCellValue(settlementGridId, event.rowIndex, "glAccCode")
                 };
@@ -1596,12 +1596,17 @@
                         Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", rowVar, function(result1) {
                             console.log("availableAmtCp :: budgetCode :: " + event.item.budgetCode + "; glAccCode :: " + event.item.glAccCode + "; totalAvailable :: " + result1.totalAvailable);
 
-                            var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
+                            var finAvailable = (parseFloat(result1.totalAvilableAdj) - parseFloat(result1.totalPending) - parseFloat(result1.totalUtilized)).toFixed(2);
 
-                            if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
+                            if(parseFloat(finAvailable) < parseFloat(event.item.totalAmt)) {
                                 console.log("finAvailable < totAmt");
                                 Common.alert("Insufficient budget amount for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-                                AUIGrid.setCellValue(settlementGridId, event.rowIndex, "totAmt", "0.00");
+                                AUIGrid.setCellValue(settlementGridId, event.rowIndex, "totalAmt", "0.00");
+                                $("#settlementTotalExp").val(AUIGrid.formatNumber((totAmt - event.item.totalAmt), "#,##0.00")); //deduct the totalAmt that has added but cannot be included due to exceeded budget
+                                $("#settlementTotAmt").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+                                var settlementGridSettTotalAdv = parseFloat($("#settlementTotalAdv").val().replace(",", "")).toFixed(0);
+                                $("#settlementTotalBalance").val(settlementGridSettTotalAdv - totAmt + event.item.totalAmt); // add back the totalAmt that has deducted but cannot be included due to exceeded budget
+                                $("#settlementTotalBalance").val(AUIGrid.formatNumber($("#settlementTotalBalance").val(), "#,##0.00"));
                             }
                         });
                         // availableAmtCp - End
