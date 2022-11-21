@@ -30,6 +30,16 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 
      function fn_doSave(){
 
+          Common.ajax("GET", "/homecare/services/checkMatFra.do", { salesOrdId : $('#salesOrderId').val() }, function(result1) {
+        	  console.log("ggg")
+        	 console.log(result1);
+
+        	  if(result1.stkCtgryId == "5707"){
+                  Common.alert("Frame Order not allow do this action.");
+                  return;
+        	  }else{
+
+
           Common.ajax("GET", "/homecare/services/checkMemCode", { hscodyId : $('#entry_cmbServiceMem').val() }, function(result) {
               console.log("::::::::::::::ajax::::::::::::::");
               console.log(result);
@@ -37,6 +47,14 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
               if ( !fn_validBasicInfo() ) {
                   return;
               }
+
+/*               var prodCat = AUIGrid.getCellValue(3, "stkCtgryId");
+
+              if(stkCtgryId == '5707'){
+                  Common.alert('* Please proceed to HC Module for this action');
+                  return;
+             } */
+
 
              var checkSuccess = {code: "00", message: "fail"};
 
@@ -47,9 +65,9 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
               }
               else  fn_doSaveBasicInfo();
            });
-
-    }
-
+        	  }
+    });
+     }
      function fn_validBasicInfo(){
 
           var isValid = true, msg = "";
@@ -153,6 +171,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
 <input type="hidden" name="custId" id="schdulId" value="${SCHDUL_ID}"/>
 <input type="hidden" name="ind" id="ind" value="${IND}"/>
+<input type="hidden" name="stkCtgryId" id="stkCtgryId" value="${STK_CTGRY_ID}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
