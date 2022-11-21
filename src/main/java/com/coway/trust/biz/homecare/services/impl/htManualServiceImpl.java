@@ -1474,4 +1474,11 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
  	    // TODO Auto-generated method stub
  	    return htManualMapper.selectCSOrderView(params);
  	  }
+
+       @Override
+      public EgovMap checkMatOrFra(Map<String, Object> params){
+   	    // TODO Auto-generated method stub
+   	    return htManualMapper.checkMatOrFra(params);
+       }
+
 }
