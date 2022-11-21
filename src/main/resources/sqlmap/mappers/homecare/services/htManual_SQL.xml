@@ -745,9 +745,9 @@ FROM
                 WHERE
                   CD.MEM_ID IS NULL
           )Project2
-            WHERE
+            WHERE 1=1
                 <if test="myBSMonth != null and myBSMonth != ''">
-                  Project2.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                  AND Project2.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
                   AND Project2.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                 </if>
 
@@ -759,7 +759,7 @@ FROM
                   </when>
                   <otherwise>
                     <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                      Project2.NO = #{txtHsOrderNo}
+                      AND Project2.NO = #{txtHsOrderNo}
                     </if>
                   </otherwise>
                 </choose>
@@ -780,7 +780,7 @@ FROM
                       </when>
                       <otherwise>
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          ( Project2.SALES_ORD_NO = #{txtSalesOrder})
+                          AND ( Project2.SALES_ORD_NO = #{txtSalesOrder})
                         </if>
                       </otherwise>
                     </choose>

@@ -320,23 +320,35 @@ var TODAY_DD      = "${toDay}";
 
 	   var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 	    if (radioVal == 1) { //HS NO CREATE BEFORE
-	        // HS PRERIOD ARE OPTIONAL IF SALES ORDER OR HS ORDER PROVIDED
-      if ($("#myBSMonth").val() == "") {
-        if ($("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "") {
-          Common.alert("CS Period or CS Order or Care Service Order are required.");
-          return false;
-        }
+
+
+	     // HS PRERIOD ARE OPTIONAL IF SALES ORDER OR HS ORDER PROVIDED
+	      if ($("#myBSMonth").val() == "") {
+	    	 if ($("#startDate").val() == '' && $("#endDate").val() == ''){
+	    		 if ($("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "") {
+	                 Common.alert("CS Period or CS Complete Date or CS Order or Care Service Order are required.");
+	                 return false;
+	             }
+	         }
+	      }
+
+      if ($("#startDate").val() != '' && $("#endDate").val() != ''){
+          var startDt = $("#startDate").val();
+          var endDt = $("#endDate").val();
+
+           if (!js.date.checkDateRange(startDt,endDt,"Complete Date", "3"))
+        	   return false;
       }
 
       if ($("#userType").val() != "4" && $("#userType").val() != "6") {
 
-      if($("#userType").val() == "7"){}else{
-    	  if ($("#cmdBranchCode").val() == ''
-              || $("#cmdBranchCode").val() == null) {
-            Common.alert("Please Select 'HT Branch'");
-            return false;
-          }
-      }
+	      if($("#userType").val() == "7"){}else{
+	    	  if ($("#cmdBranchCode").val() == ''
+	              || $("#cmdBranchCode").val() == null) {
+	            Common.alert("Please Select 'HT Branch'");
+	            return false;
+	          }
+	      }
 
       }else{
 
@@ -369,18 +381,6 @@ var TODAY_DD      = "${toDay}";
            }
 
       }
-
-      if ($("#startDate").val() != '' && $("#endDate").val() != ''){
-          var startDt = $("#startDate").val();
-          var endDt = $("#endDate").val();
-
-           if (!js.date.checkDateRange(startDt,endDt,"Complete Date", "3"))
-              valid = false;
-          /* if (!fn_checkDateRange(startDt,endDt,"Appointment"))
-              valid = false; */
-
-      }
-
 
       if ($("#userType").val() == "2") {
         if ($("#memberLevel").val() == "3"
