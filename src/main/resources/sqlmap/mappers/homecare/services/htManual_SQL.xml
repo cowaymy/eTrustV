@@ -5179,4 +5179,19 @@ FROM
     <![CDATA[WHERE Extent1.ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]>
 </select>
 
+
+<select id="checkMatOrFra" parameterType="Map" resultType="egovMap">
+			SELECT  A.SALES_ORD_NO,
+			            B.ITM_STK_ID,
+			            C.STK_DESC ,
+			            C.STK_CTGRY_ID
+			FROM SAL0001D A
+			JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+			JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
+			WHERE A.SALES_ORD_ID = #{salesOrdId}
+
+
+</select>
+
+
 </mapper>
