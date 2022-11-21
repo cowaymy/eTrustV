@@ -216,7 +216,7 @@
 	        AND B.SALES_ORD_NO = #{salesOrdNo}
 	    </if>
 	    <if test='transactionDateFrom != null and transactionDateFrom != "" and transactionDateTo != null and transactionDateTo != ""'>
-	        AND TO_DATE(TO_CHAR(A.CRT_DT),'DD/MM/YYYY') BETWEEN TO_DATE(#{transactionDateFrom},'DD/MM/YYYY') AND TO_DATE(#{transactionDateTo},'DD/MM/YYYY')
+	        AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{transactionDateFrom},'DD/MM/YYYY') AND TO_DATE(#{transactionDateTo},'DD/MM/YYYY')
 	    </if>
 		GROUP BY A.ID,A.PAY_NO,A.PAYMENT_LINK,A.STATUS_CODE_ID,C.NAME,A.ORDER_DESC,A.CRT_DT
     </select>
