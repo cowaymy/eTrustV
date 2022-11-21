@@ -44,6 +44,11 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 	  }
 
 	  @Override
+	  public List<EgovMap> paymentCollectionMobileHistoryGet(Map<String,Object> params){
+		  return eGhlPaymentCollectionMapper.paymentCollectionMobileHistoryGet(params);
+	  }
+
+	  @Override
 	  public int paymentCollectionMobileCreation(Map<String,Object> params, List<Map<String,Object>> paramDetails) {
 		  EgovMap user = eGhlPaymentCollectionMapper.getUserByUserName(params);
 

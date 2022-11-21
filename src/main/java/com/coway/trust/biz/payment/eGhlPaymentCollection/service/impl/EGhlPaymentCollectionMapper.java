@@ -17,4 +17,6 @@ public interface EGhlPaymentCollectionMapper {
 	int insertPaymentCollectionDetail(Map<String, Object> params);
 
 	EgovMap getUserByUserName(Map<String, Object> params);
+
+	List<EgovMap> paymentCollectionMobileHistoryGet(Map<String, Object> params);
 }

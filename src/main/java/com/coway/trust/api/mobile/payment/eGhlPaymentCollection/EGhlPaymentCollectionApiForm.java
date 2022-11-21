@@ -38,6 +38,9 @@ public class EGhlPaymentCollectionApiForm {
 	private String svmBillChecked;
 	private String payingAmount;
 
+	private String transactionDateFrom;
+	private String transactionDateTo;
+
 	public static Map<String, Object> createMap(EGhlPaymentCollectionApiForm vo){
     	Map<String, Object> params = new HashMap<>();
     	params.put("detailInfo", vo.getDetailInfo());
@@ -51,6 +54,10 @@ public class EGhlPaymentCollectionApiForm {
     	params.put("paymentRunningNumber", vo.getPaymentRunningNumber());
     	params.put("orderDescription", vo.getOrderDescription());
     	params.put("totalAmountPayable", vo.getTotalAmountPayable());
+
+    	params.put("salesOrdNo", vo.getSalesOrdNo());
+    	params.put("transactionDateFrom", vo.getTransactionDateFrom());
+    	params.put("transactionDateTo", vo.getTransactionDateTo());
 
     	return params;
 	}
@@ -279,5 +286,21 @@ public class EGhlPaymentCollectionApiForm {
 
 	public void setPaymentRunningNumber(String paymentRunningNumber) {
 		this.paymentRunningNumber = paymentRunningNumber;
+	}
+
+	public String getTransactionDateFrom() {
+		return transactionDateFrom;
+	}
+
+	public void setTransactionDateFrom(String transactionDateFrom) {
+		this.transactionDateFrom = transactionDateFrom;
+	}
+
+	public String getTransactionDateTo() {
+		return transactionDateTo;
+	}
+
+	public void setTransactionDateTo(String transactionDateTo) {
+		this.transactionDateTo = transactionDateTo;
 	}
 }

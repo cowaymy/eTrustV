@@ -12,4 +12,6 @@ public interface EGhlPaymentCollectionService {
 	String paymentCollectionRunningNumberGet();
 
 	int paymentCollectionMobileCreation(Map<String, Object> params, List<Map<String, Object>> paramDetails);
+
+	List<EgovMap> paymentCollectionMobileHistoryGet(Map<String, Object> params);
 }

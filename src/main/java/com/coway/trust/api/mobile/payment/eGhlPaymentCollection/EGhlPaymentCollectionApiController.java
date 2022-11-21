@@ -75,13 +75,23 @@ public class EGhlPaymentCollectionApiController {
 	@RequestMapping(value = "/paymentCollectionCreate", method = RequestMethod.POST)
 	public ResponseEntity<EGhlPaymentCollectionApiDto> paymentCollectionCreate(@RequestBody EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
 		Map<String, Object> params = eGhlPaymentCollectionApiForm.createMap(eGhlPaymentCollectionApiForm);
-//        Gson g = new Gson();
-//		List<EGhlPaymentCollectionApiForm> detailInfo = (List<EGhlPaymentCollectionApiForm>) params.get("detailInfo");
-//		List<Map<String, Object>> paramDetails = eGhlPaymentCollectionApiForm.createMap2(eGhlPaymentCollectionApiForm.getDetailInfo());
+
 		int createResponse = eGhlPaymentCollectionService.paymentCollectionMobileCreation(params,eGhlPaymentCollectionApiForm.getDetailInfo());
 
 		EGhlPaymentCollectionApiDto reponse = new EGhlPaymentCollectionApiDto();
 		reponse.setResponseCode(createResponse);
 		return ResponseEntity.ok(reponse);
+	}
+
+	@ApiOperation(value = "paymentCollectionHistoryGet", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/paymentCollectionHistoryGet", method = RequestMethod.GET)
+	public ResponseEntity<List<EGhlPaymentCollectionApiDto>> paymentCollectionHistoryGet(@ModelAttribute EGhlPaymentCollectionApiForm eGhlPaymentCollectionApiForm) throws Exception {
+		Map<String, Object> params = eGhlPaymentCollectionApiForm.createMap(eGhlPaymentCollectionApiForm);
+
+		List<EgovMap> result = eGhlPaymentCollectionService.paymentCollectionMobileHistoryGet(params);
+
+	     List<EGhlPaymentCollectionApiDto> resultList = result.stream().map(r -> EGhlPaymentCollectionApiDto.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(resultList);
 	}
 }

@@ -32,6 +32,14 @@ public class EGhlPaymentCollectionApiDto {
 	//Running number
 	private String paymentCollectionRunningNumber;
 
+	//History result
+	private int id;
+	private String payNo;
+	private String paymentLink;
+	private String statusCodeDesc;
+	private String orderDesc;
+	private String crtDt;
+
 	//Result
 	private int responseCode;
 
@@ -62,6 +70,13 @@ public class EGhlPaymentCollectionApiDto {
 		params.put("customerName",vo.getCustomerName());
 
 		params.put("paymentCollectionRunningNumber",vo.getPaymentCollectionRunningNumber());
+
+		params.put("id",vo.getId());
+		params.put("payNo",vo.getPayNo());
+		params.put("paymentLink",vo.getPaymentLink());
+		params.put("statusCodeDesc",vo.getStatusCodeDesc());
+		params.put("orderDesc",vo.getOrderDesc());
+		params.put("crtDt",vo.getCrtDt());
 
 		params.put("responseCode", vo.getResponseCode());
 		return params;
@@ -217,5 +232,53 @@ public class EGhlPaymentCollectionApiDto {
 
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getPayNo() {
+		return payNo;
+	}
+
+	public void setPayNo(String payNo) {
+		this.payNo = payNo;
+	}
+
+	public String getPaymentLink() {
+		return paymentLink;
+	}
+
+	public void setPaymentLink(String paymentLink) {
+		this.paymentLink = paymentLink;
+	}
+
+	public String getStatusCodeDesc() {
+		return statusCodeDesc;
+	}
+
+	public void setStatusCodeDesc(String statusCodeDesc) {
+		this.statusCodeDesc = statusCodeDesc;
+	}
+
+	public String getOrderDesc() {
+		return orderDesc;
+	}
+
+	public void setOrderDesc(String orderDesc) {
+		this.orderDesc = orderDesc;
+	}
+
+	public String getCrtDt() {
+		return crtDt;
+	}
+
+	public void setCrtDt(String crtDt) {
+		this.crtDt = crtDt;
 	}
 }

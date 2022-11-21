@@ -186,8 +186,8 @@
 		INSERT INTO PAY0336M (ID,PAY_NO,CUST_ID,CUST_EMAIL,CUST_CONTACT,PAYMENT_LINK,STATUS_CODE_ID,ORDER_DESC,TOT_AMT,
 		EXP_DT,CRT_DT,CRT_BY)
 		VALUES
-		(#{id},#{paymentRunningNumber},TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},#{statusCodeId},#{orderDescription},
-		#{totalAmountPayable},TO_DATE(SYSDATE+7,'DD/MM/YYYY'),SYSDATE,#{userId})
+		(#{id},#{paymentRunningNumber},TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},44,#{orderDescription},
+		#{totalAmountPayable},TO_DATE(TO_CHAR((SYSDATE+7),'DD/MM/YYYY'),'DD/MM/YYYY'),SYSDATE,#{userId})
 	</insert>
 
 		<insert id="insertPaymentCollectionDetail" parameterType="Map">
@@ -203,5 +203,21 @@
             SYS0047M
         WHERE
         	USER_NAME = #{userName}
+    </select>
+
+    <select  id="paymentCollectionMobileHistoryGet" parameterType="Map" resultType="egovMap">
+	    SELECT A.ID,A.PAY_NO,A.PAYMENT_LINK,A.STATUS_CODE_ID,C.NAME AS STATUS_CODE_DESC,A.ORDER_DESC,TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH24:MM') AS CRT_DT FROM PAY0336M A
+		INNER JOIN PAY0337D B
+		ON A.ID = B.ID
+		LEFT JOIN SYS0038M C
+		ON C.STUS_CODE_ID = A.STATUS_CODE_ID
+		WHERE 1=1
+		<if test='salesOrdNo != null and salesOrdNo != ""'>
+	        AND B.SALES_ORD_NO = #{salesOrdNo}
+	    </if>
+	    <if test='transactionDateFrom != null and transactionDateFrom != "" and transactionDateTo != null and transactionDateTo != ""'>
+	        AND TO_DATE(TO_CHAR(A.CRT_DT),'DD/MM/YYYY') BETWEEN TO_DATE(#{transactionDateFrom},'DD/MM/YYYY') AND TO_DATE(#{transactionDateTo},'DD/MM/YYYY')
+	    </if>
+		GROUP BY A.ID,A.PAY_NO,A.PAYMENT_LINK,A.STATUS_CODE_ID,C.NAME,A.ORDER_DESC,A.CRT_DT
     </select>
 </mapper>
