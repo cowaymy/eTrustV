@@ -30,16 +30,14 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 
      function fn_doSave(){
 
-          Common.ajax("GET", "/homecare/services/checkMatFra.do", { salesOrdId : $('#salesOrderId').val() }, function(result1) {
-        	  console.log("ggg")
-        	 console.log(result1);
+   Common.ajax("GET", "/homecare/services/checkMatFra.do", { salesOrdId : $('#salesOrderId').val() }, function(result1) {
+    console.log(result1);
 
-        	  if(result1.stkCtgryId == "5707"){
+    if(result1.stkCtgryId == "5707"){
                   Common.alert("Frame Order not allow do this action.");
                   return;
-        	  }else{
-
-
+     }else{
+     
           Common.ajax("GET", "/homecare/services/checkMemCode", { hscodyId : $('#entry_cmbServiceMem').val() }, function(result) {
               console.log("::::::::::::::ajax::::::::::::::");
               console.log(result);
@@ -47,14 +45,6 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
               if ( !fn_validBasicInfo() ) {
                   return;
               }
-
-/*               var prodCat = AUIGrid.getCellValue(3, "stkCtgryId");
-
-              if(stkCtgryId == '5707'){
-                  Common.alert('* Please proceed to HC Module for this action');
-                  return;
-             } */
-
 
              var checkSuccess = {code: "00", message: "fail"};
 
