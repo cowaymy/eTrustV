@@ -130,7 +130,7 @@ $(document).ready(function() {
 
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
-    doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S');
+    doGetCombo('/sales/ccp/getCcpStusCodeList2', '', ccpStus,'_statusEdit', 'S');
     //Ccp eResubmit Status
     var ccpErStus = $("#_eRStusId").val();
     doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpErStus,'_eRstatusEdit', 'S');

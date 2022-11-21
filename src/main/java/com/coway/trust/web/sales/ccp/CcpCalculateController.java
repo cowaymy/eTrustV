@@ -318,6 +318,15 @@ public class CcpCalculateController {
 
 	}
 
+	@RequestMapping(value = "/getCcpStusCodeList2")
+	public ResponseEntity<List<EgovMap>> getCcpStusCodeList2() throws Exception{
+
+		List<EgovMap> cList2 = null;
+		cList2 = ccpCalculateService.getCcpStusCodeList2();
+
+		return ResponseEntity.ok(cList2);
+
+	}
 
 	@RequestMapping(value = "/getCcpRejectCodeList")
 	public ResponseEntity<List<EgovMap>> getCcpRejectCodeList() throws Exception{

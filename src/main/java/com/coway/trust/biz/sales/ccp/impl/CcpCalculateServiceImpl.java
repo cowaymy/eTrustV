@@ -437,6 +437,12 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		return ccpCalculateMapper.getCcpStusCodeList();
 	}
 
+	@Override
+	public List<EgovMap> getCcpStusCodeList2() throws Exception {
+
+		return ccpCalculateMapper.getCcpStusCodeList2();
+	}
+
 
 	@Override
 	public List<EgovMap> getLoadIncomeRange(Map<String, Object> params) throws Exception {

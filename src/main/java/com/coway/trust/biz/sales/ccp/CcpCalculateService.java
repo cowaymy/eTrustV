@@ -26,6 +26,8 @@ public interface CcpCalculateService {
 
 	List<EgovMap> getCcpStusCodeList() throws Exception;
 
+	List<EgovMap> getCcpStusCodeList2() throws Exception;
+
 	List<EgovMap> getLoadIncomeRange(Map<String, Object> params) throws Exception;
 
 	Map<String, Object> selectLoadIncomeRange(Map<String, Object> params) throws Exception;

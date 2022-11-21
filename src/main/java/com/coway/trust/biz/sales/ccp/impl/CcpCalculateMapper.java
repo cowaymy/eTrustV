@@ -41,6 +41,8 @@ public interface CcpCalculateMapper {
 
 	List<EgovMap> getCcpStusCodeList() throws Exception;
 
+	List<EgovMap> getCcpStusCodeList2() throws Exception;
+
 	List<EgovMap> getCcpRejectCodeList() throws Exception;
 
 	EgovMap getCcpByCcpId(Map<String, Object> params) throws Exception; // 1

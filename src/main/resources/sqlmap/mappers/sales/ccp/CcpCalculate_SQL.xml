@@ -687,6 +687,15 @@ SELECT
                    NAME CODE_NAME
         FROM
                    SYS0038M
+        WHERE  STUS_CODE_ID IN (1, 5, 6)
+</select>
+
+<select id="getCcpStusCodeList2"  resultType="egovMap">
+        SELECT STUS_CODE_ID CODE_ID,
+                   CODE ,
+                   NAME CODE_NAME
+        FROM
+                   SYS0038M
         WHERE  STUS_CODE_ID IN (1, 5)
 </select>
 
