@@ -1409,7 +1409,7 @@ public class htManualController {
 
   @RequestMapping(value = "/checkMatFra.do", method = RequestMethod.GET)
   public ResponseEntity <EgovMap> checkMatOrFra(@RequestParam Map<String, Object> params, ModelMap model) {
-    logger.debug("selectHTCodeList - params : " + params);
+    logger.debug("checkMatOrFra - params : " + params);
     EgovMap CheckFra = htManualService.checkMatOrFra(params);
     return ResponseEntity.ok(CheckFra);
   }
