@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 	var rotID, rotNo, rotOrdId, rotOrdNo, ccpID;
 	var search_rootGridID;
+	var isCpd = "${PAGE_AUTH.funcUserDefine7}";
 	var ownershipTransferColumn1 = [ {
 		dataField : "rotId",
 		visible : false,
@@ -143,15 +144,19 @@
 	$(document).ready(
 			function() {
 				console.log("ready :: rotList");
+				console.log(isCpd);
 				//rootGridID = GridCommon.createAUIGrid("grid_wrap", ownershipTransferColumn, '', ownershipTransferGridPros);
 
-				if("${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7"){
-	                search_rootGridID = AUIGrid.create("#search_grid_wrap",
-	                        ownershipTransferColumn2, ownershipTransferGridPros);
+				if(!isCpd || "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2"
+						|| "${SESSION_INFO.userTypeId}" == "7" || "${SESSION_INFO.userTypeId}" == "6" ){
+					// funcUserDefine7 only allow for CPD dept
+                    search_rootGridID = AUIGrid.create("#search_grid_wrap",
+                            ownershipTransferColumn2, ownershipTransferGridPros);
+
 	            }
 				else {
-	                search_rootGridID = AUIGrid.create("#search_grid_wrap",
-	                        ownershipTransferColumn1, ownershipTransferGridPros);
+                    search_rootGridID = AUIGrid.create("#search_grid_wrap",
+                            ownershipTransferColumn1, ownershipTransferGridPros);
 	            }
 
 
@@ -166,7 +171,8 @@
 					    {typeId : '6242', separator : ' - ', inputId : ''}, '', 'rotFeedbackCode', 'M', 'fn_multiCombo'); //Feedback Code
 					    console.log("${user_info}","helheo")
 				if("${user_info.User_Role}" == "121" || "${user_info.User_Role}" == "114" || "${user_info.User_Role}" == "127" //block CM CTM HM to access function in ROOT - BY JONATHAN
-				|| "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7"  // enhancement to set requestor
+				|| "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7" || "${SESSION_INFO.userTypeId}" == "6"  // enhancement to set requestor
+				|| !isCpd
 				){
 				    $('.hidefunction').hide();
 				    $('#search_requestorInfo').val("${user_info.Mem_code}");
