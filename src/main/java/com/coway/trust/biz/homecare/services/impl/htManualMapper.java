@@ -342,4 +342,6 @@ public interface htManualMapper {
 
 	EgovMap selectCSOrderView(Map<String, Object> params);
 
+	EgovMap checkMatOrFra(Map<String, Object> params);
+
 }
