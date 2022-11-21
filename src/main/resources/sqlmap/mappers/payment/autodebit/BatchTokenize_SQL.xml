@@ -22,7 +22,7 @@
                   a.OrderNo,
                   a.FullName,
                   replace(a.CardNumber,'-',''),
-                  TO_CHAR(TO_DATE(#{item.9},'Mon-YY'),'MMYY'),
+                  TO_CHAR(TO_DATE(a.CardEXP,'Mon-YY'),'MMYY'),
                   case
                     when a.CardType = 'Credit Card' then 1241
                     when a.CardType = 'Debit Card' then 1240
