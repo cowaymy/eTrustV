@@ -16,6 +16,7 @@ public interface SsoLoginService {
 	Map<String, Object> ssoUpdateUserStatus(Map<String, Object> params);
 	Map<String, Object> ssoDeleteUserStatus(Map<String, Object> params);
 	Map<String, Object> ssoUpdateUserPassword(Map<String, Object> params);
+	Map<String, Object> ssoUpdateUserInfo(Map<String, Object> params);
 
 	LoginVO selectSSOcredential(Map<String, Object> params);
 	Map<String, Object> getAdminAccessToken(Map<String, Object> params);
@@ -24,4 +25,5 @@ public interface SsoLoginService {
 	Map<String, Object> userResetPassword(Map<String, Object> params);
 	Map<String, Object> userActivateDeactivate(Map<String, Object> params);
 	Map<String, Object> userDelete(Map<String, Object> params);
+	Map<String, Object> userInfoUpdate(Map<String, Object> params);
 }

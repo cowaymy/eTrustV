@@ -168,6 +168,25 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	}
 
 	@Override
+	public Map<String, Object> ssoUpdateUserInfo(Map<String, Object> params)  {
+		LOGGER.debug("ssoUpdateUserStatus");
+
+		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(params) ;
+		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
+
+		Map<String, Object> usernameParams = new HashMap<String, Object>();
+		usernameParams = params;
+		usernameParams.put("bearer", adminAccessToken);
+		usernameParams.put("username", params.get("memCode").toString().trim());
+		Map<String,Object> userIdMap = getUserId(usernameParams) ;
+
+		usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
+		Map<String,Object> userActiveMap = userInfoUpdate(usernameParams) ;
+
+		return userActiveMap;
+	}
+
+	@Override
 	public Map<String, Object> ssoUpdateUserPassword(Map<String, Object> params)  {
 		LOGGER.debug("ssoUpdateUserStatus");
 
@@ -1037,6 +1056,154 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			rtnRespMsg(params);
 
 			return returnParams;
+		}
+    }
+
+	@Override
+    public Map<String, Object> userInfoUpdate(Map<String, Object> params) {
+		Map<String,Object> returnParams = new HashMap<String, Object>();
+		String adminAccessToken = "";
+
+		String respTm = null;
+		StopWatch stopWatch = new StopWatch();
+	    stopWatch.reset();
+	    stopWatch.start();
+
+	    String jsonString = "";
+		String ssoUrl = ssoUrlApi + "/users/" + params.get("keycloakUserId").toString();
+		String output1 = "";
+		SsoLoginApiRespForm p = new SsoLoginApiRespForm();
+		try{
+			URL url = new URL(ssoUrl);
+
+			LOGGER.error("Start Calling keycloak API ...." + ssoUrl + "......\n");
+			HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
+			conn1.disconnect();
+	        conn1.setDoOutput(true);
+	        conn1.setRequestMethod("PUT");
+	        conn1.setRequestProperty("Content-Type", "application/json");
+	        conn1.setRequestProperty("Authorization", "Bearer " + params.get("bearer").toString());
+	        conn1.connect();
+	        DataOutputStream out = new DataOutputStream(conn1.getOutputStream());
+	        jsonString = "";
+	        if(params.get("firstName") != null && params.get("firstName").toString() != ""){
+	        	jsonString = "{\"firstName\": \""
+		        		+ params.get("firstName").toString() + "\"";
+	        }
+
+	        if(params.get("email") != null && params.get("email").toString() != ""){
+	        	if(jsonString == ""){
+	        		jsonString = "{\"email\": \""
+			        		+ params.get("email").toString() + "\"";
+	        	}else{
+	        		jsonString = jsonString + ",\"email\": \""
+			        		+ params.get("email").toString() + "\"";
+	        	}
+	        }
+
+	        jsonString = jsonString + "}";
+	        /*jsonString = "{\"enabled\": "
+	        		+ params.get("enabled").toString() + "}";*/
+	        LOGGER.error("Start Calling keycloak API jsonString...." + jsonString + "......\n");
+	        out.write(jsonString.getBytes());
+	        out.flush();
+	        out.close();
+
+	        LOGGER.error("Start Calling keycloak API return......\n");
+	        LOGGER.error("Start Calling keycloak API return getResponseCode " + conn1.getResponseCode() + "......\n");
+	        LOGGER.error("Start Calling keycloak API return getResponseMessage " + conn1.getResponseMessage() + "......\n");
+
+	        InputStream inputStream;
+	        if (conn1.getResponseCode() == 204) {
+	        	returnParams.put("status", AppConstants.SUCCESS);
+	        	returnParams.put("msg", "");
+	            //inputStream = conn1.getInputStream();
+	        	LOGGER.debug("Update info success");
+
+	            conn1.disconnect();
+
+	        } else {
+	            inputStream = conn1.getErrorStream();
+	            returnParams.put("status", AppConstants.FAIL);
+
+	            String output = "";
+	            BufferedReader br = new BufferedReader(new InputStreamReader(
+		                (inputStream)));
+	            LOGGER.error("Output from Server .... \n");
+		        while ((output = br.readLine()) != null) {
+		        	output1 = output;
+		        	LOGGER.error(output);
+		        	returnParams.put("msg", output);
+		        }
+	        }
+
+			/*if (conn1.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+		                (inputStream)));
+				//conn1.getResponseMessage();
+				// BufferedReader in = new BufferedReader(new InputStreamReader(conn1.getInputStream()));
+
+
+		        String output = "";
+		        LOGGER.debug("Output from Server .... \n");
+		        while ((output = br.readLine()) != null) {
+		        	output1 = output;
+		        	LOGGER.debug(output);
+		        }
+
+		        Gson g = new Gson();
+		        p = g.fromJson(output1, SsoLoginApiRespForm.class);
+
+		        LOGGER.error("Start Calling keycloak API return LoginApiRespForm" + p.toString() + "......\n");
+		        LOGGER.error("Start Calling keycloak API return getAccess_token : " + p.getAccess_token() + "......\n");
+		        returnParams.put("adminAccessToken", p.getAccess_token());
+		        //adminAccessToken = p.getAccess_token();
+		        String msg = p.getMessage() != null ? "LMS: " + p.getMessage().toString() : "";
+		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+//		        	resultValue.put("status", AppConstants.FAIL);
+//					resultValue.put("message", msg);
+		        }else if(p.getStatus().equals("true")){
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
+//		        	resultValue.put("status", AppConstants.SUCCESS);
+//					resultValue.put("message", msg);
+		        }else{
+//		        	resultValue.put("status", AppConstants.FAIL);
+//					resultValue.put("message", msg);
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		        }
+
+			}else{
+//				resultValue.put("status", AppConstants.FAIL);
+//				resultValue.put("message", "No Response");
+//				p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+//				p.setMessage("No Response");
+			}*/
+		}catch(Exception e){
+			LOGGER.error("Timeout:");
+			LOGGER.error("[keycloak] - Caught Exception: " + e);
+//			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
+//			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
+//			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
+//			p.setMessage("Timeout " + e.toString());
+		}finally{
+			stopWatch.stop();
+		    respTm = stopWatch.toString();
+
+		    params.put("responseCode", returnParams.get("status") == null ? "" : returnParams.get("status").toString());
+            params.put("responseMessage", returnParams.get("msg") == null ? "" : returnParams.get("msg").toString());
+            params.put("reqPrm", jsonString);
+            params.put("ipAddr", "");
+            params.put("url", ssoUrl);
+            params.put("respTm", respTm);
+            params.put("resPrm", output1);
+            params.put("apiUserId", ssoApiUserId);
+            params.put("refNo", params.get("memCode") == null ? params.get("username").toString() :params.get("memCode").toString());
+
+			rtnRespMsg(params);
+
+			return returnParams;
+//			commonApiService.rtnRespMsg(ssoUrl, p.getCode().toString(), p.getMessage().toString(),respTm , jsonString, output1 ,lmsApiUserId, refNo);
 		}
     }
 

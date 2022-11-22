@@ -1153,6 +1153,18 @@ public class MemberListController {
     					throw new RuntimeException(e1);
     				}
             	}
+
+            	//SSO Login member edit
+            	if(formMap.containsKey("memberNmUpd") ||  formMap.containsKey("emailUpd") ){
+            		/*logger.debug("memberNm " + formMap.get("memberNmUpd").toString());
+            		logger.debug("email " + formMap.get("emailUpd").toString());*/
+            		Map<String,Object> ssoParamsMem = new HashMap<String, Object>();
+            		ssoParamsMem.put("memCode", memCode);
+            		ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
+            		ssoParamsMem.put("email", formMap.get("emailUpd").toString());
+              		ssoLoginService.ssoUpdateUserInfo(ssoParamsMem);
+            	}
+
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
