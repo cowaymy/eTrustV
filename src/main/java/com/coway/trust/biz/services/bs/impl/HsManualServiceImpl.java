@@ -791,6 +791,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           insertHSNewContact.put("orgCode",brnchDt.get("orgCode").toString());
           logger.debug("==================== line 4========================");
           insertHSNewContact.put("status","P");
+          insertHSNewContact.put("cntcId", oldContDt.get("custCntcId"));
+          insertHSNewContact.put("custName", oldContDt.get("custName"));
+          insertHSNewContact.put("custId", oldContDt.get("custId"));
 
           logger.debug("==================== insertHSNewContact ========================");
           logger.debug(" insertHSNewContact: " + insertHSNewContact);

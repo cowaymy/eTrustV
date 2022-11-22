@@ -5580,9 +5580,12 @@ SELECT DISTINCT A.ORD_ID FROM (
         CUST.TEL_M1 OLD_HP_NO,
         CUST.TEL_O OLD_OFFICE_NO,
         CUST.TEL_R OLD_HOME_NO,
-        CUST.EMAIL OLD_EMAIL
+        CUST.EMAIL OLD_EMAIL,
+        SAL.CUST_ID,
+        CUSTM.NAME CUST_NAME
         FROM SAL0001D SAL
         JOIN SAL0027D CUST ON SAL.CUST_ID = CUST.CUST_ID AND SAL.CUST_CNT_ID = CUST.CUST_CNTC_ID
+        JOIN SAL0026D CUSTM ON CUSTM.CUST_ID = CUST.CUST_ID
         JOIN SVC0008D HS   ON HS.SALES_ORD_ID = SAL.SALES_ORD_ID
         WHERE HS.SALES_ORD_ID = #{orderId} AND HS.NO = #{hsNo}
     </select>
@@ -5626,7 +5629,7 @@ SELECT DISTINCT A.ORD_ID FROM (
         , #{custId}
         , #{custName}
         , #{status}
-        , #{oldCntcId}
+        , #{cntcId}
         , SYSDATE
         , #{oldHpNo}
         , #{oldHomeNo}
