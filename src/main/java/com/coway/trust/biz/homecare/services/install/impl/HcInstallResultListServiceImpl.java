@@ -807,9 +807,6 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    String istrade = String.valueOf(params.get("trade"));
 	    String isreqsms = String.valueOf(params.get("reqsms"));
 	    String resultId = String.valueOf(params.get("resultId"));
-	    String fileGroupKey = String.valueOf(params.get("fileGroupKey"));
-	    String StkId = String.valueOf(params.get("StkId"));
-	    String SalesOrderId = String.valueOf(params.get("SalesOrderId"));
 
 	    Map<String, Object> locInfoEntry = new HashMap<String, Object>();
 	    params.put("userId", sessionVO.getUserId());
@@ -858,15 +855,11 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    oMap.put("salesOrdNo", CommonUtils.nvl(params.get("SalesOrderNo")));
 	    EgovMap hcOrder = hcInstallResultListMapper.selectFrmOrdNo(oMap);
 
-	    logger.debug("hcOrder: " + hcOrder.toString());
-
 	    if (hcOrder != null) {
 	      //hcOrder.put("anoOrdNo", (String) hcOrder.get("salesOrdNo"));
 
 	      if (!"".equals(CommonUtils.nvl(hcOrder.get("salesOrdNo")))) {
 	    	  EgovMap hcIns = hcInstallResultListMapper.selectFrmInstInfo(hcOrder);
-
-	  	      logger.debug("hcIns: " + hcIns.toString());
 
 	    	  if (hcIns != null) {
 	    		  params.put("resultId", CommonUtils.nvl(hcIns.get("resultId"))); //Frame Result ID
