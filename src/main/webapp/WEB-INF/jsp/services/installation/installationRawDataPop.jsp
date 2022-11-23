@@ -221,6 +221,10 @@
     	  whereSql2 += " AND C.STK_CODE IN (" +prodCodeList + ") ";
       }
 
+      if($("#agentUserName").val() != '' && $("#agentUserName").val() != null){
+    	  whereSql2 += " AND S.USER_NAME LIKE '%"+ $("#agentUserName").val() +"%'";
+      }
+
       $("#installationRawDataForm #V_WHERESQL").val(whereSql);
       $("#installationRawDataForm #V_WHERESQL_2").val(whereSql2);
       $("#installationRawDataForm #V_SELECTSQL").val('');
@@ -364,7 +368,8 @@
        <td>
             <select class="multy_select w100p" multiple="multiple" id="prodCat" name="prodCat"></select>
        </td>
-       <th></th><td></td>
+       <th scope="row">Agent User Name</th>
+       <td><input type="text" value="" id="agentUserName" name="agentUserName"/></td>
       </tr>
 
       <tr>

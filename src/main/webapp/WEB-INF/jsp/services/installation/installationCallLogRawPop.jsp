@@ -155,6 +155,10 @@
 	                      + ") ";
 	              }
 
+	            if($("#agentUserName").val() != '' && $("#agentUserName").val() != null){
+	            	whereSql += " AND U.USER_NAME LIKE '%"+ $("#agentUserName").val() +"%'";
+	            }
+
 	      //AGING DAY
             if ($("#agingDayFrom").val() != '' && $("#agingDayTo").val() != '' && $("#agingDayFrom").val() != null && $("#agingDayTo").val() != null) {
         var agingDayFrom = $("#agingDayFrom").val();
@@ -395,8 +399,8 @@
         </div>
         <!-- date_set end -->
        </td>
-
-
+       <th scope="row">Agent User Name</th>
+       <td><input type="text" value="" id="agentUserName" name="agentUserName"/></td>
      </tr>
 
       </tbody>
