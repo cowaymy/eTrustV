@@ -174,9 +174,10 @@
 				|| "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2" || "${SESSION_INFO.userTypeId}" == "7" || "${SESSION_INFO.userTypeId}" == "6"  // enhancement to set requestor
 				|| !isCpd
 				){
-
 				    $('.hidefunction').hide();
 				    $('#search_requestorInfo').val("${SESSION_INFO.userMemCode}");
+ 	                $("#search_requestorInfo").attr("class", "w100p readonly");
+
 				}else{
 					fn_setGridEvent();
 				}
@@ -269,6 +270,7 @@
 
 	// Button functions - Start
 	function fn_searchROT() {
+
 		$("#root_searchForm")
  		console.log($("#root_searchForm").serialize());
 		Common.ajax("GET", "/sales/ownershipTransfer/selectRootList.do", $(
@@ -458,6 +460,15 @@
 
     function fn_clear() {
     	document.getElementById("root_searchForm").reset();
+
+
+    	if(!isCpd || "${SESSION_INFO.userTypeId}" == "1" || "${SESSION_INFO.userTypeId}" == "2"
+            || "${SESSION_INFO.userTypeId}" == "7" || "${SESSION_INFO.userTypeId}" == "6" ){
+    		$('#search_requestorInfo').val("${SESSION_INFO.userMemCode}");
+    		}
+
+    	// to lock requestor id for non CPD dept
+
     }
 
 	// Button functions - End
