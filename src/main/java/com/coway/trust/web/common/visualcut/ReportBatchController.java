@@ -1791,6 +1791,36 @@ public class ReportBatchController {
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
   }
 
+  @RequestMapping(value = "/HDC_Raw_Data_Excel.do")
+  //@Scheduled(cron = "0 30 4 * * *")//Daily (3:30am)
+  public void HDC_Raw_Data_Excel() {
+    LOGGER.info("[START] HDC_Raw_Data_Excel...");
+
+    Map<String, Object> params = new HashMap<>();
+    int minYear = 2020;
+
+    for (int year = LocalDate.now().getYear(); year >= minYear; year--) {
+      params.put("V_YEAR", year);
+      HDC_Raw_Data_Excel_Manual(params);
+    }
+
+    LOGGER.info("[END] HDC_Raw_Data_Excel...");
+  }
+
+  @RequestMapping(value = "/HDC_Raw_Data_Excel_Manual.do")
+  public void HDC_Raw_Data_Excel_Manual(@RequestParam Map<String, Object> params) {
+    params.put(REPORT_FILE_NAME, "/visualcut/HDCRawData.rpt");// visualcut
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_YEAR", params.get("V_YEAR").toString());// parameter
+    params.put("V_TYPE", "HC");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "HDC" + File.separator + "HDC_Raw_Data_"
+        + params.get("V_YEAR").toString() + "_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] HDC_Raw_Data_Excel_Manual...");
+  }
+
   @RequestMapping(value = "/SST_Agreement_Raw_Data_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void SST_Agreement_Raw_Data_Excel() {
