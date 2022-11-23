@@ -187,7 +187,7 @@
 		EXP_DT,CRT_DT,CRT_BY)
 		VALUES
 		(#{id},#{paymentRunningNumber},TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},44,#{orderDescription},
-		#{totalAmountPayable},TO_DATE(TO_CHAR((SYSDATE+7),'DD/MM/YYYY'),'DD/MM/YYYY'),SYSDATE,#{userId})
+		#{totalAmountPayable},SYSDATE+7,SYSDATE,#{userId})
 	</insert>
 
 		<insert id="insertPaymentCollectionDetail" parameterType="Map">
