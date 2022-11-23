@@ -39,6 +39,7 @@ public class EGhlPaymentCollectionApiDto {
 	private String statusCodeDesc;
 	private String orderDesc;
 	private String crtDt;
+	private String expDt;
 
 	//Result
 	private int responseCode;
@@ -77,6 +78,7 @@ public class EGhlPaymentCollectionApiDto {
 		params.put("statusCodeDesc",vo.getStatusCodeDesc());
 		params.put("orderDesc",vo.getOrderDesc());
 		params.put("crtDt",vo.getCrtDt());
+		params.put("expDt",vo.getExpDt());
 
 		params.put("responseCode", vo.getResponseCode());
 		return params;
@@ -280,5 +282,13 @@ public class EGhlPaymentCollectionApiDto {
 
 	public void setCrtDt(String crtDt) {
 		this.crtDt = crtDt;
+	}
+
+	public String getExpDt() {
+		return expDt;
+	}
+
+	public void setExpDt(String expDt) {
+		this.expDt = expDt;
 	}
 }
