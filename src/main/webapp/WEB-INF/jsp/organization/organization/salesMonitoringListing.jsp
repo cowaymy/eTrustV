@@ -3,20 +3,14 @@
 
     var salesOrgSummaryList, salesOrgWeeklyList;
 
-    var previous3month = new Date(), previous2month = new Date(), previousmonth = new Date(), currentmonth = new Date();
+    var previous3month = getMonthName('${month}'-3), previous2month = getMonthName('${month}'-2), previousmonth = getMonthName('${month}'-1), currentmonth =getMonthName('${month}');
+    var year =  new Date().getFullYear();
 
-    previous3month.setMonth(previous3month.getMonth()-3);
-    previous3month = previous3month.toLocaleString('default', { month: 'long' });
-
-    previous2month.setMonth(previous2month.getMonth()-2);
-    previous2month = previous2month.toLocaleString('default', { month: 'long' });
-
-    previousmonth.setMonth(previousmonth.getMonth()-1);
-    previousmonth = previousmonth.toLocaleString('default', { month: 'long' });
-
-    currentmonth.setMonth(currentmonth.getMonth());
-    currentmonth = currentmonth.toLocaleString('default', { month: 'long' });
-
+    function getMonthName(monthNumber) {
+          const date = new Date();
+          date.setMonth(monthNumber - 1);
+          return date.toLocaleString('en-US', { month: 'long' });
+    }
 
 	var salesSummaryDashboard = [{
 	    dataField: "codeName",
@@ -233,8 +227,13 @@
                          memCode = result2[0].memCode;
                     }
 
-                     Common.ajax("GET", "/organization/selectSummarySalesListing.do", {memCode: memCode}, function (result) {
-                    	 console.log(result);
+                     var params_summary ={
+                             memCode: memCode,
+                             currentYm : '${currentYm}',
+                             previousYm3 : '${previousYm3}'
+                      };
+
+                     Common.ajax("GET", "/organization/selectSummarySalesListing.do", params_summary, function (result) {
                          AUIGrid.setGridData(salesOrgSummaryList, result);
                      });
                });
@@ -252,7 +251,13 @@
 	                        memCode = result2[0].memCode;
 	                   }
 
-	                    Common.ajax("GET", "/organization/selectWeekSalesListing.do", {memCode: memCode}, function (result) {
+	                    var params_weekly ={
+	                            memCode: memCode,
+	                            currentYm : '${currentYm}',
+	                            previousYm3 : '${previousYm3}'
+	                     };
+
+	                    Common.ajax("GET", "/organization/selectWeekSalesListing.do", params_weekly, function (result) {
 	                        AUIGrid.setGridData(salesOrgWeeklyList, result);
 	                    });
 	              });

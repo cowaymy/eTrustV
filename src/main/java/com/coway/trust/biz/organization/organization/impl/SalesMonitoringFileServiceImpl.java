@@ -77,6 +77,16 @@ public class SalesMonitoringFileServiceImpl implements SalesMonitoringFileServic
 		return salesMonitoringFileMapper.selectProductCategoryList_HC();
 	}
 
+	@Override
+	  public EgovMap checkCurrentMonth() {
+		return salesMonitoringFileMapper.checkCurrentMonth();
+	}
+
+	@Override
+	  public EgovMap checkCurrentYearMonth() {
+		return salesMonitoringFileMapper.checkCurrentYearMonth();
+	}
+
 
 
 }

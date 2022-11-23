@@ -45,6 +45,21 @@ public class SalesMonitoringFileController {
     @RequestMapping(value = "/salesMonitoringFile.do")
 	public String salesMonitoringListing(@RequestParam Map<String, Object> params, ModelMap model) {
 
+
+    	EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
+
+		if(checkCurrentYearMonth == null){
+			model.put("month", "0");
+			model.put("currentYm", "0");
+			model.put("previousYm", "0");
+		}
+		else{
+			model.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+			model.put("currentYm", checkCurrentYearMonth.get("currentym"));
+			model.put("previousYm", checkCurrentYearMonth.get("previousym"));
+			model.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
+		}
+
 		return "organization/organization/salesMonitoringListing";
 	}
 
@@ -89,8 +104,20 @@ public class SalesMonitoringFileController {
 		params.put("cmbProduct", cmbProduct);
 		params.put("cmbProductCtgry",cmbProductCtgry);
 
-		LOGGER.info("gg",params);
-System.out.println(params);
+		EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
+
+		if(checkCurrentYearMonth == null){
+			params.put("month", "0");
+			params.put("currentYm", "0");
+			params.put("previousYm", "0");
+		}
+		else{
+			params.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+			params.put("currentYm", checkCurrentYearMonth.get("currentym"));
+			params.put("previousYm", checkCurrentYearMonth.get("previousym"));
+			params.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
+		}
+
         List<EgovMap> notice = salesMonitoringFileService.selectPerformanceView(params);
         return ResponseEntity.ok(notice);
     }
@@ -98,17 +125,26 @@ System.out.println(params);
 	@RequestMapping(value="/smfDailyInfoPop.do")
 	public String smfDailyInfoPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		params.put("userId", sessionVO.getUserId());
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
-			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
-			model.put("memType", getUserInfo.get("memType"));
-			model.put("orgCode", getUserInfo.get("orgCode"));
-			model.put("grpCode", getUserInfo.get("grpCode"));
-			model.put("deptCode", getUserInfo.get("deptCode"));
-			model.put("memCode", getUserInfo.get("memCode"));
+		EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
+
+		if(checkCurrentYearMonth == null){
+			model.put("month", "0");
+			model.put("currentYm", "0");
+			model.put("previousYm", "0");
 		}
+		else{
+			model.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+			model.put("currentYm", checkCurrentYearMonth.get("currentym"));
+			model.put("previousYm", checkCurrentYearMonth.get("previousym"));
+			model.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
+		}
+
+		model.put("orgCode", params.get("orgCode"));
+		model.put("grpCode", params.get("grpCode"));
+		model.put("deptCode", params.get("deptCode"));
+		model.put("memCode", params.get("memCode"));
+		model.put("position", params.get("position"));
 
 		return "organization/organization/smfDailyInfoPop";
 	}
@@ -147,6 +183,21 @@ System.out.println(params);
 		params.put("cmbProduct_actHP", cmbProduct);
 		params.put("cmbProductCtgry_actHP",cmbProductCtgry);
 
+		EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
+
+		if(checkCurrentYearMonth == null){
+			params.put("month", "0");
+			params.put("currentYm", "0");
+			params.put("previousYm", "0");
+		}
+		else{
+			params.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+			params.put("currentYm", checkCurrentYearMonth.get("currentym"));
+			params.put("previousYm", checkCurrentYearMonth.get("previousym"));
+			params.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
+		}
+
+
         List<EgovMap> notice = salesMonitoringFileService.selectSmfActHp(params);
         return ResponseEntity.ok(notice);
     }
@@ -179,6 +230,21 @@ System.out.println(params);
 		params.put("cmbProduct_HA", cmbProduct);
 		params.put("cmbProductCtgry_HA",cmbProductCtgry);
 
+		EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
+
+		if(checkCurrentYearMonth == null){
+			params.put("month", "0");
+			params.put("currentYm", "0");
+			params.put("previousYm", "0");
+		}
+		else{
+			params.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+			params.put("currentYm", checkCurrentYearMonth.get("currentym"));
+			params.put("previousYm", checkCurrentYearMonth.get("previousym"));
+			params.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
+		}
+
+
         List<EgovMap> notice = salesMonitoringFileService.selectSmfHA(params);
         return ResponseEntity.ok(notice);
     }
@@ -208,6 +274,21 @@ System.out.println(params);
 
 		params.put("cmbProduct_HC", cmbProduct);
 		params.put("cmbProductCtgry_HC",cmbProductCtgry);
+
+		EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
+
+		if(checkCurrentYearMonth == null){
+			params.put("month", "0");
+			params.put("currentYm", "0");
+			params.put("previousYm", "0");
+		}
+		else{
+			params.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+			params.put("currentYm", checkCurrentYearMonth.get("currentym"));
+			params.put("previousYm", checkCurrentYearMonth.get("previousym"));
+			params.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
+		}
+
 
         List<EgovMap> notice = salesMonitoringFileService.selectSmfHC(params);
         return ResponseEntity.ok(notice);

@@ -33,5 +33,9 @@ public interface SalesMonitoringFileMapper {
 
 	List<EgovMap> selectProductCategoryList_HC();
 
+	EgovMap checkCurrentMonth();
+
+	EgovMap checkCurrentYearMonth();
+
 
 }

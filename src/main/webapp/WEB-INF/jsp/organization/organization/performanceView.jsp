@@ -9,6 +9,23 @@ $(document).ready(function() {
 
 	 createAUIGrid();
 
+     AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
+
+         var index = AUIGrid.getSelectedIndex(listMyGridID)[0];
+         var param;
+
+         param = {
+        	         orgCode  : AUIGrid.getCellValue(listMyGridID, event.rowIndex, "orgCode"),
+			         grpCode  : AUIGrid.getCellValue(listMyGridID, event.rowIndex, "grpCode"),
+			         deptCode : AUIGrid.getCellValue(listMyGridID, event.rowIndex, "deptCode"),
+			         memCode  : AUIGrid.getCellValue(listMyGridID, event.rowIndex, "memCode"),
+			         position  : AUIGrid.getCellValue(listMyGridID, event.rowIndex, "position")
+         }
+
+         Common.popupDiv("/organization/smfDailyInfoPop.do", param, null, true,'');
+
+     });
+
 
 
      var memCode;
@@ -84,8 +101,11 @@ function createAUIGrid() {
 
     //AUIGrid 칼럼 설정
     var columnLayout = [
-        { headerText : "Member Code", dataField : "memCode",       editable : false, width : 80  }
-      , { headerText : "CRS Code",  dataField : "crsCode", editable : false, width : 80  }
+        { headerText : "Org Code", dataField : "orgCode",       editable : false, width : 80  }
+      , { headerText : "Grp Code", dataField : "grpCode",       editable : false, width : 80  }
+      , { headerText : "Dept Code", dataField : "deptCode",       editable : false, width : 80  }
+      , { headerText : "Member Code", dataField : "memCode",       editable : false, width : 80  }
+      , { headerText : "CRS Code",  dataField : "crsCode", editable : false, width : 80 , visible: false }
       , { headerText : "Name", dataField : "fullName", editable : false, width : 80  }
       , { headerText : "GM Code",   dataField : "orgCode",       editable : false, width : 100 }
       , { headerText : "Position",  dataField : "position",       editable : false, width : 100  }
@@ -149,9 +169,7 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
-//     if("${memType}"== "1"){
     	 fn_selectListAjax();
-//     }
 
 }
 
@@ -164,10 +182,6 @@ $(function(){
 	   $("#download").click(function() {
 	        GridCommon.exportTo("list_grid_wrap", 'xlsx', "Performance View List");
 	    });
-
-	   $('#btnDailyInfo').click(function() {
-           Common.popupDiv("/organization/smfDailyInfoPop.do", null, null, true);
-       });
 
 	   $('#btnActHP').click(function() {
            Common.popupDiv("/organization/smfActHpPop.do", null, null, true);
@@ -321,7 +335,6 @@ $.fn.clearForm = function() {
   <dt>Link</dt>
   <dd>
   <ul class="btns">
-      <li><p class="link_btn"><a href="#" id="btnDailyInfo">Daily Info</a></p></li>
       <li><p class="link_btn"><a href="#" id="btnActHP">Active HP</a></p></li>
       <li><p class="link_btn"><a href="#" id="btnHA">HA</a></p></li>
       <li><p class="link_btn"><a href="#" id="btnHC">HC</a></p></li>
