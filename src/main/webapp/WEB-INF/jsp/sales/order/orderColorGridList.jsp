@@ -258,13 +258,13 @@
             }, {
                 dataField : "ccpStus",
                 headerText : "CCP Status",
-                width : 80,
+                width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "ccpRemark",
                 headerText : "CCP Remark",
-                width : 80,
+                width : 200,
                 editable : false,
                 style: 'left_style'
             }, {
