@@ -126,11 +126,11 @@
           , NVL(NETSALES_W2,0) NETSALES_W2
           , NVL(NETSALES_W3,0) NETSALES_W3
           , NVL(NETSALES_W4,0) NETSALES_W4
-<!--           , NVL(NETSALES_W4,0) NETSALES_TOTAL_AMT -->
-          , CASE WHEN NVL(NETSALES_W4,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W4,0)
-                                        WHEN NVL(NETSALES_W3,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W3,0)
-                                        WHEN NVL(NETSALES_W2,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W2,0)
-                                   ELSE NVL(NETSALES_W1,0) END NETSALES_TOTAL_AMT
+          , NVL(NETSALES_W4,0) NETSALES_TOTAL_AMT
+<!--           , CASE WHEN NVL(NETSALES_W4,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W4,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W4,0) -->
+<!--                                         WHEN NVL(NETSALES_W3,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W2,0) AND NVL(NETSALES_W3,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W3,0) -->
+<!--                                         WHEN NVL(NETSALES_W2,0) > NVL(NETSALES_W4,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W3,0) AND NVL(NETSALES_W2,0) > NVL(NETSALES_W1,0) THEN NVL(NETSALES_W2,0) -->
+<!--                                    ELSE NVL(NETSALES_W1,0) END NETSALES_TOTAL_AMT -->
           , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
             ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm9,999,999,999,990.00') || '%' END NET_RATE
           , TARGETATMT_NS
@@ -664,7 +664,9 @@
         SELECT
             CODE_NAME
            <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+           <if test="orgCode != 'CRS0002'">
            , ORG_CODE
+           </if>
            </if>
            <if test='grpCode != null and grpCode != "" and grpCode != " "'>
            , GRP_CODE
@@ -718,7 +720,9 @@
                  SELECT
                             TO_CHAR(TO_DATE(A.SALES_DT), 'DD') AS DAY
                           <if test='orgCode != null and orgCode != "" and orgCode != " "'>
-                           ,A.ORG_CODE
+                          <if test="orgCode != 'CRS0002'">
+					          ,A.ORG_CODE
+					       </if>
                         </if>
                         <if test='grpCode != null and grpCode != "" and grpCode != " "'>
                             , A.GRP_CODE
@@ -746,7 +750,9 @@
 	                      AND TO_CHAR(TO_DATE(A.SALES_DT),'YYYYMM')  = #{currentYm}
 <!-- 	                    </if> -->
                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
-                            AND A.ORG_CODE = #{orgCode}
+		                        <if test="orgCode != 'CRS0002'">
+		                         AND A.ORG_CODE = #{orgCode}
+		                        </if>
                         </if>
                         <if test='grpCode != null and grpCode != "" and grpCode != " "'>
                             AND A.GRP_CODE =#{grpCode}
@@ -762,7 +768,9 @@
 
                  GROUP BY TO_CHAR(TO_DATE(A.SALES_DT), 'DD')
                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
-                           ,A.ORG_CODE
+                              <if test="orgCode != 'CRS0002'">
+                                 , A.ORG_CODE
+                                </if>
                         </if>
                         <if test='grpCode != null and grpCode != "" and grpCode != " "'>
                             , A.GRP_CODE
@@ -801,7 +809,7 @@
            FROM ORG1001V A
            JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
            JOIN SYS0047M C ON B.MEM_CODE = C.USER_NAME
-           WHERE A.MEM_LVL = 0 AND B.STUS = 1 AND B.MEM_TYPE = 1 AND C.USER_STUS_ID = 1
+           WHERE A.MEM_LVL = 0 AND B.STUS = 1 AND B.MEM_TYPE = 1 AND C.USER_STUS_ID = 1 AND TOP_ORG_CODE = 'CRS0002'
 
          </select>
 
