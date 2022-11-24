@@ -168,6 +168,27 @@
            cpeReqId = AUIGrid.getCellValue(gridID, event.rowIndex, "cpeReqId");
        });
 
+       AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+			cpeReqId = AUIGrid.getCellValue(gridID, event.rowIndex, "cpeReqId");
+     	  var selectedItems = AUIGrid.getSelectedItems(gridID);
+    	  if (selectedItems.length <= 0) {
+    	    Common.alert("<spring:message code='service.msg.NoRcd'/>");
+    	    return;
+    	  }
+
+    	  var itemCpeReqId = selectedItems[0].item.cpeReqId;
+    	  var itemSalesOrdId = selectedItems[0].item.salesOrdId;
+    	  var itemSalesOrdNo = selectedItems[0].item.salesOrdNo;
+
+    	  var data = {
+    			  cpeReqId : itemCpeReqId,
+    	          salesOrderId : itemSalesOrdId,
+    	          salesOrderNo : itemSalesOrdNo
+    	  };
+
+    	  Common.popupDiv("/services/ecom/cpeDetailPop.do", data, null, true, "cpeDetailPop");
+       });
+
 //        $("#main_department").change(
 //             function() {
 //               if ($("#main_department").val() == '') {
@@ -409,7 +430,7 @@
     <dd>
      <ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
-       <li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li>
+<!--        <li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li> -->
        <li><p class="link_btn"> <a href="javascript:fn_generateCpeEnquiryRaw()" id="genCpeEnqRaw">Enquiry Raw Data</a> </p></li>
       </c:if>
      </ul>

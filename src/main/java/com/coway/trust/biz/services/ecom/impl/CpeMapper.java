@@ -58,4 +58,6 @@ public interface CpeMapper {
 	public EgovMap selectUserBranch(Map<String, Object> params);
 
 	public EgovMap selectUserMemberLevel(Map<String, Object> params);
+
+	public int checkExistingCpeRequestStatusActive(Map<String, Object> params);
 }

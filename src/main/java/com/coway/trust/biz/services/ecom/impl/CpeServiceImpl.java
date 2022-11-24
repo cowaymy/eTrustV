@@ -52,6 +52,18 @@ public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeServic
 	}
 
 	@Override
+	public boolean checkCpeRequestStatusActiveExist(Map<String, Object> params) {
+		int result = cpeMapper.checkExistingCpeRequestStatusActive(params);
+
+		if(result > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	@Override
 	public List<EgovMap> selectSearchOrderNo(Map<String, Object> params) throws Exception {
 		return cpeMapper.selectSearchOrderNo(params);
 	}

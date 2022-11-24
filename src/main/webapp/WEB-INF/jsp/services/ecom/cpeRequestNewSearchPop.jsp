@@ -4,11 +4,10 @@
 //get Order Id
 $(document).ready(function() {
 
+	console.log("cpeRequestNewSearchPop");
     //confirm click
     $("#_confirm").click(function() {
-
-        fn_searchNewOrderPop();
-
+    	checkCpeRequestExistStatus();
     });
 
     //Order No Search
@@ -92,6 +91,19 @@ function fn_searchNewOrderPop(){
         Common.popupDiv("/services/ecom/cpeNewSearchResultPop.do", $("#_searchForm_").serializeJSON(), null , true , 'cpeNewSearchResultPop');
     }
 
+}
+
+function checkCpeRequestExistStatus(){
+	 Common.ajax("GET", "/services/ecom/checkCpeRequestStatus",$("#_searchOrdForm").serialize(), function(result) {
+		 console.log(result);
+		 var existStatus = result.status;
+		 if(existStatus == 'true'){
+				  Common.alert('This order Ecom is under ACT/PENDING status.');
+		 }
+		 else{
+		    fn_searchNewOrderPop();
+		 }
+    });
 }
 </script>
 

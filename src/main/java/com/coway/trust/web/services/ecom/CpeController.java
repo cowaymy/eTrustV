@@ -138,6 +138,18 @@ public class CpeController {
 		return ResponseEntity.ok(resultMap);
 	}
 
+	@RequestMapping(value = "/checkCpeRequestStatus", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> checkCpeRequestStatus(@RequestParam Map<String, Object> params) throws Exception{
+
+		EgovMap resultMap = new EgovMap();
+		//서비스
+		boolean result = cpeService.checkCpeRequestStatusActiveExist(params);
+
+		resultMap.put("status", new Boolean(result).toString());
+
+		return ResponseEntity.ok(resultMap);
+	}
+
 	@RequestMapping(value = "/cpeNewSearchResultPop.do", method = RequestMethod.POST)
 	public String cpeNewSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
@@ -291,6 +303,24 @@ public class CpeController {
 		model.addAttribute("approverList", approverList);
 
 		return "services/ecom/cpeRqstUpdateApprovePop";
+	}
+
+	@RequestMapping(value = "/cpeDetailPop.do")
+	public String cpeDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		logger.debug("params =====================================>>  " + params);
+
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+
+		EgovMap requestInfo = cpeService.selectRequestInfo(params);
+		model.addAttribute("requestInfo", requestInfo);
+
+		String approverList = cpeService.getApproverList(params);
+		model.addAttribute("approverList", approverList);
+
+		return "services/ecom/cpeDetailPop";
 	}
 
 	@RequestMapping(value = "/selectCpeDetailList", method = RequestMethod.GET )

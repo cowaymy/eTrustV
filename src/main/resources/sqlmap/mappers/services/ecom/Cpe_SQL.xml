@@ -238,6 +238,10 @@
 
      </select>
 
+     <select id="checkExistingCpeRequestStatusActive" parameterType="Map" resultType="int">
+     	SELECT COUNT(CPE_REQ_ID) FROM SVC0118M WHERE CPE_STUS_ID NOT IN(6,36)
+     </select>
+
      <select id="selectRequestType" resultType="egovMap">
      SELECT CODE_MASTER_ID AS CODE_ID, CODE_MASTER_NAME AS CODE_NAME FROM SYS0012M
                 WHERE CODE_MASTER_ID IN (532, 533, 534) AND DISAB = 0

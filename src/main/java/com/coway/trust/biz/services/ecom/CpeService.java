@@ -46,4 +46,6 @@ public interface CpeService {
 	List<EgovMap> getIssueTypeList(Map<String, Object> params);
 
     List<EgovMap> selectCpeHistoryDetailPop(Map<String, Object> params);
+
+	boolean checkCpeRequestStatusActiveExist(Map<String, Object> params);
 }
