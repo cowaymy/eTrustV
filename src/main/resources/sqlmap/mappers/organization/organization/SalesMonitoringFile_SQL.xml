@@ -17,11 +17,11 @@
 	             SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
 	                (
 	                SELECT
-	                         CASE  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'A'
-	                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'MM') THEN 'B'
-	                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'MM') THEN 'C'
-	                                  WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE), 0),'MM') THEN 'D'
-	                          END AS MONTH
+	                         CASE   WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-3) THEN 'A'
+                                       WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-2) THEN 'B'
+                                       WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-1) THEN 'C'
+                                       WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))) THEN 'D'
+                              END AS MONTH
 	                        , A.TYPE
 	                        , B.CODE_NAME
 	                        , SUM(NVL(A.W1,0)) W1
@@ -72,11 +72,11 @@
 			            SELECT * FROM
 			                (
 			                 SELECT
-			                        CASE WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-3),'MM') THEN 'A'
-			                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-2),'MM') THEN 'B'
-			                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),-1),'MM') THEN 'C'
-			                               WHEN A.MONTH =TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'MM') THEN 'D'
-			                          END AS MONTH
+			                         CASE WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-3) THEN 'A'
+                                             WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-2) THEN 'B'
+                                             WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-1) THEN 'C'
+                                             WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))) THEN 'D'
+                                      END AS MONTH
 			                        , A.TYPE
 			                        , B.CODE_NAME
 			                        , CASE WHEN TYPE IN (6608) THEN SUM(ROUND(NVL(A.W1,0),2)) ELSE SUM(NVL(A.W1,0)) END W1
