@@ -239,4 +239,59 @@
 			LEFT JOIN SYS0038M F
 			ON F.STUS_CODE_ID = E.STATUS_CODE_ID
     </select>
+
+    <select id="selectPaymentCollectionList" parameterType="Map" resultType="egovMap">
+	   SELECT
+	           E.*,
+	           F.NAME STATUS
+	    FROM (
+	       SELECT
+	           A.ID,
+	           A.CUST_ID,
+	           B.SALES_ORD_NO ORD_NO,
+	           TO_CHAR(B.AMOUNT, 'FM9,990.00') AMOUNT,
+	           TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH12:MI:SS AM') CRT_DT,
+	           C.USER_NAME CRT_USERNAME,
+	           CASE
+	               WHEN  A.STATUS_CODE_ID = '44'  THEN
+	                      CASE
+	                           WHEN ((TO_DATE(TO_CHAR(A.EXP_DT,'DD/MM/YYYY'),'DD/MM/YYYY')) <![CDATA[ <= ]]> (TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')))
+	                           THEN 82
+	                      ELSE 44 END
+	               ELSE A.STATUS_CODE_ID END STATUS_CODE_ID,
+	           A.PAY_NO,
+	           A.PAY_ID,
+	           A.PAYMENT_LINK
+	       FROM PAY0336M A
+	       JOIN PAY0337D B ON B.ID = A.ID
+	       LEFT JOIN SYS0047M C ON C.USER_ID = A.CRT_BY
+	       LEFT JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+	       WHERE 1=1
+	       <if test='trxDtFrom != null and trxDtTo != null'>
+	          <if test='trxDtFrom != "" and trxDtTo != ""'>
+	                   AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ >= ]]> TO_DATE(#{trxDtFrom},'DD/MM/YYYY')
+	                   AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE(#{trxDtTo},'DD/MM/YYYY')
+	           </if>
+	       </if>
+	       <if test='orderNo != null and orderNo != ""'>
+	           AND B.SALES_ORD_NO = #{orderNo}
+	       </if>
+	       <if test='custID != null and custID != ""'>
+	           AND A.CUST_ID = #{custID}
+	       </if>
+	       <if test='custIC != null and custIC != ""'>
+	           AND D.NRIC = #{custIC}
+	       </if>
+	       ORDER BY A.ID DESC
+	   ) E
+	   LEFT JOIN SYS0038M F ON F.STUS_CODE_ID = E.STATUS_CODE_ID
+	   WHERE 1=1
+	       <if test='statusList != null and statusList != ""'>
+	             AND E.STATUS_CODE_ID IN
+	             <foreach item="item" collection="statusList" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+    </select>
 </mapper>

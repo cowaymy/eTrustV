@@ -19,4 +19,6 @@ public interface EGhlPaymentCollectionMapper {
 	EgovMap getUserByUserName(Map<String, Object> params);
 
 	List<EgovMap> paymentCollectionMobileHistoryGet(Map<String, Object> params);
+
+	List<EgovMap> selectPaymentCollectionList(Map<String,Object> params);
 }

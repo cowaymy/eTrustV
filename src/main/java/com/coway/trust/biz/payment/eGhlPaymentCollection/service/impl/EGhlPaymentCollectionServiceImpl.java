@@ -97,4 +97,9 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 		  }
 		  return 1;
 	  }
+
+	  @Override
+	  public List<EgovMap> selectPaymentCollectionList(Map<String,Object> params){
+		  return eGhlPaymentCollectionMapper.selectPaymentCollectionList(params);
+	  }
 }
