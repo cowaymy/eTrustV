@@ -8,8 +8,6 @@
 <script  type="text/javascript">
 $(document).ready(function () {
     console.log("crcAllowanceMasterPlanEditPop.jsp");
-
-    var limitPlanDetail = "${limitPlanDetail}";
 	var startDate;
 	var endDate;
 	startDate = "${limitPlanDetail.startDate}";
@@ -17,7 +15,6 @@ $(document).ready(function () {
     $('#planLimitAmt').val("${limitPlanDetail.planLimitAmt}");
     $('#startDate').val(startDate.substring(3,10));
     $('#endDate').val(endDate.substring(3,10));
-    $('#remarks').val("${limitPlanDetail.remarks}");
 });
 
 function submit(){
@@ -52,6 +49,7 @@ function submit(){
     <section class="pop_body">
 		<section class="search_table">
             <form action="#" method="post" id="allowanceLimitForm" name=""allowanceLimitForm"">
+        		<input type="hidden" id="limitPlanDetail" name="limitPlanDetail" value="${limitPlanDetail}">
         		<input type="hidden" id="creditCardSeq" name="creditCardSeq" value="${cardHolderDetail.crditCardSeq}">
         		<input type="hidden" id="allowancePlanId" name="allowancePlanId" value="${limitPlanDetail.allowancePlanId}">
                 <section class="search_table">
@@ -132,7 +130,7 @@ function submit(){
                             <tr>
                                 <th scope="row">Remarks</th>
                                 <td>
-                                	<textArea id="remarks" name="remarks" cols="20" rows="5"></textArea>
+                                	<textArea id="remarks" name="remarks" cols="20" rows="5">${limitPlanDetail.remarks}</textArea>
                                 </td>
                             </tr>
                         </tbody>
