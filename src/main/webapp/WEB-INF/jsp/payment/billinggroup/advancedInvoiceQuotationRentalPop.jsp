@@ -129,7 +129,7 @@ function fn_openDivPop(){
      }
      else {
     	   Common.ajax("GET", "/payment/selectProductUsageMonth.do",  {salesOrderId: salesOrderId}, function(result1) {
-    		   if(result1[0].productUsageMonth > 49){
+    		   if(result1[0].productUsageMonth >= 49){
     			   Common.alert("Cannot generate for order with the usage period more than 49 months (due to installment left less than 12 months)");
     			   }
     		   else{
