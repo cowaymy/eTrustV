@@ -15,8 +15,8 @@ function getMonthName(monthNumber) {
 }
 
 
-const currentM_ex = getDaysInMonth(year, new Date().getMonth());
-const currentM = getDaysInMonth(year, new Date().getMonth()+1);
+const currentM_ex = getDaysInMonth(year, '${month}'-1);
+const currentM = getDaysInMonth(year, '${month}');
 
 
 function getDaysInMonth(year, month) {
