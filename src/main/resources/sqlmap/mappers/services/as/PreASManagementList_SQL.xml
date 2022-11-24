@@ -17,14 +17,14 @@
                     , Extent21.STK_CODE || ' - ' || Extent21.STK_DESC AS PRODUCT
                     , NVL(Extent18.TEL_M1, ' ') CONTACT_NO
                     , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
-                    , TO_CHAR(Extent1.CRT_DT,'HH:MM:SS PM') AS REG_TIME
+                    , TO_CHAR(Extent1.CRT_DT,'HH:MI:SS PM') AS REG_TIME
                     , Extent6.NAME AS STUS
                     , Extent1.STUS AS STUS_ID
                     , Extent1.DEFECT_CODE
                     , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
                     , Extent1.REG_ID AS CREATOR
                     , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
-                    , TO_CHAR(Extent1.UPD_DT,'HH:MM:SS PM') AS UPD_TIME
+                    , TO_CHAR(Extent1.UPD_DT,'HH:MI:SS PM') AS UPD_TIME
                     , NVL (Extent16.AREA, ' ') AS INST_AREA
                     , NVL (Extent16.POSTCODE, ' ') AS INST_POSTCODE
                     , NVL (Extent16.CITY, ' ') AS INST_CITY
