@@ -1373,8 +1373,8 @@
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
     	$('#ordPromo'+tagNum).removeAttr("disabled");
 
-    	var isSrvPac = null;
-    	if(appTypeVal == "66") isSrvPac = "Y";
+    	var isSrvPac = "Y";
+    	//if(appTypeVal == "66") isSrvPac = "Y";
 
         doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
 
