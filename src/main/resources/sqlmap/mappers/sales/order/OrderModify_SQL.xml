@@ -730,4 +730,16 @@ WHERE   SALES_ORD_NO = (
             SYSDATE
         )
     </insert>
+
+
+<select id="selectFraPayId" parameterType="Map" resultType="egovMap">
+SELECT FRA.SALES_ORD_ID,
+       B.RENT_PAY_ID
+        FROM SAL0001D MAT JOIN HMC0011D B ON MAT.SALES_ORD_NO = B.MAT_ORD_NO
+        JOIN SAL0001D FRA ON FRA.SALES_ORD_NO = B.FRA_ORD_NO
+        JOIN SAL0074D B ON FRA.SALES_ORD_ID = B.SALES_ORD_ID
+        WHERE FRA.SALES_ORD_ID = #{salesOrdId}
+
+
+</select>
 </mapper>

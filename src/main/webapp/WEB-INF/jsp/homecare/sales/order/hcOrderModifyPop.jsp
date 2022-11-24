@@ -2421,8 +2421,7 @@
   function fn_doSavePaymentChannel() {
     console.log('!@# fn_doSavePaymentChannel START');
 
-    Common.ajax("POST", "/sales/order/updatePaymentChannel.do", $(
-        '#payChanlForm').serializeJSON(), function(result) {
+    Common.ajax("POST", "/sales/order/updatePaymentChannel.do", $('#payChanlForm').serializeJSON(), function(result) {
 
       Common.alert('<spring:message code="sal.alert.msg.updSummary" />'
           + DEFAULT_DELIMITER + "<b>" + result.message + "</b>",
@@ -3376,6 +3375,7 @@ console.log(salesOrderMVO);
      </p></li>
    </ul>
    <form id="payChanlForm" name="payChanlForm" action="#" method="post">
+    <input name = "hasFrame" type="hidden" value = "2" /><input
     <input name="salesOrdId" type="hidden" value="${salesOrderId}" /> <input
      name="salesOrdNo" type="hidden" value="${salesOrderNo}" /> <input
      name="custId" type="hidden" value="${custId}" /> <input

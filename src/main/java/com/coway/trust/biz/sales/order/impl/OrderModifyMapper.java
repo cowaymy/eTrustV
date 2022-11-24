@@ -99,4 +99,6 @@ public interface OrderModifyMapper {
   int getExistSofNo(Map<String, Object> params);
 
   void updateMcoRem(Map<String, Object> params);
+
+  EgovMap selectFraPayId(Map<String, Object> params);
 }

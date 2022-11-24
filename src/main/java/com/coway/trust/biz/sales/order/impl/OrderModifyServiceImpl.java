@@ -67,6 +67,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
 import com.coway.trust.web.sales.SalesConstants;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -94,6 +95,9 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
   @Resource(name = "customerMapper")
   private CustomerMapper customerMapper;
+
+  @Resource(name = "hcOrderListService")
+  private HcOrderListService hcOrderListService;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -357,19 +361,25 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
     this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 
+    //Mattress
     int payModeId = orderModifyMapper.selectPayModeId(rentPaySetVO);
-    if ((payModeId == 131 || payModeId == 132) && rentPayMode == 130) {
-      int crtSeqSAL0236D = orderModifyMapper.crtSeqSAL0236D();
-      params.put("deductId", crtSeqSAL0236D);
-      params.put("rentPayId", Integer.parseInt((String) params.get("rentPayId")));
-      params.put("modeId", rentPayMode);
-      params.put("userId", sessionVO.getUserId());
-      orderModifyMapper.insertDeductSAL0236D(params);
-      orderModifyMapper.updatePaymentChannelvRescue(params);
-    } else {
-      orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+        if ((payModeId == 131 || payModeId == 132) && rentPayMode == 130) {
 
-    }
+          int crtSeqSAL0236D = orderModifyMapper.crtSeqSAL0236D();
+          params.put("deductId", crtSeqSAL0236D);
+          params.put("rentPayId", Integer.parseInt((String) params.get("rentPayId")));
+          params.put("modeId", rentPayMode);
+          params.put("userId", sessionVO.getUserId());
+          orderModifyMapper.insertDeductSAL0236D(params);
+          orderModifyMapper.updatePaymentChannelvRescue(params);
+
+        }else {
+
+          orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+
+        }
+
+    logger.debug("params : {}", params);
 
     SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
 
@@ -378,6 +388,55 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     salesOrderMVO.setEcash(rentPaySetVO.getModeId() == 131 ? 1 : 0);
 
     orderModifyMapper.updateECashInfo(salesOrderMVO);
+
+
+
+    //hasFrame == 2 >  from Order Mgmt edit
+    //Frame
+    if(Integer.parseInt( (String) params.get("hasFrame")) == 2  ){
+
+    params.put("ordNo", params.get("salesOrdNo"));
+
+	EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+	String fraOrdId = CommonUtils.nvl(hcOrder.get("anoOrdId"));  // get Frame Order Id
+
+    logger.debug("inside : {}", fraOrdId);
+    logger.debug("inside : {}", params);
+
+	if(fraOrdId != null && fraOrdId != "" ){
+
+        params.put("hasFrame",  "3");
+
+    	//check Frame Installation Details
+    	params.put("salesOrdId", fraOrdId);
+    	params.put("ordId", fraOrdId);
+
+    	 logger.debug("fraParams : {}", params);
+
+    	EgovMap checkFraIns = orderModifyMapper.getInstallDetail(params);
+
+
+        	if((!checkFraIns.get("stusCodeId").toString().equals("4")  ) && (checkFraIns.get("modeId").toString().equals("131")) ){
+        		if(!params.get("rentPayMode").toString().equals("131")){
+
+        		}else{
+                	logger.debug("hsResultM6 : {}", params);
+
+                	EgovMap Fra = orderModifyMapper.selectFraPayId(params);
+                	params.put("rentPayId", Fra.get("rentPayId").toString());
+
+                	this.updatePaymentChannel(params, sessionVO);
+        		}
+            }else{
+
+            	EgovMap Fra = orderModifyMapper.selectFraPayId(params);
+            	params.put("rentPayId", Fra.get("rentPayId").toString());
+
+            	this.updatePaymentChannel(params, sessionVO);
+            }
+    }
+
+    }
   }
 
   private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO)
