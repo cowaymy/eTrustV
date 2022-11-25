@@ -36,7 +36,8 @@
 
 		<repository>
 			<id>mvn2</id>
-			<url>http://repo1.maven.org/maven2/</url>
+			<!-- <url>http://repo1.maven.org/maven2/</url> -->
+            <url>https://repo1.maven.org/maven2/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -58,7 +59,8 @@
 
 		<repository>
 			<id>egovframe</id>
-			<url>http://www.egovframe.go.kr/maven/</url>
+			<!-- <url>http://www.egovframe.go.kr/maven/</url> -->
+            <url>http://maven.egovframe.kr:8080/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -312,11 +314,17 @@
 		</dependency>
 
 		<!-- jdbc -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0.2</version>
-		</dependency>
+		</dependency> -->
+
+         <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>21.7.0.0</version>
+        </dependency>
 
 		<!-- json -->
 		<dependency>
@@ -498,7 +506,18 @@
 			<artifactId>commons-net</artifactId>
 			<version>3.6</version>
 		</dependency>
-		
+
+        <dependency>
+          <groupId>com.inglab.hazelcast</groupId>
+          <artifactId>exec</artifactId>
+          <version>1.0</version>
+        </dependency>
+        <dependency>
+          <groupId>com.hazelcast</groupId>
+          <artifactId>hazelcast</artifactId>
+          <version>5.2.0</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
