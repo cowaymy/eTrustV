@@ -1957,8 +1957,8 @@ $(document).ready(function(){
             <select  id="cYear"   name= "cYear" style="width:80px"  disabled="disabled"  onChange="fn_cYear_onChageEvent()" >
                 <option value="12" >1</option>
                 <option value="24" >2</option>
-                <option value="36" >3</option>
-                <option value="48" >4</option>
+<!--                 <option value="36" >3</option> -->
+<!--                 <option value="48" >4</option> -->
             </select>
             </td>
 
