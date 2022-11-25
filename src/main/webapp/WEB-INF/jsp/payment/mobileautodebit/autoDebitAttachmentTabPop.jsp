@@ -20,7 +20,7 @@
                 <input type='text' class='input_text' readonly='readonly' id='cardImageFileTxt'  name=''/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
             </label>
-        </div>
+			 </div>
     </td>
 </tr>
 <tr>
@@ -30,7 +30,8 @@
             <input type='file' title='file add'  id='otherFile1' accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt1'/>
-                <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a>
+                </span class="optional"><span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH1")'>Remove</a></span>
             </label>
         </div>
     </td>
@@ -43,6 +44,7 @@
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt2'/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </span class="optional"><span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
             </label>
         </div>
     </td>
@@ -55,6 +57,7 @@
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt3'/>
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </span class="optional"><span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH3")'>Remove</a></span>
             </label>
         </div>
     </td>
