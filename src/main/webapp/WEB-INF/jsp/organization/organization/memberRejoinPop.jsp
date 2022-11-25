@@ -165,7 +165,7 @@
 			    </colgroup>
 			    <tbody>
 			        <tr>
-			            <th>Member Rejoin Application From</th>
+			            <th>Member Rejoin Application Form</th>
 			            <td id="attachTd">
 			                <div class="auto_file2 w100p">
 					            <input type="file" title="file add" id="fileName" />
