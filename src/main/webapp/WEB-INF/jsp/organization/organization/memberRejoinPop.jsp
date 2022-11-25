@@ -80,7 +80,7 @@
 		}
 
 		if($("#fileName").val() == null || $("#fileName").val() == ''){
-            Common.alert('Termintaion Agreement is required.');
+            Common.alert('Member rejoin application form is required.');
             return false;
         }
 
@@ -165,7 +165,7 @@
 			    </colgroup>
 			    <tbody>
 			        <tr>
-			            <th>Termination Agreement</th>
+			            <th>Member Rejoin Application From</th>
 			            <td id="attachTd">
 			                <div class="auto_file2 w100p">
 					            <input type="file" title="file add" id="fileName" />
