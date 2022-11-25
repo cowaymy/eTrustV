@@ -31,20 +31,26 @@
 			dataField : "ordNo",
 			editable : false
 		}, {
-			headerText : "<spring:message code='sales.RentalStatus'/>",
-			dataField : "ordStusCode",
-			editable : false
-		}, {
 			headerText : "<spring:message code='sales.AppType'/>",
 			dataField : "appTypeCode",
 			editable : false
 		}, {
+            headerText : "<spring:message code='sales.promoDesc'/>",
+            dataField : "promoDesc",
+            editable : false
+        }, {
 			headerText : "<spring:message code='sales.ordDt'/>",
 			dataField : "ordDt",
 			dataType : "date",
 			formatString : "dd/mm/yyyy",
 			editable : false
 		}, {
+            headerText : "<spring:message code='sales.ordCanDt'/>",
+            dataField : "orderCancellationDate",
+            dataType : "date",
+            formatString : "dd/mm/yyyy",
+            editable : false,
+        } , {
 			headerText : "<spring:message code='sales.insDt'/>",
 			dataField : "insDt",
 			dataType : "date",
@@ -64,6 +70,18 @@
 			dataField : "payMode",
 			editable : false
 		}, {
+            headerText : "<spring:message code='sal.text.cardType'/>",
+            dataField : "cardType",
+            editable : false
+        },{
+            headerText : "<spring:message code='sales.billNoMnth'/>",
+            dataField : "billNoMonth",
+            editable : false
+        },{
+            headerText : "<spring:message code='sales.RentalStatus'/>",
+            dataField : "ordStusCode",
+            editable : false
+        }, {
 			headerText : "<spring:message code='sales.agingMonth'/>",
 			dataField : "agingMonth",
 			editable : false
@@ -72,11 +90,18 @@
 			dataField : "outAmt",
 			editable : false
 		}, {
-			headerText : "<spring:message code='sales.memStus'/>",
-			dataField : "memStus",
+			headerText : "<spring:message code='sales.rotDt'/>",
+			dataField : "rotDate",
+			dataType : "date",
+            formatString : "dd/mm/yyyy",
 			editable : false,
-			width : 100
-		} ];
+		} , {
+            headerText : "<spring:message code='sales.exchgDt'/>",
+            dataField : "soExchgCrtDt",
+            dataType : "date",
+            formatString : "dd/mm/yyyy",
+            editable : false,
+        }];
 
 		// 그리드 속성 설정
 		var gridPros = {
@@ -179,7 +204,7 @@
 
 			GridCommon.exportTo("grid_wrap", "xlsx", "Order Listing"); //this jus for test have to change to PDF
 			 */
-			fn_report("PDF");
+			fn_report("EXCEL");
 		}
 	}
 	function fn_report(viewType){
@@ -212,7 +237,7 @@
 	        date = "0" + date;
 	    }
 	    $("#reportDownFileName").val("CustomerScoreCardList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-        $("#form #viewType").val("PDF");
+        $("#form #viewType").val("EXCEL");
         $("#form #reportFileName").val("/sales/CustomerScoreCardList.rpt");
 
 	    $("#form #v_WhereSQL").val(v_WhereSQL);
