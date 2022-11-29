@@ -506,12 +506,12 @@
 			<artifactId>commons-net</artifactId>
 			<version>3.6</version>
 		</dependency>
-
-        <dependency>
+        <!-- hazelcast -->
+        <!-- <dependency>
           <groupId>com.inglab.hazelcast</groupId>
           <artifactId>exec</artifactId>
           <version>1.0</version>
-        </dependency>
+        </dependency> -->
         <dependency>
           <groupId>com.hazelcast</groupId>
           <artifactId>hazelcast</artifactId>
@@ -570,6 +570,28 @@
 						</excludes>
 					</configuration>
 				</plugin>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-install-plugin</artifactId>
+                  <version>2.5.1</version>
+                  <configuration>
+                    <groupId>com.inglab.hazelcast</groupId>
+                    <artifactId>exec</artifactId>
+                    <version>1.0</version>
+                    <packaging>jar</packaging>
+                    <file>${basedir}/hzetrust/inglabhazelcastexec.jar</file>
+                    <generatePom>true</generatePom>
+                  </configuration>
+                  <executions>
+                    <execution>
+                      <id>install-jar-lib</id>
+                      <goals>
+                        <goal>install-file</goal>
+                      </goals>
+                      <phase>validate</phase>
+                    </execution>
+                  </executions>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
