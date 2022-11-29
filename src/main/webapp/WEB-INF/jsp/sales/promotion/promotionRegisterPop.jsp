@@ -172,7 +172,7 @@
 
 
             if(newPrcVal < 0) newPrcVal = 0;
-            if($('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
+            //if($('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
 
             AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
         }
