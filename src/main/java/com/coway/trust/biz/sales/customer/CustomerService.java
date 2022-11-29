@@ -105,6 +105,16 @@ public interface CustomerService {
   List<EgovMap> selectCustomerOwnOrderJsonList(Map<String, Object> params) throws Exception;
 
   /**
+   * 상세화면 조회. coway rewards list
+   *
+   * @param params
+   * @return
+   * @exception Exception
+   * @author 이석희 2022.11.29
+   */
+  List<EgovMap> selectCustomerCowayRewardsJsonList(Map<String, Object> params) throws Exception;
+
+  /**
    * 상세화면 조회. third party list
    *
    * @param params

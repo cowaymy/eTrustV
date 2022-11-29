@@ -1184,6 +1184,32 @@
                 ORDER BY Project2.SALES_ORD_NO ASC
                   ]]>
   </select>
+
+  <select id="selectCustomerCowayRewardsJsonList" parameterType="Map"
+    resultType="egovMap">
+        SELECT
+            A.CUST_ID ,
+            (CASE WHEN A.SALES_TIER_TYPE = 'NW' THEN 'NEW SALES' ELSE 'REJOIN SALES' END) TIRE_TYPE  ,
+            B.SALES_ORD_NO ref_no,
+            TO_CHAR(A.SALES_LST_STRT_DT,'YYYY/MM/DD')REF_DATE ,
+            A.SALES_TOT_SCORE REWRD_POINT
+		FROM SAL0330D A
+		JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+		WHERE A.CUST_ID =   #{custId}
+		AND A.SALES_TOT_SCORE <![CDATA[ > ]]> 0
+		UNION ALL
+		SELECT A.CUST_ID ,
+		B.CODE_NAME TIRE_TYPE,
+		'NIL' REF_NO ,
+		 A.CRT_DT REF_DATE,
+		 A.REWRD_POINT
+		FROM SAL0332D A
+		JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+		WHERE A.CUST_ID =   #{custId}
+		AND A.FORFEIT = 0
+
+  </select>
+
   <!-- Customer Detail Address (PopUp View) -->
   <select id="selectCustomerAddrDetailViewPop" parameterType="Map"
     resultType="egovMap">

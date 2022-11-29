@@ -141,6 +141,16 @@ public interface CustomerMapper {
   List<EgovMap> selectCustomerThirdPartyJsonList(Map<String, Object> params) throws Exception;
 
   /**
+   * Customer Coway Rewards List mapper
+   *
+   * @param params
+   * @return List<EgovMap>
+   * @exception Exception
+   * @author 이석희
+   */
+  List<EgovMap> selectCustomerCowayRewardsJsonList(Map<String, Object> params) throws Exception;
+
+  /**
    * Customer Address Detail View mapper
    *
    * @param params

@@ -10,6 +10,7 @@
     var creditCardGridID; // credit card list
     var ownOrderGridID; // own order list
     var thirdPartyGridID; // third party list
+    var cowayRewardsGridID; // coway rewards list
 
     $(document).ready(function(){
 
@@ -19,6 +20,7 @@
     	createCardGrid();
     	createOwnOrderGrid();
     	createThirdPartyGrid();
+    	createCowayRewardsGrid();
 
         //Call Ajax
         fn_getCustomerAddressAjax(); // address list
@@ -27,6 +29,7 @@
         fn_getCustomerCreditCardAjax(); // credit card list
         fn_getCustomerOwnOrderAjax(); // own order list
         fn_getCustomerThirdPartyAjax(); // third party list
+        fn_getCustomerCowayRewardsAjax(); // coway rewards list
     });
 
     function createAddrGrid(){
@@ -327,6 +330,35 @@
 
         thirdPartyGridID = GridCommon.createAUIGrid("#thirdparty_grid_wrap", thirdPartyColumnLayout,'',gridPros);// third party list
     }
+
+    function createCowayRewardsGrid(){
+        // Coway Rewards Column
+        var cowayRewardsColumnLayout = [
+             {dataField : "tireType",headerText : '<spring:message code="sal.text.pointType" />', width : '40%'},
+             {dataField : "refNo", headerText : '<spring:message code="sal.text.refNo" />', width : '20%'},
+             {dataField : "refDate", headerText : '<spring:message code="sal.title.date" />', width : '20%'},
+             {dataField : "rewrdPoint", headerText : '<spring:message code="sal.text.earnedPoint" />', width : '20%'}
+        ];
+
+        var gridPros = {
+
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                editable            : false,
+                fixedColumnCount    : 1,
+                showStateColumn     : true,
+                displayTreeOpen     : false,
+  //              selectionMode       : "singleRow",  //"multipleCells",
+                headerHeight        : 30,
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true
+            };
+
+        cowayRewardsGridID = GridCommon.createAUIGrid("#cowayrewards_grid_wrap", cowayRewardsColumnLayout,'',gridPros);// coway Rewards list
+    }
+
     // ajax View 조회.
     // address Ajax
     function fn_getCustomerAddressAjax() {
@@ -367,6 +399,13 @@
     function fn_getCustomerThirdPartyAjax(){
         Common.ajax("GET", "/sales/customer/selectCustomerThirdPartyJsonList",$("#getParamForm").serialize(), function(result) {
             AUIGrid.setGridData(thirdPartyGridID, result);
+        });
+    }
+
+    // coway rewards  Ajax
+    function fn_getCustomerCowayRewardsAjax (){
+        Common.ajax("GET", "/sales/customer/selectCustomerCowayRewardsJsonList",$("#getParamForm").serialize(), function(result) {
+            AUIGrid.setGridData(cowayRewardsGridID, result);
         });
     }
 
@@ -652,6 +691,13 @@
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="thirdparty_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    </article><!-- grid_wrap end -->
+    </dd>
+    <!-- #########Coway Rewards Point Breakdown List ######### -->
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, cowayRewardsGridID)"><spring:message code="sal.title.text.cowayRewards" /></a></dt>
+    <dd>
+    <article class="grid_wrap"><!-- grid_wrap start -->
+        <div id="cowayrewards_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
 </dl>

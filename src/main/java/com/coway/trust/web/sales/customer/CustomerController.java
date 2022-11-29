@@ -496,6 +496,26 @@ public class CustomerController {
   }
 
   /**
+  *
+  * Customer View Coway Rewards List
+  *
+  * @param params
+  * @param model
+  * @return
+  * @author 이석희 2022.11.29
+  */
+ @RequestMapping(value = "/selectCustomerCowayRewardsJsonList", method = RequestMethod.GET)
+ public ResponseEntity<List<EgovMap>> selectCustomerCowayRewardsJsonList(@RequestParam Map<String, Object> params,
+     ModelMap model) throws Exception {
+
+   List<EgovMap> cowayRewardslist = null;
+   LOGGER.info("##### customer coway rewards Parsing START #####");
+   cowayRewardslist = customerService.selectCustomerCowayRewardsJsonList(params);
+
+   return ResponseEntity.ok(cowayRewardslist);
+ }
+
+  /**
    *
    * Customer Address Detail View 주소 리스트의 해당 상세화면
    *

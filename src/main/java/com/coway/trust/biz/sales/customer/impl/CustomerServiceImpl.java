@@ -266,6 +266,20 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   }
 
   /**
+   * 상세화면 조회한다. (Coway Rewards List)
+   *
+   * @param
+   * @return
+   * @exception Exception
+   * @author 이석희 2022.11.29
+   */
+  @Override
+  public List<EgovMap> selectCustomerCowayRewardsJsonList(Map<String, Object> params) throws Exception {
+
+    return customerMapper.selectCustomerCowayRewardsJsonList(params);
+  }
+
+  /**
    * 상세화면 조회한다. (Detail Address View)
    *
    * @param
