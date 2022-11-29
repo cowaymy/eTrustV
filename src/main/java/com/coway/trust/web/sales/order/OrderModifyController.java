@@ -34,6 +34,7 @@ import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.impl.OrderModifyMapper;
 import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
 import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
@@ -68,6 +69,9 @@ public class OrderModifyController {
 
   @Resource(name = "customerService")
   private CustomerService customerService;
+
+  @Resource(name = "orderModifyMapper")
+  private OrderModifyMapper orderModifyMapper;
 
   @Autowired
   private FileService fileService;
@@ -204,15 +208,42 @@ public class OrderModifyController {
 
     orderModifyService.updatePaymentChannel(params, sessionVO);
 
-    // 결과 만들기
-    ReturnMessage message = new ReturnMessage();
-    message.setCode(AppConstants.SUCCESS);
-    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    message.setMessage("Order Number : " + params.get("salesOrdNo") + "</br>Information successfully updated.");
+	params.put("ordId", params.get("salesOrdId"));
+	EgovMap checkFraInsRtnMsg = orderModifyMapper.getInstallDetail(params);
 
-    return ResponseEntity.ok(message);
+		//passed from OrderMgmt(HC) but only update mattress
+    	if( (checkFraInsRtnMsg.get("modeId").toString().equals(params.get("rentPayMode").toString())) && (Integer.parseInt( (String) params.get("hasFrame")) == 2) ){
+
+    			   ReturnMessage message = new ReturnMessage();
+    			   message.setCode(AppConstants.SUCCESS);
+
+    			   // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    			   message.setMessage("Mattress Order Information successfully updated." + "</br>  Frame Order Change paymode is not updated because it was AUX or installation is not complete");
+
+    			   return ResponseEntity.ok(message);
+
+    		//passed from OrderMgmt(HC) and both updated
+    		}else if((checkFraInsRtnMsg.get("modeId").toString().equals(params.get("rentPayMode").toString())) && (Integer.parseInt( (String) params.get("hasFrame")) == 3) ){
+    			    ReturnMessage message = new ReturnMessage();
+    			    message.setCode(AppConstants.SUCCESS);
+
+    			    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    			    message.setMessage("Mattress And Frame Order "  + "</br>Information successfully updated.");
+
+    			    return ResponseEntity.ok(message);
+    		}else{
+    		//passed from Order Mgmt
+
+        // 결과 만들기
+                    ReturnMessage message = new ReturnMessage();
+                    message.setCode(AppConstants.SUCCESS);
+
+                    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+                    message.setMessage("Order Number : " + params.get("salesOrdNo") + "</br>Information successfully updated.");
+
+                    return ResponseEntity.ok(message);
+                  }
   }
-
   @RequestMapping(value = "/saveDocSubmission.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> saveDocSubmission(@RequestBody OrderVO orderVO, HttpServletRequest request,
       Model model, SessionVO sessionVO) throws Exception {
