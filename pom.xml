@@ -507,11 +507,11 @@
 			<version>3.6</version>
 		</dependency>
         <!-- hazelcast -->
-        <!-- <dependency>
+        <dependency>
           <groupId>com.inglab.hazelcast</groupId>
           <artifactId>exec</artifactId>
           <version>1.0</version>
-        </dependency> -->
+        </dependency>
         <dependency>
           <groupId>com.hazelcast</groupId>
           <artifactId>hazelcast</artifactId>
