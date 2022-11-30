@@ -204,7 +204,7 @@
 
 			GridCommon.exportTo("grid_wrap", "xlsx", "Order Listing"); //this jus for test have to change to PDF
 			 */
-			fn_report("EXCEL");
+			fn_report("PDF");
 		}
 	}
 	function fn_report(viewType){
@@ -237,7 +237,7 @@
 	        date = "0" + date;
 	    }
 	    $("#reportDownFileName").val("CustomerScoreCardList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-        $("#form #viewType").val("EXCEL");
+        $("#form #viewType").val("PDF");
         $("#form #reportFileName").val("/sales/CustomerScoreCardList.rpt");
 
 	    $("#form #v_WhereSQL").val(v_WhereSQL);
