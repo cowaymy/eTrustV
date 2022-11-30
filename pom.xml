@@ -36,7 +36,12 @@
 
 		<repository>
 			<id>mvn2</id>
-			<url>http://repo1.maven.org/maven2/</url>
+			<!-- no Hazelcast use below URL
+            <url>http://repo1.maven.org/maven2/</url>
+            -->
+            <!-- for Hazelcast use below url -->
+            <url>https://repo1.maven.org/maven2/</url>
+
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -58,7 +63,11 @@
 
 		<repository>
 			<id>egovframe</id>
-			<url>http://www.egovframe.go.kr/maven/</url>
+			<!-- no Hazelcast use below
+            <url>http://www.egovframe.go.kr/maven/</url>
+            -->
+            <!-- for Hazelcast use below -->
+            <url>http://maven.egovframe.kr:8080/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -312,11 +321,21 @@
 		</dependency>
 
 		<!-- jdbc -->
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc7</artifactId>
-			<version>12.1.0.2</version>
-		</dependency>
+		<!-- no Hazelcast use below
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0.2</version>
+        </dependency>
+        -->
+
+         <!-- for Hazelcast use below -->
+         <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>21.7.0.0</version>
+        </dependency>
+
 
 		<!-- json -->
 		<dependency>
@@ -499,6 +518,18 @@
 			<version>3.6</version>
 		</dependency>
 
+        <!-- new dependency for Hazelcast -->
+        <dependency>
+          <groupId>com.inglab.hazelcast</groupId>
+          <artifactId>exec</artifactId>
+          <version>1.0</version>
+        </dependency>
+        <dependency>
+          <groupId>com.hazelcast</groupId>
+          <artifactId>hazelcast</artifactId>
+          <version>5.2.0</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
@@ -551,6 +582,29 @@
 						</excludes>
 					</configuration>
 				</plugin>
+        <!-- new plugin for Hazelcast. Reason: add for install local jar that unable get from maven repo -->
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-install-plugin</artifactId>
+                  <version>2.5.1</version>
+                  <configuration>
+                    <groupId>com.inglab.hazelcast</groupId>
+                    <artifactId>exec</artifactId>
+                    <version>1.0</version>
+                    <packaging>jar</packaging>
+                    <file>${basedir}/hzetrust/inglabhazelcastexec.jar</file>
+                    <generatePom>true</generatePom>
+                  </configuration>
+                  <executions>
+                    <execution>
+                      <id>install-jar-lib</id>
+                      <goals>
+                        <goal>install-file</goal>
+                      </goals>
+                      <phase>validate</phase>
+                    </execution>
+                  </executions>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>

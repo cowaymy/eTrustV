@@ -35,6 +35,9 @@ import com.coway.trust.web.sales.order.OrderListController;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/* add for Hazelcast */
+import com.inglab.hazelcastreform.OrderMgmt;
+
 /**
  * @author Yunseok_Jang
  *
@@ -57,8 +60,27 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
   // private MessageSourceAccessor messageSourceAccessor;
 
   @Override
-  public List<EgovMap> selectOrderList(Map<String, Object> params) {
+  /* no Hazelcast use below
+   * public List<EgovMap> selectOrderList(Map<String, Object> params) {
     return orderListMapper.selectOrderList(params);
+  }*/
+
+  /* for Hazelcast use below */
+  public List<EgovMap> selectOrderList(Map<String, Object> params) {
+    logger.debug("XXXXXXXXXXXXXXXXXXXXXXX Invoke to selectOrderList" + params);
+
+    if (CommonUtils.nvl(params.get("hzCastYN")).equals("Y")){
+
+      logger.debug("XXXXXXXXXXXXXXXXXXXXXXX params.get(hzCastYN)" + params.get("hzCastYN").equals("Y"));
+
+      return OrderMgmt.selectOrderList(params);
+
+    } else {
+
+      return orderListMapper.selectOrderList(params);
+
+    }
+
   }
 
   @Override
