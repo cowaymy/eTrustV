@@ -29,37 +29,45 @@
 		var columnLayout = [ {
 			headerText : "<spring:message code='sales.OrderNo'/>",
 			dataField : "ordNo",
-			editable : false
+			editable : false,
+			width : 130
 		}, {
 			headerText : "<spring:message code='sales.AppType'/>",
 			dataField : "appTypeCode",
-			editable : false
+			editable : false,
+			width : 130
 		}, {
             headerText : "<spring:message code='sales.promoDesc'/>",
             dataField : "promoDesc",
-            editable : false
+            editable : false,
+            width : 200
         }, {
 			headerText : "<spring:message code='sales.ordDt'/>",
 			dataField : "ordDt",
 			dataType : "date",
 			formatString : "dd/mm/yyyy",
-			editable : false
+			editable : false,
+			width : 130
 		}, {
             headerText : "<spring:message code='sales.ordCanDt'/>",
             dataField : "orderCancellationDate",
             dataType : "date",
             formatString : "dd/mm/yyyy",
             editable : false,
+            width : 200
         } , {
 			headerText : "<spring:message code='sales.insDt'/>",
 			dataField : "insDt",
 			dataType : "date",
 			formatString : "dd/mm/yyyy",
-			editable : false
+			editable : false,
+			width : 130
 		}, {
 			headerText : "<spring:message code='sales.prod'/>",
 			dataField : "productName",
-			editable : false
+			editable : false,
+			width : 200
+
 		}, {
 			headerText : "<spring:message code='sales.insAddr'/>",
 			dataField : "insAddr",
@@ -68,39 +76,47 @@
 		}, {
 			headerText : "<spring:message code='sales.payMode'/>",
 			dataField : "payMode",
-			editable : false
+			editable : false,
+			width : 130
 		}, {
             headerText : "<spring:message code='sal.text.cardType'/>",
             dataField : "cardType",
-            editable : false
+            editable : false,
+            width : 130
         },{
             headerText : "<spring:message code='sales.billNoMnth'/>",
             dataField : "billNoMonth",
-            editable : false
+            editable : false,
+            width : 130
         },{
             headerText : "<spring:message code='sales.RentalStatus'/>",
             dataField : "ordStusCode",
-            editable : false
+            editable : false,
+            width : 130
         }, {
 			headerText : "<spring:message code='sales.agingMonth'/>",
 			dataField : "agingMonth",
-			editable : false
+			editable : false,
+			width : 130
 		}, {
 			headerText : "<spring:message code='sales.outAmt'/>",
 			dataField : "outAmt",
-			editable : false
+			editable : false,
+			width : 200
 		}, {
 			headerText : "<spring:message code='sales.rotDt'/>",
 			dataField : "rotDate",
 			dataType : "date",
             formatString : "dd/mm/yyyy",
 			editable : false,
+			width : 130
 		} , {
             headerText : "<spring:message code='sales.exchgDt'/>",
             dataField : "soExchgCrtDt",
             dataType : "date",
             formatString : "dd/mm/yyyy",
             editable : false,
+            width : 200
         }];
 
 		// 그리드 속성 설정
@@ -122,7 +138,7 @@
 
 			//     selectionMode : "multipleCells",
 
-			headerHeight : 30,
+			headerHeight : 40,
 
 			// 그룹핑 패널 사용
 			useGroupingPanel : false,
