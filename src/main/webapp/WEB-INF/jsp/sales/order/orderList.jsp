@@ -158,6 +158,10 @@
         	/* for Hazelcast use below */
         	if(fn_validSearchList()) fn_selectListAjax('N');
         });
+        /* for Hazelcast use below */
+        $('#btnSrchHzcast').click(function() {
+            if(fn_validSearchList()) fn_selectListAjax('Y');
+        });
         $('#btnClear').click(function() {
           //  alert();
         	location.reload();
