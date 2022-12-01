@@ -218,7 +218,7 @@ public class OrderModifyController {
     			   message.setCode(AppConstants.SUCCESS);
 
     			   // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    			   message.setMessage("Mattress Order Information successfully updated." + "</br>  Frame Order Change paymode is not updated because it was AUX or installation is not complete");
+    			   message.setMessage("Information Successfully Updated.");
 
     			   return ResponseEntity.ok(message);
 
