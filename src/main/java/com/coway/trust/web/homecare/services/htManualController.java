@@ -846,6 +846,9 @@ public class htManualController {
     hsResultM1.put("srvOrdId",hsResultM1.get("salesOrderId"));
 
 	EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(hsResultM1);
+
+	if (hcOrder != null){
+
 	String fraOrdId = CommonUtils.nvl(hcOrder.get("anoOrdId"));
 
 	    params.put("hscodyId", hsResultM1.get("cmbServiceMem"));
@@ -879,7 +882,9 @@ public class htManualController {
 		      htManualService.updateAssignHT(params);
 		    }
 	}
-
+	}else{
+		resultValueFra = 1;
+	}
 
     if (resultValueMat > 0 && resultValueFra > 0 ) {
       message.setCode(AppConstants.SUCCESS);

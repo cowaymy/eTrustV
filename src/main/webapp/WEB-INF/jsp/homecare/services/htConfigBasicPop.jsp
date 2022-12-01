@@ -33,11 +33,11 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
    Common.ajax("GET", "/homecare/services/checkMatFra.do", { salesOrdId : $('#salesOrderId').val() }, function(result1) {
     console.log(result1);
 
-    if(result1.stkCtgryId == "5707"){
+    if( result1 != null && result1.stkCtgryId == "5707"){
                   Common.alert("Frame Order not allow do this action.");
                   return;
      }else{
-     
+
           Common.ajax("GET", "/homecare/services/checkMemCode", { hscodyId : $('#entry_cmbServiceMem').val() }, function(result) {
               console.log("::::::::::::::ajax::::::::::::::");
               console.log(result);
