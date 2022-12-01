@@ -908,7 +908,7 @@
              , T.CRT_DT_DD
              , T.BATCH_MODE
              , T.CODE
-             , CASE WHEN t.ctrl_stus_id <![CDATA[<>]]> 4 THEN '-'
+             , CASE WHEN t.ctrl_stus_id  <![CDATA[<>]]>  4 THEN '-'
                        ELSE T.CODE_NAME END AS is_approve_str
                        ,T.BANK_DTL_APPR_CODE
     FROM ( SELECT T1.BANK_DTL_ID
@@ -927,9 +927,11 @@
                         , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
                         WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+                        WHEN T4.IND = 'EXPCARD' THEN 'Expired Card'
+                        WHEN T4.IND = 'CDOPTIN' THEN 'Card to Opt In'
                         WHEN T4.IND = 'CHGCARD' THEN
                                                     CASE WHEN T2.CTRL_IS_CRC = 1 THEN
-                                                        CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Change Card' END
+                                                        CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Refer to Issuer Bank' END
                                                     ELSE  'Change Account' END
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
                         ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
@@ -937,7 +939,7 @@
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
                LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
-               LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+               LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW','CDOPTIN','EXPCARD')
                WHERE T1.SALES_ORD_ID = #{salesOrderId}
     ) T ORDER BY T.BANK_DTL_ID DESC
   </select>
