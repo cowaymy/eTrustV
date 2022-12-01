@@ -1160,8 +1160,13 @@ public class MemberListController {
             		logger.debug("email " + formMap.get("emailUpd").toString());*/
             		Map<String,Object> ssoParamsMem = new HashMap<String, Object>();
             		ssoParamsMem.put("memCode", memCode);
-            		ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
-            		ssoParamsMem.put("email", formMap.get("emailUpd").toString());
+            		if(formMap.get("memberNmUpd") != null){
+            			ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
+            		}
+            		if(formMap.get("emailUpd") != null){
+            			ssoParamsMem.put("email", formMap.get("emailUpd").toString());
+            		}
+
               		ssoLoginService.ssoUpdateUserInfo(ssoParamsMem);
             	}
 
