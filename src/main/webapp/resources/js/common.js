@@ -172,6 +172,54 @@ var Common = {
         });
     },
 
+    ajaxFileNoSync: function (_url, _formData, _callback, _errcallback, _options) {
+        $.ajax({
+            url: getContextPath() + _url,
+            processData: false,
+            contentType: false,
+            async:false,
+            data: _formData,
+            type: "POST",
+            beforeSend: function (request) {
+                // loading start....
+                Common.showLoader();
+            },
+            success: function (data, textStatus, jqXHR) {
+
+                if (_callback) {
+                    _callback(data, textStatus, jqXHR);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                try {
+                    console.log("status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : "
+                        + jqXHR.responseJSON.detailMessage);
+                } catch (e) {
+                    console.log(e);
+                }
+
+                if (_errcallback) {
+                    _errcallback(jqXHR, textStatus, errorThrown);
+                } else {
+                    if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+                        Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    }else{
+                        Common.setMsg("Fail ........ ");
+                        Common.alert("Fail ........ ");
+                    }
+                }
+            },
+            complete: function () {
+                // loading end....
+                Common.removeLoader();
+            }
+        });
+    },
+
     /**
      * Form Id 에 속한 파일 type을 FormData 로 변경하여 리턴.
      * @param _sFormId
