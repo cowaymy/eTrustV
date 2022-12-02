@@ -62,6 +62,10 @@ public class eSVMApiDto {
     private int payMode;
     private String appvRem;
     private String saRef;
+    private Boolean svmAllowFlg;
+    private int errorCode;
+    private String errorHeader;
+    private String errorMsg;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -1113,5 +1117,37 @@ public class eSVMApiDto {
 
 	public void setSaRef(String saRef) {
 		this.saRef = saRef;
+	}
+
+	public Boolean getSvmAllowFlg() {
+		return svmAllowFlg;
+	}
+
+	public void setSvmAllowFlg(Boolean svmAllowFlg) {
+		this.svmAllowFlg = svmAllowFlg;
+	}
+
+	public int getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public String getErrorHeader() {
+		return errorHeader;
+	}
+
+	public void setErrorHeader(String errorHeader) {
+		this.errorHeader = errorHeader;
+	}
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 }

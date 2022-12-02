@@ -1,5 +1,10 @@
 package com.coway.trust.biz.sales.eSVM.impl;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1131,5 +1136,59 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
         }
         eSVMApiDto getMemberLevel = eSVMApiDto.create(eSVMApiMapper.getMemberLevel(eSVMApiForm.createMap(param)));
         return getMemberLevel;
+    }
+
+    @Override
+    public eSVMApiDto selectEosEomDt(eSVMApiForm param) throws Exception {
+
+    	logger.debug("========== selectEosEomDt ==========");
+    	logger.debug("========== param ==========" + param);
+
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+    	EgovMap itemEosEomDt = eSVMApiMapper.selectEosEomDt(eSVMApiForm.createMap(param));
+    	int configEosDurMth = eSVMApiMapper.selectconfigEosDur(eSVMApiForm.createMap(param));
+    	int configEomDurMth = eSVMApiMapper.selectconfigEomDur(eSVMApiForm.createMap(param));
+
+    	LocalDate today = LocalDate.now();
+    	LocalDate prdEosDt = null;
+    	LocalDate prdEomDt = null;
+    	Boolean svmAllowFlg = true;
+    	int errorCode = 0;
+    	String errorHeader = null;
+    	String errorMsg = null;
+
+    	if(itemEosEomDt.get("eosDate") != null && itemEosEomDt.get("eomDate") != null)
+    	{
+    		prdEosDt = (LocalDate)itemEosEomDt.get("eosDate");
+    		prdEomDt = (LocalDate)itemEosEomDt.get("eomDate");
+
+    		Period periodEos = Period.between(prdEosDt, today);
+            Period periodEom = Period.between(prdEomDt, today);
+            int diffEos = Math.abs(periodEos.getMonths());
+            int diffEom = Math.abs(periodEom.getMonths());
+
+            if(diffEos > configEosDurMth)
+            {
+            	svmAllowFlg = false;
+            	errorCode = 99;
+            	errorHeader = "Early Subscription > " + configEosDurMth + " months";
+            	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configEosDurMth + " months period from the order expired date.";
+            }
+            else if(diffEos <= configEosDurMth && diffEom < configEomDurMth )
+            {
+            	svmAllowFlg = false;
+            	errorCode = 99;
+            	errorHeader = "End of Membership";
+            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
+            }
+    	}
+
+        eSVMApiDto rtn = new eSVMApiDto();
+        rtn.setSvmAllowFlg(svmAllowFlg);
+        rtn.setErrorCode(errorCode);
+        rtn.setErrorHeader(errorHeader);
+        rtn.setErrorMsg(errorMsg);
+    	return rtn;
     }
 }

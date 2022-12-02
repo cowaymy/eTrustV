@@ -47,4 +47,6 @@ public interface eSVMApiService {
     eSVMApiDto updatePaymentUploadFile_1(eSVMApiForm param) throws Exception;
 
     eSVMApiDto getMemberLevel(eSVMApiForm param) throws Exception;
+
+    eSVMApiDto selectEosEomDt(eSVMApiForm param) throws Exception;
 }

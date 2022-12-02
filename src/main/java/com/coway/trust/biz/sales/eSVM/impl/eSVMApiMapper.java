@@ -108,4 +108,11 @@ public interface eSVMApiMapper {
     int updateSYS0070M(Map<String, Object> param);
 
     EgovMap getMemberLevel(Map<String, Object> param);
+
+    EgovMap selectEosEomDt(Map<String, Object> params);
+
+    int selectconfigEosDur(Map<String, Object> params);
+
+    int selectconfigEomDur(Map<String, Object> params);
+
 }

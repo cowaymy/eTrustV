@@ -1097,4 +1097,20 @@
 		ON B.MEM_ID = C.MEM_ID
 		WHERE A.USER_NAME = #{regId}
     </select>
+
+    <!-- CELESTE [S] SVM SUBSCRIPTION ELIGIBILITY -->
+    <select id="selectEosEomDt" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SALES_ORD_ID,
+            A.SALES_ORD_NO,
+            B.ITM_STK_ID STK_ID,
+            C.EOS_DATE, <!-- End of Sales -->
+            C.EOM_DATE  <!-- End of Membership -->
+        FROM SAL0001D A
+        LEFT JOIN SAL0002D B
+            ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE A.STUS_CODE_ID IN ('1','4')
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+    <!-- CELESTE [E] SVM SUBSCRIPTION ELIGIBILITY -->
 </mapper>

@@ -202,4 +202,12 @@ public class eSVMApiController {
     public ResponseEntity<eSVMApiDto> selectMemberLevel(@ModelAttribute eSVMApiForm param) throws Exception {
       return ResponseEntity.ok(eSVMApiService.getMemberLevel(param));
     }
+
+    @ApiOperation(value = "selectEosEomDt", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectEosEomDt", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> selectEosEomDt(@ModelAttribute eSVMApiForm param) throws Exception {
+    	LOGGER.debug("eSVMApiController :: selectEosEomDt");
+    	LOGGER.debug("param :: " + param);
+      return ResponseEntity.ok(eSVMApiService.selectEosEomDt(param));
+    }
 }
