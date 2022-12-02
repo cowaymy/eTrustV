@@ -310,7 +310,9 @@
                     Distinct1.ORD_NO, TO_CHAR(Distinct1.ORD_DT, 'DD-MM-YYYY') ORD_DT,
                     Distinct1.ORD_STUS_CODE ,
                     Distinct1.CUST_NAME ,
-                    Distinct1.CUST_NRIC ,
+                    CASE WHEN LENGTH(Distinct1.CUST_NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Distinct1.CUST_NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Distinct1.CUST_NRIC, 9,12)
+                    ELSE Distinct1.CUST_NRIC
+                    END CUST_NRIC,
                     Distinct1.APP_TYPE_CODE ,
                     Distinct1.STOCK_CODE ,
                     Distinct1.STOCK_DESC,
