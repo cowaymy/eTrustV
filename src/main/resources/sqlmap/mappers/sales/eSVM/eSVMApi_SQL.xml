@@ -1109,6 +1109,7 @@
         FROM SAL0001D A
         LEFT JOIN SAL0002D B
             ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
         WHERE A.STUS_CODE_ID IN ('1','4')
             AND A.SALES_ORD_NO = #{ordNo}
     </select>
