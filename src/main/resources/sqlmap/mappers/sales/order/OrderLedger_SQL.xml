@@ -65,17 +65,18 @@
 	                ORD_PROMO_RELATED_NO   ,
 	                UPD_DT   ,
 	                UPD_USER_ID   ,
-	                JOM_PAY_REF   ,
+	                  <!--  Added for hide AUX order jom pay ref By Gaspar -->
+                    CASE WHEN APP_TYPE_ID = 5764 THEN NULL ELSE JOM_PAY_REF END AS JOM_PAY_REF,
 	                STK_CTGRY_ID   ,
 	                STK_CTGRY_NAME   ,
 	                CUST_TYPE_ID   ,
 	                CUST_BILL_ID   ,
-	                OBLIGT_YEAR   
-	       FROM SAL1006V  
-	     WHERE ORD_ID = #{ordId} 
-	         AND ROWNUM <![CDATA[<=]]> 1	      
+	                OBLIGT_YEAR
+	       FROM SAL1006V
+	     WHERE ORD_ID = #{ordId}
+	         AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <select id="selectInsInfo" parameterType="Map" resultType="egovMap">
 	      SELECT  ORD_ID ,
                    INST_ADDR_DTL ,
@@ -96,7 +97,7 @@
                    FIRST_INSTALL_NO ,
                    FIRST_INSTALL_CT_CODE ,
                    FIRST_INSTALL_CT_NAME ,
-                   CASE WHEN FIRST_INSTALL_DT IS NOT NULL THEN FIRST_INSTALL_DT 
+                   CASE WHEN FIRST_INSTALL_DT IS NOT NULL THEN FIRST_INSTALL_DT
                            ELSE '-' END FIRST_INSTALL_DT,
                    FIRST_INSTALL_REM ,
                    FIRST_INSTALL_SIRIM_NO ,
@@ -118,14 +119,14 @@
                    INSTALL_CNTC_ID ,
                    INST_CNT_DEPT ,
                    INST_CNT_POST ,
-                   VRIFY_REM 
+                   VRIFY_REM
               FROM SAL1010V
-             WHERE  ORD_ID = #{ordId} 
-	           AND ROWNUM <![CDATA[<=]]> 1	      
+             WHERE  ORD_ID = #{ordId}
+	           AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <select id="selectMailInfo" parameterType="Map" resultType="egovMap">
-	      SELECT ORD_ID   ,	      
+	      SELECT ORD_ID   ,
 	                ADDR_DTL,
 			        STREET,
 			        MAIL_CNTY ,
@@ -149,12 +150,12 @@
 	                MAIL_CNTC_ID   ,
 	                MAIL_ADDR_ID   ,
 	                MAIL_CNT_DEPT   ,
-	                MAIL_CNT_POST   
-	         FROM SAL1011V 
-	       WHERE ORD_ID = #{ordId} 
-		       AND ROWNUM <![CDATA[<=]]> 1	      
+	                MAIL_CNT_POST
+	         FROM SAL1011V
+	       WHERE ORD_ID = #{ordId}
+		       AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <select id="selectSalesInfo" parameterType="Map" resultType="egovMap">
 	      SELECT SALES_ORD_ID   ,
 			       SALES_ORD_NO   ,
@@ -202,12 +203,12 @@
 			       SALES_GM_ID   ,
 			       ADV_BILL   ,
 			       CNVR_SCHEME_ID   ,
-			       CUST_CARE_CNT_ID   
-			  FROM SAL0001D 
-			 WHERE  SALES_ORD_ID = #{ordId} 
-	           AND ROWNUM <![CDATA[<=]]> 1	      
+			       CUST_CARE_CNT_ID
+			  FROM SAL0001D
+			 WHERE  SALES_ORD_ID = #{ordId}
+	           AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <select id="selectAgreInfo" parameterType="Map" resultType="egovMap">
 	      SELECT A.GOV_AG_ID   ,
 	                B.GOV_AG_BATCH_NO   ,
@@ -215,43 +216,43 @@
 	                D.NAME   ,
 	                E.CODE   ,
 	                CASE WHEN  B.GOV_AG_END_DT IS NOT NULL  THEN TO_CHAR(B.GOV_AG_END_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END GOV_AG_END_DT  ,
-	                CASE WHEN  B.GOV_AG_START_DT IS NOT NULL  THEN TO_CHAR(B.GOV_AG_START_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END GOV_AG_START_DT  
+	                CASE WHEN  B.GOV_AG_START_DT IS NOT NULL  THEN TO_CHAR(B.GOV_AG_START_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END GOV_AG_START_DT
 	         FROM SAL0034D A
 	                JOIN SAL0033D B   ON B.GOV_AG_ID = A.GOV_AG_ID
 	                JOIN SAL0037C C   ON C.GOV_AG_PRGRS_ID = B.GOV_AG_PRGRS_ID
 	                JOIN SYS0038M D   ON D.STUS_CODE_ID = B.GOV_AG_STUS_ID
 	                JOIN SYS0013M E   ON E.CODE_ID = B.GOV_AG_TYPE_ID
-	          WHERE  A.GOV_AG_ITM_SALES_ORD_ID = #{ordId} 
-	         ORDER BY A.GOV_AG_ID DESC    
+	          WHERE  A.GOV_AG_ITM_SALES_ORD_ID = #{ordId}
+	         ORDER BY A.GOV_AG_ID DESC
     </select>
-    
+
    <resultMap id="orderLdgr" type="egovMap" ></resultMap>
 	<select id="getOderLdgr"  statementType="CALLABLE"   parameterType="Map">
-		<![CDATA[  
+		<![CDATA[
 		{
 		      call SP_GEN_ORD_LDGR ( #{ordId} , #{CutOffDate} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr})
 		}
 		]]>
 	</select>
-	   
+
     <resultMap id="orderLdgr2" type="egovMap" ></resultMap>
 	<select id="getOderLdgr2"  statementType="CALLABLE"   parameterType="Map">
-		<![CDATA[  
+		<![CDATA[
 		{
 		      call SP_GEN_ORD_LDGR_2 ( #{ordId} ,#{CutOffDate}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr2})
 		}
 		]]>
-	</select>   
+	</select>
 
 	<resultMap id="outStndInfo" type="egovMap" ></resultMap>
 	<select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
-		<![CDATA[  
+		<![CDATA[
 		{
 		      call SP_GET_ORD_OTSTND_INFO ( #{ordId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfo})
 		}
 		]]>
-	</select>  
-	
+	</select>
+
 	<select id="selectPaymentDetailView" parameterType="Map" resultType="egovMap">
           SELECT A.PAY_ITM_ID   ,
                        A.PAY_ID   ,
@@ -287,7 +288,7 @@
                        A.PAY_ITM_MID   ,
                        A.PAY_ITM_GRP_ID   ,
                        A.PAY_ITM_REF_ITM_ID   ,
-                       A.ETC3   
+                       A.ETC3
                   FROM PAY0065D A
                          JOIN PAY0064D B   ON B.PAY_ID = A.PAY_ID
                          LEFT JOIN SYS0013M C   ON C.CODE_ID = A.PAY_ITM_MODE_ID
@@ -295,29 +296,29 @@
                          LEFT JOIN SYS0004M E   ON E.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
                          LEFT JOIN SYS0001M F   ON F.ACC_ID = A.PAY_ITM_BANK_ACC_ID
                          LEFT JOIN SYS0038M G   ON G.STUS_CODE_ID = A.PAY_ITM_STUS_ID
-                 WHERE   B.OR_NO = #{docNo} 
-                     AND  C.CODE = #{payMode} 
-    </select> 
-    
+                 WHERE   B.OR_NO = #{docNo}
+                     AND  C.CODE = #{payMode}
+    </select>
+
 	<select id="selectPaymentDetailViewCndn" parameterType="Map" resultType="egovMap">
           SELECT 1 C1  ,
 		       A.ADJ_ENTRY_NOTE_NO DOC_NO  ,
-		       CASE 
+		       CASE
 		            WHEN ( B.RESN_ID IS NOT NULL ) THEN B.CODE || ' - ' || B.RESN_DESC
 		       ELSE ' '
-		          END PAY_ITM_REM  
+		          END PAY_ITM_REM
 		  FROM PAY0002D A
 		         LEFT JOIN SYS0032M B   ON B.RESN_ID = A.ADJ_ENTRY_RESN_ID
-		 WHERE  A.ADJ_ENTRY_NOTE_NO = #{docNo} 
-    </select> 
-    
+		 WHERE  A.ADJ_ENTRY_NOTE_NO = #{docNo}
+    </select>
+
 	<select id="selectPayInfo" parameterType="Map" resultType="egovMap">
 		SELECT PAY_ID PAY_ID  ,
 		       OR_NO OR_NO  ,
 		       SALES_ORD_ID SALES_ORD_ID
-		  FROM PAY0064D 
+		  FROM PAY0064D
 		 WHERE  OR_NO = #{docNo}
-		 AND ROWNUM <![CDATA[<= ]]>1 
-    </select> 
-    
+		 AND ROWNUM <![CDATA[<= ]]>1
+    </select>
+
 </mapper>

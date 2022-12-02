@@ -70,7 +70,8 @@
                            , V1.ORD_PROMO_RELATED_NO
                            , V1.UPD_DT
                            , V1.UPD_USER_ID
-                           , V1.JOM_PAY_REF
+                         <!--  Added for hide AUX order jom pay ref By Gaspar -->
+                           ,CASE WHEN V1.APP_TYPE_ID = 5764 THEN NULL ELSE V1.JOM_PAY_REF END AS JOM_PAY_REF
                            , V1.STK_CTGRY_ID
                            , V1.STK_CTGRY_NAME
                            , V1.CUST_TYPE_ID
@@ -838,7 +839,7 @@
                         , V1.PAC_NAME
                         , V1.MBRSH_CRT_DT
                         , V1.MBRSH_START_DT
-                        , TO_DATE(V1.MBRSH_START_DT,'DD-MON-YY') as MBRSH_START_DT2
+                        , TO_DATE(V1.MBRSH_START_DT,'DD-MM-YY') as MBRSH_START_DT2
                         , V1.MBRSH_EXPR_DT
                         , V1.MBRSH_DUR
                FROM SAL1003V V1
