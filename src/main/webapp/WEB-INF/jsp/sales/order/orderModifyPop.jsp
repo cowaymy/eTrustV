@@ -3662,6 +3662,7 @@
      </p></li>
    </ul>
    <form id="payChanlForm" name="payChanlForm" action="#" method="post">
+     <input name = "hasFrame" type="hidden" value = "1" /><input
     <input name="salesOrdId" type="hidden" value="${salesOrderId}" /> <input
      name="salesOrdNo" type="hidden" value="${salesOrderNo}" /> <input
      name="custId" type="hidden" value="${custId}" /> <input
