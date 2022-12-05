@@ -1147,8 +1147,8 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     	EgovMap itemEosEomDt = eSVMApiMapper.selectEosEomDt(eSVMApiForm.createMap(param));
-    	int configEosDurMth = eSVMApiMapper.selectconfigEosDur(eSVMApiForm.createMap(param));
-    	int configEomDurMth = eSVMApiMapper.selectconfigEomDur(eSVMApiForm.createMap(param));
+    	int configEosDurMth = eSVMApiMapper.selectConfigEosEomDur("SVM_EOS");
+    	int configEomDurMth = eSVMApiMapper.selectConfigEosEomDur("SVM_EOM");
 
     	LocalDate today = LocalDate.now();
     	LocalDate prdEosDt = null;

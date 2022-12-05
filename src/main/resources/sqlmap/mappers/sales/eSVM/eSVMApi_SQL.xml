@@ -1113,5 +1113,12 @@
         WHERE A.STUS_CODE_ID IN ('1','4')
             AND A.SALES_ORD_NO = #{ordNo}
     </select>
+
+    <select id="selectconfigEosEomDur" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS0098M
+        WHERE MODULE = 'SALES'
+        AND SUB_MODULE = 'SVC_MBRSH'
+        AND PARAM_CODE = #{paramCode}
+    </select>
     <!-- CELESTE [E] SVM SUBSCRIPTION ELIGIBILITY -->
 </mapper>
