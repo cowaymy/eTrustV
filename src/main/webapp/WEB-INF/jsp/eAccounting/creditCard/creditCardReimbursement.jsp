@@ -636,7 +636,6 @@ function fn_addRow() {
 
                 data.atchFileGrpId = result.data.fileGroupKey
                 console.log(data);
-
                 if(data.gridData.add.length > 0) {
                     for(var i = 0; i < data.gridData.add.length; i++) {
                         data.gridData.add[i].bankCode = data.bankCode;
@@ -746,10 +745,10 @@ function fn_addRow() {
                         if(fn_checkCreditLimit(data.gridData.update[i]))
                         {
                         	AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+                            fn_clearData();
                         }
 
                     }
-                    fn_clearData();
                 }
 
                 if(data.gridData.remove.length > 0) {
@@ -823,39 +822,76 @@ function fn_getAllTotAmt() {
     $("#allTotAmt_text").text(allTotAmt);
 }
 
+function filterGridArrayToCaterUpdate(filter,result){
+	for(i=0; i< filter.length; i++){
+	  for(j=0; j< result.length; j++){
+	    if(filter[i].clmSeq == result[j].clmSeq){
+	    	result.splice(j,1);
+	    }
+	  }
+	}
+	return result;
+}
+
+function sumTotalAmount(array){
+	var amount = 0.00;
+	for(i=0; i< array.length; i++){
+		if(array[i].cntrlExp == "Y"){
+			amount += array[i].totAmt;
+		}
+	}
+	return amount;
+}
+
 function fn_getItemTotal() {
     // allTotAmt GET, SET
     var allTotAmt = 0.00;
-    var totAmtList = AUIGrid.getColumnValues (myGridID, "totAmt", true);
-    var totAmtList2 = AUIGrid.getColumnValues (newGridID, "totAmt", true);
-    console.log(totAmtList);
-    console.log(totAmtList.length);
-    console.log(totAmtList2);
-    console.log(totAmtList2.length);
+//     var totAmtList = AUIGrid.getColumnValues(myGridID, "totAmt", true);
+//     var totAmtList2 = AUIGrid.getColumnValues(newGridID, "totAmt", true);
+
+	var gridDataList = AUIGrid.getOrgGridData(myGridID);
+	var gridDataList2 = AUIGrid.getOrgGridData(newGridID);
+
+	var filteredResultList = filterGridArrayToCaterUpdate(Array.from(gridDataList),Array.from(gridDataList2));
+	allTotAmt += sumTotalAmount(gridDataList);
+	allTotAmt += sumTotalAmount(filteredResultList);
+//     console.log(totAmtList);
+//     console.log(totAmtList.length);
+//     console.log(totAmtList2);
+//     console.log(totAmtList2.length);
     var clmDt = $("#clmMonth").val();
     var month = clmDt.substring(0, 2);
     var year = clmDt.substring(3);
 
-    clmDt = year + month;
+//    clmDt = year + month;
+//     var data = {
+//             userid : $("#newCrditCardUserId").val(),
+//             cardNo : $("#newCrditCardNo").val(),
+//             clmDt : clmDt
+//     };
     var data = {
-            userid : $("#newCrditCardUserId").val(),
-            cardNo : $("#newCrditCardNo").val(),
-            clmDt : clmDt
+    		userid : $("#newCrditCardUserId").val(),
+    		cardNo : $("#newCrditCardNo").val(),
+    		clmMonth : ""+year+month,
+    		month : month,
+    		year : year,
+    		crcId : $("#sCardSeq").val()
     };
-    Common.ajaxSync("GET", "/eAccounting/creditCard/selectTotalSpentAmt.do", data, function(results) {
-	    for(var i = 0; i < totAmtList.length; i++) {
-	        allTotAmt += totAmtList[i];
-	    }
-	    for(var i = 0; i < totAmtList2.length; i++) {
-	        allTotAmt += totAmtList2[i];
-	    }
-	    allTotAmt += results[0].spentAmt;
-	    console.log(results[0].spentAmt);
+    Common.ajaxSync("GET", "/eAccounting/creditCard/selectTotalCntrlSpentAmt.do", data, function(results) {
+// 	    for(var i = 0; i < totAmtList.length; i++) {
+// 	        allTotAmt += totAmtList[i];
+// 	    }
+// 	    for(var i = 0; i < totAmtList2.length; i++) {
+// 	        allTotAmt += totAmtList2[i];
+// 	    }
+    	allTotAmt += results[0].cntrlSpentAmt;
+// 	    allTotAmt += results[0].spentAmt;
+// 	    console.log(results[0].spentAmt);
 	    //allTotAmt = allTotAmt.toFixed(2);
 	    //console.log($.number(allTotAmt,2,'.',''));
 	    //allTotAmt = $.number(allTotAmt,2,'.',',');
     });
-    return allTotAmt
+    return allTotAmt;
 }
 
 function fn_checkCreditLimit(v) {
@@ -879,7 +915,7 @@ function fn_checkCreditLimit(v) {
     };
     console.log(data);
 	Common.ajaxSync("GET", "/eAccounting/creditCard/selectAvailableAllowanceAmt.do", data, function(result) {
-		Common.ajaxSync("GET", "/eAccounting/creditCard/selectTotalCntrlSpentAmt.do", data, function(result1) {
+		//Common.ajaxSync("GET", "/eAccounting/creditCard/selectTotalCntrlSpentAmt.do", data, function(result1) {
 	        console.log(result);
 	        var planAmt = 0;
 	        if(result.length > 0)
@@ -890,19 +926,19 @@ function fn_checkCreditLimit(v) {
 	        {
 	            if(cntrlExp == "Y")
 	            {
-	                var totalExpAmtSmall = 0;
-	                var totalCntrlSpentAmt = result1[0].cntrlSpentAmt;
-	                totalExpAmtSmall = totAmt;
-	                totalExpAmt = totalExpAmt + totalExpAmtSmall;
-	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmt;
-	                if(totalCntrlSpentAmt > planAmt)
+// 	                var totalExpAmtSmall = 0;
+// 	                var totalCntrlSpentAmt = result1[0].cntrlSpentAmt;
+// 	                totalExpAmtSmall = totAmt;
+// 	                totalExpAmt = totalExpAmt + totalExpAmtSmall;
+// 	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmt;
+	                if(allTotAmt > planAmt)
 	                {
 	                    Common.alert('Insufficient Allowance Limit');
 	                    limitFlg = false;
 	                }
 	            }
 	        }
-		})
+		//})
 	});
 	return limitFlg;
 }

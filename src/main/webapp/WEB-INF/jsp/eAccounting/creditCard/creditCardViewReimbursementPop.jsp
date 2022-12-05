@@ -180,6 +180,9 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "yN",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "cntrlExp",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
 
@@ -334,6 +337,9 @@ var myGridColumnLayout = [ {
     }
 }, {
     dataField : "atchFileGrpId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "cntrlExp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
