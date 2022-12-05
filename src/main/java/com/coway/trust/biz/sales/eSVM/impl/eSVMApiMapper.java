@@ -111,6 +111,6 @@ public interface eSVMApiMapper {
 
     EgovMap selectEosEomDt(Map<String, Object> params);
 
-    int selectConfigEosEomDur(String paramCode);
+    EgovMap selectConfigEosEomDur(Map<String, Object> params);
 
 }

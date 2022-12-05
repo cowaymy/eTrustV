@@ -1114,11 +1114,11 @@
             AND A.SALES_ORD_NO = #{ordNo}
     </select>
 
-    <select id="selectConfigEosEomDur" parameterType="Map" resultType="int">
-        SELECT PARAM_VAL FROM SYS0098M
-        WHERE MODULE = 'SALES'
-        AND SUB_MODULE = 'SVC_MBRSH'
-        AND PARAM_CODE = #{paramCode}
+    <select id="selectConfigEosEomDur" parameterType="Map" resultType="egovMap">
+        SELECT
+    NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'SVM_EOS'), '0') SVM_EOS,
+    NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'SVM_EOM'), '0') SVM_EOM
+FROM DUAL;
     </select>
     <!-- CELESTE [E] SVM SUBSCRIPTION ELIGIBILITY -->
 </mapper>
