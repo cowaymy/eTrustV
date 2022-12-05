@@ -2,8 +2,9 @@ package com.coway.trust.biz.sales.eSVM.impl;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Months;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1158,15 +1159,18 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	String errorHeader = null;
     	String errorMsg = null;
 
-    	if(itemEosEomDt.get("eosDate") != null && itemEosEomDt.get("eomDate") != null)
+    	if(itemEosEomDt != null)
     	{
-    		prdEosDt = (LocalDate)itemEosEomDt.get("eosDate");
-    		prdEomDt = (LocalDate)itemEosEomDt.get("eomDate");
+    		prdEosDt = LocalDate.parse(itemEosEomDt.get("eosDate").toString());
+    		prdEomDt = LocalDate.parse(itemEosEomDt.get("eomDate").toString());
 
-    		Period periodEos = Period.between(prdEosDt, today);
+    		/*Period periodEos = Period.between(prdEosDt, today);
             Period periodEom = Period.between(prdEomDt, today);
             int diffEos = Math.abs(periodEos.getMonths());
-            int diffEom = Math.abs(periodEom.getMonths());
+            int diffEom = Math.abs(periodEom.getMonths());*/
+
+    		int diffEos = Months.monthsBetween(today, prdEosDt).getMonths();
+    		int diffEom = Months.monthsBetween(today, prdEomDt).getMonths();
 
             if(diffEos > configEosDurMth)
             {

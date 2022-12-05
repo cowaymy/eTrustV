@@ -1104,8 +1104,8 @@
             A.SALES_ORD_ID,
             A.SALES_ORD_NO,
             B.ITM_STK_ID STK_ID,
-            C.EOS_DATE, <!-- End of Sales -->
-            C.EOM_DATE  <!-- End of Membership -->
+            TO_CHAR(C.EOS_DATE, 'YYYY-MM-DD') EOS_DATE<!-- End of Sales -->
+            TO_CHAR(C.EOM_DATE, 'YYYY-MM-DD') EOM_DATE <!-- End of Membership -->
         FROM SAL0001D A
         LEFT JOIN SAL0002D B
             ON B.SALES_ORD_ID = A.SALES_ORD_ID
