@@ -1114,8 +1114,8 @@
             AND A.SALES_ORD_NO = #{ordNo}
     </select>
 
-    <select id="selectConfigEosEomDur" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS0098M
+    <select id="selectConfigEosEomDur" parameterType="Map" resultType="int">
+        SELECT PARAM_VAL FROM SYS0098M
         WHERE MODULE = 'SALES'
         AND SUB_MODULE = 'SVC_MBRSH'
         AND PARAM_CODE = #{paramCode}
