@@ -264,6 +264,16 @@ public class eSVMApiForm {
 
     private int curAtchFileGrpId;
 
+
+    //CELESTE
+
+    private Boolean svmAllowFlg;
+    private int errorCode;
+    private String errorHeader;
+    private String errorMsg;
+
+    //CELESTE
+
     public String getFlag() {
         return flag;
     }
@@ -1190,5 +1200,37 @@ public class eSVMApiForm {
 
 	public void setProgressStatus(int progressStatus) {
 		this.progressStatus = progressStatus;
+	}
+
+	public Boolean getSvmAllowFlg() {
+		return svmAllowFlg;
+	}
+
+	public void setSvmAllowFlg(Boolean svmAllowFlg) {
+		this.svmAllowFlg = svmAllowFlg;
+	}
+
+	public int getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public String getErrorHeader() {
+		return errorHeader;
+	}
+
+	public void setErrorHeader(String errorHeader) {
+		this.errorHeader = errorHeader;
+	}
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 }
