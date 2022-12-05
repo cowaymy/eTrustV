@@ -1149,8 +1149,9 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
 
     	EgovMap itemEosEomDt = eSVMApiMapper.selectEosEomDt(eSVMApiForm.createMap(param));
     	Map<String, Object> paramVal = new HashMap<String, Object>();
-    	int configEosDurMth = eSVMApiMapper.selectConfigEosEomDur(paramVal.put("paramCode", "SVM_EOS").toString());
-    	int configEomDurMth = eSVMApiMapper.selectConfigEosEomDur(paramVal.put("paramCode", "SVM_EOM").toString());
+
+    	int configEosDurMth = eSVMApiMapper.selectConfigEosEomDur(paramVal.get(paramVal.put("paramCode", "SVM_EOS")).toString());
+    	int configEomDurMth = eSVMApiMapper.selectConfigEosEomDur(paramVal.get(paramVal.put("paramCode", "SVM_EOM")).toString());
 
     	LocalDate today = LocalDate.now();
     	LocalDate prdEosDt = null;
