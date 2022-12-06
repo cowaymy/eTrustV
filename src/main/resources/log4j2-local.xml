@@ -38,12 +38,12 @@
 			<AppenderRef ref="rollingFile" />
 		</Logger>
 
-        <!-- for Hazelcast add below  -->
+        <!-- for Hazelcast add below
         <Logger name="com.inglab.hazelcastreform" level="DEBUG" additivity="false">
           <AppenderRef ref="console" />
           <AppenderRef ref="rollingFile" />
         </Logger>
-
+-->
 
 		<Root level="INFO">
 			<AppenderRef ref="console" />
