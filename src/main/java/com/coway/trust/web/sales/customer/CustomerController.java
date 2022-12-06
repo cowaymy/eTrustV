@@ -130,8 +130,10 @@ public class CustomerController {
                                                                           // Type
                                                                           // 콤보박스
                                                                           // 값
+    String[] cmbCustTierId = request.getParameterValues("cmbCorpTypeIdList"); // Customer Tier
     params.put("typeIdList", typeId);
     params.put("cmbCorpTypeIdList", cmbCorpTypeId);
+    params.put("cmbCustTierIdList", cmbCustTierId);
 
     LOGGER.info("##### customerList START #####");
     customerList = customerService.selectCustomerList(params);
