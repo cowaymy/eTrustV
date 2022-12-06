@@ -206,10 +206,30 @@ function fn_attachmentButtonRegister(){
      });
 
 	 if(custType.toUpperCase() == "COMPANY"){
-		 $('.optional').show();
+		 $('.optional2').hide();//remove
+		 $('.optional3').hide();//remove
+		 $('.optional4').hide();//remove
+		 $('.optionalStar2').show();
+		 $('.optionalStar3').show();
+		 $('.optionalStar4').show();
 	 }
 	 else{
-		 $('.optional').hide();
+		 if("${mobileAutoDebitDetail.isThirdPartyPayment}" == "1"){
+			 $('.optional2').hide();//remove
+			 $('.optional3').hide();//remove
+			 $('.optional4').show();//remove
+			 $('.optionalStar2').show();
+			 $('.optionalStar3').show();
+			 $('.optionalStar4').hide();
+		 }
+		 else{
+			 $('.optional2').show();//remove
+			 $('.optional3').show();//remove
+			 $('.optional4').show();//remove
+			 $('.optionalStar2').hide();
+			 $('.optionalStar3').hide();
+			 $('.optionalStar4').hide();
+		 }
 	 }
 }
 
@@ -243,7 +263,7 @@ function saveDataValidation(){
 	        return;
 		}
 	}
-	debugger;
+
 	if(custType.toUpperCase() == "COMPANY"){
 		if(thirdPartyLetterAttachment == null || thirdPartyLetterAttachment== ""){
 			if(cifId == 0){
@@ -263,6 +283,23 @@ function saveDataValidation(){
 			if(cifId == 0){
 		        Common.alert('Business Registration Form Attachment is required');
 		        return;
+			}
+		}
+	}
+	else{
+		if("${mobileAutoDebitDetail.isThirdPartyPayment}" == "1"){
+			if(thirdPartyLetterAttachment == null || thirdPartyLetterAttachment== ""){
+				if(cifId == 0){
+			        Common.alert('3rd Party Letter Attachment is required');
+			        return;
+				}
+			}
+
+			if(thirdPartyNricAttachment == null || thirdPartyNricAttachment== ""){
+				if(cifId == 0){
+			        Common.alert('Third Party NRIC Attachment is required');
+			        return;
+				}
 			}
 		}
 	}
