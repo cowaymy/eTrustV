@@ -40,7 +40,7 @@
                      renderer : {
                          type : "CheckBoxEditRenderer",
                          editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
-                         checkValue : "1"
+                         checkValue : "Y"
                      }
                  }
       ];

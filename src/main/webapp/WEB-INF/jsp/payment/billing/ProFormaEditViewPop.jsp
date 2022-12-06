@@ -97,28 +97,50 @@
               $("#hidDiscEnd").val(discEnd);
               $("#discount").val( $("#hidDiscStart").val() + " ~ " + $("#hidDiscEnd").val());
 
-              if($("#advStartDt").val() != result[0].schdulDt){
+              console.log("schlDT");
+              console.log(result[0].schdulDt);
+              $("#advStartDt").val(result[0].schdulDt);
 
-            	  var year = $("#advStartDt").val().substring(3,7);
-            	  var month = $("#advStartDt").val().substring(0,2) - 1;
+              var endMonth = Math.abs($("#advStartDt").val().substring(0,2)) + 11;
+              var endYear = $("#advStartDt").val().substring(3,7);
 
-            	  if(month < 10 & month  >= 1){
-            		  month = "0" + month;
-            	  }
-            	  if(month < 1){
-            		  year = year - 1;
-            	      month = 12 - Math.abs(month);
-            	  }
-            	  var prevMonth = month + "/" + year;
-            	  $("#hidPrevMonth").val(prevMonth);
-            	  if(prevMonth == result[0].schdulDt){ //prev month active
-            		  $("#hidPrevMonthInd").val("N");
-            	  }else{
-            		  $("#hidCurMonthInd").val("N");
-            		  $("#hidLastActiveSchdulDt").val(result[0].schdulDt);
-            	  }
+              console.log("111");
+              console.log(endMonth);
+              console.log(endYear);
 
+              if(endMonth > 12){
+            	    endYear = Math.abs(endYear) + 1;
+            	    endMonth = Math.abs(endMonth) - 12;
               }
+
+              if(endMonth < 10 & endMonth  >= 1){
+            	  endMonth = "0" + endMonth;
+              }
+
+              console.log("222");
+              console.log(endMonth);
+              console.log(endYear);
+
+              $("#advEndDt").val(endMonth + "/" + endYear);
+
+           	  var year = $("#advStartDt").val().substring(3,7);
+           	  var month = $("#advStartDt").val().substring(0,2);
+
+           	  if(month < 10 & month  >= 1){
+           		  month = "0" + month;
+           	  }
+           	  if(month < 1){
+           		  year = year - 1;
+           	      month = 12 - Math.abs(month);
+           	  }
+           	  var prevMonth = month + "/" + year;
+           	  $("#hidPrevMonth").val(prevMonth);
+           	  if(prevMonth == result[0].schdulDt){ //prev month active
+           		  $("#hidPrevMonthInd").val("N");
+           	  }else{
+           		  $("#hidCurMonthInd").val("N");
+           		  $("#hidLastActiveSchdulDt").val(result[0].schdulDt);
+           	  }
           }
           else{
         	  Common.alert("This billing group does not have Active bill");
