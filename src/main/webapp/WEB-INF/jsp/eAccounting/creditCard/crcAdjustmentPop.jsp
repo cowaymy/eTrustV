@@ -74,23 +74,29 @@
 
 	          Common.showLoader();
 	           var fileId = value;
-	           console.log('file path ' + '${pageContext.request.contextPath}');
-	         $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
-	              httpMethod: "POST",
-	              contentType: "application/json;charset=UTF-8",
-	              data: {
-	                  fileId: fileId
-	              },
-	              failCallback: function (responseHtml, url, error) {
-	                  Common.alert($(responseHtml).find("#errorMessage").text());
-	              }
-	          }).done(function () {
+	           if(fileId != null && fileId != ""){
+		           console.log('file path ' + '${pageContext.request.contextPath}');
+			         $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+			              httpMethod: "POST",
+			              contentType: "application/json;charset=UTF-8",
+			              data: {
+			                  fileId: fileId
+			              },
+			              failCallback: function (responseHtml, url, error) {
+			                  Common.alert($(responseHtml).find("#errorMessage").text());
+			              }
+			          }).done(function () {
+			                  Common.removeLoader();
+			                  console.log('File download a success!');
+			          }).fail(function () {
+			                  Common.alert('<spring:message code="sal.alert.msg.fileMissing" />');
+			                  Common.removeLoader();
+			          });
+	           }
+	           else{
+	                  Common.alert('No Attachment is uploaded for this record.');
 	                  Common.removeLoader();
-	                  console.log('File download a success!');
-	          }).fail(function () {
-	                  Common.alert('<spring:message code="sal.alert.msg.fileMissing" />');
-	                  Common.removeLoader();
-	          });
+	           }
 	      }
 	    }
 	}
@@ -172,7 +178,9 @@
 
             $("#adjRem").val(adjItems[0].adjRem);
             $("#adjNo").val(adjItems[0].adjNo);
-            $("#atchFileGrpId").val(adjItems[0].atchFileGrpId);
+            if(adjItems[0].atchFileGrpId != null && adjItems[0].atchFileGrpId != ""){
+                $("#atchFileGrpId").val(adjItems[0].atchFileGrpId);
+            }
             $("#sCrcId_h").val(adjItems[0].sCrditCardId);
             $("#rCrcId_h").val(adjItems[0].rCrditCardId);
             $('select[name="adjType"]').find('option[value="' + adjItems[0].adjType + '"]').attr('selected', 'selected');
@@ -230,7 +238,7 @@
             // Set File(s) - Start
             if("${item.mode}" == "E") {
                 // Edit Mode
-                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + adjItems[0].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Delete</a></span></div>");
+                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value=''/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Delete</a></span></div>");
                 fn_chgAdjType(adjItems[0].adjType.toString());
 
             } else {
@@ -251,7 +259,13 @@
                         fileId = adjItems[i].atchFileId;
                     }
                 }
-                fn_atchViewDown(fileGrpId, fileId);
+                if(undefinedCheck(fileGrpId) != "" && undefinedCheck(fileId) != "")
+                {
+                    fn_atchViewDown(fileGrpId, fileId);
+                }
+                else{
+	                  Common.alert('No Attachment is uploaded for this record.');
+                }
             });
 
             $("#adjForm :file").change(function() {
@@ -623,17 +637,17 @@
             return false;
         }
 
-        if(mode == "N") {
-            if($("input[name=attachment]")[0].files[0] == "" || $("input[name=attachment]")[0].files[0] == null) {
-                Common.alert("Attachment required.");
-                return false;
-            }
-        } else {
-            if(fileClick > 0 && (update.length === 0 || remove.length === 0)) {
-                Common.alert("Attachment required.");
-                return false;
-            }
-        }
+//         if(mode == "N") {
+//             if($("input[name=attachment]")[0].files[0] == "" || $("input[name=attachment]")[0].files[0] == null) {
+//                 Common.alert("Attachment required.");
+//                 return false;
+//             }
+//         } else {
+//             if(fileClick > 0 && (update.length === 0 || remove.length === 0)) {
+//                 Common.alert("Attachment required.");
+//                 return false;
+//             }
+//         }
 
         return flg;
     }
@@ -673,12 +687,10 @@
 
         if(fn_validation() == true) {
             var formData = Common.getFormData("adjForm");
-
             if(FormUtil.isEmpty($("#adjNo").val())) {
                 // New Adjustment
                 Common.ajaxFile("/eAccounting/creditCard/adjFileUpload.do", formData, function(result) {
                     console.log(result);
-
                     $("#atchFileGrpId").val(result.data.fileGroupKey);
 
                     if($("#adjType").prop("disabled") == true) $("#adjType").prop("disabled", false);
