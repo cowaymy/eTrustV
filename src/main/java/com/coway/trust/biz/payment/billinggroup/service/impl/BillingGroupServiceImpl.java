@@ -1051,34 +1051,34 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			billingGroupMapper.updCustMaster(updCustMap);
 
 			// E-mail 전송하기
-			EmailVO email = new EmailVO();
-			List<String> toList = new ArrayList<String>();
-
-			String additionalEmail = "";
-			additionalEmail = String.valueOf(params.get("reqAdditionalEmail")).trim();
-			toList.add(String.valueOf(params.get("reqEmail")).trim());
-			if (!"".equals(additionalEmail)) {
-				toList.add(additionalEmail);
-			}
-
-			email.setTo(toList);
-			email.setHtml(true);
-			email.setSubject("Coway E-Invoice Subscription Confirmation");
-			email.setText("Dear Sir/Madam, <br /><br />"
-					+ "Thank you for registering for 'Go Green Go E-invoice' with Coway. <br /><br />"
-					+ "Your email address have been registered as per below:- <br /><br />" + "Email 1: "
-					+ String.valueOf(params.get("reqEmail")).trim() + "<br />" + "Email 2: " + additionalEmail
-					+ "<br /><br /> "
-					//+ "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"
-					+
-					// To-Be eTRUST시스템에서는 문구 삭제 요청함
-					// "<a href='" + billingTypeConfirmUrl + "?reqId=" + reqId + "' target='_blank'
-					// style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
-					"Should you have any enquiries, please do not hesitate to contact our toll-free number at 1800 888 111 or email to"
-					+ "<a href='mailto:billing@coway.com.my' target='_top' style='color:blue;font-weight:bold'>billing@coway.com.my</a><br /><br /><br />"
-					+ "Yours faithfully,<br />" + "<b>Coway Malaysia</b>");
-
-			adaptorService.sendEmail(email, false);
+//			EmailVO email = new EmailVO();
+//			List<String> toList = new ArrayList<String>();
+//
+//			String additionalEmail = "";
+//			additionalEmail = String.valueOf(params.get("reqAdditionalEmail")).trim();
+//			toList.add(String.valueOf(params.get("reqEmail")).trim());
+//			if (!"".equals(additionalEmail)) {
+//				toList.add(additionalEmail);
+//			}
+//
+//			email.setTo(toList);
+//			email.setHtml(true);
+//			email.setSubject("Coway E-Invoice Subscription Confirmation");
+//			email.setText("Dear Sir/Madam, <br /><br />"
+//					+ "Thank you for registering for 'Go Green Go E-invoice' with Coway. <br /><br />"
+//					+ "Your email address have been registered as per below:- <br /><br />" + "Email 1: "
+//					+ String.valueOf(params.get("reqEmail")).trim() + "<br />" + "Email 2: " + additionalEmail
+//					+ "<br /><br /> "
+//					//+ "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"
+//					+
+//					// To-Be eTRUST시스템에서는 문구 삭제 요청함
+//					// "<a href='" + billingTypeConfirmUrl + "?reqId=" + reqId + "' target='_blank'
+//					// style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
+//					"Should you have any enquiries, please do not hesitate to contact our toll-free number at 1800 888 111 or email to"
+//					+ "<a href='mailto:billing@coway.com.my' target='_top' style='color:blue;font-weight:bold'>billing@coway.com.my</a><br /><br /><br />"
+//					+ "Yours faithfully,<br />" + "<b>Coway Malaysia</b>");
+//
+//			adaptorService.sendEmail(email, false);
 
 			return true;
 
