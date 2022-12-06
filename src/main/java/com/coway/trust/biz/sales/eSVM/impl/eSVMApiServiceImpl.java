@@ -91,21 +91,21 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         // membershipController.selectMembershipFreeConF
         EgovMap svmOrdDet = eSVMApiMapper.selectSvmOrdNo(eSVMApiForm.createMap(param));
         eSVMApiDto rtn = new eSVMApiDto();
-        rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param))); // fn_getDataInfo
+        EgovMap ordMemInfo = eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)); // fn_getDataInfo
 
         if(svmOrdDet.isEmpty()) {
             throw new ApplicationException(AppConstants.FAIL, "No order found or this order is not under complete status or activation status");
 
         }
 
-        else if(rtn == null){
+        else if(ordMemInfo == null){
         	throw new ApplicationException(AppConstants.FAIL, "This order is not valid for membership");
         }
 
         else {
 
             // fn_getDataInfo
-            //rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
+            rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
 
             // [Membership Tab]
             if("NEW".equals(param.getMode())) {
