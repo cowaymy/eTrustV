@@ -643,7 +643,7 @@ public interface CustomerMapper {
 
   int checkCreditCardValidity(String tokenId);
 
-  List<EgovMap> getCreditCardDetails(String tokenId);
+  List<EgovMap> getCreditCardDetails(Map<String, Object> params);
 
   int getCountActTokenId(Map<String, Object> params);
 

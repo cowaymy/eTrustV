@@ -53,6 +53,24 @@
                 formatString : "dd/mm/yyyy" ,
                 editable : false,
                 style: 'left_style'
+            }, {
+                dataField : "tnaFlag1",
+                headerText : "TNA",
+                width : 50,
+                editable : true,
+                renderer :
+                {
+                    type : "CheckBoxEditRenderer",
+                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                    editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                    checkValue : "Y", // true, false 인 경우가 기본
+                    unCheckValue : "N",
+                    // 체크박스 Visible 함수
+                    visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                     {
+                       return true;
+                     }
+                }  //renderer
             }];
 
      // 그리드 속성 설정
@@ -148,9 +166,15 @@
                                 console.log(r2);
                                 if(r2 != null) {
                                     if(r2.code == "99") { //FAILED
+                                    	console.log("why: "+ $("#tnaFlag1").val());
+                                    	$("#tnaFlag1").val('Y');
+                                    	console.log("why1 : "+ $("#tnaFlag1").val());
+                                        $("#CardNo").val(r2.data.bin + "******" + r2.data.cclast4);
+                                        $("#tokenID").val(r2.data.token);
                                         Common.alert(r2.message);
                                     }
                                     else {
+                                    	$("#tnaFlag1").val('');
                                         $("#CardNo").val(r2.data.bin + "******" + r2.data.cclast4);
                                         $("#tokenID").val(r2.data.token);
                                     }
@@ -165,7 +189,9 @@
     function fn_searchCreditCard(){
     	Common.ajax("GET", "/sales/customer/searchCreditCard.do",$("#searchForm").serialize(), function(result) {
     		console.log(result);
+    		console.log("why2 : "+ $("#tnaFlag1").val());
     		AUIGrid.setGridData(myGridID, result);
+    		console.log("why3 : "+ $("#tnaFlag1").val());
     	})
     }
 
@@ -206,6 +232,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="post">
+    <input type="hidden" id="tnaFlag1" name="tnaFlag1">
     <input type="hidden" id="tokenID" name="tokenID">
     <table class="type1"><!-- table start -->
     <caption>table</caption>

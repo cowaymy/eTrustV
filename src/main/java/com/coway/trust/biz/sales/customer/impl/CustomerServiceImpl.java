@@ -1021,8 +1021,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   }
 
 
-  public List<EgovMap> searchCreditCard(String tokenId) {
-    return customerMapper.getCreditCardDetails(tokenId);
+  public List<EgovMap> searchCreditCard(Map<String, Object> params) {
+    return customerMapper.getCreditCardDetails(params);
   }
 
 }

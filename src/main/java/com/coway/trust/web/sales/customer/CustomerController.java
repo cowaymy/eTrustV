@@ -2710,7 +2710,8 @@ public class CustomerController {
 
         	  ReturnMessage message = new ReturnMessage();
               message.setCode(AppConstants.FAIL);
-              message.setMessage( "This card has marked as \"Transaction Not Allowed\". Kindly change a new card");
+              message.setData(result);
+              message.setMessage( "This card has marked as \'Transaction Not Allowed\'  <span style='color:red'>(TNA)</span>. Kindly change a new card");
 
               return ResponseEntity.ok(message);
           }
@@ -2770,7 +2771,8 @@ public class CustomerController {
 	@RequestMapping(value = "/searchCreditCard.do")
 	public ResponseEntity<List<EgovMap>> searchCreditCard(@RequestParam Map<String, Object>params, ModelMap model) {
 		List<EgovMap> result = null;
-		result = customerService.searchCreditCard(params.get("tokenID").toString());
+		params.put("tokenId", params.get("tokenID").toString());
+		result = customerService.searchCreditCard(params);
 		return ResponseEntity.ok(result);
 	}
 //Credit Card Check Module end
