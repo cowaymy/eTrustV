@@ -229,7 +229,7 @@
 			                                , B.MANAGER_CODE
 			                                , B.DT_FROM
 			                                , B.DT_TO
-			                                , ROW_NUMBER() OVER(PARTITION BY B.BATCH_ID, B.MEM_CODE, B.ATD_TYPE, B.DT_FROM, B.DT_TO ORDER BY B.TIME ASC) ROW_NUM
+			                                , ROW_NUMBER() OVER(PARTITION BY B.BATCH_ID, B.MEM_CODE, B.DT_FROM, B.DT_TO ORDER BY B.TIME ASC) ROW_NUM
 			                            FROM ATD0001M A
 			                            JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
 			                            WHERE 1=1
