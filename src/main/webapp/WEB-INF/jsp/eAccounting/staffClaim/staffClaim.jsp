@@ -592,7 +592,7 @@ function fn_removeMyGridRow() {
 
 function fn_addCarMilleage(){
     Common.showLoader();
-	console.log("Car Mileage Expense Add");
+ 	console.log("Car Mileage Expense Add");
 	var gridDataList = AUIGrid.getGridData(mileageGridID);
     for(var i = 0; i < gridDataList.length; i++) {
     	// jQuery Ajax Form 사용
@@ -628,14 +628,14 @@ function fn_addCarMilleage(){
                 expGrp : "1"
         }
 
-		Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
-            console.log(result);
-            if(result.data.fileGroupKey){
-                data.atchFileGrpId = result.data.fileGroupKey
-            }
-            console.log(data);
-            AUIGrid.addRow(newGridID, data, "last");
-		});
+			Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
+	            console.log(result);
+	            if(result.data.fileGroupKey){
+	                data.atchFileGrpId = result.data.fileGroupKey
+	            }
+	            console.log(data);
+	            AUIGrid.addRow(newGridID, data, "last");
+			});
     }
 
     fn_getAllTotAmt();
@@ -643,7 +643,9 @@ function fn_addCarMilleage(){
     // Grid 초기화
     fn_destroyMileageGrid();
     fn_createMileageAUIGrid();
-    Common.removeLoader();
+    setTimeout(function() {
+        Common.removeLoader();
+    }, 1000);
 }
 
 function  fn_updateCarMilleage(){
@@ -727,7 +729,9 @@ function  fn_updateCarMilleage(){
         // Grid 초기화
         fn_destroyMileageGrid();
         fn_createMileageAUIGrid();
-        Common.removeLoader();
+        setTimeout(function() {
+            Common.removeLoader();
+        }, 1000);
 }
 
 function fn_addNormalExpenses(){
