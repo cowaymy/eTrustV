@@ -176,7 +176,9 @@
              , T1.PRC_CHRG
              , T1.PRC_COSTING
              , T1.STUS_CODE_ID
+             , T2.STK_CTGRY_ID
           FROM SAL0016M T1
+          JOIN SYS0026M T2 ON T1.STK_ID = T2.STK_ID
          WHERE T1.STK_ID = #{stkId}
            AND T1.APP_TYPE_ID = #{appTypeId}
            AND MEM_PAC_ID = #{srvPacId}

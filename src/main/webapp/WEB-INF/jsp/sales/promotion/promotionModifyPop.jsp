@@ -76,6 +76,7 @@
           , { headerText : "promoItmId",    dataField   : "promoItmId",       visible  : false, width : 80 }
           , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
           , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
+          , {dataField: "stkCtgryId", visible: false}
           ];
 
         //AUIGrid 칼럼 설정
@@ -223,7 +224,7 @@
             newPrcVal = Math.floor(newPrcVal);
 
             if(newPrcVal < 0) newPrcVal = 0;
-            if($('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
+            if(!(AUIGrid.getCellValue(stckGridID, i, "stkCtgryId") == 7177) && $('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
 
             AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
         }
@@ -332,6 +333,7 @@
                         AUIGrid.setCellValue(stckGridID, j, "amt",    result[i].amt);
                         AUIGrid.setCellValue(stckGridID, j, "prcRpf", result[i].prcRpf);
                         AUIGrid.setCellValue(stckGridID, j, "prcPv",  result[i].prcPv);
+                        AUIGrid.setCellValue(stckGridID, j, "stkCtgryId",  result[i].stkCtgryId);
                     }
                 }
             }

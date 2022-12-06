@@ -336,6 +336,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			}
 			else {
 				priceMap = promotionMapper.selectPriceInfo(params);
+				if(priceMap != null) {
+	    			dvo.setStkCtgryId((BigDecimal)priceMap.get("stkCtgryId"));
+				}
 			}
 
 			if(priceMap != null) {
