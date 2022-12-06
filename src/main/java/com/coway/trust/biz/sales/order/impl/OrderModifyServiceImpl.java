@@ -716,6 +716,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     salesOrderMVO.setUpdUserId(sessionVO.getUserId());
 
     orderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
+    orderModifyMapper.updateRental(salesOrderMVO);
   }
 
   @Override

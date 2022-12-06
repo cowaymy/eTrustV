@@ -580,6 +580,7 @@ public class htOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
 
 		htOrderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
+		htOrderModifyMapper.updateRental(salesOrderMVO);
 	}
 
 	@Override

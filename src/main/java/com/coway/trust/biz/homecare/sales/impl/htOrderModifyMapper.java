@@ -71,6 +71,8 @@ public interface htOrderModifyMapper {
 
 	void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO);
 
+	void updateRental(SalesOrderMVO salesOrderMVO);
+
 	void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO);
 
 	void updateECashInfo(SalesOrderMVO salesOrderMVO);
