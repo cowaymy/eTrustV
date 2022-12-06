@@ -1,6 +1,9 @@
 package com.coway.trust.biz.sales.customerApi;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiDto;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
@@ -31,4 +34,6 @@ public interface CustomerApiService {
   CustomerApiDto selectCodeList() throws Exception;
 
   CustomerApiForm saveCustomer(CustomerApiForm param) throws Exception;
+
+  Map<String, Object> selectCustomerTierPoint(HttpServletRequest request,CustomerApiForm param) throws Exception;
 }

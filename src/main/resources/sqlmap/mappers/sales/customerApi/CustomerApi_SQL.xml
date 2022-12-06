@@ -416,4 +416,94 @@
     )
     ]]>
   </insert>
+
+<select id="selectCustCheck" parameterType="Map" resultType="Integer">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustCheck] 20221205 - MY HLTANG */
+        select count(1) from SAL0029D where cust_id = #{custId} and TYPE_ID = 964
+    ]]>
+  </select>
+
+  <select id="selectCustomerTierMaster" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
+    select
+	a.CUST_ID, cd.code cust_tier, a.TIER_SCORE, a.TOT_SALES_CNT,a.TIER_COLC_SCORE, a.TIER_REWD_SCORE
+	, nvl(curp.rpoint,0) t_cur_point,nvl(onhp.rpoint,0) t_onhold_point,nvl(expingp.rpoint,0) t_expiring_point,nvl(expedp.rpoint,0) t_expired_point
+	from
+	SAL0333M a
+	left join sys0013m cd on cd.code_id = a.TIER_RANK
+	left join (
+	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
+	    from SAL0330D
+	    where CUST_ID = #{custId}
+	    and SALES_TOT_SCORE > 0
+	    and SALES_TIER_STUS = 7079
+	    group by cust_id,SALES_TIER_STUS
+	) curp on curp.cust_id = a.cust_id
+	left join (
+	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
+	    from SAL0330D
+	    where CUST_ID = #{custId}
+	    and SALES_TOT_SCORE > 0
+	    and SALES_TIER_STUS = 7080
+	    group by cust_id,SALES_TIER_STUS
+	) onhp on onhp.cust_id = a.cust_id
+	left join (
+	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
+	    from SAL0330D
+	    where CUST_ID = #{custId}
+	    and SALES_TOT_SCORE > 0
+	    and SALES_TIER_STUS = 7081
+	    group by cust_id,SALES_TIER_STUS
+	) expingp on expingp.cust_id = a.cust_id
+	left join (
+	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
+	    from SAL0330D
+	    where CUST_ID = #{custId}
+	    and SALES_TOT_SCORE > 0
+	    and SALES_TIER_STUS = 7082
+	    group by cust_id,SALES_TIER_STUS
+	) expedp on expedp.cust_id = a.cust_id
+	where
+	a.CUST_ID = #{custId}
+    ]]>
+  </select>
+
+  <select id="selectCustomerTierOrderList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
+    SELECT
+            D.STK_DESC prod_name,
+            B.SALES_ORD_NO ref_no,
+            to_char(NVL(A.SALES_TOT_SCORE,0)) t_point,
+            E.CODE_NAME point_status,
+            TO_CHAR(A.SALES_LST_EXPY_DT,'YYYY/MM/DD') point_expiry_dt
+        FROM SAL0330D A
+        JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        join SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID
+        JOIN SYS0013M E ON E.CODE_ID = A.SALES_TIER_STUS
+        WHERE A.CUST_ID =  #{custId}
+        AND A.SALES_TOT_SCORE  >  0
+    ]]>
+  </select>
+
+  <select id="selectCustomerTierOtherDet" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierOtherDet] 20221205 - MY HLTANG */
+    SELECT A.CUST_ID,B.CODE_id,B.CODE_NAME , sum(A.REWRD_POINT) t_bday_point,'Active' bday_point_status, '' bday_point_expiry_dt
+        FROM SAL0332D A
+        JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+        WHERE A.CUST_ID =   1250652
+        AND A.FORFEIT = 0
+		group by a.CUST_ID,B.CODE_id,B.CODE_NAME
+		order by case when B.CODE_id = 7198 then 1
+                when B.CODE_id = 7199 then 2
+                else 3
+                end
+                ,a.CUST_ID
+    ]]>
+  </select>
+
 </mapper>

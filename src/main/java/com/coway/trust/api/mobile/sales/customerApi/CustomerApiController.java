@@ -2,10 +2,13 @@ package com.coway.trust.api.mobile.sales.customerApi;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,5 +125,17 @@ public class CustomerApiController {
       }
     }
     return ResponseEntity.ok(rtn);
+  }
+
+  @ApiOperation(value = "selectCustomerTierPoint", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectCustomerTierPoint", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> selectCustomerTierPoint(HttpServletRequest request,@ModelAttribute CustomerApiForm param)
+      throws Exception {
+	  Map<String, Object> tierFullDetails = new HashMap<String, Object>();
+	  tierFullDetails = customerApiService.selectCustomerTierPoint(request,param);
+      if (LOGGER.isDebugEnabled()) {
+       LOGGER.debug("selectCustomerfulldetails    값 : {}", tierFullDetails);
+      }
+    return ResponseEntity.ok(tierFullDetails);
   }
 }

@@ -6,18 +6,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiDto;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerTierOrderListApiDto;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerTierPointApiDto;
+import com.coway.trust.biz.api.CommonApiService;
+import com.coway.trust.biz.api.impl.CommonApiMapper;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.customerApi.CustomerApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -40,6 +48,12 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
 
   @Resource(name = "CustomerApiMapper")
   private CustomerApiMapper customerApiMapper;
+
+  @Resource(name = "CommonApiMapper")
+  private CommonApiMapper commonApiMapper;
+
+  @Resource(name = "commonApiService")
+  private CommonApiService commonApiService;
 
   @Autowired
   private LoginMapper loginMapper;
@@ -390,5 +404,83 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
       throw new ApplicationException(AppConstants.FAIL, "CustAddress Exception.");
     }
     return CustomerApiForm.create(customerMap);
+  }
+
+  @Override
+  public Map<String, Object> selectCustomerTierPoint(HttpServletRequest request,CustomerApiForm param) throws Exception {
+	  String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
+
+	  // default courseCloseDt
+      String currentDate = CommonUtils.getNowDate();
+      String defaultCloseDt = CommonUtils.getAddDay(currentDate, 60, "YYYYMMDD"); // defaultly added 60 days to close date
+
+      StopWatch stopWatch = new StopWatch();
+      stopWatch.reset();
+      stopWatch.start();
+
+	  EgovMap access = new EgovMap();
+	  Map<String, Object> reqPrm = new HashMap<>();
+	  String key = request.getHeader("key");
+	  reqPrm.put("key", key);
+
+
+	  Map<String, Object> tierFullDetails = new HashMap<String, Object>();
+	  Map<String, Object> cnvTierFullDetails = new HashMap<String, Object>();
+	  try{
+		  int created = 0;
+	      access = commonApiMapper.checkAccess(reqPrm);
+	      if(access == null){
+	        code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+	        message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+	      }else{
+	    	  if (null == param) {
+				  throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+			  }
+			  if (CommonUtils.isEmpty(String.valueOf(param.getCustId()))) {
+				  throw new ApplicationException(AppConstants.FAIL, "Customer ID value does not exist.");
+			  }
+
+			  int exist = customerApiMapper.selectCustCheck(CustomerApiForm.createMap(param));
+			  if(exist != 1){
+				  throw new ApplicationException(AppConstants.FAIL, "Customer ID does not exist.");
+			  }
+
+			  EgovMap tierMaster = customerApiMapper.selectCustomerTierMaster(CustomerApiForm.createMap(param));
+			  List<CustomerTierOrderListApiDto> orderListDetails = customerApiMapper.selectCustomerTierOrderList(CustomerApiForm.createMap(param));
+			  List<EgovMap> tierOtherDetails = customerApiMapper.selectCustomerTierOtherDet(CustomerApiForm.createMap(param));
+
+			  tierFullDetails = tierMaster;
+			  tierFullDetails.put("orderList", orderListDetails);
+			  if(tierOtherDetails != null){
+				  for(int i = 0 ; i < tierOtherDetails.size() ; i++){
+		    		if(tierOtherDetails.get(i).get("codeId").toString().equals("7198")){
+		    			tierFullDetails.put("tBdayPoint", tierOtherDetails.get(i).get("tBdayPoint").toString());
+		    			tierFullDetails.put("bdayPointStatus", tierOtherDetails.get(i).get("bdayPointStatus").toString());
+		    		}
+		    		if(tierOtherDetails.get(i).get("codeId").toString().equals("7199")){
+		    			tierFullDetails.put("tOtherPoint", tierOtherDetails.get(i).get("tOtherPoint").toString());
+		    			tierFullDetails.put("otherPointStatus", tierOtherDetails.get(i).get("otherPointStatus").toString());
+		    		}
+		    	}
+			  }
+			  CustomerTierPointApiDto custTierDto = CustomerTierPointApiDto.create(tierFullDetails);
+
+			  ObjectMapper oMapper = new ObjectMapper();
+			  cnvTierFullDetails = oMapper.convertValue(custTierDto, Map.class);
+
+			  code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+		      message = String.valueOf(AppConstants.RESPONSE_DESC_SUCCESS);
+	      }
+	  } catch(Exception e){
+	      code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+	      message = StringUtils.substring(e.getMessage(), 0, 4000);
+
+	      System.out.println();
+	    } finally{
+	      stopWatch.stop();
+	      respTm = stopWatch.toString();
+	    }
+
+	  return commonApiService.rtnRespMsg(request, code, message, respTm, CustomerApiForm.createMap(param), cnvTierFullDetails ,apiUserId);
   }
 }
