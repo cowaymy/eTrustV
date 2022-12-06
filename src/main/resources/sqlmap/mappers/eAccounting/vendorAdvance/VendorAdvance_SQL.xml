@@ -1074,7 +1074,7 @@
             A.REQST_USER_ID,
             A.APPV_LINE_CNT,
             A.APPV_LINE_PRCSS_CNT,
-            TO_CHAR(J.INVC_DT, 'DD/MM/YYYY') INVC_DT,
+            J.INVC_DT INVC_DT,
             J.INVC_NO,
             B.MEM_ACC_ID,
             D.MEM_ACC_NAME,
