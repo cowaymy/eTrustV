@@ -141,7 +141,7 @@ function createAUIGrid() {
       , { headerText : "Net Rate",  dataField : "netRate", editable : false, width : 60  }
       , { headerText : "Overall Active HP",   dataField : "acthp", editable : false, width : 60  }
       , { headerText : "Overall Newly Recruit",  dataField : "recruit", editable  : false }
-      , { headerText : "Overall DR", dataField : "recruit", editable  : false }
+      , { headerText : "Overall DR", dataField : "directRecruit", editable  : false }
       , { headerText : "Overall Active New Neo", dataField : "newNeoAct", editable  : false }
       , { headerText : "Overall Part time", dataField : "parttime", editable  : false }
       , { headerText : "Overall New Neo Active Rate", dataField : "newNeoActRate", editable  : false }
