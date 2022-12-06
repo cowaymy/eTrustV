@@ -7,6 +7,7 @@ var TODAY_DD      = "${toDay}";
 var BEFORE_DD = "${bfDay}";
 var blockDtFrom = "${hsBlockDtFrom}";
 var blockDtTo = "${hsBlockDtTo}";
+var userType = '${SESSION_INFO.userTypeId}';
   //AUIGrid 생성 후 반환 ID
   var listGiftGridID;
   var FailedRemarkGridID;
@@ -1708,6 +1709,20 @@ var blockDtTo = "${hsBlockDtTo}";
         $("#custTypeNm").val(custInfo.codeName1); //Customer Name
         $("#hiddenTypeId").val(custInfo.typeId); //Type
         $("#name").val(custInfo.name); //Name
+        var maskedNric;
+
+        if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
+            if(userType == 1 || userType == 2 || userType == 7){
+                maskedNric = custInfo.nric.substr(-4).padStart(custInfo.nric.length, '*');
+            }
+            else{
+                maskedNric = custInfo.nric;
+            }
+        }
+        else{
+            maskedNric = custInfo.nric;
+        }
+        $("#nric2").val(maskedNric); //NRIC/Company No
         $("#nric").val(custInfo.nric); //NRIC/Company No
 
         vCustTypeId = custInfo.typeId;
@@ -2168,20 +2183,40 @@ var blockDtTo = "${hsBlockDtTo}";
             }
           }
 
+
           // 파일 다운
-          $(".input_text").dblclick(function() {
-            var oriFileName = $(this).val();
-            var fileGrpId;
-            var fileId;
-            for (var i = 0; i < result.length; i++) {
-              if (result[i].atchFileName == oriFileName) {
-                fileGrpId = result[i].atchFileGrpId;
-                fileId = result[i].atchFileId;
+          if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
+              if(userType != 1 && userType != 2 && userType != 7){
+                  $(".input_text").dblclick(function() {
+                      var oriFileName = $(this).val();
+                      var fileGrpId;
+                      var fileId;
+                      for (var i = 0; i < result.length; i++) {
+                        if (result[i].atchFileName == oriFileName) {
+                          fileGrpId = result[i].atchFileGrpId;
+                          fileId = result[i].atchFileId;
+                        }
+                      }
+                      if (fileId != null)
+                        fn_atchViewDown(fileGrpId, fileId);
+                    });
               }
-            }
-            if (fileId != null)
-              fn_atchViewDown(fileGrpId, fileId);
-          });
+          }
+          else{
+              $(".input_text").dblclick(function() {
+                var oriFileName = $(this).val();
+                var fileGrpId;
+                var fileId;
+                for (var i = 0; i < result.length; i++) {
+                  if (result[i].atchFileName == oriFileName) {
+                    fileGrpId = result[i].atchFileGrpId;
+                    fileId = result[i].atchFileId;
+                  }
+                }
+                if (fileId != null)
+                  fn_atchViewDown(fileGrpId, fileId);
+              });
+          }
         }
       }
     });
@@ -2292,9 +2327,8 @@ var blockDtTo = "${hsBlockDtTo}";
         <tbody>
           <tr>
             <th scope="row">NRIC/Company No</th>
-            <td>
-              <input id="nric" name="nric" type="text" value="" title="" placeholder="" class="w100p readonly" readonly />
-            </td>
+            <td><input id="nric2" name="nric2" type="text" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
+            <td><input id="nric" name="nric" type="hidden" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
             <th scope="row">SOF No</th>
             <td>
               <input id="sofNo" name="sofNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly />

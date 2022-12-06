@@ -135,6 +135,8 @@ public class PreOrderController {
 
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
+		model.put("userType", sessionVO.getUserTypeId());
+
 
 		return "sales/order/preOrderModifyPop";
 	}

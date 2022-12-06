@@ -30,6 +30,7 @@ var otherFileName2 = "";
 var terminateFileName = "";
 
 var FailedRemarkGridID;
+var userType = '${SESSION_INFO.userTypeId}';
 
 //Start AUIGrid
 $(document).ready(function() {
@@ -138,6 +139,21 @@ $(document).ready(function() {
 
        }
     });
+
+      var maskedNric;
+      if ('${memberView.name}' == 'Rejected' || '${memberView.name}' == 'Approved'){
+          if(userType == 1 || userType == 2 || userType == 7){
+              maskedNric = "${memberView.nric}".substr(-4).padStart("${memberView.nric}".length, '*');
+          }
+          else{
+              maskedNric = "${memberView.nric}";
+          }
+      }
+      else{
+          maskedNric = "${memberView.nric}";
+      }
+      document.getElementById('nric').innerText=maskedNric;
+
 
 });
 function createAUIGrid4() {
@@ -708,16 +724,28 @@ function fn_atchViewDown(fileGrpId, fileId) {
             atchFileId : fileId
     };
     Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-        console.log(result)
         var fileSubPath = result.fileSubPath;
         fileSubPath = fileSubPath.replace('\', '/'');
 
-        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
-            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-        } else {
-            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        if ('${memberView.name}' == 'Rejected' || '${memberView.name}' == 'Approved'){
+            if(userType != 1 && userType != 2 && userType != 7){
+                if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+                    console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                    window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                } else {
+                    console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                }
+            }
+        }
+        else{
+            if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            } else {
+                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            }
         }
     });
 }
@@ -846,9 +874,9 @@ function fn_selectFailedRemarkList() {
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC </th>
+    <th scope="row">NRIC</th>
     <td>
-     <span><c:out value="${memberView.nric}"/></span>
+     <span id="nric"></span>
     </td>
     <th scope="row">Date of Birth</th>
     <td>
