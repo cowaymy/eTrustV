@@ -552,6 +552,22 @@
         <td>${result.custVaNo}</td>
     </tr>
     <tr>
+        <th scope="row"><spring:message code="sal.title.text.tierStatus" /></th>
+        <td>${result.tierStatus}</td>
+        <th scope="row"><spring:message code="sal.title.text.curPoint" /></th>
+        <td>${result.curPoint}</td>
+        <th scope="row"><spring:message code="sal.title.text.ExpingPoint" /></th>
+        <td>${result.expingPoint}</td>
+    </tr>
+    <tr>
+        <th scope="row"><spring:message code="sal.title.text.onholdPoint" /></th>
+        <td>${result.onholdPoint}</td>
+        <th scope="row"><spring:message code="sal.title.text.expiredPoint" /></th>
+        <td>${result.expiredPoint}</td>
+        <th scope="row"></th>
+        <td></td>
+    </tr>
+    <tr>
         <th scope="row"><spring:message code="sal.title.remark" /></th>
         <td colspan="5">${result.rem}</td>
     </tr>

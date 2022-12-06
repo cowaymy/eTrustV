@@ -144,6 +144,11 @@
                 headerText : '<spring:message code="sal.title.text.nricCompNo" />',
                 width : 170,
                 editable : false
+            }, {
+                dataField : "custTier",
+                headerText : '<spring:message code="sal.title.text.custTier" />',
+                width : 170,
+                editable : false
             },{
                 dataField : "custAddId",
                 visible : false
@@ -222,6 +227,7 @@
     doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'M' , 'f_multiCombo');            // Customer Type Combo Box
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'nation' , 'S');        // Nationality Combo Box
     doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '538', '','cmbCustTierId', 'M' , 'f_multiCombo');    // Customer Tier Combo Box
 
     // 조회조건 combo box
     function f_multiCombo(){
@@ -427,8 +433,11 @@
           <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
-        <th scope="row"></th>
-        <td></td>
+        <th scope="row"><spring:message code="sal.title.text.custTier" /></th>
+        <td>
+          <select id="cmbCustTierId" name="cmbCustTierId" class="multy_select w100p" multiple="multiple">
+        </select>
+        </td>
     </tr>
     </tbody>
     </table><!-- table end -->
