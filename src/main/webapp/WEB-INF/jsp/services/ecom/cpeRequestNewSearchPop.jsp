@@ -94,7 +94,7 @@ function fn_searchNewOrderPop(){
 }
 
 function checkCpeRequestExistStatus(){
-	 Common.ajax("GET", "/services/ecom/checkCpeRequestStatus",$("#_searchOrdForm").serialize(), function(result) {
+	 Common.ajax("GET", "/services/ecom/checkCpeRequestStatus",$("#_searchForm_").serialize(), function(result) {
 		 console.log(result);
 		 var existStatus = result.status;
 		 if(existStatus == 'true'){

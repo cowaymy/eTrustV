@@ -239,7 +239,7 @@
      </select>
 
      <select id="checkExistingCpeRequestStatusActive" parameterType="Map" resultType="int">
-     	SELECT COUNT(CPE_REQ_ID) FROM SVC0118M WHERE CPE_STUS_ID NOT IN(6,36)
+     	SELECT COUNT(CPE_REQ_ID) FROM SVC0118M WHERE CPE_STUS_ID NOT IN (6,36) AND SALES_ORD_NO = #{salesOrderNo}
      </select>
 
      <select id="selectRequestType" resultType="egovMap">
