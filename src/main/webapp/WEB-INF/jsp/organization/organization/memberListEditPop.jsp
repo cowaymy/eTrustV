@@ -108,6 +108,10 @@ function fn_memberSave(){
 				    $.extend(jsonObj, {'Birth' :$("#Birth").val() });
 				    $.extend(jsonObj, {'memberType' : $("#memberType").val()});
 				    $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+                    $.extend(jsonObj, {'cmbInitialsUpd' : $("#cmbInitials").val()});
+                    $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
+                    $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
+                    $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
 
 				    console.log(JSON.stringify(jsonObj));
 				    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -156,6 +160,10 @@ function fn_memberSave(){
 	                  $.extend(jsonObj, {'Birth' :$("#Birth").val() });
 	                  $.extend(jsonObj, {'memberType' : $("#memberType").val()});
 	                  $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+	                    $.extend(jsonObj, {'cmbInitialsUpd' : $("#cmbInitials").val()});
+	                    $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
+	                    $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
+	                    $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
 
 	                  console.log(JSON.stringify(jsonObj));
 	                  Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -207,6 +215,10 @@ function fn_memberSave(){
 		            $.extend(jsonObj, {'Birth' :$("#Birth").val() });
 		            $.extend(jsonObj, {'memberType' : $("#memberType").val()});
 		            $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+		            $.extend(jsonObj, {'cmbInitialsUpd' : $("#cmbInitials").val()});
+		            $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
+		            $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
+		            $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
 
 		            console.log(JSON.stringify(jsonObj));
 		            Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -255,6 +267,10 @@ function fn_memberSave(){
 	        $.extend(jsonObj, {'Birth' :$("#Birth").val() });
 	        $.extend(jsonObj, {'memberType' : $("#memberType").val()});
 	        $.extend(jsonObj, {'areaIdUpd' : $("#areaId").val()});
+            $.extend(jsonObj, {'cmbInitialsUpd' : $("#cmbInitials").val()});
+            $.extend(jsonObj, {'emergencyCntcNmUpd' : $("#emergencyCntcNm").val()});
+            $.extend(jsonObj, {'emergencyCntcNoUpd' : $("#emergencyCntcNo").val()});
+            $.extend(jsonObj, {'emergencyCntcRelationshipUpd' : $("#emergencyCntcRelationship").val()});
 
 	        console.log(JSON.stringify(jsonObj));
 	        Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -378,12 +394,22 @@ $(document).ready(function() {
 
      if(("${memberView.memType}" == "5" &&  $("#traineeType").val() == "2") || ("${memberView.memType}" == "2")){
          $("#attachmentTab").show();
+         $('#emergencyTabHeader').show();
+         $('#emergencyTabDetails').show();
          if( "${memberView.atchFileGrpIdDoc}" != 0 &&  "${memberView.atchFileGrpIdDoc}" != null){
-
         	 fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
 
       }
-     }
+     }else{
+         if( "${memberView.atchFileGrpIdDoc}" != 0 &&  "${memberView.atchFileGrpIdDoc}" != null){
+             fn_loadAtchment( "${memberView.atchFileGrpIdDoc}");
+             $("#attachmentTab").show();
+         }else {
+             $("#attachmentTab").hide();
+         }
+       $('#emergencyTabHeader').hide();
+       $('#emergencyTabDetails').hide();
+   }
 
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S');
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S');
@@ -392,6 +418,7 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
+    doGetCombo('/common/selectCodeList.do', '17', '','cmbInitials', 'S' , '');
 
     /* if($("#traineeType").val() == "2" || $("#traineeType").val() == "3"){ //20-10-2021 - HLTANG - close for LMS project
         var groupCode  = {groupCode : $("#traineeType").val()};
@@ -845,6 +872,8 @@ function fn_setMemInfo(data){
 	    if(data.gender=="M"){
 	        $("#gender_m").prop("checked", true)
 	    }
+
+	    $("#cmbInitials").val(data.emrgcyCntcInit);
 
 	    $("#cmbRace option[value="+ data.c61 +"]").attr("selected", true);
 
@@ -2554,6 +2583,45 @@ function fn_removeFile(name){
                         </tbody>
                     </table>
                     <!-- table end -->
+
+                    <aside class="title_line" id="emergencyTabHeader"><!-- title_line start -->
+					<h2>Emergency Contact</h2>
+					</aside><!-- title_line end -->
+
+					<table class="type1" id="emergencyTabDetails"><!-- table start -->
+					<caption>table</caption>
+					<colgroup>
+					    <col style="width:150px" />
+					    <col style="width:*" />
+					    <col style="width:180px" />
+					    <col style="width:*" />
+					</colgroup>
+					<tbody>
+					<tr>
+					    <th scope="row"><spring:message code="sal.text.initial"/></th>
+					    <td colspan="3">
+					        <select class="w100p" id="cmbInitials" name="cmbInitials"></select>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Name</th>
+					    <td colspan="3">
+					        <input type="text" title="" id="emergencyCntcNm" name="emergencyCntcNm" placeholder="Emergency Contact Name" class="w100p" value="<c:out value="${memberView.emrgcyCntcName}"/>"  />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Contact No</th>
+					    <td>
+					        <input type="text" title="" placeholder="Numeric Only" class="w100p" id="emergencyCntcNo" name="emergencyCntcNo" maxlength="11" onKeyDown="fn_checkEmergencyCntcNo()"
+					        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;" value="<c:out value="${memberView.emrgcyCntcNo}"/>"/>
+					    </td>
+					    <th scope="row">Relationship</th>
+					    <td>
+					        <input type="text" title="" id="emergencyCntcRelationship" name="emergencyCntcRelationship" placeholder="Relationship" class="w100p" value="<c:out value="${memberView.emrgcyCntcRltshp}"/>"/>
+					    </td>
+					</tr>
+					</tbody>
+					</table><!-- table end -->
 
                     <!-- title_line start -->
                     <aside id="trConsignTitle" class="title_line">

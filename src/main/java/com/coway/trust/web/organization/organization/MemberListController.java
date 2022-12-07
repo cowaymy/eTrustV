@@ -1063,6 +1063,10 @@ public class MemberListController {
         // LaiKW - Comment starts here
         formMap.put("memberType", formMap.get("memberTypeUpd"));
         formMap.put("MemberID", formMap.get("MemberIDUpd"));
+        formMap.put("cmbInitials", params.get("cmbInitialsUpd"));
+        formMap.put("emergencyCntcNm", params.get("emergencyCntcNmUpd"));
+        formMap.put("emergencyCntcNo", params.get("emergencyCntcNoUpd"));
+        formMap.put("emergencyCntcRelationship", params.get("emergencyCntcRelationshipUpd"));
         // LaiKW - Comment ends here
 
         String memCode = "";
