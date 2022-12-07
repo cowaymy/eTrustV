@@ -99,7 +99,19 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         else if(ordMemInfo == null){
-        	throw new ApplicationException(AppConstants.FAIL, "This order is not valid for membership");
+
+        	int errorCode = 0;
+        	String errorHeader = null;
+        	String errorMsg = null;
+
+        	errorCode = 99;
+        	errorHeader = "End of Membership";
+        	errorMsg = "This order is not valid for membership";
+
+            rtn.setErrorCode(errorCode);
+            rtn.setErrorHeader(errorHeader);
+            rtn.setErrorMsg(errorMsg);
+
         }
 
         else {
