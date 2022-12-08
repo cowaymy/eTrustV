@@ -78,4 +78,6 @@ public interface CcpCalculateService {
 
 	int getMemberID(Map<String, Object> params);
 
+	EgovMap selectOwnPurchaseInfo(Object object) throws Exception;
+
 }
