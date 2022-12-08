@@ -93,7 +93,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         eSVMApiDto rtn = new eSVMApiDto();
         EgovMap ordMemInfo = eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)); // fn_getDataInfo
 
-        if(svmOrdDet.isEmpty()) {
+        if(svmOrdDet == null  || svmOrdDet.isEmpty()) {
             throw new ApplicationException(AppConstants.FAIL, "No order found or this order is not under complete status or activation status");
 
         }
@@ -105,7 +105,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         	String errorMsg = null;
 
         	errorCode = 99;
-        	errorHeader = "End of Membership";
+        	errorHeader = "Warning";
         	errorMsg = "This order is not valid for membership";
 
             rtn.setErrorCode(errorCode);
