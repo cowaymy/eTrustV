@@ -1442,4 +1442,9 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectCcpStusHistList(Map<String, Object> params) {
 		return ccpCalculateMapper.selectCcpStusHistList(params);
 	}
+
+	@Override
+	public EgovMap selectOwnPurchaseInfo(Object params) throws Exception {
+		return ccpCalculateMapper.selectOwnPurchaseInfo(params);
+	}
 }
