@@ -140,4 +140,7 @@ public interface CcpCalculateMapper {
 	String getEzyDocNo();
 
     EgovMap getExisitngOrderId(Map<String, Object> params) throws Exception;
+
+    EgovMap selectOwnPurchaseInfo(Object params) throws Exception;
+
 }
