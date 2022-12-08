@@ -52,7 +52,8 @@
                 {dataField :"packType",  headerText : "<spring:message code="pay.head.package" />",    width: 100, editable : false },
                 {dataField :"discPeriod", headerText : "<spring:message code="pay.head.discountPeriod" />",  width: 100, editable : false },
                 {dataField :"advPeriod", headerText : "Advance Period",  width: 150, editable : false },
-                {dataField :"packPrice", headerText : "<spring:message code="sal.text.packPrice" />",  width: 150, editable : false },
+                {dataField :"packPrice", headerText : "<spring:message code="sal.text.packPrice" />",  width: 150, editable : false , visible : false},
+                {dataField :"totalAmt", headerText : "<spring:message code="sal.text.packPrice" />",  width: 150, editable : false },
                 {dataField :"billType",  headerText : "billType", width: 140 ,editable : false, visible : false}
      ];
 
@@ -81,6 +82,7 @@
           $("#discount").val(result[0].discPeriod);
           $("#advStartDt").val(result[0].advStartDt);
           $("#advEndDt").val(result[0].advEndDt);
+          result[0].totalAmt = parseFloat(result[0].totalAmt).toFixed(2);
 
           AUIGrid.setGridData(proFormaGridID, result);
 
@@ -200,7 +202,7 @@
      var ordCount = totalPriceAllItems.length;
      if(totalPriceAllItems.length > 0){
          for (var i = 0 ; i < totalPriceAllItems.length ; i++){
-             totalPackPrice += parseFloat(totalPriceAllItems[i].packPrice);
+             totalPackPrice += parseFloat(totalPriceAllItems[i].totalAmt);
          }
      }
 
