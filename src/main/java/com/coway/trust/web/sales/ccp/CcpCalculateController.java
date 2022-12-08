@@ -31,6 +31,7 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
@@ -72,6 +73,9 @@ public class CcpCalculateController {
 
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
+
+	@Resource(name = "memberListService")
+	private MemberListService memberListService;
 
 	@Autowired
 	private AdaptorService adaptorService;
@@ -152,7 +156,7 @@ public class CcpCalculateController {
 	public String selectCalCcpViewEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
 		LOGGER.info("############################################################");
-		LOGGER.info("############ CalCcpViewEditPop Params Confirm : " + params.toString());
+		LOGGER.info("############ CalCcpViewEditPop Params Confirm: " + params.toString());
 		LOGGER.info("############################################################");
 
 		//Log Service
@@ -170,9 +174,36 @@ public class CcpCalculateController {
     	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
 
-
     	EgovMap tempMap = null;
     	tempMap = (EgovMap)orderDetail.get("basicInfo");
+
+    	// START selectOwnPurchaseInfo
+    	if(tempMap.get("memInfo") != null){
+    		EgovMap ownPurcInfo = ccpCalculateService.selectOwnPurchaseInfo(tempMap.get("custNric"));
+        	model.addAttribute("ownPurchaseInfo", ownPurcInfo);
+    		LOGGER.info("ownPurcInfo: " + ownPurcInfo);
+
+          	if (ownPurcInfo != null){
+
+          		// to get join period in years and months
+          		if (ownPurcInfo.get("joinPeriod") != null){
+          			BigDecimal joinPeriod = (BigDecimal)ownPurcInfo.get("joinPeriod");
+          	      	int months = joinPeriod.intValue();
+          	      	int years = months /12;
+          	      	int remainMonth = months % 12;
+          	    	model.addAttribute("joinYear", years);
+
+          	    	if(months > 12){
+          	    		model.addAttribute("joinMonth", remainMonth);
+          	    	} else {
+          	    		model.addAttribute("joinMonth", months);
+          	    		}
+          		}
+          	}
+    	}
+
+      	// END selectOwnPurchaseInfo
+
 
     	BigDecimal tempIntval = (BigDecimal)tempMap.get("custTypeId");
 
