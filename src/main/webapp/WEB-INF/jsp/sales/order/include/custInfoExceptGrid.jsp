@@ -22,12 +22,8 @@
     </span></td>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><span>${orderDetail.basicInfo.custName}</span></td>
-    <c:if test="${not empty orderDetail.basicInfo.memInfo}">
-    <th scope="row">Organization Type</th>
-    <td><span>${ownPurchaseInfo.code}</span></td>
-    <th scope="row">Organization Status</th>
-    <td><span>${ownPurchaseInfo.memStus}</span></td>
-    </c:if>
+    <td>
+    <td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.custType" /></th>
@@ -36,10 +32,6 @@
     <td><span>${orderDetail.basicInfo.custNric} (${orderDetail.basicInfo.custAge})</span></td>
     <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
-    <c:if test="${not empty orderDetail.basicInfo.memInfo}">
-    <td></td>
-    <td></td>
-    </c:if>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.nationality" /></th>
@@ -48,10 +40,6 @@
     <td><span>${orderDetail.basicInfo.custGender}</span></td>
     <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${orderDetail.basicInfo.custRace}</span></td>
-    <c:if test="${not empty orderDetail.basicInfo.memInfo}">
-    <td></td>
-    <td></td>
-    </c:if>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
@@ -60,10 +48,6 @@
     <td><span>${orderDetail.basicInfo.custPassportExpr}</span></td>
     <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td><span>${orderDetail.basicInfo.custVisaExpr}</span></td>
-    <c:if test="${not empty orderDetail.basicInfo.memInfo}">
-    <td></td>
-    <td></td>
-    </c:if>
 </tr>
 <c:if test="${not empty orderDetail.basicInfo.memInfo}">
 <tr>
@@ -73,10 +57,6 @@
     <td><span>${ownPurchaseInfo.code}</span></td>
     <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td><span>${ownPurchaseInfo.memCode}</span></td>
-    <c:if test="${not empty orderDetail.basicInfo.memInfo}">
-    <td></td>
-    <td></td>
-    </c:if>
 </tr>
 <tr>
     <th scope="row">Joined Date</th>
@@ -91,10 +71,6 @@
     </td>
     <th scope="row">Member Status</th>
     <td><span>${ownPurchaseInfo.memStus}</span></td>
-    <c:if test="${not empty orderDetail.basicInfo.memInfo}">
-    <td></td>
-    <td></td>
-    </c:if>
 </tr>
 <tr>
     <th scope="row">SHI</th>
@@ -104,9 +80,8 @@
 <c:if test="${not empty orderDetail.basicInfo.memInfo}">
     <td></td>
     <td></td>
-    <td></td>
-    <td></td>
-    </c:if></tr>
+</c:if>
+</tr>
 </c:if>
 </tbody>
 </table><!-- table end -->
