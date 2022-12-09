@@ -2034,6 +2034,25 @@ public class ReportBatchController {
     LOGGER.info("[END] dailyDeductionRaw...");
   }
 
+  @RequestMapping(value = "/DailyPotentialCn.do")
+//@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  public void dailyPotentialCn() {
+	LOGGER.info("[START] dailyPotentialCn...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/DailyPotentialCNList.rpt");// visualcut
+                                                                        // rpt
+                                                                        // file
+                                                                        // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+            "Daily Rental Collection" + File.separator + "DailyPotentialCNList_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] dailyPotentialCn...");
+  }
+
+
   @RequestMapping(value = "/ColorGrid_Daily.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily() {
