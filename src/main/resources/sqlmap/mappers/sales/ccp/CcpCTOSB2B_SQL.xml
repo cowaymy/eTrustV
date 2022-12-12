@@ -198,4 +198,12 @@
     WHERE IND = 'CCP_AGE'
 </update>
 
+<select id="getCurrentAgeGroup" parameterType="Map" resultType="egovMap">
+    SELECT
+        CODE, TO_CHAR(UPD_DT,'DD/MM/YYYY HH:MI:SS AM') UPD_DT, USER_NAME
+    FROM SYS0094M S94
+    JOIN SYS0047M S47 ON S47.USER_ID = S94.UPD_BY
+    WHERE IND = 'CCP_AGE'
+</select>
+
 </mapper>

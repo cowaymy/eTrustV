@@ -33,4 +33,6 @@ public interface CcpCTOSB2BMapper {
 	List<EgovMap> selectAgeGroupList(Map<String, Object> params);
 
 	int updateAgeGroup(Map<String, Object> params);
+
+	EgovMap getCurrentAgeGroup(Map<String, Object> params)throws Exception;
 }

@@ -10,20 +10,14 @@
 </style>
 <script type="text/javascript">
 
-var ItmOption = {
-        type : "S",
-        isCheckAll : false
-};
-
-
 function fn_save() {
 	console.log($('#form').serializeJSON());
 
 	if($('#towerChannel').val() == ''){
 	    Common.alert("Please select one option.");
 	}
-	else if($('#ageGroup').val() == ''){
-        Common.alert("Please select one option.");
+	else if(FormUtil.isEmpty($("#ageGroup").val())){
+        Common.alert("Please key in Age Group");
     }
 	else{
 		Common.ajax("GET", "/sales/ccp/updateCurrentTower.do", $('#form').serializeJSON(), function(result) {
@@ -40,7 +34,12 @@ function fn_closePop() {
 
 $(document).ready(function(){
 	doGetComboData('/common/selectCodeList.do', {groupCode:'539',orderValue:'CODE'}, '${currentTower.code}', 'towerChannel', 'S');
-	 CommonCombo.make('ageGroup', "/sales/ccp/selectAgeGroupList.do", null , '', ItmOption);
+
+	$("#ageGroup").unbind().bind("keyup", function(){
+	    $(this).val($(this).val().replace(/[^0-9]/g,""));
+	});
+
+
 });
 
 
@@ -67,7 +66,7 @@ $(document).ready(function(){
 
 <tbody>
  <th scope="row">Age Group Pick-up For CTOS</th>
-      <td><select class="w100p" id="ageGroup"  name="ageGroup"></td>
+    <td> <input type="text" id="ageGroup" name="ageGroup" class="w100p" value='${currentAgeGroup.code}'></td>
 </tr>
 
 <tr>

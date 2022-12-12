@@ -27,4 +27,6 @@ public interface CcpCTOSB2BService {
 	int  updateAgeGroup(Map<String, Object> params);
 
 	List<EgovMap> selectAgeGroupList(Map<String, Object> params);
+
+	EgovMap getCurrentAgeGroup(Map<String, Object> params)throws Exception;
 }

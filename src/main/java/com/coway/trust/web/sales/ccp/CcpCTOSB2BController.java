@@ -230,6 +230,9 @@ public class CcpCTOSB2BController {
 		  EgovMap currentTower = ccpCTOSB2BService.getCurrentTower(params);
 		  model.put("currentTower", currentTower);
 
+		  EgovMap currentAgeGroup = ccpCTOSB2BService.getCurrentAgeGroup(params);
+		  model.put("currentAgeGroup", currentAgeGroup);
+
 		  System.out.println(model);
         return "sales/ccp/ccpSwitchTower";
     }
