@@ -52,11 +52,13 @@ $(document).ready(function() {
 	});
 
 	$('#btnAddThirdPartyCust').click(function() {
-       Common.popupWin("searchForm",
-           "/sales/customer/customerRegistPop.do", {
-             width : "1200px",
-             height : "630x"
-       });
+//        Common.popupDiv("searchForm",
+//            "/sales/customer/customerRegistPop.do", {
+//              width : "1200px",
+//              height : "630x"
+//        });
+
+       Common.popupDiv("/sales/customer/customerRegistPop.do", null, null, true);
     });
 
 	$('#btnThirdPartyCustSearch').click(function() {
