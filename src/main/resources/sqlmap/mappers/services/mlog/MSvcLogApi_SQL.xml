@@ -2795,7 +2795,10 @@ SELECT MST.*
                      TRUNC (S.ACC_DEBT_SUB_CURR_COLCT, 2) + TRUNC (S.ACC_DEBT_SUB_CURR_ADJ, 2) AMT,
                      A.ACC_DEBT_ORD_TRGET_CODY_ID MEM_ID,
                      TRUNC (A.ACC_DEBT_COLCT_UPD_DT) UPD_DT,
-                     B.MEM_CODE
+                     B.MEM_CODE,
+                     NVL(AD.CRT_DT_DD,'-')  deduct_dt,
+		             NVL(AD.BANK_DTL_APPR_CODE, '-') status_code,
+		             NVL(AD.CODE_NAME,'-') status
             FROM PAY0052S A
             JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.ACC_DEBT_ORD_ID
                            AND S.ACC_DEBT_SRV_CNTRCT_ID = A.ACC_DEBT_SRV_CNTRCT_ID
@@ -2849,6 +2852,36 @@ SELECT MST.*
       LEFT JOIN SAL0071D SC ON SC.SALES_ORD_ID = X.SALES_ORD_ID
       LEFT JOIN SAL0029D A ON A.CUST_ID = SOM.CUST_ID
       JOIN SAL0074D B ON B.SALES_ORD_ID = SOM.SALES_ORD_ID
+      LEFT JOIN (WITH autoDebit AS (
+	          SELECT
+	                ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY BANK_DTL_ID DESC) AS row_number
+	               , T1.BANK_DTL_ID
+	               , T1.SALES_ORD_ID
+	               , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') CRT_DT_DD
+	               , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
+	                                , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
+	                                WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
+	                                WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+	                                WHEN T4.IND = 'EXPCARD' THEN 'Expired Card'
+	                                WHEN T4.IND = 'CDOPTIN' THEN 'Card to Opt In'
+	                                WHEN T4.IND = 'CHGCARD' THEN
+	                                                            CASE WHEN T2.CTRL_IS_CRC = 1 THEN
+	                                                                CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Refer to Issuer Bank' END
+	                                                            ELSE  'Change Account' END
+	                                WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+	                                ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
+	            FROM PAY0042D T1
+	                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND 8 != T2.CTRL_STUS_ID
+	                LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW','CDOPTIN','EXPCARD')
+	                JOIN PAY0052S T5 ON T1.SALES_ORD_ID = T5.ACC_DEBT_ORD_ID
+	                JOIN ORG0001D T6 ON T5.ACC_DEBT_ORD_TRGET_CODY_ID = T6.MEM_ID
+	            WHERE T6.MEM_CODE = 'CD116593'
+	            ORDER BY T1.SALES_ORD_ID , T1.BANK_DTL_ID DESC
+	        )
+	        SELECT
+	            BANK_DTL_ID, SALES_ORD_ID,CRT_DT_DD, BANK_DTL_APPR_CODE, CODE_NAME
+	        FROM autoDebit
+            WHERE row_number = 1) AD ON AD.SALES_ORD_ID = X.SALES_ORD_ID
       WHERE 1 = 1
         AND X.MEM_CODE = #{userId}
     ]]>
