@@ -109,8 +109,10 @@ public interface eSVMApiMapper {
 
     EgovMap getMemberLevel(Map<String, Object> param);
 
-    EgovMap selectEosEomDt(Map<String, Object> params);
+    EgovMap selectEomDt(Map<String, Object> params);
 
     EgovMap selectConfigEosEomDur(Map<String, Object> params);
+
+    EgovMap selectMembershipExpiryDt(Map<String, Object> params);
 
 }

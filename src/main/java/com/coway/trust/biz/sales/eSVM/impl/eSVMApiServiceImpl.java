@@ -487,6 +487,12 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         eSVMApiDto rtn = new eSVMApiDto();
         Map<String, Object> preInsMap = new HashMap<String, Object>();
 
+        // Membership checking for Package ID = 9 when itemSrvMemExprDt = null
+        if(param.getSvmAllowFlg().equals(false) && param.getSrvMemPacId().equals("9"))
+        {
+        	throw new ApplicationException(AppConstants.FAIL, "The order is too early to subscribe for SVM.");
+        }
+
         // MembershipQuotationServiceImpl.insertQuotationInfo
         boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
         boolean boolZeroRat = "Y".equals(param.getZeroRatYn()) ? true : false;
@@ -1166,49 +1172,86 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
 
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    	EgovMap itemEosEomDt = eSVMApiMapper.selectEosEomDt(eSVMApiForm.createMap(param));
-    	EgovMap configEosEomDurMth = eSVMApiMapper.selectConfigEosEomDur(eSVMApiForm.createMap(param));
+    	EgovMap itemEomDt = eSVMApiMapper.selectEomDt(eSVMApiForm.createMap(param));
+    	EgovMap itemSrvMemExprDt = eSVMApiMapper.selectMembershipExpiryDt(eSVMApiForm.createMap(param));
+    	EgovMap configMemExpEomDurMth = eSVMApiMapper.selectConfigEosEomDur(eSVMApiForm.createMap(param));
 
-    	int configEosDurMth = Integer.parseInt(configEosEomDurMth.get("svmEos").toString());
-    	int configEomDurMth =Integer.parseInt(configEosEomDurMth.get("svmEom").toString());
+    	int configMemExpMth = Integer.parseInt(configMemExpEomDurMth.get("svmMemExp").toString());
+    	int configEomDurMth =Integer.parseInt(configMemExpEomDurMth.get("svmEom").toString());
 
 
     	LocalDate today = LocalDate.now();
-    	LocalDate prdEosDt = null;
-    	LocalDate prdEomDt = null;
-    	Boolean svmAllowFlg = true;
+    	LocalDate srvMemExprDt = null;
+    	LocalDate srvPrdEomDt = null;
+    	Boolean svmAllowFlg = true; // for Service membership when null, pass to front end for checking
     	int errorCode = 0;
     	String errorHeader = null;
     	String errorMsg = null;
 
-    	if(itemEosEomDt != null)
+    	//Check for service membership
+    	if(itemSrvMemExprDt != null)
     	{
-    		prdEosDt = LocalDate.parse(itemEosEomDt.get("eosDate").toString());
-    		prdEomDt = LocalDate.parse(itemEosEomDt.get("eomDate").toString());
+    		srvMemExprDt = LocalDate.parse(itemSrvMemExprDt.get("srvMemExprDt").toString());
+    		int diffSrvMemExpr = Months.monthsBetween(today, srvMemExprDt).getMonths();
 
-    		/*Period periodEos = Period.between(prdEosDt, today);
+			if(diffSrvMemExpr > configMemExpMth) //Membership expiration date more than 6 months
+			{
+            	errorCode = 99;
+            	errorHeader = "Early Subscription > " + configMemExpMth + " months";
+            	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";
+			}
+    	}
+    	else
+    	{
+    		//When membership is null, need to pass a flag to Save button action to check if srvMemPacId is it equals to 9
+    		svmAllowFlg = false;
+    		/*errorCode = 99;
+        	errorHeader = "Early Subscription > " + configMemExpMth + " months";
+        	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";*/
+    	}
+
+    	// Check for EOM
+    	if(itemEomDt != null)
+    	{
+    		srvPrdEomDt = LocalDate.parse(itemEomDt.get("eomDate").toString());
+    		int diffSrvPrdEom = Months.monthsBetween(today, srvPrdEomDt).getMonths();
+
+			if(diffSrvPrdEom < configEomDurMth)
+			{
+            	errorCode = 99;
+            	errorHeader = "End of Membership";
+            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
+			}
+    	}
+
+    	/*if(itemEomDt != null)
+    	{
+    		prdEosDt = LocalDate.parse(itemEomDt.get("eosDate").toString());
+    		prdEomDt = LocalDate.parse(itemEomDt.get("eomDate").toString());
+
+    		Period periodEos = Period.between(prdEosDt, today);
             Period periodEom = Period.between(prdEomDt, today);
             int diffEos = Math.abs(periodEos.getMonths());
-            int diffEom = Math.abs(periodEom.getMonths());*/
+            int diffEom = Math.abs(periodEom.getMonths());
 
     		int diffEos = Months.monthsBetween(today, prdEosDt).getMonths();
     		int diffEom = Months.monthsBetween(today, prdEomDt).getMonths();
 
-            if(diffEos > configEosDurMth)
+            if(diffEos > configMemExpMth)
             {
             	svmAllowFlg = false;
             	errorCode = 99;
-            	errorHeader = "Early Subscription > " + configEosDurMth + " months";
-            	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configEosDurMth + " months period from the order expired date.";
+            	errorHeader = "Early Subscription > " + configMemExpMth + " months";
+            	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";
             }
-            else if(diffEos <= configEosDurMth && diffEom < configEomDurMth )
+            else if(diffEos <= configMemExpMth && diffEom < configEomDurMth )
             {
             	svmAllowFlg = false;
             	errorCode = 99;
             	errorHeader = "End of Membership";
             	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
             }
-    	}
+    	}*/
 
         eSVMApiDto rtn = new eSVMApiDto();
         rtn.setSvmAllowFlg(svmAllowFlg);
