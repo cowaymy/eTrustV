@@ -1099,7 +1099,7 @@
     </select>
 
     <!-- CELESTE [S] SVM SUBSCRIPTION ELIGIBILITY -->
-    <select id="selectEosEomDt" parameterType="Map" resultType="egovMap">
+    <select id="selectEomDt" parameterType="Map" resultType="egovMap">
         SELECT
             A.SALES_ORD_ID,
             A.SALES_ORD_NO,

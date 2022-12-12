@@ -1173,6 +1173,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     	EgovMap itemEomDt = eSVMApiMapper.selectEomDt(eSVMApiForm.createMap(param));
+    	param.setSalesOrdId(Integer.parseInt(itemEomDt.get("salesOrdId").toString()));
     	EgovMap itemSrvMemExprDt = eSVMApiMapper.selectMembershipExpiryDt(eSVMApiForm.createMap(param));
     	EgovMap configMemExpEomDurMth = eSVMApiMapper.selectConfigEosEomDur(eSVMApiForm.createMap(param));
 
