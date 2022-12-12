@@ -10,13 +10,22 @@
 </style>
 <script type="text/javascript">
 
+var ItmOption = {
+        type : "S",
+        isCheckAll : false
+};
+
 
 function fn_save() {
 	console.log($('#form').serializeJSON());
 
 	if($('#towerChannel').val() == ''){
 	    Common.alert("Please select one option.");
-	}else{
+	}
+	else if($('#ageGroup').val() == ''){
+        Common.alert("Please select one option.");
+    }
+	else{
 		Common.ajax("GET", "/sales/ccp/updateCurrentTower.do", $('#form').serializeJSON(), function(result) {
 	        Common.alert("Saved",function(){fn_closePop()});
 	    });
@@ -31,6 +40,7 @@ function fn_closePop() {
 
 $(document).ready(function(){
 	doGetComboData('/common/selectCodeList.do', {groupCode:'539',orderValue:'CODE'}, '${currentTower.code}', 'towerChannel', 'S');
+	 CommonCombo.make('ageGroup', "/sales/ccp/selectAgeGroupList.do", null , '', ItmOption);
 });
 
 
@@ -40,7 +50,7 @@ $(document).ready(function(){
 <form id="form">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP - Switch Tower</h1>
+<h1>CCP - Config Tower</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="ccpSwitchTowerClose" href="#">CLOSE</a></p></li>
 </ul>
@@ -56,8 +66,12 @@ $(document).ready(function(){
 </colgroup>
 
 <tbody>
+ <th scope="row">Age Group Pick-up For CTOS</th>
+      <td><select class="w100p" id="ageGroup"  name="ageGroup"></td>
+</tr>
+
 <tr>
-    <th scope="row">Tower Channel</th>
+    <th scope="row">Switch CRA Channel</th>
     <td>
         <select id="towerChannel" name="towerChannel" class="w100p"></select>
     </td>

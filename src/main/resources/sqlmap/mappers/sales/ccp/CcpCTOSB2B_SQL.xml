@@ -185,4 +185,17 @@
     WHERE IND = 'CCP_FLAG'
 </update>
 
+ <select id="selectAgeGroupList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT  (LEVEL + 24) CODE_ID , TO_CHAR((LEVEL + 24)) || ' ' || chr(38) || ' Below' CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 11
+      ]]>
+  </select>
+
+  <update id="updateAgeGroup" parameterType="Map">
+    UPDATE SYS0094M
+        SET CODE = ${ageGroup}, UPD_DT = SYSDATE, UPD_BY = ${userId}
+    WHERE IND = 'CCP_AGE'
+</update>
+
 </mapper>

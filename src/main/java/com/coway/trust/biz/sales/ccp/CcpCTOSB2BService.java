@@ -23,4 +23,8 @@ public interface CcpCTOSB2BService {
 	EgovMap getCurrentTower(Map<String, Object> params)throws Exception;
 
 	int  updateCurrentTower(Map<String, Object> params);
+
+	int  updateAgeGroup(Map<String, Object> params);
+
+	List<EgovMap> selectAgeGroupList(Map<String, Object> params);
 }

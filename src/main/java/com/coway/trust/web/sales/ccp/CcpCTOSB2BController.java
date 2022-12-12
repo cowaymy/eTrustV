@@ -240,15 +240,34 @@ public class CcpCTOSB2BController {
       System.out.println(params);
 
       params.put("userId", sessionVO.getUserId());
-      ccpCTOSB2BService.updateCurrentTower(params);
+      int result =ccpCTOSB2BService.updateCurrentTower(params);
+      int result2 = ccpCTOSB2BService.updateAgeGroup(params);
 
       ReturnMessage message = new ReturnMessage();
-      message.setCode(AppConstants.SUCCESS);
-      message.setData("");
-      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+      if(result >0 && result2>0){
+          message.setCode(AppConstants.SUCCESS);
+          message.setData("");
+          message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+      }
+      else{
+    	  message.setCode(AppConstants.FAIL);
+          message.setData("");
+          message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+      }
+
+
 
       return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/selectAgeGroupList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectAgeGroupList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        List<EgovMap> ageGroupList = ccpCTOSB2BService.selectAgeGroupList(params);
+
+        return ResponseEntity.ok(ageGroupList);
+     }
 
 
 }

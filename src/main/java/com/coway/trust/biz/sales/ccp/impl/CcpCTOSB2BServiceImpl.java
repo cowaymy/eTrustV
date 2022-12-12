@@ -192,5 +192,15 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 	    return ccpCTOSB2BMapper.updateCurrentTower(params);
 	  }
 
+	  @Override
+	  public List<EgovMap> selectAgeGroupList(Map<String, Object> params) {
+	    return ccpCTOSB2BMapper.selectAgeGroupList(params);
+	 }
+
+	  @Override
+	  public int  updateAgeGroup(Map<String, Object> params) {
+		    return ccpCTOSB2BMapper.updateAgeGroup(params);
+	  }
+
 
 }
