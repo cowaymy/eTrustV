@@ -54,6 +54,20 @@ $(document).ready(function() {
     	window.close();
 	});
 
+    var firstDateCalled = "${ccpInfoMap.firstCallDt}";
+
+   if(firstDateCalled != null && firstDateCalled != '' && "${SESSION_INFO.roleId}" != "206"){
+    	$("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
+        $("#firstCallDate").attr("class", "w100p readonly");
+    	$("#firstCallDate").attr("readonly", "readonly");
+    }else{
+    	$("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
+    }
+
+    $("#custIsPayerValue").val("${ccpInfoMap.custIsPayer}");
+    $("#thePayerValue").val("${ccpInfoMap.thePayer}");
+    $("#failVeriReasonValue").val("${ccpInfoMap.failVerRsn}");
+
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
      console.log("chsStatus : "+ chsStatus);
@@ -1580,6 +1594,44 @@ function chgTab(tabNm) {
         <option value="36">36</option>
         <option value="48">48</option>
         <option value="60">60</option>
+    </select>
+    </td>
+    <th scope="row">First Call Date</th>
+    <td colspan="3">
+    <input type="text" title="First Call Date"  placeholder="DD/MM/YYYY"  class="j_date"  id="firstCallDate" name="firstCallDate"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Customer Is Payer</th>
+    <td>
+    <select class="w100p" id="custIsPayerValue" name="custIsPayerValue">
+        <option value="" selected>Choose One</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+    </td>
+    <th scope="row">The Payer</th>
+    <td>
+    <select class="w100p" id="thePayerValue" name="thePayerValue">
+    <option value="" selected>Choose One</option>
+        <option value="7213">PIBG</option>
+        <option value="7214">PARENTS</option>
+        <option value="7215">KOPERASI</option>
+        <option value="7216">TEACHER(PERSONAL ACCOUNT)</option>
+        <option value="7217">THIRD PARTY COMPANY</option>
+        <option value="7218">SCHOOL ALUMNI</option>
+    </select>
+    </td>
+        <th scope="row">Failed Verification Reason</th>
+    <td>
+    <select class="w100p" id="failVeriReasonValue" name="failVeriReasonValue">
+	    <option value="" selected>Choose One</option>
+	        <option value="7219">SPONSOR</option>
+	        <option value="7220">RETURN TO SCORER</option>
+	        <option value="7221">UNREACHABLE</option>
+	        <option value="7222">CUSTOMER REQUEST CANCEL</option>
+	        <option value="7223">CUSTOMER CHANGE DETAILS</option>
+	    </select>
     </select>
     </td>
 </tr>

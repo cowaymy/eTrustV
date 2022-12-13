@@ -844,7 +844,11 @@ SELECT Extent1.CCP_ID   ,
        Extent9.CHS_STUS ,
        Extent9.CHS_RSN,
        CASE WHEN ( 1 = Extent1.CCP_AGM_REQ ) THEN 1 ELSE 0 END CCP_AGM_REQ  ,
-       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE
+       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE ,
+       TO_CHAR(Extent1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT,
+       Extent1.CUST_IS_PAYER ,
+       Extent1.THE_PAYER ,
+       Extent1.FAIL_VER_RSN
   FROM SAL0102D Extent1
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
          LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
@@ -950,7 +954,11 @@ SELECT Extent1.CCP_ID   ,
                    CCP_EXPERIANS = #{experianScore},
                    CCP_EXPERIANR = #{experianRisk},
                    CCP_AGM_REQ = #{agmReq},
-                   CCP_TEMPLATE = #{cowayTemplate}
+                   CCP_TEMPLATE = #{cowayTemplate},
+                   FIRST_CALL_DT = #{firstCallDate},
+	               CUST_IS_PAYER = #{custIsPayerValue},
+	               THE_PAYER = #{thePayerValue},
+	               FAIL_VER_RSN = #{failVeriReasonValue}
             WHERE
                    CCP_ID = #{saveCcpId}
 </update>
@@ -1487,7 +1495,11 @@ AND T1.CNT = 1
        Extent9.CHS_STUS ,
        Extent9.CHS_RSN,
        CASE WHEN ( 1 = Extent1.CCP_AGM_REQ ) THEN 1 ELSE 0 END CCP_AGM_REQ  ,
-       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE
+       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE ,
+       TO_CHAR(Extent1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT,
+       Extent1.CUST_IS_PAYER ,
+       Extent1.THE_PAYER ,
+       Extent1.FAIL_VER_RSN
   FROM SAL0102D Extent1
   JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
                                     MAX(Extent2.CCP_ID)  A1
@@ -1915,6 +1927,10 @@ AND T1.CNT = 1
                 , CRT_USER_ID
                 , UPD_DT
                 , UPD_USER_ID
+                , FIRST_CALL_DT
+                , CUST_IS_PAYER
+                , THE_PAYER
+                , FAIL_VER_RSN
                 )
                 SELECT
                 SAL0328D_ID_SEQ.NEXTVAL
@@ -1927,6 +1943,10 @@ AND T1.CNT = 1
                 , CCP_UPD_USER_ID AS CRT_USER_ID
                 , CCP_UPD_DT AS UPD_DT
                 , CCP_UPD_USER_ID AS UPD_USER_ID
+                , FIRST_CALL_DT
+                , CUST_IS_PAYER
+                , THE_PAYER
+                , FAIL_VER_RSN
                 FROM SAL0102D
                 WHERE CCP_SALES_ORD_ID = #{saveOrdId} AND CCP_ID = #{saveCcpId}
     </insert>
@@ -1943,11 +1963,17 @@ AND T1.CNT = 1
                 , SYS1.USER_NAME AS CREATED_BY
                 , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY HH:MI:SS AM') AS UPDATE_DATE
                 , SYS2.USER_NAME AS UPDATED_BY
+                , TO_CHAR(EXT1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT
+                , EXT1.CUST_IS_PAYER
+                , SYS5.CODE_NAME AS THE_PAYER_VAL
+                , SYS6.CODE_NAME AS FAIL_VER_RSN_VAL
         FROM SAL0328D EXT1
         LEFT JOIN SYS0047M SYS1 ON SYS1.USER_ID = EXT1.CRT_USER_ID
         LEFT JOIN SYS0047M SYS2 ON SYS2.USER_ID = EXT1.UPD_USER_ID
         LEFT JOIN SYS0032M SYS3 ON SYS3.RESN_ID = EXT1.CCP_RESN_ID
         LEFT JOIN SYS0038M SYS4 ON SYS4.STUS_CODE_ID = EXT1.STUS_ID
+        LEFT JOIN SYS0013M SYS5 ON SYS5.CODE_ID = EXT1.THE_PAYER AND SYS5.CODE_MASTER_ID = '541'
+        LEFT JOIN SYS0013M SYS6 ON SYS6.CODE_ID = EXT1.FAIL_VER_RSN AND SYS6.CODE_MASTER_ID = '542'
         WHERE SALES_ORD_ID = #{salesOrderId}
         ORDER BY 1
     </select>

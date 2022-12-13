@@ -37,6 +37,11 @@ $(document).ready(function() {
         $("#cancel_Pop").show();
     });
 
+    $("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
+    $("#custIsPayerValue").val("${ccpInfoMap.custIsPayer}");
+    $("#thePayerValue").val("${ccpInfoMap.thePayer}");
+    $("#failVeriReasonValue").val("${ccpInfoMap.failVerRsn}");
+
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
      console.log("chsStatus : "+ chsStatus);
@@ -95,6 +100,10 @@ $(document).ready(function() {
     $("#_reasonCodeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_spcialRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_pncRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+
+    $("#thePayerValue").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#failVeriReasonValue").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#custIsPayerValue").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
     //$("#_letterOfUdt").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     //$("#_summon").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -966,6 +975,46 @@ function chgTab(tabNm) {
     <td><span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate" <c:if test="${ccpInfoMap.ccpTemplate eq '1'}">checked</c:if> /></span></td>
     <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
     <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
+</tr>
+<tr>
+<th scope="row">First Call Date</th>
+    <td colspan="3">
+    <input type="text" title="First Call Date"  placeholder="DD/MM/YYYY"  class="w100p readonly"  id="firstCallDate" name="firstCallDate" readonly='readonly'/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Customer Is Payer</th>
+    <td>
+    <select class="w100p readonly" id="custIsPayerValue" name="custIsPayerValue"  readonly='readonly'>
+        <option value="" selected>Choose One</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+    </td>
+    <th scope="row">The Payer</th>
+    <td>
+    <select class="w100p readonly" id="thePayerValue" name="thePayerValue"  readonly='readonly'>
+    <option value="" selected>Choose One</option>
+        <option value="7213">PIBG</option>
+        <option value="7214">PARENTS</option>
+        <option value="7215">KOPERASI</option>
+        <option value="7216">TEACHER(PERSONAL ACCOUNT)</option>
+        <option value="7217">THIRD PARTY COMPANY</option>
+        <option value="7218">SCHOOL ALUMNI</option>
+    </select>
+    </td>
+        <th scope="row">Failed Verification Reason</th>
+    <td>
+    <select class="w100p readonly" id="failVeriReasonValue" name="failVeriReasonValue"  readonly='readonly'>
+        <option value="" selected>Choose One</option>
+            <option value="7219">SPONSOR</option>
+            <option value="7220">RETURN TO SCORER</option>
+            <option value="7221">UNREACHABLE</option>
+            <option value="7222">CUSTOMER REQUEST CANCEL</option>
+            <option value="7223">CUSTOMER CHANGE DETAILS</option>
+        </select>
+    </select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
