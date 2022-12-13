@@ -1212,7 +1212,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	}
 
     	// Check for EOM
-    	if(itemEomDt != null)
+    	if(itemEomDt.containsKey("eomDate") == true)
     	{
     		srvPrdEomDt = LocalDate.parse(itemEomDt.get("eomDate").toString());
     		int diffSrvPrdEom = Months.monthsBetween(today, srvPrdEomDt).getMonths();
