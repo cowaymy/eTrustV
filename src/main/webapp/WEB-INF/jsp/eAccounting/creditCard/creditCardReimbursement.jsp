@@ -922,8 +922,8 @@ function fn_checkCreditLimit(v) {
 	        {
 	            planAmt = result[0].availableAmt;
 	        }
-	        if($("#cardControlYN").val() == "Y")
-	        {
+// 	        if($("#cardControlYN").val() == "Y")
+// 	        {
 	            if(cntrlExp == "Y")
 	            {
 // 	                var totalExpAmtSmall = 0;
@@ -937,7 +937,7 @@ function fn_checkCreditLimit(v) {
 	                    limitFlg = false;
 	                }
 	            }
-	        }
+	        //}
 		//})
 	});
 	return limitFlg;
