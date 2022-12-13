@@ -2857,7 +2857,7 @@ SELECT MST.*
 	                ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY BANK_DTL_ID DESC) AS row_number
 	               , T1.BANK_DTL_ID
 	               , T1.SALES_ORD_ID
-	               , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') CRT_DT_DD
+	               , TO_CHAR(T2.CRT_DT, 'DD/MM/YY') CRT_DT_DD
 	               , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
 	                                , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
 	                                WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
