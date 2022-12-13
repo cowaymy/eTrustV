@@ -111,7 +111,7 @@ public interface eSVMApiMapper {
 
     EgovMap selectEomDt(Map<String, Object> params);
 
-    EgovMap selectConfigEosEomDur(Map<String, Object> params);
+    EgovMap selectConfigEomDur(Map<String, Object> params);
 
     EgovMap selectMembershipExpiryDt(Map<String, Object> params);
 
