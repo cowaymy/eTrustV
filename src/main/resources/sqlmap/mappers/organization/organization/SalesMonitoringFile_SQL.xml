@@ -358,14 +358,17 @@
 		                        WHERE 1 = 1
 		                        AND B.STK_CTGRY_ID NOT IN ('5706','5707')
 		                        AND E.MEM_TYPE = 1
+		                        <if test="memCode_HA != null and memCode_HA != ''">
+                                    AND A.MEM_CODE = #{memCode_HA}
+                                </if>
 		                        <if test='orgCode_HA != null and orgCode_HA != "" and orgorgCode_HACode != " "'>
-		                            AND UPPER(A.ORG_CODE) = UPPER(#{orgCode_HA})
+		                            AND A.ORG_CODE = #{orgCode_HA}
 		                        </if>
 		                        <if test='grpCode_HA != null and grpCode_HA != "" and grpCode_HA != " "'>
-		                            AND UPPER(A.GRP_CODE) = UPPER(#{grpCode_HA})
+		                            AND A.GRP_CODE = #{grpCode_HA}
 		                        </if>
 		                         <if test='deptCode_HA != null and deptCode_HA != "" and deptCode_HA != " "'>
-		                            AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode_HA})
+		                            AND A.DEPT_CODE = #{deptCode_HA}
 		                        </if>
 		                         <if test='netSalesMonth_HA == null or netSalesMonth_HA == "" or netSalesMonth_HA == " "'>
 		                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
@@ -489,14 +492,17 @@
                         WHERE 1 = 1
                         AND B.STK_CTGRY_ID IN ('5706')
                         AND E.MEM_TYPE = 1
+                         <if test="memCode_HC != null and memCode_HC != ''">
+                            AND A.MEM_CODE = #{memCode_HC}
+                         </if>
                         <if test='orgCode_HC != null and orgCode_HC != "" and orgCode_HC != " "'>
-                            AND UPPER(A.ORG_CODE) = UPPER(#{orgCode_HC})
+                            AND A.ORG_CODE =  #{orgCode_HC}
                         </if>
                         <if test='grpCode_HC != null and grpCode_HC != "" and grpCode_HC != " "'>
-                            AND UPPER(A.GRP_CODE) = UPPER(#{grpCode_HC})
+                            AND A.GRP_CODE = #{grpCode_HC}
                         </if>
                          <if test='deptCode_HC != null and deptCode_HC != "" and deptCode_HC != " "'>
-                            AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode_HC})
+                            AND A.DEPT_CODE = #{deptCode_HC}
                         </if>
                           <if test='netSalesMonth_HC == null or netSalesMonth_HC == "" or netSalesMonth_HC == " "'>
                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
@@ -619,16 +625,18 @@
                         LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
                         WHERE 1 = 1
                         AND E.MEM_TYPE = 1
+                        <if test="memCode_actHP != null and memCode_actHP != ''">
+                            AND A.MEM_CODE = #{memCode_actHP}
+                        </if>
                         <if test='orgCode_actHP != null and orgCode_actHP != "" and orgCode_actHP != " "'>
-                            AND UPPER(A.ORG_CODE) = UPPER(#{orgCode_actHP})
+                            AND A.ORG_CODE = #{orgCode_actHP}
                         </if>
                         <if test='grpCode_actHP != null and grpCode_actHP != "" and grpCode_actHP != " "'>
-                            AND UPPER(A.GRP_CODE) = UPPER(#{grpCode_actHP})
+                            AND A.GRP_CODE = #{grpCode_actHP}
                         </if>
                          <if test='deptCode_actHP != null and deptCode_actHP != "" and deptCode_actHP != " "'>
-                            AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode_actHP})
+                            AND A.DEPT_CODE = #{deptCode_actHP}
                         </if>
-
                         <if test='netSalesMonth_actHP == null or netSalesMonth_actHP == "" or netSalesMonth_actHP == " "'>
                            AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
                          </if>

@@ -3,42 +3,65 @@
 
 <script type="text/javascript">
 
+var orgCode = '${orgCode}';
+var grpCode = '${grpCode}';
+var deptCode = '${deptCode}';
+orgCode = orgCode.replace(/^\s+|\s+$/gm,'');
+grpCode = grpCode.replace(/^\s+|\s+$/gm,'');
+deptCode = deptCode.replace(/^\s+|\s+$/gm,'');
+var listMyGridID;
 
 $(document).ready(function() {
-
-    var listMyGridID;
-
+	bindData();
     createAUIGrid();
-
-   if("${memType}"== "1"){
-
-       if("${SESSION_INFO.memberLevel}" =="1"){
-          $("#orgCode_actHP").attr("class", "w100p readonly");
-          $("#orgCode_actHP").attr("readonly", "readonly");
-
-      }else if("${SESSION_INFO.memberLevel}" =="2"){
-          $("#orgCode_actHP").attr("class", "w100p readonly");
-          $("#orgCode_actHP").attr("readonly", "readonly");
-          $("#grpCode_actHP").attr("class", "w100p readonly");
-          $("#grpCode_actHP").attr("readonly", "readonly");
-
-      }else if("${SESSION_INFO.memberLevel}" =="3"){
-          $("#orgCode_actHP").attr("class", "w100p readonly");
-          $("#orgCode_actHP").attr("readonly", "readonly");
-
-          $("#grpCode_actHP").attr("class", "w100p readonly");
-          $("#grpCode_actHP").attr("readonly", "readonly");
-
-          $("#deptCode_actHP").attr("class", "w100p readonly");
-          $("#deptCode_actHP").attr("readonly", "readonly");
-      }
-
-       fn_selectSmfActHpListAjax();
-  }
-
+    fn_selectSmfActHpListAjax();
 });
 
+function bindData(){
+	   if("${memType}"== "1"){
 
+	       if("${SESSION_INFO.memberLevel}" =="1"){
+	          $("#orgCode_actHP").attr("class", "w100p readonly");
+	          $("#orgCode_actHP").attr("readonly", "readonly");
+	          $("#orgCode_actHP").val(orgCode);
+
+	      }else if("${SESSION_INFO.memberLevel}" =="2"){
+	          $("#orgCode_actHP").attr("class", "w100p readonly");
+	          $("#orgCode_actHP").attr("readonly", "readonly");
+	          $("#orgCode_actHP").val(orgCode);
+	          $("#grpCode_actHP").attr("class", "w100p readonly");
+	          $("#grpCode_actHP").attr("readonly", "readonly");
+	          $("#grpCode_actHP").val(grpCode);
+
+	      }else if("${SESSION_INFO.memberLevel}" =="3"){
+	          $("#orgCode_actHP").attr("class", "w100p readonly");
+	          $("#orgCode_actHP").attr("readonly", "readonly");
+	          $("#orgCode_actHP").val(orgCode);
+
+	          $("#grpCode_actHP").attr("class", "w100p readonly");
+	          $("#grpCode_actHP").attr("readonly", "readonly");
+	          $("#grpCode_actHP").val(grpCode);
+
+	          $("#deptCode_actHP").attr("class", "w100p readonly");
+	          $("#deptCode_actHP").attr("readonly", "readonly");
+	          $("#deptCode_actHP").val(deptCode);
+	      }
+	      else{
+	              $("#orgCode_actHP").attr("class", "w100p readonly");
+	              $("#orgCode_actHP").attr("readonly", "readonly");
+	              $("#orgCode_actHP").val(orgCode);
+
+	              $("#grpCode_actHP").attr("class", "w100p readonly");
+	              $("#grpCode_actHP").attr("readonly", "readonly");
+	              $("#grpCode_actHP").val(grpCode);
+
+	              $("#deptCode_actHP").attr("class", "w100p readonly");
+	              $("#deptCode_actHP").attr("readonly", "readonly");
+	              $("#deptCode_actHP").val(deptCode);
+	              $("#memCode_actHP").val("${SESSION_INFO.userName}");
+	          }
+	   }
+}
 
 $(function(){
     $('#btnSrch_actHP').click(function() {
@@ -115,19 +138,13 @@ function createAUIGrid() {
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_actHP", columnLayout, "", gridPros);
 
-//     if("${memType}"== "1"){
-//     	console.log("fffff");
-    	fn_selectSmfActHpListAjax();
-//     }
-
 }
 
 function fn_selectSmfActHpListAjax() {
         Common.ajax("GET", "/organization/selectSmfActHp.do", $("#form_actHP").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
-
-    }
+ }
 
 
 </script>
@@ -153,7 +170,7 @@ function fn_selectSmfActHpListAjax() {
 
 <section class="search_table mt10"><!-- search_table start -->
 <form action="#" method="post" id="form_actHP" name="form_actHP">
-
+<input id="memCode_actHP" name="memCode_actHP"  type="hidden"  class="w100p" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -164,13 +181,13 @@ function fn_selectSmfActHpListAjax() {
 <tbody>
 <tr>
     <th scope="row">Org Code</th>
-    <td><input id="orgCode_actHP" name="orgCode_actHP" type="text" title="orgCode_actHP"  class="w100p" value = '${orgCode}'.trim() /></td>
+    <td><input id="orgCode_actHP" name="orgCode_actHP" type="text" title="orgCode_actHP"  class="w100p" /></td>
 
     <th scope="row">Grp Code</th>
-    <td><input id="grpCode_actHP" name="grpCode_actHP" type="text" title="grpCode_actHP"  class="w100p" value = '${grpCode}'.trim()/></td>
+    <td><input id="grpCode_actHP" name="grpCode_actHP" type="text" title="grpCode_actHP"  class="w100p" /></td>
 
     <th scope="row">Dept Code</th>
-    <td><input id="deptCode_actHP" name="deptCode_actHP" type="text" title="deptCode_actHP"  class="w100p" value = '${deptCode}'.trim()/></td>
+    <td><input id="deptCode_actHP" name="deptCode_actHP" type="text" title="deptCode_actHP"  class="w100p" /></td>
 </tr>
 
 <tr>

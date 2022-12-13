@@ -2,45 +2,72 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+var orgCode = '${orgCode}';
+var grpCode = '${grpCode}';
+var deptCode = '${deptCode}';
+orgCode = orgCode.replace(/^\s+|\s+$/gm,'');
+grpCode = grpCode.replace(/^\s+|\s+$/gm,'');
+deptCode = deptCode.replace(/^\s+|\s+$/gm,'');
 
+var listMyGridID;
 
 $(document).ready(function() {
-
-	var listMyGridID;
-
+	bindData();
     createAUIGrid();
-
-   if("${memType}"== "1"){
-
-       if("${SESSION_INFO.memberLevel}" =="1"){
-          $("#orgCode_HA").attr("class", "w100p readonly");
-          $("#orgCode_HA").attr("readonly", "readonly");
-
-      }else if("${SESSION_INFO.memberLevel}" =="2"){
-          $("#orgCode_HA").attr("class", "w100p readonly");
-          $("#orgCode_HA").attr("readonly", "readonly");
-          $("#grpCode_HA").attr("class", "w100p readonly");
-          $("#grpCode_HA").attr("readonly", "readonly");
-
-      }else if("${SESSION_INFO.memberLevel}" =="3"){
-          $("#orgCode_HA").attr("class", "w100p readonly");
-          $("#orgCode_HA").attr("readonly", "readonly");
-
-          $("#grpCode_HA").attr("class", "w100p readonly");
-          $("#grpCode_HA").attr("readonly", "readonly");
-
-          $("#deptCode_HA").attr("class", "w100p readonly");
-          $("#deptCode_HA").attr("readonly", "readonly");
-
-      }
-
-       fn_selectHAListAjax();
-  }
+    fn_selectHAListAjax();
 
    doGetComboOrder('/organization/cmbProduct_HA.do', '', '', '', 'cmbProduct_HA', 'M', 'f_multiCombo'); //Common Code
    doGetCombo('/organization/selectProductCategoryList_HA.do', '', '', 'cmbProductCtgry_HA', 'M','f_multiCombo'); //Category
 
 });
+
+function bindData(){
+	   if("${memType}"== "1"){
+
+	       if("${SESSION_INFO.memberLevel}" =="1"){
+	          $("#orgCode_HA").attr("class", "w100p readonly");
+	          $("#orgCode_HA").attr("readonly", "readonly");
+	          $("#orgCode_HA").val(orgCode);
+
+	      }else if("${SESSION_INFO.memberLevel}" =="2"){
+	          $("#orgCode_HA").attr("class", "w100p readonly");
+	          $("#orgCode_HA").attr("readonly", "readonly");
+	          $("#orgCode_HA").val(orgCode);
+
+	          $("#grpCode_HA").attr("class", "w100p readonly");
+	          $("#grpCode_HA").attr("readonly", "readonly");
+	          $("#grpCode_HA").val(grpCode);
+
+	      }else if("${SESSION_INFO.memberLevel}" =="3"){
+	          $("#orgCode_HA").attr("class", "w100p readonly");
+	          $("#orgCode_HA").attr("readonly", "readonly");
+	          $("#orgCode_HA").val(orgCode);
+
+	          $("#grpCode_HA").attr("class", "w100p readonly");
+	          $("#grpCode_HA").attr("readonly", "readonly");
+	          $("#grpCode_HA").val(grpCode);
+
+	          $("#deptCode_HA").attr("class", "w100p readonly");
+	          $("#deptCode_HA").attr("readonly", "readonly");
+	          $("#deptCode_HA").val(deptCode);
+
+	      }
+	      else{
+	    	  $("#orgCode_HA").attr("class", "w100p readonly");
+              $("#orgCode_HA").attr("readonly", "readonly");
+              $("#orgCode_HA").val(orgCode);
+
+              $("#grpCode_HA").attr("class", "w100p readonly");
+              $("#grpCode_HA").attr("readonly", "readonly");
+              $("#grpCode_HA").val(grpCode);
+
+              $("#deptCode_HA").attr("class", "w100p readonly");
+              $("#deptCode_HA").attr("readonly", "readonly");
+              $("#deptCode_HA").val(deptCode);
+              $("#memCode_HA").val("${SESSION_INFO.userName}");
+	      }
+	  }
+}
 
 
 function f_multiCombo(){
@@ -142,10 +169,6 @@ function createAUIGrid() {
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_HA", columnLayout, "", gridPros);
 
-//     if("${memType}"== "1"){
-    	 fn_selectHAListAjax();
-//     }
-
 }
 
 function fn_selectHAListAjax() {
@@ -179,7 +202,7 @@ function fn_selectHAListAjax() {
 
 <section class="search_table mt10"><!-- search_table start -->
 <form action="#" method="post" id="form_HA" name="form_HA">
-
+<input id="memCode_HA" name="memCode_HA"  type="hidden"  class="w100p" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -190,13 +213,13 @@ function fn_selectHAListAjax() {
 <tbody>
 <tr>
     <th scope="row">Org Code</th>
-    <td><input id="orgCode_HA" name="orgCode_HA" type="text" title="orgCode_HA"  class="w100p" value = '${orgCode}'.trim() /></td>
+    <td><input id="orgCode_HA" name="orgCode_HA" type="text" title="orgCode_HA"  class="w100p" /></td>
 
     <th scope="row">Grp Code</th>
-    <td><input id="grpCode_HA" name="grpCode_HA" type="text" title="grpCode_HA"  class="w100p" value = '${grpCode}'.trim()/></td>
+    <td><input id="grpCode_HA" name="grpCode_HA" type="text" title="grpCode_HA"  class="w100p"/></td>
 
     <th scope="row">Dept Code</th>
-    <td><input id="deptCode_HA" name="deptCode_HA" type="text" title="deptCode_HA"  class="w100p" value = '${deptCode}'.trim()/></td>
+    <td><input id="deptCode_HA" name="deptCode_HA" type="text" title="deptCode_HA"  class="w100p" /></td>
 </tr>
 
 <tr>

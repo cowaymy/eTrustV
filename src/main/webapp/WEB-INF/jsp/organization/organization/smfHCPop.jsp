@@ -3,43 +3,72 @@
 
 <script type="text/javascript">
 
+var orgCode = '${orgCode}';
+var grpCode = '${grpCode}';
+var deptCode = '${deptCode}';
+orgCode = orgCode.replace(/^\s+|\s+$/gm,'');
+grpCode = grpCode.replace(/^\s+|\s+$/gm,'');
+deptCode = deptCode.replace(/^\s+|\s+$/gm,'');
+var listMyGridID;
 
 $(document).ready(function() {
 
-    var listMyGridID;
 
-    createAUIGrid();
-
-   if("${memType}"== "1"){
-
-       if("${SESSION_INFO.memberLevel}" =="1"){
-          $("#orgCode_HC").attr("class", "w100p readonly");
-          $("#orgCode_HC").attr("readonly", "readonly");
-
-      }else if("${SESSION_INFO.memberLevel}" =="2"){
-          $("#orgCode_HC").attr("class", "w100p readonly");
-          $("#orgCode_HC").attr("readonly", "readonly");
-          $("#grpCode_HC").attr("class", "w100p readonly");
-          $("#grpCode_HC").attr("readonly", "readonly");
-
-      }else if("${SESSION_INFO.memberLevel}" =="3"){
-          $("#orgCode_HC").attr("class", "w100p readonly");
-          $("#orgCode_HC").attr("readonly", "readonly");
-
-          $("#grpCode_HC").attr("class", "w100p readonly");
-          $("#grpCode_HC").attr("readonly", "readonly");
-
-          $("#deptCode_HC").attr("class", "w100p readonly");
-          $("#deptCode_HC").attr("readonly", "readonly");
-      }
-       fn_selectHCListAjax();
-  }
-
+   bindData();
+   createAUIGrid();
+   fn_selectHCListAjax();
    doGetComboOrder('/organization/cmbProduct_HC.do', '', '', '', 'cmbProduct_HC', 'M', 'f_multiCombo'); //Common Code
    doGetCombo('/organization/selectProductCategoryList_HC.do', '', '', 'cmbProductCtgry_HC', 'M','f_multiCombo'); //Category
 
 
 });
+
+function bindData(){
+	   if("${memType}"== "1"){
+	       if("${SESSION_INFO.memberLevel}" =="1"){
+	          $("#orgCode_HC").attr("class", "w100p readonly");
+	          $("#orgCode_HC").attr("readonly", "readonly");
+	          $("#orgCode_HC").val(orgCode);
+
+	      }else if("${SESSION_INFO.memberLevel}" =="2"){
+	          $("#orgCode_HC").attr("class", "w100p readonly");
+	          $("#orgCode_HC").attr("readonly", "readonly");
+	          $("#orgCode_HC").val(orgCode);
+
+	          $("#grpCode_HC").attr("class", "w100p readonly");
+	          $("#grpCode_HC").attr("readonly", "readonly");
+	          $("#grpCode_HC").val(grpCode);
+
+	      }else if("${SESSION_INFO.memberLevel}" =="3"){
+	          $("#orgCode_HC").attr("class", "w100p readonly");
+	          $("#orgCode_HC").attr("readonly", "readonly");
+	          $("#orgCode_HC").val(orgCode);
+
+	          $("#grpCode_HC").attr("class", "w100p readonly");
+	          $("#grpCode_HC").attr("readonly", "readonly");
+	          $("#grpCode_HC").val(grpCode);
+
+	          $("#deptCode_HC").attr("class", "w100p readonly");
+	          $("#deptCode_HC").attr("readonly", "readonly");
+	          $("#deptCode_HC").val(deptCode);
+	      }
+	      else{
+              $("#orgCode_HC").attr("class", "w100p readonly");
+              $("#orgCode_HC").attr("readonly", "readonly");
+              $("#orgCode_HC").val(orgCode);
+
+              $("#grpCode_HC").attr("class", "w100p readonly");
+              $("#grpCode_HC").attr("readonly", "readonly");
+              $("#grpCode_HC").val(grpCode);
+
+              $("#deptCode_HC").attr("class", "w100p readonly");
+              $("#deptCode_HC").attr("readonly", "readonly");
+              $("#deptCode_HC").val(deptCode);
+              $("#memCode_HC").val("${SESSION_INFO.userName}");
+
+	      }
+	  }
+}
 
 
 function f_multiCombo(){
@@ -140,10 +169,6 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap_HC", columnLayout, "", gridPros);
-//     if("${memType}"== "1"){
-    	 fn_selectHCListAjax();
-//     }
-
 }
 
 function fn_selectHCListAjax() {
@@ -177,7 +202,7 @@ function fn_selectHCListAjax() {
 
 <section class="search_table mt10"><!-- search_table start -->
 <form action="#" method="post" id="form_HC" name="form_HC">
-
+<input id="memCode_HC" name="memCode_HC"  type="hidden"  class="w100p" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
