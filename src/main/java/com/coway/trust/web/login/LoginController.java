@@ -263,11 +263,14 @@ public class LoginController {
 		HttpSession session = sessionHandler.getCurrentSession();
 		session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 
-		//update password in keycloak
-		Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-		ssoParamsOldMem.put("memCode", sessionVO.getUserName());
-		ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
-		ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+		if(loginVO.getUserTypeId() == 1 || loginVO.getUserTypeId() == 2 || loginVO.getUserTypeId() == 3 || loginVO.getUserTypeId() == 7
+				|| loginVO.getUserTypeId() == 5){
+			//update password in keycloak
+			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+			ssoParamsOldMem.put("memCode", sessionVO.getUserName());
+			ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
+			ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+		}
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
