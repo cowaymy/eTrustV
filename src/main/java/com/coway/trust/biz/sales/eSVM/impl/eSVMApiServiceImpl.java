@@ -141,7 +141,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 }
 
                 // getMaxPeriodEarlyBirdPromo
-                if(!rtn.getMemExprDate().isEmpty()) {
+                if(rtn.getMemExprDate() != null) { //CELESTE
                     String memExprDate = rtn.getMemExprDate();
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("memExprDt", memExprDate.substring(6) + memExprDate.substring(3, 5));
