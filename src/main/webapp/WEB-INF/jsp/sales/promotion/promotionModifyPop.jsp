@@ -224,7 +224,7 @@
             newPrcVal = Math.floor(newPrcVal);
 
             if(newPrcVal < 0) newPrcVal = 0;
-            if(!(AUIGrid.getCellValue(stckGridID, i, "stkCtgryId") == 7177) && $('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
+            if((!(AUIGrid.getCellValue(stckGridID, i, "stkCtgryId") == 7177) || dscPrcVal != 0) && $('#promoAppTypeId').val() == '2285' ) newPrcVal = (Math.trunc(newPrcVal / 10)) * 10  ; // if App Tye = Outright , trunc amount 0 -- edited by TPY 01/06/2018
 
             AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
         }
