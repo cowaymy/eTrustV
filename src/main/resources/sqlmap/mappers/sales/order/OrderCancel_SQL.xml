@@ -8,163 +8,263 @@
   -->
 
   <select id="orderCancellationList" parameterType="Map" resultType="egovMap">
-    SELECT A.REQ_ID REQ_ID ,
-           A.REQ_NO REQ_NO ,
-           A.ORD_ID ORD_ID ,
-           A.REQ_STUS_ID REQ_STUS_ID ,
-           A.REQ_STUS_CODE REQ_STUS_CODE ,
-           A.REQ_STUS_NAME REQ_STUS_NAME ,
-           A.REQ_RESN_ID REQ_RESN_ID ,
-           A.REQ_RESN_CODE REQ_RESN_CODE ,
-           A.REQ_RESN_DESC REQ_RESN_DESC ,
-           A.PREV_CALL_ENTRY_ID PREV_CALL ,
-           A.CALL_ENTRY_ID CALL_ENTRY_ID ,
-           A.REQ_STAGE_ID REQ_STAGE_ID ,
-           A.REQ_STAGE REQ_STAGE ,
-           A.STOCK_ID STOCK_ID ,
-           A.STOCK_CODE STOCK_CODE ,
-           A.STOCK_NAME STOCK_NAME ,
-           A.CRT_USER_ID_ID CRT_USER_ID_ID ,
-           A.CRT_USER_ID CRT_USER_ID ,
-           A.UPD_USER_ID_ID UPD_USER_ID_ID ,
-           A.UPD_USER_ID UPD_USER_ID ,
-           A.APP_TYPE_ID APP_TYPE_ID ,
-           A.APP_TYPE_CODE APP_TYPE_CODE ,
-           A.APP_TYPE_NAME APP_TYPE_NAME ,
-           A.ORD_AMT ORD_AMT ,
-           A.ORD_PV ORD_PV ,
-           A.ORD_RENT_AMT ORD_RENT_AMT ,
-           A.ORD_OTSTND ORD_OTSTND ,
-           A.PNALTY_AMT PNALTY_AMT ,
-           A.ADJ_AMT ADJ_AMT ,
-           A.GRAND_TOT GRAND_TOT ,
-           A.OBLIGT_MTH OBLIGT_MTH ,
-           A.USED_MTH USED_MTH ,
-           A.IS_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD ,
-           A.REQSTER_ID REQSTER_ID ,
-           A.REQSTER REQSTER ,
-           A.CALL_STUS_ID CALL_STUS_ID ,
-           A.CALL_STUS_CODE CALL_STUS_CODE ,
-           A.CALL_STUS_NAME CALL_STUS_NAME ,
-           A.CUST_ID CUST_ID ,
-           A.CUST_NAME CUST_NAME ,
-           A.CUST_IC CUST_IC ,
-           A.ORD_NO ORD_NO ,
-           A.REQ_REM REQ_REM ,
-           A.BANK_ACC BANK_ACC ,
-           A.ISS_BANK ISS_BANK ,
-           A.ACC_NAME ACC_NAME ,
-           A.ATTACH ATTACH ,
-           CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
-                  THEN A.ACTUAL_CANCL_DT
-                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END ACTUAL_CANCL_DT ,
-           CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
-                  THEN A.APP_RETN_DT
-                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_RETN_DT ,
-           CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
-                  THEN A.CALL_RECALL_DT
-                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CALL_RECALL_DT ,
-           CASE WHEN ( A.CRT_DT IS NOT NULL )
-                  THEN TO_DATE(A.CRT_DT, 'dd/mm/yyyy')
-                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CRT_DT ,
-           CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
-                  THEN A.DSC_BRNCH_ID
-                  ELSE 0 END DSC_BRNCH_ID ,
-           CASE WHEN ( A.UPD_DT IS NOT NULL )
-                  THEN A.UPD_DT
-                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END UPD_DT,
-           A.TYPE_ID,
-           A.DOC_ID,
-           A.REF_ID,
-           ( SELECT CODE
-             FROM SYS0038M
-             WHERE STUS_CODE_ID =  A.RSO_STUS
-           ) RSO_STUS,
-           A.PRD_RTN_LST_UPD,
-           CASE WHEN ( A.APP_DT IS NOT NULL )
-                  THEN A.APP_DT
-                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_DT,
-           A.ASSIGN_CT,
-           A.RCD_TMS,
-           B.CODE AS DSC ,
-            A.ATCH_FILE_GRP_ID ,
-                  A.ATTCHMENT_DOWNLOAD ,
-                  A.FILE_SUB_PATH ,
-                  A.ATCH_FILE_NAME ,
-                  A.PHYSICL_FILE_NAME
+        <![CDATA[
+         SELECT A.REQ_ID REQ_ID ,
+					A.REQ_NO REQ_NO ,
+					A.ORD_ID ORD_ID ,
+					A.REQ_STUS_ID REQ_STUS_ID ,
+					A.REQ_STUS_CODE REQ_STUS_CODE ,
+					A.REQ_STUS_NAME REQ_STUS_NAME ,
+					A.REQ_RESN_ID REQ_RESN_ID ,
+					A.REQ_RESN_CODE REQ_RESN_CODE ,
+					A.REQ_RESN_DESC REQ_RESN_DESC ,
+					A.PREV_CALL_ENTRY_ID PREV_CALL ,
+					A.CALL_ENTRY_ID CALL_ENTRY_ID ,
+					A.REQ_STAGE_ID REQ_STAGE_ID ,
+					A.REQ_STAGE REQ_STAGE ,
+					A.STOCK_ID STOCK_ID ,
+					A.STOCK_CODE STOCK_CODE ,
+					A.STOCK_NAME STOCK_NAME ,
+					A.CRT_USER_ID_ID CRT_USER_ID_ID ,
+					A.CRT_USER_ID CRT_USER_ID ,
+					A.UPD_USER_ID_ID UPD_USER_ID_ID ,
+					A.UPD_USER_ID UPD_USER_ID ,
+					A.APP_TYPE_ID APP_TYPE_ID ,
+					A.APP_TYPE_CODE APP_TYPE_CODE ,
+					A.APP_TYPE_NAME APP_TYPE_NAME ,
+					A.ORD_AMT ORD_AMT ,
+					A.ORD_PV ORD_PV ,
+					A.ORD_RENT_AMT ORD_RENT_AMT ,
+					A.ORD_OTSTND ORD_OTSTND ,
+					A.PNALTY_AMT PNALTY_AMT ,
+					A.ADJ_AMT ADJ_AMT ,
+					A.GRAND_TOT GRAND_TOT ,
+					A.OBLIGT_MTH OBLIGT_MTH ,
+					A.USED_MTH USED_MTH ,
+					A.IS_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD ,
+					A.REQSTER_ID REQSTER_ID ,
+					A.REQSTER REQSTER ,
+					A.CALL_STUS_ID CALL_STUS_ID ,
+					A.CALL_STUS_CODE CALL_STUS_CODE ,
+					A.CALL_STUS_NAME CALL_STUS_NAME ,
+					A.CUST_ID CUST_ID ,
+					A.CUST_NAME CUST_NAME ,
+					A.CUST_IC CUST_IC ,
+					A.ORD_NO ORD_NO ,
+					A.REQ_REM REQ_REM ,
+					A.BANK_ACC BANK_ACC ,
+					A.ISS_BANK ISS_BANK ,
+					A.ACC_NAME ACC_NAME ,
+					A.ATTACH ATTACH ,
+					CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
+					THEN A.ACTUAL_CANCL_DT
+					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END ACTUAL_CANCL_DT ,
+					CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
+					THEN A.APP_RETN_DT
+					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_RETN_DT ,
+					CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
+					THEN A.CALL_RECALL_DT
+					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CALL_RECALL_DT ,
+					CASE WHEN ( A.CRT_DT IS NOT NULL )
+					THEN TO_DATE(A.CRT_DT, 'dd/mm/yyyy')
+					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CRT_DT ,
+					CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
+					THEN A.DSC_BRNCH_ID
+					ELSE 0 END DSC_BRNCH_ID ,
+					CASE WHEN ( A.UPD_DT IS NOT NULL )
+					THEN A.UPD_DT
+					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END UPD_DT,
+					A.TYPE_ID,
+					A.DOC_ID,
+					A.REF_ID,
+					( SELECT CODE
+					FROM SYS0038M
+					WHERE STUS_CODE_ID = A.RSO_STUS
+					) RSO_STUS,
+					A.PRD_RTN_LST_UPD,
+					CASE WHEN ( A.APP_DT IS NOT NULL )
+					THEN A.APP_DT
+					ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_DT,
+					A.ASSIGN_CT,
+					A.RCD_TMS,
+					B.CODE AS DSC ,
+					A.ATCH_FILE_GRP_ID ,
+					A.ATTCHMENT_DOWNLOAD ,
+					A.FILE_SUB_PATH ,
+					A.ATCH_FILE_NAME ,
+					A.PHYSICL_FILE_NAME
 
-    FROM ( SELECT V.REQ_ID ,
-                  V.REQ_NO ,
-                  V.ORD_ID ,
-                  V.REQ_STUS_ID ,
-                  V.REQ_STUS_CODE ,
-                  V.REQ_STUS_NAME ,
-                  V.REQ_RESN_ID ,
-                  V.REQ_RESN_CODE ,
-                  V.REQ_RESN_DESC ,
-                  V.PREV_CALL_ENTRY_ID ,
-                  V.CALL_ENTRY_ID ,
-                  V.REQ_STAGE_ID ,
-                  V.REQ_STAGE ,
-                  V.STOCK_ID ,
-                  V.STOCK_CODE ,
-                  V.STOCK_NAME ,
-                  V.CRT_DT ,
-                  V.CRT_USER_ID_ID ,
-                  V.CRT_USER_ID ,
-                  V.UPD_DT ,
-                  V.UPD_USER_ID_ID ,
-                  V.UPD_USER_ID ,
-                  V.APP_TYPE_ID ,
-                  V.APP_TYPE_CODE ,
-                  V.APP_TYPE_NAME ,
-                  V.ORD_AMT ,
-                  V.ORD_PV ,
-                  V.ORD_RENT_AMT ,
-                  V.ORD_OTSTND ,
-                  V.PNALTY_AMT ,
-                  V.ADJ_AMT ,
-                  V.GRAND_TOT ,
-                  V.OBLIGT_MTH ,
-                  V.USED_MTH ,
-                  V.IS_UNDER_COOL_PRIOD ,
-                  V.ACTUAL_CANCL_DT ,
-                  V.REQSTER_ID ,
-                  V.REQSTER ,
-                  V.APP_RETN_DT ,
-                  V.CALL_STUS_ID ,
-                  V.CALL_STUS_CODE ,
-                  V.CALL_STUS_NAME ,
-                  V.CALL_RECALL_DT ,
-                  V.DSC_BRNCH_ID ,
-                  V.CUST_ID ,
-                  V.CUST_NAME ,
-                  V.CUST_IC ,
-                  V.ORD_NO ,
-                  V.REQ_REM ,
-                  V.BANK_ACC ,
-                  V.ISS_BANK ,
-                  V.ACC_NAME ,
-                  V.ATTACH ,
-                  V.TYPE_ID ,
-                  V.DOC_ID ,
-                  V.REF_ID ,
-                  V.RSO_STUS,
-                  NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
-                  V.APP_DT AS APP_DT,
-                  V.ASSIGN_CT,
-                  V.RCD_TMS,
-                  V.STK_CTGRY_ID ,
-                  V.ATCH_FILE_GRP_ID ,
-                  V.ATTCHMENT_DOWNLOAD ,
-                  V.FILE_SUB_PATH ,
-                  V.ATCH_FILE_NAME ,
-                  V.PHYSICL_FILE_NAME
+					FROM (
+						SELECT V.REQ_ID ,
+						V.REQ_NO ,
+						V.ORD_ID ,
+						V.REQ_STUS_ID ,
+						V.REQ_STUS_CODE ,
+						V.REQ_STUS_NAME ,
+						V.REQ_RESN_ID ,
+						V.REQ_RESN_CODE ,
+						V.REQ_RESN_DESC ,
+						V.PREV_CALL_ENTRY_ID ,
+						V.CALL_ENTRY_ID ,
+						V.REQ_STAGE_ID ,
+						V.REQ_STAGE ,
+						V.STOCK_ID ,
+						V.STOCK_CODE ,
+						V.STOCK_NAME ,
+						V.CRT_DT ,
+						V.CRT_USER_ID_ID ,
+						V.CRT_USER_ID ,
+						V.UPD_DT ,
+						V.UPD_USER_ID_ID ,
+						V.UPD_USER_ID ,
+						V.APP_TYPE_ID ,
+						V.APP_TYPE_CODE ,
+						V.APP_TYPE_NAME ,
+						V.ORD_AMT ,
+						V.ORD_PV ,
+						V.ORD_RENT_AMT ,
+						V.ORD_OTSTND ,
+						V.PNALTY_AMT ,
+						V.ADJ_AMT ,
+						V.GRAND_TOT ,
+						V.OBLIGT_MTH ,
+						V.USED_MTH ,
+						V.IS_UNDER_COOL_PRIOD ,
+						V.ACTUAL_CANCL_DT ,
+						V.REQSTER_ID ,
+						V.REQSTER ,
+						V.APP_RETN_DT ,
+						V.CALL_STUS_ID ,
+						V.CALL_STUS_CODE ,
+						V.CALL_STUS_NAME ,
+						V.CALL_RECALL_DT ,
+						V.DSC_BRNCH_ID ,
+						V.CUST_ID ,
+						V.CUST_NAME ,
+						V.CUST_IC ,
+						V.ORD_NO ,
+						V.REQ_REM ,
+						V.BANK_ACC ,
+						V.ISS_BANK ,
+						V.ACC_NAME ,
+						V.ATTACH ,
+						V.TYPE_ID ,
+						V.DOC_ID ,
+						V.REF_ID ,
+						V.RSO_STUS,
+						NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
+						V.APP_DT AS APP_DT,
+						V.ASSIGN_CT,
+						V.RCD_TMS,
+						V.STK_CTGRY_ID ,
+						V.ATCH_FILE_GRP_ID ,
+						V.ATTCHMENT_DOWNLOAD ,
+						V.FILE_SUB_PATH ,
+						V.ATCH_FILE_NAME ,
+						V.PHYSICL_FILE_NAME
 
-             FROM SAL1007V V) A
-        LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
+						FROM (( SELECT DISTINCT r.SO_REQ_ID REQ_ID,
+						r.SO_REQ_NO REQ_NO,
+						r.SO_REQ_SO_ID ORD_ID,
+						r.SO_REQ_STUS_ID REQ_STUS_ID,
+						s1.CODE REQ_STUS_CODE,
+						s1.NAME REQ_STUS_NAME,
+						NVL (r.SO_REQ_RESN_ID, 0) REQ_RESN_ID,
+						NVL (rc.CODE, ' ') REQ_RESN_CODE,
+						NVL (TO_CHAR (rc.RESN_DESC), ' ') REQ_RESN_DESC,
+						NVL (r.SO_REQ_PREV_CALL_ENTRY_ID, 0) PREV_CALL_ENTRY_ID,
+						NVL (r.SO_REQ_CUR_CALL_ENTRY_ID, 0) CALL_ENTRY_ID,
+						r.SO_REQ_CUR_STUS_ID REQ_STAGE_ID,
+						s2.NAME REQ_STAGE,
+						r.SO_REQ_CUR_STK_ID STOCK_ID,
+						stk.STK_CODE STOCK_CODE,
+						stk.STK_DESC STOCK_NAME,
+						r.SO_REQ_CRT_DT AS CRT_DT,
+						NVL (r.SO_REQ_CRT_USER_ID, 0) CRT_USER_ID_ID,
+						NVL (u1.USER_NAME, ' ') CRT_USER_ID,
+						r.SO_REQ_UPD_DT AS UPD_DT,
+						NVL (r.SO_REQ_UPD_USER_ID, 0) UPD_USER_ID_ID,
+						NVL (u2.USER_NAME, ' ') UPD_USER_ID,
+						r.SO_REQ_CUR_APP_TYPE_ID APP_TYPE_ID,
+						apptype.CODE APP_TYPE_CODE,
+						apptype.CODE_NAME APP_TYPE_NAME,
+						r.SO_REQ_CUR_AMT ORD_AMT,
+						r.SO_REQ_CUR_PV ORD_PV,
+						r.SO_REQ_CURR_AMT ORD_RENT_AMT,
+						r.SO_REQ_CANCL_RENTAL_OTSTND ORD_OTSTND,
+						r.SO_REQ_CANCL_PNALTY_AMT PNALTY_AMT,
+						r.SO_REQ_CANCL_ADJ_AMT ADJ_AMT,
+						r.SO_REQ_CANCL_TOT_OTSTND GRAND_TOT,
+						r.SO_REQ_CANCL_OB_PRIOD OBLIGT_MTH,
+						r.SO_REQ_CANCL_TOT_USED_PRIOD USED_MTH,
+						r.SO_REQ_CANCL_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD,
+						r.SO_REQ_ACTUAL_CANCL_DT ACTUAL_CANCL_DT,
+						r.SO_REQSTER REQSTER_ID,
+						NVL (requestor.CODE_NAME, ' ') REQSTER,
+						r.SO_REQ_PRE_RETN_DT APP_RETN_DT,
+						ce.STUS_CODE_ID CALL_STUS_ID,
+						s3.CODE CALL_STUS_CODE,
+						s3.NAME CALL_STUS_NAME,
+						ce.CALL_DT CALL_RECALL_DT,
+						i.BRNCH_ID DSC_BRNCH_ID,
+						cust.CUST_ID CUST_ID,
+						cust.NAME CUST_NAME,
+						cust.NRIC CUST_IC,
+						som.SALES_ORD_NO ORD_NO,
+						NVL (TO_CHAR (r.SO_REQ_REM), ' ') REQ_REM,
+						NVL (r.SO_REQ_BANK_ACC, ' ') BANK_ACC,
+						NVL (r.SO_REQ_ISS_BANK, ' ') ISS_BANK,
+						NVL (r.SO_REQ_ACC_NAME, ' ') ACC_NAME,
+						NVL (r.SO_REQ_ATTACH, ' ') ATTACH,
+						re.TYPE_ID,
+						ce.DOC_ID,
+						re.REF_ID,
+						re.STUS_CODE_ID RSO_STUS,
+						ce.TYPE_ID CALL_TYPE_ID,
+						CASE WHEN ORG.MEM_CODE IS NOT NULL THEN
+						ORG.MEM_CODE
+						ELSE ORG2.USER_NAME END PRD_RTN_LST_UPD,
+						re.APP_DT AS APP_DT,
+						ORG3.MEM_CODE AS ASSIGN_CT,
+						r.RCD_TMS AS RCD_TMS,
+						stk.STK_CTGRY_ID STK_CTGRY_ID,
+						som.BNDL_ID,
+						re.RETN_NO,
+						r.ATCH_FILE_GRP_ID ,
+						CASE WHEN r.ATCH_FILE_GRP_ID IS NOT NULL OR r.ATCH_FILE_GRP_ID != 0
+						THEN 'DOWN'
+						ELSE NULL END AS ATTCHMENT_DOWNLOAD,
+						CASE WHEN r.ATCH_FILE_GRP_ID IS NOT NULL OR r.ATCH_FILE_GRP_ID != 0
+						THEN F.FILE_SUB_PATH
+						ELSE NULL END AS FILE_SUB_PATH,
+						F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+						F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME
 
-            WHERE A.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+						from SAL0020D r
+						JOIN SAL0001D som ON som.SALES_ORD_ID = r.SO_REQ_SO_ID AND r.SO_REQ_STUS_ID <> 8
+						JOIN SAL0045D i ON i.SALES_ORD_ID = som.SALES_ORD_ID
+						JOIN SAL0029D cust ON cust.CUST_ID = som.CUST_ID
+						JOIN SYS0038M s1 ON s1.STUS_CODE_ID = r.SO_REQ_STUS_ID
+						JOIN SYS0038M s2 ON s2.STUS_CODE_ID = r.SO_REQ_CUR_STUS_ID
+						JOIN SYS0026M stk ON stk.STK_ID = r.SO_REQ_CUR_STK_ID
+						JOIN SYS0013M apptype ON apptype.CODE_ID = r.SO_REQ_CUR_APP_TYPE_ID
+						JOIN CCR0006D ce ON ce.CALL_ENTRY_ID = r.SO_REQ_CUR_CALL_ENTRY_ID
+						JOIN SYS0038M s3 ON s3.STUS_CODE_ID = ce.STUS_CODE_ID
+						LEFT JOIN SYS0032M rc ON rc.RESN_ID = r.SO_REQ_RESN_ID
+						LEFT JOIN SYS0047M u1 ON u1.USER_ID = r.SO_REQ_CRT_USER_ID
+						LEFT JOIN SYS0047M u2 ON u2.USER_ID = r.SO_REQ_UPD_USER_ID
+						LEFT JOIN SYS0013M requestor ON requestor.CODE_ID = r.SO_REQSTER
+						LEFT JOIN LOG0038D re
+						ON re.CALL_ENTRY_ID = r.SO_REQ_CUR_CALL_ENTRY_ID
+
+						LEFT JOIN ORG0001D ORG ON ORG.MEM_ID = re.UPD_USER_ID AND ORG.MEM_TYPE > 2
+						LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = re.UPD_USER_ID AND ORG2.USER_TYPE_ID > 2
+						LEFT JOIN ORG0001D ORG3 ON ORG3.MEM_ID = RE.CT_ID
+						LEFT JOIN SYS0070M E ON r.ATCH_FILE_GRP_ID = E.ATCH_FILE_GRP_ID
+						LEFT JOIN SYS0071D F ON E.ATCH_FILE_ID = F.ATCH_FILE_ID) V)) A
+				LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
+				 ]]>
+                WHERE A.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                           WHERE AA.CODE = BB.CODE
                                                               AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
     <if test="typeIdList != null and typeIdList != ''">

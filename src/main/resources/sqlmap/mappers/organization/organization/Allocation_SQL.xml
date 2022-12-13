@@ -63,8 +63,7 @@
 					                     AND T.MEM_ID = TT.MEM_ID
 					                     /*BY KV*/
 					                     AND TT.STUS = 1
-					                     AND CT_SUB_GRP IN (SELECT  /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */
-					                                                 F.CT_SUB_GRP
+					                     AND CT_SUB_GRP IN (SELECT  F.CT_SUB_GRP
 					                                          FROM   SAL0001D A,
 					                                                 SAL0045D B,
 					                                                 SAL0023D E,
@@ -81,7 +80,7 @@
 					                     AND B.MEM_ID = C.MEM_ID
 					                     AND C.MEM_LVL = '2'
 					                     AND B.STUS = '1'
-					                     AND A.CODE = (SELECT   /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.CT_BRNCH_CODE
+					                     AND A.CODE = (SELECT  F.CT_BRNCH_CODE
 					                                     FROM   SAL0001D A,
 					                                            SAL0045D B,
 					                                            SAL0023D E,

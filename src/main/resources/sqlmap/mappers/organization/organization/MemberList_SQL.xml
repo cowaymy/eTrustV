@@ -123,182 +123,211 @@
     </select>
 
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
-        <![CDATA[
+
+ <![CDATA[
 SELECT row_number,
-            Project1.MEM_ID MemberID,
-            Project1.MEM_TYPE  MemberType,
-            Project1.MEM_CODE MemberCode,
-            Project1.CODE_NAME CodeName,
-            Project1.NAME Name,
-            Project1.NRIC NRIC,
-            Project1.status_name,
-            Project1.UPD_DT Updated,
-            Project1.STUS Status,
-            Project1.position_name,
-            Project1.brnch_id,
-            Project1.ct_sub_grp,
-            Project1.C1 C1,
-            project1.TRAINEE_TYPE,
-            project1.TEST_RESULT,
-            project1.approved_by,
-            project1.branch,
-            project1.CRT_DT,
-            project1.ADDRESS,
-            project1.GRP_CODE,
-             project1.PV_YEAR   || ' / ' ||  TO_CHAR(project1.PV_MONTH,'00') AS LAST_ACT_DT,
-
-             project1.VACCINE_STATUS,
-             project1.REASON_ID,
-             project1.NEO_PRO_STATUS,
-             project1.HP_TYPE,
-             project1.ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID_DOC,
-            project1.UNIFORM_SIZE,
-            project1.MUSLIMAH_SCARFT,
-            project1.INNER_TYPE,
-            project1.EMRGCY_CNTC_NAME,
-            project1.EMRGCY_CNTC_NO,
-            project1.EMRGCY_CNTC_INIT,
-            project1.TRM_REJOIN
-
-            FROM ( SELECT Project1.C1 C1,
-                     Project1.MEM_ID MEM_ID,
-                     Project1.MEM_CODE MEM_CODE,
-                     Project1.MEM_TYPE MEM_TYPE,
-                     Project1.NAME NAME,
-                     Project1.NRIC NRIC,
-                     Project1.STUS STUS,
-                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
-                     Project1.CODE_NAME CODE_NAME,
-                     Project1.status_name,
-                     Project1.position_name,
-                     Project1.brnch_id,
-                    Project1.ct_sub_grp,
-                    project1.TRAINEE_TYPE,
-                    project1.TEST_RESULT,
-                    project1.approved_by,
-                    project1.branch,
-                    TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT,
-                    project1.ADDRESS,
-                    project1.GRP_CODE,
-                    project1.PV_MONTH ,
-                    project1.PV_YEAR ,
-
-                    project1.VACCINE_STATUS,
-                    project1.REASON_ID,
-                    project1.NEO_PRO_STATUS,
-
-
-                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number,
-                     project1.HP_TYPE,
-                     project1.ATCH_FILE_GRP_ID ,
-                    project1.UNIFORM_SIZE,
-                    project1.MUSLIMAH_SCARFT,
-                    project1.INNER_TYPE,
-                    project1.EMRGCY_CNTC_NAME,
-                    project1.EMRGCY_CNTC_NO,
-                    project1.EMRGCY_CNTC_INIT,
-                    project1.TRM_REJOIN
-
-                     FROM ( SELECT DISTINCT
-                    GroupBy1.A1 C1,
-                    Extent1.MEM_ID MEM_ID,
-                    Extent1.MEM_CODE MEM_CODE,
-                    Extent1.MEM_TYPE MEM_TYPE,
-                    Extent1.NAME NAME,
-                    Extent1.NRIC NRIC,
-                    Extent1.STUS STUS,
-                    Extent1.UPD_DT UPD_DT,
-                    Extent2.CODE_NAME CODE_NAME,
-                    Extent3.NAME as status_name,
-                    Extent1.brnch as brnch_id,
-                    Extent5.ct_sub_grp,
-                    extent1.TRAINEE_TYPE,
-                    Extend6.MEM_ORG_DESC position_name,
-                    CASE
-                        WHEN ( Extend8.COURS_TEST_RESULT = 'P' )
-                        THEN 'Pass'
-                        WHEN ( Extend8.COURS_TEST_RESULT = 'F' )
-                        THEN 'Fail'
-                        WHEN ( Extend8.COURS_TEST_RESULT = 'AB' )
-                        THEN 'Absent'
-                    ELSE ''
-                    END TEST_RESULT,
-                    Extent9.USER_NAME as approved_by,
-                    Extent10.CODE as branch,
-                    Extent1.CRT_DT,
-                    CASE WHEN (Extent1.AREA_ID IS NOT NULL OR Extent1.ADDR_DTL IS NOT NULL) THEN
-                            (Extent1.ADDR_DTL || ' ' ||
-                            CASE WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ', ' ELSE '' END ||
-                            CASE WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ', ' ELSE '' END ||
-                            CASE WHEN Extent11.POSTCODE IS NOT NULL THEN  Extent11.POSTCODE || ', ' ELSE '' END ||
-                            CASE WHEN Extent11.CITY IS NOT NULL THEN  Extent11.CITY || ', ' ELSE '' END ||
-                            CASE WHEN Extent11.STATE IS NOT NULL THEN  Extent11.STATE || ', ' ELSE '' END ||
-                            Extent11.COUNTRY)
-                        ELSE Extent1.ADDR1 || ', ' || Extent1.ADDR2 || ', ' ||
-                            (CASE WHEN Extent1.ADDR3 IS NULL THEN '' ELSE Extent1.ADDR3 || ', ' END) ||
-                            (CASE WHEN Extent1.ADDR4 IS NULL THEN '' ELSE Extent1.ADDR4 || ', ' END) ||
-                            Extent1.POSTCODE || ' ' ||Extent15.AREA_NAME || ', ' || Extent14.NAME || ', ' || Extent13.NAME
-                        END
-                    as ADDRESS,
-                    Extent12.GRP_CODE ,
-                    B.PV_MONTH ,
-                    B.PV_YEAR,
-                    /*vaccination information */
-                    V.VACCINE_STATUS,
-                    V.REASON_ID,
-                    CASE WHEN Extent16.HP_CODE is not null THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS,
-                    extent17.code_name HP_TYPE,
-                    Extent1.ATCH_FILE_GRP_ID,
-                    Extent1.UNIFORM_SIZE,
-                    Extent1.MUSLIMAH_SCARFT,
-                    Extent1.INNER_TYPE,
-                    Extent1.EMRGCY_CNTC_NAME,
-                    Extent1.EMRGCY_CNTC_NO,
-                    Extent1.EMRGCY_CNTC_INIT,
-                    Extent1.TRM_REJOIN
-
-                    FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
-                    INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
-                    INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID   /*StatusCode   eg.active, not active*/
-                    LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
-                    LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
-                    LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
-                    LEFT JOIN SYS0005M Extent10 ON Extent1.BRNCH = Extent10.BRNCH_ID
-                    LEFT JOIN SYS0064M Extent11 ON Extent1.AREA_ID = Extent11.AREA_ID
-                    LEFT JOIN ORG1001V Extent12 ON Extent1.MEM_ID = Extent12.MEM_ID
-                    LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
-                    LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
-                    LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
-                    LEFT JOIN ORG0040D V ON V.MEM_ID = Extent1.MEM_ID /* Vaccination info */
-                    LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE =Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE,'MM') AND NVL(IS_NW,0)=0
-                    LEFT JOIN SYS0013M Extent17 ON Extent1.rank = Extent17.code_id
-                    LEFT JOIN (SELECT * FROM (
-                    SELECT B.* , ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY SALES_ORD_ID DESC) ITM_ROWS
-                    FROM SAL0001D B
-                    WHERE B.PV_YEAR <> 0 AND B.PV_MONTH <> 0 AND B.STUS_CODE_ID = 4 )
-                    WHERE ITM_ROWS = 1
-                    )B ON Extent1.MEM_ID = B.MEM_ID
-
-                    CROSS JOIN  (SELECT
-                        COUNT(1) A1
-                        FROM ORG0001D Extent4,
+  Project1.MEM_ID MemberID,
+  Project1.MEM_TYPE MemberType,
+  Project1.MEM_CODE MemberCode,
+  Project1.CODE_NAME CodeName,
+  Project1.NAME Name,
+  Project1.NRIC NRIC,
+  Project1.status_name,
+  Project1.UPD_DT Updated,
+  Project1.STUS Status,
+  Project1.position_name,
+  Project1.brnch_id,
+  Project1.ct_sub_grp,
+  Project1.C1 C1,
+  project1.TRAINEE_TYPE,
+  project1.TEST_RESULT,
+  project1.approved_by,
+  project1.branch,
+  project1.CRT_DT,
+  project1.ADDRESS,
+  project1.GRP_CODE,
+  project1.PV_YEAR || '/' || TO_CHAR(project1.PV_MONTH, '00') AS LAST_ACT_DT,
+  project1.VACCINE_STATUS,
+  project1.REASON_ID,
+  project1.NEO_PRO_STATUS,
+  project1.HP_TYPE,
+  project1.ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID_DOC,
+  project1.UNIFORM_SIZE,
+  project1.MUSLIMAH_SCARFT,
+  project1.INNER_TYPE,
+  project1.EMRGCY_CNTC_NAME,
+  project1.EMRGCY_CNTC_NO,
+  project1.EMRGCY_CNTC_INIT,
+  project1.TRM_REJOIN
+FROM (
+    SELECT Project1.C1 C1,
+      Project1.MEM_ID MEM_ID,
+      Project1.MEM_CODE MEM_CODE,
+      Project1.MEM_TYPE MEM_TYPE,
+      Project1.NAME NAME,
+      Project1.NRIC NRIC,
+      Project1.STUS STUS,
+      TO_CHAR(Project1.UPD_DT, 'DD-MM-YYYY') UPD_DT,
+      Project1.CODE_NAME CODE_NAME,
+      Project1.status_name,
+      Project1.position_name,
+      Project1.brnch_id,
+      Project1.ct_sub_grp,
+      project1.TRAINEE_TYPE,
+      project1.TEST_RESULT,
+      project1.approved_by,
+      project1.branch,
+      TO_CHAR(Project1.CRT_DT, 'DD-MM-YYYY') CRT_DT,
+      project1.ADDRESS,
+      project1.GRP_CODE,
+      project1.PV_MONTH,
+      project1.PV_YEAR,
+      project1.VACCINE_STATUS,
+      project1.REASON_ID,
+      project1.NEO_PRO_STATUS,
+      row_number() OVER (
+        ORDER BY Project1.MEM_CODE ASC
+      ) AS row_number,
+      project1.HP_TYPE,
+      project1.ATCH_FILE_GRP_ID,
+      project1.UNIFORM_SIZE,
+      project1.MUSLIMAH_SCARFT,
+      project1.INNER_TYPE,
+      project1.EMRGCY_CNTC_NAME,
+      project1.EMRGCY_CNTC_NO,
+      project1.EMRGCY_CNTC_INIT,
+      project1.TRM_REJOIN
+    FROM (
+        SELECT DISTINCT GroupBy1.A1 C1,
+          Extent1.MEM_ID MEM_ID,
+          Extent1.MEM_CODE MEM_CODE,
+          Extent1.MEM_TYPE MEM_TYPE,
+          Extent1.NAME NAME,
+          Extent1.NRIC NRIC,
+          Extent1.STUS STUS,
+          Extent1.UPD_DT UPD_DT,
+          Extent2.CODE_NAME CODE_NAME,
+          Extent3.NAME as status_name,
+          Extent1.brnch as brnch_id,
+          Extent5.ct_sub_grp,
+          extent1.TRAINEE_TYPE,
+          Extend6.MEM_ORG_DESC position_name,
+          CASE
+            WHEN (Extend8.COURS_TEST_RESULT = 'P') THEN 'Pass'
+            WHEN (Extend8.COURS_TEST_RESULT = 'F') THEN 'Fail'
+            WHEN (Extend8.COURS_TEST_RESULT = 'AB') THEN 'Absent'
+            ELSE ''
+          END TEST_RESULT,
+          Extent9.USER_NAME as approved_by,
+          Extent10.CODE as branch,
+          Extent1.CRT_DT,
+          CASE
+            WHEN (
+              Extent1.AREA_ID IS NOT NULL
+              OR Extent1.ADDR_DTL IS NOT NULL
+            ) THEN (
+              Extent1.ADDR_DTL || '' || CASE
+                WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ''
+                ELSE ''
+              END || CASE
+                WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ''
+                ELSE ''
+              END || CASE
+                WHEN Extent11.POSTCODE IS NOT NULL THEN Extent11.POSTCODE || ''
+                ELSE ''
+              END || CASE
+                WHEN Extent11.CITY IS NOT NULL THEN Extent11.CITY || ''
+                ELSE ''
+              END || CASE
+                WHEN Extent11.STATE IS NOT NULL THEN Extent11.STATE || ''
+                ELSE ''
+              END || Extent11.COUNTRY
+            )
+            ELSE Extent1.ADDR1 || '' || Extent1.ADDR2 || '' || (
+              CASE
+                WHEN Extent1.ADDR3 IS NULL THEN ''
+                ELSE Extent1.ADDR3 || ''
+              END
+            ) || (
+              CASE
+                WHEN Extent1.ADDR4 IS NULL THEN ''
+                ELSE Extent1.ADDR4 || ''
+              END
+            ) || Extent1.POSTCODE || '' || Extent15.AREA_NAME || '' || Extent14.NAME || '' || Extent13.NAME
+          END as ADDRESS,
+          Extent12.GRP_CODE,
+          B.PV_MONTH,
+          B.PV_YEAR,
+          /*vaccination information */
+          V.VACCINE_STATUS,
+          V.REASON_ID,
+          CASE
+            WHEN Extent16.HP_CODE is not null THEN 'Yes'
+            ELSE 'No'
+          END AS NEO_PRO_STATUS,
+          extent17.code_name HP_TYPE,
+          Extent1.ATCH_FILE_GRP_ID,
+          Extent1.UNIFORM_SIZE,
+          Extent1.MUSLIMAH_SCARFT,
+          Extent1.INNER_TYPE,
+          Extent1.EMRGCY_CNTC_NAME,
+          Extent1.EMRGCY_CNTC_NO,
+          Extent1.EMRGCY_CNTC_INIT,
+          Extent1.TRM_REJOIN
+        FROM ORG0001D Extent1
+          /*Member eg.get mem_type eg HP, CODY, CT*/
+          INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID
+          /*CodeDetail eg.HP, CODY, CT full desc*/
+          INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID
+          /*StatusCode   eg.active, not active*/
+          LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID
+          /*MemberOrganization eg.get mem_LVL*/
+          LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID = Extent1.MEM_TYPE
+          and Extend6.MEM_ORG_LVL = Extent5.MEM_LVL
+          /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
+          LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
+          LEFT JOIN SYS0005M Extent10 ON Extent1.BRNCH = Extent10.BRNCH_ID
+          LEFT JOIN SYS0064M Extent11 ON Extent1.AREA_ID = Extent11.AREA_ID
+          LEFT JOIN ORG1001V Extent12 ON Extent1.MEM_ID = Extent12.MEM_ID
+          LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
+          LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
+          LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
+          LEFT JOIN ORG0040D V ON V.MEM_ID = Extent1.MEM_ID
+          /* Vaccination info */
+          LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE = Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
+            LEFT JOIN SYS0013M Extent17 ON Extent1.rank = Extent17.code_id
+            LEFT JOIN (
+              SELECT *
+              FROM (
+                  SELECT B.*,
+                    ROW_NUMBER() OVER (
+                      PARTITION BY MEM_ID
+                      ORDER BY SALES_ORD_ID DESC
+                    ) ITM_ROWS
+                  FROM SAL0001D B
+                  WHERE B.PV_YEAR <> 0 AND B.PV_MONTH <> 0 AND B.STUS_CODE_ID = 4 )
+                  WHERE ITM_ROWS = 1
+                ) B ON Extent1.MEM_ID = B.MEM_ID
+                CROSS JOIN (
+                  SELECT COUNT(
+                      1) A1
+                      FROM ORG0001D Extent4,
                         ORG0005D Extent7
-
-                         WHERE 1=1 AND Extent4.MEM_ID = Extent7.MEM_ID
-                         ]]>
-                         <if test="memTypeCom != null and memTypeCom != ''">
+                      WHERE 1=1 AND Extent4.MEM_ID = Extent7.MEM_ID
+            ]]>
+                        <if test="memTypeCom != null and memTypeCom != ''">
                            AND  Extent4.MEM_TYPE =  #{memTypeCom}
-                         </if>
-                         <if test="code != null and code != ''">
-                           AND  UPPER(Extent4.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
-                         </if>
-                         <if test="name != null and name != ''">
-                           AND  UPPER(Extent4.NAME) LIKE UPPER('%' || #{name} || '%')
-                         </if>
-                         <if test="icNum != null and icNum != ''">
+                       </if>
+                        <if test="name != null and name != ''">
+                           AND Extent4.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where UPPER(mem_code) LIKE UPPER('%' || #{name} || '%'))
+                        </if>
+                       <if test="code != null and code != ''">
+                           AND Extent4.MEM_CODE in ( select /*+precompute_subquery*/ mem_code from ORG0001D where UPPER(mem_code) LIKE UPPER('%' || #{code} || '%'))
+                       </if>
+                       <if test="icNum != null and icNum != ''">
                            AND  Extent4.NRIC LIKE   '%' || #{icNum} || '%'
-                         </if>
-                         <if test="birth != null and birth != ''">
+                       </if>
+                        <if test="birth != null and birth != ''">
                            AND Extent4.DOB =  TO_DATE(#{birth}, 'DD/MM/YYYY')
                          </if>
                          <if test="nation != null and nation != ''">
@@ -333,7 +362,7 @@ SELECT row_number,
                          <if test="position != null and position != ' ' ">
                             AND Extent7.MEM_LVL= #{position}
                          </if>
-                         <if test="code == null or code == ''">
+                        <if test="code == null or code == ''">
                             <if test="sessionTypeID != 4 and sessionTypeID != 6">
                                 <choose>
                                     <when test="memberLevel == 1">
@@ -351,29 +380,33 @@ SELECT row_number,
                                 </choose>
                             </if>
                          </if>
-                        )  GroupBy1
-                        LEFT JOIN (  SELECT *
-                                          FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
-                                                                             ORDER BY COURS_ITM_ID DESC) ITM_ROWS
-                                                FROM MSC0009D A
-                                                left join MSC0008d b on b.cours_id = a.cours_id
-                                                WHERE COURS_MEM_STUS_ID <![CDATA[  <>  ]]> 8
-                                                and b.cours_stus_id not in (3,8)
-                                                )
-                                          WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
 
-                        WHERE 1=1
-
-                        <if test="memTypeCom != null and memTypeCom != ''">
+                    ) GroupBy1
+                    LEFT JOIN (
+                      SELECT *
+                      FROM (
+                          SELECT A.*,
+                            ROW_NUMBER() OVER (
+                              PARTITION BY COURS_MEM_ID
+                              ORDER BY COURS_ITM_ID DESC
+                            ) ITM_ROWS
+                          FROM MSC0009D A
+                            left join MSC0008d b on b.cours_id = a.cours_id
+                          WHERE COURS_MEM_STUS_ID <![CDATA[  <>  ]]>  8
+                            AND b.cours_stus_id not in (3,8)
+                            )
+                          WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
+                          WHERE 1=1
+                          <if test="memTypeCom != null and memTypeCom != ''">
                           AND   Extent1.MEM_TYPE =  #{memTypeCom}
+                          </if>
+                          <if test="code != null and code != ''">
+                          AND   Extent1.MEM_CODE in ( select /*+precompute_subquery*/ mem_code from ORG0001D where  UPPER(mem_code) LIKE UPPER('%' || #{code} || '%'))
+                          </if>
+                          <if test="name != null and name != ''">
+                           AND   Extent1.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where  UPPER(mem_code) LIKE UPPER('%' || #{name} || '%'))
                          </if>
-                         <if test="code != null and code != ''">
-                           AND  UPPER(Extent1.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
-                         </if>
-                         <if test="name != null and name != ''">
-                           AND  UPPER(Extent1.NAME) LIKE UPPER('%' || #{name} || '%')
-                         </if>
-                         <if test="icNum != null and icNum != ''">
+                            <if test="icNum != null and icNum != ''">
                            AND  Extent1.NRIC LIKE   '%' || #{icNum} || '%'
                          </if>
                          <if test="birth != null and birth != ''">
@@ -444,12 +477,10 @@ SELECT row_number,
                                 </when>
                             </choose>
                          </if>
-                  <![CDATA[
-                )   Project1
-            )  Project1
-            WHERE Project1.row_number >  0
-            ORDER BY Project1.MEM_CODE ASC
-             ]]>
+                        ) Project1
+                    ) Project1
+                  WHERE Project1.row_number   <![CDATA[ > ]]> 0
+                  ORDER BY Project1.MEM_CODE ASC
     </select>
 
 <!-- CYC select HP Applicant -->

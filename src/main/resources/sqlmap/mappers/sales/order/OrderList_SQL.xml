@@ -1575,7 +1575,107 @@
                 , V1.PROMO_DESC
                 , V1.RELATED_NO
                 , V1.RELATED_ID
-           FROM SAL1013V  V1
+           FROM (
+           <![CDATA[
+			 SELECT DISTINCT
+				          cd.CODE APP_TYPE_CODE,
+				          som.APP_TYPE_ID,
+				          cd.CODE_NAME APP_TYPE_NAME,
+				          UPPER(NVL (u.USER_NAME, ' ')) CRT_USER_ID,
+				          UPPER(c.NRIC) CUST_IC,
+				          UPPER(c.NAME) CUST_NAME,
+				          som.CUST_ID,
+				          UPPER(NVL (c.CUST_VA_NO, ' ')) CUST_VA_NO,
+				          NVL (i.BRNCH_ID, 0) DSC_BRNCH_ID,
+				          NVL (som.BRNCH_ID, 0) KEYIN_BRNCH_ID,
+				          NVL (som.SALES_DT, TO_DATE ('01/01/1900', 'dd/mm/yyyy')) ORD_DT,
+				          som.SALES_DT,
+				          som.SALES_ORD_ID ORD_ID,
+				          som.SALES_ORD_NO ORD_NO,
+				          S.CODE ORD_STUS_CODE,
+				          som.STUS_CODE_ID ORD_STUS_ID,
+				          NVL (som.CUST_PO_NO, ' ') PO_NO,
+				          sod.ITM_STK_ID PRODUCT_ID,
+				          stk.STK_CODE PRODUCT_CODE,
+				          stk.STK_DESC PRODUCT_NAME,
+				          UPPER(NVL (som.REF_NO, ' ')) REF_NO,
+				          NVL (rs.STUS_CODE_ID, ' ') RENT_STUS,
+				          NVL (som.MEM_ID, 0) SALESMAN_MEM_ID,
+				          UPPER(NVL (mem.MEM_CODE, ' ')) SALESMAN_CODE,
+				          NVL (mem.MEM_TYPE, 0) SALESMAN_MEM_TYPE_ID,
+				          NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
+				          cp2.TEL_M1 MAIL_TEL_MOB,
+				          cp2.TELF MAIL_TEL_FAX,
+				          cp2.TEL_O MAIL_TEL_OFF,
+				          cp2.TEL_R MAIL_TEL_RES,
+				          cp3.TELF INST_TEL_FAX,
+				          cp3.TEL_M1 INST_TEL_MOB,
+				          cp3.TEL_O INST_TEL_OFF,
+				          cp3.TEL_R INST_TEL_RES,
+				          NVL (ir.SIRIM_NO, ' ') SIRIM_NO,
+				          NVL (ir.SERIAL_NO, ' ') SERIAL_NO,
+				          sod.ITM_PRC_ID,
+				          som.PV_MONTH PV_MONTH,
+				          som.PV_YEAR PV_YEAR,
+				          UPPER(NVL (pm.PROMO_CODE, ' ')) PROMO_CODE,
+				          NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
+				          UPPER(NVL (som.BINDING_NO, ' ')) RELATED_NO,
+				          NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
+				          ie.INSTALL_ENTRY_ID,
+				          ekey.SALES_ORD_ID EKEY_IN_ID,
+				          som.PCKAGE_BINDING_NO,
+				          SOM.BNDL_ID
+				     FROM SAL0001D som
+				          JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
+				          JOIN SYS0026M stk ON stk.STK_ID = sod.ITM_STK_ID
+				          JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
+				          JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
+				          JOIN SAL0045D i ON i.SALES_ORD_ID = som.SALES_ORD_ID
+				          JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
+				          LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
+				          LEFT JOIN SAL0071D rs
+				             ON rs.SALES_ORD_ID = som.SALES_ORD_ID AND som.APP_TYPE_ID = 66
+				          LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID
+				          LEFT JOIN SAL0027D cp3 ON cp3.CUST_CNTC_ID = i.CNT_ID
+				          LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
+				          LEFT JOIN ( (SELECT  SALES_ORD_ID, INSTALL_ENTRY_ID
+				              FROM (SELECT SALES_ORD_ID,
+				                           INSTALL_ENTRY_ID,
+				                           RANK ()
+				                           OVER (PARTITION BY SALES_ORD_ID
+				                                 ORDER BY INSTALL_ENTRY_ID DESC)
+				                              RANK
+				                      FROM SAL0046D
+				                     WHERE STUS_CODE_ID = 4)
+				             WHERE RANK = 1)) ei ON ei.SALES_ORD_ID = som.SALES_ORD_ID
+				          LEFT JOIN
+				          SAL0046D ie
+				             ON     ie.SALES_ORD_ID = som.SALES_ORD_ID
+				                AND ie.INSTALL_ENTRY_ID = ei.INSTALL_ENTRY_ID
+				          LEFT JOIN ((SELECT RESULT_ID,
+				                   ENTRY_ID,
+				                   SIRIM_NO,
+				                   SERIAL_NO
+				              FROM (SELECT RESULT_ID,
+				                           ENTRY_ID,
+				                           RANK ()
+				                           OVER (PARTITION BY ENTRY_ID
+				                                 ORDER BY RESULT_ID DESC)
+				                              RANK,
+				                           SIRIM_NO,
+				                           SERIAL_NO
+				                      FROM SAL0047D
+				                     WHERE STUS_CODE_ID = 4)
+				             WHERE RANK = 1)) ir ON ir.ENTRY_ID = ie.INSTALL_ENTRY_ID
+				          LEFT JOIN SAL0017D pm ON pm.PROMO_ID = som.PROMO_ID
+				          LEFT JOIN SAL0213M ekey ON ekey.SALES_ORD_ID = som.SALES_ORD_ID
+				          where
+				          som.CUST_ID IN (
+				        SELECT /*+precompute_subquery*/ CUST_ID
+				        FROM SAL0029D T
+				        WHERE 1 = 1
+              ))  V1
+              ]]>
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
 
            /*

@@ -137,10 +137,10 @@
               and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
             <if test="reqsdt !=null and reqsdt !=''">
-              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'yyyymmdd')
+              and l47.reqst_require_dt <![CDATA[>=]]> to_date(#{reqsdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
            </if>
            <if test="reqedt !=null and reqedt !=''">
-              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
+              and l47.reqst_require_dt <![CDATA[<=]]> to_date(#{reqedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
            </if>
             <if test="appntsdt !=null and appntsdt !=''">
               and to_char(s46.APPNT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{appntsdt},'dd/mm/yyyy'),'yyyymmdd')

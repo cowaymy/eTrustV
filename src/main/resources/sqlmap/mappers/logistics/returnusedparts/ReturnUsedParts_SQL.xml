@@ -31,70 +31,47 @@
 </insert>
 
 	<select id="returnPartsList" parameterType="Map" resultType="egovMap">
-		SELECT
-        ROWNUM rnum,
-        l82.SEQ,
-        l82.SVC_ORD_ID service_order,
-        s01.SALES_ORD_NO order_no,
-        l82.CUST_ID customer,
-        s29.NAME customer_name,
-
-        TO_CHAR(s06.SETL_DT,'YYYY/MM/DD') service_date,
-
-        (select STK_CODE from sys0026m where STK_ID=l82.STK_ID) material_code,
-        s26.STK_CODE material_code_actual,
-        s26.STK_DESC material_name,
-        l82.STK_ID,
-        l82.OLD_SERIAL serial_number,
-
-        l82.NEW_SERIAL serial,
-        l82.QTY qty,
-        l82.COMMENTS text,
-        l82.CMPLT_YN return_complete,
-
-        TO_CHAR(l82.CMPLT_DT,'YYYY/MM/DD') return_complete_date,
-
-        l82.RESN_CODE no_parts_return,
-        l82.CRT_DT,
-        l82.CRT_USER_ID,
-        l82.UPD_DT,
-        l82.UPD_USER_ID,
-        S26.SERIAL_CHK,
-        S26.STK_TYPE_ID,
-        l82.STK_ID_NEW,
-        o01.BRNCH,
-        o01.MEM_CODE,
-        o01.NAME,
-       (select CODE from SYS0005M where BRNCH_ID = o01.BRNCH ) code,
-       (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name
-       from LOG0082M l82
-        join sal0029d s29 on l82.CUST_ID=s29.CUST_ID
-        join sys0026m s26 on l82.STK_ID=s26.STK_ID
-        join org0001d o01 on l82.MEM_ID = o01.MEM_ID
-        join SVC0008D s08 on l82.SVC_ORD_ID=s08.NO
-        join SAL0001D s01 on s08.SALES_ORD_ID=s01.SALES_ORD_ID
-        join SVC0006D s06 on s06.RESULT_ID=l82.RESULT_ID
-
-        JOIN LOG0082M SM ON SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID) from LOG0082M aa where  aa.SVC_ORD_ID =  SM.SVC_ORD_ID) AND SM.SEQ = l82.SEQ
-       <!-- JOIN (select * from LOG0082M SM
-                        where SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID)
-                                               from LOG0082M aa
-                                                where
-                                                aa.SVC_ORD_ID =  SM.SVC_ORD_ID ))SM
-                                                on (SM.SEQ = l82.SEQ)
-        JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
-       group by WW.RESULT_ID
-       having sum(WW.qty)<![CDATA[<>]]>  0)QQ on (QQ.RESULT_ID = SM.RESULT_ID) -->
-       where 1=1
-       AND EXISTS  (   <!--   by leo.ham 26-06-2020  -->
-             select
-                    WW.RESULT_ID, sum(WW.qty)
-                from LOG0082M WW
-                  WHERE RESULT_ID = SM.RESULT_ID
-                group by WW.RESULT_ID having sum(WW.qty) <![CDATA[<>]]>  0
-        )
-
-	   <if test="searchOder != null and searchOder !=''">
+		    SELECT ROWNUM rnum,
+                  l82.SEQ,
+                  l82.SVC_ORD_ID service_order,
+                  s01.SALES_ORD_NO order_no,
+                  l82.CUST_ID customer,
+                  s29.NAME customer_name,
+                  TO_CHAR(s06.SETL_DT, 'YYYY/MM/DD') service_date,
+                  (SELECT STK_CODE   FROM sys0026m   WHERE STK_ID=l82.STK_ID) material_code,
+                  s26.STK_CODE material_code_actual,
+                  s26.STK_DESC material_name,
+                  l82.STK_ID,
+                  l82.OLD_SERIAL serial_number,
+                  l82.NEW_SERIAL serial, l82.QTY qty,
+                  l82.COMMENTS text, l82.CMPLT_YN return_complete,
+                  TO_CHAR(l82.CMPLT_DT, 'YYYY/MM/DD') return_complete_date,
+                  l82.RESN_CODE no_parts_return,
+                  l82.CRT_DT,
+                  l82.CRT_USER_ID,
+                  l82.UPD_DT,
+                  l82.UPD_USER_ID,
+                  S26.SERIAL_CHK,
+                  S26.STK_TYPE_ID,
+                  l82.STK_ID_NEW,
+                  o01.BRNCH,
+                  o01.MEM_CODE,
+                  o01.NAME,
+                  (SELECT CODE   FROM SYS0005M   WHERE BRNCH_ID = o01.BRNCH ) code,
+                  (SELECT NAME   FROM SYS0005M   WHERE BRNCH_ID = o01.BRNCH ) brnch_name
+    FROM LOG0082M l82
+    JOIN sal0029d s29 ON l82.CUST_ID=s29.CUST_ID
+    JOIN sys0026m s26 ON l82.STK_ID=s26.STK_ID
+    JOIN org0001d o01 ON l82.MEM_ID = o01.MEM_ID
+    JOIN SVC0008D s08 ON l82.SVC_ORD_ID=s08.NO
+    JOIN gbslcvd.SAL0001D s01 ON s08.SALES_ORD_ID=s01.SALES_ORD_ID
+    JOIN SVC0006D s06 ON s06.RESULT_ID=l82.RESULT_ID
+    JOIN LOG0082M SM ON SM.RESULT_ID =  (SELECT MAX(aa.RESULT_ID)   FROM LOG0082M aa   WHERE aa.SVC_ORD_ID = SM.SVC_ORD_ID)
+    AND SM.SEQ = l82.SEQ
+    WHERE 1=1
+     AND EXISTS (SELECT WW.RESULT_ID,            sum(WW.qty)     FROM LOG0082M WW     WHERE RESULT_ID = SM.RESULT_ID     GROUP BY WW.RESULT_ID
+     HAVING sum(WW.qty)  <![CDATA[<>]]>  0)
+       <if test="searchOder != null and searchOder !=''">
            AND l82.SVC_ORD_ID = #{searchOder}
        </if>
        <if test="searchCustomer != null and searchCustomer !=''">
@@ -116,17 +93,17 @@
          </otherwise>
        </choose>
        </if>
-	   <if test="servicesdt !=null and servicesdt !=''">
-           and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{servicesdt},'dd/mm/yyyy'),'yyyymmdd')
+       <if test="servicesdt !=null and servicesdt !=''">
+            AND l82.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
        </if>
        <if test="serviceedt !=null and serviceedt !=''">
-          and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{serviceedt},'dd/mm/yyyy'),'yyyymmdd')
+            AND l82.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
        </if>
         <if test="returnsdt !=null and returnsdt !=''">
-          and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{returnsdt},'dd/mm/yyyy'),'yyyymmdd')
+            AND l82.CMPLT_DT <![CDATA[>=]]>  to_date(#{returnsdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
        </if>
        <if test="returnedt !=null and returnedt !=''">
-          and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd')
+           AND l82.CMPLT_DT <![CDATA[<=]]>  to_date(#{returnedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
        </if>
         <if test="searchLoc != null and searchLoc !=''">
         and o01.MEM_CODE in

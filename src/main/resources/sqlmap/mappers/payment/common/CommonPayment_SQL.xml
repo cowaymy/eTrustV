@@ -1649,7 +1649,7 @@ ORDER BY a.or_no
         AND NVL(A.REV_STUS_ID,0) <![CDATA[ < ]]> 5
         AND B.PAY_ITM_APPV_NO = #{keyInApprovalNo}
         AND a.PAY_ITM_AMT = #{keyInAmount}
-        AND TO_CHAR(B.PAY_ITM_REF_DT,'DD/MM/YYYY') = #{keyInTrDate}
+        AND B.PAY_ITM_REF_DT BETWEEN to_date(#{keyInTrDate}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS') AND  to_date(#{keyInTrDate}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
         AND B.PAY_ITM_BANK_ACC_ID = #{keyInMerchantBank}
         AND SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) = SUBSTR(#{keyInCardNo1} || #{keyInCardNo2},1,6) || #{keyInCardNo4}
     </select>

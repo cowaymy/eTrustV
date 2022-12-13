@@ -208,27 +208,23 @@
       </foreach>
     </if>
     <if test="installNo != null and installNo != ''">
-      AND ( (TO_NUMBER(INSTR(UPPER(IE.INSTALL_ENTRY_NO),
-      UPPER(LTRIM(RTRIM(#{installNo})))),99999)) > 0 )
+       AND IE.INSTALL_ENTRY_NO = #{installNo}
     </if>
     <if test="orderNo != null and orderNo != ''">
-      AND ( (TO_NUMBER(INSTR(UPPER(SOM.SALES_ORD_NO),
-      UPPER(LTRIM(RTRIM(#{orderNo})))),99999)) > 0 )
+       AND SOM.SALES_ORD_NO = #{orderNo}
     </if>
     <if test="orderRefNo != null and orderRefNo != ''">
-      AND SOM.REF_NO = #{orderRefNo}
+       AND SOM.REF_NO = #{orderRefNo}
     </if>
     <if test="poNo != null and poNo != ''">
-      AND ( (TO_NUMBER(INSTR(UPPER(SOM.CUST_PO_NO),
-      UPPER(LTRIM(RTRIM(#{poNo})))),99999)) > 0 )
+       AND SOM.CUST_PO_NO =#{poNo}
     </if>
     <if test="ctCode != null and ctCode != ''">
       AND ((CASE WHEN (MEM.MEM_ID IS NOT NULL) THEN MEM.MEM_CODE ELSE '' END)
       = #{ctCode})
     </if>
     <if test="dscCodeList != null and dscCodeList != ''">
-      --AND I.BRNCH_ID IN
-        AND som.SALES_ORD_ID  IN (SELECT SALES_ORD_ID FROM SAL0045D WHERE BRNCH_ID IN
+      AND I.BRNCH_ID IN
       <foreach item="item" collection="dscCodeList" index="index"
         open="(" separator="," close=")">
         #{item}
@@ -239,24 +235,16 @@
       AND CUST.CUST_ID = #{customerId}
     </if>
     <if test="customerName != null and customerName != ''">
-      and ( (TO_NUMBER(INSTR(LTRIM(RTRIM(UPPER(CUST.NAME))),
-      UPPER(LTRIM(RTRIM(#{customerName})))),99999)) > 0 )
+      AND CUST.NAME = #{customerName}
     </if>
     <if test="customerIc != null and customerIc != ''">
-      AND ( (TO_NUMBER(INSTR(LTRIM(RTRIM(UPPER(CUST.NRIC))),
-      UPPER(LTRIM(RTRIM(#{customerIc})))),99999)) > 0 )
+      AND CUST.NRIC = #{customerIc}
     </if>
     <if test="sirimNo != null and sirimNo != ''">
       AND IR.SIRIM_NO = #{sirimNo}
-      <!-- AND ( (TO_NUMBER(INSTR(LTRIM(RTRIM(UPPER(CASE WHEN ( Extent9.SIRIM_NO
-        IS NOT NULL ) THEN Extent9.SIRIM_NO ELSE '' END))), UPPER(LTRIM(RTRIM(#{sirimNo})))),99999))
-        > 0 ) ) -->
     </if>
     <if test="serialNo != null and serialNo != ''">
       AND IR.SERIAL_NO = #{serialNo}
-      <!-- AND ( (TO_NUMBER(INSTR(LTRIM(RTRIM(UPPER(CASE WHEN ( Extent9.SERIAL_NO
-        IS NOT NULL ) THEN Extent9.SERIAL_NO ELSE '' END))), UPPER(LTRIM(RTRIM(#{serialNo}))),99999))
-        > 0 ) ) -->
     </if>
     <if test="instalStrlDate != '' and installEndDate == '' ">
       <![CDATA[ AND  IE.INSTALL_DT  >= TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') ]]>
