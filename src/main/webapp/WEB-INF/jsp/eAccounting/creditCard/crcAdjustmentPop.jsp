@@ -165,8 +165,8 @@
                 $("#reqBtns").show();
 				$('#approverSection').hide();
             }
-
-            var adjItems = $.parseJSON('${adjItems}');
+			var item1 = '${adjItems}';
+            var adjItems = $.parseJSON(item1.replace(/[\n]/g, '\\n'));
 
             if("${item.mode}" == "V"){
 	            if(adjItems[0].appvPrcssStus == "Rejected" || adjItems[0].appvPrcssStus == "Approved"){
