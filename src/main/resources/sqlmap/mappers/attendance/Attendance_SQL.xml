@@ -204,6 +204,7 @@
                   ELSE 1 END AS ATTENDANCE
             FROM (
             SELECT * FROM (
+            SELECT * FROM (
                      WITH DAY_LIST AS
                        (
                             SELECT
@@ -217,8 +218,6 @@
 
                         ),
                             ATD_LIST AS (
-                             SELECT * FROM
-		                            (
 			                            SELECT
 			                                  A.BATCH_ID
 			                                , B.TIME
@@ -229,7 +228,6 @@
 			                                , B.MANAGER_CODE
 			                                , B.DT_FROM
 			                                , B.DT_TO
-			                                , ROW_NUMBER() OVER(PARTITION BY B.BATCH_ID, B.MEM_CODE, B.DT_FROM, B.DT_TO ORDER BY B.TIME ASC) ROW_NUM
 			                            FROM ATD0001M A
 			                            JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
 			                            WHERE 1=1
@@ -237,8 +235,6 @@
 			                            AND NVL(B.DISAB,0) = 0
 			                            AND BATCH_MTH_YEAR = #{calMonthYear}
 			                            AND MANAGER_CODE =   #{managerCode}
-		                            )
-		                     WHERE ROW_NUM =1
                         )
                         SELECT
                                A.ATD_DATE
@@ -250,10 +246,11 @@
                              , B.YEAR
                              , B.MONTH
                              , 1 ATD_CHECK
+                             , ROW_NUMBER() OVER(PARTITION BY A.ATD_DATE ORDER BY B.TIME ASC) ROW_NUM
                         FROM DAY_LIST A
                         LEFT JOIN ATD_LIST B ON A.ATD_DATE BETWEEN TO_CHAR(B.DT_FROM,'YYYY/MM/DD') AND TO_CHAR(B.DT_TO,'YYYY/MM/DD')
                         GROUP BY A.ATD_DATE, TO_CHAR(TO_DATE(A.ATD_DATE,'YYYY/MM/DD'), 'DAY'), B.ATD_TYPE, B.TIME, B.YEAR, B.MONTH, A.MANAGER_CODE
-                     ) PIVOT (SUM(ATD_CHECK) FOR ATD_TYPE IN ('A0001' AS Info_Tech, 'A0002' AS E_Leave,'A0003' AS Public_Holiday,'A0004' AS Training ))
+                     ) WHERE ROW_NUM = 1 ) PIVOT (SUM(ATD_CHECK) FOR ATD_TYPE IN ('A0001' AS Info_Tech, 'A0002' AS E_Leave,'A0003' AS Public_Holiday,'A0004' AS Training ))
         )
         ORDER BY 1
 	</select>
