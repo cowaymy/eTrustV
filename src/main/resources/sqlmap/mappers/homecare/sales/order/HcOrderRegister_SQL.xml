@@ -71,7 +71,21 @@
                         </if>
                 </otherwise>
             </choose>
-        )
+        ) A
+        <if test="postcode != null and postcode != ''">
+            LEFT JOIN SYS0098M POSTCODE_BLOCK
+                ON POSTCODE_BLOCK.PARAM_VAL = #{postcode}
+                AND POSTCODE_BLOCK.MODULE = 'SALES'
+                AND POSTCODE_BLOCK.SUB_MODULE = 'KEYIN_BLOCK'
+                AND POSTCODE_BLOCK.PARAM_CODE = 'POSTCODE'
+            LEFT JOIN SYS0098M STK_ID_BLOCK
+                ON STK_ID_BLOCK.PARAM_VAL = TO_CHAR(A.STK_ID)
+                AND STK_ID_BLOCK.MODULE = 'SALES'
+                AND STK_ID_BLOCK.SUB_MODULE = 'KEYIN_BLOCK'
+                AND STK_ID_BLOCK.PARAM_CODE = 'STK_ID'
+            WHERE POSTCODE_BLOCK.SEQ IS NULL
+            OR STK_ID_BLOCK.SEQ IS NULL
+        </if>
         ORDER BY DISCONTINUE, CODE_NAME ASC, STK_ID ASC
     </select>
 

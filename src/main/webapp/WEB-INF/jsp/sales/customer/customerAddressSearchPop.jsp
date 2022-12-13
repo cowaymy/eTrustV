@@ -51,6 +51,7 @@
       else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_INST_ADD'){
         fn_loadInstallAddr(custAddId);
         fn_loadBillAddr(custAddId);
+        fn_resetSales()
       }
       else{
         eval(${callPrgm}(custAddId));

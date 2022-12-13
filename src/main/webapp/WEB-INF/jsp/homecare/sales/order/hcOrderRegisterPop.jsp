@@ -280,6 +280,7 @@
 
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
+                	fn_clearSales();
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
                         $("#validAreaIdYN").val("N");
@@ -2506,6 +2507,7 @@ console.log(orderVO);
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
         $('#btnMatRltdNo').addClass('blind');
+        $('#srvPacId').val('')
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -2624,11 +2626,11 @@ console.log(orderVO);
     // product comboBox 생성
     function fn_setProductCombo(){
     	 var stkType = $("#appType").val() == '66' ? '1' : '2';
-
+    	 const postcode = $("#instPostCode").val()
          // StkCategoryID - Mattress(5706)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5706'}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5706', postcode}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
          // StkCategoryID - Frame(5707)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5707'}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5707', postcode}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
     }
 
     function fn_checkEkeyinSof(sofNo) {

@@ -1515,18 +1515,20 @@ var userType = '${SESSION_INFO.userTypeId}';
   // product comboBox 생성
   function fn_setProductCombo() {
     var stkType = $("#appType").val() == '66' ? '1' : '2';
-
+    const postcode = $("#instPostCode").val()
     // StkCategoryID - Mattress(5706)
     doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {
       stkType : stkType,
       srvPacId : $('#srvPacId').val(),
-      stkCtgryId : '5706'
+      stkCtgryId : '5706',
+      postcode
     }, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
     // StkCategoryID - Frame(5707)
     doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {
       stkType : stkType,
       srvPacId : $('#srvPacId').val(),
-      stkCtgryId : '5707'
+      stkCtgryId : '5707',
+      postcode
     }, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
   }
 
@@ -1974,6 +1976,10 @@ var userType = '${SESSION_INFO.userTypeId}';
         $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
       }
     });
+  }
+
+  function fn_resetSales() {
+      $("#srvPacId").change()
   }
 
   function fn_loadInstallAddr(custAddId) {
