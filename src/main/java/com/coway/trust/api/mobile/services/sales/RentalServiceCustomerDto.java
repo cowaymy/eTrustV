@@ -8,26 +8,27 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 public class RentalServiceCustomerDto {
-	@ApiModelProperty(value = "고객명")	
+	@ApiModelProperty(value = "고객명")
 	private String custName;
-	
+
 	@ApiModelProperty(value = "주문번호")
 	private String salesOrderNo;
-	
+
 	@ApiModelProperty(value = "결제수단")
 	private String paymentMode;
-	
-	@ApiModelProperty(value = "타겟금액") 
+
+	@ApiModelProperty(value = "타겟금액")
 	private int targetAmount;
-	
-	@ApiModelProperty(value = "실적금액") 
+
+	@ApiModelProperty(value = "실적금액")
 	private int amount;
 
 	private int paymentModeId;
-	
-	
-	
-	
+
+	private String deductDt;
+
+	private String status;
+
 
 
 	public int getPaymentModeId() {
@@ -77,10 +78,26 @@ public class RentalServiceCustomerDto {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	
+
+	public String getDeductDt() {
+		return deductDt;
+	}
+
+	public void setDeductDt(String deductDt) {
+		this.deductDt = deductDt;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public static RentalServiceCustomerDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, RentalServiceCustomerDto.class);
 	}
 
-	
+
 }
