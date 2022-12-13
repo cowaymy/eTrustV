@@ -494,7 +494,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         // MembershipQuotationServiceImpl.insertQuotationInfo
-        boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
+        /*boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
         boolean boolZeroRat = "Y".equals(param.getZeroRatYn()) ? true : false;
 
         if(!boolEurCert) {
@@ -594,7 +594,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                     eSVMApiMapper.insertSal94D(eFilterMap);
                 }
             }
-        }
+        }*/
 
         return rtn;
     }
