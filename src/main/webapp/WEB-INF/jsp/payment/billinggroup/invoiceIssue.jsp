@@ -43,7 +43,9 @@ function fn_makeStatementList(type){
         if ("${sessionRoleId}" == 130  || "${sessionRoleId}" == 405 || "${sessionRoleId}" == 406   || "${sessionRoleId}" == 408 || "${sessionRoleId}" == 409
         	|| "${sessionRoleId}" == 414 || "${sessionRoleId}" == 414 || "${sessionRoleId}" == 415
             || "${sessionRoleId}" == 406 || "${sessionRoleId}" == 193 || "${sessionRoleId}" == 192 || "${sessionRoleId}" == 191 || "${sessionRoleId}" == 89
-        	|| "${sessionRoleId}" == 87   || "${sessionRoleId}" == 85 || "${sessionRoleId}" == 252  || "${sessionRoleId}" == 200 ) {
+        	|| "${sessionRoleId}" == 87   || "${sessionRoleId}" == 85 || "${sessionRoleId}" == 252  || "${sessionRoleId}" == 200
+        	|| "${sessionRoleId}" == 121 || "${sessionRoleId}" == 120 || "${sessionRoleId}" == 119 || "${sessionRoleId}" == 118 || "${sessionRoleId}" == 117
+        	|| "${sessionRoleId}" == 348 || "${sessionRoleId}" == 349 || "${sessionRoleId}" == 350 || "${sessionRoleId}" == 351 || "${sessionRoleId}" == 352) {
 
 		$("#statementList").append("<option value='initSummaryOfInvoicePop.do'>Summary of Invoice</option>");
 		$("#statementList").append("<option value='initSummaryOfAccountPop.do'>Summary of Account</option>");
