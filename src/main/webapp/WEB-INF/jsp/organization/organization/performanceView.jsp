@@ -4,9 +4,10 @@
 <script type="text/javaScript" language="javascript">
 
 var listMyGridID;
+var memCode;
 
 $(document).ready(function() {
-
+	 bindValue();
 	 createAUIGrid();
 
      AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
@@ -26,56 +27,83 @@ $(document).ready(function() {
 
      });
 
-
-
-     var memCode;
-     Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
-          Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do", {}, function (result2) {
-                 if(result.userTypeId == 1 && result.roleType != 111) {
-                     memCode = '${SESSION_INFO.userName}';
-                 }
-                 else {
-                     memCode = result2[0].memCode;
-                }
-
-                 $("#Code").val(memCode);
-                 $("#Code").attr("class", "w100p readonly");
-
-            });
-        });
-
-
-		if("${memType}"== "1"){
-
-		    if("${SESSION_INFO.memberLevel}" =="1"){
-		       $("#orgCode").attr("class", "w100p readonly");
-		       $("#orgCode").attr("readonly", "readonly");
-
-		   }else if("${SESSION_INFO.memberLevel}" =="2"){
-		       $("#orgCode").attr("class", "w100p readonly");
-		       $("#orgCode").attr("readonly", "readonly");
-		       $("#grpCode").attr("class", "w100p readonly");
-		       $("#grpCode").attr("readonly", "readonly");
-
-		   }else if("${SESSION_INFO.memberLevel}" =="3"){
-		       $("#orgCode").attr("class", "w100p readonly");
-		       $("#orgCode").attr("readonly", "readonly");
-
-		       $("#grpCode").attr("class", "w100p readonly");
-		       $("#grpCode").attr("readonly", "readonly");
-
-		       $("#deptCode").attr("class", "w100p readonly");
-		       $("#deptCode").attr("readonly", "readonly");
-
-		   }
-		}
-
-
-
+    getMemCode();
     doGetComboOrder('/sales/order/colorGridProductList.do', '', '', '', 'cmbProduct', 'M', 'f_multiCombo'); //Common Code
     doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
-
 });
+
+
+function getMemCode(){
+    Common.ajax("GET", "/organization/selectSimulatedMemberCRSCode.do" , null, function (result2) {
+           if('${SESSION_INFO.userTypeId}' == 1 && '${SESSION_INFO.roleId}' != 111) {
+               memCode = '${SESSION_INFO.userName}';
+           }
+           else {
+               memCode = result2[0].memCode;
+          }
+
+           $("#Code").val(memCode);
+           $("#Code").attr("class", "w100p readonly");
+           fn_selectListAjax();
+      });
+}
+
+function bindValue(){
+    if("${memType}"== "1"){
+        var orgCode = '${orgCode}';
+        var grpCode = '${grpCode}';
+        var deptCode = '${deptCode}';
+        orgCode = orgCode.replace(/^\s+|\s+$/gm,'');
+        grpCode = grpCode.replace(/^\s+|\s+$/gm,'');
+        deptCode = deptCode.replace(/^\s+|\s+$/gm,'');
+
+        if("${SESSION_INFO.memberLevel}" =="1"){
+           $("#orgCode").attr("class", "w100p readonly");
+           $("#orgCode").attr("readonly", "readonly");
+           $("#orgCode").val(orgCode);
+
+       }else if("${SESSION_INFO.memberLevel}" =="2"){
+           $("#orgCode").attr("class", "w100p readonly");
+           $("#orgCode").attr("readonly", "readonly");
+           $("#orgCode").val(orgCode);
+
+           $("#grpCode").attr("class", "w100p readonly");
+           $("#grpCode").attr("readonly", "readonly");
+           $("#grpCode").val( grpCode);
+
+       }else if("${SESSION_INFO.memberLevel}" =="3"){
+           $("#orgCode").attr("class", "w100p readonly");
+           $("#orgCode").attr("readonly", "readonly");
+           $("#orgCode").val(orgCode);
+
+           $("#grpCode").attr("class", "w100p readonly");
+           $("#grpCode").attr("readonly", "readonly");
+           $("#grpCode").val( grpCode);
+
+           $("#deptCode").attr("class", "w100p readonly");
+           $("#deptCode").attr("readonly", "readonly");
+           $("#deptCode").val( deptCode);
+
+       }
+       else{
+           $("#orgCode").attr("class", "w100p readonly");
+           $("#orgCode").attr("readonly", "readonly");
+           $("#orgCode").val(orgCode);
+
+           $("#grpCode").attr("class", "w100p readonly");
+           $("#grpCode").attr("readonly", "readonly");
+           $("#grpCode").val(grpCode);
+
+           $("#deptCode").attr("class", "w100p readonly");
+           $("#deptCode").attr("readonly", "readonly");
+           $("#deptCode").val(deptCode);
+
+           $("#memCode").attr("class", "w100p readonly");
+           $("#memCode").attr("readonly", "readonly");
+           $("#memCode").val("${SESSION_INFO.userName}");
+       }
+    }
+}
 
 function f_multiCombo(){
     $(function() {
@@ -169,7 +197,7 @@ function createAUIGrid() {
     };
 
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
-    	 fn_selectListAjax();
+//     	 fn_selectListAjax();
 
 }
 
@@ -200,7 +228,6 @@ function fn_selectListAjax() {
     Common.ajax("GET", "/organization/selectPerformanceView.do", $("#listSearchForm").serialize(), function(result) {
         AUIGrid.setGridData(listMyGridID, result);
     });
-
 }
 
 
@@ -277,13 +304,13 @@ $.fn.clearForm = function() {
     <td><input id="Code" name="Code" type="text" title="Code"  class="w100p" readonly="readonly"/></td>
 
     <th scope="row">Org Code</th>
-    <td><input id="orgCode" name="orgCode" type="text" title="orgCode"  class="w100p" value = '${orgCode}'.trim() /></td>
+    <td><input id="orgCode" name="orgCode" type="text" title="orgCode"  class="w100p" /></td>
 
     <th scope="row">Grp Code</th>
-    <td><input id="grpCode" name="grpCode" type="text" title="grpCode"  class="w100p" value = '${grpCode}'.trim()/></td>
+    <td><input id="grpCode" name="grpCode" type="text" title="grpCode"  class="w100p" /></td>
 
     <th scope="row">Dept Code</th>
-    <td><input id="deptCode" name="deptCode" type="text" title="deptCode"  class="w100p" value = '${deptCode}'.trim()/></td>
+    <td><input id="deptCode" name="deptCode" type="text" title="deptCode"  class="w100p"/></td>
 </tr>
 
 <tr>

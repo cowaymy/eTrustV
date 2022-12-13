@@ -6,6 +6,7 @@
           SELECT
                 TYPE
               , CODE_NAME
+              , CODE_ID
               , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(A,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(A,0))||'%' END ELSE TO_CHAR(NVL(A,0)) END A
               , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(B,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(B,0))||'%' END ELSE TO_CHAR(NVL(B,0)) END B
               , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(C,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(C,0))||'%' END ELSE TO_CHAR(NVL(C,0)) END C
@@ -14,7 +15,7 @@
            (
 	            SELECT * FROM
 	            (
-	             SELECT MONTH, TYPE, CODE_NAME, CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
+	             SELECT MONTH, TYPE, CODE_NAME, CODE_ID , CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
 	                (
 	                SELECT
 	                         CASE   WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-3) THEN 'A'
@@ -24,26 +25,25 @@
                               END AS MONTH
 	                        , A.TYPE
 	                        , B.CODE_NAME
+	                        , B.CODE_ID
 	                        , SUM(NVL(A.W1,0)) W1
 	                        , SUM(NVL(A.W2,0)) W2
 	                        , SUM(NVL(A.W3,0)) W3
 	                        , SUM(NVL(A.W4,0)) W4
-	                 FROM ORG0043T A
-	                 JOIN SYS0013M B ON A.TYPE = B.CODE_ID
-	                 WHERE A.MEM_CODE = #{memCode}
-	                 AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
-	                 AND B.CODE_ID NOT IN (6809)
-	                 GROUP BY A.MEM_CODE, A.YEAR, A.MONTH, A.TYPE, B.CODE_NAME
-	                 ORDER BY A.YEAR, A.MONTH, A.TYPE
+	                 FROM SYS0013M B
+                     LEFT JOIN ORG0043T A ON A.TYPE = B.CODE_ID AND A.MEM_CODE = #{memCode}  AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+	                 WHERE  B.CODE_ID NOT IN (6809) AND B.CODE_ID BETWEEN 6604 AND 6608
+	                 GROUP BY A.YEAR, A.MONTH, A.TYPE, B.CODE_NAME, B.CODE_ID
+	                 ORDER BY B.CODE_ID
 	                )
 	                UNPIVOT INCLUDE NULLS
 	                (
 	                AMT FOR WEEKS IN ( W1 AS 'W1', W2 AS 'W2', W3 AS 'W3',W4 AS 'W4')
 	                )
-	            GROUP BY MONTH, TYPE, CODE_NAME
+	            GROUP BY MONTH, TYPE, CODE_NAME, CODE_ID
 	            )
 	            PIVOT (SUM(RESULT) FOR MONTH IN ('A' AS A, 'B' AS b, 'C' AS C, 'D' AS D))
-	            ORDER BY TYPE
+	            ORDER BY CODE_ID
             )
         </select>
 
@@ -216,16 +216,16 @@
                         WHERE 1 = 1
                         AND E.MEM_TYPE = 1
                          <if test='orgCode != null and orgCode != "" and orgCode != " "'>
-                            AND UPPER(A.ORG_CODE) = UPPER(#{orgCode})
+                            AND A.ORG_CODE = #{orgCode}
                         </if>
                         <if test='grpCode != null and grpCode != "" and grpCode != " "'>
-                            AND UPPER(A.GRP_CODE) = UPPER(#{grpCode})
+                            AND A.GRP_CODE = #{grpCode}
                         </if>
                          <if test='deptCode != null and deptCode != "" and deptCode != " "'>
-                            AND UPPER(A.DEPT_CODE) = UPPER(#{deptCode})
+                            AND A.DEPT_CODE = #{deptCode}
                         </if>
                         <if test="memCode != null and memCode != ''">
-                            AND  UPPER(E.MEM_CODE) LIKE  UPPER('%' ||  #{memCode} || '%')
+                            AND  E.MEM_CODE = #{memCode}
                         </if>
                         <if test="memName != null and memName != ''">
                             AND  UPPER(E.NAME) LIKE UPPER('%' || #{memName} || '%')
