@@ -482,13 +482,13 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         if(null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
-        logger.debug("param :: {}", param);
+        logger.debug("param :: {}" + param);
 
         eSVMApiDto rtn = new eSVMApiDto();
         Map<String, Object> preInsMap = new HashMap<String, Object>();
 
         // Membership checking for Package ID = 9 when itemSrvMemExprDt = null
-        if(param.getSvmAllowFlg().equals(false) && param.getSrvMemPacId().equals("9"))
+        if(param.getSvmAllowFlg() == false && param.getSrvMemPacId().equals("9"))
         {
         	throw new ApplicationException(AppConstants.FAIL, "The order is too early to subscribe for SVM.");
         }
