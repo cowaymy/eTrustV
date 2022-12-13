@@ -337,7 +337,7 @@ function fn_switchTower(){
         <h2>CCP Auto-Approve Config</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                <li><p class="btn_blue"><a id="_switchTower" onclick ="fn_switchTower()"><spring:message code="sales.btn.switchTower"/></a></p></li>
+                <li><p class="btn_blue"><a id="_switchTower" onclick ="fn_switchTower()">Config Tower</a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search"/></a></p></li>
