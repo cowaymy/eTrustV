@@ -61,7 +61,7 @@
 	     SELECT DISTINCT
              CASE WHEN A.STUS_CODE_ID <> 4     THEN  A.SALES_ORD_NO
                      WHEN B.STUS IN ( '1','44' )         THEN B.SALES_ORDER_NO
-                     WHEN C.AS_STUS_ID = 1           THEN B.SALES_ORDER_NO
+                     WHEN C.AS_STUS_ID = 1           THEN A.SALES_ORD_NO
              END SALES_ORDER_NO
         FROM SAL0001D A
         LEFT JOIN SVC0130D B ON A.SALES_ORD_NO = B.SALES_ORDER_NO AND B.STUS IN ( '1','44' )
