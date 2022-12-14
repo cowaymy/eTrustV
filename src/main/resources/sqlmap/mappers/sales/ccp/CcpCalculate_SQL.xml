@@ -955,7 +955,7 @@ SELECT Extent1.CCP_ID   ,
                    CCP_EXPERIANR = #{experianRisk},
                    CCP_AGM_REQ = #{agmReq},
                    CCP_TEMPLATE = #{cowayTemplate},
-                   FIRST_CALL_DT = #{firstCallDate},
+                   FIRST_CALL_DT = TO_DATE(#{firstCallDate},'DD/MM/YYYY'),
 	               CUST_IS_PAYER = #{custIsPayerValue},
 	               THE_PAYER = #{thePayerValue},
 	               FAIL_VER_RSN = #{failVeriReasonValue}
