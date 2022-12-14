@@ -989,9 +989,14 @@ console.log(result);
 */
     // Daily Performance 리스트 조회.
     function fn_selectDailyPerformanceListAjax() {
+	if( (( '${SESSION_INFO.memberLevel}'== 1 || '${SESSION_INFO.memberLevel}'== 0) && ( '${SESSION_INFO.userTypeId}'== 1 ||  '${SESSION_INFO.userTypeId}'== 2)) || ( '${SESSION_INFO.userTypeId}' == 4) ){
         Common.ajax("GET", "/common/getDailyPerformance.do", {}, function (result) {
             AUIGrid.setGridData(detailGridID, result);
         });
+}else{
+	 $("#dailyPerf").remove();
+	 $("#detailGrid").remove();
+}
     }
 
     function fn_openPopup_tagStatus() {
