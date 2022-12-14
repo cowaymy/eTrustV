@@ -280,7 +280,10 @@
 
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
-                	fn_clearSales();
+                	console.log(convToOrdYn)
+                	if (convToOrdYn != "Y") {
+                		   fn_clearSales();
+                	}
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
                         $("#validAreaIdYN").val("N");
@@ -2588,7 +2591,7 @@ console.log(orderVO);
             if(!$('#pBtnCal').hasClass("blind")) {
                 //$('#aTabIN').click();
                 Common.alert('<b>Please press the Calculation button</b>', fn_goInstallTab);
-                return false;
+                instreturn false;
             }
         }
         */
