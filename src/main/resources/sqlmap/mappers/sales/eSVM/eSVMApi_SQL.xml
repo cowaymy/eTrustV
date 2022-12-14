@@ -1123,7 +1123,7 @@
 
     <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
 
-	    SELECT TO_CHAR(SRV_MEM_EXPR_DT, 'YYYY-MM-DD') AS SRV_MEM_EXPR_DT,
+	    SELECT TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD') AS SRV_MEM_EXPR_DT,
 		SRV_MEM_PAC_ID
 		FROM SAL1014V
 		WHERE ORD_ID =  #{salesOrdId}
