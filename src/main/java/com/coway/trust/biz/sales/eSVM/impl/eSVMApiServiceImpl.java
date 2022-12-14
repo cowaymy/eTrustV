@@ -1200,7 +1200,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
 			{
             	errorCode = 99;
             	errorHeader = "End of Membership";
-            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
+            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " months period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
 			}
     	}
 
