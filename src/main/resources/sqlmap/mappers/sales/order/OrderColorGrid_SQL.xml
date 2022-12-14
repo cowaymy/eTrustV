@@ -272,7 +272,7 @@
                             LEFT JOIN ORG0011D ORG11 ON mem.MEM_CODE = ORG11.HP_CODE AND TO_CHAR(ADD_MONTHS(TO_DATE(ORG11.PV_YEAR|| '/' || LPAD(ORG11.PV_MONTH,2,'0'), 'YYYY/MM'), -1), 'YYYY/MM') = som.PV_YEAR|| '/' || LPAD(som.PV_MONTH,2,'0')
                             and NVL(IS_NW,1)= 0
                 ]]>
-                            where chs.CUST_ID in (select /* +precompute_subquery */ CUST_ID from som)
+                            where 1=1
                             <if test="cmbCondition != null and cmbCondition != ''">
                                     AND
                             <foreach item="item" collection="cmbCondition" index="index" open="(" separator="OR" close=")">
