@@ -226,34 +226,34 @@ FROM (
               Extent1.AREA_ID IS NOT NULL
               OR Extent1.ADDR_DTL IS NOT NULL
             ) THEN (
-              Extent1.ADDR_DTL || '' || CASE
-                WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ''
-                ELSE ''
+              Extent1.ADDR_DTL || ' ' || CASE
+                WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ' '
+                ELSE ' '
               END || CASE
-                WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ''
-                ELSE ''
+                WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ' '
+                ELSE ' '
               END || CASE
-                WHEN Extent11.POSTCODE IS NOT NULL THEN Extent11.POSTCODE || ''
-                ELSE ''
+                WHEN Extent11.POSTCODE IS NOT NULL THEN Extent11.POSTCODE || ' '
+                ELSE ' '
               END || CASE
-                WHEN Extent11.CITY IS NOT NULL THEN Extent11.CITY || ''
-                ELSE ''
+                WHEN Extent11.CITY IS NOT NULL THEN Extent11.CITY || ' '
+                ELSE ' '
               END || CASE
-                WHEN Extent11.STATE IS NOT NULL THEN Extent11.STATE || ''
-                ELSE ''
+                WHEN Extent11.STATE IS NOT NULL THEN Extent11.STATE || ' '
+                ELSE ' '
               END || Extent11.COUNTRY
             )
-            ELSE Extent1.ADDR1 || '' || Extent1.ADDR2 || '' || (
+            ELSE Extent1.ADDR1 || ' ' || Extent1.ADDR2 || ' ' || (
               CASE
-                WHEN Extent1.ADDR3 IS NULL THEN ''
-                ELSE Extent1.ADDR3 || ''
+                WHEN Extent1.ADDR3 IS NULL THEN ' '
+                ELSE Extent1.ADDR3 || ' '
               END
             ) || (
               CASE
-                WHEN Extent1.ADDR4 IS NULL THEN ''
-                ELSE Extent1.ADDR4 || ''
+                WHEN Extent1.ADDR4 IS NULL THEN ' '
+                ELSE Extent1.ADDR4 || ' '
               END
-            ) || Extent1.POSTCODE || '' || Extent15.AREA_NAME || '' || Extent14.NAME || '' || Extent13.NAME
+            ) || Extent1.POSTCODE || ' ' || Extent15.AREA_NAME || ' ' || Extent14.NAME || ' ' || Extent13.NAME
           END as ADDRESS,
           Extent12.GRP_CODE,
           B.PV_MONTH,
