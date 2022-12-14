@@ -382,13 +382,6 @@
              AND S1.ECOMM_ORD_ID > 0
            </if>
            <if test='isSelectAll == null or isSelectAll == ""'>
-
-            <!--
-            AND M1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                          WHERE AA.CODE = BB.CODE
-                                                             AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
-                                                             AND BB.CODE = 'FRM')
-            --> -- Mattress, Frame
                   AND V1.APP_TYPE_ID NOT IN (5764)
            </if>
            <if test = 'memID != null and memID != ""'>
@@ -1576,7 +1569,6 @@
                 , V1.RELATED_NO
                 , V1.RELATED_ID
            FROM (
-           <![CDATA[
 			 SELECT DISTINCT
 				          cd.CODE APP_TYPE_CODE,
 				          som.APP_TYPE_ID,
@@ -1675,7 +1667,6 @@
 				        FROM SAL0029D T
 				        WHERE 1 = 1
               ))  V1
-              ]]>
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
 
            /*
