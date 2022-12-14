@@ -1762,17 +1762,10 @@
              AND EKEY_IN_ID IS NOT NULL
            </if>
            <if test='isSelectAll == null or isSelectAll == ""'>
-
-            <!--
-            AND M1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                          WHERE AA.CODE = BB.CODE
-                                                             AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
-                                                             AND BB.CODE = 'FRM')
-            --> -- Mattress, Frame
-                  AND V1.APP_TYPE_ID NOT IN (5764)
+             AND V1.APP_TYPE_ID NOT IN (5764)
            </if>
            <if test = 'memID != null and memID != ""'>
-           AND V1.SALESMAN_MEM_ID = #{memID}
+             AND V1.SALESMAN_MEM_ID = #{memID}
            </if>
     ) T
      WHERE 1=1
