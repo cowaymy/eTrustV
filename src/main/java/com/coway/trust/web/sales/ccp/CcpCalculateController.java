@@ -280,6 +280,33 @@ public class CcpCalculateController {
     	EgovMap tempMap = null;
     	tempMap = (EgovMap)orderDetail.get("basicInfo");
 
+    	// START selectOwnPurchaseInfo
+    	if(tempMap.get("memInfo") != null){
+    		EgovMap ownPurcInfo = ccpCalculateService.selectOwnPurchaseInfo(tempMap.get("custNric"));
+        	model.addAttribute("ownPurchaseInfo", ownPurcInfo);
+    		LOGGER.info("ownPurcInfo: " + ownPurcInfo);
+
+          	if (ownPurcInfo != null){
+
+          		// to get join period in years and months
+          		if (ownPurcInfo.get("joinPeriod") != null){
+          			BigDecimal joinPeriod = (BigDecimal)ownPurcInfo.get("joinPeriod");
+          	      	int months = joinPeriod.intValue();
+          	      	int years = months /12;
+          	      	int remainMonth = months % 12;
+          	    	model.addAttribute("joinYear", years);
+
+          	    	if(months > 12){
+          	    		model.addAttribute("joinMonth", remainMonth);
+          	    	} else {
+          	    		model.addAttribute("joinMonth", months);
+          	    		}
+          		}
+          	}
+    	}
+
+      	// END selectOwnPurchaseInfo
+
     	BigDecimal tempIntval = (BigDecimal)tempMap.get("custTypeId");
 
     	//Set Param
