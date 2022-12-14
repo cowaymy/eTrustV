@@ -494,7 +494,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         // MembershipQuotationServiceImpl.insertQuotationInfo
-        /*boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
+        boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
         boolean boolZeroRat = "Y".equals(param.getZeroRatYn()) ? true : false;
 
         if(!boolEurCert) {
@@ -594,7 +594,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                     eSVMApiMapper.insertSal94D(eFilterMap);
                 }
             }
-        }*/
+        }
 
         return rtn;
     }
@@ -1220,43 +1220,8 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	}
     	else
     	{
-    		//When membership is null, need to pass a flag to Save button action to check if srvMemPacId is it equals to 9
     		svmAllowFlg = false;
-    		/*errorCode = 99;
-        	errorHeader = "Early Subscription > " + configMemExpMth + " months";
-        	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";*/
     	}
-
-
-
-    	/*if(itemEomDt != null)
-    	{
-    		prdEosDt = LocalDate.parse(itemEomDt.get("eosDate").toString());
-    		prdEomDt = LocalDate.parse(itemEomDt.get("eomDate").toString());
-
-    		Period periodEos = Period.between(prdEosDt, today);
-            Period periodEom = Period.between(prdEomDt, today);
-            int diffEos = Math.abs(periodEos.getMonths());
-            int diffEom = Math.abs(periodEom.getMonths());
-
-    		int diffEos = Months.monthsBetween(today, prdEosDt).getMonths();
-    		int diffEom = Months.monthsBetween(today, prdEomDt).getMonths();
-
-            if(diffEos > configMemExpMth)
-            {
-            	svmAllowFlg = false;
-            	errorCode = 99;
-            	errorHeader = "Early Subscription > " + configMemExpMth + " months";
-            	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";
-            }
-            else if(diffEos <= configMemExpMth && diffEom < configEomDurMth )
-            {
-            	svmAllowFlg = false;
-            	errorCode = 99;
-            	errorHeader = "End of Membership";
-            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
-            }
-    	}*/
 
         eSVMApiDto rtn = new eSVMApiDto();
         rtn.setSvmAllowFlg(svmAllowFlg);
