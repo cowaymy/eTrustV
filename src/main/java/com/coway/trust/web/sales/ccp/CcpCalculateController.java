@@ -192,12 +192,8 @@ public class CcpCalculateController {
           	      	int years = months /12;
           	      	int remainMonth = months % 12;
           	    	model.addAttribute("joinYear", years);
+          	    	model.addAttribute("joinMonth", months > 12 ? remainMonth : months);
 
-          	    	if(months > 12){
-          	    		model.addAttribute("joinMonth", remainMonth);
-          	    	} else {
-          	    		model.addAttribute("joinMonth", months);
-          	    		}
           		}
           	}
     	}
@@ -295,12 +291,8 @@ public class CcpCalculateController {
           	      	int years = months /12;
           	      	int remainMonth = months % 12;
           	    	model.addAttribute("joinYear", years);
+          	    	model.addAttribute("joinMonth", months > 12 ? remainMonth : months);
 
-          	    	if(months > 12){
-          	    		model.addAttribute("joinMonth", remainMonth);
-          	    	} else {
-          	    		model.addAttribute("joinMonth", months);
-          	    		}
           		}
           	}
     	}
