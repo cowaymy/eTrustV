@@ -1189,6 +1189,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	String errorHeader = null;
     	String errorMsg = null;
 
+    	logger.debug("========== itemEomDt ==========" + itemEomDt);
     	// Check for EOM
     	if(itemEomDt.containsKey("eomDate") == true)
     	{
@@ -1203,6 +1204,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
 			}
     	}
 
+    	logger.debug("========== itemSrvMemExprDt ==========" + itemSrvMemExprDt);
     	//Check for service membership
     	if(itemSrvMemExprDt != null && itemSrvMemExprDt.containsKey("srvMemExprDt"))
     	{
