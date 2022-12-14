@@ -1189,8 +1189,22 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	String errorHeader = null;
     	String errorMsg = null;
 
+    	// Check for EOM
+    	if(itemEomDt.containsKey("eomDate") == true)
+    	{
+    		srvPrdEomDt = LocalDate.parse(itemEomDt.get("eomDate").toString());
+    		int diffSrvPrdEom = Months.monthsBetween(today, srvPrdEomDt).getMonths();
+
+			if(diffSrvPrdEom < configEomDurMth)
+			{
+            	errorCode = 99;
+            	errorHeader = "End of Membership";
+            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
+			}
+    	}
+
     	//Check for service membership
-    	if(itemSrvMemExprDt != null)
+    	if(itemSrvMemExprDt != null && itemSrvMemExprDt.containsKey("srvMemExprDt"))
     	{
     		srvMemExprDt = LocalDate.parse(itemSrvMemExprDt.get("srvMemExprDt").toString());
     		int diffSrvMemExpr = Months.monthsBetween(today, srvMemExprDt).getMonths();
@@ -1211,19 +1225,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
         	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";*/
     	}
 
-    	// Check for EOM
-    	if(itemEomDt.containsKey("eomDate") == true)
-    	{
-    		srvPrdEomDt = LocalDate.parse(itemEomDt.get("eomDate").toString());
-    		int diffSrvPrdEom = Months.monthsBetween(today, srvPrdEomDt).getMonths();
 
-			if(diffSrvPrdEom < configEomDurMth)
-			{
-            	errorCode = 99;
-            	errorHeader = "End of Membership";
-            	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " years period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
-			}
-    	}
 
     	/*if(itemEomDt != null)
     	{
