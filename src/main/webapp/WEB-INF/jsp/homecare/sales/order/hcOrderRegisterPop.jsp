@@ -280,8 +280,7 @@
 
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
-                	console.log(convToOrdYn)
-                	if (convToOrdYn != "Y") {
+                	if (convToOrdYn != "Y" && copyChangeYn != "Y") {
                 		   fn_clearSales();
                 	}
                     if("DM" == custInfo.areaId.substring(0,2)) {
