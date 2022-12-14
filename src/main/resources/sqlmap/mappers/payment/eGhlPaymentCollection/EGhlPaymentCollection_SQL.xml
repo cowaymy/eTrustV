@@ -211,7 +211,7 @@
 			    CASE
 			        WHEN  D.STATUS_CODE_ID = 44 THEN
 			               (CASE
-			                   WHEN ((TO_DATE(TO_CHAR(A.EXP_DT,'DD/MM/YYYY'),'DD/MM/YYYY') + 1) <![CDATA[ <= ]]> TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY'))
+			                   WHEN ((TO_DATE(TO_CHAR(D.EXP_DT,'DD/MM/YYYY'),'DD/MM/YYYY') + 1) <![CDATA[ <= ]]> TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY'))
 			                        THEN 82
 			                   ELSE 44 END)
 			        ELSE D.STATUS_CODE_ID END STATUS_CODE_ID,
