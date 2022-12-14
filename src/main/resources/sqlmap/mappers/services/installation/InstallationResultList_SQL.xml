@@ -229,7 +229,6 @@
         open="(" separator="," close=")">
         #{item}
       </foreach>
-      )
     </if>
     <if test="customerId != null and customerId != ''">
       AND CUST.CUST_ID = #{customerId}
