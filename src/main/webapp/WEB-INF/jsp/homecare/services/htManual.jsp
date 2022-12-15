@@ -179,7 +179,7 @@ var TODAY_DD      = "${toDay}";
       {
          dataField : "matStkDesc",
          headerText : "Product Info",
-         width : 140
+         width : 200
       },
       {
          dataField : "fraStkDesc",
@@ -212,7 +212,7 @@ var TODAY_DD      = "${toDay}";
         width : 120
       },
       {
-         dataField : "orgCode",
+         dataField : "grpcode",
          headerText : "Group Code",
          width : 120
        },
