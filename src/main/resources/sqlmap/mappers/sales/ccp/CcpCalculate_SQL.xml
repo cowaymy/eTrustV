@@ -935,6 +935,10 @@ SELECT Extent1.CCP_ID   ,
 <update id="updateCcpDecision" parameterType="Map">
             UPDATE SAL0102D
             SET
+                    <if test=" '' != firstCallDateUpd and null != firstCallDateUpd">
+                        FIRST_CALL_DT = TO_DATE(#{firstCallDateUpd},'DD/MM/YYYY'),
+                        FIRST_CALL_DT_BY_USER = #{userId},
+                   </if>
                    CCP_SCHEME_TYPE_ID = #{saveCustTypeId},
                    CCP_INCOME_RANGE_ID = #{incomeRangeEdit},
                    CCP_TOT_SCRE_POINT = #{ccpTotalScorePoint},
@@ -955,7 +959,6 @@ SELECT Extent1.CCP_ID   ,
                    CCP_EXPERIANR = #{experianRisk},
                    CCP_AGM_REQ = #{agmReq},
                    CCP_TEMPLATE = #{cowayTemplate},
-                   FIRST_CALL_DT = TO_DATE(#{firstCallDate},'DD/MM/YYYY'),
 	               CUST_IS_PAYER = #{custIsPayerValue},
 	               THE_PAYER = #{thePayerValue},
 	               FAIL_VER_RSN = #{failVeriReasonValue}
@@ -1931,6 +1934,7 @@ AND T1.CNT = 1
                 , CUST_IS_PAYER
                 , THE_PAYER
                 , FAIL_VER_RSN
+                , FIRST_CALL_DT_BY_USER
                 )
                 SELECT
                 SAL0328D_ID_SEQ.NEXTVAL
@@ -1947,6 +1951,7 @@ AND T1.CNT = 1
                 , CUST_IS_PAYER
                 , THE_PAYER
                 , FAIL_VER_RSN
+                , FIRST_CALL_DT_BY_USER
                 FROM SAL0102D
                 WHERE CCP_SALES_ORD_ID = #{saveOrdId} AND CCP_ID = #{saveCcpId}
     </insert>
@@ -1961,9 +1966,8 @@ AND T1.CNT = 1
                 , TO_CHAR(EXT1.CCP_REM) AS SPECIAL_REMARK
                 , TO_CHAR(EXT1.CRT_DT,'DD/MM/YYY HH:MI:SS AM') AS CREATE_DATE
                 , SYS1.USER_NAME AS CREATED_BY
-                , TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY HH:MI:SS AM') AS UPDATE_DATE
-                , SYS2.USER_NAME AS UPDATED_BY
-                , TO_CHAR(EXT1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT
+                , (CASE WHEN EXT1.UPD_DT IS NOT NULL  THEN TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY') || '(' || SYS2.USER_NAME || ')' END)AS UPDATE_DATE
+                , (CASE WHEN EXT1.FIRST_CALL_DT IS NOT NULL THEN TO_CHAR(EXT1.FIRST_CALL_DT,'DD/MM/YYYY') || '(' || SYS7.USER_NAME || ')' END)AS FIRST_CALL_DT
                 , EXT1.CUST_IS_PAYER
                 , SYS5.CODE_NAME AS THE_PAYER_VAL
                 , SYS6.CODE_NAME AS FAIL_VER_RSN_VAL
@@ -1974,6 +1978,7 @@ AND T1.CNT = 1
         LEFT JOIN SYS0038M SYS4 ON SYS4.STUS_CODE_ID = EXT1.STUS_ID
         LEFT JOIN SYS0013M SYS5 ON SYS5.CODE_ID = EXT1.THE_PAYER AND SYS5.CODE_MASTER_ID = '541'
         LEFT JOIN SYS0013M SYS6 ON SYS6.CODE_ID = EXT1.FAIL_VER_RSN AND SYS6.CODE_MASTER_ID = '542'
+        LEFT JOIN SYS0047M SYS7 ON SYS7.USER_ID = EXT1.FIRST_CALL_DT_BY_USER
         WHERE SALES_ORD_ID = #{salesOrderId}
         ORDER BY 1
     </select>

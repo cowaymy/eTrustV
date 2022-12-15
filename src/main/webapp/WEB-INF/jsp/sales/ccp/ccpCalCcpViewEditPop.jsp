@@ -1141,6 +1141,12 @@ function chgTab(tabNm) {
  function fn_installationArea(){
      Common.popupDiv("/sales/ccp/ccpCalInstallationAreaPop.do", '', null, true, "_instPopDiv");
  }
+
+ function fn_changeDetails(){
+	 $("#firstCallDateUpd").val($("#firstCallDate").val());
+	 console.log("HELLO : " + $("#firstCallDateUpd").val());
+	 console.log("HELLO2 : " + $("#firstCallDate").val());
+	}
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -1199,6 +1205,7 @@ function chgTab(tabNm) {
 
     <!-- from ccpEresubmitMap  -->
      <input type="hidden" id="_eRStusId" name="ccpErStusId" value="${ccpEresubmitMap.stusId}">
+
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
@@ -1495,6 +1502,9 @@ function chgTab(tabNm) {
 <input type="hidden" name="isChkSms" id="_isChkSms">
 <input type="hidden" name="hiddenUpdSmsMsg" id="_hiddenUpdSmsMsg">
 <input type="hidden" name="hiddenSalesMobile" id="_hiddenSalesMobile">
+
+<!-- firstCallDate update  -->
+<input type="hidden"  id="firstCallDateUpd" name="firstCallDateUpd" placeholder="DD/MM/YYYY"  class="j_date" >
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1598,7 +1608,7 @@ function chgTab(tabNm) {
     </td>
     <th scope="row">First Call Date</th>
     <td colspan="3">
-    <input type="text" title="First Call Date"  placeholder="DD/MM/YYYY"  class="j_date"  id="firstCallDate" name="firstCallDate"/>
+    <input type="text" title="First Call Date"  placeholder="DD/MM/YYYY"  class="j_date"  id="firstCallDate" name="firstCallDate" onchange = "fn_changeDetails()"/>
     </td>
 </tr>
 <tr>
@@ -1620,6 +1630,7 @@ function chgTab(tabNm) {
         <option value="7216">TEACHER(PERSONAL ACCOUNT)</option>
         <option value="7217">THIRD PARTY COMPANY</option>
         <option value="7218">SCHOOL ALUMNI</option>
+        <option value="7229">CUSTOMER</option>
     </select>
     </td>
         <th scope="row">Failed Verification Reason</th>
@@ -1631,6 +1642,7 @@ function chgTab(tabNm) {
 	        <option value="7221">UNREACHABLE</option>
 	        <option value="7222">CUSTOMER REQUEST CANCEL</option>
 	        <option value="7223">CUSTOMER CHANGE DETAILS</option>
+	        <option value="7230">REFUSAL ON VERIFICATION</option>
 	    </select>
     </select>
     </td>

@@ -14,8 +14,7 @@
             { headerText : '<spring:message code="sal.title.text.ccpStatus" />',    dataField : "stusCode",         width : 120 }
           , { headerText : '<spring:message code="sal.title.feedbackCode" />',   dataField : "feedbackCode", width : 120 }
           , { headerText : '<spring:message code="sal.title.text.specialRem" />',       dataField : "specialRemark",      width : 120  }
-          , { headerText : '<spring:message code="pay.head.updatedBy" />',      dataField : "updatedBy",     width : 120 }
-          , { headerText : 'First Call Date (By)',   dataField : "firstCallDt", width : 120 }
+          , { headerText : 'First Call Date (By)',   dataField : "firstCallDt", width : 180 }
           , { headerText : 'Last Update Date',    dataField : "updateDate",      width : 180 }
           , { headerText : 'The Payer',   dataField : "thePayerVal", width : 120 }
           , { headerText : 'Failed Verification Reason',   dataField : "failVerRsnVal", width : 120 }
