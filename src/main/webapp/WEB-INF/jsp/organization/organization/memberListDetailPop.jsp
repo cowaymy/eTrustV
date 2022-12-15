@@ -1159,6 +1159,12 @@ $("#HP_img").dblclick(function(){
     <span><c:out value="${memberView.incTax}"/></span>
     </td>
 </tr>
+<tr>
+<th scope="row">Registration Options</th>
+       <td colspan="5">
+        <span><c:out value="${memberView.aplicntRegOpt}"/></span>
+    </td>
+</tr>
 
 <tr>
     <th scope="row">Branch</th>

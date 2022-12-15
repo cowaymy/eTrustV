@@ -700,7 +700,8 @@ FROM (
        Limit1.EMRGCY_CNTC_NAME,
        Limit1.EMRGCY_CNTC_NO,
        Limit1.EMRGCY_CNTC_INIT,
-       Limit1.EMRGCY_CNTC_RLTSHP
+       Limit1.EMRGCY_CNTC_RLTSHP,
+       Limit1.APLICNT_REG_OPT
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -1055,7 +1056,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.EMRGCY_CNTC_NAME,
                 Extent1.EMRGCY_CNTC_NO,
                 Extent34.CODE_NAME EMRGCY_CNTC_INIT,
-                Extent1.EMRGCY_CNTC_RLTSHP
+                Extent1.EMRGCY_CNTC_RLTSHP,
+                Extent35.CODE_DESC APLICNT_REG_OPT
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1102,6 +1104,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                     AND Extent1.AREA = Extent32.AREA_ID
                 LEFT JOIN SYS0064M Extent33   ON Extent1.POSTCODE = Extent33.POSTCODE
                 LEFT JOIN SYS0013M Extent34   ON Extent1.EMRGCY_CNTC_INIT = Extent34.CODE_ID AND Extent34.CODE_MASTER_ID = '17'
+                LEFT JOIN SYS0013M Extent35   ON Extent35.CODE_ID = Extent28.APLICNT_REG_OPT
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
