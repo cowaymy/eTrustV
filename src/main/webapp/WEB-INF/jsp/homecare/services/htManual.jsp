@@ -177,6 +177,16 @@ var TODAY_DD      = "${toDay}";
         width : 120
       },
       {
+         dataField : "matStkDesc",
+         headerText : "Product Info",
+         width : 140
+      },
+      {
+         dataField : "fraStkDesc",
+         headerText : "Frame Info",
+         width : 140
+      },
+      {
           dataField : "apptype",
           headerText : "Application Type",
           width : 120
@@ -201,6 +211,11 @@ var TODAY_DD      = "${toDay}";
         headerText : "Department",
         width : 120
       },
+      {
+         dataField : "orgCode",
+         headerText : "Group Code",
+         width : 120
+       },
       {
         dataField : "htStatus",
         headerText : "HT Status",
