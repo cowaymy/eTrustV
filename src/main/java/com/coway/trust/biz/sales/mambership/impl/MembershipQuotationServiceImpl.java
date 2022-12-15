@@ -4,11 +4,14 @@
 package com.coway.trust.biz.sales.mambership.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Months;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -412,6 +415,65 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	@Override
 	public EgovMap    getSAL0093D_SEQ(Map<String, Object> params) {
 		return  membershipQuotationMapper.getSAL0093D_SEQ(params);
+	}
+
+
+	@Override
+	public Map<String, Object> mSubscriptionEligbility(Map<String, Object> params) {
+
+		EgovMap list = membershipQuotationMapper.mSubscriptionEligbility(params);
+		Map<String, Object>  data =  new HashMap<String, Object>();
+
+		if(list != null){
+		// Check material's status
+		if(!list.get("status").toString().equals("1")){
+			data.put("result", false);
+			data.put("title", "Message");
+			data.put("message", "This order is not valid for membership.");
+		}else {
+
+			// Get month range of EOS and EOM
+			EgovMap svmDateRange = membershipQuotationMapper.getSVMConfig(params);
+			int svmDateRange_SOLED = Integer.parseInt(svmDateRange.get("svmSoled").toString());
+			int svmDateRange_EOM = Integer.parseInt(svmDateRange.get("svmEom").toString());
+
+			// Today
+			LocalDate now = LocalDate.now();
+
+			//Check end of membership
+			if(list.containsKey("eom") == true){
+				//Parse EOM date
+				LocalDate eom = LocalDate.parse(list.get("eom").toString());
+
+				int EOM_MonthsBetween = Months.monthsBetween(now, eom).getMonths();
+
+				if(EOM_MonthsBetween < svmDateRange_EOM){
+					data.put("result", false);
+    				data.put("title", "End of Membership");
+    				data.put("message", "The order is <strong>end of membership soon</strong> <i>(within "+ svmDateRange_EOM +" months period)</i><strong> - not entitled to subscribe SVM</strong></br> Kindly suggest customer to do Ex-Trade for this model.");
+        		}
+    		}
+
+			// Check sales order last service date
+			EgovMap lastServiceDate = membershipQuotationMapper.getSalesOrderLastExpiredDate(params);
+			if(lastServiceDate != null){
+
+				LocalDate lastServiceDt = LocalDate.parse(lastServiceDate.get("lastSrvMemExprDate").toString());
+
+				int lastService_MonthsBetween = Months.monthsBetween(now, lastServiceDt).getMonths();
+
+				if(lastService_MonthsBetween > svmDateRange_SOLED){
+					data.put("result", false);
+					data.put("title", "Early Subscription > "+ svmDateRange_SOLED +" months");
+					data.put("message", "The order is <strong>too early to subscribe for SCM</strong>, kindly subscribe the membership within "+ svmDateRange_SOLED +" months period form the order expired date.");
+				}
+			}else{
+				data.put("validSave", false);
+			}
+		}
+	}
+
+		return data;
 	}
 
 

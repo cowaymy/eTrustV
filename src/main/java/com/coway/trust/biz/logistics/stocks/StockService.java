@@ -56,4 +56,7 @@ public interface StockService {
 
 	List<EgovMap> selectCodeList();
 
+	void modifyEosEomInfo(Map<String, Object> params);
+
+	List<EgovMap> getEosEomInfo(Map<String, Object> params);
 }

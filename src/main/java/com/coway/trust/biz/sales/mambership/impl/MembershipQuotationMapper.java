@@ -79,6 +79,12 @@ public interface MembershipQuotationMapper {
 
   EgovMap getSAL0093D_SEQ(Map<String, Object> params);
 
+  EgovMap mSubscriptionEligbility(Map<String, Object> params);
+
+  EgovMap getSVMConfig(Map<String, Object> params);
+
+  EgovMap getSalesOrderLastExpiredDate(Map<String, Object> params);
+
   List<EgovMap> mActiveQuoOrder(Map<String, Object> params);
 
   List<EgovMap> selectSrchMembershipQuotationPop(Map<String, Object> params);

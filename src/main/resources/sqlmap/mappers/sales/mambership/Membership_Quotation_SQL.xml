@@ -800,6 +800,32 @@
 	         ]]>
 	      </select>
 
+       <select id="mSubscriptionEligbility" parameterType="Map" resultType="egovMap">
+           SELECT
+              C.STUS_CODE_ID STATUS,
+              TO_CHAR(C.EOM_DATE,'YYYY-MM-DD') EOM
+           FROM SAL0001D A
+           JOIN SAL0002D B  ON B.SALES_ORD_ID = A.SALES_ORD_ID
+           JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
+           WHERE
+                A.STUS_CODE_ID IN (1,4)
+                AND A.SALES_ORD_NO = #{ORD_NO}
+       </select>
+
+       <select id="getSVMConfig" parameterType="Map" resultType="egovMap">
+            SELECT
+                NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'SVM_EOS'), '0') SVM_SOLED,
+                NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'SVM_EOM'), '0') SVM_EOM
+            FROM DUAL
+       </select>
+
+       <select id="getSalesOrderLastExpiredDate" parameterType="Map" resultType="egovMap">
+            SELECT
+                TO_CHAR(LAST_SRV_MEM_EXPR_DATE,'YYYY-MM-DD') AS LAST_SRV_MEM_EXPR_DATE
+			FROM SAL1014V
+			WHERE ORD_ID = #{ORD_ID}
+       </select>
+
        <select id="mActiveQuoOrder" parameterType="Map" resultType="egovMap">
                  <![CDATA[
                        SELECT  S.SRV_MEM_QUOT_ID   ,

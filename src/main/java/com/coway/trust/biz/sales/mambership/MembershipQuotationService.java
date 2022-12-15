@@ -53,6 +53,8 @@ public interface MembershipQuotationService {
 
   EgovMap getSAL0093D_SEQ(Map<String, Object> params);
 
+  Map<String, Object> mSubscriptionEligbility(Map<String, Object> params);
+
   List<EgovMap> mActiveQuoOrder(Map<String, Object> params);
 
   List<EgovMap> selectSrchMembershipQuotationPop(Map<String, Object> params);

@@ -453,4 +453,45 @@ public class StockListController {
 
 	    return ResponseEntity.ok(codeList);
 	  }
+
+	 @RequestMapping(value = "/EosEomInfo.do", method = RequestMethod.POST)
+		public ResponseEntity<Map> getEosEomInfo(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
+			String stkid = request.getParameter("stkid");
+			String mode = CommonUtils.nvl(request.getParameter("mode"));
+
+			Map<String, Object> smap = new HashMap();
+			smap.put("stockId", stkid);
+			smap.put("mode", mode);
+
+			List<EgovMap> info = stock.getEosEomInfo(smap);
+
+			Map<String, Object> map = new HashMap();
+			map.put("data", info);
+			return ResponseEntity.ok(map);
+		}
+
+      @RequestMapping(value = "/modifyEosEomInfo.do", method = RequestMethod.POST)
+      public ResponseEntity<Map> modifyEosEomInfo(@RequestBody Map<String, Object> params, Model model) throws Exception {
+			String retMsg = AppConstants.MSG_SUCCESS;
+
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			int loginId;
+			if (sessionVO == null) {
+				loginId = 99999999;
+			} else {
+				loginId = sessionVO.getUserId();
+			}
+
+			// loginId
+			params.put("upd_user", loginId);
+
+			Map<String, Object> map = new HashMap();
+			map.put("stkid", params.get("stockId"));
+			map.put("msg", retMsg);
+
+			stock.modifyEosEomInfo(params);
+
+			return ResponseEntity.ok(map);
+	  }
 }

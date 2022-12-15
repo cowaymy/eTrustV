@@ -339,6 +339,21 @@ public class  MembershipQuotationController {
 
 
 
+	@RequestMapping(value = "/mSubscriptionEligbility" ,method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>>  mSubscriptionEligbility(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+
+		logger.debug("in  mSubscriptionEligbility ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		Map<String, Object>  list = membershipQuotationService.mSubscriptionEligbility(params);
+
+		return ResponseEntity.ok(list);
+	}
+
+
+
 	@RequestMapping(value = "/mActiveQuoOrder" ,method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>>  mActiveQuoOrder(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
 

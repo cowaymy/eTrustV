@@ -67,6 +67,10 @@ public interface StockMapper {
 	// Added by Hui Ding, 2020-06-22
 	EgovMap selectStkCatType(Map<String, Object> params);
 
+	List<EgovMap> getEosEomInfo(Map<String, Object> params);
+
+	void modifyEosEomInfo(Map<String, Object> params);
+
 	/*//bom manual execution
 	List<EgovMap> selectITF180Data();
 	void insertBomMaster43M(Map<String, Object> map);

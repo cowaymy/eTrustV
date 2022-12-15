@@ -992,5 +992,22 @@
 
         </select>
 
+    <select id="getEosEomInfo" parameterType="Map" resultType="egovMap">
+     SELECT
+	     TO_CHAR(inv.EOS_DATE,'DD/MM/YYYY') AS EOS,
+	     TO_CHAR(inv.EOM_DATE,'DD/MM/YYYY') AS EOM
+     FROM SYS0026M inv
+     WHERE inv.STK_ID = #{stockId}
+
+  </select>
+
+    <update id="modifyEosEomInfo" parameterType="Map">
+        UPDATE SYS0026M
+           SET EOS_DATE   = TO_DATE(#{eosDate}, 'DD/MM/YYYY')
+             , EOM_DATE     = TO_DATE(#{eomDate}, 'DD/MM/YYYY')
+             , UPD_USER_ID = #{upd_user}
+             , UPD_DT         = SYSDATE
+         WHERE STK_ID = #{stockId}
+    </update>
 
 </mapper>

@@ -347,4 +347,16 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 
 	   return stockMapper.selectCodeList();
 	 }
+
+	@Override
+	public List<EgovMap> getEosEomInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMapper.getEosEomInfo(params);
+	}
+
+	@Override
+	public void modifyEosEomInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		stockMapper.modifyEosEomInfo(params);
+	}
 }

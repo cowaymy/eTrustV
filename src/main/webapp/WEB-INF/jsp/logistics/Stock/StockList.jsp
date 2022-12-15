@@ -452,6 +452,18 @@
 
         });
 
+        $("#eos_eom_info").click(function(){
+        	 f_removeclass();
+        	 $("#eos_eom_info_div").show();
+             var selectedItems = AUIGrid.getSelectedItems(myGridID);
+
+             for(i=0; i<selectedItems.length; i++) {
+                 f_view("/stock/EosEomInfo.do?stkid="+selectedItems[i].item.stkid,"EOS");
+             }
+
+            $(this).find("a").attr("class","on");
+        });
+
         $("#search").click(function(){
             $('#subDiv').hide();
             getSampleListAjax();
@@ -548,6 +560,24 @@
             var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")
             f_info_save("/stock/StockCommisionUpdate.do" , stkid , "commForm" ,"");
 
+        });
+
+        $("#eos_eom_info_edit").click(function(){
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            var item = selectedItems[0].item;
+
+            if($("#eos_eom_info_edit").text() == "EDIT"){
+                 f_view("/stock/EosEomInfo.do?stkid="+item.stkid+"&mode=edit", "EEOS");
+            }else if ($("#eos_eom_info_edit").text() == "SAVE"){
+            	var eos = $("#eosDate").val();
+            	var eom = $("#eomDate").val();
+
+            	if(eos == null || eos == "" || eom == null || eom == ""){
+            		Common.alert("Please select end of sales date and end of membership date.");
+            	}else {
+            		f_info_save("/stock/modifyEosEomInfo.do" , item.stkid , "eosEomInfo" ,"");
+            	}
+            }
         });
 
         $(".numberAmt").keyup(function(e) {
@@ -739,6 +769,9 @@
                 $("#service_info").trigger("click");
             }else if (v == "servicepoint") {
                 $("#service_point_edit").text("EDIT");
+            }else if (v == "eosEomInfo") {
+                $("#eos_eom_info_edit").text("EDIT");
+                $("#eos_eom_info").trigger("click");
             }
             getMainListAjax(data);
         });
@@ -818,6 +851,7 @@
                     $("#imgShow").html("");
                     $("#stock_info").find("a").attr("class", "on");
                     $("#stock_info_edit").text("EDIT");
+                    $("#eos_eom_info_div").hide();
                     /*if (){
 
                     }*/
@@ -1159,7 +1193,31 @@
           $("#rate_install").val(decimalSetting(data[0].c10));
           $("#outrate_install").val(decimalSetting(data[0].c11));
 
-      }
+      } else if (v == 'EEOS') {
+          $("#eOSDate").html("<input id='eosDate' name='eosDate' type='text' title='EOS Date' placeholder='DD/MM/YYYY' class='j_date' readonly />");
+          $("#eOMDate").html("<input id='eomDate' name='eomDate' type='text' title='EOM Date' placeholder='DD/MM/YYYY' class='j_date' readonly />");
+
+          if(data[0] == null){
+              $("#eosDate").val('');
+              $("#eomDate").val('');
+           }else{
+              $("#eosDate").val(data[0].eos);
+              $("#eomDate").val(data[0].eom);
+           }
+
+          $("#eos_eom_info_edit").text("SAVE");
+
+      } else if (v == 'EOS') {
+	       if(data[0] == null){
+	           $("#eOSDate").text('');
+	           $("#eOMDate").text('');
+	        }else{
+	           $("#eOSDate").text(data[0].eos);
+	           $("#eOMDate").text(data[0].eom);
+	        }
+
+            $("#eos_eom_info_edit").text("EDIT");
+        }
 
 
     }
@@ -1567,6 +1625,7 @@
                 <li id="service_point"><a href="#">Service Point</a></li>
                 <li id="stock_image"><a href="#">Stock Image</a></li>
                 <li id="stock_commisssion"><a href="#">Stock Commission Setting</a></li>
+                <li id="eos_eom_info"><a href="#">EOS / EOM Date</a></li>
             </ul>
             <article class="tap_area" id="stock_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
@@ -1924,6 +1983,36 @@
                 </div>
                 </div><!-- divine_auto end -->
              </article>
+
+              <article class="tap_area" id="eos_eom_info_div" style="display:none;">
+                <aside class="title_line"><!-- title_line start -->
+                <h3>EOS / EOM Date</h3>
+                <ul class="left_opt">
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                    <li><p class="btn_blue"><a id="eos_eom_info_edit">EDIT</a></p></li>
+                </c:if>
+                </ul>
+                </aside>
+                <form id="eosEomInfo" name="eosEomInfo" method="post">
+                <table class="type1">
+                    <caption>search table</caption>
+                    <colgroup>
+                        <col style="width:150px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">End of Sales</th>
+                        <td ID="eOSDate"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">End of Membership</th>
+                        <td ID="eOMDate"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                </form>
+            </article>
         </section><!--  tab -->
     </section><!-- data body end -->
 

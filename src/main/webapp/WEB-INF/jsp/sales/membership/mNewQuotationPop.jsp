@@ -22,6 +22,7 @@ var resultBasicObject;
 var resultSrvconfigObject;
 var resultInstallationObject;
 var defaultcTPackage = "9";
+var validSave; // Checking for SVM subscription eligibility Pac ID = 9
 
 
 $(document).ready(function(){
@@ -83,6 +84,10 @@ $(document).ready(function(){
 				$("#ORD_ID").val(result[0].ordId);
 				$("#ORD_NO_RESULT").val(result[0].ordNo);
 
+			    if (fn_svmSubscriptionEligibility()){
+                    return;
+                }
+
 				fn_getDataInfo();
 
 				fn_outspro();
@@ -119,6 +124,34 @@ $(document).ready(function(){
 
 		return rtnVAL;
 	}
+
+	 function fn_svmSubscriptionEligibility() {
+	        var rtnVAL = false;
+	        Common.ajaxSync("GET", "/sales/membership/mSubscriptionEligbility", {
+	            ORD_NO : $("#ORD_NO").val(),
+	            ORD_ID : $("#ORD_ID").val()
+	        }, function(data) {
+	               if (data != null) {
+	            	if(data.result == false){
+	                    rtnVAL = true;
+
+	                    var option = {
+	                            title : data.title,
+	                            content : data.message,
+	                            isBig : false
+	                          };
+
+	                    Common.alertBase(option);
+	                }
+
+	            	if(data.validSave == false){
+	            		validSave = data.validSave;
+                    }
+	            }
+	        });
+
+	        return rtnVAL;
+	    }
 
 	function fn_getDataInfo() {
 		Common.ajax("GET", "/sales/membership/selectMembershipFreeDataInfo", $("#getDataForm").serialize(), function(result) {
@@ -1086,16 +1119,26 @@ $(document).ready(function(){
 	}
 
 	function fn_save() {
+	    if(validSave == false && $("#srvMemPacId").val() == 9){
+	    	var option = {
+                    title : "Warning",
+                    content : "The order is <strong>too early to subscribe for SCM</strong>.",
+                    isBig : false
+                  };
 
-		var billMonth = getOrderCurrentBillMonth();
+            Common.alertBase(option);
+        }else{
 
-		if (fn_validRequiredField_Save() == false)
-			return;
-		if (fn_CheckRentalOrder(billMonth)) {
-			if (fn_CheckSalesPersonCode()) {
-				fn_unconfirmSalesPerson();
-			}
-		}
+	         var billMonth = getOrderCurrentBillMonth();
+
+	         if (fn_validRequiredField_Save() == false)
+	             return;
+	         if (fn_CheckRentalOrder(billMonth)) {
+	             if (fn_CheckSalesPersonCode()) {
+	                 fn_unconfirmSalesPerson();
+	             }
+	         }
+        }
 	}
 
 	function fn_validRequiredField_Save() {
