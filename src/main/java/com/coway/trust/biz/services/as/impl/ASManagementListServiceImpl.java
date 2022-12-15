@@ -2263,7 +2263,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       pay06d_insert.put("asDocNo", CNNO);
       pay06d_insert.put("asLgDocTypeId", "155");
       pay06d_insert.put("asLgDt", new Date());
-      pay06d_insert.put("asLgAmt", (-1 * asTotAmt));
+      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
       pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
       pay06d_insert.put("asLgUpdDt", new Date());
       pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
@@ -2816,7 +2816,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       pay06d_insert.put("asDocNo", CNNO);
       pay06d_insert.put("asLgDocTypeId", "155");
       pay06d_insert.put("asLgDt", new Date());
-      pay06d_insert.put("asLgAmt", (-1 * asTotAmt));
+      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
       pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
       pay06d_insert.put("asLgUpdDt", new Date());
       pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
@@ -3867,7 +3867,7 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
       pay06d_insert.put("asDocNo", CNNO);
       pay06d_insert.put("asLgDocTypeId", "155");
       pay06d_insert.put("asLgDt", new Date());
-      pay06d_insert.put("asLgAmt", (-1 * asTotAmt));
+      pay06d_insert.put("asLgAmt", (((BigDecimal) resultPAY0031DInfo.get("taxInvcAmtDue")).negate()));
       pay06d_insert.put("asLgUpdUserId", svc0004dmap.get("updator"));
       pay06d_insert.put("asLgUpdDt", new Date());
       pay06d_insert.put("asSoNo", svc0004dmap.get("AS_SO_NO"));
