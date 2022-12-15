@@ -212,11 +212,12 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
           MemApp.put("searchSubDept", "");
 
           MemApp.put("meetingPoint", params.get("eHPmeetingPoint").toString());
-
           MemApp.put("collectionBrnch", params.get("eHPcollectionBrnch").toString());
+
           MemApp.put("coursId", params.get("eHPorientation") != null ? params.get("eHPorientation").toString() : "");
 
           MemApp.put("atchFileGrpId", params.get("atchFileGrpId").toString());
+          MemApp.put("registrationOption", params.get("eHPregOpt").toString());
 
           if (Integer.parseInt((String) params.get("eHPmemberType")) == 2803) {
               logger.debug("MemApp : {}", MemApp);

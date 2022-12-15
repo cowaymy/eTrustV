@@ -576,6 +576,7 @@
        , ATCH_FILE_GRP_ID
        , COURS_ID
        , APLICNT_INC_TAX
+       , APLICNT_REG_OPT
        )
       VALUES (
       ORG0003D_APLCTN_ID_SEQ.NEXTVAL
@@ -625,6 +626,7 @@
       , #{atchFileGrpId}
       , #{coursId}
       , #{eHPincomeTaxNo}
+      , #{registrationOption}
       )
   </insert>
 
@@ -727,6 +729,9 @@
            </if>
             <if test="atchFileGrpId != null and atchFileGrpId != '' ">
             , ATCH_FILE_GRP_ID = #{atchFileGrpId}
+           </if>
+            <if test="eHPregOpt != null and eHPregOpt != '' ">
+            , APLICNT_REG_OPT = #{eHPregOpt}
            </if>
            , UPD_DT = SYSDATE
 
@@ -831,7 +836,8 @@
             B.POSTCODE ,
              C.NAME NATION ,
              A.CNFM,
-             A.APLICNT_INC_TAX
+             A.APLICNT_INC_TAX,
+             A.APLICNT_REG_OPT
             FROM ORG0003D A
             LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
             LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
@@ -1016,7 +1022,8 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.COLLCT_BRNCH_DESC,
        Limit1.HP_CODE ,
        Limit1.HP_ID,
-       Limit1.APLICNT_INC_TAX
+       Limit1.APLICNT_INC_TAX,
+       Limit1.APLICNT_REG_OPT
   FROM (
 SELECT Extent1.APLCTN_ID MEM_ID  ,
                 Extent1.APLICNT_CODE MEM_CODE  ,
@@ -1311,11 +1318,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                EXTENT30.CODE || ' - ' || EXTENT30.NAME COLLCT_BRNCH_DESC ,
                Extent31.MEM_CODE HP_CODE ,
                Extent31.MEM_ID HP_ID,
-               Extent1.APLICNT_INC_TAX
+               Extent1.APLICNT_INC_TAX,
+               Extent32.CODE_DESC APLICNT_REG_OPT
          FROM ORG0003D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
                 LEFT JOIN ORG0001D Extent31 ON Extent1.APLCTN_ID = Extent31.APLICNT_ID
+                LEFT JOIN SYS0013M Extent32 ON Extent1.APLICNT_REG_OPT = Extent32.CODE_ID
         LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
                                    vMemberOrg.MEM_CODE MEM_CODE  ,
                                    vMemberOrg.MEM_LVL MEM_LVL  ,

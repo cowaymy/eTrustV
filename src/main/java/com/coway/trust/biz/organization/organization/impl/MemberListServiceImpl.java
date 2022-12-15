@@ -2962,4 +2962,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params) {
         return memberListMapper.selectMemberWorkingHistory(params);
     }
+
+	@Override
+    public List<EgovMap> selectHpRegistrationOption(Map<String, Object> params) {
+        return memberListMapper.selectHpRegistrationOption(params);
+    }
 }

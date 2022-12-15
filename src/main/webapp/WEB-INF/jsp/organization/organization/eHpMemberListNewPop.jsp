@@ -87,7 +87,8 @@ function fn_memberSave(){
                     atchFileGrpId : atchFileGrpId,
                     isRejoinMem :  $("#isRejoinMem").val(),
                     salOrgRejoin : $("#salOrgRejoin").val(),
-                    memId : $("#memId").val()
+                    memId : $("#memId").val(),
+                    eHPregOpt : $("#eHPregOpt").val()
 
             };
             // jsonObj.form = $("#memberAddForm").serializeJSON();
@@ -669,7 +670,7 @@ function fn_departmentCode(value){
                         $(this).remove();
                     });
 
-                    console.log("------selectDepartmentCode-------------------" + JSON.stringify(result));
+                   // console.log("------selectDepartmentCode-------------------" + JSON.stringify(result));
                     if (result!= null) {
                        $("#eHPdeptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
                         for(var z=0; z< result.length;z++) {
@@ -700,6 +701,7 @@ $(".join").hide();
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'eHPissuedBank', 'S', '');
     //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'eHPmeetingPoint', 'S', '');
+    doGetCombo('/organization/selectHpRegistrationOption.do', '', '', 'eHPregOpt', 'S', '');
 
     $("#orientationTbl").hide();  //20-10-2021 - HLTANG - close for LMS project
 
@@ -845,6 +847,11 @@ $(".join").hide();
         fmtNumber("#eHPmobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
      });
 
+     $("#eHPregOpt").change(function (){
+    	 document.getElementById("eHPcollectionBranch").disabled = $("#eHPregOpt").val()==7227 ? true : false;
+    	 document.getElementById("eHPcollectionBranch").disabled = $("#eHPregOpt").val()==7227 ? $("#eHPcollectionBranch").val('') : '';
+     });
+
     /* Common.ajax("GET", "/organization/selectHPOrientation.do", "", function(result) { //20-10-2021 - HLTANG - close for LMS project
 
         $("#course").find('option').each(function() {
@@ -961,6 +968,17 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
         Common.alert("Please key in the bank account no");
         return false;
     }
+
+    if(FormUtil.isEmpty($('#eHPregOpt').val())) {
+        Common.alert("Please select Registration Options");
+        return false;
+    }else{
+       if ($("#eHPregOpt").val() !=7227  && FormUtil.isEmpty($('#eHPcollectionBranch').val())){
+           Common.alert("Please select Collection branch");
+           return false;
+       }
+    }
+
     //type 별로 다르게 해야됨
     if($("#eHPdeptCd").val() == ''){
         Common.alert("Please select the department code");
@@ -1042,11 +1060,10 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
             return false;
         }
 
-        console.log("Collection Branch : " + $("#eHPcollectionBranch").val());
-        if($("#eHPcollectionBranch").val() == '' ) {
-            Common.alert("Please select Collection branch");
-            return false;
-        }
+//         if($("#eHPcollectionBranch").val() == '' ) {
+//             Common.alert("Please select Collection branch");
+//             return false;
+//         }
 
         /* if($("#course").val() == "") { //20-10-2021 - HLTANG - close for LMS project
             Common.alert("Please select orientation date");
@@ -1646,9 +1663,9 @@ function fn_eHPmarritalCallBack(){
                     <colgroup>
                         <col style="width:160px" />
                         <col style="width:*" />
-                        <col style="width:150px" />
+                        <col style="width:180px" />
                         <col style="width:*" />
-                        <col style="width:150px" />
+                        <col style="width:180px" />
                         <col style="width:*" />
                     </colgroup>
 
@@ -1889,7 +1906,7 @@ function fn_eHPmarritalCallBack(){
                 <table class="type1">
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:150px" />
+                    <col style="width:160px" />
                     <col style="width:*" />
                     <col style="width:180px" />
                     <col style="width:*" />
@@ -1918,7 +1935,7 @@ function fn_eHPmarritalCallBack(){
                 <table class="type1">table start
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:150px" />
+                    <col style="width:180px" />
                     <col style="width:*" />
                     <col style="width:180px" />
                     <col style="width:*" />
@@ -1940,13 +1957,34 @@ function fn_eHPmarritalCallBack(){
                 </table>table end -->
 
                 <aside class="title_line">
+                <h2>Registration Information</h2>
+                </aside>
+
+                <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:160px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">Registration Options<span class="must">*</span></th>
+                    <td>
+                    <select class="w100p" id="eHPregOpt" name="eHPregOpt">
+                    </select>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+
+                <aside class="title_line">
                 <h2>Starter Kit & ID Tag</h2>
                 </aside>
 
                 <table class="type1">
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:150px" />
+                    <col style="width:160px" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
@@ -1975,7 +2013,7 @@ function fn_eHPmarritalCallBack(){
                 <table class="type1" id="eHPhideContent">
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:150px" />
+                    <col style="width:180px" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
@@ -1995,7 +2033,7 @@ function fn_eHPmarritalCallBack(){
                 <table class="type1" id="orientationTbl">
                     <caption>table</caption>
                     <colgroup>
-                        <col style="width:150px" />
+                        <col style="width:180px" />
                         <col style="width:*" />
                     </colgroup>
 

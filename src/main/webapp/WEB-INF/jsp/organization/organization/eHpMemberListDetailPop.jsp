@@ -1089,6 +1089,12 @@ function fn_selectFailedRemarkList() {
 
 </tr>
 <tr>
+      <th scope="row">Registration Options</th>
+       <td colspan="3">
+        <span><c:out value="${memberView.aplicntRegOpt}"/></span>
+    </td>
+</tr>
+<tr>
       <th scope="row">Collection Branch</th>
        <td colspan="3">
         <span><c:out value="${memberView.collctBrnchDesc}"/></span>

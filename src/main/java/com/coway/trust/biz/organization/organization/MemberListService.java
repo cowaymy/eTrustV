@@ -273,4 +273,6 @@ public interface MemberListService {
 	void deleteMemberListAttachBiz(FileType type, Map<String, Object> params);
 
 	List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params);
+
+	List<EgovMap> selectHpRegistrationOption(Map<String, Object> params);
 }

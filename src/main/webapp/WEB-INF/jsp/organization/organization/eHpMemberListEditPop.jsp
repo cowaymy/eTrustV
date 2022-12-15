@@ -29,6 +29,11 @@ var otherFileName2 = "";
 
 var FailedRemarkGridID;
 
+function disableCollectionBranch(){
+	document.getElementById("eHPcollctionBrnch").disabled = $("#eHPregOpt").val()==7227 ? true : false;
+    document.getElementById("eHPcollctionBrnch").disabled = $("#eHPregOpt").val()==7227 ? $("#eHPcollctionBrnch").val('') : '';
+}
+
 $(document).ready(function() {
 
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
@@ -54,6 +59,7 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '5', '','eHPeducationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'eHPissuedBank', 'S', '')
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'eHPmeetingPoint', 'S', '');
+    doGetCombo('/organization/selectHpRegistrationOption.do', '', '', 'eHPregOpt', 'S', '');
 
     console.log("atchFileGrpId : " + '${atchFileGrpId}' );
     var atchFileGrpIdTemp = '${atchFileGrpId}';
@@ -117,6 +123,11 @@ $(document).ready(function() {
 
                $("#eHPstatusID").val(result[0].stusId);
 
+               $("#eHPregOpt").val(result[0].aplicntRegOpt);
+
+               disableCollectionBranch();
+
+
                //$("#eHPmArea").val(data.area);
                //$("#eHPmArea option[value='"+ data.area +"']").attr("selected", true);
 
@@ -146,6 +157,9 @@ $(document).ready(function() {
 
     doGetCombo('/organization/selectBusinessType.do', '', '','eHPbusinessType', 'S' , '');
 
+    $("#eHPregOpt").change(function (){
+    	disableCollectionBranch();
+    });
 
     //fn_departmentCode();
     $("#eHPstate").change(function (){
@@ -474,10 +488,20 @@ function fn_saveValidation(){
          Common.alert("NRIC should be in 12 digit");
          return false;
      }
-     if($("#eHPcollctionBrnch").val() == ''){
+
+     if(FormUtil.isEmpty($('#eHPregOpt').val())) {
          valid = false;
-         message += "* Please select collection branch.<br/>";
+         message += "* Please select Registration Options.<br/>";
+     }else{
+         valid = $("#eHPregOpt").val() !=7227 && FormUtil.isEmpty($('#eHPcollctionBrnch').val()) ?  false :  true ;
+         message += $("#eHPregOpt").val() !=7227 && FormUtil.isEmpty($('#eHPcollctionBrnch').val()) ?  "* Please select collection branch.<br/>" :  "";
      }
+
+
+//      if($("#eHPcollctionBrnch").val() == ''){
+//          valid = false;
+//          message += "* Please select collection branch.<br/>";
+//      }
     //else
     //{
     //    if (this.IsExistingMember())
@@ -653,6 +677,8 @@ function fn_saveValidation(){
         if(!fn_validFile()) {
         return false;
     }
+
+
 
     //Display Message
     if (!valid)
@@ -997,7 +1023,8 @@ function fn_memberSave(){
               eHPspouseContat : $("#eHPspouseContat").val(),
 
               // ATTACHMENT
-              atchFileGrpId : '${atchFileGrpId}'
+              atchFileGrpId : '${atchFileGrpId}',
+              eHPregOpt : $("#eHPregOpt").val()
     }
 
 
@@ -1402,9 +1429,9 @@ function fn_selectFailedRemarkList() {
 <colgroup>
     <col style="width:160px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -1641,7 +1668,7 @@ function fn_selectFailedRemarkList() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
@@ -1670,7 +1697,7 @@ function fn_selectFailedRemarkList() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
@@ -1691,6 +1718,27 @@ function fn_selectFailedRemarkList() {
 </tbody>
 </table><!-- table end -->
 
+<aside class="title_line">
+<h2>Registration Information</h2>
+</aside>
+
+<table class="type1">
+<caption>table</caption>
+<colgroup>
+    <col style="width:160px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Registration Options<span class="must">*</span></th>
+    <td>
+    <select class="w100p" id="eHPregOpt" name="eHPregOpt">
+    </select>
+    </td>
+</tr>
+</tbody>
+</table>
+
 <aside class="title_line"><!-- title_line start -->
 <h2>Starter Kit & ID Tag</h2>
 </aside><!-- title_line end -->
@@ -1698,7 +1746,7 @@ function fn_selectFailedRemarkList() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -1723,7 +1771,7 @@ function fn_selectFailedRemarkList() {
 <table class="type1" id="hideContent"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
 </colgroup>
 <tbody>

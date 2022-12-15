@@ -2913,5 +2913,11 @@ public class MemberListController {
       // 호출될 화면
       return "organization/organization/rejoinRawReportPop";
     }
+
+    @RequestMapping(value = "/selectHpRegistrationOption.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectHpRegistrationOption(@RequestParam Map<String, Object> params) throws Exception {
+        List<EgovMap> codeList = memberListService.selectHpRegistrationOption(params);
+        return ResponseEntity.ok(codeList);
+    }
 }
 
