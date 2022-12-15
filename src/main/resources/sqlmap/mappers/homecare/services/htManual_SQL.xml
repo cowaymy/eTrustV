@@ -589,7 +589,16 @@ FROM
                         , Project2.HT_MGR_CODE
                         , Project2.Result as Result
                         , project2.dept_code
+                        , project2.orgCode
                          , project2.crt_user_id
+                         , CASE
+                            WHEN (SUBSTR(Project2.MAT_DESC, 1, INSTR(Project2.MAT_DESC, ' (', 1, 1))) IS NULL THEN Project2.MAT_DESC
+                            ELSE SUBSTR(Project2.MAT_DESC, 1, INSTR(Project2.MAT_DESC, ' (', 1, 1))
+                           END MAT_STK_DESC
+                         , CASE
+                            WHEN (SUBSTR(Project2.FRA_DESC, 1, INSTR(Project2.FRA_DESC, ' (', 1, 1))) IS NULL THEN Project2.FRA_DESC
+                            ELSE SUBSTR(Project2.FRA_DESC, 1, INSTR(Project2.FRA_DESC, ' (', 1, 1))
+                           END FRA_STK_DESC
                          , Project2.APPTYPE
                          , Project2.SALES_PROD_SZ
                          , Project2.APP_TYPE_ID
@@ -606,6 +615,8 @@ FROM
                               , HR.NO AS RESULT
                               , CASE WHEN SOM.SALES_ORD_NO IS NOT NULL THEN SOM.SALES_ORD_NO ELSE SO.SRV_ORD_NO END AS SALES_ORD_NO
                               , SO.APP_TYPE_ID
+                              , MI.STK_DESC as MAT_DESC
+                              , FI.STK_DESC as FRA_DESC
                               , AP.CODE AS APPTYPE
                               , SO.SALES_PROD_SZ
                               , CU.NAME
@@ -658,6 +669,12 @@ FROM
                 WHERE  ( 167 = FR.RESN_TYPE_ID )
                 AND ( 1 = FR.STUS_CODE_ID )) REM ON REM.CODE_ID = HR.FAIL_RESN_ID
                 LEFT JOIN SYS0013M SRT ON SO.SRV_TYPE = SRT.CODE_ID
+                LEFT JOIN SAL0002D MS ON MS.SALES_ORD_ID = SOM.SALES_ORD_ID
+                LEFT JOIN SYS0026M MI ON MI.STK_ID = MS.ITM_STK_ID
+                LEFT JOIN HMC0011D HC ON HC.ORD_SEQ_NO = SOM.BNDL_ID
+                LEFT JOIN SAL0001D FO ON FO.SALES_ORD_NO = HC.FRA_ORD_NO
+                LEFT JOIN SAL0002D FS ON FS.SALES_ORD_ID = FO.SALES_ORD_ID
+                LEFT JOIN SYS0026M FI ON FI.STK_ID = FS.ITM_STK_ID
                 WHERE
                 CD.MEM_ID IS NOT NULL
 
@@ -690,6 +707,8 @@ FROM
                               , HR.NO AS RESULT
                               , CASE WHEN SOM.SALES_ORD_NO IS NOT NULL THEN SOM.SALES_ORD_NO ELSE SO.SRV_ORD_NO END AS SALES_ORD_NO
                               , SO.APP_TYPE_ID
+                              , MI.STK_DESC as MAT_DESC
+                              , FI.STK_DESC as FRA_DESC
                               , AP.CODE AS APPTYPE
                               , SO.SALES_PROD_SZ
                               , CU.NAME
@@ -742,6 +761,12 @@ FROM
                 WHERE  ( 167 = FR.RESN_TYPE_ID )
                 AND ( 1 = FR.STUS_CODE_ID )) REM ON REM.CODE_ID = HR.FAIL_RESN_ID
                 LEFT JOIN SYS0013M SRT ON SO.SRV_TYPE = SRT.CODE_ID
+                LEFT JOIN SAL0002D MS ON MS.SALES_ORD_ID = SOM.SALES_ORD_ID
+                LEFT JOIN SYS0026M MI ON MI.STK_ID = MS.ITM_STK_ID
+                LEFT JOIN HMC0011D HC ON HC.ORD_SEQ_NO = SOM.BNDL_ID
+                LEFT JOIN SAL0001D FO ON FO.SALES_ORD_NO = HC.FRA_ORD_NO
+                LEFT JOIN SAL0002D FS ON FS.SALES_ORD_ID = FO.SALES_ORD_ID
+                LEFT JOIN SYS0026M FI ON FI.STK_ID = FS.ITM_STK_ID
                 WHERE
                   CD.MEM_ID IS NULL
           )Project2
