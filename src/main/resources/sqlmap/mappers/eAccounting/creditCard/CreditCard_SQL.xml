@@ -1243,6 +1243,7 @@ WHERE CRDIT_CARD_STUS = 'A'
                 FROM FCM0016M A
                 JOIN FCM0017M B
                     ON A.CRDIT_CARD_USER_ID = B.CRDIT_CARD_USER_ID
+                    AND A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
                 JOIN FCM0004M C
                     ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
                     AND C.APPV_PRCSS_STUS IN ('A','R','P')
