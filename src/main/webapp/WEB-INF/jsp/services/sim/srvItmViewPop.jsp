@@ -20,7 +20,7 @@
   var myGridIDPopAdd;
 
   var deleteRowIdx;
-
+  var TODAY_DD = "${toDay}";
   var seqNo,crtDt,currentDt,crtDtString,currentDtString,movTypCde,movDtlCde,deptCode,memId,bal,qty;
 
   $(document).ready(
@@ -28,6 +28,23 @@
     function() {
       srvItmMgmtGrid(); // CREATE GRID
       getSrvItm(); // GET RECORD FOR GRID
+
+      var todayMM = Number(TODAY_DD.substr(3, 2));
+      var todayYY = Number(TODAY_DD.substr(6, 4));
+
+      $('#txtTrxDt').change(function (event) {
+          if((Number($("#txtTrxDt").val().substr(3, 2)) !=todayMM) && (Number($("#txtTrxDt").val().substr(6, 4)) ==todayYY)){
+              $("#txtTrxDt").val("");
+              var msg = "Transaction Date only can choose with current month. ";
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+          }
+          else if((Number($("#txtTrxDt").val().substr(6, 4)) !=todayYY)){
+              $("#txtTrxDt").val("");
+              var msg = "Transaction Date only can choose with current year. ";
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+           }
+
+      });
 
       // Double click grid item to edit
       if(funcUserDefine8 == "Y"){
@@ -39,8 +56,8 @@
 
               crtDt = new Date(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "crtDt"));
               currentDt = new Date();
-              crtDtString = crtDt.getFullYear().toString()  + crtDt.getMonth().toString();
-              currentDtString = currentDt.getFullYear().toString()  + currentDt.getMonth().toString();
+              // crtDtString = crtDt.getFullYear().toString()  + crtDt.getMonth().toString();
+              // currentDtString = currentDt.getFullYear().toString()  + currentDt.getMonth().toString();
 
               movTypCde = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "movTypCde");
               movDtlCde = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "movDtlCde");
@@ -288,7 +305,7 @@
         break;
       }
 
-      if(currentDtString <= crtDtString){
+      if(currentDt.getMonth()<=crtDt.getMonth() && currentDt.getFullYear()<=crtDt.getFullYear()){ // if can edit (we get month/year)
          if(movTypCde == 0 || movTypCde == 1){
 
           doGetCombo('/services/sim/getMovTyp.do', '', movTypCde, 'cboMovTyp', 'S', ''); // ITEM TYPE
