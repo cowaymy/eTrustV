@@ -844,7 +844,7 @@ SELECT Extent1.CCP_ID   ,
        Extent9.CHS_STUS ,
        Extent9.CHS_RSN,
        CASE WHEN ( 1 = Extent1.CCP_AGM_REQ ) THEN 1 ELSE 0 END CCP_AGM_REQ  ,
-       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE 
+       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE
 <!--       TO_CHAR(Extent1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT,
        Extent1.CUST_IS_PAYER ,
        Extent1.THE_PAYER ,
@@ -958,8 +958,8 @@ SELECT Extent1.CCP_ID   ,
                    CCP_EXPERIANS = #{experianScore},
                    CCP_EXPERIANR = #{experianRisk},
                    CCP_AGM_REQ = #{agmReq},
- <!--                  CCP_TEMPLATE = #{cowayTemplate}
-	               CUST_IS_PAYER = #{custIsPayerValue},
+                 CCP_TEMPLATE = #{cowayTemplate}
+ <!-- 	               CUST_IS_PAYER = #{custIsPayerValue},
 	               THE_PAYER = #{thePayerValue},
 	               FAIL_VER_RSN = #{failVeriReasonValue} -->
             WHERE
@@ -1498,7 +1498,7 @@ AND T1.CNT = 1
        Extent9.CHS_STUS ,
        Extent9.CHS_RSN,
        CASE WHEN ( 1 = Extent1.CCP_AGM_REQ ) THEN 1 ELSE 0 END CCP_AGM_REQ  ,
-       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE 
+       CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE
  <!--      TO_CHAR(Extent1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT,
        Extent1.CUST_IS_PAYER ,
        Extent1.THE_PAYER ,
