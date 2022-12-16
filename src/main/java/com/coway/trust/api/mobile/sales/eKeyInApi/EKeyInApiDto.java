@@ -81,7 +81,7 @@ public class EKeyInApiDto {
   private String race;
   private String pasSportExpr;
   private String visaExpr;
-  private String receivingMarketingMsgStatus;
+  private int receivingMarketingMsgStatus;
   private String name;
   private String telM1;
   private String telR;
@@ -1892,11 +1892,11 @@ public class EKeyInApiDto {
 	this.quotaStus = quotaStus;
   }
 
-public String getReceivingMarketingMsgStatus() {
+public int getReceivingMarketingMsgStatus() {
 	return receivingMarketingMsgStatus;
 }
 
-public void setReceivingMarketingMsgStatus(String receivingMarketingMsgStatus) {
+public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
 	this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
 }
 
