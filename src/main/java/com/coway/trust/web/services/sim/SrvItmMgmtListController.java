@@ -94,11 +94,13 @@ public class SrvItmMgmtListController {
     logger.debug("== params " + params.toString());
     logger.debug("===========================/srvItmView.do===============================");
 
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
     String br =  SrvItmMgmtListService.getBchDesc((String) params.get("brCde"));
     String itmCde =  SrvItmMgmtListService.getItmCde((String) params.get("itmCde"));
     String itmDesc =  SrvItmMgmtListService.getItmDesc((String) params.get("itmCde"));
     String brTyp =  SrvItmMgmtListService.getBrTypDesc((String) params.get("brCde"));
 
+    model.put("toDay", toDay);
     model.put("BR_TYP_DESC", brTyp);
     model.put("BR", (String) params.get("brCde"));
     model.put("BR_DESC", br);
