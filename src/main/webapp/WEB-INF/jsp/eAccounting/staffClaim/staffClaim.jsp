@@ -231,16 +231,17 @@ function fn_setEvent() {
 	                    }
 	                });
 	            }
-	        } else if(id == "gstRgistNo") {
-	        	if($("#invcType").val() == "F") {
-	                var gstRgistNo = $(this).val();
-	                console.log(gstRgistNo);
-	                /*if(gstRgistNo.length != 12) {
-	                    Common.alert('Please insert 12 digits GST Registration No');
-	                    $("#gstRgistNo").val("");
-	                }*/
-	            }
 	        }
+// 	        else if(id == "gstRgistNo") {
+// 	        	if($("#invcType").val() == "F") {
+// 	                var gstRgistNo = $(this).val();
+// 	                console.log(gstRgistNo);
+// 	                /*if(gstRgistNo.length != 12) {
+// 	                    Common.alert('Please insert 12 digits GST Registration No');
+// 	                    $("#gstRgistNo").val("");
+// 	                }*/
+// 	            }
+// 	        }
 	   });
 
 	 // 파일 선택하기
@@ -469,6 +470,7 @@ function fn_checkEmpty() {
     // Expense Type Name == Car Mileage Expense
     //$("#expTypeName").val() == "Car Mileage Expense"
     // WebInvoice Test는 Test
+    //Fix checking
     if($(":input:radio[name=expGrp]:checked").val() == "1"){
     	var length = AUIGrid.getGridData(mileageGridID).length;
         if(length > 0) {
@@ -493,6 +495,11 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "atchFileName"))) {
+                    Common.alert('Attachment not found for Line ' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
             }
         } else {
         	Common.alert('<spring:message code="staffClaim.mileage.msg" />');
@@ -505,7 +512,8 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }
-        if($("#invcType").val() == "F") {
+    	//not sure about this invcType F/S checking
+        //if($("#invcType").val() == "F") { //not used anymore
             if(FormUtil.isEmpty($("#supplirName").val())) {
                 Common.alert('<spring:message code="staffClaim.supplierName.msg" />');
                 checkResult = false;
@@ -516,11 +524,20 @@ function fn_checkEmpty() {
                 checkResult = false;
                 return checkResult;
             }
-            if(FormUtil.isEmpty($("#gstRgistNo").val())) {
-                Common.alert('Please enter GST Rgist No.');
+//             if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+//                 Common.alert('Please enter GST Rgist No.');
+//                 checkResult = false;
+//                 return checkResult;
+//             }
+
+
+        $("#attachTd input[type='file']").each(function() {
+        	if(FormUtil.isEmpty($(this).val())){
+        		Common.alert('Attachment is required.');
                 checkResult = false;
                 return checkResult;
-            }
+        	}
+        });
             var length = AUIGrid.getGridData(myGridID).length;
             if(length > 0) {
                 for(var i = 0; i < length; i++) {
@@ -534,14 +551,29 @@ function fn_checkEmpty() {
                         checkResult = false;
                         return checkResult;
                     }
-                    if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "gstBeforAmt"))) {
-                        Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                    if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt"))) {
+                        Common.alert('Please enter the Total Amount of Line ' + (i +1) + ".");
                         checkResult = false;
                         return checkResult;
                     }
+                    else{
+                        var totAmt = AUIGrid.getCellValue(myGridID, i, "totAmt");
+
+                        if(totAmt == 0){
+                        	Common.alert('Total Amount must be bigger than 0 for Line ' + (i +1) + ".");
+                            checkResult = false;
+                            return checkResult;
+                        }
+                    }
+                    debugger;
+//                     if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "gstBeforAmt"))) {
+//                         Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+//                         checkResult = false;
+//                         return checkResult;
+//                     }
                 }
             }
-        }
+        //}
     }
     return checkResult;
 }
@@ -755,7 +787,6 @@ function fn_addNormalExpenses(){
             ,expDesc : $("#expDesc").val()
             ,gridData : GridCommon.getEditData(myGridID)
     };
-
     Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
         console.log(result);
 
@@ -1087,7 +1118,6 @@ function fn_setStaffClaimInfo(result) {
         $("#invcDt").val(result.invcDt);
         $("#gstRgistNo").val(result.gstRgistNo);
         $("#expDesc").val(result.expDesc);
-
         AUIGrid.setGridData(myGridID, result.itemGrp);
         // TODO attachFile
         attachList = result.itemGrp[0].attachList;
