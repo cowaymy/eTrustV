@@ -216,4 +216,6 @@ public interface OrderRegisterMapper {
 
   void insertPexDefectEntry(Map<String, Object> params);
 
+  int updateMarketingMessageStatus(Map<String, Object> params);
+
 }

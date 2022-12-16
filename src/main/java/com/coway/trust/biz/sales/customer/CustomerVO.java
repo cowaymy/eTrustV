@@ -25,7 +25,7 @@ public class CustomerVO implements Serializable {
 	private int bankId;
 	private String code;
 	private String areaId;
-	
+
 	/** Customer Insert VO*/
 	private String custName;
 	private int getCustId;
@@ -65,9 +65,8 @@ public class CustomerVO implements Serializable {
 	private String accBankBrnch;
 	private String accRem;
 	private String oldNric;
-	
-	
-	
+	private int receivingMarketingMsgStatus;
+
 	public String getOldNric() {
 		return oldNric;
 	}
@@ -164,7 +163,7 @@ public class CustomerVO implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
 	public String getCustName() {
 		return custName;
 	}
@@ -393,5 +392,11 @@ public class CustomerVO implements Serializable {
 	public void setStreetDtl(String streetDtl) {
 		this.streetDtl = streetDtl;
 	}
-	
+	public int getReceivingMarketingMsgStatus() {
+		return receivingMarketingMsgStatus;
+	}
+	public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
+		this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
+	}
+
 }

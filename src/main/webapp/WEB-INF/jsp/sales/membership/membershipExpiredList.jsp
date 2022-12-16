@@ -12,14 +12,10 @@
 //AUIGrid 그리드 객체
 var myGridID;
 var expiredPeriodData = [
-              {"codeId": "0","codeName": "Fresh"},
-              {"codeId": "1","codeName": "1"},
-              {"codeId": "2","codeName": "2"},
-              {"codeId": "3","codeName": "3"},
-              {"codeId": "4","codeName": "4"},
-              {"codeId": "5","codeName": "5"},
-              {"codeId": "6","codeName": "6"},
-              {"codeId": "7","codeName": "7 above"}
+              {"codeId": "0,1,2,3","codeName": "0-3 Months"},
+              {"codeId": "4,5,6","codeName": "4-6 Months"},
+              {"codeId": "7,8,9","codeName": "7-9 Months"},
+              {"codeId": "10,11,12","codeName": "10-12 Months"},
               ];
 var today = '${today}'
 

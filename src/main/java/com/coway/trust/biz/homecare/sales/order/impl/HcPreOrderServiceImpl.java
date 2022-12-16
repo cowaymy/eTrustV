@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcPreOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.PreOrderMapper;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -46,6 +47,9 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
   	@Resource(name = "hcOrderRegisterMapper")
   	private HcOrderRegisterMapper hcOrderRegisterMapper;
+
+  	@Resource(name = "orderRegisterMapper")
+	private OrderRegisterMapper orderRegisterMapper;
 
 	/**
 	 * Search Homecare Pre OrderList
@@ -173,6 +177,13 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
 			}
 			preOrderVO.setHcOrderVO(hcOrderVO);
+
+			//Update customer marketing message status(universal between HC/HA)
+	        Map<String, Object> params1 = new HashMap();
+	        params1.put("custId",preOrderVO.getCustId());
+	        params1.put("updUserId", sessionVO.getUserId());
+	        params1.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+	        orderRegisterMapper.updateMarketingMessageStatus(params1);
 
 		} catch (Exception e) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
@@ -317,6 +328,13 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 				throw new ApplicationException(AppConstants.FAIL, "Order Update Failed.");
 			}
 			preOrderVO.setHcOrderVO(hcOrderVO);
+
+			//Update customer marketing message status(universal between HC/HA)
+	        Map<String, Object> params1 = new HashMap();
+	        params1.put("custId",preOrderVO.getCustId());
+	        params1.put("updUserId", sessionVO.getUserId());
+	        params1.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+	        orderRegisterMapper.updateMarketingMessageStatus(params1);
 
 		} catch (Exception e) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Update Failed.");

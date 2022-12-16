@@ -1,6 +1,8 @@
 package com.coway.trust.web.sales.mambership;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -95,12 +97,13 @@ public class  MembershipRejoinController {
 
         if(arrAppType != null && !CommonUtils.containsEmpty(arrAppType)) params.put("arrAppType", arrAppType);
         if(arrExpiredPeriod != null && !CommonUtils.containsEmpty(arrExpiredPeriod)){
-          params.put("arrExpiredPeriod", arrExpiredPeriod);
+        	List<String> expiredPeriodSplitList = new ArrayList();
+        	for(int i=0; i< arrExpiredPeriod.length;i++){
+        		String[] arr = arrExpiredPeriod[i].split(",");
+        		Collections.addAll(expiredPeriodSplitList, arr);
+        	}
 
-          for (String str : arrExpiredPeriod){
-            if("7".equals(str))
-                params.put("expPeriod", "7");
-          }
+          params.put("arrExpiredPeriod", expiredPeriodSplitList.toArray());
         }
         if(arrCategory != null && !CommonUtils.containsEmpty(arrCategory)) params.put("arrCategory", arrCategory);
         if(arrProduct != null && !CommonUtils.containsEmpty(arrProduct)) params.put("arrProduct", arrProduct);

@@ -74,4 +74,8 @@ public interface OrderModifyService {
 
   void updateMcoRem(Map<String, Object> params);
 
+int updateReceivingMarketMessageStatus(Map<String, Object> params, SessionVO sessionVO);
+
+EgovMap selectSalesOrdDetail(Map<String, Object> params);
+
 }

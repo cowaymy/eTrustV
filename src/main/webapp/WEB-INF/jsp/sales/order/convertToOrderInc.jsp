@@ -38,6 +38,13 @@
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#ordRem").html('${preOrderInfo.instct}');
 
+                if(custInfo.receivingMarketingMsgStatus == 1){
+                	$("#marketMessageYes").prop("checked", true);
+                }
+                else{
+                	$("#marketMessageNo").prop("checked", true);
+                }
+
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
                 }

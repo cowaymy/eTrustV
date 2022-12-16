@@ -1457,7 +1457,8 @@
             corpCustType         : $('#corpCustType').val(),
             agreementType         : $('#agreementType').val(),
             salesOrdIdOld          : $('#txtOldOrderID').val(),
-            relatedNo               : $('#relatedNo').val()
+            relatedNo               : $('#relatedNo').val(),
+            marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
         };
 
         var formData = new FormData();
@@ -1875,6 +1876,13 @@
                 $("#custEmail").val(custInfo.email); //Email
 //              $("#custRem").val(custInfo.rem); //Remark
 //              $("#gstChk").val('0').prop("disabled", true);
+
+                if(custInfo.receivingMarketingMsgStatus == 1){
+                	$("#marketMessageYes").prop("checked", true);
+                }
+                else{
+                	$("#marketMessageNo").prop("checked", true);
+                }
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -2386,6 +2394,19 @@
 			<tr>
 			    <th scope="row"><spring:message code="sal.title.text.email2" /></th>
 			    <td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr>
+			 <tr>
+				<th scope="row">Receiving Marketing Message</th>
+				<td>
+					<div style="display:inline-block;width:100%;">
+						<div style="display:inline-block;">
+						<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+						</div>
+						<div style="display:inline-block;">
+						<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+						</div>
+					</div>
+				</td>
 			</tr>
 			<!-- <tr>
 			    <th scope="row">Tel (Mobile)</th>

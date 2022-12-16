@@ -457,7 +457,8 @@
                     asTelR : insContactForm.asTelR.value,
                     //asTelF : insContactForm.asTelF.value,
                     asExt : insContactForm.asExt.value,
-                    asEmail : insContactForm.asEmail.value
+                    asEmail : insContactForm.asEmail.value,
+                    marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
                 }
             };
 
@@ -1178,6 +1179,19 @@
                                 <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
                                 <td><input type="text" id="_ext_" name="ext" title="" placeholder="Extension Number" class="w100p" /></td>
                             </tr>
+							<tr>
+								<th scope="row">Receiving Marketing Message</th>
+								<td>
+								<div style="display:inline-block;width:100%;">
+									<div style="display:inline-block;">
+									<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+									</div>
+									<div style="display:inline-block;">
+										<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+										</div>
+									</div>
+								</td>
+							</tr>
                             <tr>
                                 <td colspan=2><span class="red_text">No Contain ' - ' in contact numbers</span></td>
                             </tr>

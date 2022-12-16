@@ -753,4 +753,12 @@ SELECT FRA.SALES_ORD_ID,
 
 
 </select>
+
+	<update id="updateMarketingMessageStatus" parameterType="Map">
+		UPDATE SAL0029D SET RECEIVING_MARKETING_MSG_STATUS = #{modMarketingMessageSelection}, UPD_DT = SYSDATE, UPD_USER_ID = #{updUserId} WHERE CUST_ID = #{custId}
+	</update>
+
+	<select id="selectSalesOrdDetail" parameterType="Map" resultType="egovMap">
+		SELECT * FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}
+	</select>
 </mapper>

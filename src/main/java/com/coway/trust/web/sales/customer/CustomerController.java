@@ -759,6 +759,7 @@ public class CustomerController {
     ins29Dmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
     ins29Dmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
     ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
+    ins29Dmap.put("marketingMsgStatus",vo.getReceivingMarketingMsgStatus());
 
     // Address
     insmap.put("addrDtl", vo.getAddrDtl());
@@ -911,7 +912,6 @@ public class CustomerController {
   @RequestMapping(value = "/insCustBasicInfoEkeyin.do", method = RequestMethod.POST)
   public ResponseEntity<Integer> insCustBasicInfoEkeyin(@RequestBody CustomerForm customerForm, Model model)
       throws Exception {
-
     int getCustCareCntId = 0;
     String defaultDate = "01/01/1900";
     SessionVO sessionVo = sessionHandler.getCurrentSessionInfo();
@@ -1021,6 +1021,7 @@ public class CustomerController {
     ins29Dmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
     ins29Dmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
     ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
+    ins29Dmap.put("marketingMsgStatus",vo.getReceivingMarketingMsgStatus());
 
     // Address
     insmap.put("addrDtl", vo.getAddrDtl());

@@ -157,7 +157,6 @@
         $("#searchCustId").val(custId);
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
-
             if(result != null && result.length == 1) {
 
               //fn_tabOnOffSet('BIL_DTL', 'SHOW'); //2018.01.01
@@ -188,6 +187,12 @@
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#empChk").val('0'); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
+                if(custInfo.receivingMarketingMsgStatus == 1){
+                	$("#marketMessageYes").prop("checked", true);
+                }
+                else{
+                	$("#marketMessageNo").prop("checked", true);
+                }
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -1687,7 +1692,6 @@ console.log("vBindingNo" + vBindingNo);
             vAdtPayMode = "FPX";
         }
         console.log(" TEST CONTACT  ::::: "+ $('#srvCntcId').val().trim());
-
         var orderVO = {
 
             custTypeId      : $('#typeId').val().trim(),
@@ -1738,6 +1742,7 @@ console.log("vBindingNo" + vBindingNo);
                 corpCustType            : $('#corpCustType').val(),
                 agreementType           : $('#agreementType').val(),
                 comboOrdBind            : $('#hiddenCboOrdNoTag').val(),
+                marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
@@ -2376,7 +2381,6 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_loadOrderSalesman(memId, memCode) {
-
         console.log('fn_loadOrderSalesman memId:'+memId);
         console.log('fn_loadOrderSalesman memCd:'+memCode);
 
@@ -2940,6 +2944,19 @@ console.log("vBindingNo" + vBindingNo);
 <tr>
     <th scope="row"><spring:message code="sal.text.employee" /><span class="must">*</span></th>
     <td colspan="3"><select id="empChk" name="empChk" class="w100p"></select></select></td>
+</tr>
+ <tr>
+	<th scope="row">Receiving Marketing Message</th>
+	<td>
+		<div style="display:inline-block;width:100%;">
+			<div style="display:inline-block;">
+			<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+			</div>
+			<div style="display:inline-block;">
+			<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+			</div>
+		</div>
+	</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>

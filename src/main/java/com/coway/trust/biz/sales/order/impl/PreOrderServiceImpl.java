@@ -99,16 +99,29 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 		preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
 		this.preprocPreOrder(preOrderVO, sessionVO);
-
 		preOrderMapper.insertPreOrder(preOrderVO);
+
+		//Update customer marketing message status(universal between HC/HA)
+        Map<String, Object> params = new HashMap();
+        params.put("custId",preOrderVO.getCustId());
+        params.put("updUserId", sessionVO.getUserId());
+        params.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+        orderRegisterMapper.updateMarketingMessageStatus(params);
 	}
 
 	@Override
 	public void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
 
 		this.preprocPreOrder(preOrderVO, sessionVO);
-
 		preOrderMapper.updatePreOrder(preOrderVO);
+
+        //Update customer marketing message status(universal between HC/HA)
+        Map<String, Object> params = new HashMap();
+        params.put("custId",preOrderVO.getCustId());
+        params.put("updUserId", sessionVO.getUserId());
+        params.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+
+        orderRegisterMapper.updateMarketingMessageStatus(params);
 	}
 
 	@Override

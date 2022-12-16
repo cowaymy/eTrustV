@@ -2318,11 +2318,11 @@
   function fn_validMailingAddress() {
     var isValid = true, msg = "";
 
-    if (FormUtil.isEmpty($('#modCustAddId').val().trim())) {
-      isValid = false;
-      msg += '<spring:message code="sal.alert.msg.plzSeltheAddr" />';
-    }
-
+//     if (FormUtil.isEmpty($('#modCustAddId').val().trim())) {
+//       isValid = false;
+//       msg += '<spring:message code="sal.alert.msg.plzSeltheAddr" />';
+//     }
+ if (!FormUtil.isEmpty($('#modCustAddId').val().trim())) {
     if (FormUtil.isEmpty($('#modRem').val().trim())) {
       isValid = false;
       msg += '<spring:message code="sal.alert.msg.plzKeyinReasonUpdate" />';
@@ -2332,6 +2332,7 @@
         msg += '<spring:message code="sal.alert.msg.rsnUpdValidTwoHundChar" />';
       }
     }
+ }
 
     if (!isValid)
       Common.alert('<spring:message code="sal.alert.msg.updSummary" />'
@@ -3102,6 +3103,33 @@
           code="sal.title.text.newAddr" /></th>
         <td colspan="3"><span id="modNewAddress"></span></td>
        </tr>
+        <tr>
+        <th scope="row">Receiving Marketing Message</th>
+        <td colspan="3">
+        	<div style="display:inline-block;width:100%;">
+			    <div style="display:inline-block;">
+					<c:choose>
+					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
+					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+					  </c:when>
+					  <c:otherwise>
+					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+					  </c:otherwise>
+					</c:choose>
+			    </div>
+			      <div style="display:inline-block;">
+					<c:choose>
+					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
+				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection" checked/><label for="marketMessageNo">No</label>
+					  </c:when>
+					  <c:otherwise>
+				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection"/><label for="marketMessageNo">No</label>
+					  </c:otherwise>
+					</c:choose>
+			    </div>
+	    	</div>
+        </td>
+       </tr>
        <tr>
         <th scope="row"><spring:message
           code="sal.title.text.reasonUpdate" /></th>
@@ -3186,6 +3214,33 @@
         <td><span id="txtMailState"></span></td>
         <th scope="row"><spring:message code="sal.text.country" /></th>
         <td><span id="txtMailCountry"></span></td>
+       </tr>
+        <tr>
+        <th scope="row">Receiving Marketing Message</th>
+        <td colspan="3">
+        	<div style="display:inline-block;width:100%;">
+			    <div style="display:inline-block;">
+					<c:choose>
+					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
+					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection" checked/><label for="marketMessageYes">Yes</label>
+					  </c:when>
+					  <c:otherwise>
+					     <input id="marketMessageYes" type="radio" value="1" name="modMarketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+					  </c:otherwise>
+					</c:choose>
+			    </div>
+			      <div style="display:inline-block;">
+					<c:choose>
+					 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
+				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection" checked/><label for="marketMessageNo">No</label>
+					  </c:when>
+					  <c:otherwise>
+				    	<input  id="marketMessageNo" type="radio" value="0" name="modMarketingMessageSelection"/><label for="marketMessageNo">No</label>
+					  </c:otherwise>
+					</c:choose>
+			    </div>
+	    	</div>
+        </td>
        </tr>
       </tbody>
      </table>

@@ -22,7 +22,6 @@
     var GST_CHK = '';
     var GST_MANNUAL = 'N';
     var MAT_TAG = 'N';
-
     var codeList_10 = [];
     <c:forEach var="obj" items="${codeList_10}">
     codeList_10.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
@@ -187,6 +186,13 @@
                 $("#custRem").val(custInfo.rem); //Remark
                 $("#empChk").val('0'); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
+
+                if(custInfo.receivingMarketingMsgStatus == 1){
+                	$("#marketMessageYes").prop("checked", true);
+                }
+                else{
+                	$("#marketMessageNo").prop("checked", true);
+                }
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -1611,6 +1617,7 @@
                 gstChk                    : $('#gstChk').val(),
                 corpCustType           : $('#corpCustType').val(),
                 agreementType        : $('#agreementType').val(),
+                marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
             },
             salesOrderMVO2 : {
                 advBill                    : $('input:radio[name="advPay"]:checked').val(),
@@ -2806,6 +2813,19 @@ console.log(orderVO);
 <tr>
     <th scope="row"><spring:message code="sal.text.employee" /><span class="must">*</span></th>
     <td colspan="3"><select id="empChk" name="empChk" class="w100p"></select></select></td>
+</tr>
+ <tr>
+	<th scope="row">Receiving Marketing Message</th>
+	<td>
+		<div style="display:inline-block;width:100%;">
+			<div style="display:inline-block;">
+			<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+			</div>
+			<div style="display:inline-block;">
+			<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+			</div>
+		</div>
+	</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>

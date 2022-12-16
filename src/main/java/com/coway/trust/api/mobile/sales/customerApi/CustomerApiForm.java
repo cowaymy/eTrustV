@@ -82,7 +82,7 @@ public class CustomerApiForm {
     private String ctosDt;                                                      // ASIS_COLUMN : CTOSDate
     private int ficoScre;                                                       // ASIS_COLUMN : FicoScore
     private String oldIc;                                                       //Old IC
-
+    private int receivingMarketingMsgStatus;							 //Receiving Marketing Message
 
 
     /*SAL0027D -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustContact*/
@@ -655,4 +655,16 @@ public class CustomerApiForm {
     public void setMemId(int memId) {
         this.memId = memId;
     }
+
+
+
+	public int getReceivingMarketingMsgStatus() {
+		return receivingMarketingMsgStatus;
+	}
+
+
+
+	public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
+		this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
+	}
 }

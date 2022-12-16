@@ -81,6 +81,7 @@ public class EKeyInApiDto {
   private String race;
   private String pasSportExpr;
   private String visaExpr;
+  private String receivingMarketingMsgStatus;
   private String name;
   private String telM1;
   private String telR;
@@ -1890,5 +1891,13 @@ public class EKeyInApiDto {
   public void setQuotaStus(BigDecimal quotaStus) {
 	this.quotaStus = quotaStus;
   }
+
+public String getReceivingMarketingMsgStatus() {
+	return receivingMarketingMsgStatus;
+}
+
+public void setReceivingMarketingMsgStatus(String receivingMarketingMsgStatus) {
+	this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
+}
 
 }

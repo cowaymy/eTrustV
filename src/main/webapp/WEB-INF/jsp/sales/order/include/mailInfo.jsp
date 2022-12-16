@@ -252,8 +252,31 @@
     <td><a href="#" class="search_btn" id="imgHoverAddEmail"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
         <span id="spanMailAddEmail">${orderDetail.mailingInfo.mailCntEmailAdd}</span>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Receiving Marketing Message</th>
+    <td>
+    <div style="display:inline-block;width:100%;">
+	    <div style="display:inline-block;">
+			<c:choose>
+			 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 1}">
+			     <input id="marketMessageYes" type="radio" value="yes" name="marketingMessageSelection" checked disabled/><label for="marketMessageYes">Yes</label>
+			  </c:when>
+			  <c:otherwise>
+			     <input id="marketMessageYes" type="radio" value="yes" name="marketingMessageSelection" disabled/><label for="marketMessageYes">Yes</label>
+			  </c:otherwise>
+			</c:choose>
+	    </div>
+	      <div style="display:inline-block;">
+			<c:choose>
+			 <c:when test="${orderDetail.basicInfo.receivingMarketingMsgStatus == 0}">
+		    	<input  id="marketMessageNo" type="radio" value="no" name="marketingMessageSelection" checked disabled/><label for="marketMessageNo">No</label>
+			  </c:when>
+			  <c:otherwise>
+		    	<input  id="marketMessageNo" type="radio" value="no" name="marketingMessageSelection" disabled/><label for="marketMessageNo">No</label>
+			  </c:otherwise>
+			</c:choose>
+	    </div>
+    </div>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -799,4 +799,15 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     public void updateMcoRem(Map<String, Object> params) {
         orderModifyMapper.updateMcoRem(params);
     }
+
+    @Override
+    public int updateReceivingMarketMessageStatus(Map<String, Object> params, SessionVO sessionVO) {
+        params.put("updUserId", sessionVO.getUserId());
+    	return orderModifyMapper.updateMarketingMessageStatus(params);
+    }
+
+    @Override
+    public EgovMap selectSalesOrdDetail(Map<String, Object> params){
+    	return orderModifyMapper.selectSalesOrdDetail(params);
+    }
 }

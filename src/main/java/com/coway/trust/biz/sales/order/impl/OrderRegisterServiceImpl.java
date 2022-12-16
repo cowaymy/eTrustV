@@ -2113,6 +2113,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         orderRegisterMapper.insertASEntry(asEntryVO);
       }
     //}
+
+      	//Update customer marketing message status(universal between HC/HA)
+      	Map<String, Object> params = new HashMap();
+        params.put("custId",salesOrderMVO.getCustId());
+        params.put("updUserId", salesOrderMVO.getUpdUserId());
+        params.put("marketingMsgStatus", salesOrderMVO.getMarketingMsgStatus());
+        orderRegisterMapper.updateMarketingMessageStatus(params);
   }
 
   @Override

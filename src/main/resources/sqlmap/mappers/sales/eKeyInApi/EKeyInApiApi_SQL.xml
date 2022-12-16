@@ -121,7 +121,7 @@
                          ELSE TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY') END AS PAS_SPORT_EXPR
                , CASE WHEN TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
                          ELSE TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') END AS VISA_EXPR
-
+			   , B.RECEIVING_MARKETING_MSG_STATUS
     --CONTACT-----------------------------------------------------------------------
                , A.PRE_ORD_ID AS PRE_ORD_ID
                , UPPER(C.NAME) AS NAME
@@ -1213,6 +1213,7 @@
              , CASE WHEN TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900'      THEN NULL
                        ELSE TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY') END AS VISA_EXPR
              , A.CUST_ID AS CUST_ID
+             , A.RECEIVING_MARKETING_MSG_STATUS
      FROM SAL0029D A
      LEFT OUTER JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID
                                                AND B.STUS_CODE_ID = 9

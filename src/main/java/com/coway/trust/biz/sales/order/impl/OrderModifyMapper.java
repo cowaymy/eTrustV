@@ -103,4 +103,8 @@ public interface OrderModifyMapper {
   void updateMcoRem(Map<String, Object> params);
 
   EgovMap selectFraPayId(Map<String, Object> params);
+
+  int updateMarketingMessageStatus(Map<String, Object> params);
+
+  EgovMap selectSalesOrdDetail(Map<String, Object> params);
 }

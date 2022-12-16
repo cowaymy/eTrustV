@@ -146,13 +146,18 @@ public class OrderModifyController {
   public ResponseEntity<ReturnMessage> updateMailingAddress(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) throws ParseException {
 
-    orderModifyService.updateOrderMailingAddress(params, sessionVO);
+	ReturnMessage message = new ReturnMessage();
+	String custAddId = params.get("custAddId").toString();
 
-    // 결과 만들기
-    ReturnMessage message = new ReturnMessage();
+	orderModifyService.updateReceivingMarketMessageStatus(params, sessionVO);
     message.setCode(AppConstants.SUCCESS);
-    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    message.setMessage("Mailing address has been updated.");
+    message.setMessage("Receiving Marketing Message Status has been updated.");
+
+	if(custAddId != null && custAddId != ""){
+	    orderModifyService.updateOrderMailingAddress(params, sessionVO);
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage("Mailing address has been updated.");
+	}
 
     return ResponseEntity.ok(message);
   }
@@ -161,6 +166,9 @@ public class OrderModifyController {
   public ResponseEntity<ReturnMessage> updateMailingAddress2(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) throws ParseException {
 
+	 EgovMap orderDetail = orderModifyService.selectSalesOrdDetail(params);
+	 params.put("custId", orderDetail.get("custId").toString());
+	orderModifyService.updateReceivingMarketMessageStatus(params, sessionVO);
     orderModifyService.updateOrderMailingAddress2(params, sessionVO);
 
     // 결과 만들기
