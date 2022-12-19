@@ -299,7 +299,7 @@ FROM (
                            AND  Extent4.MEM_TYPE =  #{memTypeCom}
                        </if>
                         <if test="name != null and name != ''">
-                           AND Extent4.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where UPPER(mem_code) LIKE UPPER('%' || #{name} || '%'))
+                           AND Extent4.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where UPPER(name) LIKE UPPER('%' || #{name} || '%'))
                         </if>
                        <if test="code != null and code != ''">
                            AND Extent4.MEM_CODE in ( select /*+precompute_subquery*/ mem_code from ORG0001D where UPPER(mem_code) LIKE UPPER('%' || #{code} || '%'))
@@ -384,7 +384,7 @@ FROM (
                           AND   Extent1.MEM_CODE in ( select /*+precompute_subquery*/ mem_code from ORG0001D where  UPPER(mem_code) LIKE UPPER('%' || #{code} || '%'))
                           </if>
                           <if test="name != null and name != ''">
-                           AND   Extent1.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where  UPPER(mem_code) LIKE UPPER('%' || #{name} || '%'))
+                           AND   Extent1.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where  UPPER(name) LIKE UPPER('%' || #{name} || '%'))
                          </if>
                             <if test="icNum != null and icNum != ''">
                            AND  Extent1.NRIC LIKE   '%' || #{icNum} || '%'
