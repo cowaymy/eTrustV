@@ -109,6 +109,8 @@ public class HeartServiceResultForm {
 	private String newHomeTel;
 	private String newOfficeTel;
 	private String newEmail;
+	private String resultIcHomeNo;
+	private String resultIcOfficeNo;
 	//20220826: Celeste : Edit Customer Info [e]
 
 	public String getCheckInDate() {
@@ -451,5 +453,21 @@ public class HeartServiceResultForm {
 
 	public void setNewOfficeTel(String newOfficeTel) {
 		this.newOfficeTel = newOfficeTel;
+	}
+
+	public String getResultIcHomeNo() {
+		return resultIcHomeNo;
+	}
+
+	public void setResultIcHomeNo(String resultIcHomeNo) {
+		this.resultIcHomeNo = resultIcHomeNo;
+	}
+
+	public String getResultIcOfficeNo() {
+		return resultIcOfficeNo;
+	}
+
+	public void setResultIcOfficeNo(String resultIcOfficeNo) {
+		this.resultIcOfficeNo = resultIcOfficeNo;
 	}
 }
