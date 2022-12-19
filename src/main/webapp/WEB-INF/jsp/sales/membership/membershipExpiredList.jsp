@@ -118,6 +118,10 @@ $(document).ready(function(){
 
     // ajax list 조회.
     function searchList(){
+    	if($('#expiredPeriod option:selected').length == 0){
+    		Common.alert("Please select at least 1 Expired Period filter");
+    		return false;
+    	}
     	   Common.ajax("GET","/sales/membership/selectExpiredMembershipList",$("#searchForm").serialize(), function(result){
     		   console.log(result);
     		AUIGrid.setGridData(myGridID, result);
@@ -158,6 +162,7 @@ $(document).ready(function(){
             width : '100%'
         });
         $('#cmbProduct').multipleSelect("checkAll");
+        $('#expiredPeriod').multipleSelect("checkAll");
 
     }
 
