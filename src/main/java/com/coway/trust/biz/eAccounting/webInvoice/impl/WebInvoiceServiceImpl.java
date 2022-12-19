@@ -1094,7 +1094,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
             	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been approved.<br/><br/>";
             }  else if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "J"){
             	String isResubmitAllowed = CommonUtils.nvl(params.get(i).get("isResubmitAllowed"));
-                if(isResubmitAllowed == "0") {
+                if(isResubmitAllowed.equals("0")) {
                 	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected.<br/><br/>";
                 }
                 else{
