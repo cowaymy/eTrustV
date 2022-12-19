@@ -59,16 +59,38 @@ var excelColumnLayoutNew = [{
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
-    dataField : "appvPrcssNo",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    dataField : "invcDt",
+    headerText : '<spring:message code="webInvoice.invoiceDate" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }, {
-    dataField : "appvPrcssStusCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},
-{
-	dataField:"isResubmitAllowed",
-	visible:false
+    dataField : "invcNo",
+    headerText : 'Invoice No',
 }, {
+    dataField : "supplir",
+    headerText : 'Supplier Name',
+}, {
+    dataField : "expType",
+    headerText : 'Expenses Type',
+},{
+    dataField : "expTypeName",
+    headerText : 'Expenses Type Name',
+},{
+    dataField : "glAccCode",
+    headerText : 'GL Acc Code',
+},{
+    dataField : "glAccCodeName",
+    headerText : 'GL Acc Code Name',
+},{
+    dataField : "budgetCode",
+    headerText : 'Budget Code',
+},{
+    dataField : "budgetCodeName",
+    headerText : 'Budget Code Name',
+},{
+    dataField : "expDesc",
+    headerText : 'Expenses Description',
+},{
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />',
     style : "aui-grid-user-custom-left"
@@ -128,8 +150,16 @@ function fn_popCostCenterSearchPopExcel() {
 }
 
 function fn_setPopCostCenter() {
-    $("#costCenter").val($("#search_costCentr").val());
-    $("#costCenterText").val($("#search_costCentrName").val());
+	var costCenter =  $("#costCenter").val();
+	var costCenterList = [];
+	if(costCenter != ""){
+		costCenterList = costCenter.split(",");
+	}
+	costCenterList.push($("#search_costCentr").val());
+
+	var newJoinCostCenterString = costCenterList.join(",").trim().replaceAll(",,",",");
+	newJoinCostCenterString = newJoinCostCenterString.replace(/[`~!@#$%^*()_|+\-=?;:'".<>\{\}\[\]\\\/]/gi, '');
+    $("#costCenter").val(newJoinCostCenterString);
 }
 
 function fn_supplierSearchPopExcel() {
@@ -172,7 +202,6 @@ function fn_clearExcel(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_newExcel">
-<input type="hidden" id="costCenterText" name="costCenterText">
 
 <table class="type1 mt10"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -200,7 +229,7 @@ function fn_clearExcel(){
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /><span style="color:red">*</span></th>
-	<td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" value="${costCentr}" readonly/><a href="#" class="search_btn" id="costCenterSearch"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" value="${costCentr}"/><a href="#" class="search_btn" id="costCenterSearch"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th></th>
 	<td></td>
 </tr>

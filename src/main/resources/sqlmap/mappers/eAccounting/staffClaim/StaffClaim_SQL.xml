@@ -856,7 +856,8 @@ AND T.MEM_ACC_ID = #{memAccId}
 <select id="selectStaffClaimListForExcel" parameterType="Map" resultType="egovMap">
 /* staffClaimMapper.selectStaffClaimListForExcel */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T.CLM_NO,
+SELECT * FROM (
+	SELECT T.CLM_NO,
 		T.COST_CENTR,
 		T.COST_CENTR_NAME,
        T.MEM_ACC_ID,
@@ -870,7 +871,7 @@ SELECT T.CLM_NO,
        T.APPV_PRCSS_STUS,
        T.APPV_PRCSS_DT,
        T.IS_RESUBMIT_ALLOWED
-FROM   (SELECT T1.CLM_NO,
+	FROM   (SELECT T1.CLM_NO,
 			   T1.COST_CENTR,
 			   T1.COST_CENTR_NAME,
                T1.MEM_ACC_ID,
@@ -909,7 +910,10 @@ AND TO_DATE(TO_CHAR(T.REQST_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{req
 ]]>
 </if>
 <if test="costCenter != null and costCenter != ''">
-AND T.COST_CENTR = #{costCenter}
+AND UPPER(T.COST_CENTR) IN
+	<foreach item="item" collection="costCenter" index="index" open="(" separator="," close=")">
+		UPPER(#{item})
+	</foreach>
 </if>
 <if test="staffMemAccId != null and staffMemAccId != ''">
 AND UPPER(T.MEM_ACC_ID) IN
@@ -923,6 +927,8 @@ AND T.APPV_PRCSS_STUS_CODE IN
 		#{item}
 	</foreach>
 </if>
-ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT) A
+LEFT JOIN FCM0020D B
+ON A.CLM_NO = B.CLM_NO
 </select>
 </mapper>

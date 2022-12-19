@@ -476,22 +476,32 @@ function fn_checkEmpty() {
         if(length > 0) {
             for(var i = 0; i < length; i++) {
                 if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "carMilagDt"))) {
-                    Common.alert('<spring:message code="staffClaim.date.msg" />' + (i +1) + ".");
+                    Common.alert('<spring:message code="staffClaim.date.msg" /> ' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
                 if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "locFrom"))) {
-                    Common.alert('<spring:message code="staffClaim.from.msg" />' + (i +1) + ".");
+                    Common.alert('<spring:message code="staffClaim.from.msg" /> ' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
                 if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "locTo"))) {
-                    Common.alert('<spring:message code="staffClaim.to.msgstaffClaim.to.msg" />' + (i +1) + ".");
+                    Common.alert('<spring:message code="staffClaim.to.msg" /> ' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+                if(AUIGrid.getCellValue(mileageGridID, i, "carMilag") == 0 && AUIGrid.getCellValue(mileageGridID, i, "tollAmt") == 0 && AUIGrid.getCellValue(mileageGridID, i, "parkingAmt") == 0){
+                    Common.alert('Mileage,Tolls and Parking is 0.00 for Line ' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
                 if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "purpose"))) {
-                    Common.alert('<spring:message code="staffClaim.purpose.msg" />' + (i +1) + ".");
+                    Common.alert('<spring:message code="staffClaim.purpose.msg" /> ' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "expDesc"))) {
+                    Common.alert('Please fill in Remark of Line ' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
@@ -565,7 +575,6 @@ function fn_checkEmpty() {
                             return checkResult;
                         }
                     }
-                    debugger;
 //                     if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "gstBeforAmt"))) {
 //                         Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
 //                         checkResult = false;
@@ -1028,7 +1037,6 @@ function fn_setStaffClaimInfo(result) {
     	$("#normalExp_radio").prop("checked", false);
     	$("#carMileage_radio").prop("checked", true);
     	fn_checkExpGrp();
-
         $("#newCostCenter").val(result.costCentr);
         $("#newCostCenterText").val(result.costCentrName);
         $("#newMemAccId").val(result.memAccId);
@@ -1550,11 +1558,16 @@ function fn_editRejected(){
                        Common.alert("Resubmit is not allowed for Claim No: " + selectedClaimNo);
                        return false;
            		}
+           		var clmMonth = new Date(gridObj[0].item.clmMonth).getMonth() + 1;
+           		var currentMonth = new Date().getMonth() + 1;
+           		if((currentMonth - clmMonth) > 2){
+                    Common.alert("The resubmission has exceeded 2 months. Please create New Expense Claim for Claim No: " + selectedClaimNo);
+                    return false;
+           		}
             	Common.ajax("POST", "/eAccounting/staffClaim/editRejectedClaim.do", {clmNo : selectedClaimNo}, function(result1) {
-                    console.log(result1);
                     Common.alert("New claim number : " + result1.data.newClmNo);
                     fn_selectStaffClaimList();
-                });
+             	});
             }
             else{
             	Common.alert("Please select a record with rejected status only.");

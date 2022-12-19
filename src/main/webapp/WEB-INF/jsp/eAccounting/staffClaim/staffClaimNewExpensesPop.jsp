@@ -440,7 +440,7 @@ var mileageGridColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.remark" />',
+    headerText : '<spring:message code="newWebInvoice.remark" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-left",
     width : 150
 }, {
