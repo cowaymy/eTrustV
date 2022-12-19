@@ -160,8 +160,8 @@
                                   D.CUST_ACC_BANK_ID AS bank_Code,
                                   D.CUST_ACC_NO AS card_Account_No,
                                   F.TEL_M1 AS handphone_Tel,
-                                  F.TEL_O AS home_Tel,
-                                  F.TEL_R AS office_Tel,
+                                  F.TEL_R AS home_Tel, <!-- CELESTE 20221219: Change top TEL_R from TEL_O  -->
+                                  F.TEL_O AS office_Tel, <!-- CELESTE 20221219: Change top TEL_O from TEL_R  -->
                                   F.EMAIL AS mail_Address,
                                   F.NRIC AS resultIc_Mobile_No,
                                   G.NAME AS cust_Name,

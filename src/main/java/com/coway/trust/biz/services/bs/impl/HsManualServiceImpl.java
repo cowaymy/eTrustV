@@ -775,10 +775,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           insertHSNewContact.put("salesOrderNo", params.get("salesOrderNo").toString());
           insertHSNewContact.put("salesOrderId", params.get("hidSalesOrdId").toString());
           logger.debug("==================== line 1========================");
-          insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo") == null ? null : oldContDt.get("oldHpNo").toString());
+          insertHSNewContact.put("oldHpNo", params.get("resultIcMobileNo") == null ? null : params.get("resultIcMobileNo").toString());
+          insertHSNewContact.put("oldHomeNo", params.get("resultIcHomeNo") == null ? null : params.get("resultIcHomeNo").toString());
+          insertHSNewContact.put("oldOfficeNo", params.get("resultIcOfficeNo") == null ? null : params.get("resultIcOfficeNo").toString());
+          insertHSNewContact.put("oldEmail", params.get("resultReportEmailNo") == null ? null : params.get("resultReportEmailNo").toString());
+          /*insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo") == null ? null : oldContDt.get("oldHpNo").toString());
           insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo") == null ? null : oldContDt.get("oldHomeNo").toString());
           insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo") == null ? null : oldContDt.get("oldOfficeNo").toString());
-          insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail") == null ? null : oldContDt.get("oldEmail").toString());
+          insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail") == null ? null : oldContDt.get("oldEmail").toString());*/
           logger.debug("==================== line 2========================");
           insertHSNewContact.put("newHpNo", params.get("newHandphoneTel") == null ? null : params.get("newHandphoneTel").toString());
           insertHSNewContact.put("newHomeNo", params.get("newHomeTel") == null ? null : params.get("newHomeTel").toString());
