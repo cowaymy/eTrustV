@@ -232,7 +232,7 @@
                     <a href="javascript:fn_CwDisinfSrv()" id="CwDisinfSrv">Disinfection Service (CDS) Report</a>
                 </p></li>
                 <li><p class="link_btn type2"><!--for LT and LTL, HDC branch 01-14 -->
-                    <a href="javascript:fn_filterSetInfo()" id="btnTopperAS">Topper (AS) Maintenance</a>
+                    <a href="javascript:fn_filterSetInfo()" id="btnTopperAS">CS (AS) Maintenance</a>
                 </p></li>
               </ul>
               <ul class="btns">
