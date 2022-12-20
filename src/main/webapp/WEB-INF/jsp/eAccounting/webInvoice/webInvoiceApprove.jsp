@@ -581,8 +581,11 @@ function fn_appvRejctSubmit(type, rejctResn) {
 
 function fn_getAppvExcelInfo() {
 	var list = AUIGrid.getColumnValues(invoAprveGridID, "appvPrcssNo", true);
-	console.log(list);
-    Common.ajax("POST", "/eAccounting/webInvoice/getAppvExcelInfo.do?_cacheId=" + Math.random(), {appvPrcssNo:list}, function(result) {
+	var selectedStatus=[];
+	 $('#appvPrcssStus :selected').each(function(){
+		 selectedStatus.push($(this).val());
+	  });
+    Common.ajax("POST", "/eAccounting/webInvoice/getAppvExcelInfo.do?_cacheId=" + Math.random(), {appvPrcssNo:list, appvPrcssStus:selectedStatus}, function(result) {
         console.log(result);
 
         //그리드 생성
@@ -826,6 +829,7 @@ function fn_makeGrid(){
 		<option value="A"><spring:message code="webInvoice.select.approved" /></option>
 		<option value="R"><spring:message code="webInvoice.select.request" /></option>
 		<option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
+		<option value="P"><spring:message code="sales.Pending" /></option>
 	</select>
 	</td>
 </tr>

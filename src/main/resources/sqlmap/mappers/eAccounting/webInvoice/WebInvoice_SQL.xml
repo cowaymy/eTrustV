@@ -1510,6 +1510,12 @@ WHERE  M.APPV_PRCSS_NO IN
 <foreach item="item" collection="appvPrcssNo" index="index" open="(" separator="," close=")">
              #{item}
 </foreach>
+<if test="appvPrcssStus != null">
+     AND M.APPV_PRCSS_STUS IN
+	 <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+	     #{item}
+	 </foreach>
+</if>
 </select>
 
 <select id="selectHrCodeOfUserId"  parameterType="String" resultType="String">
