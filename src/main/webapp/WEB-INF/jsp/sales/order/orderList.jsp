@@ -65,7 +65,7 @@
     }
 
     // 리스트 조회.
-    /* no Hazelcast use below
+    /* no Hazelcast use below */
     function fn_selectListAjax() {
 
         //if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
@@ -75,9 +75,9 @@
         });
 
         //if(IS_3RD_PARTY == '1') $("#listAppType").prop("disabled", true);
-    }*/
+    }
 
-    /* for Hazelcast use below */
+    /* for Hazelcast use below
     function fn_selectListAjax(hzCastYN) {
 
         //console.log("hzCastYN: "+hzCastYN);
@@ -89,7 +89,7 @@
         Common.ajax("GET", vURL, $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
-    }
+    }*/
 
     function fn_copyChangeOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
@@ -152,16 +152,16 @@
             fn_orderSimulPop();
         });
         $('#btnSrch').click(function() {
-        	/* no Hazelcast use below
-        	if(fn_validSearchList()) fn_selectListAjax();*/
+        	/* no Hazelcast use below*/
+        	if(fn_validSearchList()) fn_selectListAjax();
 
-        	/* for Hazelcast use below */
+        	/* for Hazelcast use below
         	if(fn_validSearchList()) fn_selectListAjax('N');
-        });
-        /* for Hazelcast use below */
+        });*/
+        /* for Hazelcast use below
         $('#btnSrchHzcast').click(function() {
             if(fn_validSearchList()) fn_selectListAjax('Y');
-        });
+        });*/
         $('#btnClear').click(function() {
           //  alert();
         	location.reload();
@@ -687,10 +687,10 @@
 	<li><p class="btn_blue"><a id="_btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a></p></li>
 	<li><p class="btn_blue"><a id="_btnTaxInvc" href="#"><spring:message code="sal.btn.taxInvoice" /></a></p></li>
 </c:if> --%>
-<!-- for Hazelcast use below -->
+<!-- for Hazelcast use below
 <c:if test="${PAGE_AUTH.funcUserDefine30 == 'Y'}">
 <li><p class="btn_blue"><a id="btnSrchHzcast" href="#"><span class="search"></span><spring:message code='sales.SearchHzcast'/></a></p></li>
-</c:if>
+</c:if>-->
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
