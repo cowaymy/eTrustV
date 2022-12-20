@@ -685,7 +685,7 @@ function fn_tempSave() {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
+    <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
     <td colspan="3">
     	<textarea type="text" title="" placeholder="" class="w100p" id="expDesc" name="expDesc" maxlength="100"></textarea>
     	<span id="characterCount">0 of 100 max characters</span>

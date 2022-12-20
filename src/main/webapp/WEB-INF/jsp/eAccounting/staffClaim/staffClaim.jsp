@@ -534,6 +534,11 @@ function fn_checkEmpty() {
                 checkResult = false;
                 return checkResult;
             }
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "expDesc"))) {
+                Common.alert('Please fill in remark');
+                checkResult = false;
+                return checkResult;
+            }
 //             if(FormUtil.isEmpty($("#gstRgistNo").val())) {
 //                 Common.alert('Please enter GST Rgist No.');
 //                 checkResult = false;
