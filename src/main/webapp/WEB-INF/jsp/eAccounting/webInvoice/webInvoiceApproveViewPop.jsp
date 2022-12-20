@@ -552,8 +552,10 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 $("#crcInfo").show();
                 $("#payInfo1").hide();
                 $("#payInfo2").hide();
+
+                $("#crcCostCentr").text(result.data.costCentr + "/" + result.data.costCentrName);
+                $("#crcInvcDt").text(result.data.invcDt);
             }
-            $("#crcInvcDt").text(result.data.invcDt);
     		$("#viewInvcDt").text(result.data.invcDt);
             $("#invcType").text(result.data.invcType);
             $("#invcNo").text(result.data.invcNo);
