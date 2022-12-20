@@ -794,7 +794,8 @@
                     checkResult = false;
                 }
             });
-        } else if(FormUtil.isEmpty($("#action").val())) {
+        }
+        if(FormUtil.isEmpty($("#action").val())) {
             Common.alert('Please choose an Action to proceed.');
             checkResult = false;
             return checkResult;
