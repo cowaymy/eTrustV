@@ -139,6 +139,11 @@ function fn_excelDownload(){
 	staffCode = staffCode.replace(/[`~!@#$%^*()_|+\-=?;:'".<>\{\}\[\]\\\/]/gi, '');
     $("#staffMemAccId").val(staffCode);
 
+    if(staffCode == ""){
+    	Common.alert("Please enter at least 1 staff code");
+    	return false;
+    }
+
  	 Common.ajax("GET", "/eAccounting/staffClaim/selectExcelListNew.do", $("#form_newExcel").serialize(), function(result2) {
  	     AUIGrid.setGridData(excelGridIDNew, result2);
  	     GridCommon.exportTo("excel_grid_wrap_new", "xlsx", "Staff Claim");
@@ -213,7 +218,7 @@ function fn_clearExcel(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="staffClaim.staffCode" /></th>
+	<th scope="row"><spring:message code="staffClaim.staffCode" /><span style="color:red">*</span></th>
 	<td><input type="text" title="" placeholder="" class="" id="staffMemAccId" name="staffMemAccId"/><a href="#" class="search_btn" id="supplierSearch"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 
 	<th scope="row"><spring:message code="webInvoice.status" /></th>
@@ -228,7 +233,7 @@ function fn_clearExcel(){
 	</td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.costCenter" /><span style="color:red">*</span></th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" value="${costCentr}"/><a href="#" class="search_btn" id="costCenterSearch"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th></th>
 	<td></td>
