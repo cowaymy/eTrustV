@@ -136,6 +136,18 @@
     Common.popupDiv("/homecare/services/cwDisinfSrv.do", null, null, true);
     return;
   }
+
+  function fn_filterSetInfo() {
+      var checkedItems = AUIGrid.getSelectedItems(myGridID);
+      if(checkedItems.length  <= 0) {
+          Common.alert("<b>No CS selected<b> ");
+          return ;
+      }
+
+      console.log("salesOrdId1111===");
+      console.log(checkedItems[0]);
+         Common.popupDiv("/homecare/services/csFilterSettingPop.do?&salesOrdId=" + checkedItems[0].item.salesOrdId, null, null , true , '_FilterSetPop');
+  }
 </script>
 
 <form action="#" id="searchForm" name="searchForm">
@@ -218,7 +230,10 @@
                   </p></li>
                 <li><p class="link_btn">
                     <a href="javascript:fn_CwDisinfSrv()" id="CwDisinfSrv">Disinfection Service (CDS) Report</a>
-                  </p></li>
+                </p></li>
+                <li><p class="link_btn type2"><!--for LT and LTL, HDC branch 01-14 -->
+                    <a href="javascript:fn_filterSetInfo()" id="btnTopperAS">Topper (AS) Maintenance</a>
+                </p></li>
               </ul>
               <ul class="btns">
               </ul>

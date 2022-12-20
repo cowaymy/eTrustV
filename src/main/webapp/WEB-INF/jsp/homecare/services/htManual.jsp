@@ -1227,22 +1227,6 @@ var TODAY_DD      = "${toDay}";
 	            });
 	            $('#unitTypeIdHsManagement').multipleSelect("checkAll");
 	        }
-
-	      function fn_filterSetInfo() {
-	    	    var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-	    	    if(checkedItems.length  <= 0) {
-	    	        Common.alert("<b>No CS selected<b> ");
-	    	        return ;
-	    	    }
-	    	    if(checkedItems.length  > 1) {
-	    	    	Common.alert("<b>Select only one record<b> ");
-                    return ;
-	    	    }
-	    	    console.log("salesOrdId1111===");
-	    	    console.log(checkedItems[0]);
-	    	    console.log(checkedItems[0].salesOrdId);
-	    	       Common.popupDiv("/homecare/services/csFilterSettingPop.do?&salesOrdId=" + checkedItems[0].salesOrdId, null, null , true , '_FilterSetPop');
-	    	}
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
@@ -1482,10 +1466,6 @@ var TODAY_DD      = "${toDay}";
             </p></li>
           </c:if>
               <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-
-             </c:if>
-             <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> <!--for LT and LTL, HDC branch 01-14 -->
-                <li><p class="link_btn type2"><a href="javascript:fn_filterSetInfo()" id="btnTopperAS">Topper (AS) Maintenance</a></p></li>
              </c:if>
          </ul>
          <!--
