@@ -44,7 +44,9 @@
 			    Project1.C8 AS C8,
 			    Project1.C9 AS C9,
 			    Project1.C10 AS C10,
-			    Project1.C11 AS C11
+			    Project1.C11 AS C11,
+			    Project1.EOS AS EOS,
+			    Project1.EOM AS EOM
 			    FROM (
 			SELECT stk.STK_ID AS StkID,
 			       stk.STK_CODE AS StkCode,
@@ -135,7 +137,9 @@
 			          WHEN (stk.STK_COMM_OS_INS IS NOT NULL) THEN stk.STK_COMM_OS_INS
 			          ELSE CAST (0 AS FLOAT (53))
 			       END
-			          AS C11
+			          AS C11,
+			       TO_CHAR(stk.EOS_DATE, 'DD/MM/YYYY') EOS,
+			       TO_CHAR(stk.EOM_DATE,'DD/MM/YYYY') EOM
 			  FROM SYS0026M stk
 			       LEFT OUTER JOIN SYS0047M usr
 			          ON usr.USER_ID = stk.UPD_USER_ID

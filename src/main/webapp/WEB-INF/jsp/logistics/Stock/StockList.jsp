@@ -61,7 +61,9 @@
 							{dataField: "isstockaudit",headerText :"<spring:message code='log.head.stockAudit'/>"           ,width:90 ,height:30},
 							{dataField: "stkSize", headerText :"Mattress Size", width:120, height:30},
 							{dataField: "isSmo", headerText :"Create Return SMO", width:150, height:30},
-							{dataField: "isSerialReplc", headerText :"Serial Replace", width:120, height:30}
+							{dataField: "isSerialReplc", headerText :"Serial Replace", width:120, height:30},
+							{dataField: "eos", headerText :"EOS Date", width:150, height:30},
+                            {dataField: "eom", headerText :"EOM Date", width:120, height:30}
 
                        ];
 
