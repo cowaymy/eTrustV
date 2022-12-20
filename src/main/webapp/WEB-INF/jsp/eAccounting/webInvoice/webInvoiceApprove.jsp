@@ -585,6 +585,10 @@ function fn_getAppvExcelInfo() {
 	 $('#appvPrcssStus :selected').each(function(){
 		 selectedStatus.push($(this).val());
 	  });
+	 if(list.length == 0){
+		 Common.alert("Please search for record first before download");
+		 return false;
+	 }
     Common.ajax("POST", "/eAccounting/webInvoice/getAppvExcelInfo.do?_cacheId=" + Math.random(), {appvPrcssNo:list, appvPrcssStus:selectedStatus}, function(result) {
         console.log(result);
 
