@@ -5,7 +5,7 @@
 	console.log("customerMobileContactUpdateDetailViewPop");
 	$(document).ready(function() {
 
-		if(($("#statusCode").val() == 'A') || ($("#statusCode").val() == 'R')){
+		if(($("#statusCode").val() == 'A') || ($("#statusCode").val() == 'J')){
 			$("#appvBtns").hide();
 		}
 
@@ -15,9 +15,10 @@
 	});
 
 	function fn_Reject() {
-		$("#statusCode").val("R");
+		$("#statusCode").val("J");
 		Common.ajax("POST", "/sales/customer/updateAppvStatus.do", $("#formContactUpdate").serializeJSON(), function(result) {
 			Common.alert("Information successfully rejected. ");
+			fn_selectPstRequestDOListAjax();
 			$("#_close").click();
 		});
 	}
@@ -26,6 +27,7 @@
 		$("#statusCode").val("A");
 		Common.ajax("POST", "/sales/customer/updateAppvStatus.do", $("#formContactUpdate").serializeJSON(), function(result) {
 			Common.alert("Information successfully updated. ");
+			fn_selectPstRequestDOListAjax();
 			$("#_close").click();
 		});
 	}

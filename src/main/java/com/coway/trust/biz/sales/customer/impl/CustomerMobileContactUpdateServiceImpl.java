@@ -42,7 +42,7 @@ public class CustomerMobileContactUpdateServiceImpl extends EgovAbstractServiceI
 
 	  LOGGER.debug("updateAppvStatusPARAMS :: Implementation"+ params);
 	  //Rejected status only update main table
-	  if(params.get("statusCode").equals("R")){
+	  if(params.get("statusCode").equals("J")){
 		  customerMobileContactUpdateMapper.updateAppvStatusSAL0329D(params);
 	  }
 	  //Approved status to update SAL0027D and main table
