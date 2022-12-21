@@ -105,7 +105,7 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	  }
 
 	@Override
-	public int isReTestAlreadyResult(Map<String, Object> mp) {
+	public EgovMap isReTestAlreadyResult(Map<String, Object> mp) {
 		return UsedPartReTestResultMapper.isReTestAlreadyResult(mp);
 	}
 
@@ -187,19 +187,39 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    LOGGER.debug("== PARAMS {} ", params);
 
 	    params.put("DOCNO", "182");
-	    EgovMap eMap = UsedPartReTestResultMapper.getUsedPartReTestResultDocNo(params);
-	    EgovMap seqMap = UsedPartReTestResultMapper.getUsedPartReTestResultId(params); // GET NEXT SEQ FOR SVC0122D RESULT ID
+	    ArrayList<String> serviceNo = (ArrayList<String>) params.get("serviceNo");
+	    ArrayList<Integer> asrItmId = (ArrayList<Integer>) params.get("asrItmId");
 
-	    String TEST_UP_ID = String.valueOf(seqMap.get("seq"));
+	    int a = 0;
 
-	    LOGGER.debug("== NEW USED PART RETURN TEST RESULT ID (Set to Not Tested) = " + TEST_UP_ID);
-	    LOGGER.debug("== NEW USED PART RETURN TEST RESULT NO (Set to Not Tested)  = " + eMap.get("uprno"));
+	    if(serviceNo.size() > 0){
+	    	String asNo = null;
+	    	int itmId = 0;
 
-	    params.put("TEST_UP_ID", TEST_UP_ID);
-	    params.put("TEST_UP_NO", String.valueOf(eMap.get("uprno")));
+	    	for (int i=0; i< serviceNo.size() ; i++) {
+	    		asNo =  serviceNo.get(i);
+	    		itmId = asrItmId.get(i);
 
-	    int a = UsedPartReTestResultMapper.insertSVC0122D_notTested(params);
+    		    LOGGER.debug("================map3================");
+    			EgovMap eMap = UsedPartReTestResultMapper.getUsedPartReTestResultDocNo(params);
+    		    EgovMap seqMap = UsedPartReTestResultMapper.getUsedPartReTestResultId(params); // GET NEXT SEQ FOR SVC0122D RESULT ID
 
+    			String TEST_UP_ID = String.valueOf(seqMap.get("seq"));
+
+    			LOGGER.debug("== NEW USED PART RETURN TEST RESULT ID (Set to Not Tested) = " + TEST_UP_ID);
+    		    LOGGER.debug("== NEW USED PART RETURN TEST RESULT NO (Set to Not Tested)  = " + eMap.get("uprno"));
+
+    			params.put("TEST_UP_ID", TEST_UP_ID);
+    		    params.put("TEST_UP_NO", String.valueOf(eMap.get("uprno")));
+
+    		    params.put("asNo", String.valueOf(asNo));
+    		    params.put("asrItmId",itmId);
+
+    			LOGGER.debug("== testing == " + params.toString());
+
+    			a = UsedPartReTestResultMapper.insertSVC0122D_notTested(params);
+    		}
+	    }
 	    LOGGER.debug("== insertSVC0122D set to Not Tested - END");
 
 	    return a;

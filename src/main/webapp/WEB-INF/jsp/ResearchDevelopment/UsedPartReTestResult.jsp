@@ -304,8 +304,8 @@
             }
         }
    */
-
-   if(FormUtil.isEmpty($('#listAsSettleStartDt').val()) || FormUtil.isEmpty($('#listAsSettleEndDt').val())) {
+//aaaaaaaaaa
+  /*  if(FormUtil.isEmpty($('#listAsSettleStartDt').val()) || FormUtil.isEmpty($('#listAsSettleEndDt').val())) {
 	   valid = false;
        msg += '* <spring:message code="svc.alert.msg.asSettleDt" /><br/>';
    }
@@ -316,7 +316,7 @@
     	   valid = false;
            msg += '* <spring:message code="svc.alert.msg.srchPeriodDt" />';
        }
-   }
+   }*/
 
         if (valid) {
             Common.ajax("GET", "/ResearchDevelopment/selectUsedPartReturnList.do", $(
@@ -482,10 +482,11 @@
             return;
         }
 
-        if (selectedItems.length > 1) {
+        //Comment for Allow Multiple Selection 20221214 Keyi
+        /* if (selectedItems.length > 1) {
             Common.alert("<spring:message code='service.msg.onlyPlz'/>");
             return;
-        }
+        } */
 
         if (selectedItems[0].item.testStus == 'Completed' || selectedItems[0].item.testYn == 'Completed') {
             Common.alert("<spring:message code='service.msg.alreadyComplete'/>"); //Item already Completed. Cannot be set to Not Tested.
@@ -504,16 +505,25 @@
 
     function fn_setNotTested() {
     	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    	var asNo = selectedItems[0].item.asNo;
-    	var asrItmId = selectedItems[0].item.asrItmId;
-    	var notTestedObj = {serviceNo:asNo, asrItmId:asrItmId};
+    	//var asNo = selectedItems[0].item.asNo;
+    	//var asrItmId = selectedItems[0].item.asrItmId;
+    	var asNo = new Array();
+    	var asrItmId = new Array();
 
-        Common.ajax("POST", "/ResearchDevelopment/usedPartNotTestedAdd.do", notTestedObj,
+    	if(selectedItems.length > 0){
+    		 for( var i = 0; i < selectedItems.length ; i++){
+    			asNo.push(selectedItems[i].item.asNo);
+    			asrItmId.push(selectedItems[i].item.asrItmId);
+    		}
+    	}
+        var notTestedObj = {serviceNo:asNo, asrItmId:asrItmId};
+
+         Common.ajax("POST", "/ResearchDevelopment/usedPartNotTestedAdd.do", notTestedObj,
                 function(result) {
                     if(result.code == '00') {     //successful update to Not Tested
                         Common.alert("Item updated to <b>Not Tested</b>", fn_searchUsedPart);
                     } else {
-                        Common.alert("Failed to update item to <b>Not Tested</b>. There is already an existing entry.", fn_searchUsedPart);
+                        Common.alert("Failed to update item to <b>Not Tested</b>. " + result.data +  " is already an existing entry.", fn_searchUsedPart);
                     }
                 });
     }

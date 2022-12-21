@@ -192,10 +192,10 @@ public class UsedPartReTestResultController {
 	    params.put("asEntryId", upMap.get("AS_ENTRY_ID"));
 	    params.put("asSoId", upMap.get("AS_SO_ID"));
 
-	    int isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(mp);
+	    EgovMap isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(mp);
 	    logger.debug("== isReTestCnt " + isReTestCnt);
 
-	    if (isReTestCnt == 0) {
+	    if (isReTestCnt == null) {
 	      EgovMap rtnMap = UsedPartReTestResultService.usedPartReTestResult_insert(params);
 
 	      message.setCode(AppConstants.SUCCESS);
@@ -239,10 +239,10 @@ public class UsedPartReTestResultController {
 		    params.put("updator", sessionVO.getUserId());
 		    ReturnMessage message = new ReturnMessage();
 
-		    int isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(params);
+		    EgovMap isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(params);
 		    logger.debug("== isReTestCnt " + isReTestCnt);
 
-		    if (isReTestCnt == 0) {
+		    if (isReTestCnt == null) {
 		      int rtnValue = UsedPartReTestResultService.usedPartNotTestedAdd(params);
 
 		      if (rtnValue == 1) {
@@ -255,6 +255,7 @@ public class UsedPartReTestResultController {
 
 		    } else {
 		      message.setCode(AppConstants.FAIL);
+		      message.setData(isReTestCnt.get("asNo").toString());
 		      message.setMessage("Used Part Return Test Result already exists.");
 		    }
 

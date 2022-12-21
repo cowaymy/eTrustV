@@ -27,7 +27,7 @@ public interface UsedPartReTestResultMapper {
 
 	List<EgovMap> selectTimePick();
 
-	int isReTestAlreadyResult(Map<String, Object> mp);
+	EgovMap isReTestAlreadyResult(Map<String, Object> mp);
 
 	EgovMap getUsedPartReTestResultDocNo(Map<String, Object> params);
 
