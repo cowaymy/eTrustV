@@ -592,12 +592,12 @@ FROM
                         , project2.grpCode
                          , project2.crt_user_id
                          , CASE
-                            WHEN (SUBSTR(Project2.MAT_DESC, 1, INSTR(Project2.MAT_DESC, ' (', 1, 1))) IS NULL THEN Project2.MAT_DESC
-                            ELSE SUBSTR(Project2.MAT_DESC, 1, INSTR(Project2.MAT_DESC, ' (', 1, 1))
+                            WHEN (SUBSTR(Project2.MAT_DESC, 1, INSTR(Project2.MAT_DESC, ' (C', 1, 1))) IS NULL THEN Project2.MAT_DESC
+                            ELSE SUBSTR(Project2.MAT_DESC, 1, INSTR(Project2.MAT_DESC, ' (C', 1, 1))
                            END MAT_STK_DESC
                          , CASE
-                            WHEN (SUBSTR(Project2.FRA_DESC, 1, INSTR(Project2.FRA_DESC, ' (', 1, 1))) IS NULL THEN Project2.FRA_DESC
-                            ELSE SUBSTR(Project2.FRA_DESC, 1, INSTR(Project2.FRA_DESC, ' (', 1, 1))
+                            WHEN (SUBSTR(Project2.FRA_DESC, 1, INSTR(Project2.FRA_DESC, ' (C', 1, 1))) IS NULL THEN Project2.FRA_DESC
+                            ELSE SUBSTR(Project2.FRA_DESC, 1, INSTR(Project2.FRA_DESC, ' (C', 1, 1))
                            END FRA_STK_DESC
                          , Project2.APPTYPE
                          , Project2.SALES_PROD_SZ
