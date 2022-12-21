@@ -2027,6 +2027,7 @@ SELECT
 </select>
 
 <select id="selectOwnPurchaseInfo" parameterType="Map" resultType="egovMap">
+SELECT * FROM (
   SELECT CASE WHEN (A.MEM_TYPE IN ('1','2','7')) THEN 'YES' ELSE 'NO' END IS_ORG,
     B.CODE,
     A.MEM_CODE,
@@ -2050,5 +2051,7 @@ SELECT
   JOIN ORG0005D D ON D.MEM_ID = A.MEM_ID
   WHERE A.NRIC = #{nric}
   AND A.STUS = 1
+  ORDER BY A.JOIN_DT DESC )
+ WHERE ROWNUM = 1
 </select>
 </mapper>
