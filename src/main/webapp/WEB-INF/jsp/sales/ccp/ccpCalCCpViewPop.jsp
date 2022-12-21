@@ -1001,6 +1001,7 @@ function chgTab(tabNm) {
         <option value="7216">TEACHER(PERSONAL ACCOUNT)</option>
         <option value="7217">THIRD PARTY COMPANY</option>
         <option value="7218">SCHOOL ALUMNI</option>
+        <option value="7229">CUSTOMER</option>
     </select>
     </td>
         <th scope="row">Failed Verification Reason</th>
@@ -1012,6 +1013,7 @@ function chgTab(tabNm) {
             <option value="7221">UNREACHABLE</option>
             <option value="7222">CUSTOMER REQUEST CANCEL</option>
             <option value="7223">CUSTOMER CHANGE DETAILS</option>
+            <option value="7230">REFUSAL ON VERIFICATION</option>
         </select>
     </select>
     </td>
