@@ -931,7 +931,7 @@ function fn_checkCreditLimit(v) {
 // 	                totalExpAmtSmall = totAmt;
 // 	                totalExpAmt = totalExpAmt + totalExpAmtSmall;
 // 	                totalCntrlSpentAmt = totalCntrlSpentAmt + totalExpAmt;
-	                if(allTotAmt > planAmt)
+	                if(allTotAmt.toFixed(2) > planAmt.toFixed(2))
 	                {
 	                    Common.alert('Insufficient Allowance Limit');
 	                    limitFlg = false;
