@@ -105,7 +105,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
         Map<String, Object> params = new HashMap();
         params.put("custId",preOrderVO.getCustId());
         params.put("updUserId", sessionVO.getUserId());
-        params.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+        params.put("receivingMarketingMsgStatus", preOrderVO.getReceivingMarketingMsgStatus());
         orderRegisterMapper.updateMarketingMessageStatus(params);
 	}
 
@@ -119,7 +119,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
         Map<String, Object> params = new HashMap();
         params.put("custId",preOrderVO.getCustId());
         params.put("updUserId", sessionVO.getUserId());
-        params.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+        params.put("receivingMarketingMsgStatus", preOrderVO.getReceivingMarketingMsgStatus());
 
         orderRegisterMapper.updateMarketingMessageStatus(params);
 	}

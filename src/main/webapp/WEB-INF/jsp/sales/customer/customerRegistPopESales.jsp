@@ -458,7 +458,7 @@
                     //asTelF : insContactForm.asTelF.value,
                     asExt : insContactForm.asExt.value,
                     asEmail : insContactForm.asEmail.value,
-                    marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
+                    receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
                 }
             };
 

@@ -157,7 +157,7 @@ public class SalesOrderMVO implements Serializable {
 
   private String unitType;
 
-  private int marketingMsgStatus;
+  private int receivingMarketingMsgStatus;
 
   public String getSalesProdSz() {
 	return salesProdSz;
@@ -731,12 +731,12 @@ public String getUnitType() {
     this.serviceType = serviceType;
   }
 
-public int getMarketingMsgStatus() {
-	return marketingMsgStatus;
+public int getReceivingMarketingMsgStatus() {
+	return receivingMarketingMsgStatus;
 }
 
-public void setMarketingMsgStatus(int marketingMsgStatus) {
-	this.marketingMsgStatus = marketingMsgStatus;
+public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
+	this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
 }
 
 }

@@ -3124,6 +3124,6 @@ WHERE
   </insert>
 
 	<update id="updateMarketingMessageStatus" parameterType="Map">
-		UPDATE SAL0029D SET RECEIVING_MARKETING_MSG_STATUS = #{marketingMsgStatus}, UPD_DT = SYSDATE, UPD_USER_ID = #{updUserId} WHERE CUST_ID = #{custId}
+		UPDATE SAL0029D SET RECEIVING_MARKETING_MSG_STATUS = #{receivingMarketingMsgStatus}, UPD_DT = SYSDATE, UPD_USER_ID = #{updUserId} WHERE CUST_ID = #{custId}
 	</update>
 </mapper>

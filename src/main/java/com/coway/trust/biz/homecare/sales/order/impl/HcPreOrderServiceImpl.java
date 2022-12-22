@@ -182,7 +182,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 	        Map<String, Object> params1 = new HashMap();
 	        params1.put("custId",preOrderVO.getCustId());
 	        params1.put("updUserId", sessionVO.getUserId());
-	        params1.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+	        params1.put("receivingMarketingMsgStatus", preOrderVO.getReceivingMarketingMsgStatus());
 	        orderRegisterMapper.updateMarketingMessageStatus(params1);
 
 		} catch (Exception e) {
@@ -333,7 +333,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 	        Map<String, Object> params1 = new HashMap();
 	        params1.put("custId",preOrderVO.getCustId());
 	        params1.put("updUserId", sessionVO.getUserId());
-	        params1.put("marketingMsgStatus", preOrderVO.getMarketingMsgStatus());
+	        params1.put("receivingMarketingMsgStatus", preOrderVO.getReceivingMarketingMsgStatus());
 	        orderRegisterMapper.updateMarketingMessageStatus(params1);
 
 		} catch (Exception e) {

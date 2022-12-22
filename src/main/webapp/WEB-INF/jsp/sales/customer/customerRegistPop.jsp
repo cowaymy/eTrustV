@@ -419,7 +419,7 @@
                     telO : insBasicForm.telO.value,
                     ext : insBasicForm.ext.value,
                     rem : insBasicForm.rem.value,
-                    marketingMsgStatus: insBasicForm.marketingMessageSelection.value,
+                    receivingMarketingMsgStatus: insBasicForm.marketingMessageSelection.value,
 
                     addrDtl : insAddressForm.addrDtl.value,
                     areaId : insAddressForm.areaId.value,

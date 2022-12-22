@@ -1617,7 +1617,7 @@
                 gstChk                    : $('#gstChk').val(),
                 corpCustType           : $('#corpCustType').val(),
                 agreementType        : $('#agreementType').val(),
-                marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
+                receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
             },
             salesOrderMVO2 : {
                 advBill                    : $('input:radio[name="advPay"]:checked').val(),

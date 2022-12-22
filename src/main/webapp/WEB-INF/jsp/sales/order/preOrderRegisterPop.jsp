@@ -1458,7 +1458,7 @@
             agreementType         : $('#agreementType').val(),
             salesOrdIdOld          : $('#txtOldOrderID').val(),
             relatedNo               : $('#relatedNo').val(),
-            marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
+            receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
         };
 
         var formData = new FormData();

@@ -1742,7 +1742,7 @@ console.log("vBindingNo" + vBindingNo);
                 corpCustType            : $('#corpCustType').val(),
                 agreementType           : $('#agreementType').val(),
                 comboOrdBind            : $('#hiddenCboOrdNoTag').val(),
-                marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
+                receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),

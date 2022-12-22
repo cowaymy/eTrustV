@@ -1231,7 +1231,7 @@ var userType = '${SESSION_INFO.userTypeId}';
       agreementType : $('#agreementType').val(),
       rcdTms1 : $('#hiddenRcdTms1').val(),
       rcdTms2 : $('#hiddenRcdTms2').val(),
-      marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
+      receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
     };
 
     var formData = new FormData();

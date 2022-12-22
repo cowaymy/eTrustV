@@ -2118,7 +2118,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       	Map<String, Object> params = new HashMap();
         params.put("custId",salesOrderMVO.getCustId());
         params.put("updUserId", salesOrderMVO.getUpdUserId());
-        params.put("marketingMsgStatus", salesOrderMVO.getMarketingMsgStatus());
+        params.put("receivingMarketingMsgStatus", salesOrderMVO.getReceivingMarketingMsgStatus());
         orderRegisterMapper.updateMarketingMessageStatus(params);
   }
 

@@ -1535,7 +1535,7 @@
     #{cmbCorpTypeId},
     #{gstRgistNo},
     #{oldNric},
-    #{marketingMsgStatus})
+    #{receivingMarketingMsgStatus})
   </insert>
 
   <update id="updateCustomerInfo" parameterType="Map">

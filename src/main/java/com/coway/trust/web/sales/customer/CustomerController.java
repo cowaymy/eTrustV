@@ -759,7 +759,7 @@ public class CustomerController {
     ins29Dmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
     ins29Dmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
     ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
-    ins29Dmap.put("marketingMsgStatus",vo.getReceivingMarketingMsgStatus());
+    ins29Dmap.put("receivingMarketingMsgStatus",vo.getReceivingMarketingMsgStatus());
 
     // Address
     insmap.put("addrDtl", vo.getAddrDtl());
@@ -1021,7 +1021,7 @@ public class CustomerController {
     ins29Dmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
     ins29Dmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
     ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
-    ins29Dmap.put("marketingMsgStatus",vo.getReceivingMarketingMsgStatus());
+    ins29Dmap.put("receivingMarketingMsgStatus",vo.getReceivingMarketingMsgStatus());
 
     // Address
     insmap.put("addrDtl", vo.getAddrDtl());

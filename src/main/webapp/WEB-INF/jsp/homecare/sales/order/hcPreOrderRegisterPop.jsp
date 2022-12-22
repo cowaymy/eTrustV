@@ -1210,7 +1210,7 @@
             custBillCustCareCntId   : $("#hiddenBPCareId").val(),
             corpCustType             : $('#corpCustType').val(),
             agreementType          : $('#agreementType').val(),
-            marketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
+            receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
         };
 
         var formData = new FormData();
