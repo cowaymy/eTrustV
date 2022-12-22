@@ -3012,7 +3012,7 @@
     FROM PAY0318D
     WHERE 1=1
     AND TOKEN_ID = #{tokenId}
-        AND STATUS <>8
+        AND STATUS <![CDATA[<>]]> 8
   </select>
 
   <update id="updateCustomerStatus" parameterType="Map">
