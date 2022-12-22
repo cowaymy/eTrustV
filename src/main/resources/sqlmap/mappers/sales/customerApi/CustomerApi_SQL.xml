@@ -497,7 +497,7 @@
     SELECT A.CUST_ID,B.CODE_id,B.CODE_NAME , sum(A.REWRD_POINT) t_bday_point,'Active' bday_point_status, '' bday_point_expiry_dt
         FROM SAL0332D A
         JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
-        WHERE A.CUST_ID =   1250652
+        WHERE A.CUST_ID =   #{custId}
         AND A.FORFEIT = 0
 		group by a.CUST_ID,B.CODE_id,B.CODE_NAME
 		order by case when B.CODE_id = 7198 then 1
