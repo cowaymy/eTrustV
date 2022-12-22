@@ -234,7 +234,6 @@
                                       , CTOS_DT                                                                 -- ASIS_COLUMN : CTOSDate
                                       , FICO_SCRE                                                              -- ASIS_COLUMN : FicoScore
                                       , OLD_IC                                                                   --Old IC
-                                      , RECEIVING_MARKETING_MSG_STATUS							-- Marketing Message Receiving
     ) VALUES ( #{custId}
                   , #{name}
                   , TRIM(#{nric})
@@ -261,7 +260,6 @@
                   , #{ctosDt}
                   , NULL
                   , #{oldIc}
-                  , #{receivingMarketingMsgStatus}
     )
     ]]>
   </insert>

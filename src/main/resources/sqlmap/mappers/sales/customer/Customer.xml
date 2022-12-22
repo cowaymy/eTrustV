@@ -78,7 +78,6 @@
                 P2.CUST_VA_NO AS CUST_VA_NO,
                 P2.GST_RGIST_NO AS GST_RGIST_NO
                 ,P2.CUST_TIER AS CUST_TIER
-                ,P2.RECEIVING_MARKETING_MSG_STATUS
                 FROM ( SELECT P1.CUST_ID, P1.Name1, P1.NRIC, P1.REM, P1.TYPE_ID, P1.PAS_SPORT_EXPR,
                                 P1.VISA_EXPR, P1.C1, P1.CRT_USER_ID, P1.USER_NAME1,
                                 P1.CRT_DT, P1.CORP_TYPE_ID, P1.CODE, P1.CODE_NAME,
@@ -88,7 +87,6 @@
                                 P1.CUST_ADD_ID, P1.CUST_CNTC_ID, P1.CUST_CARE_CNT_ID, P1.CUST_VA_NO,
                                 P1.GST_RGIST_NO,
                                 P1.CUST_TIER,
-                                P1.RECEIVING_MARKETING_MSG_STATUS,
                                 row_number() OVER (ORDER BY P1.CUST_ID ASC) AS row_number
                         FROM ( SELECT
                                 D1.CUST_ID AS CUST_ID,
@@ -123,7 +121,6 @@
                                 D1.CUST_VA_NO AS CUST_VA_NO,
                                 D1.GST_RGIST_NO AS GST_RGIST_NO
                                 ,D1.CUST_TIER AS CUST_TIER
-                                ,D1.RECEIVING_MARKETING_MSG_STATUS
                                 FROM ( SELECT DISTINCT
                                             S1.CUST_ID1 AS CUST_ID,
                                             S1.Name1 AS Name1,
@@ -157,14 +154,13 @@
                                             CASE WHEN (S1.CUST_VA_NO IS NOT NULL) THEN S1.CUST_VA_NO ELSE '' END AS CUST_VA_NO,
                                             CASE WHEN (S1.GST_RGIST_NO IS NOT NULL) THEN S1.GST_RGIST_NO ELSE '' END AS GST_RGIST_NO
                                             ,S1.CUST_TIER
-                                            ,S1.RECEIVING_MARKETING_MSG_STATUS
                                             FROM   (SELECT T1.CUST_ID AS CUST_ID1, T1.Name AS Name1, T1.NRIC AS NRIC1, DBMS_LOB.SUBSTR (T1.REM, 4000) AS REM, T1.TYPE_ID AS TYPE_ID, T1.PAS_SPORT_EXPR AS PAS_SPORT_EXPR,
                                                         T1.VISA_EXPR AS VISA_EXPR,
                                                         T1.CRT_USER_ID AS CRT_USER_ID1, T2.USER_ID AS USER_ID1, T2.USER_NAME AS USER_NAME1, T1.CRT_DT AS CRT_DT1, T1.CORP_TYPE_ID AS CORP_TYPE_ID, T9.CODE_ID AS CODE_ID1,
                                                         T9.CODE_NAME AS CODE_NAME1, T1.DOB AS DOB1, T1.Email AS Email1, T1.Gender AS Gender1, T1.NATION AS NATION, T4.Name AS Name2, T4.CNTY_ID AS CNTY_ID1, T1.RACE_ID AS RACE_ID1,
                                                         T5.CODE_ID AS CODE_ID2, T5.CODE_NAME AS CODE_NAME2, T1.STUS_CODE_ID AS STUS_CODE_ID1, T1.UPD_DT AS UPD_DT1, T1.UPD_USER_ID AS UPD_USER_ID1, T3.USER_ID AS USER_ID2, T3.USER_NAME AS USER_NAME2,
                                                         T6.CUST_ADD_ID AS CUST_ADD_ID, T7.CUST_CNTC_ID AS CUST_CNTC_ID, T8.CUST_CARE_CNT_ID AS CUST_CARE_CNT_ID, T1.CUST_VA_NO AS CUST_VA_NO, T1.GST_RGIST_NO AS GST_RGIST_NO
-                                                        ,T11.CODE CUST_TIER,T1.RECEIVING_MARKETING_MSG_STATUS
+                                                        ,T11.CODE CUST_TIER
                                                     FROM SAL0029D T1
                                                     LEFT OUTER JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
                                                     LEFT OUTER JOIN SYS0047M T3 ON T3.USER_ID = T1.UPD_USER_ID
@@ -1509,8 +1505,7 @@
     CUST_VA_NO,
     CORP_TYPE_ID,
     GST_RGIST_NO,
-    OLD_IC,
-    RECEIVING_MARKETING_MSG_STATUS)
+    OLD_IC)
     VALUES (#{custSeq},
     UPPER(#{custName}),
     #{nric},
@@ -1534,8 +1529,7 @@
     '98 9920 '||SUBSTR(LPAD(#{custSeq}, 8, 0), 1,4)||' '||SUBSTR(LPAD(#{custSeq}, 8, 0),5),
     #{cmbCorpTypeId},
     #{gstRgistNo},
-    #{oldNric},
-    #{receivingMarketingMsgStatus})
+    #{oldNric})
   </insert>
 
   <update id="updateCustomerInfo" parameterType="Map">
