@@ -156,8 +156,8 @@
         	if(fn_validSearchList()) fn_selectListAjax();
 
         	/* for Hazelcast use below
-        	if(fn_validSearchList()) fn_selectListAjax('N');
-        });*/
+        	if(fn_validSearchList()) fn_selectListAjax('N');*/
+        });
         /* for Hazelcast use below
         $('#btnSrchHzcast').click(function() {
             if(fn_validSearchList()) fn_selectListAjax('Y');
@@ -433,8 +433,8 @@
 
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
-        var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
         if(selIdx > -1) {
+            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
 
             if(prodCat == '5706' || prodCat == '5707')
             {
@@ -452,8 +452,8 @@
 
     function fn_orderRequestPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
-        var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
         if(selIdx > -1) {
+            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
         	if(prodCat == '5706' || prodCat == '5707')
         	{
                 Common.alert('* Please proceed to HC Module for this action');
@@ -472,9 +472,8 @@
 
     function fn_orderSimulPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
-        var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
-        console.log(prodCat, "here")
         if(selIdx > -1) {
+            var prodCat = AUIGrid.getCellValue(listMyGridID, selIdx, "stkCtgryId");
         	if(prodCat == '5706' || prodCat == '5707')
             {
                 Common.alert('* Please proceed to HC Module for this action');
