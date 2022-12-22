@@ -430,7 +430,7 @@
  }
 
 
-   function fn_asRawData() {
+   function fn_asRawData(ind) {
 	    Common.popupDiv("/services/as/preAsRawDataPop.do", {ind: ind}, null, true, '');
 	  }
 
