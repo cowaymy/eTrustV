@@ -3016,7 +3016,9 @@
   <select id="checkCreditCardValidity" parameterType="String" resultType="int">
     SELECT COUNT(*) COUNT
     FROM PAY0318D
-    WHERE TOKEN_ID = #{tokenId}
+    WHERE 1=1
+    AND TOKEN_ID = #{tokenId}
+        AND STATUS <>8
   </select>
 
   <update id="updateCustomerStatus" parameterType="Map">
