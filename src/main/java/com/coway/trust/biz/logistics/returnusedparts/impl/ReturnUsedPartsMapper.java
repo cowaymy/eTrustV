@@ -1,7 +1,10 @@
 package com.coway.trust.biz.logistics.returnusedparts.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -32,4 +35,21 @@ public interface ReturnUsedPartsMapper {
 	List<EgovMap> getCodyCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectSelectedBranchCodeList(Map<String, Object> params);
+
+	void upToPendReturnParts(Map<String, Object> params);
+
+	List<EgovMap> selectScanSerialList(Map<String, Object> params);
+
+	List<EgovMap> checkScanSerial(Map<String, Object> params);
+
+	String getScanNoSequence(Map<String, Object> params);
+
+	void upTempScanSerial(Map<String, Object> params);
+
+	void deleteTempScanSerial(Map<String, Object> params);
+
+	void saveScanSerial(Map<String, Object> params);
+
+	void upToFailedReturnParts(Map<String, Object> params);
+
 }

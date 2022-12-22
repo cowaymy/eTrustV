@@ -166,7 +166,7 @@
 			</if>
 		</if>
 
-		<if test="userType == '4'.toString() and groupCode != '151'.toString() ">
+		<if test="(userType == '4'.toString() || userType == '6'.toString()) and groupCode != '151'.toString() ">
 			AND A.MEM_LVL = '3'
 			AND A.BRNCH_ID = #{groupCode}
 			AND B.STUS

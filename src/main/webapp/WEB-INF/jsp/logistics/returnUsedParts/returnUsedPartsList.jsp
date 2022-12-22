@@ -35,7 +35,8 @@ var listGrid;
 var subGrid;
 var userCode;
 var comboData = [{"codeId": "Y","codeName": "Yes"}, {"codeId": "N","codeName": "No"}];
-var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
+var comboData1 = [{"codeId": "44","codeName": "Pending to Scan"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
+//var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
 var comboData2 = [{"codeId": "03","codeName": "CT"},{"codeId": "04","codeName": "CODY"}];
 var comboData3 = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
 var uomlist = f_getTtype('364' , '');
@@ -71,7 +72,7 @@ today = (dd + '/' + mm + '/' + yyyy);
 
 
 
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 ,},
                      {dataField: "seq",headerText :"seq"      ,width:120    ,height:30, visible:false },
                      {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },
                      {dataField: "orderNo",headerText :"Order No"      ,width:120    ,height:30, editable:false },
@@ -85,6 +86,8 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
 //                      {dataField: "stkIdNew",headerText :"New STK_ID"           ,width:150    ,height:30, editable:true},
                      {dataField: "materialName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:120    ,height:30, editable:false},
                      {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:true},
+                     {dataField: "unmatchId",headerText :"Unmatch Reason Id"     ,width:120    ,height:30, editable:false, visible:false},
+                     {dataField: "unmatchReason",headerText :"Unmatch Reason"     ,width:120    ,height:30, editable:false},
 //                      {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },
                      {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"          ,width:120    ,height:30                },
                      /* {dataField:  "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"        ,width:120    ,height:30 },  */
@@ -112,6 +115,8 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                       {dataField: "returnComplete",headerText :"<spring:message code='log.head.returncomplete'/>"      ,width:120    ,height:30, editable:false},
                       {dataField: "returnCompleteDate",headerText :"<spring:message code='log.head.returncompletedate'/>"      ,width:120    ,height:30, editable:false},
                       {dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"        ,width:120    ,height:30, editable:false},
+                      {dataField: "pendScanName",headerText :"Serial Check Status"     ,width:120    ,height:30, editable:false},
+                      {dataField: "pendScan",headerText :"Serial Check Status"     ,width:120    ,height:30, editable:false, visible:false },
                       {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },
                       {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false }
                       ];
@@ -159,10 +164,12 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    doDefCombo(comboData1, '' ,'searchMaterialType', 'S', '');
+    //doDefCombo(comboData1, '' ,'searchMaterialType', 'S', '');
     doDefCombo(comboData, '' ,'searchComplete', 'S', '');
+    doDefCombo(comboData, '' ,'searchSerialChk', 'S', '');
+    doDefCombo(comboData1, '' ,'searchSerialSts', 'S', '');
     doDefCombo(comboData2, '' ,'searchlocgb', 'S', '');
-
+    doGetComboData('/common/selectCodeList.do', { groupCode : 511}, '', 'sUnmatchReason', 'S','');
 
     var ROLE_ID = "${SESSION_INFO.roleId}";
     var access_auth1 = "${PAGE_AUTH.funcUserDefine1}";
@@ -174,17 +181,14 @@ $(document).ready(function(){
     }else{
     	doGetComboData('/logistics/returnusedparts/selectSelectedBranchCodeList.do',{userBranchId: '${SESSION_INFO.userBranchId}'}, '', 'searchBranch', 'S','');
     	$("#complete").hide();
+    	$("#pending").hide();
     }
 
     //doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE' , Codeval : 'A'}, '', 'searchlocgrade', 'S','');
    // doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
    $("#servicesdt").val(today);
     doSysdate(0 , 'serviceedt');
-    doDefCombo(comboData3, 'A' ,'searchlocgrade', 'S', '');
-
-
-
-
+    //doDefCombo(comboData3, 'A' ,'searchlocgrade', 'S', '');
 
     /**********************************
      * Header Setting End
@@ -355,6 +359,164 @@ $(document).ready(function(){
 		   }
 		});
 
+		$('#pending').click(function() {
+            var chkfalg;
+            var allChecked = false;
+            var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+               if(checkedItems.length <= 0) {
+                   Common.alert('No data selected.');
+                   return false;
+               }else{
+            	   if(checkedItems.length > 0){
+                       for (var i = 0 ; i < checkedItems.length ; i++){
+                    	   console.log("checkedItems[i].unmatchId" + checkedItems[i].unmatchId);
+                    	   if(checkedItems[i].unmatchId != undefined){
+                               Common.alert('Please uncheck service order which contains unmatch reason.');
+                               return false;
+                           }
+                    	   if(checkedItems[i].pendScan == "Y"){
+                               Common.alert('Please uncheck service order which already Pending Scan.');
+                               return false;
+                           }
+                    	   if (checkedItems[i].returnComplete =="Y"){
+                    		   Common.alert('Kindly Uncheck items which already processed.');
+                               return false;
+                           }
+                       }
+            	   }
+
+
+            	   Common.confirm("Do you want to save? </br> Note that : </br> Order WITH serial number will update to status pending </br> and WITHOUT will be update to status complete",function(){
+                       //Common.alert("confirm to update");
+            		   var data = {};
+				        var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+				        data.checked = checkdata;
+
+				        Common.ajax("POST", "/logistics/returnusedparts/returnPartsUpdatePend.do", data, function(result) {
+				            if (result.data == 0) {
+				                Common.alert(result.message);
+				                $("#search").click();
+				            }
+				            else {
+				                Common.alert('Already processed.');
+				            }
+
+				        })
+                   });
+          }
+       });
+
+			$('#scan').click(function() {
+
+				if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == undefined) {
+		            Common.alert('Please select Department Code.');
+		            return false;
+		        }
+
+				if ($("#sc").val() == '' || $("#sc").val() == undefined) {
+                    Common.alert('Please select Cody Member.');
+                    return false;
+                }
+
+				fn_scanSerialPop();
+
+				/* var chkfalg;
+	            var allChecked = false;
+				var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+	            if(checkedItems.length <= 0) {
+	                Common.alert('No data selected.');
+	                return false;
+	            }else{
+	                if(checkedItems.length > 0){
+	                    for (var i = 0 ; i < checkedItems.length ; i++){
+	                        if(checkedItems[i].pendScan != "Y"){
+	                            Common.alert('Please uncheck service order which not pending to Serial Scan.');
+	                            return false;
+	                        }
+	                    }
+	                }
+
+	                Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
+	                    //Common.alert("confirm to update");
+	                    fn_scanSerialPop();
+	                });
+		       } */
+		    });
+
+	function fn_scanSerialPop(){
+        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+
+        var param = {
+                "branch" : $("#searchBranch").val(),
+                "branchName" : $("#searchBranch :selected").text(),
+                "codyId" : $("#sc").val(),
+                "codyMem" : $("#sc :selected").text()
+            };
+        //$("#zDelvryNo").val(checkedItems[0].item.delyno);
+        //$("#zReqstno").val(checkedItems[0].item.reqstno);
+        //$("#zRcvloc").val(checkedItems[0].item.rcvloc); // From Location
+        //$("#zReqloc").val(checkedItems[0].item.reqloc); // To Location
+
+        /* if(Common.checkPlatformType() == "mobile") {
+            popupObj = Common.popupWin("frmNew", "/logistics/returnusedparts/scanSerialPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        } else{ */
+            Common.popupDiv("/logistics/returnusedparts/scanSerialPop.do", param, null, true, '_divScanSerialPop');
+        //}
+    }
+
+    $('#failed').click(function() {
+        var chkfalg;
+        var allChecked = false
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+           if(checkedItems.length <= 0) {
+               Common.alert('No data selected.');
+               return false;
+           }else{
+               var access_auth2 = "${PAGE_AUTH.funcUserDefine2}";
+                console.log("access_auth2 " + access_auth2);
+                for (var i = 0 ; i < checkedItems.length ; i++){
+                	if(checkedItems[i].unmatchId == undefined || checkedItems[i].unmatchId == ""){
+                		Common.alert('Only record(s) with Unmatched Reason able to failed.');
+                        return false;
+                	}
+                	if (checkedItems[i].returnComplete =="Y"){
+                        Common.alert('Kindly Uncheck items which already processed.');
+                        return false;
+                    }
+                }
+
+                if(access_auth2 != "Y"){ //branch admin
+                	for (var i = 0 ; i < checkedItems.length ; i++){
+                        if(checkedItems[i].unmatchId !=  "6815"){ //branch admin only can failed unmatch reason "used filter without scan label"
+                        	Common.alert('Unmatched Filer not allow to update return. </br> Kindly seek management approval.');
+                            return false;
+                        }
+                    }
+                }
+
+                Common.confirm("Unmatched Filter due to without label. </br> Do you confirm the unused filter returned is correct?",function(){
+                    var data = {};
+                     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+                     data.checked = checkdata;
+
+                     Common.ajax("POST", "/logistics/returnusedparts/returnPartsUpdateFailed.do", data, function(result) {
+                         if (result.data == 0) {
+                             Common.alert(result.message);
+                             $("#search").click();
+                         }
+                         else {
+                             Common.alert('Already processed.');
+                             $("#search").click();
+                         }
+
+                     })
+                });
+           }
+
+      });
+
+
+
         $("#download").click(function() {
         	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Return Used Parts List")
         });
@@ -375,7 +537,7 @@ $(document).ready(function(){
         var searchlocgb = $('#searchlocgb').val();
         var searchBranch = $('#searchBranch').val();
 
-        if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){
+         /* if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){
 
         	Common.alert("Please select Location Type");
         	var ROLE_ID = "${SESSION_INFO.roleId}";
@@ -389,21 +551,43 @@ $(document).ready(function(){
                 doGetComboData('/logistics/returnusedparts/selectSelectedBranchCodeList.do',{userBranchId: '${SESSION_INFO.userBranchId}'}, '', 'searchBranch', 'S','');
             }
         	return false;
-        }
+        } */
 
-        var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val() , searchBranch:searchBranch     }
-        doGetComboData('/common/selectStockLocationList3.do', param , '', 'sc', 'M','f_multiComboType');
+        /* var param = {searchlocgb:searchlocgb , searchBranch:searchBranch     }
+        doGetComboData('/common/selectStockLocationList3.do', param , '', 'sc', 'S',''); */
+
+	        $("#cmdCdManager").find('option').each(function() {
+	            $(this).remove();
+	        });
+
+	        $("#sc").find('option').each(function() {
+	          $(this).remove();
+	        });
+
+	        if ($(this).val().trim() == "") {
+	            return;
+	        }
+
+	        //if ($("#userType").val() != "3") {
+	            doGetCombo('/services/bs/getCdUpMemList.do', $(this).val(), '', 'cmdCdManager', 'S','');
+	        //}
     	}
 
     });
 
+    $('#cmdCdManager').change(function(){
+    	CommonCombo.make('sc', '/logistics/codystock/getCodyCodeList', {
+            memLvl : 4,
+            memType : 2,
+            upperLineMemberID : $("#cmdCdManager").val()
+        }, '');
+    });
 
-
-    $('#searchlocgrade').change(function(){
+    /* $('#searchlocgrade').change(function(){
         var searchlocgb = $('#searchlocgb').val();
         var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val()}
         doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
-    });
+    }); */
 
 
 
@@ -565,23 +749,28 @@ $(document).ready(function(){
 			Common.alert('Please select Branch.');
 			return false;
 		}
-		else if ($("#sc").val() == '' || $("#sc").val() == undefined) {
+		/* else if ($("#sc").val() == '' || $("#sc").val() == undefined) {
 			Common.alert('Please select Location.');
 			return false;
-		}
+		} */
 
 		// Added search range limitation checking by Hui Ding, 2021-03-11
 		var startDt = $("#servicesdt").val();
 		var endDt = $("#serviceedt").val();
 
 		if (startDt != '' && endDt != '') {
-			if (!js.date.checkDateRange(startDt,endDt,"Service Date", "3"))
+			if (!js.date.checkDateRange(startDt,endDt,"Service Date", "4"))
 				return false;
 		} else {
-			if (startDt == '' && endDt == '') {
+			/* if (startDt == '' && endDt == '') {
 				Common.alert("Service Date is required.");
 				return false;
-			} else if (startDt == '' && endDt != '') {
+			}  */
+			if (startDt == '' && endDt == '' && $("#searchComplete").val() != "N") {
+                Common.alert("Return Completed is required to choose 'No' when service date is empty.");
+                return false;
+            }
+			else if (startDt == '' && endDt != '') {
 				Common.alert("Service Start Date is required.");
 				return false;
 			} else if (startDt != '' && endDt == '') {
@@ -620,7 +809,10 @@ $(document).ready(function(){
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
 </c:if>
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-      <li><p class="btn_blue"><a id="complete"><span class="complete"></span>Complete</a></p></li>
+      <li><p class="btn_blue"><a id="pending"><span class="pending"></span>Return</a></p></li>
+      <li><p class="btn_blue"><a id="scan"><span class="scan"></span>Serial Check</a></p></li>
+      <li><p class="btn_blue"><a id="failed"><span class="failed"></span>Failed</a></p></li>
+      <!-- <li><p class="btn_blue"><a id="complete"><span class="complete"></span>Complete</a></p></li> -->
 </c:if>
       <!-- <li><p class="btn_gray"><a id="cancle"><span class="cancle"></span>Cancle</a></p></li> -->
     </ul>
@@ -648,28 +840,36 @@ $(document).ready(function(){
                    <td>
                         <select class="w100p" id="searchBranch"  name="searchBranch"></select>
                    </td>
-                   <th scope="row">Location<span class="must">*</span></th>
+                   <th scope="row">Serial Check</th>
+                   <td>
+                        <select class="w100p" id="searchSerialChk"  name="searchSerialChk"></select>
+                   </td>
+                   <!-- <th scope="row">Location<span class="must">*</span></th>
+                   <td>
+                       <select class="w100p" id="sc" name="sc"></select>
+                   </td> -->
+                </tr>
+                <tr>
+                    <th scope="row">Department Code</th>
+                   <td>
+                        <select class="w100p" id="cmdCdManager" name="cmdCdManager"></select>
+                   </td>
+                   <th scope="row">Cody Member</th>
                    <td>
 <!--                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select> -->
                        <select class="w100p" id="sc" name="sc"></select>
                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Location Grade</th>
+                   <th scope="row">Serial Check Status</th>
                    <td>
-                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
+                       <select class="w100p" id="searchSerialSts" name="searchSerialSts"></select>
                    </td>
-                   <th scope="row">Service Order</th>
-                   <td>
-                        <INPUT type="text"   class="w100p" id="searchOder" name="searchOder">
-                   </td>
-                   <th scope="row">Customer Name</th>
+                   <!-- <th scope="row">Customer Name</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchCustomer" name="searchCustomer">
-                   </td>
+                   </td> -->
                 </tr>
                 <tr>
-                    <th scope="row">Service date<span class="must">*</span></th>
+                    <th scope="row">Service date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="servicesdt" name="servicesdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
@@ -677,31 +877,41 @@ $(document).ready(function(){
                         <p><input id="serviceedt" name="serviceedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
                         </div><!-- date_set end -->
                     </td>
-                    <th scope="row">Return Date</th>
+                    <th scope="row">HS Order</th>
+                   <td>
+                        <INPUT type="text"   class="w100p" id="searchOder" name="searchOder">
+                   </td>
+                   <th scope="row">Return Status</th>
+                   <td>
+                       <select class="w100p" id="searchComplete" name="searchComplete"></select>
+                   </td>
+                    <!-- <th scope="row">Return Date</th>
                     <td >
-                        <div class="date_set w100p"><!-- date_set start -->
+                        <div class="date_set w100p">date_set start
                         <p><input id="returnsdt" name="returnsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="returnedt" name="returnedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->
-                    </td>
-                    <th scope="row"></th>
-                    <td>
-                    </td>
+                        </div>date_set end
+                    </td> -->
                 </tr>
                 <tr>
                     <th scope="row">Material Code</th>
                    <td>
                        <INPUT type="text"   class="w100p" id="searchMaterialCode" name="searchMaterialCode">
                    </td>
-                   <th scope="row">Material Type</th>
+                   <th scope="row">Serial Number (Used)</th>
+                   <td>
+                       <INPUT type="text"   class="w100p" id="searchUsedSerial" name="searchUsedSerial">
+                   </td>
+                   <th scope="row">Unmatched Reason</th>
+                   <td>
+                       <select class="w100p" id="sUnmatchReason" name="sUnmatchReason"></select>
+                   </td>
+                   <!-- <th scope="row">Material Type</th>
                    <td >
                       <select class="w100p" id="searchMaterialType" name="searchMaterialType"></select>
-                   </td>
-                   <th scope="row">Return Complete</th>
-                   <td>
-                       <select class="w100p" id="searchComplete" name="searchComplete"></select>
-                   </td>
+                   </td> -->
+
                 </tr>
 
             </tbody>
@@ -740,6 +950,5 @@ $(document).ready(function(){
 
 
     </section><!-- search_result end -->
-
 </section>
 
