@@ -15,7 +15,6 @@
                         when length(replace(a.CardNumber,'-','')) <![CDATA[ <>]]> 16 then 3491
                         when c1.bank_id is null then 3492
                         when d1.code_id is null then 3493
-                        when e1.status = '1' then 3517
                   else 0
                   end as fail_resn,
                   a.CowayCustId,
@@ -56,8 +55,6 @@
                   left join sys0109m c on SELFCARE_BANK_NAME = A.BankName
                   left join sys0004m c1 on c1.code = c.etrust_bank_name
                   left join sys0013m d1 on a.crc_type = d1.code_id
-                  left join (select CUST_CRC_ID,CUST_CRC_TOKEN,cust_id, ROW_NUMBER() over (partition by CUST_ID order by CUST_CRC_CRT_DT desc)as rn from sal0028d) e on e.cust_id = a.CowayCustId and e.rn = 1
-                  left join pay0318d e1 on e1.token_id = e.CUST_CRC_TOKEN
     </insert>
 
 
