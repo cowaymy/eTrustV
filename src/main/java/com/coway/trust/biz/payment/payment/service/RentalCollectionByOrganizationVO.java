@@ -9,6 +9,8 @@ public class RentalCollectionByOrganizationVO {
 	private String cmbInstallStatus;
 	private String cmbCustTypeId;
 	private String cmbAppType;
+	private String prdStartDt;
+	private String prdEndDt;
 
 
 	public String getOrgCode() {
@@ -54,6 +56,19 @@ public class RentalCollectionByOrganizationVO {
 		this.cmbInstallStatus = cmbInstallStatus;
 	}
 
+	public String getPrdStartDt() {
+		return prdStartDt;
+	}
+	public void setPrdStartDt(String prdStartDt) {
+		this.prdStartDt = prdStartDt;
+	}
+
+	public String getPrdEndDt() {
+		return prdEndDt;
+	}
+	public void setPrdEndDt(String prdEndDt) {
+		this.prdEndDt = prdEndDt;
+	}
 
 
 }

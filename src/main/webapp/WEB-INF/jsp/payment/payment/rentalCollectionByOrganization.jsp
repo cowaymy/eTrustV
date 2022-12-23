@@ -189,7 +189,15 @@ console.log(gridObj);
                     <tr>
                         <th scope="row">Org Code</th>
                         <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" /></td>
-                        <th scope="row" colspan="2"></th>
+               <!--          <th scope="row" colspan="2"></th> -->
+                  <th scope="row">Period</th>
+					    <td>
+					    <div class="date_set w100p"><!-- date_set start -->
+					    <p><input id="prdStartDt" name="prdStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    <span>To</span>
+					    <p><input id="prdEndDt" name="prdEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    </div><!-- date_set end -->
+					    </td>
                     </tr>
 
                 </tbody>
