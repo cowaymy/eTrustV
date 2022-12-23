@@ -1196,8 +1196,8 @@
           $("#outrate_install").val(decimalSetting(data[0].c11));
 
       } else if (v == 'EEOS') {
-          $("#eOSDate").html("<input id='eosDate' name='eosDate' type='text' title='EOS Date' placeholder='DD/MM/YYYY' class='j_date' readonly />");
-          $("#eOMDate").html("<input id='eomDate' name='eomDate' type='text' title='EOM Date' placeholder='DD/MM/YYYY' class='j_date' readonly />");
+          $("#eOSDate").html("<input id='eosDate' name='eosDate' type='text' title='EOS Date' placeholder='DD/MM/YYYY' class='j_date' />");
+          $("#eOMDate").html("<input id='eomDate' name='eomDate' type='text' title='EOM Date' placeholder='DD/MM/YYYY' class='j_date' />");
 
           if(data[0] == null){
               $("#eosDate").val('');
@@ -1214,6 +1214,8 @@
 	           $("#eOSDate").text('');
 	           $("#eOMDate").text('');
 	        }else{
+	           $("#eOSDate").empty();
+               $("#eOMDate").empty();
 	           $("#eOSDate").text(data[0].eos);
 	           $("#eOMDate").text(data[0].eom);
 	        }
