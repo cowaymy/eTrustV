@@ -1007,8 +1007,10 @@
 
     <update id="modifyEosEomInfo" parameterType="Map">
         UPDATE SYS0026M
-           SET EOS_DATE   = TO_DATE(#{eosDate}, 'DD/MM/YYYY')
-             , EOM_DATE     = TO_DATE(#{eomDate}, 'DD/MM/YYYY')
+           SET EOS_DATE   =  <if test="eosDate != null and eosDate != ''">TO_DATE(#{eosDate}, 'DD/MM/YYYY')</if>
+                                      <if test="eosDate == null or eosDate == ''">NULL</if>
+             , EOM_DATE     = <if test="eomDate != null and eomDate != ''">TO_DATE(#{eomDate}, 'DD/MM/YYYY') </if>
+                                      <if test="eomDate == null or eomDate == ''">NULL</if>
              , UPD_USER_ID = #{upd_user}
              , UPD_DT         = SYSDATE
          WHERE STK_ID = #{stockId}

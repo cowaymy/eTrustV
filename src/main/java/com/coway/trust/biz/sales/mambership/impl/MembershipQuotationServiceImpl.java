@@ -424,6 +424,9 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		EgovMap list = membershipQuotationMapper.mSubscriptionEligbility(params);
 		Map<String, Object>  data =  new HashMap<String, Object>();
 
+		boolean passEOM = true;
+		boolean passEOS = true;
+
 		if(list != null){
 		// Check material's status
 		if(!list.get("status").toString().equals("1")){
@@ -448,6 +451,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 				int EOM_MonthsBetween = Months.monthsBetween(now, eom).getMonths();
 
 				if(EOM_MonthsBetween < svmDateRange_EOM){
+					passEOM = false;
 					data.put("result", false);
     				data.put("title", "End of Membership");
     				data.put("message", "The order is <strong>end of membership soon</strong> <i>(within "+ svmDateRange_EOM +" months period)</i><strong> - not entitled to subscribe SVM</strong></br> Kindly suggest customer to do Ex-Trade for this model.");
@@ -463,12 +467,20 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 				int lastService_MonthsBetween = Months.monthsBetween(now, lastServiceDt).getMonths();
 
 				if(lastService_MonthsBetween > svmDateRange_SOLED){
+					passEOS = false;
 					data.put("result", false);
 					data.put("title", "Early Subscription > "+ svmDateRange_SOLED +" months");
-					data.put("message", "The order is <strong>too early to subscribe for SCM</strong>, kindly subscribe the membership within "+ svmDateRange_SOLED +" months period form the order expired date.");
+					data.put("message", "The order is <strong>too early to subscribe for SVM</strong>, kindly subscribe the membership within "+ svmDateRange_SOLED +" months period form the order expired date.");
 				}
 			}else{
 				data.put("validSave", false);
+			}
+
+
+			if(passEOM == false && passEOS == false){
+				data.put("result", false);
+				data.put("title", "End of Membership");
+				data.put("message", "The order is <strong>end of membership soon</strong> <i>(within "+ svmDateRange_EOM +" months period)</i><strong> - not entitled to subscribe SVM</strong></br> Kindly suggest customer to do Ex-Trade for this model.");
 			}
 		}
 	}

@@ -1122,7 +1122,7 @@ $(document).ready(function(){
 	    if(validSave == false && $("#srvMemPacId").val() == 9){
 	    	var option = {
                     title : "Warning",
-                    content : "The order is <strong>too early to subscribe for SCM</strong>.",
+                    content : "The order is <strong>too early to subscribe for SVM</strong>.",
                     isBig : false
                   };
 

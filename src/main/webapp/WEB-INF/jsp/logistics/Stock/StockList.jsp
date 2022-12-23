@@ -571,14 +571,14 @@
             if($("#eos_eom_info_edit").text() == "EDIT"){
                  f_view("/stock/EosEomInfo.do?stkid="+item.stkid+"&mode=edit", "EEOS");
             }else if ($("#eos_eom_info_edit").text() == "SAVE"){
-            	var eos = $("#eosDate").val();
-            	var eom = $("#eomDate").val();
+//             	var eos = $("#eosDate").val();
+//             	var eom = $("#eomDate").val();
 
-            	if(eos == null || eos == "" || eom == null || eom == ""){
-            		Common.alert("Please select end of sales date and end of membership date.");
-            	}else {
+//             	if(eos == null || eos == "" || eom == null || eom == ""){
+//             		Common.alert("Please select end of sales date and end of membership date.");
+//             	}else {
             		f_info_save("/stock/modifyEosEomInfo.do" , item.stkid , "eosEomInfo" ,"");
-            	}
+//             	}
             }
         });
 
@@ -1627,7 +1627,9 @@
                 <li id="service_point"><a href="#">Service Point</a></li>
                 <li id="stock_image"><a href="#">Stock Image</a></li>
                 <li id="stock_commisssion"><a href="#">Stock Commission Setting</a></li>
-                <li id="eos_eom_info"><a href="#">EOS / EOM Date</a></li>
+                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                    <li id="eos_eom_info"><a href="#">EOS / EOM Date</a></li>
+                </c:if>
             </ul>
             <article class="tap_area" id="stock_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
