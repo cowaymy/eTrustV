@@ -160,6 +160,10 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
         if (CommonUtils.isEmpty(param.getNric())) {
           throw new ApplicationException(AppConstants.FAIL, "(Basic Info) Company number value does not exist.");
         }
+
+        if (CommonUtils.isEmpty(param.getReceivingMarketingMsgStatus())) {
+            throw new ApplicationException(AppConstants.FAIL, "(Basic Info) Receiving Marketing Message value does not exist.");
+          }
       } else {
         throw new ApplicationException(AppConstants.FAIL, "(Customer Type) Customer Type value does not exist.");
       }
@@ -282,6 +286,7 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
     customerMap.put("ctosDt", param.getCtosDt());
     // customerMap.put("ficoScre", param.getFicoScre());
     customerMap.put("oldIc", param.getOldIc());
+    customerMap.put("receivingMarketingMsgStatus", param.getReceivingMarketingMsgStatus());
 
     int checkCnt = 0;
     if (((param.getNric()).toUpperCase()).contains("TST")) {
