@@ -304,19 +304,19 @@
             }
         }
    */
-//aaaaaaaaaa
-  /*  if(FormUtil.isEmpty($('#listAsSettleStartDt').val()) || FormUtil.isEmpty($('#listAsSettleEndDt').val())) {
-	   valid = false;
-       msg += '* <spring:message code="svc.alert.msg.asSettleDt" /><br/>';
-   }
-   else {
-       var diffDay = fn_diffDate($('#listAsSettleStartDt').val(), $('#listAsSettleEndDt').val());
 
-       if(diffDay > 31 || diffDay < 0) {
-    	   valid = false;
-           msg += '* <spring:message code="svc.alert.msg.srchPeriodDt" />';
-       }
-   }*/
+     if(FormUtil.isEmpty($('#listAsSettleStartDt').val()) || FormUtil.isEmpty($('#listAsSettleEndDt').val())) {
+		   valid = false;
+	       msg += '* <spring:message code="svc.alert.msg.asSettleDt" /><br/>';
+	   }
+	   else {
+	       var diffDay = fn_diffDate($('#listAsSettleStartDt').val(), $('#listAsSettleEndDt').val());
+
+	       if(diffDay > 31 || diffDay < 0) {
+	    	   valid = false;
+	           msg += '* <spring:message code="svc.alert.msg.srchPeriodDt" />';
+	       }
+	   }
 
         if (valid) {
             Common.ajax("GET", "/ResearchDevelopment/selectUsedPartReturnList.do", $(
