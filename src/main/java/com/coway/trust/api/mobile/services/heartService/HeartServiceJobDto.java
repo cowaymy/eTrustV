@@ -145,7 +145,7 @@ public class HeartServiceJobDto {
   private String rentalStatus;
 
   @ApiModelProperty(value = "")
-  private int dscCode;
+  private String dscCode;
 
   @ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
   private String lastPaymentDate;
@@ -783,11 +783,11 @@ public String getSerialChk() {
     this.bankCode = bankCode;
   }
 
-  public int getDscCode() {
+  public String getDscCode() {
     return dscCode;
   }
 
-  public void setDscCode(int dscCode) {
+  public void setDscCode(String dscCode) {
     this.dscCode = dscCode;
   }
 
