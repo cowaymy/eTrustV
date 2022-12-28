@@ -49,17 +49,11 @@ public class SalesMonitoringFileController {
 
     	EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
 
-		if(checkCurrentYearMonth == null){
-			model.put("month", "0");
-			model.put("currentYm", "0");
-			model.put("previousYm", "0");
-		}
-		else{
-			model.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
-			model.put("currentYm", checkCurrentYearMonth.get("currentym"));
-			model.put("previousYm", checkCurrentYearMonth.get("previousym"));
-			model.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
-		}
+		model.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+		model.put("currentYm", checkCurrentYearMonth.get("currentym").toString() ==null ? "0":checkCurrentYearMonth.get("currentym").toString());
+		model.put("previousYm", checkCurrentYearMonth.get("previousym").toString() ==null ? "0":checkCurrentYearMonth.get("previousym").toString());
+		model.put("previousYm2", checkCurrentYearMonth.get("previousym2").toString() ==null ? "0":checkCurrentYearMonth.get("previousym2").toString());
+		model.put("previousYm3", checkCurrentYearMonth.get("previousym3").toString() ==null ? "0":checkCurrentYearMonth.get("previousym3").toString());
 
 		return "organization/organization/salesMonitoringListing";
 	}
@@ -129,17 +123,11 @@ public class SalesMonitoringFileController {
 
 		EgovMap checkCurrentYearMonth = salesMonitoringFileService.checkCurrentYearMonth();
 
-		if(checkCurrentYearMonth == null){
-			model.put("month", "0");
-			model.put("currentYm", "0");
-			model.put("previousYm", "0");
-		}
-		else{
-			model.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
-			model.put("currentYm", checkCurrentYearMonth.get("currentym"));
-			model.put("previousYm", checkCurrentYearMonth.get("previousym"));
-			model.put("previousYm3", checkCurrentYearMonth.get("previousym3"));
-		}
+		model.put("month", checkCurrentYearMonth.get("currentm").toString() ==null ? "0":checkCurrentYearMonth.get("currentm").toString());
+		model.put("currentYm", checkCurrentYearMonth.get("currentym").toString() ==null ? "0":checkCurrentYearMonth.get("currentym").toString());
+		model.put("previousYm", checkCurrentYearMonth.get("previousym").toString() ==null ? "0":checkCurrentYearMonth.get("previousym").toString());
+		model.put("previousYm2", checkCurrentYearMonth.get("previousym2").toString() ==null ? "0":checkCurrentYearMonth.get("previousym2").toString());
+		model.put("previousYm3", checkCurrentYearMonth.get("previousym3").toString() ==null ? "0":checkCurrentYearMonth.get("previousym3").toString());
 
 		model.put("orgCode", params.get("orgCode"));
 		model.put("grpCode", params.get("grpCode"));

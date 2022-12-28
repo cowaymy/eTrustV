@@ -644,7 +644,9 @@ $(document).ready(function () {
 	      var params_weekly ={
 	    		  memCode:'${memCode}',
 	    		  currentYm : '${currentYm}',
-	    		  previousYm3 : '${previousYm3}'
+                  previousYm : '${previousYm}',
+                  previousYm2 : '${previousYm2}',
+                  previousYm3 : '${previousYm3}'
 	       };
           Common.ajax("GET", "/organization/selectWeekSalesListing.do", params_weekly , function (result) {
                 AUIGrid.setGridData(salesOrgWeeklyList, result);

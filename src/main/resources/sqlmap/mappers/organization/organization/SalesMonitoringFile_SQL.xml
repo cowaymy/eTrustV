@@ -18,10 +18,10 @@
 	             SELECT MONTH, TYPE, CODE_NAME, CODE_ID , CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
 	                (
 	                SELECT
-	                         CASE   WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-3) THEN 'A'
-                                       WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-2) THEN 'B'
-                                       WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))-1) THEN 'C'
-                                       WHEN A.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE(#{currentYm},'YYYYMM'))) THEN 'D'
+	                           CASE WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{previousYm3} THEN 'A'
+                                       WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{previousYm2} THEN 'B'
+                                       WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{previousYm}   THEN 'C'
+                                       WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{currentYm}     THEN 'D'
                               END AS MONTH
 	                        , A.TYPE
 	                        , B.CODE_NAME
@@ -73,10 +73,10 @@
                         SELECT * FROM
                             (
                              SELECT
-                                     CASE    WHEN B.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE('202212','YYYYMM'))-3) THEN 'A'
-                                             WHEN B.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE('202212','YYYYMM'))-2) THEN 'B'
-                                             WHEN B.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE('202212','YYYYMM'))-1) THEN 'C'
-                                             WHEN B.MONTH =TO_CHAR(EXTRACT(MONTH FROM TO_DATE('202212','YYYYMM'))) THEN 'D'
+                                      CASE WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{previousYm3} THEN 'A'
+                                              WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{previousYm2} THEN 'B'
+                                              WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{previousYm}   THEN 'C'
+                                              WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{currentYm}     THEN 'D'
                                       END AS MONTH
                                     , B.TYPE
                                     , A.CODE_ID
@@ -88,7 +88,7 @@
                              FROM SYS0013M A
                              LEFT JOIN ORG0043T B ON B.TYPE = A.CODE_ID AND B.MEM_CODE = #{memCode} AND TO_CHAR(TO_DATE(B.YEAR || B.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
                              WHERE A.CODE_ID IN (6604,6605,6606,6607,6608)
-                             GROUP BY B.MONTH, B.TYPE, A.CODE_ID, A.CODE_NAME
+                             GROUP BY B.YEAR, B.MONTH, B.TYPE, A.CODE_ID, A.CODE_NAME
                             )
                         )
                         PIVOT
@@ -908,9 +908,9 @@
              CASE WHEN COUNT = 0 THEN TO_CHAR(ADD_MONTHS( TO_DATE(SYSDATE),0),'MM') ELSE TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM') END currentM
              FROM YM A
              LEFT JOIN CMM0055M B ON TRUNC(SYSDATE) BETWEEN TRUNC(B.START_DT) AND TRUNC(B.END_DT)
-             LEFT JOIN CMM0055M C ON C.YEAR= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-1),'YYYY') AND C.MONTH= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-1),'MM')
-             LEFT JOIN CMM0055M D ON D.YEAR= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-2),'YYYY') AND D.MONTH= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-2),'MM')
-             LEFT JOIN CMM0055M E ON E.YEAR= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-3),'YYYY') AND E.MONTH= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-3),'MM')
+             LEFT JOIN CMM0055M C ON C.YEAR= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),0),'YYYY') AND C.MONTH= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),0),'MM')
+             LEFT JOIN CMM0055M D ON D.YEAR= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-1),'YYYY') AND D.MONTH= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-1),'MM')
+             LEFT JOIN CMM0055M E ON E.YEAR= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-2),'YYYY') AND E.MONTH= TO_CHAR(ADD_MONTHS(TO_DATE(B.END_DT),-2),'MM')
 	 </select>
 
 

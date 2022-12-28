@@ -230,6 +230,8 @@
                      var params_summary ={
                              memCode: memCode,
                              currentYm : '${currentYm}',
+                             previousYm : '${previousYm}',
+                             previousYm2 : '${previousYm2}',
                              previousYm3 : '${previousYm3}'
                       };
 
@@ -254,6 +256,8 @@
 	                    var params_weekly ={
 	                            memCode: memCode,
 	                            currentYm : '${currentYm}',
+	                            previousYm : '${previousYm}',
+	                            previousYm2 : '${previousYm2}',
 	                            previousYm3 : '${previousYm3}'
 	                     };
 
