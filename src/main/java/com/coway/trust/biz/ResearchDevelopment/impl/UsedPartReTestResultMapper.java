@@ -43,4 +43,6 @@ public interface UsedPartReTestResultMapper {
 
 	List<EgovMap> getSpareFilterList(Map<String, Object> params);
 
+	int isReTestAlreadyResult_2(Map<String, Object> mp);
+
 }

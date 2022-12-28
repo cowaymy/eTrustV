@@ -110,6 +110,11 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	}
 
 	@Override
+	public int isReTestAlreadyResult_2(Map<String, Object> mp) {
+		return UsedPartReTestResultMapper.isReTestAlreadyResult_2(mp);
+	}
+
+	@Override
 	public EgovMap usedPartReTestResult_insert(Map<String, Object> params) {
 	    LOGGER.debug("================usedPartReTestResult_insert - START ================");
 

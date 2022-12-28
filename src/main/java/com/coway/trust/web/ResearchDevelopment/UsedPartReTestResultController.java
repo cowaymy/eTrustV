@@ -192,10 +192,10 @@ public class UsedPartReTestResultController {
 	    params.put("asEntryId", upMap.get("AS_ENTRY_ID"));
 	    params.put("asSoId", upMap.get("AS_SO_ID"));
 
-	    EgovMap isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult(mp);
+	    int isReTestCnt = UsedPartReTestResultService.isReTestAlreadyResult_2(mp);
 	    logger.debug("== isReTestCnt " + isReTestCnt);
 
-	    if (isReTestCnt == null) {
+	    if (isReTestCnt == 0) {
 	      EgovMap rtnMap = UsedPartReTestResultService.usedPartReTestResult_insert(params);
 
 	      message.setCode(AppConstants.SUCCESS);

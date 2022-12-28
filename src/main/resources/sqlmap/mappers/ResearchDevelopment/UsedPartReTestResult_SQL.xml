@@ -383,6 +383,15 @@ AND R.TEST_UP_NO = #{TestResultNo}
          </foreach>
   </select>
 
+  <select id="isReTestAlreadyResult_2" parameterType="Map" resultType="java.lang.Integer">
+    <![CDATA[
+      SELECT COUNT(TEST_UP_ID)
+        FROM SVC0122D
+      WHERE  AS_NO =#{serviceNo}
+        AND ASR_ITM_ID = #{asrItmId}
+    ]]>
+  </select>
+
   <select id="getAsEventInfo" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT CASE WHEN(H.RESN_ID IS NOT NULL)
                            THEN H.RESN_DESC
