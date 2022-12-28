@@ -799,7 +799,7 @@
             var idx    = $("#appType option:selected").index();
             var selVal = $("#appType").val();
             var appSubType = '';
-
+console.log("idx:"+idx);
             if(idx > 0) {
                 if(FormUtil.isEmpty($('#hiddenCustId').val())) {
                     $('#appType').val('');
@@ -970,7 +970,7 @@
                 /* $('#ordProduct1').prop("disabled", true);
                 $('#ordProduct2').prop("disabled", true); */
 
-                $('#srvPacId').chang();
+                $('#srvPacId').change();
             }
             //$('#srvPacId').chang();
             /* $('#ordProduct1 option').remove();
@@ -2286,10 +2286,10 @@ console.log(orderVO);
                         return false;
                     } else if(memRc.opCnt > 0) {
                          // Own Purchase
-                         if(memRc.flg6Month == 0) {
+                         /* if(memRc.flg6Month == 0) {
                              Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
                              return false;
-                         }
+                         } */
 
                          if(memRc.rcPrct <= 55) {
                              Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
@@ -2429,8 +2429,6 @@ console.log(orderVO);
     // 합계
     function totSumPrice() {
     	// 합계
-    	console.log($("#orgOrdRentalFees1").val())
-    	console.log($("#orgOrdRentalFees2").val());
         var totOrdPrice = js.String.naNcheck($("#ordPrice1").val()) + js.String.naNcheck($("#ordPrice2").val());
         var totOrgOrdRentalFees = js.String.naNcheck($("#orgOrdRentalFees1").val()) + js.String.naNcheck($("#orgOrdRentalFees2").val());
         var totOrdRentalFees = js.String.naNcheck($("#ordRentalFees1").val()) + js.String.naNcheck($("#ordRentalFees2").val());

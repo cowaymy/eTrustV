@@ -1123,13 +1123,13 @@
     function fn_checkProductQuota() {
         var exceedQuota = false, msg = "";
 
-        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct1").val() , promoId : $('#ordPromo1').val() }, function(result) {
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct1").val() , promoId : $('#ordPromo1').val()}, function(result) {
             if(result != null) {
                 exceedQuota = true;
             }
         });
 
-        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct2").val() , promoId : $('#ordPromo2').val() }, function(result) {
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct2").val() , promoId : $('#ordPromo2').val()}, function(result) {
             if(result != null) {
                 exceedQuota = true;
             }
@@ -1566,10 +1566,10 @@
                             return false;
                         } else if(result.opCnt > 0) {
                             // Own Purchase
-                            if(result.flg12Month == 0) {
+                            /* if(result.flg12Month == 0) {
                                 Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase due member join less than 12 months.");
                                 return false;
-                            }
+                            } */
                             if(result.rcPrct <= 55) {
                                 Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
                                 return false;
