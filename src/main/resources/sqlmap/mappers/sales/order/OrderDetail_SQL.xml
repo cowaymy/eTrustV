@@ -112,7 +112,6 @@
                            , V8.REDEEM_YEAR
                            , V8.REDEEM_WARRANTY
                            , V1.ADV_DISC
-                           , V3.RECEIVING_MARKETING_MSG_STATUS
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -935,7 +934,7 @@
                                                         CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)' ELSE 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' END
                                                     ELSE  'Change Account' END
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)'
-                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
+                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' ELSE 'Change Account' END) END CODE_NAME
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
