@@ -1,6 +1,7 @@
 package com.coway.trust.web.eAccounting.staffClaim;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -404,7 +405,18 @@ public class StaffClaimController {
 
 			if(params.get("costCenter") != null && params.get("costCenter") != ""){
 				String[] costCenterList = params.get("costCenter").toString().split(",");
-				params.put("costCentr", costCenterList);
+				List<String> costCenterFinal = new ArrayList<String>();
+				for(int i = 0; i<costCenterList.length;i++){
+					if(!costCenterList[i].equals("")){
+						costCenterFinal.add(costCenterList[i]);
+					}
+				}
+				if(costCenterFinal.size() > 0){
+					params.put("costCentr", costCenterFinal.toArray());
+				}
+				else{
+					params.put("costCentr", null);
+				}
 			}
 			else{
 				params.put("costCentr", null);
