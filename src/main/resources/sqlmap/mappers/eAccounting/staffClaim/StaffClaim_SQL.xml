@@ -915,9 +915,9 @@ AND UPPER(T.MEM_ACC_ID) IN
 		UPPER(#{item})
 	</foreach>
 </if>
-<if test="costCenter != null and costCenter != ''">
+<if test="costCentr != null and costCentr != ''">
 	AND UPPER(T.COST_CENTR) IN
-	<foreach item="item" collection="costCenter" index="index" open="(" separator="," close=")">
+	<foreach item="item" collection="costCentr" index="index" open="(" separator="," close=")">
 		UPPER(#{item})
 	</foreach>
 </if>

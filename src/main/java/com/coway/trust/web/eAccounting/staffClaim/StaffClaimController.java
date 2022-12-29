@@ -266,6 +266,9 @@ public class StaffClaimController {
 
 	@RequestMapping(value = "/approveLinePop.do")
 	public String approveLinePop(@RequestParam Map<String, Object> params,ModelMap model) {
+		//For RequestGroup Staff Claim enhancement, get user's cost center and put into requestGroup param
+		//Task on hold until further request. Start here
+
 		model.put("clmType", params.get("clmType").toString());
 		model.put("memAccId", params.get("memAccId").toString());
 		model.put("clmMonth", params.get("clmMonth").toString());
@@ -399,7 +402,7 @@ public class StaffClaimController {
 
 			if(params.get("costCenter") != null && params.get("costCenter") != ""){
 				String[] costCenterList = params.get("costCenter").toString().split(",");
-				params.put("costCenter", costCenterList);
+				params.put("costCentr", costCenterList);
 			}
 
 			List<EgovMap> excelList = staffClaimService.selectExcelListNew(params);
