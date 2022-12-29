@@ -909,15 +909,15 @@ AND TO_DATE(T.CLM_MONTH,'YYYYMM') BETWEEN TO_DATE(#{clmMonthFrom}, 'MM/YYYY') AN
 AND TO_DATE(TO_CHAR(T.REQST_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{requestDateFrom}, 'DD/MM/YYYY') AND TO_DATE(#{requestDateTo}, 'DD/MM/YYYY')
 ]]>
 </if>
-<if test="costCenter != null and costCenter != ''">
-AND UPPER(T.COST_CENTR) IN
-	<foreach item="item" collection="costCenter" index="index" open="(" separator="," close=")">
-		UPPER(#{item})
-	</foreach>
-</if>
 <if test="staffMemAccId != null and staffMemAccId != ''">
 AND UPPER(T.MEM_ACC_ID) IN
 	<foreach item="item" collection="staffMemAccId" index="index" open="(" separator="," close=")">
+		UPPER(#{item})
+	</foreach>
+</if>
+<if test="costCenter != null and costCenter != ''">
+	AND UPPER(T.COST_CENTR) IN
+	<foreach item="item" collection="costCenter" index="index" open="(" separator="," close=")">
 		UPPER(#{item})
 	</foreach>
 </if>
