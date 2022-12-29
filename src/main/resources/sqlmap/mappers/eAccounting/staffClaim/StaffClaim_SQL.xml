@@ -915,16 +915,16 @@ AND UPPER(T.MEM_ACC_ID) IN
 		UPPER(#{item})
 	</foreach>
 </if>
-<if test="costCentr != null and costCentr != ''">
-	AND UPPER(T.COST_CENTR) IN
-	<foreach item="item" collection="costCentr" index="index" open="(" separator="," close=")">
-		UPPER(#{item})
-	</foreach>
-</if>
 <if test="status != null and status != ''">
 AND T.APPV_PRCSS_STUS_CODE IN
 	<foreach item="item" collection="status" index="index" open="(" separator="," close=")">
 		#{item}
+	</foreach>
+</if>
+<if test="costCentr != null and costCentr != ''">
+	AND UPPER(T.COST_CENTR) IN
+	<foreach item="item" collection="costCentr" index="index" open="(" separator="," close=")">
+		UPPER(#{item})
 	</foreach>
 </if>
 ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT) A
