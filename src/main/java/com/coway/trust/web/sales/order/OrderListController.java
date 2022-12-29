@@ -5,6 +5,7 @@ package com.coway.trust.web.sales.order;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,7 @@ public class OrderListController {
 		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
 		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch
 		String[] arrRentStus = request.getParameterValues("rentStus"); //Rent Status
+		String[] orderIDList=new String[255];
 
 		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
     	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
@@ -153,8 +155,13 @@ public class OrderListController {
 		// 20210310 - LaiKW - Added 2 steps searching by removal of installation sirim/serial search
         if(params.containsKey("sirimNo") || params.containsKey("serialNo")) {
             if(!"".equals(params.get("sirimNo").toString()) || !"".equals(params.get("serialNo").toString())) {
-                int ordID = orderListService.getSirimOrdID(params);
-                params.put("ordId", ordID);
+            	//29-12-2022 - Chou Jia Cheng - edited serial number to be able to view more than one result at a time
+            	List<EgovMap> ordID = orderListService.getSirimOrdID(params);
+            	orderIDList=new String[ordID.size()];
+            	for (int i=0;i<ordID.size();i++){
+            		orderIDList[i]=String.valueOf(ordID.get(i).get("salesOrdId"));
+            	}
+                params.put("ordId", orderIDList);
             }
         }
 
