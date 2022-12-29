@@ -399,10 +399,16 @@ public class StaffClaimController {
 				String[] memAccIdList = params.get("staffMemAccId").toString().split(",");
 				params.put("staffMemAccId", memAccIdList);
 			}
+			else{
+				params.put("staffMemAccId", null);
+			}
 
 			if(params.get("costCenter") != null && params.get("costCenter") != ""){
 				String[] costCenterList = params.get("costCenter").toString().split(",");
 				params.put("costCentr", costCenterList);
+			}
+			else{
+				params.put("costCentr", null);
 			}
 
 			List<EgovMap> excelList = staffClaimService.selectExcelListNew(params);
