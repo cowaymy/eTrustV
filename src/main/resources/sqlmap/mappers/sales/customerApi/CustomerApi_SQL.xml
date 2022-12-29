@@ -473,12 +473,11 @@
   </select>
 
   <select id="selectCustomerTierOrderList" parameterType="Map" resultType="egovMap">
-    <![CDATA[
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
-    SELECT
+       SELECT
             D.STK_DESC prod_name,
             B.SALES_ORD_NO ref_no,
-            to_char(NVL(A.SALES_TOT_SCORE,0)) t_point,
+            CASE WHEN SALES_TIER_STUS = 7082 THEN to_char(NVL(A.SALES_EXP_SCORE,0)) ELSE to_char(NVL(A.SALES_TOT_SCORE,0)) END t_point,
             E.CODE_NAME point_status,
             TO_CHAR(A.SALES_LST_EXPY_DT,'YYYY/MM/DD') point_expiry_dt
         FROM SAL0330D A
@@ -487,8 +486,7 @@
         JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID
         JOIN SYS0013M E ON E.CODE_ID = A.SALES_TIER_STUS
         WHERE A.CUST_ID =  #{custId}
-        AND A.SALES_TOT_SCORE  >  0
-    ]]>
+        AND (A.SALES_TOT_SCORE <![CDATA[ > ]]> 0 OR SALES_EXP_SCORE <![CDATA[ > ]]> 0 )
   </select>
 
   <select id="selectCustomerTierOtherDet" parameterType="Map" resultType="egovMap">
