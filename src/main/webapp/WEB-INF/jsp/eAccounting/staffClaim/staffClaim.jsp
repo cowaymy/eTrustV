@@ -534,7 +534,7 @@ function fn_checkEmpty() {
                 checkResult = false;
                 return checkResult;
             }
-            if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "expDesc"))) {
+            if(FormUtil.isEmpty($("#expDesc").val())) {
                 Common.alert('Please fill in remark');
                 checkResult = false;
                 return checkResult;
