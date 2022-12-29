@@ -390,7 +390,6 @@ public class StaffClaimController {
 
 	 @RequestMapping(value = "/selectExcelListNew.do")
 		public ResponseEntity<List<EgovMap>> selectExcelListNew(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
-			LOGGER.debug("params =====================================>>  " + params);
 
 			String[] status = request.getParameterValues("status");
 			params.put("status", status);
@@ -410,6 +409,7 @@ public class StaffClaimController {
 			else{
 				params.put("costCentr", null);
 			}
+			LOGGER.debug("params =====================================>>  " + params);
 
 			List<EgovMap> excelList = staffClaimService.selectExcelListNew(params);
 
