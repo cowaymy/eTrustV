@@ -407,7 +407,7 @@ public class StaffClaimController {
 				String[] costCenterList = params.get("costCenter").toString().split(",");
 				List<String> costCenterFinal = new ArrayList<String>();
 				for(int i = 0; i<costCenterList.length;i++){
-					if(!costCenterList[i].equals("")){
+					if(!costCenterList[i].trim().equals("")){
 						costCenterFinal.add(costCenterList[i]);
 					}
 				}
