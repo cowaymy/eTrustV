@@ -416,7 +416,11 @@
              AND T.ORD_NO = #{ordNo}
            </if>
            <if test='ordId != null and ordId != ""'>
-             AND T.ORD_ID = #{ordId}
+           /*29-12-2022 - Chou Jia Cheng - edited serial number to be able to view more than one result at a time*/
+             AND T.ORD_ID IN
+             <foreach item="item" collection="ordId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
            </if>
 
            <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
@@ -1681,7 +1685,11 @@
              AND T.ORD_NO = #{ordNo}
            </if>
            <if test='ordId != null and ordId != ""'>
-             AND T.ORD_ID = #{ordId}
+           /*29-12-2022 - Chou Jia Cheng - edited serial number to be able to view more than one result at a time*/
+             AND T.ORD_ID IN
+             <foreach item="item" collection="ordId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
            </if>
            <if test='arrAppType != null and arrAppType != ""'>
              AND T.APP_TYPE_ID IN
@@ -1744,7 +1752,7 @@
     ORDER BY T.ORD_NO ASC
   </select>
 
-  <select id="getSirimOrdID" parameterType="Map" resultType="int">
+  <select id="getSirimOrdID" parameterType="Map" resultType="egovMap">
       SELECT IE.SALES_ORD_ID
       FROM SAL0047D IR
       LEFT OUTER JOIN SAL0046D IE
