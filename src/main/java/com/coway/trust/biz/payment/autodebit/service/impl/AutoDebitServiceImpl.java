@@ -401,105 +401,113 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
   @Override
   public void sendSms(Map<String, Object> params) {
-	String baseUrl = params.get("baseUrl").toString();
-	String padId =  params.get("padId").toString();
-	String padNo =  params.get("padNo").toString();
-	String combinationKey = padId + "&" + padNo;
-	String encryptedString = "";
+    if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
+    	String baseUrl = params.get("baseUrl").toString();
+    	String padId =  params.get("padId").toString();
+    	String padNo =  params.get("padNo").toString();
+    	String combinationKey = padId + "&" + padNo;
+    	String encryptedString = "";
 
-	//creating encryption string for url
-	try {
-		encryptedString = encryptionDecryptionService.encrypt(combinationKey,"autodebit");
-		LOGGER.debug("encryptedString: =====================>> " + encryptedString);
+    	//creating encryption string for url
+    	try {
+    		encryptedString = encryptionDecryptionService.encrypt(combinationKey,"autodebit");
+    		LOGGER.debug("encryptedString: =====================>> " + encryptedString);
 
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		LOGGER.debug("encryptedString: =====================>> " + e.toString());
-		e.printStackTrace();
-	}
-	params.put("destinationLink", baseUrl + "/payment/mobileautodebit/autoDebitAuthorizationPublicForm.do?key=" + encryptedString);
+    	} catch (Exception e) {
+    		// TODO Auto-generated catch block
+    		LOGGER.debug("encryptedString: =====================>> " + e.toString());
+    		e.printStackTrace();
+    	}
+    	params.put("destinationLink", baseUrl + "/payment/mobileautodebit/autoDebitAuthorizationPublicForm.do?key=" + encryptedString);
 
-	//get tinyUrl link
-	try{
-		Map<String,Object> returnParams = new HashMap<String, Object>();
-		String output1 = "";
+    	//get tinyUrl link
+    	try{
+    		Map<String,Object> returnParams = new HashMap<String, Object>();
+    		String output1 = "";
 
-		URL url = new URL(tinyUrlApi + "/create");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.disconnect();
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Authorization", "Bearer " + tinyUrlToken);
-        conn.connect();
+    		URL url = new URL(tinyUrlApi + "/create");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.disconnect();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "Bearer " + tinyUrlToken);
+            conn.connect();
 
-        DataOutputStream out = new DataOutputStream(conn.getOutputStream());
-        String jsonString = "{\"url\":\"" + params.get("destinationLink") + "\",\"domain\": \"" + tinyUrlSubDomain + "\"}";
-        out.write(jsonString.getBytes());
-        out.flush();
-        out.close();
+            DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+            String jsonString = "{\"url\":\"" + params.get("destinationLink") + "\",\"domain\": \"" + tinyUrlSubDomain + "\"}";
+            out.write(jsonString.getBytes());
+            out.flush();
+            out.close();
 
-        InputStream inputStream;
-        if (conn.getResponseCode() == 200) {
-            inputStream = conn.getInputStream();
-            returnParams.put("status", AppConstants.SUCCESS);
-            returnParams.put("msg", "");
-        } else {
-            inputStream = conn.getErrorStream();
-            returnParams.put("status", AppConstants.FAIL);
-        }
+            InputStream inputStream;
+            if (conn.getResponseCode() == 200) {
+                inputStream = conn.getInputStream();
+                returnParams.put("status", AppConstants.SUCCESS);
+                returnParams.put("msg", "");
+            } else {
+                inputStream = conn.getErrorStream();
+                returnParams.put("status", AppConstants.FAIL);
+            }
 
-        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-        	BufferedReader br = new BufferedReader(new InputStreamReader(
-	                (conn.getInputStream())));
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+            	BufferedReader br = new BufferedReader(new InputStreamReader(
+    	                (conn.getInputStream())));
 
-        	String output = "";
-	        LOGGER.debug("Output from Server .... \n");
-	        while ((output = br.readLine()) != null) {
-	        	output1 = output;
-	        	LOGGER.debug(output);
-	        	returnParams.put("msg", output);
-	        }
+            	String output = "";
+    	        LOGGER.debug("Output from Server .... \n");
+    	        while ((output = br.readLine()) != null) {
+    	        	output1 = output;
+    	        	LOGGER.debug(output);
+    	        	returnParams.put("msg", output);
+    	        }
 
-	        JSONObject obj = new JSONObject(output1);
-        	String tinyUrl = obj.getJSONObject("data").getString("tiny_url");
-        	params.put("tinyUrl", tinyUrl);
-        }
+    	        JSONObject obj = new JSONObject(output1);
+            	String tinyUrl = obj.getJSONObject("data").getString("tiny_url");
+            	params.put("tinyUrl", tinyUrl);
+            }
 
-		conn.disconnect();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		LOGGER.debug("encryptedString error: =====================>> " + e.toString());
-		e.printStackTrace();
-	} finally {
-		//Send Message
-	    EgovMap custCardBankIssuer = autoDebitMapper.selectCustCardBankInformation(params);
-	    String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
-	    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
-	    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
-	    params.put("cardEnding", cardEnding);
-	    int userId = autoDebitMapper.getUserID(params.get("createdBy").toString());
-	    SmsVO sms = new SmsVO(userId, 975);
-	    String smsTemplate = autoDebitMapper.getSmsTemplate(params);
-	    String smsNo = "";
+    		conn.disconnect();
+    	} catch (Exception e) {
+    		// TODO Auto-generated catch block
+    		LOGGER.debug("encryptedString error: =====================>> " + e.toString());
+    		e.printStackTrace();
+    	} finally {
+    		//Send Message
+    	    EgovMap custCardBankIssuer = autoDebitMapper.selectCustCardBankInformation(params);
+    	    String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
+    	    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
+    	    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
+    	    params.put("cardEnding", cardEnding);
+    	    int userId = autoDebitMapper.getUserID(params.get("createdBy").toString());
+    	    SmsVO sms = new SmsVO(userId, 975);
+    	    String smsTemplate = autoDebitMapper.getSmsTemplate(params);
+    	    String smsNo = "";
 
-	    params.put("smsTemplate", smsTemplate);
+    	    params.put("smsTemplate", smsTemplate);
 
-	    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
-	      smsNo = CommonUtils.nvl(params.get("sms1"));
-	    } else if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
-	      smsNo = CommonUtils.nvl(params.get("sms2"));
-	    }
+    	    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
+    	        smsNo = CommonUtils.nvl(params.get("sms1"));
+    	    }
 
-	    if (!"".equals(CommonUtils.nvl(smsNo))) {
-	      sms.setMessage(CommonUtils.nvl(smsTemplate));
-	      sms.setMobiles(CommonUtils.nvl(smsNo));
-	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
-	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
-	      SmsResult smsResult = adaptorService.sendSMS(sms);
-	      LOGGER.debug(" smsResult : {}", smsResult.toString());
-	    }
-	}
+            if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
+                if (!"".equals(CommonUtils.nvl(smsNo))) {
+                	smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
+                } else {
+                	smsNo = CommonUtils.nvl(params.get("sms2"));
+                }
+            }
+
+    	    if (!"".equals(CommonUtils.nvl(smsNo))) {
+    	      sms.setMessage(CommonUtils.nvl(smsTemplate));
+    	      sms.setMobiles(CommonUtils.nvl(smsNo));
+    	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
+    	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
+    	      SmsResult smsResult = adaptorService.sendSMS(sms);
+    	      LOGGER.debug(" smsResult : {}", smsResult.toString());
+    	    }
+    	}
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -540,7 +548,9 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
     LOGGER.debug("auto debit result param: {}", params);
     try {
-		this.view(null, null, params); //Included sending email
+    	if(emailNo.size() > 0){
+    		this.view(null, null, params); //Included sending email
+    	}
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 	      LOGGER.debug(" autodebit email result : {}", e.toString());
