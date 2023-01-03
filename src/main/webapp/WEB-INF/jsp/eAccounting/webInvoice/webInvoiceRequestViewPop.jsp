@@ -718,7 +718,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <td colspan="3" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
 </tr>
 <tr>
-    <th scope="row">Reject</th>
+    <th scope="row">Remarks</th>
     <td colspan="3">${rejctResn}</td>
 </tr>
 <tr id="finApprAct">

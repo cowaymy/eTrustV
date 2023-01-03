@@ -217,13 +217,22 @@ public class WebInvoiceController {
     String clmType = params.get("clmType").toString();
 
     List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
+    List<String>rejectReasonList = new ArrayList<String>();
     for (int i = 0; i < appvLineInfo.size(); i++) {
       EgovMap info = appvLineInfo.get(i);
-      if ("J".equals(info.get("appvStus"))) {
-        String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
-        model.addAttribute("rejctResn", rejctResn);
+//      if ("J".equals(info.get("appvStus"))) {
+      String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
+
+      if(rejctResn == null || rejctResn.isEmpty())
+      {
+    	  rejectReasonList.add("(empty)");
       }
+      else{
+    	  rejectReasonList.add(rejctResn);
+      }
+//      }
     }
+    model.addAttribute("rejctResn", String.join("&gt", rejectReasonList));
     List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
     // TODO appvPrcssStus 생성

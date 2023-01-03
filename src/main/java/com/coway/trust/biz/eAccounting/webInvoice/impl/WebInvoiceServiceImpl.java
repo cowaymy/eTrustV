@@ -335,6 +335,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
+		String rejctResn = (String) params.get("rejctResn");
+
 		List<Map<String, Object>> emailDetailList = new ArrayList<Map<String,Object>>();
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
 			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
@@ -345,6 +347,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
 			invoAppvInfo.put("appvPrcssStus", "P");
 			invoAppvInfo.put("appvStus", "A");
+			invoAppvInfo.put("rejctResn", rejctResn);
 			invoAppvInfo.put("userId", params.get("userId"));
 			LOGGER.debug("now invoAppvInfo =====================================>>  " + invoAppvInfo);
 			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
@@ -353,6 +356,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			if(appvLineCnt > appvLineSeq) {
 				invoAppvInfo.put("appvStus", "R");
 				invoAppvInfo.put("appvLineSeq", appvLineSeq + 1);
+				invoAppvInfo.put("rejctResn", "");
 				LOGGER.debug("next invoAppvInfo =====================================>>  " + invoAppvInfo);
 				webInvoiceMapper.updateAppvLine(invoAppvInfo);
 
