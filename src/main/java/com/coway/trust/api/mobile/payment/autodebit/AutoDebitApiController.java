@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.files.FileDto;
@@ -110,16 +112,21 @@ public class AutoDebitApiController {
 
 	@ApiOperation(value = "autoDebitSubmissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
-	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm) throws Exception {
+	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm,HttpServletRequest request) throws Exception {
+		String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+		        .replacePath(null)
+		        .build()
+		        .toUriString();
         Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
         AutoDebitApiDto result = new AutoDebitApiDto();
         Map<String, Object> resultparams = new HashMap();
         resultparams = autoDebitService.autoDebitMobileSubmissionSave(params);
         int insertResult = Integer.parseInt(resultparams.get("result").toString());
         if(insertResult > 0){
+        	resultparams.put("baseUrl", baseUrl);
             result.setResponseCode(1);
 			autoDebitService.sendEmail(resultparams);
-			//autoDebitService.sendSms(resultparams);
+			autoDebitService.sendSms(resultparams);
 		 }
         else{
             result.setResponseCode(0);

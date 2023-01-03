@@ -8,7 +8,13 @@ import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +44,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.payment.autodebit.AutoDebitApiDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.EncryptionDecryptionService;
 import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
@@ -58,6 +66,7 @@ import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
 import com.coway.trust.web.common.ReportController;
 import com.coway.trust.web.common.visualcut.ReportBatchController;
+import com.coway.trust.web.login.SsoLoginApiRespForm;
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
 import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
@@ -107,11 +116,23 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   @Autowired
   private LoginMapper loginMapper;
 
+  @Resource(name = "encryptionDecryptionService")
+  private EncryptionDecryptionService encryptionDecryptionService;
+
   @Resource(name = "commonMapper")
   private CommonMapper commonMapper;
 
   @Resource(name = "autoDebitMapper")
   private AutoDebitMapper autoDebitMapper;
+
+	@Value("${tiny.api.url}")
+	private String tinyUrlApi;
+
+	@Value("${tiny.api.token}")
+	private String tinyUrlToken;
+
+	@Value("${tiny.api.sub.domain}")
+	private String tinyUrlSubDomain;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AutoDebitServiceImpl.class);
 
@@ -261,6 +282,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 		params.put("ddSubmitDt","01/01/1900");
 		params.put("ddStartDt","01/01/1900");
 		params.put("ddRejctDt","01/01/1900");
+		//Mode ID is either Credit Card/Direct Debit (debit card is a form of credit card, direct debit is bank account)
 		params.put("modeId",131);
 		params.put("custAccId",0);
 		params.put("editTypeId",0);
@@ -379,32 +401,105 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
   @Override
   public void sendSms(Map<String, Object> params) {
-    EgovMap custCardBankIssuer = autoDebitMapper.selectCustCardBankInformation(params);
-    String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
-    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
-    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
-    params.put("cardEnding", cardEnding);
+	String baseUrl = params.get("baseUrl").toString();
+	String padId =  params.get("padId").toString();
+	String padNo =  params.get("padNo").toString();
+	String combinationKey = padId + "&" + padNo;
+	String encryptedString = "";
 
-    SmsVO sms = new SmsVO(Integer.parseInt(params.get("createdBy").toString()), 975);
-    String smsTemplate = autoDebitMapper.getSmsTemplate(params);
-    String smsNo = "";
+	//creating encryption string for url
+	try {
+		encryptedString = encryptionDecryptionService.encrypt(combinationKey,"autodebit");
+		LOGGER.debug("encryptedString: =====================>> " + encryptedString);
 
-    params.put("smsTemplate", smsTemplate);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		LOGGER.debug("encryptedString: =====================>> " + e.toString());
+		e.printStackTrace();
+	}
+	params.put("destinationLink", baseUrl + "/payment/mobileautodebit/autoDebitAuthorizationPublicForm.do?key=" + encryptedString);
 
-    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
-      smsNo = CommonUtils.nvl(params.get("sms1"));
-    } else if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
-      smsNo = CommonUtils.nvl(params.get("sms2"));
-    }
+	//get tinyUrl link
+	try{
+		Map<String,Object> returnParams = new HashMap<String, Object>();
+		String output1 = "";
 
-    if (!"".equals(CommonUtils.nvl(smsNo))) {
-      sms.setMessage(CommonUtils.nvl(smsTemplate));
-      sms.setMobiles(CommonUtils.nvl(smsNo));
-      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
-      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
-      SmsResult smsResult = adaptorService.sendSMS(sms);
-      LOGGER.debug(" smsResult : {}", smsResult.toString());
-    }
+		URL url = new URL(tinyUrlApi + "/create");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.disconnect();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Authorization", "Bearer " + tinyUrlToken);
+        conn.connect();
+
+        DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+        String jsonString = "{\"url\":\"" + params.get("destinationLink") + "\",\"domain\": \"" + tinyUrlSubDomain + "\"}";
+        out.write(jsonString.getBytes());
+        out.flush();
+        out.close();
+
+        InputStream inputStream;
+        if (conn.getResponseCode() == 200) {
+            inputStream = conn.getInputStream();
+            returnParams.put("status", AppConstants.SUCCESS);
+            returnParams.put("msg", "");
+        } else {
+            inputStream = conn.getErrorStream();
+            returnParams.put("status", AppConstants.FAIL);
+        }
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+        	BufferedReader br = new BufferedReader(new InputStreamReader(
+	                (conn.getInputStream())));
+
+        	String output = "";
+	        LOGGER.debug("Output from Server .... \n");
+	        while ((output = br.readLine()) != null) {
+	        	output1 = output;
+	        	LOGGER.debug(output);
+	        	returnParams.put("msg", output);
+	        }
+
+	        JSONObject obj = new JSONObject(output1);
+        	String tinyUrl = obj.getJSONObject("data").getString("tiny_url");
+        	params.put("tinyUrl", tinyUrl);
+        }
+
+		conn.disconnect();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		LOGGER.debug("encryptedString error: =====================>> " + e.toString());
+		e.printStackTrace();
+	} finally {
+		//Send Message
+	    EgovMap custCardBankIssuer = autoDebitMapper.selectCustCardBankInformation(params);
+	    String custCardNo = custCardBankIssuer.get("custOriCrcNo").toString();
+	    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
+	    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
+	    params.put("cardEnding", cardEnding);
+
+	    SmsVO sms = new SmsVO(Integer.parseInt(params.get("createdBy").toString()), 975);
+	    String smsTemplate = autoDebitMapper.getSmsTemplate(params);
+	    String smsNo = "";
+
+	    params.put("smsTemplate", smsTemplate);
+
+	    if (!"".equals(CommonUtils.nvl(params.get("sms1")))) {
+	      smsNo = CommonUtils.nvl(params.get("sms1"));
+	    } else if (!"".equals(CommonUtils.nvl(params.get("sms2")))) {
+	      smsNo = CommonUtils.nvl(params.get("sms2"));
+	    }
+
+	    if (!"".equals(CommonUtils.nvl(smsNo))) {
+	      sms.setMessage(CommonUtils.nvl(smsTemplate));
+	      sms.setMobiles(CommonUtils.nvl(smsNo));
+	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
+	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
+	      SmsResult smsResult = adaptorService.sendSMS(sms);
+	      LOGGER.debug(" smsResult : {}", smsResult.toString());
+	    }
+	}
   }
 
   @SuppressWarnings("unchecked")
