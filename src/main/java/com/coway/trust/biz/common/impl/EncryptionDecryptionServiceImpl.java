@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -36,7 +38,8 @@ public class EncryptionDecryptionServiceImpl implements EncryptionDecryptionServ
 	            prepareSecreteKey(secret);
 	            Cipher cipher = Cipher.getInstance(ALGORITHM);
 	            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-	            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+	            //DO url encoder
+	            return URLEncoder.encode(Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8"))), StandardCharsets.UTF_8.toString());
 	        } catch (Exception e) {
 				LOGGER.debug("error: =====================>> " + e.toString());
 	        }
@@ -49,7 +52,8 @@ public class EncryptionDecryptionServiceImpl implements EncryptionDecryptionServ
 	            prepareSecreteKey(secret);
 	            Cipher cipher = Cipher.getInstance(ALGORITHM);
 	            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-	            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+
+	            return new String(cipher.doFinal(Base64.getDecoder().decode(URLDecoder.decode(strToDecrypt, StandardCharsets.UTF_8.toString()))));
 	        } catch (Exception e) {
 	            System.out.println("Error while decrypting: " + e.toString());
 	        }
