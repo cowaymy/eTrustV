@@ -15,7 +15,7 @@
             FROM FCM0038D f0038d
             INNER JOIN FCM0016M f0016m
             ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
-            WHERE TO_CHAR(f0038d.START_DATE, 'YYYY') <![CDATA[ = ]]> TO_CHAR(SYSDATE, 'YYYY')
+            AND TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
             AND f0038d.STUS_CODE_ID = 1
         ) B
             ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
@@ -37,7 +37,7 @@
             INNER JOIN FCM0016M f0016m
             ON f0016m.CRDIT_CARD_SEQ = f0038d.CREDIT_CARD_SEQ
             WHERE 1=1
-            AND TO_CHAR(f0038d.START_DATE, 'YYYY') <![CDATA[ = ]]> TO_CHAR(SYSDATE, 'YYYY')
+            AND TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
             AND f0038d.STUS_CODE_ID = 1
         ) B
             ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
@@ -1137,5 +1137,43 @@ WHERE A.CRDIT_CARD_NO IN (
 )
 AND C.APPV_PRCSS_STUS = 'A'
 AND A.CRDIT_CARD_SEQ = #{crcId}
+</select>
+
+<select id="checkExistAdjNo" parameterType="String" resultType="int">
+    SELECT COUNT(*) AS ADJ_CNT FROM FCM0034D WHERE CRDIT_CARD_ADJ_NO = #{adjNo}
+</select>
+
+<insert id="insertApp_FCM34D_Approval_Line" parameterType="Map">
+    INSERT INTO FCM0034D (
+        CRDIT_CARD_ADJ_NO,
+        REQST_DT,
+        REQST_USER_ID,
+        APPV_PRCSS_USER_ID,
+        APPV_LINE_SEQ,
+        APPV_PRCSS_STUS,
+        APPV_PRCSS_DT,
+        CRT_DT,
+        CRT_USER_ID
+    ) VALUES (
+        #{docNo},
+        SYSDATE,
+        #{userId},
+        #{apprUserId},
+        #{approveNo},
+        'R',
+        SYSDATE,
+        SYSDATE,
+        #{userId}
+    )
+</insert>
+
+<update id="updateApp_FCM33D_Approval_Line" parameterType="Map">
+	UPDATE FCM0033D
+	SET APPV_LINE_CNT = #{appvLineCnt},APPV_LINE_PRCSS_CNT=#{appvLinePrcssCnt},CURR_APPV_PRCSS_STUS=#{currAppvPrcssStus},UPD_USER_ID = #{userId}, UPD_DT = SYSDATE
+	WHERE CRDIT_CARD_ADJ_NO = #{docNo}
+</update>
+
+<select id="selectUserIdWithHrCode" parameterType="Map" resultType="int">
+	SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{memCode}
 </select>
 </mapper>
