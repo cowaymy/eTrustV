@@ -1122,7 +1122,25 @@
             ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = E.CODE
         LEFT JOIN SYS0004M F
             ON C.BANK_CODE = F.BANK_ID
-        LEFT JOIN SYS0070M G
+        LEFT JOIN (SELECT * FROM   (SELECT ROW_NUMBER ()  OVER (
+                                                         PARTITION BY F1.ATCH_FILE_GRP_ID
+                                                         ORDER BY F1.ATCH_FILE_GRP_ID,
+                                                       F2.ATCH_FILE_ID DESC) AS
+                                                     RNUM,
+                                                     F1.ATCH_FILE_GRP_ID,
+                                                     F2.ATCH_FILE_ID,
+                                                     F2.ATCH_FILE_NAME,
+                                                     F2.FILE_EXTSN,
+                                                     Count (F1.ATCH_FILE_ID)
+                                                       OVER (
+                                                         PARTITION BY F1.ATCH_FILE_GRP_ID)
+                                                     FILE_CNT
+                                              FROM   SYS0070M F1
+                                                     LEFT JOIN SYS0071D F2
+                                                            ON F1.ATCH_FILE_ID =
+                                                               F2.ATCH_FILE_ID
+                                                               ) F
+                                      WHERE  F.RNUM = 1)  G
             ON C.FILE_ATCH_GRP_ID = G.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D H
             ON G.ATCH_FILE_ID = H.ATCH_FILE_ID
