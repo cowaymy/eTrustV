@@ -478,8 +478,8 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	    String cardEnding = custCardNo.substring(custCardNo.length() - 4);
 	    params.put("bankIssuer", custCardBankIssuer.get("bankIssuer"));
 	    params.put("cardEnding", cardEnding);
-
-	    SmsVO sms = new SmsVO(Integer.parseInt(params.get("createdBy").toString()), 975);
+	    int userId = autoDebitMapper.getUserID(params.get("createdBy").toString());
+	    SmsVO sms = new SmsVO(userId, 975);
 	    String smsTemplate = autoDebitMapper.getSmsTemplate(params);
 	    String smsNo = "";
 
