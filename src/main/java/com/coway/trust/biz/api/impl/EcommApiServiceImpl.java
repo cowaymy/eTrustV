@@ -182,10 +182,39 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
               ordInfo.put("srvPacId",0);
             }*/
 
-            String prdCat = reqPrm.get("prodCat").toString();
+            //20230105: Celeste comment to use stockID to find product category
+            /*String prdCat = reqPrm.get("prodCat").toString();
             if((prdCat != null && (prdCat.equals("Mattress"))) || prdCat.equals("Frame"))
             {
             	custAdd.put("isHomecare", "Y");
+            }*/
+
+            String prodId = reqPrm.get("product").toString();
+            String hcFlag = null;
+            List<EgovMap> hcProdList = ecommApiMapper.selectHCProdId(ordInfo);
+            List<String> hcProdId = new ArrayList<String>();
+
+            Map hm = null;
+
+			for(int i=0; i<hcProdList.size(); i++)
+			{
+				Map<String, Object> hcProdMap = (Map<String, Object>) hcProdList.get(i);
+				hcProdId.add(hcProdMap.get("stkId").toString());
+			}
+
+			 LOGGER.debug("hcProdList =====================================>>  " + hcProdList);
+			 LOGGER.debug("hcProdId =====================================>>  " + hcProdId);
+
+//            for(Object map : hcProdId)
+//            {
+//            	hm = (HashMap<String, Object>) map;
+//            	hcProdId.add(hm.get("stkId").toString());
+//            }
+
+            if(hcProdId.contains(prodId))
+            {
+            	custAdd.put("isHomecare", "Y");
+            	hcFlag = "Y";
             }
 
             EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
@@ -307,7 +336,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 			int ecommOrdId = salesOrderMVO.getEcommOrdId();
             int cntExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
 
-            if((prdCat != null && (prdCat.equals("Mattress"))) || prdCat.equals("Frame"))
+            if(hcFlag != null && hcFlag.equals("Y"))
     		{
                 HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
                 //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
@@ -317,12 +346,13 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
                 SalesOrderDVO salesOrderDVO2 = new SalesOrderDVO(); //FRAME
                 AccClaimAdtVO accClaimAdtVO1 = new AccClaimAdtVO(); //MATTRESS
                 AccClaimAdtVO accClaimAdtVO2 = new AccClaimAdtVO(); //FRAME
-                if(stkCat.equals("5706"))
+//                if(stkCat.equals("5706")) // MATTRESS  // 20230103: Celeste : not to check solely 5706 but the appTypeId instead
+            	if(!ordInfo.get("appTypeId").toString().equals("5764")) // NON-AUX
                 {
                 	salesOrderDVO1 = orderVO.getSalesOrderDVO();
                 	accClaimAdtVO1 = orderVO.getAccClaimAdtVO();
                 }
-                if(stkCat.equals("5707"))
+            	else // AUX
                 {
                 	salesOrderDVO2 = orderVO.getSalesOrderDVO();
                 	accClaimAdtVO2 = orderVO.getAccClaimAdtVO();

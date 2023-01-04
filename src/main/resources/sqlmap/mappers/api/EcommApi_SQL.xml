@@ -209,4 +209,12 @@
 	  AND BNDL_ID = #{bndlId}
 </select>
 
+<select id="selectHCProdId" parameterType="Map" resultType="egovMap">
+       SELECT STK_ID
+       FROM SYS0026M
+       WHERE
+       STK_CTGRY_ID IN (
+               SELECT CODE_ID FROM SYS0013M WHERE CODE IN (
+                       SELECT CODE FROM SYS0094M WHERE IND = 'HOMECARE'))
+</select>
 </mapper>

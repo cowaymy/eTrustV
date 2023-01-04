@@ -1,6 +1,8 @@
 package com.coway.trust.biz.api.impl;
 
 
+import java.util.List;
+
 /**************************************
  * Author                  Date                    Remark
  * Chew Kah Kit        2020/12/16           API for Common
@@ -31,4 +33,5 @@ public interface EcommApiMapper {
 
   int checkDuplicateOrder(Map<String, Object> params);
 
+  List<EgovMap> selectHCProdId(Map<String, Object> params);
 }
