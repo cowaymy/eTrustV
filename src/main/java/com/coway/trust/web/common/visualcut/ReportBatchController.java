@@ -2690,6 +2690,24 @@ public void dataMartReportScheduler() {
 	dataMartReport(null);
 }
 
+@RequestMapping(value = "/rentalAgreementRaw.do")
+//@Scheduled(cron = "0 0 5 * * *")//Daily (6:00am)
+public void rentalAgreementRaw() {
+  LOGGER.info("[START] rentalAgreementRaw...");
+  Map<String, Object> params = new HashMap<>();
+  params.put(REPORT_FILE_NAME, "/sales/RentalAgrRaw.rpt");// visualcut
+                                                                                // rpt
+                                                                                // file
+                                                                                // name.
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("v_WhereSQL","");
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "Legal" + File.separator + "RentalAgreementRaw_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] rentalAgreementRaw...");
+}
+
 @RequestMapping(value = "/DataMartReport.do")
 public void dataMartReport(HttpServletRequest request) {
   LOGGER.info("[START] DataMartReport...");
