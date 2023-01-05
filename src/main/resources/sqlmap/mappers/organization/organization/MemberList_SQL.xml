@@ -5542,7 +5542,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            SYS0047M A
            LEFT JOIN ORG0001D B
                ON A.USER_NAME = B.MEM_CODE
-           LEFT JOIN ORG0005D C
+           LEFT JOIN ORG1001V C
                ON B.MEM_ID = C.MEM_ID
        WHERE
            A.USER_ID = #{userId}
