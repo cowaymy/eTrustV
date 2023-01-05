@@ -66,8 +66,8 @@
                                <if test="deptCode != null and deptCode != ''">
                                    AND V.DEPT_CODE = #{deptCode}
                                </if>
-                               <if test="salemanCode != null and salemanCode != ''">
-                                   AND V.MEM_CODE = #{salemanCode}
+                               <if test="salesmanCode != null and salesmanCode != ''">
+                                   AND V.MEM_CODE = #{salesmanCode}
                                </if>
                                <if test="memLevel == 4  and memType == 7 ">
                                    AND V.MEM_CODE =  #{memCode}
@@ -128,8 +128,8 @@
                                <if test="deptCode != null and deptCode != ''">
                                    AND V.DEPT_CODE = #{deptCode}
                                </if>
-                               <if test="salemanCode != null and salemanCode != ''">
-                                   AND V.MEM_CODE = #{salemanCode}
+                               <if test="salesmanCode != null and salesmanCode != ''">
+                                   AND V.MEM_CODE = #{salesmanCode}
                                </if>
                                <if test="memLevel == 4  and memType == 7 ">
                                    AND V.MEM_CODE =  #{memCode}
