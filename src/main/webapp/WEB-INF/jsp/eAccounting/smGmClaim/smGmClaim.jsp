@@ -200,8 +200,8 @@ function fn_setEvent() {
                 console.log(gstRgistNo);
                 /*if(gstRgistNo.length != 12) {
                     Common.alert('Please insert 12 digits GST Registration No');
-                    $("#gstRgistNo").val("");*/
-                }
+                    $("#gstRgistNo").val("");
+                }*/
             }
         }
    });
