@@ -436,7 +436,7 @@ console.log("length > 0");
                                         fn_attachmentUpdate("");
                                     }
 
-                                    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                                    //Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
                                 }
                             });
                         }
@@ -465,12 +465,14 @@ console.log("length > 0");
                                 fn_attachmentUpdate("");
                             }
 
-                            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                            //Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
                         }
                     });
                 }
             });
         }
+        //2022-01-05 Chou Jia Cheng #23019127 - fix duplicate approvalline
+        Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
     }
 }
 
