@@ -1988,11 +1988,14 @@
        <if test="cmbInstallStatus != '' and cmbInstallStatus != 0">
            AND SM.STUS_CODE_ID = #{cmbInstallStatus}
        </if>
-        <if test="prdStartDt != null and prdEndDt != null and prdStartDt != '' and prdEndDt != '' ">
+       <choose>
+        <when test="prdStartDt != null and prdEndDt != null and prdStartDt != '' and prdEndDt != '' ">
             AND SM.INSTALL_DT BETWEEN TO_DATE(#{prdStartDt}, 'DD/MM/YYYY') AND TO_DATE(#{prdEndDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-        </if>
-
-           AND TO_DATE(SM.INSTALL_DT) >= TO_DATE(ADD_MONTHS(SYSDATE, -12))
+        </when>
+        <otherwise>
+            AND TO_DATE(SM.INSTALL_DT) >= TO_DATE(ADD_MONTHS(SYSDATE, -24))
+        </otherwise>
+        </choose>
 
 
        GROUP BY A.SALES_ORD_ID,
