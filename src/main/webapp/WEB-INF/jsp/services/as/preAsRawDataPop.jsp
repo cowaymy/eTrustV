@@ -73,7 +73,7 @@
     	    whereSql += " AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
       }
 
-      if('{ind}'=="HA"){
+      if('${ind}'=="HA"){
     	  whereSql += " AND B.STK_CTGRY_ID NOT IN (5706,5707) ";
       }
       else{
