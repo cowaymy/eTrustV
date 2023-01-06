@@ -225,14 +225,14 @@ public class WebInvoiceController {
 
       if(rejctResn == null || rejctResn.isEmpty())
       {
-    	  rejectReasonList.add("(empty)");
+    	  rejectReasonList.add("-" + "(empty)");
       }
       else{
-    	  rejectReasonList.add(rejctResn);
+    	  rejectReasonList.add("-" + rejctResn);
       }
 //      }
     }
-    model.addAttribute("rejctResn", String.join("&gt", rejectReasonList));
+    model.addAttribute("rejctResn", String.join("<br/>", rejectReasonList));
     List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
     // TODO appvPrcssStus 생성
