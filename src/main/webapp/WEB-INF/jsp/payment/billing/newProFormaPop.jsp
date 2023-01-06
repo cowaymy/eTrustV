@@ -52,9 +52,9 @@ var columnLayoutBill =[
 var columnLayoutProForma =[
 						{dataField :"salesOrdId",  headerText : "SalesOrdId",      width: 150 ,editable : false, visible : false},
 						{dataField :"salesOrdNo", headerText : "<spring:message code="pay.head.orderNO" />",   width: 150, editable : false },
-						{dataField :"packType", headerText : "<spring:message code="sal.text.typeOfPack" />", width: 150, editable : false },
+						{dataField :"packType", headerText : "Month of Package", width: 150, editable : false },
 						{dataField :"advPeriod", headerText : "Advance Period", width: 150, editable : false },
-						{dataField :"disc", headerText : "Discount", width: 150, editable : false },
+						{dataField :"disc", headerText : "Discount (%)", width: 150, editable : false },
 						{dataField :"packPrice", headerText : "Package Price", width: 150, editable : false },
 						{dataField :"salesmanCode", headerText : "Salesman Code", width: 150, editable : false },
 						{dataField :"finalRentalFee", headerText : "Final Rental Fee", width: 150, editable : false },
