@@ -2217,7 +2217,7 @@ function isDupPOSToFinal(){
 		    			}
 	    		    }
 	    		}else{
-	    			if($("#searchBankAcc").val()){
+	    			if(!$("#searchBankAcc").val()){
 	    				Common.alert("<spring:message code='pay.alert.selectBankAccount'/>");
 	    				return;
 	    			}
