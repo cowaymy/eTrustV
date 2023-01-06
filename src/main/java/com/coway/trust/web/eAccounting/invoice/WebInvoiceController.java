@@ -225,7 +225,6 @@ public class WebInvoiceController {
 
       if(rejctResn == null || rejctResn.isEmpty())
       {
-    	  rejectReasonList.add("-" + "(empty)");
       }
       else{
     	  rejectReasonList.add("-" + rejctResn);
