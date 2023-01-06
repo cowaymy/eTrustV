@@ -128,7 +128,7 @@
         AUIGrid.bind(allowancePlanGridID, "cellDoubleClick", function(event) {
             var colIndex = event.columnIndex;
             crcId = event.item.crcId;
-
+            var year = $("#year").val();
             if(colIndex > 5) {
                 var month = event.dataField.replace("m", "");
                 console.log("cellDoubleClick :: crcId :: " + crcId);

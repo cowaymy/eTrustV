@@ -789,10 +789,7 @@
 		       	ON A.CRDIT_CARD_USER_ID = E.HR_CODE
             WHERE 1=1
                 <![CDATA[
-                AND A.CRC_LIMIT_ADJ_MM >= TO_NUMBER(SUBSTR(#{frAdjPeriod}, 1, 2))
-                AND A.CRC_LIMIT_ADJ_YYYY >= TO_NUMBER(SUBSTR(#{frAdjPeriod}, -4))
-                AND A.CRC_LIMIT_ADJ_MM <= TO_NUMBER(SUBSTR(#{toAdjPeriod}, 1, 2))
-                AND A.CRC_LIMIT_ADJ_YYYY >= TO_NUMBER(SUBSTR(#{toAdjPeriod}, -4))
+                AND TO_DATE(TO_CHAR(A.CRC_LIMIT_ADJ_MM, 'FM09') || '/' || A.CRC_LIMIT_ADJ_YYYY, 'MM/YYYY') BETWEEN TO_DATE(#{frAdjPeriod},'MM/YYYY') AND TO_DATE(#{toAdjPeriod},'MM/YYYY')
                 ]]>
                 <if test="crcId != null and crcId != '' ">
                     AND B.CRDIT_CARD_SEQ IN
