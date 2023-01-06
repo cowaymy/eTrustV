@@ -99,6 +99,9 @@ $(document).ready(function(){
     $("#rbt").attr("style","display:none");
     $("#ORD_NO_RESULT").attr("style","display:none");
 
+    $("#hidActBill").val("Y");
+    $("#hidInsCheck").val("Y");
+
     $("#ORD_NO").keydown(function(key)  {
            if (key.keyCode == 13) {
                fn_doConfirm();
@@ -357,28 +360,9 @@ function fn_loadOrderPO(orderId){
 
         $("#DUR").val(packType);
 
-        var today = new Date();
-        var tYear = today.getFullYear();
-        var tMonth = today.getMonth() + 1;
-
-        if(tMonth < 10){
-        	tMonth = "0" + tMonth;
-        }
-
-        var today = tMonth + "/" + tYear;
-        $("#adStartDt").val(today);
+        $("#hidInsCheck").val("Y");
 
         var adPeriod = packType == "12" ? "1" : "2";
-        var adYear = tYear + parseInt(adPeriod);
-        var adMonth = parseInt(tMonth) - 1;
-
-        if(adMonth < 10){
-        	adMonth = "0" + adMonth;
-        }
-
-        var adDate = adMonth + "/" + adYear;
-        $("#adEndDt").val(adDate);
-
         if($("#hiddenEligible").val() == "Y"){
         	var discountVal = adPeriod == "1" ? "5" : "10";
             $("#discount").val(discountVal);
@@ -386,7 +370,72 @@ function fn_loadOrderPO(orderId){
         	 $("#discount").val("0");
         }
 
+        fn_getDiscPeriod($("#ORD_NO").val());
         fn_getMembershipPackageInfo(packType);
+
+    }
+
+    function fn_getDiscPeriod(ordNo){
+        Common.ajax("GET", "/payment/getDiscPeriod.do", { ordNo : $("#ORD_NO").val()}, function(result) { //ahhh salesordid multiple
+
+            if(result[0] != "" && result[0] != null){
+                var discount = $("#discount").val();
+                var insDiff = 60 - Math.abs(result[0].installment);
+
+               if(discount == '5'){
+                	if( insDiff < '12' ){
+                		Common.alert("This billing group has less than 12 months installment");
+                		$("#hidInsCheck").val("N");
+                	}
+                }else{
+                	if( insDiff < '24' ){
+                        Common.alert("This billing group has less than 24 months installment");
+                        $("#hidInsCheck").val("N");
+                    }
+                }
+
+                console.log("schlDT");
+                console.log(result[0].schdulDt);
+                $("#adStartDt").val(result[0].schdulDt);
+
+                var endMonth = Math.abs($("#adStartDt").val().substring(0,2)) + 11;
+                var endYear = $("#adStartDt").val().substring(3,7);
+
+                console.log("111");
+                console.log(endMonth);
+                console.log(endYear);
+
+                if(endMonth > 12){
+                      endYear = Math.abs(endYear) + 1;
+                      endMonth = Math.abs(endMonth) - 12;
+                }
+
+                if(endMonth < 10 & endMonth  >= 1){
+                    endMonth = "0" + endMonth;
+                }
+
+                console.log("222");
+                console.log(endMonth);
+                console.log(endYear);
+
+                $("#adEndDt").val(endMonth + "/" + endYear);
+
+                var year = $("#adStartDt").val().substring(3,7);
+                var month = $("#adStartDt").val().substring(0,2);
+
+                if(month < 10 & month  >= 1){
+                    month = "0" + month;
+                }
+                if(month < 1){
+                    year = year - 1;
+                    month = 12 - Math.abs(month);
+                }
+            }
+            else{
+                Common.alert("This billing group does not have Active bill");
+                $("#hidActBill").val("N");
+            }
+        });
 
     }
 
@@ -892,6 +941,17 @@ function fn_loadOrderPO(orderId){
 
 	    if (fn_validRequiredField_Save() == false)
 	        return;
+
+	    if( $("#hidActBill").val() == "N"){
+            Common.alert("This billing group does not have Active bill");
+            return;
+        }
+
+        if( $("#hidInsCheck").val() == "N"){
+            Common.alert("This billing group has less than 12 or 24 months installment");
+            return;
+        }
+
 	    if (fn_CheckRentalOrder(billMonth)) {
 	        if (fn_CheckSalesPersonCode()) {
 	            fn_unconfirmSalesPerson();
@@ -1061,6 +1121,11 @@ function fn_loadOrderPO(orderId){
 
         <section class="search_table"><!-- search_table start -->
         <form action="#" method="post"  id='collForm' name ='collForm'>
+        <div style="display: none">
+            <input type="text" name="hidActBill" id="hidActBill"/>
+            <input type="text" name="hidInsCheck" id="hidInsCheck"/>
+         </div>
+
 
         <table class="type1"><!-- table start -->
         <caption>table</caption>

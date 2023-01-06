@@ -285,8 +285,15 @@
                 A.BILLING_STUS,
                 A.SCHDUL_DT
             FROM PAY1002V A
-            JOIN PAY0334D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
-            WHERE B.REF_NO = #{refNo}
+
+             <if test="refNo != null and refNo != ''">
+             JOIN PAY0334D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                WHERE B.REF_NO = #{refNo}
+             </if>
+            <if test="ordNo != null and ordNo != ''">
+                  WHERE A.SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+             </if>
+
             AND A.BILLING_STUS = 'Active'
             ORDER BY A.INSTALLMENT
             )
