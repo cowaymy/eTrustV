@@ -1,7 +1,19 @@
 package com.coway.trust.web.payment.mobileAutoDebit.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +23,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +42,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.businessobjects.report.web.shared.URIUtil;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.EncryptionDecryptionService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.payment.autodebit.service.AutoDebitService;
@@ -64,10 +81,57 @@ public class MobileAutoDebitController {
 	@Resource(name = "autoDebitService")
 	private AutoDebitService autoDebitService;
 
+	@Resource(name = "encryptionDecryptionService")
+	private EncryptionDecryptionService encryptionDecryptionService;
+
 	@RequestMapping(value = "/autoDebitEnrollmentList.do")
 	public String selectCustomerList(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		return "payment/mobileautodebit/autoDebitEnrollmentList";
+	}
+
+	@RequestMapping(value = "/autoDebitAuthorizationPublicForm.do")
+	public String autoDebitAuthorizationPublicForm(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		model.put("key", params.get("key").toString());
+		return "payment/mobileautodebit/autoDebitAuthorizationPublicForm";
+	}
+
+	@RequestMapping(value = "/selectAutoDebitFormData", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectAutoDebitFormData(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws IOException {
+		Map<String, Object> result = new HashMap<String,Object>();
+		String encryptedString = params.get("key").toString().replaceAll(" ", "+");
+		String decryptedString = "";
+		List<String> splitStringArr = new ArrayList<String>();
+		try {
+			decryptedString = encryptionDecryptionService.decrypt(encryptedString,"autodebit");
+
+			LOGGER.debug("decryptedStringPadId: =====================>> " + decryptedString);
+
+			splitStringArr = Arrays.asList(decryptedString.split("&"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			params.put("padId", Integer.parseInt(splitStringArr.get(0)));
+
+			List<EgovMap> autoDebitDetailInfo = autoDebitService.selectAutoDebitDetailInfo(params);
+			EgovMap product = autoDebitService.getProductDescription(params);
+			if(autoDebitDetailInfo.size() > 0){
+				Map<String, Object> signImg = autoDebitService.getAutoDebitSignImg(params);
+				result.put("mobileAutoDebitDetail", autoDebitDetailInfo.get(0));
+				result.put("product", product);
+				params.put("custCrcId", autoDebitDetailInfo.get(0).get("custCrcId"));
+				List<EgovMap> customerCreditCardEnrollInfo = autoDebitService.selectCustomerCreditCardInfo(params);
+
+				if(customerCreditCardEnrollInfo.size() > 0){
+					result.put("customerCreditCardEnrollInfo", customerCreditCardEnrollInfo.get(0));
+				}
+
+				result.put("signImg",signImg.get("SIGN_IMG").toString());
+			}
+		}
+		return ResponseEntity.ok(result);
 	}
 
 	@RequestMapping(value = "/autoDebitAuthorizationFormPop.do")
@@ -170,7 +234,6 @@ public class MobileAutoDebitController {
 
 	}
 
-	//NEED TO CHANGE UPLOAD
 	@RequestMapping(value = "/attachmentAutoDebitFileUpdate.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachmentAutoDebitFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 		LOGGER.debug("params =====================================>>  " + params);

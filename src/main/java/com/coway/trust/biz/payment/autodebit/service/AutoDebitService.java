@@ -40,4 +40,8 @@ public interface AutoDebitService {
 	int insertAttachmentMobileUpload(List<FileVO> list, Map<String, Object> param);
 
 	EgovMap orderNumberSearchMobileCheckActivePadNo(Map<String, Object> params);
+
+	EgovMap getProductDescription(Map<String, Object> params);
+
+	Map<String, Object> getAutoDebitSignImg(Map<String, Object> params);
 }

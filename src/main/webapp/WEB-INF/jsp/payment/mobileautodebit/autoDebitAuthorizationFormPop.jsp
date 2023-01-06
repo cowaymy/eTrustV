@@ -112,7 +112,6 @@ function fileDownload(item){
     $("#reportFileName").val("");
     $("#reportDownFileName").val("");
     $("#viewType").val("");
-	console.log(item);
 
     $("#reportDownFileName").val("AutoDebitAuthorization_"+(new Date().getMonth()+1)+new Date().getFullYear());
 

@@ -177,8 +177,18 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   }
 
   @Override
+  public EgovMap getProductDescription(Map<String, Object> params) {
+    return autoDebitMapper.getProductDescription(params);
+  }
+
+  @Override
   public List<EgovMap> selectRejectReasonCode(Map<String, Object> params) {
     return autoDebitMapper.selectRejectReasonCode(params);
+  }
+
+  @Override
+  public Map<String, Object> getAutoDebitSignImg(Map<String, Object> params) {
+    return autoDebitMapper.getAutoDebitSignImg(params);
   }
 
   @Override

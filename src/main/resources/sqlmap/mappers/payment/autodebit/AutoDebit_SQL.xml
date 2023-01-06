@@ -380,4 +380,24 @@
         FROM SYS0047M
         WHERE USER_NAME = #{userName}
     </select>
+
+    <select id="getProductDescription" parameterType="Map" resultType="egovMap">
+    	SELECT
+		s0026m.STK_DESC
+		FROM PAY0333M p0333m
+		LEFT JOIN SAL0001D s0001d
+		ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
+		LEFT JOIN SAL0002D s0002d
+		ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
+		LEFT JOIN SYS0026M s0026m
+		ON s0026m.STK_ID = s0002d.ITM_STK_ID
+		WHERE p0333m.PAD_ID = #{padId}
+		AND ROWNUM = 1
+    </select>
+
+        <select id="getAutoDebitSignImg" parameterType="Map" resultType="Map">
+    	SELECT utl_raw.cast_to_varchar2(utl_encode.base64_encode(dbms_lob.substr(SIGN_IMG))) AS SIGN_IMG
+    	FROM PAY0333M p0333m
+		WHERE p0333m.PAD_ID = #{padId}
+    </select>
 </mapper>

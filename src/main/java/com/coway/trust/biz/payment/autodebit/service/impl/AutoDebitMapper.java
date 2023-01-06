@@ -33,4 +33,6 @@ public interface AutoDebitMapper {
 	EgovMap orderNumberSearchMobileCheckActivePadNo(Map<String, Object> params);
 	EgovMap getUserOrganization(Map<String, Object> params);
 	int getUserID(String param);
+	EgovMap getProductDescription(Map<String, Object> params);
+	Map<String, Object> getAutoDebitSignImg(Map<String, Object> params);
 }
