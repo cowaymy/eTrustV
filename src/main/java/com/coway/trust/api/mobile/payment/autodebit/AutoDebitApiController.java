@@ -151,13 +151,11 @@ public class AutoDebitApiController {
 		@ApiOperation(value = "getAddress")
 		@RequestMapping(value = "/getAddress", method = RequestMethod.GET)
 		public ResponseEntity<ReturnMessage> getAddress(HttpServletRequest request) throws Exception {
-			String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
-			        .replacePath(null)
-			        .build()
-			        .toUriString();
+			String uri = request.getScheme() + "://" +   // "http" + "://
+		             request.getServerName();  // "myhost"
 			ReturnMessage message = new ReturnMessage();
-			message.setData(baseUrl);
-			message.setMessage(baseUrl);
+			message.setData(uri);
+			message.setMessage(uri);
 			return ResponseEntity.ok(message);
 		}
 }
