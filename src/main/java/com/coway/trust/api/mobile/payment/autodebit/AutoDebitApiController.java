@@ -33,6 +33,7 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.payment.autodebit.service.AutoDebitService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -146,4 +147,17 @@ public class AutoDebitApiController {
 	    FileDto fileDto = FileDto.create(list, fileGroupKey);
 	    return ResponseEntity.ok(fileDto);
 	  }
+
+		@ApiOperation(value = "getAddress")
+		@RequestMapping(value = "/getAddress", method = RequestMethod.GET)
+		public ResponseEntity<ReturnMessage> getAddress(HttpServletRequest request) throws Exception {
+			String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+			        .replacePath(null)
+			        .build()
+			        .toUriString();
+			ReturnMessage message = new ReturnMessage();
+			message.setData(baseUrl);
+			message.setMessage(baseUrl);
+			return ResponseEntity.ok(message);
+		}
 }
