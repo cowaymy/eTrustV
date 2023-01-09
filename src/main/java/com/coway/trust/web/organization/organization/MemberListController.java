@@ -2004,7 +2004,7 @@ public class MemberListController {
         String url = (String) params.get("url");
         String msg = "Dear Sir/Madam, <br /><br />"
                 + "Congratulations, your application has been successful. We are pleased to appoint you as our Health Planner, subject to terms and conditions "
-        		+ "of the Health Planner [Independent Contractor/Services] Agreement (\"HP Agreement\") accessible at "+ url + " <br /><br />"
+        		+ "of the Health Planner [Health Planner Agreement (\"HP Agreement\") accessible at "+ url + " <br /><br />"
                 + "Kindly read, understand and confirm your acceptance of the HP Aggrement within seven (7) days from the date hereof.<br /><br />"
                 + "Thank you."
                 + "<br /><br />" + "Best Regards,<br /><b>Coway (Malaysia) Sdn Bhd</b>"
