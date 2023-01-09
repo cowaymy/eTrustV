@@ -10,11 +10,14 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.services.install.HcOrderCallListService;
 import com.coway.trust.biz.organization.organization.impl.AllocationMapper;
@@ -23,8 +26,11 @@ import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
+import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -32,6 +38,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("hcOrderCallListService")
 public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implements HcOrderCallListService {
+
+	  private static final Logger logger = LoggerFactory.getLogger(InstallationResultListController.class);
 
 	@Resource(name = "orderCallListService")
 	private OrderCallListService orderCallListService;
@@ -50,6 +58,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	  private AdaptorService adaptorService;
 
 	/**
 	 * Save Call Log Result [ENHANCE OLD insertCallResult]
@@ -130,6 +141,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 	public ReturnMessage hcInsertCallSave(Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 	    Map<String, Object> resultValue = new HashMap<String, Object>();
+	    Map<String, Object> smsResultValue = new HashMap<String, Object>();
 	    int noRcd = orderCallListService.chkRcdTms(params);
 
 	    if (noRcd == 1) { // RECORD ABLE TO UPDATE
@@ -148,7 +160,18 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
      							message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + CommonUtils.nvl(resultValue.get("logStat")));
      							message.setCode(AppConstants.FAIL);
      						} else {
-     							message.setMessage("Record created successfully.</br> Installation No : " + CommonUtils.nvl(resultValue.get("installationNo")) + "</br>Seles Order No : " + CommonUtils.nvl(resultValue.get("salesOrdNo")));
+     		                	  String msg = "Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo");
+
+     							 try{
+     		                		  smsResultValue = hcCallLogSendSMS(params, sessionVO);
+     		                	  }catch (Exception e){
+
+     		                	  }
+     		                	  if(smsResultValue.isEmpty()){
+     		                		  msg += "</br> Failed to send SMS to " + params.get("custMobileNo").toString();
+     		                	  }
+
+     		                	message.setMessage(msg);
      							message.setCode(AppConstants.SUCCESS);
      						}
 	     				}
@@ -404,4 +427,52 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 	public List<EgovMap> selectHcDetailList(Map<String, Object> params) throws Exception{
 		return hcAllocationMapper.selectHcDetailList(params);
 	}
+
+	@Override
+	public Map<String, Object> hcCallLogSendSMS(Map<String, Object> params, SessionVO sessionVO) {
+		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+		String smsMessage = "";
+
+        logger.debug("===params=== " + params.toString());
+
+		try{
+		  //SMS for OrderCall Appointment
+		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
+		    		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
+
+		    params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
+
+		       if(params.get("apptypeId").equals("66") || params.get("apptypeId").equals("67") || params.get("apptypeId").equals("68")
+		    		   || params.get("apptypeId").equals("5764"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT/AUX
+		       {
+		    	   if(params.get("callStatus").equals("20") && params.get("feedBackCode").equals("225") //IF CALL LOG STATUS == READY TO INSTALL, IF FEEDBACK CODE == READY TO DO
+		    			   && params.get("custType").equals("Individual") && params.get("chkSMS").equals("on")){ //IF CUST_TYPE = INDIVIDUAL , IF CHECKED SMS CHECKBOX)
+
+		           	       Map<String, Object> smsList = new HashMap<>();
+		                   smsList.put("userId", sessionVO.getUserId());
+		                   smsList.put("smsType", 975);
+		                   smsList.put("smsMessage", smsMessage);
+		                   smsList.put("smsMobileNo", params.get("custMobileNo").toString());
+
+		                   sendSms(smsList);
+		    	   }
+		      }
+		    }catch(Exception e){
+		    	smsResultValue.put("smsLogStat", "3");
+		    }
+
+		smsResultValue.put("smsLogStat", "0");//if success
+		return smsResultValue;
+	}
+
+	 @Override
+	  public void sendSms(Map<String, Object> smsList){
+	    int userId = (int) smsList.get("userId");
+	    SmsVO sms = new SmsVO(userId, 975);
+
+	    sms.setMessage(smsList.get("smsMessage").toString());
+	    sms.setMobiles(smsList.get("smsMobileNo").toString());
+	    //send SMS
+	    SmsResult smsResult = adaptorService.sendSMS(sms);
+	  }
 }

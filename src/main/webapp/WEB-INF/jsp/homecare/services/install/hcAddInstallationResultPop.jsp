@@ -12,6 +12,9 @@ var serialGubun = "1";
         createInstallationViewAUIGrid();
         fn_viewInstallResultSearch();
 
+        $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
+                + " \nInstall Status: Completed");
+
         if (callType == 0) {
     	   $(".red_text").text("<spring:message code='service.msg.InstallationInformation'/>");
     	} else {
@@ -78,9 +81,24 @@ var serialGubun = "1";
         $("#addInstallForm #installStatus").change(function() {
             if ($("#addInstallForm #installStatus").val() == 4) {
                 $("#checkCommission").prop("checked", true);
+                $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
+                		+ " \nInstall Status: Completed");
+
             } else {
                 $("#checkCommission").prop("checked", false);
+                $("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
+                        + " \nInstall Status: Failed");
             }
+        });
+
+        $("#failReasonCode").change(function() {
+        	if ($("#addInstallForm #installStatus").val() != 4) {
+        		var msg = $("#hpMsg").val();
+        		var failReasonText = this.options[this.selectedIndex].text;
+        		var failReasonSlice = failReasonText.slice(7);
+                msg += "\nFailed Reason: " + failReasonSlice;
+                $("#hpMsg").val(msg);
+        	}
         });
 
         $("#installDate").change(function() {
@@ -143,8 +161,19 @@ var serialGubun = "1";
         }
     });
 
+    function onchangeStatus(){
+
+    }
+
+
     function fn_saveInstall() {
 	    var msg = "";
+	    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+	    var chkMobileNo = custMobileNo.substring(0, 2);
+	    if (chkMobileNo == '60'){
+	        custMobileNo = custMobileNo.substring(1);
+	    }
+	    $("#custMobileNo").val(custMobileNo);
 	    if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
 
 	     if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
@@ -179,6 +208,10 @@ var serialGubun = "1";
 	    	  }
 	      }
 
+	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
+	      }
+
 	      if (msg != "") {
 	        Common.alert(msg);
 	        return;
@@ -195,6 +228,10 @@ var serialGubun = "1";
 
 	      if ($("#nextCallDate").val() == '') {
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
+	      }
+
+	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
 	      }
 
 	      if (msg != "") {
@@ -694,35 +731,27 @@ var serialGubun = "1";
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row"><spring:message
-         code='service.title.HP_CodyCode' /></th>
+       <th scope="row"><spring:message code='service.title.HP_CodyCode' /></th>
        <td><span><c:out value="${hpMember.memCode}" /></span></td>
-       <th scope="row"><spring:message
-         code='service.title.HP_CodyName' /></th>
+       <th scope="row"><spring:message code='service.title.HP_CodyName' /></th>
        <td><span><c:out value="${hpMember.name1}" /></span></td>
-       <th scope="row"><spring:message
-         code='service.title.HP_CodyNRIC' /></th>
+       <th scope="row"><spring:message code='service.title.HP_CodyNRIC' /></th>
        <td><span><c:out value="${hpMember.nric}" /></span></td>
       </tr>
       <tr>
-       <th scope="row"><spring:message
-         code='service.title.MobileNo' /></th>
+       <th scope="row"><spring:message code='service.title.MobileNo' /></th>
        <td><span><c:out value="${hpMember.telMobile}" /></span></td>
        <th scope="row"><spring:message code='sales.HouseNo' /></th>
        <td><span><c:out value="${hpMember.telHuse}" /></span></td>
-       <th scope="row"><spring:message
-         code='service.title.OfficeNo' /></th>
+       <th scope="row"><spring:message code='service.title.OfficeNo' /></th>
        <td><span><c:out value="${hpMember.telOffice}" /></span></td>
       </tr>
       <tr>
-       <th scope="row"><spring:message
-         code='service.title.DepartmentCode' /></th>
+       <th scope="row"><spring:message code='service.title.DepartmentCode' /></th>
        <td><span><c:out value="${salseOrder.deptCode}" /></span></td>
-       <th scope="row"><spring:message
-         code='service.title.GroupCode' /></th>
+       <th scope="row"><spring:message code='service.title.GroupCode' /></th>
        <td><span><c:out value="${salseOrder.grpCode}" /></span></td>
-       <th scope="row"><spring:message
-         code='service.title.OrganizationCode' /></th>
+       <th scope="row"><spring:message code='service.title.OrganizationCode' /></th>
        <td><span><c:out value="${salseOrder.orgCode}" /></span></td>
       </tr>
      </tbody>
@@ -829,7 +858,9 @@ var serialGubun = "1";
    <input type="hidden" value="${frameInfo.salesOrdId}" id="hidFrmOrdId" name="hidFrmOrdId" />
    <input type="hidden" value="${frameInfo.salesOrdNo}" id="hidFrmOrdNo" name="hidFrmOrdNo" />
     <input type="hidden" value="" id="failDeptChk" name="failDeptChk" />
-
+    <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
+    <input type="hidden" value="${orderDetail.salesmanInfo.telMobile}" id="hpPhoneNo" name="hpPhoneNo" />
+    <input type="hidden" value="${orderDetail.salesmanInfo.memId}" id="hpMemId" name="hpMemId" />
 
    <table class="type1 mb1m">
     <!-- table start -->
@@ -927,6 +958,14 @@ var serialGubun = "1";
        </td>
      </tr>
      <tr>
+       <th scope="row">Mobile</th>
+       <td>
+         <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
+         <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
+       </td>
+       <th scope="row"></th><td></td>
+     </tr>
+     <tr>
        <td colspan="4">
          <label>
            <input type="checkbox" id="checkCommission" name="checkCommission" /><span><spring:message code='service.btn.AllowCommission' /> ?</span>
@@ -958,22 +997,16 @@ var serialGubun = "1";
     </colgroup>
     <tbody>
      <tr>
-      <td colspan="2"><label><input type="checkbox"
-        id="checkSend" name="checkSend" /><span><spring:message
-          code='service.title.SendSMSToSalesPerson' /></span></label></td>
+      <td colspan="2"><label><input type="checkbox" id="checkSend" name="checkSend" />
+      <span><spring:message code='service.title.SendSMSToSalesPerson' /></span></label></td>
      </tr>
      <tr>
       <th scope="row" rowspan="2"><spring:message code='service.title.Message' /></th>
-         <td><textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
-			Install Status: Completed
-			Order No: ${installResult.salesOrdNo}
-			Name: ${hpMember.name1}
-	       </textarea>
+         <td><textarea cols="20" rows="5" readonly="readonly" class="readonly" id="hpMsg" name="hpMsg"></textarea>
 	     </td>
      </tr>
      <tr>
-      <td><input type="text" title="" placeholder="" class="w100p"
-       value="Remark:" id="msgRemark" name="msgRemark" /></td>
+      <td><input type="text" title="" placeholder="" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
      </tr>
     </tbody>
    </table>

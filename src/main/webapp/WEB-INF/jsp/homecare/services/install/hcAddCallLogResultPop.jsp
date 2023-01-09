@@ -35,6 +35,16 @@
 		    	msg += "* <spring:message code='sys.msg.necessary' arguments='Verification' htmlEscape='false'/> </br>";
 		    } */
 
+		    var custMobileNo = $("#custMobileNo").val().replace(/[^0-9\.]+/g, "") ;
+		    var chkMobileNo = custMobileNo.substring(0, 2);
+		    if (chkMobileNo == '60'){
+		    	  custMobileNo = custMobileNo.substring(1);
+		    }
+		    $("#custMobileNo").val(custMobileNo);
+		    if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
+		    	  msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
+		    }
+
 		} else if ($("#callStatus").val() == 19) {
 		    if ($("#recallDate").val() == '') {
 		        msg += "* <spring:message code='sys.msg.necessary' arguments='Recall Date' htmlEscape='false'/> </br>";
@@ -150,6 +160,10 @@
         callLogTranGrid();
         //fn_callLogTransaction();
         fn_start();
+
+        console.log("qtytest");
+        console.log('${orderRdcInCdc.raqty}');
+        console.log('${anoRdcincdc.raqty}');
 
         $("#stock").change(function() {
             if ($("#stock").val() == 'B') {
@@ -462,6 +476,7 @@
 		<input type="hidden" value="${orderCall.callTypeId}" id="callTypeId" name="callTypeId" />
 		<input type="hidden" value="${hcOrder.anoOrdNo}" id="anoOrdNo" name="anoOrdNo" />
 		<input type="hidden" value="${orderCall.c1}" id="apptypeId" name="apptypeId" />
+        <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
 
 		<table class="type1" id="hideContent1">
             <!-- table start -->
@@ -537,6 +552,16 @@
                         </select>
                     </td>
                 </tr>
+                 <tr>
+				     <th scope="row">Mobile<span name="m2" id="m2" class="must">*</span></th>
+				      <td colspan="3">
+				          <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" />
+				          <span>SMS</span><input type="checkbox" id="chkSMS" name="chkSMS" checked>
+				          <!-- <br><br>
+				          <span>Total SMS Count :</span><input type="text" id="smsCount" name="smsCount" class="readonly" readonly="readonly" style="width:10%;"> -->
+				     </td>
+				     <th></th><td colspan="3"></td>
+				</tr>
 			    <tr>
                     <th scope="row"><spring:message code='service.title.Remark' /></th>
                     <td colspan="7"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id="remark" name="remark"></textarea></td>

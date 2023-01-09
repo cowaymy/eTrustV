@@ -22,6 +22,7 @@ import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
 import com.coway.trust.api.mobile.services.installation.InstallationResultDetailForm;
 import com.coway.trust.api.mobile.services.installation.InstallationResultDto;
+import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationDetailService;
@@ -59,6 +60,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
   @Resource(name = "installationResultListMapper")
   private InstallationResultListMapper installationResultListMapper;
+
+  @Resource(name = "hcInstallResultListService")
+	private HcInstallResultListService hcInstallResultListService;
 
   @Override
   public ResponseEntity<InstallationResultDto> installationResultProc(Map<String, Object> insApiresult)
@@ -572,7 +576,12 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
         try{
-        	smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
+        	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
+        		smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+        	}else{
+        		smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
+        	}
+
       	}catch (Exception e){
       		logger.info("===smsResultValue===" + smsResultValue.toString());
       		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
@@ -768,6 +777,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               String errorMsg = "[API] " + errMsg;
               throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
             }
+
+            Map<String, Object> smsResultValue = new HashMap<String, Object>();
+
+            try{
+            	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+	      	}catch (Exception e){
+	      		logger.info("===smsResultValue===" + smsResultValue.toString());
+	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
+	      	}
           }
         } catch (Exception e) {
           String procTransactionId = transactionId;

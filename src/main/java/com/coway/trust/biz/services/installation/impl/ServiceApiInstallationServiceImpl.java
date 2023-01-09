@@ -319,6 +319,8 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       fraParams.put("salesOrderNo", params.get("salesOrderNo"));
       fraParams.put("serialNo", params.get("serialNo"));
       fraParams.put("hidSerialRequireChkYn", "Y");
+      fraParams.put("hcInd", "Y");
+      params.put("hcInd", "Y");
 
       serviceApiInstallationDetailService.installFailJobRequestProc(params);
 

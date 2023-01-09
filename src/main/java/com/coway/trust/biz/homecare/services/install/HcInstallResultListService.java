@@ -102,4 +102,10 @@ public interface HcInstallResultListService {
 	EgovMap getFileID(Map<String, Object> params);
 
 	public int updateInstallFileKey(Map<String, Object> params, SessionVO sessionVO) throws ParseException, Exception;
+
+	Map<String, Object> hcInstallationSendSMS(String ApptypeID, Map<String, Object> installResult);
+
+	void sendSms(Map<String, Object> smsList);
+
+	Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult);
 }

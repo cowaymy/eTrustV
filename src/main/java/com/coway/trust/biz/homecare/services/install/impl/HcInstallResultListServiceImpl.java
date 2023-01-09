@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
@@ -26,6 +27,8 @@ import com.coway.trust.biz.services.installation.impl.InstallationResultListMapp
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -53,6 +56,9 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private AdaptorService adaptorService;
 
   /**
    * Insert Installation Result
@@ -471,6 +477,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
     ReturnMessage message = new ReturnMessage();
+    Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
     if (sessionVO != null) {
       int noRcd = installationResultListService.chkRcdTms(params);
@@ -579,14 +586,15 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
                 message.setCode("1");
                 message.setData("Y");
+                String msg = "";
                 if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
-                  message.setMessage(
-                      "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
-                          + resultValue.get("value") + ". Please proceed to Calllog function.");
+                  msg = "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
+                          + resultValue.get("value") + ". Please proceed to Calllog function.";
                 } else {
+              	  msg = "Installation No. (" + resultValue.get("installEntryNo")
+                    + ") successfully updated to " + resultValue.get("value") + ".";
+
                   message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
-                  message.setMessage("Installation No. (" + resultValue.get("installEntryNo")
-                      + ") successfully updated to " + resultValue.get("value") + ".");
                 }
 
                 // KR-OHK Barcode Save Start
@@ -611,8 +619,41 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                   if (!"000".equals(errCode)) {
                     throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
                   }
+                }// KR-OHK Barcode Save Start
+
+                String chksms = "";
+                if (CommonUtils.nvl(params.get("chkSms")).equals("on") || CommonUtils.nvl(params.get("chkSms")).equals("Y") ){
+              	  chksms = "Y";
+                }else{
+              	  chksms = "N";
                 }
-                // KR-OHK Barcode Save Start
+
+                params.put("chkSms", chksms);
+                params.put("ctCode", CommonUtils.nvl(installResult.get("ctMemCode")));
+                params.put("salesOrderNo", CommonUtils.nvl(installResult.get("salesOrdNo")));
+                params.put("creator", sessionVO.getUserId());
+
+	          	  try{
+	          		  smsResultValue = hcInstallationSendSMS(CommonUtils.nvl(params.get("hidAppTypeId").toString()), params);
+	          	  }catch (Exception e){
+	          		  logger.info("===smsResultValue111===" + smsResultValue.toString());
+	          	  }
+	          	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
+	          		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(params.get("custMobileNo")).toString();
+	          	  }
+
+	          	  logger.info("===hpChkSMS===" + CommonUtils.nvl(params.get("checkSend")).toString());
+	         	  logger.info("===hpChkSMS===" + CommonUtils.nvl(params.get("hpMsg")).toString());
+
+	         	  try{
+		       		  smsResultValue = hcInstallationSendHPSMS(params);
+		       	  }catch (Exception e){
+		       		  logger.info("===smsResultValue111===" + smsResultValue.toString());
+		       	  }
+		       	  if(CommonUtils.nvl(smsResultValue.get("smsLogStat")) == "3"){
+		       		  msg += "</br> Failed to send SMS to " + CommonUtils.nvl(params.get("custMobileNo")).toString();
+		       	  }
+
               }
             }
           }
@@ -873,5 +914,113 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    }
 
 	    return resultValue;
+	  }
+
+  @Override
+	public Map<String, Object> hcInstallationSendSMS(String ApptypeID, Map<String, Object> installResult) {
+		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+		String smsMessage = "";
+		smsResultValue.put("smsLogStat", "0");//if success
+
+		logger.debug("================INSMS111================");
+		logger.debug("ApptypeID===" + ApptypeID);
+		logger.debug("InstallationResult====" + installResult.toString());
+		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
+		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("CTID")).toString());
+
+		 if(CommonUtils.nvl(installResult.get("userId")).toString() != ""){ //from Mobile
+			 installResult.put("ctCode", installResult.get("userId"));
+		 }
+
+		 if(CommonUtils.nvl(installResult.get("CTID")).toString() != ""){//from Mobile
+			 installResult.put("creator", installResult.get("CTID"));
+		 }
+
+		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
+		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
+			 logger.debug("================INSMS444================");
+			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68") || ApptypeID.equals("5764")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
+			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
+			    {
+				 logger.debug("================INSMS================");
+
+			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
+				    	smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh Technician pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns" ;
+			    	}else{ //FAIL
+			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+			    	}
+			    }
+		 }
+
+	    Map<String, Object> smsList = new HashMap<>();
+	    smsList.put("userId", installResult.get("creator"));
+	    smsList.put("smsType", 975);
+	    smsList.put("smsMessage", smsMessage);
+	    smsList.put("smsMobileNo", installResult.get("custMobileNo").toString());
+
+		try{
+		    if(smsMessage != "")
+		    {
+		    	logger.debug("================SENDSMS111================");
+		    	sendSms(smsList);
+		    }
+		}catch(Exception e){
+			logger.info("Fail to send SMS to " + installResult.get("custMobileNo").toString());
+	    	smsResultValue.put("smsLogStat", "3");//if fail
+		}finally{
+			logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
+		}
+
+		logger.info("===resultValue===" + smsResultValue.toString());
+		return smsResultValue;
+	}
+
+  @Override
+	public Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult) {
+		Map<String, Object> smsResultValue = new HashMap<String, Object>();
+		String smsMessage = "";
+		smsResultValue.put("smsLogStat", "0");//if success
+
+		logger.debug("================INSMS111================");
+		logger.debug("InstallationResult====" + installResult.toString());
+
+		 if(installResult.get("checkSend").equals("on")){ //IF HP SMS CHECKBOX IS CHECKED
+			 logger.debug("================INSMS444================");
+			 smsMessage = installResult.get("hpMsg").toString();
+		 }
+
+	    Map<String, Object> smsList = new HashMap<>();
+	    smsList.put("userId", installResult.get("hpMemId"));
+	    smsList.put("smsType", 975);
+	    smsList.put("smsMessage", smsMessage);
+	    //smsList.put("smsMobileNo", installResult.get("hpPhoneNo").toString());
+	    smsList.put("smsMobileNo", "0175977998");
+
+		try{
+		    if(smsMessage != "")
+		    {
+		    	logger.debug("================SENDSMS111================");
+		    	sendSms(smsList);
+		    }
+		}catch(Exception e){
+			logger.info("Fail to send HP SMS to " + installResult.get("hpPhoneNo").toString());
+	    	smsResultValue.put("smsLogStat", "3");//if fail
+		}finally{
+			logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
+		}
+
+		logger.info("===resultValue===" + smsResultValue.toString());
+		return smsResultValue;
+	}
+
+	  @Override
+	  public void sendSms(Map<String, Object> smsList){
+	    int userId = Integer.parseInt(smsList.get("userId").toString());
+	    SmsVO sms = new SmsVO(userId, 975);
+
+	    sms.setMessage(smsList.get("smsMessage").toString());
+	    sms.setMobiles(smsList.get("smsMobileNo").toString());
+	    //send SMS
+	    SmsResult smsResult = adaptorService.sendSMS(sms);
 	  }
 }
