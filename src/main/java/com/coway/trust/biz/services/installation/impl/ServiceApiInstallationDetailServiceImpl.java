@@ -733,6 +733,16 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
 
           if (null != rtnValue) {
+
+        	  Map<String, Object> smsResultValue = new HashMap<String, Object>();
+
+              try{
+	              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+	  	      	}catch (Exception e){
+	  	      		logger.info("===smsResultValue===" + smsResultValue.toString());
+	  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
+	  	      	}
+
             HashMap spMap = (HashMap) rtnValue.get("spMap");
             if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
               rtnValue.put("logerr", "Y");
@@ -778,14 +788,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
             }
 
-            Map<String, Object> smsResultValue = new HashMap<String, Object>();
-
-            try{
-            	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
-	      	}catch (Exception e){
-	      		logger.info("===smsResultValue===" + smsResultValue.toString());
-	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
-	      	}
+            ////
           }
         } catch (Exception e) {
           String procTransactionId = transactionId;
