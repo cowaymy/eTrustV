@@ -12,12 +12,12 @@ $(document).ready(function(){
 	        styleSheets[i].disabled = true;
 		}
 	}
-	getData();
+	//getData();
 	$('.bottom_msg_box').hide();
 });
 
 function getData(){
-    Common.ajax("GET","/payment/mobileautodebit/selectAutoDebitFormData?key=" + "${key}",null, function(result){
+    Common.ajax("GET","/payment/mobileautodebit/selectAutoDebitFormData.do?key=" + "${key}",null, function(result){
         console.log(result);
         var custCrcInfo = result.customerCreditCardEnrollInfo;
 		var mobileDetail = result.mobileAutoDebitDetail;

@@ -96,7 +96,7 @@ public class MobileAutoDebitController {
 		return "payment/mobileautodebit/autoDebitAuthorizationPublicForm";
 	}
 
-	@RequestMapping(value = "/selectAutoDebitFormData", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectAutoDebitFormData.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectAutoDebitFormData(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) throws IOException {
 		Map<String, Object> result = new HashMap<String,Object>();
