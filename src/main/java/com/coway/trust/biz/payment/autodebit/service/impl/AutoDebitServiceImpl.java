@@ -134,6 +134,9 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	@Value("${tiny.api.sub.domain}")
 	private String tinyUrlSubDomain;
 
+	@Value("${etrust.base.url}")
+	private String etrustBaseUrl;
+
   private static final Logger LOGGER = LoggerFactory.getLogger(AutoDebitServiceImpl.class);
 
   @Override
@@ -412,7 +415,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   @Override
   public void sendSms(Map<String, Object> params) {
     if (!"".equals(CommonUtils.nvl(params.get("sms1"))) || !"".equals(CommonUtils.nvl(params.get("sms2")))) {
-    	String baseUrl = params.get("baseUrl").toString();
+    	String baseUrl = etrustBaseUrl;
     	String padId =  params.get("padId").toString();
     	String padNo =  params.get("padNo").toString();
     	String combinationKey = padId + "&" + padNo;

@@ -114,17 +114,12 @@ public class AutoDebitApiController {
 	@ApiOperation(value = "autoDebitSubmissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
 	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm,HttpServletRequest request) throws Exception {
-		String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
-		        .replacePath(null)
-		        .build()
-		        .toUriString();
         Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
         AutoDebitApiDto result = new AutoDebitApiDto();
         Map<String, Object> resultparams = new HashMap();
         resultparams = autoDebitService.autoDebitMobileSubmissionSave(params);
         int insertResult = Integer.parseInt(resultparams.get("result").toString());
         if(insertResult > 0){
-        	resultparams.put("baseUrl", baseUrl);
             result.setResponseCode(1);
 			autoDebitService.sendEmail(resultparams);
 			autoDebitService.sendSms(resultparams);
@@ -147,15 +142,4 @@ public class AutoDebitApiController {
 	    FileDto fileDto = FileDto.create(list, fileGroupKey);
 	    return ResponseEntity.ok(fileDto);
 	  }
-
-		@ApiOperation(value = "getAddress")
-		@RequestMapping(value = "/getAddress", method = RequestMethod.GET)
-		public ResponseEntity<ReturnMessage> getAddress(HttpServletRequest request) throws Exception {
-			String uri = request.getScheme() + "://" +   // "http" + "://
-		             request.getServerName();  // "myhost"
-			ReturnMessage message = new ReturnMessage();
-			message.setData(uri);
-			message.setMessage(uri);
-			return ResponseEntity.ok(message);
-		}
 }
