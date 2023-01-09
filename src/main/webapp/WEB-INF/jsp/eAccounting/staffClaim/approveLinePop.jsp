@@ -172,8 +172,8 @@ function fn_reqstSubmit() {
 	        	Common.alert(result.message);
 	        }
 	        else{
-	    		var requestGroup = "${requestGroup}";
-	    		Common.popupDiv("/eAccounting/staffClaim/registrationMsgPop.do", {requestGroup:requestGroup}, null, true, "registrationMsgPop");
+	    		//var requestGroup = "${requestGroup}";
+	    		Common.popupDiv("/eAccounting/staffClaim/registrationMsgPop.do", null, null, true, "registrationMsgPop");
 	        }
 	    });
 	}

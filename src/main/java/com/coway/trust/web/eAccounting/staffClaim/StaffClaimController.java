@@ -278,7 +278,7 @@ public class StaffClaimController {
 
 	@RequestMapping(value = "/registrationMsgPop.do")
 	public String registrationMsgPop(@RequestParam Map<String, Object> params,ModelMap model) {
-		model.put("requestGroup", params.get("requestGroup").toString());
+//		model.put("requestGroup", params.get("requestGroup").toString());
 		return "eAccounting/staffClaim/registrationMsgPop";
 	}
 

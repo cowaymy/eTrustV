@@ -18,14 +18,14 @@ function fn_approveLineSubmit() {
 	var newGridList = AUIGrid.getOrgGridData(newGridID);
 	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
 	console.log(clmNo);
-	var requestGroup = "${requestGroup}";
+	//var requestGroup = "${requestGroup}";
     var obj = {
             newGridList : newGridList,
             apprGridList : apprGridList,
             clmNo : clmNo,
             allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, '')),
             //For staff claim only, usage is for multiple group approval
-            requestGroup: requestGroup
+            //requestGroup: requestGroup
     };
     console.log(obj);
     Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {

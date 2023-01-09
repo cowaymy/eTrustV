@@ -1770,11 +1770,11 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         <![CDATA[
             AND J4 <> '0'
         ]]>
-	    <if test="requestGroup != null and requestGroup != ''">
-		    <![CDATA[
-		        AND RQST_GRP LIKE '%'||#{requestGroup}||'%'
-		    ]]>
-	    </if>
+<!-- 	    <if test="requestGroup != null and requestGroup != ''"> -->
+<!-- 		    <![CDATA[ -->
+<!-- 		        AND RQST_GRP LIKE '%'||#{requestGroup}||'%' -->
+<!-- 		    ]]> -->
+<!-- 	    </if> -->
     </if>
     <if test="clmType == 'J5' ">
         <![CDATA[
@@ -1844,6 +1844,12 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     <if test="clmType == 'A3' ">
         <![CDATA[
             AND A3 <> '0'
+        ]]>
+    </if>
+<!--     crc approval line task -->
+    <if test="clmType == 'B3' ">
+        <![CDATA[
+            AND B3 <> '0'
         ]]>
     </if>
 </select>
