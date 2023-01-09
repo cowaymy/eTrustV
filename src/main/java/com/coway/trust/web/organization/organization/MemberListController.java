@@ -1993,14 +1993,30 @@ public class MemberListController {
         email.setHtml(true);
         email.setSubject("Health Planner Agreement Confirmation");
 
-        String url = (String) params.get("url");
+        /* VER NBL [S] String url = (String) params.get("url");
         String msg = "Dear Sir/Madam, <br /><br />"
                 + "Thank you for register as Coway Health Planner. Please click the link below for confirmation of Health Planner Agreement. <br /><br />"
                 + "<a href='" + url
                 + "' target='_blank' style='color:blue; font-weight:bold'> Verify Now</a><br /><br />"
                 + "Please note that you are able to view this Coway Health Planner Agreement for agreement confirmation within 7 days from your application date to complete your Health Planner registration.<br /><br />"
                 + "This is a system generated email, please do not reply.<br /><br />" + "Thank you."
-                + "<br /><br /><br />" + "Best Regards,<br /><b>Coway Malaysia</b>";
+                + "<br /><br /><br />" + "Best Regards,<br /><b>Coway Malaysia</b>"; */
+        String url = (String) params.get("url");
+        String msg = "Dear Sir/Madam, <br /><br />"
+                + "Congratulations, your application has been successful. We are pleased to appoint you as our Health Planner, subject to terms and conditions "
+        		+ "of the Health Planner [Independent Contractor/Services] Agreement (\"HP Agreement\") accessible at "+ url + " <br /><br />"
+                + "Kindly read, understand and confirm your acceptance of the HP Aggrement within seven (7) days from the date hereof.<br /><br />"
+                + "Thank you."
+                + "<br /><br />" + "Best Regards,<br /><b>Coway (Malaysia) Sdn Bhd</b>"
+                + "<br /><br /><br />This is a system generated email, please do not reply.<br /><br />"
+                + "<p style='margin-bottom:6.0pt'><span lang=EN-MY style='font-size:8.0pt;color:gray'>CONFIDENTIALITY NOTICE:</span><br /><br />"
+                + "<p style='text-align:justify;text-justify:inter-ideograph'><span lang=EN-MY style='font-size:8.0pt;color:gray'>This email and any files transmitted "
+                + "with it are CONFIDENTIAL and/or PRIVILEGED information intended solely for the use of the individual or entity to whom they are addressed. "
+                + "The Addressee(s) must maintain CONFIDENTIALITY as it may be legally protected from DISCLOSURE. If you are not the named addressee(s) "
+                + "you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake "
+                + "and delete this e-mail and any attachments from your system. If you are not the intended recipient you are notified that any use, disclosing, copying, "
+                + "distributing, storage and/or taking any action in reliance on the contents of this information is strictly prohibited.<o:p></o:p></span></p>";
+        /* VER NBL [E] */
 
         email.setText(msg);
 
