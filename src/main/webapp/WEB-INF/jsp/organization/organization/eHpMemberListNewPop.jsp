@@ -122,9 +122,13 @@ function fn_memberSave(){
                             var idntfc = result.idntfc;
 
                             // Construct Agreement URL via SMS
-                            var cnfmSms = " COWAY: Click " +
+                            /* VER NBL [S] var cnfmSms = " COWAY: Click " +
                                           "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                          " for confirmation of HP agreement. TQ!";
+                                          " for confirmation of HP agreement. TQ!"; */
+                            var cnfmSms = " COWAY: HP Application successful. Click " +
+                                                  "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+                                                  " to accept T&C's of the HP agreement.";
+                            /* VER NBL [E] */
 
                             console.log(cnfmSms);
 
