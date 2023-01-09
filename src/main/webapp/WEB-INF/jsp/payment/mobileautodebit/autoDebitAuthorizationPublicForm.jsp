@@ -12,7 +12,7 @@ $(document).ready(function(){
 	        styleSheets[i].disabled = true;
 		}
 	}
-	//getData();
+	getData();
 	$('.bottom_msg_box').hide();
 });
 
