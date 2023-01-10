@@ -629,13 +629,8 @@ $(function(){
 
 
 function fn_scanClosePop(){
-	// Moblie Popup Setting
-    if(Common.checkPlatformType() == "mobile") {
-        opener.fn_PopSerialClose();
-    } else {
-    	$("#btnPopSearch").click();
-    	$('#_serialScanPop').remove();
-    }
+	$("#btnPopSearch").click();
+    $('#_serialScanPop').remove();
 }
 
 </script>
