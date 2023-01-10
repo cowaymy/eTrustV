@@ -922,7 +922,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		String smsMessage = "";
 		smsResultValue.put("smsLogStat", "0");//if success
 
-		logger.debug("================INSMS111================");
+		logger.debug("================HCINSMS111================");
 		logger.debug("ApptypeID===" + ApptypeID);
 		logger.debug("InstallationResult====" + installResult.toString());
 		logger.debug("InstallationResult====" + CommonUtils.nvl(installResult.get("userId")).toString());
@@ -938,11 +938,11 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
 		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
 		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
-			 logger.debug("================INSMS444================");
+			 logger.debug("================HCINSMS444================");
 			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68") || ApptypeID.equals("5764")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
 			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
 			    {
-				 logger.debug("================INSMS================");
+				 logger.debug("================HCINSMS================");
 
 			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
 				    	smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh Technician pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns" ;
