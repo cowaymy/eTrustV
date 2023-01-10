@@ -887,6 +887,12 @@ function createAUIGrid() {
             width : 130
         },
         {
+            dataField : "email",
+            headerText : "Email",
+            editable : false,
+            width : 130
+        },
+        {
             dataField : "grpCode",
             headerText : "Group Code",
             editable : false,
