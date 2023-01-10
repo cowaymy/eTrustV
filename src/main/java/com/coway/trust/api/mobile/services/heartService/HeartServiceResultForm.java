@@ -1,6 +1,7 @@
 package com.coway.trust.api.mobile.services.heartService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -377,7 +378,7 @@ public class HeartServiceResultForm {
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		if (heartDtails != null && heartDtails.size() > 0) {
-			Map<String, Object> map;
+			Map<String, Object> map = new HashMap();
 			for (HeartServiceResultDetailForm dtl : heartDtails) {
 				map = BeanConverter.toMap(heartServiceResultForm, "signData", "heartDtails");
 				map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
@@ -392,8 +393,9 @@ public class HeartServiceResultForm {
 				map.put("filterSerialUnmatchReason", dtl.getFilterSerialUnmatchReason());
 				map.put("sysFilterBarcdSerialNo", dtl.getSysFilterBarcdSerialNo());
 
-				list.add(map);
+
 			}
+			list.add(map);
 		}
 		return list;
 	}
@@ -416,8 +418,9 @@ public class HeartServiceResultForm {
 				map.put("filterSerialUnmatchReason", obj.getFilterSerialUnmatchReason());
 				map.put("sysFilterBarcdSerialNo", obj.getSysFilterBarcdSerialNo());
 
-				list.add(map);
+
 			}
+			list.add(map);
 		}
 
 		return list;
