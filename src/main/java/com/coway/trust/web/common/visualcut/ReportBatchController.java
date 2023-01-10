@@ -2708,24 +2708,6 @@ public void rentalAgreementRaw() {
   LOGGER.info("[END] rentalAgreementRaw...");
 }
 
-@RequestMapping(value = "/etrSummaryList.do")
-//@Scheduled(cron = " 0 0 6 * * FRI") //Every Friday Morning 6:00 AM
-public void etrSummaryList() {
-LOGGER.info("[START] etrSummaryList...");
-Map<String, Object> params = new HashMap<>();
-params.put(REPORT_FILE_NAME, "/visualcut/ETRReportSummary.rpt");// visualcut
-                                                                              // rpt
-                                                                              // file
-                                                                              // name.
-params.put("V_TEMP", "");// parameter
-params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-    "Daily Rental Collection" + File.separator + "ETR Summary List_" + CommonUtils.getNowDate() + ".xls");
-
-this.viewProcedure(null, null, params);
-LOGGER.info("[END] etrSummaryList...");
-}
-
 @RequestMapping(value = "/DataMartReport.do")
 public void dataMartReport(HttpServletRequest request) {
   LOGGER.info("[START] DataMartReport...");
