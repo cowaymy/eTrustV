@@ -382,6 +382,11 @@
 	    }
 	}
 
+	function fn_PopSerialClose(){
+	    if(popupObj!=null) popupObj.close();
+	    $("#btnPopSearch").click();
+	}
+
 
 
 </script>
