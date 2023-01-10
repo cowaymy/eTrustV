@@ -25,6 +25,7 @@ import com.coway.trust.biz.services.installation.ServiceApiInstallationService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -321,6 +322,16 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       fraParams.put("hidSerialRequireChkYn", "Y");
       fraParams.put("hcInd", "Y");
       params.put("hcInd", "Y");
+      if (CommonUtils.nvl(params.get("chkSms")).equals("Y") ){
+    	  params.put("chkSms", "Y");
+          fraParams.put("chkSms", "Y");
+	  }else{
+	      params.put("chkSms", "N");
+	      fraParams.put("chkSms", "N");
+	  }
+      params.put("custMobileNo", params.get("custMobileNo"));
+      fraParams.put("custMobileNo", params.get("custMobileNo"));
+
 
       serviceApiInstallationDetailService.installFailJobRequestProc(params);
 
