@@ -31,6 +31,7 @@
 
 <script type="text/javaScript">
 var myGridID;
+var excelGridID;
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 var selRowIndex;
@@ -100,13 +101,33 @@ function fn_memberListSearch(){
 
 
         AUIGrid.setGridData(myGridID, result);
+
+        // EXCEL Set Row Colour and Grid
+        AUIGrid.setProp(excelGridID, "rowStyleFunction", function(rowIndex, item){
+            if (item.vaccineStatus == "C") { // completed vaccine
+                return "my-yellow-style";
+            } else if (item.vaccineStatus == "D"){
+                if (item.reasonId == '6504' || item.reasonId == '6505') {
+                    return "my-orange-style";
+                } else {
+                    return "my-grey-style";
+                }
+            } else if (item.vaccineStatus == "P"){
+                return "my-blue-style";
+            } else {
+                return "";
+            }
+        });
+
+
+        AUIGrid.setGridData(excelGridID, result);
     });
 
 }
 
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("grid_wrap_memList", "xlsx", "MemberList");
+    GridCommon.exportTo("excel_list_grid_wrap", "xlsx", "MemberList");
 }
 
 function fn_TerminateResign(val){
@@ -461,6 +482,7 @@ $(document).ready(function() {
 
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
+    createAUIGridExcel();
 
    // AUIGrid.setSelectionMode(myGridID, "singleRow");
 
@@ -730,6 +752,159 @@ function createAUIGrid() {
 
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
+    }
+
+    function createAUIGridExcel(){
+
+        //AUIGrid 칼럼 설정
+        var excelColumnLayout = [ {
+            dataField : "codename",
+            headerText : "Type Name",
+            editable : true,
+            width : 130
+        }, {
+            dataField : "memberid",
+            headerText : "MemberID",
+            editable : false,
+            width : 0
+        }, {
+            dataField : "membercode",
+            headerText : "Member Code",
+            editable : false,
+            width : 130
+        }, {
+            dataField : "name",
+            headerText : "Member Name",
+            editable : false,
+            width : 130
+        }, {
+            dataField : "statusName",
+            headerText : "Status",
+            editable : false,
+            width : 130,
+            labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+                // logic processing
+                // Return value here, reprocessed or formatted as desired.
+                // The return value of the function is immediately printed in the cell.
+                 if(item.trmRejoin == 1) {
+                        return item.statusName + " (Rejoin)";
+                   } else {
+                        return item.statusName;
+                   }
+             }
+        },
+        {
+            dataField : "uniformSize",
+            headerText : "Uniform Size",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "muslimahScarft",
+            headerText : "Muslimah Scarft",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "innerType",
+            headerText : "Inner Type",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "testResult",
+            headerText : "Test Result",
+            editable : false,
+            width : 0,
+            visible : false
+
+        },
+        {
+            dataField : "hpType",
+            headerText : "HP Type",
+            editable : false,
+            width : 130,
+            visible : false
+        },
+        {
+            dataField : "neoProStatus",
+            headerText : "Neo Pro",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "updated",
+            headerText : "Last Update",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "lastActDt",
+            headerText : "Last Active Date",
+            editable : false,
+            width : 130
+
+        },
+        {
+            dataField : "positionName",
+            headerText : "Position Desc",
+            editable : false,
+            width : 130
+
+        },
+        {
+            dataField : "membertype",
+            headerText : "Member Type",
+            width : 0
+        },
+        {
+            dataField : "traineeType",
+            headerText : "Trainee Type",
+            width : 0
+        },
+        {
+            dataField : "approvedBy",
+            headerText : "Approved by",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "crtDt",
+            headerText : "Action Date",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "branch",
+            headerText : "Approved Branch",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "address",
+            headerText : "Address",
+            editable : false,
+            width : 130
+        },
+        {
+            dataField : "grpCode",
+            headerText : "Group Code",
+            editable : false,
+            width : 130
+        }];
+
+        var excelGridPros = {
+             enterKeyColumnBase : true,
+             useContextMenu : true,
+             enableFilter : true,
+             showStateColumn : true,
+             displayTreeOpen : true,
+             noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+             groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+             exportURL : "/common/exportGrid.do"
+         };
+
+        excelGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
     }
 
 function fn_memberEditPop(){
@@ -1427,6 +1602,7 @@ function fn_socialMediaInfo(){
 <article class="grid_wrap">
     <!-- grid_wrap start -->
     <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    <div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
