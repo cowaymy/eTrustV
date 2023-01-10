@@ -715,7 +715,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     	// INSERT EDITTED CONTACT INFO FOR APPROVAL
         // CELESTE: Added for edit customer contact on 25/08/2022 [s]
 
-        if(params.get("newHandphoneTel") != null || params.get("newHomeTel") != null || params.get("newOfficeTel") != null || params.get("newEmail") != null)
+        /*if(params.get("newHandphoneTel") != null || params.get("newHomeTel") != null || params.get("newOfficeTel") != null || params.get("newEmail") != null)
         {
       	  logger.debug("==================== editContactInfo [start] ========================");
             logger.debug("params: " + params);
@@ -740,10 +740,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             insertHSNewContact.put("oldHomeNo", params.get("resultIcHomeNo") == null ? null : params.get("resultIcHomeNo").toString());
             insertHSNewContact.put("oldOfficeNo", params.get("resultIcOfficeNo") == null ? null : params.get("resultIcOfficeNo").toString());
             insertHSNewContact.put("oldEmail", params.get("resultReportEmailNo") == null ? null : params.get("resultReportEmailNo").toString());
-            /*insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo") == null ? null : oldContDt.get("oldHpNo").toString());
+            insertHSNewContact.put("oldHpNo", oldContDt.get("oldHpNo") == null ? null : oldContDt.get("oldHpNo").toString());
             insertHSNewContact.put("oldHomeNo", oldContDt.get("oldHomeNo") == null ? null : oldContDt.get("oldHomeNo").toString());
             insertHSNewContact.put("oldOfficeNo", oldContDt.get("oldOfficeNo") == null ? null : oldContDt.get("oldOfficeNo").toString());
-            insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail") == null ? null : oldContDt.get("oldEmail").toString());*/
+            insertHSNewContact.put("oldEmail", oldContDt.get("oldEmail") == null ? null : oldContDt.get("oldEmail").toString());
             logger.debug("==================== line 2========================");
             insertHSNewContact.put("newHpNo", params.get("newHandphoneTel") == null ? null : params.get("newHandphoneTel").toString());
             insertHSNewContact.put("newHomeNo", params.get("newHomeTel") == null ? null : params.get("newHomeTel").toString());
@@ -766,7 +766,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             hsManualMapper.insertSAL0329D(insertHSNewContact);
 
             logger.debug("==================== editContactInfo [end] ========================");
-        }
+        }*/
 
         // CELESTE: Added for edit customer contact on 25/08/2022 [e]
 
