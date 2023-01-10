@@ -929,7 +929,9 @@
                         , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds (Baki Tidak Mencukupi)'
                         WHEN T4.IND = 'EXPCARD' THEN 'Change Card (Tukar Kad)'
-                        WHEN T4.IND = 'CDOPTIN' THEN 'Activate e-commerce (Aktifkan e-commerce)'
+                        WHEN T4.IND = 'CDOPTIN' THEN
+                                                    CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Activate e-commerce (Aktifkan e-commerce)'
+                                                    ELSE 'Change Account' END
                         WHEN T4.IND = 'CHGCARD' THEN
                                                     CASE WHEN T2.CTRL_IS_CRC = 1 THEN
                                                         CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)' ELSE 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' END
