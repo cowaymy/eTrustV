@@ -158,7 +158,8 @@ SELECT row_number,
   project1.EMRGCY_CNTC_NAME,
   project1.EMRGCY_CNTC_NO,
   project1.EMRGCY_CNTC_INIT,
-  project1.TRM_REJOIN
+  project1.TRM_REJOIN,
+  project1.EMAIL
 FROM (
     SELECT Project1.C1 C1,
       Project1.MEM_ID MEM_ID,
@@ -196,7 +197,8 @@ FROM (
       project1.EMRGCY_CNTC_NAME,
       project1.EMRGCY_CNTC_NO,
       project1.EMRGCY_CNTC_INIT,
-      project1.TRM_REJOIN
+      project1.TRM_REJOIN,
+      project1.EMAIL
     FROM (
         SELECT DISTINCT GroupBy1.A1 C1,
           Extent1.MEM_ID MEM_ID,
@@ -253,7 +255,8 @@ FROM (
           Extent1.EMRGCY_CNTC_NAME,
           Extent1.EMRGCY_CNTC_NO,
           Extent1.EMRGCY_CNTC_INIT,
-          Extent1.TRM_REJOIN
+          Extent1.TRM_REJOIN,
+          Extent1.EMAIL
         FROM ORG0001D Extent1
           /*Member eg.get mem_type eg HP, CODY, CT*/
           INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID
