@@ -979,6 +979,12 @@ function fn_setMemInfo(data){
 
 	    $("#meetingPoint option[value=" + data.meetpointId +"]").attr("selected", true);
 
+	    // Cody organization & trainee check for invalid empty email - Enhancement Cody Support : Mandatory Email Address Key In
+	    if("${memType}" == "2" || "${memType}" == "5") {
+	    
+          $('#emailLbl').append("<span class='must'>*</span>");
+	    }
+
     }
 	else{
 		  $("#memberType option[value="+ data.memType +"]").attr("selected", true);
@@ -1465,6 +1471,14 @@ function fn_saveValidation(){
         if($("#searchdepartment").val() == "") {
             valid = false;
             message = "Main department is required";
+        }
+    }
+
+    // Cody organization & trainee check for invalid empty email - Enhancement Cody Support : Mandatory Email Address Key In
+    if($("#memberType").val() == '2' || $("#memberType").val() == "5") {
+    	if($("#email").val() == "" || $("#email").val() == null) {
+            valid = false;
+            message = "Please key in email address";
         }
     }
 
@@ -2336,7 +2350,7 @@ function fn_removeFile(name){
                                 </td>
                             </tr> --%>
                             <tr id="editRow1_5">
-                                <th scope="row">Email</th>
+                                <th scope="row" id="emailLbl" name="emailLbl">Email</th>
                                 <td colspan="5">
                                    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
                                 </td>
