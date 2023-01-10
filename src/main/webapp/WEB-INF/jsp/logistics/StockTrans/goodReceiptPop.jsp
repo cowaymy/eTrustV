@@ -382,10 +382,13 @@
 	    }
 	}
 
-	function fn_PopSerialClose(){
-	    if(popupObj!=null) popupObj.close();
-	    $("#btnPopSearch").click();
-	}
+	function fn_PopSerialClose() {
+        if(popupObj!=null){
+            $("#btnPopConfirm").parent().removeClass("btn_disabled");
+            $("#btnPopConfirm").click();
+            popupObj.close();
+        }
+    }
 
 
 
