@@ -123,7 +123,21 @@
 	}
 
 	function fn_errDetail_SetVal() {
-		$("#ddlErrorDesc").val(asMalfuncResnId);
+
+		if($("#ddlErrorCode").val() == "9001700"){
+			if($("#hidASType").val() == "3154"){ //AOAS
+				$("#ddlErrorDesc").val("5"); //Add Dishing Faucet/ Mineral Filter
+	        }
+			else if($("#hidASType").val() == "6302"){ //INS AS
+				$("#ddlErrorDesc").val("1"); //Add Pump During Installation
+			}else{
+				$("#ddlErrorDesc").val(asMalfuncResnId);
+			}
+		}else
+		{
+	      $("#ddlErrorDesc").val(asMalfuncResnId);
+		}
+
 		fn_errDescCheck();
 	}
 
@@ -322,6 +336,7 @@
 		$("#ddlDSCCodeText").val(result[0].c5);
 		$("#ddlErrorCode").val(result[0].asMalfuncId);
 		$("#ddlErrorDesc").val(result[0].asMalfuncResnId);
+		$("#hidASType").val(result[0].asTypeId);
 
 		asMalfuncResnId = result[0].asMalfuncResnId;
 
@@ -610,6 +625,8 @@
 
 			// ONGHC - 20200221 ADD FOR PSI
 			$("#PROD_CAT").val(result[0].c2code);
+
+			$("#hidASType").val(result[0].asTypeId);
 
 			doGetCombo('/services/as/getASFilterInfo.do?prdctCd='
 					+ result[0].stockCode, '', '', 'ddlFilterCode', 'S', '');
@@ -2585,6 +2602,7 @@
                 <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" />
                 <input type="text" name="PROD_CDE" id="PROD_CDE" />
                 <input type="text" name="PROD_CAT" id="PROD_CAT" />
+                <input type="text" name="hidASType" id="hidASType" />
             </div>
         </form>
         <header class="pop_header">

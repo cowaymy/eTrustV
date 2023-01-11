@@ -989,7 +989,8 @@
            TO_CHAR(S.SRV_MEM_EXPR_DT ,'dd/mm/yyyy') C6,
            S.USER_FULL_NAME,
            S.INST_ADDR_DTL,
-           S.CODE_ID AS C2CODE
+           S.CODE_ID AS C2CODE,
+           S.AS_TYPE_ID
     FROM ( SELECT E.ORD_ID ORD_ID ,
                   E.ORD_NO ORD_NO ,
                   E.RENTAL_STUS RENTAL_STUS ,
@@ -1047,7 +1048,8 @@
                   E4.SRV_MEM_SALESMAN_NAME SRV_MEM_SALESMAN_NAME ,
                   E5.CODE_ID CODE_ID ,
                   E5.CODE_NAME CODE_NAME,
-                  E6.USER_FULL_NAME
+                  E6.USER_FULL_NAME,
+                  E7.AS_TYPE_ID
            FROM ( SELECT vOrderBasicInfo.*
                   FROM SAL1006V vOrderBasicInfo ) E
                   JOIN ( SELECT vOrderInstallationInfo.*
@@ -1059,6 +1061,7 @@
                               FROM SAL1014V vOrderSrvMemConfigInfo ) E4 ON E.ORD_ID = E4.ORD_ID
                   LEFT JOIN SYS0013M E5 ON Extent3.STK_CTGRY_ID = E5.CODE_ID
                   LEFT JOIN SYS0047M E6 ON E.UPD_USER_ID = E6.USER_NAME
+                  LEFT JOIN SVC0001D E7 ON E7.AS_SO_ID = E.ORD_ID
                   WHERE E.ORD_ID = #{ORD_ID} AND ROWNUM <![CDATA[ <= ]]> 1 ) S
   </select>
 
