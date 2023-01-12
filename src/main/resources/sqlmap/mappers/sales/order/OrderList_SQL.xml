@@ -389,7 +389,7 @@
                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
                                                              AND BB.CODE = 'FRM')
             --> -- Mattress, Frame
-                  AND V1.APP_TYPE_ID NOT IN (5764)
+                  AND v1.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67)
            </if>
            <if test = 'memID != null and memID != ""'>
            AND V1.SALESMAN_MEM_ID = #{memID}
