@@ -1,6 +1,10 @@
 package com.coway.trust.biz.eAccounting.vendorAdvance.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +147,16 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             item.put("netAmt", item.get("totalAmt"));
             item.put("glAccNo", item.get("glAccCode"));
 //            item.put("rem", item.get("desc"));
-
+            //2022-01 Jia Cheng- fixed date format for invcDt
+            SimpleDateFormat dateFormat=new SimpleDateFormat("dd/mm/yyyy");
+            String invcDt=(String) item.get("invcDt");
+            try {
+				Date fixeddate=new SimpleDateFormat("yyyy/mm/dd").parse(invcDt);
+                item.put("invcDt", String.valueOf(dateFormat.format(fixeddate)));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             int ins = vendorAdvanceMapper.insertAdvDet_FCM28D(item);
             detIns += ins > 0 ? 1 : 0;
         }
@@ -347,7 +360,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 delCnt += vendorAdvanceMapper.deleteAdvDet_FCM28D(hm);
             }
         }
-
+        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/mm/yyyy");
         int addCnt = 0;
         if(addList.size() > 0) {
             Map hm = null;
@@ -359,7 +372,16 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 hm.put("clmSeq", clmSeq);
                 hm.put("advType", "6");
                 hm.put("userId", sessionVO.getUserId());
-
+                String invcDt=(String) hm.get("invcDt");
+                try {
+					Date fixeddate=new SimpleDateFormat("yyyy/mm/dd").parse(invcDt);
+	                hm.put("invcDt", String.valueOf(dateFormat.format(fixeddate)));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                hm.put("amt",hm.get("totalAmt"));
+                hm.put("netAmt",hm.get("totalAmt"));
                 addCnt += vendorAdvanceMapper.insertAdvDet_FCM28D(hm);
             }
         }
@@ -372,6 +394,16 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 hm.put("clmNo", params.get("settlementNewClmNo"));
                 hm.put("advType", "6");
                 hm.put("userId", sessionVO.getUserId());
+                String invcDt=(String) hm.get("invcDt");                //System.out.println("Invc date b4: "+invcDt);
+                try {
+					Date fixeddate=new SimpleDateFormat("yyyy/mm/dd").parse(invcDt);
+					String newDate=String.valueOf(dateFormat.format(fixeddate));
+	                hm.put("invcDt", newDate);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+                hm.put("amt",hm.get("totalAmt"));
+                hm.put("netAmt",hm.get("totalAmt"));
                 LOGGER.debug("hm----->" + hm);
                 updCnt += vendorAdvanceMapper.updateAdvDet_FCM28D(hm);
             }
