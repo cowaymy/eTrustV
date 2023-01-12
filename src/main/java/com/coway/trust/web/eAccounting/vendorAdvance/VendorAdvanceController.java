@@ -2,6 +2,7 @@ package com.coway.trust.web.eAccounting.vendorAdvance;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -271,8 +272,16 @@ public class VendorAdvanceController {
 
         // FCM0027M, FCM0028D details
         EgovMap details = vendorAdvanceService.selectVendorAdvanceDetails(params.get("clmNo").toString());
-        if("6".equals(params.get("advType").toString())) {
+        if("5".equals(params.get("advType").toString())) {
             List<EgovMap> settlementItems = vendorAdvanceService.selectVendorAdvanceItems(params.get("clmNo").toString());
+            details.put("cur", settlementItems.get(0).get("currency"));
+        }
+        else if("6".equals(params.get("advType").toString())) {
+            List<EgovMap> settlementItems = vendorAdvanceService.selectVendorAdvanceItems(params.get("clmNo").toString());
+            for (int i=0;i<settlementItems.size();i++){
+            	SimpleDateFormat fixeddate=new SimpleDateFormat("yyyy/MM/dd");
+				settlementItems.get(i).put("invcDt",fixeddate.format(settlementItems.get(i).get("invcDt")));
+            }
             details.put("settlementItems", settlementItems);
         }
 
