@@ -61,11 +61,11 @@
 	     SELECT DISTINCT
              CASE WHEN A.STUS_CODE_ID <> 4     THEN  A.SALES_ORD_NO
                      WHEN B.STUS IN ( '1','44' )         THEN B.SALES_ORDER_NO
-                     WHEN C.AS_STUS_ID = 1           THEN A.SALES_ORD_NO
+                     WHEN C.AS_STUS_ID IN ( '1','19' )          THEN A.SALES_ORD_NO
              END SALES_ORDER_NO
         FROM SAL0001D A
         LEFT JOIN SVC0130D B ON A.SALES_ORD_NO = B.SALES_ORDER_NO AND B.STUS IN ( '1','44' )
-        LEFT JOIN SVC0001D C ON A.SALES_ORD_ID = C.AS_SO_ID AND C.AS_STUS_ID = 1
+        LEFT JOIN SVC0001D C ON A.SALES_ORD_ID = C.AS_SO_ID AND C.AS_STUS_ID IN ( '1','19' )
         WHERE A.SALES_ORD_NO = #{salesOrderNo} AND ROWNUM =1
 	]]>
 </select>
