@@ -74,6 +74,8 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                         ,EXTENT5.PHYSICL_FILE_NAME FILENAME
                 FROM PAY0061D Extent1
                        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.FILE_TYPE_ID
+                        LEFT JOIN SYS0070m S70 on TO_CHAR(S70.ATCH_FILE_GRP_ID) = Extent1.FILE_URL
+                        LEFT JOIN SYS0071D S71 on S70.ATCH_FILE_ID = S71.ATCH_FILE_ID
                         LEFT JOIN (SELECT *
                                           FROM SYS0070M  S70
                                            JOIN SYS0071D S71
