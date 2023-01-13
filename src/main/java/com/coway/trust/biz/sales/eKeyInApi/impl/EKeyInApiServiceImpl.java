@@ -2444,4 +2444,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
       return rtnDto;
   }
+
+	@Override
+	public EKeyInApiDto checkIfIsDscInstallationProductCategoryCode(EKeyInApiForm param) {
+		// TODO Auto-generated method stub
+	      EKeyInApiDto rtnDto = new EKeyInApiDto();
+		int result = homecareCmMapper.checkIfIsDscInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+		rtnDto.setIsHcDscInstallationFlag(result);
+		return rtnDto;
+	}
 }

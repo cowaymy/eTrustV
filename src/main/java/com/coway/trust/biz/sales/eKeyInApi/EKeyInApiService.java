@@ -91,4 +91,6 @@ public interface EKeyInApiService {
 
   EKeyInApiDto saveTokenNumber(EKeyInApiDto param) throws Exception;
 
+  EKeyInApiDto checkIfIsDscInstallationProductCategoryCode(EKeyInApiForm param);
+
 }

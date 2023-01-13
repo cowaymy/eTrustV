@@ -43,7 +43,8 @@ var userType = '${SESSION_INFO.userTypeId}';
     doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '${preOrderInfo.appTypeId}', 'appType', 'S', ''); //Common Code
     doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
     //doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-    doGetComboSepa('/homecare/selectHomecareBranchList.do', '', ' - ', '', 'dscBrnchId', 'S', ''); //Branch Code
+    //doGetComboSepa('/homecare/selectHomecareBranchList.do', '', ' - ', '', 'dscBrnchId', 'S', ''); //Branch Code
+    doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
     doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'keyinBrnchId', 'S', ''); //Branch Code
     doGetComboData('/common/selectCodeList.do', {
       groupCode : '325'
@@ -543,6 +544,21 @@ var userType = '${SESSION_INFO.userTypeId}';
       var empChk = 0;
       var exTrade = $("#exTrade").val();
       var srvPacId = appTypeVal == '66' ? $('#srvPacId').val() : 0;
+
+	  Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: stkIdVal}, function(result) {
+          if(result != null)
+          {
+        	var custAddId =	$('#hiddenCustAddId').val()
+          	if(result.data == 1){
+                fn_loadInstallAddrForDiffBranch(custAddId,'N');
+          	}
+          	else{
+				fn_loadInstallAddrForDiffBranch(custAddId,'Y');
+          	}
+          }
+      },  function(jqXHR, textStatus, errorThrown) {
+          alert("Fail to check Air Conditioner. Please contact IT");
+      });
 
       if (stkIdx > 0) {
         fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
@@ -2306,6 +2322,15 @@ var userType = '${SESSION_INFO.userTypeId}';
        return isValid;
 
    }
+
+    //Customise Installation DSC/HDC Load for Aircon Checking Usage and not including fn_clearSales for after onchange use
+    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare) {
+    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare}, function(custInfo) {
+            if(custInfo != null) {
+                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+            }
+        });
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
