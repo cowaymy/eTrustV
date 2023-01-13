@@ -35,6 +35,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiForm;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.impl.HomecareCmMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.eKeyInApi.EKeyInApiService;
@@ -78,6 +79,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Resource(name = "EKeyInApiMapper")
   private EKeyInApiMapper eKeyInApiMapper;
+
+  @Resource(name = "homecareCmMapper")
+  private HomecareCmMapper homecareCmMapper;
 
   @Autowired
   private LoginMapper loginMapper;
@@ -549,7 +553,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
     if (CommonUtils.isNotEmpty(param.getGu()) && param.getGu().equals("MATTRESS")) {
       param.setStkCtgryId(5707);
-      param.setGu("MATTRESS");
+
+      //check aircon type category
+      int result = homecareCmMapper.checkIfIsDscInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+      if(result == 1){
+          param.setGu("");
+      }
+      else{
+          param.setGu("MATTRESS");
+      }
       param.setSrvCntrctPacId(param.getSrvPacId());
       List<EgovMap> selecteOrderProduct1 = null;
 
