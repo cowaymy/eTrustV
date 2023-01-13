@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.HomecareCmService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -68,6 +69,24 @@ public class HomecareCmController {
 		return ResponseEntity.ok(branchList);
 	}
 
+	@RequestMapping(value = "/selectHomecareDscBranchList.do")
+	public ResponseEntity<List<EgovMap>> selectHomecareDscBranchList(@RequestParam Map<String, Object> params) {
+		String _brnchType = CommonUtils.nvl2(params.get("brnchType"), HomecareConstants.HDC_BRANCH_TYPE);
+		params.put("brnchType", _brnchType);
+		params.put("brnchTypeDsc", HomecareConstants.DSC_BRANCH_TYPE);
+		List<EgovMap> branchList = homecareCmService.selectHomecareBranchList(params);
+
+		return ResponseEntity.ok(branchList);
+	}
+
+	@RequestMapping(value = "/checkIfIsAirconProductCategoryCode.do")
+	public ResponseEntity<ReturnMessage> checkIfIsAirconProductCategoryCode(@RequestParam Map<String, Object> params) {
+		ReturnMessage message = new ReturnMessage();
+		int result = homecareCmService.checkIfIsAirconProductCategoryCode(params);
+		message.setCode("1");
+		message.setData(result);
+	    return ResponseEntity.ok(message);
+	}
 }
 
 

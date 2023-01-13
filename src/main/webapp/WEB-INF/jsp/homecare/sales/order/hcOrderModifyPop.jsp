@@ -18,6 +18,7 @@
 	var PV_MONTH = "${ordPvMonth}";
 	var PV_YEAR = "${ordPvYear}";
     var CUST_TYPE_ID = "${typeId}";
+    var STK_ID = "${stkId}";
 
     var keyValueList = [];
     var modDocGridID;
@@ -47,7 +48,7 @@
 
         doGetComboData('/common/selectCodeList.do', parmamGrpCode, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
         doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
-        doGetComboSepa('/common/selectBranchCodeList.do', '${dtMemType}', ' - ', '', 'dscBrnchId', 'S'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', '${dtMemType}', ' - ', '', 'dscBrnchId', 'S'); //Branch Code 5754 HDC
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', 'eurcRliefAppTypeId', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '145', 'CODE_ID', '', 'eurcRliefTypeId', 'S', ''); //Common Code
@@ -1261,7 +1262,6 @@
 
                 $('#promoId').val(promoId);
                 $('#stkId').val(stkId);
-
                 if (APP_TYPE_ID == 67 || APP_TYPE_ID == 68 || APP_TYPE_ID == 144) {
                   doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do',
                       {
@@ -1515,6 +1515,20 @@
   }
 
   function fn_loadInstallInfo(ordId) {
+	  Common.ajaxSync("GET", "/homecare/checkIfIsAirconProductCategoryCode.do", {stkId: STK_ID}, function(result) {
+          if(result != null)
+          {
+          	if(result.data == 1){
+                doGetComboSepa('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+          	}
+          	else{
+          		doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+          	}
+          }
+      },  function(jqXHR, textStatus, errorThrown) {
+          alert("Fail to check Air Conditioner. Please contact IT");
+    });
+
     console.log("fn_loadInstallInfo START");
 
     Common.ajax("GET", "/sales/order/selectInstallInfo.do", {

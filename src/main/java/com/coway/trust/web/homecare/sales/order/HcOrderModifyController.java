@@ -104,6 +104,7 @@ public class HcOrderModifyController {
         model.put("dtMemType", HomecareConstants.MEM_TYPE.DT);
         model.put("modFraOrdNo", CommonUtils.nvl(hcOrder.get("fraOrdNo")));
         model.put("modBndlId", CommonUtils.nvl(hcOrder.get("ordSeqNo")));
+        model.put("stkId", basicInfo.get("stockId"));
 
         return "homecare/sales/order/hcOrderModifyPop";
   	}

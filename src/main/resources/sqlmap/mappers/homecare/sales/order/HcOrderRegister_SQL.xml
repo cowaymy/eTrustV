@@ -23,7 +23,6 @@
                              , SAL0082D T2          /* ServiceContractPackage_Product */
                              , SYS0013M T3         /* CodeDetail */
                              , SYS0013M T5         /* CodeDetail */
-
                     WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
                        AND T1.STK_CTGRY_ID = T3.CODE_ID
                        AND 1 = T2.SRV_PAC_ITM_STUS_ID
@@ -31,12 +30,13 @@
                        AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
                        AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                        AND T5.CODE_MASTER_ID = '381'
-                        <if test='stkCtgryId != null and stkCtgryId != ""'>
-                             <if test="stkCtgryId == '5706'">
-                                AND T1.STK_CTGRY_ID != '5707'         /* StkCategoryID */
+<!--                         FOR Homecare MAIN/AUX unit handling    -->
+                        <if test='productType != null and productType != ""'>
+                             <if test='productType == "1"'>
+                                AND T3.CODE != 'FRM' AND T3.CODE != 'ACO'
                              </if>
-                             <if test="stkCtgryId != '5706'">
-                                AND T1.STK_CTGRY_ID = #{stkCtgryId}          /* StkCategoryID */
+                             <if test='productType == "2"'>
+                                AND (T3.CODE = 'FRM' OR T3.CODE = 'ACO')
                              </if>
                         </if>
                 </when>
@@ -61,12 +61,13 @@
                         AND T2.SRV_MEM_PAC_ID = #{srvPacId}
                         AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                         AND T5.CODE_MASTER_ID = '381'
-                        <if test='stkCtgryId != null and stkCtgryId != ""'>
-                            <if test="stkCtgryId == '5706'">
-                                AND T1.STK_CTGRY_ID != '5707'         /* StkCategoryID */
+<!--                         FOR Homecare MAIN/AUX unit handling    -->
+                       <if test='productType != null and productType != ""'>
+                             <if test='productType == "1"'>
+                                AND T3.CODE != 'FRM' AND T3.CODE != 'ACO'
                              </if>
-                             <if test="stkCtgryId != '5706'">
-                                AND T1.STK_CTGRY_ID = #{stkCtgryId}          /* StkCategoryID */
+                             <if test='productType == "2"'>
+                                AND (T3.CODE = 'FRM' OR T3.CODE = 'ACO')
                              </if>
                         </if>
                 </otherwise>
@@ -213,5 +214,4 @@
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getProductCategory */
         SELECT STK_CTGRY_ID FROM SYS0026M WHERE STK_ID = #{product}
     </select>
-
 </mapper>

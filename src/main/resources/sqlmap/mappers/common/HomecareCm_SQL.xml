@@ -26,9 +26,17 @@
          FROM SYS0005M
         WHERE STUS_ID = 1
             AND TYPE_ID = #{brnchType}
+            <if test="brnchTypeDsc != null and brnchTypeDsc != ''">
+                OR TYPE_ID = #{brnchTypeDsc}
+            </if>
          ORDER BY CODE
     </select>
 
-
-
+	<select id="checkIfIsAirconProductCategoryCode" parameterType="string" resultType="int">
+		SELECT CASE WHEN s0013m.CODE = 'ACO' OR s0013m.CODE = 'ACI' THEN 1 ELSE 0 END AS RESULT
+		FROM SYS0026M s0026m
+		INNER JOIN SYS0013M s0013m
+		ON s0026m.STK_CTGRY_ID = s0013m.CODE_ID
+		WHERE s0026m.STK_ID = #{stkId} AND s0013m.CODE_MASTER_ID = 11
+	</select>
 </mapper>

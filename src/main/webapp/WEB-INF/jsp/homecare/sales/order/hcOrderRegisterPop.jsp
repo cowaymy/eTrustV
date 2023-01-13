@@ -52,7 +52,7 @@
         doDefCombo(codeList_17, '', 'billPreferInitial', 'S', '');       // Common Code
         doDefCombo(codeList_322, '', 'promoDiscPeriodTp1', 'S', '');      // Discount period
         doDefCombo(codeList_322, '', 'promoDiscPeriodTp2', 'S', '');      // Discount period
-         doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+		doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
          doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
          doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
@@ -337,6 +337,54 @@
                         $("#gstChk").val('1').prop("disabled", true);
                         $("#pBtnCal").removeClass("blind");
                         //fn_tabOnOffSet('REL_CER', 'SHOW');
+                        fn_tabOnOffSet('REL_CER', 'HIDE');
+
+                    } else {
+                        $("#gstChk").val('0').prop("disabled", true);
+                        $('#pBtnCal').addClass("blind");
+                        fn_tabOnOffSet('REL_CER', 'HIDE');
+                    }
+                }
+            }
+        });
+    }
+
+    //Customise Installation Load for Aircon Checking Usage
+    function fn_loadInstallAddrForHomecare(custAddId, isHomecare) {
+    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare}, function(custInfo) {
+
+            if(custInfo != null) {
+                if(custInfo.areaId != undefined) {
+                    if("DM" == custInfo.areaId.substring(0,2)) {
+                        Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
+                        $("#validAreaIdYN").val("N");
+
+                    } else {
+                        $("#validAreaIdYN").val("Y");
+                    }
+                } else {
+                    Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
+                    return false;
+                }
+
+                $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
+                $("#instAddrDtl").val(custInfo.addrDtl); //Address
+                $("#instStreet").val(custInfo.street); //Street
+                $("#instArea").val(custInfo.area); //Area
+                $("#instCity").val(custInfo.city); //City
+                $("#instPostCode").val(custInfo.postcode); //Post Code
+                $("#instState").val(custInfo.state); //State
+                $("#instCountry").val(custInfo.country); //Country
+                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+
+                GST_CHK = custInfo.gstChk;
+
+                if($("#appType").val() == '66') {
+                    $("#gstChk").removeAttr("disabled");
+                } else if($("#appType").val() != '' && $("#appType").val() != '66') {
+                    if(custInfo.gstChk == '1') {
+                        $("#gstChk").val('1').prop("disabled", true);
+                        $("#pBtnCal").removeClass("blind");
                         fn_tabOnOffSet('REL_CER', 'HIDE');
 
                     } else {
@@ -1034,7 +1082,6 @@ console.log("idx:"+idx);
             var _tagObj = $(event.target);
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
-
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
                 _tagObj.val('');
@@ -1046,6 +1093,32 @@ console.log("idx:"+idx);
             var dataList = $('[data-ref="'+_tagId+'"]');
             for(var i=0; i<dataList.length; ++i) {
             	$('#'+ $(dataList[i]).attr('id')).val('');
+            }
+
+            //check main aircon only ajax
+            if(_tagNum == "1"){
+                var stockIdVal = $("#ordProduct"+_tagNum).val();
+                if(!FormUtil.isEmpty(stockIdVal)){
+                	Common.ajaxSync("GET", "/homecare/checkIfIsAirconProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+                        if(result != null)
+                        {
+                        	var custAddId = $('#hiddenCustAddId').val();
+                    		fn_clearInstallAddr();
+                            $('#liInstNewAddr').removeClass("blind");
+                            $('#liInstSelAddr').removeClass("blind");
+                        	if(result.data == 1){
+                        		//change installation branch to DSC //load dsc combobox
+                                fn_loadInstallAddrForHomecare(custAddId,'N');
+                        	}
+                        	else{
+                        		//change installation branch to HDC //load hdc combobox
+         						fn_loadInstallAddrForHomecare(custAddId,'Y');
+                        	}
+                        }
+                    },  function(jqXHR, textStatus, errorThrown) {
+                        alert("Fail to check Air Conditioner. Please contact IT");
+                  });
+                }
             }
 
             if(FormUtil.isEmpty(_tagObj.val())) {
@@ -1084,7 +1157,6 @@ console.log("idx:"+idx);
             var empChk     = $("#empChk").val();
             var exTrade      = $("#exTrade").val();
             var srvPacId      = appTypeVal == '66' ? $('#srvPacId').val() : 0;
-
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
                 /* if(_tagNum == '2') {
@@ -2634,10 +2706,11 @@ console.log(orderVO);
     function fn_setProductCombo(){
     	 var stkType = $("#appType").val() == '66' ? '1' : '2';
     	 const postcode = $("#instPostCode").val()
+    	 //productType is use for indicating if is MAIN unit or AUX unit, 1-(MAIN),2-(AUX) as per _tagNum
          // StkCategoryID - Mattress(5706)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5706', postcode:postcode}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), postcode:postcode, productType: '1'}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
          // StkCategoryID - Frame(5707)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5707', postcode:postcode}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), postcode:postcode, productType: '2'}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
     }
 
     function fn_checkEkeyinSof(sofNo) {

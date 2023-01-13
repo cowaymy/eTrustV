@@ -54,4 +54,11 @@ public class HomecareCmServiceImpl implements HomecareCmService {
 		return homecareCmMapper.selectHomecareBranchList(params);
 	}
 
+
+	@Override
+	public int checkIfIsAirconProductCategoryCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		return homecareCmMapper.checkIfIsAirconProductCategoryCode(params.get("stkId").toString());
+	}
 }

@@ -97,7 +97,7 @@
        // doDefCombo(branchCdList_5, '' ,'listDscBrnchId', 'M', 'fn_multiCombo');
         doDefCombo(categoryCdList, '' ,'listRentStus', 'M', 'fn_multiCombo');
 
-        doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/homecare/selectHomecareDscBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
 
 //         doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 //         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
