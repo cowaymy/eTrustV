@@ -344,10 +344,10 @@
                                 AND C.CODE = EX1.CODE
 
                             <if test='stkCtgryId == 5706'>
-                              AND EX1.CODE = 'MAT' AND EX1.CODE = 'ACI'
+                              AND EX1.CODE = 'MAT' OR EX1.CODE = 'ACI'
                             </if>
                             <if test='stkCtgryId == 5707'>
-                              AND EX1.CODE = 'FRM' AND EX1.CODE = 'ACO'
+                              AND EX1.CODE = 'FRM' OR EX1.CODE = 'ACO'
                             </if>
         )
       </when>
@@ -402,10 +402,10 @@
                                 AND C.CODE = EX1.CODE
 
                             <if test='stkCtgryId == 5706'>
-                              AND EX1.CODE = 'MAT' AND EX1.CODE = 'ACI'
+                              AND EX1.CODE = 'MAT' OR EX1.CODE = 'ACI'
                             </if>
                             <if test='stkCtgryId == 5707'>
-                              AND EX1.CODE = 'FRM' AND EX1.CODE = 'ACO'
+                              AND EX1.CODE = 'FRM' OR EX1.CODE = 'ACO'
                             </if>
         )
       </when>
