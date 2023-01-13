@@ -2708,6 +2708,52 @@ public void rentalAgreementRaw() {
   LOGGER.info("[END] rentalAgreementRaw...");
 }
 
+@RequestMapping(value = "/AD_RCM_Daily_2017_2018.do")
+//@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
+public void adRcmDaily2017t2018() {
+
+    LOGGER.info("[START] AD_RCM_Daily_2017_2018...");
+    Map<String, Object> params = new HashMap<>();
+
+    int startYear = 2017;
+    int endYear = 2018;
+
+    params.put(REPORT_FILE_NAME, "/visualcut/AD_RCM_Daily_HA.rpt");// visualcut
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_STARTYEAR", startYear);// parameter
+    params.put("V_ENDYEAR", endYear);// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Simplified_RCM" + File.separator + "AD_RCM_Daily_2017_2018_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] AD_RCM_Daily_2017_2018...");
+}
+
+@RequestMapping(value = "/AD_RCM_Daily_Current_Year.do")
+//@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
+public void adRcmDailyCurrentYear() {
+
+  int startYear = 2019;
+  int currentYear = LocalDate.now().getYear();
+
+  for(int year= startYear;year <= currentYear; year++){
+    LOGGER.info("[START] AD_RCM_Daily_Current_Year...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/AD_RCM_Daily_HA.rpt");// visualcut
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_STARTYEAR", year);// parameter
+    params.put("V_ENDYEAR", "");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Simplified_RCM" + File.separator + "AD_RCM_Daily_" + year + "_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] AD_RCM_Daily_Current_Year...");
+  }
+
+}
+
 @RequestMapping(value = "/DataMartReport.do")
 public void dataMartReport(HttpServletRequest request) {
   LOGGER.info("[START] DataMartReport...");
