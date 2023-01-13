@@ -1515,7 +1515,7 @@
   }
 
   function fn_loadInstallInfo(ordId) {
-	  Common.ajaxSync("GET", "/homecare/checkIfIsAirconProductCategoryCode.do", {stkId: STK_ID}, function(result) {
+	  Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: STK_ID}, function(result) {
           if(result != null)
           {
           	if(result.data == 1){
@@ -1527,7 +1527,7 @@
           }
       },  function(jqXHR, textStatus, errorThrown) {
           alert("Fail to check Air Conditioner. Please contact IT");
-    });
+      });
 
     console.log("fn_loadInstallInfo START");
 
