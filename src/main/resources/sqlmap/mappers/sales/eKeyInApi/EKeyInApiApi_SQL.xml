@@ -342,13 +342,13 @@
                             FROM SYS0094M EX1
                             WHERE EX1.IND = 'HOMECARE'
                                 AND C.CODE = EX1.CODE
-                               AND EX1.CODE != 'FRM'  AND EX1.CODE != 'ACO'
-<!--                             <if test='stkCtgryId == 5706'>  -->
-<!--                               AND EX1.CODE = 'MAT' -->
-<!--                             </if> -->
-<!--                             <if test='stkCtgryId == 5707'> -->
-<!--                               AND EX1.CODE = 'FRM' -->
-<!--                             </if>  -->
+
+                            <if test='stkCtgryId == 5706'>
+                              AND EX1.CODE = 'MAT' AND EX1.CODE = 'ACI'
+                            </if>
+                            <if test='stkCtgryId == 5707'>
+                              AND EX1.CODE = 'FRM' AND EX1.CODE = 'ACO'
+                            </if>
         )
       </when>
       <otherwise>
@@ -401,13 +401,12 @@
                             WHERE EX1.IND = 'HOMECARE'
                                 AND C.CODE = EX1.CODE
 
-                              AND (EX1.CODE == 'FRM'  OR EX1.CODE == 'ACO')
-<!--                             <if test='stkCtgryId == 5706'> -->
-<!--                               AND EX1.CODE = 'MAT' -->
-<!--                             </if> -->
-<!--                             <if test='stkCtgryId == 5707'> -->
-<!--                               AND EX1.CODE = 'FRM' -->
-<!--                             </if> -->
+                            <if test='stkCtgryId == 5706'>
+                              AND EX1.CODE = 'MAT' AND EX1.CODE = 'ACI'
+                            </if>
+                            <if test='stkCtgryId == 5707'>
+                              AND EX1.CODE = 'FRM' AND EX1.CODE = 'ACO'
+                            </if>
         )
       </when>
       <otherwise>
