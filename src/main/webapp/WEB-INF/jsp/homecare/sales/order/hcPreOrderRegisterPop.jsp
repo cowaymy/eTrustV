@@ -118,10 +118,9 @@
         ///doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
         doDefCombo(branchCdList_1, '', 'keyinBrnchId', 'S', '');    // Branch Code
         doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
+		doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
-        doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-
-        //UpperCase Field
+		//UpperCase Field
         $("#nric").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
         $("#sofNo").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
         $('#nric').keypress(function (e) {
@@ -459,6 +458,14 @@
             var dataList = $('[data-ref="'+_tagId+'"]');
             for(var i=0; i<dataList.length; ++i) {
                 $('#'+ $(dataList[i]).attr('id')).val('');
+            }
+
+            //check main aircon only ajax
+            if(_tagNum == "1"){
+                var stockIdVal = $("#ordProduct"+_tagNum).val();
+                if(!FormUtil.isEmpty(stockIdVal)){
+                	checkIfIsDscInstallationProductCategoryCode(stockIdVal);
+                }
             }
 
             if(FormUtil.isEmpty(_tagObj.val())) {
@@ -1454,10 +1461,10 @@
          var stkType = $("#appType").val() == '66' ? '1' : '2';
          const postcode = $("#instPostCode").val()
          // StkCategoryID - Mattress(5706)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5706', postcode}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), postcode:postcode, productType: '1'}, '', 'ordProduct1', 'S', 'fn_setOptGrpClass');//product 생성
          // StkCategoryID - Frame(5707)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), stkCtgryId:'5707', postcode}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
-    }
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(), postcode:postcode, productType: '2'}, '', 'ordProduct2', 'S', 'fn_setOptGrpClass');//product 생성
+      }
 
     function fn_clearSales() {
         $('#installDur').val('');
@@ -1727,6 +1734,36 @@
         });
     }
 
+    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare) {
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare}, function(custInfo) {
+
+            if(custInfo != null) {
+                $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
+                $("#instAddrDtl").val(custInfo.addrDtl); //Address
+                $("#instStreet").val(custInfo.street); //Street
+                $("#instArea").val(custInfo.area); //Area
+                $("#instCity").val(custInfo.city); //City
+                $("#instPostCode").val(custInfo.postcode); //Post Code
+                $("#instState").val(custInfo.state); //State
+                $("#instCountry").val(custInfo.country); //Country
+
+                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+                if(MEM_TYPE == 2)
+                    $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else if (MEM_TYPE == 7)
+                	$("#keyinBrnchId").val(284); //Posting Branch
+                else
+                    $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+
+                /* if(custInfo.gstChk == '1') {
+                    $("#gstChk").val('1').prop("disabled", true);
+                } else {
+                    $("#gstChk").val('0').removeAttr("disabled");
+                } */
+            }
+        });
+    }
+
     function fn_createCustomerPop() {
         Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : "1220px", height : "690", resizable: "no", scrollbars: "no"});
     }
@@ -1924,6 +1961,25 @@
 
         doGetComboData('/sales/order/selectPromoBsdCpntESales.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo'+tagNum, 'S', '');
     }
+
+    function checkIfIsDscInstallationProductCategoryCode(stockIdVal){
+	  	Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+	        if(result != null)
+	        {
+	        	var custAddId = $('#hiddenCustAddId').val();
+	        	if(result.data == 1){
+	        		//change installation branch to DSC //load dsc combobox
+	                fn_loadInstallAddrForDiffBranch(custAddId,'N');
+	        	}
+	        	else{
+	        		//change installation branch to HDC //load hdc combobox
+					fn_loadInstallAddrForDiffBranch(custAddId,'Y');
+	        	}
+	        }
+	    },  function(jqXHR, textStatus, errorThrown) {
+	        alert("Fail to check Air Conditioner. Please contact IT");
+	  });
+  }
 
     $('#exTrade').change(function() {
 

@@ -310,7 +310,6 @@
                 $("#instPostCode").val(custInfo.postcode); //Post Code
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
-                debugger;
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
 
                 GST_CHK = custInfo.gstChk;
