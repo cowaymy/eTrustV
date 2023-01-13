@@ -1,5 +1,6 @@
 package com.coway.trust.web.homecare.services.install;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,7 @@ public class HcOrderCallListController {
 		model.addAttribute("callLogSta", callLogSta);
 		model.addAttribute("callLogSrt", callLogSrt);
 		model.addAttribute("promotionList", promotionList);
+
 		// 호출될 화면
 		return "homecare/services/install/hcOrderCallList";
 	}
@@ -113,6 +115,10 @@ public class HcOrderCallListController {
 		params.put("DSCCodeList", DSCCodeList);
 		params.put("promotionListSp", promotionListSp); //added by keyi
 		params.put("searchFeedBackCode", searchFeedBackCode); //added by keyi
+
+		String[] branchTypeArray = {HomecareConstants.HDC_BRANCH_TYPE, HomecareConstants.DSC_BRANCH_TYPE};
+
+		params.put("branchTypeList", branchTypeArray);
 
 		List<EgovMap> orderCallList = hcOrderCallListService.searchHcOrderCallList(params);
 
