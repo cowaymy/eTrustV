@@ -55,7 +55,9 @@
                 //----------------------------------------------------------
                 // [Installation] : Installation Address SETTING
                 //----------------------------------------------------------
-                fn_loadInstallAddr('${orderInfo.installationInfo.installAddrId}');
+                var stkId = "${orderInfo.basicInfo.stockId}";
+                checkIfIsDscInstallationProductCategoryCode(stkId);
+                //fn_loadInstallAddr('${orderInfo.installationInfo.installAddrId}');
 
                 $('#prefInstDt').val('${orderInfo.installationInfo.preferInstDt}');
                 $('#prefInstTm').val('${orderInfo.installationInfo.preferInstTm}');

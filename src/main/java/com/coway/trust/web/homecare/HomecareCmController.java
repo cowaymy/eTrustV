@@ -79,10 +79,10 @@ public class HomecareCmController {
 		return ResponseEntity.ok(branchList);
 	}
 
-	@RequestMapping(value = "/checkIfIsAirconProductCategoryCode.do")
-	public ResponseEntity<ReturnMessage> checkIfIsAirconProductCategoryCode(@RequestParam Map<String, Object> params) {
+	@RequestMapping(value = "/checkIfIsDscInstallationProductCategoryCode.do")
+	public ResponseEntity<ReturnMessage> checkIfIsDscInstallationProductCategoryCode(@RequestParam Map<String, Object> params) {
 		ReturnMessage message = new ReturnMessage();
-		int result = homecareCmService.checkIfIsAirconProductCategoryCode(params);
+		int result = homecareCmService.checkIfIsDscInstallationProductCategoryCode(params);
 		message.setCode("1");
 		message.setData(result);
 	    return ResponseEntity.ok(message);

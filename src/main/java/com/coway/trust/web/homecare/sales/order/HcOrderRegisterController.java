@@ -292,7 +292,7 @@ public class HcOrderRegisterController {
 		String fraOrdId =  "";
 		String ordCtgryCd = CommonUtils.nvl(hcPreOrdInfo.get("ordCtgryCd")); // Homecare Category CD
 
-		if(ordCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.MAT)) {
+		if(ordCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.MAT) || ordCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.ACI)) {
 			matOrdId = CommonUtils.nvl(hcPreOrdInfo.get("ordId"));
 			fraOrdId = CommonUtils.nvl(hcPreOrdInfo.get("anoOrdId"));
 		} else {

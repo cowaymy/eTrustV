@@ -39,5 +39,5 @@ public interface HomecareCmMapper {
 	 */
 	public List<EgovMap> selectHomecareBranchList(Map<String, Object> params);
 
-	public int checkIfIsAirconProductCategoryCode(String stkId);
+	public int checkIfIsDscInstallationProductCategoryCode(String stkId);
 }

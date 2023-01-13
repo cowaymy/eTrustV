@@ -32,7 +32,7 @@
          ORDER BY CODE
     </select>
 
-	<select id="checkIfIsAirconProductCategoryCode" parameterType="string" resultType="int">
+	<select id="checkIfIsDscInstallationProductCategoryCode" parameterType="string" resultType="int">
 		SELECT CASE WHEN s0013m.CODE = 'ACO' OR s0013m.CODE = 'ACI' THEN 1 ELSE 0 END AS RESULT
 		FROM SYS0026M s0026m
 		INNER JOIN SYS0013M s0013m

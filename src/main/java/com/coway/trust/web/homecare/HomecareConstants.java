@@ -108,6 +108,10 @@ public class HomecareConstants {
 		public static final String MAT = "MAT";
 		/** Frame */
 		public static final String FRM = "FRM";
+		/** Aircon (Indoor) */
+		public static final String ACI = "ACI";
+		/** Aircon (Outdoor) */
+		public static final String ACO = "ACO";
 	}
 
 	/** Member Type */

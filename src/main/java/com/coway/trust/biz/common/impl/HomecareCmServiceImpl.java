@@ -56,9 +56,9 @@ public class HomecareCmServiceImpl implements HomecareCmService {
 
 
 	@Override
-	public int checkIfIsAirconProductCategoryCode(Map<String, Object> params) {
+	public int checkIfIsDscInstallationProductCategoryCode(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 
-		return homecareCmMapper.checkIfIsAirconProductCategoryCode(params.get("stkId").toString());
+		return homecareCmMapper.checkIfIsDscInstallationProductCategoryCode(params.get("stkId").toString());
 	}
 }

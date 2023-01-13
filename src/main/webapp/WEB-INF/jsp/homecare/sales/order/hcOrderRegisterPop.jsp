@@ -281,6 +281,7 @@
         });
     }
 
+    //for initial load
     function fn_loadInstallAddr(custAddId) {
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(custInfo) {
 
@@ -309,6 +310,7 @@
                 $("#instPostCode").val(custInfo.postcode); //Post Code
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
+                debugger;
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
 
                 GST_CHK = custInfo.gstChk;
@@ -349,8 +351,8 @@
         });
     }
 
-    //Customise Installation Load for Aircon Checking Usage
-    function fn_loadInstallAddrForHomecare(custAddId, isHomecare) {
+    //Customise Installation DSC/HDC Load for Aircon Checking Usage and not including fn_clearSales for after onchange use
+    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare) {
     	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare}, function(custInfo) {
 
             if(custInfo != null) {
@@ -1099,25 +1101,7 @@ console.log("idx:"+idx);
             if(_tagNum == "1"){
                 var stockIdVal = $("#ordProduct"+_tagNum).val();
                 if(!FormUtil.isEmpty(stockIdVal)){
-                	Common.ajaxSync("GET", "/homecare/checkIfIsAirconProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
-                        if(result != null)
-                        {
-                        	var custAddId = $('#hiddenCustAddId').val();
-                    		fn_clearInstallAddr();
-                            $('#liInstNewAddr').removeClass("blind");
-                            $('#liInstSelAddr').removeClass("blind");
-                        	if(result.data == 1){
-                        		//change installation branch to DSC //load dsc combobox
-                                fn_loadInstallAddrForHomecare(custAddId,'N');
-                        	}
-                        	else{
-                        		//change installation branch to HDC //load hdc combobox
-         						fn_loadInstallAddrForHomecare(custAddId,'Y');
-                        	}
-                        }
-                    },  function(jqXHR, textStatus, errorThrown) {
-                        alert("Fail to check Air Conditioner. Please contact IT");
-                  });
+                	checkIfIsDscInstallationProductCategoryCode(stockIdVal);
                 }
             }
 
@@ -2784,6 +2768,27 @@ console.log(orderVO);
     doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo'+tagNum, 'S', '');
   }
 
+  function checkIfIsDscInstallationProductCategoryCode(stockIdVal){
+	  	Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+	        if(result != null)
+	        {
+	        	var custAddId = $('#hiddenCustAddId').val();
+	    		fn_clearInstallAddr();
+	            $('#liInstNewAddr').removeClass("blind");
+	            $('#liInstSelAddr').removeClass("blind");
+	        	if(result.data == 1){
+	        		//change installation branch to DSC //load dsc combobox
+	                fn_loadInstallAddrForDiffBranch(custAddId,'N');
+	        	}
+	        	else{
+	        		//change installation branch to HDC //load hdc combobox
+					fn_loadInstallAddrForDiffBranch(custAddId,'Y');
+	        	}
+	        }
+	    },  function(jqXHR, textStatus, errorThrown) {
+	        alert("Fail to check Air Conditioner. Please contact IT");
+	  });
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">

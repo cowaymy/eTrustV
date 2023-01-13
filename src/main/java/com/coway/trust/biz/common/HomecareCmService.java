@@ -36,6 +36,6 @@ public interface HomecareCmService {
 	 */
 	public List<EgovMap> selectHomecareBranchList(Map<String, Object> params);
 
-	int checkIfIsAirconProductCategoryCode(Map<String, Object> params);
+	int checkIfIsDscInstallationProductCategoryCode(Map<String, Object> params);
 
 }
