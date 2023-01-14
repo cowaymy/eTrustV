@@ -164,6 +164,8 @@ public class AppConstants {
 	public static final String MSG_NECESSARY = "sys.msg.necessary";
 	public static final String MSG_FILE_MAX_LIMT = "sys.msg.file.limit";
 	public static final String MSG_INVALID_TOKEN = "sys.msg.invalid.token";
+
+	public static final String MSG_ERROR = "enquiry.errorMsg";
 	/**
 	 * 공통 코드 KEY
 	 */

@@ -59,4 +59,15 @@ public interface TagMgmtMapper {
   public List<EgovMap> selectCmGroup(Map<String, Object> params);
 
   public EgovMap selectCmGroupByUsername(Map<String, Object> params);
+
+  public List<EgovMap> getUpdInstllationStat(Map<String, Object> params);
+
+  public List<EgovMap> selectUpdateInstallationAddressRequest(Map<String, Object> params);
+
+  public int insertInstallAddress(Map<String, Object> params);
+
+  public int updateInstallInfo(Map<String, Object> params);
+
+  public int updateRequestStatus(Map<String, Object> params);
+
 }

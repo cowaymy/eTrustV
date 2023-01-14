@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -283,5 +285,59 @@ public class TagMgmtController {
 
     return ResponseEntity.ok(attachList);
   }
+
+  @RequestMapping(value = "/updateInstalaltionAddress.do")
+  public String updateInstalaltionAddress(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    List<EgovMap> tMgntStat = tagMgmtService.getUpdInstllationStat(params);
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
+
+    model.addAttribute("tMgntStat", tMgntStat);
+
+    return "services/tagMgmt/updateInstalaltionAddress";
+  }
+
+  @RequestMapping(value = "/selectUpdateInstallationAddressRequest")
+  ResponseEntity<List<EgovMap>> selectUpdateInstallationAddressRequest(@RequestParam Map<String, Object> params, HttpServletRequest request) {
+    String[] statusList = request.getParameterValues("statusList");
+    params.put("listStatus", statusList);
+    logger.info("param"+params);
+    List<EgovMap> notice = tagMgmtService.selectUpdateInstallationAddressRequest(params);
+    return ResponseEntity.ok(notice);
+  }
+
+  @Transactional
+  @RequestMapping(value = "/approveInstallationAddressRequest.do")
+  public ResponseEntity<ReturnMessage> approveInstallationAddressRequest(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
+
+	  try{
+		    ReturnMessage message = new ReturnMessage();
+
+		    logger.info("param approveInstallationAddressRequest"+params);
+
+		    params.put("crtUserId", session.getUserId());
+			int result = tagMgmtService.insertInstallAddress(params);
+			int result2 = tagMgmtService.updateInstallInfo(params);
+			int result3 = tagMgmtService.updateRequestStatus(params);
+
+			if (result > 0 && result2 > 0 && result3 > 0) {
+		    	message.setCode(AppConstants.SUCCESS);
+		    	message.setMessage("Success to approve.");
+			} else {
+				message.setMessage("Failed to approve this order number. Please try again later.");
+				message.setCode(AppConstants.FAIL);
+				throw new Error("Unable to update");
+			}
+			return ResponseEntity.ok(message);
+	  }
+	  catch(Exception e){
+		  throw e;
+	  }
+  }
+
 
 }

@@ -52,4 +52,14 @@ public interface TagMgmtService {
   List<EgovMap> selectCmGroup(Map<String, Object> params);
 
   EgovMap selectCmGroupByUsername(Map<String, Object> params);
+
+  List<EgovMap> getUpdInstllationStat(Map<String, Object> params);
+
+  List<EgovMap> selectUpdateInstallationAddressRequest(Map<String, Object> params);
+
+  int insertInstallAddress(Map<String, Object> params);
+
+  int updateInstallInfo(Map<String, Object> params);
+
+  int updateRequestStatus(Map<String, Object> params);
 }

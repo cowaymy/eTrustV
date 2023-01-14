@@ -145,4 +145,32 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 	  return tagMgmtMapper.selectCmGroupByUsername(params);
   }
 
+  @Override
+  public List<EgovMap> getUpdInstllationStat(Map<String, Object> params) {
+    return tagMgmtMapper.getUpdInstllationStat(params);
+  }
+
+  @Override
+  public List<EgovMap> selectUpdateInstallationAddressRequest(Map<String, Object> params) {
+    return tagMgmtMapper.selectUpdateInstallationAddressRequest(params);
+  }
+
+  @Override
+  public int insertInstallAddress(Map<String, Object> params) {
+		int result =tagMgmtMapper.insertInstallAddress(params);
+		return result;
+  }
+
+  @Override
+  public int updateInstallInfo(Map<String, Object> params) {
+		int result =tagMgmtMapper.updateInstallInfo(params);
+		return result;
+  }
+
+  @Override
+  public int updateRequestStatus(Map<String, Object> params) {
+		int result =tagMgmtMapper.updateRequestStatus(params);
+		return result;
+  }
+
 }

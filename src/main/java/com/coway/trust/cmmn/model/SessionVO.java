@@ -7,6 +7,10 @@ import java.util.List;
 
 public class SessionVO implements Serializable {
 
+	//For customer portal
+	private int custId;
+	private String custName;
+
 	private int userId;
 	private String userName; // AS-IS 에서 userName을 실제적인 로그인 ID로 사용함.
 	private String userFullname;
@@ -288,6 +292,33 @@ public class SessionVO implements Serializable {
 			sessionVO.setBizType(loginVO.getBizType());
 
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
+		}
+
+		return sessionVO;
+	}
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public int getCustId() {
+		return custId;
+	}
+
+	public void setCustId(int custId) {
+		this.custId = custId;
+	}
+
+	public static SessionVO create2(CustomerLoginVO customerLoginVO) {
+		SessionVO sessionVO = new SessionVO();
+
+		if (customerLoginVO != null) {
+			sessionVO.setCustId(customerLoginVO.getCustId());
+			sessionVO.setCustName(customerLoginVO.getCustName());
 		}
 
 		return sessionVO;

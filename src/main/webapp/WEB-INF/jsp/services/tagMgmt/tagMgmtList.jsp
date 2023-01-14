@@ -189,7 +189,7 @@
                 $("#sub_department").val('');
                 $("#sub_department").find("option").remove();
               } else if ($("#main_department").val() == 'MD08' && "${SESSION_INFO.userTypeId}" == '2'){
-            	   doGetCombo('/services/tagMgmt/selectSubDeptCodySupport.do', '', '', 'sub_department', 'M', 'f_multiComboType');
+                   doGetCombo('/services/tagMgmt/selectSubDeptCodySupport.do', '', '', 'sub_department', 'M', 'f_multiComboType');
               }
               else{
                 /* doGetCombo('/services/tagMgmt/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', ''); */
@@ -206,26 +206,26 @@
 
           // Added department code by Hui Ding, 2020-12-17
           $("#sub_department").change(function() {
-        	  if ($("#main_department").val() == 'MD08'){ // only for CODY support
-        	        var subDeptCodySupport = $('#sub_department').val();
+              if ($("#main_department").val() == 'MD08'){ // only for CODY support
+                    var subDeptCodySupport = $('#sub_department').val();
 
-        	        var tempSubDeptCodySupport = "";
-        	        if (subDeptCodySupport != null ){
-        	        for (var i = 0 ; i < subDeptCodySupport.length; i++){
-        	            if (tempSubDeptCodySupport == ""){
-        	                tempSubDeptCodySupport = subDeptCodySupport[i];
-        	            }else{
-        	                tempSubDeptCodySupport = tempSubDeptCodySupport +"∈"+subDeptCodySupport[i];
-        	            }
-        	        }
-        	         }
+                    var tempSubDeptCodySupport = "";
+                    if (subDeptCodySupport != null ){
+                    for (var i = 0 ; i < subDeptCodySupport.length; i++){
+                        if (tempSubDeptCodySupport == ""){
+                            tempSubDeptCodySupport = subDeptCodySupport[i];
+                        }else{
+                            tempSubDeptCodySupport = tempSubDeptCodySupport +"∈"+subDeptCodySupport[i];
+                        }
+                    }
+                     }
 
-        	        var param = tempSubDeptCodySupport;
-        		  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), sub_dept : param }, 'cmGroup', 'cmGroup', 'S', 'fn_setDefaultToSelection');
-        	  } else {
-        		  $("#cmGroup").val('');
-        		  $("#cmGroup").attr("disabled", true);
-        	  }
+                    var param = tempSubDeptCodySupport;
+                  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), sub_dept : param }, 'cmGroup', 'cmGroup', 'S', 'fn_setDefaultToSelection');
+              } else {
+                  $("#cmGroup").val('');
+                  $("#cmGroup").attr("disabled", true);
+              }
           });
   });
 
@@ -326,14 +326,14 @@
   }
 
   function f_multiComboType() {
-	    $(function() {
-	        $('#sub_department').change(function() {
-	        }).multipleSelect({
-	            selectAll : true
-	        });  /* .multipleSelect("checkAll"); */
+        $(function() {
+            $('#sub_department').change(function() {
+            }).multipleSelect({
+                selectAll : true
+            });  /* .multipleSelect("checkAll"); */
 
-	    });
-	}
+        });
+    }
 
 </script>
 <section id="content">
@@ -453,24 +453,24 @@
      </tr>
 
      <tr>
-	     <th scope="row"><spring:message code='service.grid.Status'/></th>
-	      <td><select class="multy_select w100p" multiple="multiple"
-	       id="statusList" name="statusList">
+         <th scope="row"><spring:message code='service.grid.Status'/></th>
+          <td><select class="multy_select w100p" multiple="multiple"
+           id="statusList" name="statusList">
 
-	        <c:forEach var="list" items="${tMgntStat}" varStatus="status">
-	          <option value="${list.code}" selected>${list.codeName}</option>
-	        </c:forEach>
+            <c:forEach var="list" items="${tMgntStat}" varStatus="status">
+              <option value="${list.code}" selected>${list.codeName}</option>
+            </c:forEach>
 
-	        <!-- <option value="1">Active</option>
-	        <option value="44">Pending</option>
-	        <option value="34">Solved</option>
-	        <option value="35">Unsolved</option>
-	        <option value="36">Closed</option>
-	        <option value="10">Cancelled</option> -->
+            <!-- <option value="1">Active</option>
+            <option value="44">Pending</option>
+            <option value="34">Solved</option>
+            <option value="35">Unsolved</option>
+            <option value="36">Closed</option>
+            <option value="10">Cancelled</option> -->
 
-	      </select></td>
-	      <th></th><td></td>
-	      <th></th><td></td>
+          </select></td>
+          <th></th><td></td>
+          <th></th><td></td>
      </tr>
     </tbody>
    </table>

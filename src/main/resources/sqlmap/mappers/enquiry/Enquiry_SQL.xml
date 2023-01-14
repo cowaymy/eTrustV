@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.enquiry.impl.EnquiryMapper">
+
+    <select id="getCustomerLoginInfo"  parameterType="Map" resultType="egovMap">
+           SELECT
+                    A.CUST_ID, A.NAME
+		   FROM SAL0029D A
+		   JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID
+		   WHERE A.STUS_CODE_ID = 1
+		   AND A.NRIC = #{nricPass}
+		   AND B.TEL_M1 = #{mobileNo}
+    </select>
+
+    <update id="updateLoginSession" parameterType="Map">
+           MERGE INTO SAL0335D A USING
+		   (
+			       SELECT * FROM SAL0029D WHERE CUST_ID = #{custId}
+		   ) SRC ON (A.CUST_ID = SRC.CUST_ID)
+		   WHEN MATCHED THEN UPDATE SET A.LOGIN_DT = SYSDATE, LOGIN_IND = 1, A.PHONE_NO = #{mobileNo}
+		   WHEN NOT MATCHED THEN  INSERT ( CUST_ID , LOGIN_DT, LOGIN_IND, PHONE_NO) VALUES(SRC.CUST_ID, SYSDATE, 1, #{mobileNo})
+    </update>
+
+    <insert id="insertErrorLog" parameterType="Map">
+	       INSERT INTO SAL0336D
+	        (
+	              PGM_PATH
+	            , FUNCTION_NAME
+	            , ERROR_MSG
+	            , CRT_DT
+	        ) VALUES (
+	              #{pgmPath}
+	            , #{functionName}
+	            , #{errorMsg}
+	            , SYSDATE
+	        )
+    </insert>
+
+    <select id="checkDuplicatedLoginSession"  parameterType="Map" resultType="int">
+           SELECT
+                    COUNT(CUST_ID) CUST_ID
+           FROM SAL0335D
+           WHERE CUST_ID = #{custId}
+<!--            AND LOGIN_IND = 1 -->
+    </select>
+
+
+    <select id="getCustomerInfo" parameterType="Map" resultType="customerLoginVO">
+            SELECT
+                      CUST_ID custId
+                    , NAME custName
+            FROM SAL0029D WHERE CUST_ID = #{custId}
+    </select>
+
+
+    <select id="selectCustomerInfoList"  parameterType="Map" resultType="egovMap">
+            SELECT  /*+first_rows*/
+                         som.SALES_ORD_ID ORD_ID,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ca1.ADDR_DTL, ' ')
+			                ELSE NVL (ca2.ADDR_DTL, ' ')
+			             END)
+			               ADDR_DTL,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ca1.STREET, ' ')
+			                ELSE NVL (ca2.STREET, ' ')
+			             END)
+			               STREET,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ma1.AREA, ' ')
+			                ELSE NVL (ma2.AREA, ' ')
+			             END)
+			               MAIL_AREA,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ma1.POSTCODE, ' ')
+			                ELSE NVL (ma2.POSTCODE, ' ')
+			             END)
+			               MAIL_POST_CODE,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ma1.CITY, ' ')
+			                ELSE NVL (ma2.CITY, ' ')
+			             END)
+			               MAIL_CITY,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ma1.STATE, ' ')
+			                ELSE NVL (ma2.STATE, ' ')
+			             END)
+			               MAIL_STATE,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (ma1.COUNTRY, ' ')
+			                ELSE NVL (ma2.COUNTRY, ' ')
+			             END)
+			               MAIL_CNTY,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.NAME, ' ')
+			                ELSE NVL (cp2.NAME, ' ')
+			             END)
+			               MAIL_CNT_NAME,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.NRIC, ' ')
+			                ELSE NVL (cp2.NRIC, ' ')
+			             END)
+			               MAIL_CNT_NRIC,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (bm.CUST_BILL_EMAIL, ' ')
+			                ELSE NVL (cp2.EMAIL, ' ')
+			             END)
+			               MAIL_CNT_EMAIL,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (bm.CUST_BILL_EMAIL_ADD, ' ')
+			                ELSE NVL (cp2.EMAIL, ' ')
+			             END)
+			               MAIL_CNT_EMAIL_ADD,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.TEL_M1, ' ')
+			                ELSE NVL (cp2.TEL_M1, ' ')
+			             END)
+			               MAIL_CNT_TEL_M,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.TEL_O, ' ')
+			                ELSE NVL (cp2.TEL_O, ' ')
+			             END)
+			               MAIL_CNT_TEL_O,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.TEL_R, ' ')
+			                ELSE NVL (cp2.TEL_R, ' ')
+			             END)
+			               MAIL_CNT_TEL_R,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.TELF, ' ')
+			                ELSE NVL (cp2.TELF, ' ')
+			             END)
+			               MAIL_CNT_TEL_F,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66
+			                THEN
+			                   (CASE
+			                       WHEN NVL (cp1.GENDER, ' ') = 'M' THEN 'Male'
+			                       WHEN NVL (cp1.GENDER, ' ') = 'F' THEN 'Female'
+			                       ELSE ' '
+			                    END)
+			                ELSE
+			                   (CASE
+			                       WHEN NVL (cp2.GENDER, ' ') = 'M' THEN 'Male'
+			                       WHEN NVL (cp2.GENDER, ' ') = 'F' THEN 'Female'
+			                       ELSE ' '
+			                    END)
+			             END)
+			               MAIL_CNT_GENDER,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN bm.CUST_BILL_GRP_NO
+			                ELSE ' '
+			             END)
+			               BILL_GRP_NO,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (bm.CUST_BILL_EMAIL, ' ')
+			                ELSE ' '
+			             END)
+			               BILL_STATE_EMAIL,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (bm.CUST_BILL_IS_ESTM, 0)
+			                ELSE 0
+			             END)
+			               BILL_STATE,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (bm.CUST_BILL_IS_SMS, 0)
+			                ELSE 0
+			             END)
+			               BILL_SMS,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (bm.CUST_BILL_IS_POST, 0)
+			                ELSE 0
+			             END)
+			               BILL_POST,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN cp1.CUST_CNTC_ID
+			                ELSE cp2.CUST_CNTC_ID
+			             END)
+			               MAIL_CNTC_ID,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN ca1.CUST_ADD_ID
+			                ELSE ca2.CUST_ADD_ID
+			             END)
+			               MAIL_ADDR_ID,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.DEPT, ' ')
+			                ELSE NVL (cp2.DEPT, ' ')
+			             END)
+			               MAIL_CNT_DEPT,
+			            (CASE
+			                WHEN som.APP_TYPE_ID = 66 THEN NVL (cp1.POS, ' ')
+			                ELSE NVL (cp2.POS, ' ')
+			             END)
+			               MAIL_CNT_POST,
+			               pd.STK_DESC,
+			               som.sales_ord_no
+		        FROM  SAL0001D som
+		        LEFT JOIN SAL0024D bm ON bm.CUST_BILL_ID = som.CUST_BILL_ID AND som.APP_TYPE_ID = 66
+		        LEFT JOIN SAL0023D ca1 ON ca1.CUST_ADD_ID = bm.CUST_BILL_ADD_ID AND som.APP_TYPE_ID = 66
+		        LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
+		        LEFT JOIN SAL0027D cp1 ON cp1.CUST_CNTC_ID = bm.CUST_BILL_CNT_ID AND som.APP_TYPE_ID = 66
+		        LEFT JOIN SAL0023D ca2 ON ca2.CUST_ADD_ID = som.CUST_ADD_ID AND som.APP_TYPE_ID <![CDATA[<> ]]> 66
+		        LEFT JOIN SYS0064M ma2 ON ma2.AREA_ID = ca2.AREA_ID
+		        LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID AND som.APP_TYPE_ID <![CDATA[<> ]]> 66
+		        JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
+		        JOIN SYS0026M pd ON sod.ITM_STK_ID = pd.STK_ID
+		    WHERE   som.STUS_CODE_ID = 4
+		    AND SOM.CUST_ID = #{custId}
+		    <if test="orderNo != null and orderNo != ''">
+            AND  SOM.SALES_ORD_NO = #{orderNo}
+            </if>
+		    ORDER BY 1
+    </select>
+
+
+    <select id="selectMagicAddressComboList" parameterType="Map" resultType="egovMap">
+            SELECT DISTINCT
+
+		    <if test=" null != colState and '' != colState">
+		      STATE AS CODE_ID,
+		      STATE AS CODE_NAME
+		    </if>
+
+		    <if test=" null != colCity and '' != colCity">
+		      CITY AS CODE_ID,
+		      CITY AS CODE_NAME
+		    </if>
+
+		    <if test=" null != colPostCode and '' != colPostCode">
+		      POSTCODE AS CODE_ID,
+		      POSTCODE AS CODE_NAME
+		    </if>
+
+		    <if test=" null != colArea and '' != colArea">
+		      AREA AS CODE_ID,
+		      AREA AS CODE_NAME
+		    </if>
+
+		    FROM
+		    SYS0064M
+		    WHERE STATUS_ID = 1 <!-- state -->
+		    AND COUNTRY = 'Malaysia'
+
+		    <if test="null != state and '' != state"> <!-- city -->
+		      AND STATE = #{state}
+		    </if>
+
+		    <if test="null != city and '' != city"> <!-- post code -->
+		      AND CITY = #{city}
+		    </if>
+
+		    <if test="null != postcode and '' != postcode"> <!-- area -->
+		      AND POSTCODE = #{postcode}
+		    </if>
+              AND AREA_ID NOT LIKE 'DM%'
+
+		    <!-- Sorting -->
+		    <if test=" null != colState and '' != colState">
+		      ORDER BY STATE
+		    </if>
+
+		    <if test=" null != colCity and '' != colCity">
+		      ORDER BY CITY
+		    </if>
+
+		    <if test=" null != colPostCode and '' != colPostCode">
+		      ORDER BY POSTCODE
+		    </if>
+
+		    <if test=" null != colArea and '' != colArea">
+		      ORDER BY AREA
+		    </if>
+
+     </select>
+
+     <select id="getAreaId" parameterType="Map" resultType="egovMap">
+		    SELECT
+		        AREA_ID
+		    FROM SYS0064M
+		    WHERE STATE = #{statValue}
+		    AND CITY = #{cityValue}
+		    AND POSTCODE = #{postCodeValue}
+		    AND AREA = #{areaValue}
+    </select>
+
+    <select id="searchMagicAddressPop" parameterType="Map" resultType="egovMap">
+		    <![CDATA[
+		            SELECT
+		                 AREA_ID,
+		                 ISO,
+		                 COUNTRY,
+		                 STATE,
+		                 CITY,
+		                 POSTCODE,
+		                 AREA,
+		                 AREA || ' ' || POSTCODE || ' ' ||  CITY || ' ' || STATE || ' ' || COUNTRY AS FULL_ADDRESS
+		            FROM
+		                SYS0064M
+		            WHERE ISO = 'MY'
+		            AND UPPER(AREA) LIKE UPPER('%'|| #{searchStreet} || '%')
+		            AND STATUS_ID = 1
+		      ]]>
+		      <if test="state != null and state != '' ">
+		           AND UPPER(STATE) LIKE UPPER('%'|| #{state} || '%')
+		      </if>
+		      <if test="city != null and city != '' ">
+		           AND UPPER(CITY) LIKE UPPER('%'|| #{city} || '%')
+		      </if>
+		      <if test="postCode != null and postCode != '' ">
+		           AND POSTCODE = #{postCode}
+		      </if>
+		      <if test=" null != searchState and '' != searchState">
+		           AND STATE = #{searchState}
+		       </if>
+		       <if test=" null != searchCity and '' != searchCity">
+		           AND CITY   = #{searchCity}
+		       </if>
+    </select>
+
+
+    <insert id="insertNewInstallationAddress" parameterType="Map">
+		    INSERT INTO SAL0339D (
+				  CUST_ADD_ID
+				, CUST_ID
+				, STUS_CODE_ID
+				, AREA_ID
+				, ADDR_DTL
+				, STREET
+				, CRT_DT
+				, PHONE_NO
+				, ORDER_NO
+				, REMARK
+		    )
+		    VALUES (
+			    SAL0339D_CUST_ADD_ID_SEQ.NEXTVAL,
+			    #{insCustId},
+			    #{stusId},
+			    #{areaId},
+			    UPPER(#{addrDtl}),
+			    UPPER(#{streetDtl}),
+			    SYSDATE,
+			    #{phoneNo},
+			    #{orderNo},
+			    #{remark}
+            )
+		    <selectKey keyProperty="custAddId" resultType="Integer"
+		      order="AFTER">
+		      SELECT SAL0339D_CUST_ADD_ID_SEQ.CURRVAL FROM DUAL
+		    </selectKey>
+     </insert>
+
+	 <select id="getCurrentPhoneNo"  parameterType="Map" resultType="egovMap">
+	           SELECT
+	                    PHONE_NO, ORDER_NO
+	           FROM SAL0335D
+	           WHERE 1=1
+<!-- 	           LOGIN_IND = 1 -->
+	           AND CUST_ID = #{custId}
+	 </select>
+
+	 <select id="checkExistRequest"  parameterType="Map" resultType="egovMap">
+               SELECT
+                        COUNT(*) RESULT
+				FROM SAL0339D
+				WHERE CUST_ID = #{custId}
+				AND ORDER_NO = #{orderNo}
+				AND STUS_CODE_ID =1
+     </select>
+
+     <update id="updateTacInfo" parameterType="Map">
+            UPDATE
+                    SAL0335D
+            SET
+                    TAC_GEN_DATE = SYSDATE,
+                    TAC_NO = #{tacNo},
+                    ORDER_NO  = #{orderNo}
+            WHERE CUST_ID = #{custId}
+            AND PHONE_NO  = #{mobileNo}
+<!--             AND LOGIN_IND = 1 -->
+    </update>
+
+    <select id="verifyTacNo"  parameterType="Map" resultType="egovMap">
+            SELECT
+	                CASE WHEN #{tacNo} = TAC_NO THEN '1' ELSE '0' END CHK_TAC ,
+	                CASE WHEN (TO_CHAR(SYSDATE -  TAC_GEN_DATE) * 24 * 60 * 60) > 180 THEN '0' ELSE '1' END CHK_TIME
+            FROM SAL0335D WHERE CUST_ID = #{custId} AND ORDER_NO = #{orderNo}
+     </select>
+
+     <update id="disabledPreviousRequest" parameterType="Map">
+            UPDATE
+                    SAL0339D
+            SET
+                    STUS_CODE_ID = 8,
+                    UPD_DT = SYSDATE
+            WHERE CUST_ID = #{custId}
+            AND ORDER_NO  = #{orderNo}
+            AND STUS_CODE_ID = 1
+    </update>
+
+    <select id="getEmailDetails"  parameterType="Map" resultType="egovMap">
+           SELECT
+				      A.CUST_ID
+				    , C.NAME
+				    , C.NRIC
+				    , A.AREA_ID
+				    , A.PHONE_NO
+				    , A.ORDER_NO
+				    , A.ADDR_DTL
+				    , A.STREET
+				    , B.POSTCODE
+				    , B.CITY
+				    , B.AREA
+				    , B.STATE
+				    , B.COUNTRY
+				    , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REQUEST_DT
+			FROM SAL0339D  A
+			JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+			JOIN SAL0029D C ON A.CUST_ID =C.CUST_ID
+			WHERE A.CUST_ID = #{custId}
+			AND A.ORDER_NO = #{orderNo}
+			AND A.STUS_CODE_ID = 1
+			AND ROWNUM = 1
+     </select>
+
+
+  </mapper>
