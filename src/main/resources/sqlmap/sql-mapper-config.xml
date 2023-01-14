@@ -23,6 +23,7 @@
 		<typeAlias alias="string" type="java.lang.String"/>
 		<typeAlias alias="int" type="java.lang.Integer"/>
 		<typeAlias alias="loginHistory" type="com.coway.trust.biz.login.LoginHistory"/>
+		<typeAlias alias="customerLoginVO" type="com.coway.trust.cmmn.model.CustomerLoginVO"/>
 		<!-- 업무 A -->
 
 		<!-- 업무 B -->
@@ -124,6 +125,6 @@
     <plugins>
         <plugin interceptor="com.coway.trust.config.mybatis.ExcecutorInterceptor"></plugin>
         <plugin interceptor="com.coway.trust.config.mybatis.ResultsetInterceptor"></plugin>
-<!-- 		<plugin interceptor="com.coway.trust.config.mybatis.SqlDebugLogInterceptor"></plugin>  -->
+<!--         <plugin interceptor="com.coway.trust.config.mybatis.SqlDebugLogInterceptor"></plugin> -->
     </plugins>
 </configuration>
