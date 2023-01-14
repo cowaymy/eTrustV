@@ -2751,7 +2751,28 @@ public void adRcmDailyCurrentYear() {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AD_RCM_Daily_Current_Year...");
   }
+}
 
+@RequestMapping(value = "/AD_RCM_Daily_HC_2020_2023.do")
+//@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
+public void adRcmDailyHc2020t2023() {
+
+  LOGGER.info("[START] AD_RCM_Daily_HC_2020_2023...");
+  Map<String, Object> params = new HashMap<>();
+
+  int startYear = 2020;
+  int endYear = 2023;
+
+  params.put(REPORT_FILE_NAME, "/visualcut/AD_RCM_Daily_HC.rpt");// visualcut
+  params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+  params.put("V_TEMP", "TEMP");// parameter
+  params.put("V_STARTYEAR", startYear);// parameter
+  params.put("V_ENDYEAR", endYear);// parameter
+  params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+      "Simplified_RCM" + File.separator + "AD_RCM_Daily_HC_2020_2023_" + CommonUtils.getNowDate() + ".xls");
+
+  this.viewProcedure(null, null, params);
+  LOGGER.info("[END] AD_RCM_Daily_HC_2020_2023...");
 }
 
 @RequestMapping(value = "/DataMartReport.do")
