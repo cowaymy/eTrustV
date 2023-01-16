@@ -258,6 +258,7 @@
            , Limit1.C4 C4
            , Limit1.PRODUCT_CODE PRODUCT_CODE
            , Limit1.PRODUCT_NAME PRODUCT_NAME
+           , Limit1.PRODUCT_CAT PRODUCT_CAT
            , Limit1.INSTALL_TEL_F INSTALL_TEL_F
            , Limit1.INSTALL_TEL_M INSTALL_TEL_M
            , Limit1.INSTALL_TEL_O INSTALL_TEL_O
@@ -279,6 +280,7 @@
                     , Extent1.CALL_STUS_CODE CALL_STUS_CODE
                     , Extent1.PRODUCT_CODE PRODUCT_CODE
                     , Extent1.PRODUCT_NAME PRODUCT_NAME
+                    , Extent1.PRODUCT_CAT PRODUCT_CAT
                     , Extent1.CUST_NAME CUST_NAME
                     , Extent1.CUST_IC CUST_IC
                     , Extent1.INSTALL_AREA_ID INSTALL_AREA_ID
@@ -328,6 +330,7 @@
                            vCallLogOrderCall.PRODUCT_ID PRODUCT_ID ,
                            vCallLogOrderCall.PRODUCT_CODE PRODUCT_CODE ,
                            vCallLogOrderCall.PRODUCT_NAME PRODUCT_NAME ,
+                           vCallLogOrderCall.PRODUCT_CAT PRODUCT_CAT,
                            vCallLogOrderCall.CUST_ID CUST_ID ,
                            vCallLogOrderCall.CUST_NAME CUST_NAME ,
                            vCallLogOrderCall.CUST_IC CUST_IC ,
@@ -612,7 +615,7 @@
       AND s28.WH_LOC_STUS_ID = '1'
       AND s05.code IN ( SELECT
                         <choose>
-                            <when test="branchTypeId != null and branchTypeId !=''">
+                            <when test="branchTypeId != null and branchTypeId !='' and !(productCat eq 'ACI' or productCat eq 'ACO')">
                                 D.DT_BRNCH_CODE
                             </when>
                             <otherwise>

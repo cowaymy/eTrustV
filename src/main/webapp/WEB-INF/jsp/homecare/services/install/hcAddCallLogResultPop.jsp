@@ -126,7 +126,8 @@
     }
 
     function fn_addCallSave() {
-        Common.ajax("POST", "/homecare/services/install/hcInsertCallResult.do", $("#addCallForm").serializeJSON(), function(result) {
+    	console.log('${hcOrder.anoOrdNo}');
+        /* Common.ajax("POST", "/homecare/services/install/hcInsertCallResult.do", $("#addCallForm").serializeJSON(), function(result) {
         	Common.alert(result.message);
 
         	if(result.code == '00') { // success
@@ -141,7 +142,7 @@
 
                 //fn_callLogTransaction(); // REFRESH THE LIST
         	}
-		});
+		}); */
     }
 
 

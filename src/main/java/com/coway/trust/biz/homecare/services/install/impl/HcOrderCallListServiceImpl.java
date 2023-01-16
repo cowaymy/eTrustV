@@ -148,6 +148,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 	    	EgovMap orderCall = orderCallListService.getOrderCall(params);
 	    	params.put("productCode", CommonUtils.nvl(orderCall.get("productCode")));
 
+	    	// Added for Air Con Project by Hui Ding, 20230113
+	    	params.put("productCat", CommonUtils.nvl(orderCall.get("productCat")));
+
 	     	EgovMap rdcStock = orderCallListService.selectRdcStock(params);
 
 	     	if (CommonUtils.intNvl(params.get("callStatus")) == 20) {

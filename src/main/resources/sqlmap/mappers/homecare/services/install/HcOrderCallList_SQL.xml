@@ -406,7 +406,7 @@
                 #{item}
 	        </foreach>
 		</if>
-		LEFT JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = vCallLogOrderCall.BNDL_ID
+		JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = vCallLogOrderCall.BNDL_ID
 		)
 		Extent1
 		WHERE 1 = 1
