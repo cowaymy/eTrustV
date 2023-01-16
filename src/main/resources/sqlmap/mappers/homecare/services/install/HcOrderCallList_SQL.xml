@@ -149,9 +149,16 @@
 		FROM CCR1002V vCallLogOrderCall
 		JOIN SYS0064M AREA ON AREA.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
 		JOIN SYS0005M DSC ON DSC.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
-		<if test="branchTypeId != null and branchTypeId != ''">
+		<!-- <if test="branchTypeId != null and branchTypeId != ''">
 			AND dsc.TYPE_ID = #{branchTypeId}
-		</if>
+		</if> -->
+		<if test="branchTypeList != null and branchTypeList != ''">
+              AND dsc.TYPE_ID IN
+            <foreach item="item" collection="branchTypeList" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 		) Extent1
 		WHERE Extent1.SALES_ORD_NO = #{orderNo}
 		<choose>

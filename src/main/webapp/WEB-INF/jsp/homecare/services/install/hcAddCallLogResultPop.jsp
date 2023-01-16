@@ -113,7 +113,7 @@
 			}
 
             if(anoOrdNo != '') {
-                if('${hcOrder.anoOrdAppType}' == '5764' && '${hcOrder.anoOrdCtgryCd}' == 'FRM'){
+                if('${hcOrder.anoOrdAppType}' == '5764' && ('${hcOrder.anoOrdCtgryCd}' == 'FRM' || '${hcOrder.anoOrdCtgryCd}' == 'ACO')){
                 	Common.confirm(msg + _addCllMsg, fn_addCallSave);
                 }else{
                 	$("#anoOrdNo").val("");
@@ -127,7 +127,8 @@
 
     function fn_addCallSave() {
     	console.log('${hcOrder.anoOrdNo}');
-        /* Common.ajax("POST", "/homecare/services/install/hcInsertCallResult.do", $("#addCallForm").serializeJSON(), function(result) {
+    	console.log("Form: " + $("#addCallForm #anoOrdNo").val());
+        Common.ajax("POST", "/homecare/services/install/hcInsertCallResult.do", $("#addCallForm").serializeJSON(), function(result) {
         	Common.alert(result.message);
 
         	if(result.code == '00') { // success
@@ -142,7 +143,7 @@
 
                 //fn_callLogTransaction(); // REFRESH THE LIST
         	}
-		}); */
+		});
     }
 
 
@@ -229,6 +230,8 @@
 	        $("#remark").val("");
 	        $("#stock").val("A");
 	    });
+
+
     });
 
     function fn_start() {
@@ -258,6 +261,7 @@
         if('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2 || '${SESSION_INFO.userTypeId}' == 3 || '${SESSION_INFO.userTypeId}' == 7 ){
         	$("#hideContent3").hide();
         }
+
     }
 
     function callLogTranGrid() {

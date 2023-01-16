@@ -92,6 +92,11 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 			anotherOrd.put("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
 			anotherOrd.put("callStusId", CommonUtils.nvl(params.get("callStusId")));
 
+			// Added for Air Conditioner Project, Hui Ding, 16/01/2023
+			String[] branchTypeArray = {HomecareConstants.HDC_BRANCH_TYPE, HomecareConstants.DSC_BRANCH_TYPE};
+
+			anotherOrd.put("branchTypeList", branchTypeArray);
+
 			Map<String, Object> orderCallOrd = selectHcOrderCall(anotherOrd);
 
 			params.put("callStusCode", CommonUtils.nvl(orderCallOrd.get("callStusCode")));
