@@ -29,6 +29,7 @@ public class RentalServiceCustomerDto {
 
 	private String status;
 
+	private String monthType;
 
 
 	public int getPaymentModeId() {
@@ -93,6 +94,14 @@ public class RentalServiceCustomerDto {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getMonthType() {
+		return monthType;
+	}
+
+	public void setMonthType(String monthType) {
+		this.monthType = monthType;
 	}
 
 	public static RentalServiceCustomerDto create(EgovMap egvoMap) {
