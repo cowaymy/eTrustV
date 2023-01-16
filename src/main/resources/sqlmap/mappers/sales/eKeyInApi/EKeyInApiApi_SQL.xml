@@ -96,8 +96,9 @@ SELECT A.CUST_ID AS CUST_ID
   <select id="selecteKeyInDetail" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInDetail] 20191212 - KR JAEMAJEM */
-      SELECT CASE WHEN O.STK_CTGRY_ID IN ('5706', '5707') THEN 'HC'--SYS0013M : 5706(Mattress), 5707(Frame)
-                                                                                     ELSE NULL END AS HC_GU
+      SELECT CASE WHEN T.CODE IN ('ACI', 'ACO', 'FRM', 'MAT')
+                   THEN 'HC' --SYS0013M : 5706(Mattress), 5707(Frame)
+                   ELSE NULL END AS HC_GU
                , A.CUST_ID AS CUST_ID
                , A.CUST_CNTC_ID AS CUST_CNTC_ID
                , I.CUST_ADD_ID AS CUST_ADD_ID
@@ -222,6 +223,7 @@ SELECT A.CUST_ID AS CUST_ID
       LEFT JOIN SYS0047M Q ON A.CRT_USER_ID = Q.USER_ID
       INNER JOIN SAL0023D R ON  A.CUST_BILL_ADD_ID = R.CUST_ADD_ID
       INNER JOIN SYS0064M S  ON R.AREA_ID = S.AREA_ID
+      INNER JOIN SYS0013M T ON O.STK_CTGRY_ID = T.CODE_ID
       WHERE   A.PRE_ORD_ID = #{preOrdId}
     ]]>
   </select>
