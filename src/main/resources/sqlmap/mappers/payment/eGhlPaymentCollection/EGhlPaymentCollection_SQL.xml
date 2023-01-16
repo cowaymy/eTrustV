@@ -226,6 +226,8 @@
 			        FROM PAY0336M A
 			        LEFT JOIN PAY0337D B
 			        ON A.ID = B.ID
+					LEFT JOIN SYS0047M G
+					ON G.USER_ID = A.CRT_BY
 			        WHERE 1=1
 			        <if test='salesOrdNo != null and salesOrdNo != ""'>
 				        AND B.SALES_ORD_NO = #{salesOrdNo}
@@ -233,18 +235,14 @@
 				    <if test='transactionDateFrom != null and transactionDateFrom != "" and transactionDateTo != null and transactionDateTo != ""'>
 				        AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{transactionDateFrom},'DD/MM/YYYY') AND TO_DATE(#{transactionDateTo},'DD/MM/YYYY')
 				    </if>
-			        GROUP BY A.ID,A.PAY_NO,A.PAYMENT_LINK,A.STATUS_CODE_ID,A.ORDER_DESC,A.CRT_DT,A.EXP_DT
+			        <if test='userName != null and userName != ""'>
+			        	AND G.USER_NAME = #{userName}
+			        </if>
+			        GROUP BY A.ID,A.PAY_NO,A.PAYMENT_LINK,A.STATUS_CODE_ID,A.ORDER_DESC,A.CRT_DT,A.EXP_DT,A.CRT_BY
 			    ) D
 			) E
 			LEFT JOIN SYS0038M F
 			ON F.STUS_CODE_ID = E.STATUS_CODE_ID
-			LEFT JOIN SYS0047M G
-			ON G.USER_ID = A.CRT_BY
-			WHERE 1=1
-	        <if test='userName != null and userName != ""'>
-	        	AND G.USER_NAME = #{userName}
-	        </if>
-	        ORDER BY CRT_DT DESC
     </select>
 
     <select id="selectPaymentCollectionList" parameterType="Map" resultType="egovMap">
