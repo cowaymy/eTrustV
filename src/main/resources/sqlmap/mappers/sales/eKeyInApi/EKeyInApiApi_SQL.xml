@@ -5,9 +5,9 @@
   <select id="selecteKeyInList" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInList] 20191209 - KR JAEMAJEM */
-      SELECT A.CUST_ID AS CUST_ID
+SELECT A.CUST_ID AS CUST_ID
                , B.NAME AS CUST_NAME
-               , CASE WHEN C.STK_CTGRY_ID IN ('5706', '5707')
+               , CASE WHEN G.CODE IN ('ACI', 'ACO', 'FRM', 'MAT')
                    THEN 'HC' --SYS0013M : 5706(Mattress), 5707(Frame)
                    ELSE NULL END AS HC_GU
                , A.SOF_NO AS SOF_NO
@@ -22,6 +22,7 @@
       INNER JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
                                AND B.TYPE_ID IN ('964', '965') --SYS0013M : 964(Individual), 965(Company)
       INNER JOIN SYS0026M C ON A.ITM_STK_ID = C.STK_ID
+      INNER JOIN SYS0013M G ON C.STK_CTGRY_ID = G.CODE_ID
       INNER JOIN SYS0038M D ON A.STUS_ID = D.STUS_CODE_ID
                                         AND D.STUS_CODE_ID IN (1, 4, 10, 21, 104) --1(Active), 4(Completed), 10(Cancelled), 21(Failed), 104(Processing)
       INNER JOIN SYS0005M E ON A.KEYIN_BRNCH_ID = E.BRNCH_ID
