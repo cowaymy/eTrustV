@@ -4889,7 +4889,7 @@ SELECT MST.*
                   SRV_PAC_ID,
                   DISINF_SRV,
                   SRV_TYPE
-           FROM ( SELECT SRV_INFO.*, AD.DISINF, U.SRV_CONFIG_ID 
+           FROM ( SELECT SRV_INFO.*, AD.DISINF, U.FAUCET_EXCH AS warranty ,U.SRV_CONFIG_ID
            FROM(
            SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
@@ -4954,12 +4954,12 @@ SELECT MST.*
                                    FROM SYS0064M
                                    WHERE STATUS_ID = 1
                                      AND AREA_ID = Q.AREA_ID) install_Address,
-                                   SRV_CONFIG_ID,
+                       <!--              SRV_CONFIG_ID, -->
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'POST')  postcode, */
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'STATE')  service_State, */
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
                                    R.SRV_MEM_CNTRCT_ID,
-                                   U.FAUCET_EXCH AS warranty,
+                       <!--              U.FAUCET_EXCH AS warranty, -->
                                    CASE WHEN SAL.SALES_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS homeCareOrderYn,
                                    L.SERIAL_CHK,
                                    C.SALES_PROD_SZ,
@@ -4968,7 +4968,7 @@ SELECT MST.*
                                    AC.CODE AS HC_REF_CAT,
                                    AB.STK_DESC AS HC_REF_PROD,
                                    SAL.SRV_PAC_ID,
-                                   AD.DISINF_SRV AS DISINF_SRV,
+                       <!--              AD.DISINF_SRV AS DISINF_SRV, -->
                                    C.SRV_TYPE
                   FROM (SELECT A.*
                         FROM SVC0008D A,
