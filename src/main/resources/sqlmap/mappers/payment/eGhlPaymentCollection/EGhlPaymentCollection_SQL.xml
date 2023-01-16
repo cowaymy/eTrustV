@@ -238,6 +238,13 @@
 			) E
 			LEFT JOIN SYS0038M F
 			ON F.STUS_CODE_ID = E.STATUS_CODE_ID
+			LEFT JOIN SYS0047M G
+			ON G.USER_ID = A.CRT_BY
+			WHERE 1=1
+	        <if test='userName != null and userName != ""'>
+	        	AND G.USER_NAME = #{userName}
+	        </if>
+	        ORDER BY CRT_DT DESC
     </select>
 
     <select id="selectPaymentCollectionList" parameterType="Map" resultType="egovMap">
