@@ -145,7 +145,16 @@
                                             $($reportForm)
                                                     .append(
                                                             '<input type="hidden" id="V_YEAR" name="V_YEAR" value="" /> ');
-                                            reportFileName = "/commission/CP58.rpt"; //reportFileName
+                                           //reportFileName = "/commission/CP58.rpt"; //reportFileName
+
+                                            if(cmmYear >= 2022){
+                                                reportFileName = "/commission/CP58_2023.rpt"; //reportFileName
+
+                                            }else{
+                                                reportFileName = "/commission/CP58.rpt"; //reportFileName
+
+                                            }
+
                                             reportDownFileName = "CP58_"
                                                     + today; //report name
                                             reportViewType = "PDF"; //viewType
