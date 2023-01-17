@@ -1188,6 +1188,8 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	int errorCode = 0;
     	String errorHeader = null;
     	String errorMsg = null;
+    	boolean passEOM = true;
+		boolean passEOS = true;
 
     	logger.debug("========== itemEomDt ==========" + itemEomDt);
     	// Check for EOM
@@ -1198,6 +1200,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
 
 			if(diffSrvPrdEom < configEomDurMth)
 			{
+				passEOM = false;
             	errorCode = 99;
             	errorHeader = "End of Membership";
             	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " months period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
@@ -1213,6 +1216,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
 
 			if(diffSrvMemExpr > configMemExpMth) //Membership expiration date more than 6 months
 			{
+				passEOS = false;
             	errorCode = 99;
             	errorHeader = "Early Subscription > " + configMemExpMth + " months";
             	errorMsg = "The order is too early to subscribe for SVM, kindly subscribe the membership within " + configMemExpMth + " months period from the order expired date.";
@@ -1221,6 +1225,12 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	else
     	{
     		svmAllowFlg = false;
+    	}
+
+    	if(passEOM == false && passEOS == false){
+    		errorCode = 99;
+    		errorHeader = "End of Membership";
+        	errorMsg = "The order is end of membership soon (within " + configEomDurMth + " months period) - not entitled to subscribe SVM. Kindly suggest customer to do Ex-Trade for this model.";
     	}
 
         eSVMApiDto rtn = new eSVMApiDto();
