@@ -2054,4 +2054,220 @@ SELECT * FROM (
   ORDER BY A.JOIN_DT DESC )
  WHERE ROWNUM = 1
 </select>
+
+<select id="selectCCPTicket" parameterType="Map" resultMap="calCcpListClobMap">
+    WITH TICKET_LOG AS (
+        SELECT
+            ROW_NUMBER() OVER (PARTITION BY TICKET_ID ORDER BY TICKET_LOG_ID) F,
+            ROW_NUMBER() OVER (PARTITION BY TICKET_ID ORDER BY TICKET_LOG_ID DESC) L,
+            Z.TICKET_LOG_ID,
+            Z.TICKET_ID,
+            Z.LOG_CONTENT,
+            Z.CRT_DT,
+            Z.CRT_USR_ID
+        FROM SAL0338D Z
+    ),
+    SALESMAN AS (
+	    SELECT
+	       A.MEM_ID,
+	       A.MEM_TYPE,
+	       HIST_MONTH,
+	       HIST_YEAR
+	    FROM ORG1002V A
+	    <where>
+	       <if test="deptCode != '' and deptCode != null">
+	           AND #{deptCode} IN (DEPT_CODE, GRP_CODE, ORG_CODE, TOP_ORG_CODE)
+	       </if>
+	       AND MEM_LVL = 4
+	    </where>
+    )
+    SELECT
+        A.TICKET_ID,
+        B.SALES_ORD_NO,
+        CUST.NAME,
+        CHS.CHS_STUS,
+        CHS.CHS_RSN,
+        D.CCP_STUS_ID,
+        D.CCP_REM,
+        A.TYPE_ID,
+        F.LOG_CONTENT TICKET_QUERY,
+        CASE WHEN
+            F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
+        THEN
+            G.LOG_CONTENT
+        ELSE
+            ''
+        END FEEDBACK,
+        A.STATUS,
+        A.CRT_DT,
+        USR.USER_NAME,
+        CASE WHEN
+            F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
+        THEN
+            G.CRT_DT
+        ELSE
+            NULL
+        END RESP_DT,
+        CASE WHEN
+            F.TICKET_LOG_ID <![CDATA[<>]]> G.TICKET_LOG_ID
+        THEN
+            RESP.USER_NAME
+        ELSE
+            NULL
+        END RESP_USR
+    FROM SAL0337M A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SALESMAN C ON C.MEM_ID = B.MEM_ID AND C.HIST_MONTH = EXTRACT(MONTH FROM B.SALES_DT) AND C.HIST_YEAR = EXTRACT(YEAR FROM B.SALES_DT)
+    LEFT JOIN SAL0102D D ON D.CCP_SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN TICKET_LOG F ON A.TICKET_ID = F.TICKET_ID  AND F.F = 1
+    JOIN TICKET_LOG G ON A.TICKET_ID = G.TICKET_ID AND G.L = 1
+
+    JOIN SAL0029D CUST ON CUST.CUST_ID = B.CUST_ID
+    LEFT JOIN SAL0262D CHS ON CHS.CUST_ID = B.CUST_ID
+        AND CHS.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
+        AND CHS.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
+    JOIN SYS0047M USR ON USR.USER_ID = A.CRT_USR_ID
+    JOIN SYS0047M RESP ON G.CRT_USR_ID = RESP.USER_ID
+    <where>
+        <if test="ordNo != '' and ordNo != null">
+            AND B.SALES_ORD_NO = #{ordNo}
+        </if>
+        <if test="ccpStatus != '' and ccpStatus != null">
+            AND D.CCP_STUS_ID = #{ccpStatus}
+        </if>
+        <if test="memType != '' and memType != null">
+            AND C.MEM_TYPE = #{memType}
+        </if>
+        <if test="ticketType != '' and ticketType != null">
+            AND A.TYPE_ID = #{ticketType}
+        </if>
+        <if test="ticketStatus != '' and ticketStatus != null">
+            AND A.STATUS = #{ticketStatus}
+        </if>
+    </where>
+    ORDER BY G.TICKET_LOG_ID DESC
+</select>
+
+<select id="selectDuplicateTickets" parameterType="Map" resultType="int">
+    SELECT
+        COUNT(*)
+    FROM SAL0337M A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE B.SALES_ORD_NO = #{ordNo}
+    AND STATUS <![CDATA[<>]]> 34
+</select>
+
+<select id="ccpTicketSeq" resultType="int">
+    SELECT SAL0337M_TICKET_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertCCPTicket" parameterType="Map">
+    INSERT INTO SAL0337M (
+        TICKET_ID,
+        SALES_ORD_ID,
+        TYPE_ID,
+        STATUS,
+        CRT_USR_ID
+    )
+    SELECT
+        #{seq},
+        SALES_ORD_ID,
+        #{ticketType},
+        1,
+        #{userId}
+    FROM SAL0001D
+    WHERE SALES_ORD_NO = #{ordNo}
+</insert>
+
+<insert id="insertCCPTicketLog" parameterType="Map">
+    INSERT INTO SAL0338D(
+        TICKET_LOG_ID,
+        TICKET_ID,
+        LOG_CONTENT,
+        CRT_USR_ID,
+        STATUS
+    )
+    SELECT
+        SAL0338D_TICKET_LOG_ID_SEQ.NEXTVAL,
+        #{seq},
+        #{content},
+        #{userId},
+        #{status}
+    FROM DUAL
+</insert>
+
+<resultMap type="egovMap" id="ccpTicket">
+    <result property="code" column="code"/>
+    <result property="status" column="status"/>
+    <result property="mem_id" column="mem_id"/>
+    <result property="month" column="month"/>
+    <result property="year" column="year"/>
+    <collection property="logs" ofType="egovMap" javaType="ArrayList">
+        <result property="log_content" column="log_content"/>
+	    <result property="crt_dt" column="crt_dt"/>
+	    <result property="user_name" column="user_name"/>
+	    <result property="status" column="log_status" />
+    </collection>
+</resultMap>
+<select id="ccpTicketDetails" parameterType="Map" resultMap="ccpTicket">
+    SELECT
+        C.CODE,
+        A.STATUS,
+        B.LOG_CONTENT,
+        B.CRT_DT,
+        B.STATUS LOG_STATUS,
+        D.USER_NAME,
+        E.MEM_ID,
+        EXTRACT(MONTH FROM E.SALES_DT) MONTH,
+        EXTRACT(YEAR FROM E.SALES_DT) YEAR
+    FROM SAL0337M A
+    JOIN SAL0338D B ON A.TICKET_ID = B.TICKET_ID
+    JOIN SYS0013M C ON C.CODE_MASTER_ID = 545 AND C.CODE_ID = A.TYPE_ID
+    JOIN SYS0047M D ON D.USER_ID = B.CRT_USR_ID
+    JOIN SAL0001D E ON E.SALES_ORD_ID = A.SALES_ORD_ID
+    WHERE A.TICKET_ID = #{ticketId}
+    ORDER BY B.CRT_DT
+</select>
+
+<select id="selectTicketLogs" parameterType="Map" resultType="egovMap">
+    SELECT
+        C.CODE,
+        B.LOG_CONTENT,
+        B.CRT_DT,
+        B.STATUS,
+        D.USER_NAME
+    FROM SAL0337M A
+    JOIN SAL0338D B ON A.TICKET_ID = B.TICKET_ID
+    JOIN SYS0013M C ON C.CODE_MASTER_ID = 545 AND C.CODE_ID = A.TYPE_ID
+    JOIN SYS0047M D ON D.USER_ID = B.CRT_USR_ID
+    JOIN SAL0001D E ON E.SALES_ORD_ID = A.SALES_ORD_ID
+    WHERE E.SALES_ORD_ID = #{salesOrderId}
+    ORDER BY B.CRT_DT
+</select>
+
+<select id="orgDetails" parameterType="Map" resultType="egovMap">
+    SELECT
+	    DECODE(A.MEM_LVL, 4, B.MEM_CODE,
+	                                    3, A.DEPT_CODE,
+					                    2, A.GRP_CODE,
+					                    1, A.ORG_CODE)
+	    CODE,
+	    B.NAME
+	FROM ORG1002V A
+	JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+	WHERE A.MEM_LVL <![CDATA[<>]]>  0
+	START WITH A.MEM_ID = #{memId} AND HIST_MONTH = #{month} AND HIST_YEAR = #{year}
+	CONNECT BY PRIOR A.MEM_UP_ID = A.MEM_ID AND PRIOR A.HIST_MONTH = A.HIST_MONTH AND PRIOR A.HIST_YEAR = A.HIST_YEAR
+	ORDER BY A.MEM_LVL
+</select>
+
+<update id="updateCCPTicket" parameterType="Map">
+    UPDATE SAL0337M
+    SET
+        STATUS = ${status},
+        UPD_DT = SYSDATE,
+        UPD_USR_ID = ${userId}
+    WHERE TICKET_ID = ${seq}
+</update>
+
 </mapper>

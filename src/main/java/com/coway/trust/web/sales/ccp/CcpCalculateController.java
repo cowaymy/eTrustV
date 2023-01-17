@@ -1144,5 +1144,89 @@ public class CcpCalculateController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(list);
 	}
+
+	@RequestMapping(value = "/ccpQuery.do")
+	public String ccpQuery(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		model.put("memType", session.getUserTypeId());
+
+		params.put("userId", session.getUserId());
+		EgovMap org = memberListService.getOrgDtls(params);
+		if (org != null) {
+			switch (((BigDecimal) org.get("memLvl")).intValue()) {
+				case 1:
+					model.put("deptCode", org.get("lastOrgCode"));
+					break;
+				case 2:
+					model.put("deptCode", org.get("lastGrpCode"));
+					break;
+				default:
+					model.put("deptCode", org.get("lastDeptCode"));
+			}
+		}
+
+		return "sales/ccp/ccpQuery";
+	}
+
+	@RequestMapping(value="/selectCcpTicket.do", method=RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCcpTicket(@RequestParam Map<String, Object>params) throws Exception {
+
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+
+		return ResponseEntity.ok(ccpCalculateService.selectCCPTicket(params));
+	}
+
+	@RequestMapping(value="/newCCPTicketPop.do")
+	public String newCCPTicketPop(@RequestParam Map<String, Object> p) throws Exception {
+		return "sales/ccp/newCCPTicketPop";
+	}
+
+	@RequestMapping(value="/createCCPTicket.do", method=RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> createCCPTicket(@RequestBody Map<String, Object> p) throws Exception {
+
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		p.put("userId", session.getUserId());
+
+		p.put("status", "1");
+
+		ccpCalculateService.createCCPTicket(p);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Ticket created!");
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value="/editCCPTicketPop.do")
+	public String editCCPTicketPop(@RequestParam Map<String, Object> p, ModelMap model) throws Exception {
+
+		EgovMap ticketDetails = ccpCalculateService.ccpTicketDetails(p);
+		model.put("ticketDetails", ticketDetails);
+
+		List<EgovMap> orgDetails = ccpCalculateService.orgDetails(ticketDetails);
+		model.put("orgDetails", orgDetails);
+
+		model.put("ticketId", p.get("ticketId"));
+
+		return "sales/ccp/editCCPTicketPop";
+	}
+
+	@RequestMapping(value="/updateCCPTicket.do", method=RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCCPTicket(@RequestBody Map<String, Object> p) throws Exception {
+
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		p.put("userId", session.getUserId());
+
+		ccpCalculateService.updateCCPTicket(p);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Ticket updated!");
+
+		return ResponseEntity.ok(message);
+	}
 }
 

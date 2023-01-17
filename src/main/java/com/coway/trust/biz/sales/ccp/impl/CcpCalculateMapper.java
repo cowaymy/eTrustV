@@ -143,4 +143,21 @@ public interface CcpCalculateMapper {
 
     EgovMap selectOwnPurchaseInfo(Object params) throws Exception;
 
+    List<EgovMap> selectCCPTicket(Map<String, Object> params) throws Exception;
+
+    int ccpTicketSeq() throws Exception;
+
+    int selectDuplicateTickets(Map<String, Object>p) throws Exception;
+
+    void insertCCPTicket(Map<String, Object> p) throws Exception;
+
+    void insertCCPTicketLog(Map<String, Object>p) throws Exception;
+
+    EgovMap ccpTicketDetails(Map<String, Object> p) throws Exception;
+
+    List<EgovMap> orgDetails(Map<String, Object> p) throws Exception;
+
+    void updateCCPTicket(Map<String, Object> p) throws Exception;
+
+	List<EgovMap> selectTicketLogs(Map<String, Object> params) throws Exception;
 }

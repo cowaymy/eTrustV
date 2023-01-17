@@ -5027,14 +5027,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      <select id="getOrgDtls" parameterType="Map" resultType="egovMap">
         SELECT
             C.MEM_LVL,
-            C.LAST_DEPT_CODE,
-            C.LAST_GRP_CODE,
-            C.LAST_ORG_CODE
+            C.DEPT_CODE LAST_DEPT_CODE,
+            C.GRP_CODE LAST_GRP_CODE,
+            C.ORG_CODE LAST_ORG_CODE
         FROM
             SYS0047M A
             LEFT JOIN ORG0001D B
                 ON A.USER_NAME = B.MEM_CODE
-            LEFT JOIN ORG0005D C
+            LEFT JOIN ORG1001V C
                 ON B.MEM_ID = C.MEM_ID
         WHERE
             A.USER_ID = #{userId}

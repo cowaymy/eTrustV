@@ -80,4 +80,13 @@ public interface CcpCalculateService {
 
 	EgovMap selectOwnPurchaseInfo(Object object) throws Exception;
 
+	List<EgovMap> selectCCPTicket(Map<String, Object> p) throws Exception;
+
+	void createCCPTicket(Map<String, Object> p) throws Exception;
+
+	EgovMap ccpTicketDetails(Map<String, Object> p) throws Exception;
+
+	List<EgovMap> orgDetails(Map<String, Object> p) throws Exception;
+
+	void updateCCPTicket(Map<String, Object> p) throws Exception;
 }

@@ -1447,4 +1447,38 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	public EgovMap selectOwnPurchaseInfo(Object params) throws Exception {
 		return ccpCalculateMapper.selectOwnPurchaseInfo(params);
 	}
+
+	@Override
+	public List<EgovMap> selectCCPTicket(Map<String, Object> p) throws Exception {
+		return ccpCalculateMapper.selectCCPTicket(p);
+	}
+
+	@Override
+	public void createCCPTicket(Map<String, Object> p) throws Exception {
+		int ticketCount = ccpCalculateMapper.selectDuplicateTickets(p);
+		if (ticketCount > 0) {
+			throw new Exception("Active Ticket for this order already exists.");
+		}
+
+		int seq = ccpCalculateMapper.ccpTicketSeq();
+		p.put("seq", seq);
+		ccpCalculateMapper.insertCCPTicket(p);
+		ccpCalculateMapper.insertCCPTicketLog(p);
+	}
+
+	@Override
+	public EgovMap ccpTicketDetails(Map<String, Object>p) throws Exception {
+		return ccpCalculateMapper.ccpTicketDetails(p);
+	}
+
+	@Override
+	public List<EgovMap> orgDetails(Map<String,Object> p) throws Exception {
+		return ccpCalculateMapper.orgDetails(p);
+	}
+
+	@Override
+	public void updateCCPTicket(Map<String, Object> p) throws Exception {
+		ccpCalculateMapper.insertCCPTicketLog(p);
+		ccpCalculateMapper.updateCCPTicket(p);
+	}
 }
