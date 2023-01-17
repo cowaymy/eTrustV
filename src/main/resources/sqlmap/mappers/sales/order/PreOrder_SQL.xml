@@ -36,12 +36,13 @@
              , T15.BRANCH_LOCATION
              --, TO_CHAR(T1.UPD_DT,'YYYY/MM/DD HH24:MI:SS') UPD_DT
              , TO_CHAR(T1.UPD_DT,'YYYYMMDDHH24MISS') UPD_DT
-             ,CONCAT(CONCAT( T16.CODE, ' - ' ) ,T16.NAME) BRANCH_NAME
+             ,CONCAT(CONCAT( T17.CODE, ' - ' ) ,T17.NAME) BRANCH_NAME
 		  FROM SAL0213M T1
-		 LEFT JOIN SYS0013M T2 ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
-		 LEFT JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
-		 LEFT JOIN SYS0026M T4 ON T4.STK_ID = T1.ITM_STK_ID
-		 LEFT JOIN SAL0029D T5 ON T5.CUST_ID = T1.CUST_ID
+		 JOIN SYS0013M T2 ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
+		 JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
+		 JOIN SYS0026M T4 ON T4.STK_ID = T1.ITM_STK_ID
+                AND T4.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB WHERE AA.CODE = BB.CODE AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')         /* StkCategoryID_Homecare */
+		 JOIN SAL0029D T5 ON T5.CUST_ID = T1.CUST_ID
 		 LEFT JOIN SYS0013M T6 ON T6.CODE_ID = T5.TYPE_ID AND T6.CODE_MASTER_ID = 8
 		 LEFT JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
 		 LEFT JOIN SYS0038M T8 ON T8.STUS_CODE_ID = T1.STUS_ID
@@ -51,15 +52,15 @@
 		 LEFT JOIN SAL0023D T12 ON T12.CUST_ADD_ID = T1.INST_ADD_ID
          LEFT JOIN SYS0064M T13 ON T13.AREA_ID = T12.AREA_ID
          LEFT JOIN SAL0017D T14 ON T14.PROMO_ID = T1.PROMO_ID
-         LEFT JOIN ORG0001D T15 ON T7.USER_NAME = T15.MEM_CODE
-         LEFT JOIN SYS0005M T16 ON T15.BRNCH = T16.BRNCH_ID
          LEFT JOIN ( SELECT
                             DOC.DOC_SO_ID ,BRNCH.CODE SUBMIT_BRANCH, BRNCH.NAME BRANCH_LOCATION
                           FROM ORG0010D DOC
                           JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
                           WHERE DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1  ) T15 ON T15.DOC_SO_ID = T11.SALES_ORD_ID
-         LEFT JOIN SAL0001D T16 ON T16.SALES_ORD_ID = T1.SALES_ORD_ID
-		 WHERE T4.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB WHERE AA.CODE = BB.CODE AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')         /* StkCategoryID_Homecare */
+         LEFT JOIN ORG0001D T16 ON T16.MEM_CODE = T7.USER_NAME
+         LEFT JOIN SYS0005M T17 ON T17.BRNCH_ID = T16.BRNCH
+
+		 WHERE 1=1
          <if test='_memCode != null and _memCode != ""'>
 		   AND T1.MEM_CODE = #{_memCode}
 		 </if>
@@ -85,10 +86,10 @@
              </foreach>
          </if>
          <if test='_nric != null and _nric != ""'>
-		   AND UPPER(T5.NRIC) = UPPER(#{_nric})
+		   AND T5.NRIC = #{_nric}
          </if>
          <if test='_sofNo != null and _sofNo != ""'>
-		   AND UPPER(T1.SOF_NO) = UPPER(#{_sofNo})
+		   AND T1.SOF_NO = #{_sofNo}
          </if>
          <if test='arrCustType != null and arrCustType != ""'>
            AND T5.TYPE_ID IN
@@ -97,7 +98,7 @@
              </foreach>
          </if>
          <if test='_name != null and _name != ""'>
-		   AND UPPER(T5.NAME) LIKE UPPER(#{_name})||'%'
+		   AND T5.NAME LIKE #{_name}||'%'
          </if>
          <if test="orgCode != '' ">
            AND T9.ORG_CODE = #{orgCode}
@@ -109,14 +110,13 @@
            AND T9.DEPT_CODE = #{deptCode}
          </if>
          <if test="_ordNo != '' ">
-           AND T16.SALES_ORD_NO = #{_ordNo}
+           AND T11.SALES_ORD_NO = #{_ordNo}
          </if>
          <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
            AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
          </if>
          <if test='ordProudctList != null and ordProudctList != ""'>
            AND T4.STK_ID  = #{ordProudctList}
-
          </if>
          <if test='memType != null and memType != ""'>
             AND T7.USER_TYPE_ID = #{memType}

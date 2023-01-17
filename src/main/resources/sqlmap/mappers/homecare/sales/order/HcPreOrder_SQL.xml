@@ -45,10 +45,11 @@
                  , TO_CHAR(T1.UPD_DT,'YYYYMMDDHH24MISS') UPD_DT
                  ,CONCAT(CONCAT( T18.CODE, ' - ' ) ,T18.NAME) BRANCH_NAME
          FROM SAL0213M T1
-    LEFT JOIN SYS0013M T2   ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
-    LEFT JOIN SYS0013M T3   ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
-    LEFT JOIN SYS0026M T4   ON T4.STK_ID = T1.ITM_STK_ID
-    LEFT JOIN SAL0029D T5   ON T5.CUST_ID = T1.CUST_ID
+    JOIN SYS0013M T2   ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
+    JOIN SYS0013M T3   ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
+    JOIN SYS0026M T4   ON T4.STK_ID = T1.ITM_STK_ID
+        AND T4.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB WHERE AA.CODE = BB.CODE AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+    JOIN SAL0029D T5   ON T5.CUST_ID = T1.CUST_ID
     LEFT JOIN SYS0013M T6   ON T6.CODE_ID = T5.TYPE_ID AND T6.CODE_MASTER_ID = 8
     LEFT JOIN SYS0047M T7   ON T7.USER_ID = T1.CRT_USER_ID
     LEFT JOIN SYS0038M T8   ON T8.STUS_CODE_ID = T1.STUS_ID
@@ -64,10 +65,10 @@
                      WHERE DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1
                    ) T15 ON T15.DOC_SO_ID = T11.SALES_ORD_ID
     LEFT JOIN HMC0011D T16 ON ORD_SEQ_NO = T1.BNDL_ID
-    LEFT JOIN ORG0001D T17 ON T7.USER_NAME = T17.MEM_CODE
-    LEFT JOIN SYS0005M T18 ON T17.BRNCH = T18.BRNCH_ID
+    LEFT JOIN ORG0001D T17 ON T17.MEM_CODE = T7.USER_NAME
+    LEFT JOIN SYS0005M T18 ON T18.BRNCH_ID = T17.BRNCH
 
-       WHERE T4.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB WHERE AA.CODE = BB.CODE AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+       WHERE 1=1
         <if test='_memCode != null and _memCode != ""'>
             AND T1.MEM_CODE = #{_memCode}
         </if>
@@ -93,10 +94,10 @@
             </foreach>
         </if>
         <if test='_nric != null and _nric != ""'>
-            AND UPPER(T5.NRIC) = UPPER(#{_nric})
+            AND T5.NRIC = #{_nric}
         </if>
         <if test='_sofNo != null and _sofNo != ""'>
-            AND UPPER(T1.SOF_NO) = UPPER(#{_sofNo})
+            AND T1.SOF_NO = #{_sofNo}
         </if>
         <if test='arrCustType != null and arrCustType != ""'>
             AND T5.TYPE_ID IN
@@ -105,7 +106,7 @@
             </foreach>
         </if>
         <if test='_name != null and _name != ""'>
-            AND UPPER(T5.NAME) LIKE UPPER(#{_name})||'%'
+            AND T5.NAME LIKE #{_name}||'%'
         </if>
         <if test="orgCode != '' ">
             AND T9.ORG_CODE = #{orgCode}
