@@ -15,7 +15,8 @@
            Z.DEPT_CODE,
            Z.SUB_DEPT_CDE,
            Z.Status,
-           TO_CHAR(Z.Reg_date, 'YYYY-MM-DD') Reg_date,
+           <!-- TO_CHAR(Z.Reg_date, 'YYYY-MM-DD') Reg_date, -->
+           TO_CHAR( to_date(Substr(REG_DTM, 1, 8 ),'YYYY/MM/DD'), 'YYYY-MM-DD') Reg_date,
            z.ord_no,z.hc_mem_id,
            z.CNSL_LRGCLAS_CD,
            z.CNSL_MEDCLAS_CD,
@@ -43,7 +44,9 @@
                     ELSE B.SUB_DEPT END SUB_DEPT_CDE
                 , A.Ord_no
                 , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
-                , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                , DECODE(B.STUS_CODE_ID, NULL, 1, B.STUS_CODE_ID) STUS_CODE_ID
+                <!-- , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date -->
+                , a.REG_DTM
                 , NVL((SELECT TO_CHAR(LST_UPD_DTM,'YYYY/MM/DD') FROM (
                                 SELECT CUR_SEQNO
                                          , LST_UPD_DTM
@@ -139,17 +142,21 @@
     </if>
 
     <if test="regStartDt != null and regStartDt != '' ">
-      AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ >= ]]> TO_CHAR(TO_DATE (#{regStartDt}, 'DD/MM/YYYY'),'YYYY-MM-DD')
+      <!-- AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ >= ]]> TO_CHAR(TO_DATE (#{regStartDt}, 'DD/MM/YYYY'),'YYYY-MM-DD') -->
+      AND Z.REG_DTM <![CDATA[ >= ]]> concat(TO_CHAR(TO_DATE(#{regStartDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'000000')
     </if>
 
     <if test="regEndDt != null and regEndDt != '' ">
-      AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ <= ]]> TO_CHAR(TO_DATE (#{regEndDt}, 'DD/MM/YYYY'),'YYYY-MM-DD')
+      <!-- AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ <= ]]> TO_CHAR(TO_DATE (#{regEndDt}, 'DD/MM/YYYY'),'YYYY-MM-DD') -->
+      AND Z.REG_DTM <![CDATA[ <= ]]> concat(TO_CHAR(TO_DATE(#{regEndDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'235959')
     </if>
 
     <if test="listStatus != null and listStatus != '' ">
-      AND Z.Status IN
+      <!-- AND Z.Status IN -->
+      AND Z.STUS_CODE_ID IN
       <foreach item="item" collection="listStatus" index="index" open="(" separator="," close=")">
-        CALLCENTERUSER.FN_ERP_GET_STUS_NM( #{item} )
+        <!-- CALLCENTERUSER.FN_ERP_GET_STUS_NM( #{item} ) -->
+        #{item}
       </foreach>
     </if>
     ORDER BY Reg_date
