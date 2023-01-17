@@ -418,22 +418,22 @@
   </select>
 
    <select id="selectSubDeptCodySupport"  parameterType="Map" resultType="egovMap">
-	SELECT DISTINCT SYSD.CODE CODE_ID
-	,SYSD.CODE_NAME CODE_NAME
-	FROM (
-	SELECT DISTINCT OD1.BRNCH
-	,OD2.MEM_ID
-	,OD2.MEM_LVL
-	,OD2.ORG_CODE
-	,OD2.GRP_CODE
-	,OD2.DEPT_CODE
-	,OD3.ORG_CODE MEMORG
-	,OD3.GRP_CODE MEMGRP
-	,OD3.DEPT_CODE MEMDEPT
-	FROM ORG0001D OD1
-	JOIN ORG1001V OD2 ON OD2.ORG_CODE  = (SELECT ORG_CODE FROM ORG1001V WHERE MEM_ID = #{memId}) AND OD1.MEM_ID = OD2.MEM_ID
-	JOIN ORG1001V OD3 ON OD3.MEM_ID = #{memId}
-	WHERE 1 = 1
+    SELECT DISTINCT SYSD.CODE CODE_ID
+    ,SYSD.CODE_NAME CODE_NAME
+    FROM (
+    SELECT DISTINCT OD1.BRNCH
+    ,OD2.MEM_ID
+    ,OD2.MEM_LVL
+    ,OD2.ORG_CODE
+    ,OD2.GRP_CODE
+    ,OD2.DEPT_CODE
+    ,OD3.ORG_CODE MEMORG
+    ,OD3.GRP_CODE MEMGRP
+    ,OD3.DEPT_CODE MEMDEPT
+    FROM ORG0001D OD1
+    JOIN ORG1001V OD2 ON OD2.ORG_CODE  = (SELECT ORG_CODE FROM ORG1001V WHERE MEM_ID = #{memId}) AND OD1.MEM_ID = OD2.MEM_ID
+    JOIN ORG1001V OD3 ON OD3.MEM_ID = #{memId}
+    WHERE 1 = 1
 
     <if test = "memLvl == 1">
       AND OD2.ORG_CODE = OD3.ORG_CODE
@@ -457,13 +457,13 @@
       AND OD2.MEM_ID = #{memId}
     </if>
 
-	AND OD1.MEM_TYPE = '2'
-	AND OD1.STUS = '1'
-	ORDER BY OD2.MEM_LVL,OD2.MEM_ID
-	) T
-	JOIN SYS0005M SYSC ON SYSC.BRNCH_ID = T.BRNCH
-	JOIN SYS0013M SYSD ON SYSD.CODE_NAME = SYSC.CODE ||'-'||SYSC.NAME AND SYSD.CODE_MASTER_ID = '360'
-	  </select>
+    AND OD1.MEM_TYPE = '2'
+    AND OD1.STUS = '1'
+    ORDER BY OD2.MEM_LVL,OD2.MEM_ID
+    ) T
+    JOIN SYS0005M SYSC ON SYSC.BRNCH_ID = T.BRNCH
+    JOIN SYS0013M SYSD ON SYSD.CODE_NAME = SYSC.CODE ||'-'||SYSC.NAME AND SYSD.CODE_MASTER_ID = '360'
+      </select>
 
   <select id="selectMainInquiryList"  resultType="egovMap">
 
@@ -677,117 +677,117 @@
 
   <select id="selectCmGroup" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT C.LAST_DEPT_CODE CODE, C.LAST_DEPT_CODE CODE_NAME FROM
-		(SELECT
-		  REGEXP_substr(CODE_NAME, '([A-Z]{3}-\d+)', '1') BRANCH_CODE,
-		  CODE
-		  FROM SYS0013M
-		  WHERE CODE_MASTER_ID = 360
-		  AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{mainDept})
-		) M
-	JOIN SYS0005M B ON M.BRANCH_CODE = B.CODE
-	JOIN ORG0005D C ON C.BRNCH_ID = B.BRNCH_ID
-	WHERE TRIM(' ' FROM C.LAST_DEPT_CODE) IS NOT NULL
-	AND M.CODE IN
-	        <foreach item="item" collection="sub_dept" index="index"
+        (SELECT
+          REGEXP_substr(CODE_NAME, '([A-Z]{3}-\d+)', '1') BRANCH_CODE,
+          CODE
+          FROM SYS0013M
+          WHERE CODE_MASTER_ID = 360
+          AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{mainDept})
+        ) M
+    JOIN SYS0005M B ON M.BRANCH_CODE = B.CODE
+    JOIN ORG0005D C ON C.BRNCH_ID = B.BRNCH_ID
+    WHERE TRIM(' ' FROM C.LAST_DEPT_CODE) IS NOT NULL
+    AND M.CODE IN
+            <foreach item="item" collection="sub_dept" index="index"
             open="(" separator="," close=")">
             #{item}
         </foreach>
 
-	AND ORG_STUS_CODE_ID = 1
-	ORDER BY C.LAST_DEPT_CODE
+    AND ORG_STUS_CODE_ID = 1
+    ORDER BY C.LAST_DEPT_CODE
   </select>
 
   <select id="selectCmGroupByUsername" parameterType="Map" resultType="egovMap">
     SELECT M.MEM_ID, M.MEM_CODE, M.BRNCH, M1.LAST_DEPT_CODE
     FROM ORG0001D M
     LEFT JOIN
-	(SELECT * FROM SYS0047M WHERE HR_CODE IS NOT NULL) U1 ON M.MEM_CODE = U1.HR_CODE
-	LEFT JOIN
-	(SELECT * FROM SYS0047M WHERE HR_CODE IS NULL) U2 ON M.MEM_CODE = U2.USER_NAME
-	JOIN ORG0005D M1 ON M.MEM_ID = M1.MEM_ID
-	WHERE U1.USER_NAME = #{username} OR U2.USER_NAME = #{username}
+    (SELECT * FROM SYS0047M WHERE HR_CODE IS NOT NULL) U1 ON M.MEM_CODE = U1.HR_CODE
+    LEFT JOIN
+    (SELECT * FROM SYS0047M WHERE HR_CODE IS NULL) U2 ON M.MEM_CODE = U2.USER_NAME
+    JOIN ORG0005D M1 ON M.MEM_ID = M1.MEM_ID
+    WHERE U1.USER_NAME = #{username} OR U2.USER_NAME = #{username}
   </select>
 
-  <select id="getUpdInstllationStat" parameterType="Map" resultType="egovMap">
-	    SELECT
-	            CODE AS CODE,
-	            CODE_NAME AS CODE_NAME
-	    FROM SYS0094M
-	    WHERE IND = 'UPDINSADDR'
-	    AND DISB = 0
-	    ORDER BY CODE
-  </select>
+<!--   <select id="getUpdInstllationStat" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!--                 CODE AS CODE, -->
+<!--                 CODE_NAME AS CODE_NAME -->
+<!--         FROM SYS0094M -->
+<!--         WHERE IND = 'UPDINSADDR' -->
+<!--         AND DISB = 0 -->
+<!--         ORDER BY CODE -->
+<!--   </select> -->
 
-  <select id="selectUpdateInstallationAddressRequest" parameterType="Map" resultType="egovMap">
-		SELECT
-		        B.CUST_ID
-		      , B.NAME
-		      , D.SALES_ORD_ID
-		      , A.ORDER_NO
-		      , E.NAME AS STATUS
-		      , A.ADDR_DTL || ' ' ||  A.STREET || ' ' || C.AREA || ' ' || C.POSTCODE || ' ' || C.CITY || ' ' || C.STATE || ' ' || C.COUNTRY AS ADDRESS
-		      , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REG_DT
-		      , A.REMARK
-		      , A.CUST_ADD_ID REQUEST_ID
-		FROM SAL0339D A
-		JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
-		JOIN SYS0064M C ON A.AREA_ID = C.AREA_ID
-		JOIN SAL0001D D ON A.ORDER_NO = D.SALES_ORD_NO
-		JOIN SYS0038M E ON A.STUS_CODE_ID = E.STUS_CODE_ID
-		WHERE A.STUS_CODE_ID <![CDATA[ <> ]]> 8
+<!--   <select id="selectUpdateInstallationAddressRequest" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!--                 B.CUST_ID -->
+<!--               , B.NAME -->
+<!--               , D.SALES_ORD_ID -->
+<!--               , A.ORDER_NO -->
+<!--               , E.NAME AS STATUS -->
+<!--               , A.ADDR_DTL || ' ' ||  A.STREET || ' ' || C.AREA || ' ' || C.POSTCODE || ' ' || C.CITY || ' ' || C.STATE || ' ' || C.COUNTRY AS ADDRESS -->
+<!--               , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REG_DT -->
+<!--               , A.REMARK -->
+<!--               , A.CUST_ADD_ID REQUEST_ID -->
+<!--         FROM SAL0339D A -->
+<!--         JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID -->
+<!--         JOIN SYS0064M C ON A.AREA_ID = C.AREA_ID -->
+<!--         JOIN SAL0001D D ON A.ORDER_NO = D.SALES_ORD_NO -->
+<!--         JOIN SYS0038M E ON A.STUS_CODE_ID = E.STUS_CODE_ID -->
+<!--         WHERE A.STUS_CODE_ID <![CDATA[ <> ]]> 8 -->
 
-		<if test="orderNo != null and orderNo != '' ">
-        AND A.ORDER_NO = #{orderNo}
-        </if>
+<!--         <if test="orderNo != null and orderNo != '' "> -->
+<!--         AND A.ORDER_NO = #{orderNo} -->
+<!--         </if> -->
 
-		<if test="regStartDt != null and regStartDt != '' ">
-        AND A.CRT_DT <![CDATA[ >= ]]> to_date(#{regStartDt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-        </if>
+<!--         <if test="regStartDt != null and regStartDt != '' "> -->
+<!--         AND A.CRT_DT <![CDATA[ >= ]]> to_date(#{regStartDt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS') -->
+<!--         </if> -->
 
-        <if test="regEndDt != null and regEndDt != '' ">
-        AND A.CRT_DT <![CDATA[ <= ]]> to_date(#{regEndDt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-        </if>
+<!--         <if test="regEndDt != null and regEndDt != '' "> -->
+<!--         AND A.CRT_DT <![CDATA[ <= ]]> to_date(#{regEndDt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS') -->
+<!--         </if> -->
 
-        <if test="listStatus != null and listStatus != '' ">
-        AND A.STUS_CODE_ID IN
-      <foreach item="item" collection="listStatus" index="index" open="(" separator="," close=")">
-        #{item}
-      </foreach>
-    </if>
+<!--         <if test="listStatus != null and listStatus != '' "> -->
+<!--         AND A.STUS_CODE_ID IN -->
+<!--       <foreach item="item" collection="listStatus" index="index" open="(" separator="," close=")"> -->
+<!--         #{item} -->
+<!--       </foreach> -->
+<!--     </if> -->
 
-		ORDER BY 1 DESC
-  </select>
+<!--         ORDER BY 1 DESC -->
+<!--   </select> -->
 
-  <insert id="insertInstallAddress" parameterType="Map" >
-	  INSERT INTO SAL0023D
-	       (CUST_ADD_ID , CUST_ID , STUS_CODE_ID, AREA_ID, ADDR_DTL, STREET, CRT_USER_ID, CRT_DT)
-	  SELECT
-		    SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL,
-		    SRC.CUST_ID ,
-		    1 ,
-		    SRC.AREA_ID ,
-		    SRC.ADDR_DTL ,
-		    SRC.STREET ,
-		    #{crtUserId},
-		    SYSDATE
-	FROM SAL0339D SRC where CUST_ADD_ID = #{requestId}
-  </insert>
+<!--   <insert id="insertInstallAddress" parameterType="Map" > -->
+<!--       INSERT INTO SAL0023D -->
+<!--            (CUST_ADD_ID , CUST_ID , STUS_CODE_ID, AREA_ID, ADDR_DTL, STREET, CRT_USER_ID, CRT_DT) -->
+<!--       SELECT -->
+<!--             SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL, -->
+<!--             SRC.CUST_ID , -->
+<!--             1 , -->
+<!--             SRC.AREA_ID , -->
+<!--             SRC.ADDR_DTL , -->
+<!--             SRC.STREET , -->
+<!--             #{crtUserId}, -->
+<!--             SYSDATE -->
+<!--     FROM SAL0339D SRC where CUST_ADD_ID = #{requestId} -->
+<!--   </insert> -->
 
 
-  <update id="updateInstallInfo" parameterType="Map" >
-    UPDATE SAL0045D
-    SET ADD_ID = SAL0023D_CUST_ADD_ID_SEQ.CURRVAL
-        , UPD_DT = SYSDATE
-        , UPD_USER_ID = #{crtUserId}
-    WHERE SALES_ORD_ID = #{salesOrderId}
-  </update>
+<!--   <update id="updateInstallInfo" parameterType="Map" > -->
+<!--     UPDATE SAL0045D -->
+<!--     SET ADD_ID = SAL0023D_CUST_ADD_ID_SEQ.CURRVAL -->
+<!--         , UPD_DT = SYSDATE -->
+<!--         , UPD_USER_ID = #{crtUserId} -->
+<!--     WHERE SALES_ORD_ID = #{salesOrderId} -->
+<!--   </update> -->
 
-   <update id="updateRequestStatus" parameterType="Map" >
-    UPDATE SAL0339D
-    SET STUS_CODE_ID = 4
-        , UPD_DT = SYSDATE
-        , UPD_USER_ID = #{crtUserId}
-    WHERE CUST_ADD_ID = #{requestId}
-  </update>
+<!--    <update id="updateRequestStatus" parameterType="Map" > -->
+<!--     UPDATE SAL0339D -->
+<!--     SET STUS_CODE_ID = 4 -->
+<!--         , UPD_DT = SYSDATE -->
+<!--         , UPD_USER_ID = #{crtUserId} -->
+<!--     WHERE CUST_ADD_ID = #{requestId} -->
+<!--   </update> -->
 
 </mapper>
