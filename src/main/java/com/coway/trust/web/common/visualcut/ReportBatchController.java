@@ -2746,7 +2746,7 @@ public void adRcmDailyCurrentYear() {
     params.put("V_STARTYEAR", year);// parameter
     params.put("V_ENDYEAR", "");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "Simplified_RCM" + File.separator + "AD_RCM_Daily_" + year + "_" + CommonUtils.getNowDate() + ".xls");
+        "Simplified_RCM" + File.separator + "AD_RCM_Daily_HA_" + year + "_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AD_RCM_Daily_Current_Year...");
