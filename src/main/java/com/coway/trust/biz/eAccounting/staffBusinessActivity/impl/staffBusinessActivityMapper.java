@@ -27,7 +27,7 @@ public interface staffBusinessActivityMapper {
 
     String selectNextClmNo(Map<String, Object> params);
 
-    void insertRequest(Map<String, Object> params);
+    int insertRequest(Map<String, Object> params);
 
     void insertTrvDetail(Map<String, Object> params);
 
@@ -37,11 +37,11 @@ public interface staffBusinessActivityMapper {
 
     void editDraftRequestD(Map<String, Object> params);
 
-    void updateTotal(Map<String, Object> params);
+    int updateTotal(Map<String, Object> params);
 
-    void updateAdvRequest(Map<String, Object> params);
+    int updateAdvRequest(Map<String, Object> params);
 
-    void updateAdvanceReqInfo(Map<String, Object> params);
+    int updateAdvanceReqInfo(Map<String, Object> params);
 
     EgovMap getRefDtls(Map<String, Object> params);
 

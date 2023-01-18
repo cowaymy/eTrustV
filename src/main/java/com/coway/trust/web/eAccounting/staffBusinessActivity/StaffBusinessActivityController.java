@@ -222,7 +222,7 @@ public class StaffBusinessActivityController {
     /* Button Functions
      * Details Saving (FCM0027M + FCM0028D)
      */
-    @RequestMapping(value = "/saveAdvReq.do", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/saveAdvReq.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> saveAdvReq(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
         LOGGER.debug("=============== saveAdvReq.do ===============");
         LOGGER.debug("params ==============================>> " + params);
@@ -307,9 +307,61 @@ public class StaffBusinessActivityController {
         message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
         return ResponseEntity.ok(message);
+    } */
+
+    /* Button Functions
+     * Details Saving (FCM0027M + FCM0028D)
+     */
+    @RequestMapping(value = "/saveAdvReq.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> saveAdvReq(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+    	LOGGER.debug("=============== saveAdvReq.do ===============");
+    	LOGGER.debug("params ==============================>> " + params);
+
+    	int count =  staffBusinessActivityService.saveAdvReq(params, sessionVO);
+
+    	LOGGER.debug("staffBusinessActivityAdvancecontroller :: saveAdvReq :: " + params);
+
+    	ReturnMessage message = new ReturnMessage();
+    	if(count > 0){
+        	message.setCode(AppConstants.SUCCESS);
+        	message.setData(params);
+        	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	}
+    	else {
+        	message.setCode(AppConstants.FAIL);
+        	message.setData(params);
+        	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+    	}
+
+    	return ResponseEntity.ok(message);
     }
 
     @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/submitAdvReq.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> submitAdvReq(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        LOGGER.debug("=============== submitAdvReq.do ===============");
+        LOGGER.debug("params ==============================>> " + params);
+
+        params.put("userId", sessionVO.getUserId());
+        params.put("userName", sessionVO.getUserName());
+
+        int count = staffBusinessActivityService.submitAdvReq(params, sessionVO);
+
+        ReturnMessage message = new ReturnMessage();
+        if(count > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(params);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        }  else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(params);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+    /*@SuppressWarnings("unchecked")
     @RequestMapping(value = "/submitAdvReq.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> submitAdvReq(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
         LOGGER.debug("=============== submitAdvReq.do ===============");
@@ -457,7 +509,7 @@ public class StaffBusinessActivityController {
         message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
         return ResponseEntity.ok(message);
-    }
+    } */
 
     @RequestMapping(value = "/getRefundDetails.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> getRefundDetails(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
@@ -499,106 +551,128 @@ public class StaffBusinessActivityController {
         LOGGER.debug("=============== saveAdvRef.do ===============");
         LOGGER.debug("params ==============================>> " + params);
 
-        int clmSeq = 1;
-
-        params.put("clmType", "REF");
-        params.put("glAccNo", "22200400");
-        if(params.get("refAdvType_h") != "")
-        {
-        	params.put("refAdvType", params.get("refAdvType_h"));
-        }
-
-        if(params.get("refAdvType_h") != "" && params.get("refAdvType_h").equals("4"))
-        {
-        	if(params.get("refSubmitFlg") != null && params.get("refSubmitFlg").equals("1") && params.get("refClmNo") != null)
-        		params.put("clmNo", params.get("refClmNo"));
-        }
-
-        String pClmNo = params.containsKey("clmNo") ? params.get("clmNo").toString() : "";
-
-        if(pClmNo.isEmpty()) {
-            // Refund New Save
-
-            String clmNo = staffBusinessActivityService.selectNextClmNo(params);
-            params.put("clmNo", clmNo);
-            params.put("userId", sessionVO.getUserId());
-
-            // Insert FCM0027M
-            //staffBusinessActivityService.insertRefund(params);
-
-            Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
-            hmTrv.put("clmNo", clmNo);
-
-            if("3".equals(params.get("refAdvType"))) {
-                // Advance Refund for Staff Travelling Advance
-                hmTrv.put("clmSeq", clmSeq);
-                hmTrv.put("invcNo", params.get("trvBankRefNo"));
-                hmTrv.put("invcDt", params.get("trvAdvRepayDate"));
-                hmTrv.put("expType", "AD101");
-                hmTrv.put("expTypeNm", "Refund Travel Advance");
-                hmTrv.put("dAmt", params.get("trvAdvRepayAmt"));
-                hmTrv.put("advType", params.get("reqAdvType"));
-                hmTrv.put("userId", sessionVO.getUserId());
-                staffBusinessActivityService.insertTrvDetail(params);
-
-            } else if("4".equals(params.get("refAdvType"))) {
-            	// Staff/Company Event Advance Request
-            	hmTrv.put("clmSeq", clmSeq);
-                hmTrv.put("invcNo", params.get("refBankRef"));
-                hmTrv.put("invcDt", params.get("refAdvRepayDate")); //CELESTE: grab from refund details TODO change
-                hmTrv.put("expType", params.get("expType"));
-                hmTrv.put("expTypeNm", params.get("expTypeNm"));
-                hmTrv.put("dAmt", params.get("refTotExp"));
-                hmTrv.put("userId", sessionVO.getUserId());
-                params.put("advType", params.get("refAdvType_h"));
-                params.put("hmTrv", hmTrv);
-                params.put("refAdvRepayDate", params.get("refAdvRepayDate"));
-                params.put("dAmt", params.get("refTotExp"));
-                // Details
-                LOGGER.debug("params ==============================>> " + params);
-                staffBusinessActivityService.insertTrvDetail(params);
-            }
-        } else { //Refund draft update
-        	params.put("clmNo", pClmNo);
-        	params.put("advType", params.get("refAdvType_h"));
-        	params.put("costCenterCode", params.get("refCostCenterCode"));
-        	params.put("payeeCode", params.get("refPayeeCode"));
-        	params.put("bankAccNo", params.get("refBankAccNo"));
-        	params.put("busActReqRem", params.get("trvRepayRem"));
-        	params.put("refdDate", params.get("refAdvRepayDate"));
-        	params.put("refBankRef", params.get("refBankRef"));
-        	params.put("bankId", params.get("bankId"));
-        	params.put("totAmt", params.get("refTotExp"));
-        	staffBusinessActivityService.editDraftRequestM(params);
-
-            Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
-            hmTrv.put("clmNo", params.get("refClmNo"));
-
-            if("4".equals(params.get("refAdvType"))) {
-                // Advance Refund for Staff Travelling Advance
-//            	params.put("invcNo", params.get("invcNo"));
-//            	params.put("invcDt", params.get("invcDt"));
-            	params.put("expType", params.get("expType"));
-            	params.put("expTypeNm", params.get("expTypeNm"));
-            	params.put("dAmt", params.get("refTotExp"));
-            	params.put("userId", sessionVO.getUserId());
-            	params.put("advType", params.get("refAdvType_h"));
-            	LOGGER.debug("params ==============================>> " + params);
-                staffBusinessActivityService.editDraftRequestD(params);
-
-            }
-
-        }
-
-        staffBusinessActivityService.updateAdvRequest(params);
+        int count = staffBusinessActivityService.saveAdvRef(params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
-        message.setCode(AppConstants.SUCCESS);
-        message.setData(params);
-        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        if(count > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(params);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        }  else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(params);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
 
         return ResponseEntity.ok(message);
     }
+
+    /*@RequestMapping(value = "/saveAdvRef.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> saveAdvRef(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+    	LOGGER.debug("=============== saveAdvRef.do ===============");
+    	LOGGER.debug("params ==============================>> " + params);
+
+    	int clmSeq = 1;
+
+    	params.put("clmType", "REF");
+    	params.put("glAccNo", "22200400");
+    	if(params.get("refAdvType_h") != "")
+    	{
+    		params.put("refAdvType", params.get("refAdvType_h"));
+    	}
+
+    	if(params.get("refAdvType_h") != "" && params.get("refAdvType_h").equals("4"))
+    	{
+    		if(params.get("refSubmitFlg") != null && params.get("refSubmitFlg").equals("1") && params.get("refClmNo") != null)
+    			params.put("clmNo", params.get("refClmNo"));
+    	}
+
+    	String pClmNo = params.containsKey("clmNo") ? params.get("clmNo").toString() : "";
+
+    	if(pClmNo.isEmpty()) {
+    		// Refund New Save
+
+    		String clmNo = staffBusinessActivityService.selectNextClmNo(params);
+    		params.put("clmNo", clmNo);
+    		params.put("userId", sessionVO.getUserId());
+
+    		// Insert FCM0027M
+    		//staffBusinessActivityService.insertRefund(params);
+
+    		Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
+    		hmTrv.put("clmNo", clmNo);
+
+    		if("3".equals(params.get("refAdvType"))) {
+    			// Advance Refund for Staff Travelling Advance
+    			hmTrv.put("clmSeq", clmSeq);
+    			hmTrv.put("invcNo", params.get("trvBankRefNo"));
+    			hmTrv.put("invcDt", params.get("trvAdvRepayDate"));
+    			hmTrv.put("expType", "AD101");
+    			hmTrv.put("expTypeNm", "Refund Travel Advance");
+    			hmTrv.put("dAmt", params.get("trvAdvRepayAmt"));
+    			hmTrv.put("advType", params.get("reqAdvType"));
+    			hmTrv.put("userId", sessionVO.getUserId());
+    			staffBusinessActivityService.insertTrvDetail(params);
+
+    		} else if("4".equals(params.get("refAdvType"))) {
+    			// Staff/Company Event Advance Request
+    			hmTrv.put("clmSeq", clmSeq);
+    			hmTrv.put("invcNo", params.get("refBankRef"));
+    			hmTrv.put("invcDt", params.get("refAdvRepayDate")); //CELESTE: grab from refund details TODO change
+    			hmTrv.put("expType", params.get("expType"));
+    			hmTrv.put("expTypeNm", params.get("expTypeNm"));
+    			hmTrv.put("dAmt", params.get("refTotExp"));
+    			hmTrv.put("userId", sessionVO.getUserId());
+    			params.put("advType", params.get("refAdvType_h"));
+    			params.put("hmTrv", hmTrv);
+    			params.put("refAdvRepayDate", params.get("refAdvRepayDate"));
+    			params.put("dAmt", params.get("refTotExp"));
+    			// Details
+    			LOGGER.debug("params ==============================>> " + params);
+    			staffBusinessActivityService.insertTrvDetail(params);
+    		}
+    	} else { //Refund draft update
+    		params.put("clmNo", pClmNo);
+    		params.put("advType", params.get("refAdvType_h"));
+    		params.put("costCenterCode", params.get("refCostCenterCode"));
+    		params.put("payeeCode", params.get("refPayeeCode"));
+    		params.put("bankAccNo", params.get("refBankAccNo"));
+    		params.put("busActReqRem", params.get("trvRepayRem"));
+    		params.put("refdDate", params.get("refAdvRepayDate"));
+    		params.put("refBankRef", params.get("refBankRef"));
+    		params.put("bankId", params.get("bankId"));
+    		params.put("totAmt", params.get("refTotExp"));
+    		staffBusinessActivityService.editDraftRequestM(params);
+
+    		Map<String, Object> hmTrv = new LinkedHashMap<String, Object>();
+    		hmTrv.put("clmNo", params.get("refClmNo"));
+
+    		if("4".equals(params.get("refAdvType"))) {
+    			// Advance Refund for Staff Travelling Advance
+//            	params.put("invcNo", params.get("invcNo"));
+//            	params.put("invcDt", params.get("invcDt"));
+    			params.put("expType", params.get("expType"));
+    			params.put("expTypeNm", params.get("expTypeNm"));
+    			params.put("dAmt", params.get("refTotExp"));
+    			params.put("userId", sessionVO.getUserId());
+    			params.put("advType", params.get("refAdvType_h"));
+    			LOGGER.debug("params ==============================>> " + params);
+    			staffBusinessActivityService.editDraftRequestD(params);
+
+    		}
+
+    	}
+
+    	staffBusinessActivityService.updateAdvRequest(params);
+
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(params);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+    	return ResponseEntity.ok(message);
+    } */
 
     @RequestMapping(value = "/staffBusActApproveViewPop.do")
     public String staffAdvanceAppvViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {

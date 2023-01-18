@@ -43,9 +43,9 @@ public interface staffBusinessActivityService {
 
     void insertAppvDetails(Map<String, Object> params);
 
-    void updateAdvRequest(Map<String, Object> params);
+    int updateAdvRequest(Map<String, Object> params);
 
-    void updateAdvanceReqInfo(Map<String, Object> params);
+    int updateAdvanceReqInfo(Map<String, Object> params);
 
     EgovMap getRefDtls(Map<String, Object> params);
 
@@ -73,4 +73,10 @@ public interface staffBusinessActivityService {
 
     // FCM0027M update - Manual Settlement for Request to add Manual Settlement for Staff Business Activity (R3) - Web invoice requested by invoice number + supplier matching
     int manualStaffBusinessAdvReqSettlement(Map<String, Object> params, SessionVO sessionVO);
+
+    int submitAdvReq(Map<String, Object> params, SessionVO sessionVO);
+
+    int saveAdvReq(Map<String, Object> params, SessionVO sessionVO);
+
+    int saveAdvRef(Map<String, Object> params, SessionVO sessionVO);
 }

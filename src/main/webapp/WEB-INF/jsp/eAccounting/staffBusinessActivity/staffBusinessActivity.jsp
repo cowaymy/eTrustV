@@ -221,11 +221,15 @@
     dataType : "date",
     //formatString : "dd/mm/yyyy",
     editRenderer : {
-      type : "CalendarRenderer",
-      defaultFormat : "dd/mm/yyyy",
-      showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-      onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-      showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+        type : "CalendarRenderer",
+        formatString : "dd/mm/yyyy",
+        openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+        onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+        showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+        titles : [gridMsg["sys.info.grid.calendar.titles.sun"], gridMsg["sys.info.grid.calendar.titles.mon"], gridMsg["sys.info.grid.calendar.titles.tue"], gridMsg["sys.info.grid.calendar.titles.wed"], gridMsg["sys.info.grid.calendar.titles.thur"], gridMsg["sys.info.grid.calendar.titles.fri"], gridMsg["sys.info.grid.calendar.titles.sat"]],
+        formatYearString : gridMsg["sys.info.grid.calendar.formatYearString"],
+        formatMonthString : gridMsg["sys.info.grid.calendar.formatMonthString"],
+        monthTitleString : gridMsg["sys.info.grid.calendar.monthTitleString"]
     }
 }, {
     dataField : "invcNo",

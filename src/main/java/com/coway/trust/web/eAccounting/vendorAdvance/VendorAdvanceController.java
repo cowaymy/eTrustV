@@ -271,7 +271,7 @@ public class VendorAdvanceController {
         LOGGER.debug("params =====================================>>  " + params);
 
         // FCM0027M, FCM0028D details
-        EgovMap details = vendorAdvanceService.selectVendorAdvanceDetails(params.get("clmNo").toString());
+        EgovMap details = vendorAdvanceService.selectVendorAdvanceDetailItem(params.get("clmNo").toString()); //EgovMap details = vendorAdvanceService.selectVendorAdvanceDetails(params.get("clmNo").toString());
         if("5".equals(params.get("advType").toString())) {
             List<EgovMap> settlementItems = vendorAdvanceService.selectVendorAdvanceItems(params.get("clmNo").toString());
             details.put("cur", settlementItems.get(0).get("currency"));
@@ -286,8 +286,15 @@ public class VendorAdvanceController {
         }
 
         // Retrieve Attachment details
-        List<EgovMap> atchInfo = webInvoiceService.selectAttachList(String.valueOf(details.get("fileAtchGrpId")));
-        details.put("attachList", atchInfo);
+        if("6".equals(params.get("advType").toString())) {
+        	 List<EgovMap> atchInfo = webInvoiceService.selectAttachList(String.valueOf(params.get("fileAtchGrpId")));
+             details.put("attachList", atchInfo);
+        }else
+        {
+        	List<EgovMap> atchInfo = webInvoiceService.selectAttachList(String.valueOf(details.get("fileAtchGrpId")));
+        	details.put("attachList", atchInfo);
+        }
+
 
         // Not draft or empty approval status, retrieve from FCM0004M and FCM0005D
         //if("6".equals(params.get("advType").toString()) && (!"".equals(params.get("appvPrcssStus").toString()) && !"T".equals(params.get("appvPrcssStus").toString()))) {
@@ -326,16 +333,25 @@ public class VendorAdvanceController {
 
         LOGGER.debug("========== selectVendorAdvanceDetails:endingParams ==========" + details);
         ReturnMessage message = new ReturnMessage();
-        if(details.size() > 0) {
-            message.setCode(AppConstants.SUCCESS);
-            message.setData(details);
-            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-        } else {
-            message.setCode(AppConstants.FAIL);
-            message.setData(details);
-            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-        }
+
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(details);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
         return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/selectVendorAdvanceDetailsGrid.do" , method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectVendorAdvanceDetailsGrid(@RequestParam Map<String, Object> params, ModelMap model) {
+//    public List<EgovMap> selectVendorAdvanceDetailsGrid(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+    	LOGGER.debug("========== vendorAdvance.selectVendorAdvanceDetailsGrid ==========");
+        LOGGER.debug("params =====================================>>  " + params);
+
+        List<EgovMap> details = vendorAdvanceService.selectVendorAdvanceItems(params.get("clmNo").toString());
+
+        LOGGER.debug("details =====================================>>  " + details);
+        return ResponseEntity.ok(details);
     }
 
     @RequestMapping(value = "/updateVendorAdvReq.do", method = RequestMethod.POST)

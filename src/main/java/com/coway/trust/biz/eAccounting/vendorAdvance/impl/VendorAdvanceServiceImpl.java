@@ -157,6 +157,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+            LOGGER.debug("item >>>>> "+ item);
             int ins = vendorAdvanceMapper.insertAdvDet_FCM28D(item);
             detIns += ins > 0 ? 1 : 0;
         }
@@ -255,6 +256,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 params.put("expDesc", params.get("advRem"));
                 params.put("amt", params.get("totalAdv"));
                 params.put("atchFileGrpId", params.get("reqAtchFileGrpId"));
+                vendorAdvanceMapper.insertAppvDetails(params);
             }
             else if(params.containsKey("settlementType") && params.get("settlementType") != null && params.get("settlementType").equals("6"))
             {
@@ -267,9 +269,41 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             	params.put("atchFileGrpId", params.get("settlementAtchFileGrpId"));
 //            	params.put("advCurr", "MYR");
             	params.put("memAccId", params.get("settlementMemAccId"));
+            	params.put("clmNo", params.get("settlementNewClmNo").toString());
+
+            	List<EgovMap> appvItemDts = vendorAdvanceMapper.selectVendorAdvanceItems(params.get("clmNo").toString());
+                Map<String, Object> appvSettlementDts = null;
+
+            	if (appvItemDts.size() > 0) {
+                	//sDtls = (EgovMap) vendorAdvanceMapper.selectVendorAdvanceItems(params.get("clmNo").toString());
+
+            		for(int j = 0; j < appvItemDts.size(); j++) {
+            			Map<String, Object> invoAppvItems = (Map<String, Object>) appvItemDts.get(j);
+
+            			params.put("appvItmSeq", j+1);
+                		params.put("budgetCode", invoAppvItems.get("budgetCode").toString());
+                    	params.put("budgetCodeName", invoAppvItems.get("budgetCodeName").toString());
+                    	params.put("glAccNo", invoAppvItems.get("glAccCode").toString());
+                    	params.put("glAccNm", invoAppvItems.get("glAccCodeName").toString());
+                    	params.put("amt", invoAppvItems.get("totalAmt").toString());
+        				LOGGER.debug("insertApproveItems =====================================>>  " + appvItemDts);
+        				LOGGER.debug("========== insertAppvDetails ==========");
+        	            LOGGER.debug("insertAppvDetails >>> " + params);
+        				// TODO appvLineItemsTable Insert
+        				vendorAdvanceMapper.insertAppvDetails(params);
+        			}
+            	}
+
+//            	params.put("budgetCode", sDtls.get("budgetCode").toString());
+//            	params.put("budgetCodeName", sDtls.get("budgetCodeName").toString());
+//            	params.put("glAccNo", sDtls.get("glAccCode").toString());
+//            	params.put("glAccNm", sDtls.get("glAccCodeNm").toString());
+
             }
 
-            vendorAdvanceMapper.insertAppvDetails(params);
+            /*LOGGER.debug("========== insertAppvDetails ==========");
+            LOGGER.debug("insertAppvDetails >>> " + params);
+            vendorAdvanceMapper.insertAppvDetails(params);*/
         }
 
         vendorAdvanceMapper.updateAppvPrcssNo(params);
@@ -283,13 +317,22 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
     }
 
     @Override
-    public EgovMap selectVendorAdvanceDetails(String clmNo) {
+    public List<EgovMap> selectVendorAdvanceDetails(String clmNo) {
         return vendorAdvanceMapper.selectVendorAdvanceDetails(clmNo);
+    }
+
+    public List<EgovMap> selectVendorAdvanceDetailsGrid(String clmNo) {
+        return vendorAdvanceMapper.selectVendorAdvanceDetailsGrid(clmNo);
     }
 
     @Override
     public List<EgovMap> selectVendorAdvanceItems(String clmNo) {
         return vendorAdvanceMapper.selectVendorAdvanceItems(clmNo);
+    }
+
+    @Override
+    public EgovMap selectVendorAdvanceDetailItem(String clmNo) {
+    	return vendorAdvanceMapper.selectVendorAdvanceDetailItem(clmNo);
     }
 
     @Override

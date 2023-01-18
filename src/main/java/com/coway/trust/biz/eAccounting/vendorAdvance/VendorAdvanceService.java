@@ -28,9 +28,11 @@ public interface VendorAdvanceService {
      * 1. FCM0027M + FCM0028D - 1 row
      * 2. FCM0028D for grid view listing
      */
-    EgovMap selectVendorAdvanceDetails(String clmNo);
+    List<EgovMap> selectVendorAdvanceDetails(String clmNo);
     List<EgovMap> selectVendorAdvanceItems(String clmNo);
 
+    List<EgovMap> selectVendorAdvanceDetailsGrid(String clmNo);
+    EgovMap selectVendorAdvanceDetailItem(String clmNo);
     EgovMap getAppvInfo(String appvPrcssNo);
 
     // FCM0027M + FCM0028D update - Advance Vendor Request (R4)

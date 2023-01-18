@@ -47,10 +47,12 @@ public interface VendorAdvanceMapper {
      * 3. Attachment
      * 4. Approval details (If claim is in Approved/Rejected/Approval in Progress/Requested status)
      */
-    EgovMap selectVendorAdvanceDetails(String clmNo);
+    List<EgovMap> selectVendorAdvanceDetails(String clmNo);
+    List<EgovMap> selectVendorAdvanceDetailsGrid(String clmNo);
     List<EgovMap> selectVendorAdvanceDetailsList(Map<String, Object> params);
     List<EgovMap> selectVendorAdvanceItems(String clmNo);
 
+    EgovMap selectVendorAdvanceDetailItem(String clmNo);
     EgovMap getAppvInfo(String appvPrcssNo);
 
     /*
