@@ -751,6 +751,22 @@
 //      if(!FormUtil.checkNum($("#ext").val())){
 //               alert("* Invalid extension number.");
 //        }
+        console.log("13.  email check");
+        if($("#_email_").val() == ""){
+
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />');
+
+            return;
+        }else{
+            if("" != $("#_email_").val() && null != $("#_email_").val()){
+
+                if(FormUtil.checkEmail($("#_email_").val())){
+                     Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
+                     return;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -1144,7 +1160,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.title.text.email2" /></th>
+                                <th scope="row"><spring:message code="sal.title.text.email2" /><span class="must">*</span></th>
                                 <td><input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" /></td>
                             </tr>
                             <tr>
