@@ -138,11 +138,18 @@ $(document).ready(function() {
             }
         }
         //Email
-        if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
+        if($("#cntcEmail").val() == ""){
 
-            if(FormUtil.checkEmail($("#cntcEmail").val())){
-                 Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
-                 return;
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />');
+
+            return;
+        }else{
+        	if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
+
+                if(FormUtil.checkEmail($("#cntcEmail").val())){
+                     Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
+                     return;
+                }
             }
         }
         // Validation Success
@@ -345,7 +352,7 @@ $(document).ready(function() {
     <td><input type="text" title="" placeholder="Extension Number" class="w100p"  id="cntcExtNo" name="cntcExpno" maxlength="50"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.email" /></th>
+    <th scope="row"><spring:message code="sal.text.email" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"  id="cntcEmail" name="cntcEmail" maxlength="70"/></td>
 </tr>
 <tr>

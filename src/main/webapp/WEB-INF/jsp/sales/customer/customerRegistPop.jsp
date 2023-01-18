@@ -690,6 +690,13 @@
                    }
                }
         }
+        console.log("13.  email check");
+        if($("#_email_").val() == ""){
+
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />');
+
+            return false;
+        }
 
 
 //      if(!FormUtil.checkNum($("#ext").val())){
@@ -843,7 +850,10 @@
 
     function emailCheck(){
         if($("#_email_").val() == ""){
-            return
+
+        	Common.alert('<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />');
+
+            return false;
         }else{
             if(FormUtil.checkEmail($("#_email_").val())){
 //              $("input[name='email']").focus();
@@ -1111,7 +1121,7 @@
                 <label><input type="radio" name="gender"  value="F" disabled="disabled"/><span><spring:message code="sal.title.text.female" /></span></label>
                 </div>
             </td>
-            <th scope="row"><spring:message code="sal.title.text.eamilOne" /></th>
+            <th scope="row"><spring:message code="sal.title.text.eamilOne" /><span class="must">*</span></th>
             <td>
               <input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" />
             </td>
