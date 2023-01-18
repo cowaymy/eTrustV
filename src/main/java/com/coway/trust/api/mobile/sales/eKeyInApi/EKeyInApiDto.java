@@ -244,6 +244,8 @@ public class EKeyInApiDto {
   private String cpntCodeName;
   private BigDecimal quotaStus;
   private int isHcAcInstallationFlag;
+  private String acBrnch;
+  private int acBrnchId;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1907,6 +1909,22 @@ public int getIsHcAcInstallationFlag() {
 
 public void setIsHcAcInstallationFlag(int isHcAcInstallationFlag) {
 	this.isHcAcInstallationFlag = isHcAcInstallationFlag;
+}
+
+public String getAcBrnch() {
+	return acBrnch;
+}
+
+public void setAcBrnch(String acBrnch) {
+	this.acBrnch = acBrnch;
+}
+
+public int getAcBrnchId() {
+	return acBrnchId;
+}
+
+public void setAcBrnchId(int acBrnchId) {
+	this.acBrnchId = acBrnchId;
 }
 
 }
