@@ -351,8 +351,8 @@
     }
 
     //Customise Installation DSC/HDC Load for Aircon Checking Usage and not including fn_clearSales for after onchange use
-    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare) {
-    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare}, function(custInfo) {
+    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare, isAC) {
+    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare,'isAC' : isAC}, function(custInfo) {
 
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
@@ -1100,7 +1100,7 @@ console.log("idx:"+idx);
             if(_tagNum == "1"){
                 var stockIdVal = $("#ordProduct"+_tagNum).val();
                 if(!FormUtil.isEmpty(stockIdVal)){
-                	checkIfIsDscInstallationProductCategoryCode(stockIdVal);
+                	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
                 }
             }
 
@@ -2767,8 +2767,8 @@ console.log(orderVO);
     doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo'+tagNum, 'S', '');
   }
 
-  function checkIfIsDscInstallationProductCategoryCode(stockIdVal){
-	  	Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+  function checkIfIsAcInstallationProductCategoryCode(stockIdVal){
+	  	Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
 	        if(result != null)
 	        {
 	        	var custAddId = $('#hiddenCustAddId').val();
@@ -2776,8 +2776,8 @@ console.log(orderVO);
 	            $('#liInstNewAddr').removeClass("blind");
 	            $('#liInstSelAddr').removeClass("blind");
 	        	if(result.data == 1){
-	        		//change installation branch to DSC //load dsc combobox
-	                fn_loadInstallAddrForDiffBranch(custAddId,'N');
+	        		//change installation branch to AC //load AC combobox
+	                fn_loadInstallAddrForDiffBranch(custAddId,'N','Y');
 	        	}
 	        	else{
 	        		//change installation branch to HDC //load hdc combobox

@@ -439,11 +439,11 @@ public class EKeyInApiController {
     return ResponseEntity.ok(rtn);
   }
 
-  @ApiOperation(value = "checkIfIsDscInstallationProductCategoryCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/checkIfIsDscInstallationProductCategoryCode", method = RequestMethod.GET)
-  public ResponseEntity<EKeyInApiDto> checkIfIsDscInstallationProductCategoryCode(@ModelAttribute EKeyInApiForm param) throws Exception {
+  @ApiOperation(value = "checkIfIsAcInstallationProductCategoryCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/checkIfIsAcInstallationProductCategoryCode", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> checkIfIsAcInstallationProductCategoryCode(@ModelAttribute EKeyInApiForm param) throws Exception {
     LOGGER.debug("selectPromoByCpntId    값 : {}", param);
-    return ResponseEntity.ok(eKeyInApiService.checkIfIsDscInstallationProductCategoryCode(param));
+    return ResponseEntity.ok(eKeyInApiService.checkIfIsAcInstallationProductCategoryCode(param));
   }
 
 }

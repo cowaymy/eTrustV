@@ -545,7 +545,7 @@ var userType = '${SESSION_INFO.userTypeId}';
       var exTrade = $("#exTrade").val();
       var srvPacId = appTypeVal == '66' ? $('#srvPacId').val() : 0;
 
-	  Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: stkIdVal}, function(result) {
+	  Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: stkIdVal}, function(result) {
           if(result != null)
           {
         	var custAddId =	$('#hiddenCustAddId').val()

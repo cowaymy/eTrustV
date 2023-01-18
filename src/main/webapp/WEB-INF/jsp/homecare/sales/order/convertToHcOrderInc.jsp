@@ -61,7 +61,7 @@
                     //----------------------------------------------------------
 	                var stkId = "${preMatOrderInfo.itmStkId}";
 		        	$('#hiddenCustAddId').val('${preOrderInfo.instAddId}');
-	                checkIfIsDscInstallationProductCategoryCode(stkId);
+		        	checkIfIsAcInstallationProductCategoryCode(stkId);
                     //fn_loadInstallAddr('${preOrderInfo.instAddId}');
                 }
 

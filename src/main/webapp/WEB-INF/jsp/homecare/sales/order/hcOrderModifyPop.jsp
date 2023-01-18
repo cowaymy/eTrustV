@@ -1525,11 +1525,11 @@
   }
 
   function fn_loadInstallInfo(ordId) {
-	  Common.ajaxSync("GET", "/homecare/checkIfIsDscInstallationProductCategoryCode.do", {stkId: STK_ID}, function(result) {
+	  Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: STK_ID}, function(result) {
           if(result != null)
           {
           	if(result.data == 1){
-                doGetComboSepa('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+          		doGetComboSepa ('/homecare/selectAcBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
           	}
           	else{
           		doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code

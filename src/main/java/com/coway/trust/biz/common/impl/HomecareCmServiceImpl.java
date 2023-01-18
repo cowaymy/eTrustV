@@ -54,11 +54,22 @@ public class HomecareCmServiceImpl implements HomecareCmService {
 		return homecareCmMapper.selectHomecareBranchList(params);
 	}
 
+	/**
+	 * Select AC Branch List For Aircon Branch in SYS0064M
+	 * @Author FRANGO
+	 * @Date 2023. 01. 18.
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectAcBranchList() {
+		return homecareCmMapper.selectAcBranchList();
+	}
 
 	@Override
-	public int checkIfIsDscInstallationProductCategoryCode(Map<String, Object> params) {
+	public int checkIfIsAcInstallationProductCategoryCode(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 
-		return homecareCmMapper.checkIfIsDscInstallationProductCategoryCode(params.get("stkId").toString());
+		return homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(params.get("stkId").toString());
 	}
 }

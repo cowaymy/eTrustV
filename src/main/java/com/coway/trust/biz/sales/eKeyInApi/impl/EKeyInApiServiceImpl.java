@@ -555,7 +555,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.setStkCtgryId(5707);
 
       //check aircon type category
-      int result = homecareCmMapper.checkIfIsDscInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+      int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
       if(result == 1){
           param.setGu("");
       }
@@ -2446,11 +2446,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   }
 
 	@Override
-	public EKeyInApiDto checkIfIsDscInstallationProductCategoryCode(EKeyInApiForm param) {
+	public EKeyInApiDto checkIfIsAcInstallationProductCategoryCode(EKeyInApiForm param) {
 		// TODO Auto-generated method stub
 	      EKeyInApiDto rtnDto = new EKeyInApiDto();
-		int result = homecareCmMapper.checkIfIsDscInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
-		rtnDto.setIsHcDscInstallationFlag(result);
+		int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+		rtnDto.setIsHcAcInstallationFlag(result);
 		return rtnDto;
 	}
 }

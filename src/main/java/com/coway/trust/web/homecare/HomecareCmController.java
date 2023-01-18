@@ -79,10 +79,24 @@ public class HomecareCmController {
 		return ResponseEntity.ok(branchList);
 	}
 
-	@RequestMapping(value = "/checkIfIsDscInstallationProductCategoryCode.do")
-	public ResponseEntity<ReturnMessage> checkIfIsDscInstallationProductCategoryCode(@RequestParam Map<String, Object> params) {
+	/**
+	 * Select AC Branch List For Aircon Branch in SYS0064M
+	 * @Author FRANGO
+	 * @Date 2023. 01. 18.
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAcBranchList.do")
+	public ResponseEntity<List<EgovMap>> selectAcBranchList() {
+		List<EgovMap> branchList = homecareCmService.selectAcBranchList();
+
+		return ResponseEntity.ok(branchList);
+	}
+
+	@RequestMapping(value = "/checkIfIsAcInstallationProductCategoryCode.do")
+	public ResponseEntity<ReturnMessage> checkIfIsAcInstallationProductCategoryCode(@RequestParam Map<String, Object> params) {
 		ReturnMessage message = new ReturnMessage();
-		int result = homecareCmService.checkIfIsDscInstallationProductCategoryCode(params);
+		int result = homecareCmService.checkIfIsAcInstallationProductCategoryCode(params);
 		message.setCode("1");
 		message.setData(result);
 	    return ResponseEntity.ok(message);

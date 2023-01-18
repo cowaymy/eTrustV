@@ -39,5 +39,14 @@ public interface HomecareCmMapper {
 	 */
 	public List<EgovMap> selectHomecareBranchList(Map<String, Object> params);
 
-	public int checkIfIsDscInstallationProductCategoryCode(String stkId);
+	/**
+	 * Select AC Branch List For Aircon Branch in SYS0064M
+	 * @Author KR-SH
+	 * @Date 2023. 01. 18.
+	 * @param params
+	 * @return
+	 */
+	public List<EgovMap> selectAcBranchList();
+
+	public int checkIfIsAcInstallationProductCategoryCode(String stkId);
 }

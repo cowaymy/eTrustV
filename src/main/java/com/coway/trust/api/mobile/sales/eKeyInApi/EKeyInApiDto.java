@@ -243,7 +243,7 @@ public class EKeyInApiDto {
   private String cpntCode;
   private String cpntCodeName;
   private BigDecimal quotaStus;
-  private int isHcDscInstallationFlag;
+  private int isHcAcInstallationFlag;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1901,12 +1901,12 @@ public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
 	this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
 }
 
-public int getIsHcDscInstallationFlag() {
-	return isHcDscInstallationFlag;
+public int getIsHcAcInstallationFlag() {
+	return isHcAcInstallationFlag;
 }
 
-public void setIsHcDscInstallationFlag(int isHcDscInstallationFlag) {
-	this.isHcDscInstallationFlag = isHcDscInstallationFlag;
+public void setIsHcAcInstallationFlag(int isHcAcInstallationFlag) {
+	this.isHcAcInstallationFlag = isHcAcInstallationFlag;
 }
 
 }

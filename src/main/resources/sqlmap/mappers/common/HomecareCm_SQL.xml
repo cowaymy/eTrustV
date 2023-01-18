@@ -32,11 +32,16 @@
          ORDER BY CODE
     </select>
 
-	<select id="checkIfIsDscInstallationProductCategoryCode" parameterType="string" resultType="int">
+	<select id="checkIfIsAcInstallationProductCategoryCode" parameterType="string" resultType="int">
 		SELECT CASE WHEN (s0013m.CODE = 'ACO' OR s0013m.CODE = 'ACI') THEN 1 ELSE 0 END AS RESULT
 		FROM SYS0026M s0026m
 		INNER JOIN SYS0013M s0013m
 		ON s0026m.STK_CTGRY_ID = s0013m.CODE_ID
 		WHERE s0026m.STK_ID = #{stkId} AND s0013m.CODE_MASTER_ID = 11
+	</select>
+
+	<select id="selectAcBranchList" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT(CODE), CODE ||'-'|| NAME  CODE_NAME,BRNCH_ID,TYPE_ID FROM SYS0005M A JOIN SYS0064M B ON CODE = CT_BRNCH_CODE WHERE HT_BRNCH_CODE IS NOT NULL AND A.STUS_ID = 1
+		ORDER BY CODE
 	</select>
 </mapper>
