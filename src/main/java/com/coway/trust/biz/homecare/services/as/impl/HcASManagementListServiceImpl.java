@@ -122,6 +122,9 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public List<EgovMap> assignCtList(Map<String, Object> params) throws Exception{
+		Map<String, Object> BrnchDet = new HashMap<String, Object>();
+		BrnchDet = hcASManagementListMapper.selectBrnchType(params);
+		params.put("brnchType", BrnchDet.get("code").toString());
 	    return hcASManagementListMapper.assignCtList(params);
 	}
 

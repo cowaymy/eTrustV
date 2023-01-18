@@ -52,4 +52,6 @@ public interface HcASManagementListMapper {
 
   //HomeCare-As Entry
   public int hcChkRcdTms(Map<String, Object> params) throws Exception;*/
+
+	public EgovMap selectBrnchType(Map<String, Object> params) throws Exception;
 }

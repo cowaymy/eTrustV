@@ -230,7 +230,7 @@
 	    AND A.CT_ID = S.MEM_ID
 	    AND A.INSTALL_STK_ID = S26.STK_ID
 	    AND S.MEM_CODE = S28.WH_LOC_CODE
-	    AND S.MEM_TYPE = 5758              -- homecare
+	    AND S.MEM_TYPE in (5758   ,3)              -- homecare/CT
     </select>
 
     <select id="selectFrmOrdNo" parameterType="Map" resultType="egovMap">
