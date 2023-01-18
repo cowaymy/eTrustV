@@ -377,7 +377,15 @@
                         LEFT JOIN SYS0005M Extent6 ON Extent5.DT_BRNCH_CODE = Extent6.CODE
                     </when>
                     <otherwise>
-                        LEFT JOIN SYS0005M Extent6 ON Extent5.CT_BRNCH_CODE = Extent6.CODE
+                        <choose>
+                            <when test='isAC == "Y"'>
+                                <!-- Aircon project When is aircond, check AC branch code and sub group instead. Hui Ding , 2023-01-18-->
+                                LEFT JOIN SYS0005M Extent6 ON Extent5.AC_BRNCH_CODE = Extent6.CODE
+                            </when>
+                            <otherwise>
+                                LEFT JOIN SYS0005M Extent6 ON Extent5.CT_BRNCH_CODE = Extent6.CODE
+                            </otherwise>
+                        </choose>
                     </otherwise>
                 </choose>
                            LEFT JOIN SYS0005M Extent7   ON Extent5.SO_BRNCH_CODE     = Extent7.CODE
