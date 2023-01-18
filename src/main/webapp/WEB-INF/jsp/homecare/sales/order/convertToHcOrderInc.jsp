@@ -60,6 +60,7 @@
                     // [Installation] : Installation Address SETTING
                     //----------------------------------------------------------
 	                var stkId = "${preMatOrderInfo.itmStkId}";
+		        	$('#hiddenCustAddId').val('${preOrderInfo.instAddId}');
 	                checkIfIsDscInstallationProductCategoryCode(stkId);
                     //fn_loadInstallAddr('${preOrderInfo.instAddId}');
                 }
