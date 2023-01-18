@@ -341,18 +341,25 @@
       if (!fn_validPaymentChannel())
         return false;
 
-      Common.ajax("GET", "/sales/order/getInstallDetail.do", { ordId : ORD_ID },
-        function(result) {
-          if (result.stusCodeId != "4" && result.modeId == "131") {
-            if ($('#rentPayMode').val() != '131') {
-              Common.alert('Change paymode is not allowed due to installation is not complete');
-            } else {
-              fn_doSavePaymentChannel();
-            }
-          } else {
-            fn_doSavePaymentChannel();
+      Common.ajax("GET", "/sales/customer/checkActTokenByCustCrcId", { custCrcId : $('#hiddenRentPayCRCId').val()}, function(result) {
+
+          if(result == true){
+              Common.alert('This card has marked as Transaction Not Allowed. Kindly change a new card');
           }
-        });
+          else {
+              Common.ajax("GET", "/sales/order/getInstallDetail.do", { ordId : ORD_ID },function(result) {
+                  if (result.stusCodeId != "4" && result.modeId == "131") {
+                      if ($('#rentPayMode').val() != '131') {
+                          Common.alert('Change paymode is not allowed due to installation is not complete');
+                         } else {
+                             fn_doSavePaymentChannel();
+                             }
+                      } else {
+                          fn_doSavePaymentChannel();
+                          }
+                  });
+          }
+      });
     });
     $('#btnSaveDocSub').click(function() {
       if (!fn_validDocSubmission())
@@ -1573,6 +1580,7 @@
               if (rsltInfo != null) {
                 $("#hiddenRentPayCRCId")
                     .val(rsltInfo.custCrcId);
+                console.log($("#hiddenRentPayCRCId").val());
                 $("#rentPayCRCNo").text(
                     rsltInfo.decryptCRCNoShow);
                 $("#hiddenRentPayEncryptCRCNo").val(
