@@ -607,6 +607,12 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		return o ;
 	}
 
+  @Override
+	public void creditCardClaimMonth2UpateFlag(Map<String, Object> params) {
+
+		 claimMapper.updateM2UploadBulk(params);
+	}
+
       @Override
       public int saveM2Upload(Map<String, Object> params, List<Map<String, Object>> list) {
 

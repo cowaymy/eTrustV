@@ -866,9 +866,9 @@ function fn_uploadFileM2(){
     var formData = new FormData();
 
     formData.append("csvFile", $("input[name=uploadfileM2]")[0].files[0]);
+    formData.append("lockOpeningFlag", $("#lockOpeningFlag").val());
 
     Common.ajaxFile("/payment/creditCardClaimMonth2Uploads.do", formData, function(result){
-
         Common.alert(result.message);
     });
 }
@@ -1392,6 +1392,17 @@ function fn_ordersListPop(){
                           <input type="file" title="file add" id="uploadfileM2" name="uploadfileM2" />
                       </div><!-- auto_file end -->
                       </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Lock Opening M2<span class="must" id="lockOpeningM2">*</span></th>
+                        <td>
+                            <select id="lockOpeningFlag" name="lockOpeningFlag" class="w100p">
+                                <option value="N">No</option>
+                                <option value="Y">Yes</option>
+                            </select>
+                        </td>
+                    <td colspan="1"></td>
                     </tr>
                 </tbody>
             </table><!-- table end -->

@@ -1366,7 +1366,7 @@
 </update>
 
   <insert id="saveM2UploadBulk" parameterType="java.util.List">
-   INSERT INTO PAY0330T (ORDER_NO,ORDER_ID )
+   INSERT INTO PAY0330T (ORDER_NO,ORDER_ID)
     <foreach item="item" collection="list" index="index" separator= " UNION ALL ">
     SELECT ORDER_NO
     , EXT1.SALES_ORD_ID ORDER_ID FROM (
@@ -1378,10 +1378,13 @@
        </foreach>
     </insert>
 
-     <delete id="clearM2UploadBulk"  parameterType="Map">
+    <delete id="clearM2UploadBulk"  parameterType="Map">
     DELETE FROM PAY0330T WHERE 1 = 1
-
     </delete>
+
+   <update id="updateM2UploadBulk"  parameterType="Map">
+    UPDATE PAY0330T SET OPEN_FLG = #{lockOpeningFlag} WHERE 1 = 1
+    </update>
 
 	  <select id="orderListMonthViewPop" parameterType="Map" resultType="egovMap">
 	   SELECT

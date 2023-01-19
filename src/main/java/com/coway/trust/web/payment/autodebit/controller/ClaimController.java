@@ -2983,7 +2983,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	}
 
 	  @RequestMapping(value = "/creditCardClaimMonth2Uploads.do", method = RequestMethod.POST)
-	  public ResponseEntity<ReturnMessage> creditCardClaimMonth2Uploads(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
+	  public ResponseEntity<ReturnMessage> creditCardClaimMonth2Uploads(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws IOException, InvalidFormatException {
 	    ReturnMessage message = new ReturnMessage();
 
 	    Map<String, MultipartFile> fileMap = request.getFileMap();
@@ -2999,13 +2999,12 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	      list.add(hm);
 	    }
 
-	    Map<String, Object> params = new HashMap<String, Object>();
-
 	    params.put("userId", sessionVO.getUserId());
 
 	    int result = 0;
 
 	    	result = claimService.saveM2Upload(params,list);
+	    	claimService.creditCardClaimMonth2UpateFlag(params);
 
 	    if(result > 0){
 	        message.setMessage("M2 orders successfully uploaded.<br />Item(s) uploaded : "+result);

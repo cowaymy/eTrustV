@@ -255,6 +255,8 @@ public interface ClaimService {
 
   int saveM2Upload(Map<String, Object> params,List<Map<String, Object>> list);
 
+  void creditCardClaimMonth2UpateFlag(Map<String, Object> params);
+
   List<EgovMap> orderListMonthViewPop(Map<String, Object> params);
 
 }
