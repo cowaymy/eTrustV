@@ -14,8 +14,9 @@ public class CTSubGroupExcelUploaderDataVO {
 	private String CT;
 	private String memId;
 	private String CTSubGroup;
+	private String ACSubGroup;
 
-	public static CTSubGroupExcelUploaderDataVO create(Row row) 
+	public static CTSubGroupExcelUploaderDataVO create(Row row)
 	{
 		CTSubGroupExcelUploaderDataVO vo = new CTSubGroupExcelUploaderDataVO();
 
@@ -24,6 +25,7 @@ public class CTSubGroupExcelUploaderDataVO {
 		vo.setCT(getValue(row.getCell(3)));
 		vo.setMemId(getValue(row.getCell(4)));
 		vo.setCTSubGroup(getValue(row.getCell(5)));
+		vo.setACSubGroup(getValue(row.getCell(7)));
 
 		return vo;
 	}
@@ -60,6 +62,14 @@ public class CTSubGroupExcelUploaderDataVO {
 		CTSubGroup = cTSubGroup;
 	}
 
+	public String getACSubGroup() {
+		return ACSubGroup;
+	}
+
+	public void setACSubGroup(String aCSubGroup) {
+		ACSubGroup = aCSubGroup;
+	}
+
 	public String getMemId() {
 		return memId;
 	}
@@ -67,6 +77,6 @@ public class CTSubGroupExcelUploaderDataVO {
 	public void setMemId(String memId) {
 		this.memId = memId;
 	}
-	
-	
+
+
 }

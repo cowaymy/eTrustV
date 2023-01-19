@@ -392,6 +392,9 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 			if(insertValue.get("ltSubGrp") != null && insertValue.get("ltSubGrp") != "")
 			{
 				insertValue.put("ctSubGrp", insertValue.get("ltSubGrp"));
+			}else if(insertValue.get("acSubGrp") != null && insertValue.get("acSubGrp") != "")
+			{
+				insertValue.put("ctSubGrp", insertValue.get("acSubGrp"));
 			}
 			else{
 				insertValue.put("ctSubGrp", insertValue.get("ctSubGrp"));

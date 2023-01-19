@@ -19,6 +19,23 @@
 		     INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL IN ('3', '4')
 		     INNER JOIN ORG0001D D ON D.MEM_ID = C.MEM_ID AND D.STUS = '1'
 		    WHERE A.TYPE_ID = #{branchTypeId}
+		    union
+            SELECT A.CODE
+                     , B.NAME
+                     , D.MEM_CODE || ' - ' || D.NAME MEM_CODE
+                     , D.MEM_ID
+                     , C.CT_SUB_GRP
+                     , C.LAST_GRP_CODE
+                     , D.MEM_CODE MEMCODE
+                     , D.MEM_TYPE
+             FROM SYS0005M A
+             INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
+             INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL IN ('3', '4')
+             INNER JOIN ORG0001D D ON D.MEM_ID = C.MEM_ID AND D.STUS = '1'
+             inner join sys0047m e on e.USER_NAME = B.MEM_CODE
+             inner join sys0045m f on f.USER_ID = e.USER_ID
+            WHERE A.TYPE_ID = '43'
+            and f.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
         ),
         TEMP2 AS (
 			SELECT *
@@ -31,6 +48,7 @@
                  , T1.MEM_ID
                  , CASE WHEN T1.MEM_TYPE = 5758 THEN T2.CT_SUB_GRP END AS CT_SUB_GRP
                  , CASE WHEN T1.MEM_TYPE = 6672 THEN T2.CT_SUB_GRP END AS LT_SUB_GRP
+                 , CASE WHEN T1.MEM_TYPE = 3 THEN T2.CT_SUB_GRP END AS AC_SUB_GRP
                  , T1.LAST_GRP_CODE
 		 FROM TEMP T1, TEMP2 T2
 
@@ -145,14 +163,16 @@
     <!-- Select DT Sub Group -->
     <select id="selectDTSubGrp" parameterType="Map" resultType="egovMap">
         /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubGrp */
-        SELECT DISTINCT DT_SUB_GRP CODE_ID
-                 , DT_SUB_GRP  CODE_NAME
+        SELECT DISTINCT NVL(AC_SUB_GRP,DT_SUB_GRP) CODE_ID
+                 , NVL(AC_SUB_GRP,DT_SUB_GRP)  CODE_NAME
          FROM SYS0064M
         WHERE DT_SUB_GRP IS NOT NULL
         <if test="groupCode != null and groupCode !='' ">
-            AND DT_BRNCH_CODE = #{groupCode}
+            AND (DT_BRNCH_CODE = #{groupCode}
+            or AC_BRNCH_CODE = #{groupCode}
+            )
         </if>
-        ORDER BY DT_SUB_GRP
+        ORDER BY NVL(AC_SUB_GRP,DT_SUB_GRP)
     </select>
 
     <!-- DT Sub Group Assign List -->

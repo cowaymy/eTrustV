@@ -14,6 +14,8 @@
                  , A.DT_SUB_GRP
                  , A.LT_BRNCH_CODE
                  , A.LT_SUB_GRP
+                 , A.AC_BRNCH_CODE
+                 , A.AC_SUB_GRP
 
          FROM SYS0064M A
            JOIN SYS0005M B
@@ -35,6 +37,8 @@
                  , A.DT_SUB_GRP
                  , A.LT_BRNCH_CODE
                  , A.LT_SUB_GRP
+                 , A.AC_BRNCH_CODE
+                 , A.AC_SUB_GRP
                  , CASE
                  WHEN A.AREA_ID IN (SELECT AREA_ID
                                                 FROM SYS0064M
@@ -61,7 +65,7 @@
 	            AND A.POSTCODE = #{postcode}
 	        </if>
 	        <if test="hdcBranch != null and hdcBranch != ''">
-	            AND A.DT_BRNCH_CODE = #{hdcBranch}
+	            AND (A.DT_BRNCH_CODE = #{hdcBranch} OR A.AC_BRNCH_CODE = #{hdcBranch})
 	        </if>
 	        <if test="status != null and status != ''">
 	            <if test="status == 'Active'">
@@ -79,6 +83,9 @@
                     AND (LT_BRNCH_CODE IS NOT NULL AND LT_SUB_GRP IS NOT NULL)
                 </if>
             </if>
+            <if test="memType == '3'">
+                    AND (AC_BRNCH_CODE IS NOT NULL AND AC_SUB_GRP IS NOT NULL)
+                </if>
         </where>
     </select>
 
@@ -92,6 +99,32 @@
                  , REQST_USER_ID
                  , DT_BRNCH_CODE        /* DT Branch Code(HDC) */
                  , DT_SUB_GRP              /* Dt Sub Group */
+                 , BRNCH_TYPE
+                 , CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+                     , #{item.areaId}
+                     , SYSDATE
+                     , #{item.requester}
+                     , #{item.branch}
+                     , #{item.extBranch}
+                     , #{item.brnchId}
+                     , '1'
+             FROM DUAL
+        </foreach>
+    </insert>
+
+    <!-- Insert Dream Service Center -->
+    <insert id="insertDSC" parameterType="java.util.List">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.insertDSC */
+        INSERT INTO ORG0019M (
+                   REQST_NO
+                 , AREA_ID
+                 , REQST_DT
+                 , REQST_USER_ID
+                 , AC_BRNCH_CODE        /* AC Branch Code(DSC) */
+                 , AC_SUB_GRP              /* AC Sub Group */
                  , BRNCH_TYPE
                  , CNFM_STUS
         )
@@ -153,7 +186,9 @@
                    DT_BRNCH_CODE,        /* DT Branch Code(HDC) */
                    DT_SUB_GRP,               /* Dt Sub Group */
                    LT_BRNCH_CODE,
-                   LT_SUB_GRP
+                   LT_SUB_GRP,
+                   AC_BRNCH_CODE,
+                   AC_SUB_GRP
           FROM ORG0019M
          WHERE REQST_NO=#{reqstNo} AND BRNCH_TYPE= #{brnchType}
     </select>
@@ -172,6 +207,14 @@
         UPDATE SYS0064M SET
                     LT_BRNCH_CODE   =  #{ltBrnchCode},
                     LT_SUB_GRP         =  #{ltSubGrp}
+         WHERE AREA_ID                = #{areaId}
+    </update>
+
+    <update id="updateSYS0064MAC" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateSYS0064M */
+        UPDATE SYS0064M SET
+                    AC_BRNCH_CODE   =  #{acBrnchCode},
+                    AC_SUB_GRP         =  #{acSubGrp}
          WHERE AREA_ID                = #{areaId}
     </update>
 

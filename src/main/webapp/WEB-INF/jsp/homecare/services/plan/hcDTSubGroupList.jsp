@@ -21,6 +21,7 @@
 
 	var subList = new Array();
 	var subListLT = new Array();
+	var subListAC = new Array();
     var localList = ["Local", "OutStation"];
 
     // 그리드 속성 설정
@@ -61,6 +62,15 @@
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
                         return subListLT;
                     }, keyField : "ltSubGrp", valueField : "codeName"
+                }
+            },
+            {dataField : "acSubGrp",         headerText : "AC Sub Group",    width : 120,
+                editRenderer : {
+                    type : "ComboBoxRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        return subListAC;
+                    }, keyField : "AcSubGrp", valueField : "codeName"
                 }
             }
         ];
@@ -386,6 +396,7 @@
 	                            <option value="">Choose One</option>
 	                            <option value="6672">Logistics Technician</option>
 	                            <option value="5758">Delivery Technician</option>
+	                            <option value="3">AC Technician</option>
 	                        </select>
 	                    </td>
 					    <th scope="row"></th>

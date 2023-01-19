@@ -61,6 +61,16 @@
             headerText : "LT Sub Group",
             width: 120
         },
+        {
+            dataField : "acBrnchCode",
+            headerText : "AC Branch",
+            width: 100
+        },
+        {
+            dataField : "acSubGrp",
+            headerText : "AC Sub Group",
+            width: 120
+        },
 	    {
 	        dataField : "status",
 	        headerText : "Status",
@@ -82,7 +92,8 @@
 	    myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 
 	    doGetCombo('/organization/territory/selectState.do', '', '','state', 'S' , '');
-	   	doGetCombo('/organization/territory/selectBranchCode.do', brnchType, '','hdcBranch', 'S' , '');
+	   	/* doGetCombo('/organization/territory/selectBranchCode.do', brnchType, '','hdcBranch', 'S' , ''); */
+	   	doGetCombo('/organization/territory/selectBranchCode.do', '', '','hdcBranch', 'S' , '');
 	   	doGetCombo('/organization/territory/selectBranchCode.do', brnchType, '','LTBranch', 'S' , '');
 	});
 
@@ -144,7 +155,7 @@
 				        <select class="w100p"  id="state" name="state">
 				        </select>
 				    </td>
-				    <th scope="row">HDC Branch</th>
+				    <th scope="row">HDC/DSC Branch</th>
 				    <td>
 				        <select class="w100p"  id="hdcBranch" name="hdcBranch">
 				        </select>
@@ -165,6 +176,7 @@
                            <option value="11" selected>Choose One</option>
                            <option value="5758">Homecare Delivery Technician</option>
                            <option value="6672">Logistics Technician</option>
+                           <option value="3">Coway Technician</option>
                         </select>
                     </td>
 				    <th></th>

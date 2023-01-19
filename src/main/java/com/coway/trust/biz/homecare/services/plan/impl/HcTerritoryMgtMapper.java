@@ -46,6 +46,7 @@ public interface HcTerritoryMgtMapper {
 	 * @return
 	 */
 	public int insertHDC(Map<String, Object> params);
+	public int insertDSC(Map<String, Object> params);
 
 	public int insertHDCLT(Map<String, Object> params);
 
@@ -87,5 +88,6 @@ public interface HcTerritoryMgtMapper {
 	public int updateORG0019M(EgovMap params);
 
 	public int updateSYS0064MLT(EgovMap egovMap);
+	public int updateSYS0064MAC(EgovMap egovMap);
 
 }

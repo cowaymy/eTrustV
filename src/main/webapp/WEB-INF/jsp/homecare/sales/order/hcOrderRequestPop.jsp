@@ -98,7 +98,7 @@
         $('#btnReqCancOrder').click(function() {
             if(fn_validReqCanc()) {
            		// 매트리스인 경우만 같이 취소한다.
-                if(js.String.isNotEmpty(anoOrdNo) && ordCtgryCd == 'MAT') {
+                if(js.String.isNotEmpty(anoOrdNo) && (ordCtgryCd == 'MAT' || ordCtgryCd == 'ACI')) {
             		var msg = _cancleMsg + "Do you want to continue?";
                     Common.confirm('<spring:message code="sal.title.text.reqCancConfrm" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_clickBtnReqCancelOrder);
                 } else {
@@ -1476,7 +1476,7 @@
             $('#scCN').removeClass("blind");
             // $('#aTabMI').click();
 
-            if(js.String.isNotEmpty(anoOrdNo) && ordCtgryCd == 'MAT') {
+            if(js.String.isNotEmpty(anoOrdNo) && (ordCtgryCd == 'MAT' || ordCtgryCd == 'ACI')) {
             	Common.alert("Request Cancellation" + DEFAULT_DELIMITER + "<b>" + _cancleMsg + "</b>", fn_cancInfoCallBack);
             } else {
             	fn_cancInfoCallBack();
@@ -1620,7 +1620,7 @@
            		return false;
 
            	} else {  // 정상인 경우
-           		if(js.String.isNotEmpty(anoOrdNo) && ordCtgryCd == 'MAT') { // Matress and have another Order
+           		if(js.String.isNotEmpty(anoOrdNo) && (ordCtgryCd == 'MAT' || ordCtgryCd == 'ACI')) { // Matress and have another Order
            			Common.ajax("GET", "/homecare/sales/order/validOCRStus.do", {salesOrdId : anoOrdId, salesOrdNo : anoOrdNo}, function(result) {
            			    if(result.code == '99') { // 오류인 경우.
                            	fn_isLock(result.message, tabNm);

@@ -125,13 +125,15 @@ public class CTSubGroupExcelUploaderController {
 		HashMap<String, Object> updateMap = null;
 		String memId = "";
 		String ctSubGrp = "";
+		String acSubGrp = "";
 
 		for (CTSubGroupExcelUploaderDataVO vo : vos) {
 			memId = CommonUtils.nvl(vo.getMemId());
 			ctSubGrp = CommonUtils.nvl(vo.getCTSubGroup());
+			acSubGrp = CommonUtils.nvl(vo.getACSubGroup());
 
 			// 파일 유효성 검사.
-			if("".equals(memId) || "".equals(ctSubGrp)) {
+			if("".equals(memId) || ("".equals(ctSubGrp) && "".equals(acSubGrp))) {
 				message.setCode(AppConstants.FAIL);
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 				return ResponseEntity.ok(message);
@@ -140,7 +142,11 @@ public class CTSubGroupExcelUploaderController {
 				updateMap = new HashMap<String, Object>();
 
 				updateMap.put("memId", memId);
-				updateMap.put("ctSubGrp", ctSubGrp);
+				if(!"".equals(acSubGrp)){
+					updateMap.put("acSubGrp", acSubGrp);
+				}else{
+					updateMap.put("ctSubGrp", ctSubGrp);
+				}
 
 				// update datas
 				updateList.add(updateMap);

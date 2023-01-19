@@ -297,7 +297,16 @@
     <select id="selectBranchCode"  parameterType="Map" resultType="egovMap">
 		SELECT CODE CODE_ID, CODE CODE_NAME
 		FROM SYS0005M
-		WHERE TYPE_ID = #{groupCode}
+		<!-- WHERE TYPE_ID = #{groupCode} -->
+		<choose>
+                <!-- 전체조회 -->
+                  <when test ="area != null and area != ''">
+                  WHERE TYPE_ID = #{groupCode}
+                   </when>
+                <otherwise>
+                 WHERE TYPE_ID in ('5754','43')
+                 </otherwise>
+              </choose>
 		ORDER BY CODE
     </select>
 

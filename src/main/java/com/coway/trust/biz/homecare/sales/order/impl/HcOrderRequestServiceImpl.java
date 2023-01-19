@@ -86,7 +86,7 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 		String salesOrdCtgryCd = CommonUtils.nvl(params.get("salesOrdCtgryCd"));
 
 		// Mattress 주문이면서 같이 주문된 주문이 있는 경우.
-		if("MAT".equals(salesOrdCtgryCd) && CommonUtils.isNotEmpty(salesAnoOrdId)) {
+		if(("MAT".equals(salesOrdCtgryCd) || "ACI".equals(salesOrdCtgryCd)) && CommonUtils.isNotEmpty(salesAnoOrdId)) {
 			// 유효성 체크
 			params.put("salesOrdId", salesAnoOrdId);
 			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);

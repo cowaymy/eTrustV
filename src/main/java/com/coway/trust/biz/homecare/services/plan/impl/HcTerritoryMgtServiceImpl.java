@@ -118,6 +118,34 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
     				}
     			}
     		}
+		}else if(HomecareConstants.DSC_BRANCH_TYPE.equals(CommonUtils.nvl(params.get("brnchType")))) {
+    		//reqstNo로 19M에 데이터를 다 가져옴
+    		List<EgovMap> select19M = hcTerritoryMgtMapper.select19M(params);
+
+    		//가져온값 64M에 UPDATE
+    		if(select19M.size() > 0){
+    			for(int i=0; i<select19M.size(); i++) {
+
+    				if(params.get("memType").equals("5758")){
+        				rtnCnt = hcTerritoryMgtMapper.updateSYS0064M(select19M.get(i));
+    				}
+    				if(params.get("memType").equals("6672")){
+        				rtnCnt = hcTerritoryMgtMapper.updateSYS0064MLT(select19M.get(i));
+    				}
+    				if(params.get("memType").equals("3")){
+        				rtnCnt = hcTerritoryMgtMapper.updateSYS0064MAC(select19M.get(i));
+    				}
+    				//전에 썼던 것을 N으로 바꿔줘야된다(area_id로 이전 데이터가 쌓이니까
+    				//area_id로 n을 주고 밑에서 area_id랑 reqstNo로 구분해 y로 바꿔주므로 n으로 바꿈)
+    				rtnCnt += hcTerritoryMgtMapper.updateORG0019MFlag(select19M.get(i));
+    				//19M에 AVAIL_FLAG 'Y'로 변경, CONFIRM STUS 4
+    				rtnCnt += hcTerritoryMgtMapper.updateORG0019M(select19M.get(i));
+
+    				if(rtnCnt != 3) {
+    					throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
+    				}
+    			}
+    		}
 		}
 		return true;
 	}
@@ -210,13 +238,44 @@ public class HcTerritoryMgtServiceImpl extends EgovAbstractServiceImpl implement
 					}
 				}
 
+
+				rtnMap.put("isErr", false);
+				rtnMap.put("errMsg", "upload success");
+
+				break;
+
+			}
+			break;
+		case HomecareConstants.DSC_BRANCH_TYPE : // DSC Branch
+			logger.debug("CASE_DSC./////" + bType);
+			switch (memType) {
+			case HomecareConstants.MEM_TYPE.CT :
+				logger.debug("CASE_CT./////" + memType);
+				Map<String, Object> hdcList = new HashMap<String, Object>();
+
+				for (int i = 0; i <= page; i++) {
+					start = i * size;
+					end = size;
+
+					if(i == page) {
+						end = list.size();
+					}
+					hdcList.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+
+					logger.debug("DSC LIST./////" + hdcList);
+					rtnCnt = hcTerritoryMgtMapper.insertDSC(hdcList);
+					logger.debug("DSC LIST11./////" + rtnCnt);
+					if(rtnCnt <= 0) {
+						throw new ApplicationException(AppConstants.FAIL, "Excel Update Failed.");
+					}
+				}
+
 				rtnMap.put("isErr", false);
 				rtnMap.put("errMsg", "upload success");
 
 				break;
 			}
 			break;
-
 		default:
 			rtnMap.put("isErr", true);
 			rtnMap.put("errMsg", "Upload Failed - Null BranchType.");

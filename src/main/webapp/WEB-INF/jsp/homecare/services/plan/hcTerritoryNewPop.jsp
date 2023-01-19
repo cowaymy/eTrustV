@@ -114,7 +114,8 @@
 			    <th scope="row">Branch Type</th>
 			    <td>
 				    <select class="multy_select w100p"  id="comBranchTypep" name="comBranchTypep">
-				       <option value="${branchTypeId}">HomeCare Delivery Canter</option>
+				       <option value="${branchTypeId}">HomeCare Delivery Center</option>
+				       <option value="43">Dream Service Center</option>
 			        </select>
 			    </td>
 			</tr>
@@ -125,6 +126,7 @@
                        <option value="11" selected>Choose One</option>
                        <option value="5758">HomeCare Delivery Technician</option>
                        <option value="6672">Logistics Technician</option>
+                       <option value="3">Coway Technician</option>
                     </select>
                 </td>
             </tr>

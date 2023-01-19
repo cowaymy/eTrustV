@@ -61,7 +61,9 @@
 	        { dataField : "dtBrnchCode",         headerText : "DT Branch",         width : 120,    editable : false},
 	        { dataField : "dtSubGrp",              headerText : "DT Sub Group",   width : 200,    editable : false},
 	        { dataField : "ltBrnchCode",         headerText : "LT Branch",         width : 120,    editable : false},
-            { dataField : "ltSubGrp",              headerText : "LT Sub Group",   width : 200,    editable : false}
+            { dataField : "ltSubGrp",              headerText : "LT Sub Group",   width : 200,    editable : false},
+            { dataField : "acBrnchCode",         headerText : "AC Branch",         width : 120,    editable : false},
+            { dataField : "acSubGrp",              headerText : "AC Sub Group",   width : 200,    editable : false}
 	    ];
 
 	    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
@@ -186,6 +188,7 @@
 				<td>
 					<select class="w100p"  id="comBranchType" name="comBranchType">
 					   <option value="${branchTypeId}">HomeCare Delivery Canter</option>
+					   <option value="43">Dream Service Center</option>
 					</select>
 				</td>
 				<th scope="row">Assign Request Code</th>
@@ -206,6 +209,7 @@
                        <option value="11">Choose One</option>
                        <option value="5758">Homecare Delivery Technician</option>
                        <option value="6672">Logistics Technician</option>
+                       <option value="3">Coway Technician</option>
                     </select>
                 </td>
                 <th></th><td></td>
