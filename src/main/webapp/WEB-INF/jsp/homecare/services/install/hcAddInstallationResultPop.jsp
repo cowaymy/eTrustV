@@ -35,6 +35,8 @@ var serialGubun = "1";
 
         if ("${orderInfo.installEntryId}" != null) {
             $("#hidCategoryId").val("${orderInfo.stkCtgryId}");
+            $("#hidStockCode").val("${orderInfo.stkCode}");//aircon
+            $("#hidFrmStockCode").val("${frameInfo.stockCode}");//aircon
 
             if (callType == 258) {
                 $("#hidPromotionId").val("${orderInfo.c8}");
@@ -157,7 +159,12 @@ var serialGubun = "1";
             $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
         }else{
         	$("#frm2").hide();
-        	$("#frmSerialNo").attr("disabled", true).addClass("readonly");
+        	if($("#hidCategoryId").val() == "7233"){
+        		$("#frm2").show();
+        		$("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+        	}else{
+        		$("#frmSerialNo").attr("disabled", true).addClass("readonly");
+        	}
         }
     });
 
@@ -207,6 +214,28 @@ var serialGubun = "1";
 	    		  msg += "* <spring:message code='sys.msg.invalid' arguments='Frame Serial No' htmlEscape='false'/> </br>";
 	    	  }
 	      }
+
+	      //validate aircon serial
+	      if($("#hidCategoryId").val() == "7233"){
+	    	  var stockCode = "";
+	          stockCode = (js.String.roughScale($("#addInstallForm #serialNo").val().trim().substr(3,5), 36)).toString();
+
+	           if(stockCode != "0" && $("#hidStockCode").val() != stockCode){
+	               msg += "* Serial Number NOT match with stock [" + $("#hidStockCode").val() +"] </br>";
+	           }
+
+	           console.log("stockCode " + stockCode);
+
+	          var frmStockCode = "";
+	          frmStockCode = (js.String.roughScale($("#addInstallForm #frmSerialNo").val().trim().substr(3,5), 36)).toString();
+
+	          console.log("frmStockCode " + frmStockCode);
+
+	          if(frmStockCode != "0" && $("#hidFrmStockCode").val() != frmStockCode){
+	              msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
+	          }
+	      }
+         //validate aircon serial
 
 	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
 	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
@@ -812,6 +841,8 @@ var serialGubun = "1";
    <input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" />
    <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
    <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
+   <input type="hidden" value="" id="hidStockCode" name="hidStockCode" />
+   <input type="hidden" value="" id="hidFrmStockCode" name="hidFrmStockCode" />
    <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />
    <input type="hidden" value="" id="hidPriceId" name="hidPriceId" />
    <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
