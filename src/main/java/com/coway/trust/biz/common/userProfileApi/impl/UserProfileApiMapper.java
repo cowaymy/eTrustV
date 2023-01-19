@@ -22,4 +22,5 @@ public interface UserProfileApiMapper {
 
 
 	EgovMap selectUserProfile(Map<String, Object> params);
+	EgovMap selectUserRole(Map<String, Object> params);
 }

@@ -54,4 +54,15 @@ FROM    SYS0047M A                                                              
 WHERE   A.USER_NAME = #{userName}
 ]]>
 </select>
+
+<select id="selectUserRole" parameterType="Map" resultType="egovMap">
+	         SELECT A.ROLE_CODE AS USER_ROLE FROM SYS0044M A
+             INNER JOIN SYS0045M B
+             ON A.ROLE_ID = B.ROLE_ID
+             INNER JOIN SYS0047M C
+             ON B.USER_ID = C.USER_ID
+             WHERE 1=1
+             AND C.USER_NAME = #{userName}
+             AND A.ROLE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'ACI_ROLE');
+</select>
 </mapper>

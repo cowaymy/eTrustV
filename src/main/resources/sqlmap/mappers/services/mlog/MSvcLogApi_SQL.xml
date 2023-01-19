@@ -1390,7 +1390,7 @@
                                                              WHERE A.CODE = B.CODE
                                                              AND A.CODE_MASTER_ID = 11
                                                              AND B.IND = 'HOMECARE'
-                                                             AND A.CODE = 'FRM')
+                                                             AND A.CODE IN ('FRM','ACO'))
     ) A
     ]]>
   </select>
@@ -5627,7 +5627,7 @@ SELECT MST.*
                                                             WHERE A.CODE = B.CODE
                                                             AND A.CODE_MASTER_ID = 11
                                                             AND B.IND = 'HOMECARE'
-                                                            AND A.CODE = 'FRM')
+                                                            AND A.CODE IN ('FRM','ACO'))
               AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
               AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
               ) A WHERE rnum = 1

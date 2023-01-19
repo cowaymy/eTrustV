@@ -44,4 +44,10 @@ public class UserProfileApiController {
     public ResponseEntity<UserProfileApiDto> selectUserProfile(@ModelAttribute UserProfileApiForm param) throws Exception {
         return ResponseEntity.ok(userProfileApiService.selectUserProfile(param));
     }
+
+    @ApiOperation(value = "selectUserRole", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectUserRole", method = RequestMethod.GET)
+    public ResponseEntity<UserProfileApiDto> selectUserRole(@ModelAttribute UserProfileApiForm param) throws Exception {
+        return ResponseEntity.ok(userProfileApiService.selectUserRole(param));
+    }
 }

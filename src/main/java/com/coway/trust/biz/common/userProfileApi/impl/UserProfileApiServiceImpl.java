@@ -51,4 +51,20 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
         }
         return rtn;
     }
+
+    @Override
+    public UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception {
+        if( null == param ){
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        if( CommonUtils.isEmpty(param.getUserName()) ){
+            throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
+        }
+        EgovMap selectUserProfile = userProfileApiMapper.selectUserRole(UserProfileApiForm.createMap(param));
+        UserProfileApiDto rtn = new UserProfileApiDto();
+        if( MapUtils.isNotEmpty(selectUserProfile) ){
+            return rtn.create(selectUserProfile);
+        }
+        return rtn;
+    }
 }

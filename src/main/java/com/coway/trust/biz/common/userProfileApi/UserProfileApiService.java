@@ -18,4 +18,6 @@ public interface UserProfileApiService {
 
 
     UserProfileApiDto selectUserProfile(UserProfileApiForm param) throws Exception;
+
+	UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception;
 }
