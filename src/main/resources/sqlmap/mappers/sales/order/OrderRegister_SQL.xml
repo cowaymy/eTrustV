@@ -1660,6 +1660,8 @@
 		     , CCP_FICO
 		     , CCP_FICO_LOK
 		     , CCP_CTOS_BATCH_NO
+		     , CCP_OPC_MEM_ID
+		     , CCP_OPC_SHI
 		     )
 		VALUES
 		     ( #{ccpId}
@@ -1684,6 +1686,8 @@
 		     , #{ccpFico}
 		     , #{ccpFicoLok}
 		     , #{ccpCtosBatchNo}
+		     , #{ccpOpcMemId}
+             , #{ccpOpcShi}
 		     )
     </insert>
 
