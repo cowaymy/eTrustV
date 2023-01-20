@@ -3100,6 +3100,19 @@ WHERE
 		WHERE ROWNUM = 1
     </select>
 
+    <select id="selectShiIndexInfo" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
+    SELECT A.MEM_ID, NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) SHI_IDX
+    FROM ORG0001D A
+    JOIN SYS0013M B ON A.MEM_TYPE = B.CODE_ID
+    JOIN SYS0038M C ON C.STUS_CODE_ID = A.STUS
+    JOIN ORG0005D D ON D.MEM_ID = A.MEM_ID
+    WHERE A.NRIC = #{nric}
+    AND A.STUS = 1
+    ORDER BY A.JOIN_DT DESC )
+    WHERE ROWNUM = 1
+    </select>
+
   <insert id="insertPexDefectEntry" parameterType="Map">
     <selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
       SELECT SAL0265D_SEQ.NEXTVAL FROM DUAL
