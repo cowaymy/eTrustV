@@ -989,7 +989,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
      */
   }
 
-  private void preprocCcpMaster(CcpDecisionMVO ccpDecisionMVO, int custTypeId, int custRaceId, SessionVO sessionVO) {
+  private void preprocCcpMaster(CcpDecisionMVO ccpDecisionMVO, int custTypeId, int custRaceId, String custNric, SessionVO sessionVO) {
 
     logger.info("!@###### preprocCcpMaster START ");
 
@@ -1005,6 +1005,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     ccpSchemeTypeId = custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND ? SalesConstants.CCP_SCHEME_TYPE_CODE_ID_ICS
         : SalesConstants.CCP_SCHEME_TYPE_CODE_ID_CCS;
 
+    EgovMap shiInfo = orderRegisterMapper.selectShiIndexInfo(custNric);
+
+    logger.info("####### Get Shi Info " + shiInfo);
     ccpDecisionMVO.setCcpId(5);
     ccpDecisionMVO.setCcpSalesOrdId(0);
     ccpDecisionMVO.setCcpSchemeTypeId(ccpSchemeTypeId);
@@ -1022,6 +1025,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     ccpDecisionMVO.setCcpPncRem("");
     ccpDecisionMVO.setCcpHasGrnt(SalesConstants.IS_FALSE);
     ccpDecisionMVO.setCcpIsHold(SalesConstants.IS_FALSE);
+
+    if(shiInfo != null) {
+        ccpDecisionMVO.setCcpOpcMemId(CommonUtils.intNvl(shiInfo.get("memId")));
+        ccpDecisionMVO.setCcpOpcShiIdx(CommonUtils.intNvl(shiInfo.get("shiIdx")));
+    }
+
 
     /*
      * CcpMaster.CcpID = 0; CcpMaster.CcpSalesOrderID = 0;
@@ -1582,6 +1591,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int itmStkId = salesOrderDVO.getItmStkId();
     int itmCompId = salesOrderDVO.getItmCompId();
     int brnchId = installationVO.getBrnchId();
+    String custNric = orderVO.getRentPaySetVO().getIssuNric();
 
     // SET BNDL_ID
     salesOrderMVO.setBndlId(orderVO.getBndlId());
@@ -1694,7 +1704,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
       // CCP MASTER
       CcpDecisionMVO ccpDecisionMVO = new CcpDecisionMVO();
-      this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, sessionVO);
+      this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, custNric, sessionVO);
       regOrderVO.setCcpDecisionMVO(ccpDecisionMVO);
 
       if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
@@ -1718,7 +1728,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	       && orderAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
     		// CCP MASTER
     		CcpDecisionMVO ccpDecisionMVO = new CcpDecisionMVO();
-    		this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, sessionVO);
+    		this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, custNric, sessionVO);
     		regOrderVO.setCcpDecisionMVO(ccpDecisionMVO);
 
     	} else {
@@ -2303,5 +2313,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   @Override
   public String selectPrevMatOrderAppTypeId(Map<String, Object> params) {
 	  return orderRegisterMapper.selectPrevMatOrderAppTypeId(params);
+  }
+
+  @Override
+  public EgovMap selectShiIndexInfo(String params) {
+	  return orderRegisterMapper.selectShiIndexInfo(params);
   }
 }
