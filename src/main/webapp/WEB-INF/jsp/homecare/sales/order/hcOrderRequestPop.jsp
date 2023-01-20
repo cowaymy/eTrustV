@@ -2458,10 +2458,10 @@
         // Homecare Product 조회
         //doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
         // StkCategoryID - Mattress(5706)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', stkCtgryId:'5706'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'1'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
          console.log(SRV_PAC_ID);
          // StkCategoryID - Frame(5707)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', stkCtgryId:'5707'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'2'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
          console.log(SRV_PAC_ID);
 
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
