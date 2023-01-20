@@ -218,4 +218,7 @@ public interface OrderRegisterMapper {
 
   int updateMarketingMessageStatus(Map<String, Object> params);
 
+  EgovMap selectShiIndexInfo(String custNric);
+
+
 }
