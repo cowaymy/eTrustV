@@ -1028,7 +1028,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     if(shiInfo != null) {
         ccpDecisionMVO.setCcpOpcMemId(CommonUtils.intNvl(shiInfo.get("memId")));
-        ccpDecisionMVO.setCcpOpcShiIdx(CommonUtils.intNvl(shiInfo.get("shiIdx")));
+        ccpDecisionMVO.setCcpOpcShi(CommonUtils.intNvl(shiInfo.get("shiIdx")));
     }
 
 
