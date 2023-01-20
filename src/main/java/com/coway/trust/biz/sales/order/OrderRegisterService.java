@@ -92,4 +92,6 @@ public interface OrderRegisterService {
 
   String selectPrevMatOrderAppTypeId(Map<String, Object> params);
 
+  EgovMap selectShiIndexInfo(String params);
+
 }
