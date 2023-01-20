@@ -92,9 +92,9 @@
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
                 //doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${orderInfo.basicInfo.srvPacId}'}, '${orderInfo.basicInfo.stockId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product
                 // StkCategoryID - Mattress(5706)
-                doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderInfo.basicInfo.srvPacId}', stkCtgryId:'5706'}, '', 'ordProduct1', 'S', 'fn_setProduct1');//product 생성
+                doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderInfo.basicInfo.srvPacId}', productType: '1'}, '', 'ordProduct1', 'S', 'fn_setProduct1');//product 생성
                 // StkCategoryID - Frame(5707)
-                doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderInfo.basicInfo.srvPacId}', stkCtgryId:'5707'}, '', 'ordProduct2', 'S', 'fn_setProduct2');//product 생성
+                doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderInfo.basicInfo.srvPacId}', productType: '2'}, '', 'ordProduct2', 'S', 'fn_setProduct2');//product 생성
 
                 $('#empChk').val('${orderInfo.basicInfo.empChk}');
                 //$('#gstChk').val('${orderInfo.basicInfo.gstChk}');
