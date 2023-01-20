@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the SAL0102D database table.
- * 
+ *
  */
 public class CcpDecisionMVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -55,6 +55,12 @@ public class CcpDecisionMVO implements Serializable {
 	private Date ccpUpdDt;
 
 	private int ccpUpdUserId;
+
+	// CCP Own Purchase SHI Index
+	private int ccpOpcShi;
+
+	// CCP Own Purchase Mem ID
+	private int ccpOpcMemId;
 
 	public CcpDecisionMVO() {
 	}
@@ -233,6 +239,22 @@ public class CcpDecisionMVO implements Serializable {
 
 	public void setCcpUpdUserId(int ccpUpdUserId) {
 		this.ccpUpdUserId = ccpUpdUserId;
+	}
+
+	public int getCcpOpcShi() {
+		return ccpOpcShi;
+	}
+
+	public void setCcpOpcShi(int ccpOpcShi) {
+		this.ccpOpcShi = ccpOpcShi;
+	}
+
+	public int getCcpOpcMemId() {
+		return ccpOpcMemId;
+	}
+
+	public void setCcpOpcMemId(int ccpOpcMemId) {
+		this.ccpOpcMemId = ccpOpcMemId;
 	}
 
 }
