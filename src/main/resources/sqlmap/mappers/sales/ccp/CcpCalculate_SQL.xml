@@ -2027,32 +2027,44 @@ SELECT
 </select>
 
 <select id="selectOwnPurchaseInfo" parameterType="Map" resultType="egovMap">
-SELECT * FROM (
-  SELECT CASE WHEN (A.MEM_TYPE IN ('1','2','7')) THEN 'YES' ELSE 'NO' END IS_ORG,
-    B.CODE,
-    A.MEM_CODE,
-    C.NAME as MEM_STUS,
-    TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
-    CEIL(MONTHS_BETWEEN(SYSDATE,A.JOIN_DT)) JOIN_PERIOD,
-    NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) SHI,
-    CASE WHEN (NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) > 89) THEN '90% ~ 100% Excellent'
-    WHEN (NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) > 79) AND ((NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) <![CDATA[ < ]]> 90))
-    THEN '80% ~ 89% Very Good (target average)'
-    WHEN (NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) > 69) AND ((NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) <![CDATA[ < ]]> 80))
-    THEN '70% ~ 79% Good (above average)'
-    WHEN (NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) > 59) AND ((NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) <![CDATA[ < ]]> 70))
-    THEN '60% ~ 69% Poor (below average)'
-    WHEN (NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) > 49) AND ((NVL(FN_GET_SHI_BY_MEMBER_V1(A.MEM_CODE, D.MEM_LVL, D.DEPT_CODE, A.MEM_TYPE),0) <![CDATA[ < ]]> 60))
-    THEN '50% ~ 59% (serious)'
-    ELSE '0% ~ 49% (Worst)' END AS RC_RATE
-  FROM ORG0001D A
-  JOIN SYS0013M B ON A.MEM_TYPE = B.CODE_ID
-  JOIN SYS0038M C ON C.STUS_CODE_ID = A.STUS
-  JOIN ORG0005D D ON D.MEM_ID = A.MEM_ID
-  WHERE A.NRIC = #{nric}
-  AND A.STUS = 1
-  ORDER BY A.JOIN_DT DESC )
- WHERE ROWNUM = 1
+SELECT * FROM
+    (
+        SELECT CASE WHEN (C.MEM_TYPE IN ('1','2','7')) THEN 'YES' ELSE 'NO' END IS_ORG,
+            D.CODE,
+            C.MEM_CODE,
+            E.NAME AS mem_stus,
+            TO_CHAR(
+                C.JOIN_DT,
+                'DD/MM/YYYY'
+            ) JOIN_DT,
+            CEIL(MONTHS_BETWEEN(
+                SYSDATE,
+                C.JOIN_DT
+            ) ) JOIN_PERIOD,
+                NVL(B.CCP_OPC_SHI,0) SHI,
+                CASE WHEN (NVL(B.CCP_OPC_SHI,0) <![CDATA[ > ]]> 89) THEN '90% ~ 100% Excellent'
+                WHEN (NVL(B.CCP_OPC_SHI,0) <![CDATA[ > ]]>  79) AND ((NVL(B.CCP_OPC_SHI,0) <![CDATA[ < ]]> 90))
+                THEN '80% ~ 89% Very Good (target average)'
+                WHEN (NVL(B.CCP_OPC_SHI,0) <![CDATA[ > ]]> 69) AND ((NVL(B.CCP_OPC_SHI,0) <![CDATA[ < ]]> 80))
+                THEN '70% ~ 79% Good (above average)'
+                WHEN (NVL(B.CCP_OPC_SHI,0) <![CDATA[ > ]]> 59) AND ((NVL(B.CCP_OPC_SHI,0) <![CDATA[ < ]]> 70))
+                THEN '60% ~ 69% Poor (below average)'
+                WHEN (NVL(B.CCP_OPC_SHI,0) <![CDATA[ > ]]> 49) AND ((NVL(B.CCP_OPC_SHI,0) <![CDATA[ < ]]> 60))
+                THEN '50% ~ 59% (serious)'
+                ELSE '0% ~ 49% (Worst)' END AS RC_RATE
+        FROM
+            SAL0102D B
+            JOIN ORG0001D C ON C.MEM_ID = B.CCP_OPC_MEM_ID
+            JOIN SYS0013M D ON C.MEM_TYPE = D.CODE_ID
+            JOIN SYS0038M E ON E.STUS_CODE_ID = C.STUS
+            JOIN ORG0005D F ON F.MEM_ID = C.MEM_ID
+        WHERE
+                B.CCP_SALES_ORD_ID = #{ccpSalesOrdId}
+            AND
+                C.STUS = 1
+        ORDER BY C.JOIN_DT DESC
+    )
+WHERE ROWNUM = 1
 </select>
 
 <select id="selectCCPTicket" parameterType="Map" resultMap="calCcpListClobMap">
