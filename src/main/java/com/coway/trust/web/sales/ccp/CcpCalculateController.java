@@ -179,7 +179,7 @@ public class CcpCalculateController {
 
     	// START selectOwnPurchaseInfo
     	if(tempMap.get("memInfo") != null){
-    		EgovMap ownPurcInfo = ccpCalculateService.selectOwnPurchaseInfo(tempMap.get("custNric"));
+    		EgovMap ownPurcInfo = ccpCalculateService.selectOwnPurchaseInfo(params.get("salesOrdId"));
         	model.addAttribute("ownPurchaseInfo", ownPurcInfo);
     		LOGGER.info("ownPurcInfo: " + ownPurcInfo);
 
@@ -278,7 +278,7 @@ public class CcpCalculateController {
 
     	// START selectOwnPurchaseInfo
     	if(tempMap.get("memInfo") != null){
-    		EgovMap ownPurcInfo = ccpCalculateService.selectOwnPurchaseInfo(tempMap.get("custNric"));
+    		EgovMap ownPurcInfo = ccpCalculateService.selectOwnPurchaseInfo(params.get("salesOrdId"));
         	model.addAttribute("ownPurchaseInfo", ownPurcInfo);
     		LOGGER.info("ownPurcInfo: " + ownPurcInfo);
 
