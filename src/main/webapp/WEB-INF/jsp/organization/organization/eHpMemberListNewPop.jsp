@@ -1307,7 +1307,7 @@ function checkNRIC(){
                        console.log("data : " + result);
                        if (result.message != "pass") {
                            Common.alert(result.message);
-                           $("#nric").val('');
+                           $("#eHPnric").val('');
                            returnValue = false;
                            return false;
                        } else {    // 조건3 통과 -> 끝
@@ -1327,7 +1327,7 @@ function checkNRIC(){
                    console.log("data : " + result);
                    if (result.message != "pass") {
                         Common.alert(result.message);
-                        $("#nric").val('');
+                        $("#eHPnric").val('');
                         returnValue = false;
                         return false;
 
@@ -1336,7 +1336,7 @@ function checkNRIC(){
                                console.log("data : " + result);
                                if (result.message != "pass") {
                                    Common.alert(result.message);
-                                   $("#nric").val('');
+                                   $("#eHPnric").val('');
                                    returnValue = false;
                                    return false;
                                } else {    // 조건2 통과 -> 조건3 수행
@@ -1345,7 +1345,7 @@ function checkNRIC(){
                                        console.log("data : " + result);
                                        if (result.message != "pass") {
                                            Common.alert(result.message);
-                                           $("#nric").val('');
+                                           $("#eHPnric").val('');
                                            returnValue = false;
                                            return false;
                                        } else {    // 조건3 통과 -> 끝
@@ -1363,7 +1363,7 @@ function checkNRIC(){
            // Not qualified to rejoin
            } else {
                Common.alert(result.message);
-               $("#nric").val('');
+               $("#eHPnric").val('');
                returnValue = false;
                return false;
            }
