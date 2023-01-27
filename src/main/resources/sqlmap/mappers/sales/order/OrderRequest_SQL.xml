@@ -1419,6 +1419,7 @@
 
     <if test='promoItmStkId != null and promoItmStkId !=""'>
       AND T1.PROMO_ITM_STK_ID = #{promoItmAnoStkId}
+      AND T3.PROMO_DESC LIKE '%CONVERSION%'
     </if>
     <if test='promoTypeId != null and promoTypeId !=""'>
       AND T3.promo_type_id = #{promoTypeId}
