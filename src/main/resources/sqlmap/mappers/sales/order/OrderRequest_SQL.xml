@@ -1419,7 +1419,6 @@
 
     <if test='promoItmStkId != null and promoItmStkId !=""'>
       AND T1.PROMO_ITM_STK_ID = #{promoItmAnoStkId}
-      AND T3.PROMO_DESC LIKE '%CONVERSION%'
     </if>
     <if test='promoTypeId != null and promoTypeId !=""'>
       AND T3.promo_type_id = #{promoTypeId}
@@ -1823,12 +1822,10 @@
            , T1.R01
            , T1.R02
     FROM PAY0022D T1
-    LEFT JOIN PAY0011D P11 ON T1.RENT_DOC_NO = P11.MEMO_ADJ_INVC_NO
     WHERE T1.RENT_SO_ID = #{salesOrdId}
       AND T1.RENT_DOC_TYPE_ID IN (158, 159)
       AND T1.RENT_AMT >= 0
       AND T1.RENT_INST_NO > 0
-      AND P11.MEMO_ADJ_INVC_NO IS NULL
     ORDER BY T1.RENT_DT_TM DESC , T1.RENT_INST_NO DESC
     ) T
     WHERE ROWNUM &lt;= 1
