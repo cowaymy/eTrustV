@@ -7,14 +7,14 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerMain.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon2.css"/>
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
 <style>
-@font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: url(../resources/images/common/materialIcon.woff2) format('woff2');
-}
+/* @font-face { */
+/*   font-family: 'Material Icons'; */
+/*   font-style: normal; */
+/*   font-weight: 400; */
+/*   src: url(../resources/images/common/materialIcon.woff2) format('woff2'); */
+/* } */
 </style>
 
 <script>
@@ -53,7 +53,7 @@
                     + result.data[i].mailState + ' '
                     + result.data[i].mailCnty
                     +'</td>'
-                    +'<td style="text-align:center;"><a href="../enquiry/updateInstallationAddressInDetails.do?orderNo='+result.data[i].salesOrdNo+'"><i class="material-icons">mode_edit</i></a></td>'
+                    +'<td style="text-align:center;"><a href="../enquiry/updateInstallationAddressInDetails.do?orderNo='+result.data[i].salesOrdNo+'"><span class="material-symbols-outlined">edit</span></a></td>'
                     + '</tr>';
                 }
             }
