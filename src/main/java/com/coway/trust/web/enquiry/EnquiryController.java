@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -88,7 +89,14 @@ public class EnquiryController {
 
 	 @RequestMapping(value = "/selectCustomerInfo.do")
 	 public String selectCustomerInfo(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) throws Exception  {
-		 	return "enquiry/customerInfo";
+
+		 SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+ 		 params.put("custId", sessionVO.getCustId());
+
+		 List<EgovMap> customerInfoList =  enquiryService.selectCustomerInfoList(params);
+		 model.put("totalCnt", customerInfoList.size());
+
+		 return "enquiry/customerInfo";
 	 }
 
 	 public void insertErrorLog(Map<String, Object> params){
@@ -130,15 +138,15 @@ public class EnquiryController {
     			    	return ResponseEntity.ok(message);
     			  }
 
-    			  checkDuplicated = enquiryService.checkDuplicatedLoginSession(params);
-
-    			  flag = checkDuplicated > 0 ? 1 : 0;
-
-    			  if(flag ==1){
-    				    message.setCode(AppConstants.FAIL);
-    			    	message.setMessage("Your account has been logged in another device. Please logout the session then try to login again.");
-    			    	return ResponseEntity.ok(message);
-    			  }
+//    			  checkDuplicated = enquiryService.checkDuplicatedLoginSession(params);
+//
+//    			  flag = checkDuplicated > 0 ? 1 : 0;
+//
+//    			  if(flag ==1){
+//    				    message.setCode(AppConstants.FAIL);
+//    			    	message.setMessage("Your account has been logged in another device. Please logout the session then try to login again.");
+//    			    	return ResponseEntity.ok(message);
+//    			  }
 
     			  if(flag == 0){
 
@@ -173,7 +181,7 @@ public class EnquiryController {
 
 	 @Transactional
 	 @RequestMapping(value = "/getCustomerInfo.do")
-	  public ResponseEntity<ReturnMessage> getCustomerInfo(@RequestParam Map<String, Object> params ) throws Exception{
+	  public ResponseEntity<ReturnMessage> getCustomerInfo(@RequestParam Map<String, Object> params, ModelMap model ) throws Exception{
 
     		 List<EgovMap> customerInfoList =  enquiryService.selectCustomerInfoList(params);
 
@@ -262,8 +270,7 @@ public class EnquiryController {
     		     EgovMap result = enquiryService.getCurrentPhoneNo(params);
 
     		     params.put("mobileNo", result.get("phoneNo"));
-    		     int smsResultValue =1;
-//    			 int smsResultValue = enquiryService.getTacNo(params, sessionVO);
+    			 int smsResultValue = enquiryService.getTacNo(params, sessionVO);
 
     			 if(smsResultValue > 0){
     				 message.setCode(AppConstants.SUCCESS);
@@ -285,7 +292,7 @@ public class EnquiryController {
 			  enquiryService.insertErrorLog(errorParam);
 
 			  message.setCode(AppConstants.FAIL);
-		      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_ERROR));
+			  message.setMessage("Please wait and retry or contact Coway Careline 1-800-888-111. Thank you.");
 		      return ResponseEntity.ok(message);
 		  }
 	  }
@@ -323,18 +330,18 @@ public class EnquiryController {
 	  }
 
 
-	 @RequestMapping(value = "/tacVerification.do")
-	 public String tacVerification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
-
-    		 sessionVO = sessionHandler.getCurrentSessionInfo();
-    	     params.put("custId", sessionVO.getCustId());
-
-    	     EgovMap result = enquiryService.getCurrentPhoneNo(params);
-    	     model.put("mobileNo", result.get("phoneNo"));
-    	     model.put("orderNo", result.get("orderNo"));
-
-		     return "enquiry/tacVerification";
-	 }
+//	 @RequestMapping(value = "/tacVerification.do")
+//	 public String tacVerification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
+//
+//    		 sessionVO = sessionHandler.getCurrentSessionInfo();
+//    	     params.put("custId", sessionVO.getCustId());
+//
+//    	     EgovMap result = enquiryService.getCurrentPhoneNo(params);
+//    	     model.put("mobileNo", result.get("phoneNo"));
+//    	     model.put("orderNo", result.get("orderNo"));
+//
+//		     return "enquiry/tacVerification";
+//	 }
 
 	 @Transactional
 	 @RequestMapping(value = "/verifyTacNo.do")
@@ -368,8 +375,8 @@ public class EnquiryController {
 		    		int insResult2 = enquiryService.insertNewInstallationAddress(params);
 		    	}
 
-		    	LOGGER.info("checktac result" + result);
-		    	LOGGER.info("checktac flag 2" + flag);
+//		    	LOGGER.info("checktac result" + result);
+//		    	LOGGER.info("checktac flag 2" + flag);
 
 		    	if(flag ==1){
 		    		 message.setCode(AppConstants.SUCCESS);
@@ -399,7 +406,7 @@ public class EnquiryController {
 			  enquiryService.insertErrorLog(errorParam);
 
 			  message.setCode(AppConstants.FAIL);
-		      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_ERROR));
+			  message.setMessage("Please try again or contact Coway Careline 1-800-888-111. Thank you.");
 		      return ResponseEntity.ok(message);
 		  }
 	  }
@@ -409,66 +416,72 @@ public class EnquiryController {
 
 		  EgovMap getEmailDetails = enquiryService.getEmailDetails(params);
 
+		  List<String> emailList = Arrays.asList("zakirin.kamarudin@coway.com.my","azrul.alias@coway.com.my");
+		  String street = getEmailDetails.get("street").equals("0") ? "" : getEmailDetails.get("street").toString() ;
+
 		  Map<String, Object> emailDetail = new HashMap<String,Object>();
 		  List<Map<String, Object>> emailDetailList = new ArrayList<Map<String,Object>>();
 		  emailDetail.put("orderNo", getEmailDetails.get("orderNo").toString());
 		  emailDetail.put("customerName", getEmailDetails.get("name").toString());
 		  emailDetail.put("mobileNo", getEmailDetails.get("phoneNo").toString());
-		  emailDetail.put("address", getEmailDetails.get("addrDtl").toString() + " " + getEmailDetails.get("street").toString() + " " + getEmailDetails.get("area").toString());
+		  emailDetail.put("address", getEmailDetails.get("addrDtl").toString() + street + " " + getEmailDetails.get("area").toString());
 		  emailDetail.put("postCode", getEmailDetails.get("postcode").toString());
 		  emailDetail.put("city", getEmailDetails.get("city").toString());
 		  emailDetail.put("state", getEmailDetails.get("state").toString());
 		  emailDetail.put("requestDt", getEmailDetails.get("requestDt").toString());
-		  emailDetail.put("email","kimching.low@coway.com.my");
-		  emailDetailList.add(emailDetail);
+		  emailDetail.put("email", emailList);
 
-		  LOGGER.info("emailDetail"+ emailDetail);
+		  //LOGGER.info("emailDetail"+ emailDetail);
 
-		 this.sendEmail(emailDetailList);
+		 this.sendEmail(emailDetail);
 	 }
 
-	 private void sendEmail(List<Map<String, Object>> params) {
-		 LOGGER.info("sendEmail params"+ params);
+	 private void sendEmail(Map<String, Object> params) {
+
+		 try{
+
+		    //LOGGER.info("sendEmail params"+ params);
 	    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	    	for(int i = 0 ;i< params.size();i++){
+	    	List<Map<String, Object>> emailList =  (List<Map<String, Object>>) params.get("email");
+	    	for(int i = 0 ;i< emailList.size();i++){
 	            EmailVO email = new EmailVO();
 
 	            String emailSubject = "Update Installation Address Request";
 
 	            List<String> emailNo = new ArrayList<String>();
 
-	            if (!"".equals(CommonUtils.nvl(params.get(i).get("email")))) {
-	            	emailNo.add(CommonUtils.nvl(params.get(i).get("email")));
+	            if (!"".equals(CommonUtils.nvl(emailList.get(i)))) {
+	            	emailNo.add(CommonUtils.nvl(emailList.get(i)));
 	            }
 
 	            String content = "";
 	            content += "<table style='border-collapse: collapse;width: 100%;'>";
 	            content += "<tr><th colspan='2' style='background-color: #3BC3FF;padding: 12px;color: white;text-align: left'>Update Installation Address Request </th><tr>";
 	            content +="<tr><td style='padding: 8px'>Full Name : </td>";
-	            content +="<td>"+params.get(i).get("customerName").toString()+"</td></tr>";
+	            content +="<td>"+params.get("customerName").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>Order No : </td>";
-	            content +="<td>"+params.get(i).get("orderNo").toString()+"</td></tr>";
+	            content +="<td>"+params.get("orderNo").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>Mobile No : </td>";
-	            content +="<td>"+params.get(i).get("mobileNo").toString()+"</td></tr>";
+	            content +="<td>"+params.get("mobileNo").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>Address : </td>";
-	            content +="<td>"+params.get(i).get("address").toString()+"</td></tr>";
+	            content +="<td>"+params.get("address").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>Postcode : </td>";
-	            content +="<td>"+params.get(i).get("postCode").toString()+"</td></tr>";
+	            content +="<td>"+params.get("postCode").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>City : </td>";
-	            content +="<td>"+params.get(i).get("city").toString()+"</td></tr>";
+	            content +="<td>"+params.get("city").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>State : </td>";
-	            content +="<td>"+params.get(i).get("state").toString()+"</td></tr>";
+	            content +="<td>"+params.get("state").toString()+"</td></tr>";
 
 	            content +="<tr><td style='padding: 8px'>Request Dt : </td>";
-	            content +="<td>"+params.get(i).get("requestDt").toString()+"</td></tr>";
+	            content +="<td>"+params.get("requestDt").toString()+"</td></tr>";
 
-	            LOGGER.info("sendEmail content"+ content);
+	            //LOGGER.info("sendEmail content"+ content);
 
 	            email.setTo(emailNo);
 	            email.setHtml(true);
@@ -476,7 +489,23 @@ public class EnquiryController {
 	            email.setText(content);
 	            adaptorService.sendEmail(email, false);
 	    	}
+		 }
+		 	catch(Exception e){
+
+			  Map<String, Object> errorParam = new HashMap<>();
+			  errorParam.put("pgmPath","/enquiry");
+			  errorParam.put("functionName", "sendEmail.do");
+			  errorParam.put("errorMsg",e.toString());
+			  enquiryService.insertErrorLog(errorParam);
+
+		 	}
 	    }
+
+
+//	 @RequestMapping(value = "/contactUs.do")
+//	 public String contactUs(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
+//		     return "enquiry/contactUs";
+//	 }
 
 
 }

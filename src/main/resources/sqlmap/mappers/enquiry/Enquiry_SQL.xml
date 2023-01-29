@@ -204,10 +204,10 @@
 		        LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID AND som.APP_TYPE_ID <![CDATA[<> ]]> 66
 		        JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
 		        JOIN SYS0026M pd ON sod.ITM_STK_ID = pd.STK_ID
-		    WHERE   som.STUS_CODE_ID = 4
-		    AND SOM.CUST_ID = #{custId}
+		    WHERE som.STUS_CODE_ID = 4
+		    AND som.CUST_ID = #{custId}
 		    <if test="orderNo != null and orderNo != ''">
-            AND  SOM.SALES_ORD_NO = #{orderNo}
+            AND  som.SALES_ORD_NO = #{orderNo}
             </if>
 		    ORDER BY 1
     </select>
@@ -406,7 +406,7 @@
 				    , A.PHONE_NO
 				    , A.ORDER_NO
 				    , A.ADDR_DTL
-				    , A.STREET
+				    , CASE WHEN A.STREET IS NULL THEN '0' ELSE  A.STREET END STREET
 				    , B.POSTCODE
 				    , B.CITY
 				    , B.AREA

@@ -2,103 +2,58 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<style>
-.navbar {
-  margin-bottom: 0;
-  border-radius: 0;
-}
-
-.navbar, .navbar-toggle {background: #25527c !important; color: white;}
-
-.text-white{color:white !important;}
-
-.marginTop{margin-top:10px;}
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/footable/js/footable.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/footable.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerMain.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon3.css"/>
 
 
-</style>
 <script>
+    let interval;
+    let areaJson;
 
-//Combo Box Choose Message
-var optionState = {chooseMessage: " 1.States "};
-var optionCity = {chooseMessage: "2. City"};
-var optionPostCode = {chooseMessage: "3. Post Code"};
-var optionArea = {chooseMessage: "4. Area"};
+    function resize(){
+        $("#banner").width(screen.width + "px");
+        $("#banner").height(screen.height *0.7+ "px");
+    }
 
- $(document).ready(function() {
+    window.addEventListener('resize', function(event){
+        resize();
+    });
+
+    //Combo Box Choose Message
+    let optionState = {chooseMessage: " 1.States "};
+    let optionCity = {chooseMessage: "2. City"};
+    let optionPostCode = {chooseMessage: "3. Post Code"};
+    let optionArea = {chooseMessage: "4. Area"};
+
+    $(document).ready(function() {
 
      //Filed Init
      fn_initAddress();
      CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , '', optionState);
-     /* ### Get Cust AddrID ####*/
-     //fn_getCustAddrId();
 
     //Enter Event
     $('#searchSt').keydown(function (event) {
         if (event.which === 13) {    //enter
-        	fn_addrSearch();
+            fn_addrSearch();
         }
     });
 
     $("#addrDtl").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
     $("#streetDtl").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
 
-    // 20190925 KR-OHK Moblie Popup Setting
-    Common.setMobilePopup(false, false, '');
-
-});//Document Ready Func End
+    });//Document Ready Func End
 
 
-function fn_getCustAddrId(){
+    function fn_initAddress(){
 
-    var getparam = $("#_insCustId").val();
-
-    $.ajax({
-
-        type: "GET",
-        url : getContextPath() + "/sales/customer/selectCustomerMainAddr",
-        data : {getparam : getparam},
-        dataType : "json",
-        contentType : "application/json;charset=UTF-8",
-        success : function(data) {
-                $("#tempAddrId").val(data.custAddId);
-                $("#tempAreaId").val(data.areaId);
-        },
-        error: function(){
-            //Common.alert("Get Address Id was Failed!");
-        },
-        complete: function(){
-        }
-    });
-
-}
-
-function fn_initAddress(){
-
-    $('#mCity').append($('<option>', { value: '', text: '2. City' }));
-    $('#mCity').val('');
-    $("#mCity").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
-
-    $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
-    $('#mPostCd').val('');
-    $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
-
-    $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-    $('#mArea').val('');
-    $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
-}
-
-function fn_selectState(selVal){
-    var tempVal = selVal;
-
-    if('' == selVal || null == selVal){
-        //전체 초기화
-        fn_initAddress();
-
-    }else{
-        $("#mCity").attr({"disabled" : false  , "class" : "form-control"});
+        $('#mCity').append($('<option>', { value: '', text: '2. City' }));
+        $('#mCity').val('');
+        $("#mCity").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
 
         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
         $('#mPostCd').val('');
@@ -107,359 +62,502 @@ function fn_selectState(selVal){
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
-
-        //Call ajax
-        var cityJson = {state : tempVal}; //Condition
-        CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson, '' , optionCity);
     }
-}
 
-function fn_selectCity(selVal){
-    var tempVal = selVal;
+    function fn_selectState(selVal){
+        let tempVal = selVal;
 
-    if('' == selVal || null == selVal){
+        if('' == selVal || null == selVal){
+            //전체 초기화
+            fn_initAddress();
 
-         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
-         $('#mPostCd').val('');
-         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+        }else{
+            $("#mCity").attr({"disabled" : false  , "class" : "form-control"});
 
-         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-         $('#mArea').val('');
-         $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+            $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+            $('#mPostCd').val('');
+            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
 
-    }else{
+            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+            $('#mArea').val('');
+            $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
 
-         //$("#mPostCd").attr({"disabled" : false  , "class" : "form-control"});
-         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
-         $('#mPostCd').val('');
-         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
-
-         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-         $('#mArea').val('');
-         $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
-
-        //Call ajax
-        var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
-        CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson, '' , optionPostCode);
+            //Call ajax
+            let cityJson = {state : tempVal}; //Condition
+            CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson, '' , optionCity);
+        }
     }
-}
 
-function fn_selectPostCode(selVal){
-    var tempVal = selVal;
+    function fn_selectCity(selVal){
+        let tempVal = selVal;
 
-    if('' == selVal || null == selVal){
+        if('' == selVal || null == selVal){
 
-        $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
-        $('#mArea').val('');
-        $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+             $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+             $('#mPostCd').val('');
+             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
 
-    }else{
-        $("#mArea").attr({"disabled" : false  , "class" : "form-control"});
-        //Call ajax
-        var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
-        CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson, '' , optionArea);
+             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+             $('#mArea').val('');
+             $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+
+        }else{
+
+             //$("#mPostCd").attr({"disabled" : false  , "class" : "form-control"});
+             $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+             $('#mPostCd').val('');
+             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+
+             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+             $('#mArea').val('');
+             $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+
+            //Call ajax
+            let postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
+            CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson, '' , optionPostCode);
+        }
     }
-}
 
-//Get Area Id
-function fn_getAreaId(){
-    var statValue = $("#mState").val();
-    var cityValue = $("#mCity").val();
-    var postCodeValue = $("#mPostCd").val();
-    var areaValue = $("#mArea").val();
+    function fn_selectPostCode(selVal){
+        let tempVal = selVal;
 
-    if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+        if('' == selVal || null == selVal){
 
-        var jsonObj = { statValue : statValue ,
-                              cityValue : cityValue,
-                              postCodeValue : postCodeValue,
-                              areaValue : areaValue
-                            };
-        Common.ajax("GET", "/enquiry/getAreaId.do", jsonObj, function(result) {
-             $("#areaId").val(result.areaId);
+            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+            $('#mArea').val('');
+            $("#mArea").attr({"disabled" : "disabled"  , "class" : "form-control disabled"});
+
+        }else{
+            $("#mArea").attr({"disabled" : false  , "class" : "form-control"});
+            //Call ajax
+            areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
+            CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson, '' , optionArea);
+        }
+    }
+
+    //Get Area Id
+    function fn_getAreaId(){
+        let statValue = $("#mState").val();
+        let cityValue = $("#mCity").val();
+        let postCodeValue = $("#mPostCd").val();
+        let areaValue = $("#mArea").val();
+
+        if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+
+            let jsonObj = { statValue : statValue ,
+                                  cityValue : cityValue,
+                                  postCodeValue : postCodeValue,
+                                  areaValue : areaValue
+                                };
+            Common.ajax("GET", "/enquiry/getAreaId.do", jsonObj, function(result) {
+                 $("#areaId").val(result.areaId);
+            });
+        }
+    }
+
+    function fn_addrSearch(){
+
+        if (FormUtil.isEmpty($("#mState").val())) {
+            document.getElementById("MsgAlert").innerHTML =  "Please select State.";
+            $("#alertModalClick").click();
+            return false;
+        }
+
+        if (FormUtil.isEmpty($("#mCity").val())) {
+            document.getElementById("MsgAlert").innerHTML =  "Please select City.";
+            $("#alertModalClick").click();
+            return false;
+        }
+
+        if($("#searchSt").val() == ''){
+            document.getElementById("MsgAlert").innerHTML =  "Please key in the area search.";
+            $("#alertModalClick").click();
+            return false;
+        }
+
+       $("#mPostCd").attr({"disabled" : false  , "class" : "form-control"});
+
+       searchMagicAddressPopJsonList();
+
+    }
+
+    function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
+
+        if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
+
+            $("#mArea").attr({"disabled" : false  , "class" : "form-control"});
+            $("#mCity").attr({"disabled" : false  , "class" : "form-control"});
+            $("#mPostCd").attr({"disabled" : false  , "class" : "form-control"});
+            $("#mState").attr({"disabled" : false  , "class" : "form-control"});
+
+            CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , mstate, optionState);
+
+            let cityJson = {state : mstate}; //Condition
+            CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson, mcity , optionCity);
+
+            let postCodeJson = {state : mstate , city : mcity};
+            CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson, mpostcode , optionCity);
+
+            areaJson = {groupCode : mpostcode, state : mstate , city : mcity , postcode : mpostcode};
+            CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson, marea , optionArea);
+
+            $("#areaId").val(areaid);
+            $("#_searchDiv").remove();
+        }else{
+            document.getElementById("MsgAlert").innerHTML =  'Please check your address.';
+            $("#alertModalClick").click();
+        }
+    }
+
+    function fn_chkItemVal(){
+
+        if(FormUtil.isEmpty($('#addrDtl').val())) {
+             document.getElementById("MsgAlert").innerHTML = "Please Fill In Address 1*";
+             $("#alertModalClick").click();
+             return false;
+         }
+
+        if(FormUtil.isEmpty($('#mState').val())) {
+             document.getElementById("MsgAlert").innerHTML = "Please Choose State";
+             $("#alertModalClick").click();
+             return false;
+        }
+
+        if(FormUtil.isEmpty($('#mCity').val())) {
+            document.getElementById("MsgAlert").innerHTML = "Please Choose City";
+            $("#alertModalClick").click();
+            return false;
+        }
+
+        if(FormUtil.isEmpty($('#mArea').val())) {
+            document.getElementById("MsgAlert").innerHTML = "Please Choose Area";
+            $("#alertModalClick").click();
+            return false;
+       }
+    }
+
+    $(function() {
+        resize();
+        let x = document.querySelector('.bottom_msg_box');
+        x.style.display = "none";
+
+        let maskedPhoneNo;
+        maskedPhoneNo = "${phoneNo}".substr(-4).padStart("${phoneNo}".length, '*');
+        document.getElementById('phoneNo').innerHTML=maskedPhoneNo;
+
+        let orderNo = document.getElementById('orderNo');
+        let productInfo = document.getElementById('productInfo');
+        let currentAddr = document.getElementById('currentAddr');
+        orderNo.innerHTML += '${orderNo}';
+        productInfo.innerHTML += '${productDesc}';
+        currentAddr.innerHTML += '${addrDtl}' + '${street}' + '${mailArea}' + '${mailPostCode}' + '${mailCity}' + '${mailState}' + '${mailCnty}';
+
+        $('#btnUpdate').click(function(evt) {
+
+	            var isVal = true;
+
+	            isVal = fn_chkItemVal();
+
+	            if(isVal == false){
+	                return;
+	            }else{
+		                 let params = {
+		                		 custId : '${SESSION_INFO.custId}',
+		                		 orderNo:  '${orderNo}'
+		                 };
+		                 Common.ajax("GET","/enquiry/checkExistRequest.do", params , function (result){
+		                     if(result.data.result > 0){
+		                         document.getElementById("MsgConfirm").innerHTML =  "You have submmitted the update request before for this order number: " + '${orderNo}' + " Confirm to proceed update new request?";
+		                         $("#confirmModalClick").click();
+		                     }
+		                     else{
+		                         getTacNo();
+		                     }
+		             });
+		        }
+         });
+
+        $('#btnResend').click(function(evt) {
+            Common.ajax("GET","/enquiry/getTacNo.do",{orderNo: "${orderNo}"}  , function (result){
+            	if(result.code = "00"){
+            		$("#tacNo").val("");
+            		startCountdown(0,1);
+            		startCountdown(180,0);
+            	}
+            });
+        });
+
+        $('#btnHelp').click(function(evt) {
+        	  clearInterval(interval);
+              $("#myModalTac").modal('hide');
+              createAlert('Please try again or contact Coway Careline 1-800-888-111. Thank you.',goCustomerInfoPage);
+        });
+
+
+
+        $('#btnContinue').click(function(evt) {
+                    //console.log($("#tacForm").serializeJSON());
+                    let param = {};
+                    params = {
+                            orderNo : "${orderNo}",
+                            tacNo : $("#tacNo").val(),
+                            insCustId : "${SESSION_INFO.custId}",
+                            areaId : $("#areaId").val(),
+                            addrDtl : $("#addrDtl").val(),
+                            streetDtl : $("#streetDtl").val(),
+                            phoneNo : "${phoneNo}"
+                    };
+
+                    Common.ajax("GET","/enquiry/verifyTacNo.do", params , function (result){
+                        console.log(result);
+                        if(result.code =="00"){
+                        	document.getElementById("MsgComplete").innerHTML = result.message;
+                            $("#completeModalClick").click();
+
+                            let counterClose = 5;
+
+                            const intervalClose = setInterval(() => {
+                              counterClose--;
+                              if (counterClose < 0 ) {
+                            	  goCustomerInfoPage();
+                              }
+                            }, 1000);
+
+                        }
+                        else{
+                            $("#tacNo").val("");
+                        	startCountdown(0,1); //stop countdown
+                            document.getElementById("MsgAlert").innerHTML = result.message;
+                            $("#alertModalClick").click();
+                        }
+                    });
+              });
+
+       });
+
+       function getTacNo(){
+    	   let paramsGetTac = {
+    			   tacNo : $("#tacNo").val(),
+    			   orderNo : "${orderNo}",
+    			   custId : "${SESSION_INFO.custId}",
+    			   mobileNo : "${phoneNo}"
+    	   };
+
+            Common.ajax("GET","/enquiry/getTacNo.do", paramsGetTac , function (result){
+	            if(result.code =="00"){
+	        	     $("#tacModalClick").click();
+	        	     $("#tacNo").val("");
+	        	     startCountdown(0,1);
+	        	     startCountdown(180,0);
+	            }
+	            else{
+	            	document.getElementById("MsgAlert").innerHTML =  result.message;
+	                $("#alertModalClick").click();
+	            }
         });
     }
-}
 
-function fn_addrSearch(){
-    // null state
-    if (FormUtil.isEmpty($("#mState").val())) {
-        Common.alert("Please select State.");
-        return false;
+     const createAlert = (text, fn) => {
+           //create modal here
+             document.getElementById("MsgAlert").innerHTML = text;
+             $("#alertModalClick").click();
+
+             if(fn!=null){
+                 $('#myModalAlert').on('hide.bs.modal', function (event) {
+                     fn();
+                 })
+             } else {
+            	 $('#myModalAlert').on('hide.bs.modal', function (event) {
+                 })
+             }
+       };
+
+    function startCountdown(seconds, flag) {
+    	if(flag==0){
+            let counter = seconds;
+
+             interval = setInterval(() => {
+              document.getElementById('countDown').innerHTML=counter;
+              counter--;
+              if (counter < 0 ) {
+                clearInterval(interval);
+                $("#myModalTac").modal('hide');
+                createAlert('Your TAC number is expired. Please click "Resend TAC" to get new code.',goTacVerificationPage);
+              }
+            }, 1000);
+    	}
+    	else{
+    		clearInterval(interval);
+    		document.getElementById('countDown').innerHTML=0;
+    	}
     }
-    // null city
-    if (FormUtil.isEmpty($("#mCity").val())) {
-        Common.alert("Please select City.");
-        return false;
+
+    function goCustomerInfoPage(){
+        $("#tacForm").attr("target", "");
+        $("#tacForm").attr({
+            action: getContextPath() + "/enquiry/selectCustomerInfo.do",
+            method: "POST"
+        }).submit();
     }
-    if($("#searchSt").val() == ''){
-        Common.alert("Please search.");
-        return false;
-    }
-    Common.popupDiv('/enquiry/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
-
-   $("#mPostCd").attr({"disabled" : false  , "class" : "form-control"});
-
-}
-
-function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
-
-    if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
-
-        $("#mArea").attr({"disabled" : false  , "class" : "form-control"});
-        $("#mCity").attr({"disabled" : false  , "class" : "form-control"});
-        $("#mPostCd").attr({"disabled" : false  , "class" : "form-control"});
-        $("#mState").attr({"disabled" : false  , "class" : "form-control"});
-
-        //Call Ajax
-
-        CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , mstate, optionState);
-
-        var cityJson = {state : mstate}; //Condition
-        CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson, mcity , optionCity);
-
-        var postCodeJson = {state : mstate , city : mcity}; //Condition
-        CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson, mpostcode , optionCity);
-
-        var areaJson = {groupCode : mpostcode};
-        var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
-        CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson, marea , optionArea);
-
-        $("#areaId").val(areaid);
-        $("#_searchDiv").remove();
-    }else{
-        Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
-    }
-}
-
-$(function() {
-    let x = document.querySelector('.bottom_msg_box');
-    x.style.display = "none";
-
-    let maskedPhoneNo;
-    maskedPhoneNo = "${phoneNo}".substr(-4).padStart("${phoneNo}".length, '*');
-    document.getElementById('phoneNo').innerText=maskedPhoneNo;
-
-    startCountdown(180);
-
-    let orderNo = document.getElementById('orderNo');
-    let productInfo = document.getElementById('productInfo');
-    let currentAddr = document.getElementById('currentAddr');
-    orderNo.innerHTML += '${orderNo}';
-    productInfo.innerHTML += '${productDesc}';
-    currentAddr.innerHTML += '${addrDtl}' + '${street}' + '${mailArea}' + '${mailPostCode}' + '${mailCity}' + '${mailState}' + '${mailCnty}';
-
-    $('#btnUpdate').click(function(evt) {
-		     Common.ajax("GET","/enquiry/checkExistRequest.do", $("#insAddressForm").serializeJSON() , function (result){
-			     if(result.data.result > 0){
-			    	 Common.alert("You have submmitted the update request before for this order number: " + '${orderNo}' + " Confirm to proceed update new request?",getTacNo);
-			     }
-			     else{
-			    	 getTacNo();
-			     }
-		 });
-     });
-
-    $('#btnResend').click(function(evt) {
-        Common.ajax("GET","/enquiry/getTacNo.do",{orderNo: "${orderNo}"}  , function (result){});
-    });
-
-    $('#btnContinue').click(function(evt) {
-		        console.log($("#tacForm").serializeJSON());
-		        var param = {};
-		        params = {
-		                orderNo : "${orderNo}",
-		                tacNo : $("#tacNo").val(),
-		                insCustId : "${SESSION_INFO.custId}",
-		                areaId : $("#areaId").val(),
-		                addrDtl : $("#addrDtl").val(),
-		                streetDtl : $("#streetDtl").val(),
-		                phoneNo : "${phoneNo}"
-		        };
-		        Common.ajax("GET","/enquiry/verifyTacNo.do", params , function (result){
-		            console.log(result);
-		            if(result.code =="00"){
-		                Common.alert(result.message, goCustomerInfoPage);
-		            }
-		            else{
-		                Common.alert(result.message);
-		            }
-		        });
-		  });
-
-   });
-
-   function getTacNo(){
-	    Common.ajax("GET","/enquiry/getTacNo.do", $("#insAddressForm").serializeJSON() , function (result){
-	    console.log(result);
-	 if(result.code =="00"){
-	        Common.alert(result.message,goTacVerificationPage);
-	    }
-	    else{
-	        Common.alert(result.message);
-	    }
-	});
-   }
-
-function startCountdown(seconds) {
-    let counter = seconds;
-
-    const interval = setInterval(() => {
-      document.getElementById('countDown').innerText=counter;
-      counter--;
-
-      if (counter < 0 ) {
-        clearInterval(interval);
-        Common.alert('Your TAC number is expired. Please click "Resend TAC" to get new code.');
-      }
-    }, 1000);
-}
-
-function goCustomerInfoPage(){
-    $("#tacForm").attr("target", "");
-    $("#tacForm").attr({
-        action: getContextPath() + "/enquiry/selectCustomerInfo.do",
-        method: "POST"
-    }).submit();
-}
 
    function goTacVerificationPage(){
-	   $("#modal").click();
-// 	   console.log("tttt")
-// 	   $("#insAddressForm").attr("target", "");
-//        $("#insAddressForm").attr({
-//            action: getContextPath() + "/enquiry/tacVerification.do",
-//            method: "POST"
-//        }).submit();
+	   $("#tacNo").val("");
+       startCountdown(0,1);
+       startCountdown(180,0);
+       $("#tacModalClick").click();
+       $('#myModalAlert').on('hide.bs.modal', function (event) {})
    }
 
+
+   function searchMagicAddressPopJsonList(){
+
+       let params = {
+               searchSt: $("#searchSt").val(),
+               city: $("#mCity").val(),
+               state: $("#mState").val(),
+               searchStreet : $("#searchSt").val()
+       };
+
+       Common.ajax("GET", "/enquiry/searchMagicAddressPopJsonList.do", params, function(result) {
+
+       let $modal = $("#editor-modal"),
+       $editor = $("#editor"),
+       $editorTitle = $("#editor-title"),
+       ft = FooTable.init("#showcase-example-1", {
+
+             paging: {
+                 size: 5
+             },
+             columns: [
+             { name: "area",
+                 title: "Area",
+             },
+             {
+                name: "areaId",
+                title: "Area Id",
+                visible: false,
+                filterable: false
+             },
+             {
+                 name: "iso",
+                 title: "ISO",
+                 visible: false,
+                 filterable: false
+              },
+             { name: "postcode", title: "Postcode" },
+             {
+                name: "city",
+                title: "City",
+                breakpoints: " xs sm",
+                style: {
+                   width: 300,
+                   overflow: "hidden",
+                   textOverflow: "ellipsis",
+                   wordBreak: "keep-all",
+                   whiteSpace: "nowrap"
+                 }
+             },
+             {
+                 name: "state",
+                 title: "State",
+                 breakpoints:  "xs sm",
+                 style: {
+                   maxWidth: 200,
+                   overflow: "hidden",
+                   textOverflow: "ellipsis",
+                   wordBreak: "keep-all",
+                   whiteSpace: "nowrap"
+                 }
+             },
+             {
+                 name: "fullAddress",
+                 title: "Full Address",
+                 breakpoints:  "lg md xs sm",
+                 style: {
+                   maxWidth: 200,
+                   overflow: "hidden",
+                   textOverflow: "ellipsis",
+                   wordBreak: "keep-all",
+                   whiteSpace: "nowrap"
+                 }
+             }],
+            rows:
+                 $.map( result, function( val, i ) {
+                     return {
+                       area: val.area,
+                       areaId: val.areaId,
+                       postcode: val.postcode,
+                       city: val.city,
+                       state: val.state,
+                       fullAddress: val.fullAddress,
+                       iso: val.iso
+                     }
+              }),
+       })
+
+       $('#showcase-example-1').on('expand.ft.row', function(e, ft, row) {
+    	   $("#area").val(row.value.area);
+    	   $("#areaId").val(row.value.areaId);
+    	   $("#city").val(row.value.city);
+    	   $("#postcode").val(row.value.postcode);
+    	   $("#state").val(row.value.state);
+    	   $("#iso").val(row.value.iso);
+
+    	   let expandElement = $(row.$el);
+           $('#showcase-example-1').find('tr').each(function(){
+               if (this.getAttribute("data-expanded")){
+                   this.click();
+               }else{
+            	   expandElement.toggleClass('toggleColor2',false);
+            	   expandElement.toggleClass('toggleColor',true);
+               }
+           });
+        });
+
+       $('#showcase-example-1').on('collapse.ft.row', function(e, ft, row) {
+    	   let collapseElement = $(row.$el);
+    	   collapseElement.toggleClass('toggleColor',false);
+    	   collapseElement.toggleClass('toggleColor2',true);
+       });
+    });
+
+    $("#customerModalClick").click();
+
+   }
+
+   function resetAreaId(){
+	   $("#areaId").val("");
+   }
+
+   function setAreaInfo(){
+	   fn_addMaddr($("#area").val(), $("#city").val(), $("#postcode").val(), $("#state").val(), $("#areaId").val(), $("#iso").val());
+   }
 
 </script>
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#"><span><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway" /></span></a>
 
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav" class="text-white">
-        <li><a class="text-white">Home</a></li>
-        <li><a class="text-white">Customer Info</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-           <li><a class="text-white">Welcome , ${SESSION_INFO.custName}</a></li>
-           <li><a href="${pageContext.request.contextPath}/enquiry/updateInstallationAddress.do" class="text-white">Log Out</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<%@ include file="/WEB-INF/jsp/enquiry/navigation.jsp" %>
 
-<div id="updateInstallationDetailsPage">
-<div class="jumbotron" style="width:100%">
-  <div class="container text-center">
-    <h3>Update Address</h3>
-  </div>
+<div id="updateDetails">
+      <div style="position:relative">
+        <img src="../resources/images/common/customerinfo4.jpg"  id="banner">
+        <div class="banner-caption">
+                <div class="container">
+		                <div class="row">
+		                    <div class="m-lg-5 col-sm-6" style="position:relative">
+		                         <br class="visible-xs">
+		                         <h3 class="fontSetting fontSize1">Update Installation Address</h3>
+		                         <p style="color: #60A4DA!important" class="fontSetting fontSize2">Unparalleled Customer Experience</p>
+		                         <p style="line-height:1.5" class="fontSetting fontSize3">With nationwide coverage, Coway's HEART Service is just one of the many reasons why we are the No.1 brand in wellness and healthy living.</p>
+		                        </div>
+		                </div>
+                </div>
+            </div>
+      </div>
 </div>
-
-<div class="container">
+<br/>
+<div class="container" id="updateDetailsPage">
 <div class="row">
-  <div class="col-md-8 mb-4 text-left">
-    <div class="card mb-4">
-      <div class="card-header py-3">
-        <h5>New Installation Address Details</h5>
-      </div>
-      <br>
-      <br>
-      <div class="card-body">
-        <form id="insAddressForm">
-            <input type="hidden" id="areaId" name="areaId">
-            <input type="hidden" value="${SESSION_INFO.custId}" id="_insCustId" name="insCustId">
-            <input type="hidden" name="addrCustAddId" id="addrCustAddId">
-            <input type="hidden" name="orderId" id="orderId" value="${orderId}">
-            <input type="hidden" name="orderNo"  value="${orderNo}">
-          <div class="row mb-4">
-            <div class="col">
-              <div class="form-outline">
-              <label class="form-label" >Address 1<span class="must text-danger">*</span></label>
-              <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="form-control" maxlength="100" />
-            </div>
-            </div>
-
-            <div class="col marginTop">
-              <div class="form-outline">
-              <label class="form-label" >Address 2</label>
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="form-control" maxlength="100" />
-              </div>
-            </div>
-
-           <div class="col marginTop">
-	             <div class="form-outline">
-		              <label class="form-label" >State</label>
-		              <select class="form-control" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
-	             </div>
-            </div>
-
-	        <div class="col marginTop">
-	              <div class="form-outline">
-	                  <label class="form-label" >City</label>
-	                  <select class="form-control" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
-	              </div>
-	        </div>
-
-	        <div class="col marginTop">
-                  <div class="form-outline">
-                      <label class="form-label" >Area Search</label>
-                      <div class="row">
-                         <div class="col-md-11">
-                      <input type="text" " id="searchSt" name="searchSt" class="form-control" />
-                      </div>
-
-                      <div class="col-md-1">
-                      <a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                      </div>
-                      </div>
-                  </div>
-            </div>
-
-
-
-             <div class="col marginTop">
-              <div class="form-outline">
-              <label class="form-label" >Postcode</label>
-                <select class="form-control" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
-              </div>
-            </div>
-
-              <div class="col marginTop">
-              <div class="form-outline">
-              <label class="form-label" >Area</label>
-            <select class="form-control" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
-              </div>
-            </div>
-
-            <div class="col marginTop">
-              <div class="form-outline">
-              <label class="form-label" >Country</label>
-              <input type="text" id="country" name="country" class="form-control" value="Malaysia" readonly />
-              </div>
-            </div>
-
-
-
-
-          </div>
-           <br/>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <div class="col-md-4 mb-4">
     <div class="card mb-4">
       <div class="card-header py-3">
@@ -469,46 +567,148 @@ function goCustomerInfoPage(){
       <br>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li
-            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-            Order No : <span id="orderNo"></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-             Products : <span id="productInfo"></span>
-          </li>
-          <li
-            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-            <div>Current Installation Address : <br><span id="currentAddr"></span>
-            </div>
+	          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+	                  <div>
+	                         <label>Order No :</label>
+	                         <span id="orderNo" style= "text-align:left !important "></span>
+	                  </div>
+	          </li>
 
-          </li>
+	           <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+	                   <div>
+	                         <label>Products :</label>
+	                         <span id="productInfo" style= "text-align:left !important "></span>
+	                  </div>
+	          </li>
+
+	          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+	                   <div>
+	                         <label>Current Installation Address :</label><br>
+	                         <span id="currentAddr" style= "text-align:left !important; text-transform: uppercase; "></span>
+	                  </div>
+	          </li>
         </ul>
+        </ul>
+        <br/>
          <p class="btn btn-primary btn-lg btn-block"  id="btnUpdate" ><a href="javascript:void(0);" style="color:white">Update</a></p>
       </div>
     </div>
   </div>
+
+  <div class="col-md-8 mb-4 text-left">
+      <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5  class="mb-0">New Installation Address Details</h5>
+          </div>
+
+          <div class="card-body">
+                   <form id="insAddressForm">
+                       <input type="hidden" id="areaId" name="areaId">
+                       <input type="hidden" value="${SESSION_INFO.custId}" id="_insCustId" name="insCustId">
+                       <input type="hidden" name="addrCustAddId" id="addrCustAddId">
+                       <input type="hidden" name="orderId" id="orderId" value="${orderId}">
+                       <input type="hidden" name="orderNo"  value="${orderNo}">
+                       <input type="hidden" id="area" name="area">
+                       <input type="hidden" id="city" name="city">
+                       <input type="hidden" id="state" name="state">
+                       <input type="hidden" id="postcode" name="postcode">
+                       <input type="hidden" id="iso" name="iso">
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                  <div class="form-outline">
+                                      <label class="form-label" >Address 1<span class="must text-danger">*</span></label>
+                                      <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="form-control" maxlength="100" />
+                                   </div>
+                                  <div class="form-outline mt-3">
+                                      <label class="form-label" >Address 2</label>
+                                      <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="form-control" maxlength="100" />
+                                   </div>
+
+                                   <div class="form-outline mt-3">
+                                      <label class="form-label" >State</label>
+                                      <select class="form-control" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                                  </div>
+
+                                   <div class="form-outline mt-3">
+                                        <label class="form-label" >City</label>
+                                        <select class="form-control" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
+                                   </div>
+
+                                   <div class="form-outline mt-3">
+                                          <label class="form-label" >Area Search</label>
+                                          <div class="row">
+                                             <div class="col-md-11 col-sm-11">
+                                                  <input type="text" " id="searchSt" name="searchSt" class="form-control" />
+                                              </div>
+
+                                              <div class="col-md-1 col-sm-1">
+                                                   <a href="javascript:void(0);" class="search_btn" onclick="fn_addrSearch()"><img id="searchIcon" src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                              </div>
+                                          </div>
+                                    </div>
+
+                                    <div class="form-outline mt-3">
+                                          <label class="form-label" >Postcode</label>
+                                          <select class="form-control" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                                    </div>
+
+                                    <div class="form-outline mt-3">
+                                         <label class="form-label" >Area</label>
+                                         <select class="form-control" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
+                                    </div>
+
+                                    <div class="form-outline mt-3">
+                                          <label class="form-label" >Country</label>
+                                          <input type="text" id="country" name="country" class="form-control" value="Malaysia" readonly />
+                                    </div>
+                         </div>
+                   </form>
+          </div>
+      </div>
+  </div>
+  </div>
 </div>
+
+
+
+ <!-- Open Modal Screen Window  -->
+
+<!-- 1. Area Information -->
+<input type="button" id="customerModalClick" data-toggle="modal" data-target="#customerMagicAddress"  hidden  />
+<div class="modal" id="customerMagicAddress">
+        <div class="modal-content" style="height:auto;">
+            <div class="modal-header">
+                <h4 class="modal-title">Area Information</h4>
+            </div>
+            <div class="modal-body" id="MsgCustomer" style="height: auto;position:relative;">
+                <div style="width: 100%; ">
+                    <table id="showcase-example-1" class="table" data-paging="true"></table>
+                </div>
+             </div>
+             <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                            <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal"  onclick="setAreaInfo()">Choose</button>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                           <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal"  onclick="resetAreaId()">Close</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+    </div>
 </div>
-</div>
 
-
-<div class="container">
-  <h2>Modal Example</h2>
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="modal">Open Modal</button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
-                          <div class="card">
+<!-- 2. Tac Modal -->
+<input type="button" id="tacModalClick" data-toggle="modal" data-target="#myModalTac"  hidden  />
+<div class="modal" id="myModalTac">
+<div class="container body-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-6 offset-md-3">
+                <div class="card">
                     <div class="text-center card-header" style="background:#25527c">
                         <div class="card-header text-white" style="text-align:center;color:white">
                             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway.gif" alt="Coway"/></h2>
@@ -538,31 +738,98 @@ function goCustomerInfoPage(){
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <h6 id="btnResend"><u>Resend TAC</u></h6>
-                                        <h6><u>Need help?</u></h6>
+                                        <h6 id="btnHelp"><u>Need help?</u></h6>
                                 </div>
-
-
                             </div>
-
                         </form>
                     </div>
                     <div>
-                    <div class="row" >
-                    <div class="col-lg-6 col-md-6 mb-3  float-left" style="text-align:center">
-                            <p class="button"  id="btnCancel" ><a href="javascript:void(0);" style="color:white">Cancel</a></p>
-                        </div>
-                        <div class="col-lg-6 col-md-6 mb-3" style="text-align:center">
-                            <p class="button"  id="btnContinue" ><a href="javascript:void(0);" style="color:white">Continue</a></p>
-                        </div>
+	                    <div class="row" >
+		                            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+		                                  <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal"  style="width:100%;background:#25527c !important" onclick=>Cancel</button>
+		                            </div>
+		                            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+		                                  <button type="button"  id="btnContinue"  class="btn btn-primary btn-block float-right" data-dismiss="modal"  style="width:100%;background:#25527c !important" >Continue</button>
+		                            </div>
+	                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+<!-- 3. Alert Msg -->
+<input type="button" id="alertModalClick" data-toggle="modal" data-target="#myModalAlert"  hidden/>
+<div class="modal" id="myModalAlert">
+    <div class="modal-dialog">
+        <div class="modal-content setHeight">
+            <div class="modal-header">
+                <h4 class="modal-title">System Information</h4>
+            </div>
+            <div class="modal-body" id="MsgAlert"></div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal">Close</button>
+                          </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
 
+<!-- 4. Confirm Resubmit -->
+<input type="button" id="confirmModalClick" data-toggle="modal" data-target="#myModalConfirm"  hidden/>
+<div class="modal" id="myModalConfirm">
+    <div class="modal-dialog">
+        <div class="modal-content setHeight">
+            <div class="modal-header">
+                <h4 class="modal-title">System Information</h4>
+            </div>
+            <div class="modal-body" id="MsgConfirm"></div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                                <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" onclick="getTacNo()">Confirm</button>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal">Close</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 5. Complete and Back to Main -->
+<input type="button" id="completeModalClick" data-toggle="modal" data-target="#myModalComplete"  hidden/>
+<div class="modal" id="myModalComplete">
+    <div class="modal-dialog ">
+        <div class="modal-content setHeight">
+            <div class="modal-header">
+                <h4 class="modal-title">System Information</h4>
+            </div>
+            <div class="modal-body" id="MsgComplete"></div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" onclick="goCustomerInfoPage()">Close</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -101,7 +101,6 @@ body {
     flex-direction: column;
     justify-content: center;
     position: absolute;
-
 }
 
 .btn.btn-primary {
@@ -149,3 +148,11 @@ btn {
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+
+#customerLogin{
+	width: auto !important;
+/* 	padding: 0 !important; */
+/* 	padding-right: auto !important; */
+    padding-right: 15px;
+}
+

@@ -1,6 +1,16 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Footable/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Footable/footable.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/js/Footable/footable.core.css"/>
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#mytable').footable();
+        });
+</script>
+
 <style type="text/css">
 
     /* 커스텀 칼럼 스타일 정의 */
@@ -9,6 +19,7 @@
     }
 </style>
 <script type="text/javascript">
+
     //AUIGrid 생성 후 반환 ID
     var mAddrGridID;
 
@@ -125,12 +136,14 @@
     }
 
     function fn_searchMagicAddressPopJsonListAjax(){
+    	console.log("rrrrrrrrrrrrrr")
+    	console.log($("#searchAddrForm").serialize())
+    	console.log("rrrrrrrrrrrrrrrrrrrr")
         Common.ajax("GET", "/enquiry/searchMagicAddressPopJsonList.do", $("#searchAddrForm").serialize(), function(result) {
             AUIGrid.setGridData(mAddrGridID, result);
         }
         );
     }
-
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -170,5 +183,117 @@
 </aside><!-- title_line end -->
 
 </section><!-- pop_body end -->
+<form id="form1" runat="server">
+    <div style="width: 100%; max-width: 800px;">
+        <table id="mytable" cellpadding="5" border="1" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>
+                        Employee Code
+                    </th>
+                    <th>
+                        Employee Name
+                    </th>
+                    <th data-hide="phone">
+                        Employee Age
+                    </th>
+                    <th data-hide="phone,tablet">
+                        Designation
+                    </th>
+                    <th data-hide="phone,tablet">
+                        Experience
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        10011
+                    </td>
+                    <td>
+                        Rajeev
+                    </td>
+                    <td>
+                        31
+                    </td>
+                    <td>
+                        Developer
+                    </td>
+                    <td>
+                        6
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        10012
+                    </td>
+                    <td>
+                        Sandhya
+                    </td>
+                    <td>
+                        27
+                    </td>
+                    <td>
+                        Tester
+                    </td>
+                    <td>
+                        2
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        10013
+                    </td>
+                    <td>
+                        Ramesh
+                    </td>
+                    <td>
+                        25
+                    </td>
+                    <td>
+                        Designer
+                    </td>
+                    <td>
+                        1
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        10014
+                    </td>
+                    <td>
+                        Sanjay
+                    </td>
+                    <td>
+                        32
+                    </td>
+                    <td>
+                        Developer
+                    </td>
+                    <td>
+                        5
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        10015
+                    </td>
+                    <td>
+                        Ramya
+                    </td>
+                    <td>
+                        23
+                    </td>
+                    <td>
+                        Developer
+                    </td>
+                    <td>
+                        1
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 
 </div><!-- popup_wrap end -->

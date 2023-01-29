@@ -119,7 +119,7 @@ public class EnquiryServiceImpl implements EnquiryService {
 
 			        if(result > 0){
 			        	//SMS for customer need to verify throught TAC first before request to update
-	    			    smsMessage = "COWAY: Confidential! Never share your temporary TAC.Password: '" + tacNumber + ". Kindly keyin your TAC to update your new installation address for Order : " + params.get("orderNo").toString();
+	    			    smsMessage = "COWAY: Confidential! Never share your temporary TAC.Password: " + tacNumber + ". Kindly keyin your TAC to update your new installation address for Order : " + params.get("orderNo").toString();
 
 	           	        Map<String, Object> smsList = new HashMap<>();
 	                    smsList.put("userId", 349);
@@ -138,7 +138,7 @@ public class EnquiryServiceImpl implements EnquiryService {
     			    	Map<String, Object> errorParam = new HashMap<>();
     					errorParam.put("pgmPath","/enquiry");
     					errorParam.put("functionName", "getTacNo.do");
-    					errorParam.put("errorMsg",e);
+    					errorParam.put("errorMsg",e.toString());
     					enquiryMapper.insertErrorLog(errorParam);
 			    }finally{
 

@@ -2,29 +2,31 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/dataTable1.10.2.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/dataTable/js/bootstrap.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerMain.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon2.css"/>
+
 <style>
-.navbar {
-  margin-bottom: 0;
-  border-radius: 0;
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../resources/images/common/materialIcon.woff2) format('woff2');
 }
-
-.navbar, .navbar-toggle {background: #25527c !important; color: white;}
-
-.text-white{color:white !important;}
-
-
 </style>
 
 <script>
-
     $(function() {
+
+    	 document.getElementById("setHeight").style.minHeight = screen.height + "px";
+
          let x = document.querySelector('.bottom_msg_box');
          x.style.display = "none";
+
+         let totalCnt = document.getElementById('totalCnt');
+         totalCnt.setAttribute("data-to", '${totalCnt}');
 
          initialize();
         });
@@ -35,25 +37,23 @@
 
             if(result.code =="00"){
                 let details = document.getElementById('details');
-                let totalCnt = document.getElementById('totalCnt');
-                totalCnt.innerHTML += result.data.length;
 
                 for (var i = 0; i < result.data.length ; i++)
                 {
-                	details.innerHTML +=
-                		'<tr>'
-                	+ '<td>' + result.data[i].salesOrdNo + '</td>'
+                    details.innerHTML +=
+                        '<tr>'
+                    + '<td style="text-align:center;">' + result.data[i].salesOrdNo + '</td>'
                     + '<td>' + result.data[i].stkDesc + '</td>'
                     + '<td>'
-                    + result.data[i].addrDtl
-                    + result.data[i].street
-                    + result.data[i].mailArea
-                    + result.data[i].mailPostCode
-                    + result.data[i].mailCity
-                    + result.data[i].mailState
+                    + result.data[i].addrDtl + ' '
+                    + result.data[i].street + ' '
+                    + result.data[i].mailArea + ' '
+                    + result.data[i].mailPostCode + ' '
+                    + result.data[i].mailCity + ' '
+                    + result.data[i].mailState + ' '
                     + result.data[i].mailCnty
                     +'</td>'
-                    +'<td><a href="../enquiry/updateInstallationAddressInDetails.do?orderNo='+result.data[i].salesOrdNo+'"><i class="material-icons">mode_edit</i></a></td>'
+                    +'<td style="text-align:center;"><a href="../enquiry/updateInstallationAddressInDetails.do?orderNo='+result.data[i].salesOrdNo+'"><i class="material-icons">mode_edit</i></a></td>'
                     + '</tr>';
                 }
             }
@@ -73,53 +73,143 @@
             method: "POST"
         }).submit();
     }
+    (function ($) {
+        $.fn.countTo = function (options) {
+            options = options || {};
 
+            return $(this).each(function () {
+                // set options for current element
+                var settings = $.extend({}, $.fn.countTo.defaults, {
+                    from:            $(this).data('from'),
+                    to:              $(this).data('to'),
+                    speed:           $(this).data('speed'),
+                    refreshInterval: $(this).data('refresh-interval'),
+                    decimals:        $(this).data('decimals')
+                }, options);
+
+                // how many times to update the value, and how much to increment the value on each update
+                var loops = Math.ceil(settings.speed / settings.refreshInterval),
+                    increment = (settings.to - settings.from) / loops;
+
+                // references & variables that will change with each update
+                var self = this,
+                    $self = $(this),
+                    loopCount = 0,
+                    value = settings.from,
+                    data = $self.data('countTo') || {};
+
+                $self.data('countTo', data);
+
+                // if an existing interval can be found, clear it first
+                if (data.interval) {
+                    clearInterval(data.interval);
+                }
+                data.interval = setInterval(updateTimer, settings.refreshInterval);
+
+                // initialize the element with the starting value
+                render(value);
+
+                function updateTimer() {
+                    value += increment;
+                    loopCount++;
+
+                    render(value);
+
+                    if (typeof(settings.onUpdate) == 'function') {
+                        settings.onUpdate.call(self, value);
+                    }
+
+                    if (loopCount >= loops) {
+                        // remove the interval
+                        $self.removeData('countTo');
+                        clearInterval(data.interval);
+                        value = settings.to;
+
+                        if (typeof(settings.onComplete) == 'function') {
+                            settings.onComplete.call(self, value);
+                        }
+                    }
+                }
+
+                function render(value) {
+                    var formattedValue = settings.formatter.call(self, value, settings);
+                    $self.html(formattedValue);
+                }
+            });
+        };
+
+        $.fn.countTo.defaults = {
+            from: 0,               // the number the element should start at
+            to: 0,                 // the number the element should end at
+            speed: 1000,           // how long it should take to count between the target numbers
+            refreshInterval: 100,  // how often the element should be updated
+            decimals: 0,           // the number of decimal places to show
+            formatter: formatter,  // handler for formatting the value before rendering
+            onUpdate: null,        // callback method for every time the element is updated
+            onComplete: null       // callback method for when the element finishes updating
+        };
+
+        function formatter(value, settings) {
+            return value.toFixed(settings.decimals);
+        }
+    }(jQuery));
+
+    jQuery(function ($) {
+      // custom formatting example
+      $('.count-number').data('countToOptions', {
+        formatter: function (value, options) {
+          return value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
+        }
+      });
+
+      // start all the timers
+      $('.timer').each(count);
+
+      function count(options) {
+        var $this = $(this);
+        options = $.extend({}, options || {}, $this.data('countToOptions') || {});
+        $this.countTo(options);
+      }
+    });
 </script>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#"><span><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway" /></span></a>
 
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav" class="text-white">
-        <li><a class="text-white">Home</a></li>
-        <li><a class="text-white">Customer Info</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-           <li><a class="text-white">Welcome , ${SESSION_INFO.custName}</a></li>
-           <li><a href="${pageContext.request.contextPath}/enquiry/updateInstallationAddress.do" class="text-white">Log Out</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<%@ include file="/WEB-INF/jsp/enquiry/navigation.jsp" %>
 
-<div id="mainPage">
-<div class="jumbotron" style="width:100%">
-  <div class="container text-center">
-    <h3>Product in  Total:</h3>
-    <h1 id="totalCnt"></h1>
-  </div>
+<div class="text-center">
+            <div class="counter">
+      <i class="fa fa-lightbulb-o fa-2x"></i>
+      <h2 class="timer count-title count-number" id="totalCnt" data-speed="1000"></h2>
+       <p class="count-text ">Total In Product</p>
 </div>
 
-  <table id="example" class="table table-striped table-bordered" style="width:100%">
-        <thead>
-            <tr>
-                <th style="width:15%; vertical-align: middle; text-align:center;">Order No</th>
-                <th style="width:25%; vertical-align: middle; text-align:center;">Products</th>
-                <th style="width:40%; vertical-align: middle; text-align:center;">Current Installation Address</th>
-                <th style="width:15%; vertical-align: middle; text-align:center;">Action</th>
-            </tr>
-        </thead>
-        <tbody id ="details">
-        </tbody>
-  </table>
-
-
-
-</div>
+<section class="intro" style="font-size:30px!important">
+  <div class="bg-image h-100 pt-3" style="background-image: url(../resources/images/common/customerinfo2.jpg);">
+    <div class="mask d-flex align-items-center h-100">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12">
+            <div class="card mask-custom">
+              <div class="card-body" id="getHeight">
+                <div class="table-responsive">
+						<table id="example" class="table table-striped table-bordered" style="width:100%;">
+						        <thead>
+						            <tr>
+						                <th style="width:15%; vertical-align: middle; text-align:center;">Order No</th>
+						                <th style="width:25%; vertical-align: middle; text-align:center;">Products</th>
+						                <th style="width:40%; vertical-align: middle; text-align:center;">Current Installation Address</th>
+						                <th style="width:15%; vertical-align: middle; text-align:center;">Action</th>
+						            </tr>
+						        </thead>
+						        <tbody id ="details">
+						        </tbody>
+						  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div id="setHeight"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

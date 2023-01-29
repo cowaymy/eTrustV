@@ -10,7 +10,7 @@
 <script type="text/javaScript">
    function resize(){
 	   document.getElementById("customerLogin").style.minHeight = screen.height  + 50 + "px";
-       document.getElementById("customerLogin").style.minWeight = screen.weight +100 + "px";
+       document.getElementById("customerLogin").style.minWeight = screen.weight + 50 + "px";
    }
 
     window.addEventListener('resize', function(event){
@@ -108,11 +108,9 @@
 
             <div class="col-sm-6">
                     <div style="height:180px"></div>
-                    <div class="row">
-			              <div class="col-sm-12">
-			                  <div class="logo">
+                    <div class="row" style="margin-left:0 !important">
+			              <div class="col-sm-12 logo">
 			                      Coway Change <br>Your Life
-			                  </div>
 			              </div>
                     </div>
 
@@ -139,10 +137,12 @@
         </div>
     </div>
 </div>
+
+
 <input type="button" id="successModalClick" data-toggle="modal" data-target="#myModalSuccess" hidden/>
-<div class="modal" id="myModalSuccess" style="height:500px">
+<div class="modal" id="myModalSuccess">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="height:200px">
             <div class="modal-header">
                 <h4 class="modal-title">System Information</h4>
             </div>
@@ -160,6 +160,8 @@
         </div>
     </div>
 </div>
+
+
 <input type="button" id="alertModalClick" data-toggle="modal" data-target="#myModalAlert" hidden />
 <div class="modal" id="myModalAlert" >
     <div class="modal-dialog">
