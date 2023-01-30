@@ -2777,7 +2777,7 @@ public void adRcmDailyHc2020t2023() {
 
 
 @RequestMapping(value = "/etrSummaryList.do")
-//@Scheduled(cron = " 0 0 6 * * FRI") //Every Friday Morning 6:00 AM
+//@Scheduled(cron = " 0 0 6 1 * FRI") //Every Friday Morning 6:00 AM
 public void etrSummaryList() {
 LOGGER.info("[START] etrSummaryList...");
 Map<String, Object> params = new HashMap<>();
