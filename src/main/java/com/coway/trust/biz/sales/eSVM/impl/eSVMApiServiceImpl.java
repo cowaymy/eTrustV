@@ -488,10 +488,10 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         Map<String, Object> preInsMap = new HashMap<String, Object>();
 
         // Membership checking for Package ID = 9 when itemSrvMemExprDt = null
-        if(param.getSvmAllowFlg() == false && param.getSrvMemPacId().equals("9"))
+        /*if(param.getSvmAllowFlg() == false && param.getSrvMemPacId().equals("9"))
         {
         	throw new ApplicationException(AppConstants.FAIL, "The order is too early to subscribe for SVM.");
-        }
+        }*/
 
         // MembershipQuotationServiceImpl.insertQuotationInfo
         boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
