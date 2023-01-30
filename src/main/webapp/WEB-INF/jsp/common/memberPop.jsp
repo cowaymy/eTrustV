@@ -92,11 +92,12 @@
 
   // 리스트 조회.
   function fn_selectMemberList() {
-    if (callPrgm == "MEM_NO_STAT") {
-      $("#status").val("");
-    } else {
-      $("#status").val("1")
-    }
+	  $("#GOC").val();
+		    if (callPrgm == "MEM_NO_STAT") {
+		      $("#status").val("");
+		    } else {
+		      $("#status").val("1")
+		    }
 
     Common.ajax("GET", "/sales/order/selectMemberList.do", $("#searchMemberFormPop").serialize(), function(result) {
       AUIGrid.setGridData(myGridID, result);
@@ -143,6 +144,7 @@
         <!-- search_table start -->
         <form id="searchMemberFormPop" name="searchMemberFormPop" action="#" method="post">
          <input type="hidden" id="status" name="status" />
+         <input type="hidden" id="GOC" name="GOC" value = "2" />
           <table class="type1">
             <!-- table start -->
             <caption>table</caption>

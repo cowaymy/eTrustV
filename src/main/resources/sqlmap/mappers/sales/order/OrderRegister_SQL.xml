@@ -1063,7 +1063,14 @@
 		                     , T1.MEM_TYPE
 		                     , T3.CODE_NAME AS MEM_TYPE_NAME
 		                     , T1.NAME
+		                       <choose>
+                                    <when test=" GOC == 2">
+                               ,REGEXP_REPLACE(T1.NRIC, '\d{8}(\d{4})', 'XXXXXXXX\1') NRIC
+                                    </when>
+                                    <otherwise>
 		                     , T1.NRIC
+		                            </otherwise>
+                               </choose>
 		                     , T1.RANK
 		                     , T1.UPD_DT
 		                     , NVL(T1.BRNCH, 0) BRNCH
