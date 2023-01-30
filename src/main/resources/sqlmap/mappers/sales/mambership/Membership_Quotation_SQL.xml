@@ -803,7 +803,8 @@
        <select id="mSubscriptionEligbility" parameterType="Map" resultType="egovMap">
            SELECT
               C.STUS_CODE_ID STATUS,
-              TO_CHAR(C.EOM_DATE,'YYYY-MM-DD') EOM
+              TO_CHAR(C.EOM_DATE,'YYYY-MM-DD') EOM,
+              A.APP_TYPE_ID APP_TYPE
            FROM SAL0001D A
            JOIN SAL0002D B  ON B.SALES_ORD_ID = A.SALES_ORD_ID
            JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
@@ -821,9 +822,23 @@
 
        <select id="getSalesOrderLastExpiredDate" parameterType="Map" resultType="egovMap">
             SELECT
-                TO_CHAR(LAST_SRV_MEM_EXPR_DATE,'YYYY-MM-DD') AS LAST_SRV_MEM_EXPR_DATE
+                MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE,'YYYY-MM-DD')) AS LAST_SRV_MEM_EXPR_DATE
 			FROM SAL1014V
 			WHERE ORD_ID = #{ORD_ID}
+			GROUP BY ORD_ID
+       </select>
+
+       <select id="getServicePacIdExist" parameterType="Map" resultType="egovMap">
+           SELECT CASE
+			            WHEN EXISTS (SELECT 1
+			                         FROM SAL0095D
+			                         WHERE SRV_MEM_PAC_ID = '9'
+			                         AND SRV_STUS_CODE_ID    <![CDATA[ <> ]]>  '8'
+			                         AND SRV_SALES_ORD_ID = #{ORD_ID})
+			            THEN 'Y'
+			            ELSE 'N'
+			        END AS PAC_EXIST
+			FROM DUAL
        </select>
 
        <select id="mActiveQuoOrder" parameterType="Map" resultType="egovMap">

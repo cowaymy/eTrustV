@@ -22,7 +22,6 @@ var resultBasicObject;
 var resultSrvconfigObject;
 var resultInstallationObject;
 var defaultcTPackage = "9";
-var validSave; // Checking for SVM subscription eligibility Pac ID = 9
 
 
 $(document).ready(function(){
@@ -143,10 +142,6 @@ $(document).ready(function(){
 
 	                    Common.alertBase(option);
 	                }
-
-	            	if(data.validSave == false){
-	            		validSave = data.validSave;
-                    }
 	            }
 	        });
 
@@ -1119,17 +1114,7 @@ $(document).ready(function(){
 	}
 
 	function fn_save() {
-	    if(validSave == false && $("#srvMemPacId").val() == 9){
-	    	var option = {
-                    title : "Warning",
-                    content : "The order is <strong>too early to subscribe for SVM</strong>.",
-                    isBig : false
-                  };
-
-            Common.alertBase(option);
-        }else{
-
-	         var billMonth = getOrderCurrentBillMonth();
+            var billMonth = getOrderCurrentBillMonth();
 
 	         if (fn_validRequiredField_Save() == false)
 	             return;
@@ -1138,7 +1123,6 @@ $(document).ready(function(){
 	                 fn_unconfirmSalesPerson();
 	             }
 	         }
-        }
 	}
 
 	function fn_validRequiredField_Save() {

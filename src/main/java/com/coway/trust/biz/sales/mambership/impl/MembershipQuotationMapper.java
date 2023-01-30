@@ -85,6 +85,8 @@ public interface MembershipQuotationMapper {
 
   EgovMap getSalesOrderLastExpiredDate(Map<String, Object> params);
 
+  EgovMap getServicePacIdExist(Map<String, Object> params);
+
   List<EgovMap> mActiveQuoOrder(Map<String, Object> params);
 
   List<EgovMap> selectSrchMembershipQuotationPop(Map<String, Object> params);
