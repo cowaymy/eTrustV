@@ -755,7 +755,7 @@
       </foreach>
     </if>
 
-        ORDER BY 1 DESC
+        ORDER BY A.CRT_DT DESC
   </select>
 
   <insert id="insertInstallAddress" parameterType="Map" >

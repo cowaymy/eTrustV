@@ -44,7 +44,7 @@
         dataField : "salesOrdId",
         headerText : "Sales Order ID",
         width : "10%",
-        visible: true
+        visible: false
     }, {
         dataField : "requestId",
         headerText : "Request ID",
@@ -112,16 +112,16 @@
 
   function confirmApproval(param){
 	  console.log(param);
-// 	    Common.ajax("POST", "/services/tagMgmt/approveInstallationAddressRequest.do", param, function(result) {
-// 	        Common.alert(result.message, fn_search);
-// 	    }, function(jqXHR, textStatus, errorThrown) {
-// 	        try {
-// 	            Common.alert("Fail : Unable to approve");
-// 	        }
-// 	        catch (e) {
-// 	            console.log(e);
-// 	            Common.alert("Fail : " + e);
-// 	        }
+	    Common.ajax("POST", "/services/tagMgmt/approveInstallationAddressRequest.do", param, function(result) {
+	        Common.alert(result.message, fn_search);
+	    }, function(jqXHR, textStatus, errorThrown) {
+	        try {
+	            Common.alert("Fail : Unable to approve");
+	        }
+	        catch (e) {
+	            console.log(e);
+	            Common.alert("Fail : " + e);
+	        }
 	    });
 	}
 
