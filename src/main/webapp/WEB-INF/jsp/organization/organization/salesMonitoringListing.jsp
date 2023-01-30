@@ -7,9 +7,16 @@
     var year =  new Date().getFullYear();
 
     function getMonthName(monthNumber) {
-          const date = new Date();
-          date.setMonth(monthNumber - 1);
-          return date.toLocaleString('en-US', { month: 'long' });
+    	if(monthNumber >0){
+            var oneDate = moment('01-'+monthNumber +'-2023', 'DD-MM-YYYY');
+            var monthName = oneDate.format('MMMM');
+            return monthName;
+    	}
+    	else{
+	        const date = new Date();
+	        date.setMonth(monthNumber - 1);
+	        return date.toLocaleString('en-US', { month: 'long' });
+    	}
     }
 
 	var salesSummaryDashboard = [{
