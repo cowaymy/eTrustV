@@ -471,7 +471,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	    				int lastService_MonthsBetween = Months.monthsBetween(now, lastServiceDt).getMonths();
 
 	    				if(lastService_MonthsBetween > svmDateRange_SOLED){
-	    					if(servicePacIdExist == "Y"){
+	    					if(servicePacIdExist.equals("Y")){
 		    					data.put("result", false);
 		    					data.put("title", "Warning");
 		    					data.put("message", "The order is <strong>too early to subscribe for SVM</strong>.");
@@ -480,7 +480,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 
 					}else{
 
-						if(servicePacIdExist == "Y"){
+						if(servicePacIdExist.equals("Y")){
 	    					data.put("result", false);
 	    					data.put("title", "Warning");
 	    					data.put("message", "The order is <strong>too early to subscribe for SVM</strong>.");
