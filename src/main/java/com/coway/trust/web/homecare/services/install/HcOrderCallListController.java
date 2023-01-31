@@ -219,6 +219,7 @@ public class HcOrderCallListController {
 		model.addAttribute("S_DATE", CommonUtils.nvl(params.get("S_DATE")));
 		model.addAttribute("TYPE", CommonUtils.nvl(params.get("TYPE")));
 		model.addAttribute("ANO_ORD_NO", CommonUtils.nvl(params.get("ANO_ORD_NO")));
+		model.addAttribute("PROD_CAT", CommonUtils.nvl(params.get("PROD_CAT")));
 
 		// 호출될 화면
 		return "homecare/services/install/hcAllocationListPop";

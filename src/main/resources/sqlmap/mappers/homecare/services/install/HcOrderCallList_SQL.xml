@@ -174,12 +174,14 @@
 
 
 	<select id="selectBaseList" parameterType="Map" resultType="egovMap">
-        <![CDATA[
+
 		SELECT MEM_ID CT
 		         , INS_DATE C_DATE
 		         , CT_SUB_GRP
 		         , BRNCH_ID
-		 FROM (SELECT DISTINCT T.MEM_ID, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+		 FROM (
+		          <if test="prodCat == null or prodCat == '' ">
+		            SELECT DISTINCT T.MEM_ID, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
 		            FROM SVC0054M T, ORG0001D TT
 		           WHERE T.MEM_ID = TT.MEM_ID
 	                   AND TT.STUS = 1
@@ -216,11 +218,12 @@
 		                                              , SYS0064M F
 		                                     WHERE A.SALES_ORD_ID = #{ORD_ID}
                                                 AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
-
-                    -- Added for Air Conditioner project - Display ACT (A.K.A CT) in allocation list -- Hui Ding -->
-                    UNION
-
-                    SELECT M.MEM_ID, M1.CT_SUB_GRP, M.BRNCH FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME JOIN SYS0045M R ON U.USER_ID = R.USER_ID
+                   </if>
+                    <if test="prodCat != null and (prodCat == 'ACO' or prodCat == 'ACI')">
+                    -- Added for Air Conditioner project - Display ACT (A.K.A CT) in allocation list -- Hui Ding
+                    SELECT M.MEM_ID, M1.CT_SUB_GRP, M.BRNCH AS BRNCH_ID
+                        FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME
+                        JOIN SYS0045M R ON U.USER_ID = R.USER_ID
                         JOIN SYS0005M B ON B.BRNCH_ID = M.BRNCH
                         LEFT JOIN ORG0005D M1 ON M1.MEM_ID = M.MEM_ID
                         WHERE R.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
@@ -233,11 +236,12 @@
                                                       , SYS0064M F
                                              WHERE A.SALES_ORD_ID =#{ORD_ID}
                                                 AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+                    </if>
                 ) C,
                 (SELECT TO_CHAR ( (TO_DATE(#{S_DATE}, 'DD/MM/YYYY') - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM DUAL
-				CONNECT BY LEVEL <= (SELECT CODE FROM SYS0013M WHERE CODE_ID = #{termDtCd})) TB
+				CONNECT BY LEVEL <![CDATA[<=]]> (SELECT CODE FROM SYS0013M WHERE CODE_ID = #{termDtCd})) TB
 		ORDER BY   MEM_ID, INS_DATE ASC
-		]]>
+
 	</select>
 
 	<!-- Search Order Call List -->

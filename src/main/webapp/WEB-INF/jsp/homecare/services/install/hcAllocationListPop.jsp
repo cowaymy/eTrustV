@@ -168,8 +168,9 @@
 		    Common.alert("There Are No selected ORDER.");
 		    return ;
 		}
+		alert('${PROD_CAT}');
 
-	    Common.ajax("GET", "/homecare/services/install/selectHcAllocation.do",{ORD_ID : '${ORD_ID}' , S_DATE: '${S_DATE}'}, function(result) {
+	    Common.ajax("GET", "/homecare/services/install/selectHcAllocation.do",{ORD_ID : '${ORD_ID}' , S_DATE: '${S_DATE}', prodCat : '${PROD_CAT}'}, function(result) {
 	        AUIGrid.setGridData(mAgrid, result);
 	    	changeRowStyleFunction();
 
@@ -535,7 +536,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 	<!-- pop_header start -->
 	<header class="pop_header">
-	<h1>DT Allocation Matrix </h1>
+	<h1>Installer Allocation Matrix </h1>
 	<ul class="right_opt">
 	    <li><p class="btn_blue2"><a href="#none"   >CLOSE</a></p></li>
 	</ul>

@@ -297,8 +297,9 @@
         var vdte = $("#requestDate").val();
         var rdcStock = $("#rdcStock").text();
 
+
         if (rdcStock != '0') {
-            Common.popupDiv("/homecare/services/install/hcAllocation.do", {ORD_ID : ord_id, S_DATE : vdte, TYPE : 'INS', ANO_ORD_NO : anoOrdNo}, null, true, '_doAllactionDiv');
+            Common.popupDiv("/homecare/services/install/hcAllocation.do", {ORD_ID : ord_id, S_DATE : vdte, TYPE : 'INS', ANO_ORD_NO : anoOrdNo, PROD_CAT : '${hcOrder.anoOrdCtgryCd}'}, null, true, '_doAllactionDiv');
         } else {
         	Common.alert("<spring:message code='service.msg.stock'/> ");
         }
