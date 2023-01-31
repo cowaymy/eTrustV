@@ -131,12 +131,20 @@ public class PreASManagementListController {
 	public String updPreASOrder(@RequestParam Map<String, Object> params, ModelMap model) {
 
 	    List<EgovMap> preasStat = PreASManagementListService.selectPreAsUpd();
+	    List<EgovMap> preAsList = PreASManagementListService.selectPreASManagementList(params);
+	    params.put("prodCat", preAsList.get(0).get("prodCat").toString());
+	 	List<EgovMap> errorCodeList = PreASManagementListService.getErrorCodeList(params);
 
 	    model.put("preasStat", preasStat);
-	  	model.put("salesOrdNo", params.get("preAsSalesOrderNo").toString());
-	  	model.put("branchCode",  params.get("preAsBranch").toString());
-	  	model.put("creator",  params.get("preAsCreator").toString());
-	  	model.put("recallDt",  params.get("preAsRecallDt").toString());
+	    model.put("errorCodeList", errorCodeList);
+	  	model.put("salesOrdNo", preAsList.get(0).get("salesOrderNo").toString());
+	  	model.put("branchCode",  preAsList.get(0).get("insBrnchCode").toString());
+	  	model.put("creator",   preAsList.get(0).get("creator").toString());
+	  	model.put("recallDt",   preAsList.get(0).get("recallDt").toString() == "-" ? null :preAsList.get(0).get("recallDt").toString());
+	  	model.put("creator",   preAsList.get(0).get("creator").toString());
+	  	model.put("defectCode",   preAsList.get(0).get("defectCode").toString());
+	  	model.put("defectDesc",   preAsList.get(0).get("defectDesc").toString());
+
 		return "services/as/updPreASOrderPop";
 	}
 

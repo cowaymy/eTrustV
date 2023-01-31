@@ -163,6 +163,12 @@
           width : 150
         },
         {
+            dataField : "amendedDesc",
+            headerText : "Amended Error Code",
+            editable : false,
+            width : 150
+          },
+        {
           dataField : "stus",
           headerText : "Status",
           editable : false,
@@ -243,7 +249,14 @@
             editable : false,
             width : 150,
             visible:false
-      }
+      },
+      {
+          dataField : "asCdSeq",
+          headerText : "Sequence",
+          editable : false,
+          width : 150,
+          visible:false
+    }
     ];
 
     myGridID = AUIGrid.create("#grid_wrap_asList", columnLayout, gridPros);
@@ -412,10 +425,7 @@
 
            if( stus == "Active" || stus == "Pending" ){
                param = {
-                       preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
-                       preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
-                       preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator"),
-                       preAsRecallDt : AUIGrid.getCellValue(myGridID, selIdx, "recallDt") == "-" ? null :  AUIGrid.getCellValue(myGridID, selIdx, "recallDt")
+            		   preAsSeq : AUIGrid.getCellValue(myGridID, selIdx, "asCdSeq")
                 }
 
                Common.popupDiv("/services/as/updPreASOrder.do", param, null  , true, '');

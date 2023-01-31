@@ -31,6 +31,9 @@
                     , Extent1.REG_ID AS REQUESTOR
                     , NVL(TO_CHAR(Extent1.RECALL_DT,'DD/MM/YYYY'),'-') RECALL_DT
                     , Extent3.CODE AS CDB_BRNCH_CODE
+                    , Extent1.AS_CD_SEQ
+                    , Extent22.CODE PROD_CAT
+                    , Extent23.DEFECT_TYPE_CODE_DESC AS AMENDED_DESC
             FROM SVC0130D Extent1
             JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
             LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
@@ -49,6 +52,8 @@
             LEFT JOIN SAL0027D Extent18 ON Extent18.CUST_CNTC_ID = Extent12.CNT_ID
             LEFT JOIN SAL0002D Extent20 ON Extent20.SALES_ORD_ID = Extent2.SALES_ORD_ID
             JOIN SYS0026M Extent21 ON Extent21.STK_ID = Extent20.ITM_STK_ID
+            JOIN SYS0013M Extent22 ON Extent21.STK_CTGRY_ID = Extent22.CODE_ID
+            LEFT JOIN SVC0056M Extent23 ON Extent23.DEFECT_TYPE_CODE = Extent1.AMENDED_DEFECT_CODE
 
             WHERE 1=1
         ]]>
@@ -132,6 +137,10 @@
               AND ( Extent3.BRNCH_ID = #{cmdBranchCode})
         </if>
 
+        <if test="preAsSeq != null and preAsSeq != ''">
+              AND  Extent1.AS_CD_SEQ = #{preAsSeq}
+        </if>
+
     </select>
 
      <select id="selectPreAsStat"  parameterType="Map" resultType="egovMap">
@@ -161,6 +170,9 @@
                       , FAIL_REASON = #{reason}
                       <if test="recallDt != null and recallDt != '' ">
                       , RECALL_DT  = TO_DATE(#{recallDt},'DD/MM/RRRR')
+                      </if>
+                      <if test="amendedErrorCode != null and amendedErrorCode != '' ">
+                      , AMENDED_DEFECT_CODE  = #{amendedErrorCode}
                       </if>
     WHERE SALES_ORDER_NO = #{orderNo} AND STUS in (1,44)
   </update>

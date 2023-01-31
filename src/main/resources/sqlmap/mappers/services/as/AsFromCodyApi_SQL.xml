@@ -58,14 +58,26 @@
 
   <select id="selectSubmissionRecords" parameterType="Map" resultType="egovMap">
 	<![CDATA[
+		 WITH TBL_SAL09 AS (
+	             SELECT * FROM (
+	                SELECT A.SALES_ORD_NO,
+	                       B.PRGRS_ID,
+	                       ROW_NUMBER() OVER(PARTITION BY A.SALES_ORD_ID ORDER BY B.LOG_ID DESC) row_num
+	                FROM SAL0001D A
+	                JOIN SAL0009D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+	                WHERE A.SALES_ORD_NO = #{salesOrderNo}
+	              ) WHERE ROW_NUM = 1
+	     )
 	     SELECT DISTINCT
-             CASE WHEN A.STUS_CODE_ID <> 4     THEN  A.SALES_ORD_NO
-                     WHEN B.STUS IN ( '1','44' )         THEN B.SALES_ORDER_NO
-                     WHEN C.AS_STUS_ID IN ( '1','19' )          THEN A.SALES_ORD_NO
+             CASE WHEN A.STUS_CODE_ID <> 4 THEN  A.SALES_ORD_NO
+                     WHEN B.STUS IN ( '1','44' ) THEN B.SALES_ORDER_NO
+                     WHEN C.AS_STUS_ID IN ( '1','19' ) THEN A.SALES_ORD_NO
+                     WHEN D.PRGRS_ID <> 5 THEN  D.SALES_ORD_NO
              END SALES_ORDER_NO
         FROM SAL0001D A
         LEFT JOIN SVC0130D B ON A.SALES_ORD_NO = B.SALES_ORDER_NO AND B.STUS IN ( '1','44' )
         LEFT JOIN SVC0001D C ON A.SALES_ORD_ID = C.AS_SO_ID AND C.AS_STUS_ID IN ( '1','19' )
+        LEFT JOIN TBL_SAL09 D ON A.SALES_ORD_NO = D.SALES_ORD_NO
         WHERE A.SALES_ORD_NO = #{salesOrderNo} AND ROWNUM =1
 	]]>
 </select>

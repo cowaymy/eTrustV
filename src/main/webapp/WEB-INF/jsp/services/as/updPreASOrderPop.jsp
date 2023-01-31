@@ -7,9 +7,28 @@
         $("#branchCode").val('${branchCode}');
         $("#creator").val('${SESSION_INFO.userMemCode}');
         $("#recallDt").val('${recallDt}');
+        $("#defectCode").val('${defectCode}' + '_'+'${defectDesc}');
 
         getReasonList();
+        checkAmendedErrorCode();
     });
+
+    function checkAmendedErrorCode(){
+
+    	 $("#amendedAsErrorCode").attr("class", "w100p readonly");
+         $("#amendedAsErrorCode").attr("disabled", "disabled");
+
+        $("#checkAmendedErrorCode").change(function() {
+            if ($(this).is(':checked') && $("#updPreAsStatus").val() == 6) {
+            	$("#amendedAsErrorCode").attr("class", "w100p");
+            	$("#amendedAsErrorCode").attr("disabled", false);
+            }
+            else{
+            	 $("#amendedAsErrorCode").attr("class", "w100p readonly");
+                 $("#amendedAsErrorCode").attr("disabled", "disabled");
+            }
+        });
+    }
 
     function getReasonList(){
         if ($("#updPreAsStatus").val() == 44) {
@@ -25,6 +44,7 @@
         	doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '','', 'ddlReason', 'S', '');
         	$("#remarkRow").hide();
         	$("#recallDtRow").hide();
+        	 $(".errorCode").hide();
         }
 
     }
@@ -32,6 +52,7 @@
     function pendingDisplay(){
         $("#remarkRow").show();
         $("#recallDtRow").show();
+        $(".errorCode").hide();
         document.getElementById('recallDt').disabled = false;
         $("#recallDt").attr("class", "w100p j_date");
     }
@@ -43,6 +64,8 @@
     	 element.classList.remove("j_date");
     	 $("#recallDt").attr("class", "readonly");
          $("#recallDt").attr("disabled", "disabled");
+
+         $(".errorCode").show();
     }
 
     $(function() {
@@ -53,6 +76,7 @@
 
 
     function validateUpdForm() {
+
         if (FormUtil.isEmpty($("#updPreAsStatus").val())) {
             Common.alert("Please choose Status.");
             return false;
@@ -63,16 +87,24 @@
             return false;
         }
 
+        if(document.getElementById("checkAmendedErrorCode").checked == true && FormUtil.isEmpty($("#amendedAsErrorCode").val())){
+            Common.alert("Please choose Amended AS Error Code");
+            return false;
+        }
+
         if (($("#updPreAsStatus").val() ==44 || $("#updPreAsStatus").val()  == 6 ) && FormUtil.isEmpty($("#updPreAsRemark").val())) {
             Common.alert("Please fill in Remark.");
             return false;
         }
+
+
 
         return true;
     }
 
     function fn_save() {
         var param;
+        var recallDt = $("#recallDt").val() == '-' ? null : $("#recallDt").val();
         if (validateUpdForm()) {
 
         	if($("#updPreAsStatus").val() ==5){
@@ -84,7 +116,8 @@
                        stus :  $("#updPreAsStatus").val(),
                        reason : $("#ddlReason").val(),
                        remark :  $("#updPreAsRemark").val(),
-                       recallDt :  $("#recallDt").val() == null ? null : $("#recallDt").val(),
+                       recallDt :  recallDt == null ? null : $("#recallDt").val(),
+                       amendedErrorCode : $("#amendedAsErrorCode").val()
              }
 
                Common.ajax("POST", "/services/as/updatePreAsStatus.do", param, function(result) {
@@ -138,7 +171,7 @@
             <td>
             <select class=" w100p"  id="updPreAsStatus" name="updPreAsStatus">
 	            <c:forEach var="list" items="${preasStat}" varStatus="status">
-	             <option value="${list.codeId}" selected>${list.codeName}</option>
+	             <option value="${list.codeId}">${list.codeName}</option>
 	             </c:forEach>
             </select>
             </td>
@@ -149,6 +182,26 @@
                 <select id='ddlReason' name='ddlReason' >
                  <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
                 </select>
+            </td>
+          </tr>
+
+          <tr class="errorCode">
+           <th scope="row">Error Code</th>
+           <td>
+                <input type="text" class="readonly" name="defectCode" id="defectCode"  readonly=readonly />
+                <input type="checkbox" id="checkAmendedErrorCode" name="checkAmendedErrorCode">
+            </td>
+          </tr>
+
+          <tr  class="errorCode">
+            <th scope="row">Amended AS Error Code</th>
+            <td>
+            <select class=" w100p"  id="amendedAsErrorCode" name="amendedAsErrorCode">
+                <option value="" selected>Please Choose One </option>
+                <c:forEach var="list" items="${errorCodeList}" varStatus="status">
+                 <option value="${list.codeId}">${list.codeName}</option>
+                 </c:forEach>
+            </select>
             </td>
           </tr>
 
