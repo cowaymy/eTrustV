@@ -340,7 +340,7 @@
         ,(
             select count(1)
             from LOG0082M
-            WHERE MEM_ID = '99032' AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            WHERE MEM_ID = #{codyMem} AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
             and scan_no = #{scanNo}
             and STK_ID = A.STK_ID
             ) SCAN_QTY
@@ -352,8 +352,11 @@
                 ,COUNT(1) RETURN_QTY
             FROM LOG0082M L82
             JOIN SYS0026M S26 ON L82.STK_ID=S26.STK_ID
+            JOIN SVC0006D S06 ON S06.RESULT_ID=L82.RESULT_ID
+            JOIN SVC0007D S07 ON S07.BS_RESULT_ID = S06.RESULT_ID AND S07.BS_RESULT_PART_ID = L82.STK_ID
             WHERE MEM_ID = #{codyMem}
             AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            AND NVL(S07.FILTER_SRL_UNMATCH_RSN,0) = 0
             GROUP BY S26.STK_ID,S26.STK_CODE,S26.STK_DESC
         )a
   </select>
@@ -366,10 +369,19 @@
            ,B.STK_DESC
         FROM LOG0082M A
         LEFT JOIN SYS0026M B ON B.STK_ID = A.STK_ID
+        JOIN SVC0006D S06 ON S06.RESULT_ID=A.RESULT_ID
+        JOIN SVC0007D S07 ON S07.BS_RESULT_ID = S06.RESULT_ID AND S07.BS_RESULT_PART_ID = A.STK_ID
         WHERE
         A.PEND_SCAN = '44'
+        AND NVL(S07.FILTER_SRL_UNMATCH_RSN,0) = 0
         AND A.OLD_SERIAL = #{barcode}
         and MEM_ID = #{codyId}
+        <if test="servicesdt !=null and servicesdt !=''">
+            AND A.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+       <if test="serviceedt !=null and serviceedt !=''">
+            AND A.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
   </select>
 
     <select id="getScanNoSequence" parameterType="Map" resultType="String">
@@ -382,9 +394,8 @@
             scan_no = #{scanNo},
             UPD_DT = SYSDATE,
             UPD_USER_ID=#{updUserId}
-        WHERE SEQ in (SELECT seq FROM LOG0082M
-        WHERE OLD_SERIAL = #{boxno}
-        )
+        WHERE SEQ = #{seq}
+
     </update>
 
     <update id="deleteTempScanSerial" parameterType="Map">

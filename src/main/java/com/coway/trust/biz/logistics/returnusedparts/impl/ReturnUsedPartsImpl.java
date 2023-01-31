@@ -155,10 +155,11 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 				for (int i = 0; i < checkList.size(); i++) {
 					insMap = (Map<String, Object>) checkList.get(i);
 					dupCnt = returnUsedPartsMapper.returnPartsdupchek(insMap);
+					String serialChk = insMap.get("serialChk") == null ? "" : insMap.get("serialChk").toString();
 
 					insMap.put("userId", loginId);
 					if(dupCnt == 0){
-						if(insMap.get("serialChk").toString().equals("Y")){
+						if(serialChk.equals("Y")){
 							insMap.put("pendSts", "44");
 							logger.debug("pendSts");
 							returnUsedPartsMapper.upToPendReturnParts(insMap);
@@ -166,6 +167,7 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 							logger.debug("no serial pendSts");
 							returnUsedPartsMapper.upReturnParts(insMap);
 						}
+						returnMap.put("dupCnt", dupCnt);
 					 }else{
 						 logger.debug("dupCnt %$%$%$%$%$%$ ??????: {}", dupCnt);
 						 returnMap.put("dupCnt", dupCnt);
@@ -237,6 +239,7 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 			if(verifySerial.size() == 1){
 				mainMap.put("stockCode", verifySerial.get(0).get("stkCode"));
 				mainMap.put("stockName", verifySerial.get(0).get("stkDesc"));
+				mainMap.put("seq", verifySerial.get(0).get("seq"));
 
 				scanNo = mainMap.get("scanNo").toString();
 				if(scanNo.isEmpty() || scanNo.equals("")){
@@ -251,6 +254,7 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 
 				mainMap.put("errCode","000");
 			}else{
+				mainMap.put("boxno", mainMap.get("barcode"));
 				mainMap.put("errMsg","Scanned serial not in Pending Scan List.");
 			}
 

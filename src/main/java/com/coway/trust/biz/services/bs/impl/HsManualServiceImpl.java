@@ -2108,6 +2108,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           // String.valueOf(qryBS_Rev.get("resultId")));
         }
         usedFilter_Rev.put("SerialNo", String.valueOf(qryUsedFilter.get(i).get("serialNo")));
+        usedFilter_Rev.put("OldSerialNo", String.valueOf(qryUsedFilter.get(i).get("oldSerialNo")));
         usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
         usedFilter_Rev.put("ResultId", CommonUtils.intNvl(qryUsedFilter.get(i).get("resultId")));
         if (CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) > 0) {

@@ -369,11 +369,11 @@ $(document).ready(function(){
                }else{
             	   if(checkedItems.length > 0){
                        for (var i = 0 ; i < checkedItems.length ; i++){
-                    	   console.log("checkedItems[i].unmatchId" + checkedItems[i].unmatchId);
+                    	   /* console.log("checkedItems[i].unmatchId" + checkedItems[i].unmatchId);
                     	   if(checkedItems[i].unmatchId != undefined){
                                Common.alert('Please uncheck service order which contains unmatch reason.');
                                return false;
-                           }
+                           } */
                     	   if(checkedItems[i].pendScan == "Y"){
                                Common.alert('Please uncheck service order which already Pending Scan.');
                                return false;
@@ -479,6 +479,10 @@ $(document).ready(function(){
                 		Common.alert('Only record(s) with Unmatched Reason able to failed.');
                         return false;
                 	}
+                	if(checkedItems[i].pendScan != "Y"){
+                        Common.alert('Record(s) not in poending scan status.');
+                        return false;
+                    }
                 	if (checkedItems[i].returnComplete =="Y"){
                         Common.alert('Kindly Uncheck items which already processed.');
                         return false;

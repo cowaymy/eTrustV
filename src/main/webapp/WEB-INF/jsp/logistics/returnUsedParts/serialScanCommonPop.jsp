@@ -385,6 +385,8 @@ function fn_splitBarcode(){
                                "barcode":BarCodeArray[i]
                                ,"scanNo":$("#scanNo").val()
                                ,"codyId":$("#pCodyId").val()
+                               ,"servicesdt":$("#servicesdt").val()
+                               ,"serviceedt":$("#serviceedt").val()
                              });
             //}
         }

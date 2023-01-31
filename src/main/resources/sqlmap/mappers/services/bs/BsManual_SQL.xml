@@ -5115,6 +5115,7 @@ SELECT Distinct1.C1 C1  ,
 		,d.CUST_ID
 		,TO_CHAR(b.RESULT_CRT_DT, 'DD/MM/YYYY') RESULT_CRT_DT
 		,a.SERIAL_NO
+		,A.OLD_FILTER_BARCD_SERIAL_NO old_serial_no
 		,c.CODY_ID
 		,b.RESULT_ID
 		from SVC0007D a
@@ -5175,7 +5176,7 @@ SELECT Distinct1.C1 C1  ,
 		,TO_DATE(#{CreatedDt}, 'DD/MM/YYYY')
 		,#{PartId}
 		,#{PartQty}
-		,nvl(#{SerialNo}, '')
+		,nvl(#{OldSerialNo}, '')
 		,#{CodyId}
 		,#{ResultId}
 
