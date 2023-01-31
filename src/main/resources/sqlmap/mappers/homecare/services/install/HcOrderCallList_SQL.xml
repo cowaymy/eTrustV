@@ -224,6 +224,7 @@
                         JOIN SYS0005M B ON B.BRNCH_ID = M.BRNCH
                         LEFT JOIN ORG0005D M1 ON M1.MEM_ID = M.MEM_ID
                         WHERE R.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
+                        AND M1.MEM_LVL = 3 -- Admin only assign to ACM. and ACM will distribute to ACI accordingly.
                         AND
                         B.CODE = (SELECT   /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.CT_BRNCH_CODE
                                               FROM SAL0001D A
