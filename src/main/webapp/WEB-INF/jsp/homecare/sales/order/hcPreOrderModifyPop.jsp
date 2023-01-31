@@ -550,7 +550,7 @@ var userType = '${SESSION_INFO.userTypeId}';
           {
         	var custAddId =	$('#hiddenCustAddId').val()
           	if(result.data == 1){
-                fn_loadInstallAddrForDiffBranch(custAddId,'N');
+                fn_loadInstallAddrForDiffBranch(custAddId,'N','Y');
           	}
           	else{
 				fn_loadInstallAddrForDiffBranch(custAddId,'Y');
@@ -1785,6 +1785,10 @@ var userType = '${SESSION_INFO.userTypeId}';
           // [Installation] : Installation Address SETTING
           //----------------------------------------------------------
           fn_loadInstallAddr('${preOrderInfo.instAddId}');
+
+          var stkId = "${preMatOrderInfo.itmStkId}";
+	      	$('#hiddenCustAddId').val('${preOrderInfo.instAddId}');
+	      	checkIfIsAcInstallationProductCategoryCode(stkId);
         }
 
         if ('${preOrderInfo.custCntcId}' > 0) {
@@ -2020,7 +2024,6 @@ var userType = '${SESSION_INFO.userTypeId}';
         $("#instPostCode").val(custInfo.postcode); //Post Code
         $("#instState").val(custInfo.state); //State
         $("#instCountry").val(custInfo.country); //Country
-
         $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
         if (salesManType == 2)
           $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
@@ -2324,13 +2327,32 @@ var userType = '${SESSION_INFO.userTypeId}';
    }
 
     //Customise Installation DSC/HDC Load for Aircon Checking Usage and not including fn_clearSales for after onchange use
-    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare) {
-    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare}, function(custInfo) {
+    function fn_loadInstallAddrForDiffBranch(custAddId, isHomecare,isAC) {
+    	Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : isHomecare,'isAC' : isAC}, function(custInfo) {
             if(custInfo != null) {
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
             }
         });
     }
+
+    function checkIfIsAcInstallationProductCategoryCode(stockIdVal){
+	  	Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+	        if(result != null)
+	        {
+	        	var custAddId = $('#hiddenCustAddId').val();
+	        	if(result.data == 1){
+	        		//change installation branch to AC //load AC combobox
+	                fn_loadInstallAddrForDiffBranch(custAddId,'N','Y');
+	        	}
+	        	else{
+	        		//change installation branch to HDC //load hdc combobox
+					fn_loadInstallAddrForDiffBranch(custAddId,'Y');
+	        	}
+	        }
+	    },  function(jqXHR, textStatus, errorThrown) {
+	        alert("Fail to check Air Conditioner. Please contact IT");
+	  });
+  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
