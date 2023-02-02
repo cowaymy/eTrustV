@@ -731,7 +731,7 @@ var serialGubun = "1";
      <tr>
       <td colspan="2">
         <label>
-            <input type="checkbox" id="checkSend" name="checkSend" />
+            <input type="checkbox" id="checkSend" name="checkSend" checked/>
             <span><spring:message code='service.title.SendSMSToSalesPerson' /></span>
         </label>
       </td>
