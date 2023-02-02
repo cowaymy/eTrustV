@@ -715,7 +715,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     	// INSERT EDITTED CONTACT INFO FOR APPROVAL
         // CELESTE: Added for edit customer contact on 25/08/2022 [s]
 
-        /*if(params.get("newHandphoneTel") != null || params.get("newHomeTel") != null || params.get("newOfficeTel") != null || params.get("newEmail") != null)
+        if(params.get("newHandphoneTel") != null || params.get("newHomeTel") != null || params.get("newOfficeTel") != null || params.get("newEmail") != null)
         {
       	  logger.debug("==================== editContactInfo [start] ========================");
             logger.debug("params: " + params);
@@ -766,7 +766,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             hsManualMapper.insertSAL0329D(insertHSNewContact);
 
             logger.debug("==================== editContactInfo [end] ========================");
-        }*/
+        }
 
         // CELESTE: Added for edit customer contact on 25/08/2022 [e]
 
