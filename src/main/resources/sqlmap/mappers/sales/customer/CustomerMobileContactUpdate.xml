@@ -93,16 +93,16 @@
              A.OLD_HOME_NO,
              A.OLD_OFFICE_NO,
              A.OLD_EMAIL,
-             CASE WHEN (A.NEW_HP_NO = A.OLD_HP_NO OR A.NEW_HP_NO IS NULL) THEN 'Remain Unchange'
+             CASE WHEN (A.NEW_HP_NO = A.OLD_HP_NO OR A.NEW_HP_NO IS NULL) THEN '-'
                       ELSE A.NEW_HP_NO
              END AS NEW_HP_NO,
-             CASE WHEN (A.NEW_HOME_NO = A.OLD_HOME_NO OR A.NEW_HOME_NO IS NULL) THEN 'Remain Unchange'
+             CASE WHEN (A.NEW_HOME_NO = A.OLD_HOME_NO OR A.NEW_HOME_NO IS NULL) THEN '-'
                       ELSE A.NEW_HOME_NO
              END AS NEW_HOME_NO,
-             CASE WHEN (A.NEW_OFFICE_NO = A.OLD_OFFICE_NO OR A.NEW_OFFICE_NO IS NULL) THEN 'Remain Unchange'
+             CASE WHEN (A.NEW_OFFICE_NO = A.OLD_OFFICE_NO OR A.NEW_OFFICE_NO IS NULL) THEN '-'
                       ELSE A.NEW_OFFICE_NO
              END AS NEW_OFFICE_NO,
-             CASE WHEN (A.NEW_EMAIL = A.OLD_EMAIL OR A.NEW_EMAIL IS NULL) THEN 'Remain Unchange'
+             CASE WHEN (A.NEW_EMAIL = A.OLD_EMAIL OR A.NEW_EMAIL IS NULL) THEN '-'
                       ELSE A.NEW_EMAIL
              END AS NEW_EMAIL,
              A.STATUS STATUS_CODE,

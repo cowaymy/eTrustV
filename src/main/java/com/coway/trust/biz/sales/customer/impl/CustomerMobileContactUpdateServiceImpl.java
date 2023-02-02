@@ -50,22 +50,22 @@ public class CustomerMobileContactUpdateServiceImpl extends EgovAbstractServiceI
 		  EgovMap contactInfo = customerMobileContactUpdateMapper.selectMobileUpdateDetail(params);
 		  contactInfo.put("userId", params.get("userId"));
 
-		  if((contactInfo.get("newHpNo") != null) && contactInfo.get("newHpNo").equals("Remain Unchange"))
+		  if((contactInfo.get("newHpNo") != null) && contactInfo.get("newHpNo").equals("-"))
 		  {
 			  contactInfo.put("newHpNo", "");
 		  }
 
-		  if((contactInfo.get("newHomeNo") != null) && contactInfo.get("newHomeNo").equals("Remain Unchange"))
+		  if((contactInfo.get("newHomeNo") != null) && contactInfo.get("newHomeNo").equals("-"))
 		  {
 			  contactInfo.put("newHomeNo", "");
 		  }
 
-		  if((contactInfo.get("newOfficeNo") != null) && contactInfo.get("newOfficeNo").equals("Remain Unchange"))
+		  if((contactInfo.get("newOfficeNo") != null) && contactInfo.get("newOfficeNo").equals("-"))
 		  {
 			  contactInfo.put("newOfficeNo", "");
 		  }
 
-		  if((contactInfo.get("newEmail") != null) && contactInfo.get("newEmail").equals("Remain Unchange"))
+		  if((contactInfo.get("newEmail") != null) && contactInfo.get("newEmail").equals("-"))
 		  {
 			  contactInfo.put("newEmail", "");
 		  }
