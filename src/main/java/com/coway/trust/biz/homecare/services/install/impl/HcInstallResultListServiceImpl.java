@@ -993,8 +993,8 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    smsList.put("userId", installResult.get("hpMemId"));
 	    smsList.put("smsType", 975);
 	    smsList.put("smsMessage", smsMessage);
-	    //smsList.put("smsMobileNo", installResult.get("hpPhoneNo").toString());
-	    smsList.put("smsMobileNo", "0175977998");
+	    smsList.put("smsMobileNo", installResult.get("hpPhoneNo").toString());
+	    //smsList.put("smsMobileNo", "0175977998");
 
 		try{
 		    if(smsMessage != "")
