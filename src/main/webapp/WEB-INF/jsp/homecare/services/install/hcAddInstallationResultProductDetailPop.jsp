@@ -190,6 +190,13 @@ var serialGubun = "1";
     }
     $("#custMobileNo").val(custMobileNo);
 
+    var hpPhoneNo = $("#hpPhoneNo").val().replace(/[^0-9\.]+/g, "") ;
+    var chkHpPhoneNo = hpPhoneNo.substring(0, 2);
+    if (chkHpPhoneNo == '60'){
+        hpPhoneNo = hpPhoneNo.substring(1);
+    }
+    $("#hpPhoneNo").val(hpPhoneNo);
+
     if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
       if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
         Common.alert("Not allowed to choose a reason for fail or recall date in complete status");

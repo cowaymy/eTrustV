@@ -181,6 +181,14 @@ var serialGubun = "1";
 	        custMobileNo = custMobileNo.substring(1);
 	    }
 	    $("#custMobileNo").val(custMobileNo);
+
+	    var hpPhoneNo = $("#hpPhoneNo").val().replace(/[^0-9\.]+/g, "") ;
+        var chkHpPhoneNo = hpPhoneNo.substring(0, 2);
+        if (chkHpPhoneNo == '60'){
+        	hpPhoneNo = hpPhoneNo.substring(1);
+        }
+        $("#hpPhoneNo").val(hpPhoneNo);
+
 	    if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
 
 	     if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
