@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
@@ -51,6 +52,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 
   @Resource(name = "orderRequestMapper")
   private OrderRequestMapper orderRequestMapper;
+
+  @Resource(name = "ccpCalculateMapper")
+  private CcpCalculateMapper ccpCalculateMapper;
 
   // @Autowired
   // private MessageSourceAccessor messageSourceAccessor;
@@ -87,6 +91,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     EgovMap prodUsgMthInfo = orderDetailMapper.selectProductUsageMonth(params);
     EgovMap renAgrInfo = orderDetailMapper.selectRenAgrList(params);
     EgovMap mobileAutoDebitPaymentInfo = orderDetailMapper.selectMobileAutoDebitInfo(params);
+	List<EgovMap> ccpTicketLogs = ccpCalculateMapper.selectTicketLogs(params);
 
     params.put("viewSort", "1");
     List<EgovMap> callLog = orderDetailMapper.selectCallLogList(params);
@@ -163,6 +168,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     orderDetail.put("callLog", callLog);
     orderDetail.put("prodUsgMthInfo", prodUsgMthInfo);
     orderDetail.put("renAgrInfo", renAgrInfo);
+    orderDetail.put("ccpTicketLogs", ccpTicketLogs);
     orderDetail.put("mobileAutoDebitPaymentInfo", mobileAutoDebitPaymentInfo);
 
     Date salesDt = (Date) basicInfo.get("ordDt");
