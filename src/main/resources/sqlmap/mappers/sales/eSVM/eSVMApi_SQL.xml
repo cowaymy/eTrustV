@@ -1132,13 +1132,13 @@
         GROUP BY ORD_ID
     </select>
 
-     <select id="getServicePacIdExist" parameterType="Map" resultType="egovMap">
+     <select id="getServicePacIdExist" parameterType="String" resultType="String">
            SELECT CASE
                         WHEN EXISTS (SELECT 1
                                      FROM SAL0095D
                                      WHERE SRV_MEM_PAC_ID = '9'
                                      AND SRV_STUS_CODE_ID    <![CDATA[ <> ]]>  '8'
-                                     AND SRV_SALES_ORD_ID = #{ORD_ID})
+                                     AND SRV_SALES_ORD_ID = #{salesOrdId})
                         THEN 'Y'
                         ELSE 'N'
                     END AS PAC_EXIST

@@ -115,5 +115,5 @@ public interface eSVMApiMapper {
 
     EgovMap selectMembershipExpiryDt(Map<String, Object> params);
 
-    EgovMap getServicePacIdExist(Map<String, Object> params);
+    String getServicePacIdExist(String salesOrdId);
 }

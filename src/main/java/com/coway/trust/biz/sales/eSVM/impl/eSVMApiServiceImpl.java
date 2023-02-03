@@ -1176,7 +1176,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
     	EgovMap configMemExpEomDurMth = eSVMApiMapper.selectConfigEomDur(eSVMApiForm.createMap(param));
 
     	int appType = Integer.parseInt(itemEomDt.get("appType").toString());
-    	String servicePacIdExist = eSVMApiMapper.getServicePacIdExist(eSVMApiForm.createMap(param)).get("pacExist").toString();
+    	String servicePacIdExist = eSVMApiMapper.getServicePacIdExist(itemEomDt.get("salesOrdId").toString());
 
     	int configMemExpMth = Integer.parseInt(configMemExpEomDurMth.get("svmMemExp").toString());
     	int configEomDurMth =Integer.parseInt(configMemExpEomDurMth.get("svmEom").toString());

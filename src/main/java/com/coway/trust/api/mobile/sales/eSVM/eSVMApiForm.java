@@ -271,7 +271,6 @@ public class eSVMApiForm {
     private int errorCode;
     private String errorHeader;
     private String errorMsg;
-    private String pacExist;
 
     //CELESTE
 
@@ -1233,13 +1232,5 @@ public class eSVMApiForm {
 
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
-	}
-
-    public String getPacExist() {
-		return pacExist;
-	}
-
-	public void setPacExist(String pacExist) {
-		this.pacExist = pacExist;
 	}
 }
