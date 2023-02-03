@@ -1126,8 +1126,7 @@
     <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
 
 	    SELECT
-	       MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD')) AS SRV_MEM_EXPR_DT,
-		  SRV_MEM_PAC_ID
+	       MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD')) AS SRV_MEM_EXPR_DT
 		FROM SAL1014V
 		WHERE ORD_ID =  #{salesOrdId}
         GROUP BY ORD_ID
