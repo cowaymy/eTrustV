@@ -33,7 +33,8 @@
                     , Extent3.CODE AS CDB_BRNCH_CODE
                     , Extent1.AS_CD_SEQ
                     , Extent22.CODE PROD_CAT
-                    , Extent23.DEFECT_TYPE_CODE_DESC AS AMENDED_DESC
+                    , CASE WHEN Extent1.STUS = '5' THEN Extent24.DEFECT_TYPE_CODE_DESC ELSE Extent23.DEFECT_TYPE_CODE_DESC END AS AMENDED_DESC
+                    , CASE WHEN Extent1.STUS = '5' THEN Extent24.DEFECT_DTL_CODE_DESC ELSE '-' END AS AMENDED_DTL_DESC
             FROM SVC0130D Extent1
             JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
             LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
@@ -54,6 +55,7 @@
             JOIN SYS0026M Extent21 ON Extent21.STK_ID = Extent20.ITM_STK_ID
             JOIN SYS0013M Extent22 ON Extent21.STK_CTGRY_ID = Extent22.CODE_ID
             LEFT JOIN SVC0056M Extent23 ON Extent23.DEFECT_TYPE_CODE = Extent1.AMENDED_DEFECT_CODE
+            LEFT JOIN SVC0056M Extent24 ON Extent24.DEFECT_TYPE_CODE = Extent10.AS_MALFUNC_ID AND Extent24.DEFECT_DTL_CODE = Extent10.AS_MALFUNC_RESN_ID AND Extent24.STUS_CODE_ID = 1
 
             WHERE 1=1
         ]]>

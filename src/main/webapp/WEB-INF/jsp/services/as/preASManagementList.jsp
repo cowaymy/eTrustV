@@ -164,10 +164,16 @@
         },
         {
             dataField : "amendedDesc",
-            headerText : "Amended Error Code",
+            headerText : "Amended AS Error Code",
             editable : false,
             width : 150
           },
+          {
+              dataField : "amendedDtlDesc",
+              headerText : "Amended AS Error Details",
+              editable : false,
+              width : 150
+            },
         {
           dataField : "stus",
           headerText : "Status",

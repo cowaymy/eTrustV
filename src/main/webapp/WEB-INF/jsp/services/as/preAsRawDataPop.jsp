@@ -70,7 +70,8 @@
                        + $("#reqstDateTo").val().substring(0, 2);
 
       if ($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''&& $("#reqstDateFr").val() != null&& $("#reqstDateTo").val() != null) {
-    	    whereSql += " AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.CRT_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
+    	    whereSql += " AND  A.CRT_DT  BETWEEN TO_DATE("+keyInDateFrom1+", 'YYYY-MM-DD') AND TO_DATE("+keyInDateTo1+"||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS') ";
+
       }
 
       if('${ind}'=="HA"){
