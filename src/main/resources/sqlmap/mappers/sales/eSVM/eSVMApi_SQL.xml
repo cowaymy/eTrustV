@@ -1105,7 +1105,8 @@
             A.SALES_ORD_NO,
             B.ITM_STK_ID STK_ID,
             TO_CHAR(C.EOS_DATE, 'YYYY-MM-DD') EOS_DATE,<!-- End of Sales -->
-            TO_CHAR(C.EOM_DATE, 'YYYY-MM-DD') EOM_DATE <!-- End of Membership -->
+            TO_CHAR(C.EOM_DATE, 'YYYY-MM-DD') EOM_DATE, <!-- End of Membership -->
+            A.APP_TYPE_ID APP_TYPE
         FROM SAL0001D A
         LEFT JOIN SAL0002D B
             ON B.SALES_ORD_ID = A.SALES_ORD_ID
@@ -1129,5 +1130,18 @@
 		WHERE ORD_ID =  #{salesOrdId}
 
     </select>
+
+     <select id="getServicePacIdExist" parameterType="Map" resultType="egovMap">
+           SELECT CASE
+                        WHEN EXISTS (SELECT 1
+                                     FROM SAL0095D
+                                     WHERE SRV_MEM_PAC_ID = '9'
+                                     AND SRV_STUS_CODE_ID    <![CDATA[ <> ]]>  '8'
+                                     AND SRV_SALES_ORD_ID = #{ORD_ID})
+                        THEN 'Y'
+                        ELSE 'N'
+                    END AS PAC_EXIST
+            FROM DUAL
+       </select>
     <!-- CELESTE [E] SVM SUBSCRIPTION ELIGIBILITY -->
 </mapper>

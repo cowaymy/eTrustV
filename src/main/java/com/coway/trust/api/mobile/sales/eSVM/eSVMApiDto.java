@@ -62,7 +62,7 @@ public class eSVMApiDto {
     private int payMode;
     private String appvRem;
     private String saRef;
-    private Boolean svmAllowFlg;
+//    private Boolean svmAllowFlg;
     private int errorCode;
     private String errorHeader;
     private String errorMsg;
@@ -1119,13 +1119,13 @@ public class eSVMApiDto {
 		this.saRef = saRef;
 	}
 
-	public Boolean getSvmAllowFlg() {
-		return svmAllowFlg;
-	}
-
-	public void setSvmAllowFlg(Boolean svmAllowFlg) {
-		this.svmAllowFlg = svmAllowFlg;
-	}
+//	public Boolean getSvmAllowFlg() {
+//		return svmAllowFlg;
+//	}
+//
+//	public void setSvmAllowFlg(Boolean svmAllowFlg) {
+//		this.svmAllowFlg = svmAllowFlg;
+//	}
 
 	public int getErrorCode() {
 		return errorCode;

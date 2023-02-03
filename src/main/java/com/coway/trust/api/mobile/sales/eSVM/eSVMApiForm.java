@@ -267,7 +267,7 @@ public class eSVMApiForm {
 
     //CELESTE
 
-    private Boolean svmAllowFlg;
+//    private Boolean svmAllowFlg;
     private int errorCode;
     private String errorHeader;
     private String errorMsg;
@@ -1202,13 +1202,13 @@ public class eSVMApiForm {
 		this.progressStatus = progressStatus;
 	}
 
-	public Boolean getSvmAllowFlg() {
-		return svmAllowFlg;
-	}
-
-	public void setSvmAllowFlg(Boolean svmAllowFlg) {
-		this.svmAllowFlg = svmAllowFlg;
-	}
+//	public Boolean getSvmAllowFlg() {
+//		return svmAllowFlg;
+//	}
+//
+//	public void setSvmAllowFlg(Boolean svmAllowFlg) {
+//		this.svmAllowFlg = svmAllowFlg;
+//	}
 
 	public int getErrorCode() {
 		return errorCode;
