@@ -188,7 +188,7 @@ var branchDs = [];
       }
 
       if ($("#branch").val() != '' && $("#branch").val() != null) {
-        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1 AND TYPE_ID = 5754)";
+        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE BRNCH_ID = '" + $("#branch").val() + "' AND STUS_ID = 1)";
       }
 
       if ($("#sortType").val() == "1") {
