@@ -244,6 +244,7 @@
                 ON A.APP_TYPE_ID = DESC1.CODE_ID
                 AND DESC1.CODE_MASTER_ID = 10
             WHERE 1=1
+            AND ROWNUM = 1
             <if test="salesOrdId != null and salesOrdId != '' ">
                 AND A.SALES_ORD_ID = #{salesOrdId}
             </if>
@@ -1124,11 +1125,12 @@
 
     <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
 
-	    SELECT TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD') AS SRV_MEM_EXPR_DT,
-		SRV_MEM_PAC_ID
+	    SELECT
+	       MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD')) AS SRV_MEM_EXPR_DT,
+		  SRV_MEM_PAC_ID
 		FROM SAL1014V
 		WHERE ORD_ID =  #{salesOrdId}
-
+        GROUP BY ORD_ID
     </select>
 
      <select id="getServicePacIdExist" parameterType="Map" resultType="egovMap">
