@@ -979,6 +979,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	public Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult) {
 		Map<String, Object> smsResultValue = new HashMap<String, Object>();
 		String smsMessage = "";
+		String hpPhone = installResult.get("hpPhoneNo").toString();
 		smsResultValue.put("smsLogStat", "0");//if success
 
 		logger.debug("================INSMS111================");
@@ -989,11 +990,14 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 			 smsMessage = installResult.get("hpMsg").toString();
 		 }
 
+		 hpPhone = hpPhone.replaceAll("\\\\u[0-9a-fA-F]{4}", "");
+		 logger.debug("hpPhone===" + hpPhone);
+
 	    Map<String, Object> smsList = new HashMap<>();
 	    smsList.put("userId", installResult.get("hpMemId"));
 	    smsList.put("smsType", 975);
 	    smsList.put("smsMessage", smsMessage);
-	    smsList.put("smsMobileNo", installResult.get("hpPhoneNo").toString());
+	    smsList.put("smsMobileNo", hpPhone);
 	    //smsList.put("smsMobileNo", "0175977998");
 
 		try{
