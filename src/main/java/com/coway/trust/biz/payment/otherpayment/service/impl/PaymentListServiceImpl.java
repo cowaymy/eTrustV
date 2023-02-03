@@ -87,14 +87,20 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
 		EgovMap returnMap = new EgovMap();
 
-		//DCF Request 등록
-		paymentListMapper.requestDCF(params);
+		int count = paymentListMapper.invalidDCF(params);
 
-		//Group Payment 정보 수정
-		params.put("revStusId", "1");
-		paymentListMapper.updateGroupPaymentRevStatus(params);
+		if (count > 0) {
+			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+		} else {
+			//DCF Request 등록
+			paymentListMapper.requestDCF(params);
 
-		returnMap.put("returnKey", params.get("dcfReqId"));
+			//Group Payment 정보 수정
+			params.put("revStusId", "1");
+			paymentListMapper.updateGroupPaymentRevStatus(params);
+
+			returnMap.put("returnKey", params.get("dcfReqId"));
+		}
 
 		return returnMap;
 
@@ -146,6 +152,12 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		//paymentListMapper.approvalDCF(params);
 
 		//LOGGER.debug("returnMap : {} ", returnMap);
+		int count = paymentListMapper.dcfDuplicates(params);
+		if (count > 0) {
+			Map<String, Object> returnMap = new HashMap<String, Object>();
+			returnMap.put("error", "DCF has already been approved before.");
+			return returnMap;
+		}
 		return paymentListMapper.approvalDCF(params);
 
 
@@ -174,47 +186,54 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
     	LOGGER.debug("params : {} ", paramMap);
 
-    	//Payment 임시테이블(PAY0240T) 시퀀스 조회
-    	Integer seq = commonPaymentMapper.getPayTempSEQ();
+		EgovMap returnMap = new EgovMap();
+
+    	int count = paymentListMapper.invalidFT(paramMap);
+
+    	if (count > 0) {
+    		returnMap.put("error", "FT Invalid for 'EOR'");
+    	} else {
+    		//Payment 임시테이블(PAY0240T) 시퀀스 조회
+    		Integer seq = commonPaymentMapper.getPayTempSEQ();
 
 
-    	//임시정보 count
-    	int isSource = commonPaymentMapper.countTmpPaymentInfoFT(paramMap);
+    		//임시정보 count
+    		int isSource = commonPaymentMapper.countTmpPaymentInfoFT(paramMap);
 
-    	//기존에 PAY0240T에 데이터가 없으면 PAY0064D/PAY0065D에서 데이터를 가져온다.
-    	if(isSource == 0){
-        	//payment 임시정보 등록
-        	paramMap.put("seq", seq);
-        	commonPaymentMapper.insertTmpPaymentInfoFT2(paramMap);
+    		//기존에 PAY0240T에 데이터가 없으면 PAY0064D/PAY0065D에서 데이터를 가져온다.
+    		if(isSource == 0){
+    			//payment 임시정보 등록
+    			paramMap.put("seq", seq);
+    			commonPaymentMapper.insertTmpPaymentInfoFT2(paramMap);
 
-    	}else{
-        	//payment 임시정보 등록
-        	paramMap.put("seq", seq);
-        	commonPaymentMapper.insertTmpPaymentInfoFT(paramMap);
+    		}else{
+    			//payment 임시정보 등록
+    			paramMap.put("seq", seq);
+    			commonPaymentMapper.insertTmpPaymentInfoFT(paramMap);
 
-    	}
-
-		//billing 임시정보 등록
-    	if (paramList.size() > 0) {
-    		Map<String, Object> hm = null;
-    		for (Object map : paramList) {
-    			hm = (HashMap<String, Object>) map;
-    			hm.put("seq", seq);
-    			commonPaymentMapper.insertTmpBillingInfo(hm);
     		}
+
+    		//billing 임시정보 등록
+    		if (paramList.size() > 0) {
+    			Map<String, Object> hm = null;
+    			for (Object map : paramList) {
+    				hm = (HashMap<String, Object>) map;
+    				hm.put("seq", seq);
+    				commonPaymentMapper.insertTmpBillingInfo(hm);
+    			}
+    		}
+
+    		//Request F/T 정보 등록
+    		paymentListMapper.requestFT(paramMap);
+
+    		//Group Payment 정보 수정
+    		paramMap.put("ftStusId", "1");
+    		paymentListMapper.updateGroupPaymentFTStatus(paramMap);
+
+
+    		//WOR 번호 조회
+    		returnMap.put("returnKey", paramMap.get("ftReqId"));
     	}
-
-    	//Request F/T 정보 등록
-    	paymentListMapper.requestFT(paramMap);
-
-    	//Group Payment 정보 수정
-    	paramMap.put("ftStusId", "1");
-    	paymentListMapper.updateGroupPaymentFTStatus(paramMap);
-
-
-    	//WOR 번호 조회
-    	EgovMap returnMap = new EgovMap();
-    	returnMap.put("returnKey", paramMap.get("ftReqId"));
 
 		return returnMap;
 
@@ -271,6 +290,10 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	@Override
 	public void approvalFT(Map<String, Object> params) {
 		//Approval DCF 처리 프로시저 호출
+		int count = paymentListMapper.ftDuplicates(params);
+		if (count > 0) {
+			return;
+		}
 		paymentListMapper.approvalFT(params);
 	}
 

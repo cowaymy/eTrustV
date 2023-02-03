@@ -133,7 +133,12 @@ function fn_FTRequest(){
 
 	    Common.ajax("POST", "/payment/requestFT.do", data, function(result) {
 
-			var message = "<spring:message code='pay.alert.ftSuccessReq' arguments='"+result.returnKey+"' htmlEscape='false'/>";
+	    	if (result.error) {
+                var message = result.error;
+	    	} else {
+				var message = "<spring:message code='pay.alert.ftSuccessReq' arguments='"+result.returnKey+"' htmlEscape='false'/>";
+	    	}
+
 
     		Common.alert(message, function(){
 				searchList();

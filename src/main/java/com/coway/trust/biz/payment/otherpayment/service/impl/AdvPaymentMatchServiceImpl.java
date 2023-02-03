@@ -79,19 +79,25 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
 
 		EgovMap returnMap = new EgovMap();
 
-		//DCF Request 등록
-		paymentListMapper.requestDCF(params);
+		int count = paymentListMapper.invalidDCF(params);
 
-		//Group Payment 정보 수정
-		params.put("revStusId", "1");
-		paymentListMapper.updateGroupPaymentRevStatus(params);
+		if (count > 0) {
+			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+		} else {
+			//DCF Request 등록
+			paymentListMapper.requestDCF(params);
+
+			//Group Payment 정보 수정
+			params.put("revStusId", "1");
+			paymentListMapper.updateGroupPaymentRevStatus(params);
 
 
-		//Approval DCF 처리 프로시저 호출
-		params.put("reqNo", params.get("dcfReqId"));
-		paymentListMapper.approvalDCF(params);
+			//Approval DCF 처리 프로시저 호출
+			params.put("reqNo", params.get("dcfReqId"));
+			paymentListMapper.approvalDCF(params);
 
-		returnMap.put("returnKey", params.get("dcfReqId"));
+			returnMap.put("returnKey", params.get("dcfReqId"));
+		}
 
 		return returnMap;
 

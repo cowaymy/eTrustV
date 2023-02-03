@@ -44,6 +44,8 @@ public interface PaymentListMapper {
 	 */
     EgovMap selectReqDcfInfo(Map<String, Object> params);
 
+    int invalidDCF(Map<String, Object> params);
+
 	/**
 	 * Payment List - Request DCF
 	 * @param
@@ -88,6 +90,8 @@ public interface PaymentListMapper {
 	 */
 	void updateStatusDCF(Map<String, Object> params);
 
+	int dcfDuplicates(Map<String, Object> params);
+
 	/**
 	 * Payment List - Approval DCF 처리
 	 * @param params
@@ -104,6 +108,8 @@ public interface PaymentListMapper {
 	 * @return
 	 */
 	List<EgovMap> selectFTOldData(Map<String, Object> params);
+
+	int invalidFT(Map<String, Object> params);
 
 	/**
 	 * Payment List - Request FT
@@ -149,6 +155,7 @@ public interface PaymentListMapper {
 	 */
 	void updateGroupPaymentFTStatus(Map<String, Object> params);
 
+	int ftDuplicates(Map<String, Object> params);
 
 	/**
 	 * Payment List - Approval FT 처리

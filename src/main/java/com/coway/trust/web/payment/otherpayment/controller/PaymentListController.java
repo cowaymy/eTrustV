@@ -253,19 +253,23 @@ public class PaymentListController {
 		// 저장
 		params.put("userId", sessionVO.getUserId());
 
-		paymentListService.approvalDCF(params);
-
-		List<EgovMap> resultMapList = (List<EgovMap>) params.get("p1"); //
-
-        if (resultMapList.size() > 0) {
-        // 프로시저 결과 Map
-            returnMap = (Map<String, Object>) resultMapList.get(0);
-        }
+		Map<String, Object> result = paymentListService.approvalDCF(params);
 
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setMessage("Saved Successfully");
+
+		if (result.get("error") != null) {
+			message.setMessage((String) result.get("error"));
+		} else {
+			List<EgovMap> resultMapList = (List<EgovMap>) params.get("p1"); //
+
+			if (resultMapList.size() > 0) {
+				// 프로시저 결과 Map
+				returnMap = (Map<String, Object>) resultMapList.get(0);
+			}
+			message.setMessage("Saved Successfully");
+		}
 
 		//return ResponseEntity.ok(message);
 		return ResponseEntity.ok(returnMap);

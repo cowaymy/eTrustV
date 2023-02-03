@@ -411,8 +411,12 @@ function fn_saveReverse(){
 	Common.confirm("<spring:message code='pay.alert.wantToReverse'/>",function (){
 	    Common.ajax("POST", "/payment/requestDCFWithAppv.do", $("#reverseForm").serializeJSON(), function(result) {
 
+	        if (result.error) {
+	        	var message = result.error;
+	        } else {
+	            var message = "<spring:message code='pay.alert.successReverse' arguments='"+result.returnKey+"' htmlEscape='false'/>";
+	        }
 
-			var message = "<spring:message code='pay.alert.successReverse' arguments='"+result.returnKey+"' htmlEscape='false'/>";
 
     		Common.alert(message, function(){
 				fn_searchAdvMatchList();

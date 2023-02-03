@@ -8,17 +8,17 @@ var myRequestDCFGridID;
 //Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
+	        editable : false,
 	        // 상태 칼럼 사용
 	        showStateColumn : false,
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
-	        
+
 	        softRemoveRowMode:false
-	
+
 	};
 // AUIGrid 칼럼 설정
-var requestDcfColumnLayout = [ 
+var requestDcfColumnLayout = [
 	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 100 , editable : false, visible : false},
 	{dataField : "payItmModeId",headerText : "<spring:message code='pay.head.payTypeId'/>",width : 240 , editable : false, visible : false},
 	{dataField : "appType",headerText : "<spring:message code='pay.head.appType'/>",width : 130 , editable : false},
@@ -41,7 +41,7 @@ var requestDcfColumnLayout = [
 
 $(document).ready(function(){
 	doGetCombo('/common/selectCodeList.do', '392' , ''   , 'reason' , 'S', '');
-	
+
 	myRequestDCFGridID = GridCommon.createAUIGrid("grid_request_dcf_wrap", requestDcfColumnLayout,null,gridPros);
 
 	searchDCFList();
@@ -49,7 +49,7 @@ $(document).ready(function(){
 
 // ajax list 조회.
 function searchDCFList(){
-	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
+	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){
 		AUIGrid.setGridData(myRequestDCFGridID, result);
 		recalculateDCFTotalAmt();
 	});
@@ -74,8 +74,8 @@ function recalculateDCFTotalAmt(){
         }
     }
 
-	$("#totalAmt").val(totalAmt);    
-    $("#totalAmtTxt").val($.number(totalAmt,2));    
+	$("#totalAmt").val(totalAmt);
+    $("#totalAmtTxt").val($.number(totalAmt,2));
 }
 
 //저장처리
@@ -86,11 +86,11 @@ function fn_DCFRequest(){
         Common.alert("<spring:message code='pay.alert.noReason'/>");
         return;
     }
-	
+
 	if( Number($("#totalAmt").val()) <= 0 ){
     	Common.alert("<spring:message code='pay.alert.amtThanZero'/>");
     	return;
-    }	
+    }
 
 	if($("#remark").val() == ''){
 		Common.alert("<spring:message code='pay.alert.inputRemark'/>");
@@ -105,21 +105,25 @@ function fn_DCFRequest(){
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.wantToRequestDcf'/>",function (){
 
-	    
+
 	    Common.ajax("POST", "/payment/requestDCF.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
-		    
-			var message = "<spring:message code='pay.alert.dcfSuccessReq' arguments='"+result.returnKey+"' htmlEscape='false'/>";
-			
+
+	    	if (result.error) {
+	    		var message = result.error;
+	    	} else {
+				var message = "<spring:message code='pay.alert.dcfSuccessReq' arguments='"+result.returnKey+"' htmlEscape='false'/>";
+	    	}
+
     		Common.alert(message, function(){
 				searchList();
-				$('#_requestDCFPop').remove();    	      
-    		});        
+				$('#_requestDCFPop').remove();
+    		});
 	    });
 	});
 }
 
 
-</script>   
+</script>
 
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
@@ -130,7 +134,7 @@ function fn_DCFRequest(){
 	</header><!-- pop_header end -->
 	<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 		<!-- search_result start -->
-		<section class="search_result">     
+		<section class="search_result">
 			<!-- grid_wrap start -->
 			<article id="grid_request_dcf_wrap" class="grid_wrap"></article>
 			<!-- grid_wrap end -->
@@ -175,6 +179,6 @@ function fn_DCFRequest(){
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a href="javascript:fn_DCFRequest();"><spring:message code='pay.btn.request'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_DCFClear();"><spring:message code='sys.btn.clear'/></a></p></li>
-		</ul> 
+		</ul>
 	</section>
 </div>

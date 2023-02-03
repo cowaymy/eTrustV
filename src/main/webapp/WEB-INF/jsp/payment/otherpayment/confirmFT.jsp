@@ -37,7 +37,8 @@
 	var columnLayout = [
         {dataField : "ftReqId",headerText : "<spring:message code='pay.head.ftRequestNo'/>",width : 150 , editable : false},
         {dataField : "ftGrpSeq",headerText : "Payment Gruop Seq",width : 150 , editable : false},
-        {dataField : "ftOrdNo",headerText : "Sales Order",width : 150 , editable : false},
+        {dataField : "srcOrdNo",headerText : "Current Order",width : 150 , editable : false},
+        {dataField : "ftOrdNo",headerText : "New Order",width : 150 , editable : false},
         {dataField : "ftResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 240 , editable : false},
 
 
