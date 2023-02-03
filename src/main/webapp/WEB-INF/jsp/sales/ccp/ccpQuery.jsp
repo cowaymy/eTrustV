@@ -38,7 +38,7 @@
     const formatDateTime = (time, usr) => {
     	let dt = new Date(time)
     	return dt.getDate().toString().padStart(2, '0') + '/' + (dt.getMonth() + 1).toString().padStart(2, '0') + '/' + dt.getUTCFullYear() + `
-    	` + (dt.getHours() >= 12 ? 'PM ' : 'AM ') + (dt.getHours() == 12 || dt.getHours() == 24 ? 12 : dt.getHours() % 12).toString().padStart(2, '0') + ':' + dt.getMinutes() + ':' + dt.getSeconds().toString().padStart(2, '0') + `
+    	` + (dt.getHours() >= 12 ? 'PM ' : 'AM ') + (dt.getHours() == 12 || dt.getHours() == 24 ? 12 : dt.getHours() % 12).toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0') + ':' + dt.getSeconds().toString().padStart(2, '0') + `
     	` + '(' + usr + ')'
     }
 
