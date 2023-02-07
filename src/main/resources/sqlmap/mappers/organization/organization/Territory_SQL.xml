@@ -300,7 +300,7 @@
 		<!-- WHERE TYPE_ID = #{groupCode} -->
 		<choose>
                 <!-- 전체조회 -->
-                  <when test ="area != null and area != ''">
+                  <when test ="groupCode != null and groupCode != ''">
                   WHERE TYPE_ID = #{groupCode}
                    </when>
                 <otherwise>
