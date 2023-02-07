@@ -369,9 +369,9 @@ public class LoginController {
 	public ResponseEntity<Map> cdEagmt1(@RequestParam Map<String, Object> params, HttpServletRequest request,
 			ModelMap model, SessionVO sessionVO) throws ParseException {
 
-		LOGGER.debug("==================== loginPopCheck ====================");
+		LOGGER.error("==================== loginPopCheck ====================");
 
-		LOGGER.debug("params : {}", params);
+		LOGGER.error("params : {}", params);
 		model.put("loginUserId", (String) params.get("loginUserId"));
 		model.put("os", (String) params.get("os"));
 		model.put("browser", (String) params.get("browser"));
@@ -394,26 +394,26 @@ public class LoginController {
 		EgovMap item1 = new EgovMap();
 		item1 = (EgovMap) loginService.getDtls(params);
 
-		LOGGER.debug("============ ITEMS1 =============" + item1);
+		LOGGER.error("============ ITEMS1 =============" + item1);
 
 		Map<String, Object> popInfo = new HashMap();
 
 		String userTypeId = params.get("userTypeId").toString();
 		while (userTypeId.length() < 4) {
 			userTypeId = "0" + userTypeId;
-			LOGGER.debug("userTypeId :: " + userTypeId);
+			LOGGER.error("userTypeId :: " + userTypeId);
 		}
 
 		params.put("userTypeId", userTypeId);
 		params.put("roleType", item1.get("roleType"));
 		params.put("roleId", item1.get("roleType"));
 
-		LOGGER.debug("============roleType=============" + item1.get("roleType"));
+		LOGGER.error("============roleType=============" + item1.get("roleType"));
 		String retMsg = "";
 
 		// If ORG0003D not empty/null = agreement exist
 		if (item1 != null) {
-			LOGGER.debug("============ AGREEMENT EXIST =============");
+			LOGGER.error("============ AGREEMENT EXIST =============");
 			if (item1.containsKey("stusId")) {
 				String stusId = item1.get("stusId").toString();
 				String cnfm = item1.get("cnfm").toString();
@@ -426,7 +426,7 @@ public class LoginController {
 
 				// Pending Agreement (New Members)
 				if ("44".equals(stusId) && "0".equals(cnfm) && "1900-01-01".equals(cnfmDt)) {
-					LOGGER.debug("============ PENDING =============");
+					LOGGER.error("============ PENDING =============");
 					params.put("roleId", item1.get("roleType"));
 					params.put("popType", "A");
 
@@ -440,7 +440,7 @@ public class LoginController {
 				// Accepted (Existing Members)
 				else if ("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
 
-					LOGGER.debug("============ ACCEPTED =============");
+					LOGGER.error("============ ACCEPTED =============");
 					// HM, SM, GM Renewal
 					if ("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -528,26 +528,26 @@ public class LoginController {
 							*/
 					) {
 						// 0007=HT, roletype121=level of position
-						LOGGER.debug("===========HT agreement renewal============");
-						LOGGER.debug("===========roleType============" + item1.get("roleType"));
+						LOGGER.error("===========HT agreement renewal============");
+						LOGGER.error("===========roleType============" + item1.get("roleType"));
 
-						LOGGER.debug("============ ACCEPTED =============");
+						LOGGER.error("============ ACCEPTED =============");
 						params.put("popType", "A");
 						params.put("roleId", item1.get("roleType"));
 						EgovMap aggrementCrtDt = new EgovMap();
 						aggrementCrtDt = (EgovMap) loginService.getPopDtls(params);
-						LOGGER.debug("============ aggrementCrtDt =============" + aggrementCrtDt);
+						LOGGER.error("============ aggrementCrtDt =============" + aggrementCrtDt);
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						Date agreeCrtDt = sdf.parse(aggrementCrtDt.get("crtDt").toString().substring(0, 10));
-						LOGGER.debug("============ agreeCrtDt =============" + agreeCrtDt);
+						LOGGER.error("============ agreeCrtDt =============" + agreeCrtDt);
 
 						// here start the validation
 						params.put("roleId", "356");
 						try {
 							Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
-							LOGGER.debug("===========joinDT============" + joinDt);
+							LOGGER.error("===========joinDT============" + joinDt);
 							Date cnfmDate = sdf.parse(cnfmDt);
-							LOGGER.debug("===========cnfmDate data type============" + cnfmDate.getClass().getName());
+							LOGGER.error("===========cnfmDate data type============" + cnfmDate.getClass().getName());
 
 							Date currDate = new Date(); // Current Date
 							Calendar cal = Calendar.getInstance();
@@ -561,14 +561,14 @@ public class LoginController {
 
 							if (cnfmDate.compareTo(agreeCrtDt) < 0 && joinDt.compareTo(agreeCrtDt) < 0
 									&& currDate.compareTo(agreeCrtDt) >= 0) {
-								LOGGER.debug("===========AAAAAAAAAAAAAA============");
+								LOGGER.error("===========AAAAAAAAAAAAAA============");
 								params.put("popType", "A");
 							}
 
 							// if(currDate.compareTo(currRenewalDt) < 0 )
 							else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0
 									&& currDate.compareTo(currRenewalDt) >= 0) {
-								LOGGER.debug("===========BBBBBBBBBBBBBBBBBB============");
+								LOGGER.error("===========BBBBBBBBBBBBBBBBBB============");
 								params.put("popType", "A");
 							} else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
 								params.put("popType", "M");
@@ -584,7 +584,7 @@ public class LoginController {
                             itemConsent == null &&
                             "4".equals(item1.get("memLvl").toString()) &&
                             ("0001".equals(userTypeId) || "0002".equals(userTypeId) || "0007".equals(userTypeId))) {
-                        LOGGER.info("HP :: ORG0036D empty");
+                        LOGGER.error("HP :: ORG0036D empty");
                         params.put("popType", "C");
                     }
 					// Other than HP user type (Staff, Admin)
