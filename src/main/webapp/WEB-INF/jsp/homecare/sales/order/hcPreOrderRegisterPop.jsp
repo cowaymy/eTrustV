@@ -2409,7 +2409,7 @@
 
 <!-- Mattress -->
 <aside class="title_line"><!-- title_line start -->
-<h3>Product</h3>
+<h3>Main Product</h3>
 </aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
     <caption>table</caption>
@@ -2457,7 +2457,7 @@
 
 <!-- Frame -->
 <aside class="title_line"><!-- title_line start -->
-<h3>Frame - Mattress Set</h3>
+<h3>AUX Product (Frame/Outdoor Unit)</h3>
 </aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
     <caption>table</caption>
