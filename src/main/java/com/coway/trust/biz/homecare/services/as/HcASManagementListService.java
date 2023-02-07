@@ -65,7 +65,6 @@ public interface HcASManagementListService {
 	// AS result save
 	public ReturnMessage newResultAdd(Map<String, Object> params) throws Exception;
 	public EgovMap asResult_updateSerial(Map<String, Object> params) throws Exception;
-	List<EgovMap> selectCTByDSCSearch2(Map<String, Object> params) throws Exception;
 
 	//public int hcChkRcdTms(Map<String, Object> params) throws Exception;
 }

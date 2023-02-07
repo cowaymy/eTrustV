@@ -166,14 +166,6 @@ public class HcASManagementListController {
       return ResponseEntity.ok(selectCTSubGroupDscList);
   }
 
-  @RequestMapping(value = "/selectCTByDSCSearch2.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> selectCTByDSCSearch2(@RequestParam Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) throws Exception {
-
-      List<EgovMap> selectCTSubGroupDscList = hcASManagementListService.selectCTByDSCSearch2(params);
-      //logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
-      return ResponseEntity.ok(selectCTSubGroupDscList);
-  }
   /*@RequestMapping(value = "/selectHTAndDTCode", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectHTAndDTCode() throws Exception {
       List<EgovMap> selectHTAndDTCodeList = hcASManagementListService.selectHTAndDTCode();
