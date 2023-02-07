@@ -170,7 +170,7 @@
           },
           {
               dataField : "amendedDtlDesc",
-              headerText : "Amended AS Error Details",
+              headerText : "AS Error Details",
               editable : false,
               width : 150
             },
