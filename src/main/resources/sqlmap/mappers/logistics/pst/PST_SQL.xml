@@ -132,6 +132,24 @@
 	       S26.STK_CTGRY_ID itmcateid,
 	       L47.REQST_CDC_RDC frlocid ,
            L47.DOC_HDER_TXT htext
+           ,(SELECT CASE
+                           WHEN WH_LOC_GB = '02'
+                           THEN
+                              WH_LOC_CODE
+                           WHEN WH_LOC_GB = '04' OR WH_LOC_GB = '03' OR WH_LOC_GB = '09'
+                           THEN
+                            RDC_CODE
+                           ELSE
+                              SL_PLANT
+                        END
+                           CRDC_LOC
+                   FROM SYS0028M
+                  WHERE WH_LOC_ID = L47.REQST_CDC_RDC)
+                   storgcrdcloc,
+                (SELECT PLANT
+                   FROM SYS0028M
+                  WHERE WH_LOC_ID = L47.REQST_CDC_RDC)
+                   storgplant
 	  FROM LOG0047M L47,
 	       LOG0048D L48,
 	       SYS0026M S26,
@@ -150,10 +168,10 @@
  <insert id="pstMaterialDocumentInsertDetail" parameterType="Map">
     INSERT INTO LOG0060D (MATRL_DOC_NO,MATRL_DOC_YEAR           ,MATRL_DOC_ITM ,INVNTRY_MOV_TYPE  ,AUTO_CRT_ITM ,DEBT_CRDIT_INDICT ,MATRL_NO  ,STORG_LOC,
                       STOCK_TRNSFR_REQST ,STOCK_TRNSFR_REQST_ITM_NO,  QTY,      MEASURE_BAS_UNIT, ITM_TXT, RCIV_ISSU_MATRL,
-              CRT_USER_ID,DOC_POSTNG_DT,CRT_DT , REF_DOC_NO , MAIN_ORD_NO)
+              CRT_USER_ID,DOC_POSTNG_DT,CRT_DT , REF_DOC_NO , MAIN_ORD_NO , STORG_CRDC_LOC , STORG_PLANT)
               VALUES (#{mdnno},  TO_CHAR(SYSDATE , 'yyyy'), #{REQNOITM}, #{TRNSTYPEDTL},  #{PFRQN} , #{DEBIT}  ,#{ITMCD}  ,#{FRLOCID},
                       #{REQNO},  #{REQNOITM},               #{REQQTY},   #{UOM}        , ''        , #{ITMCD}  ,
-                      #{userid}, #{REQEDDT} , sysdate , #{REFDOCNO}, #{psoid})
+                      #{userid}, #{REQEDDT} , sysdate , #{REFDOCNO}, #{psoid},#{STORGCRDCLOC},#{STORGPLANT})
 
  </insert>
 
