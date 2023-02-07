@@ -239,6 +239,8 @@ public interface MemberListMapper {
 
 	void updateCodyPaDate(Map<String, Object> params);
 
+	EgovMap selectRejoin(Map<String, Object> params);
+
 	void updateMemberValidateDt(Map<String, Object> params);
 
 	int updateHpApprovalReject(Map<String, Object> params);
