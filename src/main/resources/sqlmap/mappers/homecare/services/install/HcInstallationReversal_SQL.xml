@@ -83,6 +83,7 @@
                                            FROM SAL0001D A, SAL0002D B, SYS0026M C
                                           WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
                                             AND B.ITM_STK_ID = C.STK_ID
+                                            <!-- AND C.STK_CTGRY_ID IN (5706, 7177) -->
                                             AND (C.STK_CTGRY_ID IN (5706, 7177)
                                             OR C.STK_CTGRY_ID in (select CODE_ID from SYS0013M where code in ('ACI','ACO'))
                                             )
