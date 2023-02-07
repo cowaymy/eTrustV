@@ -138,12 +138,12 @@
                 NVL (som.BINDING_NO, ' ') RELATED_NO,
                 NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
                 NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
-                som.DEPT_CODE ORD_DEPT_CODE,
-                som.GRP_CODE ORD_GRP_CODE,
-                som.ORG_CODE ORD_ORG_CODE,
-                som.SALES_HM_ID ORD_HM_ID,
-                som.SALES_SM_ID ORD_SM_ID,
-                som.SALES_GM_ID ORD_GM_ID,
+                DEPT_CODE ORD_DEPT_CODE,
+                GRP_CODE ORD_GRP_CODE,
+                ORG_CODE ORD_ORG_CODE,
+                SALES_HM_ID ORD_HM_ID,
+                SALES_SM_ID ORD_SM_ID,
+                SALES_GM_ID ORD_GM_ID,
                 som.SALES_PROD_SZ PRODUCT_NAME,
 
                 som.REM ORD_REM,
@@ -152,8 +152,7 @@
 
            FROM SAL0225D som
                 JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
-                LEFT JOIN SAL0001D SO ON SO.SALES_ORD_ID = som.SRV_ORD_ID
-                JOIN SAL0029D c ON c.CUST_ID = SO.CUST_ID
+                JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
                 JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
                 JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
                 LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
