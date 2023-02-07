@@ -131,7 +131,7 @@ function doGetComboObj(url, data , selCode, obj , type, callbackFn){
         complete: function(){
         }
     });
-} ;
+};
 
 function doGetComboAndMandatory(url, groupCd , selCode, obj , type, callbackFn){
     Common.ajax("GET", url, { groupCode : groupCd}, function(data) {
