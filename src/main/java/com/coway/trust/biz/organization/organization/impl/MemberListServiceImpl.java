@@ -1972,10 +1972,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		logger.debug("params : {}", params);
 		EgovMap nricCheck = null;
+		EgovMap rejoinCheck = null;
 		nricCheck = memberListMapper.selectNricExist(params);
+		rejoinCheck = memberListMapper.selectRejoin(params);
 		logger.debug("nricCheck : {}", nricCheck);
 
-		if (nricCheck == null) {
+		if (nricCheck == null || rejoinCheck.size() > 0) {
 			// 실행
 			EgovMap selectMemberCode = null; // 각가 docNo, docNoId, prefix구함
 
