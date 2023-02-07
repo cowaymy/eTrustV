@@ -3114,7 +3114,7 @@ console.log(orderVO);
 </tr>
 <tr>
     <td>
-	        <h3>Mattress</h3>
+	        <h3>Main Product</h3>
     </td>
     <td></td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
@@ -3197,7 +3197,7 @@ console.log(orderVO);
     </td>
 </tr>
 <tr>
-    <td><h3>Frame</h3></td>
+    <td><h3>AUX Product (Frame/OutdoorUnit)</h3></td>
     <td></td>
     <td><h3>Total</h3></td>
     <td></td>
