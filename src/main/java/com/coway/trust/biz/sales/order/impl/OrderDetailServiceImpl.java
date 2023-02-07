@@ -90,7 +90,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     EgovMap gstCertInfo = orderDetailMapper.selectGSTCertInfo(params);
     EgovMap prodUsgMthInfo = orderDetailMapper.selectProductUsageMonth(params);
     EgovMap renAgrInfo = orderDetailMapper.selectRenAgrList(params);
-    EgovMap mobileAutoDebitPaymentInfo = orderDetailMapper.selectMobileAutoDebitInfo(params);
+    //EgovMap mobileAutoDebitPaymentInfo = orderDetailMapper.selectMobileAutoDebitInfo(params);
 	List<EgovMap> ccpTicketLogs = ccpCalculateMapper.selectTicketLogs(params);
 
     params.put("viewSort", "1");
@@ -169,7 +169,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     orderDetail.put("prodUsgMthInfo", prodUsgMthInfo);
     orderDetail.put("renAgrInfo", renAgrInfo);
     orderDetail.put("ccpTicketLogs", ccpTicketLogs);
-    orderDetail.put("mobileAutoDebitPaymentInfo", mobileAutoDebitPaymentInfo);
+    //orderDetail.put("mobileAutoDebitPaymentInfo", mobileAutoDebitPaymentInfo);
 
     Date salesDt = (Date) basicInfo.get("ordDt");
 

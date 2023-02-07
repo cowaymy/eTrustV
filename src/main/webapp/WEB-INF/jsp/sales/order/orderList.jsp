@@ -352,10 +352,10 @@
           });
         });
 
-        $('#btnCreditDebitAuthorization').click(function() {
-            Common.popupDiv("/payment/mobileautodebit/autoDebitAuthorizationFormPop.do",null,
-            		null , true);
-          });
+//         $('#btnCreditDebitAuthorization').click(function() {
+//             Common.popupDiv("/payment/mobileautodebit/autoDebitAuthorizationFormPop.do",null,
+//             		null , true);
+//           });
     });
 
     function fn_letter_report() {
@@ -919,9 +919,9 @@
     <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
       <li><p class="link_btn"><a href="#" id="btnUnbindCboPromOrd">Unlink Combo Promo. Order</a></p></li>
     </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
-    <li><p class="link_btn"><a href="#" id="btnCreditDebitAuthorization">Credit/Debit Card Auto Debit Authorization (Customer Sign)</a></p></li>
-    </c:if>
+<%--     <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}"> --%>
+<!--     <li><p class="link_btn"><a href="#" id="btnCreditDebitAuthorization">Credit/Debit Card Auto Debit Authorization (Customer Sign)</a></p></li> -->
+<%--     </c:if> --%>
   </ul>
 	<ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine21 == 'Y'}">

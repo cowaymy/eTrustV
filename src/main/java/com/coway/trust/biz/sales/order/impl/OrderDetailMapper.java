@@ -116,6 +116,6 @@ public interface OrderDetailMapper {
 
   EgovMap selectRenAgrList(Map<String, Object> params);
 
-  EgovMap selectMobileAutoDebitInfo(Map<String, Object> params);
+  //EgovMap selectMobileAutoDebitInfo(Map<String, Object> params);
 
 }
