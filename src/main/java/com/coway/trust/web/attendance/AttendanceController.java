@@ -50,7 +50,6 @@ import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.web.attendance.AttendanceController;
-import com.coway.trust.config.csv.CsvReadComponent;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
