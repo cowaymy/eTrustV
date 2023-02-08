@@ -15,6 +15,7 @@
 		                                       ELSE '-'
 		      END CHS_STATUS
 		    , TO_CHAR(CRT_DT,'YYYY/MM/DD') CRT_DT
+		    , CUST_ID
 		FROM SAL0343D
 		WHERE DISAB = 0
 		 <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
