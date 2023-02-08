@@ -2786,7 +2786,8 @@ SELECT MST.*
              B.MODE_ID AS payment_Mode_Id,
              NVL(AD.CRT_DT_DD,'-')  deduct_dt,
              NVL(AD.BANK_DTL_APPR_CODE, '-') status_code,
-             NVL(AD.CODE_NAME,'-') status
+             NVL(AD.CODE_NAME,'-') status,
+             CASE WHEN Z.MONTH_TYPE = 'M2' AND Y.TARGET  <>  Y.COLLECTION THEN Z.MONTH_TYPE ELSE ' ' END AS MONTH_TYPE
       FROM (SELECT A.ACC_DEBT_ORD_ID SALES_ORD_ID,
                    A.ACC_DEBT_SRV_CNTRCT_ID CNTRCT_ID,
                    (CASE WHEN A.ACC_DEBT_SRV_CNTRCT_ID <> 0
