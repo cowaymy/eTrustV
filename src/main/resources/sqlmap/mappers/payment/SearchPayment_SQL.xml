@@ -1888,7 +1888,7 @@
         <if test="memCode != '' ">
            AND A.CODY_CODE = #{memCode}
        </if>
-       <if test="cmbOutstandMonth != '' and cmbOutstandMonth != 0">
+       <if test="cmbOutstandMonth != '' ">
            AND B.ACC_DEBT_SUB_CURR_OTSTND_AGING = #{cmbOutstandMonth}
        </if>
        <if test="cmbOpeningAging != ''">
