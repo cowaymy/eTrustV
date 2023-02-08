@@ -9,7 +9,7 @@
 		    , CUST_IC
 		    , CUST_MOBILENO
 		    , CUST_EMAIL
-		    , CRT_DT
+		    , TO_CHAR(CRT_DT,'YYYY/MM/DD') CRT_DT
 		    , CASE WHEN CHS_STATUS = 'GREEN'   THEN CHS_STATUS
 		           WHEN CHS_STATUS = 'YELLOW'  THEN CHS_STATUS || '_' || CHS_RSN
 		                                       ELSE '-'
