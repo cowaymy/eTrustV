@@ -58,11 +58,10 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         }
 
         else {
-              if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 5) {
-                throw new ApplicationException(AppConstants.FAIL, "Please fill out at least five characters.");
+              if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 3) {
+                throw new ApplicationException(AppConstants.FAIL, "Please fill out at least three characters.");
               }
-              if ((("2").equals(param.getSelectType()) || ("3").equals(param.getSelectType()))
-                  && CommonUtils.isEmpty(param.getSelectKeyword())) {
+              if ( ("2").equals(param.getSelectType()) && CommonUtils.isEmpty(param.getSelectKeyword())) {
                 throw new ApplicationException(AppConstants.FAIL, "Select Keyword value does not exist.");
               }
         }

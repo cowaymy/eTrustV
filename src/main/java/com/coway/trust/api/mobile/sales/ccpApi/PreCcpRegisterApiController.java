@@ -45,7 +45,7 @@ public class PreCcpRegisterApiController {
 
   @ApiOperation(value = "selectPreCcpRegisterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectPreCcpRegisterList", method = RequestMethod.GET)
-  public ResponseEntity<List<PreCcpRegisterApiDto>> selectCustomerList(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
+  public ResponseEntity<List<PreCcpRegisterApiDto>> selectPreCcpRegisterList(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
 
 	  List<EgovMap> selectPreCcpRegisterList = preCcpRegisterApiService.selectPreCcpRegisterList(param);
 
