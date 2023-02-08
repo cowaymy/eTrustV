@@ -80,10 +80,10 @@
     <td><span>${orderDetail.thirdPartyInfo.nric}</span></td>
    </tr>
     <tr>
-<!--     <th scope="row">PAD Number</th> -->
-<%--     <td colspan="3"><span>${orderDetail.mobileAutoDebitPaymentInfo.padNo}</span></td> --%>
-<!--     <th scope="row">Last Updated At (By)</th> -->
-<%--     <td><span></span>${orderDetail.mobileAutoDebitPaymentInfo.updator}</td> --%>
+    <th scope="row">PAD Number</th>
+    <td colspan="3"><span>${orderDetail.mobileAutoDebitPaymentInfo.padNo}</span></td>
+    <th scope="row">Last Updated At (By)</th>
+    <td><span></span>${orderDetail.mobileAutoDebitPaymentInfo.updator}</td>
    </tr>
   </tbody>
  </table>
