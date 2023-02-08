@@ -355,7 +355,8 @@
             </if>
             <if test="advType == 6">
                 #{invcNo},
-                TO_DATE(TO_CHAR(TO_DATE(#{invcDt}, 'YYYY/MM/DD'), 'DD/MM/YYYY'), 'DD/MM/YYYY'),
+                <!-- TO_DATE(TO_CHAR(TO_DATE(#{invcDt}, 'YYYY/MM/DD'), 'DD/MM/YYYY'), 'DD/MM/YYYY'), -->
+                TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
                 #{expType},
                 #{expTypeNm},
                 #{glAccCode},

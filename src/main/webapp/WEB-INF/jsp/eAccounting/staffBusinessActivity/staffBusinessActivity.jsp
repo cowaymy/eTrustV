@@ -1750,7 +1750,8 @@ var myGridPros = {
 
     	                    var availableVar = {
     	                        costCentr : $("#refCostCenterCode").val(),
-    	                        stYearMonth : $("#keyDate").val().substring(3),
+    	                        //stYearMonth : $("#keyDate").val().substring(3),
+    	                        stYearMonth : $("#refKeyDate").val().substring(3),
     	                        stBudgetCode : event.item.budgetCode,
     	                        stGlAccCode : event.item.glAccCode
     	                    }
