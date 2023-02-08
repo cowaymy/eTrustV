@@ -128,7 +128,6 @@
 	<li><a href="#" onClick="javascript:chgTab('mcoRemark');">MCO Remark</a></li>
 	<li><a href="#" onClick="javascript:chgTab('fmcoEvoucher');">FMCO E-Voucher</a></li>
 	<li><a href="#" onClick="javascript:chgTab('renAgr');">Rental Agreement</a></li>
-	<li><a href="#" onClick="javascript:chgTab('ccpTicket');">CCP Ticket</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -215,10 +214,5 @@
     CCP Rental Agreement
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/rentalAgrInfo.jsp" %>
-<!------------------------------------------------------------------------------
-    CCP Ticket
-------------------------------------------------------------------------------->
-<c:set var="logs" value="${orderDetail.ccpTicketLogs}" />
-<%@ include file="/WEB-INF/jsp/sales/ccp/include/ticketLog.jsp" %>
 </section><!-- tap_wrap end -->
 
