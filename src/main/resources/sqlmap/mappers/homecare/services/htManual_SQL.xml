@@ -619,13 +619,19 @@ FROM
                               , FI.STK_DESC as FRA_DESC
                               , AP.CODE AS APPTYPE
                               , SO.SALES_PROD_SZ
-                              , CU.NAME
+                              , CASE WHEN CU.NAME IS NOT NULL
+                                        THEN CU.NAME
+                                        ELSE  CU2.NAME
+                                        END  AS NAME
                               , CD.MEM_CODE AS ASSIGN_CODY
                               , CD.MEM_ID
                               , AC.MEM_CODE AS ACTION_CODY
                               , MG.STATE
                               , MG.AREA
-                              , CU.CUST_ID AS CUST_ID
+                              , CASE WHEN  CU.CUST_ID IS NOT NULL
+                                        THEN CU.CUST_ID
+                                        ELSE  CU2.CUST_ID
+                                        END AS CUST_ID
                               , STUS.CODE AS HT_STATUS
                               , HR.SETL_DT
                               , REM.CODE_NAME AS REMARKS
@@ -653,7 +659,8 @@ FROM
                 LEFT JOIN SVC0006D HR ON HR.SCHDUL_ID = HS.SCHDUL_ID
                 LEFT JOIN SYS0038M ST ON ST.STUS_CODE_ID = HS.STUS_CODE_ID
                 INNER JOIN SYS0013M AP ON AP.CODE_ID = SO.APP_TYPE_ID
-                INNER JOIN SAL0029D CU ON CU.CUST_ID = SOM.CUST_ID
+                LEFT JOIN SAL0029D CU ON CU.CUST_ID = SOM.CUST_ID
+                JOIN SAL0029D CU2 ON CU2.CUST_ID = SO.CUST_ID
                 LEFT JOIN ORG0001D CD ON CD.MEM_ID = HS.CODY_ID
                 LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = CD.STUS
                 LEFT JOIN ORG0001D AC ON AC.MEM_ID = HS.CODY_ID
