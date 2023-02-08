@@ -17,11 +17,13 @@
             style="float: right !important"
           >
             <li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
               <p class="btn_grid">
                 <a id="btnAddThirdPartyCust" href="#">
                   <spring:message code="sal.btn.addNewThirdParty" />
                 </a>
               </p>
+              </c:if>
             </li>
           </ul>
         </td>

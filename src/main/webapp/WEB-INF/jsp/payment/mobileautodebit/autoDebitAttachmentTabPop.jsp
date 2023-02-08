@@ -18,7 +18,9 @@
             <input type='file' title='file add'  id='cardImageFile' accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='cardImageFileTxt'  name=''/>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </c:if>
             </label>
 			 </div>
     </td>
@@ -30,9 +32,13 @@
             <input type='file' title='file add'  id='otherFile1' accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt1'/>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a>
+                </c:if>
             </label>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <span class="optional2"><span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH1")'>Remove</a></span>
+                </c:if>
         </div>
     </td>
 </tr>
@@ -43,9 +49,13 @@
             <input type="file" title="file add" id="otherFile2" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt2'/>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </c:if>
              </label>
+             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
              <span class="optional3"><span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+                </c:if>
         </div>
     </td>
 </tr>
@@ -56,9 +66,13 @@
             <input type="file" title="file add" id="otherFile3" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt3'/>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </c:if>
             </label>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <span class="optional4"><span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH3")'>Remove</a></span>
+                </c:if>
         </div>
     </td>
 </tr>
@@ -69,9 +83,13 @@
             <input type="file" title="file add" id="otherFile4" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt4'/>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <span class='label_text attach_mod upload_btn'><a href='#'>Upload</a></span>
+                </c:if>
             </label>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <span class='label_text attach_mod remove_btn'><a href='#' onclick='fn_removeFile("OTH4")'>Remove</a></span>
+                </c:if>
         </div>
     </td>
 </tr>
