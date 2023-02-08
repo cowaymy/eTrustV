@@ -28,6 +28,8 @@ public class PreCcpRegisterApiForm {
 		Map<String, Object> params = new HashMap<>();
 		params.put("selectType", vo.getSelectType());
 		params.put("selectKeyword", vo.getSelectKeyword());
+        params.put("reqstDtFrom", vo.getReqstDtFrom());
+        params.put("reqstDtTo", vo.getReqstDtTo());
         params.put("custId", vo.getCustId());
         params.put("memId", vo.getMemId());
 		return params;
@@ -41,6 +43,8 @@ public class PreCcpRegisterApiForm {
     private String yyyymmdd;
     private String ddmmyyyy;
     private int memId;
+    private String reqstDtFrom;
+    private String reqstDtTo;
 
     public String getSelectType() {
         return selectType;
@@ -103,5 +107,21 @@ public class PreCcpRegisterApiForm {
 
     public void setMemId(int memId) {
         this.memId = memId;
+    }
+
+    public String getReqstDtFrom() {
+        return reqstDtFrom;
+    }
+
+    public void setReqstDtFrom(String reqstDtFrom) {
+        this.reqstDtFrom = reqstDtFrom;
+    }
+
+    public String getReqstDtTo() {
+        return reqstDtTo;
+    }
+
+    public void setReqstDtTo(String reqstDtTo) {
+        this.reqstDtTo = reqstDtTo;
     }
 }

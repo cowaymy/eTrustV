@@ -49,6 +49,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
 
   @Override
   public List<EgovMap> selectPreCcpRegisterList(PreCcpRegisterApiForm param) throws Exception {
+
         if (null == param) {
           throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
@@ -56,7 +57,6 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         if (CommonUtils.isEmpty(param.getSelectType())) {
           throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
         }
-
         else {
               if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 3) {
                 throw new ApplicationException(AppConstants.FAIL, "Please fill out at least three characters.");
@@ -64,6 +64,10 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
               if ( ("2").equals(param.getSelectType()) && CommonUtils.isEmpty(param.getSelectKeyword())) {
                 throw new ApplicationException(AppConstants.FAIL, "Select Keyword value does not exist.");
               }
+        }
+
+        if(CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
+            throw new ApplicationException(AppConstants.FAIL, "Request Date does not exist.");
         }
 
         if (CommonUtils.isEmpty(param.getMemId()) || param.getMemId() <= 0) {
