@@ -33,37 +33,34 @@
     });
 
     function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
+        if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
+            fn_loadCreditCard2(custCrcId);
+        }
+        if($('#callPrgm').val() == 'PRE_ORD') {
+            fn_loadCreditCard2(custCrcId);
+        }
+        else if($('#callPrgm').val() == 'ORD_REQUEST_PAY') {
+            fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
+        }
+        else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
+            console.log('callPrgm');
 
-        console.log('callPrgm');
-        console.log(custCrcId);
+            console.log(custCrcId);
+            var msg = "";
 
-        var msg = "";
+            Common.ajax("GET", "/sales/customer/checkActTokenByCustCrcId", { custCrcId : custCrcId}, function(result) {
 
-        Common.ajax("GET", "/sales/customer/checkActTokenByCustCrcId", { custCrcId : custCrcId}, function(result) {
-
-            if (result == true){
-                msg = Common.alert('This card has marked as Transaction Not Allowed. Kindly change a new card');
-            }
-
-            else {
-                if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
-                    fn_loadCreditCard2(custCrcId);
-                }
-                if($('#callPrgm').val() == 'PRE_ORD') {
-                    fn_loadCreditCard2(custCrcId);
-                }
-                else if($('#callPrgm').val() == 'ORD_REQUEST_PAY') {
-                    fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
-                }
-                else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
+            	if (result == false){
                     fn_loadCreditCardPop(custCrcId);
-                }
-                else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
-                    fn_loadCreditCard(custCrcId);
-                }
-            }
-        });
-
+            	}
+            	else {
+                    msg = Common.alert('This card has marked as Transaction Not Allowed. Kindly change a new card');
+            	}
+            });
+        }
+        else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
+            fn_loadCreditCard(custCrcId);
+        }
         $('#custPopCloseBtn').click();
     }
 
