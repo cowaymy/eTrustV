@@ -61,7 +61,10 @@
 		    , A.CUST_MOBILENO
 		    , A.CUST_EMAIL
 		    , A.CUST_ID
-		    , A.CHS_STATUS
+		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS
+                       WHEN A.CHS_STATUS = 'YELLOW' THEN A.CHS_STATUS || '_' || A.CHS_RSN
+                                                                          ELSE '-'
+              END CHS_STATUS
 		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
 		    , B.USER_NAME CREATOR
 	   FROM SAL0343D A
