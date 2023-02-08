@@ -93,12 +93,12 @@
         {dataField: 'chsRsn', headerText: 'CHS Reason'},
         {dataField: 'ccpStus', headerText: '<spring:message code="sal.title.text.ccpBrStus" />'},
         {dataField: 'ccpRem', headerText: '<spring:message code="sal.title.text.ccpBrRem" />'},
-        {dataField: 'type', headerText: 'CCP Query Type'},
-        {dataField: 'ticketQuery', headerText: 'CCP Query'},
-        {dataField: 'feedback', headerText: 'CCP Query Feedback'},
-        {dataField: 'status', headerText: 'CCP Query Status'},
-        {dataField: 'created', headerText: 'Query Date & Time'},
-        {dataField: 'responded', headerText: 'Responder (At_By)'}
+        {dataField: 'type', headerText: 'CCP<br>Query Type'},
+        {dataField: 'ticketQuery', headerText: 'CCP<br>Query'},
+        {dataField: 'feedback', headerText: 'CCP<br>Query Feedback'},
+        {dataField: 'status', headerText: 'CCP<br>Query Status'},
+        {dataField: 'created', headerText: 'Query<br>Date & Time'},
+        {dataField: 'responded', headerText: 'Responder<br>(At_By)'}
     ], '', {
     	usePaging: true,
     	pageRowCount: 20,

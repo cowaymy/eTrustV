@@ -21,8 +21,8 @@
 	    const logGrid = GridCommon.createAUIGrid("logGrid", [
 	        {dataField: 'status', headerText: 'Ticket Status'},
 	        {dataField: 'ticketType', headerText: 'Ticket Type'},
-	        {dataField: 'logContent', headerText: 'Details of Query and feedback'},
-	        {dataField: 'upd', headerText: 'Responder Details'}
+	        {dataField: 'logContent', headerText: 'Details of<br>Query and feedback'},
+	        {dataField: 'upd', headerText: 'Responder<br>Details'}
 	    ], '', {
 	        usePaging: true,
 	        pageRowCount: 20,

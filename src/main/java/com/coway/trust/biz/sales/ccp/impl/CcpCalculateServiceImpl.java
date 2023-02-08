@@ -1472,6 +1472,11 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
+	public List<String> ccpMembers() throws Exception {
+		return ccpCalculateMapper.ccpMembers();
+	}
+
+	@Override
 	public List<EgovMap> orgDetails(Map<String,Object> p) throws Exception {
 		return ccpCalculateMapper.orgDetails(p);
 	}

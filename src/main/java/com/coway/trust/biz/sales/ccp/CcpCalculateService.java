@@ -86,6 +86,8 @@ public interface CcpCalculateService {
 
 	EgovMap ccpTicketDetails(Map<String, Object> p) throws Exception;
 
+	List<String> ccpMembers() throws Exception;
+
 	List<EgovMap> orgDetails(Map<String, Object> p) throws Exception;
 
 	void updateCCPTicket(Map<String, Object> p) throws Exception;

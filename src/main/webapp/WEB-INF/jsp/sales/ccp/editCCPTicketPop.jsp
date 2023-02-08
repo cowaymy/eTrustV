@@ -30,22 +30,38 @@
 		                    <td id="_ticketType"></td>
 		                </tr>
 		                <tr>
-		                    <th>Details of ticket</th>
-		                    <td id="_ticketQuery"></td>
+                            <th>Ticket Info</th>
+                            <td id="_ticketQuery"></td>
+                        </tr>
+                        <c:if test="${ccpMember == 1 && ticketDetails.status == 1}">
+                            <tr>
+                                <th>CCP Feedback</th>
+                                <td><textarea name="content" id="_content"></textarea></td>
+                            </tr>
+                        </c:if>
+                        <c:if test="${ccpMember == 0 && ticketDetails.status == 1}">
+                            <tr>
+                                <th>Feedback</th>
+                                <td><textarea name="content" id="_content" maxlength="160"></textarea></td>
+                            </tr>
+                        </c:if>
+                        <c:if test="${ccpMember == 0 || ticketDetails.status != 1}">
+	                        <tr>
+	                            <th>CCP Feedback</th>
+	                            <td id="_ccpFeedback"></td>
+	                        </tr>
+                        </c:if>
+		                <tr>
+                            <th>Log conversation</th>
+                            <td id="_latestLog"></td>
+                        </tr>
+		                <tr>
+		                    <th>Status</th>
+		                    <td><select name="status" id="_status"></select></td>
 		                </tr>
-		                <c:if test="${ticketDetails.status != 34}">
-			                <tr>
-			                    <th>Feedback</th>
-			                    <td><textarea name="content" id="_content"></textarea></td>
-			                </tr>
-			                <tr>
-			                    <th>Status</th>
-			                    <td><select name="status" id="_status"></select></td>
-			                </tr>
-			            </c:if>
 		            </tbody>
 		        </table>
-		        <c:if test="${ticketDetails.status != 34}">
+		        <c:if test="${ticketDetails.status == 1}">
 			        <ul class="center_btns">
 			            <li><p class="btn_blue"><a id="saveBtn" name="ticketSaveBtn" href="#">Save</a></p></li>
 			        </ul>
@@ -103,12 +119,30 @@
         </c:forEach>
     ]
 
+    const ccpLogs = [
+        <c:forEach var="log" items="${ticketDetails.ccpLogs}">
+            {
+                logContent: `<c:out value="${log.logContent}" />`
+            },
+        </c:forEach>
+    ]
+
     $(() => {
     	$("#_ticketType").text("${ticketDetails.code}")
-        $("#_ticketQuery").text(logs[logs.length - 1].logContent)
+        $("#_ticketQuery").text(logs[0].logContent)
 
-        <c:if test="${ticketDetails.status != 34}">
-	        doDefCombo(ticketStatus.filter(s => s.codeId != 1), '35', '_status','S')
-        </c:if>
+        $("#_latestLog").text(logs[logs.length - 1].logContent)
+
+	   $("#_ccpFeedback").text(ccpLogs[ccpLogs.length - 1]?.logContent)
+
+    	<c:choose>
+	        <c:when test="${ticketDetails.status == 1}">
+		        doDefCombo(ticketStatus, '1', '_status','S')
+	        </c:when>
+		    <c:otherwise>
+		        doDefCombo(ticketStatus, '${ticketDetails.status}', '_status','S')
+		        $("#_status").prop("disabled", true);
+		    </c:otherwise>
+	     </c:choose>
     })
 </script>

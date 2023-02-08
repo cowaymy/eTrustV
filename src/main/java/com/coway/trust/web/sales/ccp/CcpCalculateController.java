@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1202,9 +1203,23 @@ public class CcpCalculateController {
 
 	@RequestMapping(value="/editCCPTicketPop.do")
 	public String editCCPTicketPop(@RequestParam Map<String, Object> p, ModelMap model) throws Exception {
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		String userName = session.getUserName();
 
 		EgovMap ticketDetails = ccpCalculateService.ccpTicketDetails(p);
+
+		List<EgovMap> logs = (List<EgovMap>) ticketDetails.get("logs");
+		List<String> ccpMembers = ccpCalculateService.ccpMembers();
+		List<EgovMap> ccpLogs = logs.stream().filter(log -> ccpMembers.contains(log.get("userName"))).collect(Collectors.toList());
+		ticketDetails.put("ccpLogs", ccpLogs);
+
 		model.put("ticketDetails", ticketDetails);
+
+		if (ccpMembers.contains(userName)) {
+			model.put("ccpMember", 1);
+		} else {
+			model.put("ccpMember", 0);
+		}
 
 		List<EgovMap> orgDetails = ccpCalculateService.orgDetails(ticketDetails);
 		model.put("orgDetails", orgDetails);

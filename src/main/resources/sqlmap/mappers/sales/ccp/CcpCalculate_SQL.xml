@@ -2166,7 +2166,7 @@ WHERE ROWNUM = 1
     FROM SAL0337M A
     JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
     WHERE B.SALES_ORD_NO = #{ordNo}
-    AND STATUS <![CDATA[<>]]> 34
+    AND STATUS = 1
 </select>
 
 <select id="ccpTicketSeq" resultType="int">
@@ -2239,6 +2239,15 @@ WHERE ROWNUM = 1
     JOIN SAL0001D E ON E.SALES_ORD_ID = A.SALES_ORD_ID
     WHERE A.TICKET_ID = #{ticketId}
     ORDER BY B.CRT_DT
+</select>
+
+<select id="ccpMembers" resultType="String">
+    SELECT
+        USER_NAME
+    FROM SYS0047M
+    WHERE USER_ID IN (
+        SELECT USER_ID FROM SYS0045M WHERE ROLE_ID IN (210,254,206)
+    ) AND USER_STUS_ID = 1
 </select>
 
 <select id="selectTicketLogs" parameterType="Map" resultType="egovMap">
