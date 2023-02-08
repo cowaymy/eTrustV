@@ -104,10 +104,12 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.eligiAdvDisc" /></th>
-    <td colspan="5">
+    <td colspan="1">
         <c:if test="${orderDetail.basicInfo.advDisc == 1}">Yes</c:if>
         <c:if test="${orderDetail.basicInfo.advDisc == 0}">No</c:if>
     </td>
+    <th scope="row">Key-In Month</th>
+    <td colspan="1">${orderDetail.basicInfo.keyInMonth}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.SeriacNo" /></th>

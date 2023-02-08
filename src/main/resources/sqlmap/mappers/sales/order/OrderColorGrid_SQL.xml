@@ -6,195 +6,204 @@
     with som as
     (
     SELECT som.SALES_ORD_ID,
-                            som.SALES_ORD_NO ,
-                            som.SALES_DT ,
-                            som.APP_TYPE_ID,
-                            som.STUS_CODE_ID ,
-                            mo.TOP_ORG_CODE,
-                            mo.ORG_CODE,
-                            mo.GRP_CODE,
-                            mo.DEPT_CODE,
-                            mo.MEM_CODE,
-                            som.PV_MONTH,
-                            som.PV_YEAR,
-                            som.COMM_DT,
-                            som.PAY_COM_DT,
-                            som.MEM_ID,
-                            CASE
-                                     WHEN NVL(som.PCKAGE_BINDING_NO,0) > 0 THEN 3
-                                     ELSE NVL(SOM.EX_TRADE,0) END SALES_TYPE,
-                            som.PRE_ORD_ID ,
-                            som.ECOMM_ORD_ID,
-                            som.CUST_ID,
-                            som.promo_ID,
-                            som.ex_trade,
-                            som.pckage_binding_no,
-                            som.BNDL_ID
-                            FROM SAL0001D som
-                            JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
-                            WHERE (som.STUS_CODE_ID  <![CDATA[<> ]]> 8)  AND som.APP_TYPE_ID <![CDATA[<> ]]> 5764
+           som.SALES_ORD_NO ,
+           som.SALES_DT ,
+           som.APP_TYPE_ID,
+           som.STUS_CODE_ID ,
+           mo.TOP_ORG_CODE,
+           mo.ORG_CODE,
+           mo.GRP_CODE,
+           mo.DEPT_CODE,
+           mo.MEM_CODE,
+           som.PV_MONTH,
+           som.PV_YEAR,
+           som.COMM_DT,
+           som.PAY_COM_DT,
+           som.MEM_ID,
+           CASE WHEN NVL(som.PCKAGE_BINDING_NO,0) > 0 THEN 3 ELSE NVL(SOM.EX_TRADE,0) END SALES_TYPE,
+           som.PRE_ORD_ID ,
+           som.ECOMM_ORD_ID,
+           som.CUST_ID,
+           som.promo_ID,
+           som.ex_trade,
+           som.pckage_binding_no,
+           som.BNDL_ID,
+           NVL(KEYIN.MONTH || '/' || KEYIN.YEAR, '-') AS key_in_month
+           FROM SAL0001D som
+           JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
+           LEFT JOIN SAL0340D KEYIN ON (CAST(som.SALES_DT AS TIMESTAMP) <![CDATA[>=]]> CAST(KEYIN.KEYIN_START_DT AS TIMESTAMP))
+                                        AND (CAST(som.SALES_DT AS TIMESTAMP)　<![CDATA[<]]> CAST(KEYIN.KEYIN_END_DT + INTERVAL '1' DAY AS TIMESTAMP))
+           WHERE (som.STUS_CODE_ID  <![CDATA[<> ]]> 8)  AND som.APP_TYPE_ID <![CDATA[<> ]]> 5764
 
-                            <if test="orgCode != null and orgCode != ''">
-                                AND NVL (mo.ORG_CODE, '') = #{orgCode}
-                            </if>
-                            <if test="grpCode != null and grpCode != ''">
-                                AND NVL (mo.GRP_CODE, '') = #{grpCode}
-                            </if>
-                            <if test="deptCode != null and deptCode != ''">
-                                AND NVL (mo.DEPT_CODE, '') = #{deptCode}
-                            </if>
-                            <if test="memID!= null and memID != ''" >
-                                AND NVL (mo.MEM_ID, '') = #{memID}
-                            </if>
-                            <if test="ordNo != null and ordNo != ''">
-                                AND som.SALES_ORD_NO = #{ordNo}
-                            </if>
-                            <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
-                              AND som.APP_TYPE_ID IN
-                                <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
-                                  #{item}
-                                </foreach>
-                            </if>
-                            <if test="createStDate != null and createStDate != ''">
-                                AND som.SALES_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-                            </if>
-                            <if test="createEnDate != null and createEnDate != ''">
-                                AND som.SALES_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-                            </if>
-                            <if test="netSalesMonth != null and netSalesMonth != ''">
-                                AND NVL (som.PV_YEAR, 0) = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-                                AND NVL (som.PV_MONTH, 0) = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-                            </if>
-                            <if test='isEKeyin != null and isEKeyin != ""'>
-                               AND NVL(som.PRE_ORD_ID,0) > 0
-                            </if>
-                            <if test='isECommerce != null and isECommerce != ""'>
-                               AND NVL(som.ECOMM_ORD_ID,0) > 0
-                            </if>
+           <if test="orgCode != null and orgCode != ''">
+               AND NVL (mo.ORG_CODE, '') = #{orgCode}
+           </if>
+           <if test="grpCode != null and grpCode != ''">
+               AND NVL (mo.GRP_CODE, '') = #{grpCode}
+           </if>
+           <if test="deptCode != null and deptCode != ''">
+               AND NVL (mo.DEPT_CODE, '') = #{deptCode}
+           </if>
+           <if test="memID!= null and memID != ''" >
+               AND NVL (mo.MEM_ID, '') = #{memID}
+           </if>
+           <if test="ordNo != null and ordNo != ''">
+               AND som.SALES_ORD_NO = #{ordNo}
+           </if>
+           <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
+             AND som.APP_TYPE_ID IN
+               <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
+                 #{item}
+               </foreach>
+           </if>
+           <if test="createStDate != null and createStDate != ''">
+               AND som.SALES_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+           </if>
+           <if test="createEnDate != null and createEnDate != ''">
+               AND som.SALES_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+           </if>
+           <if test="netSalesMonth != null and netSalesMonth != ''">
+               AND NVL (som.PV_YEAR, 0) = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+               AND NVL (som.PV_MONTH, 0) = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+           </if>
+           <if test='isEKeyin != null and isEKeyin != ""'>
+              AND NVL(som.PRE_ORD_ID,0) > 0
+           </if>
+           <if test='isECommerce != null and isECommerce != ""'>
+              AND NVL(som.ECOMM_ORD_ID,0) > 0
+           </if>
+           <if test="keyInMonth != null and keyInMonth != ''">
+                AND EXTRACT(YEAR FROM som.SALES_DT) = EXTRACT(YEAR FROM TO_DATE(#{keyInMonth},'MM/YYYY'))
+                AND EXTRACT(MONTH FROM som.SALES_DT) = EXTRACT(MONTH FROM TO_DATE(#{keyInMonth},'MM/YYYY'))
+           </if>
+
     )
-     <![CDATA[
-    SELECT D1.ORD_ID ,
-                            D1.ORD_NO ,
-                            D1.APP_TYPE_CODE ,
-                            D1.CUST_NAME ,
-                            D1.CUST_IC ,
-                            D1.STK_CODE ,
-                            D1.SALESMAN_CODE ,
-                            D1.TOP_ORG_CODE ,
-                            D1.ORG_CODE ,
-                            D1.GRP_CODE ,
-                            D1.DEPT_CODE ,
-                            D1.MEM_CODE ,
-                            D1.IS_NET ,
-                            D1.NET_MONTH ,
-                            D1.INSTALL_STUS_ID ,
-                            D1.INSTALL_STUS ,
-                            D1.INSTALL_FAIL_RESN,
-                            D1.COM_DT ,
-                            D1.PAY_COM_DT ,
-                            D1.PROMO_CODE ,
-                            D1.PROMO_DESC ,
-                            D1.C1 ,
-                            D1.ORD_DT ,
-                            D1.STUS_ID ,
-                            D1.STUS_CODE ,
-                            D1.C5 ,
-                            D1.C6 ,
-                            D1.C7 ,
-                            D1.C8 ,
-                            D1.C9,
-                            D1.STATE,
-                            D1.CHS_STUS,
-                            D1.NEO_PRO_STATUS,
-                            D1.BNDL_ID,
-                            D1.CCP_STUS,
-                            D1.CCP_REMARK
+    <![CDATA[
+    SELECT  D1.ORD_ID ,
+	        D1.ORD_NO ,
+	        D1.APP_TYPE_CODE ,
+	        D1.CUST_NAME ,
+	        D1.CUST_IC ,
+	        D1.STK_CODE ,
+	        D1.SALESMAN_CODE ,
+	        D1.TOP_ORG_CODE ,
+	        D1.ORG_CODE ,
+	        D1.GRP_CODE ,
+	        D1.DEPT_CODE ,
+	        D1.MEM_CODE ,
+	        D1.IS_NET ,
+	        D1.NET_MONTH ,
+	        D1.INSTALL_STUS_ID ,
+	        D1.INSTALL_STUS ,
+	        D1.INSTALL_FAIL_RESN,
+	        D1.COM_DT ,
+	        D1.PAY_COM_DT ,
+	        D1.PROMO_CODE ,
+	        D1.PROMO_DESC ,
+	        D1.C1 ,
+	        D1.ORD_DT ,
+	        D1.STUS_ID ,
+	        D1.STUS_CODE ,
+	        D1.C5 ,
+	        D1.C6 ,
+	        D1.C7 ,
+	        D1.C8 ,
+	        D1.C9,
+	        D1.STATE,
+	        D1.CHS_STUS,
+	        D1.NEO_PRO_STATUS,
+	        D1.BNDL_ID,
+	        D1.CCP_STUS,
+	        D1.CCP_REMARK,
+	        D1.KEY_IN_MONTH
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
-                            F1.ORD_NO ,
-                            F1.APP_TYPE_CODE ,
-                            UPPER(F1.CUST_NAME) CUST_NAME,
-                            UPPER(F1.CUST_IC) CUST_IC,
-                            F1.STK_CODE ,
-                            UPPER(F1.SALESMAN_CODE) SALESMAN_CODE ,
-                            F1.TOP_ORG_CODE ,
-                            UPPER(F1.ORG_CODE) ORG_CODE ,
-                            UPPER(F1.GRP_CODE) GRP_CODE ,
-                            UPPER(F1.DEPT_CODE) DEPT_CODE ,
-                            F1.MEM_CODE ,
-                            F1.IS_NET ,
-                            F1.NET_MONTH ,
-                            F1.INSTALL_STUS_ID ,
-                            F1.INSTALL_STUS ,
-                            F1.INSTALL_FAIL_RESN ,
-                            F1.COM_DT ,
-                            F1.PAY_COM_DT ,
-                            UPPER(F1.PROMO_CODE) PROMO_CODE ,
-                            F1.PROMO_DESC ,
-                            1 C1 ,
-                            CASE WHEN ( F1.ORD_DT IS NOT NULL )
-                                   THEN F1.ORD_DT
-                                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END ORD_DT ,
-                            CASE WHEN ( F1.STUS_ID IS NOT NULL )
-                                   THEN F1.STUS_ID
-                                   ELSE 0 END STUS_ID ,
-                            CASE WHEN ( F1.STUS_CODE IS NOT NULL )
-                                   THEN F1.STUS_CODE
-                                   ELSE ' ' END STUS_CODE ,
-                            CASE WHEN ( F1.APP_TYPE_ID IS NOT NULL )
-                                   THEN F1.APP_TYPE_ID
-                                   ELSE 0 END C5 ,
-                            CASE WHEN ( F1.STK_ID IS NOT NULL )
-                                   THEN F1.STK_ID
-                                   ELSE 0 END C6 ,
-                            F1.PV_MONTH C7 ,
-                            F1.PV_YEAR C8 ,
-                            F1.TOT_OTSTND C9,
-                            F1.STATE,
-                            F1.CHS_STUS,
-                            F1.NEO_PRO_STATUS,
-                            F1.BNDL_ID,
-                            CASE WHEN F1.CCP_STUS_ID = 1 THEN 'Active'
-                            WHEN ( F1.CCP_STUS_ID = 5 ) THEN 'Approved'
-                            WHEN ( F1.CCP_STUS_ID = 6 ) THEN 'Rejected'
-                            ELSE ''
-                            END CCP_STUS,
-                            F1.CCP_REMARK
+                           F1.ORD_NO ,
+                           F1.APP_TYPE_CODE ,
+                           UPPER(F1.CUST_NAME) CUST_NAME,
+                           UPPER(F1.CUST_IC) CUST_IC,
+                           F1.STK_CODE ,
+                           UPPER(F1.SALESMAN_CODE) SALESMAN_CODE ,
+                           F1.TOP_ORG_CODE ,
+                           UPPER(F1.ORG_CODE) ORG_CODE ,
+                           UPPER(F1.GRP_CODE) GRP_CODE ,
+                           UPPER(F1.DEPT_CODE) DEPT_CODE ,
+                           F1.MEM_CODE ,
+                           F1.IS_NET ,
+                           F1.NET_MONTH ,
+                           F1.INSTALL_STUS_ID ,
+                           F1.INSTALL_STUS ,
+                           F1.INSTALL_FAIL_RESN ,
+                           F1.COM_DT ,
+                           F1.PAY_COM_DT ,
+                           UPPER(F1.PROMO_CODE) PROMO_CODE ,
+                           F1.PROMO_DESC ,
+                           1 C1 ,
+                           CASE WHEN ( F1.ORD_DT IS NOT NULL )
+                                  THEN F1.ORD_DT
+                                  ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END ORD_DT ,
+                           CASE WHEN ( F1.STUS_ID IS NOT NULL )
+                                  THEN F1.STUS_ID
+                                  ELSE 0 END STUS_ID ,
+                           CASE WHEN ( F1.STUS_CODE IS NOT NULL )
+                                  THEN F1.STUS_CODE
+                                  ELSE ' ' END STUS_CODE ,
+                           CASE WHEN ( F1.APP_TYPE_ID IS NOT NULL )
+                                  THEN F1.APP_TYPE_ID
+                                  ELSE 0 END C5 ,
+                           CASE WHEN ( F1.STK_ID IS NOT NULL )
+                                  THEN F1.STK_ID
+                                  ELSE 0 END C6 ,
+                           F1.PV_MONTH C7 ,
+                           F1.PV_YEAR C8 ,
+                           F1.TOT_OTSTND C9,
+                           F1.STATE,
+                           F1.CHS_STUS,
+                           F1.NEO_PRO_STATUS,
+                           F1.BNDL_ID,
+                           CASE WHEN F1.CCP_STUS_ID = 1 THEN 'Active'
+                           WHEN ( F1.CCP_STUS_ID = 5 ) THEN 'Approved'
+                           WHEN ( F1.CCP_STUS_ID = 6 ) THEN 'Rejected'
+                           ELSE ''
+                           END CCP_STUS,
+                           F1.CCP_REMARK,
+                           F1.KEY_IN_MONTH
                 FROM ( SELECT E1.ORD_ID OrderID1 ,
-                            E1.ORD_NO ,
-                            E1.ORD_DT ,
-                            E1.APP_TYPE_ID ,
-                            E1.APP_TYPE_CODE ,
-                            E1.CUST_NAME ,
-                            E1.CUST_IC ,
-                            E1.STK_ID ,
-                            E1.STK_CODE ,
-                            E1.SALESMAN_CODE ,
-                            E1.STUS_ID ,
-                            E1.STUS_CODE ,
-                            E1.TOP_ORG_CODE ,
-                            E1.ORG_CODE ,
-                            E1.GRP_CODE ,
-                            E1.DEPT_CODE ,
-                            E1.MEM_CODE,
-                            E1.IS_NET ,
-                            E1.NET_MONTH ,
-                            E1.PV_MONTH ,
-                            E1.PV_YEAR ,
-                            E1.INSTALL_STUS_ID ,
-                            E1.INSTALL_STUS ,
-                            E1.INSTALL_FAIL_RESN ,
-                            E1.COM_DT ,
-                            E1.PAY_COM_DT ,
-                            E1.TOT_OTSTND ,
-                            E1.PROMO_CODE ,
-                            E1.PROMO_DESC ,
-                            1,
-                            E1.STATE,
-                            E1.CHS_STUS,
-                            E1.NEO_PRO_STATUS,
-                            E1.BNDL_ID,
-                            E1.CCP_STUS_ID,
-                            E1.CCP_REMARK
+                           E1.ORD_NO ,
+                           E1.ORD_DT ,
+                           E1.APP_TYPE_ID ,
+                           E1.APP_TYPE_CODE ,
+                           E1.CUST_NAME ,
+                           E1.CUST_IC ,
+                           E1.STK_ID ,
+                           E1.STK_CODE ,
+                           E1.SALESMAN_CODE ,
+                           E1.STUS_ID ,
+                           E1.STUS_CODE ,
+                           E1.TOP_ORG_CODE ,
+                           E1.ORG_CODE ,
+                           E1.GRP_CODE ,
+                           E1.DEPT_CODE ,
+                           E1.MEM_CODE,
+                           E1.IS_NET ,
+                           E1.NET_MONTH ,
+                           E1.PV_MONTH ,
+                           E1.PV_YEAR ,
+                           E1.INSTALL_STUS_ID ,
+                           E1.INSTALL_STUS ,
+                           E1.INSTALL_FAIL_RESN ,
+                           E1.COM_DT ,
+                           E1.PAY_COM_DT ,
+                           E1.TOT_OTSTND ,
+                           E1.PROMO_CODE ,
+                           E1.PROMO_DESC ,
+                           1,
+                           E1.STATE,
+                           E1.CHS_STUS,
+                           E1.NEO_PRO_STATUS,
+                           E1.BNDL_ID,
+                           E1.CCP_STUS_ID,
+                           E1.CCP_REMARK,
+                           E1.KEY_IN_MONTH
                       FROM (
                       SELECT * FROM (
                       SELECT som.SALES_ORD_ID ORD_ID,
@@ -260,7 +269,8 @@
                             CASE WHEN ORG11.HP_CODE IS NOT NULL THEN 'Yes' ELSE 'No' END AS NEO_PRO_STATUS,
                             som.BNDL_ID,
                             CCP.CCP_STUS_ID,
-                            CCPRESN.RESN_DESC AS CCP_REMARK
+                            CCPRESN.RESN_DESC AS CCP_REMARK,
+                            som.key_in_month
                       FROM som
                             JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                             JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID

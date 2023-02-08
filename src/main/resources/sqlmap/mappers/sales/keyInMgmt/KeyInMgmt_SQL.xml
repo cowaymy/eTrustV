@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.keyInMgmt.impl.keyInMgmtMapper">
+
+
+<select id="searchKeyinMgmtList" parameterType="Map" resultType="egovMap">
+	SELECT
+	    KEY_IN_ID,
+	    YEAR,
+	    MONTH,
+	    WEEK,
+	    TO_DATE(TO_CHAR(KEYIN_START_DT,'yyyy/mm/dd'),'yyyy/mm/dd') KEYIN_START_DT,
+        '00:00 am' AS KEYIN_START_TIME,
+        TO_DATE(TO_CHAR(KEYIN_END_DT,'yyyy/mm/dd'),'yyyy/mm/dd') KEYIN_END_DT,
+	    '23:59 pm' AS KEYIN_END_TIME,
+	    CRT_USER_ID,
+	    B.USER_NAME　CREATOR,
+	    CRT_DT,
+	    UPD_USER_ID,
+	    C.USER_NAME UPDATOR,
+	    UPD_DT
+	FROM SAL0340D A
+	LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+	LEFT JOIN SYS0047M C ON A.UPD_USER_ID = C.USER_ID
+	WHERE 1=1
+    <if test="fromMonth != null and fromMonth != ''">
+        AND ((MONTH = #{fromMonth} AND YEAR = #{fromYear}) OR (MONTH = #{toMonth} AND YEAR = #{toYear}))
+    </if>
+</select>
+<insert id="insertKeyInId" parameterType="Map">
+   INSERT INTO SAL0340D
+          (
+            KEY_IN_ID         ,
+            YEAR              ,
+            MONTH             ,
+            WEEK              ,
+            KEYIN_START_DT    ,
+            KEYIN_END_DT      ,
+            CRT_USER_ID    ,
+            CRT_DT
+          )
+    VALUES
+         (
+           SAL0340D_KEYIN_ID_SEQ.NEXTVAL
+            ,#{year}
+            ,#{month}
+            ,#{week}
+            ,TO_DATE(#{keyinStartDt},'yyyy/mm/dd')
+            ,TO_DATE(#{keyinEndDt},'yyyy/mm/dd')
+            ,#{creator}
+            ,SYSDATE
+         )
+  </insert>
+
+    <update id="updateKeyInId" parameterType="Map">
+      UPDATE SAL0340D SET
+        YEAR                = #{year}         ,
+        MONTH               = #{month}        ,
+        WEEK                = #{week}         ,
+        KEYIN_START_DT      = TO_DATE(#{keyinStartDt},'yyyy/mm/dd'),
+        KEYIN_END_DT        = TO_DATE(#{keyinEndDt},'yyyy/mm/dd'),
+        UPD_USER_ID         = #{updator}      ,
+        UPD_DT              = SYSDATE
+       WHERE KEY_IN_ID  = #{keyInId}
+  </update>
+
+    <delete id="deleteKeyInId" parameterType="Map">
+      DELETE SAL0340D  WHERE KEY_IN_ID  = #{keyInId}
+  </delete>
+
+</mapper>

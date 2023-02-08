@@ -286,6 +286,12 @@
                 editable : false,
                 style: 'left_style'
             }, {
+                dataField : "keyInMonth",
+                headerText : "Key In Month",
+                width : 100,
+                editable : false,
+                style: 'left_style'
+            },{
                 //dataField : "rsCnvrCnfmDt",
                 dataField : "netMonth",
                 headerText : "<spring:message code='sal.title.text.netMonth' />",
@@ -992,8 +998,8 @@ console.log("searchColorGrid");
         <option value="act">Active</option>
         <option value="rjct">Rejected</option>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Key-in Month</th>
+    <td><input type="text" title="기준년월" id="keyInMonth" name="keyInMonth" placeholder="MM/YYYY" class="j_date2 w100p" /></td>
     <th scope="row"></th>
     <td></td>
  </tr>
