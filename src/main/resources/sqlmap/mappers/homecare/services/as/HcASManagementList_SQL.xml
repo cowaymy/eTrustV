@@ -68,6 +68,21 @@
          AND B.CODE = #{groupCode}
     </select>
 
+    <select id="selectCTByDSCSearch2" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.selectCTByDSC2]*/
+      SELECT A.MEM_ID CODE_ID
+           , A.MEM_CODE || '-' || A.NAME CODE_NAME
+        FROM ORG0001D A
+           , SYS0005M B
+       WHERE A.BRNCH = B.BRNCH_ID
+         AND A.STUS = '1'
+         AND A.MEM_TYPE IN ('3','5758','6672') /* CT DT LT */
+         AND B.BRNCH_ID = #{brnchId}
+           <if test='isAC != null and isAC == "Y"'>
+           		AND A.IS_AC = 1
+           </if>
+    </select>
+
     <select id="getErrMstList" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.getErrMstList]*/
         SELECT DEFECT_TYPE_CODE AS CODE_ID

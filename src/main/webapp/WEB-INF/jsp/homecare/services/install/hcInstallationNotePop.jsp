@@ -22,11 +22,16 @@ var branchDs = [];
       $('.multy_select').on("change", function() {
       }).multipleSelect({});
 
+      doGetComboSepa('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'branch',  'S', ''); //Branch Code
       doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'fn_multiCombo');
-      doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
+      //doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
 
       $("#branch").change(function() {
-    	    doGetCombo('/homecare/services/as/selectCTByDSCSearch.do', $("#branch").val(), '', 'CTCode', 'M', 'fn_multiCombo');
+    	  var isAC = 'N';
+    	  if($('#branch').find(":selected").text().substring(0,3) == "DSC") {
+    		  isAC = 'Y';
+    	  }
+    	  doGetComboObj('/homecare/services/as/selectCTByDSCSearch2.do', {brnchId: $("#branch").val(), isAC: isAC}, '', 'CTCode', 'M', 'fn_multiCombo');
         });
     });
 
@@ -183,7 +188,7 @@ var branchDs = [];
       }
 
       if ($("#branch").val() != '' && $("#branch").val() != null) {
-        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1 AND TYPE_ID = 5754)";
+        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE BRNCH_ID = '" + $("#branch").val() + "' AND STUS_ID = 1)";
       }
 
       if ($("#sortType").val() == "1") {
