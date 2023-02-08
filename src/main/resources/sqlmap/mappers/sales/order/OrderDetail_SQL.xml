@@ -113,6 +113,7 @@
                            , V8.REDEEM_WARRANTY
                            , V1.ADV_DISC
                            , V3.RECEIVING_MARKETING_MSG_STATUS
+                           , V9.MONTH || '/' || V9.YEAR AS KEY_IN_MONTH
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -122,6 +123,8 @@
     LEFT JOIN SAL0001D V7 ON V7.PCKAGE_BINDING_NO = V1.ORD_ID
     <!-- LEFT JOIN SAL0213M V6 ON V6.SALES_ORD_ID = V1.ORD_ID -->
     LEFT JOIN SAL0261D V8 ON V8.SALES_ORD_ID = V2.SALES_ORD_ID
+    LEFT JOIN SAL0340D V9 ON (CAST(V2.SALES_DT AS TIMESTAMP)   <![CDATA[ >= ]]> CAST(V9.KEYIN_START_DT AS TIMESTAMP))
+                                AND (CAST(V2.SALES_DT AS TIMESTAMP)  <![CDATA[ < ]]>  CAST(V9.KEYIN_END_DT + INTERVAL '1' DAY AS TIMESTAMP))
     WHERE V1.ORD_ID = #{salesOrderId}
   </select>
 
@@ -536,7 +539,7 @@
                JOIN SYS0032M T2 ON T2.RESN_ID = T1.CCP_RESN_ID
                WHERE T1.CCP_SALES_ORD_ID = #{salesOrderId}
    ) A WHERE a.rnk = 1
-	</select>
+    </select>
 
   <select id="selectOrderCCPInfoByOrderID" parameterType="Map" resultType="egovMap">
     SELECT T1.CCP_ID
@@ -1706,9 +1709,9 @@
 
   <select id="selectMobileAutoDebitInfo" parameterType="Map" resultType="egovMap">
         SELECT * FROM (SELECT p0333m.PAD_NO, p0333m.UPT_DT || ' (' || s0047m.USER_NAME || ')' AS UPDATOR
-	    FROM PAY0333M p0333m
-	    INNER JOIN SAL0001D s0001d
-	    ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
+        FROM PAY0333M p0333m
+        INNER JOIN SAL0001D s0001d
+        ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
         LEFT JOIN SYS0047M s0047m
         ON s0047m.USER_ID = p0333m.UPT_BY
         WHERE s0001d.SALES_ORD_ID = #{salesOrderId}
