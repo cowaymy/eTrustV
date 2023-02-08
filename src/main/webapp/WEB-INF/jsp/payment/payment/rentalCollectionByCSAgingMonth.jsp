@@ -74,7 +74,7 @@ $(document).ready(function(){
 	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'cmbCustTypeId', 'S', '');       // Customer Type Combo Box
 	doDefCombo(paymode, '', 'cmbPaymode', 'S', '');
 	doDefCombo(isPaid, '', 'cmbIsPaid', 'S', '');
-	doDefCombo(outStandMonth, '0', 'cmbOutstandMonth', 'S', '');
+	doDefCombo(outStandMonth, '', 'cmbOutstandMonth', 'S', '');
 	doDefCombo(bsMonth, '', 'cmbBsMonth', 'S', '');
 	doDefCombo(openingAging, '', 'cmbOpeningAging', 'S', '');
 
