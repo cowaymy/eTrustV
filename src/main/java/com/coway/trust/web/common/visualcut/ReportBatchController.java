@@ -2708,11 +2708,11 @@ public void rentalAgreementRaw() {
   LOGGER.info("[END] rentalAgreementRaw...");
 }
 
-@RequestMapping(value = "/AD_RCM_Daily_2017_2018.do")
+@RequestMapping(value = "/AD_RCM_Daily_HA_2017_2018.do")
 //@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
 public void adRcmDaily2017t2018() {
 
-    LOGGER.info("[START] AD_RCM_Daily_2017_2018...");
+    LOGGER.info("[START] AD_RCM_Daily_HA_2017_2018...");
     Map<String, Object> params = new HashMap<>();
 
     int startYear = 2017;
@@ -2724,13 +2724,13 @@ public void adRcmDaily2017t2018() {
     params.put("V_STARTYEAR", startYear);// parameter
     params.put("V_ENDYEAR", endYear);// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "Simplified_RCM" + File.separator + "AD_RCM_Daily_2017_2018_" + CommonUtils.getNowDate() + ".xls");
+        "Simplified_RCM" + File.separator + "AD_RCM_Daily_HA_2017_2018_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
-    LOGGER.info("[END] AD_RCM_Daily_2017_2018...");
+    LOGGER.info("[END] AD_RCM_Daily_HA_2017_2018...");
 }
 
-@RequestMapping(value = "/AD_RCM_Daily_Current_Year.do")
+@RequestMapping(value = "/AD_RCM_Daily_HA_Current_Year.do")
 //@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
 public void adRcmDailyCurrentYear() {
 
@@ -2738,7 +2738,7 @@ public void adRcmDailyCurrentYear() {
   int currentYear = LocalDate.now().getYear();
 
   for(int year= startYear;year <= currentYear; year++){
-    LOGGER.info("[START] AD_RCM_Daily_Current_Year...");
+    LOGGER.info("[START] AD_RCM_Daily_HA_Current_Year...");
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/AD_RCM_Daily_HA.rpt");// visualcut
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
@@ -2746,10 +2746,10 @@ public void adRcmDailyCurrentYear() {
     params.put("V_STARTYEAR", year);// parameter
     params.put("V_ENDYEAR", "");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "Simplified_RCM" + File.separator + "AD_RCM_Daily_" + year + "_" + CommonUtils.getNowDate() + ".xls");
+        "Simplified_RCM" + File.separator + "AD_RCM_Daily_HA_" + year + "_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
-    LOGGER.info("[END] AD_RCM_Daily_Current_Year...");
+    LOGGER.info("[END] AD_RCM_Daily_HA_Current_Year...");
   }
 }
 
@@ -2777,7 +2777,7 @@ public void adRcmDailyHc2020t2023() {
 
 
 @RequestMapping(value = "/etrSummaryList.do")
-//@Scheduled(cron = " 0 0 6 * * FRI") //Every Friday Morning 6:00 AM
+//@Scheduled(cron = " 0 0 6 1 * FRI") //Every Friday Morning 6:00 AM
 public void etrSummaryList() {
 LOGGER.info("[START] etrSummaryList...");
 Map<String, Object> params = new HashMap<>();
