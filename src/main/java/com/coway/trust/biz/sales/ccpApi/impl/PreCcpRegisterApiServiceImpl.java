@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.ccpApi.PreCcpRegisterApiDto;
 import com.coway.trust.api.mobile.sales.ccpApi.PreCcpRegisterApiForm;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiController;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.impl.CommonApiMapper;
 import com.coway.trust.biz.login.impl.LoginMapper;
@@ -44,6 +47,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Service("PreCcpRegisterApiService")
 public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implements PreCcpRegisterApiService {
+
+ private static final Logger LOGGER = LoggerFactory.getLogger(PreCcpRegisterApiServiceImpl.class);
 
   @Resource(name = "PreCcpRegisterApiMapper")
   private PreCcpRegisterApiMapper preCcpRegisterApiMapper;
@@ -86,6 +91,9 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
 
   @Override
   public PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception {
+
+	    LOGGER.debug("savePreCcp  " + param);
+
         if (null == param) {
           throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
@@ -129,6 +137,9 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         preCcpMap.put("customerEmailAddr", param.getEmail());
         preCcpMap.put("chsStatus", getExistCustomer.get("chsStatus"));
         preCcpMap.put("chsRsn", getExistCustomer.get("chsRsn"));
+        preCcpMap.put("userId", param.getRegId());
+
+        LOGGER.debug("savePreCcp  preCcpMap" + preCcpMap);
 
         int saveCnt = preCcpRegisterMapper.submitPreCcpSubmission(preCcpMap);
 
@@ -136,6 +147,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
           throw new ApplicationException(AppConstants.FAIL, "Fail to insert Pre-CCP request Exception.");
         }
 
+        LOGGER.debug("savePreCcp  preCcpMap 222" + preCcpMap);
         return PreCcpRegisterApiForm.create(preCcpMap);
   }
 
