@@ -91,8 +91,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
 
   @Override
   public PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception {
-
-	    LOGGER.debug("savePreCcp  " + param);
+	    LOGGER.debug("savePreCcp impl : {}", param);
 
         if (null == param) {
           throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
@@ -139,7 +138,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         preCcpMap.put("chsRsn", getExistCustomer.get("chsRsn"));
         preCcpMap.put("userId", param.getRegId());
 
-        LOGGER.debug("savePreCcp  preCcpMap" + preCcpMap);
+        LOGGER.debug("savePreCcp preCcpMap : {}", preCcpMap);
 
         int saveCnt = preCcpRegisterMapper.submitPreCcpSubmission(preCcpMap);
 
@@ -147,7 +146,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
           throw new ApplicationException(AppConstants.FAIL, "Fail to insert Pre-CCP request Exception.");
         }
 
-        LOGGER.debug("savePreCcp  preCcpMap 222" + preCcpMap);
+        LOGGER.debug("savePreCcp preCcpMap2222 : {}", preCcpMap);
         return PreCcpRegisterApiForm.create(preCcpMap);
   }
 
