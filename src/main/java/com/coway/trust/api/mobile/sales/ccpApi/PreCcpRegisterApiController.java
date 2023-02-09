@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.biz.sales.ccpApi.PreCcpRegisterApiService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -56,6 +57,12 @@ public class PreCcpRegisterApiController {
       }
 
     return ResponseEntity.ok(selectPreCcpRegisterList.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+  }
+
+  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)
+  public ResponseEntity<PreCcpRegisterApiForm> saveCustomer(@RequestBody PreCcpRegisterApiForm param) throws Exception {
+    return ResponseEntity.ok(preCcpRegisterApiService.savePreCcp(param));
   }
 
 
