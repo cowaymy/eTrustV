@@ -56,5 +56,6 @@ public interface eHPmemberListMapper {
 
   List<EgovMap> selecteHPFailRemark(Map<String, Object> params);
 
+  List<EgovMap> getMemberExistByNRIC(Map<String, Object> params);
 
 }

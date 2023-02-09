@@ -97,7 +97,7 @@ function fn_memberSave(){
             Common.ajax("POST", "/organization/eHPmemberSave",  jsonObj , function(result) {
                 console.log("message : " + result.message );
 
-                if(result.message == "Email has been used"){
+               if(result.code == "99"){
                 	Common.alert(result.message);
                 }else{
                 	// Only applicable to HP Applicant

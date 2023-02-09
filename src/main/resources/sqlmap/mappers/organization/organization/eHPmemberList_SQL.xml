@@ -1431,4 +1431,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      ]]>
     </select>
 
+    <select id="getMemberExistByNRIC" parameterType="Map" resultType="egovMap">
+		    SELECT
+		        STUS_ID
+		    FROM ORG0003D
+		    WHERE APLICNT_NRIC = #{nric}
+		    ORDER BY APLCTN_ID DESC
+    </select>
+
     </mapper>

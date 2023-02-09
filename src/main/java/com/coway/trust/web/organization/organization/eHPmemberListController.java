@@ -443,10 +443,47 @@ public class eHPmemberListController {
        Boolean isRejoinMem = Boolean.parseBoolean(params.get("isRejoinMem").toString());
        String rejoinMemId = params.get("memId").toString();
 
+       	params.put("nric", params.get("eHPnric").toString());
+       	List<EgovMap> memberInfo = memberListService.selectMemberInfo(params);
+    	List<EgovMap> memberApprovalInfo = memberListService.selectMemberApprovalInfo(params);
+
+    	//Check nric is new joiner or existing member
+		if(memberInfo.size() > 0) {
+    		// if member's rejoin Approval status = Approved
+    		if (memberApprovalInfo.size() > 0) {
+    			if(memberInfo.get(0).get("memId").toString().equals(memberApprovalInfo.get(0).get("memId").toString())){
+    				if(!memberApprovalInfo.get(0).get("apprStus").toString().equals("5")){
+    					message.setCode("99");
+    					message.setMessage("This applicant had been registered.");
+    					return ResponseEntity.ok(message);
+    				}
+    			} else {
+    				message.setCode("99");
+    				message.setMessage("This applicant had been registered.");
+    				return ResponseEntity.ok(message);
+    			}
+    		} else {
+    			message.setCode("99");
+    			message.setMessage("This applicant is in " + memberInfo.get(0).get("name").toString() +" status.");
+			    return ResponseEntity.ok(message);
+    		}
+		} else {
+			 //New member - Check whether exist in ORG0003D
+		      List<EgovMap> memberExist = eHPmemberListService.getMemberExistByNRIC(params);
+		       if(memberExist.size() > 0){
+		    	   if(memberExist.get(0).get("stusId").toString().equals("1") || memberExist.get(0).get("stusId").toString().equals("44")){
+    		    	   message.setCode("99");
+    		    	   message.setMessage("This applicant is under pending agreement.");
+    				   return ResponseEntity.ok(message);
+		    	   }
+		       }
+		}
+
        // To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
        if (params.get("eHPemail") != null && !isRejoinMem && (rejoinMemId.equals(null) || rejoinMemId.equals(""))){
     	   List<EgovMap> HpExist = eHPmemberListService.selectHpApplByEmail(params);
     	   if(HpExist.size() > 0){
+    		   message.setCode("99");
     		   message.setMessage("Email has been used");
     		   return ResponseEntity.ok(message);
     	   }

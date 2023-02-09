@@ -308,4 +308,8 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
 		return eHPmemberListMapper.selecteHPFailRemark(params);
 	}
 
+    public List<EgovMap> getMemberExistByNRIC(Map<String, Object> params){
+    	return eHPmemberListMapper.getMemberExistByNRIC(params);
+    }
+
 }
