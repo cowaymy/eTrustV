@@ -154,6 +154,8 @@ public interface InstallationResultListService {
 
   Map<String, Object> installationSendSMS(String ApptypeID, Map<String, Object> installResult);
 
+List<EgovMap> selectWaterSrcType();
+
   //void installationSendEmail(Map<String, Object> params);
 
 }

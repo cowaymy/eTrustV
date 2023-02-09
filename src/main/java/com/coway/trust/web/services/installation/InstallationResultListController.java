@@ -300,6 +300,7 @@ public class InstallationResultListController {
     List<EgovMap> boosterUsed = installationResultListService.boosterUsed();
     List<EgovMap> failParent = installationResultListService.failParent();
     List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+    List<EgovMap> waterSrcType = installationResultListService.selectWaterSrcType();
     EgovMap callType = installationResultListService.selectCallType(params); // CALL
                                                                              // LOG
                                                                              // INFORMATION
@@ -417,6 +418,7 @@ public class InstallationResultListController {
     model.addAttribute("sirimLoc", sirimLoc);
     model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
     model.addAttribute("promotionView", promotionView);
+    model.addAttribute("waterSrcType", waterSrcType);
     // model.addAttribute("customerAddress", customerAddress);
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
@@ -468,6 +470,7 @@ public class InstallationResultListController {
     List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
     List<EgovMap> failParent = installationResultListService.failParent();
     List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+    List<EgovMap> waterSrcType = installationResultListService.selectWaterSrcType();
     params.put("ststusCodeId", 1);
     params.put("reasonTypeId", 172);
    // List<EgovMap> failReason = installationResultListService.selectFailReason(params);
@@ -587,6 +590,7 @@ public class InstallationResultListController {
     model.addAttribute("sirimLoc", sirimLoc);
     model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
     model.addAttribute("promotionView", promotionView);
+    model.addAttribute("waterSrcType", waterSrcType);
 
     return "services/installation/addInstallationResultProductDetailPop";
   }
@@ -1825,6 +1829,18 @@ public class InstallationResultListController {
   public ResponseEntity<EgovMap> getStkCatType (@RequestParam Map<String, Object> params) {
 	  EgovMap stkCatType = installationResultListService.selectStkCatType(params);
 	  return ResponseEntity.ok(stkCatType);
+  }
+
+  @RequestMapping(value = "/waterSrcTypeList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> waterSrcTypeList(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model) {
+
+    logger.debug("=====================boosterList=======================");
+    logger.debug(" PARAM :: " + params.toString());
+    logger.debug("=====================boosterList=======================");
+    List<EgovMap> waterSrcType = installationResultListService.selectWaterSrcType();
+
+    return ResponseEntity.ok(waterSrcType);
   }
 
 }

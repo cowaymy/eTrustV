@@ -39,6 +39,7 @@ var fileGroupKey ="";
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
     doGetCombo('/services/boosterList.do', '', '${installInfo.boosterPump}','boosterPump', 'S' , '');
+    doGetCombo('/services/waterSrcTypeList.do', '', '${installInfo.waterSrcType}','waterSrcType', 'S' , '');
 
      /*  $("#boosterPump").change(function() {
         val = $(this).val();
@@ -674,6 +675,16 @@ function notMandatoryForAP(){
                 <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
               </td>
             </tr>
+
+            <tr>
+            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
+            <td><select class="w100p" id="waterSrcType" name="waterSrcType">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
+                   <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach></td>
+            </select></td>
+          </tr>
 
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 

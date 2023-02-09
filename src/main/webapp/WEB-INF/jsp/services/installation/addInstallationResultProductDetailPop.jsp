@@ -188,6 +188,7 @@
         $("#addInstallForm #m12").hide();
         $("#addInstallForm #m13").hide();
         $("#addInstallForm #m14").hide();
+        $("#addInstallForm #m18").hide();
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#addInstallForm #m17").hide();
           $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -207,6 +208,7 @@
         $("#addInstallForm #m12").show();
         $("#addInstallForm #m13").show();
         $("#addInstallForm #m14").show();
+        $("#addInstallForm #m18").show();
 
         $("#addInstallForm #m6").hide();
         $("#addInstallForm #m7").hide();
@@ -234,6 +236,7 @@
           function() {
             if ($("#addInstallForm #installStatus").val() == 4) {
               $("#checkCommission").prop("checked", true);
+              $("#addInstallForm #m18").show();
             }
             else {
               var currDt = new Date(),
@@ -251,6 +254,7 @@
               var currentDate =  [day, month, year].join('/');
               $("#nextCallDate").val(currentDate);
               $("#checkCommission").prop("checked", false);
+              $("#addInstallForm #m18").hide();
             }
       });
 
@@ -2191,6 +2195,15 @@
             <td>
               <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
             </td>
+          </tr>
+          <tr>
+            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
+            <td><select class="w100p" id="waterSrcType" name="waterSrcType">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
+                   <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach></td>
+            </select></td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>

@@ -3166,6 +3166,7 @@
            , BOOSTER_PUMP BOOSTER_PUMP
            , AFT_PSI AFT_PSI
            , AFT_LPM AFT_LPM
+           , WATER_SRC_TYPE
            , ATCH_FILE_GRP_ID
 
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
@@ -3214,6 +3215,7 @@
                   , Extent3.BOOSTER_PUMP BOOSTER_PUMP
                   , Extent3.AFT_PSI AFT_PSI
                   , Extent3.AFT_LPM AFT_LPM
+                  , Extent3.WATER_SRC_TYPE
                   , CASE
                         WHEN ( Extent3.ATCH_FILE_GRP_ID IS NOT NULL ) THEN Extent3.ATCH_FILE_GRP_ID || '_' || Extent1.INSTALL_ENTRY_NO || '_WEB'
                         ELSE ''
@@ -5440,5 +5442,13 @@ AND J.CODE IN ('COM','FAL','CAN')
 <select id="selectUserByMemId" parameterType="Map" resultType="egovMap">
     SELECT U.USER_ID, U.USER_NAME FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME WHERE M.MEM_ID = #{memId} AND M.STUS = 1 AND ROWNUM = 1
 </select>
+
+    <select id="selectWaterSrcType" parameterType="Map" resultType="egovMap">
+	      SELECT Extent1.CODE_ID
+	           , Extent1.CODE
+	           , Extent1.CODE_NAME
+	      FROM SYS0013m Extent1
+	      WHERE CODE_MASTER_ID = 501
+    </select>
 
 </mapper>

@@ -318,4 +318,6 @@ public interface InstallationResultListMapper {
 
   EgovMap selectUserByMemId (Map<String, Object> params);
 
+ List<EgovMap> selectWaterSrcType();
+
 }

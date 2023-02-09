@@ -3916,4 +3916,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 			e.printStackTrace();
 		}
 	}*/
+
+  	@Override
+    public List<EgovMap> selectWaterSrcType() {
+      return installationResultListMapper.selectWaterSrcType();
+    }
 }

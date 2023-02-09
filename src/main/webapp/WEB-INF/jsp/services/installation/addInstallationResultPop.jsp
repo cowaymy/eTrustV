@@ -97,6 +97,7 @@
         $("#addInstallForm #m14").hide();
         $("#addInstallForm #m17").hide();
         $("#addInstallForm #m24").hide();
+        $("#addInstallForm #m18").hide();
 
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -116,6 +117,7 @@
         $("#addInstallForm #m13").show();
         $("#addInstallForm #m14").show();
         $("#addInstallForm #m24").hide();
+        $("#addInstallForm #m18").show();
 
         $("#addInstallForm #m6").hide();
         $("#addInstallForm #m7").hide();
@@ -194,6 +196,7 @@
             $("#addInstallForm #m4").show();
             $("#addInstallForm #m5").show();
             $("#addInstallForm #m17").show();
+            $("#addInstallForm #m18").show();
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #grid_wrap_instChk_view").show();
               $("#addInstallForm #instChklstCheckBox").show();
@@ -224,6 +227,7 @@
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
             $("#addInstallForm #m24").hide();
+            $("#addInstallForm #m18").hide();
 
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -462,6 +466,10 @@
           }
           ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
+
+         if ( $("#waterSrcType").val() == "") {
+             msg += "* <spring:message code='sys.msg.necessary' arguments='Water source type' htmlEscape='false'/> </br>";
+           }
       }
 
       //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
@@ -1912,8 +1920,13 @@
           <tr>
             <th scope="row"><spring:message code='service.title.TurbidityLevel' /><span name="m24" id="m24" class="must">*</span> <p class="link_btn"><a href="${pageContext.request.contextPath}/resources/download/service/Turbidity.pptx"> <u>Guideline </u><img src="${pageContext.request.contextPath}/resources/AUIGrid/images/help_ico.png"</a></p></th>
             <td><input type="text" title="" placeholder="<spring:message code='service.title.TurbidityLevel' />" class="w100p" id="turbLvl" name="turbLvl" onkeypress='validate(event)' onblur='validate2(this);' /></td>
-            <th></th>
-            <td></td>
+            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
+            <td><select class="w100p" id="waterSrcType" name="waterSrcType">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
+                   <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach></td>
+            </select></td>
           </tr>
           <%-- <tr>
             <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
