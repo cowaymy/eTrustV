@@ -77,6 +77,7 @@ var orgFileName = '';
             }
 
            var msg = '';
+           let filePath = "/resources/WebShare/organization/LoginPopUp/";
 
            var fileType = file.type.split('/');
            if(fileType[1] != 'pdf'){
@@ -89,79 +90,79 @@ var orgFileName = '';
 	        		   msg += "*Invalid Memo File Name.<br>Memo Type must match with file name Universal_memo.pdf";
 	        	   }
 	        	   $("#searchForm #orgFileName").val('Universal_memo.pdf');
-	        	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/Universal_memo.pdf");
+	        	   $("#searchForm #newFileName").val(filePath + "Universal_memo.pdf");
 	           }else if($("#listMemoType").val() == '7172'){
 	        	   if(file.name != "MessageFromManagingDirector.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name MessageFromManagingDirector.pdf";
                    }
 	        	   $("#searchForm #orgFileName").val('MessageFromManagingDirector.pdf');
-	               $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/MessageFromManagingDirector.pdf");
+	               $("#searchForm #newFileName").val(filePath + "MessageFromManagingDirector.pdf");
                }else if($("#listMemoType").val() == '7171'){
             	   if(file.name != "HP_MEMO_INCENTIVE.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name HP_MEMO_INCENTIVE.pdf";
                    }
             	   $("#searchForm #orgFileName").val('HP_MEMO_INCENTIVE.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/HP_MEMO_INCENTIVE.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "HP_MEMO_INCENTIVE.pdf");
                }else if($("#listMemoType").val() == '7170'){
             	   if(file.name != "CowaySalesManagerAgreement_SM.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowaySalesManagerAgreement_SM.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowaySalesManagerAgreement_SM.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowaySalesManagerAgreement_SM.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowaySalesManagerAgreement_SM.pdf");
                }else if($("#listMemoType").val() == '7169'){
             	   if(file.name != "CowaySalesManagerAgreement_HM.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowaySalesManagerAgreement_HM.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowaySalesManagerAgreement_HM.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowaySalesManagerAgreement_HM.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowaySalesManagerAgreement_HM.pdf");
                }else if($("#listMemoType").val() == '7168'){
             	   if(file.name != "CowaySalesManagerAgreement_GM.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file nameCowaySalesManagerAgreement_GM.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowaySalesManagerAgreement_GM.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowaySalesManagerAgreement_GM.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowaySalesManagerAgreement_GM.pdf");
                }else if($("#listMemoType").val() == '7167'){
             	   if(file.name != "CowaySalesManagerAgreement.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowaySalesManagerAgreement.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowaySalesManagerAgreement.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowaySalesManagerAgreement.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowaySalesManagerAgreement.pdf");
                }else if($("#listMemoType").val() == '7166'){
             	   if(file.name != "CowayHomecareTechnicianManagerAgreement.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowayHomecareTechnicianManagerAgreement.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowayHomecareTechnicianManagerAgreement.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowayHomecareTechnicianManagerAgreement.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowayHomecareTechnicianManagerAgreement.pdf");
                }else if($("#listMemoType").val() == '7165'){
             	   if(file.name != "CowayHomecareTechnicianAgreement.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowayHomecareTechnicianAgreement.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowayHomecareTechnicianAgreement.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowayHomecareTechnicianAgreement.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowayHomecareTechnicianAgreement.pdf");
                }else if($("#listMemoType").val() == '7164'){
             	   if(file.name != "CowayHealthPlannerAgreement.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowayHealthPlannerAgreement.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowayHealthPlannerAgreement.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowayHealthPlannerAgreement.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowayHealthPlannerAgreement.pdf");
                }else if($("#listMemoType").val() == '7163'){
             	   if(file.name != "CowayCodyAgreement.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name CowayCodyAgreement.pdf";
                    }
             	   $("#searchForm #orgFileName").val('CowayCodyAgreement.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/CowayCodyAgreement.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "CowayCodyAgreement.pdf");
                }else if($("#listMemoType").val() == '7162'){
             	   if(file.name != "ConsentLetter.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name ConsentLetter.pdf";
                    }
             	   $("#searchForm #orgFileName").val('ConsentLetter.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/ConsentLetter.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "ConsentLetter.pdf");
                }else if($("#listMemoType").val() == '7161'){
             	   if(file.name != "Agreement_C.pdf" ){
                        msg += "*Invalid Memo File Name.<br>Memo Type must match with file name Agreement_C.pdf";
                    }
             	   $("#searchForm #orgFileName").val('Agreement_C.pdf');
-            	   $("#searchForm #newFileName").val("/resources/report/prd/organization/LoginPopUp/Agreement_C.pdf");
+            	   $("#searchForm #newFileName").val(filePath + "Agreement_C.pdf");
                }else {
 	                msg += "*Invalid Memo File Name and Memo Type.<br>Please raise ticket to Trustdesk.";
 	            }
