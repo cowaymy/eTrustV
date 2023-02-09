@@ -91,7 +91,6 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
 
   @Override
   public PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception {
-	    LOGGER.debug("savePreCcp impl : {}", param);
 
         if (null == param) {
           throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
@@ -112,7 +111,6 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         if (CommonUtils.isEmpty(param.getEmail())) {
             throw new ApplicationException(AppConstants.FAIL, "Email value does not exist.");
         }
-
 
         Map<String, Object> loginInfoMap = new HashMap<String, Object>();
         loginInfoMap.put("_USER_ID", param.getRegId());
@@ -136,9 +134,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
         preCcpMap.put("customerEmailAddr", param.getEmail());
         preCcpMap.put("chsStatus", getExistCustomer.get("chsStatus"));
         preCcpMap.put("chsRsn", getExistCustomer.get("chsRsn"));
-        preCcpMap.put("userId", param.getRegId());
-
-        LOGGER.debug("savePreCcp preCcpMap : {}", preCcpMap);
+        preCcpMap.put("userId", loginVO.getUserId());
 
         int saveCnt = preCcpRegisterMapper.submitPreCcpSubmission(preCcpMap);
 

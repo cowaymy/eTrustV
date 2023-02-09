@@ -62,7 +62,6 @@ public class PreCcpRegisterApiController {
   @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)
   public ResponseEntity<PreCcpRegisterApiForm> savePreCcp(@RequestBody PreCcpRegisterApiForm param) throws Exception {
-	LOGGER.debug("savePreCcp    값 : {}", param);
     return ResponseEntity.ok(preCcpRegisterApiService.savePreCcp(param));
   }
 
