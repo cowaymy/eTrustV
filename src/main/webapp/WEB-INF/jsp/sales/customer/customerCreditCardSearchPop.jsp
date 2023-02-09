@@ -6,6 +6,7 @@
 
     //AUIGrid 생성 후 반환 ID
     var crcGridID;
+    var callPrgmTemp;
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
@@ -33,28 +34,32 @@
     });
 
     function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
-    	 console.log('callPrgm');
 
          console.log(custCrcId);
+
+         callPrgmTemp = $('#callPrgm').val();
 
          Common.ajax("GET", "/sales/customer/checkActTokenByCustCrcId", { custCrcId : custCrcId}, function(result) {
              var msg = "";
 
              if (result == false){
-                 if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
+                 console.log('callPrgm ' + $('#callPrgm').val());
+                 console.log('callPrgmTemp ' + callPrgmTemp);
+
+                 if(callPrgmTemp == 'ORD_REGISTER_PAYM_CRC') {
                      fn_loadCreditCard2(custCrcId);
                  }
-                 if($('#callPrgm').val() == 'PRE_ORD') {
+                 else if(callPrgmTemp == 'PRE_ORD') {
                      fn_loadCreditCard2(custCrcId);
                  }
-                 else if($('#callPrgm').val() == 'ORD_REQUEST_PAY') {
+                 else if(callPrgmTemp == 'ORD_REQUEST_PAY') {
                      fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
                  }
-                 else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
+                 else if(callPrgmTemp == 'ORD_MODIFY_PAY_CHAN') {
                      fn_loadCreditCardPop(custCrcId);
 
                  }
-                 else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
+                 else if(callPrgmTemp == 'PAY_CRC_KEY_IN') {
                      fn_loadCreditCard(custCrcId);
                  }
              }
