@@ -25,8 +25,8 @@
 								'fn_multiCombo'); //Common Code
 						// DSC CODE
 						//doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'listDSCCode', 'S', 'fn_multiCombo'); //Branch Code
-						doGetComboSepa('/homecare/selectHomecareBranchList.do',
-								'', ' - ', '', 'listDSCCode', 'S',
+						doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',
+								'', ' - ', '', 'listDSCCode', 'M',
 								'fn_multiCombo'); //Branch Code
 						// STATE CODE
 						doGetCombo('/callCenter/getstateList.do', '', '',
@@ -159,6 +159,13 @@
 			selectAll : true, // 전체선택
 			width : '100%'
 		});
+
+		$('#listDSCCode').change(function() {
+
+        }).multipleSelect({
+            selectAll : true, // 전체선택
+            width : '100%'
+        });
 
 		$('#callLogPromotionList').change(function() {//Added by Keyi
 		}).multipleSelect({

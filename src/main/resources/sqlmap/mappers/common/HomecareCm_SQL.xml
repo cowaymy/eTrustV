@@ -51,4 +51,22 @@
 		SELECT DISTINCT(BRNCH_ID) CODE_ID, CODE ||'-'|| NAME  CODE_NAME,CODE,TYPE_ID FROM SYS0005M A JOIN SYS0064M B ON CODE = CT_BRNCH_CODE WHERE HT_BRNCH_CODE IS NOT NULL AND A.STUS_ID = 1
 		ORDER BY CODE
 	</select>
+
+	<select id="selectHomecareAndDscBranchList" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID CODE_ID
+                 , CODE ||#{separator}|| NAME  CODE_NAME
+                 , TYPE_ID
+
+         FROM SYS0005M
+        WHERE STUS_ID = 1
+              AND TYPE_ID IN
+                <foreach item="item" collection="branchTypeList" index="index"
+                    open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            <if test="brnchTypeDsc != null and brnchTypeDsc != ''">
+                OR TYPE_ID = #{brnchTypeDsc}
+            </if>
+         ORDER BY CODE
+    </select>
 </mapper>

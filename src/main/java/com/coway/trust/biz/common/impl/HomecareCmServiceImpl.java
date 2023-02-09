@@ -55,6 +55,19 @@ public class HomecareCmServiceImpl implements HomecareCmService {
 	}
 
 	/**
+	 * Select Homecare Branch List
+	 * @Author MY-HLTANG
+	 * @Date 2023. 02.09.
+	 * @param params
+	 * @return
+	 * @see com.coway.trust.biz.common.HomecareCmService#selectHomecareAndDscBranchList(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap> selectHomecareAndDscBranchList(Map<String, Object> params) {
+		return homecareCmMapper.selectHomecareAndDscBranchList(params);
+	}
+
+	/**
 	 * Select AC Branch List For Aircon Branch in SYS0064M
 	 * @Author FRANGO
 	 * @Date 2023. 01. 18.

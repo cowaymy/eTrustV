@@ -7,7 +7,7 @@
     $(document).ready(function() {
 	    //doGetCombo('/services/getProductList.do', '', '', 'product', 'S', '');
 	    doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'product', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
-	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
+	    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
 
 	    createInstallationListAUIGrid();
 

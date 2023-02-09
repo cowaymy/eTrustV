@@ -71,6 +71,18 @@ public class HomecareCmController {
 		return ResponseEntity.ok(branchList);
 	}
 
+	@RequestMapping(value = "/selectHomecareAndDscBranchList.do")
+	public ResponseEntity<List<EgovMap>> selectHomecareAndDscBranchList(@RequestParam Map<String, Object> params) {
+		String[] branchTypeArray = {HomecareConstants.HDC_BRANCH_TYPE, HomecareConstants.DSC_BRANCH_TYPE};
+		params.put("branchTypeList", branchTypeArray);
+		String _brnchType = CommonUtils.nvl2(params.get("brnchType"), HomecareConstants.HDC_BRANCH_TYPE);
+		params.put("brnchType", _brnchType);
+
+		List<EgovMap> branchList = homecareCmService.selectHomecareAndDscBranchList(params);
+
+		return ResponseEntity.ok(branchList);
+	}
+
 	@RequestMapping(value = "/selectHomecareDscBranchList.do")
 	public ResponseEntity<List<EgovMap>> selectHomecareDscBranchList(@RequestParam Map<String, Object> params) {
 		String _brnchType = CommonUtils.nvl2(params.get("brnchType"), HomecareConstants.HDC_BRANCH_TYPE);

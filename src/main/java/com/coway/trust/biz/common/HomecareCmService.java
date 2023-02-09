@@ -36,6 +36,8 @@ public interface HomecareCmService {
 	 */
 	public List<EgovMap> selectHomecareBranchList(Map<String, Object> params);
 
+	public List<EgovMap> selectHomecareAndDscBranchList(Map<String, Object> params);
+
 	int checkIfIsAcInstallationProductCategoryCode(Map<String, Object> params);
 
 	public List<EgovMap> selectAcBranchList();

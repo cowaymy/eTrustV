@@ -475,9 +475,16 @@
 				#{item}
 			</foreach>
 		</if>
-		<if test="DSCCode != null and DSCCode != '' ">
+		<if test="DSCCodeList != null and DSCCodeList != '' ">
+            AND Extent1.DSC_BRNCH_ID IN
+            <foreach item="item" collection="DSCCodeList" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+		<!-- <if test="DSCCode != null and DSCCode != '' ">
 			AND Extent1.DSC_BRNCH_ID = #{DSCCode}
-		</if>
+		</if> -->
 		<if test="createDate != '' and endDate == '' ">
 	      <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
 		</if>
