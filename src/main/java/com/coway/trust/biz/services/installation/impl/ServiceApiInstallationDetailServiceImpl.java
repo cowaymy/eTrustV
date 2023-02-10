@@ -743,7 +743,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
 	  	      	}
 
-           /* HashMap spMap = (HashMap) rtnValue.get("spMap");
+            HashMap spMap = (HashMap) rtnValue.get("spMap");
             if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
               rtnValue.put("logerr", "Y");
             }
@@ -786,7 +786,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               String procMsg = "Failed to Save";
               String errorMsg = "[API] " + errMsg;
               throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-            }*/
+            }
 
             ////
           }
