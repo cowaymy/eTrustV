@@ -1835,9 +1835,9 @@ public class InstallationResultListController {
   public ResponseEntity<List<EgovMap>> waterSrcTypeList(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
 
-    logger.debug("=====================boosterList=======================");
+    logger.debug("=====================waterSrcTypeList=======================");
     logger.debug(" PARAM :: " + params.toString());
-    logger.debug("=====================boosterList=======================");
+    logger.debug("=====================waterSrcTypeList=======================");
     List<EgovMap> waterSrcType = installationResultListService.selectWaterSrcType();
 
     return ResponseEntity.ok(waterSrcType);

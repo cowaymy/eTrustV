@@ -352,4 +352,8 @@ public interface ASManagementListMapper {
   EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
 
   int updateSVC0130D(Map<String, Object> params);
+
+List<EgovMap> selectWaterSrcType();
+
+List<EgovMap> selectASNotMatch();
 }

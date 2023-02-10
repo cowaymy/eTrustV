@@ -219,6 +219,10 @@ public interface ASManagementListService {
 
 	public Map<String, Object> setCCR000Data(Map<String, Object> params);
 
+	List<EgovMap> selectWaterSrcType();
+
+	List<EgovMap> selectASNotMatch();
+
 	// void sendSms(Map<String, Object> smsList);
 
 }

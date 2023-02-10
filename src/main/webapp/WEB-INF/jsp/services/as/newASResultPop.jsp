@@ -1189,6 +1189,7 @@
 		$("#m14").show();
 		$("#m15").show();
 		$("#m16").show();
+		$("#m19").show();
 
 		$("#btnSaveDiv").attr("style", "display:inline");
 		$('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -1220,6 +1221,7 @@
 		$("#ddlFilterExchangeCode").attr("disabled", false);
 		$("#ddSrvFilterLastSerial").attr("disabled", false);
 		$("#txtFilterRemark").attr("disabled", false);
+		$("#asNotMatch").attr("disabled", false);
 		fn_clearPanelField_ASChargesFees();
 
 		//$("#ddlFilterQty").val("1");
@@ -1242,11 +1244,15 @@
 			$("#psiRcd").attr("disabled", false);
 			$("#m16").show();
 			$("#lpmRcd").attr("disabled", false);
+			$("#m18").show();
+            $("#waterSrcType").attr("disabled", false);
 		} else {
 			$("#m15").hide();
 			$("#psiRcd").attr("disabled", true);
 			$("#m16").hide();
 			$("#lpmRcd").attr("disabled", true);
+			$("#m18").hide();
+            $("#waterSrcType").attr("disabled", true);
 		}
 
 	}
@@ -1267,6 +1273,8 @@
 		$("#m13").hide();
 		$("#m15").hide();
 		$("#m16").hide();
+		$("#m18").hide();
+		$("#m19").hide();
 
 		$("#iscommission").attr("disabled", false);
 
@@ -1277,6 +1285,8 @@
 		$("#solut_code").attr("disabled", "disabled");
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
+		$('#waterSrcType').attr("disabled", "disabled");
+		$('#asNotMatch').attr("disabled", "disabled");
 
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
@@ -1309,6 +1319,8 @@
 		$("#m14").show();
 		$("#m15").hide();
 		$("#m16").hide();
+		$("#m18").hide();
+		$("#m19").hide();
 
 		$("#def_type").attr("disabled", "disabled");
 		$("#def_code").attr("disabled", "disabled");
@@ -1317,6 +1329,8 @@
 		$("#solut_code").attr("disabled", "disabled");
 		$('#psiRcd').attr("disabled", "disabled");
 		$('#lpmRcd').attr("disabled", "disabled");
+		$('#waterSrcType').attr("disabled", "disabled");
+		$('#asNotMatch').attr("disabled", "disabled");
 
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
@@ -1507,6 +1521,8 @@
 
 			AS_PSI : $('#psiRcd').val(),
 			AS_LPM : $('#lpmRcd').val(),
+			WATER_SRC_TYPE : $('#waterSrcType').val(),
+			AS_UNMATCH_REASON : $('#asNotMatch').val(),
 
 			// AS RECALL ENTRY
 			AS_APP_DT : $("#appDate").val(),
@@ -1808,6 +1824,10 @@
 						rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
 						rtnValue = false;
 					}
+					if (FormUtil.checkReqValue($("#waterSrcType"))) { // CT CODE
+	                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='water source Type' htmlEscape='false'/> </br>";
+	                    rtnValue = false;
+	                }
 				}
 
 				// KR-OHK Serial Check
@@ -1816,6 +1836,10 @@
 					rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
 					rtnValue = false;
 				}
+				if (FormUtil.checkReqValue($("#asNotMatch"))) { // CT CODE
+                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='AS not match reason' htmlEscape='false'/> </br>";
+                    rtnValue = false;
+                }
 			} else if ($("#ddlStatus").val() == 19) { // RECALL
 				if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
 					rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
@@ -2878,6 +2902,22 @@
                                         <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />"
                                             class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'/></td>
                                     </tr>
+                                    <tr>
+							            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
+							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled">
+							                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+							                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
+							                   <option value="${list.codeId}">${list.codeName}</option>
+							                </c:forEach></td>
+							            </select></td>
+							            <th scope="row">AS Error Not Match<span name="m19" id="m19" class="must">*</span></th>
+                                        <td><select class="w100p" id="asNotMatch" name="asNotMatch" disabled="disabled">
+                                            <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                                            <c:forEach var="list" items="${asNotMatch}" varStatus="status">
+                                               <option value="${list.codeId}">${list.codeName}</option>
+                                            </c:forEach></td>
+                                        </select></td>
+							       </tr>
                                 </tbody>
                             </table>
                         </dd>

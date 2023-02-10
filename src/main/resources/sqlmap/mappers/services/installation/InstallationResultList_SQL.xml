@@ -5447,7 +5447,7 @@ AND J.CODE IN ('COM','FAL','CAN')
 	      SELECT Extent1.CODE_ID
 	           , Extent1.CODE
 	           , Extent1.CODE_NAME
-	      FROM SYS0013m Extent1
+	      FROM SYS0013M Extent1
 	      WHERE CODE_MASTER_ID = 501
     </select>
 

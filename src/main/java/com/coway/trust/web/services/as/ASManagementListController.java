@@ -130,6 +130,12 @@ public class ASManagementListController {
     List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
     model.addAttribute("fltPmtTyp", fltPmtTyp);
 
+    List<EgovMap> waterSrcType = ASManagementListService.selectWaterSrcType();
+    model.addAttribute("waterSrcType", waterSrcType);
+
+    List<EgovMap> asNotMatch = ASManagementListService.selectASNotMatch();
+    model.addAttribute("asNotMatch", asNotMatch);
+
     return "services/as/inc_asResultEditPop";
   }
 
@@ -415,6 +421,11 @@ public class ASManagementListController {
     // IN HOUSE SETTING (PROMISE DAYS)
     String days = ASManagementListService.getInHseLmtDy();
     model.addAttribute("inHseLmtDy", days);
+
+    List<EgovMap> waterSrcType = ASManagementListService.selectWaterSrcType();
+    List<EgovMap> asNotMatch = ASManagementListService.selectASNotMatch();
+    model.addAttribute("waterSrcType", waterSrcType);
+    model.addAttribute("asNotMatch", asNotMatch);
 
     return "services/as/newASResultPop";
   }

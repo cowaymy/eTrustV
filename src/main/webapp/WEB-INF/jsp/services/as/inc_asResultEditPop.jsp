@@ -364,6 +364,8 @@
 
     $("#psiRcd").val(result[0].psi);
     $("#lpmRcd").val(result[0].lpm);
+    $("#waterSrcType").val(result[0].waterSrcType);
+    $("#asNotMatch").val(result[0].asUnmatchReason);
 
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
@@ -1529,12 +1531,20 @@
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
             rtnValue = false;
           }
+          if (FormUtil.checkReqValue($("#waterSrcType"))) { // CT CODE
+              rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='water source Type' htmlEscape='false'/> </br>";
+              rtnValue = false;
+          }
         }
 
         // KR-OHK Serial Check
         if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
           rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#asNotMatch"))) { // CT CODE
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='AS not match reason' htmlEscape='false'/> </br>";
+            rtnValue = false;
         }
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
@@ -1674,6 +1684,8 @@
 
       AS_PSI : $('#psiRcd').val(),
       AS_LPM : $('#lpmRcd').val(),
+      WATER_SRC_TYPE : $('#waterSrcType').val(),
+      AS_UNMATCH_REASON : $('#asNotMatch').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -2537,6 +2549,22 @@
               <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'/></td>
               </td>
             </tr>
+            <tr>
+                <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
+                <td><select class="w100p" id="waterSrcType" name="waterSrcType">
+                    <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                    <c:forEach var="list" items="${waterSrcType}" varStatus="status">
+                       <option value="${list.codeId}">${list.codeName}</option>
+                    </c:forEach></td>
+                </select></td>
+                <th scope="row">AS Error Not Match<span name="m19" id="m19" class="must">*</span></th>
+                <td><select class="w100p" id="asNotMatch" name="asNotMatch" >
+                    <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                    <c:forEach var="list" items="${asNotMatch}" varStatus="status">
+                       <option value="${list.codeId}">${list.codeName}</option>
+                    </c:forEach></td>
+                </select></td>
+           </tr>
             <tr>
               <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
               <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>

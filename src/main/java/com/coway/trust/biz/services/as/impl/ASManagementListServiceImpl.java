@@ -4221,4 +4221,14 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     //send SMS
     SmsResult smsResult = adaptorService.sendSMS(sms);
   }*/
+
+  @Override
+  public List<EgovMap> selectWaterSrcType() {
+    return ASManagementListMapper.selectWaterSrcType();
+  }
+
+  @Override
+  public List<EgovMap> selectASNotMatch() {
+    return ASManagementListMapper.selectASNotMatch();
+  }
 }

@@ -1658,7 +1658,9 @@
                   ELSE '-'
            END AS AS_RESULT_DT,
            S.PSI,
-           S.LPM
+           S.LPM,
+           S.WATER_SRC_TYPE,
+           S.AS_UNMATCH_REASON
     FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
                   E.AS_RESULT_NO AS_RESULT_NO ,
                   E.AS_ENTRY_ID ,
@@ -1728,7 +1730,9 @@
                   E.APPNT_DT,
                   E.AS_RESULT_UPD_DT,
                   E.PSI,
-                  E.LPM
+                  E.LPM,
+                  E.WATER_SRC_TYPE,
+                  E.AS_UNMATCH_REASON
            FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
            LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
            LEFT JOIN SYS0005M Extent4 ON Extent4.BRNCH_ID = E.AS_BRNCH_ID
@@ -3185,6 +3189,7 @@
                            TRNSC_ID,
                            PSI,
                            LPM,
+                           WATER_SRC_TYPE,
                            AS_UNMATCH_REASON,
                            AS_TRANSFER_TO_DT
     ) VALUES ( #{AS_RESULT_ID},
@@ -3245,6 +3250,7 @@
                #{TRNSC_ID},
                #{AS_PSI},
                #{AS_LPM},
+               #{WATER_SRC_TYPE},
                #{AS_UNMATCH_REASON},
                NVL(#{AS_TRANSFER_TO_DT},0)
     )
@@ -5038,5 +5044,21 @@
                       , APPV_REMARK = #{CALL_REM}
     WHERE SALES_ORDER_NO = #{ORDNO} AND STUS in (1,44)
   </update>
+
+  <select id="selectWaterSrcType" parameterType="Map" resultType="egovMap">
+	  SELECT Extent1.CODE_ID
+	       , Extent1.CODE
+	       , Extent1.CODE_NAME
+	  FROM SYS0013M Extent1
+	  WHERE CODE_MASTER_ID = 501
+  </select>
+
+  <select id="selectASNotMatch" parameterType="Map" resultType="egovMap">
+      SELECT Extent1.CODE_ID
+           , Extent1.CODE
+           , Extent1.CODE_NAME
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = 510
+  </select>
 
 </mapper>
