@@ -250,10 +250,12 @@ function fn_setDetail(gridID, rowIdx){
 	var padidvalue = AUIGrid.getCellValue(gridID, rowIdx, "padId");
 	var salesOrdNo = AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo");
 	var custCrcId = AUIGrid.getCellValue(gridID, rowIdx, "custCrcId");
+	var authFuncChange = "${PAGE_AUTH.funcChange}";
     Common.popupDiv("/payment/mobileautodebit/autoDebitDetailPop.do",
     		{ padId : AUIGrid.getCellValue(gridID, rowIdx, "padId"),
     	salesOrdNo : AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo"),
-    	custCrcId:  AUIGrid.getCellValue(gridID, rowIdx, "custCrcId")}, null, true, "_divAutoDebitDetailPop");
+    	custCrcId:  AUIGrid.getCellValue(gridID, rowIdx, "custCrcId"),
+    	authFuncChange: authFuncChange}, null, true, "_divAutoDebitDetailPop");
 }
 
 function createExcelAUIGrid(){

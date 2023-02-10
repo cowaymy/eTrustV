@@ -609,7 +609,7 @@ function fn_removeFile(name){
 			<!-- Status Info Tab -->
 			<%@ include file="/WEB-INF/jsp/payment/mobileautodebit/autoDebitUpdateStatusTabPop.jsp" %>
 		</section>
-		<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+		<c:if test="${authFuncChange == 'Y'}">
 		<ul class="center_btns mt20">
 		    <li><p class="btn_blue2 big"><a id="btnSave" href="#" onclick="saveDataValidation()">Save</a></p></li>
 		</ul>

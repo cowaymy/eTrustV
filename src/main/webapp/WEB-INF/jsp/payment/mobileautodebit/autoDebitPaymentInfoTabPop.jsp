@@ -17,7 +17,7 @@
             style="float: right !important"
           >
             <li>
-            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <c:if test="${authFuncChange == 'Y'}">
               <p class="btn_grid">
                 <a id="btnAddThirdPartyCust" href="#">
                   <spring:message code="sal.btn.addNewThirdParty" />

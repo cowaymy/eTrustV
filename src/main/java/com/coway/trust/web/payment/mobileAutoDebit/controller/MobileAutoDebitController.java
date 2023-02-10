@@ -223,6 +223,8 @@ public class MobileAutoDebitController {
 		else{
 			model.put("autoDebitAttachmentInfo", null);
 		}
+
+		model.put("authFuncChange",params.get("authFuncChange").toString());
 		return "payment/mobileautodebit/autoDebitDetailPop";
 	}
 
