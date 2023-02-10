@@ -23,10 +23,32 @@
             if (val == "1") { //ctComm_PDF.rpt
                 $("#searchForm #confirmChk").val("N");
                 $("#searchForm #mConfirm").show();
+
             }
+
+
+
+            $("#mLvlcontainer").hide(); //stat
+            if (val == "10") { //ctComm_PDF.rpt
+
+             $("#searchForm #mLvlcontainer").show();
+
+            }
+
+
+
+
+
         });
 
+
+
         // search member code popup
+        $('#memBtn').click(function() {
+            Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
+        });
+
+     // search member code popup
         $('#memBtn').click(function() {
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
@@ -68,6 +90,7 @@
             var cmmDt = $("#searchForm #cmmDt").val(); //commission date
             var salesPersonCd = $("#searchForm [name=salesPersonCd]").val(); //member code
 
+            var mLvl = $("#searchForm #mLvl").val(); //member level
             if (type == "") {
                 //Common.alert("Please select Report Type ");
                 Common.alert("<spring:message code='commission.alert.report.selectType'/>");
@@ -89,7 +112,7 @@
             var month = Number(cmmDt.substring(0, 2));
             var year = Number(cmmDt.substring(3));
             var taskID = month + (year * 12) - 24157; //taskId
-            var memLvl = $("#searchForm #memberLevel").val();
+            var memLvl = $("#searchForm #memberLvl").val();
 
             if (type == "1") {
                 var confirmChk = $("#searchForm [name=confirmChk]").val();
@@ -212,7 +235,64 @@
                 $("#reportForm #HTM").val("7");
                 $("#reportForm #TaskID").val(taskID);
 
-            } else if (type == "4") {
+            }
+
+
+            else if (type == '10'){
+                if (mLvl == '') {
+                    Common.alert("Please select a member level before generating the report.");
+                    return;
+                }
+                if (mLvl == 4) {
+                    reportFileName = "/commission/HT_Sales_Rental_Commission.rpt";
+                    reportDownFileName = "HT Sales Rental Commission" + today;
+                    reportViewType = "EXCEL";
+
+                    $($reportForm).append('<input type="hidden" id="EMPLEV" name="EMPLEV" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                    $("#reportForm #EMPLEV").val(mLvl);
+                    $("#reportForm #TaskID").val(taskID);
+
+                } else if (mLvl == 3) {
+                	 reportFileName = "/commission/HTM_Sales_Rental_Commission.rpt";
+                     reportDownFileName = "HTM Sales Rental Commission" + today;
+                     reportViewType = "EXCEL";
+
+                     $($reportForm).append('<input type="hidden" id="EMPLEV1" name="EMPLEV1" value="" /> ');
+                     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                     $("#reportForm #EMPLEV1").val(mLvl);
+                     $("#reportForm #TaskID").val(taskID);
+//                     reportFileName = "/commission/HTM_Sales_Rental_Commission.rpt";
+//                     reportDownFileName = "HTM Sales Rental Commission" + today;
+//                     reportViewType = "EXCEL";
+
+//                     $($reportForm).append('<input type="hidden" id="EMPLEV1" name="EMPLEV1" value="" /> ');
+//                     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+//                     $("#reportForm #EMPLEV1").val(mLvl);
+//                     $("#reportForm #TaskID").val(taskID);
+                }
+            }
+            else if (type == '12'){
+
+            	reportFileName = "/commission/HTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
+                reportDownFileName = "HTM Sales Rental Commission Overriding" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="HT" name="HTM" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+
+                $("#reportForm #HTM").val("7");
+                $("#reportForm #TaskID").val(taskID);
+            }
+
+
+
+
+            else if (type == "4") {
 
                 reportFileName = "/commission/CommCalHTRawData_Excel.rpt"; //reportFileName
                 reportDownFileName = "CommCalHTRawData_" + today; //report name
@@ -276,11 +356,11 @@
            }
 
             //report info
-            if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
-                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
-                return;
-            }
 
+             if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
+                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
+                 return;
+             }
             //default setting
             $("#reportForm #reportFileName").val(reportFileName);
             $("#reportForm #reportDownFileName").val(reportDownFileName);
@@ -359,6 +439,10 @@
                                     <option value="4">Homecare Technician Comm Calculation</option>
                                     <option value="5">Homecare Technician Manager Comm Calculation</option>
                                     <option value="6">Homecare Technician Non-Monetary Incentive</option>
+                                    <option value="10">HT / HTM Sales Rental Commission</option>
+                                    <option value="12">HTM Sales Rental Commission Overriding</option>
+
+
                                 </c:if>
                         </select></td>
                     </tr>
@@ -370,12 +454,27 @@
                                 <a href="#" id="confirm" name="confirm"><spring:message code='commission.button.confirm'/></a>
                             </p>
                         </td>
+                        <tr id="mLvlcontainer" name="mLvlcontainer" style="display: none;">
+                        <th scope="row">MemberLevel</th>
+                        <td colspan="3">
+                <select id="mLvl" name="mLvl">
+            <option value="">Select a Member Level</option>
+
+            <option value="3">HTM</option>
+            <option value="4">HT</option>
+        </select>
+    </td>
+    <td>
+
+
+
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code='commission.text.search.period'/></th>
                         <td colspan="3"><input type="text" id="cmmDt" name="cmmDt" title="Date" class="j_date2" value="${cmmDt }" /></td>
-                    </tr>
+                     </tr>
+
                 </tbody>
             </table>
             <!-- table end -->
