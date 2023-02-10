@@ -51,6 +51,57 @@ public class PreCcpRegisterApiForm {
     private String mobileNo;
     private String email;
 
+    private String customerName;
+    private String customerNric;
+    private String customerMobileNo;
+    private String customerEmailAddr;
+    private String chsStatus;
+    private String chsRsn;
+
+
+
+    public String getCustomerName() {
+        return customerName;
+    }
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerNric() {
+        return customerNric;
+    }
+    public void setCustomerNric(String customerNric) {
+        this.customerNric = customerNric;
+    }
+
+    public String getCustomerMobileNo() {
+        return customerMobileNo;
+    }
+    public void setCustomerMobileNo(String customerMobileNo) {
+        this.customerMobileNo = customerMobileNo;
+    }
+
+    public String getCustomerEmailAddr() {
+        return customerEmailAddr;
+    }
+    public void setCustomerEmailAddr(String customerEmailAddr) {
+        this.customerEmailAddr = customerEmailAddr;
+    }
+
+    public String getChsStatus() {
+        return chsStatus;
+    }
+    public void setChsStatus(String chsStatus) {
+        this.chsStatus = chsStatus;
+    }
+
+    public String getChsRsn() {
+        return chsRsn;
+    }
+    public void setChsRsn(String chsStatus) {
+        this.chsRsn = chsRsn;
+    }
+
     public String getName() {
         return name;
     }
@@ -82,7 +133,6 @@ public class PreCcpRegisterApiForm {
     public String getSelectType() {
         return selectType;
     }
-
     public void setSelectType(String selectType) {
         this.selectType = selectType;
     }
@@ -90,7 +140,6 @@ public class PreCcpRegisterApiForm {
     public String getSelectKeyword() {
         return selectKeyword;
     }
-
     public void setSelectKeyword(String selectKeyword) {
         this.selectKeyword = selectKeyword;
     }
@@ -98,7 +147,6 @@ public class PreCcpRegisterApiForm {
     public int getCustId() {
         return custId;
     }
-
     public void setCustId(int custId) {
         this.custId = custId;
     }
@@ -106,7 +154,6 @@ public class PreCcpRegisterApiForm {
     public String getRegId() {
         return regId;
     }
-
     public void setRegId(String regId) {
         this.regId = regId;
     }
@@ -114,7 +161,6 @@ public class PreCcpRegisterApiForm {
     public String getYyyymmdd() {
         return yyyymmdd;
     }
-
     public void setYyyymmdd(String yyyymmdd) {
         this.yyyymmdd = yyyymmdd;
     }
@@ -122,7 +168,6 @@ public class PreCcpRegisterApiForm {
     public String getYymmdd() {
         return yymmdd;
     }
-
     public void setYymmdd(String yymmdd) {
         this.yymmdd = yymmdd;
     }
@@ -137,7 +182,6 @@ public class PreCcpRegisterApiForm {
     public int getMemId() {
         return memId;
     }
-
     public void setMemId(int memId) {
         this.memId = memId;
     }
@@ -145,7 +189,6 @@ public class PreCcpRegisterApiForm {
     public String getReqstDtFrom() {
         return reqstDtFrom;
     }
-
     public void setReqstDtFrom(String reqstDtFrom) {
         this.reqstDtFrom = reqstDtFrom;
     }
@@ -153,7 +196,6 @@ public class PreCcpRegisterApiForm {
     public String getReqstDtTo() {
         return reqstDtTo;
     }
-
     public void setReqstDtTo(String reqstDtTo) {
         this.reqstDtTo = reqstDtTo;
     }
