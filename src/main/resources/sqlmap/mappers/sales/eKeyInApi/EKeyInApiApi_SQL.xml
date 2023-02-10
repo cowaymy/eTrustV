@@ -925,9 +925,11 @@ SELECT A.CUST_ID AS CUST_ID
              , A.CARD_TYPE_ID AS CARD_TYPE_ID
              , UPPER(B.CODE_NAME) AS CARD_TYPE_ID_NAME
              , A.CUST_CRC_ID AS CUST_CRC_ID
+             , C.STATUS
     FROM SAL0028D A
     INNER JOIN SYS0013M B ON B.CODE_MASTER_ID = 115
                                       AND A.CARD_TYPE_ID = B.CODE_ID
+    LEFT JOIN PAY0318D C ON C.CUST_CRC_ID = A.CUST_CRC_ID
     ]]>
     WHERE A.CUST_ID = #{custId}
         <if test='step == "3" '>
