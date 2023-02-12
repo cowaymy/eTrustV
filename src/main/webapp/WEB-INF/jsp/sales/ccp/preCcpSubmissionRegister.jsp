@@ -4,6 +4,7 @@
 <script type="text/javaScript" language="javascript">
 
    $(function(){
+
 	       $("#customerName").unbind().bind("change keyup", function(){
 	          $(this).val($(this).val().toUpperCase());
 	       });
@@ -44,8 +45,6 @@
    });
 
 
-
-
    function validateUpdForm() {
 
 	       if (FormUtil.isEmpty($("#customerName").val())) {
@@ -62,6 +61,12 @@
 	       if (FormUtil.isEmpty($("#customerNric").val())) {
 	           Common.alert("Please choose Customer NRIC.");
 	           return false;
+	       }
+	       else{
+	    	   if(!checkAge()){
+	    	         Common.alert("This customer is not allowed to check Pre-CCP.");
+	    	         return false;
+	    	   }
 	       }
 
 	       if (FormUtil.isEmpty($("#customerMobileNo").val())) {
@@ -95,6 +100,18 @@
    function fn_reload(){
        location.reload();
    }
+
+   function checkAge() {
+	   let dob = $("#customerNric").val().substring(0, 2);
+	   let dobYear = (dob >=50 ? '19' : '20') + dob ;
+	   let ageValid =  (new Date()).getFullYear() - dobYear;
+
+	   if(ageValid < 18 || ageValid > 70){
+		   return false;
+	   }
+
+	   return true;
+  }
 
 </script>
 
