@@ -4,22 +4,25 @@
 
 <select id="selectPreCcpRegisterList" parameterType="Map" resultType="egovMap">
 		SELECT
-		      PRECCP_SEQ
-		    , CUST_NAME
-		    , CUST_IC
-		    , CUST_MOBILENO
-		    , CUST_EMAIL
-		    , TO_CHAR(CRT_DT,'YYYY/MM/DD') CRT_DT
-		    , CASE WHEN CHS_STATUS = 'GREEN'   THEN CHS_STATUS
-		           WHEN CHS_STATUS = 'YELLOW'  THEN CHS_STATUS || '_' || CHS_RSN
+		      A.PRECCP_SEQ
+		    , A.CUST_NAME
+		    , A.CUST_IC
+		    , A.CUST_MOBILENO
+		    , A.CUST_EMAIL
+		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
+		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS
+		               WHEN A.CHS_STATUS = 'YELLOW'  THEN A.CHS_STATUS || '_' || A.CHS_RSN
 		                                       ELSE '-'
 		      END CHS_STATUS
-		    , TO_CHAR(CRT_DT,'YYYY/MM/DD') CRT_DT
-		    , CUST_ID
-		FROM SAL0343D
+		    , A.CUST_ID
+		FROM SAL0343D A
+		LEFT JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
 		WHERE DISAB = 0
 		 <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
             AND TO_CHAR(CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+        </if>
+        <if test="regId != null and regId != ''">
+            AND B.USER_NAME = #{regId}
         </if>
         <if test="selectType != null and selectType != '' ">
             <choose>

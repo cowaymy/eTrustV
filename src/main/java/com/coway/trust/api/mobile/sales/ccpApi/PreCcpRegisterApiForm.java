@@ -31,7 +31,7 @@ public class PreCcpRegisterApiForm {
         params.put("reqstDtFrom", vo.getReqstDtFrom());
         params.put("reqstDtTo", vo.getReqstDtTo());
         params.put("custId", vo.getCustId());
-        params.put("memId", vo.getMemId());
+        params.put("regId", vo.getRegId());
 		return params;
 	}
 
