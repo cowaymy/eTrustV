@@ -82,8 +82,8 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
             throw new ApplicationException(AppConstants.FAIL, "Request Date does not exist.");
         }
 
-        if (CommonUtils.isEmpty(param.getMemId()) || param.getMemId() <= 0) {
-          throw new ApplicationException(AppConstants.FAIL, "mdmId value does not exist.");
+        if (CommonUtils.isEmpty(param.getRegId()) || param.getRegId().length() <= 0) {
+          throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
         }
 
         return preCcpRegisterApiMapper.selectPreCcpRegisterList(PreCcpRegisterApiForm.createMap(param));
