@@ -21,8 +21,8 @@
               if (validateUpdForm()){
                    Common.ajax("POST", "/sales/ccp/submitPreCcpSubmission.do", $("#preCcpRegisterForm").serializeJSON() , function(result) {
                        if(result.code =="00"){
-                    	   console.log(result);
-                    	   Common.popupDiv("/sales/ccp/preCcpSubmissionRegisterResult.do", result.data, null, true, '');
+                    	   Common.showLoader();
+                    	   Common.popupDiv("/sales/ccp/preCcpSubmissionRegisterResult.do", result.data, ()=>{Common.removeLoader()}, true, '');
                     	   $("#btnPopClose").click();
                        }
                        else{

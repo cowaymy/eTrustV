@@ -11,7 +11,7 @@
   <header class="pop_header">
         <h1>Pre-CCP Register Result</h1>
          <ul class="right_opt">
-                <li><p class="btn_blue2"><a id="btnPopResultClose" href="fn_reload()"><spring:message code="sal.btn.close" /></a></p></li>
+                <li><p class="btn_blue2"><a id="btnPopResultClose" href="fn_searchPreCcpRegisterList()"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
   </header>
 
