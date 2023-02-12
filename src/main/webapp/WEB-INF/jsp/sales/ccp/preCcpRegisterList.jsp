@@ -8,6 +8,54 @@
     height : "500px"
   };
 
+  let columnLayout = [
+         {
+           dataField : "preccpSeq",
+           headerText : "Pre-CCP Seq.",
+           editable : false,
+           width : 200,
+           visible: false
+         },
+         {
+           dataField : "custName",
+           headerText : "Customer Name",
+           editable : false,
+           width : 200
+         },
+         {
+           dataField : "custIc",
+           headerText : "NRIC",
+           width : 200
+         },
+         {
+           dataField : "custMobileno",
+           headerText : "Mobile No.",
+           width : 150
+         },
+         {
+           dataField : "custEmail",
+           headerText : "Email address",
+           width : 200
+         },
+         {
+           dataField : "chsStatus",
+           headerText : "CHS Status",
+           width : 200
+         },
+         {
+           dataField : "crtDt",
+           headerText : "Register Date",
+           editable : false,
+           width : 150
+         },
+         {
+           dataField : "creator",
+           headerText : "Creator",
+           editable : false,
+           width : 150
+         },
+    ];
+
   let optionSystem = {
             type: "M",
             isShowChoose: false
@@ -37,54 +85,7 @@
   });
 
   function preCcpGrid() {
-    let columnLayout = [
-        {
-          dataField : "preccpSeq",
-          headerText : "Pre-CCP Seq.",
-          editable : false,
-          width : 200,
-          visible: false
-        },
-        {
-          dataField : "custName",
-          headerText : "Customer Name",
-          editable : false,
-          width : 200
-        },
-        {
-          dataField : "custIc",
-          headerText : "NRIC",
-          width : 200
-        },
-        {
-          dataField : "custMobileno",
-          headerText : "Mobile No.",
-          width : 150
-        },
-        {
-          dataField : "custEmail",
-          headerText : "Email address",
-          width : 200
-        },
-        {
-          dataField : "chsStatus",
-          headerText : "CHS Status",
-          width : 200
-        },
-        {
-          dataField : "crtDt",
-          headerText : "Register Date",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "creator",
-          headerText : "Creator",
-          editable : false,
-          width : 150
-        },
-    ];
-
+	$("#grid_wrap_preCcpList .aui-grid").remove()
     myGridID = AUIGrid.create("#grid_wrap_preCcpList", columnLayout, gridPros);
   }
 
@@ -116,7 +117,7 @@
   };
 
   function fn_preCcpRegister(){
-      Common.popupDiv("/sales/ccp/preCcpSubmissionRegister.do", null, null, true, '');
+      Common.popupDiv("/sales/ccp/preCcpSubmissionRegister.do", {}, null, true);
   }
 
   function f_multiCombo() {
@@ -157,15 +158,15 @@
 
 
   function fn_searchPreCcpRegisterList(){
-	  var isVal = true;
+	  let isVal = true;
       isVal = fn_validation();
 
       if(isVal == false){
           return;
       }else{
           Common.ajax("GET", "/sales/ccp/searchPreCcpRegisterList.do", $("#preCcpForm").serialize(), function(result) {
-        	  console.log(result)
-            AUIGrid.setGridData(myGridID, result);
+        	  preCcpGrid();
+        	  AUIGrid.setGridData(myGridID, result);
           });
       }
   }
