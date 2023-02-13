@@ -424,11 +424,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     	//creating encryption string for url
     	try {
     		encryptedString = encryptionDecryptionService.encrypt(combinationKey,"autodebit");
-    		LOGGER.debug("encryptedString: =====================>> " + encryptedString);
+    		LOGGER.error("autodebitsubmission sms encryptedString: =====================>> " + encryptedString);
 
     	} catch (Exception e) {
     		// TODO Auto-generated catch block
-    		LOGGER.debug("encryptedString: =====================>> " + e.toString());
+    		LOGGER.error("autodebitsubmission sms  encryptedString: =====================>> " + e.toString());
     		e.printStackTrace();
     	}
     	params.put("destinationLink", baseUrl + "/payment/mobileautodebit/autoDebitAuthorizationPublicForm.do?key=" + encryptedString);
@@ -483,7 +483,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     		conn.disconnect();
     	} catch (Exception e) {
     		// TODO Auto-generated catch block
-    		LOGGER.debug("encryptedString error: =====================>> " + e.toString());
+    		LOGGER.error("autodebitsubmission sms  encryptedString error: =====================>> " + e.toString());
     		e.printStackTrace();
     	} finally {
     		//Send Message
@@ -517,7 +517,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
     	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
     	      SmsResult smsResult = adaptorService.sendSMS(sms);
-    	      LOGGER.debug(" smsResult : {}", smsResult.toString());
+    	      LOGGER.error(" autodebitsubmission sms  smsResult : {}", smsResult.toString());
     	    }
     	}
     }
@@ -559,14 +559,14 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(EMAIL_TO, emailNo);
     params.put(EMAIL_TEXT, content);
 
-    LOGGER.debug("auto debit result param: {}", params);
+    LOGGER.error("auto debit email result param: {}", params);
     try {
     	if(emailNo.size() > 0){
     		this.view(null, null, params); //Included sending email
     	}
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
-	      LOGGER.debug(" autodebit email result : {}", e.toString());
+	      LOGGER.error(" autodebit email result error : {}", e.toString());
 		e.printStackTrace();
 	}
   }
@@ -621,7 +621,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	            params);
 	      }
 	    } catch (Exception ex) {
-	      LOGGER.error(CommonUtils.printStackTraceToString(ex));
+	      LOGGER.error("autodebitsummission email error", CommonUtils.printStackTraceToString(ex));
 	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
 
 	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);

@@ -114,15 +114,21 @@ public class AutoDebitApiController {
 	@ApiOperation(value = "autoDebitSubmissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
 	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm,HttpServletRequest request) throws Exception {
-        Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
+
+        LOGGER.error("AutoDebitSubmissionSave Log: 1","");
+		Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
         AutoDebitApiDto result = new AutoDebitApiDto();
         Map<String, Object> resultparams = new HashMap();
         resultparams = autoDebitService.autoDebitMobileSubmissionSave(params);
         int insertResult = Integer.parseInt(resultparams.get("result").toString());
+        LOGGER.error("AutoDebitSubmissionSave Log: insertResult",insertResult);
         if(insertResult > 0){
+            LOGGER.error("AutoDebitSubmissionSave Log: Inside Function ",insertResult);
             result.setResponseCode(1);
 			autoDebitService.sendEmail(resultparams);
+            LOGGER.error("AutoDebitSubmissionSave Log: Email Function pass ","Email Function pass");
 			autoDebitService.sendSms(resultparams);
+            LOGGER.error("AutoDebitSubmissionSave Log: SMS Function pass ","SMS Function pass");
 		 }
         else{
             result.setResponseCode(0);
