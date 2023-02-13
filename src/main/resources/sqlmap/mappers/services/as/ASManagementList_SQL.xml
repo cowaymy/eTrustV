@@ -1425,6 +1425,7 @@
                 AND C.STK_CODE = #{prdctCd}
                 AND B.VALID_FROM_DT <= SYSDATE
                 AND B.VALID_TO_DT >= SYSDATE
+                AND NVL(B.DEL_INDICT , 'N')  <>  'Y'
               ORDER BY D.STK_CODE
     ]]>
   </select>
