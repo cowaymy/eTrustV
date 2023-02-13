@@ -108,4 +108,6 @@ public interface HcInstallResultListService {
 	void sendSms(Map<String, Object> smsList);
 
 	Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult);
+
+	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
 }

@@ -1027,4 +1027,11 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    //send SMS
 	    SmsResult smsResult = adaptorService.sendSMS(sms);
 	  }
+
+	@Override
+	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params) {
+		return hcInstallResultListMapper.selectOrderSalesmanViewByOrderID(params);
+	}
+
+
 }

@@ -331,7 +331,13 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
 	  }
       params.put("custMobileNo", params.get("custMobileNo"));
       fraParams.put("custMobileNo", params.get("custMobileNo"));
-
+      if (CommonUtils.nvl(params.get("checkSend")).equals("Y") ){
+    	  params.put("checkSend", "Y");
+          fraParams.put("checkSend", "Y");
+	  }else{
+	      params.put("checkSend", "N");
+	      fraParams.put("checkSend", "N");
+	  }
 
       serviceApiInstallationDetailService.installFailJobRequestProc(params);
 

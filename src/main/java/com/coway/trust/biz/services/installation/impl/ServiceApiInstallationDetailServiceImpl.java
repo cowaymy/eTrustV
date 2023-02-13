@@ -218,6 +218,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
         params.put("custMobileNo", String.valueOf(insApiresult.get("custMobileNo")));
         params.put("chkSMS", String.valueOf(insApiresult.get("chkSMS")));
+        params.put("checkSend", String.valueOf(insApiresult.get("checkSend")));
 
         if (orderInfo != null) {
           params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
@@ -578,6 +579,12 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         try{
         	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
         		smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+
+        		EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
+        		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
+        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + ", Janji temu anda untuk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+        		params.put("hpMsg",hpMsg);
+        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
         	}else{
         		smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
         	}
@@ -738,6 +745,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
               try{
 	              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+	              	EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
+	        		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
+	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "Pemasangan telah diselesaikan oleh Technician pada " + params.get("installDate") + ". Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns";
+	        		params.put("hpMsg",hpMsg);
+	        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
 	  	      	}catch (Exception e){
 	  	      		logger.info("===smsResultValue===" + smsResultValue.toString());
 	  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");

@@ -283,6 +283,8 @@ public class InstallationJobDto {
 
   private String chkSms;
 
+  private String checkSend;
+
   private String custMobileNo;
 
   public String getCustMobileNo() {
@@ -293,7 +295,15 @@ public class InstallationJobDto {
 	this.custMobileNo = custMobileNo;
   }
 
-  public String getChkSms() {
+  public String getCheckSend() {
+	return checkSend;
+  }
+
+  public void setCheckSend(String checkSend) {
+	this.checkSend = checkSend;
+  }
+
+  String getChkSms() {
 	return chkSms;
   }
 

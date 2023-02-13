@@ -75,4 +75,6 @@ public interface HcInstallResultListMapper {
 	void updateInstallEntryEdit(Map<String, Object> params);
 
 	public EgovMap selectFrmInstInfo(EgovMap hcOrder);
+
+	EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params); //
 }

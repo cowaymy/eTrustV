@@ -62,6 +62,8 @@ public class InstallFailJobRequestForm {
 
   private String chkSms;
 
+  private String checkSend;
+
   private String custMobileNo;
 
   public String getTurbLvl() {
@@ -79,6 +81,15 @@ public String getChkSms() {
 public void setChkSms(String chkSms) {
 	this.chkSms = chkSms;
 }
+
+public String getCheckSend() {
+	return checkSend;
+}
+
+public void setCheckSend(String checkSend) {
+	this.checkSend = checkSend;
+}
+
 
 public String getCustMobileNo() {
 	return custMobileNo;

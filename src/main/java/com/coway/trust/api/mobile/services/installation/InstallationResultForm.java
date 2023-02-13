@@ -90,6 +90,7 @@ public class InstallationResultForm {
   private String chkCrtAs;
 
   private String chkSms;
+  private String checkSend;
   private String custMobileNo;
   private String customerType;
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
@@ -122,6 +123,14 @@ public String getWaterSrcType() {
 
 public void setWaterSrcType(String waterSrcType) {
 	this.waterSrcType = waterSrcType;
+}
+
+public String getCheckSend() {
+	return checkSend;
+}
+
+public void setCheckSend(String checkSend) {
+	this.checkSend = checkSend;
 }
 
 public String getChkSms() {
