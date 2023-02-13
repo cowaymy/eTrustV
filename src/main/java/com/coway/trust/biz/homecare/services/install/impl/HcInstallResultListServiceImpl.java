@@ -982,11 +982,11 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		String hpPhone = installResult.get("hpPhoneNo").toString();
 		smsResultValue.put("smsLogStat", "0");//if success
 
-		logger.debug("================INSMS111================");
+		logger.debug("================HPINSMS111================");
 		logger.debug("InstallationResult====" + installResult.toString());
 
 		 if(installResult.get("checkSend").equals("on")){ //IF HP SMS CHECKBOX IS CHECKED
-			 logger.debug("================INSMS444================");
+			 logger.debug("================HPINSMS444================");
 			 smsMessage = installResult.get("hpMsg").toString();
 		 }
 
@@ -1003,7 +1003,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		try{
 		    if(smsMessage != "")
 		    {
-		    	logger.debug("================SENDSMS111================");
+		    	logger.debug("================HPSENDSMS111================");
 		    	sendSms(smsList);
 		    }
 		}catch(Exception e){
