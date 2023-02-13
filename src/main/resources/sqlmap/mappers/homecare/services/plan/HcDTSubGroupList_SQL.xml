@@ -190,6 +190,13 @@
 	               FROM SYS0064M
 	             WHERE DT_SUB_GRP IS NOT NULL
 	                AND DT_BRNCH_CODE = #{branch}
+
+	                union
+
+	                SELECT DISTINCT AC_SUB_GRP
+                   FROM SYS0064M
+                 WHERE AC_SUB_GRP IS NOT NULL
+                    AND AC_BRNCH_CODE = #{branch}
                  ) B
 	  WHERE A.CT_SUB_GRP(+) = B.DT_SUB_GRP
 	  ORDER BY A.CT_SUB_GRP ASC
