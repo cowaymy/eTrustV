@@ -168,7 +168,7 @@
 		    Common.alert("There Are No selected ORDER.");
 		    return ;
 		}
-		alert('${PROD_CAT}');
+		//alert('${PROD_CAT}');
 
 	    Common.ajax("GET", "/homecare/services/install/selectHcAllocation.do",{ORD_ID : '${ORD_ID}' , S_DATE: '${S_DATE}', prodCat : '${PROD_CAT}'}, function(result) {
 	        AUIGrid.setGridData(mAgrid, result);
