@@ -180,47 +180,10 @@
 		         , CT_SUB_GRP
 		         , BRNCH_ID
 		 FROM (
-		          <if test="prodCat == null or prodCat == '' ">
-		            SELECT DISTINCT T.MEM_ID, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
-		            FROM SVC0054M T, ORG0001D TT
-		           WHERE T.MEM_ID = TT.MEM_ID
-	                   AND TT.STUS = 1
-	                   AND CT_SUB_GRP IN (SELECT  /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.DT_SUB_GRP
-	                                                   FROM SAL0001D A
-	                                                           , SAL0045D B
-	                                                           , SAL0023D E
-	                                                           , SYS0064M F
-	                                                  WHERE A.SALES_ORD_ID = #{ORD_ID}
-	                                                     AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
-	                                      UNION
-	                                      SELECT F.LT_SUB_GRP
-                                                       FROM SAL0001D A
-                                                               , SAL0045D B
-                                                               , SAL0023D E
-                                                               , SYS0064M F
-                                                      WHERE A.SALES_ORD_ID = #{ORD_ID}
-                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
-	                                      )
-                   UNION
-		           SELECT B.MEM_ID, C.CT_SUB_GRP, C.BRNCH_ID
-		            FROM SYS0005M A
-		                    , ORG0001D B
-		                    , ORG0005D C
-		                    , SYS0064M M
-		           WHERE A.BRNCH_ID = B.BRNCH
-		              AND B.MEM_ID = C.MEM_ID
-		              AND C.MEM_LVL = '2'
-		              AND B.STUS = '1'
-		              AND A.CODE = (SELECT   /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.DT_BRNCH_CODE
-		                                      FROM SAL0001D A
-		                                              , SAL0045D B
-		                                              , SAL0023D E
-		                                              , SYS0064M F
-		                                     WHERE A.SALES_ORD_ID = #{ORD_ID}
-                                                AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
-                   </if>
-                    <if test="prodCat != null and (prodCat == 'ACO' or prodCat == 'ACI')">
-                    -- Added for Air Conditioner project - Display ACT (A.K.A CT) in allocation list -- Hui Ding
+
+		  <choose>
+            <when test="prodCat != null and (prodCat == 'ACO' or prodCat == 'ACI')">
+                 -- Added for Air Conditioner project - Display ACT (A.K.A CT) in allocation list -- Hui Ding
                     SELECT M.MEM_ID, M1.CT_SUB_GRP, M.BRNCH AS BRNCH_ID
                         FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME
                         JOIN SYS0045M R ON U.USER_ID = R.USER_ID
@@ -236,7 +199,47 @@
                                                       , SYS0064M F
                                              WHERE A.SALES_ORD_ID =#{ORD_ID}
                                                 AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
-                    </if>
+            </when>
+            <otherwise>
+                SELECT DISTINCT T.MEM_ID, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+                    FROM SVC0054M T, ORG0001D TT
+                   WHERE T.MEM_ID = TT.MEM_ID
+                       AND TT.STUS = 1
+                       AND CT_SUB_GRP IN (SELECT  /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.DT_SUB_GRP
+                                                       FROM SAL0001D A
+                                                               , SAL0045D B
+                                                               , SAL0023D E
+                                                               , SYS0064M F
+                                                      WHERE A.SALES_ORD_ID = #{ORD_ID}
+                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+                                          UNION
+                                          SELECT F.LT_SUB_GRP
+                                                       FROM SAL0001D A
+                                                               , SAL0045D B
+                                                               , SAL0023D E
+                                                               , SYS0064M F
+                                                      WHERE A.SALES_ORD_ID = #{ORD_ID}
+                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+                                          )
+                   UNION
+                   SELECT B.MEM_ID, C.CT_SUB_GRP, C.BRNCH_ID
+                    FROM SYS0005M A
+                            , ORG0001D B
+                            , ORG0005D C
+                            , SYS0064M M
+                   WHERE A.BRNCH_ID = B.BRNCH
+                      AND B.MEM_ID = C.MEM_ID
+                      AND C.MEM_LVL = '2'
+                      AND B.STUS = '1'
+                      AND A.CODE = (SELECT   /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */ F.DT_BRNCH_CODE
+                                              FROM SAL0001D A
+                                                      , SAL0045D B
+                                                      , SAL0023D E
+                                                      , SYS0064M F
+                                             WHERE A.SALES_ORD_ID = #{ORD_ID}
+                                                AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+            </otherwise>
+        </choose>
                 ) C,
                 (SELECT TO_CHAR ( (TO_DATE(#{S_DATE}, 'DD/MM/YYYY') - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM DUAL
 				CONNECT BY LEVEL <![CDATA[<=]]> (SELECT CODE FROM SYS0013M WHERE CODE_ID = #{termDtCd})) TB
