@@ -745,11 +745,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
               try{
 	              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+	              	logger.info("===DONE SEND TO CUST===");
 	              	EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
 	        		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
 	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "Pemasangan telah diselesaikan oleh Technician pada " + params.get("installDate") + ". Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns";
 	        		params.put("hpMsg",hpMsg);
+	        		logger.info("===hpMsg===" + hpMsg);
+	        		logger.info("===hpPhone===" + params.get("hpPhoneNo"));
 	        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
+	        		logger.info("===DONE SEND TO HP===");
 	  	      	}catch (Exception e){
 	  	      		logger.info("===smsResultValue===" + smsResultValue.toString());
 	  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
