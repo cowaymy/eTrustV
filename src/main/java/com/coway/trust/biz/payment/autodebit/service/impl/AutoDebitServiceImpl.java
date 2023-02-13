@@ -550,7 +550,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
     String content = "";
     content += "Dear Sir/Madam,\n";
-    content += "Thank you for using " + params.get("bankShortName").toString() + " card ending " + params.get("cardLast4Digit").toString() + " monthly auto debit for order " + params.get("salesOrdNo").toString() + ".\n\n";
+    content += "Thank you for subscribing to Auto-Debit with " + params.get("bankShortName").toString() + " card ending " + params.get("cardLast4Digit").toString() + " for order " + params.get("salesOrdNo").toString() + ".\n\n";
     content += "Monthly Payment Amount : RM" + params.get("monthlyRentalAmount").toString() + ".\n\n";
     content += "Your card info shall be updated within 3 working days upon your signature acknowledgement. Kindly call 1800-888-111 for enquiry. \n\n\n\n";
     content += "This is a system generated email. Please do not respond to this email. \n";
