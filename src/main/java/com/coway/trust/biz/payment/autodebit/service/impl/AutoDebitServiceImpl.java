@@ -562,6 +562,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     LOGGER.error("auto debit email result param: {}", params);
     try {
     	if(emailNo.size() > 0){
+    	    LOGGER.error("auto debit email result email size", emailNo.size());
     		this.view(null, null, params); //Included sending email
     	}
 	} catch (IOException e) {
@@ -575,12 +576,14 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 	      throws IOException {
 
+	    LOGGER.error("auto debit email progress 1");
 	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
 		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
 
 	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
 		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
 
+	    LOGGER.error("auto debit email progress 2");
 	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
 	    Calendar startTime = Calendar.getInstance();
 	    Calendar endTime = null;
@@ -615,6 +618,8 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+
+		  LOGGER.error("auto debit email progress 4", params.toString());
 	      ReportUtils.setReportParameter(params, paramController, fields);
 	      {
 	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
@@ -634,7 +639,9 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      params.put("endTime", fmt.format(endTime.getTime()));
 	      params.put("userId", 349);
 
+		  LOGGER.error("auto debit email progress 5 log insert", params.toString());
 	      reportBatchService.insertLog(params);
+		  LOGGER.error("auto debit email progress 6 log success", params.toString());
 	    }
 	  }
 
@@ -642,9 +649,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
 
+	  LOGGER.error("auto debit email progress viewHandle", viewType.toString());
 	    switch (viewType) {
 	      case MAIL_PDF:
 	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+	    	  LOGGER.error("auto debit email progress ReportUtils success", "");
 	          break;
 
 	      default:
