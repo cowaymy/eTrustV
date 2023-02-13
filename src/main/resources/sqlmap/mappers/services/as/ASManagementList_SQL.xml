@@ -1423,8 +1423,6 @@
                 AND A.MATRL_NO = C.STK_CODE
                 AND B.BOM_COMPNT = D.STK_CODE
                 AND C.STK_CODE = #{prdctCd}
-                AND B.VALID_FROM_DT <= SYSDATE
-                AND B.VALID_TO_DT >= SYSDATE
                 AND NVL(B.DEL_INDICT , 'N')  <>  'Y'
               ORDER BY D.STK_CODE
     ]]>
