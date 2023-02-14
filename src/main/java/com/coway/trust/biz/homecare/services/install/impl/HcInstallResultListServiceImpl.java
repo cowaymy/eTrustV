@@ -1007,7 +1007,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		    	sendSms(smsList);
 		    }
 		}catch(Exception e){
-			logger.info("Fail to send HP SMS to " + installResult.get("hpPhoneNo").toString());
+			logger.info("Fail to send HP SMS to " + hpPhone);
 	    	smsResultValue.put("smsLogStat", "3");//if fail
 		}finally{
 			logger.info("===resultValueFail===" + smsResultValue.toString()); //when failed to send sms
@@ -1025,6 +1025,8 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	    sms.setMessage(smsList.get("smsMessage").toString());
 	    sms.setMobiles(smsList.get("smsMobileNo").toString());
 	    //send SMS
+	    logger.debug("================HPSENDSMS222================");
+	    logger.debug("smsList===" + smsList.toString());
 	    SmsResult smsResult = adaptorService.sendSMS(sms);
 	  }
 
