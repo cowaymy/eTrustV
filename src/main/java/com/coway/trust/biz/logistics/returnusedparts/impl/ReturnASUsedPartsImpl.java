@@ -1,7 +1,10 @@
 	package com.coway.trust.biz.logistics.returnusedparts.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -36,16 +39,22 @@ public class ReturnASUsedPartsImpl extends EgovAbstractServiceImpl implements Re
   @Override
   public void returnPartsUpdate(Map<String, Object> params, int loginId) {
     List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+        int size = 1000;
+        int page = checkList.size() % size == 0 ? (checkList.size() / size) - 1 : checkList.size() / size;
+        int start;
+        int end;
 
-    if (checkList.size() > 0) {
-      for (int i = 0; i < checkList.size(); i++) {
-        Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
-        insMap.put("userId", loginId);
+        if (checkList.size() > 0) {
+            Map<String, Object> bulkMap = new HashMap<>();
+            for (int i = 0; i <= page; i++) {
+              start = i * size  ;
+              end = i == page ? checkList.size() : size;
 
-        returnASUsedPartsMapper.upReturnParts(insMap);
-      }
-    }
-
+        	  bulkMap.put("list", checkList.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+              bulkMap.put("userId", loginId);
+              returnASUsedPartsMapper.upReturnParts(bulkMap);
+            }
+        }
   }
 
   @Override
