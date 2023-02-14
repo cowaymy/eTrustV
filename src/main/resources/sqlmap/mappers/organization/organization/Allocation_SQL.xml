@@ -63,6 +63,7 @@
 					                     AND T.MEM_ID = TT.MEM_ID
 					                     /*BY KV*/
 					                     AND TT.STUS = 1
+					                     AND SUBSTR(TT.MEM_CODE, 0, 3) <> 'ACI'
 					                     AND CT_SUB_GRP IN (SELECT  F.CT_SUB_GRP
 					                                          FROM   SAL0001D A,
 					                                                 SAL0045D B,
@@ -80,6 +81,7 @@
 					                     AND B.MEM_ID = C.MEM_ID
 					                     AND C.MEM_LVL = '2'
 					                     AND B.STUS = '1'
+					                     AND SUBSTR(B.MEM_CODE, 0, 3) <> 'ACI'
 					                     AND A.CODE = (SELECT  F.CT_BRNCH_CODE
 					                                     FROM   SAL0001D A,
 					                                            SAL0045D B,
