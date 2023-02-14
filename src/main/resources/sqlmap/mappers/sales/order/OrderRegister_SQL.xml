@@ -716,6 +716,7 @@
            AND T1.PROMO_ITM_STK_ID = #{anoStkId}
            AND T4.MEM_PAC_ID = #{srvPacId}
            AND ROWNUM = 1
+           AND T3.PROMO_DESC LIKE '%CONVERSION%'
     </select>
 
     <select id="selectProductPromotionPriceByPromoStockIDNewCorp" parameterType="Map" resultType="egovMap">
