@@ -1,6 +1,7 @@
 package com.coway.trust.web.organization.organization;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -371,6 +372,7 @@ public class MemberListController {
 		List<EgovMap> DeptCdList = memberListService.getDeptCdListList(params);
 
 		List<EgovMap> list = memberListService.getSpouseInfoView(params);
+
 //		logger.debug("return_Values: " + list.toString());
 //
 //		logger.debug("race : {} "+race);
@@ -2935,5 +2937,10 @@ public class MemberListController {
         List<EgovMap> codeList = memberListService.selectHpRegistrationOption(params);
         return ResponseEntity.ok(codeList);
     }
+
+  @RequestMapping(value = "/getOwnPurcOtstndInfo.do", method = RequestMethod.GET)
+  public ResponseEntity<BigDecimal> getOwnPurcOtstndInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+    return ResponseEntity.ok(memberListService.getOwnPurcOutsInfo(params));
+  }
 }
 

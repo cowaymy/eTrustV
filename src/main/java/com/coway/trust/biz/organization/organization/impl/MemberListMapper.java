@@ -179,6 +179,8 @@ public interface MemberListMapper {
 
 	List<EgovMap> getSpouseInfoView(Map<String, Object> params);
 
+	EgovMap getOwnPurcOutsInfo(Map<String, Object> params);
+
 	List<EgovMap> selectCoureCode(Map<String, Object> params);
 
 	String selectTypeGroupCode(Map<String, Object> params);

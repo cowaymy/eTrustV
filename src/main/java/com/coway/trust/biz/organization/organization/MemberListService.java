@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.organization;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -275,4 +276,6 @@ public interface MemberListService {
 	List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params);
 
 	List<EgovMap> selectHpRegistrationOption(Map<String, Object> params);
+
+	BigDecimal getOwnPurcOutsInfo(Map<String, Object> params);
 }

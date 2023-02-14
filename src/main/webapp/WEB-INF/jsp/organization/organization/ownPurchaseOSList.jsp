@@ -5,6 +5,7 @@
 <script type="text/javaScript">
 
     var gridID;
+    var gridExcelId;
 
     $(document).ready(function() {
         console.log("ownPurchaseOSList");
@@ -43,6 +44,10 @@
                 $("#memCode").attr("readonly", true);
             }
         }
+
+        doGetComboOrder('/common/selectCodeList.do', '1', 'CODE_ID',   '', 'listKeyinMemTypeId', 'M', 'fn_multiCombo'); //Common Code
+        doGetComboOrder('/organization/selectStatus.do', '', 'STUS_CODE_ID',   '', 'listKeyinMemStusId', 'M', 'fn_multiCombo'); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_ID',   '', 'listKeyinPayModeId', 'M', 'fn_multiCombo'); //Common Code
     });
 
     function createAUIGrid() {
@@ -61,11 +66,11 @@
         {
             dataField : "productName",
             headerText : "Product",
-            width : "15%"
+            width : "12%"
         },{
             dataField : "memName",
             headerText : "Salesman Name",
-            width : "30%"
+            width : "25%"
         },
         {
             dataField : "target",
@@ -76,10 +81,26 @@
         },{
             dataField : "os",
             headerText : "Outstanding",
-            width : "12%",
+            width : "10%",
             dataType : "numeric",
             formatString : "#,##0.00",
             style : "aui-grid-user-custom-right"
+        }, {
+            dataField : "memType",
+            headerText : "Type Name",
+            width : "8%"
+        }, {
+            dataField : "memStus",
+            headerText : "Member Status",
+            width : "8%"
+        }, {
+            dataField : "ordStus",
+            headerText : "Order Status",
+            width : "8%"
+        }, {
+            dataField : "payMode",
+            headerText : "Paymode",
+            width : "8%"
         }, {
             dataField : "orgCode",
             headerText : "Org Code",
@@ -109,6 +130,72 @@
             }
         }];
 
+        var columnExcelLayout = [{
+            dataField : "salesOrdId",
+            visible : false
+        }, {
+            dataField : "salesOrdNo",
+            headerText : "Sales Order No",
+        }, {
+            dataField : "memCode",
+            headerText : "Salesman Code",
+        },{
+            dataField : "memType",
+            headerText : "Type Name",
+        }, {
+            dataField : "memStus",
+            headerText : "Member Status",
+        }, {
+            dataField : "ordStus",
+            headerText : "Order Status",
+        } , {
+            dataField : "productName",
+            headerText : "Product",
+            width : 200,
+        }, {
+            dataField : "payMode",
+            headerText : "Paymode",
+        },{
+            dataField : "memName",
+            headerText : "Salesman Name",
+            width : 250,
+        },{
+            dataField : "target",
+            headerText : "Target",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+        },{
+            dataField : "os",
+            headerText : "Outstanding",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+            style : "aui-grid-user-custom-right"
+        }, {
+            dataField : "orgCode",
+            headerText : "Org Code",
+        }, {
+            dataField : "grpCode",
+            headerText : "Grp Code",
+        }, {
+            dataField : "deptCode",
+            headerText : "Dept Code",
+        }, {
+            dataField : "undefined",
+            headerText : " ",
+            width : 130,
+            renderer : {
+                type : "ButtonRenderer",
+                labelText : "Order Ledger(1)",
+                onclick : function(rowIndex, columnIndex, value, item) {
+                    console.log("View Order Ledger :: salesOrdID :: " + item.salesOrdId);
+                    console.log("View Order Ledger :: salesOrdNo ::" + item.salesOrdNo);
+                    $("#ordId").val(item.salesOrdId);
+                    $("#ordNo").val(item.salesOrdNo);
+                    Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+                }
+            }
+        }];
+
         var gridOpt = {
                 usePaging : true,
                 pageRowCount : 20,
@@ -117,7 +204,18 @@
                 showRowNumColumn : true
         }
 
+        var excelGridProsNew = {
+                // 페이징 사용
+                usePaging : true,
+                // 한 화면에 출력되는 행 개수 20(기본값:20)
+                pageRowCount : 20,
+                // 셀 선택모드 (기본값: singleCell)
+                selectionMode : "multipleCells",
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            };
+
         gridID = AUIGrid.create("#grid_wrap", columnLayout, gridOpt);
+        gridExcelId = AUIGrid.create("#grid_excel_wrap", columnExcelLayout, excelGridProsNew);
     }
 
     function fn_clear() {
@@ -162,6 +260,7 @@
         Common.ajax("GET", "/organization/ownPurchase/searchOwnPurchase.do", $("#searchForm").serialize(), function(result) {
            console.log(result);
            AUIGrid.setGridData(gridID, result);
+           AUIGrid.setGridData(gridExcelId, result);
         });
     }
 
@@ -170,7 +269,34 @@
     function fn_gridExport(){
 
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-        GridCommon.exportTo("grid_wrap", "xlsx", "Own Purchase Outstanding List");
+        GridCommon.exportTo("grid_excel_wrap", "xlsx", "Own Purchase Outstanding List");
+    }
+
+    function fn_multiCombo(){
+        $('#listKeyinMemTypeId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#listKeyinOrdStusId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#listKeyinMemStusId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $('#listKeyinPayModeId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
     }
 
 
@@ -226,6 +352,28 @@
                         <input type="text" title="Member Code" placeholder="Member Code" class="w100p" id="memCode" name="memCode" />
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row"><spring:message code='sal.text.memtype'/></th>
+				    <td>
+				        <select id="listKeyinMemTypeId" name="keyinMemTypeId" class="multy_select w100p" multiple="multiple"></select>
+				    </td>
+				    <th scope="row"><spring:message code='sal.text.orderStatus'/></th>
+				    <td>
+				      <select id="listKeyinOrdStusId" name="keyinOrdStusId" class="multy_select w100p" multiple="multiple">
+				        <option value="1">Active</option>
+				        <option value="4">Completed</option>
+				        <option value="10">Cancelled</option>
+				       </select>
+				    </td>
+				    <th scope="row">Member Status</th>
+				    <td>
+				        <select id="listKeyinMemStusId" name="keyinMemStusId" class="multy_select w100p" multiple="multiple"></select>
+				    </td>
+				    <th scope="row"><spring:message code='sal.title.text.payMode'/></th>
+				    <td>
+				        <select id="listKeyinPayModeId" name="keyinPayModeId" class="multy_select w100p" multiple="multiple"></select>
+				    </td>
+                </tr>
             </tbody>
         </table>
     </form>
@@ -247,3 +395,9 @@
         <input type="hidden" name="ordNo" id="ordNo" />
     </form>
 </section>
+
+<section class="search_result"><!-- search_result start -->
+	<article class="grid_wrap" id="grid_excel_wrap" style="display:none;"><!-- grid_wrap start -->
+	</article><!-- grid_wrap end -->
+</section><!-- search_result end -->
+

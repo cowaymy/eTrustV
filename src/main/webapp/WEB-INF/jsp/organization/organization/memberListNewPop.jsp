@@ -1706,7 +1706,41 @@ function checkBankAccNo() {
     }
 }
 
+function fn_clear() {
+    $('#uniformSize').hide();
+    $('#uniformSizeLbl').hide();
+    $('.chkScarft').hide();
+    $('#muslimahScarftLbl').hide();
+    $('#innerType').hide();
+    $('#innerTypeLbl').hide();
+    $('#emergencyTabHeader').hide();
+    $('#emergencyTabDetails').hide();
+    document.getElementById("memberAddForm").reset();
+}
+
 function fn_changeDetails(){
+
+	 if($("#memberType").val() == "5") {
+		if($("#traineeType1").val() == "2" || $("#traineeType1").val() == "7") {
+
+			if ( $("#nric").val() != "" && $("#traineeType1").val() != ""){
+			    var data = {
+			    		nric : $("#nric").val()
+			    };
+
+			   Common.ajax("GET", "/organization/getOwnPurcOtstndInfo.do", data, function(result) {
+			       if(result > 499.99){
+			    	   Common.alert("<span style='color:red;font-size:18px'>Alert !</span> <br> High own pruchase outstanding");
+			    	   if(result > 1999.99){
+			    		   fn_clear();
+			    		   return;
+			    	   }
+			       }
+
+			   });
+		   }
+		}
+	 }
     var uniformSizeId;
     var muslimahScarftId;
     var innerTypeId;

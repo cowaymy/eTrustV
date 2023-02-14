@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -2306,6 +2307,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public List<EgovMap> getSpouseInfoView(Map<String, Object> params) {
 		return memberListMapper.getSpouseInfoView(params);
+	}
+
+	@Override
+	public BigDecimal getOwnPurcOutsInfo(Map<String, Object> params) {
+		BigDecimal amount = BigDecimal.ZERO;
+		memberListMapper.getOwnPurcOutsInfo(params);
+
+		List <Map> a = (List<Map>) params.get("cv_1");
+
+		if (params.get("cv_1") != null) {
+			if(a.get(0).get("ownPurcOtstnd") !=null ){
+				amount = new BigDecimal(a.get(0).get("ownPurcOtstnd").toString());
+			}
+	    }
+		return amount;
 	}
 
 	@Override

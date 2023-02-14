@@ -28,7 +28,11 @@
             D.LAST_GRP_CODE GRP_CODE,
             D.LAST_DEPT_CODE DEPT_CODE,
             H.STK_DESC AS PRODUCT_NAME,
-            I.ACC_DEBT_SUB_OPNG_COLCT_TRGET AS TARGET
+            I.ACC_DEBT_SUB_OPNG_COLCT_TRGET AS TARGET,
+            J.CODE_NAME MEM_TYPE,
+            K.CODE MEM_STUS,
+            L.CODE ORD_STUS,
+            N.CODE PAY_MODE
         FROM SAL0001D A
         JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
         JOIN ORG0001D C  ON B.NRIC = C.NRIC AND C.STUS = 1
@@ -36,6 +40,11 @@
         JOIN SAL0002D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
         LEFT JOIN SYS0026M H ON H.STK_ID = E.ITM_STK_ID
         JOIN PAY0053S I ON I.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN SYS0013M J ON J.CODE_ID = C.MEM_TYPE AND J.CODE_MASTER_ID = 1
+        LEFT JOIN SYS0038M K ON K.STUS_CODE_ID = C.STUS
+        LEFT JOIN SYS0038M L ON L.STUS_CODE_ID = A.STUS_CODE_ID
+        LEFT JOIN SAL0074D M ON M.SALES_ORD_ID = A.SALES_ORD_ID AND M.SVC_CNTRCT_ID = 0
+        LEFT JOIN SYS0013M N ON N.CODE_ID = M.MODE_ID
         LEFT JOIN (
             SELECT
                 RENT_SO_ID,
@@ -59,7 +68,19 @@
         <if test="memCode != null and memCode != ''">
             AND C.MEM_CODE = #{memCode}
         </if>
-        ORDER BY MEM_CODE
+        <if test="keyinMemTypeId != null and keyinMemTypeId != ''">
+            AND C.MEM_TYPE = #{keyinMemTypeId}
+        </if>
+        <if test="keyinOrdStusId != null and keyinOrdStusId != ''">
+            AND A.STUS_CODE_ID = #{keyinOrdStusId}
+        </if>
+        <if test="keyinMemStusId != null and keyinMemStusId != ''">
+            AND C.STUS = #{keyinMemStusId}
+        </if>
+        <if test="keyinPayModeId != null and keyinPayModeId != ''">
+            AND M.MODE_ID = #{keyinPayModeId}
+        </if>
+        ORDER BY C.MEM_CODE
     </select>
 
 </mapper>
