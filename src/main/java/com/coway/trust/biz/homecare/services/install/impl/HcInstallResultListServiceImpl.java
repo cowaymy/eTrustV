@@ -990,7 +990,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 			 smsMessage = installResult.get("hpMsg").toString();
 		 }
 
-		 hpPhone = hpPhone.replaceAll("\\\\u[0-9a-fA-F]{4}", "");
+		 hpPhone = hpPhone.replaceAll("[\\-\\+\\.\\^:,]","");
 		 logger.debug("hpPhone===" + hpPhone);
 
 	    Map<String, Object> smsList = new HashMap<>();
