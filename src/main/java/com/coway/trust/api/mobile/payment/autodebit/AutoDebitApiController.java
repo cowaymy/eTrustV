@@ -114,7 +114,6 @@ public class AutoDebitApiController {
 	@ApiOperation(value = "autoDebitSubmissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/autoDebitSubmissionSave", method = RequestMethod.POST)
 	public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSave(@RequestBody AutoDebitApiForm autoDebitApiForm,HttpServletRequest request) throws Exception {
-
         LOGGER.error("AutoDebitSubmissionSave Log: 1","");
 		Map<String, Object> params = AutoDebitApiForm.createMap(autoDebitApiForm);
         AutoDebitApiDto result = new AutoDebitApiDto();
@@ -148,4 +147,51 @@ public class AutoDebitApiController {
 	    FileDto fileDto = FileDto.create(list, fileGroupKey);
 	    return ResponseEntity.ok(fileDto);
 	  }
+
+
+		@ApiOperation(value = "autoDebitSubmissionSaveEmailSmsTest", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/autoDebitSubmissionSaveEmailSmsTest", method = RequestMethod.GET)
+		public ResponseEntity<AutoDebitApiDto> autoDebitSubmissionSaveEmailSmsTest(HttpServletRequest request) throws Exception {
+	        LOGGER.error("AutoDebitSubmissionSave Log: 1","");
+
+	        AutoDebitApiDto result = new AutoDebitApiDto();
+	        Map<String, Object> resultparams = new HashMap();
+	        //real
+	        resultparams.put("padId", "7");
+	        resultparams.put("padNo", "PAD00000007");
+	        resultparams.put("newCustCreditCardId", "3858840");
+	        //test
+//	        resultparams.put("padId", "75");
+//	        resultparams.put("padNo", "PAD00000075");
+//	        resultparams.put("newCustCreditCardId", "1174143");
+
+	        resultparams.put("salesOrdNo", "3321946");
+	        resultparams.put("sms1", "0128058788");
+	        resultparams.put("createdBy", "YJLIEW");
+	        resultparams.put("signData", "");
+	        resultparams.put("creatorId", "155446");
+	        resultparams.put("isThirdPartyPayment", "0");
+	        resultparams.put("custId", "907858");
+	        resultparams.put("salesOrdNo", "3321946");
+	        resultparams.put("userBranch", "169");
+
+	        //resultparams = autoDebitService.autoDebitMobileSubmissionSave(resultparams);
+	        //int insertResult = Integer.parseInt(resultparams.get("result").toString());
+	        int insertResult = 1;
+	        LOGGER.error("AutoDebitSubmissionSave Log: insertResult {}", insertResult);
+	        if(insertResult > 0){
+	            LOGGER.error("AutoDebitSubmissionSave Log: Inside Function {}", String.valueOf(insertResult));
+	            result.setResponseCode(1);
+	            autoDebitService.sendSms(resultparams);
+				autoDebitService.sendEmail(resultparams);
+	            LOGGER.error("AutoDebitSubmissionSave Log: Email Function pass ","Email Function pass");
+
+	            LOGGER.error("AutoDebitSubmissionSave Log: SMS Function pass ","SMS Function pass");
+			 }
+	        else{
+	            result.setResponseCode(0);
+	        }
+
+	        return ResponseEntity.ok(result);
+		}
 }

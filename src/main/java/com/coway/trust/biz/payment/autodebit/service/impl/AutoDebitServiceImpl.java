@@ -517,7 +517,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
     	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
     	      SmsResult smsResult = adaptorService.sendSMS(sms);
-    	      LOGGER.error(" autodebitsubmission sms  smsResult : {}", smsResult.toString());
+    	      LOGGER.error(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
     	    }
     	}
     }
@@ -560,9 +560,10 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(EMAIL_TEXT, content);
 
     LOGGER.error("auto debit email result param: {}", params);
+    LOGGER.error("auto debit email result email size : {}", emailNo.size());
     try {
     	if(emailNo.size() > 0){
-    	    LOGGER.error("auto debit email result email size", emailNo.size());
+    	    LOGGER.error("auto debit email result email size : {}", emailNo.size());
     		this.view(null, null, params); //Included sending email
     	}
 	} catch (IOException e) {
@@ -619,14 +620,15 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
 
-		  LOGGER.error("auto debit email progress 4", params.toString());
+		  LOGGER.error("auto debit email progress 4 {}", params.toString());
 	      ReportUtils.setReportParameter(params, paramController, fields);
 	      {
 	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
 	            params);
 	      }
+		  LOGGER.error("auto debit email progress 5 viewHandlesuccess", "");
 	    } catch (Exception ex) {
-	      LOGGER.error("autodebitsummission email error", CommonUtils.printStackTraceToString(ex));
+	      LOGGER.error("autodebitsummission email error {}", CommonUtils.printStackTraceToString(ex));
 	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
 
 	      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
@@ -639,9 +641,9 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      params.put("endTime", fmt.format(endTime.getTime()));
 	      params.put("userId", 349);
 
-		  LOGGER.error("auto debit email progress 5 log insert", params.toString());
+		  LOGGER.error("auto debit email progress 6 log insert {}", params.toString());
 	      reportBatchService.insertLog(params);
-		  LOGGER.error("auto debit email progress 6 log success", params.toString());
+		  LOGGER.error("auto debit email progress 7 log success {}", params.toString());
 	    }
 	  }
 
@@ -649,7 +651,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
 
-	  LOGGER.error("auto debit email progress viewHandle", viewType.toString());
+	  LOGGER.error("auto debit email progress viewHandle {}", viewType.toString());
 	    switch (viewType) {
 	      case MAIL_PDF:
 	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
