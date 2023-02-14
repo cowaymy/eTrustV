@@ -121,142 +121,16 @@ public class MemberEligibilityController {
         return ResponseEntity.ok(memberList);
     }
 
+
     @RequestMapping(value = "/memberRejoinCheck.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> memberRejoinCheck(@RequestParam Map<String, Object> params, Model model) {
+    	EgovMap result = memberEligibilityService.memberRejoinCheck(params);
 
-    	EgovMap memberRejoinInfo = memberEligibilityService.getMemberRejoinInfo(params);
-		EgovMap memberInfo = memberEligibilityService.getMemberInfo(params);
-
-		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-    	String memMessage = "<span style='text-alig n:center;'><span style='color:#003eff;font-size:28px;'>Alert!</span></br>" +
-                        				  "<span>Note: This key in NRIC had match with previous NRIC</span></br>" +
-                        				  "<span>This candidate is </span>";
+	   	message.setMessage(result.get("message").toString());
+		message.setCode(result.get("code").toString());
 
-		String approveStatusId = params.get("approveStatusId").toString();
-		// Check selected row approval status
-		if(approveStatusId.equals("5")){ // Approved
-			memMessage += "<span style='color:red;'>in approved approval status</span></br>" +
-									 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
-		} else if (approveStatusId.equals("6")){ // Rejected
-			memMessage += "<span style='color:red;'>in rejected approval status</span></br>" +
-									 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
-		} else {
-    		// if member's rejoin Approval status = null
-    		if (memberRejoinInfo == null || !memberRejoinInfo.get("apprStus").toString().equals("44")) {
-    			//Check for rejoin TNC
-    			if(memberInfo.size() > 0) {
-    				String memType = "";
-    				String resignDt = "";
-    				String resignDtFlg = "";
-    				String status = "";
-    				String lastRankChgDt = "";
-    				String lastRankChgDtFlg = "";
-    				String rank = "";
-
-    				memType = memberInfo.get("memType").toString();
-    				status = memberInfo.get("stus").toString();
-    				rank = memberInfo.get("rank").toString();
-
-    				//Resigned
-    				if(status.equals("51")) {
-    				    resignDt = memberInfo.get("resignDt").toString();
-    		            try{
-    		            	if(!resignDt.equals("-")){
-        		                String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
-
-        		                // Current date - 12 months
-        		                Date cDt = new SimpleDateFormat("yyyyMMdd").parse(strDt);
-        		                Calendar cCal = Calendar.getInstance();
-        		                cCal.setTime(cDt);
-        		                cCal.add(Calendar.MONTH, -12);
-
-        		                Date rDt = new SimpleDateFormat("yyyyMMdd").parse(resignDt);
-        		                Calendar rCal = Calendar.getInstance();
-        		                rCal.setTime(rDt);
-
-        		                LOGGER.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
-        		                LOGGER.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
-
-        		                if(rCal.before(cCal)) {
-        		                    // Resignation Date is before 12 months before current date
-        		                    resignDtFlg = "Y";
-        		                }
-    		            	}else {
-    		            		resignDtFlg = "N";
-    		            	}
-    		            } catch(Exception ex) {
-    		                ex.printStackTrace();
-    		                LOGGER.error(ex.toString());
-    		            }
-
-    		            if(resignDtFlg.equals("Y")) {
-    	            	    message.setCode("pass");
-    		               	memMessage +=  "<span style='color:red;'>Rejoin Salesperson!</span></br>" +
-    	               								"<span style='font-weight:bold;'>Are you allow to proceed?</span></span>";
-    	                } else {
-    	                	memMessage += "<span style='color:red;'>Resign < 12 months</span></br>" +
-        											 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
-    	                }
-
-    		            //Sleeping HP - 24 months
-    				} else if(status.equals("1") && rank.equals("1366") && memType.equals("1")){
-    					lastRankChgDt = memberInfo.get("lastRankChgDt").toString();
-    					 try{
-    						if(!lastRankChgDt.equals("-")){
-         		                String strRankDt = CommonUtils.getNowDate().substring(0,6) + "01";
-
-         		                // Current date - 24 months
-         		                Date cRankDt = new SimpleDateFormat("yyyyMMdd").parse(strRankDt);
-         		                Calendar cRankCal = Calendar.getInstance();
-         		                cRankCal.setTime(cRankDt);
-         		                cRankCal.add(Calendar.MONTH, -24);
-
-         		                Date rRankDt = new SimpleDateFormat("yyyyMMdd").parse(lastRankChgDt);
-         		                Calendar rRankCal = Calendar.getInstance();
-         		                rRankCal.setTime(rRankDt);
-
-         		                LOGGER.debug("Sleeping HP :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rRankCal.getTime()));
-         		                LOGGER.debug("Sleeping HP :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cRankCal.getTime()));
-
-         		                if(rRankCal.before(cRankCal)) {
-         		                    // Last Rank Change Date is before 24 months before current date
-         		                	lastRankChgDtFlg = "Y";
-         		                }
-     		                }else {
-     		                	lastRankChgDtFlg = "N";
-     		                }
-     		            } catch(Exception ex) {
-     		                ex.printStackTrace();
-     		                LOGGER.error(ex.toString());
-     		            }
-
-     		            if(lastRankChgDtFlg.equals("Y")) {
-     		            	message.setCode("pass");
-     		               	memMessage +=  "<span style='color:red;'>Sleeping HP - 24 months</span></br>" +
-        											  "<span style='font-weight:bold;'>Are you allow to proceed?</span></span>";
-     	                } else {
-     	                	memMessage += "<span style='color:red;'> < 24 months sleeping HP </span></br>" +
-     												 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
-     	                }
-
-    		            // Other status (active / terminate / Inactive)
-    				} else {
-    			    	memMessage += "<span style='color:red;'>"+ memberInfo.get("statusName").toString() + " status</span></br>" +
-    											 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
-    				}
-    			}
-    		} else {
-    			if(memberRejoinInfo.get("apprStus").toString().equals("44")) //Pending
-    			{
-    				memMessage += "<span style='color:red;'>in pending approval status</span></br>" +
-    										"<span style='font-weight:bold;'>Not allow to proceed</span></span>";
-    			}
-    		}
-		}
-
-	   	message.setMessage(memMessage);
-    	return ResponseEntity.ok(message);
+		return ResponseEntity.ok(message);
 	}
 
 	@RequestMapping(value = "/memberRejoinPop.do")

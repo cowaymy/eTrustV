@@ -29,13 +29,13 @@
 			                LEFT JOIN SYS0038M SY38M ON O01D.STUS = SY38M.STUS_CODE_ID
 			                WHERE 1=1
 				                <if test="icNum != null and icNum != '' " >
-				                     AND O01D.NRIC LIKE '%'|| TRIM(#{icNum}) ||'%'
+				                     AND O01D.NRIC LIKE '%'|| TRIM(#{icNum})
 				                </if>
 				                <if test="code != null and code != '' " >
 				                      AND O01D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
 				                </if>
 				                <if test="name != null and name != '' " >
-				                      AND UPPER(O01D.NAME) LIKE UPPER('%' || #{name} || '%')
+				                      AND O01D.NAME = #{name}
 				                </if>
 				                <if test="currentStatus != null and currentStatus != '' " >
 				                     <if test="currentStatus != 'Rejoin' " >
@@ -53,19 +53,19 @@
 			                FROM SYS0047M S47M
 			                WHERE 1=1
 			                <if test="approvedBy != null and approvedBy != '' " >
-			                      AND UPPER(S47M.USER_FULL_NAME) =  UPPER(#{approvedBy})
+			                      AND S47M.USER_FULL_NAME = #{approvedBy}
 			                </if>
             ) B ON O46D.APPR_USER_ID = B.USER_ID
             LEFT JOIN SYS0013M S13M ON O46D.SAL_ORG_REJOIN = S13M.CODE_ID
             WHERE 1=1
                <if test="icNum != null and icNum != '' " >
-                     AND O46D.NRIC LIKE '%'|| TRIM(#{icNum}) ||'%'
+                     AND O46D.NRIC LIKE '%'|| TRIM(#{icNum})
                </if>
                 <if test="code != null and code != '' " >
                       AND O46D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
                 </if>
                 <if test="name != null and name != '' " >
-                      AND UPPER(O46D.NAME) LIKE UPPER('%' || #{name} || '%')
+                      AND O46D.NAME = #{name}
                 </if>
                 <if test="currentStatus != null and currentStatus != '' " >
                       <if test="currentStatus != 'Rejoin' " >
@@ -82,7 +82,7 @@
                       AND O46D.APPR_STUS =  #{approvalStatus}
                 </if>
                 <if test="approvedBy != null and approvedBy != '' " >
-                      AND UPPER(B.USER_FULL_NAME) =  UPPER(#{approvedBy})
+                      AND B.USER_FULL_NAME =  #{approvedBy}
                 </if>
             ORDER BY O46D.CRT_DT DESC
   </select>

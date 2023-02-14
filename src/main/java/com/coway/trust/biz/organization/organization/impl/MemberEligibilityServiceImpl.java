@@ -24,6 +24,8 @@ import javax.annotation.Resource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.joda.time.LocalDate;
+import org.joda.time.Months;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,16 +78,6 @@ public class MemberEligibilityServiceImpl extends EgovAbstractServiceImpl implem
 	}
 
 	@Override
-	public EgovMap getMemberInfo(Map<String, Object> params) {
-		return memberEligibilityMapper.getMemberInfo(params);
-	}
-
-	@Override
-	public EgovMap getMemberRejoinInfo(Map<String, Object> params) {
-		return memberEligibilityMapper.getMemberRejoinInfo(params);
-	}
-
-	@Override
 	public void submitMemberRejoin(Map<String, Object> params) {
 		memberEligibilityMapper.submitMemberRejoin(params);
 	}
@@ -101,24 +93,12 @@ public class MemberEligibilityServiceImpl extends EgovAbstractServiceImpl implem
 		String subject  = "";
 		String content = "";
 
+		List<EgovMap> picEmail = memberEligibilityMapper.getPICEmail(params);
 
 		//List
-		switch(params.get("selectOrgItem").toString()){
-    		case "1": // HP
-    			toList.add("asfa.zakaria@coway.com.my");
-    			toList.add("sales.pln@coway.com.my");
-    			break;
-    		case	"2": // CD
-    			toList.add( "siti.jabar@coway.com.my");
-    			break;
-    		case	"7": // HT
-    			toList.add( "haswiah.hashim@coway.com.my");
-    			break;
-    		case	"3": // CT
-    			toList.add("syahirah.lazim@coway.com.my");
-    			break;
-	}
-
+		for(int i = 0; i < picEmail.size(); i++){
+			toList.add(picEmail.get(i).get("paramVal").toString());
+		}
 
 		subject = "Member Rejoin Approval";
 		content = "Dear PIC,<br /><br/>" +
@@ -135,5 +115,130 @@ public class MemberEligibilityServiceImpl extends EgovAbstractServiceImpl implem
 		boolean isSuccess = adaptorService.sendEmail(email, false);
 
 		return isSuccess;
+	}
+
+	@Override
+	public EgovMap memberRejoinCheck(Map<String, Object> params){
+		EgovMap memberRejoinInfo = memberEligibilityMapper.getMemberRejoinInfo(params);
+		EgovMap memberInfo = memberEligibilityMapper.getMemberInfo(params);
+
+		String code = "";
+    	String memMessage = "<span style='text-alig n:center;'><span style='color:#003eff;font-size:28px;'>Alert!</span></br>" +
+                        				  "<span>Note: This key in NRIC had match with previous NRIC</span></br>" +
+                        				  "<span>This candidate is </span>";
+
+    	String approveStatusId = params.get("approveStatusId").toString();
+
+		// Check selected row approval status
+		if(approveStatusId.equals("5")){ // Approved
+			memMessage += "<span style='color:red;'>in approved approval status</span></br>" +
+									 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
+		} else if (approveStatusId.equals("6")){ // Rejected
+			memMessage += "<span style='color:red;'>in rejected approval status</span></br>" +
+									 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
+		} else {
+    		// if member's rejoin Approval status = null
+    		if (memberRejoinInfo == null || !memberRejoinInfo.get("apprStus").toString().equals("44")) {
+    			//Check for rejoin TNC
+    			if(memberInfo.size() > 0) {
+    				String memType = "";
+    				String resignDt = "";
+    				String resignDtFlg = "";
+    				String status = "";
+    				String lastRankChgDt = "";
+    				String lastRankChgDtFlg = "";
+    				String rank = "";
+
+    				memType = memberInfo.get("memType").toString();
+    				status = memberInfo.get("stus").toString();
+    				rank = memberInfo.get("rank").toString();
+
+    				//Resigned
+    				if(status.equals("51")) {
+    				    resignDt = memberInfo.get("resignDt").toString();
+
+    		            try{
+    		            	if(!resignDt.equals("-")){
+    		            		// Today
+    		        			LocalDate now = LocalDate.now();
+
+    		        			// Current Date - 12 months
+    		        			LocalDate resignDate = LocalDate.parse(resignDt);
+    		        			int resignDt_MonthsBetween = Months.monthsBetween(resignDate, now).getMonths();
+
+    		        			if(resignDt_MonthsBetween >= 12){
+    		        		          resignDtFlg = "Y";
+    							}else{
+    								resignDtFlg = "N";
+    							}
+    		            	}
+
+    		            } catch(Exception ex) {
+    		                ex.printStackTrace();
+    		                LOGGER.error(ex.toString());
+    		            }
+
+    		            if(resignDtFlg.equals("Y")) {
+    		            	code = "pass";
+    		               	memMessage +=  "<span style='color:red;'>Rejoin Salesperson!</span></br>" +
+    	               								"<span style='font-weight:bold;'>Are you allow to proceed?</span></span>";
+    	                } else {
+    	                	memMessage += "<span style='color:red;'>Resign < 12 months</span></br>" +
+        											 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
+    	                }
+
+    		            //Sleeping HP - 24 months
+    				} else if(status.equals("1") && rank.equals("1366") && memType.equals("1")){
+    					lastRankChgDt = memberInfo.get("lastRankChgDt").toString();
+    					 try{
+    						if(!lastRankChgDt.equals("-")){
+    			          		// Today
+    		        			LocalDate now = LocalDate.now();
+
+    		        			// Current Date - 24 months
+    		        			LocalDate lastRankChgDate = LocalDate.parse(lastRankChgDt);
+    		        			int lastRankChgDt_MonthsBetween = Months.monthsBetween(lastRankChgDate, now).getMonths();
+
+    		        			if(lastRankChgDt_MonthsBetween >= 24){
+    		        				lastRankChgDtFlg = "Y";
+    							}else{
+    								lastRankChgDtFlg = "N";
+    							}
+    						}
+
+     		            } catch(Exception ex) {
+     		                ex.printStackTrace();
+     		                LOGGER.error(ex.toString());
+     		            }
+
+     		            if(lastRankChgDtFlg.equals("Y")) {
+     		             	code = "pass";
+     		               	memMessage +=  "<span style='color:red;'>Sleeping HP - 24 months</span></br>" +
+        											  "<span style='font-weight:bold;'>Are you allow to proceed?</span></span>";
+     	                } else {
+     	                	memMessage += "<span style='color:red;'> < 24 months sleeping HP </span></br>" +
+     												 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
+     	                }
+
+    		            // Other status (active / terminate / Inactive)
+    				} else {
+    			    	memMessage += "<span style='color:red;'>"+ memberInfo.get("statusName").toString() + " status</span></br>" +
+    											 "<span style='font-weight:bold;'>Not allow to proceed</span></span>";
+    				}
+    			}
+    		} else {
+    			if(memberRejoinInfo.get("apprStus").toString().equals("44")) //Pending
+    			{
+    				memMessage += "<span style='color:red;'>in pending approval status</span></br>" +
+    										"<span style='font-weight:bold;'>Not allow to proceed</span></span>";
+    			}
+    		}
+		}
+
+		EgovMap result = new EgovMap();
+		result.put("code", code);
+		result.put("message", memMessage);
+
+		return result;
 	}
 }

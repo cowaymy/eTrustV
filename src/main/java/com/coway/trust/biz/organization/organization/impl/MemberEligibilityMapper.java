@@ -17,4 +17,6 @@ public interface MemberEligibilityMapper {
 	EgovMap getMemberRejoinInfo(Map<String, Object> params);
 
 	void submitMemberRejoin(Map<String, Object> params);
+
+	List<EgovMap> getPICEmail(Map<String, Object> params);
 }

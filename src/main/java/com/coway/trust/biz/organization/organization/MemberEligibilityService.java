@@ -19,11 +19,9 @@ public interface MemberEligibilityService {
 
 	List<EgovMap> selectMemberEligibility(Map<String, Object> params);
 
-	EgovMap getMemberInfo(Map<String, Object> params);
-
-	EgovMap getMemberRejoinInfo(Map<String, Object> params);
-
 	void submitMemberRejoin(Map<String, Object> params);
 
 	boolean sendEmail(Map<String, Object> params);
+
+	EgovMap memberRejoinCheck(Map<String, Object> params);
 }

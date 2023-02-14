@@ -6,6 +6,14 @@ $(document).ready(function(){
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
 
+    $("#approvedBy").bind("keyup", function(){
+        $(this).val($(this).val().toUpperCase());
+  });
+
+  $("#name").bind("keyup", function(){
+        $(this).val($(this).val().toUpperCase());
+  });
+
     //Search
     $("#_searchBtn").click(function() {
         if(FormUtil.checkReqValue($('#icNum')) &&

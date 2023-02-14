@@ -35,13 +35,13 @@
 		  LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
 		  WHERE 1=1
 		       <if test="icNum != null and icNum != '' " >
-                     AND O01D.NRIC LIKE '%'|| TRIM(#{icNum}) ||'%'
+                     AND O01D.NRIC LIKE '%'|| TRIM(#{icNum})
 		       </if>
 		        <if test="code != null and code != '' " >
                       AND O01D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
 		        </if>
 		        <if test="name != null and name != '' " >
-                     AND UPPER(O01D.NAME) LIKE UPPER('%' || #{name} || '%')
+                      AND O01D.NAME = #{name}
 		        </if>
 	            <if test="currentStatus != null and currentStatus != '' " >
 	                 <if test="currentStatus != 'Rejoin' " >
@@ -77,13 +77,13 @@
 			                LEFT JOIN SYS0038M SYS38M ON OR01D.STUS = SYS38M.STUS_CODE_ID
 			                WHERE 1=1
 			                    <if test="icNum != null and icNum != '' " >
-			                         AND OR01D.NRIC LIKE '%'|| TRIM(#{icNum}) ||'%'
+			                         AND OR01D.NRIC LIKE '%'|| TRIM(#{icNum})
 			                    </if>
 			                    <if test="code != null and code != '' " >
 			                          AND OR01D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
 			                    </if>
 			                    <if test="name != null and name != '' " >
-			                          AND UPPER(OR01D.NAME) LIKE UPPER('%' || #{name} || '%')
+                                          AND OR01D.NAME = #{name}
 			                    </if>
 			                    <if test="currentStatus != null and currentStatus != '' " >
 			                         <if test="currentStatus != 'Rejoin' " >
@@ -101,19 +101,19 @@
 			                FROM SYS0047M S47M
 			                WHERE 1=1
 			                <if test="approvedBy != null and approvedBy != '' " >
-			                      AND UPPER(S47M.USER_FULL_NAME) =  UPPER(#{approvedBy})
+                                 AND S47M.USER_FULL_NAME =  #{approvedBy}
 			                </if>
             ) B ON O46D.APPR_USER_ID = B.USER_ID
             LEFT JOIN SYS0013M S13M ON S13M.CODE_ID = O46D.SAL_ORG_REJOIN
             WHERE 1=1
                <if test="icNum != null and icNum != '' " >
-                     AND O46D.NRIC LIKE '%'|| TRIM(#{icNum}) ||'%'
+                     AND O46D.NRIC LIKE '%'|| TRIM(#{icNum})
                </if>
                 <if test="code != null and code != '' " >
                       AND O46D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
                 </if>
                 <if test="name != null and name != '' " >
-                     AND UPPER(O46D.NAME) LIKE UPPER('%' || #{name} || '%')
+                      AND O46D.NAME = #{name}
                 </if>
                 <if test="currentStatus != null and currentStatus != '' " >
                       <if test="currentStatus != 'Rejoin' " >
@@ -130,18 +130,18 @@
                       AND O46D.APPR_STUS =  #{approvalStatus}
                 </if>
                 <if test="approvedBy != null and approvedBy != '' " >
-                      AND UPPER(B.USER_FULL_NAME) =  UPPER(#{approvedBy})
+                      AND B.USER_FULL_NAME =  #{approvedBy}
                 </if>
                 )
        WHERE 1=1
        <if test="icNum != null and icNum != '' " >
-            AND NRIC LIKE '%'|| TRIM(#{icNum}) ||'%'
+            AND NRIC LIKE '%'|| TRIM(#{icNum})
       </if>
       <if test="code != null and code != '' " >
             AND MEM_CODE LIKE  TRIM(#{code}) ||'%'
       </if>
       <if test="name != null and name != '' " >
-             AND UPPER(NAME) LIKE UPPER('%' || #{name} || '%')
+            AND NAME = #{name}
      </if>
      <if test="currentStatus != null and currentStatus != '' " >
            <if test="currentStatus != 'Rejoin' " >
@@ -158,7 +158,7 @@
            AND APPR_STUS =  #{approvalStatus}
      </if>
        <if test="approvedBy != null and approvedBy != '' " >
-           AND UPPER(APPROVED_BY) =  UPPER(#{approvedBy})
+           AND APPROVED_BY =  #{approvedBy}
      </if>
   </select>
 
@@ -170,9 +170,9 @@
               O01D.MEM_CODE,
               O01D.MEM_TYPE, <!-- Check HP eligibility -->
               NVL(O01D.RANK, 0) AS RANK, <!-- Check HP eligibility -->
-              NVL(TO_CHAR(O01D.LAST_RANK_CHG_DT, 'YYYYMMDD'),'-') AS LAST_RANK_CHG_DT, <!-- Check HP eligibility -->
+              NVL(TO_CHAR(O01D.LAST_RANK_CHG_DT, 'YYYY-MM-DD'),'-') AS LAST_RANK_CHG_DT, <!-- Check HP eligibility -->
               O01D.NRIC,
-              NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYYMMDD'),'-') AS RESIGN_DT,
+              NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYY-MM-DD'),'-') AS RESIGN_DT,
               O01D.STUS,
               S38M.NAME AS STATUS_NAME,
               O01D.TRM_REJOIN AS TRM_REJOIN
@@ -213,4 +213,13 @@
 	        , 44
         )
     </insert>
+
+    <select id="getPICEmail"  parameterType="Map" resultType="egovMap">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'ORGANIZATION'
+        AND DISB = '0'
+        AND PARAM_CODE = #{selectOrgItem}
+    </select>
 </mapper>
