@@ -44,7 +44,7 @@ $(document).ready(function(){
        // $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
         $("input[name='basicGender']").attr("disabled" , false);
         $("#basicCmdRaceTypeId").attr("disabled" , false);
-        $("#basicCmdNationTypeId").attr("disabled" , "disabled");
+        //$("#basicCmdNationTypeId").attr("disabled" , "disabled");
         //$("#basicDob").attr("disabled" , "disabled");
     }
     // company
@@ -624,7 +624,17 @@ $(document).ready(function(){
     </td>
     <th scope="row"><spring:message code="sal.text.nationality" /> <span class="brown_text">#</span></th>
     <td>
-        <select class="disabled w100p" disabled="disabled" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+        <c:choose>
+            <c:when test="${SESSION_INFO.roleId == '250'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
+            <c:when test="${SESSION_INFO.roleId == '179'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
+            <c:otherwise>
+                <select class="disabled w100p" disabled="disabled" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:otherwise>
+        </c:choose>
     </td>
 </tr>
 <tr>
