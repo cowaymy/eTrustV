@@ -1054,6 +1054,7 @@
                 return false;
             }
         }
+        }
 
         if(FormUtil.checkReqValue($('#sofNo'))) {
             isValid = false;
