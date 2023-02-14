@@ -1328,6 +1328,10 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		params.put("logIsLock", SalesConstants.SALES_ORDER_IS_LOCK_APPROVED); //1
 
   		ccpCalculateMapper.insertLog(params);
+
+  		// inactive current call log to avoid duplicate call log
+        params.put("callStusId" , 8);
+        ccpCalculateMapper.inactiveCallLog(params);
   	}
 
   	@Override
