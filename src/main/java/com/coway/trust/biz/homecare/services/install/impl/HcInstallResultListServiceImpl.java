@@ -1032,6 +1032,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params) {
 		logger.debug("================select HP Info================");
 		EgovMap resultMap = null;
+		logger.debug("==params##==" + params.toString());
 		try{
 			 resultMap = hcInstallResultListMapper.selectOrderSalesmanViewByOrderID(params);
 		}
