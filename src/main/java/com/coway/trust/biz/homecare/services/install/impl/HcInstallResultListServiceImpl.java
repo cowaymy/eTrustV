@@ -1031,7 +1031,14 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	@Override
 	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params) {
 		logger.debug("================select HP Info================");
-		EgovMap resultMap = hcInstallResultListMapper.selectOrderSalesmanViewByOrderID(params);
+		EgovMap resultMap = null;
+		try{
+			 resultMap = hcInstallResultListMapper.selectOrderSalesmanViewByOrderID(params);
+		}
+		catch(Exception e){
+			logger.info("Fail to get HP info to " + e.getMessage());
+		}
+
 		logger.debug("================select HP Info1================");
 		logger.debug("===resultMap===" + resultMap.toString());
 		return resultMap;
