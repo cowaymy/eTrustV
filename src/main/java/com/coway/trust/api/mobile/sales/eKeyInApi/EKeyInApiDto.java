@@ -246,6 +246,7 @@ public class EKeyInApiDto {
   private int isHcAcInstallationFlag;
   private String acBrnch;
   private int acBrnchId;
+  private int custCrcTokenIdStus;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1926,5 +1927,13 @@ public int getAcBrnchId() {
 public void setAcBrnchId(int acBrnchId) {
 	this.acBrnchId = acBrnchId;
 }
+
+public int getCustCrcTokenIdStus() {
+    return custCrcTokenIdStus;
+  }
+
+  public void setCustCrcTokenIdStus(int custCrcTokenIdStus) {
+    this.custCrcTokenIdStus = custCrcTokenIdStus;
+  }
 
 }
