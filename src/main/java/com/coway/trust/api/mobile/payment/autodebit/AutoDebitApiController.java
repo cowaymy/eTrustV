@@ -120,14 +120,14 @@ public class AutoDebitApiController {
         Map<String, Object> resultparams = new HashMap();
         resultparams = autoDebitService.autoDebitMobileSubmissionSave(params);
         int insertResult = Integer.parseInt(resultparams.get("result").toString());
-        LOGGER.error("AutoDebitSubmissionSave Log: insertResult",insertResult);
+        LOGGER.error("AutoDebitSubmissionSave Log: insertResult {}",insertResult);
         if(insertResult > 0){
-            LOGGER.error("AutoDebitSubmissionSave Log: Inside Function ",insertResult);
+            LOGGER.error("AutoDebitSubmissionSave Log: Inside Function {}",insertResult);
             result.setResponseCode(1);
-			autoDebitService.sendEmail(resultparams);
-            LOGGER.error("AutoDebitSubmissionSave Log: Email Function pass ","Email Function pass");
 			autoDebitService.sendSms(resultparams);
             LOGGER.error("AutoDebitSubmissionSave Log: SMS Function pass ","SMS Function pass");
+			autoDebitService.sendEmail(resultparams);
+            LOGGER.error("AutoDebitSubmissionSave Log: Email Function pass ","Email Function pass");
 		 }
         else{
             result.setResponseCode(0);
