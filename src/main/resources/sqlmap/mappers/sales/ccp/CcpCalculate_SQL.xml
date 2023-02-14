@@ -2291,4 +2291,12 @@ WHERE ROWNUM = 1
     WHERE TICKET_ID = ${seq}
 </update>
 
+<update id="inactiveCallLog" parameterType="Map">
+      UPDATE CCR0006D SET STUS_CODE_ID = #{callStusId},  -- 8
+          UPD_DT = SYSDATE,
+          UPD_USER_ID = 349
+      WHERE SALES_ORD_ID = #{saveOrdId}
+      AND STUS_CODE_ID IN (1, 19)  -- ONLY FOR CALL LOG THAT ACTIVE AND RECALL
+    </update>
+
 </mapper>
