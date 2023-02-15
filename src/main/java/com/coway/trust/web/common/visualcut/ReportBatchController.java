@@ -295,10 +295,10 @@ public class ReportBatchController {
     LOGGER.info("[END] RCM_Daily_2015_Company...");
   }
 
-  @RequestMapping(value = "/RCM_Daily_HTMattress.do")
+  @RequestMapping(value = "/RCM_Daily_HT.do")
   //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
   public void rcmDailyHtMattress() {
-    LOGGER.info("[START] RCM_Daily_HTMattress...");
+    LOGGER.info("[START] RCM_Daily_HT...");
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_HTMattress.rpt");// visualcut
                                                                       // rpt
@@ -307,10 +307,10 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "RCM_HT" + File.separator + "RCM_Daily_HTMattress_" + CommonUtils.getNowDate() + ".xls");
+        "RCM_HT" + File.separator + "RCM_Daily_HT_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
-    LOGGER.info("[END] RCM_Daily_HTMattress...");
+    LOGGER.info("[END] RCM_Daily_HT...");
   }
 
   //No longer using this report
