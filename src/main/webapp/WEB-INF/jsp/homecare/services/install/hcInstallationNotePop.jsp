@@ -47,6 +47,12 @@ var branchDs = [];
       selectAll : false, // 전체선택
       width : '100%'
     }).multipleSelect("checkAll"); ;
+
+    $('#instalStatus').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
   }
 
   function fn_validation() {
@@ -337,7 +343,7 @@ var branchDs = [];
        </div>
       </td>
       <th scope="row"><spring:message code='service.title.InstallStatus' /> <span name="m3" id="m3" class="must">*</span></th>
-      <td><select id="instalStatus" name="instalStatus" class="multy_select w100p">
+      <td><select id="instalStatus" name="instalStatus" class="multy_select w100p" multiple="multiple" >
         <c:forEach var="list" items="${installStatus }" varStatus="status">
          <c:choose>
           <c:when test="${list.codeId=='1'}">
