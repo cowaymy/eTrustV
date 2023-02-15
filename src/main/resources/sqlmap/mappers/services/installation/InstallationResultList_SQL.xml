@@ -3001,6 +3001,7 @@
         AND A.STUS = 1
         AND B.MEM_LVL in (3, 4)
         AND E.MAJOR_GRP = '1'
+        AND A.IS_AC = 0
   </select>
 
   <select id="assignCtOrderList" parameterType="Map" resultType="egovMap">
