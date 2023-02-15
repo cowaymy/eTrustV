@@ -186,7 +186,7 @@ var branchDs = [];
             ctCodeLst += ", '" + ctCode[a] + "'"
           }
         }
-        whereSeq2 += "AND CTMEM.MEM_CODE IN (" + ctCodeLst + ") ";
+        whereSeq2 += "AND CTMEM.MEM_ID IN (" + ctCodeLst + ") ";
       }
 
       if ($("#instalType").val() != '' && $("#instalType").val() != null) {
