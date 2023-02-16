@@ -1071,6 +1071,7 @@ console.log("idx:"+idx);
                 $('#ordProduct2').prop("disabled", true);
             }
 
+            debugger;
             if($('#ordProduct1 option').length < 2 && $('#ordProduct2 option').length >= 2){
             	$('#btnMatRltdNo').removeClass("blind");
             	MAT_TAG = 'Y';
@@ -1931,6 +1932,7 @@ console.log(orderVO);
 
         const ordProd1 = $("#ordProduct1");
         const ordProd2 = $("#ordProduct2");
+        debugger;
         if((ordProd1.find("option").length > 1 && ordProd1.find("option:selected").index() <= 0) || (ordProd2.find("option").length > 1 && ordProd2.find("option:selected").index() <= 0)){
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
@@ -2010,11 +2012,21 @@ console.log(orderVO);
         		 Common.ajaxSync("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#matStkId").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
                      if(result.code != '00') {
                     	 isValid = false;
-                    	 msg +=  '<spring:message code="sal.alert.msg.matSizeDiff" />';;
+                    	 msg +=  '<spring:message code="sal.alert.msg.matSizeDiff" />';
                      }
                  });
         	}
 
+        }
+
+        // Added for aircond
+        if(srvPacVal == 27) {// aircond service package
+             Common.ajaxSync("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#ordProduct1").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+                 if(result.code != '00') {
+                     isValid = false;
+                     msg +=  'Product size is different. Please check.';
+                 }
+             });
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
