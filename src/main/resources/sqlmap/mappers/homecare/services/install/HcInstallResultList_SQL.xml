@@ -74,6 +74,7 @@
 		LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
         LEFT JOIN SYS0070M AT ON IR.ATCH_FILE_GRP_ID = AT.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D AT2 ON AT.ATCH_FILE_ID = AT2.ATCH_FILE_ID
+        LEFT JOIN ORG1001V V ON V.MEM_ID = MEM.MEM_ID
         WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                    WHERE AA.CODE = BB.CODE
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
@@ -164,6 +165,15 @@
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}
         </if>
+        <if test='deptCode != null and deptCode != ""'>
+           AND V.DEPT_CODE = #{deptCode}
+           </if>
+           <if test='grpCode != null and grpCode != ""'>
+           AND V.GRP_CODE = #{grpCode}
+           </if>
+           <if test='orgCode != null and orgCode != ""'>
+           AND V.ORG_CODE = #{orgCode}
+           </if>
         ORDER BY HMC.BNDL_NO DESC, SOM.SALES_ORD_NO ASC, IE.INSTALL_ENTRY_NO ASC, IE.INSTALL_DT ASC
 	</select>
 

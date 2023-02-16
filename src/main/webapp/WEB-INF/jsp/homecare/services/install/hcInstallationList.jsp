@@ -11,6 +11,13 @@
 
 	    createInstallationListAUIGrid();
 
+	    console.log('isAC' + '${SESSION_INFO.isAC} ');
+	    if('${SESSION_INFO.isAC}' == 1){
+	    	$("#orgCode").val('${SESSION_INFO.orgCode}');
+	    	$("#groupCode").val('${SESSION_INFO.groupCode}');
+	    	$("#deptCode").val('${SESSION_INFO.deptCode}');
+	    }
+
         AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
             if(event.checked) {
                 var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "appTypeId");
@@ -464,6 +471,11 @@
   </form>
 
   <form action="#" method="post" id="searchForm">
+  <input type="hidden" id="orgCode" name="orgCode" value="" />
+  <input type="hidden" id="grpCode" name="grpCode" value="" />
+  <input type="hidden" id="deptCode" name="deptCode" value="" />
+
+
    <table class="type1">
     <!-- table start -->
     <caption>table</caption>

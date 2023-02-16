@@ -78,6 +78,9 @@
              , (TRUNC(TO_DATE(VAC.NEXT_POP_DT, 'YYYYMMDD'),'dd')) - TRUNC(SYSDATE,'dd') diffVacDay
              ,  ORG1.BIZ_TYPE AS bizType
              ,ORG.is_AC AS isAC
+             ,NVL(ORGV.DEPT_CODE ,'') DEPT_CODE
+                      ,NVL(ORGV.GRP_CODE,'') GRP_CODE
+                      ,NVL(ORGV.ORG_CODE,'') ORG_CODE
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
            LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
            LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
@@ -86,6 +89,7 @@
            LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = ORG.BRNCH OR BRNCH_ID = USR.USER_BRNCH_ID
            LEFT JOIN ORG0003D EREGIS ON APLCTN_ID = ORG.APLICNT_ID
            LEFT JOIN ORG0040D VAC ON VAC.MEM_ID = ORG1.MEM_ID
+           left join org1001V orgv on orgv.MEM_ID = ORG.mem_id
 	 WHERE 1 = 1
 	   AND USR.USER_NAME = #{userId} /* userId => user_name 임.*/
 	   AND USR.USER_PASSWD = #{password}

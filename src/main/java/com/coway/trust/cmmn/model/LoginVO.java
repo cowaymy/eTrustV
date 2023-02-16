@@ -55,6 +55,9 @@ public class LoginVO {
 
 	private String userMemCode;
 	private int isAC;
+	private String orgCode;
+	private String groupCode;
+	private String deptCode;
 
 	public String getUserMemCode() {
 		return userMemCode;
@@ -441,5 +444,29 @@ public class LoginVO {
 
 	public void setIsAC(int isAC) {
 		this.isAC = isAC;
+	}
+
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public String getDeptCode() {
+		return deptCode;
+	}
+
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
 	}
 }

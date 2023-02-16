@@ -42,6 +42,9 @@ public class SessionVO implements Serializable {
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 	private String userMemCode;
 	private int isAC;
+	private String orgCode;
+	private String groupCode;
+	private String deptCode;
 
 	public String getUserMemCode() {
 		return userMemCode;
@@ -286,6 +289,10 @@ public class SessionVO implements Serializable {
 			sessionVO.setCostCentr(loginVO.getCostCentr());
 			sessionVO.setBizType(loginVO.getBizType());
 			sessionVO.setIsAC(loginVO.getIsAC());
+			sessionVO.setOrgCode(loginVO.getOrgCode());
+			sessionVO.setGroupCode(loginVO.getGroupCode());
+			sessionVO.setDeptCode(loginVO.getDeptCode());
+
 
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}
@@ -351,5 +358,29 @@ public class SessionVO implements Serializable {
 
 	public void setIsAC(int isAC) {
 		this.isAC = isAC;
+	}
+
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public String getDeptCode() {
+		return deptCode;
+	}
+
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
 	}
 }
