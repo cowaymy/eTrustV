@@ -54,6 +54,7 @@ public class LoginVO {
 	private int bizType;
 
 	private String userMemCode;
+	private int isAC;
 
 	public String getUserMemCode() {
 		return userMemCode;
@@ -433,4 +434,12 @@ public class LoginVO {
     public String getRank() {
         return rank;
     }
+
+	public int getIsAC() {
+		return isAC;
+	}
+
+	public void setIsAC(int isAC) {
+		this.isAC = isAC;
+	}
 }

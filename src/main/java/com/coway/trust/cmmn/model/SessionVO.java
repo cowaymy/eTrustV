@@ -34,19 +34,14 @@ public class SessionVO implements Serializable {
 	private String deptName;
 	private String userPassWord;
 	private String mgrYn;
-
 	private String menuCode; // 메뉴에 등록된 uri 에 대한 menuCode.... 등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
 							 // (AuthenticInterceptor.java 에서 등록)
-
 	private String memId;
-
 	private String costCentr;
-
 	private int bizType;
-
 	private List<LoginSubAuthVO> loginSubAuthVOList;
-
 	private String userMemCode;
+	private int isAC;
 
 	public String getUserMemCode() {
 		return userMemCode;
@@ -290,6 +285,7 @@ public class SessionVO implements Serializable {
 			sessionVO.setMemId(loginVO.getMemId());
 			sessionVO.setCostCentr(loginVO.getCostCentr());
 			sessionVO.setBizType(loginVO.getBizType());
+			sessionVO.setIsAC(loginVO.getIsAC());
 
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}
@@ -347,5 +343,13 @@ public class SessionVO implements Serializable {
 
 	public void setCostCentr(String costCentr) {
 		this.costCentr = costCentr;
+	}
+
+	public int getIsAC() {
+		return isAC;
+	}
+
+	public void setIsAC(int isAC) {
+		this.isAC = isAC;
 	}
 }
