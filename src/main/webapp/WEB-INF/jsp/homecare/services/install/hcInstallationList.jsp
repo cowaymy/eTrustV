@@ -14,7 +14,7 @@
 	    console.log('isAC' + '${SESSION_INFO.isAC} ');
 	    if('${SESSION_INFO.isAC}' == 1){
 	    	$("#orgCode").val('${SESSION_INFO.orgCode}');
-	    	$("#groupCode").val('${SESSION_INFO.groupCode}');
+	    	$("#grpCode").val('${SESSION_INFO.groupCode}');
 	    	$("#deptCode").val('${SESSION_INFO.deptCode}');
 	    }
 
