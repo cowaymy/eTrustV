@@ -64,6 +64,7 @@
         $("#searchOrderId").val(orderInfo.ordId);
         $("#orderId").val(orderInfo.ordNo);
         $("#custName").val(orderInfo.custName);
+        $("#orderId2").val(orderInfo.comboOrdNo);
         $("#reqstCntnt").val(orderInfo.telM1);
 
       } else {
@@ -127,6 +128,7 @@
         $("#searchOrderId").val(orderInfo.ordId);
         $("#orderId").val(orderInfo.ordNo);
         $("#custName").val(orderInfo.custName);
+        $("#orderId2").val(orderInfo.comboOrdNo);
         $("#reqstCntnt").val(orderInfo.telM1);
 
       } else {
@@ -296,9 +298,9 @@
               <td colspan="3">
                 <input type="text" title="" placeholder="Customer Contact" disabled="disabled" class="" id="reqstCntnt" name="reqstCntnt" value="" />
               </td>
-              <th scope="row">Customer Name</th>
+              <th scope="row">Order No2</th>
               <td colspan="3">
-                <input type="text" title="" placeholder="Customer Name" disabled="disabled" class="" id="custName" name="custName" value="" />
+                <input id="orderId2" name="orderId2" type="text" title="" placeholder="Order No2" disabled="disabled" class=""  value="" />
               </td>
             </tr>
             <tr>
@@ -306,14 +308,9 @@
               <td colspan="3">
                 <input id="reqstMemId" name="reqstMemId" type="text" title="" placeholder="Involved Person Code" class="" /><a class="search_btn" id="memBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
               </td>
-              <th scope="row">Action</th>
+              <th scope="row">Customer Name</th>
               <td colspan="3">
-                <select class="" id="action" name="action">
-                  <option value="">Action</option>
-                  <option value="56">Call In</option>
-                  <option value="57">Call Out</option>
-                  <option value="58">Internal Feedback</option>
-                </select>
+                <input type="text" title="" placeholder="Customer Name" disabled="disabled" class="" id="custName" name="custName" value="" />
               </td>
             </tr>
             <tr>

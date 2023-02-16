@@ -51,7 +51,12 @@ function ComplianceListGrid() {
         headerText : "Order No",
         editable : false,
         width : 200
-    },  {
+    },{
+        dataField : "comboOrdNo",
+        headerText : "Order No2",
+        editable : false,
+        width : 200
+    },   {
         dataField : "memCode",
         headerText : "Person Involved",
         editable : false,
@@ -163,6 +168,11 @@ function ExcelListGrid() {
     }, {
         dataField : "salesOrdNo",
         headerText : "Order No",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "comboOrdNo",
+        headerText : "Order No2",
         editable : false,
         width : 200
     }, {

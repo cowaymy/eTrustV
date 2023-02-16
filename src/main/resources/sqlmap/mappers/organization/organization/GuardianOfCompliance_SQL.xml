@@ -381,7 +381,8 @@
                 Project1.STATE STATE ,
                 Project1.RESPNS_UPDATED ,
                 Project1.RESPNS_MSG,
-                Project1.CASE_NO
+                Project1.CASE_NO,
+                NVL(Project1.COMBO_ORD_NO ,  ' - ') COMBO_ORD_NO
             FROM (
                 SELECT
                     Filter1.REQUESTID REQUESTID  ,
@@ -405,7 +406,8 @@
                     Filter1.RESPNS_UPDATED ,
                     Filter1.RESPNS_MSG,
                     Filter1.CASE_NO,
-                    Filter1.PIC_NAME
+                    Filter1.PIC_NAME,
+                    Filter1.COMBO_ORD_NO
                 FROM (
                     SELECT
                         Extent1.REQST_ID REQUESTID  ,
@@ -430,7 +432,8 @@
                         Extent9.RESPNS_MSG,
                         Extent1.REQST_NO CASE_NO,
                         Extent11.NAME PIC_NAME,
-                        Extent11.PIC_USER_ID
+                        Extent11.PIC_USER_ID,
+                        COMBO.SALES_ORD_NO COMBO_ORD_NO
                     FROM MSC0043M Extent1
                     LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
                     LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -463,6 +466,8 @@
                           AND D.HR_CODE = E.MEM_CODE
                     ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
                                                 AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
+                  LEFT JOIN SAL0001D COMBO ON COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
+                                                          OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID
                     WHERE 1=1
             ]]>
                     <if test="caseCategoryList != null and caseCategoryList != '' ">
@@ -832,6 +837,7 @@
              , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
              , T.PV_MONTH
              , T.PV_YEAR
+             , NVL(COMBO_ORD_NO,'') AS COMBO_ORD_NO
           FROM
              ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
                       V1.APP_TYPE_CODE
@@ -877,9 +883,12 @@
                     , V1.RELATED_NO
                     , V1.RELATED_ID
                     , CC.TEL_M1
+                    , COMBO.SALES_ORD_NO COMBO_ORD_NO
                  FROM SAL1013V  V1
                  JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = V1.ORD_ID
                  JOIN SAL0027D CC ON CC.CUST_CNTC_ID = SOM.CUST_CNT_ID
+                 LEFT JOIN SAL0001D COMBO ON COMBO.PCKAGE_BINDING_NO = SOM.SALES_ORD_ID
+                                                             OR  SOM.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID
 
                 WHERE 1 = 1
                 <if test='ordDt == null || ordDt == ""'>
