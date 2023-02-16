@@ -57,8 +57,22 @@ public class PreCcpRegisterApiForm {
     private String customerEmailAddr;
     private String chsStatus;
     private String chsRsn;
+    private String appvReq;
+    private String customerMonth;
 
+    public String getCustomerMonth() {
+        return customerMonth;
+    }
+    public void setCustomerMonth(String customerMonth) {
+        this.customerMonth = customerMonth;
+    }
 
+    public String getAppvReq() {
+        return appvReq;
+    }
+    public void setAppvReq(String appvReq) {
+        this.appvReq = appvReq;
+    }
 
     public String getCustomerName() {
         return customerName;
