@@ -50,10 +50,17 @@
 	    width : "20%"
      },
      {
+        dataField : "custMonth",
+        headerText : "Cust ID Month",
+        editable : false,
+        width : "10%"
+     },
+     {
         dataField : "custId",
         headerText : "Customer ID",
         editable : false,
-        width : "10%"
+        width : "10%",
+        visible: false
      },
      {
         dataField : "chsStatus",
