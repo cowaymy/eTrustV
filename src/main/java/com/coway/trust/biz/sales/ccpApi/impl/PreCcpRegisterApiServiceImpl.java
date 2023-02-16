@@ -60,7 +60,7 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
   private PreCcpRegisterMapper preCcpRegisterMapper;
 
   @Override
-  public List<EgovMap> selectPreCcpRegisterList(PreCcpRegisterApiForm param) throws Exception {
+  public List<EgovMap> checkPreCcpResult(PreCcpRegisterApiForm param) throws Exception {
 
         if (null == param) {
           throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
@@ -70,81 +70,111 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
           throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
         }
         else {
-              if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 3) {
-                throw new ApplicationException(AppConstants.FAIL, "Please fill out at least three characters.");
-              }
+//              if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 3) {
+//                throw new ApplicationException(AppConstants.FAIL, "Please fill out at least three characters.");
+//              }
               if ( ("2").equals(param.getSelectType()) && CommonUtils.isEmpty(param.getSelectKeyword())) {
-                throw new ApplicationException(AppConstants.FAIL, "Select Keyword value does not exist.");
+                throw new ApplicationException(AppConstants.FAIL, "NRIC value does not exist.");
               }
         }
 
-        if(CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
-            throw new ApplicationException(AppConstants.FAIL, "Request Date does not exist.");
-        }
+//        if(CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
+//            throw new ApplicationException(AppConstants.FAIL, "Request Date does not exist.");
+//        }
 
         if (CommonUtils.isEmpty(param.getRegId()) || param.getRegId().length() <= 0) {
           throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
         }
 
-        return preCcpRegisterApiMapper.selectPreCcpRegisterList(PreCcpRegisterApiForm.createMap(param));
+        return preCcpRegisterApiMapper.checkPreCcpResult(PreCcpRegisterApiForm.createMap(param));
   }
 
-  @Override
-  public PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception {
+//  @Override
+//  public List<EgovMap> selectPreCcpRegisterList(PreCcpRegisterApiForm param) throws Exception {
+//
+//        if (null == param) {
+//          throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+//        }
+//
+//        if (CommonUtils.isEmpty(param.getSelectType())) {
+//          throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
+//        }
+//        else {
+//              if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 3) {
+//                throw new ApplicationException(AppConstants.FAIL, "Please fill out at least three characters.");
+//              }
+//              if ( ("2").equals(param.getSelectType()) && CommonUtils.isEmpty(param.getSelectKeyword())) {
+//                throw new ApplicationException(AppConstants.FAIL, "Select Keyword value does not exist.");
+//              }
+//        }
+//
+//        if(CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
+//            throw new ApplicationException(AppConstants.FAIL, "Request Date does not exist.");
+//        }
+//
+//        if (CommonUtils.isEmpty(param.getRegId()) || param.getRegId().length() <= 0) {
+//          throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
+//        }
+//
+//        return preCcpRegisterApiMapper.selectPreCcpRegisterList(PreCcpRegisterApiForm.createMap(param));
+//  }
 
-        if (null == param) {
-          throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-        }
-
-        if (CommonUtils.isEmpty(param.getName())) {
-          throw new ApplicationException(AppConstants.FAIL, "Customer name value does not exist.");
-        }
-
-        if (CommonUtils.isEmpty(param.getNric())) {
-          throw new ApplicationException(AppConstants.FAIL, "NRIC value does not exist.");
-        }
-
-        if (CommonUtils.isEmpty(param.getMobileNo())) {
-            throw new ApplicationException(AppConstants.FAIL, "Mobile No. value does not exist.");
-        }
-
-        if (CommonUtils.isEmpty(param.getEmail())) {
-            throw new ApplicationException(AppConstants.FAIL, "Email value does not exist.");
-        }
-
-        Map<String, Object> loginInfoMap = new HashMap<String, Object>();
-        loginInfoMap.put("_USER_ID", param.getRegId());
-        LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
-        if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
-        	throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
-        }
-
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("customerNric", param.getNric());
-        EgovMap getExistCustomer = preCcpRegisterMapper.getExistCustomer(params);
-	    if(getExistCustomer == null){
-	    	throw new ApplicationException(AppConstants.FAIL, "This customer does not exist. Please key in again.");
-	    }
-
-        Map<String, Object> preCcpMap = new HashMap<String, Object>();
-        preCcpMap.put("custId", getExistCustomer.get("custId"));
-        preCcpMap.put("customerName", param.getName());
-        preCcpMap.put("customerNric", param.getNric());
-        preCcpMap.put("customerMobileNo", param.getMobileNo());
-        preCcpMap.put("customerEmailAddr", param.getEmail());
-        preCcpMap.put("chsStatus", getExistCustomer.get("chsStatus"));
-        preCcpMap.put("chsRsn", getExistCustomer.get("chsRsn"));
-        preCcpMap.put("userId", loginVO.getUserId());
-
-        int saveCnt = preCcpRegisterMapper.submitPreCcpSubmission(preCcpMap);
-
-        if (saveCnt <0 ) {
-          throw new ApplicationException(AppConstants.FAIL, "Fail to insert Pre-CCP request Exception.");
-        }
-
-        LOGGER.debug("savePreCcp preCcpMap2222 : {}", preCcpMap);
-        return PreCcpRegisterApiForm.create(preCcpMap);
-  }
+//  @Override
+//  public PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception {
+//
+//        if (null == param) {
+//          throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+//        }
+//
+//        if (CommonUtils.isEmpty(param.getName())) {
+//          throw new ApplicationException(AppConstants.FAIL, "Customer name value does not exist.");
+//        }
+//
+//        if (CommonUtils.isEmpty(param.getNric())) {
+//          throw new ApplicationException(AppConstants.FAIL, "NRIC value does not exist.");
+//        }
+//
+//        if (CommonUtils.isEmpty(param.getMobileNo())) {
+//            throw new ApplicationException(AppConstants.FAIL, "Mobile No. value does not exist.");
+//        }
+//
+//        if (CommonUtils.isEmpty(param.getEmail())) {
+//            throw new ApplicationException(AppConstants.FAIL, "Email value does not exist.");
+//        }
+//
+//        Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+//        loginInfoMap.put("_USER_ID", param.getRegId());
+//        LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+//        if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
+//        	throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
+//        }
+//
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        params.put("customerNric", param.getNric());
+//        EgovMap getExistCustomer = preCcpRegisterMapper.getExistCustomer(params);
+//	    if(getExistCustomer == null){
+//	    	throw new ApplicationException(AppConstants.FAIL, "This customer does not exist. Please key in again.");
+//	    }
+//
+//        Map<String, Object> preCcpMap = new HashMap<String, Object>();
+//        preCcpMap.put("custId", getExistCustomer.get("custId"));
+//        preCcpMap.put("customerName", param.getName());
+//        preCcpMap.put("customerNric", param.getNric());
+//        preCcpMap.put("customerMobileNo", param.getMobileNo());
+//        preCcpMap.put("customerEmailAddr", param.getEmail());
+//        preCcpMap.put("chsStatus", getExistCustomer.get("chsStatus"));
+//        preCcpMap.put("chsRsn", getExistCustomer.get("chsRsn"));
+//        preCcpMap.put("userId", loginVO.getUserId());
+//
+//        int saveCnt = preCcpRegisterMapper.submitPreCcpSubmission(preCcpMap);
+//
+//        if (saveCnt <0 ) {
+//          throw new ApplicationException(AppConstants.FAIL, "Fail to insert Pre-CCP request Exception.");
+//        }
+//
+//        LOGGER.debug("savePreCcp preCcpMap2222 : {}", preCcpMap);
+//        return PreCcpRegisterApiForm.create(preCcpMap);
+//  }
 
 }
 

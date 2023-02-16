@@ -2,38 +2,61 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.ccpApi.impl.PreCcpRegisterApiMapper">
 
-<select id="selectPreCcpRegisterList" parameterType="Map" resultType="egovMap">
-		SELECT
-		      A.PRECCP_SEQ
-		    , A.CUST_NAME
-		    , A.CUST_IC
-		    , A.CUST_MOBILENO
-		    , A.CUST_EMAIL
-		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
-		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS
-		               WHEN A.CHS_STATUS = 'YELLOW'  THEN A.CHS_STATUS || '_' || A.CHS_RSN
-		                                       ELSE '-'
-		      END CHS_STATUS
-		    , A.CUST_ID
-		FROM SAL0343D A
-		LEFT JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
-		WHERE DISAB = 0
-		 <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
-            AND TO_CHAR(CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
-        </if>
-        <if test="regId != null and regId != ''">
-            AND B.USER_NAME = #{regId}
-        </if>
-        <if test="selectType != null and selectType != '' ">
+<select id="checkPreCcpResult" parameterType="Map" resultType="egovMap">
+        SELECT
+                A.CUST_ID
+             ,  NVL(B.CHS_STUS,'-') CHS_STATUS
+             ,  CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-' ELSE B.CHS_RSN END CHS_RSN
+             ,  A.NAME
+             ,  C.APPV_REQ
+             , TRUNC(MONTHS_BETWEEN(SYSDATE, A.CRT_DT)) AS CUST_MONTH
+        FROM SAL0029D A
+        LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
+        LEFT JOIN SAL0344D C ON B.CHS_RSN = C.CHS_RSN
+        WHERE 1=1
+        <if test="selectType != null and selectType != '' "> -->
             <choose>
-                <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
-                    AND CUST_NAME LIKE  '%' || #{selectKeyword} || '%'
-                </when>
                 <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
-                    AND CUST_IC LIKE  '%' || #{selectKeyword} || '%'
+                    AND A.NRIC = #{selectKeyword}
                 </when>
             </choose>
         </if>
+        AND ROWNUM = 1
+
 </select>
+
+<!-- <select id="selectPreCcpRegisterList" parameterType="Map" resultType="egovMap"> -->
+<!-- 		SELECT -->
+<!-- 		      A.PRECCP_SEQ -->
+<!-- 		    , A.CUST_NAME -->
+<!-- 		    , A.CUST_IC -->
+<!-- 		    , A.CUST_MOBILENO -->
+<!-- 		    , A.CUST_EMAIL -->
+<!-- 		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT -->
+<!-- 		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS -->
+<!-- 		               WHEN A.CHS_STATUS = 'YELLOW'  THEN A.CHS_STATUS || '_' || A.CHS_RSN -->
+<!-- 		                                       ELSE '-' -->
+<!-- 		      END CHS_STATUS -->
+<!-- 		    , A.CUST_ID -->
+<!-- 		FROM SAL0343D A -->
+<!-- 		LEFT JOIN SYS0047M B ON A.CRT_ID = B.USER_ID -->
+<!-- 		WHERE DISAB = 0 -->
+<!-- 		 <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''"> -->
+<!--             AND TO_CHAR(CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo} -->
+<!--         </if> -->
+<!--         <if test="regId != null and regId != ''"> -->
+<!--             AND B.USER_NAME = #{regId} -->
+<!--         </if> -->
+<!--         <if test="selectType != null and selectType != '' "> -->
+<!--             <choose> -->
+<!--                 <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'> -->
+<!--                     AND CUST_NAME LIKE  '%' || #{selectKeyword} || '%' -->
+<!--                 </when> -->
+<!--                 <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'> -->
+<!--                     AND CUST_IC LIKE  '%' || #{selectKeyword} || '%' -->
+<!--                 </when> -->
+<!--             </choose> -->
+<!--         </if> -->
+<!-- </select> -->
 
 </mapper>

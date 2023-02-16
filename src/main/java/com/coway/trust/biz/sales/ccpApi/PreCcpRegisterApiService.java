@@ -25,8 +25,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface PreCcpRegisterApiService {
 
-  List<EgovMap> selectPreCcpRegisterList(PreCcpRegisterApiForm param) throws Exception;
+  List<EgovMap> checkPreCcpResult(PreCcpRegisterApiForm param) throws Exception;
 
-  PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception;
+//  PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception;
 
 }

@@ -21,6 +21,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("PreCcpRegisterApiMapper")
 public interface PreCcpRegisterApiMapper {
 
-  List<EgovMap> selectPreCcpRegisterList(Map<String, Object> params);
+  List<EgovMap> checkPreCcpResult(Map<String, Object> params);
 
 }

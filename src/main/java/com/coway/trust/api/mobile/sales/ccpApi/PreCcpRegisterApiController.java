@@ -44,29 +44,26 @@ public class PreCcpRegisterApiController {
   @Resource(name = "PreCcpRegisterApiService")
   private PreCcpRegisterApiService preCcpRegisterApiService;
 
-  @ApiOperation(value = "selectPreCcpRegisterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/selectPreCcpRegisterList", method = RequestMethod.GET)
-  public ResponseEntity<List<PreCcpRegisterApiDto>> selectPreCcpRegisterList(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
+  @ApiOperation(value = "checkPreCcpResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/checkPreCcpResult", method = RequestMethod.GET)
+  public ResponseEntity<List<PreCcpRegisterApiDto>> checkPreCcpResult(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
 
-	  List<EgovMap> selectPreCcpRegisterList = preCcpRegisterApiService.selectPreCcpRegisterList(param);
+	  List<EgovMap> preCcpResult = preCcpRegisterApiService.checkPreCcpResult(param);
 
       if (LOGGER.isDebugEnabled()) {
-          for (int i = 0; i < selectPreCcpRegisterList.size(); i++) {
-            LOGGER.debug("selectPreCcpRegisterList    값 : {}", selectPreCcpRegisterList.get(i));
+          for (int i = 0; i < preCcpResult.size(); i++) {
+            LOGGER.debug("preCcpResult    값 : {}", preCcpResult.get(i));
           }
       }
 
-    return ResponseEntity.ok(selectPreCcpRegisterList.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(preCcpResult.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
   }
 
-  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)
-  public ResponseEntity<PreCcpRegisterApiForm> savePreCcp(@RequestBody PreCcpRegisterApiForm param) throws Exception {
-    return ResponseEntity.ok(preCcpRegisterApiService.savePreCcp(param));
-  }
-
-
-
+//  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//  @RequestMapping(value = "/savePreCcp", method = RequestMethod.POST)
+//  public ResponseEntity<PreCcpRegisterApiForm> savePreCcp(@RequestBody PreCcpRegisterApiForm param) throws Exception {
+//    return ResponseEntity.ok(preCcpRegisterApiService.savePreCcp(param));
+//  }
 
 
 }
