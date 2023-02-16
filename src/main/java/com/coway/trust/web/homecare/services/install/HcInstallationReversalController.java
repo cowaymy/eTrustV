@@ -72,7 +72,15 @@ public class HcInstallationReversalController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/installationReversalSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> installationReversalListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public ResponseEntity<List<EgovMap>> installationReversalListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception{
+
+		//Apply filter for ACI able to search thier own ACI order only
+		int isAC = sessionVO.getIsAC();
+		if(isAC == 1){
+			params.put("isAC", isAC);
+			params.put("deptCode",  sessionVO.getDeptCode());
+		}
+
 		List<EgovMap> orderList = hcInstallationReversalService.selectOrderList(params);
 //		logger.debug("list : {}", orderList);
 		return ResponseEntity.ok(orderList);

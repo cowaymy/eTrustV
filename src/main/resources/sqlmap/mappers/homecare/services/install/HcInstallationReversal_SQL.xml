@@ -75,8 +75,12 @@
 		                   LEFT JOIN SAL0029D Extent8   ON Extent3.CUST_ID = Extent8.CUST_ID
 		                   LEFT JOIN SYS0038M Extent9   ON Extent1.STUS_CODE_ID = Extent9.STUS_CODE_ID
 		                   JOIN SAL0045D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
+		                   JOIN ORG1001V Extent11 ON Extent1.CT_ID = Extent11.MEM_ID
 		                  WHERE  ( NOT ( LTRIM(RTRIM(UPPER(Extent3.SALES_ORD_NO))) LIKE '%C%')
 		                           AND ( Extent3.SALES_ORD_NO = #{orderNo} )
+		                           <if test="isAC != null and isAC == 1">
+											AND Extent11.DEPT_CODE = #{deptCode}
+									</if>
 		                         )
 		                    AND Extent3.BNDL_ID IS NOT NULL
 		                    AND EXISTS ( SELECT 1
