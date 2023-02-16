@@ -50,7 +50,7 @@ public class PreCcpRegisterApiDto {
 	private String crtDt;
 	private String chsRsn;
 	private String appvReq;
-	private String custMonth;
+	private int custMonth;
 
 
     public int getCustId() {
@@ -107,10 +107,10 @@ public class PreCcpRegisterApiDto {
     public void setCrtDt(String crtDt) {
         this.crtDt = crtDt;
     }
-    public String getCustMonth() {
+    public int getCustMonth() {
         return custMonth;
     }
-    public void setCustMonth(String custMonth) {
+    public void setCustMonth(int custMonth) {
         this.custMonth = custMonth;
     }
 
