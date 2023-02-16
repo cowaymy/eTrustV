@@ -55,86 +55,114 @@ public class PreCcpRegisterController {
 	@RequestMapping(value = "/initPreCcpRegisterList.do")
 	public String initPreCcpRegisterList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
-		List<EgovMap> preccpStatus = preCcpRegisterService.selectPreCcpStatus();
-		model.put("preccpStatus", preccpStatus);
+//		List<EgovMap> preccpStatus = preCcpRegisterService.selectPreCcpStatus();
+//		model.put("preccpStatus", preccpStatus);
 
 		return "sales/ccp/preCcpRegisterList";
 	}
 
-	@RequestMapping(value = "/preCcpSubmissionRegister.do")
-	public String preCcpSubmissionRegister(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "sales/ccp/preCcpSubmissionRegister";
+
+	@RequestMapping(value="/checkPreCcpResult.do", method=RequestMethod.GET)
+	public ResponseEntity <EgovMap> checkPreCcpResult(@RequestParam Map<String, Object>params, SessionVO sessionVO) throws Exception {
+
+		EgovMap getExistCustomer= preCcpRegisterService.getExistCustomer(params);
+
+		if(getExistCustomer != null){
+			getExistCustomer.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+			int result = preCcpRegisterService.insertPreCcpSubmission(getExistCustomer);
+		}
+
+		return ResponseEntity.ok(getExistCustomer);
 	}
 
+	@RequestMapping(value = "/preCcpOrderSummary.do")
+	public String preCcpOrderSummary(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("custId", params.get("custId"));
+		return "sales/ccp/preCcpOrderSummary";
+	}
 
-   @Transactional
-   @RequestMapping(value = "/submitPreCcpSubmission.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> submitPreCcpSubmission(@RequestBody Map<String, Object> params) throws Exception {
+    @RequestMapping(value = "/searchOrderSummaryList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> searchOrderSummaryList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
-	  try{
-		    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		    params.put("userId", sessionVO.getUserId());
+        List<EgovMap> orderSummaryList = preCcpRegisterService.searchOrderSummaryList(params);
 
-		    ReturnMessage message = new ReturnMessage();
+        return ResponseEntity.ok(orderSummaryList);
+    }
 
-		    EgovMap getExistCustomer = preCcpRegisterService.getExistCustomer(params);
+//	@RequestMapping(value = "/preCcpSubmissionRegister.do")
+//	public String preCcpSubmissionRegister(@RequestParam Map<String, Object> params, ModelMap model) {
+//		return "sales/ccp/preCcpSubmissionRegister";
+//	}
 
-		    if(getExistCustomer == null){
-		    	message.setCode(AppConstants.FAIL);
-		   	    message.setMessage("This customer does not exist. Please key in again.");
-		   	    return ResponseEntity.ok(message);
-		    }
 
-		    params.put("custId", getExistCustomer.get("custId"));
-		    params.put("chsStatus", getExistCustomer.get("chsStatus"));
-		    params.put("chsRsn", getExistCustomer.get("chsRsn"));
-		    getExistCustomer.put("custName", params.get("customerName"));
+//   @Transactional
+//   @RequestMapping(value = "/submitPreCcpSubmission.do", method = RequestMethod.POST)
+//    public ResponseEntity<ReturnMessage> submitPreCcpSubmission(@RequestBody Map<String, Object> params) throws Exception {
+//
+//	  try{
+//		    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+//		    params.put("userId", sessionVO.getUserId());
+//
+//		    ReturnMessage message = new ReturnMessage();
+//
+//		    EgovMap getExistCustomer = preCcpRegisterService.getExistCustomer(params);
+//
+//		    if(getExistCustomer == null){
+//		    	message.setCode(AppConstants.FAIL);
+//		   	    message.setMessage("This customer does not exist. Please key in again.");
+//		   	    return ResponseEntity.ok(message);
+//		    }
+//
+//		    params.put("custId", getExistCustomer.get("custId"));
+//		    params.put("chsStatus", getExistCustomer.get("chsStatus"));
+//		    params.put("chsRsn", getExistCustomer.get("chsRsn"));
+//		    params.put("customerName", getExistCustomer.get("name"));
+//
+//		    int result = preCcpRegisterService.insertPreCcpSubmission(params);
+//
+//		    if(result > 0){
+//		    	 message.setCode(AppConstants.SUCCESS);
+//		    	 message.setMessage("Success to create");
+//		    	 message.setData(params);
+//		    }else{
+//		    	message.setCode(AppConstants.FAIL);
+//		   	    message.setMessage("Fail to check in Pre-CCP register. Kindly contact system administrator or respective department.");
+//		    }
+//
+//		    return ResponseEntity.ok(message);
+//	  }
+//	  catch(Exception e){
+//		  	throw e;
+//	  }
+//  }
 
-		    int result = preCcpRegisterService.submitPreCcpSubmission(params);
+//   @RequestMapping(value = "/preCcpSubmissionRegisterResult.do")
+//	public String preCcpSubmissionRegisterResult(@RequestParam Map<String, Object> params, ModelMap model) {
+//	    model.put("preccpResult", params);
+//		if (params != null && params.get("chsStatus") != null) {
+//			switch ((String) params.get("chsStatus")) {
+//				case "GREEN":
+//					model.put("chsRemark", params.get("chsStatus").toString());
+//					break;
+//				case "YELLOW":
+//					model.put("chsRemark", params.get("chsStatus").toString() + "_" + params.get("chsRsn").toString());
+//					break;
+//				default:
+//					model.put("chsRemark", "-");
+//			}
+//		}
+//		return "sales/ccp/preCcpSubmissionRegisterResult";
+//  }
 
-		    if(result > 0){
-		    	 message.setCode(AppConstants.SUCCESS);
-		    	 message.setMessage("Success to create");
-		    	 message.setData(getExistCustomer);
-		    }else{
-		    	message.setCode(AppConstants.FAIL);
-		   	    message.setMessage("Fail to check in Pre-CCP register. Kindly contact system administrator or respective department.");
-		    }
-
-		    return ResponseEntity.ok(message);
-	  }
-	  catch(Exception e){
-		  	throw e;
-	  }
-  }
-
-   @RequestMapping(value = "/preCcpSubmissionRegisterResult.do")
-	public String preCcpSubmissionRegisterResult(@RequestParam Map<String, Object> params, ModelMap model) {
-	    model.put("preccpResult", params);
-		if (params != null && params.get("chsStatus") != null) {
-			switch ((String) params.get("chsStatus")) {
-				case "GREEN":
-					model.put("chsRemark", params.get("chsStatus").toString());
-					break;
-				case "YELLOW":
-					model.put("chsRemark", params.get("chsStatus").toString() + "_" + params.get("chsRsn").toString());
-					break;
-				default:
-					model.put("chsRemark", "-");
-			}
-		}
-		return "sales/ccp/preCcpSubmissionRegisterResult";
-  }
-
-   @RequestMapping(value = "/searchPreCcpRegisterList.do", method = RequestMethod.GET)
-   public ResponseEntity<List<EgovMap>> searchPreCcpRegisterList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
-
-     String[] preccpStatusList = request.getParameterValues("preccpStatus");
-     params.put("preccpStatusList", preccpStatusList);
-
-     List<EgovMap> preCcpRegisterList = preCcpRegisterService.searchPreCcpRegisterList(params);
-
-     return ResponseEntity.ok(preCcpRegisterList);
-   }
+//   @RequestMapping(value = "/searchPreCcpRegisterList.do", method = RequestMethod.GET)
+//   public ResponseEntity<List<EgovMap>> searchPreCcpRegisterList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+//
+//     String[] preccpStatusList = request.getParameterValues("preccpStatus");
+//     params.put("preccpStatusList", preccpStatusList);
+//
+//     List<EgovMap> preCcpRegisterList = preCcpRegisterService.searchPreCcpRegisterList(params);
+//
+//     return ResponseEntity.ok(preCcpRegisterList);
+//   }
 
 }

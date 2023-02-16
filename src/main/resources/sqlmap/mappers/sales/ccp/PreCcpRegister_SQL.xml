@@ -3,14 +3,14 @@
 <mapper namespace="com.coway.trust.biz.sales.ccp.impl.PreCcpRegisterMapper">
 
 
-<insert id="submitPreCcpSubmission" parameterType="java.util.Map">
+<insert id="insertPreCcpSubmission" parameterType="java.util.Map">
 	    INSERT INTO SAL0343D
 	    (
 		      PRECCP_SEQ
-			, CUST_NAME
+<!-- 			, CUST_NAME -->
 			, CUST_IC
-			, CUST_MOBILENO
-			, CUST_EMAIL
+<!-- 			, CUST_MOBILENO -->
+<!-- 			, CUST_EMAIL -->
 			, CRT_DT
 			, CRT_ID
 			, CUST_ID
@@ -21,10 +21,10 @@
 	    VALUES
 	    (
 	          SAL0343D_PRECCP_SEQ.NEXTVAL
-	        , #{customerName}
+<!-- 	        , #{customerName} -->
 	        , #{customerNric}
-	        , #{customerMobileNo}
-	        , #{customerEmailAddr}
+<!-- 	        , #{customerMobileNo} -->
+<!-- 	        , #{customerEmailAddr} -->
 	        , SYSDATE
 	        , #{userId}
 	        , #{custId}
@@ -37,69 +37,103 @@
 <select id="getExistCustomer" parameterType="Map" resultType="egovMap">
 		 SELECT
 		        A.CUST_ID
-		     ,  CASE WHEN B.CHS_STUS IS NULL THEN '-' ELSE B.CHS_STUS END CHS_STATUS
-		     ,  B.CHS_RSN
+		     ,  NVL(B.CHS_STUS,'-') CHS_STATUS
+		     ,  CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-' ELSE B.CHS_RSN END CHS_RSN
+		     , A.NAME
+		     ,  C.APPV_REQ
 		FROM SAL0029D A
-		LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(TRUNC(SYSDATE),'YYYY') AND CHS_MONTH = TO_CHAR(TRUNC(SYSDATE),'MM')
+		LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
+		LEFT JOIN SAL0344D C ON B.CHS_RSN = C.CHS_RSN
 		WHERE A.NRIC = #{customerNric} AND ROWNUM = 1
 </select>
 
-<select id="selectPreCcpStatus"  parameterType="Map" resultType="egovMap">
-        SELECT CODE AS CODE_ID,
-               CODE_NAME AS CODE_NAME
-        FROM SYS0094M
-        WHERE IND = 'PRECCP_STA'
-          AND DISB = 0
-        ORDER BY LPAD(CODE,4)
-</select>
+<!-- <select id="selectPreCcpStatus"  parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT CODE AS CODE_ID, -->
+<!--                CODE_NAME AS CODE_NAME -->
+<!--         FROM SYS0094M -->
+<!--         WHERE IND = 'PRECCP_STA' -->
+<!--           AND DISB = 0 -->
+<!--         ORDER BY LPAD(CODE,4) -->
+<!-- </select> -->
 
-<select id="searchPreCcpRegisterList" parameterType="Map" resultType="egovMap">
-	   SELECT
-		      A.PRECCP_SEQ
-            , A.CUST_NAME
-		    , A.CUST_IC
-		    , A.CUST_MOBILENO
-		    , A.CUST_EMAIL
-		    , A.CUST_ID
-		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS
-                       WHEN A.CHS_STATUS = 'YELLOW' THEN A.CHS_STATUS || '_' || A.CHS_RSN
-                                                                          ELSE '-'
-              END CHS_STATUS
-		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
-		    , B.USER_NAME CREATOR
-	   FROM SAL0343D A
-	   JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
-       WHERE DISAB = 0
-	   <if test="custName != null and custName != '' ">
-             AND ( A.CUST_NAME LIKE '%'||#{custName}||'%')
-       </if>
+<!-- <select id="searchPreCcpRegisterList" parameterType="Map" resultType="egovMap"> -->
+<!-- 	   SELECT -->
+<!-- 		      A.PRECCP_SEQ -->
+<!--             , A.CUST_NAME -->
+<!-- 		    , A.CUST_IC -->
+<!-- 		    , A.CUST_MOBILENO -->
+<!-- 		    , A.CUST_EMAIL -->
+<!-- 		    , A.CUST_ID -->
+<!-- 		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS -->
+<!--                        WHEN A.CHS_STATUS = 'YELLOW' THEN A.CHS_STATUS || '_' || A.CHS_RSN -->
+<!--                                                                           ELSE '-' -->
+<!--               END CHS_STATUS -->
+<!-- 		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT -->
+<!-- 		    , B.USER_NAME CREATOR -->
+<!-- 	   FROM SAL0343D A -->
+<!-- 	   JOIN SYS0047M B ON A.CRT_ID = B.USER_ID -->
+<!--        WHERE DISAB = 0 -->
+<!-- 	   <if test="custName != null and custName != '' "> -->
+<!--              AND ( A.CUST_NAME LIKE '%'||#{custName}||'%') -->
+<!--        </if> -->
 
-       <if test="nric != null and nric != '' ">
-             AND ( A.CUST_IC LIKE '%'||#{nric}||'%')
-       </if>
+<!--        <if test="nric != null and nric != '' "> -->
+<!--              AND ( A.CUST_IC LIKE '%'||#{nric}||'%') -->
+<!--        </if> -->
 
-       <if test="mobileNo != null and mobileNo != '' ">
-             AND ( A.CUST_MOBILENO LIKE '%'||#{mobileNo}||'%')
-       </if>
+<!--        <if test="mobileNo != null and mobileNo != '' "> -->
+<!--              AND ( A.CUST_MOBILENO LIKE '%'||#{mobileNo}||'%') -->
+<!--        </if> -->
 
-       <if test="emailAddr != null and emailAddr != '' ">
-             AND ( A.CUST_EMAIL LIKE '%'||#{emailAddr}||'%')
-       </if>
+<!--        <if test="emailAddr != null and emailAddr != '' "> -->
+<!--              AND ( A.CUST_EMAIL LIKE '%'||#{emailAddr}||'%') -->
+<!--        </if> -->
 
-	   <if test="preCcpRegisterList != null and preCcpRegisterList != '' ">
-            AND A.CHS_STATUS IN
-           <foreach item="item" collection="preCcpRegisterList" index="index" open="(" separator="," close=")">
-            #{item}
-           </foreach>
-       </if>
+<!-- 	   <if test="preCcpRegisterList != null and preCcpRegisterList != '' "> -->
+<!--             AND A.CHS_STATUS IN -->
+<!--            <foreach item="item" collection="preCcpRegisterList" index="index" open="(" separator="," close=")"> -->
+<!--             #{item} -->
+<!--            </foreach> -->
+<!--        </if> -->
 
-       <if test=" registerDtFrm  != null  and registerDtFrm !='' and registerDtTo != null  and registerDtTo != ''  ">
-             AND  A.CRT_DT  BETWEEN TO_DATE(#{registerDtFrm}, 'DD/MM/YYYY') AND TO_DATE(#{registerDtTo}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-       </if>
+<!--        <if test=" registerDtFrm  != null  and registerDtFrm !='' and registerDtTo != null  and registerDtTo != ''  "> -->
+<!--              AND  A.CRT_DT  BETWEEN TO_DATE(#{registerDtFrm}, 'DD/MM/YYYY') AND TO_DATE(#{registerDtTo}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') -->
+<!--        </if> -->
 
-       <if test="requestor != null and requestor != '' ">
-             AND ( B.USER_NAME LIKE '%'||#{requestor}||'%')
-       </if>
+<!--        <if test="requestor != null and requestor != '' "> -->
+<!--              AND ( B.USER_NAME LIKE '%'||#{requestor}||'%') -->
+<!--        </if> -->
+<!-- </select> -->
+
+<select id="searchOrderSummaryList" parameterType="Map" resultType="egovMap">
+              WITH RENTAL AS (
+                  SELECT SUM(RENT_AMT) RENT_AMT, MAX(RENT_INST_NO) RENT_INST_NO, RENT_SO_ID FROM PAY0022D GROUP BY RENT_SO_ID
+              ),
+              OUTRIGHT AS (
+                  SELECT SUM(TRADE_AMT) TRADE_AMT, TRADE_SO_ID FROM PAY0035D GROUP BY TRADE_SO_ID
+              ),
+              CURR_RENT AS(
+                  SELECT * FROM (
+                      SELECT RENT_INST_DT, RENT_INST_NO, RENT_INST_AMT, SALES_ORD_ID, ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY RENT_INST_DT DESC) RN FROM SAL0070D WHERE RENT_INST_DT = TRUNC(SYSDATE,'MM')
+                  ) WHERE RN = 1
+              )
+              SELECT
+                    C.SALES_ORD_ID
+                  , C.SALES_ORD_NO
+                  , C.APP_TYPE_ID
+                  , G.CODE PAYMENT_MODE
+                  , E.STUS_CODE_ID RENT_STUS
+                  , CASE WHEN C.APP_TYPE_ID = 66  THEN A.RENT_AMT ELSE  D.TRADE_AMT END OUTSTANDING_AMT
+                  , CASE WHEN C.APP_TYPE_ID = 66 THEN (NVL(B.RENT_INST_NO,60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT- T1.REBATE_AMT_PER_INSTLMT) END UNBILL_AMT
+              FROM SAL0001D C
+              LEFT JOIN RENTAL A ON C.SALES_ORD_ID = A.RENT_SO_ID
+              LEFT JOIN OUTRIGHT D ON C.SALES_ORD_ID = D.TRADE_SO_ID
+              LEFT JOIN CURR_RENT B ON B.SALES_ORD_ID = C.SALES_ORD_ID
+              LEFT JOIN SAL0071D E ON E.SALES_ORD_ID = C.SALES_ORD_ID
+              LEFT JOIN SAL0074D F ON C.SALES_ORD_ID = F.SALES_ORD_ID
+              LEFT JOIN SYS0013M G ON G.CODE_ID = F.MODE_ID
+              LEFT JOIN PAY0286D T1 ON C.SALES_ORD_ID = T1.ORD_ID
+              WHERE C.CUST_ID = #{custId}
 </select>
 
 </mapper>

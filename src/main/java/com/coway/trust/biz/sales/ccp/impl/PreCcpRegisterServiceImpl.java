@@ -49,8 +49,8 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	@Transactional
-	public int submitPreCcpSubmission(Map<String, Object> params) throws Exception {
-	    int result= preCcpRegisterMapper.submitPreCcpSubmission(params);
+	public int insertPreCcpSubmission(Map<String, Object> params) throws Exception {
+	    int result= preCcpRegisterMapper.insertPreCcpSubmission(params);
 	    return result;
 	}
 
@@ -59,14 +59,19 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 		return preCcpRegisterMapper.getExistCustomer(params);
 	}
 
-	@Override
-	public List<EgovMap> selectPreCcpStatus() {
-	    return preCcpRegisterMapper.selectPreCcpStatus();
-	}
+//	@Override
+//	public List<EgovMap> selectPreCcpStatus() {
+//	    return preCcpRegisterMapper.selectPreCcpStatus();
+//	}
+//
+//    @Override
+//	public List<EgovMap> searchPreCcpRegisterList(Map<String, Object> params) {
+//	    return preCcpRegisterMapper.searchPreCcpRegisterList(params);
+//	}
 
     @Override
-	public List<EgovMap> searchPreCcpRegisterList(Map<String, Object> params) {
-	    return preCcpRegisterMapper.searchPreCcpRegisterList(params);
+	public List<EgovMap> searchOrderSummaryList(Map<String, Object> params) {
+	    return preCcpRegisterMapper.searchOrderSummaryList(params);
 	}
 
 }

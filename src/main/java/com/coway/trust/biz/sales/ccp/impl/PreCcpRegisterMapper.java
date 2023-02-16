@@ -9,12 +9,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("preCcpRegisterMapper")
 public interface PreCcpRegisterMapper {
 
-	int submitPreCcpSubmission(Map<String, Object> params);
+	int insertPreCcpSubmission(Map<String, Object> params);
 
 	EgovMap getExistCustomer(Map<String, Object> params);
 
-	List<EgovMap> selectPreCcpStatus();
+//	List<EgovMap> selectPreCcpStatus();
+//
+//	List<EgovMap> searchPreCcpRegisterList(Map<String, Object> params);
 
-	List<EgovMap> searchPreCcpRegisterList(Map<String, Object> params);
+	List<EgovMap> searchOrderSummaryList(Map<String, Object> params);
 
 }
