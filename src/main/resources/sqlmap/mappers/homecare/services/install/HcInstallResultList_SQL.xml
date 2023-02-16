@@ -165,13 +165,13 @@
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}
         </if>
-        <if test='deptCode != null and deptCode != ""'>
+        <if test='deptCode != null and deptCode != " "'>
            AND V.DEPT_CODE = #{deptCode}
            </if>
-           <if test='grpCode != null and grpCode != ""'>
+           <if test='grpCode != null and grpCode != " "'>
            AND V.GRP_CODE = #{grpCode}
            </if>
-           <if test='orgCode != null and orgCode != ""'>
+           <if test='orgCode != null and orgCode != " "'>
            AND V.ORG_CODE = #{orgCode}
            </if>
         ORDER BY HMC.BNDL_NO DESC, SOM.SALES_ORD_NO ASC, IE.INSTALL_ENTRY_NO ASC, IE.INSTALL_DT ASC
