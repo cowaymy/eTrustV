@@ -33,11 +33,10 @@ public class PreCcpRegisterApiDto {
 		Map<String, Object> params = new HashMap<>();
 		params.put("custId", vo.getCustId());
 		params.put("custName", vo.getCustName());
-		params.put("custIc", vo.getCustIc());
-		params.put("custMobileno", vo.getCustMobileno());
-		params.put("custEmail", vo.getCustEmail());
+		params.put("custMonth", vo.getCustMonth());
+		params.put("appvReq", vo.getAppvReq());
 		params.put("chsStatus", vo.getChsStatus());
-		params.put("crtDt", vo.getCrtDt());
+		params.put("chsRsn", vo.getChsRsn());
 		return params;
 	}
 
@@ -49,6 +48,9 @@ public class PreCcpRegisterApiDto {
 	private String custEmail;
 	private String chsStatus;
 	private String crtDt;
+	private String chsRsn;
+	private String appvReq;
+	private String custMonth;
 
 
     public int getCustId() {
@@ -104,6 +106,26 @@ public class PreCcpRegisterApiDto {
 
     public void setCrtDt(String crtDt) {
         this.crtDt = crtDt;
+    }
+    public String getCustMonth() {
+        return custMonth;
+    }
+    public void setCustMonth(String custMonth) {
+        this.custMonth = custMonth;
+    }
+
+    public String getAppvReq() {
+        return appvReq;
+    }
+    public void setAppvReq(String appvReq) {
+        this.appvReq = appvReq;
+    }
+
+    public String getChsRsn() {
+        return chsRsn;
+    }
+    public void setChsRsn(String chsRsn) {
+        this.chsRsn = chsRsn;
     }
 
 }

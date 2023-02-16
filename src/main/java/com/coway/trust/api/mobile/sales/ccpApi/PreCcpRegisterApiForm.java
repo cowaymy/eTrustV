@@ -112,7 +112,7 @@ public class PreCcpRegisterApiForm {
     public String getChsRsn() {
         return chsRsn;
     }
-    public void setChsRsn(String chsStatus) {
+    public void setChsRsn(String chsRsn) {
         this.chsRsn = chsRsn;
     }
 
