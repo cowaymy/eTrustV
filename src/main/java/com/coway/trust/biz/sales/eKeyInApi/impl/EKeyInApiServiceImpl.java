@@ -555,13 +555,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.setStkCtgryId(5707);
 
       //check aircon type category
-      int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+      /*int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
       if(result == 1){
           param.setGu("");
       }
       else{
           param.setGu("MATTRESS");
-      }
+      }*/
       param.setSrvCntrctPacId(param.getSrvPacId());
       List<EgovMap> selecteOrderProduct1 = null;
 
