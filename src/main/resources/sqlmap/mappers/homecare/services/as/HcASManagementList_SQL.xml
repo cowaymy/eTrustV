@@ -299,9 +299,15 @@
 		               ) WHERE N = 1
 	                 ) Extent15 ON Extent15.DEF_TYPE = Extent1.AS_MALFUNC_ID
 	                 AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID
+	                 left join sal0002d  sod on sod.SALES_ORD_ID = Extent1.AS_SO_ID
+                     left join SYS0026M STK ON STK.STK_ID =  sod.ITM_STK_ID
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                       AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
-                                                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB'))
+                                                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB','DSC'))
+
+                      and  STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                   WHERE AA.CODE = BB.CODE
+                                                      AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
 
 	                 <if test="asStatusList != null and asStatusList != '' ">
 	                   AND Extent1.AS_STUS_ID IN
@@ -648,7 +654,7 @@
                    FROM SYS0005M
                   WHERE STUS_ID = 1
                     AND TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
-                                    WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB'))
+                                    WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB','DSC'))
                   ORDER BY BRNCH_ID ASC
         ) A ORDER BY CODE_NAME ASC
     </select>

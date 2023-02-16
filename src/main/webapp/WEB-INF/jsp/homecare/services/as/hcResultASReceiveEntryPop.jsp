@@ -465,6 +465,7 @@
         	  S_DATE : vdte,
         	  OPTIONS : options,
         	  TYPE : 'AS'
+        	  ,PROD_CAT : '${orderDetail.basicInfo.ordCtgryCd}'
         }, null, true, '_doAllactionDiv');
      //}
   }
