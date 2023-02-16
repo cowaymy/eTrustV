@@ -55,9 +55,20 @@ var fileGroupKey ="";
         $("#frm2").show();
         $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
     }else{
-        $("#frm2").hide();
-        $("#frmSerialNo").attr("disabled", true).addClass("readonly");
+
+        if($("#hidCategoryId").val() == "7233"){
+            $("#frm2").show();
+            $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+        }else{
+        	$("#frm2").hide();
+        	$("#frmSerialNo").attr("disabled", true).addClass("readonly");
+        }
+
     }
+
+    $("#hidCategoryId").val("${orderDetail.basicInfo.stkCtgryId}");
+    $("#hidStockCode").val("${orderDetail.basicInfo.stockCode}");//aircon
+    $("#hidFrmStockCode").val("${frameInfo.stockCode}");//aircon
   });
 
   function fn_saveInstall() {
@@ -172,6 +183,28 @@ var fileGroupKey ="";
           }
       }
 
+    //validate aircon serial
+    if($("#hidCategoryId").val() == "7233"){
+        var stockCode = "";
+        stockCode = (js.String.roughScale($("#editInstallForm #serialNo").val().trim().substr(3,5), 36)).toString();
+
+         if(stockCode != "0" && $("#hidStockCode").val() != stockCode){
+             msg += "* Serial Number NOT match with stock [" + $("#hidStockCode").val() +"] </br>";
+         }
+
+         console.log("stockCode " + stockCode);
+
+        var frmStockCode = "";
+        frmStockCode = (js.String.roughScale($("#editInstallForm #frmSerialNo").val().trim().substr(3,5), 36)).toString();
+
+        console.log("frmStockCode " + frmStockCode);
+
+        if(frmStockCode != "0" && $("#hidFrmStockCode").val() != frmStockCode){
+            msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
+        }
+    }
+    //validate aircon serial
+
     if (msg != "") {
       Common.alert(msg);
       return false;
@@ -285,6 +318,10 @@ var fileGroupKey ="";
     <input type="hidden" value="<c:out value="${frameInfo.salesOrdId}"/>" id="hidFrmOrdId" name="hidFrmOrdId" />
     <input type="hidden" value="<c:out value="${frameInfo.salesOrdNo}"/>" id="hidFrmOrdNo" name="hidFrmOrdNo" />
     <input type="hidden" value="<c:out value="${frameInfo.frmSerial}"/>" id="hidFrmSerialNo" name="hidFrmSerialNo" />
+
+    <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
+   <input type="hidden" value="" id="hidStockCode" name="hidStockCode" />
+   <input type="hidden" value="" id="hidFrmStockCode" name="hidFrmStockCode" />
 
     <table class="type1 mb1m">
      <!-- table start -->
