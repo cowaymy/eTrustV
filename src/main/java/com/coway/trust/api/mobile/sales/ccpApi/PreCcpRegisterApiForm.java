@@ -226,10 +226,6 @@ public class PreCcpRegisterApiForm {
         this.reqstDtTo = reqstDtTo;
     }
 
-    public void setChsRsn(String chsRsn) {
-        this.chsRsn = chsRsn;
-    }
-
     public String getSalesOrdNo() {
         return salesOrdNo;
     }
