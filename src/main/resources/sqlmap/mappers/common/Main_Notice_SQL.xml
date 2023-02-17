@@ -333,6 +333,7 @@ FROM VIEW_COUNT
     JOIN MEM_INFO MI ON MI.ORG_CODE = ORGD.LAST_ORG_CODE
     </if>
     WHERE USRINFO.USER_ID = #{userId}
+    ORDER BY TO_NUMBER(SUBSTR(MI.DOB, 1,2))
     </select>
 
 </mapper>
