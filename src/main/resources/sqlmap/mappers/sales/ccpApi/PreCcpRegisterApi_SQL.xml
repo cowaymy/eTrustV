@@ -25,38 +25,35 @@
 
 </select>
 
-<!-- <select id="selectPreCcpRegisterList" parameterType="Map" resultType="egovMap"> -->
-<!-- 		SELECT -->
-<!-- 		      A.PRECCP_SEQ -->
-<!-- 		    , A.CUST_NAME -->
-<!-- 		    , A.CUST_IC -->
-<!-- 		    , A.CUST_MOBILENO -->
-<!-- 		    , A.CUST_EMAIL -->
-<!-- 		    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT -->
-<!-- 		    , CASE WHEN A.CHS_STATUS = 'GREEN'   THEN A.CHS_STATUS -->
-<!-- 		               WHEN A.CHS_STATUS = 'YELLOW'  THEN A.CHS_STATUS || '_' || A.CHS_RSN -->
-<!-- 		                                       ELSE '-' -->
-<!-- 		      END CHS_STATUS -->
-<!-- 		    , A.CUST_ID -->
-<!-- 		FROM SAL0343D A -->
-<!-- 		LEFT JOIN SYS0047M B ON A.CRT_ID = B.USER_ID -->
-<!-- 		WHERE DISAB = 0 -->
-<!-- 		 <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''"> -->
-<!--             AND TO_CHAR(CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo} -->
-<!--         </if> -->
-<!--         <if test="regId != null and regId != ''"> -->
-<!--             AND B.USER_NAME = #{regId} -->
-<!--         </if> -->
-<!--         <if test="selectType != null and selectType != '' "> -->
-<!--             <choose> -->
-<!--                 <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'> -->
-<!--                     AND CUST_NAME LIKE  '%' || #{selectKeyword} || '%' -->
-<!--                 </when> -->
-<!--                 <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'> -->
-<!--                     AND CUST_IC LIKE  '%' || #{selectKeyword} || '%' -->
-<!--                 </when> -->
-<!--             </choose> -->
-<!--         </if> -->
-<!-- </select> -->
+<select id="searchOrderSummaryList" parameterType="Map" resultType="egovMap">
+              WITH RENTAL AS (
+                  SELECT SUM(RENT_AMT) RENT_AMT, MAX(RENT_INST_NO) RENT_INST_NO, RENT_SO_ID FROM PAY0022D GROUP BY RENT_SO_ID
+              ),
+              OUTRIGHT AS (
+                  SELECT SUM(TRADE_AMT) TRADE_AMT, TRADE_SO_ID FROM PAY0035D GROUP BY TRADE_SO_ID
+              ),
+              CURR_RENT AS(
+                  SELECT * FROM (
+                      SELECT RENT_INST_DT, RENT_INST_NO, RENT_INST_AMT, SALES_ORD_ID, ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY RENT_INST_DT DESC) RN FROM SAL0070D WHERE RENT_INST_DT = TRUNC(SYSDATE,'MM')
+                  ) WHERE RN = 1
+              )
+              SELECT
+                    C.SALES_ORD_ID
+                  , C.SALES_ORD_NO
+                  , C.APP_TYPE_ID
+                  , G.CODE PAYMENT_MODE
+                  , E.STUS_CODE_ID RENT_STUS
+                  , CASE WHEN C.APP_TYPE_ID = 66  THEN A.RENT_AMT ELSE  D.TRADE_AMT END OUTSTANDING_AMT
+                  , CASE WHEN C.APP_TYPE_ID = 66 THEN (NVL(B.RENT_INST_NO,60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT- T1.REBATE_AMT_PER_INSTLMT) END UNBILL_AMT
+              FROM SAL0001D C
+              LEFT JOIN RENTAL A ON C.SALES_ORD_ID = A.RENT_SO_ID
+              LEFT JOIN OUTRIGHT D ON C.SALES_ORD_ID = D.TRADE_SO_ID
+              LEFT JOIN CURR_RENT B ON B.SALES_ORD_ID = C.SALES_ORD_ID
+              LEFT JOIN SAL0071D E ON E.SALES_ORD_ID = C.SALES_ORD_ID
+              LEFT JOIN SAL0074D F ON C.SALES_ORD_ID = F.SALES_ORD_ID
+              LEFT JOIN SYS0013M G ON G.CODE_ID = F.MODE_ID
+              LEFT JOIN PAY0286D T1 ON C.SALES_ORD_ID = T1.ORD_ID
+              WHERE C.CUST_ID = #{custId}
+</select>
 
 </mapper>

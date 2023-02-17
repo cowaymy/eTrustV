@@ -27,6 +27,8 @@ public interface PreCcpRegisterApiService {
 
   List<EgovMap> checkPreCcpResult(PreCcpRegisterApiForm param) throws Exception;
 
+  List<EgovMap> searchOrderSummaryList(PreCcpRegisterApiForm param) throws Exception;
+
 //  PreCcpRegisterApiForm savePreCcp(PreCcpRegisterApiForm param) throws Exception;
 
 }

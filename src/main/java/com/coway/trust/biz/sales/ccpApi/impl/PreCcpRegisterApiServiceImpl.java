@@ -70,23 +70,26 @@ public class PreCcpRegisterApiServiceImpl extends EgovAbstractServiceImpl implem
           throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
         }
         else {
-//              if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 3) {
-//                throw new ApplicationException(AppConstants.FAIL, "Please fill out at least three characters.");
-//              }
               if ( ("2").equals(param.getSelectType()) && CommonUtils.isEmpty(param.getSelectKeyword())) {
                 throw new ApplicationException(AppConstants.FAIL, "NRIC value does not exist.");
               }
         }
-
-//        if(CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
-//            throw new ApplicationException(AppConstants.FAIL, "Request Date does not exist.");
-//        }
 
         if (CommonUtils.isEmpty(param.getRegId()) || param.getRegId().length() <= 0) {
           throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
         }
 
         return preCcpRegisterApiMapper.checkPreCcpResult(PreCcpRegisterApiForm.createMap(param));
+  }
+
+  @Override
+  public List<EgovMap> searchOrderSummaryList(PreCcpRegisterApiForm param) throws Exception {
+
+        if (null == param) {
+          throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        return preCcpRegisterApiMapper.searchOrderSummaryList(PreCcpRegisterApiForm.createMap(param));
   }
 
 //  @Override

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
+import com.coway.trust.biz.sales.ccp.PreCcpRegisterService;
 import com.coway.trust.biz.sales.ccpApi.PreCcpRegisterApiService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -44,6 +45,9 @@ public class PreCcpRegisterApiController {
   @Resource(name = "PreCcpRegisterApiService")
   private PreCcpRegisterApiService preCcpRegisterApiService;
 
+  @Resource(name = "preCcpRegisterService")
+  private PreCcpRegisterService preCcpRegisterService;
+
   @ApiOperation(value = "checkPreCcpResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkPreCcpResult", method = RequestMethod.GET)
   public ResponseEntity<List<PreCcpRegisterApiDto>> checkPreCcpResult(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
@@ -56,7 +60,22 @@ public class PreCcpRegisterApiController {
           }
       }
 
-    return ResponseEntity.ok(preCcpResult.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+      return ResponseEntity.ok(preCcpResult.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
+  }
+
+  @ApiOperation(value = "searchOrderSummaryList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/searchOrderSummaryList", method = RequestMethod.GET)
+  public ResponseEntity<List<PreCcpRegisterApiDto>> searchOrderSummaryList(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
+
+	  List<EgovMap> orderSummary = preCcpRegisterApiService.searchOrderSummaryList(param);
+
+      if (LOGGER.isDebugEnabled()) {
+          for (int i = 0; i < orderSummary.size(); i++) {
+            LOGGER.debug("orderSummary    값 : {}", orderSummary.get(i));
+          }
+      }
+
+      return ResponseEntity.ok(orderSummary.stream().map(r -> PreCcpRegisterApiDto.create(r)).collect(Collectors.toList()));
   }
 
 //  @ApiOperation(value = "savePreCcp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

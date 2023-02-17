@@ -37,6 +37,12 @@ public class PreCcpRegisterApiDto {
 		params.put("appvReq", vo.getAppvReq());
 		params.put("chsStatus", vo.getChsStatus());
 		params.put("chsRsn", vo.getChsRsn());
+
+		params.put("salesOrdNo", vo.getSalesOrdNo());
+		params.put("rentStus", vo.getRentStus());
+		params.put("outstandingAmt", vo.getOutstandingAmt());
+		params.put("unbillAmt", vo.getUnbillAmt());
+
 		return params;
 	}
 
@@ -52,11 +58,16 @@ public class PreCcpRegisterApiDto {
 	private String appvReq;
 	private int custMonth;
 
+	private String salesOrdNo;
+	private String rentStus;
+	private String outstandingAmt;
+	private String unbillAmt;
+	private String paymentMode;
+
 
     public int getCustId() {
         return custId;
     }
-
     public void setCustId(int custId) {
         this.custId = custId;
     }
@@ -64,7 +75,6 @@ public class PreCcpRegisterApiDto {
     public String getCustName() {
         return custName;
     }
-
     public void setCustName(String custName) {
         this.custName = custName;
     }
@@ -72,14 +82,13 @@ public class PreCcpRegisterApiDto {
     public String getCustIc() {
         return custIc;
     }
-
     public void setCustIc(String custIc) {
         this.custIc = custIc;
     }
+
     public String getCustMobileno() {
         return custMobileno;
     }
-
     public void setCustMobileno(String custMobileno) {
         this.custMobileno = custMobileno;
     }
@@ -87,7 +96,6 @@ public class PreCcpRegisterApiDto {
     public String getCustEmail() {
         return custEmail;
     }
-
     public void setCustEmail(String custEmail) {
         this.custEmail = custEmail;
     }
@@ -95,7 +103,6 @@ public class PreCcpRegisterApiDto {
     public String getChsStatus() {
         return chsStatus;
     }
-
     public void setChsStatus(String chsStatus) {
         this.chsStatus = chsStatus;
     }
@@ -103,10 +110,10 @@ public class PreCcpRegisterApiDto {
     public String getCrtDt() {
         return crtDt;
     }
-
     public void setCrtDt(String crtDt) {
         this.crtDt = crtDt;
     }
+
     public int getCustMonth() {
         return custMonth;
     }
@@ -126,6 +133,41 @@ public class PreCcpRegisterApiDto {
     }
     public void setChsRsn(String chsRsn) {
         this.chsRsn = chsRsn;
+    }
+
+    public String getSalesOrdNo() {
+        return salesOrdNo;
+    }
+    public void setSalesOrdNo(String salesOrdNo) {
+        this.salesOrdNo = salesOrdNo;
+    }
+
+    public String getRentStus() {
+        return rentStus;
+    }
+    public void setRentStus(String rentStus) {
+        this.rentStus = rentStus;
+    }
+
+    public String getOutstandingAmt() {
+        return outstandingAmt;
+    }
+    public void setOutstandingAmt(String outstandingAmt) {
+        this.outstandingAmt = outstandingAmt;
+    }
+
+    public String getUnbillAmt() {
+        return unbillAmt;
+    }
+    public void setUnbillAmt(String unbillAmt) {
+        this.unbillAmt = unbillAmt;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
     }
 
 }

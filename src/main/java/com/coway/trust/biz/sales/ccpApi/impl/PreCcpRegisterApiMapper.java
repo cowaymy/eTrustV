@@ -23,4 +23,6 @@ public interface PreCcpRegisterApiMapper {
 
   List<EgovMap> checkPreCcpResult(Map<String, Object> params);
 
+  List<EgovMap> searchOrderSummaryList(Map<String, Object> params);
+
 }
