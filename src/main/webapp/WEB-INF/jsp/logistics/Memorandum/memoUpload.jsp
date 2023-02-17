@@ -172,8 +172,8 @@ var orgFileName = '';
         	   msg += "*Please select Memo Type";
        	    }
 
-            if(file.size > 3000000){
-                msg += "*Only allow attachment with less than 3MB.<br>";
+            if(file.size > 5000000){
+                msg += "*Only allow attachment with less than 5MB.<br>";
             }
 
             if(msg != null && msg != ''){
