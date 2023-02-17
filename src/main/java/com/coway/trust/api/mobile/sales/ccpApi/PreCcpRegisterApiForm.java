@@ -32,6 +32,12 @@ public class PreCcpRegisterApiForm {
         params.put("reqstDtTo", vo.getReqstDtTo());
         params.put("custId", vo.getCustId());
         params.put("regId", vo.getRegId());
+
+        params.put("salesOrdNo", vo.getSalesOrdNo());
+		params.put("rentStus", vo.getRentStus());
+		params.put("paymentMode", vo.getPaymentMode());
+		params.put("outstandingAmt", vo.getOutstandingAmt());
+		params.put("unbillAmt", vo.getUnbillAmt());
 		return params;
 	}
 
@@ -59,6 +65,12 @@ public class PreCcpRegisterApiForm {
     private String chsRsn;
     private String appvReq;
     private String customerMonth;
+
+    private String salesOrdNo;
+	private String rentStus;
+	private String outstandingAmt;
+	private String unbillAmt;
+	private String paymentMode;
 
     public String getCustomerMonth() {
         return customerMonth;
@@ -212,5 +224,44 @@ public class PreCcpRegisterApiForm {
     }
     public void setReqstDtTo(String reqstDtTo) {
         this.reqstDtTo = reqstDtTo;
+    }
+
+    public void setChsRsn(String chsRsn) {
+        this.chsRsn = chsRsn;
+    }
+
+    public String getSalesOrdNo() {
+        return salesOrdNo;
+    }
+    public void setSalesOrdNo(String salesOrdNo) {
+        this.salesOrdNo = salesOrdNo;
+    }
+
+    public String getRentStus() {
+        return rentStus;
+    }
+    public void setRentStus(String rentStus) {
+        this.rentStus = rentStus;
+    }
+
+    public String getOutstandingAmt() {
+        return outstandingAmt;
+    }
+    public void setOutstandingAmt(String outstandingAmt) {
+        this.outstandingAmt = outstandingAmt;
+    }
+
+    public String getUnbillAmt() {
+        return unbillAmt;
+    }
+    public void setUnbillAmt(String unbillAmt) {
+        this.unbillAmt = unbillAmt;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
     }
 }

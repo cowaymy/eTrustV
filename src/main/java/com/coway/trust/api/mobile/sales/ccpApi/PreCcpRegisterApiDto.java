@@ -40,6 +40,7 @@ public class PreCcpRegisterApiDto {
 
 		params.put("salesOrdNo", vo.getSalesOrdNo());
 		params.put("rentStus", vo.getRentStus());
+		params.put("paymentMode", vo.getPaymentMode());
 		params.put("outstandingAmt", vo.getOutstandingAmt());
 		params.put("unbillAmt", vo.getUnbillAmt());
 
