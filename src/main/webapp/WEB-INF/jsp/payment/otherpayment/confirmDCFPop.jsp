@@ -112,7 +112,11 @@ function fn_approval(){
 
 
 	    Common.ajax("POST", "/payment/approvalDCF.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
-            var message = "<spring:message code='pay.alert.dcfSuccessApproval'/><br> ROR No: " + result.orNo + "";
+	    	if (result.orNo) {
+	    		var message = "DCF has fail to approval"
+	    	} else {
+	            var message = "<spring:message code='pay.alert.dcfSuccessApproval'/><br> ROR No: " + result.orNo + "";
+	    	}
 
     		Common.alert(message, function(){
 				searchList();

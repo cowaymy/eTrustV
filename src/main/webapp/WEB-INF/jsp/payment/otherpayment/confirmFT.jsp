@@ -274,6 +274,10 @@
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row"><spring:message code='sales.OrderNo'/> 2</th>
+                        <td>
+                            <input id="salesOrdNo2" name="salesOrdNo2" type="text" title="Order No 2" placeholder="<spring:message code='sales.OrderNo'/> 2" class="w100p" />
+                        </td>
                         <th scope="row">Requestor</th>
                         <td>
                            <select id="userId" name="userId" class="w100p">

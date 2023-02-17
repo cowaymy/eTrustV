@@ -64,6 +64,16 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		return paymentListMapper.selectRequestDCFByGroupSeq(params);
 	}
 
+	@Override
+	public int invalidDCF(Map<String, Object> params) {
+		return paymentListMapper.invalidDCF(params);
+	}
+
+	@Override
+	public int invalidFT(Map<String, Object> params) {
+		return paymentListMapper.invalidFT(params);
+	}
+
 	/**
 	 * Payment List - Request DCF 정보 조회
 	 * @param params
@@ -87,10 +97,10 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
 		EgovMap returnMap = new EgovMap();
 
-		int count = paymentListMapper.invalidDCF(params);
-
-		if (count > 0) {
+		if (paymentListMapper.invalidDCF(params) > 0) {
 			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+		} else if (paymentListMapper.invalidReverse(params) > 0) {
+			returnMap.put("error", "Payment has Active or Completed reverse request.");
 		} else {
 			//DCF Request 등록
 			paymentListMapper.requestDCF(params);
@@ -192,7 +202,9 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 
     	if (count > 0) {
     		returnMap.put("error", "FT Invalid for 'EOR'");
-    	} else {
+    	} else if (paymentListMapper.invalidReverse(paramMap) > 0) {
+			returnMap.put("error", "Payment has Active or Completed reverse request.");
+		} else {
     		//Payment 임시테이블(PAY0240T) 시퀀스 조회
     		Integer seq = commonPaymentMapper.getPayTempSEQ();
 
@@ -288,13 +300,14 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	 * @return
 	 */
 	@Override
-	public void approvalFT(Map<String, Object> params) {
+	public int approvalFT(Map<String, Object> params) {
 		//Approval DCF 처리 프로시저 호출
 		int count = paymentListMapper.ftDuplicates(params);
 		if (count > 0) {
-			return;
+			return 0;
 		}
 		paymentListMapper.approvalFT(params);
+		return 1;
 	}
 
 

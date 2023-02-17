@@ -330,6 +330,16 @@
             DCF_REQ_ID = #{reqNo}
     </select>
 
+    <select id="invalidReverse" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM (
+            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID IN (1,5) AND GRP_SEQ = #{groupSeq}
+            UNION ALL
+            SELECT FT_REQ_ID FROM PAY0260D WHERE FT_STUS_ID IN (1,5) AND SRC_GRP_SEQ = #{groupSeq}
+        )
+    </select>
+
     <select id="invalidDCF" parameterType="Map" resultType="int">
         SELECT
 		    COUNT(*)
@@ -597,6 +607,10 @@
 
            <if test="ordNo != null and ordNo != '' ">
             AND A.SRC_ORD_NO = #{ordNo}
+            </if>
+
+            <if test="salesOrdNo2 != null and salesOrdNo2 != '' " >
+            AND A.FT_ORD_NO = #{salesOrdNo2}
             </if>
 
                 <if test="branchId != null and branchId != '' ">

@@ -36,6 +36,10 @@ public interface PaymentListService
    	 */
        List<EgovMap> selectRequestDCFByGroupSeq(Map<String, Object> params);
 
+    int invalidDCF(Map<String, Object> params);
+
+    int invalidFT(Map<String, Object> params);
+
     /**
 	 * Payment List - Request DCF 정보 조회
 	 * @param params
@@ -127,7 +131,7 @@ public interface PaymentListService
 	 * @param model
 	 * @return
 	 */
-    void approvalFT(Map<String, Object> params);
+    int approvalFT(Map<String, Object> params);
 
 
 

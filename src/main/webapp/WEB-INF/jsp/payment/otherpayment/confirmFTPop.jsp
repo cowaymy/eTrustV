@@ -58,7 +58,11 @@ function fn_approval(){
 
 
 	    Common.ajax("POST", "/payment/approvalFT.do", $("#_ftSearchForm").serializeJSON(), function(result) {
-			var message = "<spring:message code='pay.alert.fundTransSuccess'/>";
+	    	if (result) {
+				var message = "<spring:message code='pay.alert.fundTransSuccess'/>";
+	    	} else {
+	    		var message = "Fund Transfer has fail to approval";
+	    	}
 
     		Common.alert(message, function(){
 				searchList();

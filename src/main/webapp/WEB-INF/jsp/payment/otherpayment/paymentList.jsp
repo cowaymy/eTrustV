@@ -120,14 +120,26 @@
 		if (selectedItem[0] > -1){
 			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
 			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
-
-			if (revStusId == 1) {
-				Common.alert("<spring:message code='pay.alert.groupNumberRequested' arguments='"+groupSeq+"' htmlEscape='false'/>");
-			} else if (revStusId == 5) {
-				Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
-			} else {
-				Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
-			}
+			let data = AUIGrid.getOrgGridData(myGridID).filter(r => r.groupSeq == groupSeq);
+		    let ftStus = data.map(d => d.ftStusId);
+		    fetch("/payment/validDCF?groupSeq=" + groupSeq)
+		    .then(resp => resp.json()).then(d => {
+		    	if (d.error) {
+		    		Common.alert(d.error)
+		    	} else if (d.success) {
+					if (revStusId == 1) {
+						Common.alert("<spring:message code='pay.alert.groupNumberRequested' arguments='"+groupSeq+"' htmlEscape='false'/>");
+					} else if (revStusId == 5) {
+						Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
+					} else {
+						if (!ftStus.filter(s => s == 1 || s == 5).length) {
+							Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
+						}else{
+		                    Common.alert("<b>This has already been Fund Transfer processing Requested/Approved. </b>");
+		                }
+					}
+		    	}
+		    })
 		}else{
              Common.alert('No Payment List selected.');
         }
@@ -161,19 +173,26 @@
 				 return;
 			}
 
+			fetch("/payment/validFT?payId=" + payId)
+			.then(resp => resp.json()).then(d => {
+				if (d.error) {
+					Common.alert(d.error)
+				} else if (d.success) {
+					var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+					var ftStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ftStusId");
 
-			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
-			var ftStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ftStusId");
-
-			if (revStusId == 0 || revStusId == 6) {
-				if(ftStusId == 0 || ftStusId == 6) {
-					Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
-				}else{
-					Common.alert("<b>This has already been Fund Transfer processing Requested. </b>");
+					if (revStusId == 0 || revStusId == 6) {
+						if(ftStusId == 0 || ftStusId == 6) {
+							Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
+						}else{
+							Common.alert("<b>This has already been Fund Transfer processing Requested/Approved. </b>");
+						}
+					} else {
+						Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");
+					}
 				}
-			} else {
-				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");
-			}
+			})
+
 
 		}else{
              Common.alert('No Payment List selected.');

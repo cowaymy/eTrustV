@@ -44,6 +44,8 @@ public interface PaymentListMapper {
 	 */
     EgovMap selectReqDcfInfo(Map<String, Object> params);
 
+    int invalidReverse(Map<String, Object> params);
+
     int invalidDCF(Map<String, Object> params);
 
 	/**

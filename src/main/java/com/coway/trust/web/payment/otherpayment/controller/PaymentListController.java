@@ -67,6 +67,34 @@ public class PaymentListController {
         return ResponseEntity.ok(resultList);
 	}
 
+	@RequestMapping(value="/validDCF")
+	public ResponseEntity<Map<String, Object>> validDCF(@RequestParam Map<String, Object> params) {
+		int count = paymentListService.invalidDCF(params);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		if (count > 0) {
+			returnMap.put("error", "DCF Invalid for ('AER', 'ADR', 'AOR', 'EOR')");
+		} else {
+			returnMap.put("success", true);
+		}
+
+		return ResponseEntity.ok(returnMap);
+	}
+
+	@RequestMapping(value="/validFT")
+	public ResponseEntity<Map<String, Object>> validFT(@RequestParam Map<String, Object> params) {
+		int count = paymentListService.invalidFT(params);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		if (count > 0) {
+			returnMap.put("error", "FT Invalid for 'EOR'");
+		} else {
+			returnMap.put("success", true);
+		}
+
+		return ResponseEntity.ok(returnMap);
+	}
+
 	/******************************************************
 	 * Payment List - Request DCF
 	 *****************************************************/
@@ -450,21 +478,17 @@ public class PaymentListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/approvalFT.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> approvalFT(
+	public ResponseEntity<Boolean> approvalFT(
 			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		LOGGER.debug("params : {} ", params);
 
 		// 저장
 		params.put("userId", sessionVO.getUserId());
-		paymentListService.approvalFT(params);
-
-		// 결과 만들기.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage("Saved Successfully");
-
-		return ResponseEntity.ok(message);
+		if (paymentListService.approvalFT(params) == 0) {
+			return ResponseEntity.ok(false);
+		}
+		return ResponseEntity.ok(true);
 
 	}
 
