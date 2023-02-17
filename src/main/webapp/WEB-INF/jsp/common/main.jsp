@@ -549,7 +549,7 @@
         {
             dataField: "salesOrdNo",
             headerText: "Order No.",
-            width: "20%"
+            width: "30%"
         }
     ];
 
@@ -567,7 +567,7 @@
         {
             dataField: "memCode",
             headerText: "HP Code",
-            width: "20%"
+            width: "30%"
         }];
 
     var rewardPointColumnLayout = [
