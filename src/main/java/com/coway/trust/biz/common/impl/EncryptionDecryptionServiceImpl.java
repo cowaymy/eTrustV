@@ -52,8 +52,9 @@ public class EncryptionDecryptionServiceImpl implements EncryptionDecryptionServ
 	            prepareSecreteKey(secret);
 	            Cipher cipher = Cipher.getInstance(ALGORITHM);
 	            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-
-	            return new String(cipher.doFinal(Base64.getDecoder().decode(URLDecoder.decode(strToDecrypt, StandardCharsets.UTF_8.toString()))));
+	            /* URL decode is ignore because http server auto decoded when value passed in */
+	            //return new String(cipher.doFinal(Base64.getDecoder().decode(URLDecoder.decode(strToDecrypt, StandardCharsets.UTF_8.toString()))));
+	            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
 	        } catch (Exception e) {
 	            System.out.println("Error while decrypting: " + e.toString());
 	        }
