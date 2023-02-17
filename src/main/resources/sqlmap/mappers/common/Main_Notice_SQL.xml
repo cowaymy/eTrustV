@@ -203,17 +203,23 @@ FROM VIEW_COUNT
     </select>
 
     <select id="getCustomerBday" parameterType="Map" resultType="egovMap">
-        SELECT * FROM (
-	        SELECT DISTINCT * FROM (
+	        SELECT * FROM (
 			    SELECT A.CUST_ID, A.NAME, TO_CHAR(A.DOB, 'DD/MM') BDATE
+			    <if test="roleId == 115">
+			    , A.SALES_ORD_NO
+			    </if>
+			    <if test="roleId == 112 or roleId == 113 or roleId == 114">
+                , MAX(A.SALES_ORD_NO) AS SALES_ORD_NO
+                </if>
 				FROM (
-				    SELECT DISTINCT A2.CUST_ID, A2.NAME, A2.DOB, A1.MEM_ID
+				    SELECT A2.CUST_ID, MAX(A1.SALES_ORD_NO) AS SALES_ORD_NO, A2.NAME, A2.DOB, A1.MEM_ID
 				    FROM SAL0001D A1, SAL0029D A2
 				    WHERE A1.CUST_ID = A2.CUST_ID
 				    AND A1.STUS_CODE_ID = '4'
 				    AND A2.TYPE_ID = 964
-				    AND EXTRACT(DAY FROM A2.DOB) >= EXTRACT(DAY FROM SYSDATE)
 				    AND EXTRACT(MONTH FROM A2.DOB) = EXTRACT(MONTH FROM SYSDATE)
+				    GROUP BY A2.CUST_ID, A2.NAME, A2.DOB, A1.MEM_ID
+
 				) A
 				JOIN ORG1001V B
 				    ON A.MEM_ID = B.MEM_ID
@@ -253,11 +259,12 @@ FROM VIEW_COUNT
 				JOIN ORG0001D D
 				    ON B.MEM_ID = D.MEM_ID
 				    AND D.MEM_TYPE = 1
+				<if test="roleId == 112 or roleId == 113 or roleId == 114">
+				GROUP BY A.CUST_ID, A.NAME, TO_CHAR(A.DOB, 'DD/MM')
+				</if>
 	        )
 	        ORDER BY TO_NUMBER(SUBSTR(BDATE, 1, 2)),
 	                 CUST_ID
-        )
-        WHERE ROWNUM <![CDATA[ <= ]]> 3
     </select>
 
     <select id="getAccRewardPoints" parameterType="Map" resultType="egovMap">
@@ -295,6 +302,37 @@ FROM VIEW_COUNT
         WHERE RPT_YEAR = EXTRACT(YEAR FROM SYSDATE)
         AND MEM_CODE = #{userName}
 
+    </select>
+
+    <select id="getHPBirthday" parameterType="Map" resultType="egovMap">
+    WITH MEM_INFO AS (
+    SELECT
+        A.FULL_NAME, A.MEM_CODE, A.DOB, B.ORG_CODE, B.DEPT_CODE, B.GRP_CODE
+    FROM ORG0001D A
+    JOIN ORG1001V B ON B.MEM_ID = A.MEM_ID
+    WHERE
+    A.STUS = 1
+    AND A.MEM_TYPE = 1
+    AND TO_CHAR(A.DOB,'MM') = TO_CHAR(SYSDATE,'MM')
+    <if test="roleId == 112 or roleId == 113">
+    AND TO_CHAR(A.DOB,'DD') = TO_CHAR(SYSDATE,'DD')
+    </if>
+    )
+    SELECT
+        MI.MEM_CODE, MI.FULL_NAME, TO_CHAR(MI.DOB, 'DD/MM') AS DOB
+    FROM ORG0001D ORGM
+    JOIN ORG0005D ORGD ON ORGD.MEM_ID = ORGM.MEM_ID
+    JOIN SYS0047M USRINFO ON USRINFO.HR_CODE = ORGM.MEM_CODE
+    <if test="roleId == 114">
+    JOIN MEM_INFO MI ON MI.DEPT_CODE = ORGD.LAST_DEPT_CODE
+    </if>
+    <if test="roleId == 113">
+    JOIN MEM_INFO MI ON MI.GRP_CODE = ORGD.LAST_GRP_CODE
+    </if>
+    <if test="roleId == 112">
+    JOIN MEM_INFO MI ON MI.ORG_CODE = ORGD.LAST_ORG_CODE
+    </if>
+    WHERE USRINFO.USER_ID = #{userId}
     </select>
 
 </mapper>

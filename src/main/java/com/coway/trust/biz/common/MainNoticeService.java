@@ -23,5 +23,6 @@ public interface MainNoticeService {
 
 	 List<EgovMap> getAccRewardPoints(Map<String, Object> params);
 
+	List<EgovMap> getHPBirthday(Map<String, Object> params);
 
 }

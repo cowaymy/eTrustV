@@ -21,4 +21,7 @@ public interface MainNoticeMapper {
 	List<EgovMap> getCustomerBday(Map<String, Object> params);
 
 	List<EgovMap> getAccRewardPoints(Map<String, Object> params);
+
+	List<EgovMap> getHPBirthday(Map<String, Object> params);
+
 }

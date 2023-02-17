@@ -108,4 +108,11 @@ public class MainNoticeController {
        List<EgovMap> list = mainNoticeService.getAccRewardPoints(params);
        return ResponseEntity.ok(list);
    }
+
+	 @RequestMapping(value = "/getHPBirthday.do", method = RequestMethod.GET)
+	 public ResponseEntity<List<EgovMap>> getHPBirthday(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+	        params.put("userId", sessionVO.getUserId());
+	        List<EgovMap> hpBdayList = mainNoticeService.getHPBirthday(params);
+	        return ResponseEntity.ok(hpBdayList);
+	}
 }
