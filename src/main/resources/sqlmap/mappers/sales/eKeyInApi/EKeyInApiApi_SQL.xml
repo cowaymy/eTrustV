@@ -798,7 +798,7 @@ SELECT A.CUST_ID AS CUST_ID
                       WHEN #{userNm} LIKE 'HT%' THEN (SELECT CODE ||' - '|| NAME FROM SYS0005M WHERE BRNCH_ID = '284')
                       ELSE (CASE WHEN D.CODE IS NOT NULL AND D.NAME IS NOT NULL THEN D.CODE ||' - '|| D.NAME ELSE NULL END)
               END)) AS POSTING_BRNCH
-           , (CASE WHEN #{userNm} LIKE 'CD%' THEN F.BRNCH_ID
+           , (CASE WHEN #{userNm} LIKE 'CD%' THEN Z.BRNCH_ID
                       WHEN #{userNm} LIKE 'HT%' THEN 284
                       ELSE D.BRNCH_ID END) AS POSTING_BRNCH_ID
            , UPPER(CASE WHEN E.CODE IS NOT NULL AND E.NAME IS NOT NULL THEN E.CODE ||' - '|| E.NAME ELSE NULL END)  AS HDC_BRNCH
@@ -817,8 +817,8 @@ SELECT A.CUST_ID AS CUST_ID
                                            AND D.STUS_ID = '1'
   LEFT OUTER JOIN SYS0005M E ON B.DT_BRNCH_CODE= E.CODE
                                            AND E.STUS_ID = '1'
-  LEFT OUTER JOIN SYS0005M F ON B.CODY_BRNCH_CODE= F.CODE
-                                           AND F.STUS_ID = '1'
+  LEFT OUTER JOIN SYS0005M Z ON B.CODY_BRNCH_CODE= Z.CODE
+                                           AND Z.STUS_ID = '1'
   INNER JOIN SYS0038M F ON A.STUS_CODE_ID = F.STUS_CODE_ID
   LEFT OUTER JOIN SYS0005M G ON B.AC_BRNCH_CODE= G.CODE
                                            AND G.STUS_ID = '1'
