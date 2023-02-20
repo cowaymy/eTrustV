@@ -278,7 +278,7 @@
                  <if test=" rosStatus != null and rosStatus != '' ">
                     AND  Extent3.ROS_STUS =#{rosStatus}
                  </if>
-                  <if test=" rosCallerArr != null and rosCallerArr != '' or (rosCallerType != null and rosCallerType != '' )">
+                  <if test=" rosCallerArr != null and rosCallerArr != '' and (rosCallerType != null and rosCallerType != '' )">
                   AND extent1.ord_id IN (
                         SELECT
                             ord_id
