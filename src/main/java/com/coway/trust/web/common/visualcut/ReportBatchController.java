@@ -780,12 +780,24 @@ public class ReportBatchController {
       ReportAppSession ra = new ReportAppSession();
       ra.createService(REPORT_CLIENT_DOCUMENT);
 
-
       ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
       ra.initialize();
       ReportClientDocument clientDoc = new ReportClientDocument();
       clientDoc.setReportAppServer(ra.getReportAppServer());
       clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+
+
+      String connectString = reportUrl;
+      String driverName = reportDriverClass;
+      String jndiName = "sp";
+      String userName = reportUserName;
+      String password = reportPassword;
+
+      // Switch all tables on the main report and sub reports
+      CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+      // logon to database
+      CRJavaHelper.logonDataSource(clientDoc, userName, password);
+
 
       clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
