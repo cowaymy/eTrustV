@@ -5,6 +5,9 @@
     <!-- Homecare 주문내역 조회 -->
     <select id="selectHcOrderList" parameterType="Map" resultType="egovMap">
          /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderListMapper.selectHcOrderList */
+         WITH HC_CATEGORY AS (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                             WHERE AA.CODE = BB.CODE
+                                                                 AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
         SELECT T.APP_TYPE_CODE
                  , T.APP_TYPE_NAME
                  , T.CRT_USER_ID
@@ -94,8 +97,9 @@
                             , V1.RELATED_ID
                             , D1.BNDL_NO
                     FROM SAL1013V  V1
-                      JOIN SYS0026M S1 ON V1.PRODUCT_CODE = S1.STK_CODE
-               LEFT JOIN HMC0011D D1 ON V1.BNDL_ID = D1.ORD_SEQ_NO
+                    JOIN SYS0026M S1 ON V1.PRODUCT_ID = S1.STK_ID
+                    JOIN HC_CATEGORY H1 ON H1.CODE_ID = S1.STK_CTGRY_ID
+                    LEFT JOIN HMC0011D D1 ON V1.BNDL_ID = D1.ORD_SEQ_NO
                     <if test='(serialNo != null and serialNo != "") || sirimNo != null and sirimNo != ""'>
                         INNER JOIN ( SELECT IE.SALES_ORD_ID
                                             FROM SAL0047D IR
@@ -272,9 +276,6 @@
                          <if test='isECommerce != null and isECommerce != ""'>
 				           AND SAL01.ECOMM_ORD_ID > 0
 				         </if>
-                        AND S1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                             WHERE AA.CODE = BB.CODE
-                                                                 AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
          ) T
          ORDER BY T.ORD_NO ASC
     </select>
