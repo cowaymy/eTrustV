@@ -550,7 +550,7 @@
             <if test="payItemAmt != '' and payItemAmt != null">
             LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ  AND extent10.SRC_AMT = #{payItemAmt}
             </if>
-             <if test="payItemAmt == '' and payItemAmt == null">
+             <if test="payItemAmt == '' or payItemAmt == null">
             LEFT JOIN PAY0260D extent10 ON EX11.GROUP_SEQ = extent10.SRC_GRP_SEQ
             </if>
             LEFT JOIN SAL0001D extent12 ON extent8.SALES_ORD_ID = extent12.SALES_ORD_ID
