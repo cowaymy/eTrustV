@@ -21,100 +21,189 @@
 </select>
 
 <select id="selectRosCallLogList" parameterType="Map" resultType="egovMap">
-    WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
-                             FROM (SELECT sales_ord_id,
-                                          install_entry_id,INSTALL_RESULT_ID,
-                                          RANK ()
-                                          OVER (
-                                             PARTITION BY sales_ord_id
-                                             ORDER BY install_entry_id ASC)
-                                             RANK
-                                     FROM sal0046d
-                                    WHERE stus_code_id = 4)
-                            WHERE RANK = 1),
-            ROS AS (SELECT * FROM (
-                SELECT SALES_ORD_ID, CALL_RESULT_ID, ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY CALL_RESULT_ID DESC) RN FROM CCR0006D CE
-                 JOIN CCR0007D CR ON CR.CALL_ENTRY_ID = CE.CALL_ENTRY_ID
-                WHERE TYPE_ID = 507
-                ) WHERE RN = 1)
-    SELECT DISTINCT Project1.ORD_ID   ,
-                Project1.ORD_NO   ,
-                Project1.RENTAL_STUS   ,
-                Project1.ORD_REF_NO   ,
-                Project1.ORD_PO_NO   ,
-                Project1.ORD_STUS_NAME ,
-                Project1.APP_TYPE_CODE   ,
-                Project1.APP_TYPE_DESC   ,
-                Project1.STOCK_CODE   ,
-                Project1.STOCK_DESC   ,
-                Project1.CUST_ID   ,
-                Project1.CUST_NAME   ,
-                Project1.CUST_NRIC   ,
-                Project1.CUST_TYPE ,
-                Project1.APP_TYPE_ID   ,
-                Project1.ORD_DT   ,
-                Project1.ORD_STUS_ID ,
-                Project1.CURR_MTH_AGING ,
-                Project1.CURRENT_OS ,
-                Project1.ROS_CALLER ,
-                Project1.ETR ,
-                Project1.FIRST_INSTALL_DT ,
-                Project1.PAYMODE ,
-                Project1.ROS_MAIN_REASON ,
-                Project1.CUST_BILL_ID ,
-                Project1.COLT_AMT ,
-                Project1.RECALL_DT ,
-                Project1.PTP_DT ,
-                Project1.KEY_IN_DT
-         FROM ( SELECT Extent1.ORD_ID   ,
-                       Extent1.ORD_NO   ,
-                       Extent1.ORD_STUS_NAME ,
-                       Extent1.RENTAL_STUS   ,
-                       Extent1.ORD_REF_NO   ,
-                       Extent1.ORD_PO_NO   ,
-                       Extent1.APP_TYPE_CODE   ,
-                       Extent1.APP_TYPE_DESC   ,
-                       Extent1.STOCK_CODE   ,
-                       Extent1.STOCK_DESC   ,
-                       Extent1.CUST_ID   ,
-                       Extent1.CUST_NAME   ,
-                       Extent1.CUST_NRIC   ,
-                       CASE WHEN Extent1.CUST_TYPE_ID = 964 THEN Extent6.CODE_NAME ELSE Extent6.CODE_NAME || ' - ' || Extent7.CODE_NAME END CUST_TYPE ,
-                       Extent1.APP_TYPE_ID   ,
-                       CASE  WHEN ( Extent1.ORD_DT IS NOT NULL ) THEN TO_CHAR(Extent1.ORD_DT, 'DD/MM/YYYY') ELSE '01/01/1900' END ORD_DT  ,
-                       CASE  WHEN ( Extent1.ORD_STUS_ID IS NOT NULL ) THEN Extent1.ORD_STUS_ID ELSE 0 END ORD_STUS_ID ,
-                       NVL(Extent4.CURR_MTH_AGING,0) CURR_MTH_AGING,
-                       NVL(Extent4.WEB_RENT_LDGR_OS,0) CURRENT_OS,
-                       CASE  WHEN Extent5.AGENT_GRP_ID IS NOT NULL THEN (Extent5.AGENT_GRP_ID || '-'  || Extent13.AGENT_GRP_NAME) ELSE 'N/A' END ROS_CALLER,
-                       CASE WHEN ETR_FG = 1 THEN 'Yes' ELSE 'No' END ETR ,
-                       TO_CHAR(ir1.INSTALL_DT,'DD/MM/YYYY') FIRST_INSTALL_DT ,
-                       Extent9.CODE_NAME PAYMODE ,
-                       Extent11.CODE ROS_CALL_RESN_ID ,
-                       CASE WHEN Extent3.ROS_CALL_RESN_ID IS NOT NULL THEN Extent11.CODE || ' - ' || Extent11.RESN_DESC END ROS_MAIN_REASON ,
-                       Extent1.CUST_BILL_ID ,
-                       CR.CALL_ROS_AMT COLT_AMT ,
-                       TO_CHAR(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') RECALL_DT,
-                       TO_CHAR(Extent3.PTP_DT,'DD/MM/YYYY') PTP_DT ,
-                       TO_CHAR(CR.CALL_CRT_DT,'DD/MM/YYYY') KEY_IN_DT
-                FROM
-                       SAL1006V Extent1
-                       LEFT JOIN MSC0013D Extent3 ON Extent3.SALES_ORD_ID = Extent1.ORD_ID AND ROS_YEAR = TO_CHAR(SYSDATE,'YYYY') AND ROS_MONTH = TO_CHAR(SYSDATE,'MM')
-                       LEFT JOIN ROS ROS ON ROS.SALES_ORD_ID = Extent1.ORD_ID
-                       LEFT JOIN CCR0007D CR ON CR.CALL_RESULT_ID = ROS.CALL_RESULT_ID
-                       LEFT JOIN SAL0149D Extent4 ON Extent4.SALES_ORD_ID = Extent1.ORD_ID
-                       LEFT JOIN SAL0148M Extent5 ON Extent5.AGENT_GRP_ID = Extent4.AGENT_GRP_ID
-                       JOIN SAL0029D CUST ON CUST.CUST_ID =Extent1.CUST_ID
-                       LEFT JOIN SYS0013M Extent6 ON Extent6.CODE_ID = Extent1.CUST_TYPE_ID
-                       LEFT JOIN SYS0013M Extent7 ON Extent7.CODE_ID = CUST.CORP_TYPE_ID
-                       LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = Extent1.ORD_ID
-                       LEFT JOIN sal0047d ir1 ON ir1.entry_id = eimin.install_entry_id and ir1.result_id = eimin.INSTALL_RESULT_ID
-                       LEFT JOIN SAL0074D Extent8 ON Extent8.SALES_ORD_ID = Extent1.ORD_ID
-                       LEFT JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent8.MODE_ID
-                       LEFT JOIN SYS0034M Extent10 ON Extent10.RESN_ID = extent3.ROS_CALL_RESN_ID
-                       LEFT JOIN SYS0032M Extent11 ON Extent11.RESN_ID = extent10.PARENT_RESN_ID
-                       JOIN SAL0027D Extent12 ON Extent12.CUST_CNTC_ID = Extent1.ORD_CNTC_ID
-                       LEFT JOIN SAL0324M Extent13 ON Extent5.AGENT_GRP_ID =Extent13.AGENT_GRP_ID
-                       LEFT JOIN SYS0013M Extent14 ON Extent14.CODE_ID = Extent5.AGENT_TYPE
+	WITH entry_info_min AS (
+			    SELECT
+			        sales_ord_id,
+			        install_entry_id,
+			        install_result_id
+			    FROM
+			        (
+			            SELECT
+			                sales_ord_id,
+			                install_entry_id,
+			                install_result_id,
+			                RANK()
+			                OVER(PARTITION BY sales_ord_id
+			                     ORDER BY
+			                         install_entry_id ASC
+			                ) rank
+			            FROM
+			                sal0046d
+			            WHERE
+			                stus_code_id = 4
+			        )
+			    WHERE
+			        rank = 1
+			), ros AS (
+			    SELECT
+			        *
+			    FROM
+			        (
+			            SELECT
+			                sales_ord_id,
+			                call_result_id,
+			                ROW_NUMBER()
+			                OVER(PARTITION BY sales_ord_id
+			                     ORDER BY
+			                         call_result_id DESC
+			                ) rn
+			            FROM
+			                     ccr0006d ce
+			                JOIN ccr0007d cr ON cr.call_entry_id = ce.call_entry_id
+			            WHERE
+			                type_id = 507
+			        )
+			    WHERE
+			        rn = 1
+			)
+			SELECT
+			     t.ord_id,t.ord_no,
+			    t.rental_stus,
+			    t.ord_ref_no,
+			    t.ord_po_no,
+			    t.ord_stus_name,
+			    t.app_type_code,
+			    t.app_type_desc,
+			    t.stock_code,
+			    t.stock_desc,
+			    t.cust_id,
+			    t.cust_name,
+			    t.cust_nric,
+			    t.cust_type,
+			    t.app_type_id,
+			    t.ord_dt,
+			    t.ord_stus_id,
+			    t.curr_mth_aging,
+			    t.current_os,
+			    t.ros_caller,
+			    t.etr,
+			    to_char(ir1.install_dt, 'DD/MM/YYYY') first_install_dt,
+			    t.paymode,
+			    t.ros_main_reason,
+			    t.cust_bill_id,
+			    cr.call_ros_amt                       colt_amt,
+			    t.recall_dt,
+			    t.ptp_dt,
+			    to_char(cr.call_crt_dt, 'DD/MM/YYYY') key_in_dt
+			FROM
+			    (
+			        SELECT DISTINCT
+			            project1.ord_id,
+			            project1.ord_no,
+			            project1.rental_stus,
+			            project1.ord_ref_no,
+			            project1.ord_po_no,
+			            project1.ord_stus_name,
+			            project1.app_type_code,
+			            project1.app_type_desc,
+			            project1.stock_code,
+			            project1.stock_desc,
+			            project1.cust_id,
+			            project1.cust_name,
+			            project1.cust_nric,
+			            project1.cust_type,
+			            project1.app_type_id,
+			            project1.ord_dt,
+			            project1.ord_stus_id,
+			            project1.curr_mth_aging,
+			            project1.current_os,
+			            project1.ros_caller,
+			            project1.etr,
+			            project1.paymode,
+			            project1.ros_main_reason,
+			            project1.cust_bill_id,
+			            project1.recall_dt,
+			            project1.ptp_dt
+	        FROM
+	            (
+	                SELECT
+	                    extent1.ord_id,
+	                    extent1.ord_no,
+	                    extent1.ord_stus_name,
+	                    extent1.rental_stus,
+	                    extent1.ord_ref_no,
+	                    extent1.ord_po_no,
+	                    extent1.app_type_code,
+	                    extent1.app_type_desc,
+	                    extent1.stock_code,
+	                    extent1.stock_desc,
+	                    extent1.cust_id,
+	                    extent1.cust_name,
+	                    extent1.cust_nric,
+	                    CASE
+	                        WHEN extent1.cust_type_id = 964 THEN
+	                            extent6.code_name
+	                        ELSE
+	                            extent6.code_name
+	                            || ' - '
+	                            || extent7.code_name
+	                    END  cust_type,
+	                    extent1.app_type_id,
+	                    CASE
+	                        WHEN ( extent1.ord_dt IS NOT NULL ) THEN
+	                            to_char(extent1.ord_dt, 'DD/MM/YYYY')
+	                        ELSE
+	                            '01/01/1900'
+	                    END   ord_dt,
+	                    CASE
+	                        WHEN ( extent1.ord_stus_id IS NOT NULL ) THEN
+	                            extent1.ord_stus_id
+	                        ELSE 0
+	                    END  ord_stus_id,
+	                    nvl(extent4.curr_mth_aging, 0)  curr_mth_aging,
+	                    nvl(extent4.web_rent_ldgr_os, 0) current_os,
+	                    CASE
+	                        WHEN extent5.agent_grp_id IS NOT NULL THEN
+	                            ( extent5.agent_grp_id
+	                              || '-'
+	                              || extent13.agent_grp_name )
+	                        ELSE
+	                            'N/A'
+	                    END                                               ros_caller,
+	                    CASE
+	                        WHEN etr_fg = 1 THEN
+	                            'Yes'
+	                        ELSE
+	                            'No'
+	                    END                                               etr,
+	                    extent9.code_name                                 paymode,
+	                    extent11.code                                     ros_call_resn_id,
+	                    CASE
+	                        WHEN extent3.ros_call_resn_id IS NOT NULL THEN
+	                            extent11.code
+	                            || ' - '
+	                            || extent11.resn_desc
+	                    END                                               ros_main_reason,
+	                    extent1.cust_bill_id,
+	                    to_char(extent3.ros_call_recall_dt, 'DD/MM/YYYY') recall_dt,
+	                    to_char(extent3.ptp_dt, 'DD/MM/YYYY')             ptp_dt
+	                FROM
+	                    sal1006v extent1
+	                    LEFT JOIN msc0013d extent3 ON extent3.sales_ord_id = extent1.ord_id
+	                                                  AND ros_year = to_char(sysdate, 'YYYY')
+	                                                  AND ros_month = to_char(sysdate, 'MM')
+	                    LEFT JOIN sal0149d extent4 ON extent4.sales_ord_id = extent1.ord_id
+	                    LEFT JOIN sal0148m extent5 ON extent5.agent_grp_id = extent4.agent_grp_id
+	                    JOIN sal0029d cust ON cust.cust_id = extent1.cust_id
+	                    LEFT JOIN sys0013m extent6 ON extent6.code_id = extent1.cust_type_id
+	                    LEFT JOIN sys0013m extent7 ON extent7.code_id = cust.corp_type_id
+	                    LEFT JOIN sal0074d extent8 ON extent8.sales_ord_id = extent1.ord_id
+	                    LEFT JOIN sys0013m extent9 ON extent9.code_id = extent8.mode_id
+	                    LEFT JOIN sys0034m extent10 ON extent10.resn_id = extent3.ros_call_resn_id
+	                    LEFT JOIN sys0032m extent11 ON extent11.resn_id = extent10.parent_resn_id
+	                    JOIN sal0027d extent12 ON extent12.cust_cntc_id = extent1.ord_cntc_id
+	                    LEFT JOIN sal0324m extent13 ON extent5.agent_grp_id = extent13.agent_grp_id
+	                    LEFT JOIN sys0013m extent14 ON extent14.code_id = extent5.agent_type
                  WHERE 1 = 1
                  <if test=" ordNo != null and ordNo != '' ">
                     AND  Extent1.ORD_NO = #{ordNo}
@@ -175,9 +264,9 @@
                     AND  Extent11.RESN_ID = #{mainReason}
                  </if>
                  <if test=" rosCallerArr != null and rosCallerArr != '' ">
-                    AND Extent14.CODE || '_'  || Extent5.AGENT_GRP_ID || '_'  || Extent13.AGENT_GRP_NAME IN
+                    AND extent5.agent_grp_id IN
                     <foreach collection="rosCallerArr" item="item" open="(" separator="," close=")">
-                        #{item}
+                        REGEXP_SUBSTR(#{item},'[^_]+',1,2)
                     </foreach>
                  </if>
                  <if test=" ptpStartDt != null and ptpStartDt != '' ">
@@ -189,8 +278,28 @@
                  <if test=" rosStatus != null and rosStatus != '' ">
                     AND  Extent3.ROS_STUS =#{rosStatus}
                  </if>
-                          ) Project1
-  ORDER BY Project1.ORD_ID ASC
+                  <if test=" rosCallerArr != null and rosCallerArr != '' or (rosCallerType != null and rosCallerType != '' )">
+                  AND extent1.ord_id IN (
+                        SELECT
+                            ord_id
+                        FROM
+                            sal1006v extent1
+                            LEFT JOIN sal0149d extent4 ON extent4.sales_ord_id = extent1.ord_id
+                            LEFT JOIN sal0148m extent5 ON extent5.agent_grp_id = extent4.agent_grp_id
+                        WHERE extent5.agent_type = #{rosCallerType}
+                        AND extent5.agent_grp_id IN
+	                    <foreach collection="rosCallerArr" item="item" open="(" separator="," close=")">
+	                        REGEXP_SUBSTR(#{item},'[^_]+',1,2)
+	                    </foreach>
+                     )
+                  </if>
+                  ) Project1
+           )t
+    LEFT JOIN ros  ros ON ros.sales_ord_id = t.ord_id
+    LEFT JOIN ccr0007d cr ON cr.call_result_id = ros.call_result_id
+    LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = t.ord_id
+    LEFT JOIN sal0047d ir1 ON ir1.entry_id = eimin.install_entry_id AND ir1.result_id = eimin.install_result_id
+  ORDER BY t.ORD_ID ASC
 </select>
 
 
