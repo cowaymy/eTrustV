@@ -56,7 +56,7 @@ var fileGroupKey ="";
         $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
     }else{
 
-        if($("#hidCategoryId").val() == "7233"){
+        if($("#ordCtgryCd").val() == "ACI"){
             $("#frm2").show();
             $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
         }else{
@@ -184,7 +184,7 @@ var fileGroupKey ="";
       }
 
     //validate aircon serial
-    if($("#hidCategoryId").val() == "7233"){
+    if($("#ordCtgryCd").val() == "ACI"){
         var stockCode = "";
         stockCode = (js.String.roughScale($("#editInstallForm #serialNo").val().trim().substr(3,5), 36)).toString();
 
@@ -318,6 +318,8 @@ var fileGroupKey ="";
     <input type="hidden" value="<c:out value="${frameInfo.salesOrdId}"/>" id="hidFrmOrdId" name="hidFrmOrdId" />
     <input type="hidden" value="<c:out value="${frameInfo.salesOrdNo}"/>" id="hidFrmOrdNo" name="hidFrmOrdNo" />
     <input type="hidden" value="<c:out value="${frameInfo.frmSerial}"/>" id="hidFrmSerialNo" name="hidFrmSerialNo" />
+
+    <input type="hidden" value="${orderDetail.basicInfo.ordCtgryCd}" id="ordCtgryCd" name="ordCtgryCd" />
 
     <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
    <input type="hidden" value="" id="hidStockCode" name="hidStockCode" />

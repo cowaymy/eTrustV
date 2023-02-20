@@ -159,7 +159,7 @@ var serialGubun = "1";
             $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
         }else{
         	$("#frm2").hide();
-        	if($("#hidCategoryId").val() == "7233"){
+        	if($("#ordCtgryCd").val() == "ACI"){
         		$("#frm2").show();
         		$("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
         	}else{
@@ -224,7 +224,7 @@ var serialGubun = "1";
 	      }
 
 	      //validate aircon serial
-	      if($("#hidCategoryId").val() == "7233"){
+	      if($("#ordCtgryCd").val() == "ACI"){
 	    	  var stockCode = "";
 	          stockCode = (js.String.roughScale($("#addInstallForm #serialNo").val().trim().substr(3,5), 36)).toString();
 
@@ -900,6 +900,7 @@ var serialGubun = "1";
     <input type="hidden" value="${orderDetail.basicInfo.custType}" id="custType" name="custType" />
     <input type="hidden" value="${orderDetail.salesmanInfo.telMobile}" id="hpPhoneNo" name="hpPhoneNo" />
     <input type="hidden" value="${orderDetail.salesmanInfo.memId}" id="hpMemId" name="hpMemId" />
+    <input type="hidden" value="${orderDetail.basicInfo.ordCtgryCd}" id="ordCtgryCd" name="ordCtgryCd" />
 
    <table class="type1 mb1m">
     <!-- table start -->
