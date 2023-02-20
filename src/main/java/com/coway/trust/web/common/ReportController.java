@@ -117,6 +117,14 @@ public class ReportController {
       clientDoc.setReportAppServer(ra.getReportAppServer());
       clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
 
+      String connectString = reportUrl;
+      String driverName = reportDriverClass;
+      String jndiName = "sp";
+      String userName = reportUserName;
+      String password = reportPassword;
+
+      CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+
       LOGGER.debug(" reportName  ================================> ]" + reportName + "]["
           + this.getRList().contains(reportFile));
       LOGGER.debug(" open reportUserName]" + reportUserName + "]reportPassword[" + reportPassword + "]");
