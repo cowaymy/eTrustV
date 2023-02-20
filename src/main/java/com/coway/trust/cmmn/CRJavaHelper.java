@@ -130,7 +130,6 @@ public class CRJavaHelper {
 		IConnectionInfo connectionInfo = null;
 		ITable origTable = null;
 		ITable newTable = null;
-
 		// Declare variables to hold ConnectionInfo values.
 		// Below is the list of values required to switch to use a JDBC/JNDI
 		// connection
@@ -141,6 +140,7 @@ public class CRJavaHelper {
 		String jndiDatasourceName = jndiName;
 		String connectionUrl = connectionURL;
 		String dbClassName = driverName;
+
 
 		// The next few parameters are optional parameters which you may want to
 		// uncomment
@@ -156,8 +156,42 @@ public class CRJavaHelper {
 		String dbUserName = username;
 		String dbPassword = password;
 
+		if(jndiDatasourceName !=null ){
+			Tables tables = clientDoc.getDatabaseController().getDatabase().getTables();
+
+			for (int i = 0; i < tables.size(); i++) {
+				 IProcedure oldTableP = (IProcedure) tables.getTable(i);
+				 IProcedure newTableP = (IProcedure)oldTableP.clone(true);
+
+				 ParameterField paramField = (ParameterField)newTableP.getParameters().get(0);
+				 Values currentValues = new Values();
+				 ParameterFieldDiscreteValue parameterValue = new ParameterFieldDiscreteValue();
+				 parameterValue.setValue(new Integer (1));
+				 currentValues.add(parameterValue);
+				 paramField.setCurrentValues(currentValues);
+
+				 newTableP.setQualifiedName(oldTableP.getQualifiedName());
+				 connectionInfo = newTableP.getConnectionInfo();
+
+				propertyBag = new PropertyBag();
+				propertyBag.put("Trusted_Connection", trustedConnection);
+				propertyBag.put("Server Type", serverType);
+				propertyBag.put("Use JDBC", useJdbc);
+				propertyBag.put("Database DLL", databaseDll);
+				propertyBag.put("JNDI Datasource Name", jndiDatasourceName);
+				propertyBag.put("Connection URL", connectionUrl);
+				propertyBag.put("Database Class Name", dbClassName);
+
+				connectionInfo.setAttributes(propertyBag);
+				connectionInfo.setUserName(dbUserName);
+				connectionInfo.setPassword(dbPassword);
+
+				clientDoc.getDatabaseController().setTableLocation(oldTableP, newTableP);
+			}
+		}
+
 		// Obtain collection of tables from this database controller
-		if (reportName == null || reportName.equals("")) {
+		else if (reportName == null || reportName.equals("")) {
 			Tables tables = clientDoc.getDatabaseController().getDatabase().getTables();
 			for (int i = 0; i < tables.size(); i++) {
 				origTable = tables.getTable(i);
