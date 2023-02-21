@@ -702,7 +702,8 @@
 						                                      ) sL01   ON 1 = 1
                                                JOIN SYS0013M s13m   ON s13m.CODE_ID = sL01.SRV_MEM_DOC_TYPE_ID
                                                LEFT JOIN SAL0093D s93d ON s93d.SRV_MEM_QUOT_ID = sL01.SRV_MEM_QOTAT_ID
-                                               LEFT JOIN PAY0031D pay31d ON pay31d.TAX_INVC_SVC_NO = s93d.SRV_MEM_QUOT_NO
+                                               LEFT JOIN PAY0032D pay32d ON s93d.SRV_MEM_QUOT_NO = pay32d.INVC_ITM_DESC2
+                                               LEFT JOIN PAY0031D pay31d ON pay31d.TAX_INVC_ID = pay32d.TAX_INVC_ID
                                                ) dSt ) sL03
                           ORDER BY sL03.SRV_MEM_LG_ID ASC
            ]]>
