@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +25,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.biz.sales.ccp.PreCcpRegisterService;
 import com.coway.trust.biz.sales.ccpApi.PreCcpRegisterApiService;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -40,6 +42,9 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/ccpApi")
 public class PreCcpRegisterApiController {
 
+  @Autowired
+  private SessionHandler sessionHandler;
+
   private static final Logger LOGGER = LoggerFactory.getLogger(PreCcpRegisterApiController.class);
 
   @Resource(name = "PreCcpRegisterApiService")
@@ -53,6 +58,16 @@ public class PreCcpRegisterApiController {
   public ResponseEntity<List<PreCcpRegisterApiDto>> checkPreCcpResult(@ModelAttribute PreCcpRegisterApiForm param) throws Exception {
 
 	  List<EgovMap> preCcpResult = preCcpRegisterApiService.checkPreCcpResult(param);
+
+	  if(preCcpResult != null){
+		  	Map<String, Object> detailsMap = new HashMap<String, Object>();
+		  	detailsMap.put("customerNric", param.getSelectKeyword());
+		  	detailsMap.put("userId", preCcpResult.get(0).get("userId"));
+		  	detailsMap.put("custId", preCcpResult.get(0).get("custId"));
+		  	detailsMap.put("chsStatus", preCcpResult.get(0).get("chsStatus"));
+		  	detailsMap.put("chsRsn", preCcpResult.get(0).get("chsRsn"));
+			int result = preCcpRegisterService.insertPreCcpSubmission(detailsMap);
+	  }
 
       if (LOGGER.isDebugEnabled()) {
           for (int i = 0; i < preCcpResult.size(); i++) {

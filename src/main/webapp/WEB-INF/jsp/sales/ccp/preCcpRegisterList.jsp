@@ -91,11 +91,27 @@
 
   $(document).ready(function() {
 	    preCcpGrid();
-
-        $("#customerNric").unbind().bind("change keyup ", function(e) {
-        	  $(this).val($(this).val().replace(/[\D]/g,"").trim());
-        });
+	    displayOrder(2);
   });
+
+  $(function(){
+	     preCcpGrid();
+
+         $('#orderDetails').click(function (e){
+            Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: $("#saveCustId").val()}, null, true, '');
+         });
+
+  });
+
+  function displayOrder(type){
+	  if(type==1){
+		  $("#orderDetails").show();
+	  }
+	  else{
+		  $("#orderDetails").hide();
+	  }
+
+  }
 
   $.fn.clearForm = function() {
       return this.each(function() {
@@ -128,14 +144,13 @@
     	  if(event.item.chsStatus == "YELLOW"){
     		  Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: event.item.custId}, null, true, '');
     	  }
-
     });
 
   }
 
   function checkPreCcpResult(){
+	  $("#saveCustId").val("");
 	  if (validateUpdForm()){
-		  console.log($("#preCcpResultForm").serialize());
 		  Common.ajax("GET", "/sales/ccp/checkPreCcpResult.do", $("#preCcpResultForm").serialize(), function(result) {
 	          preCcpGrid();
 	          if(result != null){
@@ -145,18 +160,25 @@
 	        	  AUIGrid.setGridData(myGridID, result);
 	              AUIGrid.setProp(myGridID, "rowStyleFunction", function() {
                        if(result.chsStatus == "GREEN"){
+                    	   displayOrder(2);
+                    	   $("#saveCustId").val("");
                            return "my-green-style";
                        }
                        else if(result.chsStatus == "YELLOW"){
+                    	   displayOrder(1);
+                    	   $("#saveCustId").val(result.custId);
                            return "my-yellow-style";
                        }
                        else{
+                    	   displayOrder(2);
+                    	   $("#saveCustId").val("");
                     	   return "";
                        }
 	              });
 	              AUIGrid.update(myGridID);
 	          }
 	          else{
+	        	  displayOrder(2);
 	        	  Common.alert("1. Record Not Found <br/>"+"2. Pre-Ccp For New Customers Is Still Under Construction");
 	          }
 	      });
@@ -231,9 +253,12 @@
 	                         </tr>
                         </tbody>
 				</table>
-
+				<br/>
+                <div id="orderDetails">Click in to view order list</div>
+                <input type="hidden" id="saveCustId">
 			    <article class="grid_wrap">
-			         <div id="grid_wrap_preCcpList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+			         <div id="grid_wrap_preCcpList" style="width: 100%; margin: 0 auto;"></div>
+
 			    </article>
 		</form>
 </section>

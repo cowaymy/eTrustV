@@ -10,9 +10,11 @@
              ,  A.NAME  CUST_NAME
              ,  C.APPV_REQ
              , TRUNC(MONTHS_BETWEEN(SYSDATE, A.CRT_DT)) AS CUST_MONTH
+             , D.USER_ID
         FROM SAL0029D A
         LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
         LEFT JOIN SAL0344D C ON B.CHS_RSN = C.CHS_RSN
+        LEFT JOIN SYS0047M D ON D.USER_NAME = #{regId}
         WHERE 1=1
         <if test="selectType != null and selectType != '' "> -->
             <choose>
