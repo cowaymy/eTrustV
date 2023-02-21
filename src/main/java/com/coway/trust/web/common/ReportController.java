@@ -123,7 +123,8 @@ public class ReportController {
       String userName = reportUserName;
       String password = reportPassword;
 
-      CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+      //CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+      CRJavaHelper.replaceConnection(clientDoc, userName, password, connectString, driverName, jndiName);
 
       LOGGER.debug(" reportName  ================================> ]" + reportName + "]["
           + this.getRList().contains(reportFile));

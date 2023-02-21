@@ -28,7 +28,9 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileUtil;
+import com.crystaldecisions.sdk.occa.report.application.DBOptions;
 import com.crystaldecisions.sdk.occa.report.application.DataDefController;
+import com.crystaldecisions.sdk.occa.report.application.DatabaseController;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.*;
 import com.crystaldecisions.sdk.occa.report.document.PaperSize;
@@ -1135,5 +1137,53 @@ public class CRJavaHelper {
 		// Print report
 		clientDoc.getPrintOutputController().printReport(printOptions);
 	}
+
+	 public static void replaceConnection(ReportClientDocument clientDoc,String username, String password, String connectionURL, String driverName, String jndiName)
+	      throws ReportSDKException {
+
+	    IConnectionInfo oldConnectionInfo =  new ConnectionInfo();
+	    IConnectionInfo newConnectionInfo = new ConnectionInfo();
+
+	    Fields pFields = null;
+	    DatabaseController dbController = clientDoc.getDatabaseController();
+	    oldConnectionInfo = dbController.getConnectionInfos(null).getConnectionInfo(0);
+
+	    PropertyBag propertyBag = new PropertyBag();
+
+	    boolean trustedConnection = false;
+	    String serverType = "JDBC (JNDI)";
+	    boolean useJdbc = true;
+	    String databaseDll = "crdb_jdbc.dll";
+	    String jndiDatasourceName = jndiName;
+	    String connectionUrl = connectionURL;
+	    String dbClassName = driverName;
+
+	    // Set new table logon properties
+	    propertyBag.put("Trusted_Connection", trustedConnection);
+	    propertyBag.put("Server Type", serverType);
+	    propertyBag.put("Use JDBC", useJdbc);
+	    propertyBag.put("Database DLL", databaseDll);
+	    propertyBag.put("JNDI Datasource Name", jndiDatasourceName);
+	    propertyBag.put("Connection URL", connectionUrl);
+	    propertyBag.put("Database Class Name", dbClassName);
+
+	    // Assign the properties to the connection info
+	    newConnectionInfo.setAttributes(propertyBag);
+
+	    newConnectionInfo.setUserName(username);
+	    newConnectionInfo.setPassword(password);
+
+	    newConnectionInfo.setKind(ConnectionInfoKind.from_string("CRQE"));
+
+	  // set the parameters to replace.
+	    // The 4 options are:
+	    // _doNotVerifyDB
+	    // _ignoreCurrentTableQualifiers
+	    // _mapFieldByRowsetPosition
+	    // _useDefault
+	    int replaceParams = DBOptions._ignoreCurrentTableQualifiers + DBOptions._doNotVerifyDB;
+
+	    dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
+	  }
 
 }
