@@ -127,12 +127,14 @@ public class HcInstallResultListController {
 		String[] typeList = request.getParameterValues("type");
 		String[] appTypeList = request.getParameterValues("appType");
 		String[] dscCodeList = request.getParameterValues("dscCode"); /* dscCode- kv testing */
+		String[] productList = request.getParameterValues("product"); //added by frango
 
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
 		params.put("appTypeList", appTypeList);
 		/* KV- DSC Code */
 		params.put("dscCodeList", dscCodeList);
+		params.put("productList", productList); //added by frango
 
 		List<EgovMap> installationResultList = hcInstallResultListService.hcInstallationListSearch(params);
 

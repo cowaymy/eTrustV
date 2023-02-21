@@ -37,7 +37,7 @@
 						doGetComboAndGroup2('/common/selectProductCodeList.do',
 								{
 									selProdGubun : 'HC'
-								}, '', 'product', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
+								}, '', 'product', 'M', 'fn_setOptGrpClass');//product 생성 - Only Homecare
 						// PROMOTION
 						doGetComboOrder('/callCenter/selectPromotionList.do',
 								'', 'CODE_ID', '', 'callLogPromotionList', 'M',
@@ -149,7 +149,12 @@
 					});
 
 	function fn_setOptGrpClass() {
-		$("optgroup").attr("class", "optgroup_text");
+	    $("optgroup").attr("class" , "optgroup_text");
+		fn_multiCombo();
+	}
+
+	function fn_disableGroupOption(){
+	    $('.optgroup').children('input').attr("disabled","disabled");
 	}
 
 	function fn_multiCombo() {
@@ -174,6 +179,16 @@
 		});
 
 		$('#searchFeedBackCode').change(function() { //Added by Keyi
+		}).multipleSelect({
+			selectAll : true, // 전체선택
+			width : '100%'
+		});
+
+		$('#product').change(function(event) { //Added by Frango
+			event.preventDefault();
+			fn_disableGroupOption();
+			$('#product').next().find('.placeholder').text('');
+			$('#product').next().find('.placeholder').text($("#product option:selected").text());
 		}).multipleSelect({
 			selectAll : true, // 전체선택
 			width : '100%'

@@ -80,6 +80,13 @@
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
           AND som.BNDL_ID IS NOT NULL
 		]]>
+		<if test="productList != null and productList != '' ">
+			AND STK.STK_ID IN
+			<foreach item="item" collection="productList" index="index"
+			  open="(" separator="," close=")">
+			  #{item}
+			</foreach>
+		</if>
 		<if test="installStatusList != null and installStatusList != '' ">
 			AND ST.STUS_CODE_ID IN
 			<foreach item="item" collection="installStatusList" index="index"
@@ -159,9 +166,9 @@
         <if test="orderDate != null and orderDate != ''">
             AND SOM.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
 		</if>
-		<if test="product != null and product != ''">
-            AND STK.STK_ID = #{product}
-        </if>
+<!-- 		<if test="product != null and product != ''"> -->
+<!--             AND STK.STK_ID = #{product} -->
+<!--         </if> -->
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}
         </if>

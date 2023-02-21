@@ -108,6 +108,7 @@ public class HcOrderCallListController {
 		String[] DSCCodeList = request.getParameterValues("DSCCode");
 		String[] promotionListSp = request.getParameterValues("promotion"); //added by keyi
 		String[] searchFeedBackCode = request.getParameterValues("searchFeedBackCode"); //added by keyi
+		String[] productList = request.getParameterValues("product"); //added by frango
 
 		params.put("appTypeList", appTypeList);
 		params.put("callLogTypeList", callLogTypeList);
@@ -115,6 +116,7 @@ public class HcOrderCallListController {
 		params.put("DSCCodeList", DSCCodeList);
 		params.put("promotionListSp", promotionListSp); //added by keyi
 		params.put("searchFeedBackCode", searchFeedBackCode); //added by keyi
+		params.put("productList", productList); //added by frango
 
 		String[] branchTypeArray = {HomecareConstants.HDC_BRANCH_TYPE, HomecareConstants.DSC_BRANCH_TYPE};
 

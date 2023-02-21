@@ -6,7 +6,7 @@
 
     $(document).ready(function() {
 	    //doGetCombo('/services/getProductList.do', '', '', 'product', 'S', '');
-	    doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'product', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
+	    doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'product', 'M', 'fn_setOptGrpClass');//product 생성 - Only Homecare
 	    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
 
 	    createInstallationListAUIGrid();
@@ -61,7 +61,12 @@
 
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text");
+		fn_multiCombo();
     }
+
+    function fn_disableGroupOption(){
+	    $('.optgroup').children('input').attr("disabled","disabled");
+	}
 
     function fn_multiCombo() {
         $('#dscCode').change(function() {
@@ -70,6 +75,16 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
+
+        $('#product').change(function(event) { //Added by Frango
+			event.preventDefault();
+			fn_disableGroupOption();
+			$('#product').next().find('.placeholder').text('');
+			$('#product').next().find('.placeholder').text($("#product option:selected").text());
+		}).multipleSelect({
+			selectAll : true, // 전체선택
+			width : '100%'
+		});
     }
 
     function fn_installationListSearch() {
