@@ -2442,6 +2442,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
           qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
           qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+          qryFilter_param.put("lastSerialNo", bsResultDet.get(i).get("SerialNo"));
+
           hsManualMapper.updateQryFilter(qryFilter_param);
 
           ItemNo = ItemNo + 1;
@@ -2462,6 +2464,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
          *
          * hsManualMapper.addBsResultDet_NoFilter(bsResultDet_NoFilter); 이거때문에
          */
+    	  Map<String, Object> qryFilter_param = new HashMap<String, Object>();
+          // qryFilter_param.put("SrvConfigID",
+          // String.valueOf(qryConfig.get("SrvConfigID")));
+          qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId")));
+          qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet_Rev.get("BSResultPartID")));
+          qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+          qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+
+          hsManualMapper.updateQryFilter_rev(qryFilter_param);
       }
 
     }
