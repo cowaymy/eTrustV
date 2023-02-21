@@ -1146,6 +1146,7 @@ public class CRJavaHelper {
 
 	    Fields pFields = null;
 	    DatabaseController dbController = clientDoc.getDatabaseController();
+
 	    oldConnectionInfo = dbController.getConnectionInfos(null).getConnectionInfo(0);
 
 	    PropertyBag propertyBag = new PropertyBag();
@@ -1184,6 +1185,17 @@ public class CRJavaHelper {
 	    int replaceParams = DBOptions._ignoreCurrentTableQualifiers + DBOptions._doNotVerifyDB;
 
 	    dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
+
+	     IStrings subNames = clientDoc.getSubreportController().getSubreportNames();
+	     for (int subNum = 0; subNum < subNames.size(); subNum++) {
+	        Tables tables = clientDoc.getSubreportController().getSubreport(subNames.getString(subNum)).getDatabaseController().getDatabase().getTables();
+	        for (int i = 0; i < tables.size(); i++) {
+	          dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
+	          clientDoc.getSubreportController().getSubreport(subNames.getString(subNum))
+	                   .getDatabaseController().replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);;
+	        }
+	     }
+
 	  }
 
 }
