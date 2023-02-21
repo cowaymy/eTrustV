@@ -85,7 +85,7 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
 //                      {dataField: "materialCodeActual",headerText :"Material Code Actual"           ,width:150    ,height:30, editable:true},
 //                      {dataField: "stkIdNew",headerText :"New STK_ID"           ,width:150    ,height:30, editable:true},
                      {dataField: "materialName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:120    ,height:30, editable:false},
-                     {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:true},
+                     {dataField: "serialNumber",headerText :"Used Filter Serial"                ,width:120    ,height:30, editable:true},
                      {dataField: "unmatchId",headerText :"Unmatch Reason Id"     ,width:120    ,height:30, editable:false, visible:false},
                      {dataField: "unmatchReason",headerText :"Unmatch Reason"     ,width:120    ,height:30, editable:false},
 //                      {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },
