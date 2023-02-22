@@ -286,12 +286,14 @@
     //for initial load
     function fn_loadInstallAddr(custAddId) {
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(custInfo) {
-
             if(custInfo != null) {
                 if(custInfo.areaId != undefined) {
-                	if (convToOrdYn != "Y" && copyChangeYn != "Y") {
-                		   fn_clearSales();
+                	if(convToOrdYn && copyChangeYn){ //check the string is positive value (means it is not empty or null)
+                		if (convToOrdYn != "Y" && copyChangeYn != "Y") {
+                              fn_clearSales();
+                       }
                 	}
+
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
                         $("#validAreaIdYN").val("N");
@@ -793,6 +795,7 @@
                 var promoIdVal2 = $("#ordPromo2").val();
                 var srvPacId       = appTypeVal == '66' ? $('#srvPacId').val() : 0;
 
+                alert("service "+srvPacId);
                 fn_loadProductPrice(appTypeVal, stkIdVal1, srvPacId, '1');
                 fn_loadProductPrice(appTypeVal, stkIdVal2, srvPacId, '2');
 
