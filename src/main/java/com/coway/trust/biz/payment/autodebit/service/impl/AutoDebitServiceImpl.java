@@ -609,7 +609,8 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	        String password = reportPassword;
 
 
-	        CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+	        //CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+	        CRJavaHelper.replaceConnection(clientDoc, userName, password, connectString, driverName, jndiName);
 	        CRJavaHelper.logonDataSource(clientDoc, userName, password);
 	      }
 
