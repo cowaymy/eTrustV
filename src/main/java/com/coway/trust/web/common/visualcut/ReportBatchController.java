@@ -2961,7 +2961,7 @@ public void dataMartReport(HttpServletRequest request) {
         String password = reportPassword;
 
         // Switch all tables on the main report and sub reports
-        CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+        CRJavaHelper.replaceConnection(clientDoc, userName, password, connectString, driverName, jndiName);
         // logon to database
         CRJavaHelper.logonDataSource(clientDoc, userName, password);
       }
