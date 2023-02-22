@@ -250,7 +250,12 @@ var TODAY_DD      = "${toDay}";
           dataField : "crtUserId",
           headerText : "Create User ID",
           width : 200
-        },
+      },
+      {
+          dataField : "agingMth",
+          headerText : "Aging Month",
+          width : 200
+      },
       {
         dataField : "stusCodeId",
         headerText : "HT Status Code",
