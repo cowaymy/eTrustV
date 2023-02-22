@@ -65,7 +65,11 @@
        V1.ORD_GM_ID,
        V1.ORD_REM,
        V1.UPD_DT,
-       V1.UPD_USER_ID
+       V1.UPD_USER_ID,
+       V1.CUST_ID2,
+       V1.CUST_IC2,
+       V1.CUST_NAME2
+
        FROM (
        SELECT DISTINCT
                 cd.CODE APP_TYPE_CODE,
@@ -148,12 +152,16 @@
 
                 som.REM ORD_REM,
                  TO_DATE(nvl(TO_CHAR(som.UPD_DT,'DD/MM/YYYY'),'01/01/1900'),'DD/MM/YYYY') upd_dt,
-                  u2.USER_NAME UPD_USER_ID
+                  u2.USER_NAME UPD_USER_ID,
+                  so.cust_id CUST_ID2,
+                  cust.NRIC CUST_IC2,
+                  cust.NAME CUST_NAME2
 
            FROM SAL0225D som
                 JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
                 LEFT JOIN SAL0001D SO ON SO.SALES_ORD_ID = som.SRV_ORD_ID
-                JOIN SAL0029D c ON c.CUST_ID = SO.CUST_ID
+                LEFT JOIN SAL0029D c ON c.CUST_ID = SO.CUST_ID
+                LEFT JOIN SAL0029D cust ON cust.CUST_ID= SOM.CUST_ID
                 JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
                 JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
                 LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
