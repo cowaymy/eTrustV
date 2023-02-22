@@ -448,7 +448,21 @@ function fn_setEvent() {
 function fn_creditCardNoChange() {
 	console.log("fn_creditCardNoChange() Action");
 	if(!FormUtil.isEmpty($("#newCrditCardNo").val())) {
-		Common.ajaxSync("GET", "/eAccounting/creditCard/selectCrditCardInfoByNo.do", {crditCardNo:$("#newCrditCardNo").val()}, function(result) {
+		  	var clmDt = $("#clmMonth").val();
+		    var month = "";
+		    var year = "";
+		    if(clmDt.length>0){
+			    month = clmDt.substring(0, 2);
+			    year = clmDt.substring(3);
+		    }
+		    var data = {
+		    		clmMonth : year+month,
+		    		month : month,
+		    		year : year,
+		    		crditCardNo : $("#newCrditCardNo").val()
+		    };
+
+		Common.ajaxSync("GET", "/eAccounting/creditCard/selectCrditCardInfoByNo.do", data, function(result) {
 	        console.log(result);
 	        if(result.data) {
 	            $("#newCrditCardUserId").val(result.data.crditCardUserId);
@@ -461,6 +475,12 @@ function fn_creditCardNoChange() {
 	            $("#bankName").val(result.data.bankName);
 	            $("#sCardSeq").val(result.data.crditCardSeq);
 	            $("#cardControlYN").val(result.data.cntrlCard);
+	            if(result.data.availableAmt && result.data.availableAmt > 0){
+		            $("#entitledAmt").text("RM " + result.data.availableAmt.toFixed(2));
+	            }
+	            else{
+		            $("#entitledAmt").text("0");
+	            }
 	        } else {
 	            Common.alert('<spring:message code="crditCardReim.noData.msg" />');
 	            $("#newCrditCardUserId").val("");
@@ -471,6 +491,7 @@ function fn_creditCardNoChange() {
 	            $("#newCostCenterText").val("");
 	            $("#bankCode").val("");
 	            $("#bankName").val("");
+	            $("#entitledAmt").text("");
 	        }
 	    });
 	} else {
@@ -482,6 +503,7 @@ function fn_creditCardNoChange() {
         $("#newCostCenterText").val("");
         $("#bankCode").val("");
         $("#bankName").val("");
+        $("#entitledAmt").text("");
 	}
 }
 

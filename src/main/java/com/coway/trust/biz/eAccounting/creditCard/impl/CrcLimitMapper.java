@@ -51,4 +51,11 @@ public interface CrcLimitMapper {
 	List<EgovMap> selectCardholderUtilisedAmountList(Map<String, Object> params);
 	List<EgovMap> selectCardholderPendingAmountList(Map<String, Object> params);
 
+	int checkExistAdjNo(String adjNo);
+	int insertApp_FCM34D_Approval_Line(Map<String, Object> params);
+	int updateApp_FCM33D_Approval_Line(Map<String, Object> params);
+	int selectUserIdWithHrCode(Map<String, Object> params);
+	EgovMap selectTotalAppLineStusCountInfo(Map<String, Object> params);
+	int updateAppLineStus_FCM33D(Map<String, Object> params);
+	List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params);
 }

@@ -1,10 +1,12 @@
 package com.coway.trust.web.eAccounting.creditCard;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +14,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,10 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.eAccounting.pettyCash.PettyCashController;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -159,6 +167,9 @@ public class CrcLimitController {
                 */
                 List<EgovMap> adjItems = crcLimitService.selectAdjItems(params);
                 model.addAttribute("adjItems", new Gson().toJson(adjItems));
+
+                List<EgovMap> approvalLineDescriptionInfo = crcLimitService.getApprovalLineDescriptionInfo(params);
+                model.addAttribute("approvalLineDescriptionInfo", new Gson().toJson(approvalLineDescriptionInfo));
             }
         }
 
@@ -373,6 +384,7 @@ public class CrcLimitController {
         LOGGER.debug("========== crcAdjustmentRejectPop ==========");
 
         model.addAttribute("adjNo", params.get("adjNo"));
+        model.addAttribute("appvLineSeq", params.get("appvLineSeq"));
 
         return "eAccounting/creditCard/crcAdjustmentRejectPop";
     }
@@ -405,4 +417,178 @@ public class CrcLimitController {
 
         return "eAccounting/creditCard/monthlyAllowanceDetailDisplayPop";
     }
+
+	@RequestMapping(value = "/checkFinAppr.do")
+	public ResponseEntity<ReturnMessage> checkFinAppr(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        ReturnMessage message = new ReturnMessage();
+
+        //int subCount = crcLimitService.checkExistAdjNo(params.get("adjNo").toString());
+
+//        if(subCount > 0) {
+//            message.setCode(AppConstants.FAIL);
+//            message.setData(params);
+//            message.setMessage("Adjustment has been submitted.");
+//        } else {
+            List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+
+            if (apprGridList.size() > 0) {
+                Map hm = null;
+                List<String> appvLineUserId = new ArrayList<>();
+
+                for (Object map : apprGridList) {
+                    hm = (HashMap<String, Object>) map;
+                    appvLineUserId.add(hm.get("memCode").toString());
+                }
+
+                String finAppvLineUserId = appvLineUserId.get(appvLineUserId.size() - 1);
+
+                params.put("clmType", params.get("clmType").toString());
+                EgovMap hm2 = webInvoiceService.getFinApprover(params);
+                String memCode = "0";
+                if(hm2 == null){
+                	memCode = "0";
+                }
+                else{
+                	memCode = hm2.get("apprMemCode").toString();
+                }
+                LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+
+                memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+                if(!finAppvLineUserId.equals(memCode)) {
+                    message.setCode(AppConstants.FAIL);
+                    message.setData(params);
+                    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+                } else {
+                    message.setCode(AppConstants.SUCCESS);
+                    message.setData(params);
+                }
+            }
+//        }
+
+        return ResponseEntity.ok(message);
+    }
+
+
+
+    @RequestMapping(value = "/submitNewAdjustmentWithApprovalLine.do")
+    public ResponseEntity<ReturnMessage> submitNewAdjustmentWithApprovalLine(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+        LOGGER.debug("========== submitAdjustment ==========");
+        LOGGER.debug("params ========== :: " + params);
+
+        String docNo = crcLimitService.submitNewAdjustmentWithApprovalLine(params, sessionVO);
+
+        ReturnMessage message = new ReturnMessage();
+        if(!"".equals(docNo)) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(docNo);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(docNo);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+	 	@RequestMapping(value = "/saveRequestBulk.do")
+	    public ResponseEntity<ReturnMessage> saveRequestBulk(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	        LOGGER.debug("========== saveRequest ==========");
+	        LOGGER.debug("params ========== :: " + params);
+
+	        String docNo = crcLimitService.saveRequest(params, sessionVO);
+
+	        ReturnMessage message = new ReturnMessage();
+	        if(!"".equals(docNo)) {
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setData(docNo);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        } else {
+	            message.setCode(AppConstants.FAIL);
+	            message.setData(docNo);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+
+	        return ResponseEntity.ok(message);
+	    }
+
+	  @RequestMapping(value = "/crcApprovalLinePop.do")
+	    public String crcApprovalLinePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	        LOGGER.debug("========== crcApprovalLinePop ==========");
+
+	        model.addAttribute("isNew", params.get("isNew"));
+	        model.addAttribute("isBulk", params.get("isBulk"));
+	        return "eAccounting/creditCard/crcApprovalLine/crcApprovalLinePop";
+	    }
+
+	    @RequestMapping(value = "/submitEditAdjustmentWithApprovalLine.do")
+	    public ResponseEntity<ReturnMessage> submitEditAdjustmentWithApprovalLine(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws JsonParseException, JsonMappingException, IOException {
+	        LOGGER.debug("========== editRequest ==========");
+	        LOGGER.debug("params ========== :: " + params);
+	        ReturnMessage message = new ReturnMessage();
+
+ 	        ObjectMapper mapper = new ObjectMapper();
+	        String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("editData"));
+
+	        Map<String,Object> paramDataMapped = mapper.readValue(value, Map.class);
+
+	        String docNo = crcLimitService.editRequest(paramDataMapped, sessionVO);
+	    	List<String> documentNumberList = new ArrayList<String>();
+	    	documentNumberList.add(docNo);
+	    	if (documentNumberList.size() > 0) {
+	    		params.put("documentNumberList", documentNumberList);
+		        crcLimitService.saveApprovalLineBulk(params, sessionVO);
+	    	}
+	        if(!"".equals(docNo)) {
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setData(docNo);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        } else {
+	            message.setCode(AppConstants.FAIL);
+	            message.setData(docNo);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+
+	        return ResponseEntity.ok(message);
+	    }
+
+	    @RequestMapping(value = "/submitBulkAdjustmentWithApprovalLine.do")
+	    public ResponseEntity<ReturnMessage> submitBulkAdjustmentWithApprovalLine(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws JsonParseException, JsonMappingException, IOException {
+	        LOGGER.debug("========== editRequest ==========");
+	        LOGGER.debug("params ========== :: " + params);
+	        ReturnMessage message = new ReturnMessage();
+
+ 	        ObjectMapper mapper = new ObjectMapper();
+
+	        String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.get("adjGridList"));
+	        List<Map<String, Object>> adjustmentGridList = mapper.readValue(value, new TypeReference<List<Map<String, Object>>>(){});
+	        //Map<String,Object> adjustmentGridList = mapper.readValue(value, Map.class);
+
+	    	List<String> documentNumberList = new ArrayList<String>();
+	        if(adjustmentGridList.size() > 0){
+	        	for(int i = 0; i < adjustmentGridList.size(); i++){
+	    	    	documentNumberList.add(adjustmentGridList.get(i).get("adjNo").toString());
+	        	}
+		    	documentNumberList = documentNumberList.stream().distinct().collect(Collectors.toList());
+	        }
+
+	    	if (documentNumberList.size() > 0) {
+	    		params.put("documentNumberList", documentNumberList);
+		        crcLimitService.saveApprovalLineBulk(params, sessionVO);
+	    	}
+	        if(documentNumberList.size() > 0) {
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setData(String.join(",", documentNumberList));
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        } else {
+	            message.setCode(AppConstants.FAIL);
+	            message.setData(String.join(",", documentNumberList));
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+
+	        return ResponseEntity.ok(message);
+	    }
 }

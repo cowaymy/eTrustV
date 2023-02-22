@@ -21,9 +21,29 @@
     var crcId = 0;
     var checkRemoved = false;
 
-    var allowanceAdjGridID;
+    var adjGridID;
 
     var allowanceAdjColLayout = [
+        {
+            dataField : "isActive",
+            headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+            width: 30,
+            renderer : {
+                type : "CheckBoxEditRenderer",
+                showLabel : false,
+                editable : true,
+                checkValue : "Active",
+                unCheckValue : "Inactive",
+                disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+                    if(item.appvStus == "D")
+                        return false;
+                    return true;
+                }
+            },
+            cellMerge : true,
+            mergeRef : "adjNo",
+            mergePolicy : "restrict"
+        },
         {
             dataField : "adjStus",
             headerText : "Status",
@@ -105,12 +125,13 @@
             usePaging : false,
             showStateColumn : false,
             showRowNumColumn : false,
-            enableCellMerge : true
+            enableCellMerge : true,
+            selectionMode : "multipleCells"
     };
 
     $(document).ready(function () {
         console.log("crcAdjustment.jsp");
-        allowanceAdjGridID = AUIGrid.create("#allowanceAdj_grid_wrap", allowanceAdjColLayout, allowanceAdjGridPros);
+        adjGridID = AUIGrid.create("#allowanceAdj_grid_wrap", allowanceAdjColLayout, allowanceAdjGridPros);
 
         // Default year
         var date = new Date();
@@ -118,7 +139,7 @@
         $("#frAdjPeriod").val("01/" + year);
         $("#toAdjPeriod").val("12/" + year);
 
-        AUIGrid.bind(allowanceAdjGridID, "cellDoubleClick", function(event) {
+        AUIGrid.bind(adjGridID, "cellDoubleClick", function(event) {
             var obj;
 
             /*
@@ -162,7 +183,7 @@
 
         Common.ajax("GET", "/eAccounting/creditCard/selectAdjustmentList.do?", $("#adjustmentForm").serialize(), function(result) {
             console.log(result);
-            AUIGrid.setGridData(allowanceAdjGridID, result);
+            AUIGrid.setGridData(adjGridID, result);
         });
     }
 
@@ -180,6 +201,16 @@
     function fn_setCostCenter() {
         $("#costCenter").val($("#search_costCentr").val());
         /* $("#costCenterText").val($("#search_costCentrName").val()); */
+    }
+
+    function fn_bulkAdjustmentSubmit() {
+        console.log("fn_bulkApproval");
+        var adjAppList = AUIGrid.getItemsByValue(adjGridID, "isActive", "Active");
+        if(adjAppList.length == 0) {
+            Common.alert("No data selected.");
+        } else {
+			Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:false,isBulk:true}, null, true, "crcApprovalLinePop");
+        }
     }
 </script>
 
@@ -270,6 +301,10 @@
     </section>
 
     <section class="search_result">
+        <ul class="right_btns">
+            <li><p class="btn_grid"><a href="#" onclick="javascript:fn_bulkAdjustmentSubmit()" id="submit_btn">Submit</a></p></li>
+        </ul>
+
         <article class="grid_wrap" id="allowanceAdj_grid_wrap"></article>
     </section>
 

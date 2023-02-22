@@ -21,7 +21,7 @@
     var crcId = 0;
     var checkRemoved = false;
 
-    var allowanceAdjGridID;
+    var allowanceApprAdjGridID;
 
     var allowanceAdjColLayout = [
         {
@@ -79,17 +79,31 @@
             formatString : "#,##0.00",
             style : "aui-grid-user-custom-right"
         }, {
+            dataField : "appvLineSeq",
+            visible : false
+        }, {
+            dataField : "currAppvStus",
+            visible : false
+        }, {
+            dataField : "currAppvStusName",
+            headerText : "Overall Approval Status",
+            width : 130
+        }, {
             dataField : "adjRem",
             headerText : "Remark",
             width : 200
         }, {
-            dataField : "appvStus",
+            dataField : "appvPrcssUserId",
             visible : false
         }, {
-            dataField : "appvStusName",
-            headerText : "Approval Status",
-            width : 130
-        }
+            dataField : "currAppvUserName",
+            headerText : "Current Approver",
+            width : 200
+        }, {
+            dataField : "finalAppvUserName",
+            headerText : "Last Approver",
+            width : 200
+        },
     ];
 
     var allowanceAdjGridPros = {
@@ -97,12 +111,13 @@
             pageRowCount : 20,
             showRowCheckColumn : false,
             showRowNumColumn : false,
-            selectionMode : "multipleCells"
+            selectionMode : "multipleCells",
+            fixedColumnCount    : 4
     };
 
     $(document).ready(function () {
-        console.log("crcAdjustment.jsp");
-        allowanceAdjGridID = AUIGrid.create("#allowanceAdj_grid_wrap", allowanceAdjColLayout, allowanceAdjGridPros);
+        console.log("crcAdjustmentApproval.jsp");
+        allowanceApprAdjGridID = AUIGrid.create("#allowanceAdj_grid_wrap", allowanceAdjColLayout, allowanceAdjGridPros);
 
         // Default year
         var date = new Date();
@@ -110,30 +125,31 @@
         $("#frAdjPeriod").val("01/" + year);
         $("#toAdjPeriod").val("12/" + year);
 
-        AUIGrid.bind(allowanceAdjGridID, "cellDoubleClick", function(event) {
+        AUIGrid.bind(allowanceApprAdjGridID, "cellDoubleClick", function(event) {
             var obj;
 console.log("dblClick : appvStus :: " + event.item.appvStus);
             if(event.item.appvStus == "R" || event.item.appvStus == "P") {
                 // Request / Pending
                 obj = {
                         docNo : event.item.adjNo,
+                        appvLineSeq : event.item.appvLineSeq,
                         mode : "A"
                 };
             } else  {
                 // Approved / Rejected
                 obj = {
                         docNo : event.item.adjNo,
+                        appvLineSeq : event.item.appvLineSeq,
                         mode : "V"
                 };
             }
-
             fn_adjustmentPop(obj);
         });
 
         $("#search_costCenter_btn").click(fn_costCenterSearchPop);
     });
 
-    function fn_listAdjApp() {
+    function fn_listAdjPln() {
         // Validation
         if(FormUtil.isEmpty($("#frAdjPeriod").val())) {
             Common.alert("Please enter from period");
@@ -147,7 +163,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
         Common.ajax("GET", "/eAccounting/creditCard/selectAdjustmentAppvList.do?", $("#adjustmentForm").serialize(), function(result) {
             console.log(result);
-            AUIGrid.setGridData(allowanceAdjGridID, result);
+            AUIGrid.setGridData(allowanceApprAdjGridID, result);
         });
     }
 
@@ -169,7 +185,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
     function fn_bulkApproval(v) {
         console.log("fn_bulkApproval");
-        var adjAppList = AUIGrid.getItemsByValue(allowanceAdjGridID, "isActive", "Active");
+        var adjAppList = AUIGrid.getItemsByValue(allowanceApprAdjGridID, "isActive", "Active");
 
         if(adjAppList.length == 0) {
             Common.alert("No data selected.");
@@ -185,6 +201,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
                     Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", obj, function(result) {
                         console.log(result);
                         Common.alert("Adjustment(s) approved");
+                        fn_listAdjPln();
                     });
                 });
 
@@ -209,7 +226,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
             var obj = {
                     action : 'J',
                     rejctResn : $("#rejctResn").val(),
-                    grid : AUIGrid.getItemsByValue(allowanceAdjGridID, "isActive", "Active")
+                    grid : AUIGrid.getItemsByValue(allowanceApprAdjGridID, "isActive", "Active")
             };
 
             Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", obj, function(result) {
@@ -218,42 +235,8 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
                 $("#rejectAdjPop").hide();
                 $("#rejctResn").val("");
 
-                fn_listAdjApp();
+                fn_listAdjPln();
             });
-        }
-    }
-
-    function fn_rejectProceed(v) {
-        console.log("crcAdjustmentApproval :: fn_rejectProceed");
-        if(v == "P") {
-            // v = P (Proceed)
-            if($("#rejctResn").val() == null || $("#rejctResn").val() == "") {
-                Common.alert("Reject reason cannot be empty");
-                return false;
-            }
-
-            var data = {
-                action : "J",
-                rejResn : $("#rejctResn").val(),
-                adjNo : $("#adjNoAppv").val()
-            };
-
-            Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
-                $("#crcAdjustmentPop").remove();
-                $("#adjForm").clearForm()
-                $("#rejctResn").val("");
-                $("#rejectAdjPop1").remove();
-
-                if(result.code == "00") {
-                    Common.alert("Allowance adjustment successfully rejected");
-                } else {
-                    Common.alert("Allowance adjustment fail to reject");
-                }
-            });
-
-        } else {
-            // v = C (Cancel)
-            $("#rejectAdjPop1").remove();
         }
     }
 </script>
@@ -267,7 +250,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
         <h2>Allowance Limit Approval</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_listAdjApp()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_listAdjPln()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
         </ul>
     </aside>
 

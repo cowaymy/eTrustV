@@ -9,6 +9,7 @@
     $(document).ready(function(){
         console.log("crcAdjustmentRejectPop.jsp");
         $('#adjNo').val('${adjNo}');
+        $('#appvLineSeq').val('${appvLineSeq}');
     });
 
     $.fn.clearForm = function() {
@@ -39,10 +40,12 @@
             var data = {
                 action : "J",
                 rejctResn : $("#rejctResn1").val(),
-                adjNo : $("#adjNo").val()
+                adjNo : $("#adjNo").val(),
+                appvLineSeq : $("#appvLineSeq").val()
             };
 			console.log(data);
             Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", data, function(result) {
+                $("#crcAdjustmentPop").remove();
                 $("#adjForm").clearForm();
                 $("#rejctResn").val("");
                 $("#crcAdjustmentRejectPop").remove();
@@ -52,7 +55,7 @@
                 } else {
                     Common.alert("Allowance adjustment fail to reject");
                 }
-                fn_listAdjApp();
+                fn_listAdjPln();
             });
 
         } else {
@@ -76,6 +79,7 @@
 
     <section class="pop_body">
         <input type="hidden" id="adjNo" name="adjNo">
+        <input type="hidden" id="appvLineSeq" name="appvLineSeq">
         <p class="msg_txt">
             <spring:message code="rejectionWebInvoiceMsg.registMsg" />
             <textarea cols="20" rows="5" id="rejctResn1" placeholder="Reject reason max 400 characters"></textarea>

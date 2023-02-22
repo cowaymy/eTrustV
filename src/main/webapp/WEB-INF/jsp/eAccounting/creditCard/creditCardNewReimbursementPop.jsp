@@ -478,7 +478,7 @@ function fn_tempSave() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
-    <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth"/></td>
+    <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth" onchange="javascript:fn_creditCardNoChange()"/></td>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenter" name="costCentr"/></td>
 </tr>
@@ -554,6 +554,7 @@ function fn_tempSave() {
 <section class="search_result"><!-- search_result start -->
 
 <aside class="title_line"><!-- title_line start -->
+<h2 class="total_text">Entertainment Entitled Amount : <span style="color: #25527c;" id="entitledAmt"></span></h2><br/>
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="allTotAmt_text"></span></h2>
 </aside><!-- title_line end -->
 

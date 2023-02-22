@@ -5,8 +5,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -40,4 +42,10 @@ public interface CrcLimitService {
 	List<EgovMap> selectCardholderPendingAmountList(Map<String, Object> params);
 	List<EgovMap> selectCardholderUtilisedAmountList(Map<String, Object> params);
 	List<EgovMap> selectCardholderApprovedAdjustmentLimitList(Map<String, Object> params);
+	EgovMap getFinApprover(Map<String, Object> params);
+	int checkExistAdjNo(String adjNo);
+	List<String> saveRequestBulk(Map<String, Object> params, SessionVO sessionVO);
+	int saveApprovalLineBulk(Map<String, Object> params, SessionVO sessionVO);
+	String submitNewAdjustmentWithApprovalLine(Map<String, Object> params, SessionVO sessionVO);
+	List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params);
 }

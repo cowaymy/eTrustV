@@ -1,5 +1,6 @@
 package com.coway.trust.biz.eAccounting.creditCard.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.eAccounting.budget.impl.BudgetMapper;
 import com.coway.trust.biz.eAccounting.creditCard.CrcLimitService;
+import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
@@ -26,6 +33,12 @@ public class CrcLimitServiceImpl implements CrcLimitService {
 
     @Resource(name = "crcLimitMapper")
     private CrcLimitMapper crcLimitMapper;
+
+	@Resource(name = "webInvoiceMapper")
+	private WebInvoiceMapper webInvoiceMapper;
+
+	@Resource(name = "budgetMapper")
+	private BudgetMapper budgetMapper;
 
     @Override
     public List<EgovMap> selectAllowanceCardList() {
@@ -197,10 +210,13 @@ public class CrcLimitServiceImpl implements CrcLimitService {
     public List<EgovMap> selectAdjustmentList(Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
         LOGGER.debug("========== selectAdjustmentList ==========");
         LOGGER.debug("params :: {}", params);
+        //Allowing Budget Team to see all records only
+    	params.put("userId", sessionVO.getUserId());
+        List<EgovMap> budgetTeamList = budgetMapper.getListPermAppr(params);
 
-        String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-        if(!"A1101".equals(costCentr) && sessionVO.getUserId() != 16178 && sessionVO.getUserId() != 22661)
-            params.put("loginUserId", sessionVO.getUserId());
+        if(budgetTeamList.size() == 0){
+        	params.put("loginUserId", sessionVO.getUserId());
+        }
 
         String[] adjType = request.getParameterValues("selAdjType");
         params.put("adjType", adjType);
@@ -213,7 +229,6 @@ public class CrcLimitServiceImpl implements CrcLimitService {
 
         return crcLimitMapper.selectAdjustmentList(params);
     }
-
     @Override
     public String editRequest(Map<String, Object> params, SessionVO sessionVO) {
         LOGGER.debug("========== editRequest ==========");
@@ -275,9 +290,13 @@ public class CrcLimitServiceImpl implements CrcLimitService {
     public List<EgovMap> selectAdjustmentAppvList(Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO) {
         LOGGER.debug("========== selectAdjustmentAppvList ==========");
         LOGGER.debug("params :: {}", params);
+        //Allowing Budget Team to see all records only
+    	params.put("userId", sessionVO.getUserId());
+        List<EgovMap> budgetTeamList = budgetMapper.getListPermAppr(params);
 
-        String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-        if(!"A1101".equals(costCentr)) params.put("loginUserId", sessionVO.getUserId());
+        if(budgetTeamList.size() == 0){
+        	params.put("loginUserId", sessionVO.getUserId());
+        }
 
         String[] adjType = request.getParameterValues("adjType");
         params.put("adjType", adjType);
@@ -305,20 +324,57 @@ public class CrcLimitServiceImpl implements CrcLimitService {
                 appParam.put("adjNo", gridItem.get("adjNo"));
                 appParam.put("action", params.get("action"));
                 appParam.put("userId", sessionVO.getUserId());
+                appParam.put("appvLineSeq", gridItem.get("appvLineSeq"));
 
                 if("J".equals((String) params.get("action"))) {
                     appParam.put("rejctResn", params.get("rejctResn"));
                 }
 
-                appCnt += crcLimitMapper.updateApp_FCM34D(appParam);
+                crcLimitMapper.updateApp_FCM34D(appParam);
+                this.updateMasterApprovalLineStatus(appParam);
+                appCnt += 1;
             }
         } else {
             // Single
             params.put("userId", sessionVO.getUserId());
-            appCnt += crcLimitMapper.updateApp_FCM34D(params);
+            crcLimitMapper.updateApp_FCM34D(params);
+            appCnt += 1;
+            this.updateMasterApprovalLineStatus(params);
         }
 
         return appCnt;
+    }
+
+    private int updateMasterApprovalLineStatus(Map<String, Object> params){
+    	//get user current approval line count and overall adjustment number total approval line count
+    	EgovMap countInfo = crcLimitMapper.selectTotalAppLineStusCountInfo(params);
+
+    	int userApprovalLineCount = Integer.parseInt(params.get("appvLineSeq").toString());
+    	int totalApprovalLineCount = Integer.parseInt(countInfo.get("appvLineCnt").toString());
+
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("adjNo", params.get("adjNo"));
+        param.put("userId", params.get("userId"));
+
+        //reject handling
+        if(params.get("action").toString().equals("J")){
+    		param.put("appvLinePrcssCnt", userApprovalLineCount);
+    		param.put("currAppvPrcssStus", params.get("action"));
+    		crcLimitMapper.updateAppLineStus_FCM33D(param);
+        }
+        else{
+        	if(userApprovalLineCount < totalApprovalLineCount){
+        		param.put("appvLinePrcssCnt", userApprovalLineCount + 1);
+        		param.put("currAppvPrcssStus", "P");
+        		crcLimitMapper.updateAppLineStus_FCM33D(param);
+        	}
+        	else{
+        		param.put("appvLinePrcssCnt", userApprovalLineCount);
+        		param.put("currAppvPrcssStus", params.get("action"));
+        		crcLimitMapper.updateAppLineStus_FCM33D(param);
+        	}
+        }
+    	return 1;
     }
 
     @Override
@@ -338,4 +394,82 @@ public class CrcLimitServiceImpl implements CrcLimitService {
 		// TODO Auto-generated method stub
 		return crcLimitMapper.selectCardholderApprovedAdjustmentLimitList(params);
 	}
+
+    @Override
+    public EgovMap getFinApprover(Map<String, Object> params) {
+        return webInvoiceMapper.getFinApprover(params);
+    }
+
+    @Override
+    public int checkExistAdjNo(String adjNo) {
+        return crcLimitMapper.checkExistAdjNo(adjNo);
+    }
+
+    @Override
+    public List<String> saveRequestBulk(Map<String, Object> params, SessionVO sessionVO) {
+    	List<String> documentNumberList = new ArrayList<String>();
+    	List<Object> adjGridList = (List<Object>) params.get("adjGridList");
+    	if (adjGridList.size() > 0) {
+			Map hm = null;
+
+			for (Object map : adjGridList) {
+				hm = (HashMap<String, Object>) map;
+
+				documentNumberList.add(this.saveRequest(hm, sessionVO));
+			}
+		}
+    	return documentNumberList;
+    }
+
+    @Override
+    public int saveApprovalLineBulk(Map<String, Object> params, SessionVO sessionVO) {
+    	List<String> documentNumberList = (List<String>) params.get("documentNumberList");
+    	List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+
+		params.put("appvLineCnt", apprGridList.size());
+
+		if (documentNumberList.size() > 0) {
+			if (apprGridList.size() > 0) {
+				Map hm = null;
+				for(int i = 0; i < documentNumberList.size();i++){
+					for (Object map : apprGridList) {
+						hm = (HashMap<String, Object>) map;
+						hm.put("docNo", documentNumberList.get(i).toString());
+						hm.put("userId", sessionVO.getUserId());
+
+						int approverUserId = crcLimitMapper.selectUserIdWithHrCode(hm);
+						hm.put("apprUserId", approverUserId);
+						crcLimitMapper.insertApp_FCM34D_Approval_Line(hm);
+					}
+
+
+					Map fcm0033Param = new HashMap<String,Object>();
+					fcm0033Param.put("docNo", documentNumberList.get(i).toString());
+					fcm0033Param.put("appvLineCnt", apprGridList.size());
+					fcm0033Param.put("appvLinePrcssCnt", 1);
+					fcm0033Param.put("currAppvPrcssStus", "R");
+					fcm0033Param.put("userId", sessionVO.getUserId());
+
+					crcLimitMapper.updateApp_FCM33D_Approval_Line(fcm0033Param);
+				}
+			}
+		}
+
+		return 1;
+    }
+
+    @Override
+    public String submitNewAdjustmentWithApprovalLine(Map<String, Object> params, SessionVO sessionVO) {
+    	List<String> documentNumberList = this.saveRequestBulk(params, sessionVO);
+    	if (documentNumberList.size() > 0) {
+    		params.put("documentNumberList", documentNumberList);
+    		this.saveApprovalLineBulk(params, sessionVO);
+    	}
+    	return String.join(",", documentNumberList);
+    }
+
+    @Override
+    public List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params) {
+        return crcLimitMapper.getApprovalLineDescriptionInfo(params);
+    }
 }

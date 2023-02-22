@@ -80,11 +80,12 @@
                     A.CRC_LIMIT_ADJ_YYYY,
                     A.CRC_LIMIT_ADJ_MM
                 FROM FCM0033D A
-                JOIN FCM0034D B
-                    ON A.CRDIT_CARD_ADJ_NO = B.CRDIT_CARD_ADJ_NO
-                    AND B.CRDIT_CARD_ADJ_NO IS NOT NULL
-                    AND B.APPV_PRCSS_STUS = 'A'
+<!--                 JOIN FCM0034D B -->
+<!--                     ON A.CRDIT_CARD_ADJ_NO = B.CRDIT_CARD_ADJ_NO -->
+<!--                     AND B.CRDIT_CARD_ADJ_NO IS NOT NULL -->
+<!--                     AND B.APPV_PRCSS_STUS = 'A' -->
                 WHERE 1=1
+                AND A.CURR_APPV_PRCSS_STUS = 'A'
                 <if test="(stMonth != null and stMonth != '') or (edMonth != null and edMonth != '')">
                     <if test="stMonth != null and stMonth != '' ">
                         <![CDATA[
@@ -587,16 +588,16 @@
             C.ADJ_REM,
             C.ATCH_FILE_GRP_ID,
             C.ATCH_FILE_ID,
-            C.ATCH_FILE_NAME,
-            CASE WHEN F.APPV_PRCSS_STUS IS NULL THEN 'Draft'
-                     WHEN F.APPV_PRCSS_STUS = 'R' THEN 'Requested'
-                     WHEN F.APPV_PRCSS_STUS = 'A' THEN 'Approved'
-                     WHEN F.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
-            END AS APPV_PRCSS_STUS,
-            F.APPV_PRCSS_USER_ID,
-            G.USER_FULL_NAME,
-            TO_CHAR(F.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT,
-            F.REJCT_RESN
+            C.ATCH_FILE_NAME
+<!--             CASE WHEN F.APPV_PRCSS_STUS IS NULL THEN 'Draft' -->
+<!--                      WHEN F.APPV_PRCSS_STUS = 'R' THEN 'Requested' -->
+<!--                      WHEN F.APPV_PRCSS_STUS = 'A' THEN 'Approved' -->
+<!--                      WHEN F.APPV_PRCSS_STUS = 'J' THEN 'Rejected' -->
+<!--             END AS APPV_PRCSS_STUS, -->
+<!--             F.APPV_PRCSS_USER_ID, -->
+<!--             G.USER_FULL_NAME, -->
+<!--             TO_CHAR(F.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT, -->
+<!--             F.REJCT_RESN -->
         FROM (
             SELECT DISTINCT CRDIT_CARD_ADJ_NO
             FROM FCM0033D
@@ -672,10 +673,10 @@
                 ON A.COST_CENTR = B.COST_CENTER
         ) E
         ON B.R_CRDIT_CARD_ID = E.CRDIT_CARD_SEQ
-        LEFT JOIN FCM0034D F
-        ON F.CRDIT_CARD_ADJ_NO = MAIN.CRDIT_CARD_ADJ_NO
-        LEFT JOIN SYS0047M G
-        ON F.APPV_PRCSS_USER_ID = G.USER_ID
+<!--         LEFT JOIN FCM0034D F -->
+<!--         ON F.CRDIT_CARD_ADJ_NO = MAIN.CRDIT_CARD_ADJ_NO -->
+<!--         LEFT JOIN SYS0047M G -->
+<!--         ON F.APPV_PRCSS_USER_ID = G.USER_ID -->
     </select>
 
     <select id="getAdjDocNo" resultType="String">
@@ -771,10 +772,11 @@
                 CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'D'
                      ELSE C.APPV_PRCSS_STUS
                 END APPV_STUS,
-                CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'Draft'
-                     WHEN C.APPV_PRCSS_STUS = 'R' THEN 'Requested'
-                     WHEN C.APPV_PRCSS_STUS = 'A' THEN 'Approved'
-                     WHEN C.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                CASE WHEN A.CURR_APPV_PRCSS_STUS IS NULL THEN 'Draft'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'R' THEN 'Requested'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'P' THEN 'Approval In-Progress'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'J' THEN 'Rejected'
                 END APPV_STUS_NAME,
                 A.ADJ_GRP_SEQ,
                 A.CRT_DT
@@ -783,6 +785,7 @@
                 ON A.CRDIT_CARD_ID = B.CRDIT_CARD_SEQ
             LEFT JOIN FCM0034D C
                 ON A.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
+                AND A.APPV_LINE_PRCSS_CNT =  C.APPV_LINE_SEQ
             JOIN SYS0047M D
                 ON A.CRT_USER_ID = D.USER_ID
                  JOIN SYS0047M E
@@ -812,7 +815,8 @@
 		                FROM SYS0047M
 		                WHERE USER_ID = #{loginUserId}
 		            )
-		            OR E.USER_ID = #{loginUserId})
+		            OR E.USER_ID = #{loginUserId}
+		            OR A.CRT_USER_ID = #{loginUserId})
 		        </if>
             )
         WHERE 1=1
@@ -840,6 +844,9 @@
     </select>
 
     <select id="selectAdjustmentAppvList" parameterType="Map" resultType="egovMap">
+    	WITH AA AS (SELECT CRDIT_CARD_ADJ_NO,FINAL_APPV_PRCSS_USER_ID,LAST_APPV_LINE_SEQ,FINAL_APPV_USER_NAME from (SELECT A.CRDIT_CARD_ADJ_NO, A.APPV_PRCSS_USER_ID AS FINAL_APPV_PRCSS_USER_ID, A.APPV_LINE_SEQ AS LAST_APPV_LINE_SEQ, B.USER_NAME AS FINAL_APPV_USER_NAME,ROW_NUMBER() OVER (PARTITION BY CRDIT_CARD_ADJ_NO ORDER BY APPV_LINE_SEQ DESC) AS RANK
+            from FCM0034D A INNER JOIN SYS0047M B ON A.APPV_PRCSS_USER_ID = B.USER_ID ) A1 WHERE A1.RANK = 1)
+
         SELECT *
         FROM (
             SELECT DISTINCT
@@ -856,31 +863,43 @@
                      WHEN A.ADJ_TYPE = 4 THEN 'Deduction'
                 END ADJ_TYPE,
                 A.ADJ_AMT,
+                C.APPV_PRCSS_USER_ID,
+                E.USER_NAME AS CURR_APPV_USER_NAME,
                 D.HR_CODE || ' - ' || D.USER_NAME REQUESTOR,
                 CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'D'
                      ELSE C.APPV_PRCSS_STUS
                 END APPV_STUS,
-                CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'Draft'
-                     WHEN C.APPV_PRCSS_STUS = 'R' THEN 'Requested'
-                     WHEN C.APPV_PRCSS_STUS = 'A' THEN 'Approved'
-                     WHEN C.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
-                END APPV_STUS_NAME,
+<!--                 CASE WHEN C.APPV_PRCSS_STUS IS NULL THEN 'Draft' -->
+<!--                      WHEN C.APPV_PRCSS_STUS = 'R' THEN 'Requested' -->
+<!--                      WHEN C.APPV_PRCSS_STUS = 'A' THEN 'Approved' -->
+<!--                      WHEN C.APPV_PRCSS_STUS = 'J' THEN 'Rejected' -->
+<!--                 END APPV_STUS_NAME, -->
                 A.ADJ_REM,
-                A.CRT_DT
+                A.CRT_DT,
+                CASE WHEN A.CURR_APPV_PRCSS_STUS IS NULL THEN 'D'
+                     ELSE A.CURR_APPV_PRCSS_STUS
+                END CURR_APPV_STUS,
+                CASE WHEN A.CURR_APPV_PRCSS_STUS IS NULL THEN 'Draft'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'R' THEN 'Requested'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'P' THEN 'Approval In-Progress'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                     WHEN A.CURR_APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                END CURR_APPV_STUS_NAME,
+                C.APPV_LINE_SEQ
             FROM FCM0033D A
             JOIN FCM0016M B
                 ON A.CRDIT_CARD_ID = B.CRDIT_CARD_SEQ
             JOIN FCM0034D C
                 ON A.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
-                AND C.APPV_PRCSS_STUS NOT IN ('A','J')
+<!--                 AND C.APPV_PRCSS_STUS NOT IN ('A','J') -->
             JOIN SYS0047M D
                 ON A.CRT_USER_ID = D.USER_ID
+            JOIN SYS0047M E
+                ON C.APPV_PRCSS_USER_ID = E.USER_ID
             WHERE A.ADJ_GRP_SEQ = 1
-                <![CDATA[
-                AND A.CRC_LIMIT_ADJ_MM >= TO_NUMBER(SUBSTR(#{frAdjPeriod}, 1, 2))
-                AND A.CRC_LIMIT_ADJ_YYYY >= TO_NUMBER(SUBSTR(#{frAdjPeriod}, -4))
-                AND A.CRC_LIMIT_ADJ_MM <= TO_NUMBER(SUBSTR(#{toAdjPeriod}, 1, 2))
-                AND A.CRC_LIMIT_ADJ_YYYY >= TO_NUMBER(SUBSTR(#{toAdjPeriod}, -4))
+            	AND C.APPV_LINE_SEQ <![CDATA[ = ]]> A.APPV_LINE_PRCSS_CNT
+            	<![CDATA[
+                AND TO_DATE(TO_CHAR(A.CRC_LIMIT_ADJ_MM, 'FM09') || '/' || A.CRC_LIMIT_ADJ_YYYY, 'MM/YYYY') BETWEEN TO_DATE(#{frAdjPeriod},'MM/YYYY') AND TO_DATE(#{toAdjPeriod},'MM/YYYY')
                 ]]>
                 <if test="crcId != null and crcId != '' ">
                     AND B.CRDIT_CARD_SEQ IN
@@ -903,29 +922,47 @@
                 <if test="adjNo != null and adjNo != '' ">
                     AND A.CRDIT_CARD_ADJ_NO = #{adjNo}
                 </if>
-            )
+                <if test="loginUserId != null and loginUserId != '' ">
+                 	AND C.APPV_PRCSS_USER_ID = #{loginUserId}
+                </if>
+            ) BB
+        LEFT JOIN AA ON AA.CRDIT_CARD_ADJ_NO = BB.ADJ_NO
         WHERE 1=1
             <if test="status != null and status != '' ">
-                AND B.APPV_STUS IN
+                AND BB.APPV_STUS IN
                 <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
-        ORDER BY CRT_DT DESC
+        ORDER BY BB.CRT_DT DESC
     </select>
 
     <update id="updateApp_FCM34D" parameterType="Map">
         UPDATE FCM0034D
         SET APPV_PRCSS_STUS = #{action},
-            APPV_PRCSS_USER_ID = #{userId},
+<!--             APPV_PRCSS_USER_ID = #{userId}, -->
             APPV_PRCSS_DT = SYSDATE,
             <if test="rejctResn != null and rejctResn != '' ">
                 REJCT_RESN = #{rejctResn},
             </if>
             UPD_DT = SYSDATE,
             UPD_USER_ID = #{userId}
+        WHERE CRDIT_CARD_ADJ_NO = #{adjNo} AND APPV_LINE_SEQ = #{appvLineSeq}
+    </update>
+
+    <update id="updateAppLineStus_FCM33D" parameterType="Map">
+        UPDATE FCM0033D
+        SET APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt},
+            CURR_APPV_PRCSS_STUS = #{currAppvPrcssStus},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
         WHERE CRDIT_CARD_ADJ_NO = #{adjNo}
     </update>
+
+    <select id="selectTotalAppLineStusCountInfo" parameterType="Map"  resultType="egovMap">
+    SELECT DISTINCT APPV_LINE_CNT FROM  FCM0033D
+	WHERE CRDIT_CARD_ADJ_NO = #{adjNo} AND ROWNUM = 1
+    </select>
 
     <update  id="updateSenderApp_FCM33D" parameterType="Map">
     	UPDATE FCM0033D
@@ -1102,7 +1139,7 @@ SELECT
     B.SIGNAL,
     B.ADJ_AMT,
     B.ADJ_REM,
-    TO_CHAR(C.APPV_PRCSS_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT
+    TO_CHAR(B.UPD_DT,'DD/MM/YYYY') AS APPV_PRCSS_DT
 FROM FCM0016M A
 LEFT JOIN FCM0033D B
     ON A.CRDIT_CARD_NO = B.CRDIT_CARD_NO
@@ -1113,8 +1150,8 @@ LEFT JOIN FCM0033D B
     <if test="clmMonth != null and clmMonth != '' ">
         AND B.CRC_LIMIT_ADJ_MM = #{clmMonth}
      </if>
-LEFT JOIN FCM0034D C
-    ON B.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
+<!-- LEFT JOIN FCM0034D C -->
+<!--     ON B.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO -->
 WHERE A.CRDIT_CARD_NO IN (
 			SELECT DISTINCT CRDIT_CARD_NO
 			FROM FCM0038D f0038d
@@ -1132,7 +1169,7 @@ WHERE A.CRDIT_CARD_NO IN (
 <!--         AND CRC_LIMIT_YYYY = #{year} -->
 <!--      </if> -->
 )
-AND C.APPV_PRCSS_STUS = 'A'
+AND B.CURR_APPV_PRCSS_STUS = 'A'
 AND A.CRDIT_CARD_SEQ = #{crcId}
 </select>
 
@@ -1172,5 +1209,17 @@ AND A.CRDIT_CARD_SEQ = #{crcId}
 
 <select id="selectUserIdWithHrCode" parameterType="Map" resultType="int">
 	SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{memCode}
+</select>
+
+<select id="getApprovalLineDescriptionInfo" parameterType="Map" resultType="egovMap">
+SELECT
+ CASE WHEN f0034d.APPV_PRCSS_STUS = 'R' THEN 'Requested'
+ WHEN f0034d.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+ WHEN f0034d.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+ END AS APPV_PRCSS_STUS_DESC,
+ f0034d.APPV_PRCSS_STUS,f0034d.APPV_PRCSS_USER_ID,s0047m.USER_FULL_NAME,TO_CHAR(f0034d.APPV_PRCSS_DT,'DD/MM/YYYY HH24:MI:SS') AS APPV_PRCSS_DT,NVL(f0034d.REJCT_RESN,'') REJCT_RESN,f0034d.APPV_LINE_SEQ  FROM FCM0034D f0034d
+INNER JOIN SYS0047M s0047m
+ON f0034d.APPV_PRCSS_USER_ID = s0047m.USER_ID
+WHERE f0034d.CRDIT_CARD_ADJ_NO = #{docNo}
 </select>
 </mapper>

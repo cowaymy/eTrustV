@@ -317,6 +317,20 @@ public class CreditCardController {
 
 		EgovMap creditCardInfo = creditCardService.selectCrditCardInfoByNo(params);
 
+
+		params.put("crcId", creditCardInfo.get("crditCardSeq"));
+		String clmMonth = params.get("clmMonth").toString();
+
+		if(!clmMonth.equals("")) {
+			List<EgovMap> availableAllowanceAmt = creditCardService.selectAvailableAllowanceAmt(params);
+			if(availableAllowanceAmt.size() > 0){
+				creditCardInfo.put("availableAmt", availableAllowanceAmt.get(0).get("availableAmt"));
+			}
+		}
+		else{
+			creditCardInfo.put("availableAmt", "");
+		}
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(creditCardInfo);

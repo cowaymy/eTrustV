@@ -412,6 +412,28 @@ SELECT T1.CRDIT_CARD_USER_ID
 FROM   FCM0016M T1 LEFT JOIN ORG0001D T2
                       ON T1.CHRG_USER_ID = T2.MEM_CODE
 WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
+
+
+<!-- SELECT T1.CRDIT_CARD_USER_ID -->
+<!--         ,T1.CRDIT_CARD_USER_NAME -->
+<!--         ,T1.CHRG_USER_ID -->
+<!--         ,T2.NAME    AS CHRG_USER_NAME -->
+<!--         ,T1.COST_CENTR -->
+<!--         ,T1.COST_CENTR_NAME -->
+<!--         ,T1.BANK_CODE -->
+<!--         ,T1.BANK_NAME -->
+<!--         ,T1.CRDIT_CARD_SEQ -->
+<!--         ,T1.CNTRL_CARD -->
+<!--         ,NVL(T3.PLAN_LIMIT_AMT, 0) AS PLAN_LIMIT_AMT -->
+<!-- FROM   FCM0016M T1 -->
+<!-- LEFT JOIN ORG0001D T2 -->
+<!-- ON T1.CHRG_USER_ID = T2.MEM_CODE -->
+<!-- LEFT JOIN FCM0038D T3 -->
+<!-- ON T1.CRDIT_CARD_SEQ = T3.CREDIT_CARD_SEQ -->
+<!-- WHERE T1.CRDIT_CARD_NO = #{crditCardNo} -->
+<!-- AND T3.STUS_CODE_ID = 1 -->
+<!-- AND TO_DATE(TO_CHAR(T3.START_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE(TO_CHAR(SYSDATE, 'DD/MM/YYYY'),'DD/MM/YYYY') -->
+<!-- AND TO_DATE(TO_CHAR(T3.END_DATE, 'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ >= ]]> TO_DATE(TO_CHAR(SYSDATE, 'DD/MM/YYYY'),'DD/MM/YYYY') -->
 </select>
 
 <select id="selectNextClmNo" resultType="String">
@@ -889,6 +911,7 @@ SELECT CRDIT_CARD_NO AS CARD_NO,
          CRDIT_CARD_SEQ
 FROM   FCM0016M
 WHERE CRDIT_CARD_STUS = 'A'
+ORDER BY CRDIT_CARD_USER_NAME
 </select>
 
 <select id="getOldDisClamUn" parameterType="Map" resultType="egovMap">
@@ -1197,8 +1220,6 @@ WHERE CRDIT_CARD_STUS = 'A'
                 <if test="month != null and month != '' ">
                     AND B.CRC_LIMIT_ADJ_MM = #{month}
                 </if>
-            LEFT JOIN FCM0034D C
-                ON B.CRDIT_CARD_ADJ_NO = C.CRDIT_CARD_ADJ_NO
             WHERE A.CRDIT_CARD_NO IN (
 <!--                 SELECT DISTINCT CRDIT_CARD_NO -->
 <!--                 FROM FCM0032D -->
@@ -1217,7 +1238,7 @@ WHERE CRDIT_CARD_STUS = 'A'
 			                AND TO_NUMBER(#{year}) <![CDATA[ >= ]]> TO_NUMBER(TO_CHAR(f0038d.START_DATE, 'YYYY'))
 						</if>
             )
-                AND C.APPV_PRCSS_STUS = 'A'
+                AND B.CURR_APPV_PRCSS_STUS = 'A'
             GROUP BY
                 A.CRDIT_CARD_NO,
                 A.CRDIT_CARD_USER_ID,
@@ -1319,7 +1340,17 @@ WHERE CRDIT_CARD_STUS = 'A'
 </select>
 
 <select id="selectCreditCardholderDetailList" resultType="egovMap">
-	SELECT DISTINCT CRDIT_CARD_USER_ID,CRDIT_CARD_USER_NAME,CRDIT_CARD_NO FROM FCM0016M ORDER BY CRDIT_CARD_USER_NAME
+	SELECT DISTINCT CRDIT_CARD_USER_ID,
+	CRDIT_CARD_NO,
+       (
+            CRDIT_CARD_USER_NAME
+         || ' - '
+         || SUBSTR(CRDIT_CARD_NO, 1, 4)
+         || '********'
+         || SUBSTR(CRDIT_CARD_NO, -4)
+         )    AS CRDIT_CARD_USER_NAME
+	FROM   FCM0016M
+	ORDER BY CRDIT_CARD_USER_NAME ASC
 </select>
 
 <select id="selectAllowanceCardPicList" resultType="egovMap">

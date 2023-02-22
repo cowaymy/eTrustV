@@ -14,7 +14,7 @@
 
     //AUIGRID
        var myFileCaches = {};
-	var myGridID;
+	var allowanceAdjGridID;
 
 	var myGridColumnLayout = [
 	{
@@ -119,7 +119,7 @@
         console.log("crcAdjustmentPop.jsp");
 
         //Grid Table Enhancement
-		myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
+		allowanceAdjGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
 	    $("#add_row").click(fn_addMyGridRow);
 	    $("#remove_row").click(fn_removeMyGridRow);
 	    fn_setEvent();
@@ -169,11 +169,35 @@
             var adjItems = $.parseJSON(item1.replaceAll(/[\n]/g, '\\n'));
 
             if("${item.mode}" == "V"){
-	            if(adjItems[0].appvPrcssStus == "Rejected" || adjItems[0].appvPrcssStus == "Approved"){
-	                $("#approverMessage").text(adjItems[0].appvPrcssStus + " By " + adjItems[0].userFullName);
-	                $("#approverDate").text("[" + adjItems[0].appvPrcssDt + "]");
-	                $("#rejectReasonMessage").text(adjItems[0].rejctResn);
-	            }
+    			var item2 = '${approvalLineDescriptionInfo}';
+                var approvalLineRemark = $.parseJSON(item2.replaceAll(/[\n]/g, '\\n'));
+            	//Update remark message stucture here
+            	if(approvalLineRemark.length > 0){
+                	for(var i =0; i < approvalLineRemark.length; i++){
+                		var statusDesc = approvalLineRemark[i].appvPrcssStusDesc;
+                		var approverName = approvalLineRemark[i].userFullName;
+                		var remark = "";
+                		var approvalDate = approvalLineRemark[i].appvPrcssDt;
+
+                		if(approvalLineRemark[i].rejctResn){
+                			remark = " : " + approvalLineRemark[i].rejctResn;
+                		}
+
+                		var message = "";
+                		if(approvalLineRemark[i].appvPrcssStus == "R") {
+                			message = "<span>" + approvalDate + " - " + "(" + statusDesc + ")" + " - " + approverName + "</span><br/>";
+                		}
+                		if(approvalLineRemark[i].appvPrcssStus == "J" || approvalLineRemark[i].appvPrcssStus == "A") {
+                			message = "<span>" + approvalDate + " - " + "(" + statusDesc + ")" + " - " + approverName + remark + "</span><br/>";
+                		}
+            			$("#approverDetail").append(message);
+                	}
+            	}
+// 	            if(adjItems[0].appvPrcssStus == "Rejected" || adjItems[0].appvPrcssStus == "Approved"){
+// 	                $("#approverMessage").text(adjItems[0].appvPrcssStus + " By " + adjItems[0].userFullName);
+// 	                $("#approverDate").text("[" + adjItems[0].appvPrcssDt + "]");
+// 	                $("#rejectReasonMessage").text(adjItems[0].rejctResn);
+// 	            }
             }
 
             $("#adjRem").val(adjItems[0].adjRem);
@@ -668,6 +692,7 @@
      * Param :: val = Draft (D) / Submit (S)
      */
     // ========== Submit/Draft - Start ==========
+    //This is for existing draft handling
     function fn_reqAdjustment(val) {
         console.log("fn_reqAdjustment");
 
@@ -683,6 +708,7 @@
                      Common.alert("Error occurs on deletion. Please try again.");
         		 }
         	 });
+        	 return;
         }
 
         if(fn_validation() == true) {
@@ -704,48 +730,52 @@
                     if($("#rAmt").prop("disabled") == true) $("#rAmt").prop("disabled", false);
 
                     if(result.code == "00") {
-                        Common.ajax("POST", "/eAccounting/creditCard/saveRequest.do", $("#adjForm").serializeJSON(), function(result2) {
-                            console.log(result2);
-                            $("#crcAdjustmentPop").remove();
+                    	//FRANGO CHANGE
+        				Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:true,isBulk:false}, null, true, "crcApprovalLinePop");
+                    	//
 
-                            // Submit
-                            if(result2.code == "00" && val ==  "S") {
-                                Common.ajax("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
-                                    console.log(result3);
+//                         Common.ajax("POST", "/eAccounting/creditCard/saveRequest.do", $("#adjForm").serializeJSON(), function(result2) {
+//                             console.log(result2);
+//                             $("#crcAdjustmentPop").remove();
 
-                                    if(result3.code == "00") {
-                                        Common.alert("Allowance adjustment submitted document number : " + result2.data);
-                                    } else {
-                                        Common.alert("Allowance adjustment fail to submit.");
-                                    }
-                                });
-                            } else if(result2.code == "00" && val == "D") {
-                                Common.alert("Allowance adjustment drafted document number : " + result2.data);
-                                //refresh grid list
-                                fn_listAdjPln();
-                            } else if(result2.code == "99") {
-                                Common.alert("Allowance adjustment failed to save.");
-                            }
-                        });
+//                             // Submit
+//                             if(result2.code == "00" && val ==  "S") {
+//                                 Common.ajax("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
+//                                     console.log(result3);
+
+//                                     if(result3.code == "00") {
+//                                         Common.alert("Allowance adjustment submitted document number : " + result2.data);
+//                                     } else {
+//                                         Common.alert("Allowance adjustment fail to submit.");
+//                                     }
+//                                 });
+//                             } else if(result2.code == "00" && val == "D") {
+//                                 Common.alert("Allowance adjustment drafted document number : " + result2.data);
+//                                 //refresh grid list
+//                                 fn_listAdjPln();
+//                             } else if(result2.code == "99") {
+//                                 Common.alert("Allowance adjustment failed to save.");
+//                             }
+//                         });
                     }
                 });
             } else {
-                // Edit Adjustment
-                formData.append("atchFileGrpId", $("#atchFileGrpId").val());
-                formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-                formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+            	if(val == "D"){
+            		fn_editRequest(val);
+            	}
+            	else{
+               	 	if($("#adjType").prop("disabled") == true) $("#adjType").prop("disabled", false);
 
-                if(fileClick > 0) {
-                    Common.ajaxFile("/eAccounting/creditCard/adjFileUpdate.do"), formData, function(result) {
-                        if(result.code == "00") {
-                            fn_editRequest(val);
-                        } else {
-                            Common.alert("File update failed");
-                        }
-                    }
-                } else {
-                    fn_editRequest(val);
-                }
+                    if($("#sPeriod").prop("disabled") == true) $("#sPeriod").prop("disabled", false);
+                    if($("#sCrcHolder").prop("disabled") == true) $("#sCrcHolder").prop("disabled", false);
+                    if($("#sAmt").prop("disabled") == true) $("#sAmt").prop("disabled", false);
+
+                    if($("#rPeriod").prop("disabled") == true) $("#rPeriod").prop("disabled", false);
+                    if($("#rCrcHolder").prop("disabled") == true) $("#rCrcHolder").prop("disabled", false);
+                    if($("#rAmt").prop("disabled") == true) $("#rAmt").prop("disabled", false);
+
+   					Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:false,isBulk:false}, null, true, "crcApprovalLinePop");
+            	}
             }
         }
     }
@@ -768,19 +798,20 @@
             $("#crcAdjustmentPop").remove();
 
             // Submit
-            if(result2.code == "00" && val ==  "S") {
-                Common.ajax("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
-                    console.log(result3);
+//             if(result2.code == "00" && val ==  "S") {
+//                 Common.ajax("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
+//                     console.log(result3);
 
-                    if(result3.code == "00") {
-                        Common.alert("Allowance adjustment submitted document number : " + result2.data);
-                        //refresh grid list
-                        fn_listAdjPln();
-                    } else {
-                        Common.alert("Allowance adjustment fail to submit.");
-                    }
-                });
-            } else if(result2.code == "00" && val == "D") {
+//                     if(result3.code == "00") {
+//                         Common.alert("Allowance adjustment submitted document number : " + result2.data);
+//                         //refresh grid list
+//                         fn_listAdjPln();
+//                     } else {
+//                         Common.alert("Allowance adjustment fail to submit.");
+//                     }
+//                 });
+//             } else
+            if(result2.code == "00" && val == "D") {
                 Common.alert("Allowance adjustment updated");
 
             } else if(result2.code == "99") {
@@ -804,8 +835,9 @@
         }
 
         Common.alert(msg, function (result) {
+        	var appvLineSeq = "${item.appvLineSeq}";
             if(v == "A") {
-                Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", {adjNo : $("#adjNo").val(), action : v}, function(result2) {
+                Common.ajax("POST", "/eAccounting/creditCard/approvalUpdate.do", {adjNo : $("#adjNo").val(), action : v, appvLineSeq:appvLineSeq}, function(result2) {
                     console.log("approvalUpdate.do :: A :: " + result2);
                     $("#crcAdjustmentPop").remove();
 
@@ -820,11 +852,10 @@
             } else {
                 console.log("fn_appAdjustment :: v = j")
 				var adjNo = $("#adjNo").val();
-                $("#crcAdjustmentPop").remove();
                 /*
                 $("#rejectAdjPop1").show();
                 */
-                Common.popupDiv("/eAccounting/creditCard/crcAdjustmentRejectPop.do", {adjNo : adjNo}, null, true, "crcAdjustmentRejectPop");
+                Common.popupDiv("/eAccounting/creditCard/crcAdjustmentRejectPop.do", {adjNo : adjNo, appvLineSeq:appvLineSeq}, null, true, "crcAdjustmentRejectPop");
             }
         });
     }
@@ -908,7 +939,7 @@
         	 console.log('atchGroupFileId' + $("#atchFileGrpId").val());
         	 console.log('atchFileId' + $("#atchFileId").val());
 
-        	AUIGrid.addRow(myGridID,
+        	AUIGrid.addRow(allowanceAdjGridID,
                     {
     					adjType: $('#adjType').val(),
     					adjTypeDesc: $('#adjType option:selected').text(),
@@ -937,7 +968,7 @@
 
     function fn_removeMyGridRow(){
     	// Grid Row 삭제
-        AUIGrid.removeRow(myGridID, selectRowIdx);
+        AUIGrid.removeRow(allowanceAdjGridID, selectRowIdx);
     }
 
     function fn_clearData() {
@@ -945,49 +976,89 @@
         fn_chgAdjType($('#adjType').val());
     }
 
+    //Newly freshly added adjustment
     function fn_saveAppAdjustment(val){
-        var gridDataList = AUIGrid.getOrgGridData(myGridID);
-        var documentNumber = "";
-		if(gridDataList.length > 0){
-			for(var i = 0; i < gridDataList.length; i++){
-				var data = gridDataList[i];
-		         Common.ajaxSync("POST", "/eAccounting/creditCard/saveRequest.do", data, function(result2) {
-	             // Submit
-	             if(result2.code == "00" && val ==  "S") {
-	                 Common.ajaxSync("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
-	                     console.log(result3);
+    	if(val ==  "S"){
+//     		//Submit button clicked, foward to approval line page
+// 	        var gridDataList = AUIGrid.getOrgGridData(allowanceAdjGridID);
+// 	        var documentNumber = "";
+// 			if(gridDataList.length > 0){
+// 				for(var i = 0; i < gridDataList.length; i++){
+// 					var data = gridDataList[i];
+// 			         Common.ajaxSync("POST", "/eAccounting/creditCard/saveRequest.do", data, function(result2) {
+// 		             // Submit
+// 		             if(result2.code == "00") {
+// 		                 Common.ajaxSync("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
+// 		                     console.log(result3);
 
-	                     if(result3.code == "00") {
-	                         var documentNo = result2.data + " ";
-	                         documentNumber += documentNo;
-	                     } else {
-	                         Common.alert("Allowance adjustment fail to submit.");
-	                     }
-	                 });
-	             } else if(result2.code == "00" && val == "D") {
-                     var documentNo = result2.data + " ";
-                     documentNumber += documentNo;
-	             } else if(result2.code == "99") {
-	                 Common.alert("Allowance adjustment failed to save.");
-	             }
-	         });
-			}
+// 		                     if(result3.code == "00") {
+// 		                         var documentNo = result2.data + " ";
+// 		                         documentNumber += documentNo;
+// 		                     } else {
+// 		                         Common.alert("Allowance adjustment fail to submit but adjustment is saved with document number : " +  result2.data);
+// 		                     }
+// 		                 });
+// 		             }  else if(result2.code == "99") {
+// 		                 Common.alert("Allowance adjustment failed to save.");
+// 		             }
+// 		         });
+// 				}
 
-			if(val ==  "S"){
-                $("#crcAdjustmentPop").remove();
-                Common.alert("Allowance adjustment submitted document number : " + documentNumber);
+// 				if(val ==  "S"){
+// 	                $("#crcAdjustmentPop").remove();
+// 	                Common.alert("Allowance adjustment submitted document number : " + documentNumber);
+// 				}
+// 	            //refresh grid list
+// 	            fn_listAdjPln();
+
+				Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:true,isBulk:false}, null, true, "crcApprovalLinePop");
+// 			}
+    	}
+    	else{
+    		//Draft clicked
+	        var gridDataList = AUIGrid.getOrgGridData(allowanceAdjGridID);
+	        var documentNumber = "";
+			if(gridDataList.length > 0){
+				for(var i = 0; i < gridDataList.length; i++){
+					var data = gridDataList[i];
+			         Common.ajaxSync("POST", "/eAccounting/creditCard/saveRequest.do", data, function(result2) {
+		             // Submit
+		             if(result2.code == "00" && val ==  "S") {
+		                 Common.ajaxSync("POST", "/eAccounting/creditCard/submitAdjustment.do", {docNo : result2.data}, function (result3) {
+		                     console.log(result3);
+
+		                     if(result3.code == "00") {
+		                         var documentNo = result2.data + " ";
+		                         documentNumber += documentNo;
+		                     } else {
+		                         Common.alert("Allowance adjustment fail to submit.");
+		                     }
+		                 });
+		             } else if(result2.code == "00" && val == "D") {
+	                     var documentNo = result2.data + " ";
+	                     documentNumber += documentNo;
+		             } else if(result2.code == "99") {
+		                 Common.alert("Allowance adjustment failed to save.");
+		             }
+		         });
+				}
+
+				if(val ==  "S"){
+	                $("#crcAdjustmentPop").remove();
+	                Common.alert("Allowance adjustment submitted document number : " + documentNumber);
+				}
+				else if(val ==  "D"){
+	                $("#crcAdjustmentPop").remove();
+	                Common.alert("Allowance adjustment drafted document number : " + documentNumber);
+				}
+	            //refresh grid list
+	            fn_listAdjPln();
 			}
-			else if(val ==  "D"){
-                $("#crcAdjustmentPop").remove();
-                Common.alert("Allowance adjustment drafted document number : " + documentNumber);
-			}
-            //refresh grid list
-            fn_listAdjPln();
-		}
+    	}
     }
 
     function fn_setEvent() {
-    	AUIGrid.bind(myGridID, "cellClick", function( event )
+    	AUIGrid.bind(allowanceAdjGridID, "cellClick", function( event )
         {
             console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
             selectRowIdx = event.rowIndex;
@@ -1182,16 +1253,10 @@
 
                         <tbody>
                             <tr>
-                                <th scope="row">Approver</th>
+                                <th scope="row">Approver Details</th>
                                 <td>
-                                    <p id="approverMessage"></p>
-                                    <p id="approverDate"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Reject Reason</th>
-                                <td>
-                                    <p id="rejectReasonMessage"></p>
+                                	<div id="approverDetail">
+                                	</div>
                                 </td>
                             </tr>
                         </tbody>
