@@ -18,6 +18,14 @@
 	});
 
     $(function(){
+    	sessionStorage.setItem("cust", "0");
+        if("${exception}" == "401"){
+            Common.alert("<spring:message code='sys.msg.session.expired'/>");
+            if(window.top.location.href.indexOf("login.do")<0){
+                window.top.Common.showLoader();
+                window.top.location.href = '/enquiry/updateInstallationAddress.do';
+            }
+        }
 
     	resize();
 
@@ -54,6 +62,7 @@
     }
 
     function goNextPage(){
+    	sessionStorage.setItem("cust", "1");
         $("#loginForm").attr("target", "");
         $("#loginForm").attr({
             action: getContextPath() + "/enquiry/selectCustomerInfo.do",
@@ -118,10 +127,10 @@
                      <h3 class="header-title">LOGIN</h3>
 	                 <form class="login-form" id="loginForm" role="form">
 		                   <div class="form-group">
-		                        <input type="password" class="form-control" placeholder="Enter your NRIC No./ Passport No." name="nricPass" id="nricPass"/>
+		                        <input type="password" class="form-control" placeholder="NRIC No (Example: 991212011234)" name="nricPass" id="nricPass"/>
 		                   </div>
 		                   <div class="form-group">
-		                        <input type="text" class="form-control" placeholder="Enter your mobile number" name="mobileNo" id="mobileNo"/>
+		                        <input type="text" class="form-control" placeholder="Mobile number (Example: 0123456789)" name="mobileNo" id="mobileNo"/>
 		                   </div>
 		                   <div>
 		                    <div class="custom-control custom-switch">

@@ -173,4 +173,9 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 		return result;
   }
 
+  @Override
+  public EgovMap getEmailDetails(Map<String, Object> params){
+        return tagMgmtMapper.getEmailDetails(params);
+  }
+
 }

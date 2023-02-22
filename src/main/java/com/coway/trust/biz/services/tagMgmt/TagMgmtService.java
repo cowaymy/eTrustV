@@ -62,4 +62,6 @@ public interface TagMgmtService {
   int updateInstallInfo(Map<String, Object> params);
 
   int updateRequestStatus(Map<String, Object> params);
+
+  EgovMap getEmailDetails(Map<String, Object> params);
 }

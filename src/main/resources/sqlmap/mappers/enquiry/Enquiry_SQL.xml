@@ -10,6 +10,7 @@
 		   WHERE A.STUS_CODE_ID = 1
 		   AND A.NRIC = #{nricPass}
 		   AND B.TEL_M1 = #{mobileNo}
+		   AND B.STUS_CODE_ID = 9
     </select>
 
     <update id="updateLoginSession" parameterType="Map">
@@ -330,6 +331,7 @@
 				, PHONE_NO
 				, ORDER_NO
 				, REMARK
+				, SOURCE
 		    )
 		    VALUES (
 			    SAL0339D_CUST_ADD_ID_SEQ.NEXTVAL,
@@ -341,7 +343,8 @@
 			    SYSDATE,
 			    #{phoneNo},
 			    #{orderNo},
-			    #{remark}
+			    #{remark},
+			    'Link'
             )
 		    <selectKey keyProperty="custAddId" resultType="Integer"
 		      order="AFTER">

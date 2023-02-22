@@ -8,17 +8,15 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerMain.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon2.css"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
-<style>
-/* @font-face { */
-/*   font-family: 'Material Icons'; */
-/*   font-style: normal; */
-/*   font-weight: 400; */
-/*   src: url(../resources/images/common/materialIcon.woff2) format('woff2'); */
-/* } */
-</style>
+
 
 <script>
     $(function() {
+
+    	  if(FormUtil.isEmpty('${SESSION_INFO.custId}') || "${exception}" == "401") {
+                window.top.Common.showLoader();
+                window.top.location.href = '/enquiry/updateInstallationAddress.do';
+        }
 
     	 document.getElementById("setHeight").style.minHeight = screen.height + "px";
 

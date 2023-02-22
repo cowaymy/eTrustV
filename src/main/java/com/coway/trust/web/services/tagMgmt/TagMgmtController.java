@@ -1,6 +1,9 @@
 package com.coway.trust.web.services.tagMgmt;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +28,21 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.enquiry.EnquiryService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
+import com.coway.trust.biz.common.AdaptorService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -60,6 +67,12 @@ public class TagMgmtController {
 
   @Resource(name = "orderDetailService")
    private OrderDetailService orderDetailService;
+
+  @Autowired
+  private AdaptorService adaptorService;
+
+  @Resource(name = "EnquiryService")
+  private EnquiryService enquiryService;
 
   @Autowired
   private FileApplication fileApplication;
@@ -317,8 +330,6 @@ public class TagMgmtController {
 	  try{
 		    ReturnMessage message = new ReturnMessage();
 
-		    logger.info("param approveInstallationAddressRequest"+params);
-
 		    params.put("crtUserId", session.getUserId());
 			int result = tagMgmtService.insertInstallAddress(params);
 			int result2 = tagMgmtService.updateInstallInfo(params);
@@ -327,6 +338,7 @@ public class TagMgmtController {
 			if (result > 0 && result2 > 0 && result3 > 0) {
 		    	message.setCode(AppConstants.SUCCESS);
 		    	message.setMessage("Success to approve.");
+		    	setEmailData(params);
 			} else {
 				message.setMessage("Failed to approve this order number. Please try again later.");
 				message.setCode(AppConstants.FAIL);
@@ -338,6 +350,88 @@ public class TagMgmtController {
 		  throw e;
 	  }
   }
+
+	 private void setEmailData(Map<String, Object> params) {
+
+		  EgovMap getEmailDetails = tagMgmtService.getEmailDetails(params);
+		  List<String> emailList = Arrays.asList("kimching.low@coway.com.my");
+//		  List<String> emailList = Arrays.asList("zakirin.kamarudin@coway.com.my","azrul.alias@coway.com.my");
+		  String street = getEmailDetails.get("street").equals("0") ? "" : getEmailDetails.get("street").toString() ;
+
+		  Map<String, Object> emailDetail = new HashMap<String,Object>();
+		  List<Map<String, Object>> emailDetailList = new ArrayList<Map<String,Object>>();
+		  emailDetail.put("orderNo", getEmailDetails.get("orderNo").toString());
+		  emailDetail.put("customerName", getEmailDetails.get("name").toString());
+		  emailDetail.put("mobileNo", getEmailDetails.get("phoneNo").toString());
+		  emailDetail.put("address", getEmailDetails.get("addrDtl").toString() + street + " " + getEmailDetails.get("area").toString());
+		  emailDetail.put("postCode", getEmailDetails.get("postcode").toString());
+		  emailDetail.put("city", getEmailDetails.get("city").toString());
+		  emailDetail.put("state", getEmailDetails.get("state").toString());
+		  emailDetail.put("requestDt", getEmailDetails.get("requestDt").toString());
+		  emailDetail.put("email", emailList);
+		  emailDetail.put("emailSubject", "Approved Installation Address Request");
+
+		 this.sendEmail(emailDetail);
+	 }
+
+	 private void sendEmail(Map<String, Object> params) {
+
+    		 try{
+    	    	List<Map<String, Object>> emailList =  (List<Map<String, Object>>) params.get("email");
+
+            	    	for(int i = 0 ;i< emailList.size();i++){
+                	            EmailVO email = new EmailVO();
+
+                	            String emailSubject = params.get("emailSubject").toString();
+
+                	            List<String> emailNo = new ArrayList<String>();
+
+                	            if (!"".equals(CommonUtils.nvl(emailList.get(i)))) {
+                	            	emailNo.add(CommonUtils.nvl(emailList.get(i)));
+                	            }
+
+                	            String content = "";
+                	            content += "<table style='border-collapse: collapse;width: 100%;'>";
+                	            content += "<tr><th colspan='2' style='background-color: #3BC3FF;padding: 12px;color: white;text-align: left'>Approved Update Installation Address Request </th><tr>";
+                	            content +="<tr><td style='padding: 8px'>Full Name : </td>";
+                	            content +="<td>"+params.get("customerName").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>Order No : </td>";
+                	            content +="<td>"+params.get("orderNo").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>Mobile No : </td>";
+                	            content +="<td>"+params.get("mobileNo").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>Address : </td>";
+                	            content +="<td>"+params.get("address").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>Postcode : </td>";
+                	            content +="<td>"+params.get("postCode").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>City : </td>";
+                	            content +="<td>"+params.get("city").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>State : </td>";
+                	            content +="<td>"+params.get("state").toString()+"</td></tr>";
+
+                	            content +="<tr><td style='padding: 8px'>Request Dt : </td>";
+                	            content +="<td>"+params.get("requestDt").toString()+"</td></tr>";
+
+                	            email.setTo(emailNo);
+                	            email.setHtml(true);
+                	            email.setSubject(emailSubject);
+                	            email.setText(content);
+                	            adaptorService.sendEmail(email, false);
+            	    	}
+    		 }
+		 	catch(Exception e){
+    			  Map<String, Object> errorParam = new HashMap<>();
+    			  errorParam.put("pgmPath","/services/tagMgmt");
+    			  errorParam.put("functionName", "sendEmail.do");
+    			  errorParam.put("errorMsg",e.toString());
+    			  enquiryService.insertErrorLog(errorParam);
+		 	}
+	    }
 
 
 }

@@ -729,11 +729,14 @@
               , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REG_DT
               , A.REMARK
               , A.CUST_ADD_ID REQUEST_ID
+              , F.USER_FULL_NAME UPDATOR
+              , TO_CHAR(A.UPD_DT,'DD/MM/YYYY') UPD_DT
         FROM SAL0339D A
         JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
         JOIN SYS0064M C ON A.AREA_ID = C.AREA_ID
         JOIN SAL0001D D ON A.ORDER_NO = D.SALES_ORD_NO
         JOIN SYS0038M E ON A.STUS_CODE_ID = E.STUS_CODE_ID
+        LEFT JOIN SYS0047M F ON F.USER_ID = A.UPD_USER_ID
         WHERE A.STUS_CODE_ID <![CDATA[ <> ]]> 8
 
         <if test="orderNo != null and orderNo != '' ">
@@ -789,5 +792,27 @@
         , UPD_USER_ID = #{crtUserId}
     WHERE CUST_ADD_ID = #{requestId}
   </update>
+
+  <select id="getEmailDetails"  parameterType="Map" resultType="egovMap">
+            SELECT
+                      A.CUST_ID
+                    , C.NAME
+                    , C.NRIC
+                    , A.AREA_ID
+                    , A.PHONE_NO
+                    , A.ORDER_NO
+                    , A.ADDR_DTL
+                    , CASE WHEN A.STREET IS NULL THEN '0' ELSE  A.STREET END STREET
+                    , B.POSTCODE
+                    , B.CITY
+                    , B.AREA
+                    , B.STATE
+                    , B.COUNTRY
+                    , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REQUEST_DT
+            FROM SAL0339D  A
+            JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+            JOIN SAL0029D C ON A.CUST_ID =C.CUST_ID
+            WHERE A.CUST_ADD_ID = #{requestId}
+     </select>
 
 </mapper>

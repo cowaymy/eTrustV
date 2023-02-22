@@ -31,7 +31,6 @@
     let optionArea = {chooseMessage: "4. Area"};
 
     $(document).ready(function() {
-
      //Filed Init
      fn_initAddress();
      CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , '', optionState);
@@ -237,6 +236,12 @@
     }
 
     $(function() {
+
+         if(FormUtil.isEmpty('${SESSION_INFO.custId}')|| "${exception}" == "401") {
+              window.top.Common.showLoader();
+              window.top.location.href = '/enquiry/updateInstallationAddress.do';
+         }
+
         resize();
         let x = document.querySelector('.bottom_msg_box');
         x.style.display = "none";
@@ -309,9 +314,11 @@
                     };
 
                     Common.ajax("GET","/enquiry/verifyTacNo.do", params , function (result){
-                        console.log(result);
+                    	Common.showLoader();
                         if(result.code =="00"){
+
                         	document.getElementById("MsgComplete").innerHTML = result.message;
+                        	Common.removeLoader();
                             $("#completeModalClick").click();
 
                             let counterClose = 5;
@@ -328,6 +335,7 @@
                             $("#tacNo").val("");
                         	startCountdown(0,1); //stop countdown
                             document.getElementById("MsgAlert").innerHTML = result.message;
+                            Common.removeLoader();
                             $("#alertModalClick").click();
                         }
                     });

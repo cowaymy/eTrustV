@@ -84,7 +84,8 @@ public class EnquiryController {
 
 	 @RequestMapping(value = "/updateInstallationAddress.do")
 	 public String updateInstallationAddressHomePage(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
-			return "enquiry/updateInstallationAddress";
+		 model.addAttribute("exception", params.get("exception"));
+		 return "enquiry/updateInstallationAddress";
 	 }
 
 	 @RequestMapping(value = "/selectCustomerInfo.do")
@@ -94,7 +95,13 @@ public class EnquiryController {
  		 params.put("custId", sessionVO.getCustId());
 
 		 List<EgovMap> customerInfoList =  enquiryService.selectCustomerInfoList(params);
-		 model.put("totalCnt", customerInfoList.size());
+
+		 if(sessionVO.getCustId() != 0){
+			 model.put("totalCnt", customerInfoList.size());
+			 model.put("exception", params.get("exception"));
+		 }else{
+			 model.put("exception", "401");
+		 }
 
 		 return "enquiry/customerInfo";
 	 }
@@ -137,16 +144,6 @@ public class EnquiryController {
     			    	message.setMessage("Your account is not found. Please try to login again.");
     			    	return ResponseEntity.ok(message);
     			  }
-
-//    			  checkDuplicated = enquiryService.checkDuplicatedLoginSession(params);
-//
-//    			  flag = checkDuplicated > 0 ? 1 : 0;
-//
-//    			  if(flag ==1){
-//    				    message.setCode(AppConstants.FAIL);
-//    			    	message.setMessage("Your account has been logged in another device. Please logout the session then try to login again.");
-//    			    	return ResponseEntity.ok(message);
-//    			  }
 
     			  if(flag == 0){
 
@@ -201,16 +198,22 @@ public class EnquiryController {
     		List<EgovMap> customerInfoList =  enquiryService.selectCustomerInfoList(params);
     	    EgovMap getInfo = enquiryService.getCurrentPhoneNo(params);
 
-    		model.put("orderNo", params.get("orderNo"));
-    		model.put("orderId", customerInfoList.get(0).get("ordId").toString());
-    		model.put("productDesc", customerInfoList.get(0).get("stkDesc").toString());
-    		model.put("addrDtl", customerInfoList.get(0).get("addrDtl").toString());
-    		model.put("street", customerInfoList.get(0).get("street").toString());
-    		model.put("mailPostCode", customerInfoList.get(0).get("mailPostCode").toString());
-    		model.put("mailCity", customerInfoList.get(0).get("mailCity").toString());
-    		model.put("mailState", customerInfoList.get(0).get("mailState").toString());
-    		model.put("mailCnty", customerInfoList.get(0).get("mailCnty").toString());
-    		model.put("phoneNo", getInfo.get("phoneNo"));
+    	    if(getInfo!=null && customerInfoList!=null){
+        		model.put("orderNo", params.get("orderNo"));
+        		model.put("orderId", customerInfoList.get(0).get("ordId").toString());
+        		model.put("productDesc", customerInfoList.get(0).get("stkDesc").toString());
+        		model.put("addrDtl", customerInfoList.get(0).get("addrDtl").toString());
+        		model.put("street", customerInfoList.get(0).get("street").toString());
+        		model.put("mailPostCode", customerInfoList.get(0).get("mailPostCode").toString());
+        		model.put("mailCity", customerInfoList.get(0).get("mailCity").toString());
+        		model.put("mailState", customerInfoList.get(0).get("mailState").toString());
+        		model.put("mailCnty", customerInfoList.get(0).get("mailCnty").toString());
+        		model.put("phoneNo", getInfo.get("phoneNo"));
+        		model.put("exception", sessionVO.getCustId() == 0 ? "401" : params.get("exception"));
+    	    }
+    	    else{
+    	    	model.put("exception","401");
+    	    }
 
     		return "enquiry/updateInstallationAddressInDetails";
 	 }
@@ -235,7 +238,7 @@ public class EnquiryController {
 
 
 	 @RequestMapping(value = "/searchMagicAddressPop.do")
-	 public String searchMagicAddressPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	 public String searchMagicAddressPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
     	    model.addAttribute("searchStreet", params.get("searchSt"));
     	    model.addAttribute("state", params.get("mState"));
@@ -243,6 +246,7 @@ public class EnquiryController {
     	    model.addAttribute("postCode", params.get("mPostCd"));
     	    model.addAttribute("searchState", params.get("mState"));
     	    model.addAttribute("searchCity", params.get("mCity"));
+    	    model.addAttribute("exception", sessionVO.getCustId() == 0 ? "401" : params.get("exception"));
 
     	    return "enquiry/customerMagicAddrPop";
 	 }
@@ -330,19 +334,6 @@ public class EnquiryController {
 	  }
 
 
-//	 @RequestMapping(value = "/tacVerification.do")
-//	 public String tacVerification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
-//
-//    		 sessionVO = sessionHandler.getCurrentSessionInfo();
-//    	     params.put("custId", sessionVO.getCustId());
-//
-//    	     EgovMap result = enquiryService.getCurrentPhoneNo(params);
-//    	     model.put("mobileNo", result.get("phoneNo"));
-//    	     model.put("orderNo", result.get("orderNo"));
-//
-//		     return "enquiry/tacVerification";
-//	 }
-
 	 @Transactional
 	 @RequestMapping(value = "/verifyTacNo.do")
      public ResponseEntity<ReturnMessage> verifyTacNo(@RequestParam Map<String, Object> params, SessionVO sessionVO ) throws Exception{
@@ -374,9 +365,6 @@ public class EnquiryController {
 		    		params.put("remark", result.get("chkTac").equals("0") ? "Failed due to TAC number is not match." : "Rejected due to TAC Timeout");
 		    		int insResult2 = enquiryService.insertNewInstallationAddress(params);
 		    	}
-
-//		    	LOGGER.info("checktac result" + result);
-//		    	LOGGER.info("checktac flag 2" + flag);
 
 		    	if(flag ==1){
 		    		 message.setCode(AppConstants.SUCCESS);
@@ -415,8 +403,8 @@ public class EnquiryController {
 	 private void setEmailData(Map<String, Object> params) {
 
 		  EgovMap getEmailDetails = enquiryService.getEmailDetails(params);
-
-		  List<String> emailList = Arrays.asList("zakirin.kamarudin@coway.com.my","azrul.alias@coway.com.my");
+		  List<String> emailList = Arrays.asList("kimching.low@coway.com.my");
+//		  List<String> emailList = Arrays.asList("zakirin.kamarudin@coway.com.my","azrul.alias@coway.com.my");
 		  String street = getEmailDetails.get("street").equals("0") ? "" : getEmailDetails.get("street").toString() ;
 
 		  Map<String, Object> emailDetail = new HashMap<String,Object>();
@@ -430,8 +418,7 @@ public class EnquiryController {
 		  emailDetail.put("state", getEmailDetails.get("state").toString());
 		  emailDetail.put("requestDt", getEmailDetails.get("requestDt").toString());
 		  emailDetail.put("email", emailList);
-
-		  //LOGGER.info("emailDetail"+ emailDetail);
+		  emailDetail.put("emailSubject", "Update Installation Address Request");
 
 		 this.sendEmail(emailDetail);
 	 }
@@ -439,14 +426,12 @@ public class EnquiryController {
 	 private void sendEmail(Map<String, Object> params) {
 
 		 try{
-
-		    //LOGGER.info("sendEmail params"+ params);
 	    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	    	List<Map<String, Object>> emailList =  (List<Map<String, Object>>) params.get("email");
 	    	for(int i = 0 ;i< emailList.size();i++){
 	            EmailVO email = new EmailVO();
 
-	            String emailSubject = "Update Installation Address Request";
+	            String emailSubject = params.get("emailSubject").toString();
 
 	            List<String> emailNo = new ArrayList<String>();
 
@@ -481,8 +466,6 @@ public class EnquiryController {
 	            content +="<tr><td style='padding: 8px'>Request Dt : </td>";
 	            content +="<td>"+params.get("requestDt").toString()+"</td></tr>";
 
-	            //LOGGER.info("sendEmail content"+ content);
-
 	            email.setTo(emailNo);
 	            email.setHtml(true);
 	            email.setSubject(emailSubject);
@@ -500,12 +483,5 @@ public class EnquiryController {
 
 		 	}
 	    }
-
-
-//	 @RequestMapping(value = "/contactUs.do")
-//	 public String contactUs(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
-//		     return "enquiry/contactUs";
-//	 }
-
 
 }

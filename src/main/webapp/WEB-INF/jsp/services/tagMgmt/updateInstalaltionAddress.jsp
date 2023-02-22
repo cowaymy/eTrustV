@@ -50,6 +50,16 @@
         headerText : "Request ID",
         width : "10%",
         visible: false
+    }, {
+        dataField : "updator",
+        headerText : "Approver",
+        width : "10%",
+        visible: true
+    }, {
+        dataField : "updDt",
+        headerText : "Updated Date",
+        width : "10%",
+        visible: true
     }];
 
     var excelLayout = [{

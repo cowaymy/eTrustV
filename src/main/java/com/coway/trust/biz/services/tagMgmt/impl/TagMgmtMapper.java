@@ -70,4 +70,6 @@ public interface TagMgmtMapper {
 
   public int updateRequestStatus(Map<String, Object> params);
 
+  EgovMap getEmailDetails(Map<String, Object> params);
+
 }
