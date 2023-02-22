@@ -545,14 +545,14 @@ function fn_checkEmpty() {
 //                 return checkResult;
 //             }
 
-
-        $("#attachTd input[type='file']").each(function() {
-        	if(FormUtil.isEmpty($(this).val())){
-        		Common.alert('Attachment is required.');
-                checkResult = false;
-                return checkResult;
-        	}
-        });
+// Requested to ignore attachment compulsory
+//         $("#attachTd input[type='file']").each(function() {
+//         	if(FormUtil.isEmpty($(this).val())){
+//         		Common.alert('Attachment is required.');
+//                 checkResult = false;
+//                 return checkResult;
+//         	}
+//         });
             var length = AUIGrid.getGridData(myGridID).length;
             if(length > 0) {
                 for(var i = 0; i < length; i++) {

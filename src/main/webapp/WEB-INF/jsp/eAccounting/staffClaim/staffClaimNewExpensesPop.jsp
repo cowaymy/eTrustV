@@ -677,7 +677,7 @@ function fn_tempSave() {
     <td></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="newWebInvoice.attachment" /><span style="color:red">*</span></th>
+    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
     <td colspan="3" id="attachTd">
     <div class="auto_file2 auto_file3"><!-- auto_file start -->
     <input type="file" title="file add" />
