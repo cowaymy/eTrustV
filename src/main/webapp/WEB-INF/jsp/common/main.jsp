@@ -12,8 +12,6 @@
 
 <script type="text/javaScript">
 
-    var roleId = '${SESSION_INFO.roleId}';
-
     var noticeLayout = [{
         dataField: "ntceNo",
         visible: false
@@ -544,31 +542,9 @@
         {
             dataField: "name",
             headerText: "Customer Name",
-            width: "60%"
-        },
-        {
-            dataField: "salesOrdNo",
-            headerText: "Order No.",
-            width: "30%"
+            width: "80%"
         }
     ];
-
-    var hpBdayColumnLayout = [
-        {
-            dataField: "dob",
-            headerText: "Birthday",
-            width: "20%"
-        },
-        {
-            dataField: "fullName",
-            headerText: "HP Name",
-            width: "60%"
-        },
-        {
-            dataField: "memCode",
-            headerText: "HP Code",
-            width: "30%"
-        }];
 
     var rewardPointColumnLayout = [
           {dataField: "rptYear",headerText :"Year",width:120, height: 30, visible : false},
@@ -701,7 +677,7 @@
     ];
 
     //AUIGrid 생성 후 반환 ID
-    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid, hpBdayGrid, rewardPointGridID;
+    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid, rewardPointGridID;
 
     var gridOption = {
         showStateColumn : false,
@@ -747,12 +723,6 @@
 
                 salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
                 customerBdayGrid = GridCommon.createAUIGrid("salesOrgCustBday", customerBdayColumnLayout, null, salesGridOption);
-                if(result.roleType == 112 || result.roleType == 113 || result.roleType == 114) {
-                    hpBdayGrid = GridCommon.createAUIGrid("salesOrgHPBday", hpBdayColumnLayout, null, salesGridOption);
-                }
-                else{
-                    $('#hpBdayTitle').hide();
-                }
 
                 if(result.roleType == 115) {
                     console.log("else :: hpDashboard");
@@ -789,9 +759,9 @@
             }
 
             if(result.userTypeId == 1 || result.userTypeId == 2){
-                $("#memo").show();
-                memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
-                fn_selectMemoDashboard();
+                //$("#memo").show();
+                //memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
+                //fn_selectMemoDashboard();
 
                 AUIGrid.bind(memoGridID, "cellDoubleClick", function(event){
                     $("#viewwindow").show();
@@ -834,8 +804,8 @@
             }
 
             if(result.userTypeId == 2 && memLvl == 4){
-            	$('#accRewardPoint').show();
-            	$('#accRewardPointHeader').html('Monthly Accumulated Reward Points - ' + (new Date().getFullYear() ) );
+            	//$('#accRewardPoint').show();
+            	//$('#accRewardPointHeader').html('Monthly Accumulated Reward Points - ' + (new Date().getFullYear() ) );
 
             	rpOption = {
             			usePaging: false,
@@ -844,7 +814,7 @@
                         fixedColumnCount : 5,
             	}
             	rewardPointGridID = GridCommon.createAUIGrid("rewardPointGridID", rewardPointColumnLayout, null, rpOption);
-            	fn_selectAccRewardPoint(userName);
+            	//fn_selectAccRewardPoint(userName);
             }
 
             //  [Woongjin Jun] Tab
@@ -994,13 +964,6 @@ console.log(result);
                 console.log(result1);
                 AUIGrid.setGridData(customerBdayGrid, result1);
             });
-
-            if(userRole == 112 || userRole == 113 || userRole == 114) {
-                Common.ajax("GET", "/common/getHPBirthday.do", {userId : userId, roleId : userRole}, function(result2) {
-                    console.log(result2);
-                    AUIGrid.setGridData(hpBdayGrid, result2);
-                });
-            }
         });
     }
 
@@ -1128,16 +1091,10 @@ console.log(result);
 
             <div style="width:25%">
                 <aside class="title_line">
-                    <h2>Birthday Information</h2>
+                    <h2>Customer Birthday</h2>
                 </aside>
-                <aside class="title_line">
-                    <h4>Customer Birthday</h4>
-                </aside>
+
                 <div id="salesOrgCustBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
-                 <aside class="title_line">
-                 <h4 id="hpBdayTitle">HP Birthday</h4>
-                </aside>
-                <div id="salesOrgHPBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
             </div>
         </div>
 
