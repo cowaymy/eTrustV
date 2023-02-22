@@ -12,12 +12,12 @@
 
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : '<spring:message code="sal.text.mnth" />',       dataField : "crtDtMm",      width : 120 }
-          , { headerText : '<spring:message code="sal.title.text.mode" />', dataField : "batchMode",    width : 120 }
+            { headerText : '<spring:message code="sal.text.mnth" />',       dataField : "crtDtMm",      width : "15%" }
+          , { headerText : '<spring:message code="sal.title.text.mode" />', dataField : "batchMode",    width : "15%" }
     /*       , { headerText : '<spring:message code="sal.title.text.bank" />', dataField : "code"                      } // edited by Tommy 14/01/2019 */
-          , { headerText : '<spring:message code="sal.text.dateDeduct" />', dataField : "crtDtDd",      width : 150 }
-          , { headerText : '<spring:message code="sal.title.amount" />',    dataField : "bankDtlAmt",   width : 100 }
-          , { headerText : '<spring:message code="sal.text.isSuccess" />',  dataField : "isApproveStr", width : 120 }
+          , { headerText : '<spring:message code="sal.text.dateDeduct" />', dataField : "crtDtDd",      width : "15%" }
+          , { headerText : '<spring:message code="sal.title.amount" />',    dataField : "bankDtlAmt",   width : "15%" }
+          , { headerText : '<spring:message code="sal.text.isSuccess" />',  dataField : "isApproveStr", width : "40%" }
           ];
 
         autoDebitGridID = GridCommon.createAUIGrid("grid_autoDebit_wrap", columnLayout, "", gridPros);

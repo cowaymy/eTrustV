@@ -931,7 +931,7 @@
                         , NVL(T1.BANK_APPV, 0) BANK_APPV
                         , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
                         , T2.CTRL_IS_CRC CTRL_IS_CRC
-                        , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
+                        <!-- , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds (Baki Tidak Mencukupi)'
                         WHEN T4.IND = 'EXPCARD' THEN 'Change Card (Tukar Kad)'
                         WHEN T4.IND = 'CDOPTIN' THEN
@@ -942,12 +942,13 @@
                                                         CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)' ELSE 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' END
                                                     ELSE  'Change Account' END
                         WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed (Kad Tidak Dibenarkan)'
-                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' ELSE 'Change Account' END) END CODE_NAME
+                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Refer To Issuer Bank (Rujuk Pihak Bank Berkenaan)' ELSE 'Change Account' END) END CODE_NAME -->
+                        , FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) CODE_NAME
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
                LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
-               LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','CHGCARD','TRXNOTALW','CDOPTIN','EXPCARD')
+               <!-- LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','CHGCARD','TRXNOTALW','CDOPTIN','EXPCARD') -->
                WHERE T1.SALES_ORD_ID = #{salesOrderId}
     ) T ORDER BY T.BANK_DTL_ID DESC
   </select>
