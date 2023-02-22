@@ -78,8 +78,16 @@
 		                   JOIN ORG1001V Extent11 ON Extent1.CT_ID = Extent11.MEM_ID
 		                  WHERE  ( NOT ( LTRIM(RTRIM(UPPER(Extent3.SALES_ORD_NO))) LIKE '%C%')
 		                           AND ( Extent3.SALES_ORD_NO = #{orderNo} )
-		                           <if test="isAC != null and isAC == 1">
-											AND Extent11.DEPT_CODE = #{deptCode}
+									<if test="isAC != null and isAC == 1">
+								       <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+							           	AND Extent11.DEPT_CODE = #{deptCode}
+							           </if>
+							           <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+							           	AND Extent11.GRP_CODE = #{grpCode}
+							           </if>
+							           <if test='orgCode != null and orgCode != " "  and orgCode != ""'>
+							          	AND Extent11.ORG_CODE = #{orgCode}
+							           </if>
 									</if>
 		                         )
 		                    AND Extent3.BNDL_ID IS NOT NULL

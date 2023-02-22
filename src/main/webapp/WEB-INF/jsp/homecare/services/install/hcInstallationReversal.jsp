@@ -26,6 +26,22 @@ $(document).ready(function() {
         selectrow(installEntryNo, salesOrdNo, installEntryId, salesOrdId);
     });
 
+	if('${SESSION_INFO.isAC}' == 1){
+    	if("${SESSION_INFO.memberLevel}" =="1"){
+            $("#orgCode").val('${SESSION_INFO.orgCode}');
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+            $("#orgCode").val('${SESSION_INFO.orgCode}');
+            $("#grpCode").val('${SESSION_INFO.groupCode}');
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+            $("#orgCode").val('${SESSION_INFO.orgCode}');
+            $("#grpCode").val('${SESSION_INFO.groupCode}');
+            $("#deptCode").val('${SESSION_INFO.deptCode}');
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+            $("#orgCode").val('${SESSION_INFO.orgCode}');
+            $("#grpCode").val('${SESSION_INFO.groupCode}');
+            $("#deptCode").val('${SESSION_INFO.deptCode}');
+        }
+    }
 });
 
 function selectrow(installEntryNo, salesOrdNo, installEntryId, salesOrdId){
@@ -318,6 +334,7 @@ var gridPros = {
 };
 
 function fn_orderSearch(){
+
     Common.ajax("GET", "/homecare/services/installationReversalSearch.do", $("#searchForm").serialize(), function(orderList) {
         AUIGrid.setGridData(myGridID, orderList);
     });
@@ -450,6 +467,9 @@ function fn_close(){
 	    <input type="hidden"  id="salesOrdNo" name="salesOrdNo"/>
 	    <input type="hidden"  id="installEntryId" name="installEntryId"/>
 	    <input type="hidden"  id="salesOrdId" name="salesOrdId"/>
+	    <input type="hidden" id="orgCode" name="orgCode" value="" />
+		<input type="hidden" id="grpCode" name="grpCode" value="" />
+		<input type="hidden" id="deptCode" name="deptCode" value="" />
 
     <aside class="link_btns_wrap">
 	    <div id="divErrorMessage" style="width: 100%; height: 20px; margin: 0 auto;">
