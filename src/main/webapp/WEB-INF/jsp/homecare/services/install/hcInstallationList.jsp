@@ -13,10 +13,22 @@
 
 	    console.log('isAC' + '${SESSION_INFO.isAC} ');
 	    if('${SESSION_INFO.isAC}' == 1){
-	    	$("#orgCode").val('${SESSION_INFO.orgCode}');
-	    	$("#grpCode").val('${SESSION_INFO.groupCode}');
-	    	$("#deptCode").val('${SESSION_INFO.deptCode}');
-	    }
+            if("${SESSION_INFO.memberLevel}" =="1"){
+                $("#orgCode").val('${SESSION_INFO.orgCode}');
+            }else if("${SESSION_INFO.memberLevel}" =="2"){
+                $("#orgCode").val('${SESSION_INFO.orgCode}');
+                $("#grpCode").val('${SESSION_INFO.groupCode}');
+            }else if("${SESSION_INFO.memberLevel}" =="3"){
+                $("#orgCode").val('${SESSION_INFO.orgCode}');
+                $("#grpCode").val('${SESSION_INFO.groupCode}');
+                $("#deptCode").val('${SESSION_INFO.deptCode}');
+            }else if("${SESSION_INFO.memberLevel}" =="4"){
+                $("#orgCode").val('${SESSION_INFO.orgCode}');
+                $("#grpCode").val('${SESSION_INFO.groupCode}');
+                $("#deptCode").val('${SESSION_INFO.deptCode}');
+                //$("#memCode").val("${memCode}");
+            }
+        }
 
         AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
             if(event.checked) {

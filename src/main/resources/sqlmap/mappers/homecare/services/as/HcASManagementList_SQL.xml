@@ -301,6 +301,7 @@
 	                 AND Extent15.DEF_DET = Extent1.AS_MALFUNC_RESN_ID
 	                 left join sal0002d  sod on sod.SALES_ORD_ID = Extent1.AS_SO_ID
                      left join SYS0026M STK ON STK.STK_ID =  sod.ITM_STK_ID
+                     LEFT JOIN ORG1001V V ON V.MEM_ID = Extent8.MEM_ID
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                       AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
                                                            WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB','DSC'))
@@ -330,6 +331,15 @@
 	                 <if test="cmbctId != null and cmbctId != '' ">
 	                   AND Extent8.MEM_CODE IN #{cmbctId}
 	                 </if>
+	                 <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+			             AND V.DEPT_CODE = #{deptCode}
+			           </if>
+			           <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+			             AND V.GRP_CODE = #{grpCode}
+			           </if>
+			           <if test='orgCode != null and orgCode != " "  and orgCode != ""'>
+			             AND V.ORG_CODE = #{orgCode}
+			           </if>
 
 	          ) E LEFT JOIN SYS0047M Extent8 ON E.AS_CRT_USER_ID = Extent8.USER_ID
 	              LEFT JOIN SYS0032M Extent17 ON Extent17.RESN_ID = E.AS_FAIL_RESN_ID

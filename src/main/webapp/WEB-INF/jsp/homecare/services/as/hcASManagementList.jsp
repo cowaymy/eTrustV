@@ -38,6 +38,24 @@ var branchDs = [];
 
   $(document).ready(
       function() {
+   	  if('${SESSION_INFO.isAC}' == 1){
+   	         if("${SESSION_INFO.memberLevel}" =="1"){
+   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
+   	         }else if("${SESSION_INFO.memberLevel}" =="2"){
+   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
+   	             $("#grpCode").val('${SESSION_INFO.groupCode}');
+   	         }else if("${SESSION_INFO.memberLevel}" =="3"){
+   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
+   	             $("#grpCode").val('${SESSION_INFO.groupCode}');
+   	             $("#deptCode").val('${SESSION_INFO.deptCode}');
+   	         }else if("${SESSION_INFO.memberLevel}" =="4"){
+   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
+   	             $("#grpCode").val('${SESSION_INFO.groupCode}');
+   	             $("#deptCode").val('${SESSION_INFO.deptCode}');
+   	             //$("#memCode").val("${memCode}");
+   	         }
+   	     }
+
         asManagementGrid();
         //doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', ''); // DSC BRANCH
         doDefCombo(branchDs, '', 'cmbbranchId', 'S', '');   // Home Care Branch : 5743
@@ -1223,6 +1241,11 @@ var branchDs = [];
      style="width: 100%; height: 500px; margin: 0 auto;"></div>
    </article>
    <!-- grid_wrap end -->
+
+   <input type="hidden" id="orgCode" name="orgCode" value="" />
+  <input type="hidden" id="grpCode" name="grpCode" value="" />
+  <input type="hidden" id="deptCode" name="deptCode" value="" />
+
   </form>
   <form action="#" id="reportForm" method="post">
    <input type="hidden" id="V_RESULTID" name="V_RESULTID" />
