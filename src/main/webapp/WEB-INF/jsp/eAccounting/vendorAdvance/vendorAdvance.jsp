@@ -8,7 +8,7 @@
     var advGridId, settlementGridId, approveLineGridID, budgetGridID, glAccGridID , advGridCostCenter;
     var selectRowIdx, gRowIndex;
     var deleteRowIdx;
-    var advGridSelectRowId, advGridClmNo, advGridAdvType, advAppvPrcssNo, advGridAppvPrcssStus, advGridRepayStus, advFileAtchGrpId;
+    var advGridSelectRowId, advGridClmNo, advGridAdvType, advAppvPrcssNo, advGridAppvPrcssStus, advGridRepayStus;
     var gAtchFileGrpId;
     var currList = ["MYR", "USD"];
     var gUserId = '${userId}';
@@ -75,9 +75,6 @@
     }, {
         dataField : "settlementStusDesc",
         headerText : "Settlement Status"
-    }, {
-        dataField : "atchFileId",
-        visible : false
     }];
 
     var advanceGridPros = {
@@ -165,8 +162,9 @@
         formatString : "dd/mm/yyyy",
         editRenderer : {
             type : "CalendarRenderer",
-            formatString : "dd/mm/yyyy",
+            //defaultFormat : "dd/mm/yyyy",
             openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+            //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
             onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
             showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
             titles : [gridMsg["sys.info.grid.calendar.titles.sun"], gridMsg["sys.info.grid.calendar.titles.mon"], gridMsg["sys.info.grid.calendar.titles.tue"], gridMsg["sys.info.grid.calendar.titles.wed"], gridMsg["sys.info.grid.calendar.titles.thur"], gridMsg["sys.info.grid.calendar.titles.fri"], gridMsg["sys.info.grid.calendar.titles.sat"]],
@@ -462,7 +460,6 @@
         advAppvPrcssNo = null;
         advGridAppvPrcssStus = null;
         advGridRepayStus = null;
-        advFileAtchGrpId = null;
         attachmentList = new Array();
 
         if(type == "M") {
@@ -611,7 +608,6 @@
             advGridAppvPrcssStus = event.item.appvPrcssStus; // Current claim number's approval status
             advGridRepayStus = event.item.settlementStus;
             advGridCostCenter = event.item.costCenter;
-            advAtchFileId  = event.item.fileAtchGrpId;
         });
 
         AUIGrid.bind(advGridId, "cellDoubleClick", function(event) {
@@ -622,7 +618,6 @@
             advAppvPrcssNo = event.item.appvPrcssNo;
             advGridAppvPrcssStus = event.item.appvPrcssStus; // Current claim number's approval status
             advGridRepayStus = event.item.settlementStus;
-            advAtchFileId  = event.item.fileAtchGrpId;
 
             if(advGridAdvType == "5") {
                 // Display vendor advance request data
@@ -661,8 +656,7 @@
                     clmNo : advGridClmNo,
                     appvPrcssNo : advAppvPrcssNo,
                     advType : advGridAdvType,
-                    appvPrcssStus : advGridAppvPrcssStus,
-                    fileAtchGrpId : advFileAtchGrpId
+                    appvPrcssStus : advGridAppvPrcssStus
             };
 
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
@@ -824,8 +818,7 @@
                     clmNo : advGridClmNo,
                     appvPrcssNo : advAppvPrcssNo,
                     advType : advGridAdvType,
-                    appvPrcssStus : advGridAppvPrcssStus,
-                    fileAtchGrpId : advAtchFileId
+                    appvPrcssStus : advGridAppvPrcssStus
             };
 
             console.log("advGridAdvType " + advGridAdvType);
@@ -1008,16 +1001,8 @@
                             }
                         });
                     });
-                    var data2 = {
-                    		clmNo : advGridClmNo,
-                            appvPrcssNo : advAppvPrcssNo,
-                            advType : advGridAdvType,
-                            appvPrcssStus : advGridAppvPrcssStus
-                    };
-                    Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetailsGrid.do", data2, function(result2) {
-                    console.log(result2);
-                    AUIGrid.setGridData(settlementGridId, result2);
-                    });
+
+                    AUIGrid.setGridData(settlementGridId, result.data.settlementItems);
 
                     $("#settlementPop").show();
                 }
@@ -1605,7 +1590,7 @@
                 var totAmt = fn_getTotalExpenses();
                 $("#settlementTotalExp").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
                 $("#settlementTotAmt").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-                var settlementGridSettTotalAdv = parseFloat($("#settlementTotalAdv").val().replace(",", "")).toFixed(0);
+                var settlementGridSettTotalAdv = parseFloat($("#settlementTotalAdv").val().replace(",", "")).toFixed(2);
                 $("#settlementTotalBalance").val(settlementGridSettTotalAdv - totAmt);
                 $("#settlementTotalBalance").val(AUIGrid.formatNumber($("#settlementTotalBalance").val(), "#,##0.00"));
 
@@ -1945,7 +1930,6 @@
             obj = $("#form_vendorAdvanceSettlement").serializeJSON();
             obj.clmNo = $("#settlementNewClmNo").val();
             obj.apprGridList = apprGridList;
-            obj.gridData = gridData;
             obj.advCurr = $("#settlementCurrency").val();
 
             msg = "Settlement";
