@@ -81,12 +81,22 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 
 		//Basic Info
 		EgovMap basicInfo        = htOrderDetailMapper.selectBasicInfo(params);
+
+		if (!"".equals(basicInfo.get("custName")) && basicInfo.get("custName")!=null){
+			basicInfo.put("custId", basicInfo.get("custId2"));
+		}else{
+			basicInfo.put("custNric", basicInfo.get("custIc2"));
+			basicInfo.put("custName", basicInfo.get("custName2"));
+		}
+
 		EgovMap salesmanInfo 	 = htOrderDetailMapper.selectOrderSalesmanViewByOrderID(params);
 		EgovMap codyInfo     	 = htOrderDetailMapper.selectOrderServiceMemberViewByOrderID(params);
 		String memInfo           = htOrderDetailMapper.selectMemberInfo((String) basicInfo.get("custNric"));
 		EgovMap installationInfo = htOrderDetailMapper.selectOrderInstallationInfoByOrderID(params);
 		EgovMap orderCfgInfo 	 = htOrderDetailMapper.selectOrderConfigInfo(params);
 		EgovMap mailingInfo 	 = htOrderDetailMapper.selectOrderMailingInfoByOrderID(params);
+
+
 
 		//EgovMap logView          = htOrderDetailMapper.selectLatestOrderLogByOrderID(params);
 		//EgovMap agreementView    = htOrderDetailMapper.selectOrderAgreementByOrderID(params);
@@ -144,6 +154,7 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 			}
     	}
 */
+
 		this.loadBasicInfo(basicInfo);
 		this.loadCustInfo(basicInfo);
 		if(installationInfo != null) this.loadInstallationInfo(installationInfo);
