@@ -279,7 +279,7 @@ var columnLayout = [{dataField: "sirimNo",headerText :"<spring:message code='log
             return false;
         }
 
-        if (StartSirimNo.length >10) {
+        if (StartSirimNo.length >11) {
             Common.alert("* Generate SirimNo no lenth.");
             $("#addSirimNoFirst").focus();
             return false;
