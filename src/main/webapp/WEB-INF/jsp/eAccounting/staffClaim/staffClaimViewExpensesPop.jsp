@@ -547,7 +547,7 @@ var mileageGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "atchFileName",
-    headerText : '<spring:message code="newWebInvoice.attachment" /><span style="color:red">*</span>',
+    headerText : '<spring:message code="newWebInvoice.attachment" />',
     width : 150,
     editable : false,
     labelFunction : function( rowIndex, columnIndex, value, headerText, item ) {

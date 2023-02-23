@@ -505,11 +505,11 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "atchFileName"))) {
-                    Common.alert('Attachment not found for Line ' + (i +1) + ".");
-                    checkResult = false;
-                    return checkResult;
-                }
+//                 if(FormUtil.isEmpty(AUIGrid.getCellValue(mileageGridID, i, "atchFileName"))) {
+//                     Common.alert('Attachment not found for Line ' + (i +1) + ".");
+//                     checkResult = false;
+//                     return checkResult;
+//                 }
             }
         } else {
         	Common.alert('<spring:message code="staffClaim.mileage.msg" />');
