@@ -1270,6 +1270,7 @@ WHERE 1=1
 				          AND SYSDATE <= VALID_DT_TO
 				          AND MAIN_MODULE = #{mainMod}
 				          AND SUB_MODULE = #{subMod}
+				          AND STATUS = 1
 				        GROUP BY COST_CENTER
 				    ]]>)
                 <!-- <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")">
