@@ -46,15 +46,14 @@ public class AppConstants {
 	public static final String LOGIN_MOBILE = "02";
 	public static final String LOGIN_CALL_CENTER = "03";
 
-
 	/**
 	 * URL
 	 */
 	public static final String REDIRECT_LOGIN = "redirect:/login/login.do";
 	public static final String REDIRECT_MOBILE_LOGIN = "redirect:/mobileWeb/login.do";
-
 	public static final String REDIRECT_UNAUTHORIZED = "redirect:/common/unauthorized.do";
-
+	public static final String REDIRECT_CUSTOMER_LOGIN = "redirect:/enquiry/updateInstallationAddress.do";
+	public static final String CUSTOMER_WEB = "/enquiry";
 	/**
 	 * ajax return code
 	 */
@@ -164,7 +163,6 @@ public class AppConstants {
 	public static final String MSG_NECESSARY = "sys.msg.necessary";
 	public static final String MSG_FILE_MAX_LIMT = "sys.msg.file.limit";
 	public static final String MSG_INVALID_TOKEN = "sys.msg.invalid.token";
-
 	public static final String MSG_ERROR = "enquiry.errorMsg";
 	/**
 	 * 공통 코드 KEY

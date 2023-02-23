@@ -28,7 +28,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.web.mobile.MobileConstants;
 
 /**
- * 
+ *
  * @author lim
  *
  */
@@ -235,6 +235,10 @@ public class GlobalExceptionHandler {
 
 			if (request.getRequestURI().startsWith(MobileConstants.MOBILE_WEB + "/")) {
 				redirect = AppConstants.REDIRECT_MOBILE_LOGIN;
+			}
+
+			if (request.getRequestURI().startsWith(AppConstants.CUSTOMER_WEB + "/")) {
+				redirect = AppConstants.REDIRECT_CUSTOMER_LOGIN;
 			}
 
 			HttpStatus httpStatus = ex.getHttpStatus();
