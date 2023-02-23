@@ -2288,8 +2288,8 @@ FROM
                             NVL(sm.SRV_EXPR_DT, TO_DATE('01/01/1900', 'dd/mm/yyyy')) SRV_MEM_EXPR_DT,
                             NVL(Prd.SRV_PRD_DUR, 0) SRV_MEM_FREQ  ,
                             NVL(sm.SRV_DUR, 0) SRV_MEM_DUR  ,
-                            NVL(mem.MEM_CODE, ' ') SRV_MEM_SALESMAN_CODE  ,
-                            NVL(mem.NAME, ' ') SRV_MEM_SALESMAN_NAME
+                            NVL(mem1.MEM_CODE, ' ') SRV_MEM_SALESMAN_CODE  ,
+                            NVL(mem1.NAME, ' ') SRV_MEM_SALESMAN_NAME
 
                         FROM
                             SAL0225D SOM
@@ -2315,7 +2315,7 @@ FROM
                             LEFT JOIN SAL0095D sm   ON sm.SRV_SALES_ORD_ID = SOM.SRV_ORD_ID AND sm.SRV_MEM_ID NOT IN  0
                             LEFT JOIN SAL0088D Prd   ON Prd.SRV_CONFIG_ID = cg.SRV_CONFIG_ID AND Prd.SRV_PRD_STUS_ID = 1
                             AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(Prd.SRV_PRD_START_DT,'YYYYMM')||'01' AND TO_CHAR(LAST_DAY(Prd.SRV_PRD_EXPR_DT),'YYYYMMDD')
-                            LEFT JOIN ORG0001D mem   ON mem.MEM_ID = NVL(sm.SRV_MEM_SALES_MEM_ID, 0) AND NVL(sm.SRV_MEM_SALES_MEM_ID, 0) NOT IN  0
+                            LEFT JOIN ORG0001D mem1   ON mem1.MEM_ID = NVL(sm.SRV_MEM_SALES_MEM_ID, 0) AND NVL(sm.SRV_MEM_SALES_MEM_ID, 0) NOT IN  0
                         WHERE
                             ( SOM.STUS_CODE_ID NOT IN 8 )
 
