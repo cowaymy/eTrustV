@@ -13,7 +13,7 @@
 <script type="text/javaScript">
 
     var roleId = '${SESSION_INFO.roleId}';
-    
+
     var noticeLayout = [{
         dataField: "ntceNo",
         visible: false
@@ -721,7 +721,7 @@
         var roleType, userId, userName, memLvl;
 
         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
-            console.log(result);
+            console.log('result:: ',result);
 
             roleType = result.roleType;
             userId = result.userId;
@@ -746,14 +746,14 @@
 
                 salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
                 customerBdayGrid = GridCommon.createAUIGrid("salesOrgCustBday", customerBdayColumnLayout, null, salesGridOption);
-                
-                if(result.roleType == 112 || result.roleType == 113 || result.roleType == 114) {
+
+                if(result.roleType == 111 || result.roleType == 112 || result.roleType == 113 || result.roleType == 114) {
                     hpBdayGrid = GridCommon.createAUIGrid("salesOrgHPBday", hpBdayColumnLayout, null, salesGridOption);
                 }
                 else{
                     $('#hpBdayTitle').hide();
                 }
-                
+
                 if(result.roleType == 115) {
                     console.log("else :: hpDashboard");
                     salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", hpDashboard, null, salesGridOption);
@@ -994,8 +994,8 @@ console.log(result);
                 console.log(result1);
                 AUIGrid.setGridData(customerBdayGrid, result1);
             });
-            
-			if(userRole == 112 || userRole == 113 || userRole == 114) {
+
+			if(userRole == 111 || userRole == 112 || userRole == 113 || userRole == 114) {
                 Common.ajax("GET", "/common/getHPBirthday.do", {userId : userId, roleId : userRole}, function(result2) {
                     console.log(result2);
                     AUIGrid.setGridData(hpBdayGrid, result2);
