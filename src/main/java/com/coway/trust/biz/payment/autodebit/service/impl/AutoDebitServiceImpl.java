@@ -64,9 +64,7 @@ import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
-import com.coway.trust.web.common.ReportController;
-import com.coway.trust.web.common.visualcut.ReportBatchController;
-import com.coway.trust.web.login.SsoLoginApiRespForm;
+import com.coway.trust.web.common.ReportController.ViewType;
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
 import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
@@ -590,7 +588,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	    Calendar endTime = null;
 
 	    String reportFile = (String) params.get(REPORT_FILE_NAME);
-	    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+	    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 	    String reportName = reportFilePath + reportFile;
 	    String prodName = "view";
 	    int maxLength = 0;
@@ -648,7 +646,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	    }
 	  }
 
-  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
+  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
 
