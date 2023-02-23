@@ -651,7 +651,7 @@ FROM
                               ,SRT.CODE AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
-                              ,ag.ACC_DEBT_SUB_CURR_OTSTND_AGING agingMth
+                              ,ag.CURR_MTH_AGING agingMth
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -684,7 +684,7 @@ FROM
                 LEFT JOIN SAL0001D FO ON FO.SALES_ORD_NO = HC.FRA_ORD_NO
                 LEFT JOIN SAL0002D FS ON FS.SALES_ORD_ID = FO.SALES_ORD_ID
                 LEFT JOIN SYS0026M FI ON FI.STK_ID = FS.ITM_STK_ID
-                LEFT JOIN PAY0053S ag ON ag.ACC_DEBT_ORD_ID=HS.SALES_ORD_ID
+                LEFT JOIN REP0010S ag ON ag.ORD_ID=HS.SALES_ORD_ID
                 WHERE
                 CD.MEM_ID IS NOT NULL
 
@@ -746,7 +746,7 @@ FROM
                               ,SRT.CODE AS SRV_TYPE
                               ,SO.UNIT_TYPE
                               ,SO.SRV_TYPE AS SERVICE_TYPE
-                              ,ag.ACC_DEBT_SUB_CURR_OTSTND_AGING agingMth
+                              ,ag.CURR_MTH_AGING agingMth
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -778,7 +778,7 @@ FROM
                 LEFT JOIN SAL0001D FO ON FO.SALES_ORD_NO = HC.FRA_ORD_NO
                 LEFT JOIN SAL0002D FS ON FS.SALES_ORD_ID = FO.SALES_ORD_ID
                 LEFT JOIN SYS0026M FI ON FI.STK_ID = FS.ITM_STK_ID
-                LEFT JOIN PAY0053S ag ON ag.ACC_DEBT_ORD_ID=HS.SALES_ORD_ID
+                LEFT JOIN REP0010S ag ON ag.ORD_ID=HS.SALES_ORD_ID
                 WHERE
                   CD.MEM_ID IS NULL
           )Project2
