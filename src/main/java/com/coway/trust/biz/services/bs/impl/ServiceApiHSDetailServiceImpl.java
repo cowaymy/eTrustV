@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
@@ -24,7 +23,6 @@ import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.bs.ServiceApiHSDetailService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.BizMsgVO;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -134,7 +132,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     				logger.debug("LOC. INFO. : {}" + locInfo);
     				if (locInfo != null) {
     					if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
-    						// FAIL CODY NOT ENOUGH STOCK
+    						// FAIL Cody NOT ENOUGH STOCK
     						MSvcLogApiService.updateErrStatus(transactionId);
 
     						Map<String, Object> m = new HashMap();
@@ -151,12 +149,11 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     						String procKey = serviceNo;
     						String procMsg = "PRODUCT STOCK UNAVAILABLE";
     						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
-    						 throw new ApplicationException(AppConstants.FAIL, "Cody Lack of Stock");
-    						//throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
     					}
     				}
     				else {
-    					// FAIL CODY NOT ENOUGH STOCK
+    					// FAIL CT NOT ENOUGH STOCK
     					MSvcLogApiService.updateErrStatus(transactionId);
 
     					Map<String, Object> m = new HashMap();
@@ -173,8 +170,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     					String procKey = serviceNo;
     					String procMsg = "PRODUCT STOCK UNAVAILABLE";
     					String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. ";
-    					 throw new ApplicationException(AppConstants.FAIL, "Cody Lack of Stock");
-    					//throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
     				}
     			}
           }
