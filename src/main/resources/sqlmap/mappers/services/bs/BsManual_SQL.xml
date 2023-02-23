@@ -736,7 +736,7 @@
 		, project2.STK_ID
 		, project2.Complete_Dt
 		AS Complete_Dt<!--Added by Keyi 20210923 -->
-		FROM (SELECT /*+ use_hash(br, hs) index(ad, SAL0023D_IDX5) */
+		FROM (SELECT
 		DISTINCT
 		hs.no AS no
 		, hs.stus_code_id AS stus_code_id

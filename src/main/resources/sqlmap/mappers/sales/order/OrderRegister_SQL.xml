@@ -449,8 +449,8 @@
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID IN( 2282, 1034) <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  <!-- AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD') -->
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
@@ -471,8 +471,8 @@
                   </if>
                   AND T2.PROMO_TYPE_ID IN( 2282, 1034)
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  <!-- AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD') -->
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
