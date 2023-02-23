@@ -40,263 +40,351 @@
 
   <select id="returnPartsList" parameterType="Map" resultType="egovMap">
     SELECT * FROM (
+        <if test="asTyp != 'ihr'">
+        SELECT
+            T1.RNUM  ,
+            T1.SEQ,
+            T1.SERVICE_ORDER,
+            T1.ASR_NO,
+            T1.ORDER_NO,
+            T1.CUSTOMER,
+            T1.CUSTOMER_NAME,
+            T1.SERVICE_DATE,
+            T1.MATERIAL_CODE,
+            T1.MATERIAL_CODE_ACTUAL,
+            T1.MATERIAL_NAME,
+            T1.STK_ID,
+            T1.PRODUCT_CODE,
+            T1.PRODUCT_NAME,
+             T1.PRODUCT_CAT,
+             T1.SERIAL_NUMBER,
+             T1.SERIAL,
+             T1.QTY,
+             T1.TEXT,
+             T1.RETURN_COMPLETE,
+             T1.RETURN_COMPLETE_DATE,
+             T1.NO_PARTS_RETURN,
+             T1.CRT_DT,
+             T1.CRT_USER_ID,
+             T1.UPD_DT,
+             T1.UPD_USER_ID,
+             T1.SERIAL_CHK,
+             T1.STK_TYPE_ID,
+             T1.STK_ID_NEW,
+             T1.BRNCH,
+             T1.MEM_CODE,
+             T1.NAME,
+             T1.CODE,
+             T1.BRNCH_NAME,
+             T1.DEFTYP,
+             T1.DEFCDE,
+             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') INSTALL_DT,
+             CASE WHEN T1.AS_SETL_DT IS NOT NULL THEN
+                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(T1.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
+                          0 END AS AS_AGING
+            FROM
+            (
+			      SELECT
+			            ROWNUM  RNUM,
+			            A.SEQ  AS SEQ,
+			            A.RESULT_ID,
+			            C.SALES_ORD_ID,
+			            G.AS_SETL_DT,
+			            A.SVC_ORD_ID  AS SERVICE_ORDER,
+			            G.AS_RESULT_NO AS ASR_NO,
+			            C.SALES_ORD_NO AS ORDER_NO,
+			            C.CUST_ID AS CUSTOMER,
+			            D.NAME AS CUSTOMER_NAME,
+			            TO_CHAR(G.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
+			            (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = A.STK_ID) AS MATERIAL_CODE,
+			            E.STK_CODE   AS MATERIAL_CODE_ACTUAL,
+			            E.STK_DESC   AS MATERIAL_NAME,
+			            A.STK_ID,
+			            M.STK_CODE    AS PRODUCT_CODE,
+			            M.STK_DESC    AS PRODUCT_NAME,
+			            N.CODE_DESC  AS PRODUCT_CAT,
+			            A.OLD_SERIAL  AS SERIAL_NUMBER,
+			            A.NEW_SERIAL  AS SERIAL,
+			            A.QTY   AS QTY,
+			            A.COMMENTS  AS TEXT,
+			            A.CMPLT_YN  AS RETURN_COMPLETE,
+			            TO_CHAR(A.CMPLT_DT, 'YYYY/MM/DD')  RETURN_COMPLETE_DATE,
+			            A.RESN_CODE  NO_PARTS_RETURN,
+			            A.CRT_DT,
+			            A.CRT_USER_ID,
+			            A.UPD_DT,
+			            A.UPD_USER_ID,
+			            E.SERIAL_CHK,
+			            E.STK_TYPE_ID,
+			            A.STK_ID_NEW,
+			            F.BRNCH,
+			            F.MEM_CODE,
+			            F.NAME,
+			            (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) CODE,
+			            (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) BRNCH_NAME,
+			            J.DEFECT_DESC  AS DEFTYP,
+			            K.DEFECT_DESC  AS DEFCDE
+			      FROM LOG0103M A
+			      JOIN SVC0001D B ON B.AS_NO = A.SVC_ORD_ID
+			      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
+			      JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
+			      JOIN SYS0026M E ON A.STK_ID = E.STK_ID
+			      JOIN ORG0001D F ON A.MEM_ID = F.MEM_ID
+			      JOIN SVC0004D G ON A.RESULT_ID = G.AS_RESULT_ID
+			      LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
+			      LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
+			      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
+			      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
+			      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
+			      WHERE 1 = 1
+			      AND A.RESULT_ID IN (SELECT CC.RESULT_ID FROM LOG0103M CC WHERE CC.RESULT_ID = A.RESULT_ID GROUP BY CC.RESULT_ID HAVING SUM(CC.QTY) <![CDATA[<>]]> 0)
+			      <if test="searchOder != null and searchOder !=''">
+			        AND A.SVC_ORD_ID = #{searchOder}
+			      </if>
+			      <if test="searchCustomer != null and searchCustomer !=''">
+			        AND D.NAME = #{searchCustomer}
+			      </if>
+			       <if test="searchBranch != null and searchBranch !=''">
+			        AND B.AS_BRNCH_ID = #{searchBranch}
+			      </if>
+			      <if test="searchMaterialCode != null and searchMaterialCode !=''">
+			        AND E.STK_CODE = #{searchMaterialCode}
+			      </if>
+			      <if test="searchMaterialType != null and searchMaterialType !=''">
+			        AND E.STK_TYPE_ID = #{searchMaterialType}
+			      </if>
+			      <if test="searchComplete != null and searchComplete !=''">
+			        <choose>
+			          <when test='searchComplete == "Y" '>
+			            AND A.CMPLT_YN= #{searchComplete}
+			          </when>
+			          <otherwise>
+			            AND A.CMPLT_YN IS NULL
+			          </otherwise>
+			        </choose>
+			      </if>
+			      <if test="servicesdt !=null and servicesdt !=''">
+			        AND A.SVC_DT <![CDATA[>=]]> TO_DATE(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="serviceedt !=null and serviceedt !=''">
+			        AND A.SVC_DT <![CDATA[<=]]> TO_DATE(#{serviceedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="returnsdt !=null and returnsdt !=''">
+			        AND A.CMPLT_DT <![CDATA[>=]]> TO_DATE(#{returnsdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="returnedt !=null and returnedt !=''">
+			        AND A.CMPLT_DT <![CDATA[<=]]> TO_DATE(#{returnedt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="searchLoc != null and searchLoc !=''">
+			        AND F.MEM_CODE IN
+			        <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+			          #{item}
+			        </foreach>
+			      </if>
+			      <if test="searchDefTyp !=null and searchDefTyp !=''">
+			        AND J.DEFECT_ID = #{searchDefTyp}
+			      </if>
+			      <if test="searchSltCde !=null and searchSltCde !=''">
+			        AND G.AS_SLUTN_RESN_ID IN
+			        <foreach item="item2" collection="searchSltCde" index="index" open="(" separator="," close=")">
+			          #{item2}
+			        </foreach>
+			      </if>
+			      <if test="searchDefCde !=null and searchDefCde !=''">
+			        AND K.DEFECT_ID IN
+			        <foreach item="item3" collection="searchDefCde" index="index" open="(" separator="," close=")">
+			          #{item3}
+			        </foreach>
+			      </if>
+		 )T1
+		JOIN (SELECT * FROM  LOG0103M AA WHERE AA.RESULT_ID = (SELECT MAX(bb.result_id) FROM LOG0103M BB WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID))H ON ( T1.SEQ = H.SEQ )
+        JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (
+            SELECT
+                    MIN(SAL0046D.INSTALL_ENTRY_ID)
+            FROM SAL0046D WHERE SAL0046D.SALES_ORD_ID = T1.SALES_ORD_ID AND SAL0046D.STUS_CODE_ID = '4'
+            GROUP BY SAL0046D.SALES_ORD_ID)  AND O.SALES_ORD_ID = T1.SALES_ORD_ID
+        JOIN SAL0047D P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
+	</if>
 
-    <if test="asTyp != 'ihr'">
-      SELECT ROWNUM rnum,
-             A.SEQ AS SEQ,
-             A.SVC_ORD_ID AS service_order,
-             G.AS_RESULT_NO AS asr_no,
-             C.SALES_ORD_NO AS order_no,
-             C.CUST_ID AS customer,
-             D.NAME AS customer_name,
-             TO_CHAR(G.AS_SETL_DT,'YYYY/MM/DD') AS service_date,
-             (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = A.STK_ID) AS material_code,
-             E.STK_CODE AS material_code_actual,
-             E.STK_DESC AS material_name,
-             A.STK_ID,
-             M.stk_code as product_code,
-             M.stk_desc as product_name,
-             N.CODE_DESC as product_cat,
-             A.OLD_SERIAL AS serial_number,
-             A.NEW_SERIAL AS serial,
-             A.QTY AS qty,
-             A.COMMENTS AS text,
-             A.CMPLT_YN AS return_complete,
-             TO_CHAR(A.CMPLT_DT,'YYYY/MM/DD') return_complete_date,
-             A.RESN_CODE no_parts_return,
-             A.CRT_DT,
-             A.CRT_USER_ID,
-             A.UPD_DT,
-             A.UPD_USER_ID,
-             E.SERIAL_CHK,
-             E.STK_TYPE_ID,
-             A.STK_ID_NEW,
-             F.BRNCH,
-             F.MEM_CODE,
-             F.NAME,
-             (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) code,
-             (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) brnch_name,
-             J.DEFECT_DESC AS defTyp,
-             K.DEFECT_DESC AS defCde,
-             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') install_dt,
-             CASE WHEN G.AS_SETL_DT IS NOT NULL THEN
-                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(G.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
-                          0 END AS as_aging
-      FROM LOG0103M A
-      JOIN SVC0001D B ON B.AS_NO = A.SVC_ORD_ID
-      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
-      JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
-      JOIN SYS0026M E ON A.STK_ID = E.STK_ID
-      JOIN ORG0001D F ON A.MEM_ID = F.MEM_ID
-      JOIN SVC0004D G ON A.RESULT_ID = G.AS_RESULT_ID
-      JOIN (SELECT * FROM LOG0103M AA
-            WHERE AA.RESULT_ID = (SELECT MAX(BB.RESULT_ID)
-                                  FROM LOG0103M BB
-                                  WHERE BB.SVC_ORD_ID =  AA.SVC_ORD_ID )) H ON (A.SEQ = H.SEQ)
-      JOIN (SELECT CC.RESULT_ID,
-                   SUM(CC.qty)
-            FROM LOG0103M CC
-            GROUP BY CC.RESULT_ID
-            HAVING SUM(CC.qty) <![CDATA[<>]]> 0) I ON (A.RESULT_ID = I.RESULT_ID)
-      LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
-      LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
-      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
-      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
-      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
-      JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (SELECT MIN(SAL0046D.INSTALL_ENTRY_ID) FROM SAL0046D WHERE SAL0046D.SALES_ORD_ID = C.SALES_ORD_ID AND SAL0046D.STUS_CODE_ID = '4' GROUP BY SAL0046D.SALES_ORD_ID) AND O.SALES_ORD_ID = C.SALES_ORD_ID
-      JOIN SAL0047D P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
-      WHERE 1 = 1
-
-      <if test="searchOder != null and searchOder !=''">
-        AND A.SVC_ORD_ID = #{searchOder}
-      </if>
-      <if test="searchCustomer != null and searchCustomer !=''">
-        AND D.NAME = #{searchCustomer}
-      </if>
-       <if test="searchBranch != null and searchBranch !=''">
-        AND B.AS_BRNCH_ID = #{searchBranch}
-      </if>
-      <if test="searchMaterialCode != null and searchMaterialCode !=''">
-        AND E.STK_CODE = #{searchMaterialCode}
-      </if>
-      <if test="searchMaterialType != null and searchMaterialType !=''">
-        AND E.STK_TYPE_ID = #{searchMaterialType}
-      </if>
-      <if test="searchComplete != null and searchComplete !=''">
-        <choose>
-          <when test='searchComplete == "Y" '>
-            AND A.CMPLT_YN= #{searchComplete}
-          </when>
-          <otherwise>
-            AND A.CMPLT_YN IS NULL
-          </otherwise>
-        </choose>
-      </if>
-      <if test="servicesdt !=null and servicesdt !=''">
-        AND TO_CHAR(A.SVC_DT , 'yyyymmdd') <![CDATA[>=]]> TO_CHAR(to_date(#{servicesdt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="serviceedt !=null and serviceedt !=''">
-        AND TO_CHAR(A.SVC_DT , 'yyyymmdd') <![CDATA[<=]]> TO_CHAR(to_date(#{serviceedt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="returnsdt !=null and returnsdt !=''">
-        AND TO_CHAR(A.CMPLT_DT , 'yyyymmdd') <![CDATA[>=]]> TO_CHAR(to_date(#{returnsdt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="returnedt !=null and returnedt !=''">
-        AND TO_CHAR(A.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> TO_CHAR(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="searchLoc != null and searchLoc !=''">
-        AND F.MEM_CODE IN
-        <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
-          #{item}
-        </foreach>
-      </if>
-      <if test="searchDefTyp !=null and searchDefTyp !=''">
-        AND J.DEFECT_ID = #{searchDefTyp}
-      </if>
-      <if test="searchSltCde !=null and searchSltCde !=''">
-        AND G.AS_SLUTN_RESN_ID IN
-        <foreach item="item2" collection="searchSltCde" index="index" open="(" separator="," close=")">
-          #{item2}
-        </foreach>
-      </if>
-      <if test="searchDefCde !=null and searchDefCde !=''">
-        AND K.DEFECT_ID IN
-        <foreach item="item3" collection="searchDefCde" index="index" open="(" separator="," close=")">
-          #{item3}
-        </foreach>
-      </if>
-    </if>
 
     <if test="asTyp != 'as' and asTyp != 'ihr'">
       UNION
     </if>
 
     <if test="asTyp != 'as'">
-      SELECT ROWNUM rnum,
-             A.SEQ AS SEQ,
-             A.SVC_ORD_ID AS service_order,
-             G.AS_RESULT_NO AS asr_no,
-             C.SALES_ORD_NO AS order_no,
-             C.CUST_ID AS customer,
-             D.NAME AS customer_name,
-             TO_CHAR(G.AS_SETL_DT,'YYYY/MM/DD') AS service_date,
-             (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = A.STK_ID) AS material_code,
-             E.STK_CODE AS material_code_actual,
-             E.STK_DESC AS material_name,
-             A.STK_ID,
-             M.stk_code as product_code,
-             M.stk_desc as product_name,
-             N.CODE_DESC as product_cat,
-             A.OLD_SERIAL AS serial_number,
-             A.NEW_SERIAL AS serial,
-             A.QTY AS qty,
-             A.COMMENTS AS text,
-             A.CMPLT_YN AS return_complete,
-             TO_CHAR(A.CMPLT_DT,'YYYY/MM/DD') return_complete_date,
-             A.RESN_CODE no_parts_return,
-             A.CRT_DT,
-             A.CRT_USER_ID,
-             A.UPD_DT,
-             A.UPD_USER_ID,
-             E.SERIAL_CHK,
-             E.STK_TYPE_ID,
-             A.STK_ID_NEW,
-             F.BRNCH,
-             F.MEM_CODE,
-             F.NAME,
-             (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) code,
-             (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) brnch_name,
-             J.DEFECT_DESC AS defTyp,
-             K.DEFECT_DESC AS defCde,
-             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') install_dt,
-             CASE WHEN G.AS_SETL_DT IS NOT NULL THEN
-                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(G.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
-                          0 END AS as_aging
-      FROM LOG0103M A
-      JOIN SVC0108D B ON B.AS_NO = A.SVC_ORD_ID
-      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
-      JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
-      JOIN SYS0026M E ON A.STK_ID = E.STK_ID
-      JOIN ORG0001D F ON A.MEM_ID = F.MEM_ID
-      JOIN SVC0109D G ON A.RESULT_ID = G.AS_RESULT_ID
-      JOIN (SELECT * FROM LOG0103M AA
-            WHERE AA.RESULT_ID = (SELECT MAX(BB.RESULT_ID)
-                                  FROM LOG0103M BB
-                                  WHERE BB.SVC_ORD_ID =  AA.SVC_ORD_ID )) H ON (A.SEQ = H.SEQ)
-      JOIN (SELECT CC.RESULT_ID,
-                   SUM(CC.qty)
-            FROM LOG0103M CC
-            GROUP BY CC.RESULT_ID
-            HAVING SUM(CC.qty) <![CDATA[<>]]> 0) I ON (A.RESULT_ID = I.RESULT_ID)
-      LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
-      LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
-      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
-      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
-      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
-      JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (SELECT MIN(SAL0046D.INSTALL_ENTRY_ID) FROM SAL0046D WHERE SAL0046D.SALES_ORD_ID = C.SALES_ORD_ID AND SAL0046D.STUS_CODE_ID = '4' GROUP BY SAL0046D.SALES_ORD_ID) AND O.SALES_ORD_ID = C.SALES_ORD_ID
-      JOIN SAL0047D P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
-      WHERE 1 = 1
-
-      <if test="searchOder != null and searchOder !=''">
-        AND A.SVC_ORD_ID = #{searchOder}
-      </if>
-      <if test="searchCustomer != null and searchCustomer !=''">
-        AND D.NAME = #{searchCustomer}
-      </if>
-       <if test="searchBranch != null and searchBranch !=''">
-        AND B.AS_BRNCH_ID = #{searchBranch}
-      </if>
-      <if test="searchMaterialCode != null and searchMaterialCode !=''">
-        AND E.STK_CODE = #{searchMaterialCode}
-      </if>
-      <if test="searchMaterialType != null and searchMaterialType !=''">
-        AND E.STK_TYPE_ID = #{searchMaterialType}
-      </if>
-      <if test="searchComplete != null and searchComplete !=''">
-        <choose>
-          <when test='searchComplete == "Y" '>
-            AND A.CMPLT_YN= #{searchComplete}
-          </when>
-          <otherwise>
-            AND A.CMPLT_YN IS NULL
-          </otherwise>
-        </choose>
-      </if>
-      <if test="servicesdt !=null and servicesdt !=''">
-        AND TO_CHAR(A.SVC_DT , 'yyyymmdd') <![CDATA[>=]]> TO_CHAR(to_date(#{servicesdt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="serviceedt !=null and serviceedt !=''">
-        AND TO_CHAR(A.SVC_DT , 'yyyymmdd') <![CDATA[<=]]> TO_CHAR(to_date(#{serviceedt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="returnsdt !=null and returnsdt !=''">
-        AND TO_CHAR(A.CMPLT_DT , 'yyyymmdd') <![CDATA[>=]]> TO_CHAR(to_date(#{returnsdt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="returnedt !=null and returnedt !=''">
-        AND TO_CHAR(A.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> TO_CHAR(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd')
-      </if>
-      <if test="searchLoc != null and searchLoc !=''">
-        AND F.MEM_CODE IN
-        <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
-          #{item}
-        </foreach>
-      </if>
-      <if test="searchDefTyp !=null and searchDefTyp !=''">
-        AND J.DEFECT_ID = #{searchDefTyp}
-      </if>
-      <if test="searchSltCde !=null and searchSltCde !=''">
-        AND G.AS_SLUTN_RESN_ID IN
-        <foreach item="item2" collection="searchSltCde" index="index" open="(" separator="," close=")">
-          #{item2}
-        </foreach>
-      </if>
-      <if test="searchDefCde !=null and searchDefCde !=''">
-        AND K.DEFECT_ID IN
-        <foreach item="item3" collection="searchDefCde" index="index" open="(" separator="," close=")">
-          #{item3}
-        </foreach>
-      </if>
-    </if>
-
+        SELECT
+             T2.RNUM,
+             T2.SEQ,
+             T2.SERVICE_ORDER,
+             T2.ASR_NO,
+             T2.ORDER_NO,
+             T2.CUSTOMER,
+             T2.CUSTOMER_NAME,
+             T2.SERVICE_DATE,
+             T2.MATERIAL_CODE,
+             T2.MATERIAL_CODE_ACTUAL,
+             T2.MATERIAL_NAME,
+             T2.STK_ID,
+             T2.PRODUCT_CODE,
+             T2.PRODUCT_NAME,
+             T2.PRODUCT_CAT,
+             T2.SERIAL_NUMBER,
+             T2.SERIAL,
+             T2.QTY,
+             T2.TEXT,
+             T2.RETURN_COMPLETE,
+             T2.RETURN_COMPLETE_DATE,
+             T2.NO_PARTS_RETURN,
+             T2.CRT_DT,
+             T2.CRT_USER_ID,
+             T2.UPD_DT,
+             T2.UPD_USER_ID,
+             T2.SERIAL_CHK,
+             T2.STK_TYPE_ID,
+             T2.STK_ID_NEW,
+             T2.BRNCH,
+             T2.MEM_CODE,
+             T2.NAME,
+             T2.CODE,
+             T2.BRNCH_NAME,
+             T2.DEFTYP,
+             T2.DEFCDE,
+             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') INSTALL_DT,
+             CASE WHEN T2.AS_SETL_DT IS NOT NULL THEN
+                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(T2.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
+                          0 END AS AS_AGING
+    FROM
+    (
+			      SELECT
+			            ROWNUM  RNUM,
+			            A.SEQ   AS SEQ,
+			            A.RESULT_ID,
+			            C.SALES_ORD_ID,
+			            G.AS_SETL_DT,
+			            A.SVC_ORD_ID AS SERVICE_ORDER,
+			            G.AS_RESULT_NO AS ASR_NO,
+			            C.SALES_ORD_NO AS ORDER_NO,
+			            C.CUST_ID AS CUSTOMER,
+			            D.NAME AS CUSTOMER_NAME,
+			            TO_CHAR(G.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
+			            (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = A.STK_ID) AS MATERIAL_CODE,
+			            E.STK_CODE AS MATERIAL_CODE_ACTUAL,
+			            E.STK_DESC AS MATERIAL_NAME,
+			            A.STK_ID,
+			            M.STK_CODE AS PRODUCT_CODE,
+			            M.STK_DESC AS PRODUCT_NAME,
+			            N.CODE_DESC AS PRODUCT_CAT,
+			            A.OLD_SERIAL  AS SERIAL_NUMBER,
+			            A.NEW_SERIAL  AS SERIAL,
+			            A.QTY AS QTY,
+			            A.COMMENTS AS TEXT,
+			            A.CMPLT_YN AS RETURN_COMPLETE,
+			            TO_CHAR(A.CMPLT_DT, 'YYYY/MM/DD')  RETURN_COMPLETE_DATE,
+			            A.RESN_CODE NO_PARTS_RETURN,
+			            A.CRT_DT,
+			            A.CRT_USER_ID,
+			            A.UPD_DT,
+			            A.UPD_USER_ID,
+			            E.SERIAL_CHK,
+			            E.STK_TYPE_ID,
+			            A.STK_ID_NEW,
+			            F.BRNCH,
+			            F.MEM_CODE,
+			            F.NAME,
+			            (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) CODE,
+			            (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH) BRNCH_NAME,
+			            J.DEFECT_DESC AS DEFTYP,
+			            K.DEFECT_DESC AS DEFCDE
+			      FROM LOG0103M A
+			      JOIN SVC0108D B ON B.AS_NO = A.SVC_ORD_ID
+			      JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
+			      JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
+			      JOIN SYS0026M E ON A.STK_ID = E.STK_ID
+			      JOIN ORG0001D F ON A.MEM_ID = F.MEM_ID
+			      JOIN SVC0109D G ON A.RESULT_ID = G.AS_RESULT_ID
+			      LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
+			      LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
+			      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
+			      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
+			      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
+			      WHERE 1 = 1
+			      AND  A.RESULT_ID IN (SELECT CC.RESULT_ID FROM LOG0103M CC WHERE CC.RESULT_ID = A.RESULT_ID GROUP BY CC.RESULT_ID HAVING SUM(CC.QTY) <![CDATA[<>]]> 0)
+			      <if test="searchOder != null and searchOder !=''">
+			        AND A.SVC_ORD_ID = #{searchOder}
+			      </if>
+			      <if test="searchCustomer != null and searchCustomer !=''">
+			        AND D.NAME = #{searchCustomer}
+			      </if>
+			       <if test="searchBranch != null and searchBranch !=''">
+			        AND B.AS_BRNCH_ID = #{searchBranch}
+			      </if>
+			      <if test="searchMaterialCode != null and searchMaterialCode !=''">
+			        AND E.STK_CODE = #{searchMaterialCode}
+			      </if>
+			      <if test="searchMaterialType != null and searchMaterialType !=''">
+			        AND E.STK_TYPE_ID = #{searchMaterialType}
+			      </if>
+			      <if test="searchComplete != null and searchComplete !=''">
+			        <choose>
+			          <when test='searchComplete == "Y" '>
+			            AND A.CMPLT_YN= #{searchComplete}
+			          </when>
+			          <otherwise>
+			            AND A.CMPLT_YN IS NULL
+			          </otherwise>
+			        </choose>
+			      </if>
+			      <if test="servicesdt !=null and servicesdt !=''">
+			        AND A.SVC_DT <![CDATA[>=]]> TO_DATE(#{servicesdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="serviceedt !=null and serviceedt !=''">
+			        AND A.SVC_DT <![CDATA[<=]]> TO_DATE(#{serviceedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="returnsdt !=null and returnsdt !=''">
+			        AND A.CMPLT_DT <![CDATA[>=]]> TO_DATE(#{returnsdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="returnedt !=null and returnedt !=''">
+			        AND A.CMPLT_DT <![CDATA[<=]]> TO_DATE(#{returnedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+			      </if>
+			      <if test="searchLoc != null and searchLoc !=''">
+			        AND F.MEM_CODE IN
+			        <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+			          #{item}
+			        </foreach>
+			      </if>
+			      <if test="searchDefTyp !=null and searchDefTyp !=''">
+			        AND J.DEFECT_ID = #{searchDefTyp}
+			      </if>
+			      <if test="searchSltCde !=null and searchSltCde !=''">
+			        AND G.AS_SLUTN_RESN_ID IN
+			        <foreach item="item2" collection="searchSltCde" index="index" open="(" separator="," close=")">
+			          #{item2}
+			        </foreach>
+			      </if>
+			      <if test="searchDefCde !=null and searchDefCde !=''">
+			        AND K.DEFECT_ID IN
+			        <foreach item="item3" collection="searchDefCde" index="index" open="(" separator="," close=")">
+			          #{item3}
+			        </foreach>
+			      </if>
+		 ) T2
+		 JOIN (
+	        SELECT * FROM LOG0103M AA  WHERE AA.RESULT_ID = (
+	        SELECT
+	            MAX(BB.RESULT_ID)
+	        FROM LOG0103M BB
+	        WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID
+	        )
+	    ) H ON ( T2.SEQ = H.SEQ )
+	    JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (
+	        SELECT MIN(SAL0046D.INSTALL_ENTRY_ID)
+	        FROM SAL0046D
+	        WHERE SAL0046D.SALES_ORD_ID = T2.SALES_ORD_ID
+	        AND SAL0046D.STUS_CODE_ID = '4'
+	        GROUP BY SAL0046D.SALES_ORD_ID
+	    ) AND O.SALES_ORD_ID = T2.SALES_ORD_ID
+	    JOIN SAL0047D      P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
+	</if>
     )
   </select>
 
