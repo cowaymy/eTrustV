@@ -78,7 +78,6 @@ public class HcInstallationReversalController {
 		int isAC = sessionVO.getIsAC();
 		if(isAC == 1){
 			params.put("isAC", isAC);
-			params.put("deptCode",  sessionVO.getDeptCode());
 		}
 
 		List<EgovMap> orderList = hcInstallationReversalService.selectOrderList(params);
