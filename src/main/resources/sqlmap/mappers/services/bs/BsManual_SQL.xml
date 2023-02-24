@@ -166,7 +166,7 @@
 			</if>
 		</if>
 
-		<if test="userType == '4'.toString() and groupCode != '151'.toString() ">
+		<if test="(userType == '4'.toString() || userType == '6'.toString()) and groupCode != '151'.toString() ">
 			AND A.MEM_LVL = '3'
 			AND A.BRNCH_ID = #{groupCode}
 			AND B.STUS
@@ -1292,6 +1292,13 @@
 			D.SRV_FILTER_ID = F.BS_RESULT_PART_ID WHERE A.SCHDUL_ID = #{selSchdulId}
 			]]> -->
 
+<!-- CASE WHEN C.BS_RESULT_PART_QTY = -1
+                           THEN
+                           distinct1.SRV_FILTER_prev_SERIAL
+                           ELSE
+                           c.OLD_FILTER_BARCD_SERIAL_NO
+                           END AS s_old_serial_no
+                           , -->
                 <![CDATA[
 
             SELECT  DISTINCT distinct1.SRV_FILTER_STK_ID AS STK_ID,
@@ -1300,7 +1307,7 @@
                            distinct1.SERIAL_CHK,
                            c.BS_RESULT_ITM_ID,
                            c.SERIAL_NO,
-                           c.SERIAL_NO as s_serial_no,
+                           distinct1.SRV_FILTER_LAST_SERIAL s_old_serial_no,
                            CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID
                                    THEN C.BS_RESULT_PART_QTY
                                    ELSE 0
@@ -1315,6 +1322,7 @@
                            e.SRV_FILTER_STK_ID,
                            e.IS_RETURN
                            ,e.SRV_FILTER_prev_SERIAL
+                           ,e.SRV_FILTER_last_SERIAL
                      FROM SVC0008D A,
                               SAL0090D D,
                               SAL0087D E,
@@ -4090,11 +4098,34 @@
 		SRV_FILTER_PRV_CHG_DT = to_date(#{SettleDate},'DD/MM/YYYY')
 		,SRV_FILTER_UPD_DT = sysdate
 		,SRV_FILTER_UPD_USER_ID = #{ResultCreator}
+		,SRV_FILTER_LAST_SERIAL= #{lastSerialNo}
+        , SRV_FILTER_PREV_SERIAL =
+        (SELECT SRV_FILTER_LAST_SERIAL
+        FROM SAL0087D
+        WHERE SRV_CONFIG_ID =
+        #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID})
 		where SRV_CONFIG_ID = #{SrvConfigID}
 		and SRV_FILTER_STUS_ID = 1
 		and
 		SRV_FILTER_STK_ID = #{BSResultPartID}
 	</update>
+
+    <update id="updateQryFilter_rev" parameterType="Map">
+        update SAL0087D
+        set
+        SRV_FILTER_PRV_CHG_DT = to_date(#{SettleDate},'DD/MM/YYYY')
+        ,SRV_FILTER_UPD_DT = sysdate
+        ,SRV_FILTER_UPD_USER_ID = #{ResultCreator}
+        ,SRV_FILTER_LAST_SERIAL=
+        (SELECT SRV_FILTER_PREV_SERIAL
+        FROM SAL0087D
+        WHERE SRV_CONFIG_ID =
+        #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID})
+        where SRV_CONFIG_ID = #{SrvConfigID}
+        and SRV_FILTER_STUS_ID = 1
+        and
+        SRV_FILTER_STK_ID = #{BSResultPartID}
+    </update>
 
 	<update id="updateIsReturn" parameterType="Map">
 		update SAL0087D
@@ -5115,6 +5146,7 @@ SELECT Distinct1.C1 C1  ,
 		,d.CUST_ID
 		,TO_CHAR(b.RESULT_CRT_DT, 'DD/MM/YYYY') RESULT_CRT_DT
 		,a.SERIAL_NO
+		,A.OLD_FILTER_BARCD_SERIAL_NO old_serial_no
 		,c.CODY_ID
 		,b.RESULT_ID
 		from SVC0007D a
@@ -5175,7 +5207,7 @@ SELECT Distinct1.C1 C1  ,
 		,TO_DATE(#{CreatedDt}, 'DD/MM/YYYY')
 		,#{PartId}
 		,#{PartQty}
-		,nvl(#{SerialNo}, '')
+		,nvl(#{OldSerialNo}, '')
 		,#{CodyId}
 		,#{ResultId}
 
