@@ -4121,6 +4121,7 @@
         FROM SAL0087D
         WHERE SRV_CONFIG_ID =
         #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID})
+         ,SRV_FILTER_PREV_SERIAL = #{oldSerialNo}
         where SRV_CONFIG_ID = #{SrvConfigID}
         and SRV_FILTER_STUS_ID = 1
         and
@@ -5683,5 +5684,17 @@ SELECT DISTINCT A.ORD_ID FROM (
         )
 
     </insert>
+
+    <select id="selectOldQryConfig" parameterType="Map" resultType="egovMap">
+        select NVL(s07.OLD_FILTER_BARCD_SERIAL_NO,'') old_serial_no
+          from svc0007d s07
+           join svc0006d s06 on s06.result_id = s07.bs_result_id
+           join (
+           select max(SCHDUL_ID) SCHDUL_ID
+           from svc0008d where sales_ord_id  = #{salOrdId}
+           and no <![CDATA[<>]]> #{hsNo}
+           ) s08
+           on s08.SCHDUL_ID = s06.SCHDUL_ID
+    </select>
 
 </mapper>
