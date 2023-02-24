@@ -651,14 +651,21 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      throws ReportSDKExceptionBase, IOException {
 
 	  LOGGER.error("auto debit email progress viewHandle {}", viewType.toString());
-	    switch (viewType) {
-	      case MAIL_PDF:
+//	    switch (viewType) {
+//	      case MAIL_PDF:
+//	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+//	    	  LOGGER.error("auto debit email progress ReportUtils success", "");
+//	          break;
+//
+//	      default:
+//	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+//	    }
+	    if(viewType == ViewType.MAIL_PDF){
 	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
 	    	  LOGGER.error("auto debit email progress ReportUtils success", "");
-	          break;
-
-	      default:
-	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+	    }
+	    else{
+	    	throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
 	    }
 	  }
 }
