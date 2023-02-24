@@ -61,6 +61,10 @@ $(document).ready(function(){
         if(FormUtil.isNotEmpty(memCd)) {
             fn_loadOrderSalesman(null,memCd);
         }
+        else{
+        	$('#_memId').val('');
+        	$('#_memName').val('');
+        }
     });
     $('#_memCode').keydown(function (event) {
         if (event.which === 13) {    //enter
@@ -68,6 +72,10 @@ $(document).ready(function(){
 
             if(FormUtil.isNotEmpty(memCd)) {
                 fn_loadOrderSalesman(null,memCd);
+            }
+            else{
+            	$('#_memId').val('');
+            	$('#_memName').val('');
             }
             return false;
         }
@@ -425,9 +433,9 @@ function fn_clear(){
 						<td>
 							<!-- date_set start -->
 							<div class="date_set w100p">
-						    <p><input id="requestDateFrom" name="requestDateFrom" type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
+						    <p><input id="requestDateFrom" name="requestDateFrom" type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date" autocomplete="off"/></p>
 						    <span>~</span>
-						    <p><input id="requestDateTo" name="requestDateTo"  type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+						    <p><input id="requestDateTo" name="requestDateTo"  type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date"  autocomplete="off"/></p>
 						    </div>
 						    <!-- date_set end -->
 						</td>

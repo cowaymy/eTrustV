@@ -143,6 +143,13 @@
 		        #{item}
 		      </foreach>
 		</if>
+		<if test="custTypeIdList != null and custTypeIdList != ''">
+		      AND s0029d.TYPE_ID in
+		      <foreach item="item" collection="custTypeIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
 		<if test="branchIdList != null and branchIdList != ''">
 		      AND s0005m.BRNCH_ID in
 		      <foreach item="item" collection="branchIdList" index="index"
@@ -151,7 +158,7 @@
 		      </foreach>
 		</if>
 		<if test="regionIdList != null and regionIdList != ''">
-		      AND p0333m.REGN_ID in
+		      AND s0005m.REGN_ID in
 		      <foreach item="item" collection="regionIdList" index="index"
 		        open="(" separator="," close=")">
 		        #{item}
