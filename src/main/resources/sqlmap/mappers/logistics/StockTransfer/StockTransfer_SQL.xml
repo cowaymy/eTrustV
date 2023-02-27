@@ -762,14 +762,13 @@
                             , SCAN_STUS_CODE
                             , IO_TYPE
                          FROM LOG0099D
+                         WHERE  DELVRY_NO = L55.DELVRY_NO
+                         AND DELVRY_NO_ITM = L55.DELVRY_NO_ITM
+                         AND  ITM_CODE = L55.ITM_CODE
+                         AND SCAN_STUS_CODE = 'D'
+                         AND IO_TYPE = 'I'
                       ) Z1
-               WHERE 1 = 1
-                 AND Z1.DELVRY_NO = L55.DELVRY_NO
-                 AND Z1.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
-                 AND Z1.ITM_CODE = L55.ITM_CODE
-                 AND Z1.SCAN_STUS_CODE = 'D'
-                 AND Z1.IO_TYPE = 'I'
-                 AND Z1.RN = 1
+               WHERE Z1.RN = 1
                ) AS SCAN_QTY
                , NVL(S28Q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
               FROM LOG0047M l47
