@@ -209,7 +209,7 @@ function fn_bulkApprovalLineSubmission(){
             if(result.code == "99") {
                 Common.alert("Adjustment submit failed");
             } else {
-            	$("#crcApprovalLinePop").remove();
+            	$("#crcApprovalLineCreatePop").remove();
                 $("#approveLineSearchPop").remove();
                 //refresh grid list
                 fn_listAdjPln();
@@ -263,7 +263,7 @@ function fn_submitEditAdjustmentWithApprovalLine(){
 
          if(result3.code == "00") {
              Common.alert("Allowance adjustment submitted document number : " + result3.data);
- 	        $("#crcApprovalLinePop").remove();
+ 	        $("#crcApprovalLineCreatePop").remove();
  	        $("#approveLineSearchPop").remove();
  	        $("#crcAdjustmentPop").remove();
          } else {
@@ -291,7 +291,7 @@ function fn_submitNewAdjustmentWithApprovalLine(){
 
             if(result3.code == "00") {
                 Common.alert("Allowance adjustment submitted document number : " + result3.data);
- 	        	$("#crcApprovalLinePop").remove();
+ 	        	$("#crcApprovalLineCreatePop").remove();
     	        $("#approveLineSearchPop").remove();
     	        $("#crcAdjustmentPop").remove();
             } else {

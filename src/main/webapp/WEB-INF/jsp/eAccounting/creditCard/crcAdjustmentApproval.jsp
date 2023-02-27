@@ -239,6 +239,10 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
             });
         }
     }
+
+    function editApprovalLine(){
+    	var gridObjSelected = AUIGrid.getSelectedItems(allowanceApprAdjGridID);
+    }
 </script>
 
 <section id="content">

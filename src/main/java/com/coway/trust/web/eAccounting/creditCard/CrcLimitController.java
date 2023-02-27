@@ -520,13 +520,13 @@ public class CrcLimitController {
 	        return ResponseEntity.ok(message);
 	    }
 
-	  @RequestMapping(value = "/crcApprovalLinePop.do")
-	    public String crcApprovalLinePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	  @RequestMapping(value = "/crcApprovalLineCreatePop.do")
+	    public String crcApprovalLineCreatePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 	        LOGGER.debug("========== crcApprovalLinePop ==========");
 
 	        model.addAttribute("isNew", params.get("isNew"));
 	        model.addAttribute("isBulk", params.get("isBulk"));
-	        return "eAccounting/creditCard/crcApprovalLine/crcApprovalLinePop";
+	        return "eAccounting/creditCard/crcApprovalLine/crcApprovalLineCreatePop";
 	    }
 
 	    @RequestMapping(value = "/submitEditAdjustmentWithApprovalLine.do")

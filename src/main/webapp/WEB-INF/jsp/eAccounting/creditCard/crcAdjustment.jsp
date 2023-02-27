@@ -209,7 +209,7 @@
         if(adjAppList.length == 0) {
             Common.alert("No data selected.");
         } else {
-			Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:false,isBulk:true}, null, true, "crcApprovalLinePop");
+			Common.popupDiv("/eAccounting/creditCard/crcApprovalLineCreatePop.do", {isNew:false,isBulk:true}, null, true, "crcApprovalLineCreatePop");
         }
     }
 </script>

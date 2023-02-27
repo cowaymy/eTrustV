@@ -737,7 +737,7 @@
 
                     if(result.code == "00") {
                     	//FRANGO CHANGE
-        				Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:true,isBulk:false}, null, true, "crcApprovalLinePop");
+        				Common.popupDiv("/eAccounting/creditCard/crcApprovalLineCreatePop.do", {isNew:true,isBulk:false}, null, true, "crcApprovalLineCreatePop");
                     	//
 
 //                         Common.ajax("POST", "/eAccounting/creditCard/saveRequest.do", $("#adjForm").serializeJSON(), function(result2) {
@@ -780,7 +780,7 @@
                     if($("#rCrcHolder").prop("disabled") == true) $("#rCrcHolder").prop("disabled", false);
                     if($("#rAmt").prop("disabled") == true) $("#rAmt").prop("disabled", false);
 
-   					Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:false,isBulk:false}, null, true, "crcApprovalLinePop");
+   					Common.popupDiv("/eAccounting/creditCard/crcApprovalLineCreatePop.do", {isNew:false,isBulk:false}, null, true, "crcApprovalLineCreatePop");
             	}
             }
         }
@@ -1017,7 +1017,7 @@
 // 	            //refresh grid list
 // 	            fn_listAdjPln();
 
-				Common.popupDiv("/eAccounting/creditCard/crcApprovalLinePop.do", {isNew:true,isBulk:false}, null, true, "crcApprovalLinePop");
+				Common.popupDiv("/eAccounting/creditCard/crcApprovalLineCreatePop.do", {isNew:true,isBulk:false}, null, true, "crcApprovalLineCreatePop");
 // 			}
     	}
     	else{
