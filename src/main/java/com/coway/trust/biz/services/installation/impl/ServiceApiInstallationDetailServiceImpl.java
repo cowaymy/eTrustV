@@ -586,8 +586,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         		EgovMap failReason = hcInstallResultListService.selectFailReason(params);
         		params.put("resnDesc",failReason.get("resnDesc"));
         		params.put("resnCode",failReason.get("resnCode"));
-        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\nName: " + params.get("resultCustName") + "\nInstall Status: Failed"
-        				+ "\nFailed Reason: " + params.get("resnDesc") ;
+        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "\n Install Status: Failed"
+        				+ "\n Failed Reason: " + params.get("resnDesc") ;
         		params.put("hpMsg",hpMsg);
 
         		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
@@ -755,7 +755,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	              	EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
 	              	params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
 	              	params.put("hpMemId",salesmanInfo.get("memId"));
-	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\nName: " + params.get("resultCustName") + "Install Status: Completed" ;
+	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "Install Status: Completed" ;
 	        		params.put("hpMsg",hpMsg);
 	        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
 	        		logger.info("===DONE SEND TO HP===");
