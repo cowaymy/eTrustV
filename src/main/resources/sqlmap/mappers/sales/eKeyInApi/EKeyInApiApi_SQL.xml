@@ -763,6 +763,8 @@ SELECT A.CUST_ID AS CUST_ID
         AND T1.PROMO_ITM_STK_ID = #{itmStkId}
         AND T4.MEM_PAC_ID = #{srvPacId}
         AND T1.PROMO_ITM_STUS_ID = 1
+        AND T4.STUS_CODE_ID = 1
+        AND SYSDATE BETWEEN TO_DATE(T4.START_DT, 'DD/MM/YYYY') AND TO_DATE(T4.END_DT, 'DD/MM/YYYY')
     ]]>
   </select>
 
