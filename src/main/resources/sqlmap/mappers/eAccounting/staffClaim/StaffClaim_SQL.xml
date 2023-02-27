@@ -711,7 +711,7 @@ AND T.MEM_ACC_ID = #{memAccId}
        ,#{invcDt}
        ,#{invcType}
        ,#{invcNo}
-       ,#{supplirName}
+       ,#{supplir}
        ,#{gstRgistNo}
        ,#{invcRem}
        ,#{expType}
