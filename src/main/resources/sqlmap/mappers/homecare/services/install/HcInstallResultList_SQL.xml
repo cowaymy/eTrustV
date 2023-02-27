@@ -410,4 +410,12 @@
     LEFT JOIN ORG0001D T5 ON T5.MEM_ID = T1.SALES_HM_ID
     WHERE T1.SALES_ORD_ID = #{hidSalesOrderId}
   </select>
+
+  <select id="selectFailReason" parameterType="Map" resultType="egovMap">
+    SELECT
+	    CODE RESN_CODE,
+	    RESN_DESC
+    FROM SYS0032M
+    WHERE RESN_ID = #{failReasonCode}
+  </select>
 </mapper>
