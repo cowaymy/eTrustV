@@ -174,7 +174,6 @@
             }
 			var item1 = '${adjItems}';
             var adjItems = $.parseJSON(item1.replaceAll(/[\n]/g, '\\n'));
-
             if("${item.mode}" == "V" || ("${item.mode}" == "A" && "${item.apprGrp}" == "BUDGET" && "${checkCurrAppvLineIsBudgetTeam}" == "0")){
     			var item2 = '${approvalLineDescriptionInfo}';
                 var approvalLineRemark = $.parseJSON(item2.replaceAll(/[\n]/g, '\\n'));
