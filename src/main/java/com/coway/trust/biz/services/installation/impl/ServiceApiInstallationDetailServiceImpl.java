@@ -582,8 +582,14 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
         		EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
         		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + ", Janji temu anda untuk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+        		params.put("hpMemId",salesmanInfo.get("memId"));
+        		EgovMap failReason = hcInstallResultListService.selectFailReason(params);
+        		params.put("resnDesc",failReason.get("resnDesc"));
+        		params.put("resnCode",failReason.get("resnCode"));
+        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\nName: " + params.get("resultCustName") + "\nInstall Status: Failed"
+        				+ "\nFailed Reason: " + params.get("resnDesc") ;
         		params.put("hpMsg",hpMsg);
+
         		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
         	}else{
         		smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
@@ -747,11 +753,10 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
 	              	logger.info("===DONE SEND TO CUST===");
 	              	EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
-	        		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "Pemasangan telah diselesaikan oleh Technician pada " + params.get("installDate") + ". Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns";
+	              	params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
+	              	params.put("hpMemId",salesmanInfo.get("memId"));
+	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\nName: " + params.get("resultCustName") + "Install Status: Completed" ;
 	        		params.put("hpMsg",hpMsg);
-	        		logger.info("===hpMsg===" + hpMsg);
-	        		logger.info("===hpPhone===" + params.get("hpPhoneNo"));
 	        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
 	        		logger.info("===DONE SEND TO HP===");
 	  	      	}catch (Exception e){

@@ -1046,5 +1046,21 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		return resultMap;
 	}
 
+	@Override
+	public EgovMap selectFailReason(Map<String, Object> params) {
+		logger.debug("================select fail reason================");
+		EgovMap resultMap = null;
+		try{
+			 resultMap = hcInstallResultListMapper.selectFailReason(params);
+		}
+		catch(Exception e){
+			logger.info("Fail to get fail reason === " + e.getMessage());
+		}
+
+		logger.debug("================select fail reason================");
+		logger.debug("===resultMap===" + resultMap.toString());
+		return resultMap;
+	}
+
 
 }

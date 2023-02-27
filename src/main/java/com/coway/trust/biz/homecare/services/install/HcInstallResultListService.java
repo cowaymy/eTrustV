@@ -110,4 +110,6 @@ public interface HcInstallResultListService {
 	Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult);
 
 	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
+
+	public EgovMap selectFailReason(Map<String, Object> params);
 }
