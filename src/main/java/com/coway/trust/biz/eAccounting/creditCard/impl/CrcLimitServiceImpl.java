@@ -297,6 +297,9 @@ public class CrcLimitServiceImpl implements CrcLimitService {
         if(budgetTeamList.size() == 0){
         	params.put("loginUserId", sessionVO.getUserId());
         }
+        else{
+
+        }
 
         String[] adjType = request.getParameterValues("adjType");
         params.put("adjType", adjType);
@@ -471,5 +474,11 @@ public class CrcLimitServiceImpl implements CrcLimitService {
     @Override
     public List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params) {
         return crcLimitMapper.getApprovalLineDescriptionInfo(params);
+    }
+
+
+    @Override
+    public int checkCurrAppvLineIsBudgetTeam(Map<String, Object> params) {
+        return crcLimitMapper.checkCurrAppvLineIsBudgetTeam(params);
     }
 }

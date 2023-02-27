@@ -153,9 +153,16 @@
 			$('#newSubmitButton').hide();
 			$('#grid_section_new').hide();
             if("${item.mode}" == "A") {
-                $("#appBtns").show();
-                $("#reqBtns").hide();
-				$('#approverSection').hide();
+            	if("${item.apprGrp}" == "BUDGET" && "${checkCurrAppvLineIsBudgetTeam}" == "0"){
+                    $("#appBtns").hide();
+                    $("#reqBtns").hide();
+    				$('#approverSection').show();
+            	}
+            	else{
+            		  $("#appBtns").show();
+                      $("#reqBtns").hide();
+      				  $('#approverSection').hide();
+            	}
             } else if("${item.mode}" == "V") {
                 $("#appBtns").hide();
                 $("#reqBtns").hide();
@@ -168,7 +175,7 @@
 			var item1 = '${adjItems}';
             var adjItems = $.parseJSON(item1.replaceAll(/[\n]/g, '\\n'));
 
-            if("${item.mode}" == "V"){
+            if("${item.mode}" == "V" || ("${item.mode}" == "A" && "${item.apprGrp}" == "BUDGET" && "${checkCurrAppvLineIsBudgetTeam}" == "0")){
     			var item2 = '${approvalLineDescriptionInfo}';
                 var approvalLineRemark = $.parseJSON(item2.replaceAll(/[\n]/g, '\\n'));
             	//Update remark message stucture here

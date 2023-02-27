@@ -58,4 +58,5 @@ public interface CrcLimitMapper {
 	EgovMap selectTotalAppLineStusCountInfo(Map<String, Object> params);
 	int updateAppLineStus_FCM33D(Map<String, Object> params);
 	List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params);
+	int checkCurrAppvLineIsBudgetTeam(Map<String, Object> params);
 }

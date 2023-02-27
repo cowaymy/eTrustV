@@ -170,6 +170,9 @@ public class CrcLimitController {
 
                 List<EgovMap> approvalLineDescriptionInfo = crcLimitService.getApprovalLineDescriptionInfo(params);
                 model.addAttribute("approvalLineDescriptionInfo", new Gson().toJson(approvalLineDescriptionInfo));
+
+                int checkCurrAppvLineIsBudgetTeam = crcLimitService.checkCurrAppvLineIsBudgetTeam(params);
+                model.addAttribute("checkCurrAppvLineIsBudgetTeam", checkCurrAppvLineIsBudgetTeam);
             }
         }
 

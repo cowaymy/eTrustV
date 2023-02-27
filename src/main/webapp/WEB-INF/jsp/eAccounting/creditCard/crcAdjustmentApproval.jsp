@@ -35,7 +35,7 @@
                 checkValue : "Active",
                 unCheckValue : "Inactive",
                 disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-                    if(item.appvStus == "A" || item.appvStus == "J")
+                    if(item.appvStus == "A" || item.appvStus == "J" || (item.isBudgetApprLine == "0" && item.isBudgetTeam == "1"))
                         return true;
                     return false;
                 }
