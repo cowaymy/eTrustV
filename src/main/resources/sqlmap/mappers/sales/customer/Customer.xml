@@ -44,7 +44,13 @@
 
 
   <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
-        <![CDATA[
+        <if test="name != null and name !=''">
+	             WITH AA AS
+	             (SELECT
+	                CUST_ID
+	             FROM SAL0029D T WHERE UPPER(T.NAME) LIKE '%'|| UPPER(#{name}) || '%'
+	             )
+        </if>
         SELECT
                 P2.C1 AS C1,
                 P2.CUST_ID AS CUST_ID,
@@ -135,18 +141,18 @@
                                             1 AS C1,
                                             CASE WHEN (S1.CRT_USER_ID1 IS NOT NULL) THEN S1.CRT_USER_ID1 ELSE 0 END AS CRT_USER_ID,
                                             CASE WHEN (S1.USER_ID1 IS NOT NULL) THEN S1.USER_NAME1 ELSE '' END AS USER_NAME1,
-                                            CASE WHEN ((S1.CRT_DT1 IS NOT NULL) AND (S1.CRT_DT1 > TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN   S1.CRT_DT1 ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS CRT_DT,
+                                            CASE WHEN ((S1.CRT_DT1 IS NOT NULL) AND (S1.CRT_DT1 <![CDATA[ > ]]>  TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN   S1.CRT_DT1 ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS CRT_DT,
                                             CASE WHEN (S1.CORP_TYPE_ID IS NOT NULL) THEN S1.CORP_TYPE_ID ELSE 0 END AS CORP_TYPE_ID,
                                             CASE WHEN (T10.CODE_ID IS NOT NULL) THEN T10.Code ELSE '' END AS CODE,
                                             CASE WHEN (T10.CODE_ID IS NOT NULL) THEN T10.CODE_NAME ELSE '' END AS CODE_NAME,
                                             CASE WHEN (S1.CODE_ID1 IS NOT NULL) THEN S1.CODE_NAME1 ELSE '' END AS CODE_NAME1,
-                                            CASE WHEN (964 <> S1.TYPE_ID) THEN TO_DATE('1900-01-01','YYYY-MM-DD') WHEN ((S1.DOB1 IS NOT NULL) AND (S1.DOB1 > TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN   S1.DOB1 ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS DOB,
+                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN TO_DATE('1900-01-01','YYYY-MM-DD') WHEN ((S1.DOB1 IS NOT NULL) AND (S1.DOB1 <![CDATA[ > ]]> TO_DATE('1900-01-01','YYYY-MM-DD'))) THEN   S1.DOB1 ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END AS DOB,
                                             CASE WHEN (S1.Email1 IS NOT NULL) THEN S1.Email1 ELSE '' END AS EMAIL,
-                                            CASE WHEN (964 <> S1.TYPE_ID) THEN '' WHEN (S1.Gender1 IS NOT NULL) THEN S1.Gender1 ELSE '' END AS GENDER,
-                                            CASE WHEN (964 <> S1.TYPE_ID) THEN 0 WHEN (S1.NATION IS NOT NULL) THEN   S1.NATION ELSE 0 END AS NATION,
-                                            CASE WHEN (964 <> S1.TYPE_ID) THEN '' WHEN (S1.CNTY_ID1 IS NOT NULL) THEN S1.Name2 ELSE '' END AS Name2,
-                                            CASE WHEN (964 <> S1.TYPE_ID) THEN 0 WHEN (S1.RACE_ID1 IS NOT NULL) THEN   S1.RACE_ID1 ELSE 0 END AS RACE_ID,
-                                            CASE WHEN (964 <> S1.TYPE_ID) THEN '' WHEN (S1.CODE_ID2 IS NOT NULL) THEN S1.CODE_NAME2 ELSE '' END AS CODE_NAME2,
+                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN '' WHEN (S1.Gender1 IS NOT NULL) THEN S1.Gender1 ELSE '' END AS GENDER,
+                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN 0 WHEN (S1.NATION IS NOT NULL) THEN   S1.NATION ELSE 0 END AS NATION,
+                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN '' WHEN (S1.CNTY_ID1 IS NOT NULL) THEN S1.Name2 ELSE '' END AS Name2,
+                                            CASE WHEN (964  <![CDATA[ <> ]]>  S1.TYPE_ID) THEN 0 WHEN (S1.RACE_ID1 IS NOT NULL) THEN   S1.RACE_ID1 ELSE 0 END AS RACE_ID,
+                                            CASE WHEN (964  <![CDATA[ <> ]]> S1.TYPE_ID) THEN '' WHEN (S1.CODE_ID2 IS NOT NULL) THEN S1.CODE_NAME2 ELSE '' END AS CODE_NAME2,
                                             CASE WHEN (S1.STUS_CODE_ID1 IS NOT NULL) THEN   S1.STUS_CODE_ID1 ELSE 0 END AS STUS_CODE_ID,
                                             CASE WHEN (S1.UPD_USER_ID1 IS NOT NULL) THEN S1.UPD_USER_ID1 ELSE 0 END AS UPD_USER_ID,
                                             CASE WHEN S1.UPD_DT1 IS NOT NULL THEN  TO_CHAR(S1.UPD_DT1,'YYYYMMDDHH24MISS') ELSE '01/01/1900' END AS UPD_DT,
@@ -177,13 +183,16 @@
                                                                                 FROM
                                                                                 (
                                                                                 SELECT
-                                                                                    CUST_ID,
-                                                                                    CUST_ADD_ID,
-                                                                                    ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
+                                                                                    T.CUST_ID,
+                                                                                    T.CUST_ADD_ID,
+                                                                                    ROW_NUMBER() OVER (PARTITION BY T.CUST_ID ORDER BY T.UPD_DT) CNT
                                                                                 FROM
-                                                                                   SAL0023D
+                                                                                   SAL0023D T
+                                                                                   <if test="name != null and name !=''">
+                                                                                   JOIN AA A1 ON T.CUST_ID = A1.CUST_ID
+                                                                                   </if>
                                                                                 WHERE
-                                                                                    9 = STUS_CODE_ID
+                                                                                    9 = T.STUS_CODE_ID
                                                                                 )ADDT
                                                                                 WHERE ADDT.CNT = 1
                                                                                         ) T6 ON T6.CUST_ID = T1.CUST_ID
@@ -192,11 +201,14 @@
                                                                                 CNTC.CUST_ID
                                                                              FROM(
                                                                                      SELECT
-                                                                                        CUST_CNTC_ID,
-                                                                                        CUST_ID,
-                                                                                        ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
+                                                                                        T.CUST_CNTC_ID,
+                                                                                        T.CUST_ID,
+                                                                                        ROW_NUMBER() OVER (PARTITION BY T.CUST_ID ORDER BY T.UPD_DT) CNT
                                                                                      FROM
-                                                                                        SAL0027D
+                                                                                        SAL0027D T
+                                                                                        <if test="name != null and name !=''">
+                                                                                        JOIN AA A1 ON T.CUST_ID = A1.CUST_ID
+                                                                                        </if>
                                                                                      WHERE
                                                                                         9 = STUS_CODE_ID
                                                                                     )CNTC
@@ -206,13 +218,12 @@
                                                     LEFT OUTER JOIN SYS0013M T9 ON T9.CODE_ID = T1.TYPE_ID
                                                     LEFT OUTER JOIN SAL0333M T10 ON T10.CUST_ID = T1.CUST_ID
                                                     LEFT JOIN SYS0013M T11 ON T11.CODE_ID = T10.TIER_RANK AND T11.CODE_MASTER_ID = 538
-                                                   WHERE (8 <>   T1.STUS_CODE_ID)
+                                                   WHERE (8  <![CDATA[ <> ]]>    T1.STUS_CODE_ID)
                                                    ) S1
                                              LEFT OUTER JOIN SYS0013M T10 ON T10.CODE_ID = S1.CORP_TYPE_ID AND S1.CORP_TYPE_ID IS NOT NULL
                                          WHERE 1=1
-                                            ]]>
-    <if test="typeIdList != null and typeIdList != ''">
-      AND S1.TYPE_ID in
+     <if test="typeIdList != null and typeIdList != ''">
+        AND S1.TYPE_ID in
       <foreach item="item" collection="typeIdList" index="index"
         open="(" separator="," close=")">
         #{item}
@@ -1289,7 +1300,7 @@
                            LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
                     WHERE  (8 <> Extent1.STUS_CODE_ID)
                            AND  Extent1.CUST_ADD_ID = #{getparam} AND ROWNUM <= 1
-                   ]]>
+
   </select>
   <!-- Customer Detail Contact(PopUp View) -->
 
