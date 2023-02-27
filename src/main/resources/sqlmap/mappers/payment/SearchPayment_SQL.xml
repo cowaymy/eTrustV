@@ -1830,7 +1830,7 @@
 
     <!-- RentalCollectionByBS 리스트 조회 -->
     <select id="searchRCByBSAgingMonthNewList" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT /*+ FIRST_ROWS(50)*/
             A.SALES_ORD_ID,
             A.BS_MONTH,
             A.REN_MEM,
