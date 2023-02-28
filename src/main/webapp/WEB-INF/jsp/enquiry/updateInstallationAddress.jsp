@@ -27,6 +27,10 @@
             }
         }
 
+        $('#myModalSuccess').on('hidden.bs.modal', function (e) {
+        	goNextPage();
+        });
+
     	resize();
 
         //hide footer

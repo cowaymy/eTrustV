@@ -353,7 +353,7 @@
 
             Common.ajax("GET","/enquiry/getTacNo.do", paramsGetTac , function (result){
 	            if(result.code =="00"){
-	        	     $("#tacModalClick").click();
+	            	 $('#myModalTac').modal({backdrop: 'static', keyboard: false});
 	        	     $("#tacNo").val("");
 	        	     startCountdown(0,1);
 	        	     startCountdown(180,0);
@@ -412,7 +412,7 @@
 	   $("#tacNo").val("");
        startCountdown(0,1);
        startCountdown(180,0);
-       $("#tacModalClick").click();
+       $('#myModalTac').modal({backdrop: 'static', keyboard: false});
        $('#myModalAlert').on('hide.bs.modal', function (event) {})
    }
 
