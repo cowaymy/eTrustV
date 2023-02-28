@@ -904,6 +904,7 @@
             JOIN SYS0047M E
                 ON C.APPV_PRCSS_USER_ID = E.USER_ID
             WHERE A.ADJ_GRP_SEQ = 1
+            	AND A.CURR_APPV_PRCSS_STUS NOT IN ('A','J')
             	AND C.APPV_LINE_SEQ <![CDATA[ = ]]> A.APPV_LINE_PRCSS_CNT
             	<![CDATA[
                 AND TO_DATE(TO_CHAR(A.CRC_LIMIT_ADJ_MM, 'FM09') || '/' || A.CRC_LIMIT_ADJ_YYYY, 'MM/YYYY') BETWEEN TO_DATE(#{frAdjPeriod},'MM/YYYY') AND TO_DATE(#{toAdjPeriod},'MM/YYYY')
@@ -1244,5 +1245,18 @@ WHERE f0034d.CRDIT_CARD_ADJ_NO = #{docNo}
 	AND f0033d.CRDIT_CARD_ADJ_NO = f0034d.CRDIT_CARD_ADJ_NO
 	WHERE f0034d.CRDIT_CARD_ADJ_NO = #{docNo}
     AND ROWNUM = 1
+</select>
+
+<select id="selectApprovalLineForEdit" parameterType="Map" resultType="egovMap">
+	SELECT f0033d.APPV_PRCSS_USER_ID AS USER_ID, s0047m.USER_NAME AS MEM_CODE, s0047m.USER_FULL_NAME AS NAME, f0033d.APPV_PRCSS_STUS AS APPV_STUS,
+	            CASE WHEN f0033d.APPV_PRCSS_STUS IS NULL THEN 'Draft'
+                     WHEN f0033d.APPV_PRCSS_STUS = 'R' THEN 'Requested'
+                     WHEN f0033d.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                     WHEN f0033d.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                     END AS APPV_STUS_NAME
+	FROM FCM0034D f0033d
+	JOIN SYS0047M s0047m ON f0033d.APPV_PRCSS_USER_ID = s0047m.USER_ID
+	WHERE CRDIT_CARD_ADJ_NO = #{docNo}
+	ORDER BY APPV_LINE_SEQ ASC
 </select>
 </mapper>
