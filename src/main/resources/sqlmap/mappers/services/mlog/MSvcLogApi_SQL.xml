@@ -1066,6 +1066,7 @@
 
                    , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
                    , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
+                   , TO_CHAR (SAL0046D.CHECK_SEND) AS CHECK_SEND
 
             FROM SAL0046D,
                  ORG0001D,
@@ -1230,6 +1231,7 @@
          , TO_CHAR(WATER_SRC_TYPE) AS water_src_type
          , TO_CHAR(CHK_SMS) AS chk_sms
          , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
+         , TO_CHAR(CHECK_SEND) AS check_send
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>

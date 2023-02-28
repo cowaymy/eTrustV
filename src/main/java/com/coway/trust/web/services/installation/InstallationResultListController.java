@@ -882,6 +882,14 @@ public class InstallationResultListController {
               param.put("ctCode", CommonUtils.nvl(installResult.get("ctMemCode")));
               param.put("salesOrderNo", CommonUtils.nvl(installResult.get("salesOrdNo")));
               param.put("creator", sessionVO.getUserId());
+              String checkSend = "";
+              if (CommonUtils.nvl(param.get("checkSend")).equals("on")){
+            	  checkSend = "Y";
+              }else{
+            	  checkSend = "N";
+              }
+              param.put("checkSend", checkSend);
+
 
         	  try{
         		  smsResultValue = installationResultListService.installationSendSMS(CommonUtils.nvl(param.get("hidAppTypeId").toString()), param);

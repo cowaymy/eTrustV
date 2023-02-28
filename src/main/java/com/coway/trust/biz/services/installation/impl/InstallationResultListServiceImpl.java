@@ -1877,6 +1877,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 	}
 
     installResult.put("signData", params.get("signData"));
+    if(!CommonUtils.nvl(params.get("checkSend")).toString().equals(null)){
+		installResult.put("checkSend", CommonUtils.nvl(params.get("checkSend")).toString());
+	}else{
+		installResult.put("checkSend", "N");
+	}
 
     logger.debug("========================INS SMS PARAM===========================");
     logger.debug("INS SMS PARAM : {}", params.toString());
@@ -2492,6 +2497,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
     String chkSMS = "";
+    String checkSend = "";
 
     if(installResult.get("chkSMS").equals("on") || installResult.get("chkSMS").equals("Y")){
     	chkSMS = "Y";
@@ -2499,7 +2505,15 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     else{
     	chkSMS = "N";
     }
+
+    if(installResult.get("checkSend").equals("on") || installResult.get("checkSend").equals("Y")){
+    	checkSend = "Y";
+    }
+    else{
+    	checkSend = "N";
+    }
     installResult.put("chkSMS", chkSMS);
+    installResult.put("checkSend", checkSend);
 
     // Rental || Sponsor || Education || AUX
     if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID) || "145".equals(ApptypeID)) { //add on Free Trial
@@ -2521,6 +2535,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         s46dup.put("resultAcceptanceName", installResult.get("resultAcceptanceName"));
         s46dup.put("chkSMS", chkSMS);
         s46dup.put("custMobileNo", installResult.get("custMobileNo"));
+        s46dup.put("checkSend", checkSend);
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
       }
@@ -2564,6 +2579,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
       entry.put("chkSMS", chkSMS);
       entry.put("custMobileNo", installResult.get("custMobileNo"));
+      entry.put("checkSend", checkSend);
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
     }
@@ -2664,6 +2680,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         m.put("installDate", installResult.get("installDate"));
         m.put("chkSMS", chkSMS);
         m.put("custMobileNo", installResult.get("custMobileNo"));
+        m.put("checkSend", checkSend);
 
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(m);
@@ -2715,6 +2732,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     logger.debug("PARAMS111 :" + installResult.toString());
     logger.debug("================chkSMS================" + chkSMS);
     logger.debug("================ApptypeID================" + ApptypeID);
+    logger.debug("================checkSend================" + checkSend);
     logger.debug("CHECKPOINT  - get resultIcMobileNo:" + installResult.get("resultIcMobileNo").toString());
     logger.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - END ================");
 
