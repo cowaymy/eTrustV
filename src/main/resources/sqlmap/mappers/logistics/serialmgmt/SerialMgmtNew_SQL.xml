@@ -483,14 +483,29 @@
 
     <update id="updateDeliveryGrHist" parameterType="Map">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.updateDeliveryGrHist] - Huiling */
-        update LOG0101H set stus_code = #{ioType}
-        WHERE serial_no = #{serialNo}
-        AND SEQ = #{seq}
+        merge into LOG0101H a
+        using (select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        ,'I' io_type
+        FROM LOG0101h
+        WHERE
+
+            last_DELVRY_NO = #{delvryNo}
+
+
+        AND ITM_CODE = #{itmCode}
+        )x where RN =1)
+        b on (b.SERIAL_NO = a.SERIAL_NO and b.seq = a.seq)
+        when matched then
+        UPDATE SET
+        a.stus_code = b.io_type
     </update>
 
     <select id="selectSerialInfoMul" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectSerialInfo] - HLTANG */
-            SELECT X.*
+            SELECT x.REQST_NO,x.DELVRY_NO,x.ITM_CODE,x.IO_TYPE
               FROM (
                     SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
                          , A.SERIAL_NO
@@ -527,6 +542,130 @@
                 <if test="zIoType !=null and zIoType !=''">
                 and X.IO_TYPE = #{zIoType}
                </if>
+               group by x.ITM_CODE,x.REQST_NO,x.DELVRY_NO,x.IO_TYPE
 
     </select>
+
+<update id="copySerialMasterHistoryBulk" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.copySerialMasterHistoryBulk] - MY HLTANG */
+        MERGE INTO LOG0101H A
+         USING (
+         SELECT MAS.SERIAL_NO                  --serial number
+             , (SELECT NVL(MAX(SEQ), 0)+1 AS SEQ FROM LOG0101H WHERE SERIAL_NO = MAS.SERIAL_NO) SEQ
+             , MAS.LAST_LOC_ID                --Last location id
+             , MAS.ITM_CODE                   --Material code
+             , MAS.LAST_DELVRY_GR_DT          --Last Delivery GR Date
+             , MAS.LAST_LOC_STK_GRAD          --Stock Grade
+             , MAS.LAST_CUST_ID               --customerid
+             , MAS.LAST_SALES_ORD_ID          --SalesOrderID
+             , MAS.STUS_CODE                  --Status Code
+             , MAS.LAST_REQST_NO
+             , MAS.LAST_REQST_NO_ITM
+             , MAS.LAST_DELVRY_NO             --delivery
+             , MAS.LAST_DELVRY_NO_ITM        --delivery item
+             , MAS.TEMP_SCAN_NO               --temp mapping scan number
+             , MAS.CRT_USER_ID                --name of person who created the object
+             , SYSDATE CRT_DT
+             , MAS.UPD_USER_ID                --update User id
+             , SYSDATE UPD_DT
+          FROM LOG0100M MAS
+         WHERE MAS.SERIAL_NO IN (
+         SELECT SERIAL_NO FROM LOG0099D WHERE 1= 1
+              <if test="ioType !=null and ioType !=''">
+                AND IO_TYPE = #{ioType}
+               </if>
+                AND (
+                DELVRY_NO = #{reqstNo}
+                OR REQST_NO = #{reqstNo}
+                )
+         )
+         ) B ON (B.SERIAL_NO = A.SERIAL_NO AND B.SEQ = A.SEQ)
+         WHEN NOT MATCHED THEN
+
+         INSERT
+               --Serial Numbers Info Master History
+        (
+               SERIAL_NO                  --serial number
+             , SEQ                        --seq
+             , LAST_LOC_ID                --Last location id
+             , ITM_CODE                   --Material code
+             , LAST_DELVRY_GR_DT          --Last Delivery GR Date
+             , LAST_LOC_STK_GRAD          --Stock Grade
+             , LAST_CUST_ID               --customerid
+             , LAST_SALES_ORD_ID          --SalesOrderID
+             , STUS_CODE                  --Status Code
+             , LAST_REQST_NO
+             , LAST_REQST_NO_ITM
+             , LAST_DELVRY_NO             --delivery
+             , LAST_DELVRY_NO_ITM        --delivery item
+             , TEMP_SCAN_NO               --temp mapping scan number
+             , CRT_USER_ID                --name of person who created the object
+             , CRT_DT                     --date on which record was created
+             , UPD_USER_ID                --update User id
+             , UPD_DT                     --update date
+        )
+         VALUES
+         (
+         B.SERIAL_NO                  --serial number
+             , B.SEQ                        --seq
+             , B.LAST_LOC_ID                --Last location id
+             , B.ITM_CODE                   --Material code
+             , B.LAST_DELVRY_GR_DT          --Last Delivery GR Date
+             , B.LAST_LOC_STK_GRAD          --Stock Grade
+             , B.LAST_CUST_ID               --customerid
+             , B.LAST_SALES_ORD_ID          --SalesOrderID
+             , B.STUS_CODE                  --Status Code
+             , B.LAST_REQST_NO
+             , B.LAST_REQST_NO_ITM
+             , B.LAST_DELVRY_NO             --delivery
+             , B.LAST_DELVRY_NO_ITM        --delivery item
+             , B.TEMP_SCAN_NO               --temp mapping scan number
+             , B.CRT_USER_ID                --name of person who created the object
+             , B.CRT_DT                     --date on which record was created
+             , B.UPD_USER_ID                --update User id
+             , B.UPD_DT
+         )
+    </update>
+
+    <delete id="deleteSerialInfoBulk" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteSerialInfoBulk] - MY HLTANG */
+        DELETE FROM LOG0099D
+         WHERE  SCAN_NO in (SELECT SCAN_NO FROM LOG0099D WHERE 1= 1
+          <if test="ioType !=null and ioType !=''">
+            AND IO_TYPE = #{ioType}
+           </if>
+            AND (
+                DELVRY_NO = #{reqstNo}
+                OR REQST_NO = #{reqstNo}
+                )
+          )
+          AND SERIAL_NO IN
+          (
+	          SELECT SERIAL_NO FROM LOG0099D WHERE 1= 1
+	          <if test="ioType !=null and ioType !=''">
+	            AND IO_TYPE = #{ioType}
+	           </if>
+	            AND (
+                DELVRY_NO = #{reqstNo}
+                OR REQST_NO = #{reqstNo}
+                )
+          )
+    </delete>
+
+    <delete id="deleteTempSerialMasterBulk" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteTempSerialMasterBulk] - MY HLTANG */
+        UPDATE LOG0100M
+        SET TEMP_SCAN_NO = null
+         WHERE  TEMP_SCAN_NO in (
+	         SELECT SCAN_NO FROM LOG0099D WHERE 1= 1
+	          <if test="ioType !=null and ioType !=''">
+	            AND IO_TYPE = #{ioType}
+	           </if>
+	            AND (
+                DELVRY_NO = #{reqstNo}
+                OR REQST_NO = #{reqstNo}
+                )
+          )
+
+    </delete>
 </mapper>

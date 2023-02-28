@@ -504,20 +504,7 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 			mainMap = (Map<String, Object>) obj;
 			serialMgmtNewMapper.updateDeliveryGrDetail(mainMap);//log0099m
 			serialMgmtNewMapper.updateDeliveryGrMain(mainMap);//log0100m
-
-
-			List<EgovMap> grList1 = serialMgmtNewMapper.selectDeliveryGrHist(mainMap);
-			Map<String, Object> oMap = null;
-			for(EgovMap info : grList1){
-				oMap = new HashMap<String, Object>();
-				oMap.put("updUserId", sessionVo.getUserId());
-				oMap.put("crtUserId", sessionVo.getUserId());
-				oMap.put("serialNo", info.get("serialNo").toString());
-				oMap.put("seq", info.get("seq").toString());
-				oMap.put("ioType", mainMap.get("ioType"));
-
-				serialMgmtNewMapper.updateDeliveryGrHist(oMap);//log0101h
-			}
+			serialMgmtNewMapper.updateDeliveryGrHist(mainMap);//log0101h
 		}
 	}
 
@@ -537,32 +524,44 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		sMap.put("ioType", (String)params.get("ioType"));
 		List<EgovMap> infoList = serialMgmtNewMapper.selectSerialInfo(sMap);
 
-		Map<String, Object> oMap = null;
-		for(EgovMap info : infoList){
-			oMap = new HashMap<String, Object>();
-			oMap.put("updUserId", sessionVO.getUserId());
-			oMap.put("crtUserId", sessionVO.getUserId());
-			oMap.put("boxno", (String)info.get("serialNo"));
-			oMap.put("ioType", (String)params.get("ioType"));
-			oMap.put("scanNo", (String)params.get("scanNo"));
-			oMap.put("delvryNo", (String)info.get("delvryNo"));
-			oMap.put("scanNo", (String)info.get("scanNo"));
-			oMap.put("reqstNo", (String)info.get("reqstNo"));
 
-			// LOG0101H -- LOG0100M --
-			serialMgmtNewMapper.copySerialMasterHistory(oMap);
+		sMap.put("updUserId", sessionVO.getUserId());
+		sMap.put("crtUserId", sessionVO.getUserId());
+		sMap.put("scanNo", (String)params.get("scanNo"));
 
-			// LOG0099D
-			serialMgmtNewMapper.deleteSerialInfo(oMap);
+//		Map<String, Object> oMap = null;
+//		for(EgovMap info : infoList){
+//			oMap = new HashMap<String, Object>();
+//			oMap.put("updUserId", sessionVO.getUserId());
+//			oMap.put("crtUserId", sessionVO.getUserId());
+//			oMap.put("boxno", (String)info.get("serialNo"));
+//			oMap.put("ioType", (String)params.get("ioType"));
+//			oMap.put("scanNo", (String)params.get("scanNo"));
+//			oMap.put("delvryNo", (String)info.get("delvryNo"));
+//			oMap.put("scanNo", (String)info.get("scanNo"));
+//			oMap.put("reqstNo", (String)info.get("reqstNo"));
+//
+//			// LOG0101H -- LOG0100M --
+//			serialMgmtNewMapper.copySerialMasterHistory(oMap);
+//
+//			// LOG0099D
+////			serialMgmtNewMapper.deleteSerialInfo(oMap);
+//
+//			// LOG0100M -- State : N - update
+//			oMap.put("stusCode", "N");
+//			//serialMgmtNewMapper.deleteSerialMaster(oMap);
+//
+////			serialMgmtNewMapper.deleteTempSerialMaster(oMap);
+//
+//			saveCnt++;
+//		}
 
-			// LOG0100M -- State : N - update
-			oMap.put("stusCode", "N");
-			//serialMgmtNewMapper.deleteSerialMaster(oMap);
+		serialMgmtNewMapper.copySerialMasterHistoryBulk(sMap);
+		serialMgmtNewMapper.deleteTempSerialMasterBulk(sMap);
+		serialMgmtNewMapper.deleteSerialInfoBulk(sMap);
 
-			serialMgmtNewMapper.deleteTempSerialMaster(oMap);
 
-			saveCnt++;
-		}
+		saveCnt++;
 
 		return saveCnt;
 	}
