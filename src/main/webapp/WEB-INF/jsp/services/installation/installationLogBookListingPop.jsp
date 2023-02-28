@@ -130,7 +130,7 @@
       } else if (($("#sortType").val() == "2")) {
         orderBySql = " ORDER BY ie.Install_Entry_No,m.mem_code,som.Sales_Ord_No ";
       } else if (($("#sortType").val() == "3")) {
-        orderBySql = " ORDER BY m.mem_code,ie.Install_Entry_No ";
+        orderBySql = " ORDER BY som.Sales_Ord_No,m.mem_code,ie.Install_Entry_No ";
       } else {
         orderBySql = " ORDER BY m.mem_code,ie.Install_Entry_No ";
       }
