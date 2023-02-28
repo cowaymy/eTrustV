@@ -444,8 +444,11 @@
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
                 JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+                LEFT JOIN PAY0011D Extent5 ON Extent5.MEMO_ADJ_REF_NO = Extent1.RENT_DOC_NO
+                LEFT JOIN PAY0022D Extent6 ON Extent5.MEMO_ADJ_INVC_NO = Extent6.RENT_DOC_NO AND Extent6.RENT_DOC_TYPE_ID = 161
             WHERE
                 Extent1.RENT_SO_ID = #{orderId}
+                AND Extent6.RENT_RUN_ID IS NULL
             ) LED
         WHERE
             BILL_AMT <![CDATA[ < ]]> 0
