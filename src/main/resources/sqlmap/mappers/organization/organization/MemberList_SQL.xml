@@ -284,11 +284,24 @@ FROM (
               FROM (
                   SELECT B.*,
                     ROW_NUMBER() OVER (
-                      PARTITION BY MEM_ID
-                      ORDER BY SALES_ORD_ID DESC
+                      PARTITION BY B.MEM_ID
+                      ORDER BY B.SALES_ORD_ID DESC
                     ) ITM_ROWS
                   FROM SAL0001D B
-                  WHERE B.PV_YEAR <> 0 AND B.PV_MONTH <> 0 AND B.STUS_CODE_ID = 4 )
+                  JOIN ORG1001V EXTENT ON B.MEM_ID = EXTENT.MEM_ID
+                  WHERE B.PV_YEAR <> 0 AND B.PV_MONTH <> 0 AND B.STUS_CODE_ID = 4
+                  ]]>
+                  <if test="orgCode != null and orgCode != '' ">
+                  AND EXTENT.ORG_CODE = #{orgCode}
+                  </if>
+                  <if test="grpCode != null and grpCode != '' ">
+                  AND EXTENT.GRP_CODE = #{grpCode}
+                  </if>
+                  <if test="deptCode != null and deptCode != '' ">
+                  AND EXTENT.DEPT_CODE = #{deptCode}
+                  </if>
+                  <![CDATA[
+                  )
                   WHERE ITM_ROWS = 1
                 ) B ON Extent1.MEM_ID = B.MEM_ID
                 CROSS JOIN (
@@ -297,7 +310,7 @@ FROM (
                       FROM ORG0001D Extent4,
                         ORG0005D Extent7
                       WHERE 1=1 AND Extent4.MEM_ID = Extent7.MEM_ID
-            ]]>
+                  ]]>
                         <if test="memTypeCom != null and memTypeCom != ''">
                            AND  Extent4.MEM_TYPE =  #{memTypeCom}
                        </if>
