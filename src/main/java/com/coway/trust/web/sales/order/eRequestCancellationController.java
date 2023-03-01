@@ -65,7 +65,7 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
 			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
 			model.put("memType", getUserInfo.get("memType"));
 			model.put("orgCode", getUserInfo.get("orgCode"));
@@ -293,7 +293,7 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
    @RequestMapping(value="/eRequestApprovalPop.do")
    public String eRequestApprovalPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
      EgovMap orderDetail = eRequestCancellationService.selectOrderBasicInfo(params, sessionVO);
-     
+
      EgovMap eRequestDetail = eRequestCancellationService.selectRequestApprovalList(params).get(0);
      EgovMap eRequestAux = null;
 

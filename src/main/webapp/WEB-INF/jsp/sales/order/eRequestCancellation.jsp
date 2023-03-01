@@ -120,6 +120,9 @@
     // CLEAR TRIGGER
     $('#btnClear').click(function() {
       $('#listSearchForm').clearForm();
+      $("#orgCode").val("${orgCode}");
+      $("#deptCode").val("${deptCode}");
+      $("#grpCode").val("${grpCode}");
     });
   });
 
