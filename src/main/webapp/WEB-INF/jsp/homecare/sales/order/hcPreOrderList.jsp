@@ -236,6 +236,8 @@
             {headerText : "BNDL No.",             dataField : "bndlNo",         editable : false, width : '7%'}
           , {headerText : "SOF No.",                dataField : "sofNo",           editable : false, width : '7%'}
           , {headerText : "eKey-in Date",          dataField : "requestDt",      editable : false, width : '8%'}
+          , {headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width : '10%' }
+          , {headerText : "Application Type",        dataField : "appType",    editable : false, width : 80  }
           , {headerText : "eKey-in Time",          dataField : "requestTm",    editable : false, width : '8%'}
           , {headerText : "Product",                 dataField : "product",        editable : false, width : '12%'}
           , {headerText : "Customer Name",     dataField : "custNm",         editable : false, width : '15%'}
