@@ -840,7 +840,7 @@
     <result property="CUST_CRC_REM" column="CUST_CRC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap> -->
 
-  <select id="selectCustomerCreditCardJsonList" parameterType="Map"
+  <!-- <select id="selectCustomerCreditCardJsonList" parameterType="Map"
     resultType="egovMap">
    <![CDATA[
         SELECT   Project1.CUST_CRC_ID CUST_CRC_ID  ,
@@ -941,7 +941,66 @@
     ) Project1
     ) Project1
     ORDER BY Project1.CUST_CRC_ID ASC
+  </select> -->
+
+  <select id="selectCustomerCreditCardJsonList" parameterType="Map"
+    resultType="egovMap">
+   <![CDATA[
+  select
+      EXTENT1.CUST_CRC_ID             CUST_CRC_ID,
+      EXTENT1.CUST_ENCRYPT_CRC_NO     CUST_ENCRYPT_CRC_NO,
+      EXTENT6.CODE_NAME               CODE_NAME,
+      EXTENT1.CUST_ID                 CUST_ID,
+      EXTENT1.CUST_CRC_BANK_ID        CUST_CRC_BANK_ID,
+      EXTENT2.CODE                    BANK_CODE,
+      EXTENT2.name                    BANK_NAME,
+      EXTENT1.CUST_CRC_EXPR           CUST_CRC_EXPR,
+      EXTENT1.CUST_CRC_OWNER          CUST_CRC_OWNER,
+      EXTENT1.CUST_CRC_NO             CUST_CRC_NO,
+      EXTENT1.CUST_ORI_CRC_NO         CUST_ORI_CRC_NO,
+      EXTENT1.CUST_CRC_TYPE_ID        CUST_CRC_TYPE_ID,
+      EXTENT3.CODE_NAME               CODE_NAME1,
+      EXTENT1.CUST_CRC_STUS_ID        CUST_CRC_STUS_ID,
+      EXTENT1.CUST_CRC_CRT_DT         CUST_CRC_CRT_DT,
+      EXTENT1.CUST_CRC_UPD_DT         CUST_CRC_UPD_DT,
+      EXTENT1.CUST_CRC_REM            CUST_CRC_REM,
+      EXTENT1.CUST_CRC_CRT_USER_ID    CUST_CRC_CRT_USER_ID,
+      EXTENT1.CUST_CRC_UPD_USER_ID    CUST_CRC_UPD_USER_ID,
+      EXTENT4.USER_NAME               USER_NAME,
+      EXTENT5.USER_NAME               USER_NAME1,
+      EXTENT1.CARD_TYPE_ID            CARD_TYPE_ID
+  from
+           SAL0028D EXTENT1
+      join SYS0004M  EXTENT2 on EXTENT2.BANK_ID = EXTENT1.CUST_CRC_BANK_ID
+      join SYS0013M  EXTENT3 on EXTENT3.CODE_ID = EXTENT1.CUST_CRC_TYPE_ID
+      join SYS0047M  EXTENT4 on EXTENT4.USER_ID = EXTENT1.CUST_CRC_CRT_USER_ID
+      join SYS0047M  EXTENT5 on EXTENT5.USER_ID = EXTENT1.CUST_CRC_UPD_USER_ID
+      join SYS0013M  EXTENT6 on EXTENT6.CODE_ID = EXTENT1.CARD_TYPE_ID
+  where
+      EXTENT1.CUST_CRC_STUS_ID <> 8
+    ]]>
+    <if test='custId != null and custId !=""'>
+      AND Extent1.CUST_ID = #{custId}
+    </if>
+    <if test='custOriCrcNo != null and custOriCrcNo !=""'>
+      AND Extent1.CUST_ORI_CRC_NO = #{custOriCrcNo}
+    </if>
+    <if test='searchWord != null and searchWord !=""'>
+      AND UPPER(Extent1.CUST_ORI_CRC_NO LIKE '%' || UPPER(#{searchWord}) ||
+      '%'
+      OR UPPER(Extent3.CODE_NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
+      OR UPPER(Extent1.CUST_CRC_OWNER) LIKE '%' || UPPER(#{searchWord}) ||
+      '%'
+      OR UPPER(Extent1.CUST_CRC_EXPR) LIKE '%' || UPPER(#{searchWord}) || '%'
+      OR UPPER(Extent2.CODE) LIKE '%' || UPPER(#{searchWord}) || '%'
+      OR UPPER(Extent2.NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
+      OR UPPER(Extent6.CODE_NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
+    </if>
+    <if test='custCrcToken != null and custCrcToken != "" '>
+      AND Extent1.CUST_CRC_TOKEN = #{custCrcToken}
+    </if>
   </select>
+
   <!-- Ajax Call Own Order List -->
   <select id="selectCustomerOwnOrderJsonList" parameterType="Map"
     resultType="egovMap">
@@ -1846,7 +1905,7 @@
     Mt.CODE_NAME
     FROM ( SELECT Sub.BANK_ID BANK_ID ,
     Sub.CODE CODE ,
-    Sub.CODE || ' - ' || Sub.NAME CODE_NAME
+    Sub.NAME CODE_NAME
     FROM SYS0004M Sub
     WHERE ( 1 = Sub.STUS_CODE_ID )
     <if test='isAllowForDd != null and isAllowForDd == "1"'>
@@ -1859,7 +1918,7 @@
   <select id="selectDdtChnlAccBank" parameterType="Map"
     resultType="egovMap">
     SELECT B.BANK_ID CODE_ID,
-    B.CODE || ' - ' || B.NAME CODE_NAME
+    B.NAME CODE_NAME
     FROM SYS0093M A JOIN
     SYS0004M B ON A.BANK_ID = B.BANK_ID
     WHERE B.STUS_CODE_ID = 1
