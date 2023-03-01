@@ -23,7 +23,7 @@ $(document).ready(function(){
     	result = null;
     }
     else{
-    	var item1 = '${result}'
+    	var item1 = '${result}';
     	result = $.parseJSON(item1.replaceAll(/[\n]/g, '\\n'));
     }
     type = '${item.type}';

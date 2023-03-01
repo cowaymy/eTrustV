@@ -1248,7 +1248,7 @@ WHERE f0034d.CRDIT_CARD_ADJ_NO = #{docNo}
 </select>
 
 <select id="selectApprovalLineForEdit" parameterType="Map" resultType="egovMap">
-	SELECT f0033d.APPV_PRCSS_USER_ID AS USER_ID, s0047m.USER_NAME AS MEM_CODE, s0047m.USER_FULL_NAME AS NAME, f0033d.APPV_PRCSS_STUS AS APPV_STUS,
+	SELECT f0033d.APPV_PRCSS_USER_ID AS APPV_PRCSS_USER_ID, s0047m.HR_CODE AS MEM_CODE, s0047m.USER_FULL_NAME AS NAME, f0033d.APPV_PRCSS_STUS AS APPV_STUS,
 	            CASE WHEN f0033d.APPV_PRCSS_STUS IS NULL THEN 'Draft'
                      WHEN f0033d.APPV_PRCSS_STUS = 'R' THEN 'Requested'
                      WHEN f0033d.APPV_PRCSS_STUS = 'A' THEN 'Approved'
@@ -1259,4 +1259,32 @@ WHERE f0034d.CRDIT_CARD_ADJ_NO = #{docNo}
 	WHERE CRDIT_CARD_ADJ_NO = #{docNo}
 	ORDER BY APPV_LINE_SEQ ASC
 </select>
+
+<update  id="updateApp_FCM34D_Approval_Line" parameterType="Map">
+	MERGE INTO FCM0034D AA
+	USING (
+	    SELECT CRDIT_CARD_ADJ_NO,#{approveNo} AS APPV_LINE_SEQ FROM FCM0034D A WHERE A.CRDIT_CARD_ADJ_NO = #{docNo} AND ROWNUM = 1
+	) BB
+	ON (AA.CRDIT_CARD_ADJ_NO = BB.CRDIT_CARD_ADJ_NO AND AA.APPV_LINE_SEQ = BB.APPV_LINE_SEQ)
+	WHEN MATCHED THEN
+	    UPDATE SET AA.APPV_PRCSS_USER_ID = #{apprUserId}, AA.UPD_USER_ID = #{userId}, AA.UPD_DT = SYSDATE
+	WHEN NOT MATCHED THEN
+	     INSERT (
+	        CRDIT_CARD_ADJ_NO, REQST_DT, REQST_USER_ID, APPV_PRCSS_USER_ID, APPV_LINE_SEQ,
+	        APPV_PRCSS_STUS, APPV_PRCSS_DT, CRT_DT, CRT_USER_ID
+	        ) VALUES (
+	            #{docNo}, SYSDATE, #{userId}, #{apprUserId}, #{approveNo},
+	            'R', SYSDATE, SYSDATE, #{userId}
+	        )
+</update>
+
+<update id="updateApp_FCM33D_Approval_Line_Count" parameterType="Map">
+	UPDATE FCM0033D
+	SET APPV_LINE_CNT = #{appvLineCnt} ,UPD_USER_ID = #{userId}, UPD_DT = SYSDATE
+	WHERE CRDIT_CARD_ADJ_NO = #{docNo}
+</update>
+
+<delete id="deleteApp_FCM34D_Excess_Approval_Line" parameterType="Map">
+	DELETE FCM0034D WHERE CRDIT_CARD_ADJ_NO = #{docNo} AND APPV_LINE_SEQ > #{appvLineCnt}
+</delete>
 </mapper>

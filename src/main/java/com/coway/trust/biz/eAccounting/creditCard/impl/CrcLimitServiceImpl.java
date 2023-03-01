@@ -481,4 +481,38 @@ public class CrcLimitServiceImpl implements CrcLimitService {
     public int checkCurrAppvLineIsBudgetTeam(Map<String, Object> params) {
         return crcLimitMapper.checkCurrAppvLineIsBudgetTeam(params);
     }
+
+    @Override
+    public List<EgovMap> selectApprovalLineForEdit(Map<String, Object> params) {
+        return crcLimitMapper.selectApprovalLineForEdit(params);
+    }
+
+    @Override
+    public int editApprovalLineSubmit(Map<String, Object> params, SessionVO sessionVO) {
+    	List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+    	if (apprGridList.size() > 0) {
+			for (Object map : apprGridList) {
+				Map hm = null;
+				hm = (HashMap<String, Object>) map;
+
+				String appvStus = "";
+
+				if(hm.get("appvStus") != null){
+					appvStus = hm.get("appvStus").toString();
+				}
+
+				hm.put("userId", sessionVO.getUserId());
+				hm.put("apprUserId", crcLimitMapper.selectUserIdWithHrCode(hm));
+				hm.put("docNo", params.get("docNo"));
+				crcLimitMapper.updateApp_FCM34D_Approval_Line(hm);
+			}
+			Map<String,Object> approvalLineDetail = new HashMap<String, Object>();
+			approvalLineDetail.put("docNo", params.get("docNo"));
+			approvalLineDetail.put("appvLineCnt", apprGridList.size());
+			approvalLineDetail.put("userId", sessionVO.getUserId());
+			crcLimitMapper.deleteApp_FCM34D_Excess_Approval_Line(approvalLineDetail);
+			crcLimitMapper.updateApp_FCM33D_Approval_Line_Count(approvalLineDetail);
+		}
+    	return 1;
+    }
 }

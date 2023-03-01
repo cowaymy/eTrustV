@@ -49,4 +49,6 @@ public interface CrcLimitService {
 	String submitNewAdjustmentWithApprovalLine(Map<String, Object> params, SessionVO sessionVO);
 	List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params);
 	int checkCurrAppvLineIsBudgetTeam(Map<String, Object> params);
+	List<EgovMap> selectApprovalLineForEdit(Map<String, Object> params);
+	int editApprovalLineSubmit(Map<String, Object> params, SessionVO sessionVO);
 }

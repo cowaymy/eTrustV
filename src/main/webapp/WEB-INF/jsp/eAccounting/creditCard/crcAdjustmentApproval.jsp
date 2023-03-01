@@ -240,8 +240,23 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
         }
     }
 
-    function editApprovalLine(){
+    function fn_editApprovalLine(){
     	var gridObjSelected = AUIGrid.getSelectedItems(allowanceApprAdjGridID);
+    	if(gridObjSelected.length > 0){
+    		var currAppvStus = gridObjSelected[0].item.currAppvStus;
+    		var isBudgetTeam = gridObjSelected[0].item.isBudgetTeam;
+
+    		if((currAppvStus == "R" || currAppvStus == "P") && isBudgetTeam == "1"){
+        		var docNo = gridObjSelected[0].item.adjNo;
+                Common.popupDiv("/eAccounting/creditCard/crcApprovalLineEditPop.do", {docNo: docNo}, null, true, "crcApprovalLineEditPop");
+    		}
+    		else{
+    			Common.alert("You are not allowed to edit record that is already approved/rejected.");
+    		}
+    	}
+    	else{
+    		Common.alert("Please select a record");
+    	}
     }
 </script>
 
@@ -338,6 +353,7 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
     <section class="search_result">
         <ul class="right_btns">
+            <li><p class="btn_grid"><a href="#" onclick="javascript:fn_editApprovalLine()" id="edit_btn">Edit</a></p></li>
             <li><p class="btn_grid"><a href="#" onclick="javascript:fn_bulkApproval('A')" id="approve_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
             <li><p class="btn_grid"><a href="#" onclick="javascript:fn_bulkApproval('J')" id="reject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
         </ul>

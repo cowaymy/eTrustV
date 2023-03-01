@@ -59,4 +59,8 @@ public interface CrcLimitMapper {
 	int updateAppLineStus_FCM33D(Map<String, Object> params);
 	List<EgovMap> getApprovalLineDescriptionInfo(Map<String, Object> params);
 	int checkCurrAppvLineIsBudgetTeam(Map<String, Object> params);
+	List<EgovMap> selectApprovalLineForEdit(Map<String, Object> params);
+	int updateApp_FCM33D_Approval_Line_Count(Map<String, Object> params);
+	int updateApp_FCM34D_Approval_Line(Map<String, Object> params);
+	int deleteApp_FCM34D_Excess_Approval_Line(Map<String, Object> params);
 }

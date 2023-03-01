@@ -596,4 +596,34 @@ public class CrcLimitController {
 
 	        return ResponseEntity.ok(message);
 	    }
+
+	    @RequestMapping(value = "/crcApprovalLineEditPop.do")
+	    public String crcApprovalLineEditPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+	        LOGGER.debug("========== selectApprovalLineForEdit ==========");
+
+	        List<EgovMap> adjustmentApprovalLine = crcLimitService.selectApprovalLineForEdit(params);
+	        model.addAttribute("result", new Gson().toJson(adjustmentApprovalLine));
+	        model.addAttribute("docNo", params.get("docNo"));
+
+	        return "eAccounting/creditCard/crcApprovalLine/crcApprovalLineEditPop";
+	    }
+
+	    @RequestMapping(value = "/editApprovalLineSubmit.do")
+	    public ResponseEntity<ReturnMessage> editApprovalLineSubmit(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws JsonParseException, JsonMappingException, IOException {
+	        LOGGER.debug("========== editApprovalLineSubmit ==========");
+	        LOGGER.debug("params ========== :: " + params);
+	        ReturnMessage message = new ReturnMessage();
+
+	        int result = crcLimitService.editApprovalLineSubmit(params, sessionVO);
+
+	        if(result == 1) {
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        } else {
+	            message.setCode(AppConstants.FAIL);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+
+	        return ResponseEntity.ok(message);
+	    }
 }
