@@ -1841,11 +1841,11 @@
 									<td><p style="width: 70%">
 											<input id="ManuaMyBSMonth" name="ManuaMyBSMonth" type="text"
 												title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p"
-												readonly />
+												readonly disabled/>
 										</p>
-										<p class="btn_gray">
+										<!-- <p class="btn_gray">
 											<a href="#" onclick="fn_cMyBSMonth('ManuaMyBSMonth')">Clear</a>
-										</p></td>
+										</p></td> -->
 									<th scope="row">Customer ID</th>
 									<td><input id="manualCustomer" name="manualCustomer"
 										type="text" title="" placeholder="Customer ID" class="w100p" />
