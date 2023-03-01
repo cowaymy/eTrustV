@@ -753,23 +753,33 @@
                       , (
                 SELECT COUNT(1)
                   FROM (
-                       SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
-                            , REQST_NO
-                            , REQST_NO_ITM
-                            , DELVRY_NO
-                            , DELVRY_NO_ITM
-                            , ITM_CODE
-                            , SCAN_STUS_CODE
-                            , IO_TYPE
-                         FROM LOG0099D
+                                 SELECT ROW_NUMBER() OVER (PARTITION BY L99.SERIAL_NO ORDER BY L99.SCAN_NO DESC ) AS RN
+                                    , L99.REQST_NO
+                                    , L99.REQST_NO_ITM
+                                    , L99.DELVRY_NO
+                                    , L99.DELVRY_NO_ITM
+                                    , L99.ITM_CODE
+                                    , L99.SCAN_STUS_CODE
+                                    , L99.IO_TYPE
+                         FROM LOG0099D L99, LOG0055D L55
+                         WHERE L99.DELVRY_NO = L55.DELVRY_NO
+                         AND L99.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
+                         AND L99.ITM_CODE = L55.ITM_CODE
+                         AND L99.SCAN_STUS_CODE = 'D'
+                         AND L99.IO_TYPE = 'I'
+                         AND L55.DELVRY_NO IN
+                        <choose>
+                             <when test="arrDelyList !=null">
+                                 <foreach item="item" collection="arrDelyList" index="index" open="(" separator="," close=")">
+                                     #{item}
+                                 </foreach>
+                             </when>
+                             <otherwise>
+                                 (#{delyno})
+                             </otherwise>
+                        </choose>
                       ) Z1
-               WHERE 1 = 1
-                 AND Z1.DELVRY_NO = L55.DELVRY_NO
-                 AND Z1.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
-                 AND Z1.ITM_CODE = L55.ITM_CODE
-                 AND Z1.SCAN_STUS_CODE = 'D'
-                 AND Z1.IO_TYPE = 'I'
-                 AND Z1.RN = 1
+               WHERE  Z1.RN = 1
                ) AS SCAN_QTY
                , NVL(S28Q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
               FROM LOG0047M l47
