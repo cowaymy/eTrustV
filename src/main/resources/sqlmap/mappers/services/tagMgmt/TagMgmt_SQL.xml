@@ -731,6 +731,7 @@
               , A.CUST_ADD_ID REQUEST_ID
               , F.USER_FULL_NAME UPDATOR
               , TO_CHAR(A.UPD_DT,'DD/MM/YYYY') UPD_DT
+              , A.SOURCE
         FROM SAL0339D A
         JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
         JOIN SYS0064M C ON A.AREA_ID = C.AREA_ID

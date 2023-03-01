@@ -403,8 +403,7 @@ public class EnquiryController {
 	 private void setEmailData(Map<String, Object> params) {
 
 		  EgovMap getEmailDetails = enquiryService.getEmailDetails(params);
-		  List<String> emailList = Arrays.asList("kimching.low@coway.com.my");
-//		  List<String> emailList = Arrays.asList("zakirin.kamarudin@coway.com.my","azrul.alias@coway.com.my");
+		  List<String> emailList = Arrays.asList("callcenter@coway.com.my");
 		  String street = getEmailDetails.get("street").equals("0") ? "" : getEmailDetails.get("street").toString() ;
 
 		  Map<String, Object> emailDetail = new HashMap<String,Object>();
