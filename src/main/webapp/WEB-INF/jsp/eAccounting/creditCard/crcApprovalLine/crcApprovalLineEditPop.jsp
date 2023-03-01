@@ -74,8 +74,8 @@ var approveLineColumnLayout = [ {
         iconHeight : 12,
         onclick : function(rowIndex, columnIndex, value, item) {
         	var rowCount = AUIGrid.getRowCount(approveLineGridID);
-        	if (rowCount > 3) {
-        		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
+        	if (rowCount > 4) {
+        		Common.alert('Approval lines can be up to 5 levels.');
         	} else {
             	var nextRowData = AUIGrid.getItemByRowIndex(approveLineGridID,rowIndex + 1);
             	if(nextRowData){
