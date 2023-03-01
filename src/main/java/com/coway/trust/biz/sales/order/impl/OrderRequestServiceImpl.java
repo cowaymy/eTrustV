@@ -2469,17 +2469,17 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             || SalesConstants.RENTAL_STATUS_TER.equals(rentalStatus)
             || SalesConstants.RENTAL_STATUS_RET.equals(rentalStatus)
             || SalesConstants.RENTAL_STATUS_WOF.equals(rentalStatus)) {
-          msgT = "Contact CRT";
-          msg = "This order is under SUS/TER/RET/WOF. Contact CRT.";
+          msgT = "Strictly not allowed for RCO";
+          msg = "This order is under SUS/TER/RET/WOF. Strictly not allowed for RCO.";
           isInValid = "isInValid";
         } else if (orderStatusID == 4) {
           if (CurrentBillMth > LastBillMth) {
             msgT = "Unbill Amount Exist";
-            msg = "This order come with un-bill amount. Contact CRT.";
+            msg = "This order come with un-bill amount. Strictly not allowed for RCO.";
             isInValid = "isInValid";
           } else if (LastBillMth > Integer.parseInt(obligtPriod.get("rcoPriod").toString())) {
             msgT = "Exceed RCO Billing Month";
-            msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("rcoPriod").toString())+"th billing month. Contact CRT.";
+            msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("rcoPriod").toString())+"th billing month. Strictly not allowed for RCO.";
             isInValid = "isInValid";
           } else if (Integer.parseInt(installDate) <= 19000101) {
             msgT = "Invalid Install Date";
@@ -2555,15 +2555,15 @@ public class OrderRequestServiceImpl implements OrderRequestService {
               || SalesConstants.RENTAL_STATUS_TER.equals(rentalStatus)
               || SalesConstants.RENTAL_STATUS_RET.equals(rentalStatus)
               || SalesConstants.RENTAL_STATUS_WOF.equals(rentalStatus)) {
-            msgT = "Contact CRT";
-            msg = "This order is under SUS/TER/RET/WOF. Contact CRT.";
+            msgT = "Strictly not allowed for RCO";
+            msg = "This order is under SUS/TER/RET/WOF. Strictly not allowed for RCO.";
             isInValid = "isInValid";
           } else {
             logger.debug("CurrentBillMth" + CurrentBillMth);
             logger.debug("LastBillMth" + LastBillMth);
             if (CurrentBillMth > LastBillMth) {
               msgT = "Unbill Amount Exist";
-              msg = "This order come with un-bill amount. Contact CRT.";
+              msg = "This order come with un-bill amount. Strictly not allowed for RCO.";
               isInValid = "isInValid";
             }
             /*else if (LastBillMth > 36) {
@@ -2577,7 +2577,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             }*/
             else if (LastBillMth > Integer.parseInt(obligtPriod.get("rcoPriod").toString())) {
               msgT = "Exceed RCO Billing Month";
-              msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("rcoPriod").toString())+"th billing month. Contact CRT.";
+              msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("rcoPriod").toString())+"th billing month. Strictly not allowed for RCO.";
               isInValid = "isInValid";
             } else if (OutrightPrice.compareTo(BigDecimal.ZERO) == 0) {
               msgT = "Outright Price Missing";
