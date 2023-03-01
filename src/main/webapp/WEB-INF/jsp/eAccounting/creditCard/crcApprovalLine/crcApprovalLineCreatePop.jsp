@@ -58,7 +58,7 @@ var approveLineColumnLayout = [ {
         iconHeight : 12,
         onclick : function(rowIndex, columnIndex, value, item) {
         	var rowCount = AUIGrid.getRowCount(approveLineGridID);
-        	if (rowCount > 4) {
+        	if (rowCount > 3) {
         		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
         	} else {
         		fn_appvLineGridAddRow();
@@ -199,7 +199,6 @@ function fn_bulkApprovalLineSubmission(){
     var adjGridList = AUIGrid.getItemsByValue(adjGridID, "isActive", "Active");
 	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
 
-//     Common.alert("Confirm to submit these adjustments?", function(result) {
         var obj = {
                 apprGridList : apprGridList,
         		adjGridList : adjGridList
@@ -218,7 +217,6 @@ function fn_bulkApprovalLineSubmission(){
 
             }
         });
-//     });
 }
 
 function fn_approvalLineSubmission(){

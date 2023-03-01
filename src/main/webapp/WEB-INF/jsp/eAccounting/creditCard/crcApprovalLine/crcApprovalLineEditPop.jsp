@@ -74,9 +74,18 @@ var approveLineColumnLayout = [ {
         iconHeight : 12,
         onclick : function(rowIndex, columnIndex, value, item) {
         	var rowCount = AUIGrid.getRowCount(approveLineGridID);
-        	if (rowCount > 4) {
+        	if (rowCount > 3) {
         		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
         	} else {
+            	var nextRowData = AUIGrid.getItemByRowIndex(approveLineGridID,rowIndex + 1);
+            	if(nextRowData){
+            		if(nextRowData.appvStus == "J" || nextRowData.appvStus == "A")
+            		{
+            			Common.alert("Approval Line is not allowed to be added as next approval line has been Approved/Rejected");
+            			return false;
+            		}
+            	}
+
         		fn_appvLineGridAddRow({},"selectionDown");
         	}
         }
