@@ -80,7 +80,7 @@ public class HcInstallationReversalServiceImpl extends EgovAbstractServiceImpl i
 			List<EgovMap> bndlList = hcInstallationReversalMapper.selectBndlInfoList(params);
 			for (EgovMap sMap : bndlList) {
 				sMap.put("esalesOrdNo", sMap.get("salesOrdNo"));
-				selectReversalStockState(sMap);
+				//selectReversalStockState(sMap);
 
 				EgovMap  list1 = hcInstallationReversalMapper.selectOrderListDetail1(sMap);
 				EgovMap  list5 = installationReversalService.installationReversalSearchDetail5(params);
