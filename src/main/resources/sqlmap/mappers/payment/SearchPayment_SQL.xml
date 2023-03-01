@@ -17,8 +17,8 @@
     <!--Search Payment Order List(Master Grid) 리스트 조회  -->
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <!-- <include refid="pagingStart" /> -->
-        SELECT
-            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+        SELECT DISTINCT /*+ FIRST_ROWS(50)*/
+            H.BANK_STATE_MAPPING_ID TRX_ID,
             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
 			pay.TRX_DT,
 			pay.TRX_AMT,
@@ -74,11 +74,8 @@
 			pay.BATCH_PAY_ID
 	    FROM
 	        PAY1001V pay
-            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
-                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
+            LEFT JOIN PAY0252T H ON H.PAY_ID in (pay.PAY_ID,pay.MTCH_ID)
             LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
-            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
-                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) I ON pay.MTCH_ID = I.PAY_ID
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
