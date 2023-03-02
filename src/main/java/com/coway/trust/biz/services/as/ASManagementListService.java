@@ -225,4 +225,6 @@ public interface ASManagementListService {
 
 	// void sendSms(Map<String, Object> smsList);
 
+	void insertASResultLog(String params, String reqstUrl, String asId, int userId);
+
 }

@@ -5060,4 +5060,18 @@
       WHERE CODE_MASTER_ID = 510
   </select>
 
+  <insert id="insertASResultLog" parameterType="Map">
+        INSERT INTO SVC0135H (
+            PARAMS,
+            AS_ID,
+            CRT_USR,
+            URL_PATH
+        ) VALUES (
+            #{params},
+            #{asId},
+            #{userId},
+            #{url}
+        )
+  </insert>
+
 </mapper>

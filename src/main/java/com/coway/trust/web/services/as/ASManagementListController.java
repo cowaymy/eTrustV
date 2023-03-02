@@ -764,6 +764,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/newResultAdd.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newResultAdd(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
+
+	ASManagementListService.insertASResultLog(params.toString(), request.getRequestURI(), String.valueOf(((LinkedHashMap) params.get("asResultM")).get("AS_ID")), sessionVO.getUserId());
+
     logger.debug("===========================/newResultAdd.do===============================");
     logger.debug("== params " + params.toString());
 
@@ -848,6 +851,8 @@ public class ASManagementListController {
     logger.debug("== params " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
+
+    ASManagementListService.insertASResultLog(params.toString(), request.getRequestURI(), String.valueOf(((LinkedHashMap) params.get("asResultM")).get("AS_ID")), sessionVO.getUserId());
 
     LinkedHashMap asResultM = (LinkedHashMap) params.get("asResultM");
     List<EgovMap> add = (List<EgovMap>) params.get("add");
@@ -1057,6 +1062,8 @@ public class ASManagementListController {
   @RequestMapping(value = "/newASInHouseAdd.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newASInHouseAdd(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
+
+	ASManagementListService.insertASResultLog(params.toString(), request.getRequestURI(), String.valueOf(((Map<String, Object>) params.get("asResultM")).get("AS_ENTRY_ID")), sessionVO.getUserId());
     logger.debug("===========================/newASInHouseAdd.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/newASInHouseAdd.do===============================");

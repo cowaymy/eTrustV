@@ -4231,4 +4231,14 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
   public List<EgovMap> selectASNotMatch() {
     return ASManagementListMapper.selectASNotMatch();
   }
+
+  @Override
+  public void insertASResultLog(String params, String reqstUrl, String asId, int userId) {
+	  Map<String, Object> p = new HashMap();
+	  p.put("params", params);
+	  p.put("url", reqstUrl);
+	  p.put("asId", asId);
+	  p.put("userId", userId);
+	  ASManagementListMapper.insertASResultLog(p);
+  }
 }

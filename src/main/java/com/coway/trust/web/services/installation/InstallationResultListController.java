@@ -724,6 +724,9 @@ public class InstallationResultListController {
 @RequestMapping(value = "/addInstallation_2.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> insertInstallationResult_2(@RequestBody Map<String, Object> params,
       SessionVO sessionVO) throws ParseException {
+
+	ASManagementListService.insertASResultLog(params.toString(), "/addInstallation_2.do", null, sessionVO.getUserId());
+
     ReturnMessage message = new ReturnMessage();
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> resultValuePexRtn = new HashMap<String, Object>();
@@ -1637,6 +1640,9 @@ public class InstallationResultListController {
   @RequestMapping(value = "/addInstallationSerial.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> addInstallationSerial(@RequestBody Map<String, Object> params,
       SessionVO sessionVO) throws ParseException {
+
+	  ASManagementListService.insertASResultLog(params.toString(), "/addInstallationSerial.do", null, sessionVO.getUserId());
+
     ReturnMessage message = new ReturnMessage();
 
     logger.debug("==========================/addInstallationSerial.do=================================");

@@ -356,4 +356,6 @@ public interface ASManagementListMapper {
 List<EgovMap> selectWaterSrcType();
 
 List<EgovMap> selectASNotMatch();
+
+void insertASResultLog(Map<String, Object> p);
 }

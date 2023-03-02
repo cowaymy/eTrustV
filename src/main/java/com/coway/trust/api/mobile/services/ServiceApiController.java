@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -784,6 +785,10 @@ public class ServiceApiController {
   @RequestMapping(value = "/afterServiceResult", method = RequestMethod.POST)
   public ResponseEntity<AfterServiceResultDto> asRegistration(
       @RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
+	  AfterServiceResultForm form = afterServiceForms.get(0);
+	  Map<String, Object> map = form.createMaps(form).get(0);
+	  Map<String, Object> basic = MSvcLogApiService.getAsBasic(map);
+	ASManagementListService.insertASResultLog(afterServiceForms.toString(), "/mobile/afterServiceResult", String.valueOf(basic.get("asId")), (int) basic.get("updUsrId"));
     return serviceApiASService.asResult(afterServiceForms);
 
     // String transactionId = "";
@@ -1354,6 +1359,11 @@ public class ServiceApiController {
   @RequestMapping(value = "/installationResult", method = RequestMethod.POST)
   public ResponseEntity<InstallationResultDto> installationResult(
       @RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
+
+	  InstallationResultForm form = installationResultForms.get(0);
+	  Map<String, Object> map = form.createMaps(form).get(0);
+      int userId = Integer.valueOf(MSvcLogApiService.getUseridToMemid(map));
+	ASManagementListService.insertASResultLog(installationResultForms.toString(), "/mobile/installationResult", null, userId);
 
 	  LOGGER.debug("============ServiceApiController.java @ installationResult============");
 
@@ -2771,7 +2781,7 @@ public class ServiceApiController {
      LOGGER.debug("### selectOrderInfo Param FORM : " + params.toString());
 
      EgovMap resultMap = null;
-      
+
      resultMap = asFromCodyApiService.selectOrderInfo(params);
 
      LOGGER.debug("### selectOrderInfo Param FORM : " + resultMap.toString());
