@@ -522,7 +522,7 @@
         WHEN MATCHED THEN
             UPDATE SET
                 INVC_NO = #{invcNo},
-                INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
+                INVC_DT = TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
                 EXP_TYPE = #{expType},
                 EXP_TYPE_NM = #{expTypeNm},
                 GL_ACC_NO = #{glAccCode},
@@ -563,7 +563,7 @@
                 #{clmNo},
                 (SELECT MAX(CLM_SEQ) + 1 FROM FCM0028D WHERE CLM_NO = #{clmNo}),
                 #{invcNo},
-                TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
+                TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
                 #{expType},
                 #{expTypeNm},
                 #{glAccCode},
@@ -849,7 +849,7 @@
                T1.BGT_CODE BUDGET_CODE,
                T1.BGT_NM BUDGET_CODE_NAME,
                T1.INVC_NO,
-               TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+               TO_CHAR(T1.INVC_DT, 'YYYY/MM/DD') AS INVC_DT,
                T1.TAX_CODE,
                T2.INDUSTRY_CODE||'('||T2.TAX_NAME||')' AS TAX_NAME,
                'MYR' AS CUR,
