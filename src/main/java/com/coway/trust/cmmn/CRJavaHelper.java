@@ -1147,55 +1147,70 @@ public class CRJavaHelper {
 	    Fields pFields = null;
 	    DatabaseController dbController = clientDoc.getDatabaseController();
 
-	    oldConnectionInfo = dbController.getConnectionInfos(null).getConnectionInfo(0);
+	    if(!dbController.getConnectionInfos(null).isEmpty()){
+  	    oldConnectionInfo = dbController.getConnectionInfos(null).getConnectionInfo(0);
 
-	    PropertyBag propertyBag = new PropertyBag();
+  	    PropertyBag propertyBag = new PropertyBag();
 
-	    boolean trustedConnection = false;
-	    String serverType = "JDBC (JNDI)";
-	    boolean useJdbc = true;
-	    String databaseDll = "crdb_jdbc.dll";
-	    String jndiDatasourceName = jndiName;
-	    String connectionUrl = connectionURL;
-	    String dbClassName = driverName;
+  	    boolean trustedConnection = false;
+  	    String serverType = "JDBC (JNDI)";
+  	    boolean useJdbc = true;
+  	    String databaseDll = "crdb_jdbc.dll";
+  	    String jndiDatasourceName = jndiName;
+  	    String connectionUrl = connectionURL;
+  	    String dbClassName = driverName;
 
-	    // Set new table logon properties
-	    propertyBag.put("Trusted_Connection", trustedConnection);
-	    propertyBag.put("Server Type", serverType);
-	    propertyBag.put("Use JDBC", useJdbc);
-	    propertyBag.put("Database DLL", databaseDll);
-	    propertyBag.put("JNDI Datasource Name", jndiDatasourceName);
-	    propertyBag.put("Connection URL", connectionUrl);
-	    propertyBag.put("Database Class Name", dbClassName);
+  	    // Set new table logon properties
+  	    propertyBag.put("Trusted_Connection", trustedConnection);
+  	    propertyBag.put("Server Type", serverType);
+  	    propertyBag.put("Use JDBC", useJdbc);
+  	    propertyBag.put("Database DLL", databaseDll);
+  	    propertyBag.put("JNDI Datasource Name", jndiDatasourceName);
+  	    propertyBag.put("Connection URL", connectionUrl);
+  	    propertyBag.put("Database Class Name", dbClassName);
 
-	    // Assign the properties to the connection info
-	    newConnectionInfo.setAttributes(propertyBag);
+  	    // Assign the properties to the connection info
+  	    newConnectionInfo.setAttributes(propertyBag);
 
-	    newConnectionInfo.setUserName(username);
-	    newConnectionInfo.setPassword(password);
+  	    newConnectionInfo.setUserName(username);
+  	    newConnectionInfo.setPassword(password);
 
-	    newConnectionInfo.setKind(ConnectionInfoKind.from_string("CRQE"));
+  	    newConnectionInfo.setKind(ConnectionInfoKind.from_string("CRQE"));
 
-	  // set the parameters to replace.
-	    // The 4 options are:
-	    // _doNotVerifyDB
-	    // _ignoreCurrentTableQualifiers
-	    // _mapFieldByRowsetPosition
-	    // _useDefault
-	    int replaceParams = DBOptions._ignoreCurrentTableQualifiers + DBOptions._doNotVerifyDB;
+  	  // set the parameters to replace.
+  	    // The 4 options are:
+  	    // _doNotVerifyDB
+  	    // _ignoreCurrentTableQualifiers
+  	    // _mapFieldByRowsetPosition
+  	    // _useDefault
+  	    int replaceParams = DBOptions._ignoreCurrentTableQualifiers + DBOptions._doNotVerifyDB;
 
-	    dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
+  	    dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
 
-	     IStrings subNames = clientDoc.getSubreportController().getSubreportNames();
-	     for (int subNum = 0; subNum < subNames.size(); subNum++) {
-	        Tables tables = clientDoc.getSubreportController().getSubreport(subNames.getString(subNum)).getDatabaseController().getDatabase().getTables();
-	        for (int i = 0; i < tables.size(); i++) {
-	          dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
-	          clientDoc.getSubreportController().getSubreport(subNames.getString(subNum))
-	                   .getDatabaseController().replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);;
-	        }
-	     }
+  	     IStrings subNames = clientDoc.getSubreportController().getSubreportNames();
+  	     for (int subNum = 0; subNum < subNames.size(); subNum++) {
+  	        Tables tables = clientDoc.getSubreportController().getSubreport(subNames.getString(subNum)).getDatabaseController().getDatabase().getTables();
+  	        for (int i = 0; i < tables.size(); i++) {
+  	          dbController.replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);
+  	          clientDoc.getSubreportController().getSubreport(subNames.getString(subNum))
+  	                   .getDatabaseController().replaceConnection(oldConnectionInfo, newConnectionInfo, pFields, replaceParams);;
+  	        }
+  	     }
+	    }
 
 	  }
+
+	 public static void exportExcel2007(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
+	      String downFileName) throws ReportSDKExceptionBase, IOException {
+	    ExportOptions exportOptions = getExcel2007ExportOptions();
+	    export(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
+	  }
+
+	  public static ExportOptions getExcel2007ExportOptions() {
+	    ExportOptions exportOptions = new ExportOptions();
+	    exportOptions.setExportFormatType(ReportExportFormat.MSExcel);
+	    return exportOptions;
+	  }
+
 
 }
