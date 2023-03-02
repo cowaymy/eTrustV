@@ -264,9 +264,9 @@
                     </tr>
 
                        <tr>
-                        <th scope="row"><spring:message code='sales.OrderNo'/></th>
+                        <th scope="row">Current Order</th>
                         <td>
-                            <input id=ordNo name="ordNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
+                            <input id=ordNo name="ordNo" type="text" title="Current Order" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
                         </td>
                         <th scope="row">Branch Code</th>
                         <td>
@@ -274,9 +274,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><spring:message code='sales.OrderNo'/> 2</th>
+                        <th scope="row">New Order</th>
                         <td>
-                            <input id="salesOrdNo2" name="salesOrdNo2" type="text" title="Order No 2" placeholder="<spring:message code='sales.OrderNo'/> 2" class="w100p" />
+                            <input id="salesOrdNo2" name="salesOrdNo2" type="text" title="New Order" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
                         </td>
                         <th scope="row">Requestor</th>
                         <td>

@@ -61,7 +61,7 @@ function fn_approval(){
 	    	if (result) {
 				var message = "<spring:message code='pay.alert.fundTransSuccess'/>";
 	    	} else {
-	    		var message = "Fund Transfer has fail to approval";
+	    		var message = "Fund Transfer has fail to approval due to payment has been reversed\nKindly reject it.";
 	    	}
 
     		Common.alert(message, function(){

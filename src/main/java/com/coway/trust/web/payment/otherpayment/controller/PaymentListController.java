@@ -287,7 +287,7 @@ public class PaymentListController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 
-		if (result.get("error") != null) {
+		if (result != null) {
 			message.setMessage((String) result.get("error"));
 		} else {
 			List<EgovMap> resultMapList = (List<EgovMap>) params.get("p1"); //
