@@ -341,9 +341,8 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put("padNo", padNo);
     params.put("padId", padId);
 
-    LOGGER.error("Auto Debit Resubmit Pilot Test Check Params :", params.toString());
     int insertPay0333M = autoDebitMapper.insertAutoDebitMobileSubmmisionData(params);
-    LOGGER.error("Auto Debit Resubmit Pilot Test Check insertPay0333M : ",insertPay0333M);
+    LOGGER.debug("Auto Debit Resubmit Pilot Test Check insertPay0333M : ",insertPay0333M);
     if (insertPay0333M > 0) {
 	  params.put("result", "1");
       return params;
@@ -422,7 +421,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     	//creating encryption string for url
     	try {
     		encryptedString = encryptionDecryptionService.encrypt(combinationKey,"autodebit");
-    		LOGGER.error("autodebitsubmission sms encryptedString: =====================>> " + encryptedString);
 
     	} catch (Exception e) {
     		// TODO Auto-generated catch block
@@ -515,7 +513,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     	      sms.setRemark("SMS AUTO DEBIT VIA MOBILE APPS");
     	      sms.setRefNo(CommonUtils.nvl(params.get("padNo")));
     	      SmsResult smsResult = adaptorService.sendSMS(sms);
-    	      LOGGER.error(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
+    	      LOGGER.debug(" autodebitsubmission sms  smsResult : {}", smsResult.getFailReason().toString());
     	    }
     	}
     }
@@ -544,7 +542,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     } else if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
       emailNo.add(CommonUtils.nvl(params.get("email2")));
     }
-    emailNo.add("frango.liew@coway.com.my");
 
     String content = "";
     content += "Dear Sir/Madam,\n";
@@ -557,11 +554,8 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
     params.put(EMAIL_TO, emailNo);
     params.put(EMAIL_TEXT, content);
 
-    LOGGER.error("auto debit email result param: {}", params);
-    LOGGER.error("auto debit email result email size : {}", emailNo.size());
     try {
     	if(emailNo.size() > 0){
-    	    LOGGER.error("auto debit email result email size : {}", emailNo.size());
     		this.view(null, null, params); //Included sending email
     	}
 	} catch (IOException e) {
@@ -574,15 +568,12 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 	      throws IOException {
-
-	    LOGGER.error("auto debit email progress 1");
 	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
 		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
 
 	   Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
 		        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
 
-	    LOGGER.error("auto debit email progress 2");
 	    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
 	    Calendar startTime = Calendar.getInstance();
 	    Calendar endTime = null;
@@ -606,7 +597,6 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	        String userName = reportUserName;
 	        String password = reportPassword;
 
-
 	        //CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
 	        CRJavaHelper.replaceConnection(clientDoc, userName, password, connectString, driverName, jndiName);
 	        CRJavaHelper.logonDataSource(clientDoc, userName, password);
@@ -619,13 +609,11 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
 
-		  LOGGER.error("auto debit email progress 4 {}", params.toString());
 	      ReportUtils.setReportParameter(params, paramController, fields);
 	      {
 	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
 	            params);
 	      }
-		  LOGGER.error("auto debit email progress 5 viewHandlesuccess", "");
 	    } catch (Exception ex) {
 	      LOGGER.error("autodebitsummission email error {}", CommonUtils.printStackTraceToString(ex));
 	      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
@@ -640,9 +628,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      params.put("endTime", fmt.format(endTime.getTime()));
 	      params.put("userId", 349);
 
-		  LOGGER.error("auto debit email progress 6 log insert {}", params.toString());
 	      reportBatchService.insertLog(params);
-		  LOGGER.error("auto debit email progress 7 log success {}", params.toString());
 	    }
 	  }
 
@@ -650,19 +636,9 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
 	      throws ReportSDKExceptionBase, IOException {
 
-	  LOGGER.error("auto debit email progress viewHandle {}", viewType.toString());
-//	    switch (viewType) {
-//	      case MAIL_PDF:
-//	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
-//	    	  LOGGER.error("auto debit email progress ReportUtils success", "");
-//	          break;
-//
-//	      default:
-//	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
-//	    }
+	  //Tested with switch case, apparently switch case unable to handle viewtype and return error 505 so use if/else
 	    if(viewType == ViewType.MAIL_PDF){
 	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
-	    	  LOGGER.error("auto debit email progress ReportUtils success", "");
 	    }
 	    else{
 	    	throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
