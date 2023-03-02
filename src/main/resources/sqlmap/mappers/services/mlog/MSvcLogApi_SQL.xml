@@ -5080,7 +5080,8 @@ SELECT MST.*
                     AND I.INSTALL_ENTRY_ID = J.ENTRY_ID(+)
                     AND C.SRV_ORD_ID = K.SALES_ORD_ID(+)
                     AND K.ITM_STK_ID = L.STK_ID(+)
-                    AND C.CUST_BILL_ID = M.CUST_BILL_ID(+)
+                    /*AND C.CUST_BILL_ID = M.CUST_BILL_ID(+)*/
+                    AND SAL.CUST_BILL_ID = M.CUST_BILL_ID(+)
 
                     /*AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)*/
                     /*AND C.SALES_ORD_ID = O.CUST_ID(+)*/
