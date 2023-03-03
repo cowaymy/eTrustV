@@ -1839,6 +1839,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     installResult.put("smsMobileNo", CommonUtils.nvl(params.get("hidCustomerContact")).toString());
     installResult.put("ctCode", CommonUtils.nvl(params.get("ctCode")).toString());
+    installResult.put("CTID", Integer.parseInt(CommonUtils.nvl(params.get("CTID")).toString()));
+    installResult.put("dtPairId", CommonUtils.nvl(params.get("dtPairCode")).toString());
 
     // installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
     // installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
@@ -3939,4 +3941,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     public List<EgovMap> selectWaterSrcType() {
       return installationResultListMapper.selectWaterSrcType();
     }
+
+  	@Override
+  	public List<EgovMap> getInstallDtPairByCtCode(Map<String, Object> params) {
+  		return installationResultListMapper.getInstallDtPairByCtCode(params);
+  	}
 }

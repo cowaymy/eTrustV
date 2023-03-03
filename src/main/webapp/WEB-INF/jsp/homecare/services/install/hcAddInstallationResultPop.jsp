@@ -150,8 +150,10 @@ var serialGubun = "1";
 
         if(js.String.isEmpty( $("#hidFrmOrdNo").val() )){
         	$(".frmS1").hide();
+        	$(".frmS3").hide();
         }else{
         	$(".frmS1").show();
+        	$(".frmS3").show();
         }
 
         if(js.String.strNvl($("#hidFrmSerialChkYn").val()) == "Y"){
@@ -165,6 +167,20 @@ var serialGubun = "1";
         	}else{
         		$("#frmSerialNo").attr("disabled", true).addClass("readonly");
         	}
+        }
+
+        // ADIB - Hide DT PAIR For Aircond
+        if($("#ordCtgryCd").val() == "ACI"){
+            $(".dtPair1").hide();
+            $(".dtPair2").hide();
+            $(".dtPair3").show();
+            $(".dtPair4").show();
+        }
+        else {
+            $(".dtPair1").show();
+            $(".dtPair2").show();
+            $(".dtPair3").hide();
+            $(".dtPair4").hide();
         }
     });
 
@@ -195,6 +211,12 @@ var serialGubun = "1";
 	    	  Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 	    	  return;
 	     }
+
+	     if (($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") && $("#ordCtgryCd").val() != "ACI") {
+	    	 Common.alert("Please choose a DT Pair");
+	         return;
+	     }
+
 	     /*  if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
 	    	        Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 	        return;
@@ -265,6 +287,10 @@ var serialGubun = "1";
 
 	      if ($("#nextCallDate").val() == '') {
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
+	      }
+
+	      if ($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") {
+	    	msg += "Please choose a DT Pair";
 	      }
 
 	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
@@ -974,11 +1000,18 @@ var serialGubun = "1";
          <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop1()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </td>
      </tr>
-     <tr class="frmS1" style="display:none;">
-       <th scope="row"></th>
-       <td></td>
-       <th scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
-       <td>
+     <tr>
+      <th class="dtPair1" scope="row">DT Pair<span id="dtPair" class="must">*</span></th>
+      <td class="dtPair2"><select class="w100p" id="dtPairCode" name="dtPairCode">
+        <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+            <c:forEach var="list" items="${dtPairList}">
+                <option value="${list.dtId}">${list.dtMemCode}</option>
+        </c:forEach>
+        </select></td>
+        <th class="dtPair3" scope="row"></th>
+        <td class="dtPair4"></td>
+       <th class="frmS1" scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
+       <td class="frmS3">
 	     <input type="text" title="" placeholder="Frame Serial No" class="w50p" id="frmSerialNo" name="frmSerialNo" />
 	     <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop2()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </td>

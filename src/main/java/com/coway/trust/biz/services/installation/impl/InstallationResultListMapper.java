@@ -320,4 +320,6 @@ public interface InstallationResultListMapper {
 
  List<EgovMap> selectWaterSrcType();
 
+ List<EgovMap> getInstallDtPairByCtCode(Map<String, Object> params);
+
 }

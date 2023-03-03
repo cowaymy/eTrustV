@@ -206,6 +206,7 @@ public class HcInstallResultListController {
         EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
         EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
         EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+        List<EgovMap> dtPairList = installationResultListService.getInstallDtPairByCtCode(installResult);
 
         EgovMap orderInfo = new EgovMap();
         if (params.get("codeId").toString().equals("258")) { // PRODUCT EXCHANGE
@@ -269,6 +270,7 @@ public class HcInstallResultListController {
         model.addAttribute("sirimLoc", sirimLoc);
         model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
         model.addAttribute("promotionView", promotionView);
+        model.addAttribute("dtPairList", dtPairList);
 
         EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
         model.put("orderDetail", orderDetail);

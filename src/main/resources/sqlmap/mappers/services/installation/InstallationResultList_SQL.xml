@@ -3631,6 +3631,7 @@
                         , WATER_SRC_TYPE
                         , INST_NOTECHK
                         , SGN_DT
+                        , DT_PAIR_ID
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3670,6 +3671,7 @@
             , #{waterSrcType}
             , #{instNoteChk}
             , #{signData}
+            , #{dtPairId}
     )
   </insert>
 
@@ -5452,5 +5454,13 @@ AND J.CODE IN ('COM','FAL','CAN')
 	      FROM SYS0013M Extent1
 	      WHERE CODE_MASTER_ID = 501
     </select>
+
+<select id="getInstallDtPairByCtCode" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID AS DT_ID, MEM_CODE AS DT_MEM_CODE FROM ORG0001D ORG
+    WHERE ORG.MEM_TYPE IN ('5758','6672')
+    AND ORG.STUS = 1
+    AND ORG.MEM_CODE <![CDATA[<>]]> #{ctMemCode}
+    AND ORG.BRNCH IN (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{ctMemCode})
+</select>
 
 </mapper>
