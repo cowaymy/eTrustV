@@ -17,7 +17,7 @@
     <!--Search Payment Order List(Master Grid) 리스트 조회  -->
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <!-- <include refid="pagingStart" /> -->
-        SELECT DISTINCT /*+ FIRST_ROWS(50)*/
+        SELECT DISTINCT
             H.BANK_STATE_MAPPING_ID TRX_ID,
             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
 			pay.TRX_DT,
