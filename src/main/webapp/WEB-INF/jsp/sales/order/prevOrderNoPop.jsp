@@ -14,8 +14,16 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(prevOrdNoGridID, "cellDoubleClick", function(event) {
-            $('#relatedNo').val("");
-            Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "promoId"), exTrade : $('#exTrade').val()}, function(RESULT) {
+        	$('#relatedNo').val("");
+
+           //** Start exTrade Neo to Neo Plus **//
+		   //             if($('#prodId').val() == null || $('#prodId').val() == ''){
+		   //             	Common.alert("Please select a product.");
+		   //             	$('#btnPrevOrderNo').click();
+		   //             }else{
+	       //** End exTrade Neo to Neo Plus **//
+
+            Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "promoId"), exTrade : $('#exTrade').val(), prodId : $('#prodId').val(), stkId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stkId")}, function(RESULT) {
                 console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
                 console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
                 console.log('RESULT MSG         :'+RESULT.msg);
@@ -74,6 +82,7 @@
             });
             //fn_setData(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"))
             //$('#btnPrevOrderNo').click();
+//             }
         });
 
     });
@@ -92,6 +101,7 @@
           , { headerText : "Product Name", dataField : "stkDesc"}
           , { headerText : "Promo Id",     dataField : "promoId", visible  : false }
           , { headerText : "Order Id",     dataField : "salesOrdId" , visible  : false}
+//           , { headerText : "Stock Id",     dataField : "stkId" , visible  : false}  // Used for exTrade Neo to NeoPlus
             ];
 
         //그리드 속성 설정
@@ -171,6 +181,7 @@
 </article><!-- grid_wrap end -->
 
 <input type="hidden" id="custId" name="custId" value="${custId}"/>
+<%-- <input type="hidden" id="prodId" name="prodId" value="${prodId}"/> --%> <!-- Used for extrade Neo to Neo Plus -->
 <input type="hidden" id="exTrade" name="exTrade" value="${exTrade}"/>
 
 <ul class="left_btns mb10">

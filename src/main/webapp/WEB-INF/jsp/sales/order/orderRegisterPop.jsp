@@ -638,7 +638,11 @@
 
     $(function(){
         $('#btnRltdNo').click(function() {
-            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+        	   //** Start exTrade Neo to Neo Plus **//
+//             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(), prod:$('#ordProudct').val(), extrade:$("#exTrade").val()}, null, true);
+        	   //** End exTrade Neo to Neo Plus **//
+
+        	   Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
@@ -1085,8 +1089,11 @@
             }
         });
         $('#ordProudct').change(function() {
+        	   //** Start exTrade Neo to Neo Plus **//
+               //   $('#relatedNo').val('');
+        	   //** End exTrade Neo to Neo Plus **//
 
-            if(FormUtil.checkReqValue($('#exTrade'))) {
+        	if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
                 $('#ordProudct').val('');
                 return;

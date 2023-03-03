@@ -548,6 +548,7 @@ public class OrderRegisterController {
 
     model.put("custId", params.get("custId"));
     model.put("isHomecare", params.get("isHomecare") != null ? '1' : '0');
+//    model.put("prodId", params.get("prod") != null ? params.get("prod") : ""); // Used for exTrade Neo to NeoPlus
 
     return "sales/order/prevOrderNoPop";
   }
@@ -796,4 +797,9 @@ public class OrderRegisterController {
     return ResponseEntity.ok(result);
   }
 
+  @RequestMapping(value = "/getExTradeConfig.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getExTradeConfig() {
+      EgovMap result = orderRegisterService.getExTradeConfig();
+      return ResponseEntity.ok(result);
+  }
 }

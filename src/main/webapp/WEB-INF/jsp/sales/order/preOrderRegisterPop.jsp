@@ -172,8 +172,11 @@
 
     $(function(){
     	$('#btnRltdNoEKeyIn').click(function() {
-            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
-        });
+    		  //** Start exTrade Neo to Neo Plus **//
+              //  Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(), prod : $('#ordProudct').val()}, null, true);
+    		  //** Start exTrade Neo to Neo Plus **//
+    		  Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+    	});
 
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
@@ -488,6 +491,9 @@
 
         });
         $('#ordProudct').change(function() {
+        	//** Start exTrade Neo to Neo Plus **//
+            //  $('#relatedNo').val('');
+        	//** End exTrade Neo to Neo Plus **//
 
             console.log('ordProudct change event start');
             disableSaveButton()

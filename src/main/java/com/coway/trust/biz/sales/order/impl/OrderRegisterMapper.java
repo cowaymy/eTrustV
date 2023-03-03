@@ -220,5 +220,7 @@ public interface OrderRegisterMapper {
 
   EgovMap selectShiIndexInfo(String custNric);
 
+  EgovMap getExTradeConfig();
 
+  EgovMap getRentalPeriod(int salesOrdIdOld);
 }

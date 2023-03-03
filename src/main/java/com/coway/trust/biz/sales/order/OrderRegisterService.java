@@ -94,4 +94,5 @@ public interface OrderRegisterService {
 
   EgovMap selectShiIndexInfo(String params);
 
+  EgovMap getExTradeConfig();
 }

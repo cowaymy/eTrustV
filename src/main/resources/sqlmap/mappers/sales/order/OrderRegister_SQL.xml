@@ -3152,4 +3152,22 @@ WHERE
 	<update id="updateMarketingMessageStatus" parameterType="Map">
 		UPDATE SAL0029D SET RECEIVING_MARKETING_MSG_STATUS = #{receivingMarketingMsgStatus}, UPD_DT = SYSDATE, UPD_USER_ID = #{updUserId} WHERE CUST_ID = #{custId}
 	</update>
+
+  <select id="getExTradeConfig" parameterType="Map" resultType="egovMap">
+       SELECT
+<!--        ** Start exTrade Neo to Neo Plus ** -->
+<!--            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'EX_TRADE_DT_RANGE'), '0') EX_TRADE_DT_RANGE, -->
+<!--            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'EX_TRADE_NEO_ID'), '0') EX_TRADE_NEO_ID, -->
+<!--            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'EX_TRADE_NEO_PLUS_ID'), '0') EX_TRADE_NEO_PLUS_ID -->
+ <!--        ** End exTrade Neo to Neo Plus ** -->
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'EX_TRADE_MTH'), '0') EX_TRADE_MTH
+       FROM DUAL
+  </select>
+
+  <select id="getRentalPeriod" parameterType="Map" resultType="egovMap">
+       SELECT
+           CNTRCT_RENTAL_PRIOD
+       FROM SAL0003D
+       WHERE CNTRCT_SALES_ORD_ID = #{value}
+  </select>
 </mapper>

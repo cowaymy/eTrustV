@@ -425,15 +425,38 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
                 EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
 
-                if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 57) { // Ex-Trade
-                                                                                               // can
-                                                                                               // be
-                                                                                               // done
-                                                                                               // 4
-                                                                                               // month
-                                                                                               // early
-                  msg = msg + " -Below 57th months not allowed to entitle Ex-Trade Promo. <br/>";
-                  isInValid = "InValid";
+                EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
+                int exTrade_mth = Integer.parseInt(String.valueOf(exTradeConfig.get("exTradeMth")));
+
+            	//** Start exTrade Neo to Neo Plus **//
+//                if((params.get("prodId").toString()).equals(exTradeConfig.get("exTradeNeoPlusId").toString()) &&
+//                	(params.get("stkId").toString()).equals(exTradeConfig.get("exTradeNeoId").toString())){
+//                	if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < exTrade_dur){
+//                		  msg = msg + " -Below "+ exTrade_dur +" months not allowed to entitle Ex-Trade Promo. <br/>";
+//                          isInValid = "InValid";
+//                	}
+//                } else{
+//                    if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 57) { // Ex-Trade
+//                                                                                                   // can
+//                                                                                                   // be
+//                                                                                                   // done
+//                                                                                                   // 4
+//                                                                                                   // month
+//                                                                                                   // early
+//                      msg = msg + " -Below 57th months not allowed to entitle Ex-Trade Promo. <br/>";
+//                      isInValid = "InValid";
+//                    }
+//                }
+            	//** End exTrade Neo to Neo Plus **//
+
+                EgovMap rentalPrd = orderRegisterMapper.getRentalPeriod(getOldOrderID);
+                int rentalPeriod = Integer.parseInt(String.valueOf(rentalPrd.get("cntrctRentalPriod")));
+
+                int allowToExTrade = rentalPeriod - exTrade_mth;
+
+                if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < allowToExTrade){
+                	   msg = msg + " -Not allow early ex-trade 5 months and above advance before end of contract. <br/>";
+                       isInValid = "InValid";
                 }
 
                 if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
@@ -2318,5 +2341,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   @Override
   public EgovMap selectShiIndexInfo(String params) {
 	  return orderRegisterMapper.selectShiIndexInfo(params);
+  }
+
+  @Override
+  public EgovMap getExTradeConfig(){
+	  EgovMap exTradeConfig = orderRegisterMapper.getExTradeConfig();
+	  return exTradeConfig;
   }
 }

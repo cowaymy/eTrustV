@@ -15,10 +15,13 @@ var  gridID;
 var  detailGridID;
 var  filterGridID;
 var typeKeyValueList = [];
+var exTrade = 0;
 
 $(document).ready(function(){
 
     fn_codeSearch();
+    fn_exTradeConfig();
+
     //AUIGrid 그리드를 생성합니다.
     createAUIGrid();
     createDetailAUIGrid();
@@ -102,6 +105,18 @@ function createAUIGrid() {
                                     onlyNumeric : true,
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
                                 }
+                            },
+                            { dataField : "exTradeObligtPriod", headerText  : "Ex-trade Obliged <br> Period",  width  : 150 , dataType:"numeric", editable: false,
+                                labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+                                    // logic processing
+                                    // Return value here, reprocessed or formatted as desired.
+                                    // The return value of the function is immediately printed in the cell.
+                                     if(item.obligtPriod != null) {
+                                            return item.obligtPriod - exTrade;
+                                       } else {
+                                            return "";
+                                       }
+                                 }
                             },
                             { dataField : "rcoPriod", headerText  : "<spring:message code="sal.title.rcoPeriod" />",  width  : 80 , dataType:"numeric",
                                 editRenderer : {
@@ -413,6 +428,13 @@ function  fn_goSelectAdd(){
      var pram  ="?packItemID="+selectedItems[0].item.srvPacItmId+"&packID="+selectedItems[0].item.srvCntrctPacId+"&mod=EDIT";
      Common.popupDiv("/sales/mPackages/membershipPackageRPop.do"+pram ,null, null , true , '_goSelectAddDiv1');
 
+}
+
+function fn_exTradeConfig(){
+	Common.ajax("GET","/sales/order/getExTradeConfig.do",{},function(data){
+        console.log(data);
+        exTrade = data.exTradeMth;
+    });
 }
 
 //리스트 조회.
