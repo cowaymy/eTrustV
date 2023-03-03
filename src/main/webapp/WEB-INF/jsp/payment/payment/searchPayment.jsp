@@ -336,6 +336,14 @@ function fn_validSearch() {
 		   */
 	}
 
+	if(!FormUtil.isEmpty($('#customerName').val())){
+		let customerName = $('#customerName').val();
+		if(customerName.trim().length < 5 ){
+			 isValid = false;
+		     msg += '* Customer Name must more than 5 characters ';
+		}
+	}
+
 	 if(!isValid) Common.alert(msg);
 
      return isValid;
