@@ -391,8 +391,8 @@ var userType = '${SESSION_INFO.userTypeId}';
             pType : pType
           }, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
-          $('#ordProduct1').removeAttr("disabled");
-          $('#ordProduct2').removeAttr("disabled");
+//           $('#ordProduct1').removeAttr("disabled");
+//           $('#ordProduct2').removeAttr("disabled");
         }
       } else {
         $('#srvPacId option').remove();
@@ -1823,8 +1823,8 @@ var userType = '${SESSION_INFO.userTypeId}';
     //--------------------------------------------------------------
     fn_getSvrPacCombo('${preOrderInfo.appTypeId}', '${preOrderInfo.srvPacId}');
 
-    $('#ordProduct1').removeAttr("disabled");
-    $('#ordProduct2').removeAttr("disabled");
+//     $('#ordProduct1').removeAttr("disabled");
+//     $('#ordProduct2').removeAttr("disabled");
 
     var stkType = '${preOrderInfo.appTypeId}' == '66' ? '1' : '2';
     // StkCategoryID - Mattress(5706)

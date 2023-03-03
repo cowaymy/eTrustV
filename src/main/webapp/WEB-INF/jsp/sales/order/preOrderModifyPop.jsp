@@ -369,7 +369,7 @@ var userType = "${userType}";
                     //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
                     doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
-                    $('#ordProudct').removeAttr("disabled");
+                    //$('#ordProudct').removeAttr("disabled");
                 }
             }
             else {
@@ -2020,7 +2020,7 @@ var userType = "${userType}";
 
       //$('#srvPacId').val('${preOrderInfo.srvPacId}');
 
-        $('#ordProudct').removeAttr("disabled");
+        //$('#ordProudct').removeAttr("disabled");
 
         var stkType = '${preOrderInfo.appTypeId}' == '66' ? '1' : '2';
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
@@ -2919,13 +2919,13 @@ var userType = "${userType}";
     <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
     <td>
     <p><select id="appType" name="appType" class="w100p"></select></p>
-    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
+    <p><select id="srvPacId" name="srvPacId" class="w100p readonly" disabled></select></p>
     </td>
 </tr>
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
     <td>
-        <select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
+        <select id="ordProudct" name="ordProudct" class="w50p readonly" disabled></select>
         <select id="compType" name="compType" class="w50p blind" onchange="fn_reloadPromo()"></select>
     </td>
 </tr>
