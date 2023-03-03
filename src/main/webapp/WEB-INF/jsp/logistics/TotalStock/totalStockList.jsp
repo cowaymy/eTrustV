@@ -232,6 +232,10 @@ function fn_PdfReport() {
     Common.popupDiv("/logistics/totalstock/totalStockPdfPop.do", null, null, true, '');
   }
 
+function fn_ExcelReportCt() {
+    Common.popupDiv("/logistics/totalstock/totalStockCtPop.do", null, null, true, '');
+  }
+
 function SearchSessionAjax() {
     var url = "/logistics/totalstock/SearchSessionInfo.do";
     Common.ajaxSync("GET" , url , '' , function(result){
@@ -446,6 +450,11 @@ function fnSerialSearchResult(data) {
         <li><p class="link_btn type2">
           <a href="#" onclick="fn_PdfReport()">Total Stock Report (PDF)</a>
          </p></li>
+          <li>
+                <p class="link_btn type2">
+                    <a href="#" onclick="fn_ExcelReportCt()">Total Stock Report (CT)</a>
+                </p>
+         </li>
       </ul>
       <p class="hide_btn">
        <a href="#"><img
