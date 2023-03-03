@@ -8,11 +8,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("TotalStockMapper")
 public interface TotalStockMapper {
-	
+
 	List<EgovMap> totStockSearchList(Map<String, Object> params);
 
 	List<EgovMap> selectBranchList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCDCList(Map<String, Object> params);
-	
+
+	List<EgovMap> selectTotalDscList(Map<String, Object> params);
+
 }

@@ -145,4 +145,16 @@ public class TotalStockController {
 		return "logistics/TotalStock/totalStockPdfPop";
 	}
 
+	@RequestMapping(value = "/totalStockCtPop.do")
+	public String totalStockCtPop(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/TotalStock/totalStockCtPop";
+	}
+
+	@RequestMapping(value = "/selectTotalDscList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTotalDscList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = TotalStockService.selectTotalDscList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 }

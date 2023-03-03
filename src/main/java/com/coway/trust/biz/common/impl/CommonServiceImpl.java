@@ -1722,6 +1722,12 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectStockLocationList4(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commonMapper.selectStockLocationList4(params);
+	}
+
+	@Override
 	public List<EgovMap> selectBankList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return commonMapper.selectBankList(params);

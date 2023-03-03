@@ -361,6 +361,7 @@ public interface CommonService {
 
 	List<EgovMap> selectStockLocationList(Map<String, Object> params);
 
+	List<EgovMap> selectStockLocationList4(Map<String, Object> params);
 	/**
 	*  IssuedBankList 조회
 	 * @param

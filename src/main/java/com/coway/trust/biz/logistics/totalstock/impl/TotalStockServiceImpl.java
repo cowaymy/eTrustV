@@ -28,18 +28,24 @@ public class TotalStockServiceImpl extends EgovAbstractServiceImpl implements To
 		// TODO Auto-generated method stub
 		return TotalStockMapper.totStockSearchList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectBranchList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return TotalStockMapper.selectBranchList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCDCList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return TotalStockMapper.selectCDCList(params);
 	}
-	
+
+	@Override
+	public List<EgovMap> selectTotalDscList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return TotalStockMapper.selectTotalDscList(params);
+	}
+
 
 }

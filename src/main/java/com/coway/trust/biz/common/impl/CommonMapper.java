@@ -205,6 +205,8 @@ public interface CommonMapper {
 
 	List<EgovMap> selectStockLocationList(Map<String, Object> params);
 
+	List<EgovMap> selectStockLocationList4(Map<String, Object> params);
+
 	/**
 	*  IssuedBankList 조회
 	 * @param
@@ -271,4 +273,6 @@ public interface CommonMapper {
 	// Added for Special Delivery CT enhancement by Hui Ding, 31-03-2020
 	EgovMap selectSuperCtInd();
 	EgovMap selectSuperCtCode();
+
+
 }

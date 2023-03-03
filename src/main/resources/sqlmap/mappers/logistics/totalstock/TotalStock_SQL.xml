@@ -131,6 +131,20 @@ AND S28M.WH_LOC_GB IN ('01', '05')
 ORDER BY WH_LOC_CODE
 </select>
 
+<select id="selectTotalDscList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+		      WH_LOC_BRNCH_ID CODE
+		   ,  WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+		FROM SYS0028M S28M
+		LEFT JOIN SYS0005M  S05M ON S28M.WH_LOC_BRNCH_ID = S05M.BRNCH_ID
+		WHERE 1=1
+		    AND S05M.TYPE_ID = 43
+		    AND S28M.WH_LOC_GB = '02'
+		<if test="locationGrade != null and locationGrade !=''">
+            AND S28M.WH_LOC_STK_GRAD = #{locationGrade}
+        </if>
+</select>
+
 
 
 </mapper>

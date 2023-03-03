@@ -391,6 +391,14 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectStockLocationList4.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockLocationList4(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		String[] dscBranchList = request.getParameterValues("dscBranch");
+        params.put("dscBranchList", dscBranchList);
+		List<EgovMap> codeList = commonService.selectStockLocationList4(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	@RequestMapping(value = "/customerPop.do")
 	public String customerPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
