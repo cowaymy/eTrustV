@@ -337,10 +337,15 @@ function fn_validSearch() {
 	}
 
 	if(!FormUtil.isEmpty($('#customerName').val())){
-		let customerName = $('#customerName').val();
-		if(customerName.trim().length < 5 ){
+		if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())){
 			 isValid = false;
-		     msg += '* Customer Name must more than 5 characters ';
+             msg += '* Please select Pay Date ';
+		}else{
+		     let customerName = $('#customerName').val();
+		     if(customerName.trim().length < 5 ){
+		             isValid = false;
+		             msg += '* Customer Name must more than 5 characters ';
+		        }
 		}
 	}
 
