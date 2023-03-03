@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -788,7 +789,7 @@ public class ServiceApiController {
 	  AfterServiceResultForm form = afterServiceForms.get(0);
 	  Map<String, Object> map = form.createMaps(form).get(0);
 	  Map<String, Object> basic = MSvcLogApiService.getAsBasic(map);
-	ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/afterServiceResult", String.valueOf(basic.get("asId")), (int) basic.get("updUsrId"));
+	ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/afterServiceResult", String.valueOf(basic.get("asId")), ((BigDecimal) basic.get("updUsrId")).intValue());
     return serviceApiASService.asResult(afterServiceForms);
 
     // String transactionId = "";
