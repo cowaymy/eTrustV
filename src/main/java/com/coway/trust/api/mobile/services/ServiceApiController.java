@@ -786,10 +786,10 @@ public class ServiceApiController {
   @RequestMapping(value = "/afterServiceResult", method = RequestMethod.POST)
   public ResponseEntity<AfterServiceResultDto> asRegistration(
       @RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
-	  AfterServiceResultForm form = afterServiceForms.get(0);
-	  Map<String, Object> map = form.createMaps(form).get(0);
-	  Map<String, Object> basic = MSvcLogApiService.getAsBasic(map);
-	ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/afterServiceResult", String.valueOf(basic.get("asId")), ((BigDecimal) basic.get("updUsrId")).intValue());
+//	  AfterServiceResultForm form = afterServiceForms.get(0);
+//	  Map<String, Object> map = form.createMaps(form).get(0);
+//	  Map<String, Object> basic = MSvcLogApiService.getAsBasic(map);
+//	ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/afterServiceResult", String.valueOf(basic.get("asId")), ((BigDecimal) basic.get("updUsrId")).intValue());
     return serviceApiASService.asResult(afterServiceForms);
 
     // String transactionId = "";
@@ -1361,10 +1361,10 @@ public class ServiceApiController {
   public ResponseEntity<InstallationResultDto> installationResult(
       @RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
 
-	  InstallationResultForm form = installationResultForms.get(0);
-	  Map<String, Object> map = form.createMaps(form).get(0);
-      int userId = Integer.valueOf(MSvcLogApiService.getUseridToMemid(map));
-	ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/installationResult", null, userId);
+//	  InstallationResultForm form = installationResultForms.get(0);
+//	  Map<String, Object> map = form.createMaps(form).get(0);
+//      int userId = Integer.valueOf(MSvcLogApiService.getUseridToMemid(map));
+//	ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/installationResult", null, userId);
 
 	  LOGGER.debug("============ServiceApiController.java @ installationResult============");
 
