@@ -1360,6 +1360,8 @@
                     WHERE  (8 <> Extent1.STUS_CODE_ID)
                            AND  Extent1.CUST_ADD_ID = #{getparam} AND ROWNUM <= 1
 
+                             ]]>
+
   </select>
   <!-- Customer Detail Contact(PopUp View) -->
 
