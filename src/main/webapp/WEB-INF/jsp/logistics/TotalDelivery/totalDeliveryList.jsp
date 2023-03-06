@@ -88,7 +88,12 @@
 
 	    $('#search').click(function() {
 
-	        SearchListAjax();
+	    	if(validation()){
+	    		SearchListAjax();
+	    	}
+	    	else {
+
+	    	}
 
 	    });
 
@@ -158,6 +163,15 @@
 	    }
 
 
+	// added by ADIB - To cater for performance issue
+	function validation() {
+		if ($("#crtsdt").val() == "" || ($("#crtedt").val() == "")) {
+			Common.alert('Please enter the Delivery Date');
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	function SearchListAjax() {
 
