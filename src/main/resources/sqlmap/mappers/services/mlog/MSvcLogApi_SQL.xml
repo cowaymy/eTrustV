@@ -4827,7 +4827,8 @@ SELECT MST.*
            HC_REF_PROD,
            TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID,
            TO_CHAR (A.DISINF_SRV) AS DISINFEC_SERV,
-           A.SRV_TYPE
+           A.SRV_TYPE,
+           A.prodCat
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4893,7 +4894,8 @@ SELECT MST.*
                   HC_REF_PROD,
                   SRV_PAC_ID,
                   DISINF_SRV,
-                  SRV_TYPE
+                  SRV_TYPE,
+                  prodCat
            FROM ( SELECT SRV_INFO.*, AD.DISINF_SRV AS DISINF_SRV, U.FAUCET_EXCH AS warranty ,U.SRV_CONFIG_ID FROM(
                                   SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
@@ -4974,7 +4976,8 @@ SELECT MST.*
                                    AB.STK_DESC AS HC_REF_PROD,
                                    SAL.SRV_PAC_ID,
                        /*              AD.DISINF_SRV AS DISINF_SRV, */
-                                   C.SRV_TYPE
+                                   C.SRV_TYPE,
+                                   AD.CODE AS prodCat
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -5065,6 +5068,7 @@ SELECT MST.*
                  SAL0001D Z,
                  SAL0002D AA,
                  SYS0026M AB,
+                 SYS0013M AD,
                  (SELECT CODE_ID ,CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11') AC
 /*                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID2, SRV_SO_ID AS SRV_SO_ID2, DISINF_SRV FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, DISINF_SRV) AD */
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
@@ -5104,6 +5108,7 @@ SELECT MST.*
                     AND Y.SALES_ORD_ID = Z.SALES_ORD_ID(+)
                     AND Z.SALES_ORD_ID = AA.SALES_ORD_ID(+)
                     AND AA.ITM_STK_ID = AB.STK_ID(+)
+                    AND L.STK_CTGRY_ID = AD.CODE_ID(+)
                     AND AB.STK_CTGRY_ID = AC.CODE_ID(+)) SRV_INFO
                     JOIN (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U on SRV_INFO.SRV_ORD_ID = U.SRV_SO_ID
                     JOIN (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID2, SRV_SO_ID AS SRV_SO_ID2, DISINF_SRV FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, DISINF_SRV)AD on SRV_INFO.SRV_ORD_ID = AD.SRV_SO_ID2
