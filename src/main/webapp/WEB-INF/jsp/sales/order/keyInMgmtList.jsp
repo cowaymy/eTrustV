@@ -153,24 +153,16 @@ function auiCellEditignHandler(event)
       var yyyy = today.getFullYear();
 
       if (event.dataField == "month"){
-          console.log("month value===" + event.value);
           if (mm > event.value){
               return false;
           }
       }
 
       if (event.dataField == "keyinStartDt"){
-    	  console.log("keyinStartDt0 value===" + event.value);
     	  var startDate = new Date(event.value);
     	  var dd2 = startDate.getDate();
     	  var mm2 = startDate.getMonth() + 1;
     	  var yyyy2 = startDate.getFullYear();
-          console.log("keyinStartDt value===" + startDate);
-          console.log("keyinStartDt1 value===" + dd2);
-          console.log("keyinStartDt2 value===" + mm2);
-          console.log("keyinStartDt3 value===" + yyyy2);
-          console.log("true/false")
-          console.log(yyyy >= yyyy2 && mm > mm2);
 
           if (yyyy >= yyyy2 && mm > mm2 ){ //current date > value date
               return false;
@@ -178,18 +170,10 @@ function auiCellEditignHandler(event)
       }
 
       if (event.dataField == "keyinEndDt"){
-          console.log("keyinEndDt0 value===" + event.value);
     	  var endDate = new Date(event.value);
           var dd3 = endDate.getDate();
           var mm3 = endDate.getMonth() + 1;
           var yyyy3 = endDate.getFullYear();
-          console.log("keyinEndDt0 value===" + endDate);
-          console.log("keyinEndDt1 value===" + dd3);
-          console.log("keyinEndDt2 value===" + mm3);
-          console.log("keyinEndDt3 value===" + yyyy3);
-
-          console.log("true/false")
-          console.log(yyyy >= yyyy3 && mm > mm3);
 
           if (yyyy >= yyyy3 && mm > mm3 ){ //current date > value date
               return false;
