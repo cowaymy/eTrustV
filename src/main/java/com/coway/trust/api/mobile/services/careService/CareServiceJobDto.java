@@ -225,6 +225,8 @@ public class CareServiceJobDto {
 
   private String srvType;
 
+  private String prodcat;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -838,5 +840,13 @@ public class CareServiceJobDto {
   public void setSrvType(String srvType) {
 	    this.srvType = srvType;
   }
+
+  public String getProdcat() {
+		return prodcat;
+	}
+
+	public void setProdcat(String prodcat) {
+		this.prodcat = prodcat;
+	}
 
 }
