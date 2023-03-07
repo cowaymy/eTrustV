@@ -41,10 +41,11 @@ $(document).ready(function(){
 
     var MainColumnLayout =
         [
-            { dataField : "keyInId", headerText : 'keyInId', width : "10%"},
-            { dataField : "year", headerText : 'Year', width : "10%"},
+            { dataField : "keyInId", headerText : 'keyInId', width : "10%", editable : false},
+            { dataField : "keyInNo", headerText : 'keyInNo', width : "10%", editable : false},
+            { dataField : "year", headerText : 'Year', width : "10%", editable : false },
             { dataField : "month", headerText : 'Month', width : "10%" },
-            { dataField : "week", headerText : 'Weeks', width : "10%" },
+            { dataField : "week", headerText : 'Weeks', width : "10%", editable : false },
             { dataField : "keyinStartDt", headerText : 'Key-In Start Date',  width : "15%",dataType : "date",
                 formatString : "dd/mm/yyyy",
                 editRenderer : {
@@ -134,7 +135,6 @@ $(document).ready(function(){
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
     $("#delCancel").hide();
@@ -146,12 +146,62 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin")
   {
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      var today = new Date();
+
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+
+      if (event.dataField == "month"){
+          console.log("month value===" + event.value);
+          if (mm > event.value){
+              return false;
+          }
+      }
+
+      if (event.dataField == "keyinStartDt"){
+    	  console.log("keyinStartDt0 value===" + event.value);
+    	  var startDate = new Date(event.value);
+    	  var dd2 = startDate.getDate();
+    	  var mm2 = startDate.getMonth() + 1;
+    	  var yyyy2 = startDate.getFullYear();
+          console.log("keyinStartDt value===" + startDate);
+          console.log("keyinStartDt1 value===" + dd2);
+          console.log("keyinStartDt2 value===" + mm2);
+          console.log("keyinStartDt3 value===" + yyyy2);
+          console.log("true/false")
+          console.log(yyyy >= yyyy2 && mm > mm2);
+
+          if (yyyy >= yyyy2 && mm > mm2 ){ //current date > value date
+              return false;
+          }
+      }
+
+      if (event.dataField == "keyinEndDt"){
+          console.log("keyinEndDt0 value===" + event.value);
+    	  var endDate = new Date(event.value);
+          var dd3 = endDate.getDate();
+          var mm3 = endDate.getMonth() + 1;
+          var yyyy3 = endDate.getFullYear();
+          console.log("keyinEndDt0 value===" + endDate);
+          console.log("keyinEndDt1 value===" + dd3);
+          console.log("keyinEndDt2 value===" + mm3);
+          console.log("keyinEndDt3 value===" + yyyy3);
+
+          console.log("true/false")
+          console.log(yyyy >= yyyy3 && mm > mm3);
+
+          if (yyyy >= yyyy3 && mm > mm3 ){ //current date > value date
+              return false;
+          }
+      }
+
   }
   else if(event.type == "cellEditEnd")
   {
       console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 
-      if (event.dataField == "pgmName" && event.headerText == "NAME" )
+      /* if (event.dataField == "pgmName" && event.headerText == "NAME" )
       {
           AUIGrid.setCellValue(myGridID, event.rowIndex, 4, event.value);
       }
@@ -168,33 +218,13 @@ function auiCellEditignHandler(event)
               AUIGrid.setCellValue(myGridID, event.rowIndex, 9, "");    // toDtFieldNm
               AUIGrid.setCellValue(myGridID, event.rowIndex, 10, "");   // toDtVal
           }
-      }
+      } */
   }
   else if(event.type == "cellEditCancel")
   {
       console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
   }
 
-}
-
-//행 추가 이벤트 핸들러
-function auiAddRowHandler(event)
-{
-  gAddRowCnt = gAddRowCnt + event.items.length ;
-    console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length );
-}
-
-//Main 행 추가, 삽입
-function fnAddRowId()
-{
-  var item = new Object();
-  item.year ="";
-  item.month ="";
-  item.week ="";
-  item.orderStartDate ="";
-  item.orderEndDate ="";
-
-  AUIGrid.addRow(myGridID, item, "first");
 }
 
 function auiRemoveRowHandler(event)
@@ -374,6 +404,7 @@ function removeAllCancel()
 function fnSetPgmIdParamSet(myGridID, rowIndex)
 {
     $("#keyInId").val(AUIGrid.getCellValue(myGridID, rowIndex, "keyInId"));
+    $("#keyInNo").val(AUIGrid.getCellValue(myGridID, rowIndex, "keyInNo"));
 }
 
 function fnSelectKeyinListAjax()
@@ -383,6 +414,11 @@ function fnSelectKeyinListAjax()
                   AUIGrid.setGridData(myGridID, result);
                   oldRowIndex = -1; // 20190911 KR-OHK Initialize Variables
                });
+}
+
+function fn_New(){
+
+    Common.popupDiv("/sales/keyInMgmt/keyInMgmtUploadPop.do" ,null, null , true , '_NewAddDiv1');
 }
 
 </script>
@@ -400,6 +436,9 @@ function fnSelectKeyinListAjax()
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Key-In Management</h2>
         <ul class="right_btns">
+         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Upload</a></p></li>
+        </c:if>
           <li>
             <p class="btn_blue"><a onclick="fnSelectKeyinListAjax();"><span class="search"></span>Search</a></p>
           </li>
@@ -409,8 +448,8 @@ function fnSelectKeyinListAjax()
       <section class="search_table">
         <!-- search_table start -->
         <form id="MainForm" method="get" action="">
-          <input type="hidden" id="keyInId" name="keyInId" value="" />
-
+            <input type="hidden" id="keyInId" name="keyInId" value="" />
+            <input type="hidden" id="keyInNo" name="keyInNo" value="" />
 
           <table class="type1">
             <!-- table start -->
@@ -459,9 +498,6 @@ function fnSelectKeyinListAjax()
             </li>
             <li>
               <p class="btn_grid"><a onclick="removeRow();">DEL</a></p>
-            </li>
-            <li>
-              <p class="btn_grid"><a onclick="fnAddRowId();">ADD</a></p>
             </li>
             <li>
               <p class="btn_grid"><a onclick="fnSaveId();">SAVE</a></p>

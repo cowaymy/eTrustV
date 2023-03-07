@@ -16,4 +16,11 @@ public interface keyInMgmtMapper {
 	int insertKeyInId(Map<String, Object> params);
 
 	List<EgovMap> searchKeyinMgmtList(Map<String, Object> params);
+
+	EgovMap selectDocNo(String docNoId);
+
+	void updateDocNo(Map<String, Object> requestNo);
+
+	public int uploadKeyInMgmt(Map<String, Object> params);
+
 }
