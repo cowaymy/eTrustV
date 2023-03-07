@@ -611,7 +611,6 @@ var myGridPros = {
                  $("#refEventStartDt").val(results.advPrdFr);
                  $("#refEventEndDt").val(results.advPrdTo);
                  $("#refAtchFileGrpId").val(results.fileAtchGrpId);
-
                  $("#refTotExp").val(AUIGrid.formatNumber(results.totAmt, "#,##0.00"));
                  $("#refBankRef").val(results.advRefdRef);
                  var balanceAmt = results.reqAdvTotAmt - results.totAmt;
@@ -626,13 +625,17 @@ var myGridPros = {
                  });
 
                // Request file selector
-                 gAtchFileGrpId = results.attachmentList[0].atchFileGrpId;
-                 var atchObj = {
-                         atchFileGrpId : results.attachmentList[0].atchFileGrpId,
-                         atchFileId : results.attachmentList[0].atchFileId,
-                         atchFileName : results.attachmentList[0].atchFileName
-                 };
-                 attachmentList.push(atchObj);
+               /* Need check the Array is empty or not */
+               if(!Array.isArray(results.attachmentList) || results.attachmentList.length !=0){
+            	   gAtchFileGrpId = results.attachmentList[0].atchFileGrpId;
+                   var atchObj = {
+                           atchFileGrpId : results.attachmentList[0].atchFileGrpId,
+                           atchFileId : results.attachmentList[0].atchFileId,
+                           atchFileName : results.attachmentList[0].atchFileName
+                   };
+                   attachmentList.push(atchObj);
+               }
+
 
 
                  $("#trvAdvFileSelector").html("");
