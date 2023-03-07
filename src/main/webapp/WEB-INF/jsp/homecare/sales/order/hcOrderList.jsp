@@ -118,9 +118,28 @@
     // 리스트 조회.
     function fn_selectListAjax() {
         // console.log($("#listSearchForm").serialize());
-        Common.ajax("GET", "/homecare/sales/order/selectHcOrderList", $("#listSearchForm").serialize(), function(result) {
-            AUIGrid.setGridData(listMyGridID, result);
-        });
+
+        if(validationForm()){
+        	 Common.ajax("GET", "/homecare/sales/order/selectHcOrderList", $("#listSearchForm").serialize(), function(result) {
+                 AUIGrid.setGridData(listMyGridID, result);
+             });
+        }
+
+    }
+
+    function validationForm(){
+
+	   	  if(FormUtil.isEmpty($('#ordStartDt').val())) {
+	   		  Common.alert("Please select Order Date");
+	   		  return false;
+	   	  }
+	   	  if(FormUtil.isEmpty($('#ordEndDt').val())) {
+	          Common.alert("Please select Order Date");
+	          return false;
+	      }
+
+	   	  return true;
+
     }
 
     function fn_copyChangeOrderPop() {
