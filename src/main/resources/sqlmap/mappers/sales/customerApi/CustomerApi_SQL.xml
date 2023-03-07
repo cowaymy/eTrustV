@@ -427,7 +427,7 @@
   </select>
 
   <select id="selectCustomerTierMaster" parameterType="Map" resultType="egovMap">
-    <![CDATA[
+
     /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
     select
 	a.CUST_ID, cd.code cust_tier, a.TIER_SCORE, a.TOT_SALES_CNT,a.TIER_COLC_SCORE, a.TIER_REWD_SCORE
@@ -439,7 +439,7 @@
 	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
 	    from SAL0330D
 	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE > 0
+	    and SALES_TOT_SCORE <![CDATA[>]]> 0
 	    and SALES_TIER_STUS = 7079
 	    group by cust_id,SALES_TIER_STUS
 	) curp on curp.cust_id = a.cust_id
@@ -447,7 +447,7 @@
 	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
 	    from SAL0330D
 	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE > 0
+	    and SALES_TOT_SCORE <![CDATA[>]]> 0
 	    and SALES_TIER_STUS = 7080
 	    group by cust_id,SALES_TIER_STUS
 	) onhp on onhp.cust_id = a.cust_id
@@ -455,21 +455,21 @@
 	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
 	    from SAL0330D
 	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE > 0
+	    and SALES_TOT_SCORE <![CDATA[>]]> 0
 	    and SALES_TIER_STUS = 7081
 	    group by cust_id,SALES_TIER_STUS
 	) expingp on expingp.cust_id = a.cust_id
 	left join (
-	    select cust_id,SALES_TIER_STUS, sum(SALES_TOT_SCORE) rpoint
+	    select cust_id,SALES_TIER_STUS, sum(SALES_EXP_SCORE) rpoint
 	    from SAL0330D
 	    where CUST_ID = #{custId}
-	    and SALES_TOT_SCORE > 0
+	    and SALES_EXP_SCORE <![CDATA[>]]> 0
 	    and SALES_TIER_STUS = 7082
 	    group by cust_id,SALES_TIER_STUS
 	) expedp on expedp.cust_id = a.cust_id
 	where
 	a.CUST_ID = #{custId}
-    ]]>
+
   </select>
 
   <select id="selectCustomerTierOrderList" parameterType="Map" resultType="egovMap">
