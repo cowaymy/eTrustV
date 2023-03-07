@@ -368,7 +368,7 @@ public class OrderListController {
 		if(CheckCurrentPromo.size() > 0){
 			promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),true);
 		}else{
-			if(promotionId != "0"){
+			if(!promotionId.equals("0")){
 				 promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),false);
 
 			}else{
@@ -473,7 +473,7 @@ public class OrderListController {
 	public ResponseEntity<ReturnMessage> insertProductReturnResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		logger.debug("params : {}", params);
+		logger.debug("AddProductreturn + params : {}", params);
 
 		EgovMap   pReturnParam =orderListService.getPReturnParam(params);
 		if(String.valueOf(params.get("returnStatus")).equals("4") ) { //성공시
