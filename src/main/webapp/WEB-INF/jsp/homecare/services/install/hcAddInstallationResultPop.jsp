@@ -289,7 +289,7 @@ var serialGubun = "1";
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
 	      }
 
-	      if ($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") {
+	      if (($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") && $("#ordCtgryCd").val() != "ACI") {
 	    	msg += "Please choose a DT Pair";
 	      }
 
@@ -304,7 +304,7 @@ var serialGubun = "1";
 	    }
 
 	    // KR-OHK Serial Check add
-	    Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
+ 	    Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
 	        Common.alert(result.message, fn_saveclose);
 
 	        $("#popup_wrap").remove();
