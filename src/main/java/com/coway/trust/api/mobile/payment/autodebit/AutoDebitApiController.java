@@ -48,9 +48,9 @@ import springfox.documentation.annotations.ApiIgnore;
  *
  * @History
  * <pre>
- * Date            Author       Description
- * -------------  -----------  -------------
- * 2019. 9. 30.   KR-HAN        First creation
+ * Date            Author                 Description
+ * -------------  -----------              -------------
+ * 2022. 07.21   MY-FRANGO        First creation
  * </pre>
  */
 
