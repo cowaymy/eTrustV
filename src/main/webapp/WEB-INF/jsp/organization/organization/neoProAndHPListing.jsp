@@ -12,7 +12,7 @@
     var userName, userRole, userType;
 
     $(document).ready(function() {
-    	
+
     	doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
         userName = "${userName}";
@@ -157,6 +157,11 @@
             prev3Mth : $("#prev3Mth").val(),
             meetPoint : $("#meetingPoint").val()
         };
+
+        if(FormUtil.isEmpty($('#prev1Mth').val()) && FormUtil.isEmpty($('#prev2Mth').val()) && FormUtil.isEmpty($('#prev3Mth').val())){
+        	Common.alert("Please select Previous 3 Mth or Previous 2 Mth or Previous 1 Mth");
+        	return false;
+        }
 
         Common.ajax("GET", "/organization/selectNeoProAndHPList.do", data, function(result) {
             console.log(result);
