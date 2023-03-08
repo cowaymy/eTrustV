@@ -57,7 +57,7 @@ public class keyInMgmtServiceImpl implements keyInMgmtService{
 
 	  @SuppressWarnings("unchecked")
 	  @Override
-		public int saveKeyInId(List<Object> udtList, List<Object> delList, Integer userId) {
+		public int saveKeyInId(List<Object> udtList, Integer userId) {
 			int saveCnt = 0;
 			LOGGER.debug("udtList: {}" + udtList);
 
@@ -69,16 +69,6 @@ public class keyInMgmtServiceImpl implements keyInMgmtService{
 				saveCnt++;
 
 				keyInMgmtMapper.updateKeyInId((Map<String, Object>) obj);
-			}
-
-			// delete
-			for (Object obj : delList) {
-				((Map<String, Object>) obj).put("creator", userId);
-				((Map<String, Object>) obj).put("updator", userId);
-
-				saveCnt++;
-
-				keyInMgmtMapper.deleteKeyInId((Map<String, Object>) obj);
 			}
 
 			return saveCnt;

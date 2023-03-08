@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface keyInMgmtService {
 
-	int saveKeyInId(List<Object> udtList, List<Object> delList, Integer userId);
+	int saveKeyInId(List<Object> udtList, Integer userId);
 
 	List<EgovMap> selectKeyinMgmtList(Map<String, Object> params);
 

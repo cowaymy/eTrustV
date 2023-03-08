@@ -66,12 +66,10 @@ public class keyInMgmtController {
 	public ResponseEntity<ReturnMessage> saveKeyInId(@RequestBody Map<String, ArrayList<Object>> params,
 			SessionVO sessionVO) {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE);
-		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);
 
-		int totCnt = keyInMgmtService.saveKeyInId(udtList, delList, sessionVO.getUserId());
+		int totCnt = keyInMgmtService.saveKeyInId(udtList, sessionVO.getUserId());
 
 		LOGGER.info("upd : {}", udtList.toString());
-		LOGGER.info("del : {}", delList.toString());
 		LOGGER.info("cnt : {}", totCnt);
 
 		ReturnMessage message = new ReturnMessage();

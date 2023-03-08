@@ -17,7 +17,6 @@
     </style>
     <script type="text/javaScript">
 
-var gAddRowCnt = 0;
 var keyValueList = [];
 var myGridID;
 var oldRowIndex = -1;
@@ -135,7 +134,6 @@ $(document).ready(function(){
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
     $("#delCancel").hide();
 
@@ -211,79 +209,15 @@ function auiCellEditignHandler(event)
 
 }
 
-function auiRemoveRowHandler(event)
-{
-  console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
-}
-
-//행 삭제 이벤트 핸들러
-function auiRemoveRowHandlerDetail(event)
-{
-  console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
-}
-
-//행 삭제 메소드
-function removeRow()
-{
-    console.log("removeRow method")
-    AUIGrid.removeRow(myGridID,"selectedIndex");
-}
-
 function fnValidationCheck()
 {
     var result = true;
-    var addList = AUIGrid.getAddedRowItems(myGridID);
     var udtList = AUIGrid.getEditedRowItems(myGridID);
-    var delList = AUIGrid.getRemovedItems(myGridID);
 
-    if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
+    if (udtList.length == 0)
     {
       Common.alert("No Change");
       return false;
-    }
-
-    for (var i = 0; i < addList.length; i++)
-    {
-      var year  = addList[i].year;
-      var month  = addList[i].month;
-      var week  = addList[i].week;
-      var keyinStartDt  = addList[i].keyinStartDt;
-      var keyinEndDt  = addList[i].keyinEndDt;
-
-        if (year == "" || year.length == 0)
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='key in year' htmlEscape='false'/>");
-          break;
-        }
-
-        if (month == "" || month.length == 0)
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='key in month' htmlEscape='false'/>");
-          break;
-        }
-
-        if (week == "" || week.length == 0)
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='key in week' htmlEscape='false'/>");
-          break;
-        }
-
-        if (keyinStartDt == "" || keyinStartDt.length == 0)
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='key in start Date' htmlEscape='false'/>");
-          break;
-        }
-
-        if (keyinEndDt == "" || keyinEndDt.length == 0)
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='key in end date' htmlEscape='false'/>");
-          break;
-        }
     }
 
     for (var i = 0; i < udtList.length; i++)
@@ -328,11 +262,6 @@ function fnValidationCheck()
           Common.alert("<spring:message code='sys.msg.necessary' arguments='key in end date' htmlEscape='false'/>");
           break;
         }
-    }
-
-    for (var i = 0; i < delList.length; i++)
-    {
-
     }
 
     return result;
@@ -479,9 +408,6 @@ function fn_New(){
           <ul class="right_opt">
             <li id="delCancel">
               <p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p>
-            </li>
-            <li>
-              <p class="btn_grid"><a onclick="removeRow();">DEL</a></p>
             </li>
             <li>
               <p class="btn_grid"><a onclick="fnSaveId();">SAVE</a></p>
