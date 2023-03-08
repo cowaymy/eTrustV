@@ -32,7 +32,7 @@
      color: #4374D9 !important;
      text-align: right;
  }
-l
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -124,15 +124,7 @@ $(document).ready(function(){
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
-
-    // added by ADIB - Enhancement to Block SDS Samsung Logistics see other location data
-    if(roleId == '386'){
-        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE',  codeIn : '01,02,09'}, '', 'searchlocgb', 'M','f_multiCombo');
-    }
-    else {
-        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo')
-    }
-
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, 'A', 'searchlocgrade', 'S','');
 
     doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
@@ -193,13 +185,8 @@ $(function(){
         $('#searchMatName').val('');
         doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
         doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
-        // added by ADIB - Enhancement to Block SDS Samsung Logistics see other location data
-        if(roleId == '386'){
-            doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE',  codeIn : '01,02,09'}, '', 'searchlocgb', 'M','f_multiCombo');
-        }
-        else {
-            doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo')
-        }    });
+        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
+    });
 
     $('#searchMatName').keypress(function(event) {
         $('#searchMatCode').val('');
