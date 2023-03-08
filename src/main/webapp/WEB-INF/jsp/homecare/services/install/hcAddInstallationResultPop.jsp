@@ -212,10 +212,10 @@ var serialGubun = "1";
 	    	  return;
 	     }
 
-	     if (($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") && $("#ordCtgryCd").val() != "ACI") {
+/* 	     if (($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") && $("#ordCtgryCd").val() != "ACI") {
 	    	 Common.alert("Please choose a DT Pair");
 	         return;
-	     }
+	     } */
 
 	     /*  if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
 	    	        Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
@@ -289,9 +289,9 @@ var serialGubun = "1";
 	        msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
 	      }
 
-	      if (($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") && $("#ordCtgryCd").val() != "ACI") {
+/* 	      if (($("#dtPairCode").val() == 0 || $("#dtPairCode").val() == "") && $("#ordCtgryCd").val() != "ACI") {
 	    	msg += "Please choose a DT Pair";
-	      }
+	      } */
 
 	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
 	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
@@ -1001,7 +1001,7 @@ var serialGubun = "1";
        </td>
      </tr>
      <tr>
-      <th class="dtPair1" scope="row">DT Pair<span id="dtPair" class="must">*</span></th>
+      <th class="dtPair1" scope="row">DT Pair</th>
       <td class="dtPair2"><select class="w100p" id="dtPairCode" name="dtPairCode">
         <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
             <c:forEach var="list" items="${dtPairList}">
