@@ -25,7 +25,7 @@
 	LEFT JOIN SYS0047M C ON A.UPD_USER_ID = C.USER_ID
 	WHERE 1=1
     <if test="fromMonth != null and fromMonth != ''">
-        AND ((MONTH = #{fromMonth} AND YEAR = #{fromYear}) OR (MONTH = #{toMonth} AND YEAR = #{toYear}))
+         <![CDATA[AND ((MONTH >= #{fromMonth} AND YEAR = #{fromYear}) OR (MONTH <= #{toMonth} AND YEAR = #{toYear}))]]>
     </if>
 </select>
 
