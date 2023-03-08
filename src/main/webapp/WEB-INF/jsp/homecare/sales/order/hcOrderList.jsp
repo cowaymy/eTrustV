@@ -129,11 +129,14 @@
 
     function validationForm(){
 
-	   	  if(FormUtil.isEmpty($('#ordStartDt').val())) {
+    	console.log("startDate" + $('#listOrdStartDt').val());
+    	console.log("endDate" + $('#listOrdEndDt').val());
+
+	   	  if(FormUtil.isEmpty($('#listOrdStartDt').val())) {
 	   		  Common.alert("Please select Order Date");
 	   		  return false;
 	   	  }
-	   	  if(FormUtil.isEmpty($('#ordEndDt').val())) {
+	   	  if(FormUtil.isEmpty($('#listOrdEndDt').val())) {
 	          Common.alert("Please select Order Date");
 	          return false;
 	      }
