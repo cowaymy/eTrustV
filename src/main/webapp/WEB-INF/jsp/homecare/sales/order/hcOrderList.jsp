@@ -119,30 +119,9 @@
     function fn_selectListAjax() {
         // console.log($("#listSearchForm").serialize());
 
-        if(validationForm()){
-        	 Common.ajax("GET", "/homecare/sales/order/selectHcOrderList", $("#listSearchForm").serialize(), function(result) {
-                 AUIGrid.setGridData(listMyGridID, result);
-             });
-        }
-
-    }
-
-    function validationForm(){
-
-    	console.log("startDate" + $('#listOrdStartDt').val());
-    	console.log("endDate" + $('#listOrdEndDt').val());
-
-	   	  if(FormUtil.isEmpty($('#listOrdStartDt').val())) {
-	   		  Common.alert("Please select Order Date");
-	   		  return false;
-	   	  }
-	   	  if(FormUtil.isEmpty($('#listOrdEndDt').val())) {
-	          Common.alert("Please select Order Date");
-	          return false;
-	      }
-
-	   	  return true;
-
+   	 Common.ajax("GET", "/homecare/sales/order/selectHcOrderList", $("#listSearchForm").serialize(), function(result) {
+            AUIGrid.setGridData(listMyGridID, result);
+        });
     }
 
     function fn_copyChangeOrderPop() {
@@ -336,12 +315,12 @@
 
         if(FormUtil.isEmpty($('#listOrdNo').val())
         && FormUtil.isEmpty($('#listCustId').val())
-        && FormUtil.isEmpty($('#listCustName').val())
+//         && FormUtil.isEmpty($('#listCustName').val())
         && FormUtil.isEmpty($('#listCustIc').val())
         && FormUtil.isEmpty($('#listVaNo').val())
         && FormUtil.isEmpty($('#listSalesmanCode').val())
         && FormUtil.isEmpty($('#listPoNo').val())
-        && FormUtil.isEmpty($('#listContactNo').val())
+//         && FormUtil.isEmpty($('#listContactNo').val())
         && FormUtil.isEmpty($('#listSerialNo').val())
         && FormUtil.isEmpty($('#listSirimNo').val())
         && FormUtil.isEmpty($('#listRelatedNo').val())
