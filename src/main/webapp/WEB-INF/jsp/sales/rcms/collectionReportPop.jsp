@@ -109,6 +109,7 @@
     const getCaller = () => {
         if (MEM_TYPE == '4') {
              $('#caller').multipleSelect("enable")
+             CommonCombo.make("caller", "/sales/rcms/selectAgentGrpList", $('#summaryForm').serialize(), '',  {id: "agentGrpId", name: "agentGrpName",isShowChoose: false, type: "M"})
         }else{
              $(document).ready(
                         function() {
@@ -139,7 +140,6 @@
             type : "M"
         });
 
-        CommonCombo.make("caller", "/sales/rcms/selectAgentGrpList", $('#summaryForm').serialize(), '',  {id: "agentGrpId", name: "agentGrpName",isShowChoose: false, type: "M"})
     }
 
 
