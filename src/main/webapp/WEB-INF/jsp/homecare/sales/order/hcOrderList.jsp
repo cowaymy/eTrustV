@@ -320,7 +320,7 @@
         && FormUtil.isEmpty($('#listVaNo').val())
         && FormUtil.isEmpty($('#listSalesmanCode').val())
         && FormUtil.isEmpty($('#listPoNo').val())
-//         && FormUtil.isEmpty($('#listContactNo').val())
+        && FormUtil.isEmpty($('#listContactNo').val())
         && FormUtil.isEmpty($('#listSerialNo').val())
         && FormUtil.isEmpty($('#listSirimNo').val())
         && FormUtil.isEmpty($('#listRelatedNo').val())
