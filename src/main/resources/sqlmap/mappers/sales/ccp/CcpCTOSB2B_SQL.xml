@@ -171,7 +171,7 @@
             WHERE  PROMO_ID         = #{promoId}
 </update>
 
-<select id="getCurrentTower" parameterType="Map" resultType="egovMap">
+<select id="getCurrentTower_BK" parameterType="Map" resultType="egovMap">
     SELECT
         CODE, TO_CHAR(UPD_DT,'DD/MM/YYYY HH:MI:SS AM') UPD_DT, USER_NAME
     FROM SYS0094M S94
@@ -179,10 +179,40 @@
     WHERE IND = 'CCP_FLAG'
 </select>
 
+<select id="getCurrentTower" parameterType="Map" resultType="egovMap">
+    SELECT * FROM
+    (
+    SELECT
+        IND, CODE, TO_CHAR(UPD_DT,'DD/MM/YYYY HH:MI:SS AM') UPD_DT, USER_NAME
+    FROM SYS0094M S94
+    JOIN SYS0047M S47 ON S47.USER_ID = S94.UPD_BY
+    WHERE IND IN ('CtosAgeFr1','CtosAgeTo1','CtosAgeFr2','CtosAgeTo2','ExprAgeFr1','ExprAgeTo1','ExprAgeFr2','ExprAgeTo2','CCP_FLAG')
+    )
+    PIVOT
+    (
+        MAX(CODE) FOR IND IN ('CtosAgeFr1' CtosAgeFr1,'CtosAgeTo1' CtosAgeTo1,'CtosAgeFr2' CtosAgeFr2,'CtosAgeTo2' CtosAgeTo2,'ExprAgeFr1' ExprAgeFr1,'ExprAgeTo1' ExprAgeTo1,'ExprAgeFr2' ExprAgeFr2,'ExprAgeTo2' ExprAgeTo2, 'CCP_FLAG' CCP_FLAG)
+    )
+</select>
+
+
+
 <update id="updateCurrentTower" parameterType="Map">
     UPDATE SYS0094M
+        SET UPD_DT = SYSDATE
+        , UPD_BY = ${userId}
+        , CODE = CASE IND WHEN 'CtosAgeFr1' THEN ${CtosAgeFr1}
+                        WHEN 'CtosAgeTo1' THEN ${CtosAgeTo1}
+                        WHEN 'CtosAgeFr2' THEN ${CtosAgeFr2}
+                        WHEN 'CtosAgeTo2' THEN ${CtosAgeTo2}
+                        WHEN 'ExprAgeFr1' THEN ${ExprAgeFr1}
+                        WHEN 'ExprAgeTo1' THEN ${ExprAgeTo1}
+                        WHEN 'ExprAgeFr2' THEN ${ExprAgeFr2}
+                        WHEN 'ExprAgeTo2' THEN ${ExprAgeTo2}
+                        WHEN 'CCP_FLAG'  THEN 0 END
+    WHERE IND IN ('CtosAgeFr1','CtosAgeTo1','CtosAgeFr2','CtosAgeTo2','ExprAgeFr1','ExprAgeTo1','ExprAgeFr2','ExprAgeTo2','CCP_FLAG')
+    <!-- UPDATE SYS0094M
         SET CODE = ${towerChannel}, UPD_DT = SYSDATE, UPD_BY = ${userId}
-    WHERE IND = 'CCP_FLAG'
+    WHERE IND = 'CCP_FLAG' -->
 </update>
 
  <select id="selectAgeGroupList" parameterType="Map" resultType="egovMap">

@@ -16,11 +16,12 @@ function fn_save() {
 	if($('#towerChannel').val() == ''){
 	    Common.alert("Please select one option.");
 	}
-	else if(FormUtil.isEmpty($("#ageGroup").val())){
+	/* else if(FormUtil.isEmpty($("#ageGroup").val())){
         Common.alert("Please key in Age Group");
-    }
+    } */
 	else{
 		Common.ajax("GET", "/sales/ccp/updateCurrentTower.do", $('#form').serializeJSON(), function(result) {
+			console.log(result);
 	        Common.alert("Saved",function(){fn_closePop()});
 	    });
 	}
@@ -33,7 +34,7 @@ function fn_closePop() {
 }
 
 $(document).ready(function(){
-	doGetComboData('/common/selectCodeList.do', {groupCode:'539',orderValue:'CODE'}, '${currentTower.code}', 'towerChannel', 'S');
+	doGetComboData('/common/selectCodeList.do', {groupCode:'539',orderValue:'CODE'}, '${currentTower.ccpFlag}', 'towerChannel', 'S');
 
 	$("#ageGroup").unbind().bind("keyup", function(){
 	    $(this).val($(this).val().replace(/[^0-9]/g,""));
@@ -65,10 +66,55 @@ $(document).ready(function(){
 </colgroup>
 
 <tbody>
- <th scope="row">Age Group Pick-up For CTOS</th>
-    <td> <input type="text" id="ageGroup" name="ageGroup" class="w100p" value='${currentAgeGroup.code}'></td>
+<tr>
+<th scope="row" colspan="2"><b>Age Group Pick-up For CTOS<b/></th>
 </tr>
 
+<tr>
+<th scope="row">Age Group 1</th>
+<td>
+    <div class="date_set">
+         <p><input type="text" title="" placeholder="" class="w100p" id="CtosAgeFr1" name="CtosAgeFr1" value="${currentTower.ctosagefr1}" /></p>
+         <span>To</span>
+         <p><input type="text" title="" placeholder="" class="w100p" id="CtosAgeTo1" name="CtosAgeTo1" value="${currentTower.ctosageto1}"/></p>
+    </div>
+</td>
+</tr>
+<tr>
+<th scope="row">Age Group 2</th>
+<td>
+    <div class="date_set">
+         <p><input type="text" title="" placeholder="" class="w100p" id="CtosAgeFr2" name="CtosAgeFr2" value="${currentTower.ctosagefr2}"/></p>
+         <span>To</span>
+         <p><input type="text" title="" placeholder="" class="w100p" id="CtosAgeTo2" name="CtosAgeTo2" value="${currentTower.ctosageto2}"/></p>
+    </div>
+</td>
+</tr>
+
+<th scope="row" colspan="2"><b>Age Group Pick-up For Experian</b></th>
+<tr>
+<th scope="row">Age Group 1</th>
+<td>
+    <div class="date_set">
+         <p><input type="text" title="" placeholder="" class="w100p" id="ExprAgeFr1" name="ExprAgeFr1" value="${currentTower.expragefr1}"/></p>
+         <span>To</span>
+         <p><input type="text" title="" placeholder="" class="w100p" id="ExprAgeTo1" name="ExprAgeTo1" value="${currentTower.exprageto1}"/></p>
+    </div>
+</td>
+</tr>
+<tr>
+<th scope="row">Age Group 2</th>
+<td>
+    <div class="date_set">
+         <p><input type="text" title="" placeholder="" class="w100p" id="ExprAgeFr2" name="ExprAgeFr2" value="${currentTower.expragefr2}"/></p>
+         <span>To</span>
+         <p><input type="text" title="" placeholder="" class="w100p" id="ExprAgeTo2" name="ExprAgeTo2" value="${currentTower.exprageto2}"/></p>
+    </div>
+</td>
+</tr>
+
+
+<th scope="row" colspan="2"><b>General Setting</b></th>
 <tr>
     <th scope="row">Switch CRA Channel</th>
     <td>
