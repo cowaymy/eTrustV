@@ -349,6 +349,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
         params.put("clmNo", params.get("reqNewClmNo"));
         params.put("userId", sessionVO.getUserId());
         params.put("totAmt", params.get("totalAdv"));
+        params.put("netAmt", params.get("totalAdv"));
         params.put("costCenterCode", params.get("reqCostCentr"));
         params.put("clmSeq", "1");
 
