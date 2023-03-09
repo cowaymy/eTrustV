@@ -244,11 +244,11 @@ public class CcpCTOSB2BController {
 
       params.put("userId", sessionVO.getUserId());
       int result =ccpCTOSB2BService.updateCurrentTower(params);
-      int result2 = ccpCTOSB2BService.updateAgeGroup(params);
+      //int result2 = ccpCTOSB2BService.updateAgeGroup(params);
 
       ReturnMessage message = new ReturnMessage();
 
-      if(result >0 && result2>0){
+      if(result > 0){
           message.setCode(AppConstants.SUCCESS);
           message.setData("");
           message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
