@@ -544,9 +544,17 @@
     }
 
 	function fn_dailyCollectionOrderReport() {
+
+		if(MEM_TYPE != '4') {
+			var dt = new Date();
+	        var time = dt.getHours();
+	        if(time < 9 || time > 20){//11-13
+	        	Common.alert("Vendor only allow download in 11am - 1pm");
+	        	return;
+	        }
+		}
 		Common.popupDiv("/sales/rcms/dailyCollectionOrderReportPop.do", null, null, true, "dailyCollectionOrderReportPop")
 	}
-
 	/* Report End*/
 
 	function viewRentalLedger() {

@@ -3,28 +3,28 @@
 <mapper namespace="com.coway.trust.biz.sales.rcms.impl.RCMSAgentManageMapper">
 
 <select id="selectAgentTypeList" parameterType="Map" resultType="egovMap">
-	SELECT
-	    CODE_ID,
-	    CODE,
-	    CODE_NAME,
-	    DISAB
-	FROM
-	    SYS0013M
-	WHERE
-	    CODE_MASTER_ID = #{codeMasterId}
+    SELECT
+        CODE_ID,
+        CODE,
+        CODE_NAME,
+        DISAB
+    FROM
+        SYS0013M
+    WHERE
+        CODE_MASTER_ID = #{codeMasterId}
 </select>
 
 <select id="chkUserNameByUserId" parameterType="Map" resultType="egovMap">
-	SELECT
-	    USER_NAME
-	FROM
-	    SYS0047M
-	WHERE
-	    USER_NAME = #{userId}
-	AND
-	<![CDATA[
-	   ROWNUM <= 1
-	]]>
+    SELECT
+        USER_NAME
+    FROM
+        SYS0047M
+    WHERE
+        USER_NAME = #{userId}
+    AND
+    <![CDATA[
+       ROWNUM <= 1
+    ]]>
 </select>
 
 <select id="getSeqSAL0148M" resultType="java.lang.Integer">
@@ -32,30 +32,30 @@
 </select>
 
 <insert id="insAgentMaster" parameterType="Map">
-		INSERT INTO SAL0148M(
-											AGENT_ID,
-											AGENT_GRP_ID,
-											AGENT_TYPE,
-											AGENT_NAME,
-											STUS_ID,
-											USER_ID,
-											CRT_USER_ID,
-											CRT_DT,
-											UPD_USER_ID,
-											UPD_DT
-									)
-							VALUES(
-											#{agentSeq},
-											#{agentGrpId},
-											#{agentType},
-											#{agentName},
-											#{stusId},
-											#{userId},
-											#{crtUserId},
-											SYSDATE,
-											#{crtUserId},
-							                SYSDATE
-							)
+        INSERT INTO SAL0148M(
+                                            AGENT_ID,
+                                            AGENT_GRP_ID,
+                                            AGENT_TYPE,
+                                            AGENT_NAME,
+                                            STUS_ID,
+                                            USER_ID,
+                                            CRT_USER_ID,
+                                            CRT_DT,
+                                            UPD_USER_ID,
+                                            UPD_DT
+                                    )
+                            VALUES(
+                                            #{agentSeq},
+                                            #{agentGrpId},
+                                            #{agentType},
+                                            #{agentName},
+                                            #{stusId},
+                                            #{userId},
+                                            #{crtUserId},
+                                            SYSDATE,
+                                            #{crtUserId},
+                                            SYSDATE
+                            )
 </insert>
 
 <update id="updAgentMaster" parameterType="Map">
@@ -88,36 +88,36 @@
 </select>
 
 <select id="selectAgentList" parameterType="Map" resultType="egovMap">
-			SELECT
-			    AGENT_ID,
-			    AGENT_GRP_ID,
-			    AGENT_TYPE,
-			    AGENT_NAME,
-			    STUS_ID,
-			    USER_ID,
-			    CRT_USER_ID,
-			    TO_CHAR(CRT_DT , 'DD/MM/YYYY') CRT_DT,
-			    UPD_USER_ID,
-			    TO_CHAR(UPD_DT , 'DD/MM/YYYY') UPD_DT
-			FROM
-			    SAL0148M
-			WHERE
-			    1 = 1
-			    <if test=" agentName != null and agentName != '' ">
+            SELECT
+                AGENT_ID,
+                AGENT_GRP_ID,
+                AGENT_TYPE,
+                AGENT_NAME,
+                STUS_ID,
+                USER_ID,
+                CRT_USER_ID,
+                TO_CHAR(CRT_DT , 'DD/MM/YYYY') CRT_DT,
+                UPD_USER_ID,
+                TO_CHAR(UPD_DT , 'DD/MM/YYYY') UPD_DT
+            FROM
+                SAL0148M
+            WHERE
+                1 = 1
+                <if test=" agentName != null and agentName != '' ">
                     AND UPPER(AGENT_NAME) LIKE '%'||UPPER(#{agentName})||'%'
-			    </if>
-			    <if test="typeList != null and typeList.length > 0 ">
-			        AND AGENT_TYPE IN
-			        <foreach collection="typeList" item="item" open="(" separator="," close=")">
-			             #{item}
-			        </foreach>
-			    </if>
-			    <if test="statusList != null and statusList.length > 0">
-			         AND STUS_ID IN
-			         <foreach collection="statusList" item="item" open="(" separator="," close=")">
-			             #{item}
-			         </foreach>
-			    </if>
+                </if>
+                <if test="typeList != null and typeList.length > 0 ">
+                    AND AGENT_TYPE IN
+                    <foreach collection="typeList" item="item" open="(" separator="," close=")">
+                         #{item}
+                    </foreach>
+                </if>
+                <if test="statusList != null and statusList.length > 0">
+                     AND STUS_ID IN
+                     <foreach collection="statusList" item="item" open="(" separator="," close=")">
+                         #{item}
+                     </foreach>
+                </if>
 </select>
 
 <select id="selectAgentGrpList" parameterType="Map" resultType="egovMap">
@@ -131,10 +131,13 @@
              #{item}
         </foreach>
     </if>
+         <if test="userName != null and userName != '' ">
+          AND A.USER_ID= #{userName}
+      </if>
 </select>
 
 <select id="selectRosCaller" parameterType="Map"  resultType="egovMap">
-	SELECT distinct A.AGENT_GRP_ID
+    SELECT distinct A.AGENT_GRP_ID
                ,B.CODE || '_'||A.AGENT_GRP_ID||'_'||C.AGENT_GRP_NAME AGENT_NAME
       FROM SAL0148M A
       JOIN SAL0324M C ON A.AGENT_GRP_ID =C.AGENT_GRP_ID
@@ -142,9 +145,9 @@
                                  AND B.CODE_MASTER_ID = 329
                                  AND DISAB = 0
      WHERE 1=1
-	 <if test="stus != null and stus != '' ">
-	      AND A.STUS_ID = 1
-	 </if>
+     <if test="stus != null and stus != '' ">
+          AND A.STUS_ID = 1
+     </if>
      <if test="userName != null and userName != '' ">
           AND A.USER_ID= #{userName}
       </if>
@@ -436,64 +439,64 @@
 </select>
 
     <update id="updateAgent" parameterType="Map">
-		UPDATE SAL0149D
-		   SET
-		      UPD_USER_ID = #{userId},
+        UPDATE SAL0149D
+           SET
+              UPD_USER_ID = #{userId},
                UPD_DT = SYSDATE,
-		   <if test="rcmsUploadType == 5525">
-		       AGENT_ID = #{updateField},
-		       PREV_AGENT_ID = #{prevAgentId},
-		       UPD_AGENT_DT = SYSDATE,
-		   </if>
-		   <if test="rcmsUploadType == 5524">
-		       ETR_FG = #{updateField},
-		   </if>
-		   <if test="rcmsUploadType == 5523">
-		      SENSITIVE_FG = #{updateField},
-		   </if>
-		       REM = #{rem}
-		 WHERE SALES_ORD_ID = #{salesOrdId}
-	 </update>
+           <if test="rcmsUploadType == 5525">
+               AGENT_ID = #{updateField},
+               PREV_AGENT_ID = #{prevAgentId},
+               UPD_AGENT_DT = SYSDATE,
+           </if>
+           <if test="rcmsUploadType == 5524">
+               ETR_FG = #{updateField},
+           </if>
+           <if test="rcmsUploadType == 5523">
+              SENSITIVE_FG = #{updateField},
+           </if>
+               REM = #{rem}
+         WHERE SALES_ORD_ID = #{salesOrdId}
+     </update>
 
     <update id="updateRemark" parameterType="Map">
-		UPDATE SAL0149D
-		   SET REM = #{remark},
-		       ETR_REM = #{remark2},
-		       AGENT_ID = #{rosCaller2},
+        UPDATE SAL0149D
+           SET REM = #{remark},
+               ETR_REM = #{remark2},
+               AGENT_ID = #{rosCaller2},
                PREV_AGENT_ID = #{prevAgentGrpId},
                AGENT_GRP_ID = #{rosCaller2},
                PREV_AGENT_GRP_ID = #{prevAgentGrpId},
                UPD_AGENT_DT = SYSDATE,
-		       SENSITIVE_FG = #{sensitiveFg},
-		       ETR_FG = #{etrFg},
-		       UPD_USER_ID = #{userId},
-		       UPD_DT = SYSDATE
-		 WHERE SALES_ORD_ID = #{salesOrdId}
-	 </update>
+               SENSITIVE_FG = #{sensitiveFg},
+               ETR_FG = #{etrFg},
+               UPD_USER_ID = #{userId},
+               UPD_DT = SYSDATE
+         WHERE SALES_ORD_ID = #{salesOrdId}
+     </update>
 
     <update id="updateCompany" parameterType="Map">
-		UPDATE SAL0029D
-		   SET CORP_TYPE_ID = #{corpTypeId},
-		   UPD_USER_ID = #{userId},
-		   UPD_DT = SYSDATE
-		 WHERE CUST_ID = #{custId}
-	 </update>
+        UPDATE SAL0029D
+           SET CORP_TYPE_ID = #{corpTypeId},
+           UPD_USER_ID = #{userId},
+           UPD_DT = SYSDATE
+         WHERE CUST_ID = #{custId}
+     </update>
 
-	 <select id="checkOrderNo" parameterType="Map" resultType="int">
-		 SELECT count(-1) cnt
-		  FROM SAL0149D A JOIN SAL0001D B
-		                              ON A.SALES_ORD_ID = B.SALES_ORD_ID
-		                              AND B.APP_TYPE_ID = 66
-		 WHERE B.SALES_ORD_NO =  #{orderNo}
-	 </select>
+     <select id="checkOrderNo" parameterType="Map" resultType="int">
+         SELECT count(-1) cnt
+          FROM SAL0149D A JOIN SAL0001D B
+                                      ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                                      AND B.APP_TYPE_ID = 66
+         WHERE B.SALES_ORD_NO =  #{orderNo}
+     </select>
 
-	 <select id="checkAgentId" parameterType="Map" resultType="int">
-	    SELECT COUNT(-1) CNT
-	      FROM SAL0148M A
-	        JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
-	                                 AND B.CODE_MASTER_ID = 329
-	                                 AND DISAB = 0
-	      WHERE A.AGENT_GRP_ID = #{updateField}
+     <select id="checkAgentId" parameterType="Map" resultType="int">
+        SELECT COUNT(-1) CNT
+          FROM SAL0148M A
+            JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID
+                                     AND B.CODE_MASTER_ID = 329
+                                     AND DISAB = 0
+          WHERE A.AGENT_GRP_ID = #{updateField}
     </select>
 
     <select id="selectRcmsInfo" parameterType="Map" resultType="egovMap">
@@ -590,14 +593,14 @@
 
     <select id="selectRosCallDetailList" parameterType="map" resultType="egovMap">
      SELECT ROS_YEAR || '/' || ROS_MONTH ROS_DT
-	           , CASE WHEN ROS_CALLER_USER_ID = 0 THEN null ELSE ROS_CALLER_USER_ID END ROS_CALLER_USER_ID
-	  FROM MSC0013D
-	 WHERE SALES_ORD_ID = #{salesOrdId}
+               , CASE WHEN ROS_CALLER_USER_ID = 0 THEN null ELSE ROS_CALLER_USER_ID END ROS_CALLER_USER_ID
+      FROM MSC0013D
+     WHERE SALES_ORD_ID = #{salesOrdId}
 
      </select>
 
-	 <select id="rentalStatusListForBadAcc" parameterType="Map" resultType="egovMap">
-	   SELECT  B.STUS_CODE_ID
+     <select id="rentalStatusListForBadAcc" parameterType="Map" resultType="egovMap">
+       SELECT  B.STUS_CODE_ID
                            ,C.CODE
                            ,C.NAME CODE_NAME
                            ,B.SEQ_NO
@@ -617,9 +620,9 @@
             </foreach>
        </if>
        ORDER BY B.SEQ_NO
-	 </select>
+     </select>
 
-	 <select id="checkCustAgent" parameterType="Map" resultType="egovMap">
+     <select id="checkCustAgent" parameterType="Map" resultType="egovMap">
         SELECT COUNT(CUST_ID) CNT,AGENT_GRP_ID
             FROM SAL0149D
             WHERE CUST_ID = #{custId} AND AGENT_GRP_ID != 0  GROUP BY CUST_ID,AGENT_GRP_ID
@@ -727,9 +730,9 @@
         LEFT JOIN SAL0001D EXTENT2 ON EXTENT2.SALES_ORD_NO = EXTENT1.ORD_NO
     </insert>
 
-	<select id="getSeqSAL0324M" resultType="java.lang.Integer">
-	    SELECT SAL0324M_AGENT_GRP_ID_SEQ.NEXTVAL FROM DUAL
-	</select>
+    <select id="getSeqSAL0324M" resultType="java.lang.Integer">
+        SELECT SAL0324M_AGENT_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
 
     <select id="selectAgentGroupList" parameterType="Map" resultType="egovMap">
             SELECT * FROM SAL0324M ORDER BY AGENT_GRP_ID
@@ -747,12 +750,12 @@
      </insert>
 
      <update id="updAgentGroupMaster" parameterType="Map">
-		    UPDATE
-		        SAL0324M
-		    SET
-		        AGENT_GRP_NAME = #{agentGrpName}
-		    WHERE
-		        AGENT_GRP_ID = #{agentGrpId}
+            UPDATE
+                SAL0324M
+            SET
+                AGENT_GRP_NAME = #{agentGrpName}
+            WHERE
+                AGENT_GRP_ID = #{agentGrpId}
     </update>
 
 
