@@ -146,52 +146,52 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			}
 
 			//MemberOrganization
-			EgovMap mQryMemOrg     = memberEventMapper.getMemberOrganizationsMemId(formList.get("memId").toString());
-            EgovMap mQryMemUpOrg = memberEventMapper.getMemberOrganizationsMemUpId(mQryMemOrg.get("memUpId").toString());
-            EgovMap mQryMemPrOrg  = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
+//			EgovMap mQryMemOrg     = memberEventMapper.getMemberOrganizationsMemId(formList.get("memId").toString());
+//            EgovMap mQryMemUpOrg = memberEventMapper.getMemberOrganizationsMemUpId(mQryMemOrg.get("memUpId").toString());
+//            EgovMap mQryMemPrOrg  = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
 
-            logger.debug("mQryMemOrg : {}",mQryMemOrg);
-            logger.debug("mQryMemUpOrg : {}",mQryMemUpOrg);
-            logger.debug("mQryMemPrOrg : {}",mQryMemPrOrg);
+//            logger.debug("mQryMemOrg : {}",mQryMemOrg);
+//            logger.debug("mQryMemUpOrg : {}",mQryMemUpOrg);
+//            logger.debug("mQryMemPrOrg : {}",mQryMemPrOrg);
 
-            String prevDeptCode = mQryMemOrg.get("deptCode").toString();
-            String prevMemberUpID;
-            String prevMemberLvl;
+//            String prevDeptCode = mQryMemOrg.get("deptCode").toString();
+//            String prevMemberUpID;
+//            String prevMemberLvl;
 
-			if (mQryMemOrg.get("memUpId").toString() != null)
-				prevMemberUpID = mQryMemOrg.get("memUpId").toString();
-			else
-				prevMemberUpID = "0";
-
-			if (mQryMemOrg.get("memLvl").toString() != null)
-				prevMemberLvl = mQryMemOrg.get("memLvl").toString();
-			else
-				prevMemberLvl = "0";
+//			if (mQryMemOrg.get("memUpId").toString() != null)
+//				prevMemberUpID = mQryMemOrg.get("memUpId").toString();
+//			else
+//				prevMemberUpID = "0";
+//
+//			if (mQryMemOrg.get("memLvl").toString() != null)
+//				prevMemberLvl = mQryMemOrg.get("memLvl").toString();
+//			else
+//				prevMemberLvl = "0";
 			//화면에서 memId가져와서 넣어줘야함
 			EgovMap deptCode = memberEventMapper.selectDeptCode(Integer.parseInt(params.get("promoId").toString()));
 			int memberUpId = 0;
 			//memberUpId = memberEventMapper.selectMemUpId(mQryMemUpOrg.get("deptCode").toString());
 			logger.debug("deptCode : {}", deptCode);
 			Map<String, Object> mMemOrg = new HashMap<String, Object>();
-			mQryMemOrg.put("prevDeptCode", prevDeptCode);
-			mQryMemOrg.put("prevMemIdId", prevMemberUpID);
-			mQryMemOrg.put("prevMemLvl", prevMemberLvl);
-			mQryMemOrg.put("prevGrpCode", mQryMemPrOrg.get("deptCode"));
-			mQryMemOrg.put("deptCode", deptCode.get("lastDeptCode"));
+//			mQryMemOrg.put("prevDeptCode", prevDeptCode);
+//			mQryMemOrg.put("prevMemIdId", prevMemberUpID);
+//			mQryMemOrg.put("prevMemLvl", prevMemberLvl);
+//			mQryMemOrg.put("prevGrpCode", mQryMemPrOrg.get("deptCode"));
+//			mQryMemOrg.put("deptCode", deptCode.get("lastDeptCode"));
 			//mQryMemOrg.put("memUpId", memberUpId);
-			mQryMemOrg.put("memUpId", mQryMemUpOrg.get("memUpId"));
-			mQryMemOrg.put("memLvlTo", formList.get("memLvlTo"));
+//			mQryMemOrg.put("memUpId", mQryMemUpOrg.get("memUpId"));
+//			mQryMemOrg.put("memLvlTo", formList.get("memLvlTo"));
 //			mMemOrg.put("orgUpdDt", sysdate);
-			mQryMemOrg.put("orgUpdUserId", formList.get("orgUpdUserId"));
-			mQryMemOrg.put("prCode", "");
-			mQryMemOrg.put("prMemId", 0);
-			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
-			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
-			mQryMemOrg.put("brnchId", deptCode.get("brnchId")  != null ? deptCode.get("brnchId") :0);
+//			mQryMemOrg.put("orgUpdUserId", formList.get("orgUpdUserId"));
+//			mQryMemOrg.put("prCode", "");
+//			mQryMemOrg.put("prMemId", 0);
+//			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
+//			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
+//			mQryMemOrg.put("brnchId", deptCode.get("brnchId")  != null ? deptCode.get("brnchId") :0);
 
-			mQryMemOrg.put("lastDeptCode", deptCode.get("lastDeptCode"));
-			mQryMemOrg.put("lastGrpCode", deptCode.get("lastGrpCode"));
-			mQryMemOrg.put("lastOrgCode", deptCode.get("lastOrgCode"));
+//			mQryMemOrg.put("lastDeptCode", deptCode.get("lastDeptCode"));
+//			mQryMemOrg.put("lastGrpCode", deptCode.get("lastGrpCode"));
+//			mQryMemOrg.put("lastOrgCode", deptCode.get("lastOrgCode"));
 
 
 			//2017 -11 -20    hgham edit   전위원 요청 배치로 변경 한다고 함. (업데이트도 오류 있음.)
