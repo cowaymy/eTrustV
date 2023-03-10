@@ -85,6 +85,11 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		return paymentListMapper.selectReqDcfInfo(params);
 	}
 
+	@Override
+	public int invalidReverse(Map<String, Object> params) {
+		return paymentListMapper.invalidReverse(params);
+	}
+
 	 /**
 	 * Payment List - Request DCF
 	 * @param

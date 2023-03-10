@@ -36,6 +36,8 @@ public interface PaymentListService
    	 */
        List<EgovMap> selectRequestDCFByGroupSeq(Map<String, Object> params);
 
+    int invalidReverse(Map<String, Object> params);
+
     int invalidDCF(Map<String, Object> params);
 
     int invalidFT(Map<String, Object> params);
