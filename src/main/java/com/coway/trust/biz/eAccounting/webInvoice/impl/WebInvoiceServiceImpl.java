@@ -406,7 +406,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
                             if("1".equals(invoAppvItems.get("advType").toString())) {
                                 invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
-                                invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
+                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt")); // Celeste : Ticket : 23021352 : Change to approval date instead of request date
                             }
 
                             if("2".equals(invoAppvItems.get("advType").toString())) {
@@ -450,7 +450,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                             if("3".equals(invoAppvItems.get("advType").toString())) {
                             	invoAppvItems.put("grandAmt", invoAppvItems.get("netAmt"));
                             	invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
-                                invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
+                            	invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt")); //Celeste : Ticket : 23021352 : Change to approval date instead of request date
                             }
 
                             if("4".equals(invoAppvItems.get("advType").toString())) {
