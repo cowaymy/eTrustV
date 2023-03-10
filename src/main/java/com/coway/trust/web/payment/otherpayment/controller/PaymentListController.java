@@ -103,10 +103,13 @@ public class PaymentListController {
 	 * @param params
 	 * @param model
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/initRequestDCFPop.do")
-	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) {
-
+	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		if (paymentListService.invalidReverse(params) > 0) {
+			throw new Exception("Payment has Active or Completed reverse request.");
+		}
 		model.put("groupSeq", params.get("groupSeq"));
 		LOGGER.debug("payment List params : {} ", params);
 
