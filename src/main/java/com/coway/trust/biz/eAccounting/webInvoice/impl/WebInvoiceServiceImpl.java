@@ -1,17 +1,8 @@
 package com.coway.trust.biz.eAccounting.webInvoice.impl;
 
-import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
-import static com.coway.trust.AppConstants.EMAIL_TEXT;
-import static com.coway.trust.AppConstants.EMAIL_TO;
-import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
-import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
-
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,14 +21,11 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.eAccounting.vendor.VendorMapper;
-import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.eAccounting.staffBusinessActivity.impl.staffBusinessActivityMapper;
 import com.coway.trust.biz.eAccounting.vendorAdvance.impl.VendorAdvanceMapper;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
-import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
-import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -60,9 +48,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
 	@Resource(name = "VendorAdvanceMapper")
 	private VendorAdvanceMapper VendorAdvanceMapper;
-
-	@Autowired
-	private AdaptorService adaptorService;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -335,9 +320,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
-		String rejctResn = (String) params.get("rejctResn");
-
-		List<Map<String, Object>> emailDetailList = new ArrayList<Map<String,Object>>();
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
 			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
 			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
@@ -347,7 +329,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
 			invoAppvInfo.put("appvPrcssStus", "P");
 			invoAppvInfo.put("appvStus", "A");
-			invoAppvInfo.put("rejctResn", rejctResn);
 			invoAppvInfo.put("userId", params.get("userId"));
 			LOGGER.debug("now invoAppvInfo =====================================>>  " + invoAppvInfo);
 			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
@@ -356,7 +337,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			if(appvLineCnt > appvLineSeq) {
 				invoAppvInfo.put("appvStus", "R");
 				invoAppvInfo.put("appvLineSeq", appvLineSeq + 1);
-				invoAppvInfo.put("rejctResn", "");
 				LOGGER.debug("next invoAppvInfo =====================================>>  " + invoAppvInfo);
 				webInvoiceMapper.updateAppvLine(invoAppvInfo);
 
@@ -397,15 +377,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 						LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
 						webInvoiceMapper.insertAppvInterface(invoAppvItems);
 					}
-					//Send Email Here for Staff claim which reach last approval line
-					Map<String, Object> emailDetail = new HashMap<String,Object>();
-					emailDetail.put("clmNo",invoAppvInfo.get("clmNo").toString());
-					emailDetail.put("reqstUserId",invoAppvInfo.get("reqstUserId").toString());
-					emailDetail.put("reqstDt",invoAppvInfo.get("reqstDt").toString());
-					EgovMap userDetail = webInvoiceMapper.selectUserDetail(emailDetail);
-					emailDetail.put("appvPrcssStus", "A");
-					emailDetail.put("email",userDetail.get("userEmail").toString());
-					emailDetailList.add(emailDetail);
 				} else if("R1".equals(clmType)) {
 					// appvPrcssNo의 items get
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(invoAppvInfo);
@@ -435,7 +406,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
                             if("1".equals(invoAppvItems.get("advType").toString())) {
                                 invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
-                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt")); // Celeste : Ticket : 23021352 : Change to approval date instead of request date
+                                invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
                             }
 
                             if("2".equals(invoAppvItems.get("advType").toString())) {
@@ -479,7 +450,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                             if("3".equals(invoAppvItems.get("advType").toString())) {
                             	invoAppvItems.put("grandAmt", invoAppvItems.get("netAmt"));
                             	invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
-                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt")); //Celeste : Ticket : 23021352 : Change to approval date instead of request date
+                                invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
                             }
 
                             if("4".equals(invoAppvItems.get("advType").toString())) {
@@ -822,11 +793,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				}
 			}
 		}
-
-		if(emailDetailList.size() > 0)
-		{
-			this.sendEmail(emailDetailList);
-		}
 	}
 
 	@Override
@@ -835,8 +801,6 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		LOGGER.debug("params =====================================>>  " + params);
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
 		String rejctResn = (String) params.get("rejctResn");
-
-		List<Map<String, Object>> emailDetailList = new ArrayList<Map<String,Object>>();
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
 			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
 			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
@@ -847,7 +811,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			invoAppvInfo.put("appvPrcssStus", "J");
 			invoAppvInfo.put("appvStus", "J");
 			invoAppvInfo.put("rejctResn", rejctResn);
-			invoAppvInfo.put("isResubmitAllowed", params.get("isResubmitAllowed"));
+			invoAppvInfo.put("userId", params.get("userId"));
 			invoAppvInfo.put("userId", params.get("userId"));
 
 			LOGGER.debug("vendorClmNo =====================================>>  " + vendorClmNo);
@@ -862,19 +826,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
 			webInvoiceMapper.updateAppvLine(invoAppvInfo);
 			webInvoiceMapper.insertNotification(invoAppvInfo);
-
-			Map<String, Object> emailDetail = new HashMap<String,Object>();
-			emailDetail.put("clmNo",invoAppvInfo.get("clmNo").toString());
-			emailDetail.put("reqstUserId",invoAppvInfo.get("reqstUserId").toString());
-			emailDetail.put("reqstDt",invoAppvInfo.get("reqstDt").toString());
-			EgovMap userDetail = webInvoiceMapper.selectUserDetail(emailDetail);
-			emailDetail.put("appvPrcssStus", "J");
-			emailDetail.put("isResubmitAllowed", params.get("isResubmitAllowed"));
-			emailDetail.put("email",userDetail.get("userEmail").toString());
-			emailDetailList.add(emailDetail);
 		}
-
-		sendEmail(emailDetailList);
 	}
 
 	@Override
@@ -1076,42 +1028,5 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     public String selectFCM12Data(Map<String, Object> params) {
       // TODO Auto-generated method stub
       return webInvoiceMapper.selectFCM12Data(params);
-    }
-
-    private void sendEmail(List<Map<String, Object>> params) {
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    	for(int i = 0 ;i< params.size();i++){
-            EmailVO email = new EmailVO();
-            Timestamp timestamp = new Timestamp(Long.parseLong((String) params.get(i).get("reqstDt")));
-            Date requestDate = new Date(timestamp.getTime());
-            String emailSubject = "Reminder/Notification for e-claim document";
-
-            List<String> emailNo = new ArrayList<String>();
-
-            if (!"".equals(CommonUtils.nvl(params.get(i).get("email")))) {
-            	emailNo.add(CommonUtils.nvl(params.get(i).get("email")));
-            }
-
-            String content = "";
-            content += "Dear Sir/Madam,<br/>";
-            if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "A"){
-            	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been approved.<br/><br/>";
-            }  else if(CommonUtils.nvl(params.get(i).get("appvPrcssStus")) == "J"){
-            	String isResubmitAllowed = CommonUtils.nvl(params.get(i).get("isResubmitAllowed"));
-                if(isResubmitAllowed.equals("0")) {
-                	content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected.<br/><br/>";
-                }
-                else{
-                    content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected. Kindly resubmit your document no later than two (2)";
-                    content += " months from the receipt month.<br/><br/>";
-                }
-            }
-
-            email.setTo(emailNo);
-            email.setHtml(true);
-            email.setSubject(emailSubject);
-            email.setText(content);
-            adaptorService.sendEmail(email, false);
-    	}
     }
 }
