@@ -63,6 +63,6 @@ WHERE   A.USER_NAME = #{userName}
              ON B.USER_ID = C.USER_ID
              WHERE 1=1
              AND C.USER_NAME = #{userName}
-             AND A.ROLE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'ACI_ROLE')
+             AND A.ROLE_ID IN (SELECT CODE FROM SYS0094M WHERE IND = 'ACI_ROLE')
 </select>
 </mapper>
