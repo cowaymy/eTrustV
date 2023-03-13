@@ -1,5 +1,6 @@
 package com.coway.trust.biz.common.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +74,12 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
 
 	@Override
 	public List<EgovMap> getHPBirthday(Map<String, Object> params) {
-		return mainNoticeMapper.getHPBirthday(params);
+		Map<String, Object> pMap = new HashMap<String, Object>();
+		pMap.put("roleId", params.get("roleId"));
+		pMap.put("userId", params.get("userId"));
+		pMap.put("isHmBday", params.get("isHmBday"));
+
+		return mainNoticeMapper.getHPBirthday(pMap);
 	}
 
 }

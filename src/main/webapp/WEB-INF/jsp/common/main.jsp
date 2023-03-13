@@ -13,6 +13,9 @@
 <script type="text/javaScript">
 
     var roleId = '${SESSION_INFO.roleId}';
+    var headers = [{memLvl: "3", dob : "", fullName:"HM",memCode:"", title:"HM", header: "1"},
+                   {memLvl: "2", dob : "", fullName:"SM", memCode:"", title:"SM", header: "1"},
+                   {memLvl: "1", dob : "", fullName:"GM",memCode:"", title:"GM", header: "1"}];
 
     var noticeLayout = [{
         dataField: "ntceNo",
@@ -699,8 +702,51 @@
           }
     ];
 
+    var hpManagerBdayColumnLayout = [
+          {dataField: "memLvl",headerText :"", visible: false},
+          {dataField: "dob",headerText :"Birthday",width:"20%"},
+          {dataField: "fullName",headerText :"HP Name",width:"60%"},
+          {dataField: "memCode",headerText :"HP Code",width:"30%"}
+
+     ];
+
+    var auiGridProps = {
+    		usePaging : false,
+            showStateColumn : false,
+            showRowNumColumn : false,
+            pageRowCount : 4,
+            headerHeight: 50,
+            editable: true,
+            fillValueGroupingSummary: true,
+            groupingFields: ["title", "header"],
+/*             groupingSummary: {
+            	dataFields: ["fullName"]
+           }, */
+            cellMergeRowSpan: true,
+            displayTreeOpen: true,
+            enableCellMerge: true,
+            showBranchOnGrouping: false,
+
+/*             rowStyleFunction: function (rowIndex, item) {
+            	if (item._$isGroupSumField) {
+            		switch (item._$depth) {
+            		case 2:
+            			return "aui-grid-row-depth1-style";
+            		case 3:
+            			return "aui-grid-row-depth2-style";
+            		case 4:
+            			return "aui-grid-row-depth3-style";
+            		default:
+            			return "aui-grid-row-depth-default-style";
+            		}}
+            	return null;
+            } */
+};
+
+
+
     //AUIGrid 생성 후 반환 ID
-    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid, hpBdayGrid, rewardPointGridID;
+    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid, hpBdayGrid, rewardPointGridID, hpManagerBdayGrid;
 
     var gridOption = {
         showStateColumn : false,
@@ -745,7 +791,18 @@
                     };
 
                 salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
-                customerBdayGrid = GridCommon.createAUIGrid("salesOrgCustBday", customerBdayColumnLayout, null, salesGridOption);
+                if (result.roleType == 111){
+                    $('#custBdayTitle').hide();
+                    $('#custBdayDiv').remove();
+
+
+                     hpManagerBdayGrid = GridCommon.createAUIGrid("hpManagerBday", hpManagerBdayColumnLayout, null, auiGridProps);
+                }
+                else {
+                	$('#hpManagerBdayTitle').hide();
+                    $('#custBdayTitle').show();
+                    customerBdayGrid = GridCommon.createAUIGrid("salesOrgCustBday", customerBdayColumnLayout, null, salesGridOption);
+                }
 
                 if(result.roleType == 111 || result.roleType == 112 || result.roleType == 113 || result.roleType == 114) {
                     hpBdayGrid = GridCommon.createAUIGrid("salesOrgHPBday", hpBdayColumnLayout, null, salesGridOption);
@@ -989,19 +1046,47 @@ console.log(result);
             });
             AUIGrid.update(salesOrgPerfD);
 
-            Common.ajax("GET", "/common/getCustomerBday.do", {userId : userId, roleId : userRole}, function(result1) {
-                console.log("fn_getCustomerBday");
-                console.log(result1);
-                AUIGrid.setGridData(customerBdayGrid, result1);
-            });
+            if(userRole != 111){
+            	Common.ajax("GET", "/common/getCustomerBday.do", {userId : userId, roleId : userRole}, function(result1) {
+            		console.log("fn_getCustomerBday");
+            		console.log(result1);
+            		AUIGrid.setGridData(customerBdayGrid, result1);
+            	});
+            }
+
 
 			if(userRole == 111 || userRole == 112 || userRole == 113 || userRole == 114) {
-                Common.ajax("GET", "/common/getHPBirthday.do", {userId : userId, roleId : userRole}, function(result2) {
+                Common.ajax("GET", "/common/getHPBirthday.do", {userId : userId, roleId : userRole, isHmBday : "false"}, function(result2) {
                     console.log(result2);
                     AUIGrid.setGridData(hpBdayGrid, result2);
                 });
             }
         });
+
+
+        if(userRole == 111) {
+           console.log("Manager Bday");
+
+           Common.ajax("GET", "/common/getHPBirthday.do", {userId : userId, roleId : userRole, isHmBday : "true"}, function(result3) {
+
+               for(var i = 0; i < headers.length; i++) {
+                   var item = headers[i];
+                    result3.push(item);
+                    console.log('new item', item);
+               }
+
+               AUIGrid.setGridData(hpManagerBdayGrid, result3);
+               AUIGrid.setProp(hpManagerBdayGrid, "rowStyleFunction", function(rowIndex, item) {
+                   if(item.header == "1") {
+                       return "my-row-style-2";
+                   } else {
+                       return "";
+                   }
+               });
+               AUIGrid.update(hpManagerBdayGrid);
+           });
+
+          }
     }
 
     function fn_selectMemoDashboard() {
@@ -1065,6 +1150,11 @@ console.log(result);
     .my-row-style {
     background:#fff64c;
     color:#f7ea00;
+}
+
+    .my-row-style-2 {
+    background:#75c6ff;
+    color:#addeff;
 }
 </style>
 <!-- [Woongjin Jun] Tab -->
@@ -1130,15 +1220,25 @@ console.log(result);
                 <aside class="title_line">
                     <h2>Birthday Information</h2>
                 </aside>
+                <div id="custBdayDiv">
                 <aside class="title_line">
-                    <h4>Customer Birthday</h4>
+                    <h4 id="custBdayTitle">Customer Birthday</h4>
                 </aside>
                 <div id="salesOrgCustBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
+                </div>
                  <aside class="title_line">
                  <h4 id="hpBdayTitle">HP Birthday</h4>
                 </aside>
                 <div id="salesOrgHPBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
-            </div>
+
+<!--  START HERE  -->
+                 <aside class="title_line">
+                 <h4 id="hpManagerBdayTitle">Manager Birthday</h4>
+                </aside>
+               <div id="hpManagerBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
+
+ <!--  ENDS HERE -->
+        </div>
         </div>
 
 

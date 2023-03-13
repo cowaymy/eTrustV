@@ -317,15 +317,24 @@ FROM VIEW_COUNT
     A.STUS = 1
     AND A.MEM_TYPE = 1
     AND TO_CHAR(A.DOB,'MM') = TO_CHAR(SYSDATE,'MM')
-    <if test="roleId == 111 or roleId == 112 or roleId == 113">
+    <if test="isHmBday == 'false' and (roleId == 111 or roleId == 112 or roleId == 113)">
     AND TO_CHAR(A.DOB,'DD') = TO_CHAR(SYSDATE,'DD')
     </if>
     )
     SELECT
         MI.MEM_CODE, MI.FULL_NAME, TO_CHAR(MI.DOB, 'DD/MM') AS DOB
+    <if test="roleId == 111 and isHmBday == 'true'">
+    , ORGD.MEM_LVL
+    , CASE WHEN ORGD.MEM_LVL = 3
+    THEN 'HM'
+    WHEN ORGD.MEM_LVL = 2
+    THEN 'SM'
+    ELSE 'GM' END AS TITLE
+    , '2' AS HEADER
+    </if>
     FROM ORG0001D ORGM
-    <if test="roleId != 111">
     JOIN ORG0005D ORGD ON ORGD.MEM_ID = ORGM.MEM_ID
+    <if test="roleId != 111">
     JOIN SYS0047M USRINFO ON USRINFO.HR_CODE = ORGM.MEM_CODE
     </if>
     <if test="roleId == 114">
@@ -340,10 +349,20 @@ FROM VIEW_COUNT
     <if test="roleId == 111">
     JOIN MEM_INFO MI ON MI.MEM_ID = ORGM.MEM_ID
     </if>
+    WHERE
     <if test="roleId != 111">
-    WHERE USRINFO.USER_ID = #{userId}
+    USRINFO.USER_ID = #{userId}
+    </if>
+    <if test="roleId == 111 and isHmBday == 'false'">
+    ORGD.MEM_LVL = '4'
+    </if>
+    <if test="roleId == 111 and isHmBday == 'true'">
+    ORGD.MEM_LVL IN ('1', '2', '3')
     </if>
     ORDER BY TO_NUMBER(SUBSTR(MI.DOB, 1,2))
+    <if test="roleId == 111 and isHmBday == 'true'">
+    , ORGD.MEM_LVL DESC
+    </if>
     </select>
 
 </mapper>
