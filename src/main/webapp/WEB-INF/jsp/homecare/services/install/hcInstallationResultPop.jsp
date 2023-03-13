@@ -28,6 +28,11 @@ $(document).ready(function() {
 	    if(${resultInfo.requireSms} =="1"){
 	            $("#smsCheck").attr("checked",true);
 	    }
+	    if (${resultInfo.dismantle} == 1) {
+	        $('input:radio[name=dismantle][value="1"]').attr('checked', true);
+	      }else{
+	          $('input:radio[name=dismantle][value="0"]').attr('checked', true);
+	      }
     }
 
 
@@ -199,6 +204,37 @@ function fn_winClose(){
     <td>
     <span><c:out value="${resultInfo.serialNo}"/></span>
     </td>
+</tr>
+<tr>
+  <th scope="row">Dismantle<span  class="must airconm" style="display:none">*</span></th>
+   <td colspan="1">
+        <label><input type="radio" name="dismantle" disabled="disabled" value="1"/><span>Yes</span></label>
+        <label><input type="radio" name="dismantle" disabled="disabled" value="0"/><span>No</span></label>
+</td>
+   <th scope="row"></th><td></td>
+ </tr>
+ <tr>
+   <th scope="row">Total Copper Pipe<span  class="must airconm" style="display:none">*</span></th>
+  <td>
+  <span><c:out value="${resultInfo.totPipe}"/></span>
+    <span>ft</span>
+  </td>
+  <th scope="row" rowspan="2">Gas Pressue <span  class="must airconm"  style="display:none">*</span><br/>Before Installation<br/>After Installation
+  </th>
+
+  <td rowspan="1">
+  <span ><c:out value="${resultInfo.gasPresBef}"/>  PSI</span>
+  </td>
+</tr>
+<tr>
+  <th scope="row">Total Wire<span  class="must airconm" style="display:none">*</span></th>
+  <td>
+  <span><c:out value="${resultInfo.totWire}"/></span>
+    <span>ft</span>
+  </td>
+  <td rowspan="1">
+    <span><c:out value="${resultInfo.gasPresAft}"/>  PSI</span>
+  </td>
 </tr>
 <tr>
     <th scope="row" colspan="4">

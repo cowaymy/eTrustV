@@ -3169,6 +3169,11 @@
            , AFT_LPM AFT_LPM
            , WATER_SRC_TYPE
            , ATCH_FILE_GRP_ID
+           , Limit1.DISMANTLE
+           , Limit1.TOT_PIPE
+           , Limit1.TOT_WIRE
+           , Limit1.GAS_PRES_BEF
+           , Limit1.GAS_PRES_AFT
 
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
@@ -3221,6 +3226,11 @@
                         WHEN ( Extent3.ATCH_FILE_GRP_ID IS NOT NULL ) THEN Extent3.ATCH_FILE_GRP_ID || '_' || Extent1.INSTALL_ENTRY_NO || '_WEB'
                         ELSE ''
                         END ATCH_FILE_GRP_ID
+                  , Extent3.DISMANTLE
+                  , Extent3.TOT_PIPE
+                  , Extent3.TOT_WIRE
+                  , Extent3.GAS_PRES_BEF
+                  , Extent3.GAS_PRES_AFT
 
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
@@ -3455,6 +3465,11 @@
                   , Project1.REM REM
                   , Project1.CODE1 CODE1
                   , Project1.RESN_DESC RESN_DESC
+                  , Project1.DISMANTLE DISMANTLE
+                  , Project1.TOT_PIPE TOT_PIPE
+                  , Project1.TOT_WIRE TOT_WIRE
+                  , Project1.GAS_PRES_BEF GAS_PRES_BEF
+                  , Project1.GAS_PRES_AFT GAS_PRES_AFT
          FROM ( SELECT Extent1.RESULT_ID RESULT_ID
                      , to_char(Extent1.INSTALL_DT,'yyyy-mm-dd')  INSTALL_DT
                      , Extent1.REM REM
@@ -3475,6 +3490,11 @@
                      , Extent5.USER_NAME USER_NAME
                      , Extent6.CODE CODE1
                      , Extent6.RESN_DESC RESN_DESC
+                     , Extent1.DISMANTLE
+                     , Extent1.TOT_PIPE
+                     , Extent1.TOT_WIRE
+                     , Extent1.GAS_PRES_BEF
+                     , Extent1.GAS_PRES_AFT
                 FROM SAL0047D Extent1
                 JOIN SAL0046D Extent2 ON Extent1.ENTRY_ID = Extent2.INSTALL_ENTRY_ID
                 LEFT JOIN SYS0038M Extent3 ON Extent2.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -3631,6 +3651,11 @@
                         , WATER_SRC_TYPE
                         , INST_NOTECHK
                         , SGN_DT
+                        , DISMANTLE
+                        , TOT_PIPE
+                        , TOT_WIRE
+                        , GAS_PRES_BEF
+                        , GAS_PRES_AFT
                         , DT_PAIR_ID
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
@@ -3671,6 +3696,11 @@
             , #{waterSrcType}
             , #{instNoteChk}
             , #{signData}
+            , #{dismantle}
+            , #{tPipe}
+            , #{tWire}
+            , #{gasPreBIns}
+            , #{gasPreAIns}
             , #{dtPairId}
     )
   </insert>
@@ -4836,6 +4866,11 @@
                     <if test="atchFileGrpId != null and atchFileGrpId != ''">
                       ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
                       </if>
+                      , DISMANTLE = #{hidDismantle}
+                      , TOT_PIPE = #{totalPipe}
+                      , TOT_WIRE = #{totalWire}
+                      , GAS_PRES_BEF = #{gaspreBefIns}
+                      , GAS_PRES_AFT = #{gaspreAftIns}
 
     WHERE ( RESULT_ID = #{resultId} )
   </update>

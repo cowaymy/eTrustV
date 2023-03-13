@@ -1878,6 +1878,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 		installResult.put("ctCode", CommonUtils.nvl(params.get("ctCode")).toString());
 	}
 
+    installResult.put("dismantle", params.get("hidDismantle"));//Dismantle
+    installResult.put("tPipe", params.get("totalPipe"));//Total Copper Pipe
+    installResult.put("tWire", params.get("totalWire"));//Total Wire
+    installResult.put("gasPreBIns", params.get("gaspreBefIns"));//Before Installation
+    installResult.put("gasPreAIns", params.get("gaspreAftIns"));//After Installation
+
     installResult.put("signData", params.get("signData"));
     if(!CommonUtils.nvl(params.get("checkSend")).toString().equals(null)){
 		installResult.put("checkSend", CommonUtils.nvl(params.get("checkSend")).toString());

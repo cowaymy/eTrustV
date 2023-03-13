@@ -15,7 +15,9 @@ var branchDs = [];
 $(document).ready(function() {
 
     //doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
-    doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
+    //doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
+    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - '
+            , '',   'branch', 'M', 'f_multiCombo'); //Branch Code
     doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'f_multiCombo');
 
     //$("#branch").change(
@@ -32,6 +34,12 @@ $(document).ready(function() {
       width : '80%'
     });
     $('#appliType').multipleSelect("checkAll");
+
+    $('#branch').change(function() {
+    }).multipleSelect({
+      selectAll : true,
+      width : '80%'
+    });
   }
 
   //function fn_multiCombo() {
@@ -114,8 +122,13 @@ $(document).ready(function() {
         whereSql += " AND (m.mem_code between'" + $("#CTCodeFr").val()
             + "' AND '" + $("#CTCodeTo").val() + "') ";
       }
-      if ($("#branch").val() != '' && $("#branch").val() != null) {
+      /* if ($("#branch").val() != '' && $("#branch").val() != null) {
         whereSql += " AND i.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1 AND TYPE_ID = 5754) ";
+      } */
+      if ($("#branch").val() != '' && $("#branch").val() != null) {
+          whereSql += " AND i.BRNCH_ID IN " +
+             " (SELECT BRNCH_ID FROM SYS0005M WHERE BRNCH_ID IN ( " + $("#branch").val() +
+                     " ) AND STUS_ID = 1 AND TYPE_ID in ( 5754 ,43)) ";
       }
       if ($("#group").val() != '' && $("#group").val() != null) {
         whereSql += " AND ie.CT_GRP = " + " '" + $("#group").val()
@@ -254,7 +267,7 @@ $(document).ready(function() {
       </tr>
       <tr>
        <th scope="row"><spring:message code='home.lbl.hdcBranch' /></th>
-       <td><select id="branch" name="branch" class="w100p"></select></td>
+       <td><select id="branch" name="branch" class="w100p multy_select"></select></td>
         <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>
         <div class="date_set">

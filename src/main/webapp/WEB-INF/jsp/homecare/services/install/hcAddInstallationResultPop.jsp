@@ -159,11 +159,15 @@ var serialGubun = "1";
         if(js.String.strNvl($("#hidFrmSerialChkYn").val()) == "Y"){
         	$("#frm2").show();
             $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+            if($("#ordCtgryCd").val() == "ACI"){
+            	$(".airconm").show();
+            }
         }else{
         	$("#frm2").hide();
         	if($("#ordCtgryCd").val() == "ACI"){
         		$("#frm2").show();
         		$("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+        		$(".airconm").show();
         	}else{
         		$("#frmSerialNo").attr("disabled", true).addClass("readonly");
         	}
@@ -264,8 +268,31 @@ var serialGubun = "1";
 	          if(frmStockCode != "0" && $("#hidFrmStockCode").val() != frmStockCode){
 	              msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
 	          }
+
+	          if ($("input[type=radio][name=dismantle]:checked").val() == '' || $("input[type=radio][name=dismantle]:checked").val() == null) {
+	        	  msg += "* <spring:message code='sys.msg.necessary' arguments='Dismantle' htmlEscape='false'/> </br>";
+	          }
+
+	          if ($("#totalPipe").val() == '' || $("#totalPipe").val() == null) {
+                  msg += "* <spring:message code='sys.msg.necessary' arguments='Total Copper Wire' htmlEscape='false'/> </br>";
+              }
+
+	          if ($("#totalWire").val() == '' || $("#totalWire").val() == null) {
+                  msg += "* <spring:message code='sys.msg.necessary' arguments='Total Wire' htmlEscape='false'/> </br>";
+              }
+
+	          if ($("#gaspreBefIns").val() == '' || $("#gaspreBefIns").val() == null) {
+                  msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure before install' htmlEscape='false'/> </br>";
+              }
+
+	          if ($("#gaspreAftIns").val() == '' || $("#gaspreAftIns").val() == null) {
+                  msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure after install' htmlEscape='false'/> </br>";
+              }
 	      }
          //validate aircon serial
+
+        var hidDismantle = $("input[type=radio][name=dismantle]:checked").val();
+        $("#hidDismantle").val(hidDismantle);
 
 	      if ($("#custMobileNo").val().trim() == '' && $("#chkSMS").is(":checked")) {
 	          msg += "* Please fill in customer mobile no </br> Kindly proceed to edit customer contact info </br>";
@@ -928,6 +955,8 @@ var serialGubun = "1";
     <input type="hidden" value="${orderDetail.salesmanInfo.memId}" id="hpMemId" name="hpMemId" />
     <input type="hidden" value="${orderDetail.basicInfo.ordCtgryCd}" id="ordCtgryCd" name="ordCtgryCd" />
 
+    <input type="hidden" value="" id="hidDismantle" name="hidDismantle" />
+
    <table class="type1 mb1m">
     <!-- table start -->
     <caption>table</caption>
@@ -1000,6 +1029,14 @@ var serialGubun = "1";
          <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop1()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </td>
      </tr>
+     <tr class="frmS1" style="display:none;">
+       <th scope="row">Mobile</th>
+       <td>
+         <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
+         <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
+       </td>
+       <th scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
+       <td>
      <tr>
       <th class="dtPair1" scope="row">DT Pair</th>
       <td class="dtPair2"><select class="w100p" id="dtPairCode" name="dtPairCode">
@@ -1031,12 +1068,34 @@ var serialGubun = "1";
        </td>
      </tr>
      <tr>
-       <th scope="row">Mobile</th>
-       <td>
-         <input type="text" title="" value ="${orderDetail.installationInfo.instCntTelM}" placeholder="Mobile No" id="custMobileNo" name="custMobileNo" style="width:50%;"/>
-         <span>SMS</span><input type="checkbox" id="chkSms" name="chkSms" checked>
-       </td>
+       <th scope="row">Dismantle<span  class="must airconm" style="display:none">*</span></th>
+       <td colspan="1">
+		    <label><input type="radio" name="dismantle"  value="1"/><span>Yes</span></label>
+		    <label><input type="radio" name="dismantle"  value="0"/><span>No</span></label>
+    </td>
        <th scope="row"></th><td></td>
+     </tr>
+     <tr>
+       <th scope="row">Total Copper Pipe<span  class="must airconm" style="display:none">*</span></th>
+       <td>
+         <input type="text" title="" placeholder="Total Copper Pipe" class="" id="totalPipe" name="totalPipe" style="width:90%;" type="number"/><span>ft</span>
+       </td>
+       <th scope="row" rowspan="2">Gas Pressue <span  class="must airconm"  style="display:none">*</span><br/>Before Installation<br/>After Installation
+       </th>
+
+       <td rowspan="1">
+         <input type="text" title="" placeholder="Before Installation" class="" id="gaspreBefIns" name="gaspreBefIns" /><span>PSI</span>
+       </td>
+     </tr>
+     <tr>
+       <th scope="row">Total Wire<span  class="must airconm" style="display:none">*</span></th>
+       <td>
+         <input type="text" title="" placeholder="Total Wire" class="" id="totalWire" name="totalWire"  style="width:90%;"/><span>ft</span>
+       </td>
+       <td rowspan="1">
+         <input type="text" title="" placeholder="After Installation" class="" id="gaspreAftIns" name="gaspreAftIns" value="<c:out value="${installInfo.gasPresAft}"/>" />
+         <span>PSI</span>
+       </td>
      </tr>
      <tr>
        <td colspan="4">

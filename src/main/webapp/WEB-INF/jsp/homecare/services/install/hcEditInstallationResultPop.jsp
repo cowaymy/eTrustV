@@ -21,6 +21,7 @@ var fileGroupKey ="";
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
+    var dismantle = ${installInfo.dismantle};
 
     if (allcom == 1) {
       $("#allwcom").prop("checked", true);
@@ -33,6 +34,12 @@ var fileGroupKey ="";
     if (reqsms == 1) {
       $("#reqsms").prop("checked", true);
     }
+
+    if (dismantle == 1) {
+    	$('input:radio[name=dismantle][value="1"]').attr('checked', true);
+      }else{
+    	  $('input:radio[name=dismantle][value="0"]').attr('checked', true);
+      }
 
     $("#installdt").change( function() {
       var checkMon = $("#installdt").val();
@@ -54,11 +61,15 @@ var fileGroupKey ="";
     if(js.String.strNvl($("#hidFrmSerialChkYn").val()) == "Y"){
         $("#frm2").show();
         $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+        if($("#ordCtgryCd").val() == "ACI"){
+            $(".airconm").show();
+        }
     }else{
 
         if($("#ordCtgryCd").val() == "ACI"){
             $("#frm2").show();
             $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+            $(".airconm").show();
         }else{
         	$("#frm2").hide();
         	$("#frmSerialNo").attr("disabled", true).addClass("readonly");
@@ -73,6 +84,9 @@ var fileGroupKey ="";
 
   function fn_saveInstall() {
     if (fn_validate()) {
+
+    	var hidDismantle = $("input[type=radio][name=dismantle]:checked").val();
+        $("#hidDismantle").val(hidDismantle);
 
     	var formData = new FormData();
         formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
@@ -202,6 +216,26 @@ var fileGroupKey ="";
         if(frmStockCode != "0" && $("#hidFrmStockCode").val() != frmStockCode){
             msg += "* Serial Number NOT match with stock [" + $("#hidFrmStockCode").val() +"] </br>";
         }
+
+        if ($("input[type=radio][name=dismantle]:checked").val() == '' || $("input[type=radio][name=dismantle]:checked").val() == null) {
+            msg += "* <spring:message code='sys.msg.necessary' arguments='Dismantle' htmlEscape='false'/> </br>";
+        }
+
+        if ($("#totalPipe").val() == '' || $("#totalPipe").val() == null) {
+            msg += "* <spring:message code='sys.msg.necessary' arguments='Total Copper Wire' htmlEscape='false'/> </br>";
+        }
+
+        if ($("#totalWire").val() == '' || $("#totalWire").val() == null) {
+            msg += "* <spring:message code='sys.msg.necessary' arguments='Total Wire' htmlEscape='false'/> </br>";
+        }
+
+        if ($("#gaspreBefIns").val() == '' || $("#gaspreBefIns").val() == null) {
+            msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure before install' htmlEscape='false'/> </br>";
+        }
+
+        if ($("#gaspreAftIns").val() == '' || $("#gaspreAftIns").val() == null) {
+            msg += "* <spring:message code='sys.msg.necessary' arguments='Gas pressure after install' htmlEscape='false'/> </br>";
+        }
     }
     //validate aircon serial
 
@@ -325,6 +359,8 @@ var fileGroupKey ="";
    <input type="hidden" value="" id="hidStockCode" name="hidStockCode" />
    <input type="hidden" value="" id="hidFrmStockCode" name="hidFrmStockCode" />
 
+   <input type="hidden" value="" id="hidDismantle" name="hidDismantle" />
+
     <table class="type1 mb1m">
      <!-- table start -->
      <caption>table</caption>
@@ -403,6 +439,40 @@ var fileGroupKey ="";
                 </div>
             </td>
       </tr>
+      <tr>
+       <th scope="row">Dismantle<span  class="must airconm" style="display:none">*</span></th>
+       <td colspan="1">
+            <label><input type="radio" name="dismantle"  value="1"/><span>Yes</span></label>
+            <label><input type="radio" name="dismantle"  value="0"/><span>No</span></label>
+    </td>
+       <th scope="row"></th><td></td>
+     </tr>
+     <tr>
+       <th scope="row">Total Copper Pipe<span  class="must airconm" style="display:none">*</span></th>
+       <td>
+         <input type="text" title="" placeholder="Total Copper Pipe" class="" id="totalPipe" name="totalPipe" style="width:90%;" type="number"
+         value="<c:out value="${installInfo.totPipe}"/>" />
+         <span>ft</span>
+       </td>
+       <th scope="row" rowspan="2">Gas Pressue <span  class="must airconm"  style="display:none">*</span><br/>Before Installation<br/>After Installation
+       </th>
+
+       <td rowspan="1">
+         <input type="text" title="" placeholder="Before Installation" class="" id="gaspreBefIns" name="gaspreBefIns" value="<c:out value="${installInfo.gasPresBef}"/>" />
+         <span>PSI</span>
+       </td>
+     </tr>
+     <tr>
+       <th scope="row">Total Wire<span  class="must airconm" style="display:none">*</span></th>
+       <td>
+         <input type="text" title="" placeholder="Total Wire" class="" id="totalWire" name="totalWire"  style="width:90%;" value="<c:out value="${installInfo.totWire}"/>" />
+         <span>ft</span>
+       </td>
+       <td rowspan="1">
+         <input type="text" title="" placeholder="After Installation" class="" id="gaspreAftIns" name="gaspreAftIns" value="<c:out value="${installInfo.gasPresAft}"/>" />
+         <span>PSI</span>
+       </td>
+     </tr>
       <tr>
             <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
       </tr>

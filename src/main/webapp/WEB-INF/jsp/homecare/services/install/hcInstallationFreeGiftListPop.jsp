@@ -15,16 +15,18 @@ $(document).ready(function(){
     }).multipleSelect({});
 
     //doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S');
-    doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
+    //doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
+    /* doDefCombo('/homecare/selectHomecareAndDscBranchList.do',  '', ' - '
+            , '',   'branch', 'S', ''); //Branch Code */
+            //doGetCombo('/homecare/selectHomecareAndDscBranchList.do', '','-', 'branch', 'S', '');
+           doGetComboSepa('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'branch',  'S', '');
 
     //doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCode', 'S' ,  '');
     $("#branch").change(function() {
-        doGetCombo('/homecare/services/as/selectCTByDSCSearch.do', $("#branch").val(), '', 'CTCode', 'S', '');
+    	doGetComboObj('/homecare/services/as/selectCTByDSCSearch2.do', {brnchId:$("#branch").val()}, '', 'CTCode', 'S', '');
     });
 
 });
-
-
 
 function fn_openReport(){
 		var date = new Date();
