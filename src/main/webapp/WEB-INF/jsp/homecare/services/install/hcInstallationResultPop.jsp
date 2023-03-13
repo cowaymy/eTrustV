@@ -19,16 +19,16 @@ $(document).ready(function() {
 
 
     function fn_setResultCheck(){
-	    if(${resultInfo.allowComm} =="1"){
+	    if("${resultInfo.allowComm}" =="1"){
 	            $("#allowCheck").attr("checked",true);
 	    }
-	    if(${resultInfo.isTradeIn} =="1"){
+	    if("${resultInfo.isTradeIn}" =="1"){
 	            $("#tradeCheck").attr("checked",true);
 	    }
-	    if(${resultInfo.requireSms} =="1"){
+	    if("${resultInfo.requireSms}" =="1"){
 	            $("#smsCheck").attr("checked",true);
 	    }
-	    if (${resultInfo.dismantle} == 1) {
+	    if ("${resultInfo.dismantle}" == 1) {
 	        $('input:radio[name=dismantle][value="1"]').attr('checked', true);
 	      }else{
 	          $('input:radio[name=dismantle][value="0"]').attr('checked', true);
