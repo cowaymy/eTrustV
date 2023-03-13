@@ -40,11 +40,22 @@ var requestDcfColumnLayout = [
 
 
 $(document).ready(function(){
-	doGetCombo('/common/selectCodeList.do', '392' , ''   , 'reason' , 'S', '');
+	fetch("/payment/checkDCFPopValid.do?groupSeq=${groupSeq}")
+	.then(resp => resp.json())
+	.then(d => {
+		if (d.success) {
+			doGetCombo('/common/selectCodeList.do', '392' , ''   , 'reason' , 'S', '');
 
-	myRequestDCFGridID = GridCommon.createAUIGrid("grid_request_dcf_wrap", requestDcfColumnLayout,null,gridPros);
+			myRequestDCFGridID = GridCommon.createAUIGrid("grid_request_dcf_wrap", requestDcfColumnLayout,null,gridPros);
 
-	searchDCFList();
+			searchDCFList();
+		} else {
+			Common.alert(d.message, () => {
+				$("#popup_wrap .pop_header .right_opt .btn_blue2 a").click()
+			});
+		}
+	})
+
 });
 
 // ajax list 조회.

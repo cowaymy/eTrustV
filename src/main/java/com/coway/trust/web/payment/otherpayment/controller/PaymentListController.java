@@ -106,10 +106,7 @@ public class PaymentListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/initRequestDCFPop.do")
-	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
-		if (paymentListService.invalidReverse(params) > 0) {
-			throw new Exception("Payment has Active or Completed reverse request.");
-		}
+	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.put("groupSeq", params.get("groupSeq"));
 		LOGGER.debug("payment List params : {} ", params);
 
@@ -118,6 +115,20 @@ public class PaymentListController {
         //model.put("paymentList", resultList);
 
 		return "payment/otherpayment/requestDCFPop";
+	}
+
+	@RequestMapping(value= "/checkDCFPopValid.do")
+	public ResponseEntity<Map<String, Object>> checkDCFPopValid(@RequestParam Map<String, Object> params) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		if (paymentListService.invalidReverse(params) > 0) {
+			returnMap.put("success", false);
+			returnMap.put("message", "Payment has Active or Completed reverse request.");
+			return ResponseEntity.badRequest().body(returnMap);
+		} else {
+			returnMap.put("success", true);
+			returnMap.put("message", "Ok");
+			return ResponseEntity.ok(returnMap);
+		}
 	}
 
 	/**

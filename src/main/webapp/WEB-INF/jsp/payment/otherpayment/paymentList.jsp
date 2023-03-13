@@ -132,7 +132,7 @@
 					} else if (revStusId == 5) {
 						Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
 					} else {
-						if (!ftStus.filter(s => s == 1 || s == 5).length) {
+						if (!(ftStus.filter(s => s == 1).length)) {
 							Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
 						}else{
 		                    Common.alert("<b>This has already been Fund Transfer processing Requested/Approved. </b>");
