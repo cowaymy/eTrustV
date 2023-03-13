@@ -233,15 +233,16 @@
       if ($("#main_department").val() == 'MD08'){
           var subDeptCodySupport = $('#sub_department').val();
           if ( subDeptCodySupport != null &&  subDeptCodySupport != '' && subDeptCodySupport.length > 0){
-                console.log('tag form',$("#tagMgmtForm").serialize())
-                Common.ajax("GET", "/services/tagMgmt/selectTagStatus", $("#tagMgmtForm").serialize(),
-                function(result) {
-                AUIGrid.setGridData(gridID, result);
-                AUIGrid.setGridData(gridIDExcelHide, result);
-                  });
+                console.log('tag form',$("#tagMgmtForm").serialize());
+
+                    Common.ajax("GET", "/services/tagMgmt/selectTagStatus", $("#tagMgmtForm").serialize(),
+                    function(result) {
+                        AUIGrid.setGridData(gridID, result);
+                        AUIGrid.setGridData(gridIDExcelHide, result);
+                    });
           }
           else{
-              Common.alert("Please select Sub Departemant.");
+              Common.alert("Please select Sub Department.");
               return;
           }
 
@@ -325,12 +326,12 @@
       });
   }
 
-  function f_multiComboType() {
+   function f_multiComboType() {
         $(function() {
             $('#sub_department').change(function() {
             }).multipleSelect({
                 selectAll : true
-            });  /* .multipleSelect("checkAll"); */
+            });  /* .multipleSelect("checkAll");*/
 
         });
     }
