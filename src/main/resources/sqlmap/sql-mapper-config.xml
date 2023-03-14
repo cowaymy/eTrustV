@@ -116,8 +116,8 @@
 
         <!-- Added for On-Loan module, by Hui Ding, 20-02-2020 -->
         <!-- On-Loan -->
-        <typeAlias alias="loanOrderDVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderDVO"/>
-        <typeAlias alias="loanOrderMVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderMVO"/>
+<!--         <typeAlias alias="loanOrderDVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderDVO"/> -->
+<!--         <typeAlias alias="loanOrderMVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderMVO"/> -->
 
     </typeAliases>
 
