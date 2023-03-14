@@ -335,7 +335,7 @@
   </select>
 
   <select id="selectStockPrice" parameterType="Map" resultType="egovMap">
-    SELECT NVL(T.PRC_ID, 0) AS PRICE_ID
+   SELECT NVL(T.PRC_ID, 0) AS PRICE_ID
              , NVL(T.PRC_COSTING, 0) AS COST
              , NVL(T.AMT, 0) AS NORMAL_PRICE
              , NVL(T.PRC_PV, 0) AS PV
@@ -355,6 +355,7 @@
                                                 AND T2.MEM_PAC_ID = #{srvPacId}
                WHERE T1.STK_ID = #{stkId}
                    AND 61 = T1.STK_TYPE_ID
+                   and T2.STUS_CODE_ID = 1
     AND ROWNUM &lt;= 1 ) T
   </select>
 
