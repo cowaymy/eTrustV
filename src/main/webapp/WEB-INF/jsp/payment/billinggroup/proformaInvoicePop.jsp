@@ -97,9 +97,9 @@ function fn_getProformaInvoiceListAjax() {
 function ValidRequiredField(){
     var valid = true;
 
-    if($("#invoiceNo").val() == "" && $("#orderNo").val() == "")
+    if(FormUtil.isEmpty($("#invoiceNo").val()) && FormUtil.isEmpty($("#orderNo").val())) {
         valid = false;
-
+    }
     return valid;
 }
 
