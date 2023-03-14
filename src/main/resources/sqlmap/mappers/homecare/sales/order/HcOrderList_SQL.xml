@@ -141,6 +141,7 @@
 		                                JOIN SAL0090D G ON S.SALES_ORD_ID = G.SRV_SO_ID
 		                                JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
 		                                LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
+		                                LEFT JOIN SAL0027D cp2 ON C.CUST_ID = cp2.CUST_ID
 						                WHERE 1=1
 	                                    <if test='ordId != null and ordId != ""'>
 	                                    AND S.SALES_ORD_ID = #{ordId}
@@ -155,8 +156,7 @@
 	                                    AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
 	                                    </if>
 	                                    <if test='memId != null and memId != ""'>
-	                                    AND (V.MEM_ID = #{memId}
-	                                    OR C.TYPE_ID = 965)
+	                                    AND (V.MEM_ID = #{memId} OR C.TYPE_ID = 965)
 	                                    </if>
 	                                    <if test='deptCode != null and deptCode != ""'>
 	                                    AND (V.DEPT_CODE = #{deptCode} OR C.TYPE_ID = 965)
@@ -176,6 +176,9 @@
 				                        <if test='custIc != null and custIc != ""'>
 				                          AND C.NRIC = #{custIc}
 				                        </if>
+				                         <if test='contactNo != null and contactNo != ""'>
+                                          AND #{contactNo} IN (cp2.TEL_M1, cp2.TEL_O, cp2.TEL_R)
+                                        </if>
 					              )
 					            ) SVC
 					            ON V1.ORD_ID = SVC.SALES_ORD_ID
