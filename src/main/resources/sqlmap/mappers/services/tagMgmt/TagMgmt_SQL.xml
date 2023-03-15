@@ -134,7 +134,11 @@
         </foreach>
     </if>
     <if test="cmGroup != null and cmGroup !='' ">
-        AND Z.CMGROUP IN (#{cmGroup})
+        AND Z.CMGROUP IN
+        <foreach item="item" collection="cmGroup" index="index"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </if>
 
     <if test="feedback_code != null and feedback_code != '' ">
@@ -815,5 +819,6 @@
             JOIN SAL0029D C ON A.CUST_ID =C.CUST_ID
             WHERE A.CUST_ADD_ID = #{requestId}
      </select>
+
 
 </mapper>
