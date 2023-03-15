@@ -139,22 +139,24 @@ public class TagMgmtController {
     params.put("sub_department", sub_department);
 
     List <String> cmCode= new ArrayList<String>();
-    if("MD08".equals(params.get("main_department")) && "".equals(params.get("cmGroup"))){
+    if("MD08".equals(params.get("main_department"))){
         	params.put("sub_dept",sub_department);
         	params.put("mainDept", params.get("main_department"));
     		List <EgovMap> cmGroupList = tagMgmtService.selectCmGroup(params);
 
-    		for(EgovMap s : cmGroupList){
-    			cmCode.add((String) s.getValue(0));
+    		if("".equals(params.get("cmGroup"))){
+    			for(EgovMap s : cmGroupList){
+        			cmCode.add((String) s.getValue(0));
+        		}
+    		}else {
+    			cmCode.add((String)params.get("cmGroup"));
     		}
-    		
-    }else{
-    	cmCode.add((String)params.get("cmGroup"));
+
+
+    	    Object[] commaCm= cmCode.toArray();
+    		params.put("cmGroup", commaCm);
+
     }
-
-    Object[] commaCm= cmCode.toArray();
-	params.put("cmGroup", commaCm);
-
 
     List<EgovMap> notice = tagMgmtService.getTagStatus(params);
     return ResponseEntity.ok(notice);
