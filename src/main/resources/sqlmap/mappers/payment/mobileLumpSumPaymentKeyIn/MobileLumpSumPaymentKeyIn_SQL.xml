@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.impl.MobileLumpSumPaymentKeyInMapper">
+	<select  id="getCustomerBillingInfoByInvoiceNo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.NRIC,p0016d.ACC_BILL_CRT_DT,p0016d.ACC_BILL_GRP_ID FROM PAY0016D p0016d
+		INNER JOIN SAL0001D s0001d
+		ON s0001d.SALES_ORD_ID = p0016d.ACC_BILL_ORD_ID
+		INNER JOIN SAL0029D s0029d
+		ON s0001d.CUST_ID = s0029d.CUST_ID
+		WHERE 1=1
+		AND p0016d.ACC_BILL_REM = #{custCi}
+		AND ROWNUM = 1
+	</select>
+
+	<select id="getCustomerInfo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.CUST_ID,s0029d.NAME, s0029d.NRIC, s0029d.EMAIL,
+		s0029d.TYPE_ID AS CUST_TYPE_ID, s0013m1.CODE AS CUST_TYPE_CODE, s0013m1.CODE_NAME AS CUST_TYPE_CODE_NAME,
+		s0029d.CORP_TYPE_ID AS CUST_CORP_TYPE_ID, s0013m2.CODE AS CUST_CORP_TYPE_CODE, s0013m2.CODE_NAME AS CUST_CORP_TYPE_CODE_NAME
+		FROM SAL0029D s0029d
+		INNER JOIN SYS0013M s0013m1
+		ON s0029d.TYPE_ID = s0013m1.CODE_ID
+		INNER JOIN SYS0013M s0013m2
+		ON s0029d.CORP_TYPE_ID = s0013m2.CODE_ID
+		WHERE 1=1
+		AND s0029d.NRIC = #{nric}
+	</select>
+
+	<select id="getCustomerOutstandingOrder" parameterType="Map" resultType="egovMap">
+		SELECT * FROM (
+
+<!-- 		RENTAL MEMBERSHIP(TOTAL) -->
+		SELECT
+		    C.SALES_ORD_ID ORD_ID,
+		    C.SALES_ORD_NO ORD_NO,
+		    A.SRV_LDGR_TYPE_ID ORD_PAYMENT_TYPE_ID,
+		    F.CODE_NAME ORD_PAYMENT_TYPE_NAME,
+		    'RENTAL MEMBERSHIP' PAY_TYPE,
+		    ROUND(SUM(A.SRV_LDGR_AMT),2) OTSTND_AMT,
+		    C.CUST_ID,
+		    D.NRIC,
+		    E.CODE_ID AS ORD_TYPE_ID,
+		    E.CODE_NAME AS ORD_TYPE_NAME
+		FROM PAY0023D A
+		LEFT JOIN SAL0077D B ON B.SRV_CNTRCT_ID  = A.SRV_LDGR_CNTRCT_ID
+		LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+		LEFT JOIN SAL0029D D ON D.CUST_ID = C.CUST_ID
+		LEFT JOIN SYS0013M E ON E.CODE_ID = C.APP_TYPE_ID
+		LEFT JOIN SYS0013M F ON F.CODE_ID = A.SRV_LDGR_TYPE_ID
+		WHERE 1=1
+	        <if test='custId != null and custId != ""'>
+		    AND D.CUST_ID = #{custId}
+		    </if>
+ 			<if test='ordNoList != null and ordNoList != ""'>
+	             AND C.SALES_ORD_NO IN
+	             <foreach item="item" collection="ordNoList" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+		GROUP BY
+		    A.SRV_LDGR_CNTRCT_ID,
+		    C.SALES_ORD_ID, C.SALES_ORD_NO,
+		    A.SRV_LDGR_CRT_DT,
+		    A.SRV_LDGR_TYPE_ID,'RENTAL MEMBERSHIP',0,
+		    C.CUST_ID, D.NRIC, E.CODE_ID, E.CODE_NAME, F.CODE_NAME
+		HAVING NVL(ROUND(SUM(A.SRV_LDGR_AMT),2), 0.00) > 0
+
+		UNION
+
+<!-- 		OUTRIGHT MEMBERSHIP(TOTAL)   -->
+		 SELECT
+		    B.SALES_ORD_ID ORD_ID,
+		    B.SALES_ORD_NO ORD_NO,
+		    0 ORD_PAYMENT_TYPE_ID,
+		    '' ORD_PAYMENT_TYPE_NAME,
+		    'OUTRIGHT MEMBERSHIP' PAY_TYPE,
+		    NVL (ROUND(SUM (D.SRV_MEM_AMT),2), 0.00) OTSTND_AMT,
+		    B.CUST_ID,
+		    C.NRIC,
+		    E.CODE_ID ORD_TYPE_ID,
+		    E.CODE_NAME ORD_TYPE_NAME
+		FROM SAL0095D A
+		JOIN SAL0001D B ON B.SALES_ORD_ID = A.SRV_SALES_ORD_ID
+		JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+		LEFT JOIN PAY0024D D ON D.SRV_MEM_ID = A.SRV_MEM_ID
+		LEFT JOIN SYS0013M E ON E.CODE_ID = B.APP_TYPE_ID
+		WHERE 1=1
+	        <if test='custId != null and custId != ""'>
+		        AND C.CUST_ID = #{custId}
+		    </if>
+		    <if test='ordNoList != null and ordNoList != ""'>
+	             AND B.SALES_ORD_NO IN
+	             <foreach item="item" collection="ordNoList" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+		GROUP BY
+		    A.SRV_MEM_ID,
+		    A.SRV_MEM_NO,
+		    B.SALES_ORD_ID,
+		    B.SALES_ORD_NO,
+		    0,0,
+		    'OUTRIGHT MEMBERSHIP',
+		    D.SRV_MEM_DT_TM,
+		    B.CUST_ID,
+		    C.NRIC, E.CODE_ID, E.CODE_NAME
+		HAVING NVL(ROUND(SUM (D.SRV_MEM_AMT), 0), 0.00) > 0
+
+		UNION
+
+<!-- 		RENTAL OUTSTANDING(TOTAL) -->
+		 SELECT
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'RENTAL PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.RENT_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM(
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				 <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       		</if>
+		           AND A.APP_TYPE_ID IN (66)
+		)D
+		JOIN PAY0022D E ON D.ORD_ID = E.RENT_SO_ID
+		WHERE 1=1
+		GROUP BY
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.RENT_AMT),2) , 0.00) > 0
+
+		UNION
+
+<!-- 		OUTRIGHT/OUTRIGHT PLUS OUTSTANDING(TOTAL) -->
+		SELECT
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'OUTRIGHT PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.TRADE_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM(
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				    <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       			</if>
+		           AND A.APP_TYPE_ID IN (67, 1412)
+		)D
+		JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
+		WHERE 1=1
+		GROUP BY
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.TRADE_AMT),2) , 0.00) > 0
+
+		UNION
+
+<!-- 		INSTALLMENT OUTSTANDING(TOTAL) -->
+		SELECT
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'INSTALLMENT PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.INSTLMT_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM(
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				    <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       			</if>
+		           AND A.APP_TYPE_ID IN (68)
+		)D
+		JOIN PAY0010D E ON D.ORD_ID = E.INSTLMT_SO_ID
+		WHERE  1=1
+		GROUP BY
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.INSTLMT_AMT),2) , 0.00) > 0
+
+		UNION
+
+		SELECT
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'AS PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.AS_LG_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM (
+		 SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				   <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       			</if>
+		) D
+		JOIN PAY0006D E ON D.ORD_NO =  E.AS_SO_NO
+		WHERE  1=1
+		GROUP BY
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.AS_LG_AMT),2) , 0.00) > 0
+		)
+	</select>
+</mapper>
