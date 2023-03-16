@@ -8,7 +8,7 @@
     }
 
    .my-yellow-style {
-	    background:#FFE400;
+	    background:#fbffc0;
 	    color:#22741C;
    }
 
@@ -47,7 +47,7 @@
 	    dataField : "name",
 	    headerText : "Customer Name",
 	    editable : false,
-	    width : "20%"
+	    width : "15%"
      },
      {
         dataField : "custMonth",
