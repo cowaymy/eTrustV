@@ -24,7 +24,7 @@
 				        </if>
 			    )
 	    </if>
-		SELECT A.QUOT_ID   ,
+		SELECT DISTINCT A.QUOT_ID   ,
 			       A.QTY_FILTER_CHRG   ,
 			       A.QUOT_NO   ,
 			       A.PAC_ID   ,
