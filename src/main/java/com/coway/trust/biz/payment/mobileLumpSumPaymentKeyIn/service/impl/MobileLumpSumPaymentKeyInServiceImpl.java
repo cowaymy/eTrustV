@@ -46,7 +46,7 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 		  //Cust search by NRIC/Company IC
 		  if(custCiType.equals("2")){
-			  params.put("nric", params.get("nric").toString());
+			  params.put("nric", params.get("custCi").toString());
 		  }
 
 		  List<EgovMap> customerInfoSearchResult = null;
