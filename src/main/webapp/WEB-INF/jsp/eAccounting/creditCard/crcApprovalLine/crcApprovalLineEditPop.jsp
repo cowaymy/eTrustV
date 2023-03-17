@@ -46,11 +46,16 @@ var approveLineColumnLayout = [ {
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
-            console.log("selectRowIdx : " + selectRowIdx);
-        	selectRowIdx = rowIndex;
-            fn_searchUserIdPop();
+        	if(item.appvStus == "A" || item.appvStus == "J"){
+    			Common.alert("Approval Line is not allowed to be added as next approval line has been Approved/Rejected");
+        	}
+        	else{
+	            console.log("selectRowIdx : " + selectRowIdx);
+	        	selectRowIdx = rowIndex;
+	            fn_searchUserIdPop();
             }
-        },
+        }
+    },
     colSpan : -1
 }, {
     dataField : "name",
