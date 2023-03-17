@@ -56,9 +56,15 @@ public class MobileLumpSumPaymentApiController {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
 
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.customerInfoSearch(params);
-	     List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
+		if(searchResult.size() > 0){
+		    List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
 
-		return ResponseEntity.ok(result);
+			return ResponseEntity.ok(result);
+		}
+		else{
+			List<MobileLumpSumPaymentApiDto> result = null;
+			return ResponseEntity.ok(result);
+		}
 	}
 
 	@ApiOperation(value = "getCustomerOutstandingOrderNumber", produces = MediaType.APPLICATION_JSON_VALUE)

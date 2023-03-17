@@ -1,6 +1,7 @@
 package com.coway.trust.api.mobile.payment.mobileLumpSumPayment;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.util.BeanConverter;
@@ -8,6 +9,7 @@ import com.coway.trust.util.BeanConverter;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class MobileLumpSumPaymentApiDto {
+	private List<MobileLumpSumPaymentApiDto> list;
 	//customer info search
 	private String nric;
 	private String accBillCrtDt;
@@ -42,6 +44,7 @@ public class MobileLumpSumPaymentApiDto {
 
 	public static Map<String, Object> createMap(MobileLumpSumPaymentApiDto vo){
 		Map<String, Object> params = new HashMap<>();
+		params.put("list", vo.getList());
 
 		//customer info search
 		params.put("nric", vo.getNric());
@@ -237,5 +240,13 @@ public class MobileLumpSumPaymentApiDto {
 
 	public void setOrdPaymentTypeName(String ordPaymentTypeName) {
 		this.ordPaymentTypeName = ordPaymentTypeName;
+	}
+
+	public List<MobileLumpSumPaymentApiDto> getList() {
+		return list;
+	}
+
+	public void setList(List<MobileLumpSumPaymentApiDto> list) {
+		this.list = list;
 	}
 }
