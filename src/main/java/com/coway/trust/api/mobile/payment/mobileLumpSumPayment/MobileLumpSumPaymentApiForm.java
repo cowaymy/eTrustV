@@ -12,7 +12,7 @@ public class MobileLumpSumPaymentApiForm {
 	private String custCi;
 
 	//Order Search
-	private String custId;
+	private int custId;
 
 	public static Map<String, Object> createMap(MobileLumpSumPaymentApiForm vo){
     	Map<String, Object> params = new HashMap<>();
@@ -38,10 +38,10 @@ public class MobileLumpSumPaymentApiForm {
 	public void setCustCi(String custCi) {
 		this.custCi = custCi;
 	}
-	public String getCustId() {
+	public int getCustId() {
 		return custId;
 	}
-	public void setCustId(String custId) {
+	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 }
