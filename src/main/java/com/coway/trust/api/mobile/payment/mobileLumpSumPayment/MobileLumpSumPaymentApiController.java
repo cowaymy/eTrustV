@@ -50,7 +50,7 @@ public class MobileLumpSumPaymentApiController {
 	@Resource(name="mobileLumpSumPaymentKeyInService")
 	private MobileLumpSumPaymentKeyInService mobileLumpSumPaymentKeyInService;
 
-	@ApiOperation(value = "customerInfoSearch", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "customerInfoSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/customerInfoSearch", method = RequestMethod.GET)
 	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> customerInfoSearch(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
@@ -67,7 +67,7 @@ public class MobileLumpSumPaymentApiController {
 		}
 	}
 
-	@ApiOperation(value = "getCustomerOutstandingOrderNumber", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "getCustomerOutstandingOrderNumber", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/getCustomerOutstandingOrderNumber", method = RequestMethod.GET)
 	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getCustomerOutstandingOrderNumber(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
@@ -78,7 +78,7 @@ public class MobileLumpSumPaymentApiController {
 		return ResponseEntity.ok(result);
 	}
 
-	@ApiOperation(value = "getCustomerOutstandingOrderDetailList", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "getCustomerOutstandingOrderDetailList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/getCustomerOutstandingOrderDetailList", method = RequestMethod.POST)
 	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getCustomerOutstandingOrderDetailList(@RequestBody MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);

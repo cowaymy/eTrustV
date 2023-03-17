@@ -7,7 +7,9 @@ import java.util.Map;
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import io.swagger.annotations.ApiModel;
 
+@ApiModel(value = "MobileLumpSumPaymentApiDto", description = "MobileLumpSumPaymentApiDto")
 public class MobileLumpSumPaymentApiDto {
 	private List<MobileLumpSumPaymentApiDto> list;
 	//customer info search
