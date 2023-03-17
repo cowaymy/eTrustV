@@ -47,7 +47,7 @@ var approveLineColumnLayout = [ {
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
         	if(item.appvStus == "A" || item.appvStus == "J"){
-    			Common.alert("Approval Line is not allowed to be added as next approval line has been Approved/Rejected");
+    			Common.alert("Approval Line is not allowed to be added as current approval line has been Approved/Rejected");
         	}
         	else{
 	            console.log("selectRowIdx : " + selectRowIdx);
