@@ -353,9 +353,9 @@
                LEFT JOIN SAL0016M T2 ON T2.STK_ID = T1.STK_ID
                                                 AND T2.APP_TYPE_ID = #{appTypeId}
                                                 AND T2.MEM_PAC_ID = #{srvPacId}
+                                                and T2.STUS_CODE_ID = 1
                WHERE T1.STK_ID = #{stkId}
                    AND 61 = T1.STK_TYPE_ID
-                   and T2.STUS_CODE_ID = 1
     AND ROWNUM &lt;= 1 ) T
   </select>
 
