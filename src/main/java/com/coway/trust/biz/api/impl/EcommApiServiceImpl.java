@@ -242,14 +242,26 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             salesOrderMVO.setPvMonth(0);
             salesOrderMVO.setPvYear(0);
 
-            salesOrderMVO.setDefRentAmt(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderMVO.setMthRentAmt(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderMVO.setPromoDiscPeriod(promoPrice.get("promoDiscPeriod").toString() == "0" ? 0: Integer.valueOf((promoPrice.get("promoDiscPeriod").toString())));
-            salesOrderMVO.setPromoDiscPeriodTp(promoPrice.get("promoDiscPeriodTp").toString() == "0" ? 0 : Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
-            salesOrderMVO.setTotPv(promoPrice.get("orderPVPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderPVPromo").toString()));
-            salesOrderMVO.setNorAmt(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderMVO.setNorRntFee(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderMVO.setDiscRntFee(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            if(promoPrice != null){
+            	salesOrderMVO.setDefRentAmt(promoPrice.get("orderRentalFeesPromo").toString() == null ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+                salesOrderMVO.setMthRentAmt(promoPrice.get("orderRentalFeesPromo").toString() == null ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+                salesOrderMVO.setPromoDiscPeriod(promoPrice.get("promoDiscPeriod").toString() == null ? 0: Integer.valueOf((promoPrice.get("promoDiscPeriod").toString())));
+                salesOrderMVO.setPromoDiscPeriodTp(promoPrice.get("promoDiscPeriodTp").toString() == null ? 0 : Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
+                salesOrderMVO.setTotPv(promoPrice.get("orderPVPromo").toString() == null ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+                salesOrderMVO.setNorAmt(promoPrice.get("orderRentalFeesPromo").toString() == null ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+                salesOrderMVO.setNorRntFee(promoPrice.get("orderRentalFeesPromo").toString() == null ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+                salesOrderMVO.setDiscRntFee(promoPrice.get("orderRentalFeesPromo").toString() == null ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            }else{
+            	salesOrderMVO.setDefRentAmt(BigDecimal.ZERO);
+                salesOrderMVO.setMthRentAmt(BigDecimal.ZERO);
+                salesOrderMVO.setPromoDiscPeriod(0);
+                salesOrderMVO.setPromoDiscPeriodTp(0);
+                salesOrderMVO.setTotPv(BigDecimal.ZERO);
+                salesOrderMVO.setNorAmt(BigDecimal.ZERO);
+                salesOrderMVO.setNorRntFee(BigDecimal.ZERO);
+                salesOrderMVO.setDiscRntFee(BigDecimal.ZERO);
+            }
+
             /*salesOrderMVO.setMthRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()) );
             salesOrderMVO.setPromoDiscPeriod(Integer.valueOf(promoPrice.get("promoDiscPeriod").toString()));
             salesOrderMVO.setPromoDiscPeriodTp(Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
@@ -273,10 +285,22 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
             // SAL0002D
             //salesOrderDVO.setItmPrc(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderDVO.setItmPrc(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderDVO.setItmPrcId(Integer.valueOf(productPrice.get("priceId").toString()));
+            if(promoPrice != null){
+            	salesOrderDVO.setItmPrc(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            	salesOrderDVO.setItmPv(promoPrice.get("orderPVPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+            }
+            else{
+            	salesOrderDVO.setItmPrc(BigDecimal.ZERO);
+            	salesOrderDVO.setItmPv(BigDecimal.ZERO);
+            }
+
+            if(productPrice != null){
+            	salesOrderDVO.setItmPrcId(productPrice.get("priceId").toString() == "0" ? 0 : Integer.valueOf(productPrice.get("priceId").toString()));
+            }
+            else{
+            	salesOrderDVO.setItmPrcId(0);
+            }
             //salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
-            salesOrderDVO.setItmPv(promoPrice.get("orderPVPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderPVPromo").toString()));
             salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
             salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
             orderVO.setSalesOrderDVO(salesOrderDVO);
