@@ -107,9 +107,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     EgovMap priceInfo = orderRegisterMapper.selectStockPrice(params);
 
-    BigDecimal orderPrice = BigDecimal.ZERO;
-    BigDecimal orderPV = BigDecimal.ZERO;
-    BigDecimal orderRentalFees = BigDecimal.ZERO;
+    BigDecimal orderPrice, orderPV, orderRentalFees;
 
     if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(params.get("appTypeId")))) {
       // orderPrice = "₩" +
@@ -117,21 +115,16 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       // orderPV = "₩" + ((BigDecimal)priceInfo.get("pv")).toString();
       // orderRentalFees = "₩" +
       // ((BigDecimal)priceInfo.get("monthlyRental")).toString();
-    	if(priceInfo != null){
-    		orderPrice = (BigDecimal) priceInfo.get("rentalDeposit");
-    	    orderPV = (BigDecimal) priceInfo.get("pv");
-    	    orderRentalFees = (BigDecimal) priceInfo.get("monthlyRental");
-    	}
-
+      orderPrice = (BigDecimal) priceInfo.get("rentalDeposit");
+      orderPV = (BigDecimal) priceInfo.get("pv");
+      orderRentalFees = (BigDecimal) priceInfo.get("monthlyRental");
     } else {
       // orderPrice = "₩" +
       // ((BigDecimal)priceInfo.get("normalPrice")).toString();
       // orderPV = "₩" + ((BigDecimal)priceInfo.get("pv")).toString();
-    	if(priceInfo != null){
-    		orderPrice = (BigDecimal) priceInfo.get("normalPrice");
-    	    orderPV = (BigDecimal) priceInfo.get("pv");
-    	    orderRentalFees = BigDecimal.ZERO;
-    	}
+      orderPrice = (BigDecimal) priceInfo.get("normalPrice");
+      orderPV = (BigDecimal) priceInfo.get("pv");
+      orderRentalFees = BigDecimal.ZERO;
     }
 
     priceInfo.put("orderPrice", new DecimalFormat("0.00").format(orderPrice));
