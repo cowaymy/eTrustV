@@ -10,6 +10,7 @@ public class MobileLumpSumPaymentApiForm {
 	//Customer Search
 	private String custCiType;
 	private String custCi;
+	private String[] ordNoList;
 
 	//Order Search
 	private int custId;
@@ -22,6 +23,7 @@ public class MobileLumpSumPaymentApiForm {
 
     	//Order Search
     	params.put("custId", vo.getCustId());
+    	params.put("ordNoList", vo.getOrdNoList());
 
     	return params;
 	}
@@ -43,5 +45,13 @@ public class MobileLumpSumPaymentApiForm {
 	}
 	public void setCustId(int custId) {
 		this.custId = custId;
+	}
+
+	public String[] getOrdNoList() {
+		return ordNoList;
+	}
+
+	public void setOrdNoList(String[] ordNoList) {
+		this.ordNoList = ordNoList;
 	}
 }
