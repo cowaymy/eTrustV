@@ -82,10 +82,10 @@ public class MobileLumpSumPaymentApiController {
 	@RequestMapping(value = "/getCustomerOutstandingOrderDetailList", method = RequestMethod.GET)
 	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getCustomerOutstandingOrderDetailList(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
-
+		LOGGER.debug(params.toString());
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.getCustomerOutstandingOrderDetailList(params);
 	    List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
 
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(result);
 	}
 }
