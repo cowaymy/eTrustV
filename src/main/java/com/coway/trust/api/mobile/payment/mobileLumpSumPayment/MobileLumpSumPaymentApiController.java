@@ -79,8 +79,8 @@ public class MobileLumpSumPaymentApiController {
 	}
 
 	@ApiOperation(value = "getCustomerOutstandingOrderDetailList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/getCustomerOutstandingOrderDetailList", method = RequestMethod.POST)
-	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getCustomerOutstandingOrderDetailList(@RequestBody MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
+	@RequestMapping(value = "/getCustomerOutstandingOrderDetailList", method = RequestMethod.GET)
+	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getCustomerOutstandingOrderDetailList(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
 
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.getCustomerOutstandingOrderDetailList(params);
