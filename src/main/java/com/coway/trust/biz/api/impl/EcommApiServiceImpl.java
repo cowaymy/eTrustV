@@ -242,14 +242,21 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             salesOrderMVO.setPvMonth(0);
             salesOrderMVO.setPvYear(0);
 
-            salesOrderMVO.setDefRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderMVO.setMthRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()) );
+            salesOrderMVO.setDefRentAmt(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setMthRentAmt(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setPromoDiscPeriod(promoPrice.get("promoDiscPeriod").toString() == "0" ? 0: Integer.valueOf((promoPrice.get("promoDiscPeriod").toString())));
+            salesOrderMVO.setPromoDiscPeriodTp(promoPrice.get("promoDiscPeriodTp").toString() == "0" ? 0 : Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
+            salesOrderMVO.setTotPv(promoPrice.get("orderPVPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+            salesOrderMVO.setNorAmt(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setNorRntFee(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setDiscRntFee(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            /*salesOrderMVO.setMthRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()) );
             salesOrderMVO.setPromoDiscPeriod(Integer.valueOf(promoPrice.get("promoDiscPeriod").toString()));
             salesOrderMVO.setPromoDiscPeriodTp(Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
             salesOrderMVO.setTotPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
             salesOrderMVO.setNorAmt(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
             salesOrderMVO.setNorRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
-            salesOrderMVO.setDiscRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderMVO.setDiscRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));*/
 
             salesOrderMVO.setPromoId( Integer.valueOf(reqPrm.get("promo").toString()) );
             salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
@@ -265,9 +272,11 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             orderVO.setSalesOrderMVO(salesOrderMVO);
 
             // SAL0002D
-            salesOrderDVO.setItmPrc(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            //salesOrderDVO.setItmPrc(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+            salesOrderDVO.setItmPrc(promoPrice.get("orderRentalFeesPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
             salesOrderDVO.setItmPrcId(Integer.valueOf(productPrice.get("priceId").toString()));
-            salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+            //salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+            salesOrderDVO.setItmPv(promoPrice.get("orderPVPromo").toString() == "0" ? BigDecimal.ZERO : new BigDecimal(promoPrice.get("orderPVPromo").toString()));
             salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
             salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
             orderVO.setSalesOrderDVO(salesOrderDVO);
