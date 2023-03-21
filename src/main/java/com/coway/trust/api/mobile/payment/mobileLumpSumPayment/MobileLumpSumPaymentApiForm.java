@@ -10,7 +10,7 @@ public class MobileLumpSumPaymentApiForm {
 	//Customer Search
 	private String custCiType;
 	private String custCi;
-	private String[] ordNoList;
+	private String ordNoList;
 
 	//Order Search
 	private int custId;
@@ -47,11 +47,11 @@ public class MobileLumpSumPaymentApiForm {
 		this.custId = custId;
 	}
 
-	public String[] getOrdNoList() {
+	public String getOrdNoList() {
 		return ordNoList;
 	}
 
-	public void setOrdNoList(String[] ordNoList) {
+	public void setOrdNoList(String ordNoList) {
 		this.ordNoList = ordNoList;
 	}
 }

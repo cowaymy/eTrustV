@@ -83,6 +83,10 @@ public class MobileLumpSumPaymentApiController {
 	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> getCustomerOutstandingOrderDetailList(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
 		LOGGER.debug(params.toString());
+		if(!mobileLumpSumPaymentApiForm.getOrdNoList().isEmpty()){
+			params.put("ordNoList",mobileLumpSumPaymentApiForm.getOrdNoList().split(","));
+		}
+
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.getCustomerOutstandingOrderDetailList(params);
 	    List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
 
