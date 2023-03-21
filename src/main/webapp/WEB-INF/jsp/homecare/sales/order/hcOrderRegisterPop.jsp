@@ -444,6 +444,8 @@
                 }
             }
         }
+
+        $('.aui-checkbox').val("").prop("disabled", false);
     }
 
     function fn_loadSrvCntcPerson(custCareCntId) {
