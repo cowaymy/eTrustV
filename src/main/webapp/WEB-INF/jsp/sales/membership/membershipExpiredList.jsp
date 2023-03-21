@@ -193,7 +193,18 @@ $(document).ready(function(){
 
     }
 
+    function fn_insertLog(){
+        var data = {
+                rawDataDate : $("#V_GENDATE").val(),
+                path: "membershipExpiredList"
+        }
+        Common.ajax("POST", "/sales/membership/insertGenerateExpireLog.do", data, function(result){
+            console.log("Result: >>" + result);
+        });
+    }
+
     function fn_generate(){
+    	fn_insertLog();
         var option = { isProcedure : true };
         Common.report("rawDataForm", option);
     }

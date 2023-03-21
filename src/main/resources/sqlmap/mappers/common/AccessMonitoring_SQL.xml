@@ -21,7 +21,7 @@
          AND c.CODE_MASTER_ID = 336
          AND c.CODE = A.SYSTEM_ID
          AND a.system_id = #{systemId}
-         AND a.ACCES_DAY BETWEEN TO_CHAR(TO_DATE(REPLACE(#{frDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(REPLACE(#{toDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') /* Essential Param*/
+         AND a.ACCES_DAY   between TO_CHAR(TO_DATE(#{frDate},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{toDate},'DD/MM/YYYY'),'YYYYMMDD') /* Essential Param*/
          <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')

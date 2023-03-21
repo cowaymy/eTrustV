@@ -79,7 +79,7 @@ function validRequiredField(){
 }
 
 function btnGeneratePDF_Click(){
-
+	fn_insertLog();
 	if(validRequiredField()){
 
 		$("#reportFileName").val("");
@@ -222,8 +222,24 @@ function btnGeneratePDF_Click(){
 	}
 }
 
+function fn_insertLog(){
+	var data = {
+			orderNo : $("#txtOrderNo").val(),
+			applicationType: $("#cmbAppType").val(),
+			rentalStus: $("#cmbRentalStatus").val(),
+			onlyExpire: $("#btnOnlyExpire").val(),
+			expireMonthFr: $("#mypExpireMonthFr").val(),
+			expireMonthTo: $("#mypExpireMonthTo").val(),
+			path: "membershipOutrightExpireListPop"
+	}
+	Common.ajax("POST", "/sales/membership/insertGenerateExpireLog.do", data, function(result){
+		console.log("Result: >>" + result);
+	});
+}
+
 function btnGenerateExcel_Click(){
 
+	fn_insertLog();
 	if(validRequiredField()){
 
 		$("#reportFileName").val("");

@@ -36,8 +36,22 @@ function validRequiredField(){
 	return valid;
 }
 
-function btnGenerate_Click(){
+function fn_insertLog(){
+    var data = {
+            orderNo : $("#txtOrderNo").val(),
+            orderDateFr: $("#dpOrderDateFr").val(),
+            orderDateTo: $("#dpOrderDateTo").val(),
+            expireMonthFr: $("#mypExpireMonthFr").val(),
+            expireMonthTo: $("#mypExpireMonthTo").val(),
+            path: "membershipOutrightExpireYearListPop"
+    }
+    Common.ajax("POST", "/sales/membership/insertGenerateExpireLog.do", data, function(result){
+        console.log("Result: >>" + result);
+    });
+}
 
+function btnGenerate_Click(){
+	fn_insertLog();
 	if(validRequiredField()){
 
 		$("#reportFileName").val("");

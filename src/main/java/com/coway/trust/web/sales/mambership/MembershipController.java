@@ -18,16 +18,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipConvSaleService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -46,6 +50,12 @@ public class MembershipController {
 
 	@Resource(name = "membershipConvSaleService")
 	private MembershipConvSaleService membershipConvSaleService;
+
+	@Autowired
+	private SessionHandler sessionHandler;
+
+	@Resource(name = "accessMonitoringService")
+	private AccessMonitoringService accessMonitoringService;
 
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
@@ -661,6 +671,26 @@ public class MembershipController {
 
 
 		return "sales/membership/membershipOutrightExpireYearListPop";
+	}
+
+
+	@RequestMapping(value = "/insertGenerateExpireLog.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertCodyClaimExp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO,HttpServletRequest request) {
+
+		logger.debug("params =====================================>>  " + params);
+		sessionVO = sessionHandler.getCurrentSessionInfo();
+    	StringBuffer requestUrl = new StringBuffer(request.getRequestURI());
+    	String path = params.get("path").toString();
+    	requestUrl.replace(requestUrl.lastIndexOf("/"), requestUrl.lastIndexOf("/") + 1, "/" +path+".do/");
+    	params.remove("path");
+		accessMonitoringService.insertSubAccessMonitoring(requestUrl.toString(), params, request,sessionVO);
+		// TODO insert
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
 	}
 
 
