@@ -207,59 +207,14 @@ var orgFileName = '';
 	            msg +=  "* Please key in valid start and end date.";
 	        }else{
 
-	        	var currDt = new Date();
+	        	let currDt = (new Date()).toLocaleDateString('en-GB').split("/").reverse().join("");
+	        	let validStartDt = ($("#crtsdt").val()).split("/").reverse().join("");
+	        	let validEndDt = ($("#crtedt").val()).split("/").reverse().join("");
 
-	        	var validStartDt = $("#crtsdt").val();
-	        	var validEndDt = $("#crtedt").val();
-
-	        	validStartDt = validStartDt.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-	        	validEndDt = validEndDt.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-
-	        	var strDay = validStartDt.substring(0, 2);
-	        	var strMonth = validStartDt.substring(2, 4);
-	            var strYear = validStartDt.substring(4, 8);
-
-	            var endDay = validEndDt.substring(0, 2);
-	            var endMonth = validEndDt.substring(2, 4);
-	            var endYear = validEndDt.substring(4, 8);
-
-	            if(currDt.getMonth() == 12){
-	            	currDt.setMonth(currDt.getMonth() + 1);
-	            	currDt.setFullYear(currDt.getFullYear() - 1);
-	            }else{
-	            	currDt.setMonth(currDt.getMonth() + 1);
-	            }
-
-	            var  currYear = currDt.getFullYear();
-	            var currMonth = currDt.getMonth();
-	            var  currDay = currDt.getDate();
-	            if(strYear >= currYear ){
-	                if(strYear == currYear && strMonth < currMonth ){
-	                    isValid = false;
-	                    msg +=  "* Valid start date must be today or future date.";
-	                }else{
-	                	if(strDay < currDay ||  endDay < currDay){
-	                		isValid = false;
-	                        msg +=  "* Valid start and end date must be today or future date.";
-	                	}else if(endYear >= strYear ){
-	                		if(endYear == strYear){
-	                			if( endMonth < strMonth ){
-		                            isValid = false;
-		                            msg +=  "* Valid end date must greater than start date.";
-		                        }else if( endMonth == strMonth && endDay < strDay){
-		                            isValid = false;
-		                            msg +=  "* Valid end date must greater than start date.";
-		                        }
-	                		}
-	                    }else{
-	                        isValid = false;
-	                        msg +=  "* Valid end date must greater than start date.";
-	                    }
-	                }
-	            }else{
-	                isValid = false;
-	                msg +=  "* Valid start date must be today or future date.";
-	            }
+	        	if(validStartDt < currDt || validEndDt < currDt ){
+	        		isValid = false;
+	        		msg +=  "* Valid start date must be today or future date.";
+	        	}
 	        }
         }
         if(!isValid) Common.alert("Upload File Validation" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
