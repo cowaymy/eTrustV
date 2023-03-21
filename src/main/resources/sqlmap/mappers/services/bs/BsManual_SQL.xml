@@ -1247,6 +1247,7 @@
 		Distinct1.SRV_FILTER_ID,
 		Distinct1.srv_config_id,
 		Distinct1.IS_RETURN
+		,Distinct1.SRV_FILTER_LAST_SERIAL s_old_serial_no
 		FROM ( SELECT DISTINCT Extent3.STK_ID STK_ID ,
 		Extent3.STK_CODE
 		STK_CODE ,
@@ -1256,6 +1257,7 @@
 		Filter1.SRV_FILTER_ID,
 		Filter1.srv_config_id,
 		Filter1.IS_RETURN
+		,Filter1.SRV_FILTER_last_SERIAL
 		FROM (
 		SELECT Extent1.SRV_SO_ID SRV_SO_ID ,
 		Extent2.SRV_FILTER_STK_ID
@@ -1263,6 +1265,7 @@
 		Extent2.SRV_FILTER_ID,
 		Extent1.srv_config_id,
 		Extent2.IS_RETURN
+		,Extent2.SRV_FILTER_last_SERIAL
 		FROM SAL0090D Extent1
 		JOIN SAL0087D Extent2 ON (
 		Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID )
