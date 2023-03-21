@@ -207,6 +207,7 @@
       SELECT count(*) FROM API0005D
 	  WHERE ref_no = #{refNo}
 	  AND BNDL_ID = #{bndlId}
+	  AND STUS_CODE_ID in (1,4)
 </select>
 
 <select id="selectHCProdId" parameterType="Map" resultType="egovMap">
