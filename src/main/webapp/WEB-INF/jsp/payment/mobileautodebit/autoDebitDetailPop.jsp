@@ -506,7 +506,7 @@ function loadStatusInfoData(){
 		$("#action option[value='"+ actionStatus +"']").attr("selected", true);
 	}
 	if(remarks != null){
-		$('#remarks').val(remarks);
+		$('#remarks').val(remarks.replaceAll("<br>","\n"));
 	}
 }
 
