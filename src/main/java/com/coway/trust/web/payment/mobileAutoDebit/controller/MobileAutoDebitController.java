@@ -174,6 +174,9 @@ public class MobileAutoDebitController {
 		List<Map<String, Object>> autoDebitAttachmentInfo = autoDebitService.selectAttachmentInfo(params);
 
 		if(autoDebitDetailInfo.size() > 0){
+			String remarks = autoDebitDetailInfo.get(0).get("remarks").toString();
+			remarks = remarks.replaceAll("(\r\n|\n)", "<br />");
+			autoDebitDetailInfo.get(0).put("remarks", remarks);
 			model.put("mobileAutoDebitDetail", autoDebitDetailInfo.get(0));
 
 			EgovMap autoDebitDetail = autoDebitDetailInfo.get(0);
