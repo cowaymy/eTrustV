@@ -1189,7 +1189,6 @@
 		$("#m14").show();
 		$("#m15").show();
 		$("#m16").show();
-		$("#m19").show();
 
 		$("#btnSaveDiv").attr("style", "display:inline");
 		$('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -1274,7 +1273,6 @@
 		$("#m15").hide();
 		$("#m16").hide();
 		$("#m18").hide();
-		$("#m19").hide();
 
 		$("#iscommission").attr("disabled", false);
 
@@ -1320,7 +1318,6 @@
 		$("#m15").hide();
 		$("#m16").hide();
 		$("#m18").hide();
-		$("#m19").hide();
 
 		$("#def_type").attr("disabled", "disabled");
 		$("#def_code").attr("disabled", "disabled");
@@ -1836,10 +1833,10 @@
 					rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
 					rtnValue = false;
 				}
-				if (FormUtil.checkReqValue($("#asNotMatch"))) { // CT CODE
+				/* if (FormUtil.checkReqValue($("#asNotMatch"))) { // CT CODE
                     rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='AS not match reason' htmlEscape='false'/> </br>";
                     rtnValue = false;
-                }
+                } */
 			} else if ($("#ddlStatus").val() == 19) { // RECALL
 				if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
 					rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
@@ -2910,7 +2907,7 @@
 							                   <option value="${list.codeId}">${list.codeName}</option>
 							                </c:forEach></td>
 							            </select></td>
-							            <th scope="row">AS Error Not Match<span name="m19" id="m19" class="must">*</span></th>
+							            <th scope="row">AS Error Not Match</th>
                                         <td><select class="w100p" id="asNotMatch" name="asNotMatch" disabled="disabled">
                                             <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                                             <c:forEach var="list" items="${asNotMatch}" varStatus="status">
