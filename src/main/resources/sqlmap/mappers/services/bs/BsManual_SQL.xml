@@ -4124,7 +4124,8 @@
         FROM SAL0087D
         WHERE SRV_CONFIG_ID =
         #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID})
-         ,SRV_FILTER_PREV_SERIAL = #{oldSerialNo}
+         <!-- ,SRV_FILTER_PREV_SERIAL = #{oldSerialNo} -->
+         ,SRV_FILTER_PREV_SERIAL = ''
         where SRV_CONFIG_ID = #{SrvConfigID}
         and SRV_FILTER_STUS_ID = 1
         and
