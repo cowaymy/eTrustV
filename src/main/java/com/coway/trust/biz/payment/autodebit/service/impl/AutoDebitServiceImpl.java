@@ -283,7 +283,14 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
 		params.put("custCrcId", Integer.parseInt(padDetail.get("custCrcId").toString()));
 		params.put("salesOrdNo", padDetail.get("salesOrdNo").toString());
 		params.put("is3rdParty", Integer.parseInt(padDetail.get("isThirdPartyPayment").toString()));
+
 		params.put("custId", Integer.parseInt(padDetail.get("custId").toString()));
+		if(Integer.parseInt(padDetail.get("isThirdPartyPayment").toString()) == 0){
+			params.put("custId", Integer.parseInt(padDetail.get("custId").toString()));
+		}
+		else{
+			params.put("custId", Integer.parseInt(padDetail.get("thirdPartyCustId").toString()));
+		}
 
 		EgovMap currentPaymentChannel = autoDebitMapper.getCurrentPaymentChannelDetail(params);
 		params.put("rentPayId", Integer.parseInt(currentPaymentChannel.get("rentPayId").toString()));
