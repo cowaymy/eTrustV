@@ -353,7 +353,9 @@ console.log("dblClick : appvStus :: " + event.item.appvStus);
 
     <section class="search_result">
         <ul class="right_btns">
-            <li><p class="btn_grid"><a href="#" onclick="javascript:fn_editApprovalLine()" id="edit_btn">Edit</a></p></li>
+   			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_editApprovalLine()" id="edit_btn">Edit</a></p></li>
+   			</c:if>
             <li><p class="btn_grid"><a href="#" onclick="javascript:fn_bulkApproval('A')" id="approve_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
             <li><p class="btn_grid"><a href="#" onclick="javascript:fn_bulkApproval('J')" id="reject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
         </ul>
