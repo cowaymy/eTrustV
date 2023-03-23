@@ -11,7 +11,8 @@
 	       ,USR.USER_FULL_NAME AS userFullName
 	       ,USR.USER_EMAIL AS userEmail
 	       ,USR.USER_STUS_ID AS userStatusId
-	       ,USR.USER_TYPE_ID AS userTypeId
+           , CASE WHEN USR.USER_TYPE_ID = 6672 THEN 5758
+                ELSE USR.USER_TYPE_ID END AS userTypeId
 	       ,USR.HR_CODE as userMemCode
 	       ,ROLET.ROLE_ID AS roleId
 	       , (SELECT A.MEM_LVL
