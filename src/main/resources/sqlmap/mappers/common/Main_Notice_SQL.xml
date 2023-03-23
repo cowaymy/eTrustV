@@ -361,7 +361,7 @@ FROM VIEW_COUNT
     </if>
     ORDER BY TO_NUMBER(SUBSTR(MI.DOB, 1,2))
     <if test="roleId == 111 and isHmBday == 'true'">
-    , ORGD.MEM_LVL DESC
+    , ORGD.MEM_LVL ASC
     </if>
     </select>
 
