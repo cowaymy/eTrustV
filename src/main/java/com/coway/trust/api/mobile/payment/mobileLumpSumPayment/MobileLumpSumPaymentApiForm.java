@@ -53,7 +53,7 @@ public class MobileLumpSumPaymentApiForm {
 		params.put("sms2", vo.getSms2());
 		params.put("email1", vo.getEmail1());
 		params.put("email2", vo.getEmail2());
-		params.put("paymentMethod", vo.getPaymentMethodId());
+		params.put("paymentMethodId", vo.getPaymentMethodId());
 		params.put("totalOriginalOutstandingAmount", vo.getTotalOriginalOutstandingAmount());
 		params.put("totalPayableAmount", vo.getTotalPayableAmount());
 		params.put("orderDetailList", createMap2(vo.getOrderDetailList()));
