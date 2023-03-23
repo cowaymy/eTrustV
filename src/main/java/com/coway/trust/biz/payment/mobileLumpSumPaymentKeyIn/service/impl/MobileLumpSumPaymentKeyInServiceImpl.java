@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.api.mobile.payment.mobileLumpSumPayment.MobileLumpSumPaymentOrderDetailsForm;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -81,6 +82,23 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	  public List<EgovMap> getCustomerOutstandingOrderDetailList(Map<String,Object> params){
 		  List<EgovMap> customerOutstandingOrders =  mobileLumpSumPaymentKeyInMapper.getCustomerOutstandingOrder(params);
 		  return customerOutstandingOrders;
+	  }
+
+	  @Override
+	  public Map<String, Object> submissionSave(Map<String,Object> params){
+		  Map<String, Object> result = new HashMap<>();
+		  int nextGroupID = mobileLumpSumPaymentKeyInMapper.selectNextMobPayGroupId();
+		  EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
+		  params.put("userId", user.get("userId"));
+		  LOGGER.debug("Mobile LS : " + params);
+
+		  List<Map<String,Object>> orderDetails = (List<Map<String, Object>>) params.get("orderDetailList");
+		  if(orderDetails.size() > 0){
+
+		  }
+		  params.put("userId", user.get("userId"));
+
+		  return result;
 	  }
 
 	  private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)

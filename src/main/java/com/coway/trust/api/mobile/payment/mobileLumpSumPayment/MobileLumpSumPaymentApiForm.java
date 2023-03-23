@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.payment.mobileLumpSumPayment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class MobileLumpSumPaymentApiForm {
     private String sms2;
     private String email1;
     private String email2;
-    private String paymentMethod;
+    private int paymentMethodId;
     private Double totalOriginalOutstandingAmount;
     private Double totalPayableAmount;
     private List<MobileLumpSumPaymentOrderDetailsForm> orderDetailList;
@@ -52,12 +53,34 @@ public class MobileLumpSumPaymentApiForm {
 		params.put("sms2", vo.getSms2());
 		params.put("email1", vo.getEmail1());
 		params.put("email2", vo.getEmail2());
-		params.put("paymentMethod", vo.getPaymentMethod());
+		params.put("paymentMethod", vo.getPaymentMethodId());
 		params.put("totalOriginalOutstandingAmount", vo.getTotalOriginalOutstandingAmount());
 		params.put("totalPayableAmount", vo.getTotalPayableAmount());
-		params.put("orderDetailList", vo.getOrderDetailList());
+		params.put("orderDetailList", createMap2(vo.getOrderDetailList()));
 
-    	return params;
+		return params;
+	}
+
+	public static List<Object
+	> createMap2(List<MobileLumpSumPaymentOrderDetailsForm> vo){
+		List<Object> paramList = new ArrayList<>();
+
+		for(MobileLumpSumPaymentOrderDetailsForm data : vo){
+			Map<String, Object> params = new HashMap<>();
+			params.put("ordId", data.getOrdId());
+			params.put("ordNo", data.getOrdNo());
+			params.put("ordPaymentTypeId", data.getOrdPaymentTypeId());
+			params.put("ordPaymentTypeName", data.getOrdPaymentTypeName());
+			params.put("payType", data.getPayType());
+			params.put("otstndAmt", data.getOtstndAmt());
+			params.put("inputOtstndAmt", data.getInputOtstndAmt());
+			params.put("custId", data.getCustId());
+			params.put("nric", data.getNric());
+			params.put("ordTypeId", data.getOrdTypeId());
+			params.put("ordTypeName", data.getOrdTypeName());
+			paramList.add(params);
+		}
+    	return paramList;
 	}
 
 	public String getCustCiType() {
@@ -135,14 +158,6 @@ public class MobileLumpSumPaymentApiForm {
 		this.email2 = email2;
 	}
 
-	public String getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(String paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-
 	public Double getTotalOriginalOutstandingAmount() {
 		return totalOriginalOutstandingAmount;
 	}
@@ -165,6 +180,14 @@ public class MobileLumpSumPaymentApiForm {
 
 	public void setOrderDetailList(List<MobileLumpSumPaymentOrderDetailsForm> orderDetailList) {
 		this.orderDetailList = orderDetailList;
+	}
+
+	public int getPaymentMethodId() {
+		return paymentMethodId;
+	}
+
+	public void setPaymentMethodId(int paymentMethodId) {
+		this.paymentMethodId = paymentMethodId;
 	}
 
 }

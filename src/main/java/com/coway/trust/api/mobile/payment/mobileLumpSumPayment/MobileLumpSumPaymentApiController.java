@@ -92,4 +92,18 @@ public class MobileLumpSumPaymentApiController {
 
 		return ResponseEntity.ok(result);
 	}
+
+
+	@ApiOperation(value = "submissionSave", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/submissionSave", method = RequestMethod.POST)
+	public ResponseEntity<MobileLumpSumPaymentApiDto> submissionSave(@RequestBody MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
+		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
+		LOGGER.debug(params.toString());
+
+		Map<String, Object> searchResult = mobileLumpSumPaymentKeyInService.submissionSave(params);
+
+		MobileLumpSumPaymentApiDto result = new MobileLumpSumPaymentApiDto();
+		result.setResponseCode(1);
+		return ResponseEntity.ok(result);
+	}
 }

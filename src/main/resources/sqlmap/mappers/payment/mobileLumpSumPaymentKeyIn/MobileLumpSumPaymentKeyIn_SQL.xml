@@ -302,4 +302,63 @@
 		HAVING NVL(ROUND(SUM(E.AS_LG_AMT),2) , 0.00) > 0
 		)
 	</select>
+
+	<select id="selectNextMobPayId" resultType="int">
+        SELECT PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <select id="selectNextMobPayGroupId" resultType="int">
+        SELECT PAY0349M_MOB_PAY_GROUP_NO_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <select id="selectUserId" parameterType="String" resultType="egovMap">
+       	SELECT s0047m.USER_ID
+       	FROM SYS0047M s0047m
+       	WHERE USER_NAME = #{userName}
+    </select>
+
+    <insert id="insertPaymentInfo" parameterType="Map">
+		INSERT INTO PAY0349M
+		(
+		MOB_PAY_ID,
+		MOB_PAY_GROUP_NO,
+		SALES_ORD_ID,
+		SALES_ORD_NO,
+		PAY_STUS_ID,
+		PAY_MODE,
+		PAY_TYPE,
+		PAY_AMT,
+		ORI_OUT_AMT,
+		TOT_PAY_AMT,
+		TOT_ORI_OUT_AMT,
+		SMS_1,
+		SMS_2,
+		EMAIL_1,
+		EMAIL_2,
+		SIGN_IMG,
+		CRT_DT,
+		CRT_BY
+		)
+		VALUES
+		(
+		PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL
+		#{mobilePayGrpNo},
+		#{ordId},
+		#{ordNo},
+		1,
+		#{paymentMethodId},
+		#{ordPaymentTypeId},
+		#{inputOtstndAmt},
+		#{otstndAmt},
+		#{totalPayableAmount},
+		#{totalOriginalOutstandingAmount},
+		#{sms1},
+		#{sms2},
+		#{email1},
+		#{email2},
+		#{signData},
+		SYSDATE,
+		#{userId}
+		)
+	</insert>
 </mapper>

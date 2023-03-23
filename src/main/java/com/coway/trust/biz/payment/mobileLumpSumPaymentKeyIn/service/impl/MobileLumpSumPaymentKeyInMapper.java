@@ -11,4 +11,8 @@ public interface MobileLumpSumPaymentKeyInMapper {
 	EgovMap getCustomerBillingInfoByInvoiceNo(Map<String, Object> params);
 	List<EgovMap> getCustomerInfo(Map<String, Object> params);
 	List<EgovMap> getCustomerOutstandingOrder(Map<String, Object> params);
+    int selectNextMobPayId();
+    int selectNextMobPayGroupId();
+    EgovMap selectUser(Map<String, Object> params);
+    int insertPaymentInfo(Map<String, Object> params);
 }

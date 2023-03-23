@@ -11,4 +11,6 @@ public interface MobileLumpSumPaymentKeyInService {
 	List<EgovMap> getCustomerOutstandingDistinctOrder(Map<String, Object> params);
 
 	List<EgovMap> getCustomerOutstandingOrderDetailList(Map<String, Object> params);
+
+	Map<String, Object> submissionSave(Map<String, Object> params);
 }
