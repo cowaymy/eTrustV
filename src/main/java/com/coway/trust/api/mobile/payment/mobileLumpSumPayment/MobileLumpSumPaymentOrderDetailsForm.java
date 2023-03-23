@@ -8,7 +8,7 @@ public class MobileLumpSumPaymentOrderDetailsForm {
 	private String ordNo;
 	private int ordPaymentTypeId;
 	private String ordPaymentTypeName;
-	private int payType;
+	private String payType;
 	private Double otstndAmt;
 	private Double inputOtstndAmt;
 	private int custId;
@@ -39,12 +39,6 @@ public class MobileLumpSumPaymentOrderDetailsForm {
 	}
 	public void setOrdPaymentTypeName(String ordPaymentTypeName) {
 		this.ordPaymentTypeName = ordPaymentTypeName;
-	}
-	public int getPayType() {
-		return payType;
-	}
-	public void setPayType(int payType) {
-		this.payType = payType;
 	}
 	public Double getOtstndAmt() {
 		return otstndAmt;
@@ -81,5 +75,11 @@ public class MobileLumpSumPaymentOrderDetailsForm {
 	}
 	public void setInputOtstndAmt(Double inputOtstndAmt) {
 		this.inputOtstndAmt = inputOtstndAmt;
+	}
+	public String getPayType() {
+		return payType;
+	}
+	public void setPayType(String payType) {
+		this.payType = payType;
 	}
 }
