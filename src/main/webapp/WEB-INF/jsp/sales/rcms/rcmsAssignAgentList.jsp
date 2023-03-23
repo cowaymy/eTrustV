@@ -548,7 +548,7 @@
 		if(MEM_TYPE != '4') {
 			var dt = new Date();
 	        var time = dt.getHours();
-	        if(time < 9 || time > 20){//11-13
+	        if(time < 11 || time > 13){//11-13
 	        	Common.alert("Vendor only allow download in 11am - 1pm");
 	        	return;
 	        }

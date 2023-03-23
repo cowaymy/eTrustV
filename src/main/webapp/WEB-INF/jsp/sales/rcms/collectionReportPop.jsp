@@ -244,7 +244,7 @@
         var day2 = today.getDate() - 5;
 
         var month = today.getMonth() +1;
-        var month2 = ""
+        var month2 = "";
 
         var year = today.getFullYear();
         var year2 = "";
@@ -253,11 +253,9 @@
             day = "0" + day;
         }
 
-        if(day2 < 10 ){
-            if(day2 > 0){
-
-            day2 = "0" + day2
-        }}
+        if(day2 < 10 && day2 > 0){
+            day2 = "0" + day2;
+        }
 
         if(day2 < 1){
             month2 = month -1;
@@ -276,10 +274,9 @@
             month = "0" + month;
         }
 
-         if(month2 < 10 ){
-             if(month2 >= 1){
+         if(month2 < 10 &&  month2 >= 1){
                 month2 = "0" + month2;
-            }}
+            }
 
         if(month2 < 1){
             year2 = year - 1;
