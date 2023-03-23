@@ -175,7 +175,7 @@ public class MobileAutoDebitController {
 
 		if(autoDebitDetailInfo.size() > 0){
 			String remarks = autoDebitDetailInfo.get(0).get("remarks").toString();
-			remarks = remarks.replaceAll("(\r\n|\n)", "<br />");
+			remarks = remarks.replaceAll("(\r\n|\n)", "<br>");
 			autoDebitDetailInfo.get(0).put("remarks", remarks);
 			model.put("mobileAutoDebitDetail", autoDebitDetailInfo.get(0));
 
