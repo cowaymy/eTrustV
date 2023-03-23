@@ -304,14 +304,14 @@
 	</select>
 
 	<select id="selectNextMobPayId" resultType="int">
-        SELECT PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+        SELECT PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL id FROM DUAL
     </select>
 
     <select id="selectNextMobPayGroupId" resultType="int">
         SELECT PAY0349M_MOB_PAY_GROUP_NO_SEQ.NEXTVAL atchFileId FROM DUAL
     </select>
 
-    <select id="selectUserId" parameterType="String" resultType="egovMap">
+    <select id="selectUser" parameterType="String" resultType="egovMap">
        	SELECT s0047m.USER_ID
        	FROM SYS0047M s0047m
        	WHERE USER_NAME = #{userName}
