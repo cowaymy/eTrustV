@@ -13,9 +13,9 @@
 <script type="text/javaScript">
 
     var roleId = '${SESSION_INFO.roleId}';
-    var headers = [{memLvl: "3", dob : "", fullName:"HM",memCode:"", title:"HM", header: "1"},
+    var headers = [{memLvl: "1", dob : "", fullName:"GM",memCode:"", title:"GM", header: "1"},
                    {memLvl: "2", dob : "", fullName:"SM", memCode:"", title:"SM", header: "1"},
-                   {memLvl: "1", dob : "", fullName:"GM",memCode:"", title:"GM", header: "1"}];
+                   {memLvl: "3", dob : "", fullName:"HM",memCode:"", title:"HM", header: "1"}];
 
     var noticeLayout = [{
         dataField: "ntceNo",
@@ -718,7 +718,7 @@
             headerHeight: 50,
             editable: true,
             fillValueGroupingSummary: true,
-            groupingFields: ["title", "header"],
+            groupingFields: ["memLvl", "header"],
 /*             groupingSummary: {
             	dataFields: ["fullName"]
            }, */
@@ -799,7 +799,9 @@
                      hpManagerBdayGrid = GridCommon.createAUIGrid("hpManagerBday", hpManagerBdayColumnLayout, null, auiGridProps);
                 }
                 else {
-                	$('#hpManagerBdayTitle').hide();
+                	$('#hpManagerBdayDiv').remove();
+/*                 	$('#hpManagerBdayTitle').hide();
+ */
                     $('#custBdayTitle').show();
                     customerBdayGrid = GridCommon.createAUIGrid("salesOrgCustBday", customerBdayColumnLayout, null, salesGridOption);
                 }
@@ -1226,18 +1228,22 @@ console.log(result);
                 </aside>
                 <div id="salesOrgCustBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
                 </div>
+
+<!--  START HERE  -->
+                <div id="hpManagerBdayDiv">
+                <aside class="title_line">
+                <h4 id="hpManagerBdayTitle">Manager Birthday</h4>
+                </aside>
+                <div id="hpManagerBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
+                </div>
+ <!--  ENDS HERE -->
+
                  <aside class="title_line">
                  <h4 id="hpBdayTitle">HP Birthday</h4>
                 </aside>
                 <div id="salesOrgHPBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
 
-<!--  START HERE  -->
-                 <aside class="title_line">
-                 <h4 id="hpManagerBdayTitle">Manager Birthday</h4>
-                </aside>
-               <div id="hpManagerBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
 
- <!--  ENDS HERE -->
         </div>
         </div>
 
