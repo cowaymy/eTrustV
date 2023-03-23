@@ -2,7 +2,7 @@ package com.coway.trust.api.mobile.payment.mobileLumpSumPayment;
 
 import io.swagger.annotations.ApiModel;
 
-@ApiModel(value = "MobileLumpSumPaymentApiForm", description = "MobileLumpSumPaymentApiForm")
+@ApiModel(value = "MobileLumpSumPaymentOrderDetailsForm", description = "MobileLumpSumPaymentOrderDetailsForm")
 public class MobileLumpSumPaymentOrderDetailsForm {
 	private int ordId;
 	private String ordNo;
