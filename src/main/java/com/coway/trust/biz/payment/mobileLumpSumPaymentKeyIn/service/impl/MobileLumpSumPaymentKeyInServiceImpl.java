@@ -90,14 +90,17 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		  int nextGroupID = mobileLumpSumPaymentKeyInMapper.selectNextMobPayGroupId();
 		  EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
 		  params.put("userId", user.get("userId"));
+		  params.put("mobilePayGrpNo", nextGroupID);
 		  LOGGER.debug("Mobile LS : " + params);
+		  mobileLumpSumPaymentKeyInMapper.insertPaymentMasterInfo(params);
 
 		  List<Map<String,Object>> orderDetails = (List<Map<String, Object>>) params.get("orderDetailList");
 		  if(orderDetails.size() > 0){
-
+			  for(int i=0; i< orderDetails.size(); i++){
+				  orderDetails.get(i).put("mobilePayGrpNo", nextGroupID);
+				  mobileLumpSumPaymentKeyInMapper.insertPaymentDetailInfo(orderDetails.get(i));
+			  }
 		  }
-		  params.put("userId", user.get("userId"));
-
 		  return result;
 	  }
 

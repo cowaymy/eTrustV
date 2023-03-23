@@ -317,18 +317,13 @@
        	WHERE USER_NAME = #{userName}
     </select>
 
-    <insert id="insertPaymentInfo" parameterType="Map">
+    <insert id="insertPaymentMasterInfo" parameterType="Map">
 		INSERT INTO PAY0349M
 		(
 		MOB_PAY_ID,
 		MOB_PAY_GROUP_NO,
-		SALES_ORD_ID,
-		SALES_ORD_NO,
 		PAY_STUS_ID,
 		PAY_MODE,
-		PAY_TYPE,
-		PAY_AMT,
-		ORI_OUT_AMT,
 		TOT_PAY_AMT,
 		TOT_ORI_OUT_AMT,
 		SMS_1,
@@ -341,15 +336,10 @@
 		)
 		VALUES
 		(
-		PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL
+		PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL,
 		#{mobilePayGrpNo},
-		#{ordId},
-		#{ordNo},
 		1,
 		#{paymentMethodId},
-		#{ordPaymentTypeId},
-		#{inputOtstndAmt},
-		#{otstndAmt},
 		#{totalPayableAmount},
 		#{totalOriginalOutstandingAmount},
 		#{sms1},
@@ -359,6 +349,31 @@
 		#{signData},
 		SYSDATE,
 		#{userId}
+		)
+	</insert>
+
+	 <insert id="insertPaymentDetailInfo" parameterType="Map">
+		INSERT INTO PAY0350D
+		(
+		MOB_PAY_DETAIL_ID,
+		MOB_PAY_GROUP_NO,
+		SALES_ORD_ID,
+		SALES_ORD_NO,
+		ORD_PAY_TYPE_ID,
+		PAY_TYPE,
+		PAY_AMT,
+		ORI_OUT_AMT
+		)
+		VALUES
+		(
+		PAY0350D_MOB_PAY_DETAIL_ID_SEQ.NEXTVAL,
+		#{mobilePayGrpNo},
+		#{ordId},
+		#{ordNo},
+		#{ordPaymentTypeId},
+		#{payType},
+		#{inputOtstndAmt},
+		#{otstndAmt}
 		)
 	</insert>
 </mapper>
