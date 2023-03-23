@@ -61,24 +61,24 @@ public class MobileLumpSumPaymentApiForm {
 		return params;
 	}
 
-	public static List<Object
-	> createMap2(List<MobileLumpSumPaymentOrderDetailsForm> vo){
+	public static List<Object> createMap2(List<MobileLumpSumPaymentOrderDetailsForm> vo){
 		List<Object> paramList = new ArrayList<>();
-
-		for(MobileLumpSumPaymentOrderDetailsForm data : vo){
-			Map<String, Object> params = new HashMap<>();
-			params.put("ordId", data.getOrdId());
-			params.put("ordNo", data.getOrdNo());
-			params.put("ordPaymentTypeId", data.getOrdPaymentTypeId());
-			params.put("ordPaymentTypeName", data.getOrdPaymentTypeName());
-			params.put("payType", data.getPayType());
-			params.put("otstndAmt", data.getOtstndAmt());
-			params.put("inputOtstndAmt", data.getInputOtstndAmt());
-			params.put("custId", data.getCustId());
-			params.put("nric", data.getNric());
-			params.put("ordTypeId", data.getOrdTypeId());
-			params.put("ordTypeName", data.getOrdTypeName());
-			paramList.add(params);
+		if(vo!=null){
+			for(MobileLumpSumPaymentOrderDetailsForm data : vo){
+				Map<String, Object> params = new HashMap<>();
+				params.put("ordId", data.getOrdId());
+				params.put("ordNo", data.getOrdNo());
+				params.put("ordPaymentTypeId", data.getOrdPaymentTypeId());
+				params.put("ordPaymentTypeName", data.getOrdPaymentTypeName());
+				params.put("payType", data.getPayType());
+				params.put("otstndAmt", data.getOtstndAmt());
+				params.put("inputOtstndAmt", data.getInputOtstndAmt());
+				params.put("custId", data.getCustId());
+				params.put("nric", data.getNric());
+				params.put("ordTypeId", data.getOrdTypeId());
+				params.put("ordTypeName", data.getOrdTypeName());
+				paramList.add(params);
+			}
 		}
     	return paramList;
 	}
