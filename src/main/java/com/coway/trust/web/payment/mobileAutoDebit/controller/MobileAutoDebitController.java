@@ -85,7 +85,7 @@ public class MobileAutoDebitController {
 	private EncryptionDecryptionService encryptionDecryptionService;
 
 	@RequestMapping(value = "/autoDebitEnrollmentList.do")
-	public String selectCustomerList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String autoDebitEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		return "payment/mobileautodebit/autoDebitEnrollmentList";
 	}
