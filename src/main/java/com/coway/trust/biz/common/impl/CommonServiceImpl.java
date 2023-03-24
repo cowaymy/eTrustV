@@ -1830,4 +1830,9 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> getHcHolidayList(Map<String, Object> params) {
 		return commonMapper.getHcHolidayList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectMemTypeCodeList(Map<String, Object> params) {
+		return commonMapper.selectMemTypeCodeList(params);
+	}
 }

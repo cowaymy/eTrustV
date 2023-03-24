@@ -2092,4 +2092,17 @@
         SELECT CODE FROM SYS0094M WHERE IND = 'SPR_CT_CD' AND DISB = 0
     </select>
 
+    <select id="selectMemTypeCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode} AND CODE_ID IN (1,2,3,5,7,7284)
+        </if>
+    </select>
+
 </mapper>

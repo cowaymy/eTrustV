@@ -525,4 +525,14 @@ public class CommonController {
 
 		return vendorList;
 	}
+
+	@RequestMapping(value = "/selectMemTypeCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemTypeCodeList(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("groupCode : {}", params);
+
+		List<EgovMap> codeList = commonService.selectMemTypeCodeList(params);
+
+		return ResponseEntity.ok(codeList);
+	}
 }

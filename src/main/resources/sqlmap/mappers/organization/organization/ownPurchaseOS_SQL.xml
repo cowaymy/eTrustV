@@ -24,6 +24,8 @@
             C.MEM_CODE,
             C.NAME MEM_NAME,
             ROUND(NVL(F.OS, 0), 2) OS,
+            ROUND(NVL(I.UN_BILL_AMT,0),2) UNBILL,
+            ROUND(NVL(H.TOT_CHRG,0),2) PENALTY,
             D.LAST_ORG_CODE ORG_CODE,
             D.LAST_GRP_CODE GRP_CODE,
             D.LAST_DEPT_CODE DEPT_CODE,
@@ -51,9 +53,18 @@
                 SUM(RENT_AMT) OS
             FROM PAY0022D
             GROUP BY RENT_SO_ID
-        ) F
-            ON A.SALES_ORD_ID = F.RENT_SO_ID
+        ) F　ON A.SALES_ORD_ID = F.RENT_SO_ID
         JOIN SAL0071D G ON A.SALES_ORD_ID = G.SALES_ORD_ID AND g.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
+        LEFT JOIN (
+            SELECT
+                RENT_SO_ID,
+                SUM(RENT_AMT) TOT_CHRG
+            FROM PAY0022D
+            WHERE RENT_DOC_TYPE_ID = 162
+            GROUP BY RENT_SO_ID
+        ) H　ON A.SALES_ORD_ID = H.RENT_SO_ID　
+        LEFT JOIN SAL0149D I on I.SALES_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN ORG0001D J ON J.NRIC = C.NRIC AND J.STUS = 3
         WHERE 1=1
         AND A.APP_TYPE_ID = 66
         <if test="staffOwnPurch == 'false'">
@@ -68,9 +79,14 @@
         <if test="memCode != null and memCode != ''">
             AND C.MEM_CODE = #{memCode}
         </if>
-        <if test="keyinMemTypeId != null and keyinMemTypeId != ''">
-            AND C.MEM_TYPE = #{keyinMemTypeId}
-        </if>
+        <choose>
+	        <when test="keyinMemTypeId != null and keyinMemTypeId != 7284">
+	          AND C.MEM_TYPE = #{keyinMemTypeId}
+	        </when>
+	        <when test="keyinMemTypeId == 7284">
+	          AND J.TRM_REJOIN = 1
+	        </when>
+	     </choose>
         <if test="keyinOrdStusId != null and keyinOrdStusId != ''">
             AND A.STUS_CODE_ID = #{keyinOrdStusId}
         </if>

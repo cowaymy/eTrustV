@@ -45,7 +45,7 @@
             }
         }
 
-        doGetComboOrder('/common/selectCodeList.do', '1', 'CODE_ID',   '', 'listKeyinMemTypeId', 'M', 'fn_multiCombo'); //Common Code
+        doGetComboOrder('/common/selectMemTypeCodeList.do', '1', 'CODE_ID',   '', 'listKeyinMemTypeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboOrder('/organization/selectStatus.do', '', 'STUS_CODE_ID',   '', 'listKeyinMemStusId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_ID',   '', 'listKeyinPayModeId', 'M', 'fn_multiCombo'); //Common Code
     });
@@ -81,6 +81,20 @@
         },{
             dataField : "os",
             headerText : "Outstanding",
+            width : "10%",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+            style : "aui-grid-user-custom-right"
+        },{
+            dataField : "unbill",
+            headerText : "Unbill",
+            width : "10%",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+            style : "aui-grid-user-custom-right"
+        },{
+            dataField : "penalty",
+            headerText : "Penalty",
             width : "10%",
             dataType : "numeric",
             formatString : "#,##0.00",

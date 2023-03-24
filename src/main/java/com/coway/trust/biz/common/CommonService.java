@@ -440,4 +440,6 @@ public interface CommonService {
 	// Inner Type list
 	List<EgovMap> selectInnerTypeList(Map<String, Object> params);
 
+	List<EgovMap> selectMemTypeCodeList(Map<String, Object> params);
+
 }

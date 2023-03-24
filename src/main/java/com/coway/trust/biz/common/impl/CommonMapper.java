@@ -274,5 +274,6 @@ public interface CommonMapper {
 	EgovMap selectSuperCtInd();
 	EgovMap selectSuperCtCode();
 
+	List<EgovMap> selectMemTypeCodeList(Map<String, Object> params);
 
 }
