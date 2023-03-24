@@ -184,7 +184,21 @@
             dataType : "numeric",
             formatString : "#,##0.00",
             style : "aui-grid-user-custom-right"
-        }, {
+        }, ,{
+            dataField : "unbill",
+            headerText : "Unbill",
+            width : "10%",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+            style : "aui-grid-user-custom-right"
+        },{
+            dataField : "penalty",
+            headerText : "Penalty",
+            width : "10%",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+            style : "aui-grid-user-custom-right"
+        },{
             dataField : "orgCode",
             headerText : "Org Code",
         }, {
