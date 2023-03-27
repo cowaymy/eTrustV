@@ -105,10 +105,10 @@
 		ON s0028d.CUST_CRC_ID = p0333m.CUST_CRC_ID
 		WHERE 1=1
 		<if test='padNo != null and padNo != ""'>
-			AND p0333m.PAD_NO = #{padNo}
+			AND p0333m.PAD_NO = TRIM(#{padNo})
 		</if>
 		<if test='orderNo != null and orderNo != ""'>
-			AND p0333m.SALES_ORD_NO = #{orderNo}
+			AND p0333m.SALES_ORD_NO = TRIM(#{orderNo})
 		</if>
 		<if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != ""'>
 			<if test='requestTimeFrom == null or requestTimeFrom == "" or requestTimeTo == null or requestTimeTo == ""'>
@@ -125,16 +125,16 @@
 			AND s0029d.NAME LIKE '%'||UPPER(#{custName})||'%'
 		</if>
 		<if test='nricCompanyNo != null and nricCompanyNo != ""'>
-			AND s0029d.NRIC = #{nricCompanyNo}
+			AND s0029d.NRIC = TRIM(#{nricCompanyNo})
 		</if>
 		<if test='orgCode != null and orgCode != ""'>
-			AND o0005d.LAST_ORG_CODE = #{orgCode}
+			AND o0005d.LAST_ORG_CODE = TRIM(#{orgCode})
 		</if>
 		<if test='grpCode != null and grpCode != ""'>
-			AND o0005d.LAST_GRP_CODE = #{grpCode}
+			AND o0005d.LAST_GRP_CODE = TRIM(#{grpCode})
 		</if>
 		<if test='deptCode != null and deptCode != ""'>
-			AND o0005d.LAST_DEPT_CODE = #{deptCode}
+			AND o0005d.LAST_DEPT_CODE = TRIM(#{deptCode})
 		</if>
 		<if test="statusIdList != null and statusIdList != ''">
 		      AND p0333m.STUS_CODE_ID in
@@ -172,10 +172,10 @@
 		      </foreach>
 		</if>
 		<if test='memId != null and memId != ""'>
-			AND o0001d.MEM_ID = #{memId}
+			AND o0001d.MEM_ID = TRIM(#{memId})
 		</if>
 		<if test='memCode != null and memCode != ""'>
-			AND o0001d.MEM_CODE = #{memCode}
+			AND o0001d.MEM_CODE = TRIM(#{memCode})
 		</if>
 		ORDER BY p0333m.CRT_DT DESC
   </select>
