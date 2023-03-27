@@ -13,7 +13,9 @@
     }).multipleSelect({});
 
     //doGetCombo('/services/as/report/selectMemberCodeList.do', '', '', 'CTCode', 'S', '');
-    doGetComboSepa("/common/selectBranchCodeList.do", 5758, '-', '', 'branch', 'S', '');
+    //doGetComboSepa("/common/selectBranchCodeList.do", 5758, '-', '', 'branch', 'S', '');
+    doGetComboSepa('/homecare/selectHomecareAndDscBranchList.do',  '', ' - '
+            , '',   'branch', 'S', ''); //Branch Code
   });
 
   function fn_validation() {
