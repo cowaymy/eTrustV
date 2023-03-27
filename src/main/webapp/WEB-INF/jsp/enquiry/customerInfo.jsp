@@ -43,13 +43,13 @@
                     + '<td style="text-align:center;">' + result.data[i].salesOrdNo + '</td>'
                     + '<td>' + result.data[i].stkDesc + '</td>'
                     + '<td>'
-                    + result.data[i].addrDtl + ' '
-                    + result.data[i].street + ' '
-                    + result.data[i].mailArea + ' '
-                    + result.data[i].mailPostCode + ' '
-                    + result.data[i].mailCity + ' '
-                    + result.data[i].mailState + ' '
-                    + result.data[i].mailCnty
+                    + result.data[i].instAddrDtl + ' '
+                    + result.data[i].instStreet + ' '
+                    + result.data[i].instArea + ' '
+                    + result.data[i].instPostcode + ' '
+                    + result.data[i].instCity + ' '
+                    + result.data[i].instState + ' '
+                    + result.data[i].instCountry
                     +'</td>'
                     +'<td style="text-align:center;"><a href="../enquiry/updateInstallationAddressInDetails.do?orderNo='+result.data[i].salesOrdNo+'"><span class="material-symbols-outlined">edit</span></a></td>'
                     + '</tr>';

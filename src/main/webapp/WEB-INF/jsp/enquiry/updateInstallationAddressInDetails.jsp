@@ -255,7 +255,7 @@
         let currentAddr = document.getElementById('currentAddr');
         orderNo.innerHTML += '${orderNo}';
         productInfo.innerHTML += '${productDesc}';
-        currentAddr.innerHTML += '${addrDtl}' + '${street}' + '${mailArea}' + '${mailPostCode}' + '${mailCity}' + '${mailState}' + '${mailCnty}';
+        currentAddr.innerHTML += '${addrDtl}' + ' ' + '${street}' + ' ' + '${mailArea}' + ' ' + '${mailPostCode}' + ' ' + '${mailCity}' + ' ' + '${mailState}' + ' ' + '${mailCnty}';
 
         $('#btnUpdate').click(function(evt) {
 

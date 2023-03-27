@@ -202,12 +202,12 @@ public class EnquiryController {
         		model.put("orderNo", params.get("orderNo"));
         		model.put("orderId", customerInfoList.get(0).get("ordId").toString());
         		model.put("productDesc", customerInfoList.get(0).get("stkDesc").toString());
-        		model.put("addrDtl", customerInfoList.get(0).get("addrDtl").toString());
-        		model.put("street", customerInfoList.get(0).get("street").toString());
-        		model.put("mailPostCode", customerInfoList.get(0).get("mailPostCode").toString());
-        		model.put("mailCity", customerInfoList.get(0).get("mailCity").toString());
-        		model.put("mailState", customerInfoList.get(0).get("mailState").toString());
-        		model.put("mailCnty", customerInfoList.get(0).get("mailCnty").toString());
+        		model.put("addrDtl", customerInfoList.get(0).get("instAddrDtl").toString());
+        		model.put("street", customerInfoList.get(0).get("instStreet").toString());
+        		model.put("mailPostCode", customerInfoList.get(0).get("instPostcode").toString());
+        		model.put("mailCity", customerInfoList.get(0).get("instCity").toString());
+        		model.put("mailState", customerInfoList.get(0).get("instState").toString());
+        		model.put("mailCnty", customerInfoList.get(0).get("instCountry").toString());
         		model.put("phoneNo", getInfo.get("phoneNo"));
         		model.put("exception", sessionVO.getCustId() == 0 ? "401" : params.get("exception"));
     	    }
