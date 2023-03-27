@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.util.HtmlUtils;
 
 import com.businessobjects.report.web.shared.URIUtil;
 import com.coway.trust.AppConstants;
@@ -179,6 +180,7 @@ public class MobileAutoDebitController {
 				remarks = autoDebitDetailInfo.get(0).get("remarks").toString();
 			}
 			remarks = remarks.replaceAll("(\r\n|\n)", "<br>");
+			remarks = HtmlUtils.htmlEscape(remarks);
 			autoDebitDetailInfo.get(0).put("remarks", remarks);
 			model.put("mobileAutoDebitDetail", autoDebitDetailInfo.get(0));
 

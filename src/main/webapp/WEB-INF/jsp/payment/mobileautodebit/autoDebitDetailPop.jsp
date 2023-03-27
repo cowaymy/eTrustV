@@ -506,8 +506,20 @@ function loadStatusInfoData(){
 		$("#action option[value='"+ actionStatus +"']").attr("selected", true);
 	}
 	if(remarks != null){
-		$('#remarks').val(remarks.replaceAll("<br>","\n"));
+		var decodeRemark= decodeHtml(remarks);
+		$('#remarks').val(decodeRemark.replaceAll("<br>","\n"));
 	}
+}
+
+function decodeHtml(str) {
+	  var map = {
+	    '&amp;': '&',
+	    '&lt;': '<',
+	    '&gt;': '>',
+	    '&quot;': '"',
+	    '&#039;': "'"
+	  };
+	  return str.replace(/&amp;|&lt;|&gt;|&quot;|&#039;/g, function(m) {return map[m];});
 }
 
 //Attachments
