@@ -2431,20 +2431,27 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
             hsManualMapper.addStkCrd_new(stkCrd_new);
           }
-          Map<String, Object> qryFilter_param = new HashMap<String, Object>();
-          // qryFilter_param.put("SrvConfigID",
-          // String.valueOf(qryConfig.get("SrvConfigID")));
-          qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId"))); // edit
-                                                                                            // hgham
-                                                                                            // 25-12
-                                                                                            // -2017
-          qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
-          qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
-          qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
-          qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
-          qryFilter_param.put("lastSerialNo", bsResultDet.get(i).get("SerialNo"));
 
-          hsManualMapper.updateQryFilter(qryFilter_param);
+          for (int j = 0; j < qryResultDet.size(); j++) {
+    		  if(!String.valueOf(qryResultDet.get(j).get("bsResultPartQty")).equals(String.valueOf(bsResultDet.get(i).get("BSResultPartQty")))
+    				  && String.valueOf(qryResultDet.get(j).get("bsResultPartId")).equals(String.valueOf(bsResultDet.get(i).get("BSResultPartID")))
+    				  ){
+              Map<String, Object> qryFilter_param = new HashMap<String, Object>();
+              // qryFilter_param.put("SrvConfigID",
+              // String.valueOf(qryConfig.get("SrvConfigID")));
+              qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId"))); // edit
+                                                                                                // hgham
+                                                                                                // 25-12
+                                                                                                // -2017
+              qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
+              qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
+              qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+              qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+              qryFilter_param.put("lastSerialNo", bsResultDet.get(i).get("SerialNo"));
+
+              hsManualMapper.updateQryFilter(qryFilter_param);
+    		  }
+          }
 
           ItemNo = ItemNo + 1;
         }
