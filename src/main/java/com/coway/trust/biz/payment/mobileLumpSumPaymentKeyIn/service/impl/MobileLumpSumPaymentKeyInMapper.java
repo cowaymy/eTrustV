@@ -16,4 +16,6 @@ public interface MobileLumpSumPaymentKeyInMapper {
     EgovMap selectUser(Map<String, Object> params);
     int insertPaymentMasterInfo(Map<String, Object> params);
     int insertPaymentDetailInfo(Map<String, Object> params);
+    List<EgovMap> getLumpSumEnrollmentList(Map<String, Object> params);
+    List<EgovMap> selectCashMatchingPayGroupList(Map<String, Object> params);
 }

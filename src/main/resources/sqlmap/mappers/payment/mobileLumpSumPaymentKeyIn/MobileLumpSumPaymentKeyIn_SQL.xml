@@ -326,6 +326,7 @@
 		PAY_MODE,
 		TOT_PAY_AMT,
 		TOT_ORI_OUT_AMT,
+		CUST_ID,
 		SMS_1,
 		SMS_2,
 		EMAIL_1,
@@ -342,6 +343,7 @@
 		#{paymentMethodId},
 		#{totalPayableAmount},
 		#{totalOriginalOutstandingAmount},
+		#{custId},
 		#{sms1},
 		#{sms2},
 		#{email1},
@@ -376,4 +378,98 @@
 		#{otstndAmt}
 		)
 	</insert>
+
+	<select id="getLumpSumEnrollmentList" parameterType="Map" resultType="egovMap">
+		SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM') AS CRT_DT,p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME, p0349m.PAY_MODE, s0013m.CODE_NAME AS PAY_MODE_NAME,
+		p0349m.TOT_PAY_AMT,p0349m.TOT_ORI_OUT_AMT,p0349m.CRT_BY,s0047m1.USER_NAME AS CRT_USER_NAME,p0349m.UPD_BY,s0047m2.USER_NAME AS UPD_USER_NAME,
+		p0350d.SALES_ORD_ID,p0350d.SALES_ORD_NO,p0350d.ORD_PAY_TYPE_ID,p0350d.PAY_TYPE,p0350d.PAY_AMT,p0350d.ORI_OUT_AMT,s0029d.NAME AS CUST_NAME
+		FROM PAY0349M p0349m
+		JOIN PAY0350D p0350d
+		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
+		JOIN SYS0038M s0038m
+		ON p0349m.PAY_STUS_ID = STUS_CODE_ID
+		LEFT JOIN SYS0013M s0013m
+		ON  p0349m.PAY_MODE = s0013m.CODE_ID
+		JOIN SYS0047M s0047m1
+		ON p0349m.CRT_BY = s0047m1.USER_ID
+		LEFT JOIN SYS0047M s0047m2
+		on p0349m.UPD_BY = s0047m2.USER_ID
+		LEFT JOIN SAL0029D s0029d
+        on s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0005M s0005m
+		ON s0047m1.USER_BRNCH_ID = s0005m.BRNCH_ID
+        WHERE 1=1
+        <if test='grpTicketNo != null and grpTicketNo != ""'>
+        	AND p0349m.MOB_PAY_GRP_NO = TRIM(#{grpTicketNo})
+	    </if>
+	    <if test='requestStartDate != null and requestStartDate != null'>
+			<if test='requestEndDate != "" and requestEndDate != ""'>
+				<![CDATA[
+					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{dateFrom},'DD/MM/YYYY') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{dateTo},'DD/MM/YYYY')
+				]]>
+			</if>
+		</if>
+        <if test='orderNo != null and orderNo != ""'>
+        	AND p0349m.SALES_ORD_NO = TRIM(#{orderNo})
+	    </if>
+        <if test='ticketStatus != null and ticketStatus != ""'>
+        	AND p0349m.PAY_STUS_ID = #{ticketStatus}
+	    </if>
+	    <if test="branchIdList != null and branchIdList != ''">
+		      AND s0005m.BRNCH_ID in
+		      <foreach item="item" collection="branchIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
+		<if test="cmbRegionList != null and cmbRegionList != ''">
+		      AND s0005m.REGN_ID in
+		      <foreach item="item" collection="cmbRegionList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
+	    <if test='payMode != null and payMode != ""'>
+
+	    </if>
+	    <if test='serialNo != null and serialNo != ""'>
+
+	    </if>
+	    <if test='memberCode != null and memberCode != ""'>
+			AND s0047m1.USER_NAME = TRIM(#{memberCode})
+	    </if>
+	    <if test='apprvNo != null and apprvNo != ""'>
+
+	    </if>
+	    <if test='cardNoA != null and cardNoA != ""'>
+
+	    </if>
+	    <if test='cardNoB != null and cardNoB != ""'>
+
+	    </if>
+	    <if test='orgCode != null and orgCode != ""'>
+			AND o0005d.LAST_ORG_CODE = TRIM(#{orgCode})
+		</if>
+		<if test='grpCode != null and grpCode != ""'>
+			AND o0005d.LAST_GRP_CODE = TRIM(#{grpCode})
+		</if>
+		<if test='deptCode != null and deptCode != ""'>
+			AND o0005d.LAST_DEPT_CODE = TRIM(#{deptCode})
+		</if>
+		ORDER BY p0349m.CRT_DT DESC,p0349m.MOB_PAY_GROUP_NO DESC
+	</select>
+
+	<select id="selectCashMatchingPayGroupList" parameterType="Map" resultType="egovMap">
+		SELECT p0349m.MOB_PAY_GROUP_NO,p0349m.TOT_PAY_AMT,p0349m.PAY_MODE,s0013m1.CODE_NAME AS PAY_MODE_NAME,
+        p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME , LISTAGG(p0350d.SALES_ORD_NO, ',') WITHIN GROUP (ORDER BY p0350d.SALES_ORD_NO) AS ORD_NO,p0349m.CRT_DT
+        FROM PAY0349M p0349m
+		JOIN PAY0350D p0350d
+		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
+        LEFT JOIN SYS0013M s0013m1
+        ON s0013m1.CODE_ID = p0349m.PAY_MODE
+        LEFT JOIN SYS0038M s0038m
+        ON s0038m.STUS_CODE_ID = p0349m.PAY_STUS_ID
+        GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME
+        ORDER BY p0349m.CRT_DT DESC
+	</select>
 </mapper>

@@ -13,4 +13,8 @@ public interface MobileLumpSumPaymentKeyInService {
 	List<EgovMap> getCustomerOutstandingOrderDetailList(Map<String, Object> params);
 
 	Map<String, Object> submissionSave(Map<String, Object> params);
+
+	List<EgovMap> selectCashMatchingPayGroupList(Map<String, Object> params);
+
+	List<EgovMap> getLumpSumEnrollmentList(Map<String, Object> params);
 }

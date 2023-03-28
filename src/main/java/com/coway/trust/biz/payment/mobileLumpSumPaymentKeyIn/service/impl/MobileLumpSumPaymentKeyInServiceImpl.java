@@ -104,6 +104,18 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		  return result;
 	  }
 
+	  @Override
+	  public List<EgovMap> getLumpSumEnrollmentList(Map<String,Object> params){
+		  List<EgovMap> resultList =  mobileLumpSumPaymentKeyInMapper.getLumpSumEnrollmentList(params);
+		  return resultList;
+	  }
+
+	  @Override
+	  public List<EgovMap> selectCashMatchingPayGroupList(Map<String,Object> params){
+		  List<EgovMap> resultList =  mobileLumpSumPaymentKeyInMapper.selectCashMatchingPayGroupList(params);
+		  return resultList;
+	  }
+
 	  private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
 	  {
 	      Map<Object, Boolean> map = new ConcurrentHashMap<>();

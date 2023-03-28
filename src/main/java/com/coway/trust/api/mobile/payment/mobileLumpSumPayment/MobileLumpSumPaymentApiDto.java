@@ -36,6 +36,15 @@ public class MobileLumpSumPaymentApiDto {
 	private int ordTypeId;
 	private String ordTypeName;
 
+	//Cash Matching Order Search
+	private String mobPayGroupNo;
+	private Double totPayAmt;
+	private int payMode;
+	private String payModeName;
+	private int payStusId;
+	private String payStusName;
+	private String crtDt;
+
 	//Result
 	private int responseCode;
 
@@ -71,6 +80,15 @@ public class MobileLumpSumPaymentApiDto {
 		params.put("ordPaymentTypeName",vo.getOrdPaymentTypeName());
 		params.put("ordTypeId",vo.getOrdTypeId());
 		params.put("ordTypeName",vo.getOrdTypeName());
+
+		//cash matching order search
+		params.put("mobPayGroupNo",vo.getMobPayGroupNo());
+		params.put("totPayAmt",vo.getTotPayAmt());
+		params.put("payMode",vo.getPayMode());
+		params.put("payModeName",vo.getPayModeName());
+		params.put("payStusId",vo.getPayStusId());
+		params.put("payStusName",vo.getPayStusName());
+		params.put("crtDt",vo.getCrtDt());
 
 		params.put("responseCode", vo.getResponseCode());
 		return params;
@@ -250,5 +268,61 @@ public class MobileLumpSumPaymentApiDto {
 
 	public void setList(List<MobileLumpSumPaymentApiDto> list) {
 		this.list = list;
+	}
+
+	public String getMobPayGroupNo() {
+		return mobPayGroupNo;
+	}
+
+	public void setMobPayGroupNo(String mobPayGroupNo) {
+		this.mobPayGroupNo = mobPayGroupNo;
+	}
+
+	public Double getTotPayAmt() {
+		return totPayAmt;
+	}
+
+	public void setTotPayAmt(Double totPayAmt) {
+		this.totPayAmt = totPayAmt;
+	}
+
+	public int getPayMode() {
+		return payMode;
+	}
+
+	public void setPayMode(int payMode) {
+		this.payMode = payMode;
+	}
+
+	public String getPayModeName() {
+		return payModeName;
+	}
+
+	public void setPayModeName(String payModeName) {
+		this.payModeName = payModeName;
+	}
+
+	public int getPayStusId() {
+		return payStusId;
+	}
+
+	public void setPayStusId(int payStusId) {
+		this.payStusId = payStusId;
+	}
+
+	public String getPayStusName() {
+		return payStusName;
+	}
+
+	public void setPayStusName(String payStusName) {
+		this.payStusName = payStusName;
+	}
+
+	public String getCrtDt() {
+		return crtDt;
+	}
+
+	public void setCrtDt(String crtDt) {
+		this.crtDt = crtDt;
 	}
 }

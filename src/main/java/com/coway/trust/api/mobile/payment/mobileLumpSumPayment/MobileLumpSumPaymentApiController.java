@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.payment.mobileLumpSumPayment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,11 +59,10 @@ public class MobileLumpSumPaymentApiController {
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.customerInfoSearch(params);
 		if(searchResult.size() > 0){
 		    List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
-
 			return ResponseEntity.ok(result);
 		}
 		else{
-			List<MobileLumpSumPaymentApiDto> result = null;
+			List<MobileLumpSumPaymentApiDto> result = new ArrayList<>();
 			return ResponseEntity.ok(result);
 		}
 	}
@@ -104,6 +104,18 @@ public class MobileLumpSumPaymentApiController {
 
 		MobileLumpSumPaymentApiDto result = new MobileLumpSumPaymentApiDto();
 		result.setResponseCode(1);
+		return ResponseEntity.ok(result);
+	}
+
+	@ApiOperation(value = "selectCashMatchingPayGroupList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectCashMatchingPayGroupList", method = RequestMethod.POST)
+	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> selectCashMatchingPayGroupList(@RequestBody MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
+		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
+		LOGGER.debug(params.toString());
+
+		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.selectCashMatchingPayGroupList(params);
+		List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
+
 		return ResponseEntity.ok(result);
 	}
 }
