@@ -631,6 +631,12 @@ $(document).ready(function(){
             <c:when test="${SESSION_INFO.roleId == '179'}">
                 <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
             </c:when>
+             <c:when test="${SESSION_INFO.roleId == '105'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
+             <c:when test="${SESSION_INFO.roleId == '97'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
             <c:otherwise>
                 <select class="disabled w100p" disabled="disabled" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
             </c:otherwise>
