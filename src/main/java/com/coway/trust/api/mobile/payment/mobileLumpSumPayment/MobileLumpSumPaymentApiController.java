@@ -109,7 +109,7 @@ public class MobileLumpSumPaymentApiController {
 
 	@ApiOperation(value = "selectCashMatchingPayGroupList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectCashMatchingPayGroupList", method = RequestMethod.GET)
-	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> selectCashMatchingPayGroupList(@RequestBody MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
+	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> selectCashMatchingPayGroupList(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
 		LOGGER.debug(params.toString());
 
