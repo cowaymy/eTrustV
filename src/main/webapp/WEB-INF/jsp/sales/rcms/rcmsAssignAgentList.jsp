@@ -795,6 +795,13 @@
 										<a onclick="javascript: fn_assignListReport()"><spring:message
 												code="sal.title.text.assignListRaw" /></a>
 									</p></li>
+							    <li>
+                                    <p class="link_btn type2">
+                                        <a onclick="javascript: fn_dailyCollectionOrderReport()">
+                                            <spring:message code="sal.title.text.dailyCollectionOrderReport" />
+                                        </a>
+                                    </p>
+                                </li>
 							</c:if>
 							<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 								<li><p class="link_btn type2">
