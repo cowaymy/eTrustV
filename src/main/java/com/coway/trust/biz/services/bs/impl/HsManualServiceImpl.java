@@ -2390,6 +2390,19 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         hsManualMapper.updateQryConfig(bsResultMas);
       }
 
+      for (int i = 0; i < qryResultDet.size(); i++) {
+    	  Map<String, Object> qryFilter_param = new HashMap<String, Object>();
+          // qryFilter_param.put("SrvConfigID",
+          // String.valueOf(qryConfig.get("SrvConfigID")));
+          qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId")));
+          qryFilter_param.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));
+          qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+          qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+          //qryFilter_param.put("oldSerialNo", old_qryFilter_param.get("oldSerialNo"));
+
+          hsManualMapper.updateQryFilter_rev(qryFilter_param);
+      }
+
       if (bsResultDet.size() > 0) {
         int ItemNo = 1;
 
@@ -2431,27 +2444,19 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
             hsManualMapper.addStkCrd_new(stkCrd_new);
           }
-
-          for (int j = 0; j < qryResultDet.size(); j++) {
-    		  if(!String.valueOf(qryResultDet.get(j).get("bsResultPartQty")).equals(String.valueOf(bsResultDet.get(i).get("BSResultPartQty")))
-    				  && String.valueOf(qryResultDet.get(j).get("bsResultPartId")).equals(String.valueOf(bsResultDet.get(i).get("BSResultPartID")))
-    				  ){
-              Map<String, Object> qryFilter_param = new HashMap<String, Object>();
-              // qryFilter_param.put("SrvConfigID",
-              // String.valueOf(qryConfig.get("SrvConfigID")));
-              qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId"))); // edit
-                                                                                                // hgham
-                                                                                                // 25-12
-                                                                                                // -2017
-              qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
-              qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
-              qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
-              qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
-              qryFilter_param.put("lastSerialNo", bsResultDet.get(i).get("SerialNo"));
-
-              hsManualMapper.updateQryFilter(qryFilter_param);
-    		  }
-          }
+          Map<String, Object> qryFilter_param = new HashMap<String, Object>();
+          // qryFilter_param.put("SrvConfigID",
+          // String.valueOf(qryConfig.get("SrvConfigID")));
+          qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId"))); // edit
+                                                                                            // hgham
+                                                                                            // 25-12
+                                                                                            // -2017
+          qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
+          qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
+          qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+          qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+          qryFilter_param.put("lastSerialNo", bsResultDet.get(i).get("SerialNo"));
+          hsManualMapper.updateQryFilter(qryFilter_param);
 
           ItemNo = ItemNo + 1;
         }
@@ -2471,29 +2476,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
          *
          * hsManualMapper.addBsResultDet_NoFilter(bsResultDet_NoFilter); 이거때문에
          */
-    	  logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
 
-    	  for (int i = 0; i < qryResultDet.size(); i++) {
-    		  if(!String.valueOf(qryResultDet.get(i).get("bsResultPartQty")).equals("-1")){
-    			//Map<String, Object> old_qryFilter_param = new HashMap<String, Object>();
-            	  //Map<String, Object> old_qryFilter_det = new HashMap<String, Object>();
-
-            	  /*old_qryFilter_param.put("salOrdId", params.get("hidSalesOrdId"));
-            	  old_qryFilter_param.put("hsNo", params.get("hidHsno"));
-            	  old_qryFilter_det = hsManualMapper.selectOldQryConfig(old_qryFilter_param);*/
-
-            	  Map<String, Object> qryFilter_param = new HashMap<String, Object>();
-                  // qryFilter_param.put("SrvConfigID",
-                  // String.valueOf(qryConfig.get("SrvConfigID")));
-                  qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId")));
-                  qryFilter_param.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));
-                  qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
-                  qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
-                  //qryFilter_param.put("oldSerialNo", old_qryFilter_param.get("oldSerialNo"));
-
-                  hsManualMapper.updateQryFilter_rev(qryFilter_param);
-    		  }
-    	  }
       }
 
     }
