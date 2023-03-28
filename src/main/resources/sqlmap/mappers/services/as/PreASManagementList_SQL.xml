@@ -262,7 +262,7 @@
                             ,F.STK_DESC AS product_Name
                             ,E.SRV_EXPR_DT  AS Membership_Contract_Expiry
                             ,TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
-                           ,((EXTRACT(YEAR FROM TRUNC(E.SRV_EXPR_DT)) - EXTRACT(YEAR FROM TRUNC(SYSDATE)))*12) - EXTRACT(MONTH FROM TRUNC(SYSDATE))+EXTRACT(MONTH FROM TO_DATE(E.SRV_EXPR_DT,'YYYY/MM/DD'))
+                           ,MONTHS_BETWEEN(TRUNC(E.SRV_EXPR_DT, 'MM'), TRUNC(SYSDATE, 'MM'))
                             AS Membership_Expiry
                     FROM SAL0001D A
                     LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
