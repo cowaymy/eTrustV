@@ -441,7 +441,7 @@
                     Extent18.USER_NAME CRT_USR_ID,
                     Extent1.ATCH_FILE_GRP_ID ,
                     Extent1.DEPT_CODE ,
-                    Extent19.USER_NAME STUS_UPD_ID,
+                    CASE WHEN Extent1.STUS_ID = 5 THEN Extent22.USER_NAME ELSE Extent19.USER_NAME END STUS_UPD_ID,
                     Extent20.MEM_CODE HP_CODE ,
                     Extent21.CODE || ' - ' || Extent21.NAME  BRNCH_CODE ,
                     Extent22.USER_NAME APPROVED_BY ,
