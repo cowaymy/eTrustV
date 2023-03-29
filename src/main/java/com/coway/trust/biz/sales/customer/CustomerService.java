@@ -603,4 +603,6 @@ public interface CustomerService {
 
   boolean getCountActTokenId(Map<String, Object> params)throws Exception;
 
+  boolean getAutoDebitUserId(Map<String, Object> params)throws Exception;
+
 }

@@ -2790,4 +2790,15 @@ public class CustomerController {
 		return ResponseEntity.ok(result);
 	}
 
-}
+	@RequestMapping(value = "/checkDeleteAccess")
+	public  ResponseEntity<Boolean>  checkDeleteAccess(@RequestParam Map<String, Object> params) throws Exception {
+		boolean result = false;
+
+		 LOGGER.debug("getAutoDebitUserId params : {}", params.toString());
+		result = customerService.getAutoDebitUserId(params);
+
+		return ResponseEntity.ok(result);
+
+
+	}
+	}

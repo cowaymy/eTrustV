@@ -6,6 +6,14 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
+		  var userId = '${SESSION_INFO.userId}';
+
+	      Common.ajax("GET", "/sales/customer/checkDeleteAccess.do", {userId : userId}, function(result) {
+	           if(result == false){
+	        	   $('#_delBtn').hide();
+	           }
+	         });
+
 		//j_date
 	    var pickerOpts={
 	            changeMonth:true,
@@ -410,12 +418,12 @@
                     <tr>
                         <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
                         <td>
-                            <input class="" id="custOriCrcNo" name="custOriCrcNo" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:90%" value="${detailcard.custCrcNo}" readonly />
-                            <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                            <input class="" id="custOriCrcNo" name="custOriCrcNo" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:90%" value="${detailcard.custCrcNo}" readonly disabled/>
+
                         </td>
                         <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
                         <td>
-                            <input type="text" title="" id="cardExpr" name="cardExpr" placeholder="Expiry" class="w100p" value="${detailcard.custCrcExpr}" readonly />
+                            <input type="text" title="" id="cardExpr" name="cardExpr" placeholder="Expiry" class="w100p" value="${detailcard.custCrcExpr}" readonly  disabled/>
                         </td>
                     </tr>
                     <tr>

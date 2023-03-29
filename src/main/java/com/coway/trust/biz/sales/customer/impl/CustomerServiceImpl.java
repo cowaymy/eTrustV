@@ -1025,4 +1025,19 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return customerMapper.getCreditCardDetails(params);
   }
 
+  public boolean getAutoDebitUserId(Map<String, Object> params)throws Exception{
+
+	  int count = 0;
+	  LOGGER.info("######################################### userId : " + params);
+
+	   count = customerMapper.getAutoDebitUserId(params);
+
+		if(count > 0){
+			return true;
+		}else{
+			return false;
+		}
+
+  }
+
 }

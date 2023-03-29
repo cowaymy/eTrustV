@@ -647,4 +647,6 @@ public interface CustomerMapper {
 
   int getCountActTokenId(Map<String, Object> params);
 
+int getAutoDebitUserId(Map<String, Object> params);
+
 }
