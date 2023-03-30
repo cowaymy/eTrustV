@@ -206,7 +206,8 @@ function fn_report(){
 	}else if($("#cmbType :selected").val() == "2"){
 
 		if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
-			whereSQL += " AND (NVL(som.SALES_DT, TO_DATE('01/01/1900', 'dd/MM/YY')) BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS'))";
+			//whereSQL += " AND (NVL(som.SALES_DT, TO_DATE('01/01/1900', 'dd/MM/YY')) BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS'))";
+			whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy')+1 ";
 		}
 		if(!($("#txtOrderNumberFrom").val() == null || $("#txtOrderNumberFrom").val().length == 0) && !($("#txtOrderNumberTo").val() == null || $("#txtOrderNumberTo").val().length == 0)){
 			whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNumberFrom").val()+"' AND '"+$("#txtOrderNumberTo").val()+"')";
@@ -231,7 +232,7 @@ function fn_report(){
 	}else if($("#cmbType :selected").val() == "3"){
 
 		if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
-			whereSQL += " AND (NVL(som.SALES_DT, TO_DATE('01/01/1900', 'dd/MM/YY')) BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS'))";
+			whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS')";
 		}
         if(!($("#txtOrderNumberFrom").val() == null || $("#txtOrderNumberFrom").val().length == 0) && !($("#txtOrderNumberTo").val() == null || $("#txtOrderNumberTo").val().length == 0)){
             whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNumberFrom").val()+"' AND '"+$("#txtOrderNumberTo").val()+"')";
