@@ -15,7 +15,6 @@ import com.coway.trust.biz.common.userProfileApi.UserProfileApiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-
 /**
  * @ClassName : UserProfileApiController.java
  * @Description : TO-DO Class Description
@@ -25,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * Date            Author          Description
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
+ * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
  * </pre>
  */
 @Api(value = "UserProfileApiController", description = "UserProfileApiController")
@@ -32,22 +32,18 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/userProfileApi")
 public class UserProfileApiController {
 
+  @Resource(name = "UserProfileApiService")
+  private UserProfileApiService userProfileApiService;
 
+  @ApiOperation(value = "selectUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectUserProfile", method = RequestMethod.GET)
+  public ResponseEntity<UserProfileApiDto> selectUserProfile(@ModelAttribute UserProfileApiForm param) throws Exception {
+    return ResponseEntity.ok(userProfileApiService.selectUserProfile(param));
+  }
 
-	@Resource(name = "UserProfileApiService")
-	private UserProfileApiService userProfileApiService;
-
-
-
-    @ApiOperation(value = "selectUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @RequestMapping(value = "/selectUserProfile", method = RequestMethod.GET)
-    public ResponseEntity<UserProfileApiDto> selectUserProfile(@ModelAttribute UserProfileApiForm param) throws Exception {
-        return ResponseEntity.ok(userProfileApiService.selectUserProfile(param));
-    }
-
-    @ApiOperation(value = "selectUserRole", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @RequestMapping(value = "/selectUserRole", method = RequestMethod.GET)
-    public ResponseEntity<UserProfileApiDto> selectUserRole(@ModelAttribute UserProfileApiForm param) throws Exception {
-        return ResponseEntity.ok(userProfileApiService.selectUserRole(param));
-    }
+  @ApiOperation(value = "selectUserRole", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectUserRole", method = RequestMethod.GET)
+  public ResponseEntity<UserProfileApiDto> selectUserRole(@ModelAttribute UserProfileApiForm param) throws Exception {
+    return ResponseEntity.ok(userProfileApiService.selectUserRole(param));
+  }
 }
