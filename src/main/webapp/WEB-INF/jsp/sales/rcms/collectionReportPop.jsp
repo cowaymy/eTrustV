@@ -118,7 +118,9 @@
                                     userName : userName
                                 }, function(result) {
                                     if (result.length > 0) {
-                                        agentGrpId = "" + result[0].agentGrpId + "|!|";
+                                        agentGrpId = "" + result[0].agentGrpId ;
+                                        $("#V_CALLER").val(agentGrpId);
+
                                     }
                                 }, null, {
                                     async : false
@@ -293,6 +295,9 @@
          var today_s = day + "/" +  month + "/" + year;
          $("#endDt").val(today_s);
 
+
+         $("#V_SDATE").val(today);
+         $("#V_EDATE").val(today_s);
 
             }
 
