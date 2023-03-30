@@ -44,8 +44,8 @@ $(document).ready(function() {
 
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
-     console.log("chsStatus : "+ chsStatus);
-     console.log("chsRsn : "+ chsRsn);
+     /* console.log("chsStatus : "+ chsStatus);
+     console.log("chsRsn : "+ chsRsn); */
 
      if(chsStatus == "YELLOW") {
         $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
@@ -57,6 +57,29 @@ $(document).ready(function() {
         $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
     }
+
+    let ccpFico = '${ccpInfoMap.ccpFico}';
+    let ccpExperianr = '${ccpInfoMap.ccpExperianr}';
+    let score_group_style = "";
+    let score_group_desc = "";
+
+     if((ccpFico >= 701 && ccpFico <= 900) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
+    	score_group_style = "green_text";
+    	score_group_desc  = "Excellent Score"
+    }else if((ccpFico >= 551 && ccpFico <= 700) || (ccpExperianr >= 5 && ccpExperianr <= 8)){
+    	score_group_style = "green_text";
+        score_group_desc = "Good Score"
+    }else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 4)){
+    	score_group_desc = "Low Score";
+    }else if(ccpFico == 9999 || ccpExperianr == 9999){
+    	score_group_style = "red_text";
+        score_group_desc = "No Score Insufficient CCRIS";
+    }else{
+    	score_group_style = "red_text";
+        score_group_desc = "No Score";
+    }
+
+    $('#score_group').addClass(score_group_style).text(score_group_desc);
 
     //Init
     var mst = getMstId();
@@ -940,6 +963,11 @@ function chgTab(tabNm) {
         <span style="width:87pt">
             ${ccpInfoMap.ccpExperianr}
         </span>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Score Group</th>
+    <td colspan="5" id="score_group">
     </td>
 </tr>
 <tr>

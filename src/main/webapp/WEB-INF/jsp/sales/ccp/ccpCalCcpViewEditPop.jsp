@@ -232,7 +232,7 @@ $(document).ready(function() {
             return;
         }else{
             //if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
-            if( $("#_ficoScore").val() > 9999 || $("#_ficoScore").val() < 0){
+            if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 0){
                 Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
             }
@@ -678,6 +678,31 @@ function fn_ccpStatusChangeFunc(getVal){
 
     }
 
+}
+
+function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
+
+    let score_group_style = "";
+    let score_group_desc = "";
+
+    if((ccpFico >= 701 && ccpFico <= 900) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
+        score_group_style = "green_text";
+        score_group_desc  = "Excellent Score"
+    }else if((ccpFico >= 551 && ccpFico <= 700) || (ccpExperianr >= 5 && ccpExperianr <= 8)){
+        score_group_style = "green_text";
+        score_group_desc = "Good Score"
+    }else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 4)){
+    	score_group_style = "black_text";
+        score_group_desc = "Low Score";
+    }else if(ccpFico == 9999 || ccpExperianr == 9999){
+        score_group_style = "red_text";
+        score_group_desc = "No Score Insufficient CCRIS";
+    }else{
+        score_group_style = "red_text";
+        score_group_desc = "No Score";
+    }
+
+    $('#score_group').addClass(score_group_style).text(score_group_desc);
 }
 
 function  bind_RetrieveData(){
@@ -1541,17 +1566,21 @@ function chgTab(tabNm) {
 <!--  "sal.title.text.ficoScore" THIS IS IN THE TABLE SYS0052M-->
 <!--    <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th> -->
     <th scope="row">CTOS Score</th>
-    <td colspan="5" ><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled" maxlength="10"></span></td>
+    <td colspan="5" ><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" onchange="javascript : fn_ccpScoreChangeFunc(this.value,0)" disabled="disabled" maxlength="10"></span></td>
 </tr>
 <tr>
     <th scope="row">Experian Score</th>
     <td colspan="5">
         <span>
             <input style="width:87pt" type="text" id="_experianScore" name="experianScore" value="${ccpInfoMap.ccpExperians}" disabled="disabled" maxlength="10">
-            <input style="width:87pt" type="text" id="_experianRisk" name="experianRisk" value="${ccpInfoMap.ccpExperianr}" disabled="disabled" maxlength="10">
+            <input style="width:87pt" type="text" id="_experianRisk" name="experianRisk" value="${ccpInfoMap.ccpExperianr}" onchange="javascript : fn_ccpScoreChangeFunc(0,this.value)" disabled="disabled" maxlength="10">
         </span>
     </td>
-<!--    <td colspan="5" ></td> -->
+</tr>
+<tr>
+    <th scope="row">Score Group</th>
+    <td colspan="5" id="score_group">
+    </td>
 </tr>
 <tr>
     <th scope="row">CHS Status</th>
