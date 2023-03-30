@@ -113,7 +113,17 @@
 
                 $('#empChk').val('${preOrderInfo.empChk}');
                 $('#gstChk').val('${preOrderInfo.gstChk}');
-                doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'},'${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
+                doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'},'${preOrderInfo.exTrade}', 'exTrade', 'S', `
+                		($('[name="ordSaveBtn"]').click(function() {
+                            if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
+                                var data = {memCode : $("#salesmanCd").val()};
+                                Common.popupDiv("/sales/order/copyOrderBulkPop.do", data, null, true, "copyOrderBulkPop");
+                            }
+                            else {
+                                fn_preCheckSave();
+                            }
+                        }))
+                `); //EX-TRADE
 
                 $('#relatedNo').val('${preOrderInfo.relatedNo}');
                 $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');

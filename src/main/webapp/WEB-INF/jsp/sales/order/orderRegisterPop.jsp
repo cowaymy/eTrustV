@@ -1363,15 +1363,20 @@
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
             }
         });
-        $('[name="ordSaveBtn"]').click(function() {
-            if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
-                var data = {memCode : $("#salesmanCd").val()};
-                Common.popupDiv("/sales/order/copyOrderBulkPop.do", data, null, true, "copyOrderBulkPop");
-            }
-            else {
-                fn_preCheckSave();
-            }
-        });
+
+        if (convToOrdYn != 'Y'
+            //&& copyChangeYn != 'Y'
+        ) {
+	        $('[name="ordSaveBtn"]').click(function() {
+	            if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
+	                var data = {memCode : $("#salesmanCd").val()};
+	                Common.popupDiv("/sales/order/copyOrderBulkPop.do", data, null, true, "copyOrderBulkPop");
+	            }
+	            else {
+	                fn_preCheckSave();
+	            }
+	        });
+        }
     });
 
     function fn_preCheckSave() {
