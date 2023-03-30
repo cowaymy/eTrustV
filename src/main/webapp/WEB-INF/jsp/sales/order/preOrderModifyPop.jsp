@@ -66,7 +66,7 @@ var userType = "${userType}";
         }
 
         if('${preOrderInfo.atchFileGrpId}' != 0){
-        	fn_loadAtchment('${preOrderInfo.atchFileGrpId}');
+            fn_loadAtchment('${preOrderInfo.atchFileGrpId}');
         }
 
         var vCustType = $("#hiddenTypeId").val();
@@ -117,7 +117,7 @@ var userType = "${userType}";
 
  function createAUIGridFailedRemark() {
 
-	//AUIGrid 칼럼 설정
+    //AUIGrid 칼럼 설정
      var columnLayout = [
             { headerText : 'Status', dataField : "stus", width : 150}
           , { headerText : 'Fail Reason', dataField : "rem1", width : 150}
@@ -128,31 +128,31 @@ var userType = "${userType}";
      ];
 
      var gridPros = {
-    	      usePaging : true,
-    	      pageRowCount : 10,
-    	      editable : false,
-    	      selectionMode : "singleRow",
-    	      showRowNumColumn : true,
-    	      showStateColumn : false,
-    	      wordWrap : true
+              usePaging : true,
+              pageRowCount : 10,
+              editable : false,
+              selectionMode : "singleRow",
+              showRowNumColumn : true,
+              showStateColumn : false,
+              wordWrap : true
      };
 
      FailedRemarkGridID =  GridCommon.createAUIGrid("grid_FailedRemark_wrap", columnLayout, "", gridPros);
  }
 
  function fn_selectFailedRemarkList() {
-	 Common.ajax("GET", "/sales/order/selectPreOrderFailStatus.do", {preOrdId : $('#frmPreOrdReg #hiddenPreOrdId').val().trim()}, function(result) {
-		    AUIGrid.setGridData(FailedRemarkGridID, result);
+     Common.ajax("GET", "/sales/order/selectPreOrderFailStatus.do", {preOrdId : $('#frmPreOrdReg #hiddenPreOrdId').val().trim()}, function(result) {
+            AUIGrid.setGridData(FailedRemarkGridID, result);
      });
  }
 
  function disableSaveButton() {
-	 $('#btnSave').unbind()
+     $('#btnSave').unbind()
  }
 
  function enableSaveButton() {
-	 disableSaveButton()
-	 $('#btnSave').click(function() {
+     disableSaveButton()
+     $('#btnSave').click(function() {
 
 
          if(!fn_validCustomer()) {
@@ -198,11 +198,7 @@ var userType = "${userType}";
 
     $(function(){
         $('#btnRltdNoEKeyIn').click(function() {
-        	   //** Start exTrade Neo to Neo Plus **//
-               //   Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(), prod:$('#ordProudct').val()}, null, true);
-        	   //** End exTrade Neo to Neo Plus **//
-
-        	   Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
 
         $('#btnConfirm').click(function() {
@@ -369,7 +365,7 @@ var userType = "${userType}";
                     //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
                     doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
-                    //$('#ordProudct').removeAttr("disabled");
+                    $('#ordProudct').removeAttr("disabled");
                 }
             }
             else {
@@ -498,9 +494,6 @@ var userType = "${userType}";
             }
         });
         $('#ordProudct').change(function() {
-        	//** Start exTrade Neo to Neo Plus **//
-            //      $('#relatedNo').val('');
-        	//** End exTrade Neo to Neo Plus **//
             disableSaveButton()
             console.log('ordProudct change event start');
 
@@ -777,11 +770,11 @@ var userType = "${userType}";
             if(file == null){
                 remove.push(trFileId);
             }else if(file.name != trFileName){
-	            myFileCaches[4] = {file:file};
-	            if(trFileName != ""){
-	            	update.push(trFileId);
-	           }
-	        }
+                myFileCaches[4] = {file:file};
+                if(trFileName != ""){
+                    update.push(trFileId);
+               }
+            }
 
             var msg = '';
             if(file.name.length > 30){
@@ -1069,7 +1062,7 @@ var userType = "${userType}";
         $('#sctThrdParty').removeClass("blind");
     }
 
-	function fn_excludeGstAmt() {
+    function fn_excludeGstAmt() {
         //Amount before GST
         var oldPrice     = $('#normalOrdPrice').val();
         var newPrice     = $('#ordPrice').val();
@@ -1090,7 +1083,7 @@ var userType = "${userType}";
         $('#ordPv').val(newPv);
 
         $('#pBtnCal').addClass("blind");
-	}
+    }
 
     function fn_isExistESalesNo() {
         var isExist = false, msg = "";
@@ -1379,7 +1372,7 @@ var userType = "${userType}";
 
     function fn_doSavePreOrder() {
 
-    	//Save attachment first
+        //Save attachment first
         var vAppType    = $('#appType').val();
         var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
         var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
@@ -1391,7 +1384,7 @@ var userType = "${userType}";
 
         var orderVO = {
 
-        		preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
+                preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
                 sofNo                : $('#sofNo').val().trim(),
                 custPoNo             : $('#poNo').val().trim(),
                 appTypeId            : vAppType,
@@ -1537,10 +1530,10 @@ var userType = "${userType}";
     }
 
     function fn_closePreOrdModPop2(){
-    	myFileCaches = {};
-    	delete update;
+        myFileCaches = {};
+        delete update;
         delete remove;
-    	$('#_divPreOrdModPop').remove();
+        $('#_divPreOrdModPop').remove();
     }
 
     function fn_setBillGrp(grpOpt) {
@@ -1627,7 +1620,7 @@ var userType = "${userType}";
         $('#salesmanNm').val('');
 
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
-        	console.log('fn_loadOrderSalesman memId:'+memInfo);
+            console.log('fn_loadOrderSalesman memId:'+memInfo);
             if(memInfo == null) {
                 Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
             }
@@ -1679,7 +1672,7 @@ var userType = "${userType}";
 
     //LoadProductComponent
     function fn_loadProductComponent(stkId) {
-    	var cnptId = '${preOrderInfo.cpntId}' != undefined ? '${preOrderInfo.cpntId}' : 0;
+        var cnptId = '${preOrderInfo.cpntId}' != undefined ? '${preOrderInfo.cpntId}' : 0;
         doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, cnptId, 'compType', 'S', ''); //Common Code
     }
 
@@ -1859,7 +1852,7 @@ var userType = "${userType}";
         });
     }
 
-	function fn_getSvrPacCombo(selVal, srvPacId){
+    function fn_getSvrPacCombo(selVal, srvPacId){
 
         switch(selVal) {
             case '66' : //RENTAL
@@ -1927,15 +1920,15 @@ var userType = "${userType}";
                 var maskedNric;
 
                 if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
-                	if(userType == 1 || userType == 2 || userType == 7){
-                		maskedNric = custInfo.nric.substr(-4).padStart(custInfo.nric.length, '*');
-                	}
-                	else{
-                		maskedNric = custInfo.nric;
-                	}
+                    if(userType == 1 || userType == 2 || userType == 7){
+                        maskedNric = custInfo.nric.substr(-4).padStart(custInfo.nric.length, '*');
+                    }
+                    else{
+                        maskedNric = custInfo.nric;
+                    }
                 }
                 else{
-                	maskedNric = custInfo.nric;
+                    maskedNric = custInfo.nric;
                 }
                 $("#nric2").val(maskedNric); //NRIC/Company No
                 $("#nric").val(custInfo.nric); //NRIC/Company No
@@ -1951,7 +1944,7 @@ var userType = "${userType}";
                 $("#custEmail").val(custInfo.email); //Email
                 $('#speclInstct').html('${preOrderInfo.instct}');
                 if ('${preOrderInfo.appTypeId}' == '66' && custInfo.typeId == '965') {
-                	doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '${preOrderInfo.corpCustType}', 'corpCustType',     'S', ''); //Common Code
+                    doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '${preOrderInfo.corpCustType}', 'corpCustType',     'S', ''); //Common Code
                     $('#corpCustType').removeAttr("disabled");
                     doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '${preOrderInfo.agreementType}', 'agreementType',     'S', ''); //Common Code
                     $('#agreementType').removeAttr("disabled");
@@ -1959,10 +1952,10 @@ var userType = "${userType}";
                   }
 
                 if(custInfo.receivingMarketingMsgStatus == 1){
-                	$("#marketMessageYes").prop("checked", true);
+                    $("#marketMessageYes").prop("checked", true);
                 }
                 else{
-                	$("#marketMessageNo").prop("checked", true);
+                    $("#marketMessageNo").prop("checked", true);
                 }
 
                 if(custInfo.corpTypeId > 0) {
@@ -2020,14 +2013,14 @@ var userType = "${userType}";
 
       //$('#srvPacId').val('${preOrderInfo.srvPacId}');
 
-        //$('#ordProudct').removeAttr("disabled");
+        $('#ordProudct').removeAttr("disabled");
 
         var stkType = '${preOrderInfo.appTypeId}' == '66' ? '1' : '2';
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
 
         if('${preOrderInfo.cpntId}' != 0){
-        	$('#compType').removeClass("blind");
-        	fn_loadProductComponent('${preOrderInfo.itmStkId}');
+            $('#compType').removeClass("blind");
+            fn_loadProductComponent('${preOrderInfo.itmStkId}');
         }
 
         $('#installDur').val('${preOrderInfo.instPriod}');
@@ -2043,7 +2036,7 @@ var userType = "${userType}";
         console.log("date: "+date);
         //if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
         if(date >= 201907) {
-        	doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
+            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                 ,stkId:'${preOrderInfo.itmStkId}'
                 ,empChk:'${preOrderInfo.empChk}'
                 ,promoCustType:vCustTypeId
@@ -2055,7 +2048,7 @@ var userType = "${userType}";
         }
         else
         {
-        	doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
                 ,stkId:'${preOrderInfo.itmStkId}'
                 ,empChk:'${preOrderInfo.empChk}'
                 ,promoCustType:vCustTypeId
@@ -2333,7 +2326,7 @@ var userType = "${userType}";
                 }
 
                 $('[name="advPay"]').prop("disabled", true);
-                $('#advPayNo').prop("checked", true);
+                //$('#advPayNo').prop("checked", true);   // for enable radio button
                 $('#poNo').prop("disabled", true);
 
                 break;
@@ -2371,49 +2364,49 @@ var userType = "${userType}";
     }
 
     function fn_loadAtchment(atchFileGrpId) {
-    	Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+        Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
             console.log(result);
-	       if(result) {
-	            if(result.length > 0) {
-	            	$("#attachTd").html("");
-	            	for ( var i = 0 ; i < result.length ; i++ ) {
-	                    switch (result[i].fileKeySeq){
-	                    case '1':
-	                        sofFileId = result[i].atchFileId;
-	                        sofFileName = result[i].atchFileName;
-	                        $(".input_text[id='sofFileTxt']").val(sofFileName);
-	                        break;
-	                    case '2':
-	                        nricFileId = result[i].atchFileId;
-	                        nricFileName = result[i].atchFileName;
-	                        $(".input_text[id='nricFileTxt']").val(nricFileName);
-	                        break;
-	                    case '3':
-	                        payFileId = result[i].atchFileId;
-	                        payFileName = result[i].atchFileName;
-	                        $(".input_text[id='payFileTxt']").val(payFileName);
-	                        break;
-	                    case '4':
-	                        trFileId = result[i].atchFileId;
-	                        trFileName = result[i].atchFileName;
-	                        $(".input_text[id='trFileTxt']").val(trFileName);
-	                        break;
-	                    case '5':
-	                        otherFileId = result[i].atchFileId;
-	                        otherFileName = result[i].atchFileName;
-	                        $(".input_text[id='otherFileTxt']").val(otherFileName);
-	                        break;
-	                    case '6':
+           if(result) {
+                if(result.length > 0) {
+                    $("#attachTd").html("");
+                    for ( var i = 0 ; i < result.length ; i++ ) {
+                        switch (result[i].fileKeySeq){
+                        case '1':
+                            sofFileId = result[i].atchFileId;
+                            sofFileName = result[i].atchFileName;
+                            $(".input_text[id='sofFileTxt']").val(sofFileName);
+                            break;
+                        case '2':
+                            nricFileId = result[i].atchFileId;
+                            nricFileName = result[i].atchFileName;
+                            $(".input_text[id='nricFileTxt']").val(nricFileName);
+                            break;
+                        case '3':
+                            payFileId = result[i].atchFileId;
+                            payFileName = result[i].atchFileName;
+                            $(".input_text[id='payFileTxt']").val(payFileName);
+                            break;
+                        case '4':
+                            trFileId = result[i].atchFileId;
+                            trFileName = result[i].atchFileName;
+                            $(".input_text[id='trFileTxt']").val(trFileName);
+                            break;
+                        case '5':
+                            otherFileId = result[i].atchFileId;
+                            otherFileName = result[i].atchFileName;
+                            $(".input_text[id='otherFileTxt']").val(otherFileName);
+                            break;
+                        case '6':
                             otherFileId2 = result[i].atchFileId;
                             otherFileName2 = result[i].atchFileName;
                             $(".input_text[id='otherFileTxt2']").val(otherFileName2);
                             break;
-	                    case '7':
-	                    	sofTncFileId = result[i].atchFileId;
-	                    	sofTncFileName = result[i].atchFileName;
+                        case '7':
+                            sofTncFileId = result[i].atchFileId;
+                            sofTncFileName = result[i].atchFileName;
                             $(".input_text[id='sofTncFileTxt']").val(sofTncFileName);
                             break;
-	                    case '8':
+                        case '8':
                             msofFileId = result[i].atchFileId;
                             msofFileName = result[i].atchFileName;
                             $(".input_text[id='msofFileTxt']").val(msofFileName);
@@ -2423,45 +2416,45 @@ var userType = "${userType}";
                             msofTncFileName = result[i].atchFileName;
                             $(".input_text[id='msofTncFileTxt']").val(msofTncFileName);
                             break;
-	                     default:
-	                    	 Common.alert("no files");
-	                    }
-	                }
+                         default:
+                             Common.alert("no files");
+                        }
+                    }
 
-	                // 파일 다운
-	            	 if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
-	                     if(userType != 1 && userType != 2 && userType != 7){
-	                         $(".input_text").dblclick(function() {
-	                             var oriFileName = $(this).val();
-	                             var fileGrpId;
-	                             var fileId;
-	                             for(var i = 0; i < result.length; i++) {
-	                                 if(result[i].atchFileName == oriFileName) {
-	                                     fileGrpId = result[i].atchFileGrpId;
-	                                     fileId = result[i].atchFileId;
-	                                 }
-	                             }
-	                             if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
-	                         });
-	                     }
-	                 }
-	                 else{
-	                     $(".input_text").dblclick(function() {
-	                         var oriFileName = $(this).val();
-	                         var fileGrpId;
-	                         var fileId;
-	                         for(var i = 0; i < result.length; i++) {
-	                             if(result[i].atchFileName == oriFileName) {
-	                                 fileGrpId = result[i].atchFileGrpId;
-	                                 fileId = result[i].atchFileId;
-	                             }
-	                         }
-	                         if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
-	                     });
-	                 }
+                    // 파일 다운
+                     if ('${preOrderInfo.stusId}' == '4' || '${preOrderInfo.stusId}' == '10'){
+                         if(userType != 1 && userType != 2 && userType != 7){
+                             $(".input_text").dblclick(function() {
+                                 var oriFileName = $(this).val();
+                                 var fileGrpId;
+                                 var fileId;
+                                 for(var i = 0; i < result.length; i++) {
+                                     if(result[i].atchFileName == oriFileName) {
+                                         fileGrpId = result[i].atchFileGrpId;
+                                         fileId = result[i].atchFileId;
+                                     }
+                                 }
+                                 if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                             });
+                         }
+                     }
+                     else{
+                         $(".input_text").dblclick(function() {
+                             var oriFileName = $(this).val();
+                             var fileGrpId;
+                             var fileId;
+                             for(var i = 0; i < result.length; i++) {
+                                 if(result[i].atchFileName == oriFileName) {
+                                     fileGrpId = result[i].atchFileGrpId;
+                                     fileId = result[i].atchFileId;
+                                 }
+                             }
+                             if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                         });
+                     }
 
-	            }
-	        }
+                }
+            }
        });
     }
 
@@ -2543,7 +2536,7 @@ var userType = "${userType}";
 <header class="pop_header"><!-- pop_header start -->
 <h1>eKey-in</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdModPop2();" href="#">CLOSE | TUTUP</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdModPop2();" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2551,8 +2544,8 @@ var userType = "${userType}";
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-	<li><p class="btn_blue blind"><a id="btnConfirm" href="#">Confirm</a></p></li>
-	<li><p class="btn_blue blind"><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue blind"><a id="btnConfirm" href="#">Confirm</a></p></li>
+    <li><p class="btn_blue blind"><a href="#">Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
@@ -2560,18 +2553,18 @@ var userType = "${userType}";
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">NRIC/Company No</th>
-	<td><input id="nric2" name="nric2" type="text" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
-	<td><input id="nric" name="nric" type="hidden" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
-	<th scope="row">SOF No</th>
-	<td><input id="sofNo" name="sofNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input id="nric2" name="nric2" type="text" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td><input id="nric" name="nric" type="hidden" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <th scope="row">SOF No</th>
+    <td><input id="sofNo" name="sofNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2583,7 +2576,7 @@ var userType = "${userType}";
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-	<li><a href="aTabCS" class="on">Customer</a></li>
+    <li><a href="aTabCS" class="on">Customer</a></li>
     <li><a href="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
     <li><a href="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
     <li><a href="aTabFL" >Attachment</a></li>
@@ -2608,8 +2601,8 @@ var userType = "${userType}";
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:350px" />
-	<col style="width:*" />
+    <col style="width:350px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -2629,23 +2622,23 @@ var userType = "${userType}";
     <td><input id="name" name="name" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <!-- <tr>
-	<th scope="row">GST Relief Certificate / Regist. No.</th>
-	<td colspan="3"><p><select id="gstChk" name="gstChk" class="w100p"></select></p>
-		<p><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></p>
-		<p>
-		<div class="auto_file file_flag">auto_file start
-		<input type="file" title="file add" />
-		</div>auto_file end
-		</p>
-	</td>
+    <th scope="row">GST Relief Certificate / Regist. No.</th>
+    <td colspan="3"><p><select id="gstChk" name="gstChk" class="w100p"></select></p>
+        <p><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></p>
+        <p>
+        <div class="auto_file file_flag">auto_file start
+        <input type="file" title="file add" />
+        </div>auto_file end
+        </p>
+    </td>
 </tr> -->
 </tbody>
 </table><!-- table end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:350px" />
-	<col style="width:*" />
+    <col style="width:350px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -2677,17 +2670,17 @@ var userType = "${userType}";
     <td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
  <tr>
-	<th scope="row">Receiving Marketing Message</th>
-	<td>
-		<div style="display:inline-block;width:100%;">
-			<div style="display:inline-block;">
-			<input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
-			</div>
-			<div style="display:inline-block;">
-			<input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
-			</div>
-		</div>
-	</td>
+    <th scope="row">Receiving Marketing Message</th>
+    <td>
+        <div style="display:inline-block;width:100%;">
+            <div style="display:inline-block;">
+            <input id="marketMessageYes" type="radio" value="1" name="marketingMessageSelection"/><label for="marketMessageYes">Yes</label>
+            </div>
+            <div style="display:inline-block;">
+            <input  id="marketMessageNo" type="radio" value="0" name="marketingMessageSelection"/><label for="marketMessageNo">No</label>
+            </div>
+        </div>
+    </td>
 </tr>
 <!-- <tr>
     <th scope="row">Tel (Mobile)<span class="must">*</span></th>
@@ -2717,15 +2710,15 @@ var userType = "${userType}";
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
-	<col style="width:250px" />
-	<col style="width:*" />
+    <col style="width:250px" />
+    <col style="width:*" />
+    <col style="width:250px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <!-- <tr>
-	<th scope="row">If contact same as above click here</th>
-	<td colspan="3"><input id="chkSameCntc" type="checkbox" checked/></td>
+    <th scope="row">If contact same as above click here</th>
+    <td colspan="3"><input id="chkSameCntc" type="checkbox" checked/></td>
 </tr> -->
 </tbody>
 </table><!-- table end -->
@@ -2740,8 +2733,8 @@ var userType = "${userType}";
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
+    <col style="width:250px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -2783,8 +2776,8 @@ var userType = "${userType}";
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_grid"><a id="btnNewInstAddr" href="#">Add New Address</a></p></li>
-	<li><p class="btn_grid"><a id="btnSelInstAddr" href="#">Select Another Address</a></p></li>
+    <li><p class="btn_grid"><a id="btnNewInstAddr" href="#">Add New Address</a></p></li>
+    <li><p class="btn_grid"><a id="btnSelInstAddr" href="#">Select Another Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2919,13 +2912,13 @@ var userType = "${userType}";
     <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
     <td>
     <p><select id="appType" name="appType" class="w100p"></select></p>
-    <p><select id="srvPacId" name="srvPacId" class="w100p readonly" disabled></select></p>
+    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
     </td>
 </tr>
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
     <td>
-        <select id="ordProudct" name="ordProudct" class="w50p readonly" disabled></select>
+        <select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
         <select id="compType" name="compType" class="w50p blind" onchange="fn_reloadPromo()"></select>
     </td>
 </tr>
@@ -3592,7 +3585,7 @@ var userType = "${userType}";
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-	<li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>
 </ul>
 
 </section>
