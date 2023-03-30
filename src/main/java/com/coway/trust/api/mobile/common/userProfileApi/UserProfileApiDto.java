@@ -40,6 +40,7 @@ public class UserProfileApiDto {
     params.put("bankAccNo", vo.getBankAccNo());
     params.put("memHpno", vo.getMemHpno());
     params.put("memEmail", vo.getMemEmail());
+    params.put("brnchAddr", vo.getBrnchAddr());
     return params;
   }
 
@@ -56,6 +57,7 @@ public class UserProfileApiDto {
   private String bankAccNo;
   private String memHpno;
   private String memEmail;
+  private String brnchAddr;
 
   public String getMemCode() {
     return memCode;
@@ -159,5 +161,13 @@ public class UserProfileApiDto {
 
   public void setMemEmail(String memEmail) {
     this.memEmail = memEmail;
+  }
+
+  public String getBrnchAddr() {
+    return brnchAddr;
+  }
+
+  public void setBrnchAddr(String brnchAddr) {
+    this.brnchAddr = brnchAddr;
   }
 }
