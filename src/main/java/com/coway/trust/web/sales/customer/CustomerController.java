@@ -1694,6 +1694,9 @@ public class CustomerController {
   public ResponseEntity<ReturnMessage> updateCustomerCardInfoAf(@RequestParam Map<String, Object> params,
       ModelMap model) throws Exception {
 
+	  params.put("custOriCrcNo", params.get("oriCustCrcNo"));
+	  params.put("cardExpr", params.get("crcExpDate"));
+
     // service
     customerService.updateCustomerCardInfoAf(params); //FRANGO CHECK 1CARD 1 CUST
 

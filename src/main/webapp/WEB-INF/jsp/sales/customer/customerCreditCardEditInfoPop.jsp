@@ -105,10 +105,10 @@
                 return;
             }
 
-            var isExistCrc = fn_existCrcNo('${custId}', $("#tknId").val().trim());
+/*               var isExistCrc = fn_existCrcNo('${custId}', $("#tknId").val().trim());
             if(isExistCrc) {
                 return;
-            }
+            } */
 
 	    	/* Update  */
 	    	fn_customerCardInfoUpdateAjax();
@@ -161,8 +161,6 @@
 		 var isValid = true;
 
 		 var isExistCrc = false;
-
-		 $("#oriCustCrcNo").val($("#custOriCrcNo").val());
 
 		 Common.ajax("GET", "/sales/customer/updateCustomerCardInfoAf.do", $("#updForm").serialize(), function(result) {
              Common.alert(result.message, fn_parentReload);
@@ -369,7 +367,7 @@
 
             <input type="hidden" value="${custNric}" name="nric" id="nric">
             <input type="hidden" id="etyPoint" name="etyPoint" value="EE">
-            <input type="hidden" id="tknId" name="tknId">
+            <input type="hidden" id="tknId" name="tknId" >
             <input type="hidden" id="refNo" name="refNo">
             <input type="hidden" id="urlReq" name="urlReq">
             <input type="hidden" id="merchantId" name="merchantId">
@@ -381,7 +379,9 @@
             <input type="hidden" id="custCrcExpr" name="custCrcExpr">
             <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
 
-            <input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo">
+            <input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo" value = "${detailcard.custCrcNo }">
+            <input type = "hidden" id= "crcExpDate" name = "crcExpDate" value = "${detailcard.custCrcExpr }">
+
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>

@@ -2143,8 +2143,8 @@
     CUST_CRC_OWNER = #{nameCard},
     CARD_TYPE_ID = #{cardTypeId},
     CUST_CRC_EXPR = #{cardExpr},
-    CUST_CRC_REM = #{custCrcRem},
-    CUST_CRC_TOKEN = #{tknId}
+    CUST_CRC_REM = #{custCrcRem}
+   <!--  , CUST_CRC_TOKEN = #{tknId} -->
     WHERE
     CUST_CRC_ID = #{custCrcId}
   </update>
