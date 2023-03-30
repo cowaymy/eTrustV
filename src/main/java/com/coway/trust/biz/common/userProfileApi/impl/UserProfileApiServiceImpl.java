@@ -24,47 +24,44 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date            Author          Description
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
+ * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
  * </pre>
  */
 @Service("UserProfileApiService")
-public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implements UserProfileApiService{
+public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implements UserProfileApiService {
 
+  @Resource(name = "UserProfileApiMapper")
+  private UserProfileApiMapper userProfileApiMapper;
 
-
-    @Resource(name = "UserProfileApiMapper")
-	private UserProfileApiMapper userProfileApiMapper;
-
-
-
-    @Override
-    public UserProfileApiDto selectUserProfile(UserProfileApiForm param) throws Exception {
-        if( null == param ){
-            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-        }
-        if( CommonUtils.isEmpty(param.getUserName()) ){
-            throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
-        }
-        EgovMap selectUserProfile = userProfileApiMapper.selectUserProfile(UserProfileApiForm.createMap(param));
-        UserProfileApiDto rtn = new UserProfileApiDto();
-        if( MapUtils.isNotEmpty(selectUserProfile) ){
-            return rtn.create(selectUserProfile);
-        }
-        return rtn;
+  @Override
+  public UserProfileApiDto selectUserProfile(UserProfileApiForm param) throws Exception {
+    if (null == param) {
+      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
-
-    @Override
-    public UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception {
-        if( null == param ){
-            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-        }
-        if( CommonUtils.isEmpty(param.getUserName()) ){
-            throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
-        }
-        EgovMap selectUserProfile = userProfileApiMapper.selectUserRole(UserProfileApiForm.createMap(param));
-        UserProfileApiDto rtn = new UserProfileApiDto();
-        if( MapUtils.isNotEmpty(selectUserProfile) ){
-            return rtn.create(selectUserProfile);
-        }
-        return rtn;
+    if (CommonUtils.isEmpty(param.getUserName())) {
+      throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
     }
+    EgovMap selectUserProfile = userProfileApiMapper.selectUserProfile(UserProfileApiForm.createMap(param));
+    UserProfileApiDto rtn = new UserProfileApiDto();
+    if (MapUtils.isNotEmpty(selectUserProfile)) {
+      return rtn.create(selectUserProfile);
+    }
+    return rtn;
+  }
+
+  @Override
+  public UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception {
+    if (null == param) {
+      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+    }
+    if (CommonUtils.isEmpty(param.getUserName())) {
+      throw new ApplicationException(AppConstants.FAIL, "User name value does not exist.");
+    }
+    EgovMap selectUserProfile = userProfileApiMapper.selectUserRole(UserProfileApiForm.createMap(param));
+    UserProfileApiDto rtn = new UserProfileApiDto();
+    if (MapUtils.isNotEmpty(selectUserProfile)) {
+      return rtn.create(selectUserProfile);
+    }
+    return rtn;
+  }
 }
