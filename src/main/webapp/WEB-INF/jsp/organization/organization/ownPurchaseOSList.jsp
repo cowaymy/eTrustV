@@ -184,7 +184,7 @@
             dataType : "numeric",
             formatString : "#,##0.00",
             style : "aui-grid-user-custom-right"
-        }, ,{
+        },{
             dataField : "unbill",
             headerText : "Unbill",
             width : "10%",
@@ -201,13 +201,13 @@
         },{
             dataField : "orgCode",
             headerText : "Org Code",
-        }, {
+        },{
             dataField : "grpCode",
             headerText : "Grp Code",
-        }, {
+        },{
             dataField : "deptCode",
             headerText : "Dept Code",
-        }, {
+        },{
             dataField : "undefined",
             headerText : " ",
             width : 130,
@@ -233,17 +233,16 @@
         }
 
         var excelGridProsNew = {
-                // 페이징 사용
                 usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
                 pageRowCount : 20,
-                // 셀 선택모드 (기본값: singleCell)
                 selectionMode : "multipleCells",
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             };
 
         gridID = AUIGrid.create("#grid_wrap", columnLayout, gridOpt);
         gridExcelId = AUIGrid.create("#grid_excel_wrap", columnExcelLayout, excelGridProsNew);
+        console.log("test===");
+        console.log(gridExcelId);
     }
 
     function fn_clear() {
@@ -289,6 +288,7 @@
            console.log(result);
            AUIGrid.setGridData(gridID, result);
            AUIGrid.setGridData(gridExcelId, result);
+           console.log(gridExcelId);
         });
     }
 
@@ -297,7 +297,7 @@
     function fn_gridExport(){
 
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-        GridCommon.exportTo("grid_excel_wrap", "xlsx", "Own Purchase Outstanding List");
+        GridCommon.exportTo("#grid_excel_wrap", "xlsx", "Own Purchase Outstanding List");
     }
 
     function fn_multiCombo(){
@@ -411,21 +411,23 @@
   <aside class="title_line"><!-- title_line start -->
 
         <ul class="right_btns">
-                <li><p class="btn_grid"><a id="btnExcel" onclick="javascript:fn_gridExport('xlsx');">Generate</a></p></li>
+                <li><p class="btn_grid"><a id="btnExcel" onclick="fn_gridExport()">Generate</a></p></li>
 
         </ul>
     </aside><!-- title_line end -->
 
     <article class="grid_wrap" id="grid_wrap"></article>
+        <article class="grid_wrap" id="grid_excel_wrap" style="display:none;"><!-- grid_wrap start -->
+
 
     <form id="ledgerForm" method="post">
         <input type="hidden" name="ordId" id="ordId" />
         <input type="hidden" name="ordNo" id="ordNo" />
     </form>
 </section>
-
-<section class="search_result"><!-- search_result start -->
-	<article class="grid_wrap" id="grid_excel_wrap" style="display:none;"><!-- grid_wrap start -->
-	</article><!-- grid_wrap end -->
+<!--
+<section class="search_result">search_result start
+	<article class="grid_wrap" id="grid_excel_wrap" style="display:none;">grid_wrap start
+	</article>grid_wrap end -->
 </section><!-- search_result end -->
 
