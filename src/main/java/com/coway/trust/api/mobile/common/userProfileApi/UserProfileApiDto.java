@@ -2,13 +2,9 @@ package com.coway.trust.api.mobile.common.userProfileApi;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.coway.trust.util.BeanConverter;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
-
-
 /**
  * @ClassName : UserProfileApiDto.java
  * @Description : TO-DO Class Description
@@ -18,163 +14,150 @@ import io.swagger.annotations.ApiModel;
  * Date            Author          Description
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
+ * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
  * </pre>
  */
 @ApiModel(value = "UserProfileApiDto", description = "UserProfileApiDto")
 public class UserProfileApiDto {
 
+  @SuppressWarnings("unchecked")
+  public UserProfileApiDto create(EgovMap egvoMap) {
+    return BeanConverter.toBean(egvoMap, UserProfileApiDto.class);
+  }
 
+  public static Map<String, Object> createMap(UserProfileApiDto vo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memCode", vo.getMemCode());
+    params.put("memName", vo.getMemName());
+    params.put("memTypeName", vo.getMemTypeName());
+    params.put("memStatus", vo.getMemStatus());
+    params.put("brnchCode", vo.getBrnchCode());
+    params.put("brnchName", vo.getBrnchName());
+    params.put("grpCode", vo.getGrpCode());
+    params.put("orgCode", vo.getOrgCode());
+    params.put("deptCode", vo.getDeptCode());
+    params.put("bankName", vo.getBankName());
+    params.put("bankAccNo", vo.getBankAccNo());
+    params.put("memHpno", vo.getMemHpno());
+    params.put("memEmail", vo.getMemEmail());
+    return params;
+  }
 
-	@SuppressWarnings("unchecked")
-	public UserProfileApiDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, UserProfileApiDto.class);
-	}
+  private String memCode;
+  private String memName;
+  private String memTypeName;
+  private String memStatus;
+  private String brnchCode;
+  private String brnchName;
+  private String grpCode;
+  private String orgCode;
+  private String deptCode;
+  private String bankName;
+  private String bankAccNo;
+  private String memHpno;
+  private String memEmail;
 
+  public String getMemCode() {
+    return memCode;
+  }
 
+  public void setMemCode(String memCode) {
+    this.memCode = memCode;
+  }
 
-    public static Map<String, Object> createMap(UserProfileApiDto vo){
-        Map<String, Object> params = new HashMap<>();
-        params.put("memCode", vo.getMemCode());
-        params.put("memName", vo.getMemName());
-        params.put("memTypeName", vo.getMemTypeName());
-        params.put("memStatus", vo.getMemStatus());
-        params.put("brnchCode", vo.getBrnchCode());
-        params.put("brnchName", vo.getBrnchName());
-        params.put("grpCode", vo.getGrpCode());
-        params.put("orgCode", vo.getOrgCode());
-        params.put("deptCode", vo.getDeptCode());
-        params.put("bankName", vo.getBankName());
-        params.put("bankAccNo", vo.getBankAccNo());
-        params.put("agExprDt", vo.getAgExprDt());
-        params.put("userRole", vo.getUserRole());
-        return params;
-    }
+  public String getMemName() {
+    return memName;
+  }
 
+  public void setMemName(String memName) {
+    this.memName = memName;
+  }
 
+  public String getMemTypeName() {
+    return memTypeName;
+  }
 
-	private String memCode;
-	private String memName;
-	private String memTypeName;
-	private String memStatus;
-	private String brnchCode;
-	private String brnchName;
-	private String grpCode;
-	private String orgCode;
-	private String deptCode;
-	private String bankName;
-	private String bankAccNo;
-	private String agExprDt;
-	private String userRole;
+  public void setMemTypeName(String memTypeName) {
+    this.memTypeName = memTypeName;
+  }
 
+  public String getMemStatus() {
+    return memStatus;
+  }
 
+  public void setMemStatus(String memStatus) {
+    this.memStatus = memStatus;
+  }
 
-    public String getMemCode() {
-        return memCode;
-    }
+  public String getBrnchCode() {
+    return brnchCode;
+  }
 
-    public void setMemCode(String memCode) {
-        this.memCode = memCode;
-    }
+  public void setBrnchCode(String brnchCode) {
+    this.brnchCode = brnchCode;
+  }
 
-    public String getMemName() {
-        return memName;
-    }
+  public String getBrnchName() {
+    return brnchName;
+  }
 
-    public void setMemName(String memName) {
-        this.memName = memName;
-    }
+  public void setBrnchName(String brnchName) {
+    this.brnchName = brnchName;
+  }
 
-    public String getMemTypeName() {
-        return memTypeName;
-    }
+  public String getGrpCode() {
+    return grpCode;
+  }
 
-    public void setMemTypeName(String memTypeName) {
-        this.memTypeName = memTypeName;
-    }
+  public void setGrpCode(String grpCode) {
+    this.grpCode = grpCode;
+  }
 
-    public String getMemStatus() {
-        return memStatus;
-    }
+  public String getOrgCode() {
+    return orgCode;
+  }
 
-    public void setMemStatus(String memStatus) {
-        this.memStatus = memStatus;
-    }
+  public void setOrgCode(String orgCode) {
+    this.orgCode = orgCode;
+  }
 
-    public String getBrnchCode() {
-        return brnchCode;
-    }
+  public String getDeptCode() {
+    return deptCode;
+  }
 
-    public void setBrnchCode(String brnchCode) {
-        this.brnchCode = brnchCode;
-    }
+  public void setDeptCode(String deptCode) {
+    this.deptCode = deptCode;
+  }
 
-    public String getBrnchName() {
-        return brnchName;
-    }
+  public String getBankName() {
+    return bankName;
+  }
 
-    public void setBrnchName(String brnchName) {
-        this.brnchName = brnchName;
-    }
+  public void setBankName(String bankName) {
+    this.bankName = bankName;
+  }
 
-    public String getGrpCode() {
-        return grpCode;
-    }
+  public String getBankAccNo() {
+    return bankAccNo;
+  }
 
-    public void setGrpCode(String grpCode) {
-        this.grpCode = grpCode;
-    }
+  public void setBankAccNo(String bankAccNo) {
+    this.bankAccNo = bankAccNo;
+  }
 
-    public String getOrgCode() {
-        return orgCode;
-    }
+  public String getMemHpno() {
+    return memHpno;
+  }
 
-    public void setOrgCode(String orgCode) {
-        this.orgCode = orgCode;
-    }
+  public void setMemHpno(String memHpno) {
+    this.memHpno = memHpno;
+  }
 
-    public String getDeptCode() {
-        return deptCode;
-    }
+  public String getMemEmail() {
+    return memEmail;
+  }
 
-    public void setDeptCode(String deptCode) {
-        this.deptCode = deptCode;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    public String getBankAccNo() {
-        return bankAccNo;
-    }
-
-    public void setBankAccNo(String bankAccNo) {
-        this.bankAccNo = bankAccNo;
-    }
-
-	public String getAgExprDt() {
-		return agExprDt;
-	}
-
-	public void setAgExprDt(String agExprDt) {
-		this.agExprDt = agExprDt;
-	}
-
-
-
-	public String getUserRole() {
-		return userRole;
-	}
-
-
-
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
-	}
-
-
+  public void setMemEmail(String memEmail) {
+    this.memEmail = memEmail;
+  }
 }
