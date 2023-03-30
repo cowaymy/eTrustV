@@ -14,13 +14,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date            Author          Description
  * -------------   -----------     -------------
  * 2019. 10. 21.   KR-JAEMJAEM:)   First creation
+ * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
  * </pre>
  */
 @Mapper("UserProfileApiMapper")
 public interface UserProfileApiMapper {
 
+  EgovMap selectUserProfile(Map<String, Object> params);
 
-
-	EgovMap selectUserProfile(Map<String, Object> params);
-	EgovMap selectUserRole(Map<String, Object> params);
+  EgovMap selectUserRole(Map<String, Object> params);
 }
