@@ -437,6 +437,7 @@
              , SALES_ORD_ID             = #{salesOrdId}
              , UPD_USER_ID                = #{updUserId}
              , UPD_DT                     = SYSDATE
+             , ADV_BILL                   = #{advBill}
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
 
