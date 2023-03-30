@@ -23,8 +23,6 @@
 
   var ddlFilterObj = {};
 
-  var selectedHTAndDTObj = {};
-
   $(document).ready(
     function() {
       createAUIGrid();
@@ -75,8 +73,7 @@
       // doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
       // doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');
       // doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
-     
-      fn_getHTandCTDetails();
+
       fn_getASOrderInfo(); // GET AS ORDER INFOR.
       fn_getASEvntsInfo(); // GET AS EVENT INFOR.
       fn_getASHistoryInfo(); // GET AS HISTORY INFOR
@@ -100,31 +97,7 @@
         $("#inHouseRepair_div").attr("style", "display:none");
       }
 
-      $("#ddlCTCodeText").change(function(){
-    	 var ddlCTCodeTextSelectedVal = $("#ddlCTCodeText option:selected").val();
-    	 var selectedCTbranchId = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchId;
-    	 var selectedCTbranchCode = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchCode;
-
-          $("#ddlDSCCode").val(selectedCTbranchId);
-          $("#ddlDSCCodeText").val(selectedCTbranchCode)
-          $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);
-        });
     });
-
-  function fn_getHTandCTDetails() {
-	  $.ajax({
-		  type : "GET",
-		  url:"/homecare/services/as/selectHTAndDTCode",
-		  dataType : "json",
-          contentType : "application/json;charset=UTF-8",
-          success : function(result) {
-        	  $.each(result, function(idx, row){
-        		  selectedHTAndDTObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "branchId":row.branchId, "branchCode":row.branchCode};
-              });
-        	  doDefCombo(result, '', 'ddlCTCodeText', 'S', '');
-          }
-	  });
-  }
 
   function fn_inHouseAutoClose() {
     if ('${IS_AUTO}' == "true") {
@@ -171,7 +144,7 @@
   }
 
   function fn_getASRulstSVC0004DInfo() {
-	  Common.ajax("GET", "/homecare/services/as/getASRulstSVC0004DInfo.do", $("#resultASForm").serialize(), function(result) {
+      Common.ajax("GET", "/homecare/services/as/getASRulstSVC0004DInfo.do", $("#resultASForm").serialize(), function(result) {
       if (result != "") {
         fn_setSVC0004dInfo(result);
       } else {
@@ -191,7 +164,7 @@
   }
 
   function fn_setSVC0004dInfo(result) {
-	$("#creator").val(result[0].c28);
+    $("#creator").val(result[0].c28);
     $("#creatorat").val(result[0].asResultCrtDt);
     $("#txtResultNo").text(result[0].asResultNo);
 
@@ -212,8 +185,7 @@
 
     fn_errMst_SelectedIndexChanged(result[0].asMalfuncResnId);
 
-   // $("#ddlCTCodeText").val(result[0].c12);
-    $("#ddlCTCodeText").val(result[0].c11);
+    $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlCTCode").val(result[0].c11);
     $("#CTID").val(result[0].c11);
 
@@ -222,14 +194,6 @@
 
     if (result[0].c27 == "1") {
       $("#iscommission").attr("checked", true);
-    }
-
-    if(result[0].asTransferToDt == "1")
-    {
-        $("#isTransferToDT").attr("checked", true);
-    }
-    else {
-        $("#isTransferToDT").attr("checked", false);
     }
 
     $('#def_type').val(result[0].c16);
@@ -318,8 +282,8 @@
 
   function auiCellEditBeginHandler(event){
 
-	  if (event.dataField == "retSmoSerialNo"){
-		  var selectItem = AUIGrid.getSelectedItems(myFltGrd10);
+      if (event.dataField == "retSmoSerialNo"){
+          var selectItem = AUIGrid.getSelectedItems(myFltGrd10);
           if(selectItem.length == 0){
               return false;
           }
@@ -327,17 +291,17 @@
           if( event.item.isSmo != "Y" ){
               return false;
           }
-	  }
+      }
 
-	  if (event.dataField == "srvFilterLastSerial"){
-		  if(event.item.isSerialReplace != "Y"){
-			  return false;
-		  }
+      if (event.dataField == "srvFilterLastSerial"){
+          if(event.item.isSerialReplace != "Y"){
+              return false;
+          }
 
-		  if(event.item.isChkSerial != "N"){
-			  return false;
-		  }
-	  }
+          if(event.item.isChkSerial != "N"){
+              return false;
+          }
+      }
 
   }
 
@@ -346,20 +310,20 @@
 
           var isChkSerial = fn_chkSerial(event.value);
           if(isChkSerial != "Y"){
-        	  Common.alert("Invalid Serial No.");
+              Common.alert("Invalid Serial No.");
           }
 
           AUIGrid.setCellValue(myFltGrd10, event.rowIndex, "isChkSerial", js.String.isEmpty(isChkSerial)?"N":isChkSerial);
       }
-	  if (event.dataField == "retSmoSerialNo"){
+      if (event.dataField == "retSmoSerialNo"){
 
-		  var isSmoChkYn = fn_chkSerial(event.value);
-		  if(isSmoChkYn != "Y"){
+          var isSmoChkYn = fn_chkSerial(event.value);
+          if(isSmoChkYn != "Y"){
               Common.alert("Invalid Return Serial No.");
           }
 
           AUIGrid.setCellValue(myFltGrd10, event.rowIndex, "isSmoChkYn", js.String.isEmpty(isSmoChkYn)?"N":isSmoChkYn);
-	  }
+      }
   }
 
   function createAUIGrid() {
@@ -632,29 +596,29 @@
 
 
   function fn_chkSerial(serial){
-	  if( js.String.isNotEmpty(serial) ){
-		  if(serial.length != 18){
-			  return "N";
-		  }
+      if( js.String.isNotEmpty(serial) ){
+          if(serial.length != 18){
+              return "N";
+          }
 
-		  var barCode = serial.toUpperCase();
-		  var stockCode = (js.String.roughScale(barCode.substr(3, 5), 36)).toString();
-		  if(stockCode == "0"){
-			  return "N";
-		  }
+          var barCode = serial.toUpperCase();
+          var stockCode = (js.String.roughScale(barCode.substr(3, 5), 36)).toString();
+          if(stockCode == "0"){
+              return "N";
+          }
 
-		  Common.ajaxSync("POST", "/homecare/services/as/selectSerialChk.do", {"serial":barCode, "stockCode":stockCode}, function(result) {
-			    if(result.code == "00"){
-			    	return "Y";
-			    }else{
-			    	return "N";
-			    }
-		  }, function(){return "N";});
+          Common.ajaxSync("POST", "/homecare/services/as/selectSerialChk.do", {"serial":barCode, "stockCode":stockCode}, function(result) {
+                if(result.code == "00"){
+                    return "Y";
+                }else{
+                    return "N";
+                }
+          }, function(){return "N";});
 
-	  }else{
-		  return "N";
-	  }
-	  return "Y";
+      }else{
+          return "N";
+      }
+      return "Y";
   }
 
   function fn_getASHistoryInfo() {
@@ -831,34 +795,34 @@
     fitem.isSmoChkYn = "N";
 
     if(ddlFilterObj[$("#ddlFilterCode").val()] != null){
-	    fitem.isSmo = ddlFilterObj[$("#ddlFilterCode").val()].isSmo;
-	    fitem.isSerialReplace = ddlFilterObj[$("#ddlFilterCode").val()].isSerialReplace;
+        fitem.isSmo = ddlFilterObj[$("#ddlFilterCode").val()].isSmo;
+        fitem.isSerialReplace = ddlFilterObj[$("#ddlFilterCode").val()].isSerialReplace;
 
-	    if(fitem.isSerialReplace == "Y"){
-	    	fitem.isChkSerial = fn_chkSerial(fitem.srvFilterLastSerial);
-	    	if(fitem.isChkSerial != "Y"){
-	    		Common.alert("Invalid serial No.");
-	    		return false;
-	    	}
-	    }
+        if(fitem.isSerialReplace == "Y"){
+            fitem.isChkSerial = fn_chkSerial(fitem.srvFilterLastSerial);
+            if(fitem.isChkSerial != "Y"){
+                Common.alert("Invalid serial No.");
+                return false;
+            }
+        }
     }else{
-    	fitem.isSmo = "N";
-    	fitem.isSerialReplace = "N";
+        fitem.isSmo = "N";
+        fitem.isSerialReplace = "N";
     }
 
     if(fitem.isSerialReplace == "Y"){
-    	var rows = AUIGrid.getGridData(myGridID);
+        var rows = AUIGrid.getGridData(myGridID);
 
-    	var isChk = false;
-    	$.each(rows, function(idx, item){
+        var isChk = false;
+        $.each(rows, function(idx, item){
             if(item.isSerialReplace == "Y"){
-            	isChk = true;
+                isChk = true;
             }
         });
-    	if(isChk){
-    		Common.alert("There can be no more than one serial replace.");
-    		return false;
-    	}
+        if(isChk){
+            Common.alert("There can be no more than one serial replace.");
+            return false;
+        }
     }
 
     // CHECK PRICE
@@ -959,7 +923,7 @@
 
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-    $("#ddlCTCodeText").val(selectedItems[0].item.asMemId);
+    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
 
     if (selectedItems[0].item.asMalfuncId != "") {
@@ -1777,32 +1741,32 @@
     var isSmoChk = "Y";
     var replc = 0;
     for(var i in rows){
-    	if(rows[i].isSerialReplace == "Y"){
-    		replc++;
-    	}
+        if(rows[i].isSerialReplace == "Y"){
+            replc++;
+        }
 
-    	if(rows[i].isSerialReplace == "Y" && rows[i].isChkSerial != "Y"){
-    		isChk = fn_chkSerial(rows[i].srvFilterLastSerial);
-    		if(isChk != "Y"){break;}
-    	}
+        if(rows[i].isSerialReplace == "Y" && rows[i].isChkSerial != "Y"){
+            isChk = fn_chkSerial(rows[i].srvFilterLastSerial);
+            if(isChk != "Y"){break;}
+        }
 
-    	if(rows[i].isSmo == "Y" && rows[i].isSmoChkYn != "Y"){
-    		isSmoChk = fn_chkSerial(rows[i].retSmoSerialNo);
-    		if(isSmoChk != "Y"){break;}
-    	}
+        if(rows[i].isSmo == "Y" && rows[i].isSmoChkYn != "Y"){
+            isSmoChk = fn_chkSerial(rows[i].retSmoSerialNo);
+            if(isSmoChk != "Y"){break;}
+        }
     }
 
     if(replc > 1){
-    	rtnMsg += "* Only one serial replace is possible. </br>";
+        rtnMsg += "* Only one serial replace is possible. </br>";
         rtnValue = false;
     }
 
     if(isChk != "Y"){
-    	rtnMsg += "* Invalid serial No. </br>";
+        rtnMsg += "* Invalid serial No. </br>";
         rtnValue = false;
     }
     if(isSmoChk != "Y"){
-    	rtnMsg += "* Invalid return serial No. </br>";
+        rtnMsg += "* Invalid return serial No. </br>";
         rtnValue = false;
     }
     /////////
@@ -2576,8 +2540,7 @@ function fnSerialSearchResult(data) {
           </th>
           <td>
             <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
-           <!--<input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' />-->
-            <select id='ddlCTCodeText' name='ddlCTCodeText' class="w100p"  disabled="disabled"></select>
+            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' />
             <!-- <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
                  <input type="text" title="" placeholder="" class="readonly" id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
              -->
