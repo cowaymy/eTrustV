@@ -11,13 +11,12 @@ import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
  * Date            Author          Description
  * -------------   -----------     -------------
  * 2019. 11. 01.   KR-JAEMJAEM:)   First creation
+ * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
  * </pre>
  */
 public interface UserProfileApiService {
 
+  UserProfileApiDto selectUserProfile(UserProfileApiForm param) throws Exception;
 
-
-    UserProfileApiDto selectUserProfile(UserProfileApiForm param) throws Exception;
-
-	UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception;
+  UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception;
 }
