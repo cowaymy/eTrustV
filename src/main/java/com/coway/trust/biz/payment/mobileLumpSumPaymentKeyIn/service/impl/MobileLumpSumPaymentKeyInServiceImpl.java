@@ -111,8 +111,8 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 	  }
 
 	  @Override
-	  public List<EgovMap> selectCashMatchingPayGroupList(Map<String,Object> params){
-		  List<EgovMap> resultList =  mobileLumpSumPaymentKeyInMapper.selectCashMatchingPayGroupList(params);
+	  public List<EgovMap> mobileSelectCashMatchingPayGroupList(Map<String,Object> params){
+		  List<EgovMap> resultList =  mobileLumpSumPaymentKeyInMapper.mobileSelectCashMatchingPayGroupList(params);
 		  return resultList;
 	  }
 

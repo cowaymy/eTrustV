@@ -459,7 +459,7 @@
 		ORDER BY p0349m.CRT_DT DESC,p0349m.MOB_PAY_GROUP_NO DESC
 	</select>
 
-	<select id="selectCashMatchingPayGroupList" parameterType="Map" resultType="egovMap">
+	<select id="mobileSelectCashMatchingPayGroupList" parameterType="Map" resultType="egovMap">
 		SELECT p0349m.MOB_PAY_GROUP_NO,p0349m.TOT_PAY_AMT,p0349m.PAY_MODE,s0013m1.CODE_NAME AS PAY_MODE_NAME,
         p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME , LISTAGG(p0350d.SALES_ORD_NO, ',') WITHIN GROUP (ORDER BY p0350d.SALES_ORD_NO) AS ORD_NO,TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
         s0029d.NAME
@@ -479,6 +479,7 @@
 	<update id="mobileUpdateCashMatchingData" parameterType="Map">
 		UPDATE PAY0349M
 		SET
+		PAY_STUS_ID = 104 <!-- 	Processing Stage -->
 		SLIP_NO = #{slipNo},
 		UPLOAD_IMG1 = #{uploadImg1},
 		UPLOAD_IMG2 = #{uploadImg2},
