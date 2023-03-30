@@ -116,6 +116,14 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		  return resultList;
 	  }
 
+	  @Override
+	  public int mobileUpdateCashMatchingData(Map<String,Object> params){
+		  EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
+		  params.put("userId", user.get("userId"));
+		  mobileLumpSumPaymentKeyInMapper.mobileUpdateCashMatchingData(params);
+		  return 1;
+	  }
+
 	  private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
 	  {
 	      Map<Object, Boolean> map = new ConcurrentHashMap<>();

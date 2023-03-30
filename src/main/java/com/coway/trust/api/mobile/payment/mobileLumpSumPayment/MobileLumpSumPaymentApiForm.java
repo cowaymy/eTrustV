@@ -29,6 +29,14 @@ public class MobileLumpSumPaymentApiForm {
     private int paymentMethodId;
     private Double totalOriginalOutstandingAmount;
     private Double totalPayableAmount;
+
+    //Submit cash matching info
+    private String mobPayGroupNo;
+    private String slipNo;
+    private int uploadImg1;
+    private int uploadImg2;
+    private int uploadImg3;
+
     private List<MobileLumpSumPaymentOrderDetailsForm> orderDetailList;
 
 	public static Map<String, Object> createMap(MobileLumpSumPaymentApiForm vo){
@@ -57,6 +65,13 @@ public class MobileLumpSumPaymentApiForm {
 		params.put("totalOriginalOutstandingAmount", vo.getTotalOriginalOutstandingAmount());
 		params.put("totalPayableAmount", vo.getTotalPayableAmount());
 		params.put("orderDetailList", createMap2(vo.getOrderDetailList()));
+
+		//update cash matching
+		params.put("mobPayGroupNo", vo.getMobPayGroupNo());
+		params.put("slipNo", vo.getSlipNo());
+		params.put("uploadImg1", vo.getUploadImg1());
+		params.put("uploadImg2", vo.getUploadImg2());
+		params.put("uploadImg3", vo.getUploadImg3());
 
 		return params;
 	}
@@ -188,6 +203,46 @@ public class MobileLumpSumPaymentApiForm {
 
 	public void setPaymentMethodId(int paymentMethodId) {
 		this.paymentMethodId = paymentMethodId;
+	}
+
+	public String getMobPayGroupNo() {
+		return mobPayGroupNo;
+	}
+
+	public void setMobPayGroupNo(String mobPayGroupNo) {
+		this.mobPayGroupNo = mobPayGroupNo;
+	}
+
+	public String getSlipNo() {
+		return slipNo;
+	}
+
+	public void setSlipNo(String slipNo) {
+		this.slipNo = slipNo;
+	}
+
+	public int getUploadImg1() {
+		return uploadImg1;
+	}
+
+	public void setUploadImg1(int uploadImg1) {
+		this.uploadImg1 = uploadImg1;
+	}
+
+	public int getUploadImg2() {
+		return uploadImg2;
+	}
+
+	public void setUploadImg2(int uploadImg2) {
+		this.uploadImg2 = uploadImg2;
+	}
+
+	public int getUploadImg3() {
+		return uploadImg3;
+	}
+
+	public void setUploadImg3(int uploadImg3) {
+		this.uploadImg3 = uploadImg3;
 	}
 
 }

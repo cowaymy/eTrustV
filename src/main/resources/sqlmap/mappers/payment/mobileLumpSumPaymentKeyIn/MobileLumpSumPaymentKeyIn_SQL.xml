@@ -475,4 +475,16 @@
         GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME
         ORDER BY p0349m.CRT_DT DESC
 	</select>
+
+	<update id="mobileUpdateCashMatchingData" parameterType="Map">
+		UPDATE PAY0349M
+		SET
+		SLIP_NO = #{slipNo},
+		UPLOAD_IMG1 = #{uploadImg1},
+		UPLOAD_IMG2 = #{uploadImg2},
+		UPLOAD_IMG3 = #{uploadImg3},
+		UPD_DT = SYSDATE,
+		UPD_BY = #{userId}
+		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</update>
 </mapper>
