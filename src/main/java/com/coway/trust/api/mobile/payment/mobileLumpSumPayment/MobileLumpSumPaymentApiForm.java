@@ -86,6 +86,11 @@ public class MobileLumpSumPaymentApiForm {
 		params.put("uploadImg2", vo.getUploadImg2());
 		params.put("uploadImg3", vo.getUploadImg3());
 
+		//update cheque matching
+		params.put("issueBank", vo.getIssueBank());
+		params.put("chequeDate", vo.getChequeDate());
+		params.put("uploadImg4", vo.getUploadImg4());
+
 		return params;
 	}
 
@@ -272,6 +277,30 @@ public class MobileLumpSumPaymentApiForm {
 
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
+	}
+
+	public int getIssueBank() {
+		return issueBank;
+	}
+
+	public void setIssueBank(int issueBank) {
+		this.issueBank = issueBank;
+	}
+
+	public String getChequeDate() {
+		return chequeDate;
+	}
+
+	public void setChequeDate(String chequeDate) {
+		this.chequeDate = chequeDate;
+	}
+
+	public String getUploadImg4() {
+		return uploadImg4;
+	}
+
+	public void setUploadImg4(String uploadImg4) {
+		this.uploadImg4 = uploadImg4;
 	}
 
 }
