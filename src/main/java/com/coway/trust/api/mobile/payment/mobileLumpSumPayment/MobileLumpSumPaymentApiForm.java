@@ -30,6 +30,10 @@ public class MobileLumpSumPaymentApiForm {
     private Double totalOriginalOutstandingAmount;
     private Double totalPayableAmount;
 
+    //Search cash matching
+    private String fromDate;
+    private String toDate;
+
     //Submit cash matching info
     private String mobPayGroupNo;
     private String slipNo;
@@ -65,6 +69,10 @@ public class MobileLumpSumPaymentApiForm {
 		params.put("totalOriginalOutstandingAmount", vo.getTotalOriginalOutstandingAmount());
 		params.put("totalPayableAmount", vo.getTotalPayableAmount());
 		params.put("orderDetailList", createMap2(vo.getOrderDetailList()));
+
+		//search cash matching
+		params.put("fromDate", vo.getFromDate());
+		params.put("toDate", vo.getToDate());
 
 		//update cash matching
 		params.put("mobPayGroupNo", vo.getMobPayGroupNo());
@@ -243,6 +251,22 @@ public class MobileLumpSumPaymentApiForm {
 
 	public void setUploadImg3(int uploadImg3) {
 		this.uploadImg3 = uploadImg3;
+	}
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
 	}
 
 }

@@ -135,10 +135,62 @@ function createAUIGrid() {
 		mergeRef: "mobPayGroupNo",
 		mergePolicy: "restrict"
 	}, {
+		dataField: "slipNo",
+		headerText: 'Slip No',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "attchImgUrl1",
+		headerText: 'Transaction Slip',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict",
+		 renderer : {
+	            type : "ImageRenderer",
+	            width : 20,
+	            height : 20,
+	            imgTableRef : {
+	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+	            }
+	          }
+	},{
+		dataField: "attchImgUrl2",
+		headerText: 'Submission Checklist',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict",
+		 renderer : {
+	            type : "ImageRenderer",
+	            width : 20,
+	            height : 20,
+	            imgTableRef : {
+	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+	            }
+	          }
+	},{
+		dataField: "attchImgUrl3",
+		headerText: 'Cheque Image',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict",
+		 renderer : {
+	            type : "ImageRenderer",
+	            width : 20,
+	            height : 20,
+	            imgTableRef : {
+	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+	            }
+	          }
+	}, {
 		dataField: "payStusId",
 		visible: false
 	}, {
-		dataField: "mobPayId",
+		dataField: "mobPayDetailId",
 		visible: false
 	}, {
 		dataField: "ordId",
@@ -156,8 +208,43 @@ function createAUIGrid() {
 		wordWrap:true
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-	mergeCheckBoxClick();
     AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
+
+    AUIGrid.bind(myGridID, "cellClick", function(event) {
+        if (event.dataField == "attchImgUrl1") {
+          if (FormUtil.isEmpty(event.value) == false) {
+            var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+            if (FormUtil.isEmpty(rowVal.atchFileName1) == false && FormUtil.isEmpty(rowVal.physiclFileName1) == false) {
+              window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath1 + "&fileName=" + rowVal.physiclFileName1 + "&orignlFileNm=" + rowVal.atchFileName1);
+            }
+          }
+        } else if (event.dataField == "attchImgUrl2") {
+          if (FormUtil.isEmpty(event.value) == false) {
+            var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+            if (FormUtil.isEmpty(rowVal.atchFileName2) == false && FormUtil.isEmpty(rowVal.physiclFileName2) == false) {
+              window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath2 + "&fileName=" + rowVal.physiclFileName2 + "&orignlFileNm=" + rowVal.atchFileName2);
+            }
+          }
+        } else if (event.dataField == "attchImgUrl3") {
+          if (FormUtil.isEmpty(event.value) == false) {
+            var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+            if (FormUtil.isEmpty(rowVal.atchFileName3) == false && FormUtil.isEmpty(rowVal.physiclFileName3) == false) {
+              window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath3 + "&fileName=" + rowVal.physiclFileName3 + "&orignlFileNm=" + rowVal.atchFileName3);
+            }
+          }
+        }
+
+        if(event.dataField == "checkId"){
+    		var isChecked = AUIGrid.getCellValue(myGridID, event.rowIndex, "checkId");
+    		var mobPayGroupNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "mobPayGroupNo");
+    		var rows = AUIGrid.getRowsByValue(myGridID, "mobPayGroupNo", mobPayGroupNo);
+    		var items = [];
+    		for(var i = 0 ; i < rows.length; i++){
+        		var rowIndex = AUIGrid.getRowIndexesByValue(myGridID, "mobPayDetailId", rows[i].mobPayDetailId);
+    			AUIGrid.setCellValue(myGridID, rowIndex, "checkId",isChecked);
+    		}
+		}
+      });
 }
 
 function loadComboBox() {
@@ -225,25 +312,6 @@ function checkAll(isChecked) {
 
     // 헤더 체크 박스 일치시킴.
     document.getElementById("allCheckbox").checked = isChecked;
-}
-
-function mergeCheckBoxClick(){
-	AUIGrid.bind(myGridID, "cellClick", function(event) {
-
-		var isChecked = AUIGrid.getCellValue(myGridID, event.rowIndex, "checkId");
-		var mobPayGroupNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "mobPayGroupNo");
-		var rows = AUIGrid.getRowsByValue(myGridID, "mobPayGroupNo", mobPayGroupNo);
-		//var rows = AUIGrid.getRowIndexesByValue(myGridID, "mobPayGroupNo", mobPayGroupNo);
-		console.log(rows);
-		var items = [];
-		for(var i = 0 ; i < rows.length; i++){
-			items.push({
-				mobPayGroupNo: mobPayGroupNo,
-				checkId : isChecked
-			})
-		}
-		AUIGrid.updateRowsById(myGridID, items);
-	});
 }
 </script>
 <!-- html content -->
