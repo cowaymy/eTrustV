@@ -55,6 +55,7 @@
     AND S28.WH_LOC_ID = (SELECT WH_LOC_ID
                          FROM SYS0028M
                          WHERE WH_LOC_CODE = #{userId})
+    ORDER BY L56.STK_DESC
   </select>
 
   <select id="getInventoryOnHandStock" parameterType="Map" resultType="egovMap">
@@ -109,6 +110,7 @@
       AND UPPER(L56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
     </if>
     GROUP BY L56.LOC_ID,L56.STK_CODE,L56.STK_DESC,L56.STK_TYPE_ID, L56.STK_CTGRY_ID,QTY,WH_LOC_DESC,L63.SERIAL_NO,T1.REF_DOC_NO,QTY - NVL (L75.BOOKING_QTY, 0) ,S26.STK_ID,S28.rdc_code
+    ORDER BY L56.STK_DESC
   </select>
 
     <select id="getUserFilterList"  resultType="egovMap">
