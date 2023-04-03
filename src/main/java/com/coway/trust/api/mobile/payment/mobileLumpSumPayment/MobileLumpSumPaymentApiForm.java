@@ -41,6 +41,11 @@ public class MobileLumpSumPaymentApiForm {
     private int uploadImg2;
     private int uploadImg3;
 
+    //Submit cheque matching info
+    private int issueBank;
+    private String chequeDate;
+    private String uploadImg4;
+
     private List<MobileLumpSumPaymentOrderDetailsForm> orderDetailList;
 
 	public static Map<String, Object> createMap(MobileLumpSumPaymentApiForm vo){
