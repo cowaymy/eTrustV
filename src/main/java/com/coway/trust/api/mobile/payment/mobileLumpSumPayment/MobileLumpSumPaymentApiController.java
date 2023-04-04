@@ -124,7 +124,7 @@ public class MobileLumpSumPaymentApiController {
 	public ResponseEntity<List<MobileLumpSumPaymentApiDto>> mobileSelectCashMatchingPayGroupList(@ModelAttribute MobileLumpSumPaymentApiForm mobileLumpSumPaymentApiForm) throws Exception {
 		Map<String, Object> params = mobileLumpSumPaymentApiForm.createMap(mobileLumpSumPaymentApiForm);
 		LOGGER.debug(params.toString());
-
+		
 		List<EgovMap> searchResult = mobileLumpSumPaymentKeyInService.mobileSelectCashMatchingPayGroupList(params);
 		List<MobileLumpSumPaymentApiDto> result = searchResult.stream().map(r -> MobileLumpSumPaymentApiDto.create(r)).collect(Collectors.toList());
 

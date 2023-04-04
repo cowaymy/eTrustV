@@ -373,7 +373,7 @@
 		#{uploadImg3},
 		#{uploadImg4},
 		#{chequeDate},
-		#{chequeNo}.
+		#{chequeNo},
 		#{issueBank},
 		#{cardNo},
 		#{approvalNo},
@@ -587,6 +587,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         LEFT JOIN SAL0029D s0029d
         ON s0029d.CUST_ID = p0349m.CUST_ID
         WHERE 1=1
+        AND (p0349m.PAY_MODE = 5698 OR p0349m.PAY_MODE = 5697)
         <if test='userId != null and userId != ""'>
 			AND p0349m.CRT_BY = #{userId}
 		</if>
