@@ -2078,7 +2078,7 @@
     </select>
 
     <select id="getHomeCareGroupChkYn" parameterType="Map" resultType="String">
-        SELECT CASE WHEN USER_TYPE_ID in ('5758','6672') THEN 'Y' ELSE 'N' END
+        SELECT CASE WHEN USER_TYPE_ID = '5758' THEN 'Y' ELSE 'N' END
           FROM SYS0047M
          WHERE USER_NAME = #{userId}
     </select>
