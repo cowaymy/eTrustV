@@ -63,13 +63,13 @@ $(document).ready(function() {
     let score_group_style = "";
     let score_group_desc = "";
 
-     if((ccpFico >= 701 && ccpFico <= 900) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
+     if((ccpFico >= 701 && ccpFico <= 850) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
     	score_group_style = "green_text";
     	score_group_desc  = "Excellent Score"
-    }else if((ccpFico >= 551 && ccpFico <= 700) || (ccpExperianr >= 5 && ccpExperianr <= 8)){
+    }else if((ccpFico >= 551 && ccpFico <= 700) || (ccpExperianr >= 4 && ccpExperianr <= 8)){
     	score_group_style = "green_text";
         score_group_desc = "Good Score"
-    }else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 4)){
+    }else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 3)){
     	score_group_desc = "Low Score";
     }else if(ccpFico == 9999 || ccpExperianr == 9999){
     	score_group_style = "red_text";
