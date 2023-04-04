@@ -340,6 +340,7 @@
 		UPLOAD_IMG3,
 		UPLOAD_IMG4,
 		CHEQUE_DATE,
+		CHEQUE_NO,
 		ISSUE_BANK,
 		CARD_NO,
 		APPROVAL_NO,
@@ -372,6 +373,7 @@
 		#{uploadImg3},
 		#{uploadImg4},
 		#{chequeDate},
+		#{chequeNo}.
 		#{issueBank},
 		#{cardNo},
 		#{approvalNo},
@@ -422,6 +424,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         U11.ATCH_FILE_NAME AS ATCH_FILE_NAME1,
         U11.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME1,
         U11.FILE_EXTSN AS FILE_EXTSN1,
+
         p0349m.UPLOAD_IMG2,
         CASE WHEN p0349m.UPLOAD_IMG2 IS NOT NULL
           THEN 'DOWN'
@@ -430,6 +433,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         U22.ATCH_FILE_NAME AS ATCH_FILE_NAME2,
         U22.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME2,
         U22.FILE_EXTSN AS FILE_EXTSN2,
+
         p0349m.UPLOAD_IMG3,
         CASE WHEN p0349m.UPLOAD_IMG3 IS NOT NULL
           THEN 'DOWN'
@@ -437,7 +441,33 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         U33.FILE_SUB_PATH AS FILE_SUB_PATH3,
         U33.ATCH_FILE_NAME AS ATCH_FILE_NAME3,
         U33.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME3,
-        U33.FILE_EXTSN AS FILE_EXTSN1
+        U33.FILE_EXTSN AS FILE_EXTSN3,
+
+        p0349m.UPLOAD_IMG4,
+        CASE WHEN p0349m.UPLOAD_IMG4 IS NOT NULL
+          THEN 'DOWN'
+          ELSE NULL END AS ATTCH_IMG_URL4,
+        U44.FILE_SUB_PATH AS FILE_SUB_PATH4,
+        U44.ATCH_FILE_NAME AS ATCH_FILE_NAME4,
+        U44.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME4,
+        U44.FILE_EXTSN AS FILE_EXTSN4,
+
+        p0349m.ISSUE_BANK,
+        s0004m.NAME AS ISSUE_BANK_NAME,
+        p0349m.CHEQUE_NO,
+        p0349m.CHEQUE_DATE,
+        p0349m.CARD_NO,
+        p0349m.APPROVAL_NO,
+        p0349m.CRC_NAME,
+        p0349m.TRANSACTION_DATE,
+        p0349m.EXPIRY_DATE,
+        p0349m.CARD_MODE,
+        s0013m1.CODE_NAME AS CARD_MODE_DESC,
+        p0349m.MERCHANT_BANK,
+        s0001m.ACC_CODE || '' ||  s0001m.ACC_DESC AS MERCHANT_BANK_DESC,
+        p0349m.CARD_BRAND,
+        s0013m1.CODE_NAME AS CARD_BRAND_DESC
+
 		FROM PAY0349M p0349m
 		JOIN PAY0350D p0350d
 		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
@@ -458,13 +488,30 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         LEFT JOIN SYS0071D U11
         ON U1.ATCH_FILE_ID = U11.ATCH_FILE_ID
         LEFT JOIN SYS0070M U2
-        ON p0349m.UPLOAD_IMG1 = U2.ATCH_FILE_GRP_ID
+        ON p0349m.UPLOAD_IMG2 = U2.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D U22
         ON U2.ATCH_FILE_ID = U22.ATCH_FILE_ID
         LEFT JOIN SYS0070M U3
-        ON p0349m.UPLOAD_IMG1 = U3.ATCH_FILE_GRP_ID
+        ON p0349m.UPLOAD_IMG3 = U3.ATCH_FILE_GRP_ID
         LEFT JOIN SYS0071D U33
         ON U3.ATCH_FILE_ID = U33.ATCH_FILE_ID
+        LEFT JOIN SYS0070M U4
+        ON p0349m.UPLOAD_IMG4 = U4.ATCH_FILE_GRP_ID
+        LEFT JOIN SYS0071D U44
+        ON U4.ATCH_FILE_ID = U44.ATCH_FILE_ID
+
+        LEFT JOIN SYS0004M s0004m
+        ON s0004m.BANK_ID = p0349m.ISSUE_BANK
+
+        LEFT JOIN SYS0001M s0001m
+        ON s0001m.ACC_ID = p0349m.MERCHANT_BANK
+
+        LEFT JOIN SYS0013M s0013m1
+        ON s0013m1.CODE_ID = p0349m.CARD_BRAND AND s0013m1.CODE_MASTER_ID = '21'
+
+        LEFT JOIN SYS0013M s0013m2
+        ON s0013m2.CODE_ID = p0349m.CARD_MODE AND s0013m2.CODE_MASTER_ID = '130'
+
         WHERE 1=1
         <if test='grpTicketNo != null and grpTicketNo != ""'>
         	AND p0349m.MOB_PAY_GRP_NO = TRIM(#{grpTicketNo})
@@ -496,24 +543,24 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		        #{item}
 		      </foreach>
 		</if>
-	    <if test='payMode != null and payMode != ""'>
-
-	    </if>
-	    <if test='serialNo != null and serialNo != ""'>
-
-	    </if>
+		<if test="payMode != null and payMode != '' ">
+           AND p0349m.PAY_MODE = #{payMode}
+        </if>
+        <if test="serialNo != null and serialNo != '' ">
+          AND ( p0349m.SLIP_NO = #{serialNo} OR p0349m.CHEQUE_NO = #{serialNo} )
+        </if>
 	    <if test='memberCode != null and memberCode != ""'>
 			AND s0047m1.USER_NAME = TRIM(#{memberCode})
 	    </if>
 	    <if test='apprvNo != null and apprvNo != ""'>
-
+			AND p0349m.APPROVAL_NO = #{apprvNo}
 	    </if>
-	    <if test='cardNoA != null and cardNoA != ""'>
-
-	    </if>
-	    <if test='cardNoB != null and cardNoB != ""'>
-
-	    </if>
+		<if test="cardNoA != null and cardNoA != '' ">
+          AND SUBSTR (p0349m.CARD_NO, 1, 6) = #{cardNoA}
+        </if>
+        <if test="cardNoB != null and cardNoB != '' ">
+          AND SUBSTR (p0349m.CARD_NO, 13, 4) = #{cardNoB}
+        </if>
 	    <if test='orgCode != null and orgCode != ""'>
 			AND o0005d.LAST_ORG_CODE = TRIM(#{orgCode})
 		</if>

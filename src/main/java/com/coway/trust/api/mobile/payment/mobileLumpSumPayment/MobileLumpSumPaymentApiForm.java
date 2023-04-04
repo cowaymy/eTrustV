@@ -46,6 +46,7 @@ public class MobileLumpSumPaymentApiForm {
 
     //Submit cheque info
     private int issueBank;
+    private String chequeNo;
     private String chequeDate;
 
     //Submit credit card info
@@ -103,6 +104,7 @@ public class MobileLumpSumPaymentApiForm {
 
 		//update cheque
 		params.put("issueBank", vo.getIssueBank());
+		params.put("chequeNo", vo.getChequeNo());
 		params.put("chequeDate", vo.getChequeDate());
 
 		//update credit card
@@ -389,6 +391,14 @@ public class MobileLumpSumPaymentApiForm {
 
 	public void setCardBrand(int cardBrand) {
 		this.cardBrand = cardBrand;
+	}
+
+	public String getChequeNo() {
+		return chequeNo;
+	}
+
+	public void setChequeNo(String chequeNo) {
+		this.chequeNo = chequeNo;
 	}
 
 }

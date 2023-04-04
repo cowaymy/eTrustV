@@ -141,6 +141,98 @@ function createAUIGrid() {
 		cellMerge: true,
 		mergeRef: "mobPayGroupNo",
 		mergePolicy: "restrict"
+	},
+	{
+		dataField: "chequeNo",
+		headerText: 'Cheque No',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "chequeDate",
+		headerText: 'Cheque Date',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "issueBankName",
+		headerText: 'Issue Bank',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "chequeNo",
+		headerText: 'Cheque no',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "chequeDate",
+		headerText: 'Cheque Date',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "cardNo",
+		headerText: 'Card No',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "expiryDate",
+		headerText: 'Expiry Date',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "approvalNo",
+		headerText: 'Approval No',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "crcName",
+		headerText: 'CRC Name',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "transactionDate",
+		headerText: 'TRX Date',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "cardModeDesc",
+		headerText: 'Card Mode',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "merchantBankDesc",
+		headerText: 'Merchant Bank',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
+	},{
+		dataField: "cardBrandDesc",
+		headerText: 'Card Brand',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict"
 	},{
 		dataField: "attchImgUrl1",
 		headerText: 'Transaction Slip',
@@ -173,7 +265,7 @@ function createAUIGrid() {
 	          }
 	},{
 		dataField: "attchImgUrl3",
-		headerText: 'Cheque Image',
+		headerText: 'Other/Cheque Image',
 		width: 100,
 		cellMerge: true,
 		mergeRef: "mobPayGroupNo",
@@ -186,7 +278,34 @@ function createAUIGrid() {
 	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
 	            }
 	          }
+	},{
+		dataField: "attchImgUrl4",
+		headerText: 'Other 2',
+		width: 100,
+		cellMerge: true,
+		mergeRef: "mobPayGroupNo",
+		mergePolicy: "restrict",
+		 renderer : {
+	            type : "ImageRenderer",
+	            width : 20,
+	            height : 20,
+	            imgTableRef : {
+	              "DOWN" : "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+	            }
+	          }
+	},{
+		dataField: "issueBank",
+		visible: false
+	},{
+		dataField: "cardMode",
+		visible: false
 	}, {
+		dataField: "merchantBank",
+		visible: false
+	},{
+		dataField: "cardBrand",
+		visible: false
+	},{
 		dataField: "payStusId",
 		visible: false
 	}, {
@@ -232,7 +351,14 @@ function createAUIGrid() {
               window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath3 + "&fileName=" + rowVal.physiclFileName3 + "&orignlFileNm=" + rowVal.atchFileName3);
             }
           }
-        }
+        } else if (event.dataField == "attchImgUrl4") {
+         if (FormUtil.isEmpty(event.value) == false) {
+             var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+             if (FormUtil.isEmpty(rowVal.atchFileName4) == false && FormUtil.isEmpty(rowVal.physiclFileName4) == false) {
+               window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath4 + "&fileName=" + rowVal.physiclFileName4 + "&orignlFileNm=" + rowVal.atchFileName4);
+             }
+           }
+         }
 
         if(event.dataField == "checkId"){
     		var isChecked = AUIGrid.getCellValue(myGridID, event.rowIndex, "checkId");
@@ -498,7 +624,6 @@ function checkAll(isChecked) {
 				</p></li>
 		</c:if>
 	</ul>
-	<!-- search_table end -->
 
 	<!-- search_result start -->
 	<section class="search_result">
@@ -510,5 +635,333 @@ function checkAll(isChecked) {
 		</article>
 	</section>
 	<!-- search_result end -->
+
+	<!--  Pop Up 1 -->
+        <section style="display:none;max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
+          <!-- pop_body start -->
+          <form id="paymentForm1" name="paymentForm1">
+            <input type="hidden" id="payType" name="payType" /> <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" /> <input type="hidden" name="keyInScrn" id="keyInScrn" value="NOR" />
+            <table class="type1">
+              <!-- table start -->
+              <caption>table</caption>
+              <colgroup>
+                <col style="width: 160px" />
+                <col style="width: *" />
+                <col style="width: 160px" />
+                <col style="width: *" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">Transaction ID <span class="must">*</span></th>
+                  <td colspan="3">
+                    <div>
+                      <!-- auto_file start -->
+                      <input type="text" id="transactionId" name="transactionId" placeholder="Transaction ID" value="" /> <input type="checkbox" name="allowance" value="1" checked><label for="allowance"> Allow commission for this payment</label>
+                    </div>
+                    <!-- auto_file end -->
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">TR Ref No.</th>
+                  <td>
+                    <input type="text" id="trRefNo" name="trRefNo" value="" placeholder="TR Ref.No." />
+                  </td>
+                  <th scope="row">TR Issued Date</th>
+                  <td>
+                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="trIssDt" name="trIssDt" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- table end -->
+          </form>
+          <ul class="center_btns">
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+              <li><p class="btn_blue2 big"><a id="savePayment1" href="javascript:saveNormalPayment();"><spring:message code='sys.btn.save' /></a></p></li>
+            </c:if>
+          </ul>
+        </section>
+	<!--  Pop Up 1 -->
+
+	<!--  Pop Up 2 -->
+		<section style="display:none;max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
+
+        <div id="PopUp2_wrap" class="popup_wrap win_popup" style="display: none;">
+        <!-- popup_wrap start -->
+        <header class="pop_header">
+          <!-- pop_header start -->
+          <h1>Update [ Card ] Key-in</h1>
+          <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close' /></a></p></li>
+          </ul>
+        </header>
+        <!-- search_table start -->
+        <section style="max-height: 500px; padding: 10px; background: #fff; overflow-y: scroll;">
+          <!-- search_table start -->
+          <form id="paymentForm" action="#" method="post">
+            <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" /> <input type="hidden" name="keyInScrn" id="keyInScrn" value="CRC" /> <input type="hidden" name="keyInPayType" id="keyInPayType" value="107" />
+            <table class="type1">
+              <caption>table</caption>
+              <colgroup>
+                <col style="width: 180px" />
+                <col style="width: *" />
+                <col style="width: 180px" />
+                <col style="width: *" />
+              </colgroup>
+              <tbody>
+
+                 <!-- <input  type="hidden"  id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly" /> -->
+                <input  type="hidden"  id="keyInAmount" name="keyInAmount" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardMode" name="keyInCardMode" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCrcType" name="keyInCrcType" class="w100p" readonly="readonly" />
+
+                <input  type="hidden"  id="keyInCardNo1" name="keyInCardNo1" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardNo2" name="keyInCardNo2" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardNo3" name="keyInCardNo3" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardNo4" name="keyInCardNo4" class="w100p" readonly="readonly" />
+
+                <input  type="hidden"  id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInHolderNm" name="keyInHolderNm" class="w100p" readonly="readonly" />
+
+                 <input  type="hidden"  id="keyInIssueBank" name="keyInIssueBank" class="w100p" readonly="readonly" />
+                 <input  type="hidden"  id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" readonly="readonly" />
+
+                 <input  type="hidden"  id="keyInExpiryMonth" name="keyInExpiryMonth" class="w100p" readonly="readonly" />
+                 <input  type="hidden"  id="keyInExpiryYear" name="keyInExpiryYear" class="w100p" readonly="readonly" />
+
+                 <input  type="hidden" id="keyInTrDate" name="keyInTrDate" />
+
+
+                <tr>
+                  <th scope="row">Card Type<span class="must">*</span></th>
+                  <td>
+                     <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly">
+                      <option value="1241">Credit Card</option>
+                      <option value="1240">Debit Card</option>
+                    </select>
+
+                  </td>
+                  <!-- <th scope="row">Amount<span class="must">*</span></th> -->
+                   <td>
+                    <!-- <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly="readonly" /> -->
+                  </td>
+                </tr>
+
+                <!-- <tr>
+                  <th scope="row">Card Mode<span class="must">*</span></th>
+                  <td>
+                     <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();" ></select>
+                  </td>
+                  <th scope="row">Card Brand<span class="must">*</span></th>
+                  <td>
+                    <select id="keyInCrcType" name="keyInCrcType" class="w100p"></select>
+                  </td>
+                </tr> -->
+
+                <!-- <tr>
+                  <th scope="row">Card No<span class="must">*</span></th>
+                  <td>
+                    <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' onChange="javascript:fn_changeCardNo1();"  readonly="readonly"/></p> <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  readonly="readonly" /></p> <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  readonly="readonly" /></p> <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  readonly="readonly" /></p>
+                  </td>
+                  <th scope="row">Approval No.<span class="must">*</span></th>
+                  <td>
+                     <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" maxlength="6" placeholder="Approval No."  readonly="readonly" />
+                  </td>
+                </tr> -->
+
+                <!-- <tr>
+                  <th scope="row">Credit Card Holder Name</th>
+                  <td colspan="3">
+                    <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p" placeholder="Credit Card Holder Name"  readonly="readonly" />
+                  </td>
+                </tr> -->
+
+                <!-- <tr>
+                  <th scope="row">Issue Bank<span class="must">*</span></th>
+                   <td>
+                      <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"></select>
+                  </td>
+                  <th scope="row">Merchant Bank<span class="must">*</span></th>
+                  <td>
+                    <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();" ></select>
+                  </td>
+                </tr> -->
+
+                <!-- <tr>
+                  <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
+                  <td>
+                    <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)'  readonly="readonly"/></p> <span>/</span>
+                    <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)'  readonly="readonly"/></p>
+                  </td>
+                  <th scope="row">Transaction Date<span class="must">*</span></th>
+                  <td>
+                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p"  />
+                  </td>
+                </tr> -->
+
+                <tr>
+                  <th scope="row">TR Ref No.</th>
+                  <td>
+                    <input type="text" id="trRefNo2" name="trRefNo2" value="" />
+                  </td>
+                  <th scope="row">TR Issued Date</th>
+                  <td>
+                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="trIssDt2" name="trIssDt2" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="4">
+                    <div>
+                      <input type="checkbox" name="allowance" value="1" checked><label for="allowance"> Allow commission for this payment</label>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+            <!-- table end -->
+          </form>
+          <ul class="center_btns">
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+              <li><p class="btn_blue2 big"><a id="cardSave" href="javascript:savePayment();"><spring:message code='sys.btn.save' /></a></p></li>
+            </c:if>
+          </ul>
+        </section>
+        <form id="frmLedger" name="frmLedger" action="#" method="post">
+          <input id="ordId" name="ordId" type="hidden" value="" />
+        </form>
+        <!-- search_table end -->
+      </div>
+      <!-- popup_wrap end -->
+  </section>
+  <!-- search_result end -->
+
+<!-- popup_wrap start -->
+<div class="popup_wrap size_small" id="updFail_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="updFail_pop_header">
+        <h1>Update Status</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="updFailForm" id="updFailForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:175px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                <tr>
+                     <th scope="row">Action<span class="must">*</span></th>
+                     <td><select id="_action" name="_action"></select></td>
+                 </tr>
+
+                 <tr id="fail_reason" style="display: none;">
+                     <th scope="row">Fail reason code<span class="must">*</span></th>
+                        <td><select id="failReason" name="failReason" class="w50p"></select></td>
+                 </tr>
+                 <tr id="reject_reason" style="display: none;">
+                     <th scope="row">Reject reason code<span class="must">*</span></th>
+                        <td><select id="rejectReason" name="rejectReason" class="w50p"></select></td>
+                 </tr>
+                 <tr id="rem">
+                     <th scope="row"><spring:message code="pay.head.remark" /></th>
+                         <td>
+                             <textarea cols="20" rows="2" id="etc" name="etc" placeholder="Remark"></textarea>
+                         </td>
+                 </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="#" onClick="fn_updateFailStatus()">Save</a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+
+<!-- popup_wrap start -->
+<div class="popup_wrap size_mid" id="errSum_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="updFail_pop_header">
+        <h1>Cody Keyin Error Summary</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="errorSummaryReport" id="errorSummaryReport"  method="post">
+	<input type="hidden" id="reportFileName" name="reportFileName" value="" />
+	<input type="hidden" id="viewType" name="viewType" />
+	<input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
+
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:175px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                <tr>
+                    <th scope="row"><spring:message code='pay.head.requestDate'/></th>
+                    <td>
+					    <div class="date_set w100p">
+					    <p><input id="startDt" name="startDt" type="text" value="" title="Request start date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    <span>To</span>
+					    <p><input id="endDt" name="endDt" type="text" value="" title="Request end date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    </div>
+				    </td>
+				 </tr>
+                 <tr>
+                     <th scope="row"><spring:message code='sal.title.text.region'/></th>
+                        <td><select id="_region" name="_region" class="w100p"></select></td>
+                 </tr>
+                 <tr>
+                     <th scope="row"><spring:message code='pay.head.branch'/></th>
+                        <td>
+                        <select class="multy_select w100p" id="_branch" name="_branch" multiple="multiple" disabled>
+				                <c:forEach var="list" items="${userBranch}" varStatus="status">
+				                  <option value="${list.branchid}">${list.c1}</option>
+				                </c:forEach>
+				              </select>
+                        </td>
+                 </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="#" onClick="fn_generate()">Save</a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+</section>
+	<!--  Pop Up 2 -->
 </section>
 <!-- html content -->
