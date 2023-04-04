@@ -112,8 +112,13 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 
 	  @Override
 	  public List<EgovMap> mobileSelectCashMatchingPayGroupList(Map<String,Object> params){
-		  EgovMap user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
-		  params.put("userId", user.get("userId"));
+		  EgovMap user = new EgovMap();
+		  if(params.get("userName") != null){
+			  user = mobileLumpSumPaymentKeyInMapper.selectUser(params);
+			  if(user != null){
+				  params.put("userId", user.get("userId"));
+			  }
+		  }
 		  List<EgovMap> resultList =  mobileLumpSumPaymentKeyInMapper.mobileSelectCashMatchingPayGroupList(params);
 		  return resultList;
 	  }
