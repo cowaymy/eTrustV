@@ -1038,7 +1038,7 @@
 
 
 <select id="getAlternativeFilterDList" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT DISTINCT
         MATRL_NO PRODUCT_CODE,
         (select STK_ID from sys0026m  where  stk_code = l43.MATRL_NO) product_Id,
         S26.STK_DESC FILTER_NAME,
@@ -1064,7 +1064,7 @@
 
         UNION ALL
 
-    SELECT
+    SELECT DISTINCT
 
         '' AS PRODUCT_CODE,
         0 AS product_Id,
@@ -1095,7 +1095,7 @@
 
        UNION ALL
 
-    SELECT
+    SELECT DISTINCT
 
         '' AS PRODUCT_CODE,
         0 AS product_Id,
