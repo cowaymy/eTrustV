@@ -593,7 +593,7 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		<if test='fromDate != null and fromDate != null'>
 			<if test='toDate != "" and toDate != ""'>
 				<![CDATA[
-					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'DD/MM/YYYY') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'DD/MM/YYYY')
+					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'YYYYMMDD') AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'YYYYMMDD')
 				]]>
 			</if>
 		</if>
