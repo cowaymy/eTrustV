@@ -1950,11 +1950,27 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     orderRegisterMapper.insertSalesOrderD(salesOrderDVO);
 
     // is Mattress
-    EgovMap stkMap = orderRegisterMapper.getCtgryId(salesOrderDVO.getItmStkId());
+   /* EgovMap stkMap = orderRegisterMapper.getCtgryId(salesOrderDVO.getItmStkId());
     int ctgyId = CommonUtils.intNvl(stkMap.get("stkCtgryId"));
 
     if(ctgyId == HomecareConstants.HC_CTGRY_ID.MAT
-        || (ctgyId == HomecareConstants.HC_CTGRY_ID.FRM && orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL)) {  // Mattress Only
+        || (ctgyId == HomecareConstants.HC_CTGRY_ID.FRM && orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL)
+        || ctgyId == HomecareConstants.HC_CTGRY_ID.ACI
+        || ctgyId == HomecareConstants.HC_CTGRY_ID.MC ) { // Mattress Only
+    	salesOrderMVO.setSalesProdSz(CommonUtils.nvl(stkMap.get("stkSize")));
+    	orderRegisterMapper.insert_SAL0225D(salesOrderMVO);
+    } **/
+
+  // Homecare orders insert CS table automatically by Hui Ding, 17/03/2023
+    EgovMap stkMap = orderRegisterMapper.getCtgryCode(salesOrderDVO.getItmStkId());
+    String catCode = CommonUtils.nvl(stkMap.get("stkCatCode"));
+
+    if (catCode.equalsIgnoreCase(HomecareConstants.HC_CTGRY_CD.MAT)
+    	|| (catCode.equalsIgnoreCase(HomecareConstants.HC_CTGRY_CD.FRM) && orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL)
+    	|| catCode.equalsIgnoreCase(HomecareConstants.HC_CTGRY_CD.ACI)
+    	|| catCode.equalsIgnoreCase(HomecareConstants.HC_CTGRY_CD.MC)
+    	) {
+
     	salesOrderMVO.setSalesProdSz(CommonUtils.nvl(stkMap.get("stkSize")));
     	orderRegisterMapper.insert_SAL0225D(salesOrderMVO);
     }

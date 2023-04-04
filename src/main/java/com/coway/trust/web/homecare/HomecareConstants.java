@@ -100,6 +100,12 @@ public class HomecareConstants {
 		public static final int MAT = 5706;
 		/** Frame */
 		public static final int FRM = 5707;
+		/** Aircon (Indoor) */
+		public static final int ACI = 7237;
+		/** Aircon (Outdoor) */
+		public static final int ACO = 7241;
+		/** Massage Chair */
+		public static final int MC = 7177;
 	}
 
 	/** Homecare Category CD */
@@ -112,6 +118,8 @@ public class HomecareConstants {
 		public static final String ACI = "ACI";
 		/** Aircon (Outdoor) */
 		public static final String ACO = "ACO";
+		/** Massage Chair */
+		public static final String MC = "MC";
 	}
 
 	/** Member Type */

@@ -2946,6 +2946,16 @@ WHERE
          FROM SYS0026M WHERE STK_ID = #{stkId}
     </select>
 
+    <!-- Added by Hui Ding 04/04/2023 for Aircondd and Massage Chair. -->
+    <select id="getCtgryCode" parameterType="int" resultType="egovMap">
+        /* com.coway.trust.biz.sales.order.impl.OrderRegisterMapper.getCtgryCode*/
+        SELECT C.CODE AS STK_CAT_CODE
+                 , STK_SIZE
+         FROM SYS0026M S LEFT JOIN SYS0013M C ON S.STK_CTGRY_ID = C.CODE_ID
+         AND C.CODE_MASTER_ID = 11
+         WHERE STK_ID = #{stkId}
+    </select>
+
     <insert id="insert_SAL0225D" parameterType="salesOrderMVO">
         /* com.coway.trust.biz.sales.order.impl.OrderRegisterMapper.insert_SAL0225D */
 	    INSERT INTO SAL0225D (
