@@ -32,7 +32,7 @@
 	                        , SUM(NVL(A.W4,0)) W4
 	                 FROM SYS0013M B
                      LEFT JOIN ORG0043T A ON A.TYPE = B.CODE_ID AND A.MEM_CODE = #{memCode}  AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
-	                 WHERE  B.CODE_ID NOT IN (6809) AND B.CODE_ID BETWEEN 6604 AND 6608
+	                 WHERE  B.CODE_ID IN (6604,6605,6606,6607,6608,6809)
 	                 GROUP BY A.YEAR, A.MONTH, A.TYPE, B.CODE_NAME, B.CODE_ID
 	                 ORDER BY B.CODE_ID
 	                )
@@ -87,7 +87,7 @@
                                     , CASE WHEN TYPE IN (6608) THEN SUM(ROUND(NVL(B.W4,0),2)) ELSE SUM(NVL(B.W4,0)) END W4
                              FROM SYS0013M A
                              LEFT JOIN ORG0043T B ON B.TYPE = A.CODE_ID AND B.MEM_CODE = #{memCode} AND TO_CHAR(TO_DATE(B.YEAR || B.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
-                             WHERE A.CODE_ID IN (6604,6605,6606,6607,6608)
+                             WHERE A.CODE_ID IN (6604,6605,6606,6607,6608,6809)
                              GROUP BY B.YEAR, B.MONTH, B.TYPE, A.CODE_ID, A.CODE_NAME
                             )
                         )
@@ -893,15 +893,15 @@
 
 
 	 <select id="checkCurrentYearMonth"  parameterType="Map" resultType="egovMap">
-       SELECT
+        SELECT
             PREVIOUSYM3, PREVIOUSYM2, PREVIOUSYM, CURRENTYM, TO_CHAR(TO_DATE(CURRENTYM,'YYYYMM'),'MM') CURRENTM
         FROM
         (
             WITH CNT_CMM55 AS (
-                SELECT COUNT(*) CNT FROM CMM0055M WHERE SYSDATE BETWEEN START_DT AND END_DT
+                SELECT COUNT(*) CNT FROM CMM0055M WHERE TRUNC(SYSDATE) BETWEEN TRUNC(START_DT) AND TRUNC(END_DT)
             ),
             TBL_CMM55 AS (
-                SELECT TO_DATE(YEAR || MONTH,'YYYYMM') DT FROM CMM0055M WHERE SYSDATE BETWEEN START_DT AND END_DT
+                SELECT TO_DATE(YEAR || MONTH,'YYYYMM') DT FROM CMM0055M WHERE TRUNC(SYSDATE) BETWEEN TRUNC(START_DT) AND TRUNC(END_DT)
             )
             SELECT
                  LEVEL SEQ
@@ -910,7 +910,7 @@
             FROM DUAL
             LEFT JOIN CNT_CMM55 TBL1 ON 1=1
             LEFT JOIN TBL_CMM55 TBL2 ON 1=1
-            CONNECT BY LEVEL <![CDATA[ <= ]]>  4
+            CONNECT BY LEVEL <![CDATA[ <= ]]>   4
         )
         PIVOT
         (
