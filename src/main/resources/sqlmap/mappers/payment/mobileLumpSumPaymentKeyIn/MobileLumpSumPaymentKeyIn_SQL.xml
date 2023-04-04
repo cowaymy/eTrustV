@@ -333,7 +333,22 @@
 		EMAIL_2,
 		SIGN_IMG,
 		CRT_DT,
-		CRT_BY
+		CRT_BY,
+		SLIP_NO,
+		UPLOAD_IMG1,
+		UPLOAD_IMG2,
+		UPLOAD_IMG3,
+		UPLOAD_IMG4,
+		CHEQUE_DATE,
+		ISSUE_BANK,
+		CARD_NO,
+		APPROVAL_NO,
+		CRC_NAME,
+		TRANSACTION_DATE,
+		EXPIRY_DATE,
+		CARD_MODE,
+		MERCHANT_BANK,
+		CARD_BRAND
 		)
 		VALUES
 		(
@@ -350,7 +365,22 @@
 		#{email2},
 		#{signData},
 		SYSDATE,
-		#{userId}
+		#{userId},
+		#{slipNo},
+		#{uploadImg1},
+		#{uploadImg2},
+		#{uploadImg3},
+		#{uploadImg4},
+		#{chequeDate},
+		#{issueBank},
+		#{cardNo},
+		#{approvalNo},
+		#{crcName},
+		#{transactionDate},
+		#{expiryDate},
+		#{cardMode},
+		#{merchantBank},
+		#{cardBrand}
 		)
 	</insert>
 
@@ -529,12 +559,9 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		SET
 		PAY_STUS_ID = 104 <!-- 	Processing Stage -->
 		SLIP_NO = #{slipNo},
-		ISSUE_BANK = #{issueBank},
-		CHEQUE_DT = #{chequeDate},
 		UPLOAD_IMG1 = #{uploadImg1},
 		UPLOAD_IMG2 = #{uploadImg2},
 		UPLOAD_IMG3 = #{uploadImg3},
-		UPLOAD_IMG4 = #{uploadImg4},
 		UPD_DT = SYSDATE,
 		UPD_BY = #{userId}
 		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}

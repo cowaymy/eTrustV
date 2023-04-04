@@ -30,6 +30,12 @@ public class MobileLumpSumPaymentApiForm {
     private Double totalOriginalOutstandingAmount;
     private Double totalPayableAmount;
 
+    //upload image
+    private int uploadImg1;
+    private int uploadImg2;
+    private int uploadImg3;
+    private int uploadImg4;
+
     //Search cash matching
     private String fromDate;
     private String toDate;
@@ -37,14 +43,20 @@ public class MobileLumpSumPaymentApiForm {
     //Submit cash matching info
     private String mobPayGroupNo;
     private String slipNo;
-    private int uploadImg1;
-    private int uploadImg2;
-    private int uploadImg3;
 
-    //Submit cheque matching info
+    //Submit cheque info
     private int issueBank;
     private String chequeDate;
-    private String uploadImg4;
+
+    //Submit credit card info
+    private String cardNo;
+    private String approvalNo;
+    private String crcName;
+    private String transactionDate;
+    private String expiryDate;
+    private int cardMode;
+    private int merchantBank;
+    private int cardBrand;
 
     private List<MobileLumpSumPaymentOrderDetailsForm> orderDetailList;
 
@@ -79,17 +91,29 @@ public class MobileLumpSumPaymentApiForm {
 		params.put("fromDate", vo.getFromDate());
 		params.put("toDate", vo.getToDate());
 
-		//update cash matching
-		params.put("mobPayGroupNo", vo.getMobPayGroupNo());
-		params.put("slipNo", vo.getSlipNo());
+		//upload image
 		params.put("uploadImg1", vo.getUploadImg1());
 		params.put("uploadImg2", vo.getUploadImg2());
 		params.put("uploadImg3", vo.getUploadImg3());
+		params.put("uploadImg4", vo.getUploadImg4());
 
-		//update cheque matching
+		//update cash matching
+		params.put("mobPayGroupNo", vo.getMobPayGroupNo());
+		params.put("slipNo", vo.getSlipNo());
+
+		//update cheque
 		params.put("issueBank", vo.getIssueBank());
 		params.put("chequeDate", vo.getChequeDate());
-		params.put("uploadImg4", vo.getUploadImg4());
+
+		//update credit card
+		params.put("cardNo",vo.getCardNo());
+		params.put("approvalNo",vo.getApprovalNo());
+		params.put("crcName",vo.getCrcName());
+		params.put("transactionDate",vo.getTransactionDate());
+		params.put("expiryDate",vo.getExpiryDate());
+		params.put("cardMode",vo.getCardMode());
+		params.put("merchantBank",vo.getMerchantBank());
+		params.put("cardBrand",vo.getCardBrand());
 
 		return params;
 	}
@@ -295,12 +319,76 @@ public class MobileLumpSumPaymentApiForm {
 		this.chequeDate = chequeDate;
 	}
 
-	public String getUploadImg4() {
+	public int getUploadImg4() {
 		return uploadImg4;
 	}
 
-	public void setUploadImg4(String uploadImg4) {
+	public void setUploadImg4(int uploadImg4) {
 		this.uploadImg4 = uploadImg4;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public String getApprovalNo() {
+		return approvalNo;
+	}
+
+	public void setApprovalNo(String approvalNo) {
+		this.approvalNo = approvalNo;
+	}
+
+	public String getCrcName() {
+		return crcName;
+	}
+
+	public void setCrcName(String crcName) {
+		this.crcName = crcName;
+	}
+
+	public String getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public String getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(String expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public int getCardMode() {
+		return cardMode;
+	}
+
+	public void setCardMode(int cardMode) {
+		this.cardMode = cardMode;
+	}
+
+	public int getMerchantBank() {
+		return merchantBank;
+	}
+
+	public void setMerchantBank(int merchantBank) {
+		this.merchantBank = merchantBank;
+	}
+
+	public int getCardBrand() {
+		return cardBrand;
+	}
+
+	public void setCardBrand(int cardBrand) {
+		this.cardBrand = cardBrand;
 	}
 
 }
