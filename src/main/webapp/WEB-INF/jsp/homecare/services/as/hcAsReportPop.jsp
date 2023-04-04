@@ -175,7 +175,7 @@ var branchDs = [];
         whereSql += " AND AE.AS_NO =  '" + asNumber + "' ";
       }
 
-      if($("#cmbctId2 option:selected").index() > 0 ){
+      if($("#cmbctId2 option:selected").index() > -1 ){
           if (ctCode.length > 0) {
             for (var a = 0; a < ctCode.length; a++) {
               if (a == 0) {
@@ -191,7 +191,7 @@ var branchDs = [];
 
       if ($("#cmbbranchId2").val() != '') {
         whereSql += " AND AE.AS_BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '"
-            + dscBranchCode + "' AND TYPE_ID = 5754 AND STUS_ID = 1 ) ";
+            + dscBranchCode + "' AND TYPE_ID in (5754,43) AND STUS_ID = 1 ) ";
       }
 
       // HomeCare add

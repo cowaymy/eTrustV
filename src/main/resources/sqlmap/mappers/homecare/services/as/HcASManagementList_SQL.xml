@@ -53,6 +53,17 @@
                            WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')
 	     AND A.STUS = '1'
 	     AND B.CODE = #{groupCode}
+	     UNION ALL
+         SELECT A.MEM_CODE CODE_ID
+           , A.MEM_CODE || '-' || A.NAME CODE_NAME
+        FROM ORG0001D A
+           , SYS0005M B
+       WHERE A.BRNCH = B.BRNCH_ID
+         AND B.TYPE_ID = (SELECT CODE_ID FROM SYS0013M
+                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'DSC')
+        AND A.IS_AC = '1'
+         AND A.STUS = '1'
+         AND B.CODE = #{groupCode}
 	</select>
 
     <select id="selectCTByDSCSearch" parameterType="Map" resultType="egovMap">
@@ -64,6 +75,17 @@
        WHERE A.BRNCH = B.BRNCH_ID
          AND B.TYPE_ID = (SELECT CODE_ID FROM SYS0013M
                            WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')
+         AND A.STUS = '1'
+         AND B.CODE = #{groupCode}
+         UNION ALL
+         SELECT A.MEM_ID CODE_ID
+           , A.MEM_CODE || '-' || A.NAME CODE_NAME
+        FROM ORG0001D A
+           , SYS0005M B
+       WHERE A.BRNCH = B.BRNCH_ID
+         AND B.TYPE_ID = (SELECT CODE_ID FROM SYS0013M
+                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'DSC')
+         AND A.IS_AC = '1'
          AND A.STUS = '1'
          AND B.CODE = #{groupCode}
     </select>
