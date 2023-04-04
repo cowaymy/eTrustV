@@ -92,6 +92,33 @@ public class MobileLumpSumPaymentKeyInServiceImpl extends EgovAbstractServiceImp
 		  params.put("userId", user.get("userId"));
 		  params.put("mobilePayGrpNo", nextGroupID);
 		  LOGGER.debug("Mobile LS : " + params);
+
+		  if(params.get("uploadImg1") != null && Integer.parseInt(params.get("uploadImg1").toString()) == 0){
+			  params.put("uploadImg1", null);
+		  }
+		  if(params.get("uploadImg2") != null && Integer.parseInt(params.get("uploadImg2").toString()) == 0){
+			  params.put("uploadImg2", null);
+		  }
+		  if(params.get("uploadImg3") != null && Integer.parseInt(params.get("uploadImg3").toString()) == 0){
+			  params.put("uploadImg3", null);
+		  }
+		  if(params.get("uploadImg4") != null && Integer.parseInt(params.get("uploadImg4").toString()) == 0){
+			  params.put("uploadImg4", null);
+		  }
+		  if(params.get("issueBank") != null && Integer.parseInt(params.get("issueBank").toString()) == 0){
+			  params.put("issueBank", null);
+		  }
+		  if(params.get("cardMode") != null && Integer.parseInt(params.get("cardMode").toString()) == 0){
+			  params.put("cardMode", null);
+		  }
+		  if(params.get("merchantBank") != null && Integer.parseInt(params.get("merchantBank").toString()) == 0){
+			  params.put("merchantBank", null);
+		  }
+
+		  if(params.get("cardBrand") != null && Integer.parseInt(params.get("cardBrand").toString()) == 0){
+			  params.put("cardBrand", null);
+		  }
+
 		  mobileLumpSumPaymentKeyInMapper.insertPaymentMasterInfo(params);
 
 		  List<Map<String,Object>> orderDetails = (List<Map<String, Object>>) params.get("orderDetailList");
