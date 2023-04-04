@@ -901,10 +901,19 @@ public class WebInvoiceController {
 		item = (EgovMap) budgetService.availableAmtCp(params);
 
 		Map<String, Object> budgetInfo = new HashMap();
-		budgetInfo.put("totalAvailable", item.get("availableAmt"));
-		budgetInfo.put("totalAvilableAdj", item.get("total"));
-		budgetInfo.put("totalPending", item.get("pendAppvAmt"));
-		budgetInfo.put("totalUtilized", item.get("consumAppvAmt"));
+		if(item != null) {
+
+			budgetInfo.put("totalAvailable", item.get("availableAmt"));
+			budgetInfo.put("totalAvilableAdj", item.get("total"));
+			budgetInfo.put("totalPending", item.get("pendAppvAmt"));
+			budgetInfo.put("totalUtilized", item.get("consumAppvAmt"));
+		}
+		else {
+			budgetInfo.put("totalAvailable", "0");
+			budgetInfo.put("totalAvilableAdj", "0");
+			budgetInfo.put("totalPending", "0");
+			budgetInfo.put("totalUtilized", "0");
+		}
 
 		return ResponseEntity.ok(budgetInfo);
 	}
