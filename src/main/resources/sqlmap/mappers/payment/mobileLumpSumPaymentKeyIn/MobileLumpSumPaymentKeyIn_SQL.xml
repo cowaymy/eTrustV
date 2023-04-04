@@ -372,13 +372,23 @@
 		#{uploadImg2},
 		#{uploadImg3},
 		#{uploadImg4},
-		#{chequeDate},
+		<if test='chequeDate != null and chequeDate != ""'>
+	        TO_DATE(#{chequeDate},'DD/MM/YYYY'),
+	    </if>
+	    <if test='chequeDate == null or chequeDate == ""'>
+	        null,
+	    </if>
 		#{chequeNo},
 		#{issueBank},
 		#{cardNo},
 		#{approvalNo},
 		#{crcName},
-		#{transactionDate},
+		<if test='transactionDate != null and transactionDate != ""'>
+	        TO_DATE(#{transactionDate},'DD/MM/YYYY'),
+	    </if>
+	    <if test='transactionDate == null or transactionDate == ""'>
+	        null,
+	    </if>
 		#{expiryDate},
 		#{cardMode},
 		#{merchantBank},
