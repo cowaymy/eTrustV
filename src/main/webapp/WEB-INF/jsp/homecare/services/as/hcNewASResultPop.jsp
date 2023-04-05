@@ -128,6 +128,102 @@
 
   function fn_errDetail_SetVal() {
     $("#ddlErrorDesc").val(asMalfuncResnId);
+    fn_errDescCheck();
+  }
+
+  function fn_errDescCheck() {
+      //(_method, _url, _jsonObj, _callback, _errcallback, _options, _header)
+      var indicator = $("#ddlErrorDesc").val();
+      var jsonObj = {
+          errCd : $("#ddlErrorCode").val(),
+          errDesc : $("#ddlErrorDesc").val()
+      };
+
+      Common.ajax("GET", "/homecare/services/as/getAsDefectEntry.do", jsonObj,
+              function(result) {
+                  if (result) {
+                      if (result.length > 0) {
+                          fn_asDefectEntryHideSearch(result);
+                      } else {
+                          fn_asDefectEntryNormal(indicator);
+                      }
+                  }
+              });
+
+  }
+
+  function fn_asDefectEntryHideSearch(result) {
+      //DP DEFETC PART
+      $("#def_part").val(result[0].defectCode);
+      $("#def_part_id").val(result[0].defectId);
+      $("#def_part_text").val(result[0].defectDesc);
+      $("#DP").hide();
+      //DD AS PROBLEM SYMPTOM LARGE
+      $("#def_def").val(result[1].defectCode);
+      $("#def_def_id").val(result[1].defectId);
+      $("#def_def_text").val(result[1].defectDesc);
+      $("#HDD").hide();
+      //DC AS PROBLEM SYMPTOM SMALL
+      $("#def_code").val(result[2].defectCode);
+      $("#def_code_id").val(result[2].defectId);
+      $("#def_code_text").val(result[2].defectDesc);
+      $("#HDC").hide();
+      //DT AS SOLUTION LARGE
+      $("#def_type").val(result[3].defectCode);
+      $("#def_type_id").val(result[3].defectId);
+      $("#def_type_text").val(result[3].defectDesc);
+      $("#HDT").hide();
+      //SC AS SOLUTION SMALL
+      $("#solut_code").val(result[4].defectCode);
+      $("#solut_code_id").val(result[4].defectId);
+      $("#solut_code_text").val(result[4].defectDesc);
+      $("#HSC").hide();
+
+      if ($("#ddlErrorCode").val() == "400200" && $("#ddlErrorDesc").val() == "400206") {
+          $("#txtLabourch").prop("checked", true);
+          $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
+          $("#fcm1").show();
+          $("#cmbLabourChargeAmt").val(150);
+          $("#txtLabourCharge").val("150.00");
+          $("#txtTotalCharge").val("150.00");
+      }else{
+          $("#txtLabourch").prop("checked", false);
+          $("#cmbLabourChargeAmt").attr("disabled", true);
+          $("#fcm1").hide();
+          $("#cmbLabourChargeAmt").val("");
+          $("#txtLabourCharge").val("0.00");
+          $("#txtTotalCharge").val("0.00");
+      }
+  }
+
+  function fn_asDefectEntryNormal(indicator) {
+
+          //DP DEFETC PART
+          $("#def_part").val("");
+          $("#def_part_id").val("");
+          $("#def_part_text").val("");
+          $("#DP").show();
+          //DD AS PROBLEM SYMPTOM LARGE
+          $("#def_def").val("");
+          $("#def_def_id").val("");
+          $("#def_def_text").val("");
+          $("#HDD").show();
+          //DC AS PROBLEM SYMPTOM SMALL
+          $("#def_code").val("");
+          $("#def_code_id").val("");
+          $("#def_code_text").val("");
+          $("#HDC").show();
+          //DT AS SOLUTION LARGE
+          $("#def_type").val("");
+          $("#def_type_id").val("");
+          $("#def_type_text").val("");
+          $("#HDT").show();
+          //SC AS SOLUTION SMALL
+          $("#solut_code").val("");
+          $("#solut_code_id").val("");
+          $("#solut_code_text").val("");
+          $("#HSC").show();
+
   }
 
   function fn_getASRulstEditFilterInfo() {
@@ -2550,7 +2646,7 @@ function fnSerialSearchResult(data) {
           <th scope="row"><spring:message code='service.grid.ErrDesc' /><span id='m8' name='m8' class="must" style="display:none">*</span>
           </th>
           <td>
-            <select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p"></select>
+            <select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p" onChange="fn_errDescCheck()"></select>
           </td>
           <th scope="row"><spring:message code='sal.title.warehouse' /></th>
           <td>

@@ -68,4 +68,7 @@ public interface HcASManagementListService {
 	List<EgovMap> selectCTByDSCSearch2(Map<String, Object> params) throws Exception;
 
 	//public int hcChkRcdTms(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> getAsDefectEntry(Map<String, Object> params);
+
 }

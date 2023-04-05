@@ -786,4 +786,18 @@ public class HcASManagementListController {
       return "homecare/services/as/hcPreASManagementList";
     }
 
+
+    @RequestMapping(value = "/getAsDefectEntry.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> getAsDefectEntry(@RequestParam Map<String, Object> params,
+        HttpServletRequest request, ModelMap model) {
+      logger.debug("===========================/getAsDefectEntry.do===============================");
+      logger.debug("== params heres" + params.toString());
+
+      List<EgovMap> getAsDefectEntryList = hcASManagementListService.getAsDefectEntry(params);
+
+      logger.debug("== getAsDefectEntryList : {}" + getAsDefectEntryList);
+      logger.debug("===========================/getAsDefectEntry.do===============================");
+      return ResponseEntity.ok(getAsDefectEntryList);
+    }
+
 }
