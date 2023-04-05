@@ -48,6 +48,7 @@ import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.autodebit.service.M2UploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
+import com.coway.trust.biz.payment.payment.service.vRescueBulkUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultScbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultCimbUploadVO;
 import com.coway.trust.biz.payment.payment.service.ClaimResultHsbcUploadVO;
@@ -3021,4 +3022,95 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	    return ResponseEntity.ok(resultList);
 	  }
 
+	  @RequestMapping(value = "/initVRescueBulkUpload.do")
+	  public String initVRescueBulkUpload(@RequestParam Map<String, Object> params, ModelMap model) {
+	    return "payment/autodebit/vRescueBulkUploadList";
+	  }
+
+	  @RequestMapping(value = "/selectVRescueBulkList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectVRescueBulkList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	      LOGGER.debug("params =====================================>>  " + params);
+
+	      List<EgovMap> list = claimService.selectVRescueBulkList(params);
+
+	      LOGGER.debug("list =====================================>>  " + list.toString());
+	      return ResponseEntity.ok(list);
+	  }
+
+	  @RequestMapping(value = "/selectVRescueBulkDetails.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectVRescueBulkDetails(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	      LOGGER.debug("params =====================================>>  " + params);
+
+	      List<EgovMap> list = claimService.selectVRescueBulkDetails(params);
+
+	      LOGGER.debug("list =====================================>>  " + list.toString());
+	      return ResponseEntity.ok(list);
+	  }
+
+	  @RequestMapping(value = "/csvVRescueBulkUpload", method = RequestMethod.POST)
+	  public ResponseEntity readFile(MultipartHttpServletRequest request,SessionVO sessionVO) throws IOException, InvalidFormatException {
+	       ReturnMessage message = new ReturnMessage();
+	      Map<String, MultipartFile> fileMap = request.getFileMap();
+	      MultipartFile multipartFile = fileMap.get("csvFile");
+	      List<vRescueBulkUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, true, vRescueBulkUploadVO::create);
+
+	      List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
+	      for (vRescueBulkUploadVO vo : vos) {
+
+	          HashMap<String, Object> hm = new HashMap<String, Object>();
+
+
+	          hm.put("ordNo", vo.getOrdNo().trim());
+	          hm.put("remark", vo.getRemark().trim());
+	          hm.put("crtUserId", sessionVO.getUserId());
+	          hm.put("updUserId", sessionVO.getUserId());
+
+	          detailList.add(hm);
+	      }
+
+	      Map<String, Object> master = new HashMap<String, Object>();
+
+	      master.put("crtUserId", sessionVO.getUserId());
+	      master.put("updUserId", sessionVO.getUserId());
+	      master.put("totItem", vos.size());
+
+	      int result = claimService.saveCsvVRescueBulkUpload(master, detailList);
+	      if(result > 0){
+
+	          message.setMessage("vRescue Bulk Upload File successfully uploaded.<br />Batch ID : "+result);
+	          message.setCode(AppConstants.SUCCESS);
+	      }else{
+	          message.setMessage("Failed to upload vRescue Bulk Upload File. Please try again later.");
+	          message.setCode(AppConstants.FAIL);
+	      }
+
+
+	      return ResponseEntity.ok(message);
+	  }
+
+
+	  @RequestMapping(value = "/saveVRescueBulkConfirm.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> saveVRescueBulkConfirm(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+
+		  params.put("userId", sessionVO.getUserId());
+	      LOGGER.debug("params =====================================>>  " + params);
+		  int result = claimService.saveVRescueBulkConfirm(params);
+
+		  ReturnMessage message = new ReturnMessage();
+	      if(result == 1){
+
+				message.setCode(AppConstants.SUCCESS);
+				message.setData("");
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	      }
+
+	      else{
+				message.setCode(AppConstants.FAIL);
+				message.setData("");
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	      }
+
+	      return ResponseEntity.ok(message);
+
+		}
 }

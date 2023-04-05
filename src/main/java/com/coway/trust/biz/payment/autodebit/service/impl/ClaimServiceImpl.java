@@ -640,5 +640,72 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
         return claimMapper.orderListMonthViewPop(params);
       }
 
+      @Override
+      public List<EgovMap> selectVRescueBulkList(Map<String, Object> params) {
+          // TODO Auto-generated method stub
+          return claimMapper.selectVRescueBulkList(params);
+      }
+
+      @Override
+      public List<EgovMap> selectVRescueBulkDetails(Map<String, Object> params) {
+          // TODO Auto-generated method stub
+          return claimMapper.selectVRescueBulkDetails(params);
+      }
+
+      @Override
+      public int saveCsvVRescueBulkUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
+          // TODO Auto-generated method stub
+          int masterSeq = claimMapper.selectNextBatchId();
+          master.put("batchId", masterSeq);
+          int mResult = claimMapper.insertVRescueBulkMaster(master); // INSERT INTO SAL0347D
+
+          int size = 1000;
+          int page = detailList.size() / size;
+          int start;
+          int end;
+
+          Map<String, Object> vRescuelist = new HashMap<>();
+          vRescuelist.put("batchId", masterSeq);
+          for (int i = 0; i <= page; i++) {
+              start = i * size;
+              end = size;
+
+              if(i == page){
+                  end = detailList.size();
+              }
+
+              vRescuelist.put("list",
+                  detailList.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+              claimMapper.insertVRescueBulkDetail(vRescuelist); // INSERT INTO SAL0348D
+          }
+
+          return masterSeq;
+      }
+
+    @Override
+  	public int  saveVRescueBulkConfirm(Map<String, Object> params) {
+
+  		List<EgovMap> rentPayIdList = claimMapper.selectRentPayIdByBchId(params);
+
+  		int bvr=0;
+    	if (rentPayIdList.size() > 0) {
+  			for (int i = 0; i < rentPayIdList.size(); i++) {
+  				Map<String, Object> updateMap = (Map<String, Object>) rentPayIdList.get(i);
+
+  				updateMap.put("userId", params.get("userId"));
+  				 claimMapper.saveVRescueUpdate(updateMap) ;
+  			}
+
+  			claimMapper.updateVRescueBulkMByBchId(params);
+  			bvr = 1;
+  		}
+
+    	else {
+    		bvr = 0;
+    	}
+
+  		return bvr ;
+  	}
+
 
 }

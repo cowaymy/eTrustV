@@ -1400,4 +1400,127 @@
 	    AND MONTH_TYPE IN ('M1/M2','M2')
 	    ORDER BY 1 DESC
 	  </select>
+
+	<select id="selectVRescueBulkList" parameterType="Map" resultType="egovMap">
+	SELECT M.BATCH_ID, M.BATCH_NO, STS.CODE AS STUS, M.TOT_ITEM,
+	M.CRT_DT, CRTUSER.USER_NAME AS CREATOR, UPDUSER.USER_NAME AS UPD_USER_NAME,
+	NVL(TO_CHAR(M.CRT_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS CRT_DT2,
+	NVL(TO_CHAR(M.UPD_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT
+	FROM SAL0347D M
+	JOIN SYS0038M STS ON STS.STUS_CODE_ID = M.BATCH_STUS
+	JOIN SYS0047M CRTUSER ON CRTUSER.USER_ID = M.CRT_USER_ID
+	JOIN SYS0047M UPDUSER ON UPDUSER.USER_ID = M.UPD_USER_ID
+	WHERE 1 = 1
+	<if test="bchId!= null and bchId != ''">
+    AND M.BATCH_ID = #{bchId}
+    </if>
+	<if test="batchNo!= null and batchNo != ''">
+	AND M.BATCH_NO = #{batchNo}
+	</if>
+	<if test="crtUserName != null and crtUserName != ''">
+	AND US.USER_NAME LIKE '%'||#{creator}||'%'
+	</if>
+    <if test=" '' != createDt1 and null != createDt1">
+    AND  M.CRT_DT >= TO_DATE(#{createDt1}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+    <if test=" '' != createDt2 and null != createDt2">
+     <![CDATA[ AND  M.CRT_DT <= TO_DATE(#{createDt2} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') ]]>
+    </if>
+    ORDER BY M.BATCH_ID DESC
+
+	</select>
+
+	<select id="selectVRescueBulkDetails" parameterType="Map" resultType="egovMap">
+	SELECT A.BATCH_ID, B.BATCH_NO, A.ORD_NO, A.REMARK, C.CODE AS STATUS, D.USER_NAME, A.CRT_DT
+	FROM SAL0348D A
+	JOIN SAL0347D B ON B.BATCH_ID = A.BATCH_ID
+	JOIN SYS0038M C ON C.STUS_CODE_ID = B.BATCH_STUS
+	JOIN SYS0047M D ON D.USER_ID = A.CRT_USER_ID
+	WHERE A.BATCH_ID = #{batchId}
+	</select>
+
+	<select id="selectNextBatchId" resultType="int">
+    SELECT NVL(MAX(BATCH_ID) + 1, 1) AS BATCH_ID FROM SAL0347D
+    </select>
+
+    <insert id="insertVRescueBulkMaster" parameterType="Map">
+      INSERT INTO SAL0347D (
+      BATCH_ID
+      ,BATCH_NO
+      ,BATCH_STUS
+      ,TOT_ITEM
+      ,CRT_USER_ID
+      ,CRT_DT
+      ,UPD_USER_ID
+      ,UPD_DT
+      ) VALUES (
+      #{batchId}
+      ,'BVR'||LPAD(#{batchId}, 7, '0')
+      ,1
+      ,#{totItem}
+      ,#{crtUserId}
+      ,SYSDATE
+      ,#{crtUserId}
+      ,SYSDATE
+      )
+     </insert>
+
+     <insert id="insertVRescueBulkDetail" parameterType="Map">
+        INSERT INTO SAL0348D(
+        BATCH_ID
+        ,ORD_NO
+        ,REMARK
+        ,CRT_USER_ID
+        ,CRT_DT
+        ,UPD_USER_ID
+        ,UPD_DT
+        )
+
+SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+
+            #{batchId} batchId
+            ,#{item.ordNo} ordNo
+            ,#{item.remark} remark
+            ,#{item.crtUserId} crtUserId
+            ,SYSDATE crtDt
+            ,#{item.updUserId} updUserId
+            ,SYSDATE updDt
+            FROM DUAL
+        </foreach>
+)
+    </insert>
+
+    <select id="selectRentPayIdByBchId" parameterType="Map" resultType="egovMap">
+    SELECT C.RENT_PAY_ID FROM SAL0348D A
+    JOIN SAL0001D B ON B.SALES_ORD_NO = A.ORD_NO
+    JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE C.DEDUCT_ACC_ID IS NOT NULL
+    AND C.DEDUCT_ACC_ID <![CDATA[ <> ]]> 0
+    AND A.BATCH_ID = #{batchId}
+    </select>
+
+    <!-- Update detail batch list -->
+    <update id="updateVRescueBulkDByBchId" parameterType="Map">
+    UPDATE
+    SAL0348D SET STATUS = 4
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID =
+    #{userId}
+    WHERE BATCH_ID = #{batchId}
+  </update>
+
+  <!-- Update master batch -->
+      <update id="updateVRescueBulkMByBchId" parameterType="Map">
+    UPDATE
+    SAL0347D SET BATCH_STUS = 4
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID =
+    #{userId}
+    WHERE BATCH_ID = #{batchId}
+  </update>
+
 </mapper>

@@ -287,4 +287,21 @@ public interface ClaimMapper {
 
   List<EgovMap> orderListMonthViewPop(Map<String, Object> params);
 
+  int selectNextBatchId();
+  int insertVRescueBulkDetail(Map<String, Object> params);
+  int insertVRescueBulkMaster(Map<String, Object> params);
+
+  List<EgovMap> selectVRescueBulkList(Map<String, Object> params);
+  List<EgovMap> selectVRescueBulkDetails(Map<String, Object> params);
+
+  /**
+   * Auto Debit - vRescue Bulk Upload De Flag
+   *
+   * @param params
+   * @return
+   */
+  void updateVRescueBulkMByBchId(Map<String, Object> params);
+  void updateVRescueBulkDByBchId(Map<String, Object> params);
+  List<EgovMap> selectRentPayIdByBchId(Map<String, Object> params);
+
 }

@@ -259,4 +259,11 @@ public interface ClaimService {
 
   List<EgovMap> orderListMonthViewPop(Map<String, Object> params);
 
+  int saveCsvVRescueBulkUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
+
+  List<EgovMap> selectVRescueBulkList(Map<String, Object> param);
+  List<EgovMap> selectVRescueBulkDetails(Map<String, Object> param);
+
+  int  saveVRescueBulkConfirm(Map<String, Object> params);
+
 }
