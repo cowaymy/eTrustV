@@ -3,6 +3,9 @@ package com.coway.trust.biz.sales.order.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -233,4 +236,17 @@ public interface OrderCancelMapper {
 
 List<EgovMap> productRetReason(Map<String, Object> params);
 List<EgovMap> rsoStatus(Map<String, Object> params);
+
+  int crtSeqSAL0346D();
+
+  void insertDeductSAL0236D(Map<String, Object> params);
+
+  int crtSeqSAL0236D();
+
+  void updatePaymentChannelvRescue(Map<String, Object> params);
+
+  void insertCancelSAL0346D(Map<String, Object> saveParam);
+
+  void updateECashInfo(SalesOrderMVO salesOrderMVO);
+
 }

@@ -447,7 +447,8 @@
 
     // 저장
     function fn_procSaveCancel() {
-        Common.ajax("GET", "/homecare/sales/order/hcSaveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
+    	console.log($("#addCallForm").serializeJSON());
+         Common.ajax("GET", "/homecare/sales/order/hcSaveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
         	Common.alert(result.message);
 
             if(result.code == '00') {   // success
@@ -476,6 +477,22 @@
     function fn_success(){
         fn_orderCancelListAjax();
         $("#_close").click();
+    }
+
+    function fn_changeDeactPaymode(x){
+        console.log(x);
+        if(x == 1){
+            $('#deactPayModeYes').prop("checked",true);
+            $('#deactPayModeNo').removeAttr("checked");
+            $("#deactPayMode").val("");
+            $("#deactPayMode").val(x);
+        }
+        else {
+            $('#deactPayModeNo').prop("checked",true);
+            $('#deactPayModeYes').removeAttr("checked");
+            $("#deactPayMode").val("");
+            $("#deactPayMode").val(x);
+        }
     }
 
     //그리드 속성 설정
@@ -813,6 +830,11 @@
 		    <!--  add by hgham  -->
 		    <input id="ctId" name="ctId" type="hidden" >
 
+		      <!--  added by Adib -->
+  <input type="hidden" name="pgmPath" value="sales/order/hcCancelNewLogResultPop"/>
+  <input id="rentPayMode" name="rentPayMode" type="hidden" value="${orderDetail.rentPaySetInf.payModeId}">
+  <input id="rentPayId" name="rentPayId" type="hidden" value="${orderDetail.rentPaySetInf.rentPayId}"/>
+
 		    <table class="type1"><!-- table start -->
 		        <caption>table</caption>
 			    <colgroup>
@@ -870,6 +892,21 @@
 		                <td>
 		                    <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"  readonly="readonly" />
 		                </td>
+		            </tr>
+		            <tr>
+		            <th scope="row">Deactivate Paymode</th>
+		            <td>
+		            <div style="display:inline-block;width:100%;">
+		            <div style="display:inline-block;">
+		            <label for="deactPayModeYes">YES</label>
+		            <input id="deactPayModeYes" type="checkbox" value="1" name="deactPayMode" onChange="fn_changeDeactPaymode(this.value)"/>
+		            </div>
+		            <div style="display:inline-block;">
+		            <label for="deactPayModeNo">NO</label>
+		            <input  id="deactPayModeNo" type="checkbox" value="0" name="deactPayMode" onChange="fn_changeDeactPaymode(this.value)" checked/>
+		            </div>
+		            </div>
+		            </td>
 		            </tr>
 		            <tr>
 		                <th scope="row"><spring:message code="sal.text.remark" /><span id='m9' name='m9' class="must">*</span></th>

@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.order.impl;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.order.OrderCancelService;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -156,6 +158,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
     logger.info("####################### appTypeId ######## " + appTypeId);
     int reqStageId = CommonUtils.intNvl(params.get("reqStageId")); // before , after install
     String reqStageIdValue = ""; // RET, CAN
+    int deactPayMode = CommonUtils.intNvl(params.get("deactPayMode"));
 
     /* java.lang.ClassCastException - modify KR-SH
      if ((String) params.get("reqStageId") != null && !"".equals((String) params.get("reqStageId"))) {
@@ -395,6 +398,44 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       saveParam.put("userId", params.get("userId"));
 
       orderInvestMapper.insertSalesOrdLog(saveParam);
+    }
+
+    // Deactivate paymode
+    if (deactPayMode == 1){
+    	 logger.info("####################### Deactivate Paymode Start!! #####################");
+        int getSeqId = orderCancelMapper.crtSeqSAL0346D();
+        saveParam.put("id", getSeqId);
+        saveParam.put("salesOrderId", params.get("paramOrdId"));
+        saveParam.put("pgmPath", params.get("pgmPath"));
+        saveParam.put("userId", params.get("userId"));
+        orderCancelMapper.insertCancelSAL0346D(saveParam);
+
+        int crtSeqSAL0236D = orderCancelMapper.crtSeqSAL0236D();
+
+        int rentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
+        params.put("deductId", crtSeqSAL0236D);
+        params.put("rentPayId", params.get("rentPayId"));
+        params.put("modeId", 130);
+        params.put("userId", params.get("userId"));
+
+        if (rentPayMode == 131 || rentPayMode == 132) {
+        orderCancelMapper.insertDeductSAL0236D(params);
+        orderCancelMapper.updatePaymentChannelvRescue(params);
+        logger.debug("params : {}", params);
+
+        SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
+
+        salesOrderMVO.setSalesOrdId(Long.parseLong((String) saveParam.get("salesOrdId")));
+        salesOrderMVO.setUpdUserId((int) params.get("userId"));
+        salesOrderMVO.setEcash(rentPayMode == 131 ? 1 : 0);
+
+        orderCancelMapper.updateECashInfo(salesOrderMVO);
+        logger.info("####################### Deactivate Paymode Start!! #####################");
+        }
+
+    } else {
+    	logger.info("####################### Deactivate Paymode Issue with param: " + deactPayMode + "#######");
+    	// Do nothing as This would not deactivate the paymode
     }
 
   }

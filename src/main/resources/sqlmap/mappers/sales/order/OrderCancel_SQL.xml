@@ -1640,4 +1640,105 @@
     AND ROWNUM = 1
   </select>
 
+   <select id="crtSeqSAL0346D"  resultType="int">
+    SELECT SAL0346D_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+   <insert id="insertCancelSAL0346D" parameterType="Map">
+    INSERT INTO SAL0346D ( ID,
+                           ORD_ID,
+                           PGM_PATH,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           UPD_USER_ID,
+                           UPD_DT
+                         ) VALUES ( SAL0346D_ID_SEQ.NEXTVAL,
+                                    #{salesOrderId},
+                                    #{pgmPath},
+                                    #{userId},
+                                    SYSDATE,
+                                    #{userId},
+                                    SYSDATE
+                         )
+  </insert>
+
+
+    <insert id="insertDeductSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE RENT_PAY_ID = #{rentPayId}
+      </insert>
+
+    <select id="crtSeqSAL0236D" resultType="Integer">
+        SELECT SAL0236D_DEDUCTION_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+    <update id="updatePaymentChannelvRescue" parameterType="Map">
+        UPDATE SAL0074D
+           SET MODE_ID  = #{modeId},
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null,
+                   UPD_USER_ID     = #{userId},
+                   UPD_DT          = SYSDATE,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
+         WHERE RENT_PAY_ID     = #{rentPayId}
+    </update>
+
+    <update id="updatePaymentChannel" parameterType="rentPaySetVO">
+        UPDATE SAL0074D
+           SET MODE_ID         = #{modeId}
+             , CUST_CRC_ID     = #{custCrcId}
+             , BANK_ID         = #{bankId}
+             , CUST_ACC_ID     = #{custAccId}
+             , DD_APPLY_DT     = TO_DATE(#{ddApplyDt}, 'DD/MM/YYYY')
+             , DD_SUBMIT_DT    = TO_DATE(#{ddSubmitDt}, 'DD/MM/YYYY')
+             , DD_START_DT     = TO_DATE(#{ddStartDt}, 'DD/MM/YYYY')
+             , DD_REJCT_DT     = TO_DATE(#{ddRejctDt}, 'DD/MM/YYYY')
+             , UPD_USER_ID     = #{updUserId}
+             , UPD_DT          = SYSDATE
+             , IS_3RD_PARTY    = #{is3rdParty}
+             , CUST_ID         = #{custId}
+             , NRIC_OLD        = #{nricOld}
+             , FAIL_RESN_ID    = #{failResnId}
+             , ISSU_NRIC       = #{issuNric}
+             , LAST_APPLY_USER = #{lastApplyUser}
+             , PAY_TRM         = #{payTrm}
+             , GRACE_PERIOD = 0
+         WHERE RENT_PAY_ID     = #{rentPayId}
+    </update>
+
+    <update id="updateECashInfo" parameterType="salesOrderMVO">
+        UPDATE SAL0001D
+           SET UPD_DT       = SYSDATE
+             , UPD_USER_ID  = #{updUserId}
+             , ECASH        = #{ecash}
+         WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+
 </mapper>
