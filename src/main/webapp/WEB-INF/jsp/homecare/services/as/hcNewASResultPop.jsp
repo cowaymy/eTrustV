@@ -153,30 +153,32 @@
   }
 
   function fn_asDefectEntryHideSearch(result) {
+
+	  console.log(result);
       //DP DEFETC PART
       $("#def_part").val(result[0].defectCode);
       $("#def_part_id").val(result[0].defectId);
       $("#def_part_text").val(result[0].defectDesc);
       $("#DP").hide();
       //DD AS PROBLEM SYMPTOM LARGE
-      $("#def_def").val(result[1].defectCode);
-      $("#def_def_id").val(result[1].defectId);
-      $("#def_def_text").val(result[1].defectDesc);
+      $("#def_def").val(result[3].defectCode);
+      $("#def_def_id").val(result[3].defectId);
+      $("#def_def_text").val(result[3].defectDesc);
       $("#HDD").hide();
       //DC AS PROBLEM SYMPTOM SMALL
-      $("#def_code").val(result[2].defectCode);
-      $("#def_code_id").val(result[2].defectId);
-      $("#def_code_text").val(result[2].defectDesc);
+      $("#def_code").val(result[4].defectCode);
+      $("#def_code_id").val(result[4].defectId);
+      $("#def_code_text").val(result[4].defectDesc);
       $("#HDC").hide();
       //DT AS SOLUTION LARGE
-      $("#def_type").val(result[3].defectCode);
-      $("#def_type_id").val(result[3].defectId);
-      $("#def_type_text").val(result[3].defectDesc);
+      $("#def_type").val(result[2].defectCode);
+      $("#def_type_id").val(result[2].defectId);
+      $("#def_type_text").val(result[2].defectDesc);
       $("#HDT").hide();
       //SC AS SOLUTION SMALL
-      $("#solut_code").val(result[4].defectCode);
-      $("#solut_code_id").val(result[4].defectId);
-      $("#solut_code_text").val(result[4].defectDesc);
+      $("#solut_code").val(result[1].defectCode);
+      $("#solut_code_id").val(result[1].defectId);
+      $("#solut_code_text").val(result[1].defectDesc);
       $("#HSC").hide();
 
       if ($("#ddlErrorCode").val() == "400200" && $("#ddlErrorDesc").val() == "400206") {
