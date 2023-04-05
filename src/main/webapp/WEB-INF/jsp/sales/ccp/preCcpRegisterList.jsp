@@ -15,7 +15,6 @@
 	.my-green-style {
 	    background:#86E57F;
 	    color:#22741C;
-	    font-weight:bold;
 	}
 </style>
 <script type="text/javaScript">
@@ -179,7 +178,7 @@
 	          }
 	          else{
 	        	  displayOrder(2);
-	        	  Common.alert("1. Record Not Found <br/>"+"2. Pre-Ccp For New Customers Is Still Under Construction");
+	        	  Common.alert("1. Record Not Found <br/>"+"2. Please proceed to 'Create Pre-CCP Entry'");
 	          }
 	      });
 	  }
@@ -215,6 +214,14 @@
       location.reload();
   }
 
+  function fn_preCcpRegister(){
+      Common.popupDiv("/sales/ccp/preCcpSubmissionRegister.do", {}, null, true);
+  }
+
+  function fn_preCcpEditRemark(){
+      Common.popupDiv("/sales/ccp/preCcpEditRemark.do", {}, null, true);
+  }
+
 </script>
 
 <section id="content">
@@ -224,11 +231,13 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p><h2>Pre-CCP</h2>
 
 		<ul class="right_btns">
-<!--
+
+<!-- 			    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_preCcpRegister()">Create Pre-CCP Entry</a></p></li> -->
+
 			    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-			        <li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_preCcpRegister()">Create Pre-CCP Entry</a></p></li>
+			          <li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_preCcpEditRemark()">Edit Remark</a></p></li>
 			    </c:if>
--->
+
 			   <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 			        <li><p class="btn_blue"><a href="javascript:void(0);" onClick="checkPreCcpResult()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			   </c:if>

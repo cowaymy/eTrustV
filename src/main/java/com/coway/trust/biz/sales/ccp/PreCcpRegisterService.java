@@ -14,10 +14,21 @@ public interface PreCcpRegisterService {
 
 	EgovMap getExistCustomer(Map<String, Object> params);
 
-//	List<EgovMap> selectPreCcpStatus();
-
-//	List<EgovMap> searchPreCcpRegisterList(Map<String, Object> params);
-
 	List<EgovMap> searchOrderSummaryList(Map<String, Object> params);
 
+	Map<String, Object> insertNewCustomerInfo(Map<String, Object> params);
+
+	void updateCcrisScre(Map<String, Object> params);
+
+	void updateCcrisId(Map<String, Object> params);
+
+	Map<String, Object> insertNewCustomerDetails(Map<String, Object> params);
+
+	EgovMap getPreccpResult(Map<String, Object> params);
+
+	List<EgovMap> getPreCcpRemark(Map<String, Object> params);
+
+	int editRemarkRequest(Map<String, Object> params) throws Exception;
+
+	int insertRemarkRequest(Map<String, Object> params) ;
 }

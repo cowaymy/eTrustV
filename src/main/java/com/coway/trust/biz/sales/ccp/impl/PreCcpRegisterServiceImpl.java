@@ -59,19 +59,52 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 		return preCcpRegisterMapper.getExistCustomer(params);
 	}
 
-//	@Override
-//	public List<EgovMap> selectPreCcpStatus() {
-//	    return preCcpRegisterMapper.selectPreCcpStatus();
-//	}
-//
-//    @Override
-//	public List<EgovMap> searchPreCcpRegisterList(Map<String, Object> params) {
-//	    return preCcpRegisterMapper.searchPreCcpRegisterList(params);
-//	}
-
     @Override
 	public List<EgovMap> searchOrderSummaryList(Map<String, Object> params) {
 	    return preCcpRegisterMapper.searchOrderSummaryList(params);
 	}
 
+    @Override
+    public Map<String, Object> insertNewCustomerInfo(Map<String, Object> params) {
+		return preCcpRegisterMapper.insertNewCustomerInfo(params);
+    }
+
+    @Override
+    public void updateCcrisScre(Map<String, Object> params) {
+		 preCcpRegisterMapper.updateCcrisScre(params);
+    }
+
+    @Override
+    public void updateCcrisId(Map<String, Object> params) {
+		 preCcpRegisterMapper.updateCcrisId(params);
+    }
+
+    @Override
+    public Map<String, Object> insertNewCustomerDetails(Map<String, Object> params) {
+		return preCcpRegisterMapper.insertNewCustomerDetails(params);
+    }
+
+	@Override
+	public EgovMap getPreccpResult(Map<String, Object> params) {
+		return preCcpRegisterMapper.getPreccpResult(params);
+	}
+
+	@Override
+	public List<EgovMap> getPreCcpRemark(Map<String, Object> params) {
+	    return preCcpRegisterMapper.getPreCcpRemark(params);
+	}
+
+	@Override
+	@Transactional
+	public int editRemarkRequest(Map<String, Object> params) throws Exception {
+	    int result= preCcpRegisterMapper.editRemarkRequest(params);
+	    return result;
+	}
+
+	@Override
+	@Transactional
+	public int insertRemarkRequest(Map<String, Object> params)  {
+	    int result= preCcpRegisterMapper.insertRemarkRequest(params);
+	    return result;
+	}
 }

@@ -2,18 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.ccpApi.impl.PreCcpRegisterApiMapper">
 
+<resultMap type="egovMap" id="getPreccpResultMap">
+    <result property="APPV_REQ" column="APPV_REQ" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+
 <select id="checkPreCcpResult" parameterType="Map" resultType="egovMap">
         SELECT
                 A.CUST_ID
              ,  NVL(B.CHS_STUS,'-') CHS_STATUS
              ,  CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-' ELSE B.CHS_RSN END CHS_RSN
              ,  A.NAME  CUST_NAME
-             ,  C.APPV_REQ
+             ,  CASE WHEN B.CHS_STUS = 'GREEN' THEN D.APPV_REQ ELSE C.APPV_REQ END APPV_REQ
              , TRUNC(MONTHS_BETWEEN(SYSDATE, A.CRT_DT)) AS CUST_MONTH
              , D.USER_ID
         FROM SAL0029D A
         LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
-        LEFT JOIN SAL0344D C ON B.CHS_RSN = C.CHS_RSN
+        LEFT JOIN SAL0344D C ON B.CHS_STUS = C.CHS_STUS AND B.CHS_RSN = C.CHS_RSN
+        LEFT JOIN SAL0344D D ON B.CHS_STUS = D.CHS_STUS AND D.CHS_STUS = 'GREEN'
         LEFT JOIN SYS0047M D ON D.USER_NAME = #{regId}
         WHERE 1=1
         <if test="selectType != null and selectType != '' "> -->
