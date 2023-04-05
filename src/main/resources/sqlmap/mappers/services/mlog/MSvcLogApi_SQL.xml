@@ -76,7 +76,9 @@
           ,A.NEW_HANDPHONE_TEL,
           A.NEW_HOME_TEL,
           A.NEW_OFFICE_TEL,
-          A.NEW_EMAIL
+          A.NEW_EMAIL,
+          A.LATITUDE,
+          A.LONGITUDE
           <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
         FROM ( SELECT appointment_Date,
                   service_No,
@@ -145,7 +147,9 @@
                   ,NEW_HANDPHONE_TEL,
                   NEW_HOME_TEL,
                   NEW_OFFICE_TEL,
-                  NEW_EMAIL
+                  NEW_EMAIL,
+                  LATITUDE,
+                  LONGITUDE
                   <!-- /*   20221108 CELESTE [E] Edit Customer Contact Info */ -->
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
@@ -224,7 +228,9 @@
                                     ,CUST.NEW_HP_NO AS NEW_HANDPHONE_TEL,
                                     CUST.NEW_HOME_NO AS NEW_HOME_TEL,
                                     CUST.NEW_OFFICE_NO AS NEW_OFFICE_TEL,
-                                    CUST.NEW_EMAIL AS NEW_EMAIL
+                                    CUST.NEW_EMAIL AS NEW_EMAIL,
+                                    Q.LATITUDE,
+                                    Q.LONGITUDE
                                    <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
                   FROM (SELECT
                                  A.NO ,
@@ -445,6 +451,8 @@
           , TO_CHAR(VOUCHER_REDEMPTION) AS VOUCHER_REDEMPTION
           , TO_CHAR(IS_VOUCHER) AS IS_VOUCHER
           , TO_CHAR(PRODCAT) AS prodcat
+          , LATITUDE AS LATITUDE
+          , LONGITUDE AS LONGITUDE
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1021,6 +1029,8 @@
                    NVL(SYS0064M.POSTCODE, '') postcode,
                    NVL(SYS0064M.STATE, '') service_State,
                    (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
+                   NVL (SAL0023D.latitude, '') AS latitude,
+                   NVL (SAL0023D.longitude, '') AS longitude,
                    NVL (SYS0026M.STK_DESC, '') AS product_Name,
                    NVL (SYS0026M.STK_CODE, '') AS product_Code,
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
@@ -1232,6 +1242,8 @@
          , TO_CHAR(CHK_SMS) AS chk_sms
          , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
          , TO_CHAR(CHECK_SEND) AS check_send
+         , LATITUDE AS LATITUDE
+         , LONGITUDE AS LONGITUDE
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1313,6 +1325,8 @@
                      NVL (P.POSTCODE, '') postcode,
                      NVL (P.STATE, '') service_State,
                      ( O.ADDR_DTL || ' ' || O.STREET || ' ' || P.AREA || ' ' || P.POSTCODE || ' ' || P.CITY || ' ' || P.STATE || ' ' || P.COUNTRY) install_Address,
+                     NVL (O.latitude, '') AS latitude,
+                     NVL (O.longitude, '') AS longitude,
                      NVL (TO_CHAR (N.TEL_M1), '') AS handphone_Tel,
                      NVL (TO_CHAR (N.TEL_R), '') AS home_Tel,
                      NVL (TO_CHAR (N.TEL_O), '') AS office_Tel,
@@ -1466,6 +1480,8 @@
          , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
          , TO_CHAR(SEL_SERIAL_NO) AS sel_Serial_No
          , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
+         , LATITUDE AS LATITUDE
+         , LONGITUDE AS LONGITUDE
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
@@ -1752,7 +1768,9 @@
            TO_CHAR(PSI) AS psi,
            TO_CHAR(LPM) AS lpm,
            TO_CHAR(PRODCAT) AS prodcat,
-           TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON
+           TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON,
+           LATITUDE AS LATITUDE,
+           LONGITUDE AS LONGITUDE
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -6029,5 +6047,24 @@ SELECT MST.*
       FROM REP0085S
       WHERE MEM_CODE =  #{userId}
   </select>
+
+
+  <select id="getCustAddDtlLst" parameterType="Map" resultType="egovMap">
+       SELECT A.CUST_ID,
+                  B.ADD_ID
+       FROM SAL0001D A
+       LEFT JOIN SAL0045D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+       WHERE A.SALES_ORD_NO = #{salesOrderNo}
+  </select>
+
+  <update id="updateGps" parameterType="Map">
+        UPDATE SAL0023D A
+        SET LATITUDE     = #{currentGpsValLat},
+            LONGITUDE    = #{currentGpsValLong},
+            UPD_DT       = SYSDATE,
+            UPD_USER_ID  = #{crtUserId}
+        WHERE CUST_ADD_ID =  #{custAddId}
+  </update>
+
 
 </mapper>

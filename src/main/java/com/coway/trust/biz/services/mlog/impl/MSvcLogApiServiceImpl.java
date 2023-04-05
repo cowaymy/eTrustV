@@ -31,6 +31,7 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.google.gson.JsonObject;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -48,6 +49,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 22/04/2020    ONGHC      1.0.6       - Create getRelateOrdLst
  * 23/04/2019    ONGHC      1.0.7       - Add function getOrdDetail
  * 29/04/2020    ONGHC      1.0.8       - Add function insertSVC0115D
+ * 03/04/2023    FANNIE      1.0.9       - Add function updateGPS
  *********************************************************************************************/
 
 @Service("MSvcLogApiService")
@@ -1071,4 +1073,43 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
     logger.debug("Trobleshooting 0099");
   }*/
+
+  @Override
+  public JsonObject updateGPS(Map<String, Object> params) {
+    JsonObject rtnUpdateGpsObj = new JsonObject();
+    JsonObject jsonReturn = new JsonObject();
+
+    logger.debug("##### updateGps params values: {} #####", params.toString());
+
+    Map<String,Object> updateGpsMap = new HashMap<String,Object>();
+    Map<String,Object> custAddDtlLst = new HashMap<String,Object>();
+
+    String oRtnCode = "";
+    String oRtnMsg = "";
+    try {
+        custAddDtlLst = MSvcLogApiMapper.getCustAddDtlLst(params);
+
+        if((params.get("currentGpsValLat") != "" || params.get("currentGpsValLat") != null) && (params.get("currentGpsValLong") !="" || params.get("currentGpsValLong") != null)){
+            updateGpsMap.put("salesOrderNo", params.get("salesOrderNo"));
+            updateGpsMap.put("currentGpsValLat", params.get("currentGpsValLat"));
+            updateGpsMap.put("currentGpsValLong", params.get("currentGpsValLong"));
+            updateGpsMap.put("crtUserId", params.get("userId"));
+            updateGpsMap.put("custAddId", custAddDtlLst.get("addId").toString());
+
+            MSvcLogApiMapper.updateGps(updateGpsMap);
+            jsonReturn.addProperty("oRtnCode", "TRUE");
+            jsonReturn.addProperty("oRtnMsg", "-");
+        }
+
+        return jsonReturn;
+    }catch(Exception e) {
+        logger.error("##### Unexception error on updateGps:  #####"+e.toString());
+        e.printStackTrace();
+
+        jsonReturn.addProperty("oRtnCode", "FALSE");
+        jsonReturn.addProperty("oRtnMsg", e.toString());
+
+        return jsonReturn;
+    }
+  }
 }

@@ -19,6 +19,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 22/04/2020    ONGHC      1.0.6       - Create getRelateOrdLst
  * 23/04/2019    ONGHC      1.0.7       - Add function getOrdDetail
  * 29/04/2020    ONGHC      1.0.8       - Add function insertSVC0115D
+ * 03/04/2023    FANNIE      1.0.9       - Add function getCustAddDtlLst and updateGPS
  *********************************************************************************************/
 
 @Mapper("MSvcLogApiMapper")
@@ -300,4 +301,8 @@ public interface MSvcLogApiMapper {
   String selectSVC0115D(Map<String, Object> params);
 
   List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params);
+
+  Map<String, Object> getCustAddDtlLst(Map<String, Object> params);
+
+  void updateGps(Map<String, Object> params);
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.google.gson.JsonObject;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -19,6 +20,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 22/04/2020    ONGHC      1.0.5       - Create getRelateOrdLst
  * 23/04/2020    ONGHC      1.0.6       - Add function getOrdDetail
  * 29/04/2020    ONGHC      1.0.7       - Add function insertSVC0115D
+ * 03/04/2023    FANNIE      1.0.8       - Add function updateGPS
  *********************************************************************************************/
 
 public interface MSvcLogApiService {
@@ -237,5 +239,7 @@ public interface MSvcLogApiService {
   String selectSVC0115D(Map<String, Object> params);
 
   List<EgovMap> searchRentalCollectionByBSNewList(Map<String, Object> params);
+
+  JsonObject updateGPS (Map<String, Object> params);
 
 }

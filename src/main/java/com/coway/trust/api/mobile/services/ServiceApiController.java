@@ -58,6 +58,7 @@ import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelDto;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelSmsForm;
+import com.coway.trust.api.mobile.services.gps.UpdateGPSForm;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestForm;
 import com.coway.trust.api.mobile.services.heartService.HSReAppointmtRequestDto;
@@ -106,6 +107,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.google.gson.JsonObject;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -188,6 +190,7 @@ import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListForm;
  * 23/04/2019    ONGHC      1.0.11      - Add function getOrdDetail
  * 24/09/2020    FARUQ       1.0.12      - Missing product name when fail (mobile site only)
  * 07/07/2022    FARUQ       1.0.13 	  - establish /mobile/api/v1/service/insertAsFromCodyRequest
+ * 03/04/2022    FANNIE      1.0.14      - Add function update GPS
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -2810,5 +2813,27 @@ public class ServiceApiController {
 
        return ResponseEntity.ok(recordtList);
 	}
+
+	@ApiOperation(value = "SYSTEM GPS UPDATED", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/updateGPS", method = RequestMethod.POST)
+  public ResponseEntity<ArrayList<String>> systemGpsUpdate(@RequestBody UpdateGPSForm UpdateGPSForm) throws Exception {
+    Map<String, Object> params = UpdateGPSForm.createMap(UpdateGPSForm);
+    LOGGER.info("[ServiceApiController params updateGPS] params:: {} "+ params);
+    LOGGER.debug("##### ServiceApiController params updateGPS #####", params.toString());
+
+    JsonObject rtnUpdateGpsObj = new JsonObject();
+    rtnUpdateGpsObj = MSvcLogApiService.updateGPS(params);
+    LOGGER.info("[ServiceApiController params updateGPS] rtnUpdateGpsObj:: {} "+ rtnUpdateGpsObj);
+    LOGGER.debug("##### ServiceApiController rtnUpdateGpsObj updateGPS #####", rtnUpdateGpsObj.toString());
+
+    ArrayList<String> rtn = new ArrayList<String>();
+    rtn.add(0, (String) rtnUpdateGpsObj.get("oRtnCode").toString());
+    rtn.add(1, (String) params.get("currentGpsValLat"));
+    rtn.add(2, (String) params.get("currentGpsValLong"));
+    rtn.add(3, (String) rtnUpdateGpsObj.get("oRtnMsg").toString());
+
+
+    return ResponseEntity.ok(rtn);
+  }
 
 }
