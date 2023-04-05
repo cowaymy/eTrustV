@@ -6,7 +6,7 @@
     <result property="APPV_REQ" column="APPV_REQ" jdbcType="CLOB" javaType="java.lang.String"/>
 </resultMap>
 
-<select id="checkPreCcpResult" parameterType="Map" resultType="egovMap">
+<select id="checkPreCcpResult" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
         SELECT
                 A.CUST_ID
              ,  NVL(B.CHS_STUS,'-') CHS_STATUS
@@ -21,7 +21,7 @@
         LEFT JOIN SAL0344D D ON B.CHS_STUS = D.CHS_STUS AND D.CHS_STUS = 'GREEN'
         LEFT JOIN SYS0047M D ON D.USER_NAME = #{regId}
         WHERE 1=1
-        <if test="selectType != null and selectType != '' "> -->
+        <if test="selectType != null and selectType != '' ">
             <choose>
                 <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
                     AND A.NRIC = #{selectKeyword}
