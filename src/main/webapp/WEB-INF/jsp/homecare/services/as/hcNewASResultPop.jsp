@@ -188,6 +188,7 @@
           $("#cmbLabourChargeAmt").val(150);
           $("#txtLabourCharge").val("150.00");
           $("#txtTotalCharge").val("150.00");
+          $("#iscommission").prop("checked", false);
       }else{
           $("#txtLabourch").prop("checked", false);
           $("#cmbLabourChargeAmt").attr("disabled", true);
@@ -195,6 +196,7 @@
           $("#cmbLabourChargeAmt").val("");
           $("#txtLabourCharge").val("0.00");
           $("#txtTotalCharge").val("0.00");
+          $("#iscommission").prop("checked", true);
       }
   }
 
@@ -225,6 +227,24 @@
           $("#solut_code_id").val("");
           $("#solut_code_text").val("");
           $("#HSC").show();
+
+          if ($("#ddlErrorCode").val() == "400200" && $("#ddlErrorDesc").val() == "400206") {
+              $("#txtLabourch").prop("checked", true);
+              $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
+              $("#fcm1").show();
+              $("#cmbLabourChargeAmt").val(150);
+              $("#txtLabourCharge").val("150.00");
+              $("#txtTotalCharge").val("150.00");
+              $("#iscommission").prop("checked", false);
+          }else{
+              $("#txtLabourch").prop("checked", false);
+              $("#cmbLabourChargeAmt").attr("disabled", true);
+              $("#fcm1").hide();
+              $("#cmbLabourChargeAmt").val("");
+              $("#txtLabourCharge").val("0.00");
+              $("#txtTotalCharge").val("0.00");
+              $("#iscommission").prop("checked", true);
+          }
 
   }
 
