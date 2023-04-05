@@ -61,8 +61,8 @@ public class PreCcpRegisterController {
     @Autowired
     private SessionHandler sessionHandler;
 
-    @Autowired
-    private Proxy proxy;
+//    @Autowired
+//    private Proxy proxy;
 
 	@RequestMapping(value = "/initPreCcpRegisterList.do")
 	public String initPreCcpRegisterList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
