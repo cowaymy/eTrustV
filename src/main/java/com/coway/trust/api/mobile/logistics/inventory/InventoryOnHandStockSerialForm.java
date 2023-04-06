@@ -22,7 +22,7 @@ public class InventoryOnHandStockSerialForm {
     Map<String, Object> params = new HashMap<>();
     params.put("userId", inventoryOnHandStockSerialForm.getUserId());
     params.put("partsCode", inventoryOnHandStockSerialForm.getPartsCode());
-    params.put("serialNo", inventoryOnHandStockSerialForm.getPartsCode());
+    params.put("serialNo", inventoryOnHandStockSerialForm.getSerialNo());
     return params;
   }
 
