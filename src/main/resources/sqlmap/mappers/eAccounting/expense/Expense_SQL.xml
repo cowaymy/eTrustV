@@ -172,7 +172,8 @@
 		                FROM   (SELECT *
 		                        FROM   FCM0101M A) A
 		                      ) A
-		        WHERE 1=1 --A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+		        WHERE 1=1
+		       <!--  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') -->
 		        <if test="searchCostCenter != null and searchCostCenter != ''">
 		        AND A.COST_CENTR = #{searchCostCenter}
 		        </if>

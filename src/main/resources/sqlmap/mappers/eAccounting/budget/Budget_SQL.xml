@@ -1626,7 +1626,8 @@ WHERE 1=1
         LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F40.GL_ACC_CODE
         LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = F40.STUS_CODE_ID
         LEFT JOIN SYS0013M S13 ON S13.CODE_ID = F40.EXPENSE_TYP AND S13.CODE_MASTER_ID = 552
-        WHERE 1=1 --F40.STUS_CODE_ID = 1
+        WHERE 1=1
+        <!-- F40.STUS_CODE_ID = 1 -->
 
              <if test="budgetCode != null and budgetCode != ''">
               AND F40.BUDGET_CODE = #{budgetCode}
