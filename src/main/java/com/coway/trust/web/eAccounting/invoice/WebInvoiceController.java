@@ -217,13 +217,21 @@ public class WebInvoiceController {
     String clmType = params.get("clmType").toString();
 
     List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
+    List<String>rejectReasonList = new ArrayList<String>();
     for (int i = 0; i < appvLineInfo.size(); i++) {
       EgovMap info = appvLineInfo.get(i);
-      if ("J".equals(info.get("appvStus"))) {
-        String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
-        model.addAttribute("rejctResn", rejctResn);
+//      if ("J".equals(info.get("appvStus"))) {
+      String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
+
+      if(rejctResn == null || rejctResn.isEmpty())
+      {
       }
+      else{
+    	  rejectReasonList.add("-" + rejctResn);
+      }
+//      }
     }
+    model.addAttribute("rejctResn", String.join("<br/>", rejectReasonList));
     List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
     // TODO appvPrcssStus 생성
@@ -902,7 +910,6 @@ public class WebInvoiceController {
 
 		Map<String, Object> budgetInfo = new HashMap();
 		if(item != null) {
-
 			budgetInfo.put("totalAvailable", item.get("availableAmt"));
 			budgetInfo.put("totalAvilableAdj", item.get("total"));
 			budgetInfo.put("totalPending", item.get("pendAppvAmt"));
@@ -994,7 +1001,13 @@ public class WebInvoiceController {
 
 	                params.put("clmType", params.get("clmNo").toString().substring(0, 2));
 	                EgovMap hm2 = webInvoiceService.getFinApprover(params);
-	                String memCode = hm2.get("apprMemCode").toString();
+	                String memCode = "0";
+	                if(hm2 == null){
+	                	memCode = "0";
+	                }
+	                else{
+	                	memCode = hm2.get("apprMemCode").toString();
+	                }
 	                LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
 
 	                memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
@@ -1005,7 +1018,6 @@ public class WebInvoiceController {
 	                } else {
 	                    message.setCode(AppConstants.SUCCESS);
 	                    message.setData(params);
-	                    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 	                }
 	            }
 	        }
