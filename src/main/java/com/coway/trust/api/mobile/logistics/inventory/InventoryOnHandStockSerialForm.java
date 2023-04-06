@@ -13,7 +13,7 @@ public class InventoryOnHandStockSerialForm {
   private String userId;
 
   @ApiModelProperty(value = "PART CODE", example = "112446")
-  private int partsCode;
+  private String partsCode;
 
   public static Map<String, Object> createMap(InventoryOnHandStockSerialForm inventoryOnHandStockSerialForm) {
     Map<String, Object> params = new HashMap<>();
@@ -30,11 +30,11 @@ public class InventoryOnHandStockSerialForm {
     this.userId = userId;
   }
 
-  public int getPartsCode() {
+  public String getPartsCode() {
     return partsCode;
   }
 
-  public void setPartsCode(int partsCode) {
+  public void setPartsCode(String partsCode) {
     this.partsCode = partsCode;
   }
 }
