@@ -52,7 +52,6 @@
        fetch("/sales/ccp/getPreCcpRemark.do")
        .then(r => r.json())
        .then(resp => {
-    	   console.log(resp)
                 resp = resp.map(i => {
                     return {
                         ...i,

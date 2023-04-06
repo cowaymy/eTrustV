@@ -13,7 +13,6 @@
     <tiles:insertAttribute name="css" />
     <tiles:insertAttribute name="script" />
     <tiles:insertAttribute name="head" />
-    <script src="${pageContext.request.contextPath}/resources/js/ckeditor/ckeditor.js"></script>
 </head>
 
 
