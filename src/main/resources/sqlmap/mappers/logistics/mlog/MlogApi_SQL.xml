@@ -104,7 +104,7 @@
 
     <if test="searchType == 1 ">
       AND L56.STK_CODE = #{searchKeyword}
-    </if>1472
+    </if>
     <if test="searchType == 2 ">
       AND UPPER(L56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
     </if>
