@@ -535,7 +535,7 @@ function fn_pBudgetCodePop(str){
   }else{
       $("#recvBudgetCode").val("");
       $("#recvBudgetCodeName").val("");
-
+      obj.costcenter = $("#recvCostCenter").val();
       if($("#pAdjustmentType").val() == "04"){
           obj.call = 'budgetAdj';
       }
@@ -592,7 +592,7 @@ function fn_pGlAccountSearchPop(str){
       $("#sendGlAccCodeName").val("");
 
       if($("#pAdjustmentType").val() != "05") {
-          obj.call = 'budgetAdj'; 
+          obj.call = 'budgetAdj';
 
           if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02") {
               $("#recvGlAccCode").val("");
@@ -607,7 +607,8 @@ function fn_pGlAccountSearchPop(str){
   } else {
       $("#recvGlAccCode").val("");
       $("#recvGlAccCodeName").val("");
-
+      obj.costcenter = $("#recvCostCenter").val();
+      obj.budgetCode = $("#recvBudgetCode").val();
       if($("#pAdjustmentType").val() == "05"){
           obj.call = 'budgetAdj';
       }
@@ -628,7 +629,7 @@ function fn_setPopGlData(){
     		  $("#recvGlAccCode").val($("#pGlAccCode").val());
               $("#recvGlAccCodeName").val( $("#pGlAccCodeName").val());
           }
-
+    	 fn_checkBudget();
       }
   }else{
       $("#recvGlAccCode").val($("#pGlAccCode").val());
@@ -1012,6 +1013,7 @@ function fn_AddRow()
 
 }
 
+var pAtch = "";
 function fn_uploadFile(str) {
 
     var formData = Common.getFormData("pAdjForm");
@@ -1239,6 +1241,10 @@ function fn_closeMonChk(obj){
             $("#" + obj.id).val("");
         }
 
+         if(obj.id == "sendYearMonth"){
+        	fn_checkBudget();
+        }
+
    });
 }
 
@@ -1283,6 +1289,37 @@ function fn_setBudgetView() {
 		}
 
 	});
+}
+
+function fn_checkBudget(){
+
+    var sYm, sCc, sBc, sGac;
+
+        sYm =  $("#sendYearMonth").val();
+        sCc = $("#sendCostCenter").val();
+        sBc = $("#sendBudgetCode").val();
+        sGac = $("#sendGlAccCode").val();
+
+        if(sYm != "" && sYm != null
+                && sCc != "" && sCc != null
+                && sBc != "" && sBc != null
+                && sGac != "" && sGac != null
+            ){
+
+     var data = {
+             sendYearMonth : sYm,
+             sendCostCenter : sCc,
+             sendBudgetCode : sBc,
+             sendGlAccCode : sGac
+     };
+     Common.ajax("GET", "/eAccounting/budget/budgetCheck", data, function(result) {
+            $("#sendAmount").val(result.availableAmt);
+            if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+                 $("#recvAmount").val( $("#sendAmount").val());
+            }
+
+            });
+     }
 }
 
 

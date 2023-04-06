@@ -319,10 +319,30 @@ WHEN NOT MATCHED THEN
             NVL(M12,0) M12
         FROM (
             SELECT *
-            FROM FCM0101M A
+            FROM (
+                 SELECT F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F1.GL_ACC_CODE, F1.BUDGET_CODE,
+                 F1.PLAN_AMT, F1.CHNG_AMT,
+                 (SUM(CASE  WHEN F3.SIGNAL = '+' THEN F3.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN F3.SIGNAL = '-' THEN F3.ADJ_AMT ELSE 0 END)) TOTAL
+                 , SUM(F5.NET_AMT) APP_AMT_TOTAL
+                FROM FCM0101M F1
+                LEFT JOIN (SELECT F3.BUDGET_ADJ_YEAR, F3.BUDGET_ADJ_MONTH, F3.COST_CENTR, F3.BUDGET_CODE, F3.GL_ACC_CODE, F3.ADJ_AMT, F3.SIGNAL
+		                FROM FCM0103D F3
+		                LEFT JOIN FCM0102M F2 ON F2.BUDGET_DOC_NO = F3.BUDGET_DOC_NO
+		                LEFT JOIN FCM0105M F5 ON F5.BUDGET_DOC_NO = F3.BUDGET_DOC_NO
+		                WHERE  F2.APPV_STUS = 'C'
+		                AND F5.APPV_PRCSS_STUS = 'A') F3  ON F3.BUDGET_ADJ_YEAR = F1.BUDGET_PLAN_YEAR AND F3.BUDGET_ADJ_MONTH = F1.BUDGET_PLAN_YEAR
+                LEFT JOIN (SELECT F5.CRT_DT, F5.NET_AMT, F5.BUDGET_CODE, F5.COST_CENTR, F5.GL_ACC_CODE FROM FCM0015D F5
+		                LEFT JOIN FCM0004M F4 ON F4.APPV_PRCSS_NO = F5.APPV_PRCSS_NO
+		                WHERE F4.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')) F5
+                ON EXTRACT(YEAR FROM TO_DATE(F5.CRT_DT, 'DD/MM/YYYY')) = F1.BUDGET_PLAN_YEAR
+                AND EXTRACT (MONTH FROM TO_DATE(F5.CRT_DT, 'DD/MM/YYYY')) = F1.BUDGET_PLAN_MONTH
+                AND F5.COST_CENTR = F1.COST_CENTR AND F5.BUDGET_CODE = F1.BUDGET_CODE AND F5.GL_ACC_CODE = F1.GL_ACC_CODE
+                GROUP BY
+                F1.PLAN_AMT, F1.CHNG_AMT, F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR,
+                F1.GL_ACC_CODE, F1.BUDGET_CODE ) A
             PIVOT (MAX(
                 CASE
-                    WHEN '0'= #{budgetPlan} THEN PLAN_AMT + CHNG_AMT
+                    WHEN '0'= #{budgetPlan} THEN NVL(PLAN_AMT,0) + NVL(CHNG_AMT,0) + NVL(TOTAL,0) - NVL(APP_AMT_TOTAL ,0)
                     WHEN '1'= #{budgetPlan} THEN PLAN_AMT
                     ELSE 0
                 END)
@@ -469,6 +489,25 @@ FROM   (SELECT COST_CENTR                             AS COST_CENTER,
                                        AND A.BUDGET_CODE = C.BUDGET_CODE
                                        AND A.GL_ACC_CODE = C.GL_ACC_CODE) A
         WHERE  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+
+         <if test="searchCostCenter != null and searchCostCenter != ''">
+                AND A.COST_CENTR = #{searchCostCenter}
+                </if>
+                <if test="searchBudgetCode != null and searchBudgetCode != ''">
+                AND A.BUDGET_CODE = #{searchBudgetCode}
+                </if>
+                <if test="budgetCode != null and budgetCode != ''">
+                AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
+                </if>
+                <if test="budgetCodeText != null and budgetCodeText != ''">
+                AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
+                </if>
+                <if test="glAccCode != null and glAccCode != ''">
+                AND GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
+                </if>
+                <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
+                AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
+                </if>
         /* AND A.COST_CENTR = costCentr */
         <if test="procFlg != null and procFlg != '' and procFlg == 1">
             AND A.COST_CENTR IN (
@@ -508,6 +547,10 @@ WHERE 1=1
        <if test="glAccCodeDesc != null and glAccCodeDesc != '' " >
             AND GL_ACC_DESC = #{glAccCodeDesc}
        </if>
+       <![CDATA[
+            AND T.START_DT <= SYSDATE
+            AND T.END_DT  >= SYSDATE
+            ]]>
   </select>
 
   <select id="selectAvailableBudgetAmt" parameterType="Map" resultType="egovMap">
@@ -1569,4 +1612,144 @@ WHERE 1=1
         SELECT APPR_USER_ID FROM FCM0023M WHERE APPR_GRP = 'BUDGET' AND APPR_USER_ID = #{userId}
     ]]>
     </select>
+
+      <select id="selectAdjType" parameterType="String" resultType="String">
+        SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '347' AND UPPER(CODE_NAME) = #{budgetAdjType}
+   </select>
+
+   <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
+
+        SELECT F40.BUDGET_CODE, F10.BUDGET_CODE_TEXT, F40.GL_ACC_CODE, F9.GL_ACC_DESC,
+        F40.NATURE_OF_EXP, S38.NAME STUS, S38.STUS_CODE_ID, S13.CODE_NAME CODE_NAME, S13.CODE_ID
+        FROM FCM0040D F40
+        LEFT JOIN FCM0010M F10 ON F10.BUDGET_CODE = F40.BUDGET_CODE
+        LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F40.GL_ACC_CODE
+        LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = F40.STUS_CODE_ID
+        LEFT JOIN SYS0013M S13 ON S13.CODE_ID = F40.EXPENSE_TYP AND S13.CODE_MASTER_ID = 552
+        WHERE 1=1 --F40.STUS_CODE_ID = 1
+
+             <if test="budgetCode != null and budgetCode != ''">
+              AND F40.BUDGET_CODE = #{budgetCode}
+              </if>
+              <if test="glAccCode != null and glAccCode != ''">
+              AND F40.GL_ACC_CODE = #{glAccCode}
+              </if>
+              <if test="searchKey != null and searchKey != ''">
+              AND F40.NATURE_OF_EXP LIKE '%'|| #{searchKey} || '%'
+              </if>
+              <if test="stusCodeId != null and stusCodeId != ''">
+              AND F40.STUS_CODE_ID IN
+                <foreach item="item" collection="stusCodeId" index="index" open="(" separator="," close=")">
+                 #{item}
+                </foreach>
+              </if>
+              <if test="expenseTyp != null and expenseTyp != ''">
+                 AND F40.EXPENSE_TYP IN
+              <foreach item="item" collection="expenseTyp" index="index" open="(" separator="," close=")">
+                 #{item}
+              </foreach>
+              </if>
+
+    </select>
+
+    <select id="selectUploadAdjNo" parameterType="String" resultType="String">
+           SELECT 'U' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(FCM0039M_UPLOAD_NO_SEQ.NEXTVAL, 8, 0) FROM DUAL
+     </select>
+
+    <select id="getUploadNewMasterList" parameterType="Map" resultType="egovMap">
+            SELECT BUDGET_DOC_NO, COST_CENTR, ADJ_YEAR_MONTH,
+            BUDGET_CODE, GL_ACC_CODE, BUDGET_ADJ_TYPE, SIGNAL, ADJ_AMT, ADJ_REM, BUDGET_GRP_SEQ
+            FROM FCM0039D
+            WHERE UPLOAD_NO = #{uploadAdjNo}
+            AND ADJ_NUMBER = #{adjNumber}
+     </select>
+
+     <select id="getUploadMasterList" parameterType="Map" resultType="egovMap">
+        SELECT * FROM FCM0039D WHERE UPLOAD_NO = #{uploadAdjNo}
+     </select>
+
+      <select id="checkDuplicate" parameterType="String" resultType="String">
+        SELECT COUNT(BUDGET_DOC_NO) FROM FCM0102M WHERE BUDGET_DOC_NO = #{budgetDocNo}
+     </select>
+
+     <select id="selectBudgetAdjustmentConflict" parameterType="String" resultType="String">
+        SELECT COUNT(BUDGET_DOC_NO) FROM FCM0102M WHERE BUDGET_DOC_NO = #{budgetDocNo}
+     </select>
+
+        <insert id="insertUploadAdjustmentT" parameterType="Map">
+		    INSERT INTO FCM0039D
+		    (
+		    UPLOAD_NO,
+		    ADJ_NUMBER,
+		    BUDGET_DOC_NO,
+		    COST_CENTR,
+		    ADJ_YEAR_MONTH,
+		    BUDGET_CODE,
+		    GL_ACC_CODE,
+		    BUDGET_ADJ_TYPE ,
+		    SIGNAL,
+		    ADJ_AMT,
+		    ADJ_REM,
+		    CRT_DT,
+		    CRT_USER_ID,
+		    UPD_DT,
+		    UPD_USER_ID,
+		    BUDGET_GRP_SEQ
+		    )
+		    VALUES(
+		    #{uploadAdjNo},
+		    #{adjNo},
+		    #{budgetDocNo},
+		    #{costCentr},
+		    #{adjYearMonth},
+		    #{budgetCode},
+		    #{glAccCode},
+		    #{budgetAdjType},
+		    #{signal},
+		    #{adjAmt},
+		    #{remark},
+		    SYSDATE,
+		    #{crtUserId},
+		    SYSDATE,
+		    #{updUserId},
+		    #{budgetGrpSeq}
+		    )
+		  </insert>
+
+     <delete id="removeFCM0039D" parameterType="Map">
+        DELETE FROM FCM0039D WHERE UPLOAD_NO = #{uploadAdjNo}
+    </delete>
+
+    <update id="updateFCM0039D" parameterType="Map">
+        UPDATE FCM0039D SET BUDGET_DOC_NO = #{budgetDocNo} WHERE UPLOAD_NO = #{uploadAdjNo} AND ADJ_NUMBER = #{adjNumber}
+    </update>
+
+    <update id="updateBudgetCode" parameterType="Map">
+        UPDATE FCM0040D SET
+                NATURE_OF_EXP = #{natureOfExp},
+                EXPENSE_TYP = #{codeId},
+                STUS_CODE_ID = #{stusCodeId},
+                UPD_USER_ID = #{updUserId},
+                UPD_DT = SYSDATE
+                WHERE BUDGET_CODE = #{budgetCode}
+                AND GL_ACC_CODE = #{glAccCode}
+    </update>
+
+    <select id="selectStatusList" resultType="egovMap">
+        SELECT S38.STUS_CODE_ID  ,
+	       S38.CODE CODE  ,
+	       S38.NAME NAME
+		  FROM SYS0038M S38
+		  WHERE  S38.STUS_CODE_ID IN ( 1,7 )
+		  ORDER BY S38.NAME ASC
+     </select>
+
+     <select id="selectExpenseTyp" resultType="egovMap">
+        SELECT S13.CODE_ID, S13.CODE, S13.CODE_DESC
+        FROM SYS0013M S13
+        WHERE S13.CODE_MASTER_ID = 552
+        ORDER BY S13.CODE_ID
+     </select>
+
+
 </mapper>

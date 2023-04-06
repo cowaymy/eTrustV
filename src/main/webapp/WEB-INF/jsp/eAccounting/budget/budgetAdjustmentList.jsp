@@ -209,6 +209,81 @@ $(document).ready(function(){
             editable :false
       };
 
+
+    var uploadGridLayout = [
+                            {dataField : "0", headerText : "Number of Adjustment", editable : true ,width : 120 },
+                            {dataField : "1", headerText : "Cost Centre", editable : true, width : 120},
+                            {dataField : "2", headerText : "Month/Year", editable : true, width : 120},
+                            {dataField : "3", headerText : "Budget Code", editable : true, width : 120},
+                            {dataField : "4", headerText : "GL Account", editable : true, width : 180},
+                            {dataField : "5", headerText : "Adjustment Type", editable : true, width : 180},
+                            {dataField : "6", headerText : "Signal", editable : true, width : 180},
+                            {dataField : "7", headerText : "Adjustment Amount", editable : true, width : 180},
+                            {dataField : "8", headerText : "Remark", editable : true, width : 180},
+                            {dataField : "9", headerText : "Group of Seq", editable : true, width : 180},
+                            {
+                                dataField : "overBudgetFlag",
+                                headerText : '',
+                                visible : false,
+                            },{
+                                dataField : "atchFileGrpId",
+                                headerText : '',
+                                visible : false,
+                            }
+                            ];
+
+    var gridPros2 = {
+
+            // 편집 가능 여부 (기본값 : false)
+      //editable : false,
+      // 상태 칼럼 사용
+      showStateColumn : false,
+      // 기본 헤더 높이 지정
+      headerHeight : 35,
+
+      softRemoveRowMode:false
+
+    }
+
+    myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros2);
+
+    $('#fileSelector').on('change', function(evt) {
+        if (!checkHTML5Brower()) {
+            // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
+            // 파일 내용 읽어 반환시켜 그리드에 적용.
+            commitFormSubmit();
+
+            //alert("브라우저가 HTML5 를 지원하지 않습니다.");
+        } else {
+            var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                return;
+            }
+
+            var reader = new FileReader();
+            //reader.readAsText(file); // 파일 내용 읽기
+            reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+            reader.onload = function(event) {
+                if (typeof event.target.result != "undefined") {
+                    // 그리드 CSV 데이터 적용시킴
+                    AUIGrid.setCsvGridData(myUploadGridID, event.target.result, false);
+
+                    //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(myUploadGridID,0);
+                } else {
+                    Common.alert("<spring:message code='000030'/>");
+                }
+            };
+
+            reader.onerror = function() {
+                Common.alert("<spring:message code='000031' arguments='"+file.fileName+"' htmlEscape='false'/>");
+            };
+
+        }
+
+    });
+
     adjMGridID = GridCommon.createAUIGrid("#adjMGridID", adjLayout, "seq", adjOptions);
 
     // 헤더 클릭 핸들러 바인딩
@@ -221,6 +296,138 @@ $(document).ready(function(){
     //$("#appvPrcssStus").multipleSelect("checkAll");
 
 });
+
+function fn_uploadFile2() {
+
+	//Remove fileselector value to avoid getting uploaded as well. Only the attachmemt should be upload
+    $("#fileSelector").val("");
+
+    var formData = Common.getFormData("uploadForm");
+
+    var idx = AUIGrid.getRowCount(myUploadGridID);
+
+    if(idx == 0){
+        Common.alert("<spring:message code='budget.msg.noData' />");
+        return;
+    }
+
+
+
+    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+
+            if(AUIGrid.getCellValue(myUploadGridID, 1, "atchFileGrpId") != "" &&AUIGrid.getCellValue(myUploadGridID, 1, "atchFileGrpId") != null ){
+                formData.append("pAtchFileGrpIdUpload", AUIGrid.getCellValue(myUploadGridID, 1, "atchFileGrpId") );
+            }
+
+            Common.ajaxFile("/eAccounting/budget/uploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+
+                console.log(result);
+
+                if(result.data) {
+                    $("#pAtchFileGrpIdUpload").val(result.data);
+                }
+
+                if($("#pAtchFileGrpIdUpload").val() == ""){
+                     Common.alert("<spring:message code="budget.msg.fileRequir" />");
+                     return;
+                }
+
+                fn_uploadAdjustment();
+
+            });
+      }));
+}
+
+
+function checkHTML5Brower() {
+    var isCompatible = false;
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        isCompatible = true;
+    }
+  console.log("isCompatible " +isCompatible);
+    return isCompatible;
+  };
+
+function commitFormSubmit() {
+
+    AUIGrid.showAjaxLoader(myUploadGridID);
+    console.log("Here:" + $("#fileSelector").val());
+
+    // Submit 을 AJax 로 보내고 받음.
+    // ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
+    // 링크 : http://malsup.com/jquery/form/
+
+    $('#uploadForm').ajaxSubmit({
+        type : "json",
+        success : function(responseText, statusText) {
+            if(responseText != "error") {
+                var csvText = responseText;
+
+                // 기본 개행은 \r\n 으로 구분합니다.
+                // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
+                // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
+                // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
+                csvText = csvText.replace(/\r?\n/g, "\r\n")
+
+                // 그리드 CSV 데이터 적용시킴
+                AUIGrid.setCsvGridData(myUploadGridID, csvText);
+                AUIGrid.removeAjaxLoader(myUploadGridID);
+
+                //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                AUIGrid.removeRow(myUploadGridID,0);
+            }
+        },
+        error : function(e) {
+            Common.alert("ajaxSubmit Error : " + e);
+        }
+    });
+  }
+
+function fn_uploadAdjustment(){
+    var gridData = GridCommon.getGridData(myUploadGridID);
+    gridData.form = $("#uploadForm").serializeJSON();
+
+    console.log("gridData: " + gridData);
+
+    Common.ajax("POST", "/eAccounting/budget/uploadBudgetAdjustment", gridData , function(result){
+        console.log("Result: " + JSON.stringify(result));
+
+         if(result.code == '99'){
+            var msg = result.message;
+            Common.alert("Failed to upload: " + result.message);
+
+        }else{
+            var rtnBudgetCodeNo = "";
+            console.log("Size: " + result.dataList.length);
+            var length = result.dataList.length;
+            if(length > 0){
+                for(var i = 0; i < length; i++){
+                    rtnBudgetCodeNo += result.dataList[i].budgetDocNo + ",";
+                }
+            }
+
+            rtnBudgetCodeNo = rtnBudgetCodeNo.slice(0, rtnBudgetCodeNo.length - 1);
+            Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + rtnBudgetCodeNo);
+            hideViewPopup();
+        }
+
+    },
+    function(jqXHR, textStatus, errorThrown){
+                 try {
+                     console.log("Fail Status : " + jqXHR.status);
+                     console.log("code : "        + jqXHR.responseJSON.code);
+                     console.log("message : "     + jqXHR.responseJSON.message);
+                     console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+               }
+               catch (e)
+               {
+                 console.log(e);
+               }
+               //console.log("Error: " + result.dataList);
+               Common.alert("Fail : " + jqXHR.responseJSON.message);
+         });
+}
+
 
 function auiCellClikcHandler(event){
     console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -473,6 +680,36 @@ function fn_budgetDelete() {
 
     }));
 }
+
+function fn_budgetAdjustmentUpload(){
+    $("#uploadAdj_wrap").show();
+    AUIGrid.resize(myUploadGridID);
+
+	//Common.popupDiv("/eAccounting/budget/budAdj.do",null, null, true, "budgetCodeSearchPop");
+}
+
+hideViewPopup=function(val){
+    $(val).hide();
+
+    //업로드창이 닫히면 upload 화면도 reset한다.
+   /*  if(val == '#upload_wrap'){
+        fn_uploadClear();
+    } */
+
+    fn_uploadClear();
+}
+
+function fn_uploadClear(){
+    //화면내 모든 form 객체 초기화
+    $("#uploadForm")[0].reset();
+
+    //그리드 초기화
+    //$("#fileSelector").val("");
+
+    AUIGrid.clearGridData(myUploadGridID);
+}
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -593,6 +830,8 @@ function fn_budgetDelete() {
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+	<li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/eAccounting/BudgetAdjustment_Format1.csv">Template</a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentUpload();">Upload</a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetDelete();"><spring:message code="budget.Delete" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.NewAdjustment" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Submit" /></a></p></li>
@@ -606,3 +845,75 @@ function fn_budgetDelete() {
 </section><!-- search_result end -->
 
 </section><!-- content end -->
+<div class="popup_wrap" id="uploadAdj_wrap" style="display: none;">
+ <!-- pop_header start -->
+ <header class="pop_header" id="updResult_pop_header">
+  <h1>
+   Upload Budget Adjustment
+  </h1>
+  <ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#uploadAdj_wrap')"><spring:message code="expense.CLOSE" /></a></p></li>
+</ul>
+ </header>
+ <!-- pop_header end -->
+ <!-- pop_body start -->
+ <form name="uploadForm" id="uploadForm" method="post">
+ <input type="hidden" id = "pAtchFileGrpIdUpload" name="pAtchFileGrpIdUpload" />
+  <section class="pop_body">
+   <!-- search_table start -->
+   <section class="search_table">
+    <!-- table start -->
+    <table class="type1">
+     <caption>table</caption>
+     <colgroup>
+      <col style="width: 165px" />
+      <col style="width: *" />
+     </colgroup>
+     <tbody>
+      <tr>
+       <th scope="row">Choose File</th>
+       <td>
+        <div class="auto_file">
+         <!-- auto_file start -->
+         <input type="file" title="file add" id="fileSelector" name="fileSelector" accept=".csv" />
+        </div> <!-- auto_file end -->
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </section>
+   <section class="search_result">
+    <!-- search_result start -->
+    <article class="grid_wrap" id="grid_upload_wrap"></article>
+    <div id="uploadAdj" style="display: none;">
+    <!-- grid_wrap end -->
+   </section>
+<table class="type1 mt10"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+
+<tr>
+    <th scope="row" rowspan="2"><spring:message code="sal.text.attachment" /></th>
+    <td>
+     <div class="auto_file2"><!-- auto_file start -->
+        <input type="file" title="file add" style="width:300px" id="_fileName"/>
+    </div><!-- auto_file end -->
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+   <!-- search_result end -->
+   <!-- search_table end -->
+   <ul class="center_btns">
+   <li><p class="btn_blue2"><a href="javascript:fn_uploadFile2();">Save</a></p></li>
+   </ul>
+  </section>
+ </form>
+
+ <!-- pop_body end -->
+</div>

@@ -1,7 +1,10 @@
 package com.coway.trust.biz.eAccounting.budget;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -30,6 +33,8 @@ public interface BudgetService {
 	List<EgovMap> selectApprovalList(Map<String, Object> params) throws Exception;
 
 	EgovMap saveAdjustmentInfo (Map<String, Object> params) throws Exception;
+
+	Map<String, Object> uploadBudgetAdjustment (Map<String, Object> params, List<Object> list) throws Exception;
 
 	EgovMap saveApprovalList (Map<String, Object> params) throws Exception;
 
@@ -66,4 +71,15 @@ public interface BudgetService {
 	EgovMap getBgtApprList(Map<String, Object> params);
 
 	List<EgovMap> getListPermAppr(Map<String, Object> params);
+
+	String selectAdjType(String params);
+
+	List<EgovMap> selectBudgetCodeList(Map<String, Object> params) throws Exception;
+
+	int updateBudgetCode(List<Object> updList, SessionVO sessionVO);
+
+	List<EgovMap> selectStatusList();
+
+	List<EgovMap> selectExpenseTyp();
+
 }

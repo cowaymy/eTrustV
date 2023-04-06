@@ -52,10 +52,12 @@ public class ExpenseController {
         List<EgovMap> expenseList = null;
 
         String[] claimType = request.getParameterValues("claimType");
-        String[] expType = request.getParameterValues("expType");
+        //String[] expType = request.getParameterValues("expType");
+        //String[] status = request.getParameterValues("status");
 
         params.put("claimType", claimType);
-        params.put("expType", expType);
+        //params.put("expType", expType);
+        //params.put("status", status);
 
 //        if(CommonUtils.isEmpty(params.get("type"))){
 //            params.put("expType", expType);
@@ -79,13 +81,23 @@ public class ExpenseController {
     public String budgetCodeSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
         model.addAttribute("pop", params.get("pop"));
         model.addAttribute("call", params.get("call"));
+        model.addAttribute("resultList", params);
+        LOGGER.debug("Params >>> " + params);
         return "eAccounting/expense/budgetCodeSearchPop";
+    }
+
+    @RequestMapping(value = "/expenseCode.do")
+    public String expenseCodeList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+        model.addAttribute("pop", params.get("pop"));
+        model.addAttribute("call", params.get("call"));
+        return "eAccounting/expense/expenseCodeSearchPop";
     }
 
     @RequestMapping(value = "/glAccountSearchPop.do")
     public String glAccountSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
         model.addAttribute("pop", params.get("pop"));
         model.addAttribute("call", params.get("call"));
+        model.addAttribute("resultList", params);
         return "eAccounting/expense/glAccountSearchPop";
     }
 
@@ -142,6 +154,26 @@ public class ExpenseController {
         budgetCodeList = expenseService.selectBudgetCodeList(params);
 
         return ResponseEntity.ok(budgetCodeList);
+    }
+
+    @RequestMapping(value = "/selectCodeListBG", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectCodeListBG (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+        LOGGER.debug("Params =====================================>>  " + params);
+
+        List<EgovMap> budgetCodeList = null;
+        budgetCodeList = expenseService.selectCodeListWO(params);
+
+        return ResponseEntity.ok(budgetCodeList);
+    }
+
+    @RequestMapping(value = "/selectExpenseCodeList", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectExpenseCodeList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+        LOGGER.debug("Params =====================================>>  " + params);
+
+        List<EgovMap> expenseCodeList = null;
+        expenseCodeList = expenseService.selectExpenseCodeList(params);
+
+        return ResponseEntity.ok(expenseCodeList);
     }
 
     @RequestMapping(value = "/selectGlCodeList", method = RequestMethod.GET)

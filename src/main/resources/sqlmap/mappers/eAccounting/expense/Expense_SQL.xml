@@ -20,8 +20,9 @@
           , TO_CHAR(UPD_DT, 'dd-mm-yyyy') UPD_DT
           , (SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = UPD_USER_ID) AS UPD_USER_ID
           , CNTRL_EXP
+          , DISAB_FLAG
         FROM FCM0001M
-        WHERE DISAB_FLAG IS NULL
+        WHERE 1=1--DISAB_FLAG IS NULL
             <if test="claimType != null and claimType != ''">
                 AND CLM_TYPE IN
                 <foreach item="item" collection="claimType" index="index" open="(" separator="," close=")">
@@ -40,6 +41,24 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="expenseCd != null and expenseCd != ''">
+                AND EXP_TYPE = #{expenseCd}
+            </if>
+            <if test="budgetCd != null and budgetCd != ''">
+                AND BUDGET_CODE = #{budgetCd}
+            </if>
+            <if test="glAcc != null and glAcc != ''">
+                AND GL_ACC_CODE = #{glAcc}
+            </if>
+             <if test="status != null and status != ''">
+                <if test="status == 1">
+                AND DISAB_FLAG = 'N' OR DISAB_FLAG IS NULL
+                </if>
+                <if test="status == 8">
+                AND DISAB_FLAG = 'Y'
+                </if>
+            </if>
+
         ORDER BY CLM_TYPE, EXP_TYPE
     </select>
 
@@ -101,6 +120,88 @@
             <if test="budgetCodeText != null and budgetCodeText != ''">
                 AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
             </if>
+    </select>
+
+     <select id="selectCodeListWO" parameterType="Map" resultType="egovMap">
+		       SELECT
+		       BUDGET_CODE,
+		       BUDGET_CODE_TEXT,
+		       GL_ACC_CODE,
+		       GL_ACC_DESC,
+		       START_DT,
+		       END_DT
+		FROM   (SELECT
+		               BUDGET_CODE,
+		               (SELECT B.BUDGET_CODE_TEXT
+		                FROM   FCM0010M B
+		                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT,
+		                GL_ACC_CODE,
+		               (SELECT B.GL_ACC_DESC
+		                FROM   FCM0009M B
+		                WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC,
+		                 (SELECT TO_CHAR(B.START_DT, 'DD-MM-YYYY')
+		                FROM   FCM0010M B
+		                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) START_DT,
+		               (SELECT TO_CHAR(B.END_DT, 'DD-MM-YYYY')
+		                FROM   FCM0010M B
+		                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) END_DT
+		        FROM   (SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR,
+		                       A.COST_CENTR,
+		                       A.GL_ACC_CODE,
+		                       A.BUDGET_CODE
+		                FROM   (SELECT *
+		                        FROM   (SELECT A.COST_CENTR,
+		                                       A.BUDGET_CODE,
+		                                       A.GL_ACC_CODE,
+		                                       A.BUDGET_ADJ_YEAR,
+		                                       A.BUDGET_ADJ_MONTH
+		                                FROM   FCM0103D A,
+		                                       FCM0102M B
+		                                WHERE  A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
+		                                       AND B.APPV_STUS = 'C'
+		                                GROUP  BY A.BUDGET_ADJ_YEAR,
+		                                          A.BUDGET_ADJ_MONTH,
+		                                          A.COST_CENTR,
+		                                          A.BUDGET_CODE,
+		                                          A.GL_ACC_CODE) A) A
+		                UNION ALL
+		                SELECT A.BUDGET_PLAN_YEAR,
+		                       A.COST_CENTR,
+		                       A.GL_ACC_CODE,
+		                       A.BUDGET_CODE
+		                FROM   (SELECT *
+		                        FROM   FCM0101M A) A
+		                      ) A
+		        WHERE 1=1 --A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+		        <if test="searchCostCenter != null and searchCostCenter != ''">
+		        AND A.COST_CENTR = #{searchCostCenter}
+		        </if>
+		        <if test="searchBudgetCode != null and searchBudgetCode != ''">
+                AND A.BUDGET_CODE = #{searchBudgetCode}
+                </if>
+                <if test="budgetCode != null and budgetCode != ''">
+                AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
+                </if>
+                <if test="budgetCodeText != null and budgetCodeText != ''">
+                AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
+                </if>
+                <if test="glAccCode != null and glAccCode != ''">
+                AND GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
+                </if>
+                <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
+                AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
+                </if>
+
+		        GROUP  BY BUDGET_PLAN_YEAR,
+		                  COST_CENTR,
+		                  GL_ACC_CODE,
+		                  BUDGET_CODE
+		        ORDER  BY COST_CENTR) T
+		WHERE 1=1
+		 <![CDATA[
+            AND T.START_DT <= SYSDATE
+            AND T.END_DT  >= SYSDATE
+            ]]>
     </select>
 
     <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
@@ -181,5 +282,20 @@
                     ORDER BY CODE_NAME
                 </otherwise>
             </choose>
+        </select>
+
+         <select id="selectExpenseCodeList" parameterType="Map" resultType="egovMap">
+              SELECT F1.CLM_TYPE, F1.EXP_TYPE, F1.EXP_TYPE_NAME, F1.DISAB_FLAG
+              FROM FCM0001M F1
+              LEFT JOIN FCM0010M F01 ON F01.BUDGET_CODE = F1.BUDGET_CODE
+              WHERE F1.DISAB_FLAG IS NULL
+              AND F01.START_DT <![CDATA[ <= ]]>  SYSDATE
+              AND F01.END_DT <![CDATA[ >= ]]>  SYSDATE
+              <if test="expenseCode != null and expenseCode !=''">
+                AND F1.EXP_TYPE LIKE '%'|| #{expenseCode} ||'%'
+              </if>
+               <if test="expenseCodeText != null and expenseCodeText !=''">
+                AND F1.EXP_TYPE_NAME LIKE  '%'|| #{expenseCodeText} ||'%'
+              </if>
         </select>
 </mapper>

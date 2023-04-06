@@ -22,9 +22,9 @@ $(document).ready(function(){
           $('#claimType').on("change", function () {
 
               var $this = $(this);
-             CommonCombo.initById("expType");
+             //CommonCombo.initById("expType");
 
-             if (FormUtil.isNotEmpty($this.val())) {
+            /*  if (FormUtil.isNotEmpty($this.val())) {
 
                  CommonCombo.make("expType", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), "", {
                      id: "expType",
@@ -32,15 +32,15 @@ $(document).ready(function(){
                      type:"M"
                  });
 
-             }
+             }*/
          });
 
-        CommonCombo.make("expType", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), "", {
+       /*  CommonCombo.make("expType", "/eAccounting/expense/selectExpenseList", $("#listSForm").serialize(), "", {
             id: "expType",
             name: "expTypeName",
             type:"M"
         });
-
+ */
         CommonCombo.make("claimType", "/eAccounting/expense/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
             id: "code",
             name: "codeName",
@@ -112,6 +112,48 @@ function fn_expenseEdit(){
    Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");
 }
 
+//Budget Code Pop 호출
+function fn_budgetCd(){
+    $("#budgetCd").val("");
+    $("#hbudgetCd").val("");
+    $("#pBudgetCode").val("");
+    $("#pBudgetCodeName").val("");
+    Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
+}
+
+function  fn_setBudgetData(){
+    $("#budgetCd").val($("#pBudgetCode").val());
+    $("#hbudgetCd").val( $("#pBudgetCodeName").val());
+}
+
+//Gl Account Pop 호출
+function fn_glAcc(){
+    $("#glAcc").val("");
+    $("#hglAcc").val("");
+    $("#pGlAccCode").val("");
+    $("#pGlAccCodeName").val("");
+    Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", null, null, true, "glAccountSearchPop");
+}
+
+function fn_setGlData (){
+    $("#glAcc").val($("#pGlAccCode").val());
+    $("#hglAcc").val( $("#pGlAccCodeName").val());
+}
+
+function fn_expenseCd(){
+	$("#expenseCd").val("");
+    $("#hexpenseCd").val("");
+    $("#pExpCode").val("");
+    $("#pExpCodeName").val("");
+    Common.popupDiv("/eAccounting/expense/expenseCode.do", null, null, true, "expenseCodeSearchPop");
+}
+
+function fn_setExpData (){
+    $("#expenseCd").val($("#pExpCode").val());
+    $("#hexpenseCd").val( $("#pExpCodeName").val());
+}
+
+
 function createAUIGrid() {
     // AUIGrid 칼럼 설정
 
@@ -128,14 +170,13 @@ function createAUIGrid() {
             width : 150
         }, {
             dataField : "expType",
-            headerText : '<spring:message code="expense.expType" />',
-            width : 150,
-            visible : false
+            headerText : 'Expense Code',
+            width : 100
         }, {
 	        dataField : "expTypeName",
 	        headerText : '<spring:message code="expense.ExpenseType" />',
             style : "aui-grid-user-custom-left",
-	        width : 120,
+	        width : 150,
 	        editable : false
 	    }, {
             dataField : "glAccCode",
@@ -187,7 +228,14 @@ function createAUIGrid() {
             headerText : 'Controllable',
             width : 100,
             editable : false
-        }];
+        },
+/*         {
+            dataField : "disabFlag",
+            headerText : 'Status',
+            width : 100,
+            editable : false
+        } */
+        ];
 
     //그리드 속성 설정
     var gridPros = {
@@ -242,6 +290,12 @@ function createAUIGrid() {
 
 
 <form action="#"  id="listSForm" name="listSForm" method="post">
+    <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
+    <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
+    <input type="hidden" id = "pExpCode" name="pExpCode" />
+    <input type="hidden" id = "pExpCodeName" name="pExpCodeName" />
+    <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
+    <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -258,12 +312,56 @@ function createAUIGrid() {
 	<select class="multy_select w100p" id="claimType" name="claimType" multiple="multiple">
 	</select>
 	</td>
-	<th scope="row"><spring:message code="expense.ExpenseType" /></th>
+	<th scope="row">Status</th>
+    <td>
+     <select class="w100p"  id="status" name="status" >
+        <option value="">Choose One</option>
+        <option value="1">Active</option>
+        <option value="8">Inactive</option>
+    </select>
+    </td><td></td>
+	<%-- <th scope="row"><spring:message code="expense.ExpenseType" /></th>
 	<td>
 	<select class="multy_select w100p" id="expType" name="expType" multiple="multiple">
 	</select>
-	</td>
+	</td> --%>
 </tr>
+<tr>
+<th scope="row">Expense Code</th>
+    <td>
+        <div class="date_set" style="width:500px"><!-- date_set start -->
+            <p class="search_type" ><input type="hidden" id="hexpenseCd" name="hexpenseCd" title="" placeholder="" class="fl_left" />
+                <input type="text" id="expenseCd" name="expenseCd" title="" placeholder="" class="fl_left"/>
+                <a href="#" class="search_btn" onclick="javascript:fn_expenseCd()" id="expenseCdIcon">
+                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a>
+            </p>
+        </div>
+    </td>
+    <th scope="row">Budget Code</th>
+    <td>
+        <div class="date_set" style="width:500px"><!-- date_set start -->
+            <p class="search_type"><input type="hidden" id="hbudgetCd" name="hbudgetCd" title="" placeholder="" class="fl_left" />
+                <input type="text" id="budgetCd" name="budgetCd" title="" placeholder="" class="fl_left" />
+                <a href="#" class="search_btn" onclick="javascript:fn_budgetCd()" id="budgetCdIcon">
+                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a>
+            </p>
+        </div>
+    </td>
+    <th scope="row">GL Account</th>
+    <td>
+        <div class="date_set" style="width:500px"><!-- date_set start -->
+            <p class="search_type"><input type="hidden" id="hglAcc" name="hglAcc" title="" placeholder="" class="fl_left" />
+                <input type="text" id="glAcc" name="glAcc" title="" placeholder="" class="fl_left" />
+                <a href="#" class="search_btn" onclick="javascript:fn_glAcc()" id="glAccIcon">
+                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a>
+            </p>
+        </div>
+    </td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 

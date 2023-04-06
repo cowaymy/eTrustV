@@ -1,0 +1,5 @@
+Number of Adjustment,Cost Center,Month/Year,Budget Code,GL Account,Adjustment Type,Signal, Adjustment Amount ,Remark,Budget Group Seq
+1,A1601,1/1/2019,1280,61200200,Addition,+,10,TESTING,1
+1,A1601,1/1/2019,17329,61200200,Deduction,-,10,TETSING SECOND,2
+2,A1601,1/2/2019,17286,61200200,Transfer between Period,-,10,TESTING THIRD,1
+2,A1601,2/2/2019,17286,61200200,Transfer between Period,+,10,TESTING FORTH,2

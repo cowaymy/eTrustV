@@ -11,6 +11,7 @@ var glCodeGridID;
 
 $(document).ready(function() {
 
+	console.log("Cost Center: " + '${resultList.costcenter}' + "Budget Code: " + '${resultList.budgetCode}');
 	//아이템 AUIGrid 칼럼 설정
 	var glCodecolumnLayout = [ {
 	    dataField : "glAccCode",
@@ -50,8 +51,8 @@ $(document).ready(function() {
 
 //리스트 조회.
 function fn_selectGlListAjax() {
-    Common.ajax("GET", "/eAccounting/expense/selectGlCodeList?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
-
+    //Common.ajax("GET", "/eAccounting/expense/selectGlCodeList?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
+    	Common.ajax("GET", "/eAccounting/expense/selectCodeListBG?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
          console.log("성공.");
          console.log( result);
 
@@ -84,6 +85,8 @@ function fn_selectAdjustmentCBG() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="glSForm" name="glSForm" method="post">
+<input type="hidden" id="searchBudgetCode" name="searchBudgetCode"  value="${resultList.budgetCode}"/>
+<input type="hidden" id="searchCostCenter" name="searchCostCenter"  value="${resultList.costcenter}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -10,17 +10,21 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface ExpenseMapper {
 
 	List<EgovMap> selectExpenseList( Map<String, Object> params) throws Exception;
-	
+
 	String selectMaxExpType(Map<String, Object> params) throws Exception;
-	
+
 	int insertExpenseInfo(Map<String, Object> params) throws Exception;
-	
+
 	List<EgovMap> selectBudgetCodeList( Map<String, Object> params) throws Exception;
-	
+
+	List<EgovMap> selectCodeListWO( Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectExpenseCodeList( Map<String, Object> params) throws Exception;
+
 	List<EgovMap> selectGlCodeList( Map<String, Object> params) throws Exception;
-	
+
 	int updateExpenseInfo (Map<String, Object> params) throws Exception;
-	
+
 	List<EgovMap> selectCodeList( Map<String, Object> params) throws Exception;
-	
+
 }

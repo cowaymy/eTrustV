@@ -1,5 +1,6 @@
 package com.coway.trust.biz.eAccounting.budget.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,4 +87,33 @@ public interface BudgetMapper {
 	List<EgovMap> getListPerm(Map<String, Object> params);
 
 	List<EgovMap> getListPermAppr(Map<String, Object> params);
+
+	String selectAdjType(String params);
+
+	List<EgovMap> selectBudgetCodeList(Map<String, Object> params) throws Exception;
+
+	String selectUploadAdjNo();
+
+	void insertUploadAdjustmentT(HashMap<String, Object> hm);
+
+	List<EgovMap> getUploadMasterList(Map<String, Object> reMap);
+
+	List<EgovMap> getUploadNewMasterList(Map<String, Object> reMap);
+
+	String checkDuplicate(Map<String, Object> reMap);
+
+	public List<EgovMap> selectBudgetAdjustmentConflict(Map<String, Object> obj) ;
+
+	void removeFCM0039D(Map<String, Object> reMap);
+
+	void updateFCM0039D (Map<String, Object> params);
+
+	int getBudgetAvailable (Map<String, Object> params);
+
+	void updateBudgetCode(Map<String, Object> params);
+
+	List<EgovMap> selectStatusList();
+
+	List<EgovMap> selectExpenseTyp();
+
 }

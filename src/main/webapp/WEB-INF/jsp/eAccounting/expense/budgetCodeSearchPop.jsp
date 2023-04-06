@@ -14,6 +14,8 @@ var budgetCodeText;
 
 $(document).ready(function() {
 console.log("budgetCodeSearchPop");
+
+console.log("Cost Center: " + '${resultList.costcenter}');
 	// 아이템 AUIGrid 칼럼 설정
 	var budgetcolumnLayout = [ {
 	    dataField : "budgetCode",
@@ -62,6 +64,7 @@ console.log("budgetCodeSearchPop");
         	 fn_setPopBudgetData();
          }else{
         	 fn_setBudgetData();
+        	 console.log("Budget Code: " + $("#pBudgetCode").val());
          }
 
 
@@ -79,7 +82,8 @@ console.log("budgetCodeSearchPop");
 
 //리스트 조회.
 function fn_selectBudgetListAjax() {
-    Common.ajax("GET", "/eAccounting/expense/selectBudgetCodeList?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/expense/selectCodeListBG?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
+    	//Common.ajax("GET", "/eAccounting/expense/selectBudgetCodeList?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
 
          console.log("성공.");
          console.log( result);
@@ -114,7 +118,7 @@ function fn_selectAdjustmentCBG() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="bgSForm" name="bgSForm" method="post">
-
+<input type="hidden" id="searchCostCenter" name="searchCostCenter"  value="${resultList.costcenter}"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

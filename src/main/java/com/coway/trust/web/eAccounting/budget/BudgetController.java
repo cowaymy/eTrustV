@@ -1,15 +1,21 @@
 package com.coway.trust.web.eAccounting.budget;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -564,6 +570,8 @@ public class BudgetController {
 		}
 
 		model.addAttribute("budgetStatus", "Y");
+		model.addAttribute("resultList", params);
+		LOGGER.debug("ResultList>>>>" + params);
 
 		if(!StringUtils.isEmpty(params.get("gridBudgetDocNo"))){
 
@@ -814,6 +822,7 @@ public class BudgetController {
         return "eAccounting/budget/budgetApprove";
     }
 
+
 	@RequestMapping(value = "/selectApprovalList")
 	public ResponseEntity <List<EgovMap>>  selectApprovalList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 
@@ -905,6 +914,7 @@ public class BudgetController {
 		sendParam.put("costCenter", params.get("sendCostCenter"));
 		sendParam.put("glAccCode", params.get("sendGlAccCode"));
 		sendParam.put("budgetCode", params.get("sendBudgetCode"));
+		LOGGER.debug("Cost Centre Here: " + params.get("sendCostCenter"));
 
 		send = budgetService.selectPlanMaster(sendParam);
 
@@ -1119,6 +1129,165 @@ public class BudgetController {
 	    }
 
 	    return ResponseEntity.ok(info);
+	}
+
+	@RequestMapping(value = "/uploadBudgetAdjustment", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> uploadBudgetAdjustment(@RequestBody Map<String, Object> params,
+        ModelMap model, SessionVO sessionVO) throws Exception {
+
+		LOGGER.debug("uploadBudgetAdjustment.do :::: params {} ", params);
+		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+        Map<String, Object> formData = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+
+    	  if(!CommonUtils.isEmpty(formData.get("pAtchFileGrpIdUpload").toString())){
+
+    			int atchFileGrpId =  Integer.parseInt(formData.get("pAtchFileGrpIdUpload").toString());
+    			formData.put("atchFileGrpId", atchFileGrpId);
+    		}
+
+          // Item map
+          Map<String, Object> itemMap = null;
+          List<Object> itemList = new ArrayList<Object>();
+
+          // 등록 parameter 세팅
+          if (gridList.size() > 0) {
+            Map<String, Object> gridMap = null;
+
+            for (int i = 0; i < gridList.size(); i++) {
+
+              gridMap = (Map<String, Object>) gridList.get(i);
+
+              // 첫번째 값이 없으면 skip
+              if (gridMap.get("0") == null || String.valueOf(gridMap.get("0")).equals("")
+                  || String.valueOf(gridMap.get("0")).trim().length() < 1) {
+                continue;
+              }
+
+
+              itemMap = new HashMap<String, Object>();
+              itemMap.put("adjNo", Integer.valueOf((String) gridMap.get("0")));
+              itemMap.put("costCentr", String.valueOf(gridMap.get("1")).trim().toUpperCase());
+              String adjYearMonth = String.valueOf(gridMap.get("2")).trim().toUpperCase();
+
+                  if(adjYearMonth.length() == 8){
+                	  adjYearMonth = adjYearMonth.substring(2);
+                	  adjYearMonth = "0" + adjYearMonth;
+                  }else if(adjYearMonth.length() == 10){
+                	  adjYearMonth = adjYearMonth.substring(3);
+                  }
+
+              LOGGER.debug("AdYearMonth: " + adjYearMonth);
+              itemMap.put("adjYearMonth", adjYearMonth);
+
+              String budgetCd = String.valueOf(gridMap.get("3")).trim().toUpperCase();
+              if(budgetCd.length() < 5 && budgetCd.length() == 4){
+            	  budgetCd = "0" + budgetCd;
+              }
+              itemMap.put("budgetCode", budgetCd);
+              String glAcc = String.valueOf(gridMap.get("4")).trim();
+              if(glAcc.length() == 8){
+            	  glAcc = "00" + glAcc;
+              }
+              itemMap.put("glAccCode", glAcc);
+              String adjType = String.valueOf(gridMap.get("5")).trim().toUpperCase();
+              itemMap.put("budgetAdjType", budgetService.selectAdjType(adjType));
+              itemMap.put("signal", String.valueOf(gridMap.get("6")).trim().toUpperCase());
+              itemMap.put("adjAmt", String.valueOf(gridMap.get("7")).trim());
+              itemMap.put("remark", String.valueOf(gridMap.get("8")).trim());
+              itemMap.put("budgetGrpSeq", Integer.valueOf((String) gridMap.get("9")));
+
+              itemList.add(itemMap);
+            }
+          }
+
+          // 마스터 정보 parameter 추가 세팅
+           formData.put("crtUserId", sessionVO.getUserId());
+           formData.put("updUserId", sessionVO.getUserId());
+
+          // 저장처리
+          Map<String, Object> returnMap = budgetService.uploadBudgetAdjustment(formData, itemList);
+
+          LOGGER.debug("uploadBudgetAdjustment.do :::: returnMap {} ", returnMap);
+          String message = "";
+          message = (String) returnMap.get("message");
+
+          List<EgovMap> list = null;
+          list = (List<EgovMap>) returnMap.get("resultList");
+
+          LOGGER.debug("uploadBudgetAdjustment.do :::: message {} ", message);
+
+          ReturnMessage msg = new ReturnMessage();
+          if (message == null || message.equalsIgnoreCase("")){
+            msg.setCode(AppConstants.SUCCESS);
+            LOGGER.debug("if message is null ");
+          } else {
+            msg.setCode(AppConstants.FAIL);
+            msg.setMessage(message);
+            msg.setDataList(list);
+            LOGGER.debug("else message is null ");
+          }
+          msg.setMessage(message);
+          msg.setDataList(list);
+          return ResponseEntity.ok(msg);
+
+          // 결과 만들기.
+
+
+        }
+
+
+	@RequestMapping(value = "/budgetCodeMaster.do")
+	public String serialByLocation(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		List<EgovMap> statusList = budgetService.selectStatusList();
+		List<EgovMap> expenseTyp = budgetService.selectExpenseTyp();
+
+		model.addAttribute("statusList", new Gson().toJson(statusList));
+		model.addAttribute("expenseTyp", new Gson().toJson(expenseTyp));
+		return "eAccounting/budget/budgetCodeMaster";
+	}
+
+	@RequestMapping(value = "/selectBudgetCodeList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBudgetCodeList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		String[] stusCodeId = request.getParameterValues("stusCodeId");
+		String[] expenseTyp = request.getParameterValues("expenseType");
+		params.put("stusCodeId", stusCodeId);
+		params.put("expenseTyp", expenseTyp);
+
+		List<EgovMap> budgetCodeList = null;
+		budgetCodeList = budgetService.selectBudgetCodeList(params);
+		return ResponseEntity.ok(budgetCodeList);
+	}
+
+
+	@RequestMapping(value = "/updateBudgetCode.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateBudgetCode(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+
+		int updCnt	= 0;
+		List<Object> updList	= params.get(AppConstants.AUIGRID_UPDATE);
+
+		//int status = updList.get("Status");
+		LOGGER.info("updateSalesPlanDetail : {}", updList.toString());
+
+		if ( 0 < updList.size() ) {
+			updCnt	= budgetService.updateBudgetCode(updList, sessionVO);
+		} else {
+			LOGGER.info("updateSalesPlanDetail : no changed");
+		}
+
+		LOGGER.info("updCnt : ", updCnt);
+
+		ReturnMessage message	= new ReturnMessage();
+
+		if ( 0 < updCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(updCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+
+		return	ResponseEntity.ok(message);
 	}
 }
 

@@ -65,6 +65,17 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 	}
 
 	@Override
+	public List<EgovMap> selectCodeListWO(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return expenseMapper.selectCodeListWO(params);
+	}
+
+	public List<EgovMap> selectExpenseCodeList(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return expenseMapper.selectExpenseCodeList(params);
+	}
+
+	@Override
 	public List<EgovMap> selectGlCodeList(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return expenseMapper.selectGlCodeList(params);

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import com.coway.trust.biz.eAccounting.budget.BudgetService;
 import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementServieImpl;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -523,4 +526,271 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
     public List<EgovMap> getListPermAppr(Map<String, Object> params) {
     	return budgetMapper.getListPermAppr(params);
     }
+
+    @Override
+    public Map<String, Object> uploadBudgetAdjustment(Map<String, Object> formData, List<Object> itemList) throws Exception {
+      // TODO Auto-generated method stub
+    	Logger.debug("uploadBudgetAdjustment :::: itemList {} ", itemList);
+
+        String uploadAdjNo = budgetMapper.selectUploadAdjNo();
+      	List budgetDocNoList = new ArrayList();
+
+      	Object  atchFileGrpId = formData.get("atchFileGrpId");
+      	List<Object> resultAddList = new ArrayList();
+
+          // insert FCM0039D
+          if (itemList.size() > 0) {
+            HashMap<String, Object> hm = null;
+            for (Object map : itemList) {
+              hm = (HashMap<String, Object>) map;
+              hm.put("uploadAdjNo", uploadAdjNo);
+              hm.put("crtUserId", formData.get("crtUserId"));
+              hm.put("updUserId", formData.get("updUserId"));
+              budgetMapper.insertUploadAdjustmentT(hm);
+
+            }
+          }
+
+
+        Map<String, Object> reMap = new HashMap();
+        Map<String, Object> updateMap = new HashMap();
+
+        reMap.put("uploadAdjNo", uploadAdjNo);
+      	int compareKey = 1;
+
+        List<EgovMap> uploadMasterList = budgetMapper.getUploadMasterList(reMap);
+        List resultList = new ArrayList();
+      	List adjList = null;
+      	int cnt = 0;
+      	Logger.debug("uploadBudgetAdjustment :::: uploadMasterList {} ", uploadMasterList);
+      	 int addCnt=0;
+      	 int addTurn = 0;
+          if (uploadMasterList.size() > 0) {
+
+          	Object  budgetDocNo = "";
+
+            for (int a = 0; a < uploadMasterList.size(); a++) {
+             reMap = uploadMasterList.get(a);
+             Logger.debug("reMap >>> " + reMap.get("adjNumber"));
+              reMap.put("uploadAdjNo", uploadAdjNo);
+
+      				reMap.put("adjNumber", compareKey);
+      				List<EgovMap> uploadNewMasterList = budgetMapper.getUploadNewMasterList(reMap);
+      				Logger.debug("uploadNewMasterList {} >>>" + uploadNewMasterList);
+      				if (uploadNewMasterList.size() > 0) {
+
+      					for (int i = 0; i < uploadNewMasterList.size(); i++) {
+      					reMap = uploadNewMasterList.get(i);
+      					Logger.debug("reMap 2 >>> " + reMap);
+      					reMap.put("uploadAdjNo", uploadAdjNo);
+      					reMap.put("crtUserId", formData.get("crtUserId"));
+      					reMap.put("updUserId", formData.get("updUserId"));
+      					reMap.put("costCenter", reMap.get("costCentr"));
+      					if (checkPlanMaster(reMap) < 0) { // cnt > 0 mean budget adjustment already uploaded before
+
+      						//List<EgovMap> list = selectBudgetAdjustmentConflict(reMap);
+      					  // remove the data from FCM0039D
+      					  removeFCM0039D(reMap);
+
+      					  formData.put("message", "Error. The budget code is not in yearly budget");
+      					  /*for(i = 0; i<list.size(); i++){
+      						  resultList.add(list.get(i));
+      					  }*/
+
+
+      					} else { // no conflict location can proceed
+      						Logger.debug("uploadAdjNo :::: reMap {} ", reMap);
+
+      						((Map<String, Object>) reMap).put("userId", formData.get("updUserId"));
+      						addCnt++;
+      						addTurn++;
+
+      						if(addTurn == 1){
+      						//if(addTurn == 1 && CommonUtils.isEmpty(budgetDocNo)){
+
+      							((Map<String, Object>) reMap).put("atchFileGrpId", formData.get("atchFileGrpId"));
+
+      							//master table insert
+      							budgetMapper.insertAdjustmentM((Map<String, Object>) reMap);
+
+      							budgetDocNo = (String) ((Map<String, Object>) reMap).get("budgetDocNo");
+      							if(!budgetDocNoList.contains(budgetDocNo)){
+      								budgetDocNoList.add(budgetDocNo);
+      							}
+
+      						}
+
+      						((Map<String, Object>) reMap).put("budgetDocNo", budgetDocNo);
+
+      						//detail table insert
+      						budgetMapper.insertAdjustmentD((Map<String, Object>) reMap);
+
+      						reMap.put("adjNumber", compareKey);
+
+      						budgetMapper.updateFCM0039D(reMap);
+      					//}
+      						cnt++;
+      				}
+
+
+      					}
+      					addTurn = 0;
+      					Logger.debug("addTurn: " + addTurn);
+      					a += cnt;
+      					Logger.debug("a is now >>> " + a);
+      				} else {
+      				  // remove the data from FCM0039D
+      				  removeFCM0039D(reMap);
+
+
+      				  formData.put("message", "Error. Please try again");
+      				}
+      			//}
+      			++compareKey;
+      			Logger.debug("Current compareKey: " + compareKey);
+            }
+            /*if (resultList.size() > 0){
+          	  formData.put("dataList", resultList);
+            }*/
+
+          } else {
+            // remove the data from LOG0112D
+            removeFCM0039D(reMap);
+
+            formData.put("message", "Error. No data inserted");
+          }
+
+        Map approvalMap = new HashMap<String, Object>();
+
+      	for(int i = 0; i < budgetDocNoList.size(); i++){
+      		EgovMap result = new EgovMap();
+      		List resultAmtList = new ArrayList();
+      		String overbudget="N"; //예산 사용 가능
+
+      		//approval table insert
+      		approvalMap.put("budgetDocNo", budgetDocNoList.get(i));
+      		approvalMap.put("userId", formData.get("crtUserId"));
+      		approvalMap.put("appvStus", "O");
+      		approvalMap.put("appvPrcssStus",  "R");
+      		approvalMap.put("atchFileGrpId", atchFileGrpId);
+
+      		List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);
+
+      			for(int j=0; j < amtList.size(); j++){
+      				EgovMap amtMap = amtList.get(j);
+
+      				if(  Float.parseFloat(amtMap.get("total").toString()) < 0 && Float.parseFloat(amtMap.get("total").toString())*-1 > Float.parseFloat(amtMap.get("availableAmt").toString())){
+
+      					Logger.debug(" total : " + amtMap.get("total").toString()  );
+      					Logger.debug(" availableAmt: " + amtMap.get("availableAmt").toString()  );
+
+      					overbudget = "Y";  //예산 초과
+      					amtMap.put("overbudget", overbudget);
+
+      					resultAmtList.add(amtMap);
+      					continue;
+      				}
+      			}
+
+      			if(overbudget.equals("N")){
+      				budgetMapper.insertApprove(approvalMap);
+      				budgetMapper.updateAdjustmentM(approvalMap);
+
+      				Map ntf = new HashMap<String, Object>();
+      				ntf.put("code", "Budget");
+      				ntf.put("codeName", "Budget Adjustment");
+      				ntf.put("clmNo", budgetDocNoList.get(i).toString());
+      				ntf.put("appvStus", "R");
+      				ntf.put("rejctResn", "Pending Approval.");
+      				ntf.put("reqstUserId", "BUDGET");
+      				ntf.put("userId", formData.get("crtUserId"));
+
+      				webInvoiceMapper.insertNotification(ntf);
+      			}else{
+
+      				result.put("totCnt", addCnt);
+      				result.put("budgetDocNo", budgetDocNoList.get(i).toString());
+      				result.put("resultAmtList", resultAmtList);
+      				result.put("overbudget", overbudget);
+      				throw new ApplicationException("-1","Overbudget");
+      			}
+
+
+
+      			result.put("totCnt", addCnt);
+      			result.put("budgetDocNo", budgetDocNoList.get(i).toString());
+      			result.put("resultAmtList", resultAmtList);
+      			result.put("overbudget", overbudget);
+
+      			resultAddList.add(result);
+      		}
+
+      	//formData.put("budgetDocNoList", budgetDocNoList);
+      	formData.put("resultList", resultAddList);
+
+        return formData;
+    }
+
+    @Override
+	public String selectAdjType(String params) {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectAdjType(params);
+	}
+
+
+    @Override
+	public List<EgovMap> selectBudgetCodeList(Map<String, Object> params) throws Exception {
+		return budgetMapper.selectBudgetCodeList(params);
+	}
+
+    private int checkPlanMaster(Map<String, Object> reMap) throws Exception {
+        int resultCnt = budgetMapper.selectPlanMaster(reMap);
+
+        return resultCnt;
+      }
+
+    @Override
+	public int updateBudgetCode(List<Object> updList, SessionVO sessionVO) {
+
+		int updCnt	= 0;
+		int updUserId	= sessionVO.getUserId();
+		//int stusCode = updList.g
+
+		try {
+			for ( Object obj : updList ) {
+				((Map<String, Object>) obj).put("updUserId", updUserId);
+				budgetMapper.updateBudgetCode((Map<String, Object>) obj);
+				updCnt++;
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+		return	updCnt;
+	}
+
+    public List<EgovMap> selectBudgetAdjustmentConflict(Map<String, Object> params){
+  	  return budgetMapper.selectBudgetAdjustmentConflict(params);
+    }
+
+    private void removeFCM0039D(Map<String, Object> reMap) {
+        // TODO Auto-generated method stub
+        budgetMapper.removeFCM0039D(reMap);
+      }
+
+   private int checkBudget(Map<String, Object> reMap) throws Exception {
+        // TODO Auto-generated method stub
+	   int result = budgetMapper.getBudgetAvailable(reMap);
+	   return result;
+      }
+
+   public List<EgovMap> selectStatusList() {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectStatusList();
+	}
+
+   public List<EgovMap> selectExpenseTyp() {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectExpenseTyp();
+	}
 }
