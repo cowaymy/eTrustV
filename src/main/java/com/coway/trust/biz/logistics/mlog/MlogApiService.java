@@ -14,129 +14,120 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface MlogApiService {
 
-	List<EgovMap> getRDCStockList(Map<String, Object> params);
+  // List<EgovMap> getBarcodeList(Map<String, Object> params);
 
-	List<EgovMap> getStockbyHolderList(Map<String, Object> params);
+  // List<EgovMap> getNonBarcodeList(Map<String, Object> params);
 
-	List<EgovMap> getCommonQty(Map<String, Object> params);
+  // List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params);
 
-	List<EgovMap> getCt_CodyList(Map<String, Object> params);
+  // List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap);
 
-	List<EgovMap> getInventoryOverallStock(Map<String, Object> params);
+  List<EgovMap> getRDCStockList(Map<String, Object> params);
 
-	List<EgovMap> getAllStockList(Map<String, Object> params);
+  List<EgovMap> getStockbyHolderList(Map<String, Object> params);
 
-	List<EgovMap> getInventoryStockByHolder(Map<String, Object> params);
+  List<EgovMap> getCommonQty(Map<String, Object> params);
 
-	List<EgovMap> StockReceiveList(Map<String, Object> params);
+  List<EgovMap> getCt_CodyList(Map<String, Object> params);
 
-	List<EgovMap> selectStockReceiveSerial(Map<String, Object> params);
-	List<EgovMap> selectStockReceiveSerialScan(Map<String, Object> params);
+  List<EgovMap> getInventoryOverallStock(Map<String, Object> params);
 
-	List<EgovMap> getMyStockList(Map<String, Object> params);
+  List<EgovMap> getAllStockList(Map<String, Object> params);
 
-	List<EgovMap> getReturnPartsSearch(Map<String, Object> params);
-	List<EgovMap> getReturnPartsSearchScan(Map<String, Object> params);
+  List<EgovMap> getInventoryStockByHolder(Map<String, Object> params);
 
-	List<EgovMap> getAlternativeFilterMList();
+  List<EgovMap> StockReceiveList(Map<String, Object> params);
 
-	List<EgovMap> getAlternativeFilterDList();
+  List<EgovMap> selectStockReceiveSerial(Map<String, Object> params);
 
-	List<EgovMap> getItemBankLocationList(Map<String, Object> params);
+  List<EgovMap> selectStockReceiveSerialScan(Map<String, Object> params);
 
-	List<EgovMap> getItemBankItemList();
+  List<EgovMap> getMyStockList(Map<String, Object> params);
 
-	List<EgovMap> getItemBankResultList(Map<String, Object> params);
+  List<EgovMap> getReturnPartsSearch(Map<String, Object> params);
 
-	List<EgovMap> getCommonReqHeader(Map<String, Object> params);
+  List<EgovMap> getReturnPartsSearchScan(Map<String, Object> params);
 
-	List<EgovMap> getCommonReqParts(Map<String, Object> params);
-	List<EgovMap> getCommonReqPartsScan(Map<String, Object> params);
+  List<EgovMap> getAlternativeFilterMList();
 
-	List<EgovMap> getAuditStockResultDetail(Map<String, Object> params);
+  List<EgovMap> getAlternativeFilterDList();
 
-	List<EgovMap> getStockTransferReqStatusMList(Map<String, Object> params);
+  List<EgovMap> getItemBankLocationList(Map<String, Object> params);
 
-	List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params);
+  List<EgovMap> getItemBankItemList();
 
-	List<EgovMap> getNonBarcodeM(Map<String, Object> params);
+  List<EgovMap> getItemBankResultList(Map<String, Object> params);
 
-	List<EgovMap> getNonBarcodeDList(String invenAdjustLocId);
+  List<EgovMap> getCommonReqHeader(Map<String, Object> params);
 
-	List<EgovMap> getBarcodeDList(String invenAdjustLocId);
+  List<EgovMap> getCommonReqParts(Map<String, Object> params);
 
-	List<EgovMap> getBarcodeCList(String invenAdjustLocId);
+  List<EgovMap> getCommonReqPartsScan(Map<String, Object> params);
 
-	List<EgovMap> getUsedPartsList(Map<String, Object> params);
+  List<EgovMap> getAuditStockResultDetail(Map<String, Object> params);
 
-	List<EgovMap> getMiscPartList();
+  List<EgovMap> getStockTransferReqStatusMList(Map<String, Object> params);
 
-	List<EgovMap> getFilterNotChangeList(Map<String, Object> params);
+  List<EgovMap> getStockTransferReqStatusDList(Map<String, Object> params);
 
-	List<EgovMap> getFilterChangeList(Map<String, Object> params);
+  List<EgovMap> getNonBarcodeM(Map<String, Object> params);
 
-	List<EgovMap> getUserFilterList(Map<String, Object> params);
+  List<EgovMap> getNonBarcodeDList(String invenAdjustLocId);
 
-	List<EgovMap> getInventoryOnHandStock(Map<String, Object> params);
+  List<EgovMap> getBarcodeDList(String invenAdjustLocId);
 
-	List<EgovMap> getInventoryOnHandStockNoSerial(Map<String, Object> params);
+  List<EgovMap> getBarcodeCList(String invenAdjustLocId);
 
-	/**
-	 * 현창배 추가
-	 *
-	 * @param params
-	 * @return
-	 */
-	//List<EgovMap> getBarcodeList(Map<String, Object> params);
+  List<EgovMap> getUsedPartsList(Map<String, Object> params);
 
-	//List<EgovMap> getNonBarcodeList(Map<String, Object> params);
+  List<EgovMap> getMiscPartList();
 
-	List<EgovMap> getStockAuditResult(Map<String, Object> params);
+  List<EgovMap> getFilterNotChangeList(Map<String, Object> params);
 
-	List<EgovMap> getStockPriceList(Map<String, Object> params);// 완
+  List<EgovMap> getFilterChangeList(Map<String, Object> params);
 
-	//List<StrockMovementVoForMobile> getStockRequestStatusHeader(Map<String, Object> params);
+  List<EgovMap> getUserFilterList(Map<String, Object> params);
 
-	//List<StrockMovementVoForMobile> getRequestStatusParts(Map<String, Object> setMap);
+  List<EgovMap> getInventoryOnHandStock(Map<String, Object> params);
 
-	/**
-	 * 인서트 추가
-	 *
-	 * @param reqTransferMList
-	 * @return
-	 */
+  List<EgovMap> getInventoryOnHandStockNoSerial(Map<String, Object> params);
 
-	void saveInvenReqTransfer(InventoryReqTransferMForm inventoryReqTransferMForm);
+  List<EgovMap> getStockAuditResult(Map<String, Object> params);
 
-	void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
-	void stockMovementReqDeliveryScan(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
+  List<EgovMap> getStockPriceList(Map<String, Object> params);// 완
 
-	Map<String, Object> selectStockMovementSerial(Map<String, Object> params);
+  void saveInvenReqTransfer(InventoryReqTransferMForm inventoryReqTransferMForm);
 
-	void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm);
+  void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
 
-	void stockMovementConfirmReceiveScan(ConfirmReceiveMForm confirmReceiveMForm);
+  void stockMovementReqDeliveryScan(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm);
 
-	String stockMovementCommonCancle(Map<String, Object> params);
+  Map<String, Object> selectStockMovementSerial(Map<String, Object> params);
 
-	void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReq);
-	void returnOnHandStockReqScan(ReturnOnHandStockReqMForm returnOnHandStockReq);
+  void stockMovementConfirmReceive(ConfirmReceiveMForm confirmReceiveMForm);
 
-	void inputNonBarcode(InputNonBarcodeForm inputNonBarcodeForm);
+  void stockMovementConfirmReceiveScan(ConfirmReceiveMForm confirmReceiveMForm);
 
-	void inputBarcode(List<InputBarcodePartsForm> inputBarcodePartsForm);
+  String stockMovementCommonCancle(Map<String, Object> params);
 
-	Map<String, Object> selectDelvryGRcmplt(String delNo);
+  void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReq);
 
-	/* Woongjin Jun */
-	List<EgovMap> getStockHCPriceList(Map<String, Object> params);
-	/* Woongjin Jun */
+  void returnOnHandStockReqScan(ReturnOnHandStockReqMForm returnOnHandStockReq);
 
-	/* Woongjin Han */
-	List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params);
-	/* Woongjin Han */
+  void inputNonBarcode(InputNonBarcodeForm inputNonBarcodeForm);
 
-	List<EgovMap> getHiCareInventory(Map<String, Object> params);
+  void inputBarcode(List<InputBarcodePartsForm> inputBarcodePartsForm);
 
-	Map<String, Object> getSMOCntList(Map<String, Object> params);
+  Map<String, Object> selectDelvryGRcmplt(String delNo);
+
+  List<EgovMap> getStockHCPriceList(Map<String, Object> params);
+
+  List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params);
+
+  List<EgovMap> getHiCareInventory(Map<String, Object> params);
+
+  Map<String, Object> getSMOCntList(Map<String, Object> params);
+
+  List<EgovMap> getOnHandStkSerialList(Map<String, Object> params);
+
 }
