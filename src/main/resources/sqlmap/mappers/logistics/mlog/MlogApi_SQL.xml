@@ -2575,6 +2575,6 @@
                                             WHERE WH_LOC_CODE = #{userId} )
         AND ( A.ITM_CODE = #{partsCode} OR B.STK_DESC = #{partsCode} )
         AND A.STUS_CODE IN ( 'I' )
-       ORDER BY A.SERIAL_NO;
+       ORDER BY A.SERIAL_NO
   </select>
 </mapper>
