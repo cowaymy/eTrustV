@@ -2575,6 +2575,11 @@
                                             WHERE WH_LOC_CODE = #{userId} )
         AND ( A.ITM_CODE = #{partsCode} OR B.STK_DESC = #{partsCode} )
         AND A.STUS_CODE IN ( 'I' )
+
+        <if test="serialNo !=null and serialNo !=''">
+          AND A.SERIAL_NO = #{serialNo}
+       </if>
+
        ORDER BY A.SERIAL_NO
   </select>
 </mapper>
