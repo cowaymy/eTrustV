@@ -104,7 +104,7 @@
 
     <if test="searchType == 1 ">
       AND L56.STK_CODE = #{searchKeyword}
-    </if>
+    </if>1472
     <if test="searchType == 2 ">
       AND UPPER(L56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
     </if>
@@ -1434,41 +1434,43 @@
 
         <if test="reqStatus eq 'MROL'.toString() ">
            AND LG47M.RCIV_CDC_RDC = SY28M.WH_LOC_ID
-           AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
+        </if>
 
-           <if test="searchStatus == 1 ">
-             AND LG47M.REQST_STUS ='O'
-           </if>
+        AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
 
-           <if test="searchStatus == 2 ">
-             AND LG47M.REQST_STUS='C'
-           </if>
+        <if test="searchStatus == 1 ">
+          AND LG47M.REQST_STUS ='O'
+        </if>
 
-           <if test="searchType == 1 ">
-             and LG47M.PRIDIC_FRQNCY = 'A'
-           </if>
+        <if test="searchStatus == 2 ">
+          AND LG47M.REQST_STUS='C'
+        </if>
 
-           <if test="searchType == 2 ">
-             and LG47M.PRIDIC_FRQNCY = 'M'
-           </if>
+        <if test="searchType == 1 ">
+          and LG47M.PRIDIC_FRQNCY = 'A'
+        </if>
 
-           <if test="reqStatus eq 'MRRL'.toString() ">
-             AND LG47M.TRNSC_TYPE_DTL ='UM03'
-           </if>
+        <if test="searchType == 2 ">
+          and LG47M.PRIDIC_FRQNCY = 'M'
+        </if>
 
-           <if test="reqStatus eq 'MROL'.toString() ">
-              AND LG47M.TRNSC_TYPE_DTL ='UM93'
-           </if>
+        <if test="reqStatus eq 'MRRL'.toString() ">
+           AND LG47M.TRNSC_TYPE_DTL ='UM03'
+        </if>
 
-           <if test="searchFromDate !=null and searchFromDate !=''">
-             AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]>
-                    TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'YYYYMMDD')
-           </if>
+        <if test="reqStatus eq 'MROL'.toString() ">
+           AND LG47M.TRNSC_TYPE_DTL ='UM93'
+        </if>
 
-           <if test="searchToDate !=null and searchToDate !=''">
-             AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[<=]]>
-                    TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'YYYYMMDD')
-           </if>
+        <if test="searchFromDate !=null and searchFromDate !=''">
+          AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[>=]]>
+                 TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'YYYYMMDD')
+        </if>
+
+        <if test="searchToDate !=null and searchToDate !=''">
+          AND TO_CHAR(LG47M.REQST_REQUIRE_DT , 'YYYYMMDD') <![CDATA[<=]]>
+                 TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'YYYYMMDD')
+        </if>
   </select>
 
   <select id="getCommonReqParts" parameterType="Map" resultType="egovMap">
