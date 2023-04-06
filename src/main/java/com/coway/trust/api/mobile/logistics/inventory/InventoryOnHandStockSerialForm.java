@@ -15,10 +15,14 @@ public class InventoryOnHandStockSerialForm {
   @ApiModelProperty(value = "PART CODE", example = "112446")
   private String partsCode;
 
+  @ApiModelProperty(value = "SERAIL NO", example = "13908ERI21A1504061")
+  private String serialNo;
+
   public static Map<String, Object> createMap(InventoryOnHandStockSerialForm inventoryOnHandStockSerialForm) {
     Map<String, Object> params = new HashMap<>();
     params.put("userId", inventoryOnHandStockSerialForm.getUserId());
     params.put("partsCode", inventoryOnHandStockSerialForm.getPartsCode());
+    params.put("serialNo", inventoryOnHandStockSerialForm.getPartsCode());
     return params;
   }
 
@@ -36,5 +40,13 @@ public class InventoryOnHandStockSerialForm {
 
   public void setPartsCode(String partsCode) {
     this.partsCode = partsCode;
+  }
+
+  public String getSerialNo() {
+    return serialNo;
+  }
+
+  public void setSerialNo(String serialNo) {
+    this.serialNo = serialNo;
   }
 }
