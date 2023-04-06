@@ -232,6 +232,19 @@ var myDetailGridData = null;
           if(event.item.name > 1){
               Common.alert('* This function is not support for this filter currently. (quantity which more than 2 / other reasons).');
               AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "serialNo", "");
+          }else{
+        	  if(event.item.serialNo != ""){
+        		  console.log("event.item.serialNo :: " + event.item.serialNo);
+        		  var  codyLoc= ['${orderDetail.codyInfo.ctWhLocId}'];
+        		  var codyFilterStatus = ['I'];
+        		  Common.ajax("POST", "/logistics/SerialMgmt/serialSearchDataList.do", {searchSerialNo:event.item.serialNo,locCode:codyLoc,searchItemCodeOrName:event.item.stkCode,searchStatus:codyFilterStatus}, function (result) {
+        	            if(result.data.length == 0){
+        	            	Common.alert('* This Serial Not belongs to this cody.');
+        	                AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "serialNo", "");
+        	            }
+        	        });
+        	  }
+
           }
       }
 
