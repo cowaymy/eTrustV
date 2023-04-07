@@ -22,7 +22,8 @@
           , CNTRL_EXP
           , DISAB_FLAG
         FROM FCM0001M
-        WHERE 1=1--DISAB_FLAG IS NULL
+        WHERE 1=1
+        <!-- DISAB_FLAG IS NULL -->
             <if test="claimType != null and claimType != ''">
                 AND CLM_TYPE IN
                 <foreach item="item" collection="claimType" index="index" open="(" separator="," close=")">

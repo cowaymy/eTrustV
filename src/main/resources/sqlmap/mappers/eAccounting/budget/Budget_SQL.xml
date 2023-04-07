@@ -1609,9 +1609,7 @@ WHERE 1=1
     </select>
 
     <select id="getListPermAppr" parameterType="Map" resultType="egovMap">
-    <![CDATA[
         SELECT APPR_USER_ID FROM FCM0023M WHERE APPR_GRP = 'BUDGET' AND APPR_USER_ID = #{userId}
-    ]]>
     </select>
 
       <select id="selectAdjType" parameterType="String" resultType="String">
