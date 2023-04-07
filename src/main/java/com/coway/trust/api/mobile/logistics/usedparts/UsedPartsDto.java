@@ -12,85 +12,117 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "UsedPartsDto", description = "UsedPartsDto")
 public class UsedPartsDto {
 
-	@ApiModelProperty(value = "부품코드")
-	String partsCode;
+  @ApiModelProperty(value = "부품코드")
+  String partsCode;
 
-	@ApiModelProperty(value = "부품 id")
-	int partsId;
+  @ApiModelProperty(value = "부품 id")
+  int partsId;
 
-	@ApiModelProperty(value = "부품명")
-	String partsName;
+  @ApiModelProperty(value = "부품명")
+  String partsName;
 
-	@ApiModelProperty(value = "고객명")
-	String custName;
+  @ApiModelProperty(value = "고객명")
+  String custName;
 
-	@ApiModelProperty(value = "수량")
-	int usedQty; // no standard data
+  @ApiModelProperty(value = "수량")
+  int usedQty;
 
-	@ApiModelProperty(value = "통화")
-	String currency; // no standard data
-	
-	@ApiModelProperty(value = "부품 sn")
-	String serialNo; // no standard data
+  @ApiModelProperty(value = "통화")
+  String currency;
 
-	public static UsedPartsDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, UsedPartsDto.class);
-	}
+  @ApiModelProperty(value = "Old Serial No")
+  String serialNo;
 
-	public String getPartsCode() {
-		return partsCode;
-	}
+  @ApiModelProperty(value = "New Installed Serial No")
+  String newSerial;
 
-	public void setPartsCode(String partsCode) {
-		this.partsCode = partsCode;
-	}
+  @ApiModelProperty(value = "HS Service No")
+  String serviceNo;
 
-	public int getPartsId() {
-		return partsId;
-	}
+  @ApiModelProperty(value = "Sales Order No")
+  String salesOrdNo;
 
-	public void setPartsId(int partsId) {
-		this.partsId = partsId;
-	}
+  public static UsedPartsDto create(EgovMap egvoMap) {
+    return BeanConverter.toBean(egvoMap, UsedPartsDto.class);
+  }
 
-	public String getPartsName() {
-		return partsName;
-	}
+  public String getPartsCode() {
+    return partsCode;
+  }
 
-	public void setPartsName(String partsName) {
-		this.partsName = partsName;
-	}
+  public void setPartsCode(String partsCode) {
+    this.partsCode = partsCode;
+  }
 
-	public String getCustName() {
-		return custName;
-	}
+  public int getPartsId() {
+    return partsId;
+  }
 
-	public void setCustName(String custName) {
-		this.custName = custName;
-	}
+  public void setPartsId(int partsId) {
+    this.partsId = partsId;
+  }
 
-	public int getUsedQty() {
-		return usedQty;
-	}
+  public String getPartsName() {
+    return partsName;
+  }
 
-	public void setUsedQty(int usedQty) {
-		this.usedQty = usedQty;
-	}
+  public void setPartsName(String partsName) {
+    this.partsName = partsName;
+  }
 
-	public String getCurrency() {
-		return currency;
-	}
+  public String getCustName() {
+    return custName;
+  }
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
+  public void setCustName(String custName) {
+    this.custName = custName;
+  }
 
-	public String getSerialNo() {
-		return serialNo;
-	}
+  public int getUsedQty() {
+    return usedQty;
+  }
 
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
-	}
+  public void setUsedQty(int usedQty) {
+    this.usedQty = usedQty;
+  }
 
+  public String getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(String currency) {
+    this.currency = currency;
+  }
+
+  public String getSerialNo() {
+    return serialNo;
+  }
+
+  public void setSerialNo(String serialNo) {
+    this.serialNo = serialNo;
+  }
+
+  public String getNewSerial() {
+    return newSerial;
+  }
+
+  public void setNewSerial(String newSerial) {
+    this.newSerial = newSerial;
+  }
+
+  public String getServiceNo() {
+    return serviceNo;
+  }
+
+  public void setServiceNo(String serviceNo) {
+    this.serviceNo = serviceNo;
+  }
+
+  public String getSalesOrdNo() {
+    return salesOrdNo;
+  }
+
+  public void setSalesOrdNo(String salesOrdNo) {
+    this.salesOrdNo = salesOrdNo;
+  }
 }
