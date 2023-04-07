@@ -14,7 +14,7 @@ public interface FileMapper {
 
 	void insertFileGroup(FileGroupVO fileGroupVO);
 
-	int insertFileDetail(FileVO fileVO);
+	void insertFileDetail(FileVO fileVO);
 
 	FileVO selectFileByFileId(int fileId);
 
