@@ -494,6 +494,24 @@
           and nvl(l82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'Y'
         </if>
 
+        <if test="search2Type == 1 ">
+          <if test="search2Inp !=null and search2Inp !=''">
+            and s01.SALES_ORD_NO = #{search2Inp}
+          </if>
+        </if>
+
+        <if test="search2Type == 2 ">
+          <if test="search2Inp !=null and search2Inp !=''">
+            and s26.STK_CODE = #{search2Inp}
+          </if>
+        </if>
+
+         <if test="search2Type == 3 ">
+          <if test="search2Inp !=null and search2Inp !=''">
+            and l82.SVC_ORD_ID = #{search2Inp}
+          </if>
+        </if>
+
         <if test="searchFromDate !=null and searchFromDate !=''">
          AND TO_CHAR (SVC_DT, 'YYYYMMDD')  BETWEEN #{searchFromDate}
         </if>
