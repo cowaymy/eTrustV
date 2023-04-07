@@ -151,7 +151,9 @@
 
 <update id="editRemarkRequest" parameterType="java.util.Map">
 	      UPDATE SAL0344D
-	      SET APPV_REQ = #{editorArea}
+	      SET    APPV_REQ = #{editorArea}
+			      , UPD_ID = #{userId}
+			      , UPD_DT = SYSDATE
 	      WHERE REMARK_ID = #{editorId}
 </update>
 

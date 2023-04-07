@@ -57,7 +57,7 @@ $(function(){
 	          [ "justifyleft", "justifycenter", "justifyright", "justifyfull", "separator",
 	            "lefttoright", "righttoleft", "separator",
 	            "orderedlist", "unorderedlist", "outdent", "indent", "separator",
-	            "forecolor", "hilitecolor", "separator"]
+	            "forecolor", "hilitecolor", "separator","htmlmode"]
 	    ];
 
 	    this.fontname = {
@@ -172,7 +172,7 @@ $(function(){
 	         headers : {
 	             "Content-Type" : "application/json",
 	         },
-	         body : JSON.stringify({editorId : $("#editorId").val(), editorArea : editor.getHTML().replace(/<p><\/p>/g,"<br/>")})
+	         body : JSON.stringify({editorId : $("#editorId").val(), editorArea : editor.getHTML().replace(/<p( style="direction: ltr;")?>\s*<\/p>/g,"<br/>")})
 	     })
 	     .then( r=> r.json())
 	     .then(
