@@ -22,7 +22,7 @@ public class UsedPartsListForm {
   private int searchType;
 
   @ApiModelProperty(value = "search Serial no", example = "13908ERI21A1504061")
-  private int searchSerialNo;
+  private String searchSerialNo;
 
   public static Map<String, Object> createMap(UsedPartsListForm usedPartsListForm) {
     Map<String, Object> params = new HashMap<>();
@@ -66,11 +66,11 @@ public class UsedPartsListForm {
     this.searchType = searchType;
   }
 
-  public int getSearchSerialNo() {
+  public String getSearchSerialNo() {
     return searchSerialNo;
   }
 
-  public void setSearchSerialNo(int searchSerialNo) {
+  public void setSearchSerialNo(String searchSerialNo) {
     this.searchSerialNo = searchSerialNo;
   }
 }
