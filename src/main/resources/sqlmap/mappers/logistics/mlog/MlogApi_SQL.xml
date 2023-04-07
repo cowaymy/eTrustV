@@ -471,8 +471,7 @@
                ( SELECT CODE_NAME
                  FROM SYS0013M
                  WHERE CODE_ID=s26.UOM) currency,
-               l82.OLD_SERIAL serial_No,
-               l82.NEW_SERIAL
+               l82.OLD_SERIAL serial_No
     FROM log0082m l82,
              SVC0008D s08,
              org0001d o01,
