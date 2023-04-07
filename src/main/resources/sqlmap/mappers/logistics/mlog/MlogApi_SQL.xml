@@ -461,11 +461,13 @@
   </select>
 
   <select id="getUsedPartsList" parameterType="Map" resultType="egovMap">
-    SELECT l82.STK_ID parts_Id,
+    SELECT l82.SVC_ORD_ID service_no,
+               l82.STK_ID parts_Id,
                s26.STK_CODE parts_Code,
                s26.STK_DESC parts_Name,
                s29.NAME cust_Name,
                l82.QTY used_Qty,
+               s01.SALES_ORD_NO,
                ( SELECT CODE_NAME
                  FROM SYS0013M
                  WHERE CODE_ID=s26.UOM) currency,
@@ -475,13 +477,15 @@
              SVC0008D s08,
              org0001d o01,
              sys0026m s26,
-             sal0029d s29
+             sal0029d s29,
+             sal0001d s01
     WHERE 1 = 1
         AND s08.cody_id = o01.mem_id
         AND l82.STK_ID=s26.STK_ID
         AND o01.mem_code = #{userId}
         AND l82.svc_ord_id = s08.no
         AND l82.CUST_ID=s29.CUST_ID
+        AND s08.SALES_ORD_ID = s01.SALES_ORD_ID
 
        <if test="searchType == 1 ">
          and nvl(l82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'N'
