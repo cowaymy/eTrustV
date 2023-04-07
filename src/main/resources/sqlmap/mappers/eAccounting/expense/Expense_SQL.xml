@@ -123,6 +123,7 @@
     </select>
 
      <select id="selectCodeListWO" parameterType="Map" resultType="egovMap">
+     <!--  DATE : 070423 -->
 		       SELECT
 		       BUDGET_CODE,
 		       BUDGET_CODE_TEXT,

@@ -318,6 +318,7 @@ WHEN NOT MATCHED THEN
             NVL(M11,0) M11,
             NVL(M12,0) M12
         FROM (
+        <!--  DATE : 070423 -->
             SELECT *
             FROM (
                  SELECT F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F1.GL_ACC_CODE, F1.BUDGET_CODE,
