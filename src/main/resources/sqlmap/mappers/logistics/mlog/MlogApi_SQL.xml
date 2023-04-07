@@ -502,6 +502,13 @@
         <if test="searchToDate !=null and searchToDate !=''">
           AND #{searchToDate}
         </if>
+
+        <if test="searchSerialNo !=null and searchSerialNo !=''">
+          AND l82.OLD_SERIAL = #{searchSerialNo}
+        </if>
+    ORDER BY s01.SALES_ORD_NO,
+                   l82.SVC_ORD_ID,
+                   s26.STK_DESC
   </select>
 
   <select id="StockReceiveList" parameterType="Map" resultType="egovMap">
