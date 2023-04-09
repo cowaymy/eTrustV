@@ -87,4 +87,6 @@ public interface OrderConversionMapper {
 
 	List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params);
 
+	List<EgovMap> paymodeCnvrOrdListRpt(Map<String, Object> params);
+
 }

@@ -4,11 +4,14 @@
 <script type="text/javaScript" language="javascript">
     //AUIGrid 생성 후 반환 ID
     var myGridID;
+    var excelGridID;
 
     $(document).ready(function(){
 
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+
+        createAUIGridExcel();
 
       //AUIGrid.setSelectionMode(myGridID, "singleRow");
 
@@ -67,6 +70,8 @@
                 visible : false
             }];
 
+
+
      // 그리드 속성 설정
         var gridPros = {
 
@@ -96,14 +101,139 @@
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
 
+    function createAUIGridExcel(){
+        // added by Adib 06/04/2023
+        var excelColumnLayout = [ {
+            dataField : "salesOrdNo",
+            headerText : "ORDERNO",
+            width : 80,
+            editable : false
+            }, {
+            dataField : "crtDt",
+            headerText : "DATE",
+            dataType : "date",
+            formatString : "dd/mm/yyyy" ,
+            width : 90,
+            editable : false
+            }, {
+            dataField : "oldPmode",
+            headerText : "OLDPAYMODE",
+            width : 100,
+            editable : false
+            }, {
+            dataField : "newPmode",
+            headerText : "NEWPAYMODE",
+            width : 80,
+            editable : false
+            }, {
+            dataField : "remark",
+            headerText : "REMARKS",
+            width : 120,
+            editable : false
+            }, {
+            dataField : "reqdesc",
+            headerText : "REQDESC",
+            width : 120,
+            editable : false,
+            }, {
+            dataField : "creator",
+            headerText : "CREATOR",
+            width : 80,
+            editable : false
+            }, {
+            dataField : "saleskeyinbranch",
+            headerText : "SALESKEYINBRANCH",
+            width : 100,
+            editable : false
+            }, {
+            dataField : "platform",
+            headerText : "PLATFORM",
+            width : 80,
+            editable : false
+            }];
+
+        var excelGridPros = {
+                enterKeyColumnBase : true,
+                useContextMenu : true,
+                enableFilter : true,
+                showStateColumn : true,
+                displayTreeOpen : true,
+                showRowNumColumn : false,
+                noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+                groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+                exportURL : "/common/exportGrid.do"
+            };
+
+         excelGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
+
+    }
+
     function fn_searchListAjax(){
+    	console.log(myGridID);
         Common.ajax("GET", "/sales/order/paymodeConversionList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
+            console.log(myGridID);
         });
     }
 
     function fn_newConvert(){
         Common.popupDiv("/sales/order/paymodeConversion.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
+    }
+
+    function fn_diffDate(startDt, endDt) {
+        var arrDt1 = startDt.split("/");
+        var arrDt2 = endDt.split("/");
+
+        var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+        var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+        var diff = new Date(dt2 - dt1);
+        var day = diff/1000/60/60/24;
+
+        return day;
+    }
+
+    function fn_genOrdListRpt(){
+
+    	console.log(excelGridID);
+
+    	var msg = "";
+
+    	var morgrid;
+
+    	  if(FormUtil.isEmpty($('#createStDate').val()) || FormUtil.isEmpty($('#createEnDate').val())) {
+              msg += 'Please fill in create date';
+              Common.alert(msg);
+          }
+          else {
+        	  console.log($('#createStDate').val());
+              console.log($('#createEnDate').val());
+
+              var diffDay = fn_diffDate($('#createStDate').val(), $('#createEnDate').val());
+
+              if(diffDay > 181 || diffDay < 0) {
+                  msg += 'Create date must be within 6 months';
+                  Common.alert(msg);
+              }
+              else {
+                  Common.ajax("GET", "/sales/order/paymodeCnvrOrdListRpt.do", $("#searchForm").serialize(), function(result) {
+                	  console.log(result);
+                       AUIGrid.setGridData(excelGridID, result);
+                       if(result.length > -1){
+                    	   fn_excelDown();
+                       }
+
+                       console.log(excelGridID);
+                  });
+
+
+              }
+          }
+
+    }
+
+    function fn_excelDown(){
+        GridCommon.exportTo("excel_list_grid_wrap", "xlsx", "OrderListReport");
     }
 
 
@@ -202,7 +332,19 @@
         </tbody>
     </table><!-- table end -->
 
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
 
+    <ul class="btns">
+        <li><p class="link_btn"><a href="#" onclick="javascript: fn_genOrdListRpt();"> Order List Report</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
@@ -210,7 +352,9 @@
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+
+ <div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

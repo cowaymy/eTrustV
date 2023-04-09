@@ -336,4 +336,8 @@ public EgovMap paymodeConversionView(Map<String, Object> params) {
 public List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params) {
 	return orderConversionMapper.paymodeConversionViewItmList(params);
 }
+
+public List<EgovMap> paymodeCnvrOrdListRpt(Map<String, Object> params) {
+	return orderConversionMapper.paymodeCnvrOrdListRpt(params);
+}
 }

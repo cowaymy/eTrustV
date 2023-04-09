@@ -42,9 +42,11 @@ public interface OrderConversionService {
 	List<EgovMap> chkPayCnvrList(Map<String, Object> params);
 
 	List<EgovMap> paymodeConversionList(Map<String, Object> params);
-	
+
 	EgovMap paymodeConversionView(Map<String, Object> params);
-	
+
 	List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params);
+
+	List<EgovMap> paymodeCnvrOrdListRpt(Map<String, Object> params);
 
 }

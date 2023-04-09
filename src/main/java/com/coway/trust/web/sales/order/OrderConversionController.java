@@ -350,4 +350,12 @@ public class OrderConversionController {
 		return "sales/order/paymodeConvertNewPop";
 	}
 
+	@RequestMapping(value = "/paymodeCnvrOrdListRpt.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> paymodeCnvrOrdListRpt(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> conversionList = orderConversionService.paymodeCnvrOrdListRpt(params);
+
+		return ResponseEntity.ok(conversionList);
+	}
+
 }
