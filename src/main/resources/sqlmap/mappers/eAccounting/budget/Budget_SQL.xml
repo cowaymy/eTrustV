@@ -362,7 +362,7 @@ WHERE 1=1
     WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
     <!-- Default cost center values with cost center disabled on screen -->
     <if test="stCostCentr == null or stCostCentr == '' ">
-      /* stCostCentr == null or stCostCentr == '' */
+       <!-- stCostCentr == null or stCostCentr == ''  -->
       <if test="procFlg != null and procFlg != '' and procFlg == 1">
         AND A.COST_CENTR IN (<![CDATA[
         SELECT
@@ -380,7 +380,7 @@ WHERE 1=1
       </if>
     </if>
     <if test="(costCentr == null or costCentr == '') and flg == 1">
-      /* (costCentr == null or costCentr == '') and flg == 1 */
+     <!--  (costCentr == null or costCentr == '') and flg == 1  -->
       <if test="stCostCentr != null and stCostCentr != '' and procFlg == 0">
         <if test="edCostCentr != null and edCostCentr != '' ">
           AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}

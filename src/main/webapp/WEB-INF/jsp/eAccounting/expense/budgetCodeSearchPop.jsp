@@ -74,7 +74,9 @@ console.log("Cost Center: " + '${resultList.costcenter}');
  // add jgkim
     if("${call}" == "budgetAdj") {
         $("#search_btn").click(fn_selectAdjustmentCBG);
-    } else {
+    } else if("${call}" == "selectCodeList"){
+    	$("#search_btn").click(fn_selectCodeList)
+    }else {
         $("#search_btn").click(fn_selectBudgetListAjax);
     }
 
@@ -82,8 +84,7 @@ console.log("Cost Center: " + '${resultList.costcenter}');
 
 //리스트 조회.
 function fn_selectBudgetListAjax() {
-    Common.ajax("GET", "/eAccounting/expense/selectCodeListBG?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
-    	//Common.ajax("GET", "/eAccounting/expense/selectBudgetCodeList?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
+    	Common.ajax("GET", "/eAccounting/expense/selectBudgetCodeList?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
 
          console.log("성공.");
          console.log( result);
@@ -96,6 +97,15 @@ function fn_selectBudgetListAjax() {
 function fn_selectAdjustmentCBG() {
     Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#bgSForm").serializeJSON(), function(result) {
         console.log(result);
+        AUIGrid.setGridData(bgGridID, result);
+    });
+}
+
+function fn_selectCodeList(){
+	Common.ajax("GET", "/eAccounting/expense/selectCodeListBG?_cacheId=" + Math.random(), $("#bgSForm").serialize(), function(result) {
+		 console.log("성공.");
+         console.log( result);
+
         AUIGrid.setGridData(bgGridID, result);
     });
 }

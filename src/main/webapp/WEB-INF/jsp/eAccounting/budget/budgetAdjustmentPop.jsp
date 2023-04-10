@@ -538,6 +538,8 @@ function fn_pBudgetCodePop(str){
       obj.costcenter = $("#recvCostCenter").val();
       if($("#pAdjustmentType").val() == "04"){
           obj.call = 'budgetAdj';
+      }else{
+    	  obj.call = 'selectCodeList';
       }
   }
 
@@ -609,8 +611,11 @@ function fn_pGlAccountSearchPop(str){
       $("#recvGlAccCodeName").val("");
       obj.costcenter = $("#recvCostCenter").val();
       obj.budgetCode = $("#recvBudgetCode").val();
+      console.log("Budget Code: " + obj.budgetCode);
       if($("#pAdjustmentType").val() == "05"){
           obj.call = 'budgetAdj';
+      }else{
+          obj.call = 'selectCodeList';
       }
   }
 

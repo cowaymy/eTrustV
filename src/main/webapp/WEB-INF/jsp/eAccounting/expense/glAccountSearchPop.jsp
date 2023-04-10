@@ -43,6 +43,8 @@ $(document).ready(function() {
     // add jgkim
     if("${call}" == "budgetAdj") {
         $("#search_btn").click(fn_selectAdjustmentCBG);
+    }else if("${call}" == "selectCodeList"){
+        $("#search_btn").click(fn_selectCodeList);
     } else {
         $("#search_btn").click(fn_selectGlListAjax);
     }
@@ -51,9 +53,7 @@ $(document).ready(function() {
 
 //리스트 조회.
 function fn_selectGlListAjax() {
-    //Common.ajax("GET", "/eAccounting/expense/selectGlCodeList?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
-    	Common.ajax("GET", "/eAccounting/expense/selectCodeListBG?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
-         console.log("성공.");
+    Common.ajax("GET", "/eAccounting/expense/selectGlCodeList?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
          console.log( result);
 
         AUIGrid.setGridData(glCodeGridID, result);
@@ -64,6 +64,15 @@ function fn_selectGlListAjax() {
 function fn_selectAdjustmentCBG() {
     Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#glSForm").serializeJSON(), function(result) {
         console.log(result);
+        AUIGrid.setGridData(glCodeGridID, result);
+    });
+}
+
+function fn_selectCodeList(){
+    Common.ajax("GET", "/eAccounting/expense/selectCodeListBG?_cacheId=" + Math.random(), $("#glSForm").serialize(), function(result) {
+         console.log("성공.");
+         console.log( result);
+
         AUIGrid.setGridData(glCodeGridID, result);
     });
 }

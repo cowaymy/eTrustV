@@ -17,7 +17,7 @@ public interface ExpenseMapper {
 
 	List<EgovMap> selectBudgetCodeList( Map<String, Object> params) throws Exception;
 
-	List<EgovMap> selectCodeListWO( Map<String, Object> params) throws Exception;
+	List<EgovMap> selectCodeListAll( Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectExpenseCodeList( Map<String, Object> params) throws Exception;
 

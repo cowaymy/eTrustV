@@ -118,10 +118,13 @@ function fn_budgetCd(){
     $("#hbudgetCd").val("");
     $("#pBudgetCode").val("");
     $("#pBudgetCodeName").val("");
-    Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
+
+    var obj = {pop : 'pop'};
+    obj.call = 'selectCodeList';
+    Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",obj, null, true, "budgetCodeSearchPop");
 }
 
-function  fn_setBudgetData(){
+function  fn_setPopBudgetData(){
     $("#budgetCd").val($("#pBudgetCode").val());
     $("#hbudgetCd").val( $("#pBudgetCodeName").val());
 }
@@ -132,10 +135,12 @@ function fn_glAcc(){
     $("#hglAcc").val("");
     $("#pGlAccCode").val("");
     $("#pGlAccCodeName").val("");
-    Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", null, null, true, "glAccountSearchPop");
+    var obj = {pop : 'pop'};
+    obj.call = 'selectCodeList';
+    Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", obj, null, true, "glAccountSearchPop");
 }
 
-function fn_setGlData (){
+function fn_setPopGlData(){
     $("#glAcc").val($("#pGlAccCode").val());
     $("#hglAcc").val( $("#pGlAccCodeName").val());
 }

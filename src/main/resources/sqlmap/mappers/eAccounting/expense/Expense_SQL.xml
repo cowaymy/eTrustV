@@ -123,88 +123,34 @@
             </if>
     </select>
 
-     <select id="selectCodeListWO" parameterType="Map" resultType="egovMap">
+     <select id="selectCodeListAll" parameterType="Map" resultType="egovMap">
      <!--  DATE : 070423 -->
-		       SELECT
-		       BUDGET_CODE,
-		       BUDGET_CODE_TEXT,
-		       GL_ACC_CODE,
-		       GL_ACC_DESC,
-		       START_DT,
-		       END_DT
-		FROM   (SELECT
-		               BUDGET_CODE,
-		               (SELECT B.BUDGET_CODE_TEXT
-		                FROM   FCM0010M B
-		                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT,
-		                GL_ACC_CODE,
-		               (SELECT B.GL_ACC_DESC
-		                FROM   FCM0009M B
-		                WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC,
-		                 (SELECT TO_CHAR(B.START_DT, 'DD-MM-YYYY')
-		                FROM   FCM0010M B
-		                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) START_DT,
-		               (SELECT TO_CHAR(B.END_DT, 'DD-MM-YYYY')
-		                FROM   FCM0010M B
-		                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) END_DT
-		        FROM   (SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR,
-		                       A.COST_CENTR,
-		                       A.GL_ACC_CODE,
-		                       A.BUDGET_CODE
-		                FROM   (SELECT *
-		                        FROM   (SELECT A.COST_CENTR,
-		                                       A.BUDGET_CODE,
-		                                       A.GL_ACC_CODE,
-		                                       A.BUDGET_ADJ_YEAR,
-		                                       A.BUDGET_ADJ_MONTH
-		                                FROM   FCM0103D A,
-		                                       FCM0102M B
-		                                WHERE  A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
-		                                       AND B.APPV_STUS = 'C'
-		                                GROUP  BY A.BUDGET_ADJ_YEAR,
-		                                          A.BUDGET_ADJ_MONTH,
-		                                          A.COST_CENTR,
-		                                          A.BUDGET_CODE,
-		                                          A.GL_ACC_CODE) A) A
-		                UNION ALL
-		                SELECT A.BUDGET_PLAN_YEAR,
-		                       A.COST_CENTR,
-		                       A.GL_ACC_CODE,
-		                       A.BUDGET_CODE
-		                FROM   (SELECT *
-		                        FROM   FCM0101M A) A
-		                      ) A
-		        WHERE 1=1
-		       <!--  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') -->
-		        <if test="searchCostCenter != null and searchCostCenter != ''">
-		        AND A.COST_CENTR = #{searchCostCenter}
-		        </if>
-		        <if test="searchBudgetCode != null and searchBudgetCode != ''">
-                AND A.BUDGET_CODE = #{searchBudgetCode}
+
+              SELECT DISTINCT F10.BUDGET_CODE, F10.BUDGET_CODE_TEXT, F9.GL_ACC_CODE, F9.GL_ACC_DESC,
+              TO_CHAR(F10.START_DT, 'DD-MM-YYYY') START_DT, TO_CHAR(F10.END_DT, 'DD-MM-YYYY') END_DT
+              FROM FCM0010M F10
+              LEFT JOIN FCM0040D F40 ON F40.BUDGET_CODE = F10.BUDGET_CODE
+              LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F40.GL_ACC_CODE
+              LEFT JOIN FCM0104D F4 ON F4.BUDGET_CODE = F10.BUDGET_CODE AND F4.GL_ACC_CODE = F9.GL_ACC_CODE
+              WHERE F40.STUS_CODE_ID = 1
+			 <if test="searchCostCenter != null and searchCostCenter != ''">
+                AND F4.COST_CENTR = #{searchCostCenter}
+                </if>
+                <if test="searchBudgetCode != null and searchBudgetCode != ''">
+                AND F10.BUDGET_CODE = #{searchBudgetCode}
                 </if>
                 <if test="budgetCode != null and budgetCode != ''">
-                AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
+                AND F10.BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
                 </if>
                 <if test="budgetCodeText != null and budgetCodeText != ''">
-                AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
+                AND LOWER(F10.BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
                 </if>
                 <if test="glAccCode != null and glAccCode != ''">
-                AND GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
+                AND F9.GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
                 </if>
                 <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
-                AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
+                AND LOWER(F9.GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
                 </if>
-
-		        GROUP  BY BUDGET_PLAN_YEAR,
-		                  COST_CENTR,
-		                  GL_ACC_CODE,
-		                  BUDGET_CODE
-		        ORDER  BY COST_CENTR) T
-		WHERE 1=1
-		 <![CDATA[
-            AND T.START_DT <= SYSDATE
-            AND T.END_DT  >= SYSDATE
-            ]]>
     </select>
 
     <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
