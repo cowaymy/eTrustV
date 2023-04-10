@@ -543,10 +543,6 @@ WHERE 1=1
     <if test="glAccCodeDesc != null and glAccCodeDesc != '' ">
       AND GL_ACC_DESC = #{glAccCodeDesc}
     </if>
-       <![CDATA[
-            AND T.START_DT <= SYSDATE
-            AND T.END_DT  >= SYSDATE
-            ]]>
   </select>
 
   <select id="selectAvailableBudgetAmt" parameterType="Map" resultType="egovMap">
