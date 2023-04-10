@@ -3226,11 +3226,11 @@
                         WHEN ( Extent3.ATCH_FILE_GRP_ID IS NOT NULL ) THEN Extent3.ATCH_FILE_GRP_ID || '_' || Extent1.INSTALL_ENTRY_NO || '_WEB'
                         ELSE ''
                         END ATCH_FILE_GRP_ID
-                  , Extent3.DISMANTLE
-                  , Extent3.TOT_PIPE
-                  , Extent3.TOT_WIRE
-                  , Extent3.GAS_PRES_BEF
-                  , Extent3.GAS_PRES_AFT
+                  , NVL(Extent3.DISMANTLE,0) DISMANTLE
+                  , NVL(Extent3.TOT_PIPE,0) TOT_PIPE
+                  , NVL(Extent3.TOT_WIRE,0) TOT_WIRE
+                  , NVL(Extent3.GAS_PRES_BEF,0) GAS_PRES_BEF
+                  , NVL(Extent3.GAS_PRES_AFT,0) GAS_PRES_AFT
 
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
@@ -3696,11 +3696,11 @@
             , #{waterSrcType}
             , #{instNoteChk}
             , #{signData}
-            , #{dismantle}
-            , #{tPipe}
-            , #{tWire}
-            , #{gasPreBIns}
-            , #{gasPreAIns}
+            , nvl(#{dismantle},0)
+            , nvl(#{tPipe},0)
+            , nvl(#{tWire},0)
+            , nvl(#{gasPreBIns},0)
+            , nvl(#{gasPreAIns},0)
             , #{dtPairId}
     )
   </insert>

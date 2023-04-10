@@ -54,6 +54,7 @@
 	                  AT2.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME
 	                  ,HPDET.name HP_NAME
                       ,HPDET.TEL_MOBILE HP_CONTACT
+                      ,som.stus_code_id ord_stus_code_id
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -264,7 +265,7 @@
 		   AND A.BNDL_ID = B.ORD_SEQ_NO
 		   AND A.SALES_ORD_NO = #{salesOrdNo} -->
 
-	SELECT DISTINCT B.FRA_ORD_NO AS SALES_ORD_NO
+	SELECT DISTINCT B.FRA_ORD_NO AS SALES_ORD_NO,a.stus_code_id ord_stus_code_id
           FROM SAL0001D a
              , HMC0011D B
          WHERE A.BNDL_ID IS NOT NULL

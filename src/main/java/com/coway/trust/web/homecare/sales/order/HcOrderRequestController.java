@@ -126,6 +126,52 @@ public class HcOrderRequestController {
 	}
 
 
+	@RequestMapping(value = "/hcOrderRequestPEXPop.do")
+	public String hcOrderRequestPEXPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		String callCenterYn = "N";
+
+		if (CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))) {
+			callCenterYn = "Y";
+		}
+		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+
+		EgovMap orderDetailChose = null;
+		orderDetailChose = orderDetailService.selectBasicInfo(params);
+//        params.put("salesOrderId", CommonUtils.nvl(hcOrder.get("srvOrdId")));
+//        params.put("ordNo", CommonUtils.nvl(hcOrder.get("matOrdNo")));
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);		//Chosen Order
+		orderDetail.put("basicInfo", orderDetailChose);
+		hcOrder = hcOrderListService.selectHcOrderInfo(params);
+
+//		EgovMap orderDetail2 = null;
+		// has frame order
+//		if(hcOrder != null) {
+//			int anoOrdId = CommonUtils.intNvl(hcOrder.get("anoOrdId"));
+//
+//			if(anoOrdId > 0) {
+//				Map<String, Object> fraParams = new HashMap<String, Object>();
+//				fraParams.put("salesOrderId", CommonUtils.nvl(anoOrdId));
+//				fraParams.put("ordNo", CommonUtils.nvl(hcOrder.get("fraOrdNo")));
+//				orderDetail2 = orderDetailService.selectBasicInfo(fraParams);		// Mattress Order
+//			}
+//		}
+
+		model.put("orderDetail", orderDetail);
+//		model.put("orderDetail2", orderDetail2);
+		model.put("hcOrder", hcOrder);
+		model.put("ordReqType", params.get("ordReqType"));
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("toDay", toDay);
+		model.put("callCenterYn", callCenterYn);
+		model.put("userId", sessionVO.getUserId());
+		model.put("isComToPEX", 'Y');
+
+		return "homecare/sales/order/hcOrderRequestPop";
+	}
+
 	/**
 	 * Request Cancel Order
 	 * @Author KR-SH

@@ -160,6 +160,13 @@ public class HcOrderCallListController {
 		Map<String, Object> anoRdcMap = new HashMap<String, Object>();
 		EgovMap anoRdcincdc = null;
 
+		Map<String, Object> isComToPexMap = (Map<String, Object>) orderDetail.get("basicInfo");
+		String isComToPex = isComToPexMap.get("ordStusId").toString();
+		if(isComToPex.equals("4")){
+			anoProduct = null;
+			hcOrder.put("anoOrdNo","");
+		}
+
 		if (anoProduct != null) {
 			anoRdcMap.put("dscBrnchId", CommonUtils.nvl(orderCall.get("dscBrnchId")));
 			anoRdcMap.put("productCode", CommonUtils.nvl(anoProduct.get("stkCode")));

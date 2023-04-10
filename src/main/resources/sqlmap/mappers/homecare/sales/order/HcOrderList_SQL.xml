@@ -323,6 +323,7 @@
                    WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND SYS1.STK_ID = A.PRODUCT_CODE) AS ORD_CTGRY_CD
                  , B.ANO_ORD_APP_TYPE
                  , b.ANO_ORD_CTGRY_CD
+                 , a.APP_TYPE_ID
          FROM (
                 SELECT H1.ORD_SEQ_NO
 		                 , H1.CUST_ID
@@ -344,6 +345,7 @@
 		                </choose>
 		                 , H1.SRV_ORD_ID
 		                 , H1.BNDL_NO
+		                 ,S1.APP_TYPE_ID
 
 		         FROM HMC0011D H1
 		                 , SAL0001D S1

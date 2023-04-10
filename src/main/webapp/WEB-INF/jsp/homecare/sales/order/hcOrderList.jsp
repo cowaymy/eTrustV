@@ -381,6 +381,16 @@
         }
     }
 
+    function fn_orderRequestPEXPop() {
+    	//PEX which After installation just call this function, after installation, PEX no need in bundle, just exchange for the requested order
+        var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        if(selIdx > -1) {
+            Common.popupDiv("/homecare/sales/order/hcOrderRequestPEXPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"), ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo")}, null , true);
+        } else {
+            Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+        }
+    }
+
     function fn_orderSimulPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {

@@ -40,6 +40,8 @@
     var anoOrdNo = "${hcOrder.anoOrdNo}";
     var ordCtgryCd = "${hcOrder.ordCtgryCd}";
     var anoOrdId = "${hcOrder.anoOrdId}";
+    var isComToPEX = "${isComToPEX}";
+    var chgPromoNum = '';
 
     var myFileCaches = {};
     var atchFileGrpId = 0;
@@ -55,6 +57,27 @@
 // </c:if>
 //             fn_changeTab(TAB_NM);
 //         }
+
+        if(isComToPEX == 'Y'){
+        	/* if(APP_TYPE_ID == '5764'){
+        		APP_TYPE_ID = "${hcOrder.anoOrdAppType}";
+        	} */
+        	console.log("com to pex start");
+        	//$("#ordReqType").val("PEXC");
+        	//$("#ordReqType").val("PEXC").attr('selected', 'selected');
+        	$('#scPX').removeClass("blind");
+            $('#aTabBI').click();
+
+            fn_loadListPexch();
+            $('#ordProduct1').prop("disabled", true);
+            $('#btnReqPrdExch').removeClass("blind");
+            fn_isLockOrder("PEXC");
+
+            //fn_disableControlPexc();
+
+            console.log("com to pex end");
+            $("#ordReqType option[value='PEXC']").attr("selected", "selected");
+        }
      });
 
     // Edit Type 삭제처리.
@@ -537,6 +560,7 @@
     // Product Change Event - 최초 1회 호출
     function fn_chgProduct(_tagNum) {
     	var stkIdVal = $("#ordProduct"+_tagNum).val();
+    	var appType = APP_TYPE_ID;
 
         if(FormUtil.isEmpty(stkIdVal)) {
             totSumPrice();   // 합계
@@ -547,16 +571,18 @@
         $('#ordPv'+ _tagNum).addClass("readonly");
         $('#ordRentalFees'+ _tagNum).addClass("readonly");
 
-        /* if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
+        if(APP_TYPE_ID == "5764"){
+            appType = "${hcOrder.anoOrdAppType}";
+        }
+        if(isComToPEX == 'Y' && (appType == 67 || appType == 68)) {
             SRV_PAC_ID = 0;
-        } */
-
+        }
         if(FormUtil.isNotEmpty(stkIdVal)) {
-            fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID, _tagNum);
+            fn_loadProductPrice(appType, stkIdVal, SRV_PAC_ID, _tagNum);
             if(_tagNum == '1') {
-                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, PROMO_ID, _tagNum);
+                fn_loadProductPromotion(appType, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, PROMO_ID, _tagNum);
             } else {
-                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, PROMO_ID2, _tagNum);
+                fn_loadProductPromotion(appType, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, PROMO_ID2, _tagNum);
             }
         }
     }
@@ -1261,7 +1287,7 @@
         }
     }
 
-    var chgPromoNum = '';
+    //var chgPromoNum = '';
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, srvPacId, promoId, tagNum) {
         // $('#cmbPromotion').removeAttr("disabled");
@@ -1312,28 +1338,30 @@
     function fn_loadProductPrice(appTypeVal, stkId, srvPacId, tagNum) {
         var appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
 
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
-            if(stkPriceInfo != null) {
-                var pvVal = stkPriceInfo.orderPV;
-                var pvValGst = Math.floor(pvVal*(1/1.06))
+        if(!(stkId == null || stkId == ""|| stkId == "undefined")){
+        	Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
+                if(stkPriceInfo != null) {
+                    var pvVal = stkPriceInfo.orderPV;
+                    var pvValGst = Math.floor(pvVal*(1/1.06));
 
-                $("#ordPrice"+tagNum).val(stkPriceInfo.orderPrice);
-                $("#ordPv"+tagNum).val(pvVal);
-                $("#ordPvGST"+tagNum).val(pvValGst);
-                $("#ordRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
-                $("#ordPriceId"+tagNum).val(stkPriceInfo.priceId);
+                    $("#ordPrice"+tagNum).val(stkPriceInfo.orderPrice);
+                    $("#ordPv"+tagNum).val(pvVal);
+                    $("#ordPvGST"+tagNum).val(pvValGst);
+                    $("#ordRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
+                    $("#ordPriceId"+tagNum).val(stkPriceInfo.priceId);
 
-                $("#orgOrdPrice"+tagNum).val(stkPriceInfo.orderPrice);
-                $("#orgOrdPv"+tagNum).val(stkPriceInfo.orderPV);
-                $("#orgOrdRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
-                $("#orgOrdPriceId"+tagNum).val(stkPriceInfo.priceId);
+                    $("#orgOrdPrice"+tagNum).val(stkPriceInfo.orderPrice);
+                    $("#orgOrdPv"+tagNum).val(stkPriceInfo.orderPV);
+                    $("#orgOrdRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
+                    $("#orgOrdPriceId"+tagNum).val(stkPriceInfo.priceId);
 
-                $("#promoDiscPeriodTp"+tagNum).val('');
-                $("#promoDiscPeriod"+tagNum).val('');
-                // 합계
-                totSumPrice();
-            }
-        });
+                    $("#promoDiscPeriodTp"+tagNum).val('');
+                    $("#promoDiscPeriod"+tagNum).val('');
+                    // 합계
+                    totSumPrice();
+                }
+            });
+        }
     }
 
     // change Edit type
@@ -1376,7 +1404,7 @@
                     }
                 });
 
-                if(ORD_STUS_ID != '1' /* && ORD_STUS_ID != '4' */) {
+                if(ORD_STUS_ID != '1'  && ORD_STUS_ID != '4' ) {
                     msg = '<spring:message code="sal.msg.underProdExch" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
 
@@ -1487,16 +1515,19 @@
 
         // Product Exchange - 제품변경
         if(tabNm == 'PEXC') {
-            $('#scPX').removeClass("blind");
-            $('#aTabBI').click();
+        	if(ORD_STUS_ID == '4'){
+        		$("#_popupDiv").remove();
+        		fn_orderRequestPEXPop();
+        	}else{
+        		$('#scPX').removeClass("blind");
+                $('#aTabBI').click();
 
-            fn_loadListPexch();
+                fn_loadListPexch();
 
-            //fn_loadOrderInfoPexc();
+                //fn_disableControlPexc();
+                $('#btnReqPrdExch').removeClass("blind");
+        	}
 
-            //fn_disableControlPexc();
-            $('#btnReqPrdExch').removeClass("blind");
-            //fn_isLockOrder(tabNm);
         } else {
             $('#scPX').addClass("blind");
         }
@@ -2001,6 +2032,9 @@
 
     // Product Exchange
     function fn_doSaveReqPexc() {
+
+    	$('#ordProduct1').prop("disabled", false);
+
         Common.ajax("POST", "/homecare/sales/order/hcRequestProdExch.do", $('#frmReqPrdExc').serializeJSON(),
         	function(result) {
                 Common.alert('<spring:message code="sal.alert.msg.prodExchSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
@@ -2028,7 +2062,7 @@
          });
 
          Common.ajaxFile("/homecare/sales/order/hcAttachmentFileUpload.do", formData, function(result) {
-        	 console.log("helloooo");
+        	 console.log("hc atch file");
         	 console.log(result);
 
              if(result != 0 && result.code == 00){
@@ -2300,17 +2334,20 @@
                 msg += "* Please select the promotion code.<br>";
             }
         }
-        if($("#ordProduct2 option:selected").index() > 0) {
-            if($("#ordPromo2 option:selected").index() <= 0) {
-                isValid = false;
-                msg += "* Please select the promotion code.<br>";
-            }
-        }
 
-        // 기존주문에 프레임이 있는경우. 프레임 필수
-        if(FormUtil.isNotEmpty(anoOrdId) && $("#ordProduct2 option:selected").index() <= 0) {
-            isValid = false;
-            msg += "* Please select a product.<br>";
+        if(ORD_STUS_ID == '1'){
+        	if($("#ordProduct2 option:selected").index() > 0) {
+                if($("#ordPromo2 option:selected").index() <= 0) {
+                    isValid = false;
+                    msg += "* Please select the promotion code.<br>";
+                }
+            }
+
+            // 기존주문에 프레임이 있는경우. 프레임 필수
+            if(FormUtil.isNotEmpty(anoOrdId) && $("#ordProduct2 option:selected").index() <= 0) {
+                isValid = false;
+                msg += "* Please select a product.<br>";
+            }
         }
 
         /*
@@ -2452,17 +2489,30 @@
     function fn_loadListPexch() {
         var stkType = APP_TYPE_ID == '66' ? '1' : '2';
 
-        if(FormUtil.isNotEmpty(STOCK_ID2)) {
-        	$('#ordProduct2').removeAttr("disabled");
+        if(ORD_STUS_ID == '4'){
+        	console.log("fn_loadListPexch" + APP_TYPE_ID);
+
+        	if(APP_TYPE_ID  == "5764"){
+        	//if(!(APP_TYPE_ID  == 66 || APP_TYPE_ID  == 67)){
+                stkType = "${hcOrder.anoOrdAppType}" == '66' ? '1' : '2';
+        		doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'2'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+        	}else{
+                doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'1'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+        	}
+        }else{
+        	if(FormUtil.isNotEmpty(STOCK_ID2)) {
+                $('#ordProduct2').removeAttr("disabled");
+            }
+            // Homecare Product 조회
+            //doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
+            // StkCategoryID - Mattress(5706)
+
+             doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'1'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+             console.log(SRV_PAC_ID);
+             // StkCategoryID - Frame(5707)
+             doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'2'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
+             console.log(SRV_PAC_ID);
         }
-        // Homecare Product 조회
-        //doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
-        // StkCategoryID - Mattress(5706)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'1'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
-         console.log(SRV_PAC_ID);
-         // StkCategoryID - Frame(5707)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'2'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
-         console.log(SRV_PAC_ID);
 
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
@@ -2753,6 +2803,7 @@
 		<input id="hiddenCurrentProductID" name="hiddenCurrentProductID" type="hidden" value="${orderDetail.basicInfo.stockId}"/>
 		<input id="hiddenCurrentPromotionID" name="hiddenCurrentPromotionID" type="hidden" value="${orderDetail.basicInfo.ordPromoId}"/>
 		<input id="hiddenCurrentPromotion" name="hiddenCurrentPromotion" type="hidden" value="${orderDetail.basicInfo.ordPromoDesc}"/>
+		<input id="isComToPEX" name="isComToPEX" type="hidden" value="${isComToPEX}"/>
 		<!-- table start -->
 		<table class="type1">
 			<caption>table</caption>

@@ -228,6 +228,9 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
 		int fraOrdId = CommonUtils.intNvl(hcOrder.get("anoOrdId"));  // get - Frame Order Id
 
+		if(params.get("isComToPEX").toString().equals("Y")){
+			fraOrdId = 0;
+		}
 		BigDecimal norAmt1 =  new BigDecimal(CommonUtils.nvl(params.get("orgOrdPrice1")));
 		BigDecimal mrhRenAmt1 = new BigDecimal(CommonUtils.nvl(params.get("ordRentalFees1")));
 		BigDecimal defRentAmt1 = new BigDecimal(CommonUtils.nvl(params.get("ordRentalFees1")));
