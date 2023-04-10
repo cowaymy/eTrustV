@@ -425,7 +425,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
         SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
 
-        salesOrderMVO.setSalesOrdId(Long.parseLong((String) saveParam.get("salesOrdId")));
+        salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(saveParam.get("salesOrdId")));
         salesOrderMVO.setUpdUserId((int) params.get("userId"));
         salesOrderMVO.setEcash(rentPayMode == 131 ? 1 : 0);
 
