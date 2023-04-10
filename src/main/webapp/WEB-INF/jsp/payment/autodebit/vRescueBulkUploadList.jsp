@@ -141,6 +141,8 @@
   //View Claim Pop-UP
   function fn_openDivPop(val) {
 
+	  viewGridId = null;
+
 	    if (val == "VIEW" || val == "CONFIRM" ) {
 
 	      var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -190,8 +192,7 @@
                       groupingMessage : "Here groupping"
               };
 
-              viewGridId = GridCommon.createAUIGrid("view_grid_wrap",
-              popupColumnLayout, null, gridProsPopup);
+              viewGridId = AUIGrid.create("view_grid_wrap", popupColumnLayout, gridProsPopup);
               Common.ajax("GET", "/payment/selectVRescueBulkDetails.do", {"batchId" : bchId}, function(result) {
                   AUIGrid.setGridData(viewGridId, result);
               });
@@ -199,6 +200,7 @@
 	          if (val == "CONFIRM") {
 
 	        	$('#view_grid_wrap').hide();
+	        	$('#batchItmId').hide();
 	            $('#pop_header h1').text(
                 "CONFIRM BATCH UPLOAD");
                 $('#center_btns1').show();
@@ -408,10 +410,7 @@
     </p></li>
   </ul>
  </header>
-      <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="view_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>
-</article>
-  </section>
+
 
  <!-- pop_header end -->
  <!-- pop_body start -->
@@ -464,10 +463,13 @@
     </tbody>
 
    </table>
-<aside class="title_line"><!-- title_line start -->
+
+<aside id="batchItmId" class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.batchItem" /></h3>
 </aside><!-- title_line end -->
-
+      <article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="view_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>
+</article>
 
   <ul class="center_btns" id="center_btns1">
    <li><p class="btn_blue2">
