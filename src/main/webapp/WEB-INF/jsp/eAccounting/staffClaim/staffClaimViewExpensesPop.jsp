@@ -175,7 +175,7 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.remark" />',
+    headerText : '<spring:message code="newWebInvoice.remark" /><span style="color:red">*</span>',
     style : "aui-grid-user-custom-left",
     width : 200
 }, {
