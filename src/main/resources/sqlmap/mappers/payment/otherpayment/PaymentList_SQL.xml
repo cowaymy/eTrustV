@@ -44,7 +44,7 @@
 				PAY_ID,
 				TOT_AMT,
 				PAY_ITM_REF_DT,
-                ROW_NUMBER() OVER (PARTITION BY OR_NO ORDER BY STUS) R
+                ROW_NUMBER() OVER (PARTITION BY OR_NO ORDER BY CASE WHEN STUS = 6 THEN -1 ELSE STUS END DESC) R
             FROM (
 		        SELECT
 		            A.GROUP_SEQ,
@@ -72,7 +72,12 @@
 		            A.BANK_STATE_MAPPING_DT,
 		            NVL(A.REV_STUS_ID,0) AS REV_STUS_ID,
 		            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID,
-		            G.NAME AS REV_STUS_NM,
+		            CASE WHEN K.STUS = 999
+		            THEN
+		              'Refund'
+		            ELSE
+		              G.NAME
+		            END AS REV_STUS_NM,
 		            K.STUS,
 		            K.DT AS REV_DT,
 		            C.PAY_ID,
@@ -88,6 +93,8 @@
 		                JOIN PAY0258D X ON Z.GROUP_SEQ = X.GRP_SEQ
 		                UNION
 		                SELECT SRC_PAY_ID PAY_ID, FT_STUS_ID STUS, FT_APPV_DT DT FROM PAY0260D
+		                UNION
+		                SELECT PAY_ID, 999 STUS, A.UPD_DT DT FROM PAY0045D A JOIN PAY0064D B ON A.WOR_NO = B.OR_NO WHERE A.VALID_STUS_ID = 4
 		            ) K ON C.PAY_ID = K.PAY_ID
 		            LEFT JOIN SYS0038M G ON K.STUS = G.STUS_CODE_ID
 		            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
