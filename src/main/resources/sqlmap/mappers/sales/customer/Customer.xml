@@ -327,11 +327,27 @@
             LEFT OUTER JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent1.CORP_TYPE_ID AND Extent1.CORP_TYPE_ID IS NOT NULL
             LEFT OUTER JOIN SAL0333M Extent11 ON Extent11.CUST_ID = Extent1.CUST_ID
             LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent11.TIER_RANK AND Extent12.CODE_MASTER_ID = 538
-            left join (select * from (
-                select CUST_ID,SALES_TIER_STUS
-                ,CASE WHEN SALES_TIER_STUS = 7082 THEN SALES_EXP_SCORE
-                ELSE SALES_TOT_SCORE END SALES_TOT_SCORE
-                from SAL0330D
+            left join (
+            select * from (
+                select
+            q1.cust_id, q1.sales_tier_stus
+            , case when q1.sales_tier_stus = q1.min_status and q1.sales_tier_stus <> 7082
+                then sum(q1.SALES_TOT_SCORE) + sum(nvl(q2.REWRD_POINT,0))
+                else sum(q1.SALES_TOT_SCORE)
+                end SALES_TOT_SCORE
+            from (
+            select
+            a.CUST_ID,a.SALES_TIER_STUS
+                ,CASE WHEN a.SALES_TIER_STUS = 7082 THEN a.SALES_EXP_SCORE
+                ELSE a.SALES_TOT_SCORE END SALES_TOT_SCORE
+                ,c.SALES_TIER_STUS min_status
+                from SAL0330D a
+                left join
+                    (
+                    select CUST_ID, min(SALES_TIER_STUS) SALES_TIER_STUS from SAL0330D group by  cust_id
+                    ) c on a.cust_id = c.cust_id
+                ) q1 left join SAL0332D q2 on q1.cust_id = q2.cust_id
+                group by q1.cust_id, q1.sales_tier_stus,q1.min_status
                 )
                 pivot
                 (
