@@ -448,6 +448,7 @@
                                                                             AND CC.APP_TYPE_ID IN (66, 67, 68, 1412)
                                          INNER JOIN SAL0095D DD ON CC.SALES_ORD_ID = DD.SRV_SALES_ORD_ID
                                                                             AND DD.SRV_STUS_CODE_ID = 4
+                                             WHERE 1=1
                                              AND CC.CUST_ID = A.CUST_ID
                             )
     ]]>
