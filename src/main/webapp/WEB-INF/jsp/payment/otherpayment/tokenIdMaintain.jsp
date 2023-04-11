@@ -316,7 +316,7 @@ function fn_ordersListPop(){
                     <dd>
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
-                        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_ordersListPop();">Token ID Upload</a></p></li>
                         </c:if>
                     </ul>
