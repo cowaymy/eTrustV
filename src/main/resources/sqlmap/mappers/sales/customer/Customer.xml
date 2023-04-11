@@ -2197,10 +2197,17 @@
   </update>
 
   <update id="deleteCustomerCard" parameterType="Map">
-    UPDATE
+    <!-- UPDATE
     SAL0028D
     SET
     CUST_CRC_STUS_ID = 8
+    WHERE
+    CUST_CRC_ID = #{custCrcId} !-->
+    <!-- WAWA 11/4/2018 ADD UPDATE COLUMN -->
+    UPDATE SAL0028D
+    SET CUST_CRC_STUS_ID = 8,
+           CUST_CRC_UPD_USER_ID = #{userId},
+           CUST_CRC_UPD_DT = SYSDATE
     WHERE
     CUST_CRC_ID = #{custCrcId}
   </update>
@@ -3165,14 +3172,23 @@
   </select>
 
   <select id="getAutoDebitUserId" parameterType="Map" resultType="java.lang.Integer">
-	SELECT COUNT(*)
+	<!--  SELECT COUNT(*)
 	FROM ORG0001D A
 	JOIN SYS0047M B ON A.MEM_CODE = B.HR_CODE
 	JOIN SYS0045M C ON C.USER_ID = B.USER_ID
 	WHERE 1=1
 	AND C.ROLE_ID = 212
 	AND A.STUS=1
-	AND C.USER_ID = #{userId}
+	AND C.USER_ID = #{userId} -->
+	<!-- WAWA 11/4/2023 OPEN ROLE -->
+	 SELECT COUNT(*)
+    FROM ORG0001D A
+    JOIN SYS0047M B ON A.MEM_CODE = B.HR_CODE
+    JOIN SYS0045M C ON C.USER_ID = B.USER_ID
+    WHERE 1=1
+    AND C.ROLE_ID in (212,105,97,250,179)
+    AND A.STUS=1
+    AND C.USER_ID = #{userId}
   </select>
 
 </mapper>
