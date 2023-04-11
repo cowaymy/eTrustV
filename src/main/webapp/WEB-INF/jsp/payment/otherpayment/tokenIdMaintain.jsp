@@ -274,14 +274,17 @@ function fn_ordersListPop(){
         </colgroup>
         <tbody>
           <tr>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <th scope="row">Response Code</th>
             <td><input id="responseCode" name="responseCode" type="text"/></td>
             <th scope="row">Credit Card Type</th>
              <td>
                    <select class="w100p" id="creditCardType" name="creditCardType"></select>
              </td>
+             </c:if>
           </tr>
           <tr>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <th scope="row">Status</th>
             <td>
                   <select class="" id="status" name="status">
@@ -290,10 +293,12 @@ function fn_ordersListPop(){
                       <option value="8">Inactive</option>
                   </select>
               </td>
+            </c:if>
             <th scope="row">Token ID</th>
             <td><input id="tokenIdSearch" name="tokenIdSearch" type="text"/></td>
           </tr>
            <tr>
+           <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <th scope="row">Updator</th>
             <td><input id="updatorCode" name="updatorCode" type="text"/></td>
             <th scope="row"><spring:message code='sal.title.updateDate'/></th>
@@ -304,6 +309,7 @@ function fn_ordersListPop(){
 		    <p><input id="listUpdEndDt" name="updEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 		    </div><!-- date_set end -->
 		    </td>
+		    </c:if>
           </tr>
         </tbody>
       </table>
