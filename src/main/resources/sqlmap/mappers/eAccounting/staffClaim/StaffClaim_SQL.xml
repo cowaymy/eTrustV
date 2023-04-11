@@ -865,7 +865,6 @@ SELECT * FROM (
        TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
        T.REQST_DT,
        'MYR' AS CUR,
-       T.TOT_AMT,
        T.APPV_PRCSS_NO,
        T.APPV_PRCSS_STUS_CODE,
        T.APPV_PRCSS_STUS,
