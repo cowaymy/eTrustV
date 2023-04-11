@@ -905,6 +905,8 @@ function  bind_RetrieveData(){
         $("#_letterOfUdt").attr("checked" , true);
     }
 
+    fn_ccpScoreChangeFunc(ficoScre,expRisk);
+
 }// bindData
 
 //changed by Lee (2018/01/18)
