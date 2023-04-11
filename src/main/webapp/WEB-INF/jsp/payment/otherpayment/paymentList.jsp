@@ -120,6 +120,7 @@
 		if (selectedItem[0] > -1){
 			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
 			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+			const revStusNm = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusNm");
 			let data = AUIGrid.getOrgGridData(myGridID).filter(r => r.groupSeq == groupSeq);
 		    let ftStus = data.map(d => d.ftStusId);
 		    fetch("/payment/validDCF?groupSeq=" + groupSeq)
@@ -127,7 +128,9 @@
 		    	if (d.error) {
 		    		Common.alert(d.error)
 		    	} else if (d.success) {
-					if (revStusId == 1) {
+		    		if (revStusNm == "Refund") {
+		    			Common.alert("<b>This has already been refunded. </b>");
+		    		} else if (revStusId == 1) {
 						Common.alert("<spring:message code='pay.alert.groupNumberRequested' arguments='"+groupSeq+"' htmlEscape='false'/>");
 					} else if (revStusId == 5) {
 						Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
@@ -180,8 +183,11 @@
 				} else if (d.success) {
 					var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
 					var ftStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ftStusId");
+					const revStusNm = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusNm");
 
-					if (revStusId == 0 || revStusId == 6) {
+					if (revStusNm == "Refund") {
+						Common.alert("<b>This has already been refunded. </b>");
+					} else if (revStusId == 0 || revStusId == 6) {
 						if(ftStusId == 0 || ftStusId == 6) {
 							Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
 						}else{
