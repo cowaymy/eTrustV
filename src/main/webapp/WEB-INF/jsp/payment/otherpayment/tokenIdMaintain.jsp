@@ -248,12 +248,15 @@ function fn_ordersListPop(){
     </p>
     <h2>Token ID Maintenance</h2>
     <ul class="right_btns">
-<%--       <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
       <li><p class="btn_blue"><a id="btnUpload">Upload</a></p></li>
+     </c:if>
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+      <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
       <li><p class="btn_blue"><a href="javascript:fn_excelDown('MAIN');">Generate</a></p></li>
-<%--       </c:if> --%>
+      </c:if>
+
     </ul>
   </aside>
   <!-- title_line end -->
@@ -312,8 +315,8 @@ function fn_ordersListPop(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
+                        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_ordersListPop();">Token ID Upload</a></p></li>
                         </c:if>
                     </ul>
