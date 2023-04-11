@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.payment.autodebit.AutoDebitApiDto;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.EncryptionDecryptionService;
@@ -414,6 +415,28 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
       }
     }
     return newFileGroupId;
+  }
+
+  @Override
+  public List<EgovMap> selectCustomerList(CustomerApiForm param) throws Exception {
+    if (null == param) {
+      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+    }
+    if (CommonUtils.isEmpty(param.getSelectType())) {
+      throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
+    } else {
+      if (("1").equals(param.getSelectType()) && param.getSelectKeyword().length() < 5) {
+        throw new ApplicationException(AppConstants.FAIL, "Please fill out at least five characters.");
+      }
+      if ((("2").equals(param.getSelectType()) || ("3").equals(param.getSelectType()))
+          && CommonUtils.isEmpty(param.getSelectKeyword())) {
+        throw new ApplicationException(AppConstants.FAIL, "Select Keyword value does not exist.");
+      }
+    }
+    if (CommonUtils.isEmpty(param.getMemId()) || param.getMemId() <= 0) {
+      throw new ApplicationException(AppConstants.FAIL, "mdmId value does not exist.");
+    }
+    return autoDebitMapper.selectCustomerList(CustomerApiForm.createMap(param));
   }
 
   @Override

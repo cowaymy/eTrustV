@@ -28,6 +28,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.files.FileDto;
 import com.coway.trust.api.mobile.payment.payment.PaymentForm;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiDto;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.payment.autodebit.service.AutoDebitService;
@@ -141,5 +143,18 @@ public class AutoDebitApiController {
 	    int fileGroupKey = autoDebitService.insertAttachmentMobileUpload(FileVO.createList(list), params);
 	    FileDto fileDto = FileDto.create(list, fileGroupKey);
 	    return ResponseEntity.ok(fileDto);
+	  }
+
+	  @ApiOperation(value = "selectCustomerList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/selectCustomerList", method = RequestMethod.GET)
+	  public ResponseEntity<List<CustomerApiDto>> selectCustomerList(@ModelAttribute CustomerApiForm param)
+	      throws Exception {
+	    List<EgovMap> selectCustomerList = autoDebitService.selectCustomerList(param);
+	    if (LOGGER.isDebugEnabled()) {
+	      for (int i = 0; i < selectCustomerList.size(); i++) {
+	        LOGGER.debug("selectCustomerList Auto Debit   값 : {}", selectCustomerList.get(i));
+	      }
+	    }
+	    return ResponseEntity.ok(selectCustomerList.stream().map(r -> CustomerApiDto.create(r)).collect(Collectors.toList()));
 	  }
 }

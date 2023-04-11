@@ -407,4 +407,73 @@
     	FROM PAY0333M p0333m
 		WHERE p0333m.PAD_ID = #{padId}
     </select>
+
+    <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerList] 20190916 - KR JAEMAJEM */
+      SELECT CUST_ID
+               , NAME
+               , ADDR
+               , TYPE_ID_NAME
+               , CUST_ADD_ID
+               , NRIC
+      FROM ( SELECT A.CUST_ID AS CUST_ID
+                          , A.NAME AS NAME
+                          , A.NRIC
+                          , B.ADDR_DTL ||' '||
+                            NVL(B.STREET, '') ||' '||
+                            NVL(C.AREA, '') ||' '||
+                            NVL(C.POSTCODE, '') ||' '||
+                            NVL(C.CITY,'') ||' '||
+                            NVL(C.STATE,'') ||' '||
+                            NVL(C.COUNTRY,'') AS ADDR
+                          , CASE WHEN E.CODE_NAME IS NOT NULL   THEN D.CODE_NAME||'('||E.CODE_NAME||')'
+                                    ELSE D.CODE_NAME END AS TYPE_ID_NAME
+                          , B.CUST_ADD_ID AS CUST_ADD_ID
+                          , ROW_NUMBER() OVER(PARTITION BY B.CUST_ID ORDER BY B.CUST_ADD_ID DESC)AS ROW_NUMBER
+                 FROM SAL0029D A
+                 INNER JOIN SAL0023D B ON A.CUST_ID = B.CUST_ID
+                                                  AND B.STUS_CODE_ID = 9
+                 INNER JOIN SYS0064M C ON B.AREA_ID = C.AREA_ID
+                 INNER JOIN SYS0013M D ON A.TYPE_ID = D.CODE_ID
+                 LEFT OUTER JOIN SYS0013M E ON A.CORP_TYPE_ID = E.CODE_ID
+                                                          AND A.CORP_TYPE_ID != 0
+                 WHERE A.STUS_CODE_ID != 8
+                     AND EXISTS ( SELECT 1
+                                         FROM ORG0001D AA
+                                         INNER JOIN SAL0090D BB ON AA.MEM_ID = BB.SRV_CODY_ID
+                                                                            AND BB.SRV_STUS_ID = 1
+                                         INNER JOIN SAL0001D CC ON BB.SRV_SO_ID = CC.SALES_ORD_ID
+                                                                            AND CC.STUS_CODE_ID = 4
+                                                                            AND CC.APP_TYPE_ID IN (66, 67, 68, 1412)
+                                         INNER JOIN SAL0095D DD ON CC.SALES_ORD_ID = DD.SRV_SALES_ORD_ID
+                                                                            AND DD.SRV_STUS_CODE_ID = 4
+                                             AND CC.CUST_ID = A.CUST_ID
+                            )
+    ]]>
+
+    <if test="typeId > 0">
+      AND A.TYPE_ID = #{typeId}
+    </if>
+
+    <if test="selectType != null and selectType != '' ">
+      <choose>
+        <when test='selectType.equals("1")'>
+          AND REPLACE(UPPER(A.NAME), ' ', '') LIKE '%'||REPLACE(UPPER(#{selectKeyword}), ' ', '')||'%'
+        </when>
+
+         <when test='selectType.equals("2")'>
+           AND UPPER(A.NRIC) = UPPER(#{selectKeyword})
+         </when>
+
+         <when test='selectType.equals("3")'>
+           AND UPPER(A.NRIC) = UPPER(#{selectKeyword})
+         </when>
+      </choose>
+    </if>
+
+    <![CDATA[
+      ) WHERE ROW_NUMBER = 1
+    ]]>
+  </select>
 </mapper>

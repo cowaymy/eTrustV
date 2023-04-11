@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.api.mobile.payment.autodebit.AutoDebitApiDto;
+import com.coway.trust.api.mobile.sales.customerApi.CustomerApiForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
@@ -44,4 +45,6 @@ public interface AutoDebitService {
 	EgovMap getProductDescription(Map<String, Object> params);
 
 	Map<String, Object> getAutoDebitSignImg(Map<String, Object> params);
+
+	List<EgovMap> selectCustomerList(CustomerApiForm param) throws Exception;
 }

@@ -35,4 +35,5 @@ public interface AutoDebitMapper {
 	int getUserID(String param);
 	EgovMap getProductDescription(Map<String, Object> params);
 	Map<String, Object> getAutoDebitSignImg(Map<String, Object> params);
+	List<EgovMap> selectCustomerList(Map<String, Object> params);
 }
