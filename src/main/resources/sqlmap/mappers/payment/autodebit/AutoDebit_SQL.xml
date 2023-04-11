@@ -410,7 +410,7 @@
 
     <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
     <![CDATA[
-      /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerList] 20190916 - KR JAEMAJEM */
+      /* [com.coway.trust.biz.payment.autodebit.service.impl.AutoDebitMapper.selectCustomerList] 20190916 - KR JAEMAJEM */
       SELECT CUST_ID
                , NAME
                , ADDR
