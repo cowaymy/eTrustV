@@ -9,6 +9,7 @@ import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -1082,8 +1083,20 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     	for(int i = 0 ;i< params.size();i++){
             EmailVO email = new EmailVO();
-            Timestamp timestamp = new Timestamp(Long.parseLong((String) params.get(i).get("reqstDt")));
-            Date requestDate = new Date(timestamp.getTime());
+            Date requestDate = null;
+            Timestamp timestamp = null;
+            if(params.get(i).get("reqstDt").toString().contains("/")){
+            	try {
+					requestDate = dateFormat.parse((String) params.get(i).get("reqstDt"));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+            else{
+            	timestamp = new Timestamp(Long.parseLong((String) params.get(i).get("reqstDt")));
+                requestDate = new Date(timestamp.getTime());
+            }
             String emailSubject = "Reminder/Notification for e-claim document";
 
             List<String> emailNo = new ArrayList<String>();
