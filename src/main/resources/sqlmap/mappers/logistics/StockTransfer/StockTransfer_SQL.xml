@@ -47,6 +47,7 @@
              , l48.uom
              , uomt.code_name uomnm
              , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l47.CRT_USER_ID),l47.CRT_USER_ID) user_Name
+             ,case when s13h.stk_id is not null then 'HC' else 'HA' end stk_catgry
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran
@@ -58,6 +59,7 @@
              , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY
                  from log0055d WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
                  group by reqst_no , itm_code )l55
+              ,(SELECT * FROM sys0026m M WHERE stk_ctgry_id IN ( SELECT code_id FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) ) s13h
          where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
@@ -68,6 +70,7 @@
            AND l48.reqst_no       = l55.reqst_no(+)
            AND l48.itm_code       = l55.itm_code(+)
            and l47.reqst_stus     = reqs.code(+)
+           and l48.itm_code = s13h.stk_code(+)
            AND NVL(l48.REQST_DEL , 'N') = 'N'
            <!-- Added for solving removed SMO/STO still appear in search list issue. By Hui Ding, 01/10/2019 -->
            AND NVL(l47.REQST_DEL , 'N') = 'N'
@@ -220,12 +223,14 @@
                when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
                else 'N' end SERIALCHCK
              ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM) uom
+             ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
           from log0056m l56 , sys0026m s26 , sys0028m s28
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
                 AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
                 group by loc_id , itm_code ) l75
              , (select * from sys0013m where code_master_id = 15) s15
              , (select * from sys0013m where code_master_id = 11) s11
+             ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
          where 1 = 1
            and l56.stk_code = l75.itm_code(+)
            and l56.loc_id = l75.loc_id(+)
@@ -233,6 +238,7 @@
            and l56.stk_type_id = s15.code_id
            and l56.stk_ctgry_id = s11.code_id
            and l56.stk_code = s26.stk_code
+           and s26.stk_ctgry_id = s13h.code_id(+)
            and s26.STUS_CODE_ID = 1
            and l56.loc_id = #{toloc}
            <if test="ctype != null and ctype !=''">

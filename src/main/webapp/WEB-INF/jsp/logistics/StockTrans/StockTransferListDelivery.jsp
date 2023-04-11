@@ -70,7 +70,8 @@ var rescolumnLayout=[{dataField:   "rnum",headerText :"<spring:message code='log
                      {dataField: "mtext",headerText :"Movement Type"                   ,width:120    ,height:30                },
                      {dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30                },
                      {dataField: "crtdt",headerText :"Reqst. Create Date"            ,width:120    ,height:30                },
-                     {dataField: "reqdate",headerText :"Reqst. Required Date"          ,width:120    ,height:30                }
+                     {dataField: "reqdate",headerText :"Reqst. Required Date"          ,width:120    ,height:30                },
+                     {dataField: "stkCatgry",headerText :"Stock Category"          ,width:120    ,height:30                }
                      ];
 var reqcolumnLayout=[{dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 },
                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30 },
@@ -98,7 +99,7 @@ var resop = {
         showStateColumn : false,
         showBranchOnGrouping : false
         };
-var reqop = {editable : true};        
+var reqop = {editable : true};
 
 // var serialop = {
 //         editable : true
@@ -161,7 +162,7 @@ $(document).ready(function(){
     //serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
-    
+
     AUIGrid.bind(reqGrid, "cellClick", function( event ) {
     	console.log(event);
     });
@@ -264,7 +265,7 @@ $(document).ready(function(){
 //     	document.searchForm.submit();
     });
 
-   
+
 	AUIGrid.bind(listGrid, "rowCheckClick", function(event) {
 
 					var checked = AUIGrid.getCheckedRowItems(listGrid);
@@ -297,6 +298,19 @@ $(document).ready(function(){
 							}
 							return false;
 						}
+
+						if(checked[i].item.stkCatgry != event.item.stkCatgry)
+	                       {
+	                             Common.alert("Stock Category is different.");
+
+	                             var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+
+	                             for (var i = 0; i < rown.length; i++)
+	                             {
+	                                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+	                             }
+	                             return false;
+	                       }
 					}
 
 				});
@@ -445,7 +459,7 @@ $(document).ready(function(){
 			GridCommon.exportTo("main_grid_wrap", "xlsx", "Stock Transfer Delivery List");
 		});
 
-		
+
 	$('#delivery').click(function() {
 			if ("true" == $("#allChk").val()) {
 				Common.alert("Not Allow to Select All.");

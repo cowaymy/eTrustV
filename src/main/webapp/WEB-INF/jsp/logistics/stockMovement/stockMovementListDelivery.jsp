@@ -321,6 +321,14 @@
 	        height : 30,
 	        visible:false
 	      }
+	  ,
+      {
+         dataField : "stkCatgry",
+         headerText : "Stock Category",
+         width : 200,
+         height : 30,
+         visible:false
+       }
       ];
   var reqcolumnLayout;
 
@@ -881,6 +889,19 @@
                            {
                                AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
                            }
+                       }
+
+                       if(checked[i].item.stkCatgry != event.item.stkCatgry)
+                       {
+                             Common.alert("Stock Category is different.");
+
+                             var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+
+                             for (var i = 0; i < rown.length; i++)
+                             {
+                                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                             }
+                             return false;
                        }
 
                    }

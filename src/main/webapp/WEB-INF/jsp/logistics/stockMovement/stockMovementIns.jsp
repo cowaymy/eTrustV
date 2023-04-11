@@ -108,12 +108,18 @@
 		height : 30,
 		visible : false
 	}, {
-		dataField : "serialChk",
-		headerText : "<spring:message code='log.head.serial'/>",
-		width : 120,
-		height : 30,
-		editable : false
-	} ];
+        dataField : "serialChk",
+        headerText : "<spring:message code='log.head.serial'/>",
+        width : 120,
+        height : 30,
+        editable : false
+    }, {
+        dataField : "stkCatgry",
+        headerText : "Stock Category",
+        width : 120,
+        height : 30,
+        editable : false
+    } ];
 
 	var reqcolumnLayout;
 
@@ -223,7 +229,13 @@
 			width : 120,
 			height : 30,
 			editable : true
-		} ];
+		} , {
+	        dataField : "stkCatgry",
+	        headerText : "Stock Category",
+	        width : 120,
+	        height : 30,
+	        editable : false
+	    } ];
 
 		resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout, "", resop);
 		reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout, "", reqop);
@@ -498,7 +510,24 @@
 							boolitem = false;
 							break;
 						}
+
+						if (reqitms[j].stkCatgry != checkedItems[i].stkCatgry){
+	                        boolitem = false;
+	                        alert("Different Stock Category is not allowed in one SMO.");
+	                        break;
+	                    }
 					}
+
+					if(reqitms.length == 0 && checkedItems.length > 1){
+	                    for (var m = i + 1 ; m < checkedItems.length ; m++){
+	                        if (checkedItems[i].stkCatgry != checkedItems[m].stkCatgry){
+	                            boolitem = false;
+	                            alert("Different Stock Category is not allowed in one SMO.");
+	                            break;
+	                        }
+	                        break;
+	                    }
+	                }
 
 					if (boolitem) {
 						rowList[k] = {
@@ -509,7 +538,8 @@
 							rqty : 0,
 							uom : checkedItems[i].uom,
 							itmserial : checkedItems[i].serialChk,
-							itmtype : checkedItems[i].typeid
+							itmtype : checkedItems[i].typeid,
+							stkCatgry : checkedItems[i].stkCatgry
 						}
 						k++;
 					}

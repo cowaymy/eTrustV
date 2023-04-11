@@ -145,6 +145,18 @@
 	                    }
 	                    return false;
 	                }
+
+	                if(checked[i].item.stkCatgry != event.item.stkCatgry)
+                    {
+                          Common.alert("Stock Category is different.");
+                          var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+
+                          for (var i = 0; i < rown.length; i++)
+                          {
+                              AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+                          }
+                          return false;
+                    }
                 }
             }
         });
@@ -190,7 +202,8 @@
             {dataField:"appntDt", headerText:"Appointment Date", width:140, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"trnsctypedtl", headerText:"Movement Type", width:250, height:30, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
                 return getCodeList("CODE", "", "308", item.trnsctypedtl);
-            }}
+            }},
+            {dataField: "stkCatgry",headerText :"Stock Category"        ,width:100    ,height:30                }
         ];
 
     	var mainGridOptions = {

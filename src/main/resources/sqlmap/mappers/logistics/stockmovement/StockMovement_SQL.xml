@@ -59,6 +59,7 @@
                      WHERE CODE_ID = s26.STK_CTGRY_ID)
                       stk_ctgry_name
               , NVL(s28c.SERIAL_REQUIRE_CHK_YN, 'N') AS FROM_SERIAL_REQUIRE_CHK_YN
+             ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran
@@ -77,6 +78,7 @@
 		            AND IO_TYPE  = 'O'
 		         GROUP BY REQST_NO, ITM_CODE) l99
 		     ,HMC0011D H11
+		     ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
          where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
@@ -95,6 +97,7 @@
            AND l48.reqst_no = l99.REQST_NO(+)
            AND l48.itm_code = l99.ITM_CODE(+)
            AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
+           and s26.stk_ctgry_id = s13h.code_id(+)
            <if test='sscancel !="Y"'>
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
@@ -282,12 +285,14 @@
                when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
                when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
                else 'N' end SERIAL_CHK
+                ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
           from log0056m l56 , sys0026m s26 , sys0028m s28
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
               AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
                 group by loc_id , itm_code ) l75
              , (select * from sys0013m where code_master_id = 15) s15
              , (select * from sys0013m where code_master_id = 11) s11
+             ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
          where 1 = 1
            and l56.stk_code = l75.itm_code(+)
            and l56.loc_id = l75.loc_id(+)
@@ -295,6 +300,7 @@
            and l56.stk_type_id = s15.code_id
            and l56.stk_ctgry_id = s11.code_id
            and l56.stk_code = s26.stk_code
+           and s26.stk_ctgry_id = s13h.code_id(+)
            and s26.STUS_CODE_ID = 1
            and l56.loc_id = #{toloc}
            <if test="ctype != null and ctype !=''">

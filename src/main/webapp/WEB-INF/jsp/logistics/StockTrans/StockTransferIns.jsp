@@ -40,7 +40,8 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "typenm",headerText :"<spring:message code='log.head.type'/>"            ,width:120    ,height:30,editable:false},
                      {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},
                      {dataField: "catenm",headerText :"<spring:message code='log.head.category'/>"             ,width:120    ,height:30,editable:false},
-                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false}
+                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false},
+                     {dataField: "stkCatgry",headerText :"Stock Category"                  ,width:120    ,height:30,editable:false}
                     ];
 
 var reqcolumnLayout;
@@ -104,7 +105,8 @@ $(document).ready(function(){
                              keyField : "codeId",
                              valueField : "codeName"
                           }
-                      }
+                      },
+                      {dataField: "stkCatgry",headerText :"Stock Category"                  ,width:120    ,height:30,editable:false}
                      ];
 
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
@@ -243,7 +245,24 @@ $(function(){
                         boolitem = false;
                         break;
                     }
+
+                    if (reqitms[j].stkCatgry != checkedItems[i].stkCatgry){
+                        boolitem = false;
+                        alert("Different Stock Category is not allowed in one STO.");
+                        break;
+                    }
                 }
+
+	        	if(reqitms.length == 0 && checkedItems.length > 1){
+	        		for (var m = i + 1 ; m < checkedItems.length ; m++){
+	        			if (checkedItems[i].stkCatgry != checkedItems[m].stkCatgry){
+	                        boolitem = false;
+	                        alert("Different Stock Category is not allowed in one STO.");
+	                        break;
+	                    }
+	        			break;
+	        		}
+	        	}
 
 	        	if (boolitem){
                     rowList[k] = {
@@ -251,7 +270,8 @@ $(function(){
                             itmcd : checkedItems[i].stkcd,
                             itmname : checkedItems[i].stknm,
                             aqty : checkedItems[i].qty,
-                            uom : checkedItems[i].uom
+                            uom : checkedItems[i].uom,
+                            stkCatgry : checkedItems[i].stkCatgry
                         }
                     k++;
 	        	}
@@ -428,7 +448,7 @@ function f_multiCombo() {
 }
 
 
-	
+
 	function fn_setDefaultSelection() {
 
 		Common.ajax("GET", "/logistics/stocktransfer/selectDefLocation.do", '',
