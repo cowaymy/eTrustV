@@ -121,6 +121,21 @@ function cmbType_SelectedIndexChanged(){
         $("#cmbbranch").prop('disabled', true);
         $("#cmbbranch").addClass("disabled");
 
+    }else if($("#cmbType :selected").val() == "6"){
+        $("#cmbType").prop('disabled', true);
+        $("#cmbType").addClass("disabled");
+        $("#txtOrderNumberFrom").prop('disabled', true);
+        $("#txtOrderNumberFrom").addClass("disabled");
+        $("#txtOrderNumberTo").prop('disabled', true);
+        $("#txtOrderNumberTo").addClass("disabled");
+        $("#dpDateFr").prop('disabled', false);
+        $("#dpDateTo").prop('disabled', false);
+        $("#tpTimeFr").prop('disabled', false);
+        $("#tpTimeTo").prop('disabled', false);
+        $("#cmbRegion").prop('disabled', true);
+        $("#cmbRegion").addClass("disabled");
+        $("#cmbbranch").prop('disabled', true);
+        $("#cmbbranch").addClass("disabled");
     }
 
 }
@@ -292,7 +307,34 @@ function fn_report(){
         $("#reportDownFileName").val("CCPAssignRaw_Excel_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportFileName").val("/sales/CCPAssignRaw.rpt");
 
+    }else if($("#cmbType :selected").val() == "6"){
+
+        if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
+            //whereSQL += " AND (NVL(som.SALES_DT, TO_DATE('01/01/1900', 'dd/MM/YY')) BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS'))";
+            whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy')+1 ";
+        }
+        if(!($("#txtOrderNumberFrom").val() == null || $("#txtOrderNumberFrom").val().length == 0) && !($("#txtOrderNumberTo").val() == null || $("#txtOrderNumberTo").val().length == 0)){
+            whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNumberFrom").val()+"' AND '"+$("#txtOrderNumberTo").val()+"')";
+        }
+        if($("#cmbRegion :selected").index() > 0){
+            whereSQL += " AND br.REGN_ID = '"+$("#cmbRegion :selected").val()+"'";
+        }
+        if($("#cmbbranch :selected").index() > 0){
+            whereSQL += " AND som.BRNCH_ID = '"+$("#cmbbranch :selected").val()+"'";
+        }
+
+        $("#V_ORDERDATETOSQL").val(orderDateTo);
+        $("#V_SELECTSQL").val(selectSQL);
+        $("#V_WHERESQL").val(whereSQL);
+        $("#V_EXTRAWHERESQL").val(extraWhereSQL);
+        $("#V_ORDERBYSQL").val(orderBySQL);
+        $("#V_FULLSQL").val(fullSQL);
+
+        $("#reportDownFileName").val("CCPRawExtradeSales_Excel_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportFileName").val("/sales/CCPRawExtradeSales_Excel.rpt");
+
     }
+
 
 	$("#viewType").val("EXCEL");
 
@@ -348,6 +390,7 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
         <option value="3"><spring:message code="sal.combo.text.ccpCcpInfoRawData" /></option>
         <option value="4"><spring:message code="sal.combo.text.ccpCcpAssignB2BRawData" /></option>
         <option value="5"><spring:message code="sal.combo.text.ccpCcpAssignRawData" /></option>
+        <option value="6"><spring:message code="sal.combo.text.ccpCcpExtradeSalesRawData" /></option>
     </select>
     </td>
 </tr>
