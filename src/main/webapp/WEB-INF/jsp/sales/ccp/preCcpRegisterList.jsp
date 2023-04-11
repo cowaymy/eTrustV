@@ -178,7 +178,8 @@
 	          }
 	          else{
 	        	  displayOrder(2);
-	        	  Common.alert("1. Record Not Found <br/>"+"2. Please proceed to 'Create Pre-CCP Entry'");
+	              Common.alert("1. Record Not Found <br/>"+"2. Pre-Ccp For New Customers Is Still Under Construction");
+
 	          }
 	      });
 	  }
