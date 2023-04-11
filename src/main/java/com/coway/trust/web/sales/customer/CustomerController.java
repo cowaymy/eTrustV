@@ -1756,9 +1756,13 @@ public class CustomerController {
   @RequestMapping(value = "/deleteCustomerCard.do")
   public ResponseEntity<ReturnMessage> deleteCustomerCard(@RequestParam Map<String, Object> params) throws Exception {
 
+	//WAWA 11/4/2023 PASSING USER ID
+	  SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	 params.put("userId", sessionVO.getUserId());
     // service
     customerService.deleteCustomerCard(params);
     // 결과 만들기 예.
+
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
