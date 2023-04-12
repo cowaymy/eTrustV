@@ -14,6 +14,7 @@ public class AutoDebitApiForm {
 	private String dateTo;
 	private String statusCode;
 	private String custId;
+	private String thirdPartyCustId;
 	private String newCustCreditCardId;
 	private String isThirdPartyPayment;
 	private String signData;
@@ -53,6 +54,7 @@ public class AutoDebitApiForm {
 		params.put("email1", vo.getEmail1());
 		params.put("email2", vo.getEmail2());
 		params.put("userName", vo.getUserName());
+		params.put("thirdPartyCustId", vo.getThirdPartyCustId());
 		return params;
 	}
 
@@ -198,5 +200,13 @@ public class AutoDebitApiForm {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getThirdPartyCustId() {
+		return thirdPartyCustId;
+	}
+
+	public void setThirdPartyCustId(String thirdPartyCustId) {
+		this.thirdPartyCustId = thirdPartyCustId;
 	}
 }

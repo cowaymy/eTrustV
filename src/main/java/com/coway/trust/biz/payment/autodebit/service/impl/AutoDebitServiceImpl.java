@@ -342,6 +342,7 @@ public class AutoDebitServiceImpl extends EgovAbstractServiceImpl implements Aut
       params.put("isThirdPartyPaymentCheck", 1);
     } else {
       params.put("isThirdPartyPaymentCheck", 0);
+      params.put("thirdPartyCustId", null);
     }
 
     String padNo = commonMapper.selectDocNo("187");
