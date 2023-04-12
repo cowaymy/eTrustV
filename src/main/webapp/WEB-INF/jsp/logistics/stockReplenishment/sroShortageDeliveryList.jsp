@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
 <script type="text/javaScript">
   var option = {
     width : "1200px",
@@ -16,10 +15,8 @@
   var myGridID;
 
   var gridPros = {
-          //showRowCheckColumn : true,
           usePaging : true,
           pageRowCount : 20,
-          //showRowAllCheckBox : true,
           editable : false,
           selectionMode : "multipleCells"
         };
@@ -36,11 +33,11 @@
         CommonCombo.make('searchYear', "/logistics/stockReplenishment/selectYearList.do", null , '', ItmOption);
         CommonCombo.make('searchMonth', "/logistics/stockReplenishment/selectMonthList.do", null , '', ItmOption);
 
+
    });
 
-//btn clickevent
   $(function(){
-      $('#search_sroHsFilterForecastCodyForm').click(function() {
+      $('#search_sroStorageDeliveryForm').click(function() {
           if (f_validatation()){
               fn_searchSroForecastHistortList();
           }
@@ -60,12 +57,12 @@
               $("#stype").val('stock');
               $("#svalue").val($('#searchMatName').val());
               $("#sUrl").val("/logistics/material/materialcdsearch.do");
-              Common.searchpopupWin("sroHsFilterForecastCodyForm", "/common/searchPopList.do","stock");
+              Common.searchpopupWin("sroStorageDeliveryForm", "/common/searchPopList.do","stock");
           }
       });
 
 
-      $("#searchBranch").change(function(){
+      $("#sroStorageDeliveryFormBranch").change(function(){
           if(($('#searchlocgb').val() == "04") && ($('#searchBranch').val() != "")){
               console.log("choose cody and branch is selected.");
               var paramdata = {
@@ -79,103 +76,84 @@
 
   function sroForecastHistoryGrid() {
     var columnLayout = [
-        {
-          dataField : "sroStatusCd",
-          headerText : "Status",
-          editable : false,
-          width : 100
-        },
-        {
-          dataField : "foreYyyy",
-          headerText : "Year",
-          editable : false,
-          width : 100
-        },
-        {
-          dataField : "foreMm",
-          headerText : "Month",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "foreWw",
-          headerText : "Week",
-          width : 100
-        },
-        {
-          dataField : "rdcCode",
-          headerText : "Branch Code",
-          width : 150
-        },
-        {
-          dataField : "rdcDesc",
-          headerText : "Branch Name",
-          width : 200
-        },
-        {
-          dataField : "codyCode",
-          headerText : "Location Code",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "codyDesc",
-          headerText : "Location Name",
-          editable : false,
-          width : 250
-        },
-        {
-          dataField : "stkCode",
-          headerText : "Code",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "stkDesc",
-          headerText : "Desc",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "sroForeQty",
-          headerText : "Forecast",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "sroCodyAvaQty",
-          headerText : "Available Q'ty",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "sroReqDevliQty",
-          headerText : "Delivery",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "sroCdcAvaQty",
-          headerText : "CDC Stock",
-          editable : false,
-          width : 150
-        },
-        {
-          dataField : "sroRefSmoNo",
-          headerText : "SMO No.",
-          editable : false,
-          width : 150
-        }
+          {
+            dataField : "foreYyyy",
+            headerText : "Year",
+            editable : false,
+            width : 100
+          },
+          {
+            dataField : "foreMm",
+            headerText : "Month",
+            editable : false,
+            width : 150
+          },
+          {
+            dataField : "foreWw",
+            headerText : "Week",
+            width : 100
+          },
+          {
+            dataField : "rdcCode",
+            headerText : "Branch Code",
+            width : 150
+          },
+          {
+            dataField : "rdcDesc",
+            headerText : "Branch Name",
+            width : 200
+          },
+          {
+            dataField : "codyCode",
+            headerText : "Location Code",
+            editable : false,
+            width : 150
+          },
+          {
+            dataField : "codyDesc",
+            headerText : "Location Name",
+            editable : false,
+            width : 250
+          },
+          {
+            dataField : "stkCode",
+            headerText : "Code",
+            editable : false,
+            width : 150
+          },
+          {
+            dataField : "stkDesc",
+            headerText : "Desc",
+            editable : false,
+            width : 150
+          },
+          {
+            dataField : "sroForeQty",
+            headerText : "Forecast",
+            editable : false,
+            width : 150
+          },
+          {
+            dataField : "sroReqDevliQty",
+            headerText : "Delivery",
+            editable : false,
+            width : 150
+          },
+          {
+            dataField : "shortageQty",
+            headerText : "Shortage",
+            editable : false,
+            width : 150
+          }
     ];
 
-
-    myGridID = AUIGrid.create("#grid_wrap_sroHsFilterForecastCodyForm", columnLayout, gridPros);
+    myGridID = AUIGrid.create("#grid_wrap_sroStorageDeliveryForm", columnLayout, gridPros);
   }
 
   function fn_searchSroForecastHistortList() {
 
-        console.log($("#sroHsFilterForecastCodyForm").serialize());
-        Common.ajax("GET", "/logistics/stockReplenishment/selectSroForecastHistoryList.do", $("#sroHsFilterForecastCodyForm").serialize(), function(result) {
+        console.log($("#sroStorageDeliveryForm").serialize());
+        Common.ajax("GET", "/logistics/stockReplenishment/selectSroForecastHistoryList.do", $("#sroStorageDeliveryForm").serialize(), function(result) {
         console.log(result);
           AUIGrid.setGridData(myGridID, result);
         });
@@ -183,7 +161,6 @@
 
 
   function fn_excelDown() {
-    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
       var date = new Date();
       var month = date.getMonth() + 1;
       var day = date.getDate();
@@ -191,12 +168,12 @@
       if (date.getDate() < 10) {
           day = "0" + date.getDate();
       }
-    GridCommon.exportTo("grid_wrap_sroHsFilterForecastCodyForm", "xlsx", "SroHsFilterForecastCody_" + day + month + date.getFullYear());
+    GridCommon.exportTo("grid_wrap_sroStorageDeliveryForm", "xlsx", "SroHsFilterForecastRdc_" + day + month + date.getFullYear());
   }
 
   function f_multiCombo() {
         $(function() {
-        	   $('#searchlocgb').change(function() {
+               $('#searchlocgb').change(function() {
                    let flag =$.inArray("04",$("#searchlocgb").val());
                    if (FormUtil.isNotEmpty($('#searchlocgb').val())){
                        if(flag >=0 && FormUtil.isEmpty($('#searchBranch').val())){
@@ -221,6 +198,7 @@
                }).multipleSelect({
                    selectAll : true
                });
+
 
             $('#searchStatus').change(function() {
             }).multipleSelect({
@@ -306,40 +284,29 @@
 }
 
 
-
-
 </script>
 <section id="content">
- <!-- content start -->
- <ul class="path">
-  <!-- <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-  <li>Sales</li>
-  <li>Order list</li> -->
- </ul>
+ <ul class="path"></ul>
  <aside class="title_line">
-  <!-- title_line start -->
   <p class="fav">
    <a href="#" class="click_add_on">My menu</a>
   </p>
-  <h2>HS Filter SRO (CD)</h2>
+  <h2>Shortage Delivery Report</h2>
 
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="search_sroHsFilterForecastCodyForm"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+    <li><p class="btn_blue"><a href="#" id="search_sroStorageDeliveryForm"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
    </c:if>
-   <li><p class="btn_blue"><a href="#" onclick="javascript:$('#sroHsFilterForecastCodyForm').clearForm();"><span class="clear"></span><spring:message code='service.btn.Clear'/></a></p></li>
+   <li><p class="btn_blue"><a href="#" onclick="javascript:$('#sroStorageDeliveryForm').clearForm();"><span class="clear"></span><spring:message code='service.btn.Clear'/></a></p></li>
   </ul>
  </aside>
- <!-- title_line end -->
  <section class="search_table">
-  <!-- search_table start -->
-  <form action="#" method="post" id="sroHsFilterForecastCodyForm">
+  <form action="#" method="post" id="sroStorageDeliveryForm">
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
     <input type="hidden" id="stype" name="stype">
     <input type="hidden" name="LocCode" id="LocCode" />
    <table class="type1">
-    <!-- table start -->
     <caption>table</caption>
     <colgroup>
      <col style="width: 150px" />
@@ -351,7 +318,7 @@
     </colgroup>
     <tbody>
 
-     <tr>
+    <tr>
          <th scope="row">Forecast Year</th>
          <td><select class="w100p" id="searchYear"  name="searchYear"></td>
 
@@ -362,16 +329,16 @@
          <td><select class="w100p" id="searchWeek"  name="searchWeek"></td>
       </tr>
 
-   <tr>
-         <th scope="row">CDC</th>
-         <td><select class="w100p" id="searchCDC" name="searchCDC"></select></td>
+       <tr>
+             <th scope="row">CDC</th>
+             <td><select class="w100p" id="searchCDC" name="searchCDC"></select></td>
 
-         <th scope="row">Branch</th>
-         <td><select class="w100p" id="searchBranch"  name="searchBranch"></select></td>
+             <th scope="row">Branch</th>
+             <td><select class="w100p" id="searchBranch"  name="searchBranch"></select></td>
 
-         <th></th>
-         <td></td>
-     </tr>
+             <th></th>
+             <td></td>
+         </tr>
 
      <tr>
          <th scope="row">Location Type</th>
@@ -399,9 +366,7 @@
      </tr>
     </tbody>
    </table>
-   <!-- table end -->
 
-   <!-- link_btns_wrap end -->
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
      <li><p class="btn_grid">
@@ -410,13 +375,9 @@
     </c:if>
    </ul>
    <article class="grid_wrap">
-    <!-- grid_wrap start -->
-    <div id="grid_wrap_sroHsFilterForecastCodyForm" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    <div id="grid_wrap_sroStorageDeliveryForm" style="width: 100%; height: 500px; margin: 0 auto;"></div>
    </article>
-   <!-- grid_wrap end -->
   </form>
 
  </section>
- <!-- search_table end -->
 </section>
-<!-- content end -->

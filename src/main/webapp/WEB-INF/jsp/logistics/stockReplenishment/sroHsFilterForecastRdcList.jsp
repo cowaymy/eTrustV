@@ -33,6 +33,9 @@
         doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
         CommonCombo.make('searchWeek', "/logistics/stockReplenishment/selectWeekList.do", null , '', ItmOption);
         doGetComboData('/logistics/stockReplenishment/selectSroStatus.do', null, '', 'searchStatus', 'M','f_multiCombo');
+        CommonCombo.make('searchYear', "/logistics/stockReplenishment/selectYearList.do", null , '', ItmOption);
+        CommonCombo.make('searchMonth', "/logistics/stockReplenishment/selectMonthList.do", null , '', ItmOption);
+
 
    });
 
@@ -194,25 +197,31 @@
 
   function f_multiCombo() {
         $(function() {
-            $('#searchlocgb').change(function() {
-                //console.log('1');
-                if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
-                     var searchlocgb = $('#searchlocgb').val();
+        	   $('#searchlocgb').change(function() {
+                   let flag =$.inArray("04",$("#searchlocgb").val());
+                   if (FormUtil.isNotEmpty($('#searchlocgb').val())){
+                       if(flag >=0 && FormUtil.isEmpty($('#searchBranch').val())){
+                           Common.alert("Please choose Branch to search listing.",()=>{
+                               $('.msg_box').remove();
+                        });
+                       }else{
+                               var searchlocgb = $('#searchlocgb').val();
+                               var locgbparam = "";
 
-                        var locgbparam = "";
-                        for (var i = 0 ; i < searchlocgb.length ; i++){
-                            if (locgbparam == ""){
-                                locgbparam = searchlocgb[i];
-                            }else{
-                                locgbparam = locgbparam +"∈"+searchlocgb[i];
-                            }
-                        }
-                        var param = {searchlocgb:locgbparam , grade:'A', searchBranch: ($('#branchCode').val()!="" ? $('#branchCode').val() : "" )}
-                        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
-                  }
-            }).multipleSelect({
-                selectAll : true
-            });
+                               for (var i = 0 ; i < searchlocgb.length ; i++){
+                                   if (locgbparam == ""){
+                                       locgbparam = searchlocgb[i];
+                                   }else{
+                                       locgbparam = locgbparam +"∈"+searchlocgb[i];
+                                   }
+                               }
+                               var param = {searchlocgb:locgbparam , grade:'A', searchBranch: ($('#searchBranch').val()!="" ? $('#searchBranch').val() : "" )}
+                               doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+                         }
+                   }
+               }).multipleSelect({
+                   selectAll : true
+               });
 
 
             $('#searchStatus').change(function() {
@@ -285,13 +294,17 @@
 
   function f_validatation(){
 
-      if ( $("#searchlocgb").val() == undefined || $("#searchlocgb").val() == ""){
-          Common.alert("Please Select Location Type.");
+      if(FormUtil.isEmpty($('#searchYear').val())) {
+          Common.alert("Please Select Forecast Year.");
           return false;
-      }
-      else {
-          return true;
-      }
+       }
+
+      if(FormUtil.isEmpty($('#searchMonth').val())) {
+          Common.alert("Please Select Forecast Month.");
+          return false;
+       }
+
+      return true;
 }
 
 
@@ -339,16 +352,28 @@
      <col style="width: *" />
     </colgroup>
     <tbody>
-     <tr>
-         <th scope="row">Forecast Week</th>
+
+    <tr>
+         <th scope="row">Forecast Year</th>
+         <td><select class="w100p" id="searchYear"  name="searchYear"></td>
+
+         <th scope="row">Forecast Month</th>
+         <td><select class="w100p" id="searchMonth"  name="searchMonth"></td>
+
+         <th scope="row">Forecast Week / Batch</th>
          <td><select class="w100p" id="searchWeek"  name="searchWeek"></td>
+      </tr>
 
-         <th scope="row">CDC</th>
-         <td><select class="w100p" id="searchCDC" name="searchCDC"></select></td>
+       <tr>
+             <th scope="row">CDC</th>
+             <td><select class="w100p" id="searchCDC" name="searchCDC"></select></td>
 
-         <th scope="row">Branch</th>
-         <td><select class="w100p" id="searchBranch"  name="searchBranch"></select></td>
-     </tr>
+             <th scope="row">Branch</th>
+             <td><select class="w100p" id="searchBranch"  name="searchBranch"></select></td>
+
+             <th></th>
+             <td></td>
+         </tr>
 
      <tr>
          <th scope="row">Location Type</th>

@@ -16,13 +16,11 @@
   var myGridID;
 
   var gridPros = {
-          //showRowCheckColumn : true,
           usePaging : true,
           pageRowCount : 20,
-          //showRowAllCheckBox : true,
           editable : false,
           selectionMode : "multipleCells"
-        };
+   };
 
   $(document).ready(function() {
         sroForecastHistoryGrid();
@@ -32,9 +30,11 @@
         doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
         doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
         CommonCombo.make('searchWeek', "/logistics/stockReplenishment/selectWeekList.do", null , '', ItmOption);
+        CommonCombo.make('searchYear', "/logistics/stockReplenishment/selectYearList.do", null , '', ItmOption);
+        CommonCombo.make('searchMonth', "/logistics/stockReplenishment/selectMonthList.do", null , '', ItmOption);
    });
 
-//btn clickevent
+
   $(function(){
       $('#search_sroForecastHistoryForm').click(function() {
           if (f_validatation()){
@@ -164,21 +164,27 @@
   function f_multiCombo() {
 	    $(function() {
 	        $('#searchlocgb').change(function() {
-	            //console.log('1');
-	            if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
-	                 var searchlocgb = $('#searchlocgb').val();
+	        	let flag =$.inArray("04",$("#searchlocgb").val());
+	            if (FormUtil.isNotEmpty($('#searchlocgb').val())){
+	                if(flag >=0 && FormUtil.isEmpty($('#searchBranch').val())){
+	                    Common.alert("Please choose Branch to search listing.",()=>{
+	                        $('.msg_box').remove();
+	                 });
+	                }else{
+		                    var searchlocgb = $('#searchlocgb').val();
+		                    var locgbparam = "";
 
-	                    var locgbparam = "";
-	                    for (var i = 0 ; i < searchlocgb.length ; i++){
-	                        if (locgbparam == ""){
-	                            locgbparam = searchlocgb[i];
-	                        }else{
-	                            locgbparam = locgbparam +"∈"+searchlocgb[i];
-	                        }
-	                    }
-	                    var param = {searchlocgb:locgbparam , grade:'A', searchBranch: ($('#branchCode').val()!="" ? $('#branchCode').val() : "" )}
-	                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
-	              }
+		                    for (var i = 0 ; i < searchlocgb.length ; i++){
+		                        if (locgbparam == ""){
+		                            locgbparam = searchlocgb[i];
+		                        }else{
+		                            locgbparam = locgbparam +"∈"+searchlocgb[i];
+		                        }
+		                    }
+		                    var param = {searchlocgb:locgbparam , grade:'A', searchBranch: ($('#searchBranch').val()!="" ? $('#searchBranch').val() : "" )}
+		                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+		              }
+	            }
 	        }).multipleSelect({
 	            selectAll : true
 	        });
@@ -247,13 +253,22 @@
 
   function f_validatation(){
 
-      if ( $("#searchlocgb").val() == undefined || $("#searchlocgb").val() == ""){
-          Common.alert("Please Select Location Type.");
+	  if(FormUtil.isEmpty($('#searchYear').val())) {
+          Common.alert("Please Select Forecast Year.");
           return false;
-      }
-      else {
-          return true;
-      }
+       }
+
+	  if(FormUtil.isEmpty($('#searchMonth').val())) {
+          Common.alert("Please Select Forecast Month.");
+          return false;
+       }
+
+// 	  if(FormUtil.isEmpty($('#searchlocgb').val())) {
+//           Common.alert("Please Select Location Type.");
+//           return false;
+//        }
+
+	    return true;
 }
 
 
@@ -261,29 +276,22 @@
 
 </script>
 <section id="content">
- <!-- content start -->
- <ul class="path">
-  <!-- <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-  <li>Sales</li>
-  <li>Order list</li> -->
- </ul>
+ <ul class="path"></ul>
  <aside class="title_line">
-  <!-- title_line start -->
-  <p class="fav">
-   <a href="#" class="click_add_on">My menu</a>
-  </p>
-  <h2>SRO Forecast History</h2>
+	  <p class="fav">
+	        <a href="#" class="click_add_on">My menu</a>
+	  </p>
+	  <h2>SRO Forecast History</h2>
 
-  <ul class="right_btns">
-   <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="search_sroForecastHistoryForm"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-   </c:if>
-   <li><p class="btn_blue"><a href="#" onclick="javascript:$('#sroForecastHistoryForm').clearForm();"><span class="clear"></span><spring:message code='service.btn.Clear'/></a></p></li>
-  </ul>
+	  <ul class="right_btns">
+		   <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+		    <li><p class="btn_blue"><a href="#" id="search_sroForecastHistoryForm"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+		   </c:if>
+	        <li><p class="btn_blue"><a href="#" onclick="javascript:$('#sroForecastHistoryForm').clearForm();"><span class="clear"></span><spring:message code='service.btn.Clear'/></a></p></li>
+	  </ul>
  </aside>
- <!-- title_line end -->
+
  <section class="search_table">
-  <!-- search_table start -->
   <form action="#" method="post" id="sroForecastHistoryForm">
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
@@ -291,7 +299,6 @@
     <input type="hidden" name="LocCode" id="LocCode" />
 
    <table class="type1">
-    <!-- table start -->
     <caption>table</caption>
     <colgroup>
      <col style="width: 150px" />
@@ -303,14 +310,25 @@
     </colgroup>
     <tbody>
      <tr>
-	     <th scope="row">Forecast Week</th>
-	     <td><select class="w100p" id="searchWeek"  name="searchWeek"></td>
+         <th scope="row">Forecast Year</th>
+         <td><select class="w100p" id="searchYear"  name="searchYear"></td>
 
+         <th scope="row">Forecast Month</th>
+         <td><select class="w100p" id="searchMonth"  name="searchMonth"></td>
+
+	     <th scope="row">Forecast Week / Batch</th>
+	     <td><select class="w100p" id="searchWeek"  name="searchWeek"></td>
+      </tr>
+
+      <tr>
 	     <th scope="row">CDC</th>
 	     <td><select class="w100p" id="searchCDC" name="searchCDC"></select></td>
 
 	     <th scope="row">Branch</th>
 	     <td><select class="w100p" id="searchBranch"  name="searchBranch"></select></td>
+
+	     <th></th>
+	     <td></td>
      </tr>
 
      <tr>
@@ -322,15 +340,6 @@
 
          <th></th>
          <td></td>
-
-         <th scope="row" style="display:none">Status</th>
-         <td style="display:none">
-	         <select class="multy_select w100p" multiple="multiple" id="searchStatus" name="searchStatus">
-		        <c:forEach var="list" items="${sroStatus}" varStatus="status">
-		             <option value="${list.code}" selected>${list.codeName}</option>
-		        </c:forEach>
-	        </select>
-        </td>
      </tr>
 
       <tr>
@@ -348,24 +357,22 @@
      </tr>
     </tbody>
    </table>
-   <!-- table end -->
 
-   <!-- link_btns_wrap end -->
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
-     <li><p class="btn_grid">
-       <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
-      </p></li>
+     <li>
+        <p class="btn_grid">
+                <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
+         </p>
+      </li>
     </c:if>
    </ul>
    <article class="grid_wrap">
-    <!-- grid_wrap start -->
     <div id="grid_wrap_sroForecastHistoryList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
    </article>
-   <!-- grid_wrap end -->
   </form>
-
  </section>
- <!-- search_table end -->
 </section>
-<!-- content end -->
+
+
+

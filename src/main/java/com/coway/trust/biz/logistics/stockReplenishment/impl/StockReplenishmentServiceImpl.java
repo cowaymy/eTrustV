@@ -85,5 +85,32 @@ public class StockReplenishmentServiceImpl implements StockReplenishmentService 
 		return stockReplenishmentMapper.selectSroStatus(params);
 	}
 
+    @Override
+	public List<EgovMap> selectWeeklyList(Map<java.lang.String, Object> params) {
+		return stockReplenishmentMapper.selectWeeklyList(params);
+	}
+
+    @Override
+	@Transactional
+	public int saveSroCalendarGrid(List<Object> dataList, String userId)  {
+    	int cnt=0;
+    	for (Object obj : dataList) {
+    		((Map<String, Object>) obj).put("userId", userId);
+    		cnt = stockReplenishmentMapper.saveSroCalendarGrid((Map<String, Object>) obj);
+    	}
+	    return cnt;
+	}
+
+    @Override
+    public List<EgovMap> selectYearList(Map<String, Object> params) {
+    	return stockReplenishmentMapper.selectYearList(params);
+    }
+
+    @Override
+    public List<EgovMap> selectMonthList(Map<String, Object> params) {
+    	return stockReplenishmentMapper.selectMonthList(params);
+    }
+
+
 
 }

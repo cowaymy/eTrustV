@@ -4,7 +4,7 @@
 
     <select id="selectWeekList" parameterType="Map" resultType="egovMap">
      <![CDATA[
-              SELECT 'W' || LEVEL CODE_ID,  'W' || LEVEL CODE_NAME  FROM DUAL
+              SELECT 'B' || LEVEL CODE_ID,  'B' || LEVEL CODE_NAME  FROM DUAL
               CONNECT BY LEVEL <= 4
       ]]>
     </select>
@@ -22,19 +22,27 @@
                 , D.WH_LOC_ID   CODY_LOC_ID
                 , E.STK_CODE
                 , E.STK_DESC
-                , B.SRO_FORE_QTY
-                , B.SRO_REQ_DEVLI_QTY
-                , B.SRO_CODY_AVA_QTY
-                , B.SRO_CDC_AVA_QTY
+                , NVL(B.SRO_FORE_QTY,0) SRO_FORE_QTY
+                , NVL(B.SRO_REQ_DEVLI_QTY,0) SRO_REQ_DEVLI_QTY
+                , NVL(B.SRO_REQ_DEVLI_QTY,0) - NVL(B.SRO_FORE_QTY,0) SHORTAGE_QTY
+                , NVL(B.SRO_CODY_AVA_QTY,0) SRO_CODY_AVA_QTY
+                , NVL(B.SRO_CDC_AVA_QTY,0) SRO_CDC_AVA_QTY
                 , A.SRO_REF_SMO_NO
-                , DECODE (A.SRO_STATUS_CD, 'A', 'Active','C', 'Completed') AS SRO_STATUS_CD
+                , DECODE (G.REQST_STUS, 'P', 'Active', 'O', 'Active','C', 'Completed') AS SRO_STATUS_CD
             FROM LOG0117M A
             JOIN LOG0118D B ON A.SRO_NO = B.SRO_NO
             JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
             JOIN SYS0028M D ON B.SRO_CODY_CODE = D.WH_LOC_CODE
             JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
             JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            JOIN LOG0047M G ON A.SRO_REF_SMO_NO = G.REQST_NO
             WHERE 1=1
+             <if test="searchYear != null and searchYear != '' ">
+            AND  A.SRO_CRT_YYYY = #{searchYear}
+            </if>
+             <if test="searchMonth != null and searchMonth != '' ">
+            AND  A.SRO_CRT_MM = #{searchMonth}
+            </if>
             <if test="searchWeek != null and searchWeek != '' ">
             AND  A.SRO_CRT_WW = #{searchWeek}
             </if>
@@ -54,9 +62,9 @@
              </foreach>
            </if>
             <if test="searchStatus != null and searchStatus !=''">
-            AND A.SRO_STATUS_CD IN
-            <foreach item="item" collection="searchStatus" index="index" open="(" separator="," close=")">
-             #{item}
+            AND G.REQST_STUS IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="UNION" close=")">
+              select regexp_substr (#{item},'[^,]+',1,level) from DUAL connect by level <![CDATA[ <= ]]> length ( #{item} ) - length ( replace ( #{item}, ',' ) ) + 1
              </foreach>
            </if>
            <if test="searchType != null and searchType !=''">
@@ -72,6 +80,87 @@
              </foreach>
             </if>
             <if test="searchlocgb != null and searchlocgb !=''">
+            AND D.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="sstocknm != null and sstocknm !=''">
+            AND (UPPER(E.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(E.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+            </if>
+
+            UNION
+
+            SELECT
+                  SRO_CRT_YYYY  FORE_YYYY
+                , SRO_CRT_MM    FORE_MM
+                , SRO_CRT_WW    FORE_WW
+                , C.WH_LOC_CODE RDC_CODE
+                , C.WH_LOC_DESC RDC_DESC
+                , C.WH_LOC_ID   RDC_LOC_ID
+                , D.WH_LOC_CODE CODY_CODE
+                , D.WH_LOC_DESC CODY_DESC
+                , D.WH_LOC_ID   CODY_LOC_ID
+                , E.STK_CODE
+                , E.STK_DESC
+                , NVL(B.SRO_SEND_QTY,0) SRO_FORE_QTY
+                , NVL(B.SRO_REQ_DEVLI_QTY,0)  SRO_REQ_DEVLI_QTY
+                , NVL(B.SRO_REQ_DEVLI_QTY,0) - NVL(B.SRO_SEND_QTY,0) SHORTAGE_QTY
+                , 0 SRO_CODY_AVA_QTY
+                , NVL(B.SRO_CDC_AVA_QTY,0) SRO_CDC_AVA_QTY
+                , A.SRO_REF_SMO_NO
+                , DECODE (G.REQST_STUS, 'P', 'Active', 'O', 'Active','C', 'Completed') AS SRO_STATUS_CD
+            FROM LOG0200M A
+            JOIN LOG0201D B ON A.SRO_NO = B.SRO_NO
+            JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
+            JOIN SYS0028M D ON B.SRO_RDC_CODE = D.WH_LOC_CODE
+            JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
+            JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            JOIN LOG0047M G ON A.SRO_REF_SMO_NO = G.REQST_NO
+            WHERE 1=1
+            <if test="searchYear != null and searchYear != '' ">
+            AND  A.SRO_CRT_YYYY = #{searchYear}
+            </if>
+             <if test="searchMonth != null and searchMonth != '' ">
+            AND  A.SRO_CRT_MM = #{searchMonth}
+            </if>
+            <if test="searchWeek != null and searchWeek != '' ">
+            AND  A.SRO_CRT_WW = #{searchWeek}
+            </if>
+             <if test="searchCDC != null and searchCDC != '' ">
+            AND  A.SRO_CDC_CODE = #{searchCDC}
+            </if>
+            <if test="searchBranch != null and searchBranch != '' ">
+            AND #{searchBranch} IN (D.WH_LOC_BRNCH_ID , D.WH_LOC_BRNCH_ID2 , D.WH_LOC_BRNCH_ID3, D.WH_LOC_BRNCH_ID4, D.WH_LOC_BRNCH_ID5)
+            </if>
+            <if test="searchMatCode != null and searchMatCode !=''">
+            AND (E.STK_CODE = #{searchMatCode} OR E.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+            </if>
+            <if test="searchLoc != null and searchLoc !=''">
+            AND D.WH_LOC_CODE IN
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+            <if test="searchStatus != null and searchStatus !=''">
+            AND G.REQST_STUS IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="UNION" close=")">
+	             select regexp_substr (#{item},'[^,]+',1,level) from DUAL connect by level <![CDATA[ <= ]]> length ( #{item} ) - length ( replace ( #{item}, ',' ) ) + 1
+             </foreach>
+           </if>
+           <if test="searchType != null and searchType !=''">
+            AND E.STK_TYPE_ID IN
+            <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            </if>
+            <if test="searchCtgry != null and searchCtgry !=''">
+            AND E.STK_CTGRY_ID IN
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+             <if test="searchlocgb != null and searchlocgb !=''">
             AND D.WH_LOC_GB in
             <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
              #{item}
@@ -122,7 +211,9 @@
                         , #{stkCode}  as STK_CODE
                         , #{safetyQty} as SAFETY_QTY
                         , #{userId} as  USER_ID
-                   FROM DUAL
+                        , B.STK_CTGRY_ID
+                   FROM DUAL A
+                   JOIN SYS0026M B ON B.STK_CODE = #{stkCode}
             ) SRC ON (  A.WH_LOC_CODE = SRC.WH_LOC_CODE AND A.STK_CODE = SRC.STK_CODE)
             WHEN MATCHED THEN
             UPDATE
@@ -137,6 +228,7 @@
                         , DISAB
                         , CRT_USER_ID
                         , CRT_DT
+                        , STK_CTGRY_ID
                    )
              VALUES (
                           SRC.WH_LOC_CODE
@@ -145,6 +237,7 @@
                         , 0
                         , SRC.USER_ID
                         , SYSDATE
+                        , SRC.STK_CTGRY_ID
            )
     </update>
 
@@ -166,6 +259,88 @@
         WHERE IND = 'SRO_STUS'
           AND DISB = 0
         ORDER BY LPAD(CODE,4)
+    </select>
+
+     <select id="selectWeeklyList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+		      SELECT
+	                  A.GEN_FORE_YYYY,
+	                  A.GEN_FORE_MM,
+	                  A.GEN_FORE_BATCH,
+	                  TO_CHAR(TO_DATE(A.GEN_BATCH_START_DT,'YYYY/MM/DD') ,'YYYY/MM/DD') GEN_BATCH_START_DT,
+	                  A.GEN_BATCH_RATE,
+	                  A.GEN_TAT_YYYY,
+	                  A.GEN_TAT_MM,
+	                  A.CRT_ID,
+	                  B.USER_NAME CRT_USER,
+	                  A.CRT_DT,
+	                  A.UPD_ID,
+	                  C.USER_NAME UPD_USER,
+	                  TO_CHAR(A.UPD_DT,'YYYY/MM/DD') UPD_DT
+	                  FROM LOG0114M A
+	                  LEFT JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
+	                  LEFT JOIN SYS0047M C ON A.UPD_ID = C.USER_ID
+               WHERE 1=1
+           ]]>
+         <if test="year != null and month != null">
+                AND A.GEN_FORE_YYYY=#{year} AND A.GEN_FORE_MM=#{month}
+        </if>
+          <![CDATA[
+                ORDER BY  A.GEN_FORE_YYYY,
+                      A.GEN_FORE_MM,
+                      A.GEN_FORE_BATCH
+        ]]>
+    </select>
+
+    <update id="saveSroCalendarGrid" parameterType="Map">
+               MERGE INTO LOG0114M A
+               USING (
+	                    SELECT
+	                     #{genForeYyyy} GEN_FORE_YYYY,
+	                     #{genForeMm} GEN_FORE_MM,
+	                     #{genForeBatch} GEN_FORE_BATCH,
+	                     TO_CHAR(TO_DATE(#{genBatchStartDt},'YYYY/MM/DD'),'YYYYMMDD') GEN_BATCH_START_DT,
+	                     #{genBatchRate} GEN_BATCH_RATE,
+	                     #{genTatYyyy} GEN_TAT_YYYY,
+	                     #{genTatMm} GEN_TAT_MM,
+	                     #{userId} USER_ID
+	                    FROM DUAL
+                )SRC ON (A.GEN_FORE_YYYY = SRC.GEN_FORE_YYYY AND A.GEN_FORE_MM = SRC.GEN_FORE_MM AND A.GEN_FORE_MM = SRC.GEN_FORE_MM
+               AND A.GEN_FORE_BATCH = SRC.GEN_FORE_BATCH)
+               WHEN MATCHED THEN UPDATE
+               SET  A.GEN_BATCH_START_DT = SRC.GEN_BATCH_START_DT,
+	                   A.GEN_BATCH_RATE = SRC.GEN_BATCH_RATE,
+	                   A.UPD_ID = SRC.USER_ID,
+	                   A.UPD_DT = SYSDATE
+               WHEN NOT MATCHED THEN
+               INSERT (GEN_FORE_YYYY, GEN_FORE_MM, GEN_FORE_BATCH, GEN_BATCH_START_DT, GEN_BATCH_RATE, GEN_TAT_YYYY, GEN_TAT_MM, CRT_ID, CRT_DT)
+               VALUES(
+                       SRC.GEN_FORE_YYYY,
+                       SRC.GEN_FORE_MM,
+                       SRC.GEN_FORE_BATCH,
+                       SRC.GEN_BATCH_START_DT,
+                       SRC.GEN_BATCH_RATE,
+                       SRC.GEN_TAT_YYYY,
+                       SRC.GEN_TAT_MM,
+                       SRC.USER_ID,
+                       SYSDATE
+               )
+    </update>
+
+
+    <select id="selectYearList" parameterType="Map" resultType="egovMap">
+	 <![CDATA[
+	       SELECT (TO_CHAR(SYSDATE,'YYYY') - 1) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'YYYY') - 1) + (LEVEL-1) CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 5
+	 ]]>
+	</select>
+
+
+	<select id="selectMonthList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT  LPAD(LEVEL,2,'0') CODE_ID, LPAD(LEVEL,2,'0') CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 12
+     ]]>
     </select>
 
 

@@ -74,13 +74,15 @@ var sample_columnLayout = [
 
             enableMovingColumn : true,
 
-            editable : true
+            editable : true,
+
+            usePaging : true,
+
+            pageRowCount : 20
 
         };
 
-    // 실제로 #grid_wrap 에 그리드 생성
     mstGridID = AUIGrid.create("#main_grid_wrap", columnLayout, auiGridProps);
-
     mstGridID2 = AUIGrid.create("#sample_grid_wrap", sample_columnLayout, auiGridProps);
 
 }
@@ -94,13 +96,22 @@ var sample_columnLayout = [
        createAUIGrid(columnLayout);
    });
 
-
-    // 리스트 조회.
     function fn_getDataListAjax () {
-console.log($("#sroForecastHisotryForm").serialize());
-         Common.ajax("GET", "/logistics/stockReplenishment/selectSroSafetyLvlList.do", $("#sroForecastHisotryForm").serialize(), function(result) {
-            AUIGrid.setGridData(mstGridID, result);
-        });
+    	if(validForm()){
+            Common.ajax("GET", "/logistics/stockReplenishment/selectSroSafetyLvlList.do", $("#sroForecastHisotryForm").serialize(), function(result) {
+                AUIGrid.setGridData(mstGridID, result);
+            });
+    	}
+    }
+
+    function validForm(){
+
+    	if (FormUtil.isEmpty($('#searchCDC').val())){
+    		Common.alert("Please select CDC.");
+    		return false;
+    	}
+
+    	return true;
     }
 
 

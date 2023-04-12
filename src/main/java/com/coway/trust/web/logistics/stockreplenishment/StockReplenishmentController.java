@@ -85,7 +85,7 @@ public class StockReplenishmentController {
 
 
 	    @RequestMapping(value = "/selectWeekList.do", method = RequestMethod.GET)
-		public ResponseEntity<List<EgovMap>> selectYearList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+		public ResponseEntity<List<EgovMap>> selectWeekList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
 		    List<EgovMap> weekList = stockReplenishmentService.selectWeekList(params);
 
@@ -95,7 +95,6 @@ public class StockReplenishmentController {
 	    @RequestMapping(value = "/selectSroForecastHistoryList.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectSroForecastHistoryList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
-
 			String searchMatCode = request.getParameter("searchMatCode");
 			String[] searchType = request.getParameterValues("searchType");
 			String[] searchCtgry = request.getParameterValues("searchCtgry");
@@ -104,13 +103,17 @@ public class StockReplenishmentController {
 			String searchlocgrade = request.getParameter("searchlocgrade");
 			String searchBranch = request.getParameter("searchBranch");
 			String searchCDC = request.getParameter("searchCDC");
+			String searchYear = request.getParameter("searchYear");
+			String searchMonth = request.getParameter("searchMonth");
 			String searchWeek = request.getParameter("searchWeek");
 			String[] searchStatus = request.getParameterValues("searchStatus");
-
 			String sstocknm = request.getParameter("searchMatName");
 
 			Map<String, Object> smap = new HashMap();
 
+
+			smap.put("searchYear", searchYear);
+			smap.put("searchMonth", searchMonth);
 			smap.put("searchWeek", searchWeek);
 			smap.put("searchMatCode", searchMatCode);
 			smap.put("searchLoc", searchLoc);
@@ -212,6 +215,78 @@ public class StockReplenishmentController {
 		   return ResponseEntity.ok(list);
 		}
 
+		@RequestMapping(value = "/sroGenerateCalendar.do")
+		public String sroGenerateCalendar(@RequestParam Map<String, Object> params, ModelMap model) {
+
+			String dt = CommonUtils.getNowDate().substring(0, 6);
+			dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+			model.addAttribute("searchDt", dt);
+			model.addAttribute("year",  Integer.parseInt(dt.substring(3)));
+			model.addAttribute("month", Integer.parseInt(dt.substring(0,2)));
+
+			return "/logistics/stockReplenishment/sroGenerateCalendar";
+		}
+
+
+		@RequestMapping(value = "/selectWeeklyList", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectWeeklyList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+			List<EgovMap> weeklyList = stockReplenishmentService.selectWeeklyList(params);
+
+			return ResponseEntity.ok(weeklyList);
+		}
+
+
+		@RequestMapping(value = "/saveSroCalendarGrid.do", method = RequestMethod.POST)
+		public  ResponseEntity<ReturnMessage>  saveSroCalendarGrid(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) {
+
+			ReturnMessage message = new ReturnMessage();
+
+			try{
+				String dt = CommonUtils.getNowDate().substring(0, 6);
+				dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+				int result = 0;
+				List<Object> dataList = (List<Object>) params.get("data");
+				params.put("userId", sessionHandler.getCurrentSessionInfo().getUserId());
+
+				if (dataList.size() > 0) {
+					result = stockReplenishmentService.saveSroCalendarGrid(dataList,  params.get("userId").toString());
+				}
+
+				model.addAttribute("searchDt", dt);
+				model.addAttribute("year",  Integer.parseInt(dt.substring(3)));
+				model.addAttribute("month", Integer.parseInt(dt.substring(0,2)));
+
+				message.setCode(result > 0 ? AppConstants.SUCCESS : AppConstants.FAIL);
+				message.setMessage(result > 0 ? messageAccessor.getMessage(AppConstants.MSG_SUCCESS) : messageAccessor.getMessage(AppConstants.MSG_FAIL));
+				return ResponseEntity.ok(message);
+
+			}catch(Exception e){
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+				return ResponseEntity.ok(message);
+			}
+
+		}
+
+		@RequestMapping(value = "/selectYearList.do", method = RequestMethod.GET)
+	    public ResponseEntity<List<EgovMap>> selectYearList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+        		List<EgovMap> yearList = stockReplenishmentService.selectYearList(params);
+        		return ResponseEntity.ok(yearList);
+		}
+
+		@RequestMapping(value = "/selectMonthList.do", method = RequestMethod.GET)
+	    public ResponseEntity<List<EgovMap>> selectMonthList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+        		List<EgovMap> monthList = stockReplenishmentService.selectMonthList(params);
+        		return ResponseEntity.ok(monthList);
+		}
+
+		@RequestMapping(value = "/sroShortageDeliveryList.do")
+		public String sroShortageDeliveryList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
+				return "/logistics/stockReplenishment/sroShortageDeliveryList";
+		}
 
 
 

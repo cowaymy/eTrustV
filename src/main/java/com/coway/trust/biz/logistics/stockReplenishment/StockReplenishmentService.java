@@ -23,4 +23,12 @@ public interface StockReplenishmentService {
 
 	List<EgovMap> selectSroStatus(Map<String, Object> params);
 
+	List<EgovMap> selectWeeklyList(Map<String, Object> params);
+
+	int saveSroCalendarGrid(List<Object> dataList, String userId);
+
+	List<EgovMap> selectYearList(Map<String, Object> params);
+
+	List<EgovMap> selectMonthList(Map<String, Object> params);
+
 }
