@@ -287,6 +287,10 @@ public class InstallationJobDto {
 
   private String custMobileNo;
 
+  private String latitude;
+
+  private String longitude;
+
   public String getCustMobileNo() {
 	return custMobileNo;
   }
@@ -1131,6 +1135,22 @@ public String getVoltage() {
 
   public void setSalesPromotionCde(String salesPromotionCde) {
     this.salesPromotionCde = salesPromotionCde;
+  }
+
+  public String getLatitude(){
+    return latitude;
+  }
+
+  public void setLatitude(String latitude){
+    this.latitude = latitude;
+  }
+
+  public String getLongitude(){
+    return longitude;
+  }
+
+  public void setLongitude(String longitude){
+     this.longitude = longitude;
   }
 
   public static InstallationJobDto create(EgovMap egvoMap) {
