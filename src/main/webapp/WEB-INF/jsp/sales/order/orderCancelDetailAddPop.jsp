@@ -986,6 +986,8 @@
        readonly="readonly" id="CTSSessionSegmentType" name="CTSSessionSegmentType"
        class="readonly" /></td>
       <c:if test ="${orderDetail.rentPaySetInf.payModeId eq '130' or orderDetail.rentPaySetInf.payModeId eq '131' or orderDetail.rentPaySetInf.payModeId eq '132'}">
+      <c:if test ="${orderDetail.basicInfo.rentalStus eq 'RET' or orderDetail.basicInfo.rentalStus eq 'TER'}">
+      <c:if test ="${orderDetail.logView.prgrsId eq '13' or orderDetail.logView.prgrsId eq '12' or orderDetail.logView.prgrsId eq '11'}">
       <th scope="row">Deactivate Paymode</th>
       <td>
       <div style="display:inline-block;width:100%;">
@@ -999,6 +1001,8 @@
       </div>
       </div>
       </td>
+      </c:if>
+      </c:if>
       </c:if>
     </tr>
     <tr>
