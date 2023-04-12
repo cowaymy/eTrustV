@@ -17,13 +17,13 @@
             style="float: right !important"
           >
             <li>
-            <c:if test="${authFuncChange == 'Y'}">
-              <p class="btn_grid">
-                <a id="btnAddThirdPartyCust" href="#">
-                  <spring:message code="sal.btn.addNewThirdParty" />
-                </a>
-              </p>
-              </c:if>
+<%--             <c:if test="${authFuncChange == 'Y'}"> --%>
+<!--               <p class="btn_grid"> -->
+<!--                 <a id="btnAddThirdPartyCust" href="#"> -->
+<!--                   <spring:message code="sal.btn.addNewThirdParty" /> -->
+<!--                 </a> -->
+<!--               </p> -->
+<!--               </c:if> -->
             </li>
           </ul>
         </td>
@@ -60,11 +60,11 @@
               class=""
               readonly
             />
-            <a href="#" class="search_btn" id="btnThirdPartyCustSearch"
-              ><img
-                src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-                alt="search"
-            /></a>
+<!--             <a href="#" class="search_btn" id="btnThirdPartyCustSearch" -->
+<!--               ><img -->
+<%--                 src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" --%>
+<!--                 alt="search" -->
+<!--             /></a> -->
           </td>
           <th scope="row"><spring:message code="sal.text.type" /></th>
           <td><span id="thrdPartyType"></span></td>
