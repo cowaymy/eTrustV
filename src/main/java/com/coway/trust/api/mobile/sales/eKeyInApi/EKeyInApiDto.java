@@ -91,6 +91,7 @@ public class EKeyInApiDto {
   private String ext;
   private int appTypeId;
   private int srvPacId;
+  private int instPriod;
   private String srvPacName;
   private int itmStkId;
   private int promoId;
@@ -678,6 +679,14 @@ public class EKeyInApiDto {
 
   public void setSrvPacId(int srvPacId) {
     this.srvPacId = srvPacId;
+  }
+
+  public int getInstPriodId() {
+    return instPriod;
+  }
+
+  public void setInstPriodId(int instPriod) {
+    this.instPriod = instPriod;
   }
 
   public String getSrvPacName() {

@@ -57,6 +57,7 @@ public class EKeyInApiForm {
     params.put("stusCodeId", vo.getStusCodeId());
     params.put("userNm", vo.getUserNm());
     params.put("cpntCode", vo.getCpntCode());
+    params.put("instPriod", vo.getInstPriodId());
     return params;
   }
 
@@ -87,6 +88,7 @@ public class EKeyInApiForm {
   private int stusCodeId;
   private String userNm;
   private String cpntCode;
+  private int instPriod;
 
   public int getStusCodeId() {
     return stusCodeId;
@@ -302,6 +304,14 @@ public class EKeyInApiForm {
 
   public void setCpntCode(String cpntCode) {
     this.cpntCode = cpntCode;
+  }
+
+  public int getInstPriodId() {
+    return instPriod;
+  }
+
+  public void setInstPriodId(int instPriod) {
+    this.instPriod = instPriod;
   }
 
 }

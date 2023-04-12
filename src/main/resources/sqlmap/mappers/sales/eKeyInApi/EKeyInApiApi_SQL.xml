@@ -138,6 +138,7 @@ SELECT A.CUST_ID AS CUST_ID
                , CASE WHEN A.APP_TYPE_ID = 5764  THEN 66 --SYS0013M : 5764(Auxiliary), 66(Rental)
                           ELSE A.APP_TYPE_ID END AS APP_TYPE_ID
                , A.SRV_PAC_ID AS SRV_PAC_ID
+               , A.INST_PRIOD AS INST_PRIOD
                , A.ITM_STK_ID AS ITM_STK_ID
                , A.PROMO_ID AS PROMO_ID
                , A.TOT_AMT AS TOT_AMT
@@ -804,7 +805,7 @@ SELECT A.CUST_ID AS CUST_ID
                       ELSE D.BRNCH_ID END) AS POSTING_BRNCH_ID
            , UPPER(CASE WHEN E.CODE IS NOT NULL AND E.NAME IS NOT NULL THEN E.CODE ||' - '|| E.NAME ELSE NULL END)  AS HDC_BRNCH
            , E.BRNCH_ID  AS HDC_BRNCH_ID
-           , UPPER(F.NAME)  AS STUS_CODE_ID_NAME
+           , UPPER(G.NAME)  AS STUS_CODE_ID_NAME
            , UPPER(CASE WHEN ( A.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(A.ADDR_DTL)) ELSE ''
              END ||' '||NVL(A.STREET, '') ||' '|| B.AREA ||' '|| B.POSTCODE ||' '|| B.CITY ||' '|| B.STATE ||' '|| B.COUNTRY) AS FULL_ADDR
            ,   A.CUST_ADD_ID AS CUST_ADD_ID
@@ -820,7 +821,7 @@ SELECT A.CUST_ID AS CUST_ID
                                            AND E.STUS_ID = '1'
   LEFT OUTER JOIN SYS0005M Z ON B.CODY_BRNCH_CODE= Z.CODE
                                            AND Z.STUS_ID = '1'
-  INNER JOIN SYS0038M F ON A.STUS_CODE_ID = F.STUS_CODE_ID
+  INNER JOIN SYS0038M G ON A.STUS_CODE_ID = G.STUS_CODE_ID
   LEFT OUTER JOIN SYS0005M G ON B.AC_BRNCH_CODE= G.CODE
                                            AND G.STUS_ID = '1'
   WHERE  A.CUST_ID = #{custId}
