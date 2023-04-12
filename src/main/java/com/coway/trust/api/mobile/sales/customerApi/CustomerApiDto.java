@@ -57,7 +57,7 @@ public class CustomerApiDto {
         params.put("stusCodeIdName", vo.getStusCodeIdName());
         params.put("appTypeIdName", vo.getAppTypeIdName());
         params.put("stkDescName", vo.getStkDescName());
-        params.put("custNric", vo.getCustNric());
+        params.put("custNric", vo.getNric());
 		return params;
 	}
 
@@ -91,7 +91,7 @@ public class CustomerApiDto {
     private String code;
     private String codeName;
     private String codeDesc;
-    private String custNric;
+    private String nric;
 
 
 
@@ -323,12 +323,11 @@ public class CustomerApiDto {
     public void setStkDescName(String stkDescName) {
         this.stkDescName = stkDescName;
     }
-
-	public String getCustNric() {
-		return custNric;
+	public String getNric() {
+		return nric;
 	}
 
-	public void setCustNric(String custNric) {
-		this.custNric = custNric;
+	public void setNric(String nric) {
+		this.nric = nric;
 	}
 }
