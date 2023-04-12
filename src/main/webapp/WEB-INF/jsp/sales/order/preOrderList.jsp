@@ -275,6 +275,7 @@ console.log("preOrderList");
           , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%' ,visible : false}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false, width : '18%' }
           , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
+          , {headerText : "Installation State",       dataField : "state",   editable : false, width : '15%'}
           /* { headerText : "Status",          dataField : "stusId",     editable : true,  width : 100 ,
                     labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                     var retStr = value;
@@ -351,6 +352,7 @@ console.log("preOrderList");
           , { headerText : "Group Code", dataField : "grpCode",   editable : false,width:200}
           , { headerText : "Dept Code", dataField : "deptCode",   editable : false,width:200}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
+          ,{ headerText : "Installation State", dataField: "state", editable : false, width: 300}
             ];
 
         //그리드 속성 설정

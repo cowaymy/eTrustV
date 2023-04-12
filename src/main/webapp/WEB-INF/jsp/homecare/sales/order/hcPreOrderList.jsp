@@ -247,6 +247,7 @@
           , {headerText : "Fail Reason Code",    dataField : "rem1",            editable : false,  width : '10%'}
           , {headerText : "Fail Remark",            dataField : "rem2",            editable : false,  width : '15%'}
           , {headerText : "Last Update At (By)", dataField : "lastUpd",         editable : false,  width : '18%'}
+          , {headerText : "Installation State",    dataField : "state",            editable : false,  width: '15%'}
           , {headerText : "StatusId",                 dataField : "stusId",           visible  : false}
           , {headerText : "preOrdId",               dataField : "preOrdId",       visible  : false}
           , {headerText : "updDt",                  dataField : "updDt",   visible : false}
@@ -302,6 +303,7 @@
           , { headerText : "Group Code", dataField : "grpCode",   editable : false,width:200}
           , { headerText : "Dept Code", dataField : "deptCode",   editable : false,width:200}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
+          , { headerText : "Installation State", dataField : "state",  editable : false, width : 300}
         ];
 
         //그리드 속성 설정
