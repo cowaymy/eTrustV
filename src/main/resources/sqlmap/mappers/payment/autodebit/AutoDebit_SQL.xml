@@ -439,18 +439,6 @@
                  LEFT OUTER JOIN SYS0013M E ON A.CORP_TYPE_ID = E.CODE_ID
                                                           AND A.CORP_TYPE_ID != 0
                  WHERE A.STUS_CODE_ID != 8
-                     AND EXISTS ( SELECT 1
-                                         FROM ORG0001D AA
-                                         INNER JOIN SAL0090D BB ON AA.MEM_ID = BB.SRV_CODY_ID
-                                                                            AND BB.SRV_STUS_ID = 1
-                                         INNER JOIN SAL0001D CC ON BB.SRV_SO_ID = CC.SALES_ORD_ID
-                                                                            AND CC.STUS_CODE_ID = 4
-                                                                            AND CC.APP_TYPE_ID IN (66, 67, 68, 1412)
-                                         INNER JOIN SAL0095D DD ON CC.SALES_ORD_ID = DD.SRV_SALES_ORD_ID
-                                                                            AND DD.SRV_STUS_CODE_ID = 4
-                                             WHERE 1=1
-                                             AND CC.CUST_ID = A.CUST_ID
-                            )
     ]]>
 
     <if test="typeId > 0">
