@@ -2,7 +2,7 @@ package com.coway.trust.api.mobile.services.productRetrun;
 
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
-
+import java.math.BigDecimal;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -222,6 +222,10 @@ public class ProductRetrunJobDto {
 	private String retnCodeFailRemark;
 
 	private String serialChk;
+
+  private BigDecimal latitude;
+
+  private BigDecimal longitude;
 
 	public String getSerialChk() {
 		return serialChk;
@@ -809,9 +813,26 @@ public class ProductRetrunJobDto {
 	public String getRetnCodeFailRemark() {
 		return retnCodeFailRemark;
 	}
+
 	public void setRetnCodeFailRemark(String retnCodeFailRemark) {
 		this.retnCodeFailRemark = retnCodeFailRemark;
 	}
+
+  public BigDecimal getLatitude(){
+    return latitude;
+  }
+
+  public void setLatitude(BigDecimal latitude){
+    this.latitude = latitude;
+  }
+
+  public BigDecimal getLongitude(){
+    return longitude;
+  }
+
+  public void setLongitude(BigDecimal longitude){
+     this.longitude = longitude;
+  }
 
 	public static ProductRetrunJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, ProductRetrunJobDto.class);

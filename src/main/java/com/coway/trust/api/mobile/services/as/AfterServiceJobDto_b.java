@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.services.as;
 
+import java.math.BigDecimal;
+
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 
@@ -261,6 +263,10 @@ public class AfterServiceJobDto_b {
 
   @ApiModelProperty(value = "AS_UNMATCH_REASON")
   private String asUnmatchReason;
+
+  private BigDecimal latitude;
+
+  private BigDecimal longitude;
 
   public String getAsUnmatchReason() {
 	return asUnmatchReason;
@@ -980,6 +986,22 @@ public class AfterServiceJobDto_b {
 
   public void setInhouserepairyn(String inhouserepairyn) {
     this.inhouserepairyn = inhouserepairyn;
+  }
+
+  public BigDecimal getLatitude(){
+    return latitude;
+  }
+
+  public void setLatitude(BigDecimal latitude){
+    this.latitude = latitude;
+  }
+
+  public BigDecimal getLongitude(){
+    return longitude;
+  }
+
+  public void setLongitude(BigDecimal longitude){
+     this.longitude = longitude;
   }
 
   public static AfterServiceJobDto_b create(EgovMap egovMap) {
