@@ -780,16 +780,18 @@ SELECT T.APPV_PRCSS_NO
                 ,T5.MEM_ACC_NAME
                 <!-- ,SUM (T3.APPV_AMT) APPV_AMT -->
                 ,(SELECT SUM(APPV_AMT) FROM FCM0015D WHERE APPV_PRCSS_NO = T1.APPV_PRCSS_NO) AS APPV_AMT
-                , (CASE T2.APPV_STUS
+                , (CASE T1.APPV_PRCSS_STUS
                       WHEN 'R'
                          THEN 'Request'
+                      WHEN 'P'
+                         THEN 'Pending'
                       WHEN 'A'
                          THEN 'Approved'
                       WHEN 'J'
                          THEN 'Rejected'
                    END
                   ) APPV_PRCSS_STUS
-                ,T2.APPV_STUS AS APPV_PRCSS_STUS_CODE
+                ,T1.APPV_PRCSS_STUS AS APPV_PRCSS_STUS_CODE
                 ,T3.CLAM_UN
                 ,T3.ATCH_FILE_GRP_ID
                 /*
