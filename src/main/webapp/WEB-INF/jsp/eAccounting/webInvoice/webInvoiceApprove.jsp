@@ -830,10 +830,10 @@ function fn_makeGrid(){
 	<th scope="row"><spring:message code="webInvoice.status" /></th>
 	<td>
 	<select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
-		<option value="A"><spring:message code="webInvoice.select.approved" /></option>
 		<option value="R"><spring:message code="webInvoice.select.request" /></option>
-		<option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
 		<option value="P"><spring:message code="sales.Pending" /></option>
+		<option value="A"><spring:message code="webInvoice.select.approved" /></option>
+		<option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
 	</select>
 	</td>
 </tr>
