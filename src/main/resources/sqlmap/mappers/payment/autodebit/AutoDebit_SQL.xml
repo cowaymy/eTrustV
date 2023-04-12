@@ -319,7 +319,7 @@
 		VALUES
 		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
 		#{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),#{signImg},
-		TO_NUMBER(#{atchFileGroupId},#{thirdPartyCustId}))
+		TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId})
 	</insert>
 
 	<select id="getSmsTemplate" parameterType="Map" resultType="String">
