@@ -112,7 +112,7 @@
             var month = Number(cmmDt.substring(0, 2));
             var year = Number(cmmDt.substring(3));
             var taskID = month + (year * 12) - 24157; //taskId
-            var memLvl = $("#searchForm #memberLvl").val();
+            var memLvl = $("#searchForm #memberLevel").val();
 
             if (type == "1") {
                 var confirmChk = $("#searchForm [name=confirmChk]").val();
@@ -162,9 +162,15 @@
                 }
                 else
                 {
-                    reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
-                    reportViewType = "PDF"; //viewType
-                    reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                	if (taskID >= 122){ // start from comm month = 03/2023. Added by Hui Ding, 13/04/2023
+                		reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
+                        reportViewType = "PDF"; //viewType
+                        reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                	} else {
+	                    reportFileName = "/commission/HTCommission_PDF_20230406.rpt"; //reportFileName
+	                    reportViewType = "PDF"; //viewType
+	                    reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                	}
                 }
 
                 //set parameters
