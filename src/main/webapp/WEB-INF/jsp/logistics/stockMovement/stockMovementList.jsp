@@ -103,6 +103,18 @@
 				width : 120,
 				height : 30
 			},
+	        {
+                dataField : "brnchCode",
+                headerText : "Branch Code",
+                width : 120,
+                height : 30
+            },
+            {
+                dataField : "brnchName",
+                headerText : "Branch Name",
+                width : 120,
+                height : 30
+            },
 			{
 				dataField : "itmcd",
 				headerText : "<spring:message code='log.head.matcode'/>",
@@ -522,7 +534,8 @@
 						paramdata = {
 							groupCode : '306',
 							orderValue : 'CRT_DT',
-							Codeval : 'UM'
+// 							Codeval : 'UM',
+							codeIn:'UM,UR'
 						};
 						//paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
 
@@ -536,6 +549,7 @@
 						}, '${searchVal.sstatus}', 'sstatus', 'S', '');
 
 						doDefCombo(servicecanceldata, 'N', 'sscancel', 'S', '');
+						doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
 						//doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
 						//     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
 						//     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
@@ -1000,7 +1014,8 @@
 								</p>
 							</div> <!-- date_set end -->
 						</td>
-						<td colspan="2">&nbsp;</td>
+						 <th scope="row">Branch</th>
+                        <td><select class="w100p" id="searchBranch"  name="searchBranch"></select></td>
 						<td colspan="2">&nbsp;</td>
 					</tr>
 				</tbody>

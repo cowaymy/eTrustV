@@ -35,6 +35,8 @@
              , l47.reqst_cdc_rdc reqloc
              , s28q.wh_loc_code  reqlocnm
              , s28q.wh_loc_code || '-' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
+             , s5.CODE BRNCH_CODE
+             , s5.name BRNCH_NAME
              , l48.itm_code      itmcd
              , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pd_chk = 'Y' then 'Y' else 'N' end
                       when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
@@ -79,6 +81,7 @@
 		         GROUP BY REQST_NO, ITM_CODE) l99
 		     ,HMC0011D H11
 		     ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
+		     , sys0005m s5
          where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
@@ -98,6 +101,7 @@
            AND l48.itm_code = l99.ITM_CODE(+)
            AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
            and s26.stk_ctgry_id = s13h.code_id(+)
+           AND s28q.WH_LOC_BRNCH_ID = s5.BRNCH_ID (+)
            <if test='sscancel !="Y"'>
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
@@ -177,7 +181,11 @@
                     <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
                     #{item}
                     </foreach>
-            </if>
+           </if>
+
+            <if test="searchBranch !=null and searchBranch !=''">
+                AND s5.BRNCH_ID= #{searchBranch}
+           </if>
 
 
            ORDER by l47.CRT_DT desc
