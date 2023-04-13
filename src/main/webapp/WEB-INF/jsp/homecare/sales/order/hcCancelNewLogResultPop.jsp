@@ -893,6 +893,9 @@
 		                    <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"  readonly="readonly" />
 		                </td>
 		            </tr>
+		            <c:if test ="${orderDetail.rentPaySetInf.payModeId eq '130' or orderDetail.rentPaySetInf.payModeId eq '131' or orderDetail.rentPaySetInf.payModeId eq '132'}">
+                    <c:if test ="${orderDetail.basicInfo.rentalStus eq 'RET' or orderDetail.basicInfo.rentalStus eq 'TER'}">
+                    <c:if test ="${orderDetail.logView.prgrsId eq '13' or orderDetail.logView.prgrsId eq '12' or orderDetail.logView.prgrsId eq '11'}">
 		            <tr>
 		            <th scope="row">Deactivate Paymode</th>
 		            <td>
@@ -908,6 +911,9 @@
 		            </div>
 		            </td>
 		            </tr>
+		            </c:if>
+		            </c:if>
+		            </c:if>
 		            <tr>
 		                <th scope="row"><spring:message code="sal.text.remark" /><span id='m9' name='m9' class="must">*</span></th>
 		                <td colspan="3">
