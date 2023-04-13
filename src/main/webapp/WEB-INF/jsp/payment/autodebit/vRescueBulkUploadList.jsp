@@ -320,6 +320,15 @@
       <th scope="row">Batch No</th>
       <td colspan="5"><input id="batchNo" name="batchNo" type="text"
        title="BatchNo" placeholder="Batch No" class="w100p" /></td>
+      <th scope="row">Batch ID</th>
+      <td><input id="sBatchId" name="sBatchId" type="text"
+       title="sBatchId" placeholder="Batch ID" class="w100p" /></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='pay.text.creator' /></th>
+      <td colspan="5"><input id="creator" name="creator" type="text"
+       title="Creator" placeholder="Creator (Username)" class="w100p" />
+      </td>
       <th scope="row"><spring:message code='pay.text.crtDt' /></th>
       <td>
        <!-- date_set start -->
@@ -337,14 +346,6 @@
         </p>
        </div> <!-- date_set end -->
       </td>
-     </tr>
-     <tr>
-      <th scope="row"><spring:message code='pay.text.creator' /></th>
-      <td colspan="5"><input id="creator" name="creator" type="text"
-       title="Creator" placeholder="Creator (Username)" class="w100p" />
-      </td>
-      <th scope="row"></th>
-      <td></td>
      </tr>
     </tbody>
    </table>
