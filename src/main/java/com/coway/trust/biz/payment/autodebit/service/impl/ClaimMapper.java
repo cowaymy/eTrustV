@@ -304,4 +304,6 @@ public interface ClaimMapper {
   void updateVRescueBulkDByBchId(Map<String, Object> params);
   List<EgovMap> selectRentPayIdByBchId(Map<String, Object> params);
 
+  String selectvRescueBatchNo(int params);
+
 }

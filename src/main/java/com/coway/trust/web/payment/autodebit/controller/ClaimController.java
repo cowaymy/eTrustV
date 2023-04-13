@@ -3074,10 +3074,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	      master.put("updUserId", sessionVO.getUserId());
 	      master.put("totItem", vos.size());
 
-	      int result = claimService.saveCsvVRescueBulkUpload(master, detailList);
-	      if(result > 0){
-
-	          message.setMessage("vRescue Bulk Upload File successfully uploaded.<br />Batch ID : "+result);
+	      Map<String, Object> result = claimService.saveCsvVRescueBulkUpload(master, detailList);
+	      if(result.get("batchId") != null){
+	          message.setMessage("vRescue Bulk Upload File successfully uploaded.<br />Batch ID : "+result.get("batchId") +"<br />Batch No : "+result.get("batchNo"));
 	          message.setCode(AppConstants.SUCCESS);
 	      }else{
 	          message.setMessage("Failed to upload vRescue Bulk Upload File. Please try again later.");

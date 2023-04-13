@@ -1445,6 +1445,10 @@
     SELECT NVL(MAX(BATCH_ID) + 1, 1) AS BATCH_ID FROM SAL0347D
     </select>
 
+    <select id="selectvRescueBatchNo" parameterType="int"  resultType="String">
+    SELECT BATCH_NO FROM SAL0347D WHERE BATCH_ID = #{batchId}
+    </select>
+
     <insert id="insertVRescueBulkMaster" parameterType="Map">
       INSERT INTO SAL0347D (
       BATCH_ID
@@ -1499,7 +1503,6 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
     JOIN SAL0001D B ON B.SALES_ORD_NO = A.ORD_NO
     JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
     WHERE C.DEDUCT_ACC_ID IS NOT NULL
-    AND C.DEDUCT_ACC_ID <![CDATA[ <> ]]> 0
     AND A.BATCH_ID = #{batchId}
     </select>
 

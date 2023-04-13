@@ -653,11 +653,12 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
       }
 
       @Override
-      public int saveCsvVRescueBulkUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
+      public Map<String, Object> saveCsvVRescueBulkUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
           // TODO Auto-generated method stub
           int masterSeq = claimMapper.selectNextBatchId();
           master.put("batchId", masterSeq);
           int mResult = claimMapper.insertVRescueBulkMaster(master); // INSERT INTO SAL0347D
+          String batchNo = claimMapper.selectvRescueBatchNo(masterSeq);
 
           int size = 1000;
           int page = detailList.size() / size;
@@ -666,6 +667,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 
           Map<String, Object> vRescuelist = new HashMap<>();
           vRescuelist.put("batchId", masterSeq);
+          vRescuelist.put("batchNo", batchNo);
           for (int i = 0; i <= page; i++) {
               start = i * size;
               end = size;
@@ -679,7 +681,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
               claimMapper.insertVRescueBulkDetail(vRescuelist); // INSERT INTO SAL0348D
           }
 
-          return masterSeq;
+          return vRescuelist;
       }
 
     @Override
@@ -687,12 +689,14 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 
   		List<EgovMap> rentPayIdList = claimMapper.selectRentPayIdByBchId(params);
 
+  		LOGGER.debug("rentPayIdList =====================================>>  " + rentPayIdList);
   		int bvr=0;
     	if (rentPayIdList.size() > 0) {
   			for (int i = 0; i < rentPayIdList.size(); i++) {
   				Map<String, Object> updateMap = (Map<String, Object>) rentPayIdList.get(i);
 
   				updateMap.put("userId", params.get("userId"));
+  				LOGGER.debug("updateMap =====================================>>  " + updateMap);
   				 claimMapper.saveVRescueUpdate(updateMap) ;
   			}
 
