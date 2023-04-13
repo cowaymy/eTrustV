@@ -348,7 +348,6 @@
                     AND R.SRV_MEM_CNTRCT_ID = O.SVC_CNTRCT_ID(+)
                     AND O.CUST_CRC_ID = W.CUST_CRC_ID(+)
                     AND W.CARD_TYPE_ID = X.CODE_ID(+)
-
                     AND O.MODE_ID = P.CODE_ID(+)
                     AND C.CUST_ID = Q.CUST_ID
                     AND H.ADD_ID = Q.CUST_ADD_ID(+)
@@ -367,7 +366,6 @@
                      <!-- /*  20221108 CELESTE [S] Edit Customer Contact Info */ -->
                   )AA
        ) A LEFT JOIN PAY0053S B ON B.ACC_DEBT_ORD_ID = A.SALES_ORDER_ID AND B.ACC_DEBT_SRV_CNTRCT_ID = A.SRV_MEM_CNTRCT_ID
-
   </select>
 
   <select id="getHeartServiceJobList_b" parameterType="Map" resultType="egovMap">
@@ -555,6 +553,8 @@
                                       area_id AS area_id,
                                       addr_dtl AS addr_dtl,
                                       street AS street,
+                                      latitude AS latitude,
+                                      longitude AS longitude,
                                       NVL(Serial_Chk, 'N') AS Serial_Chk,
                                       psi AS psi,
                                       lpm AS lpm,
@@ -584,6 +584,8 @@
                                            sal0023d.addr_dtl AS addr_dtl,
                                            sal0023d.area_id AS area_id,
                                            sal0023d.street AS street,
+                                           sal0023d.latitude AS latitude,
+                                           sal0023d.longitude AS longitude,
                                            sal0027d.tel_m1 AS handphone_Tel,
                                            sal0027d.tel_r AS home_Tel,
                                            sal0027d.tel_o AS office_Tel,
@@ -1040,16 +1042,14 @@
                    NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code,
                    NVL (TO_CHAR (SVC0113D.MATT_SZ), '') AS before_Product_Serial_No
                    , CASE WHEN CCR0006D.TYPE_ID = '258' AND (
-
-                   SELECT COUNT(*) AS CNT
-                   FROM SAL0046D A
-                   JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
-                   JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID
-                   WHERE A.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-                       AND A.STUS_CODE_ID = '4'
-                       AND C.STK_CTGRY_ID IN (5706, 5707)
-
-                                                                                      ) > 0 THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
+                         SELECT COUNT(*) AS CNT
+                         FROM SAL0046D A
+                         JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                         JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID
+                         WHERE A.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+                             AND A.STUS_CODE_ID = '4'
+                             AND C.STK_CTGRY_ID IN (5706, 5707)
+                   ) > 0 THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
                    , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
                    , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
                    , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
@@ -1067,17 +1067,14 @@
                    , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
                    , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
                    , TO_CHAR (SAL0047D.WATER_SRC_TYPE) AS water_src_type
-
                    , TO_CHAR (SAL0046D.OWNER_CODE) AS OWNER_CODE
                    , TO_CHAR (SAL0046D.RESULT_CUST_NAME) AS RESULT_CUST_NAME
                    , TO_CHAR (SAL0046D.RESULT_ICMOBILE_NO) AS RESULT_IC_MOBILE_NO
                    , TO_CHAR (SAL0046D.RESULT_RPT_EMAIL_NO) AS RESULT_REPORT_EMAIL_NO
                    , TO_CHAR (SAL0046D.RESULT_ACEPT_NAME) AS RESULT_ACCEPTANCE_NAME
-
                    , TO_CHAR (SAL0046D.CHK_SMS) AS CHK_SMS
                    , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
                    , TO_CHAR (SAL0046D.CHECK_SEND) AS CHECK_SEND
-
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
