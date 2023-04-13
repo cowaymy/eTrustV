@@ -2003,11 +2003,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       }
     }
 
-    if ("68".equals(CommonUtils.nvl(param.getAppTypeId()))) {
+    /*if ("68".equals(CommonUtils.nvl(param.getAppTypeId()))) {
     	if (CommonUtils.isEmpty(param.getInstPriod())) {
             throw new ApplicationException(AppConstants.FAIL, "Installment Period does not exist.");
           }
-    }
+    }*/
 
     // if (CommonUtils.isEmpty(param.getRentPayCustId()) ||
     // param.getRentPayCustId() <= 0) {
@@ -2099,7 +2099,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("custPoNo", null);
     // sal0213M.put("appTypeId", param.getAppTypeId());
     sal0213M.put("srvPacId", param.getSrvPacId());
-    sal0213M.put("instPriod", CommonUtils.intNvl(param.getInstPriod()));
+    //sal0213M.put("instPriod", CommonUtils.intNvl(param.getInstPriod()));
     // sal0213M.put("custId", param.getCustId());
     // sal0213M.put("empChk", 0);
     // sal0213M.put("gstChk", 0);
