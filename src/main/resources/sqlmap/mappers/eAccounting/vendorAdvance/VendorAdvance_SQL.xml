@@ -1118,7 +1118,7 @@
             TO_CHAR(C.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
             --B.APPV_AMT REPAY_AMT,
             J.NET_AMT REPAY_AMT,
-            I.CLM_NO ADV_REFD_CLM_NO,
+            C.MAIN_REQ_NO ADV_REFD_CLM_NO,
             TO_CHAR(I.ADV_PRD_FR, 'DD/MM/YYYY') REF_TRV_PRD_FR,
             TO_CHAR(I.ADV_PRD_TO, 'DD/MM/YYYY') REF_TRV_PRD_TO,
             C.FILE_ATCH_GRP_ID ATCH_FILE_GRP_ID,
@@ -1172,7 +1172,7 @@
         LEFT JOIN SYS0071D H
             ON G.ATCH_FILE_ID = H.ATCH_FILE_ID
         LEFT JOIN FCM0027M I
-                ON A.APPV_REQ_KEY_NO = I.ADV_REFD_NO
+                ON C.MAIN_REQ_NO = I.CLM_NO
         LEFT JOIN FCM0028D J
                 ON J.CLM_NO = C.CLM_NO
         WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
