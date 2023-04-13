@@ -1416,6 +1416,9 @@
 	<if test="bchId!= null and bchId != ''">
     AND M.BATCH_ID = #{bchId}
     </if>
+    <if test="sBatchId!= null and sBatchId != ''">
+    AND M.BATCH_ID = #{sBatchId}
+    </if>
 	<if test="batchNo!= null and batchNo != ''">
 	AND M.BATCH_NO = #{batchNo}
 	</if>
