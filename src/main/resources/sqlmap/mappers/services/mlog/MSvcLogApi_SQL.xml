@@ -76,7 +76,7 @@
           ,A.NEW_HANDPHONE_TEL,
           A.NEW_HOME_TEL,
           A.NEW_OFFICE_TEL,
-          A.NEW_EMAIL,
+          A.NEW_EMAIL
           <!--A.LATITUDE,
           A.LONGITUDE -->
           <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
@@ -147,7 +147,7 @@
                   ,NEW_HANDPHONE_TEL,
                   NEW_HOME_TEL,
                   NEW_OFFICE_TEL,
-                  NEW_EMAIL,
+                  NEW_EMAIL
                   <!-- LATITUDE,
                   LONGITUDE -->
                   <!-- /*   20221108 CELESTE [E] Edit Customer Contact Info */ -->
@@ -228,7 +228,7 @@
                                     ,CUST.NEW_HP_NO AS NEW_HANDPHONE_TEL,
                                     CUST.NEW_HOME_NO AS NEW_HOME_TEL,
                                     CUST.NEW_OFFICE_NO AS NEW_OFFICE_TEL,
-                                    CUST.NEW_EMAIL AS NEW_EMAIL,
+                                    CUST.NEW_EMAIL AS NEW_EMAIL
                                     <!-- Q.LATITUDE,
                                     Q.LONGITUDE -->
                                    <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
