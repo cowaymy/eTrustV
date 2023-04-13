@@ -138,7 +138,7 @@ SELECT A.CUST_ID AS CUST_ID
                , CASE WHEN A.APP_TYPE_ID = 5764  THEN 66 --SYS0013M : 5764(Auxiliary), 66(Rental)
                           ELSE A.APP_TYPE_ID END AS APP_TYPE_ID
                , A.SRV_PAC_ID AS SRV_PAC_ID
-               , A.INST_PRIOD AS INST_PRIOD
+               , NVL(A.INST_PRIOD,0) AS INST_PRIOD
                , A.ITM_STK_ID AS ITM_STK_ID
                , A.PROMO_ID AS PROMO_ID
                , A.TOT_AMT AS TOT_AMT

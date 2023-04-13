@@ -681,11 +681,11 @@ public class EKeyInApiDto {
     this.srvPacId = srvPacId;
   }
 
-  public int getInstPriodId() {
+  public int getInstPriod() {
     return instPriod;
   }
 
-  public void setInstPriodId(int instPriod) {
+  public void setInstPriod(int instPriod) {
     this.instPriod = instPriod;
   }
 
