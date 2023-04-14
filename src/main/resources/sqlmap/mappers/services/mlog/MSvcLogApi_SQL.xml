@@ -77,8 +77,8 @@
           A.NEW_HOME_TEL,
           A.NEW_OFFICE_TEL,
           A.NEW_EMAIL
-          <!--A.LATITUDE,
-          A.LONGITUDE -->
+          A.LATITUDE,
+          A.LONGITUDE
           <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
         FROM ( SELECT appointment_Date,
                   service_No,
@@ -148,8 +148,8 @@
                   NEW_HOME_TEL,
                   NEW_OFFICE_TEL,
                   NEW_EMAIL
-                  <!-- LATITUDE,
-                  LONGITUDE -->
+                  LATITUDE,
+                  LONGITUDE
                   <!-- /*   20221108 CELESTE [E] Edit Customer Contact Info */ -->
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
@@ -229,8 +229,8 @@
                                     CUST.NEW_HOME_NO AS NEW_HOME_TEL,
                                     CUST.NEW_OFFICE_NO AS NEW_OFFICE_TEL,
                                     CUST.NEW_EMAIL AS NEW_EMAIL
-                                    <!-- Q.LATITUDE,
-                                    Q.LONGITUDE -->
+                                    Q.LATITUDE,
+                                    Q.LONGITUDE
                                    <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
                   FROM (SELECT
                                  A.NO ,
@@ -449,8 +449,8 @@
           , TO_CHAR(VOUCHER_REDEMPTION) AS VOUCHER_REDEMPTION
           , TO_CHAR(IS_VOUCHER) AS IS_VOUCHER
           , TO_CHAR(PRODCAT) AS prodcat
-          <!--  , LATITUDE AS LATITUDE
-          , LONGITUDE AS LONGITUDE -->
+          , LATITUDE AS LATITUDE
+          , LONGITUDE AS LONGITUDE
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -553,6 +553,8 @@
                                       area_id AS area_id,
                                       addr_dtl AS addr_dtl,
                                       street AS street,
+                                      latitude AS latitude,
+                                      longitude AS longitude,
                                       NVL(Serial_Chk, 'N') AS Serial_Chk,
                                       psi AS psi,
                                       lpm AS lpm,
@@ -582,6 +584,8 @@
                                            sal0023d.addr_dtl AS addr_dtl,
                                            sal0023d.area_id AS area_id,
                                            sal0023d.street AS street,
+                                           sal0023d.latitude AS latitude,
+                                           sal0023d.longitude AS longitude,
                                            sal0027d.tel_m1 AS handphone_Tel,
                                            sal0027d.tel_r AS home_Tel,
                                            sal0027d.tel_o AS office_Tel,
@@ -987,20 +991,40 @@
                    CASE WHEN SAL0046D.SESION_CODE IS NULL
                      THEN 'O'
                      ELSE SAL0046D.SESION_CODE END AS job_Session,
-                   (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Name,
-                   (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Tel,
+                   ( SELECT NAME
+                     FROM ORG0001D
+                     WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Name,
+                   (SELECT TEL_MOBILE
+                    FROM ORG0001D
+                    WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Tel,
                    CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
-                     THEN (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
-                     ELSE (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Name,
+                     THEN (SELECT NAME
+                               FROM ORG0001D
+                               WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
+                     ELSE (SELECT NAME
+                              FROM ORG0001D
+                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Name,
                    CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
-                     THEN (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
-                     ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Tel,
+                     THEN (SELECT TEL_MOBILE
+                               FROM ORG0001D
+                               WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
+                     ELSE (SELECT TEL_MOBILE
+                              FROM ORG0001D
+                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hm_Tel,
                    CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
-                     THEN (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
-                     ELSE (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Name,
+                     THEN (SELECT NAME
+                               FROM ORG0001D
+                               WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
+                     ELSE (SELECT NAME
+                              FROM ORG0001D
+                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Name,
                    CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
-                     THEN (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
-                     ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Tel,
+                     THEN (SELECT TEL_MOBILE
+                               FROM ORG0001D
+                               WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
+                     ELSE (SELECT TEL_MOBILE
+                              FROM ORG0001D
+                              WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS sm_Tel,
                    NVL (ORG0001D.MEM_CODE, '') AS settled_By,
                    NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
                    NVL (SAL0001D.CUST_ID, '') AS customer_Id,
@@ -1027,6 +1051,8 @@
                    NVL(SYS0064M.POSTCODE, '') postcode,
                    NVL(SYS0064M.STATE, '') service_State,
                    (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
+                   NVL (SAL0023D.LATITUDE, '') AS latitude,
+                   NVL (SAL0023D.LONGITUDE, '') AS longitude,
                    NVL (SYS0026M.STK_DESC, '') AS product_Name,
                    NVL (SYS0026M.STK_CODE, '') AS product_Code,
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
@@ -1070,55 +1096,59 @@
                    , TO_CHAR (SAL0046D.CUST_MOBILE_NO) AS CUST_MOBILE_NO
                    , TO_CHAR (SAL0046D.CHECK_SEND) AS CHECK_SEND
             FROM SAL0046D,
-                 ORG0001D,
-                 ORG0005D,
-                 ORG1001V,
-                 SAL0001D,
-                 SAL0002D,
-                 (SELECT CUST_ID AS CUST_ID, MAX(CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID, MAX(CUST_ACC_NO) AS CUST_ACC_NO FROM SAL0022D GROUP BY CUST_ID) SAL0022D,
-                 SAL0023D,
-                 SAL0024D,
-                 SAL0027D,
-                 SAL0029D,
-                 SAL0045D,
-                 SAL0047D,
-                 SAL0095D,
-                 SYS0005M,
-                 SYS0026M,
-                 CCR0006D,
-                 CCR0007D,
-                 (SELECT *
-                  FROM SYS0064M
-                  WHERE STATUS_ID = 1) SYS0064M,
-                 SAL0233M,
-                 SVC0113D,
-                 SAL0017D
-            WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
-              AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
-              AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
-              AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
-              AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
-              AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
-              AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID(+)
-              AND SAL0023D.AREA_ID = SAL0233M.AREA_ID(+) AND SAL0233M.STUS_CODE_ID(+) = 1
-              AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
-              AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID(+)
-              AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
-              AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID(+)
-              AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
-              AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID(+)
-              AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
-              AND SAL0046D.INSTALL_STK_ID = SYS0026M.STK_ID(+)
-              AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
-              AND CCR0006D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-              AND CCR0006D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
-              AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
-              AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
-              AND ORG0001D.mem_code = #{userId}
-              AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
-              AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
-              AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
-              AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
+                     ORG0001D,
+                     ORG0005D,
+                     ORG1001V,
+                     SAL0001D,
+                     SAL0002D,
+                     (SELECT CUST_ID AS CUST_ID,
+                                 MAX(CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID,
+                                 MAX(CUST_ACC_NO) AS CUST_ACC_NO
+                      FROM SAL0022D
+                      GROUP BY CUST_ID) SAL0022D,
+                       SAL0023D,
+                       SAL0024D,
+                       SAL0027D,
+                       SAL0029D,
+                       SAL0045D,
+                       SAL0047D,
+                       SAL0095D,
+                       SYS0005M,
+                       SYS0026M,
+                       CCR0006D,
+                       CCR0007D,
+                       (SELECT *
+                        FROM SYS0064M
+                        WHERE STATUS_ID = 1) SYS0064M,
+                       SAL0233M,
+                       SVC0113D,
+                       SAL0017D
+                       WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
+                        AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
+                        AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
+                        AND SAL0001D.SALES_ORD_ID = SAL0046D.SALES_ORD_ID
+                        AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
+                        AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
+                        AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID(+)
+                        AND SAL0023D.AREA_ID = SAL0233M.AREA_ID(+) AND SAL0233M.STUS_CODE_ID(+) = 1
+                        AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
+                        AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID(+)
+                        AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
+                        AND SAL0001D.SALES_ORD_ID = SAL0045D.SALES_ORD_ID(+)
+                        AND SAL0046D.INSTALL_ENTRY_ID = SAL0047D.ENTRY_ID(+)
+                        AND SAL0001D.SALES_ORD_ID = SAL0095D.SRV_SALES_ORD_ID(+)
+                        AND ORG0001D.BRNCH = SYS0005M.BRNCH_ID
+                        AND SAL0046D.INSTALL_STK_ID = SYS0026M.STK_ID(+)
+                        AND SAL0023D.AREA_ID = SYS0064M.AREA_ID(+)
+                        AND CCR0006D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+                        AND CCR0006D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
+                        AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
+                        AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
+                        AND ORG0001D.mem_code = #{userId}
+                        AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
+                        AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
+                        AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
+                        AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
     ]]>
 
          <!-- <if test='userId == "DT100004" '>
@@ -1233,8 +1263,8 @@
          , TO_CHAR(CHK_SMS) AS chk_sms
          , TO_CHAR(CUST_MOBILE_NO) AS cust_mobile_no
          , TO_CHAR(CHECK_SEND) AS check_send
-         <!-- , LATITUDE AS LATITUDE
-         , LONGITUDE AS LONGITUDE  -->
+         , LATITUDE AS LATITUDE
+         , LONGITUDE AS LONGITUDE
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1316,6 +1346,8 @@
                      NVL (P.POSTCODE, '') postcode,
                      NVL (P.STATE, '') service_State,
                      ( O.ADDR_DTL || ' ' || O.STREET || ' ' || P.AREA || ' ' || P.POSTCODE || ' ' || P.CITY || ' ' || P.STATE || ' ' || P.COUNTRY) install_Address,
+                     NVL (O.LATITUDE, '') AS latitude,
+                     NVL (O.LONGITUDE, '') AS longitude,
                      NVL (TO_CHAR (N.TEL_M1), '') AS handphone_Tel,
                      NVL (TO_CHAR (N.TEL_R), '') AS home_Tel,
                      NVL (TO_CHAR (N.TEL_O), '') AS office_Tel,
@@ -1470,8 +1502,8 @@
          , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
          , TO_CHAR(SEL_SERIAL_NO) AS sel_Serial_No
          , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
-         <!-- , LATITUDE AS LATITUDE
-         , LONGITUDE AS LONGITUDE  -->
+         , LATITUDE AS LATITUDE
+         , LONGITUDE AS LONGITUDE
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
@@ -1530,14 +1562,14 @@
           LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID AND S87A.SRV_FILTER_STK_ID = S07A.BS_RESULT_PART_ID
           INNER JOIN ORG0001D O1DA ON O1DA.MEM_ID = S08A.CODY_ID
           LEFT OUTER JOIN ( SELECT S26.STK_CODE,
-                                   NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
-                               FROM SYS0026M S26
-                               WHERE 1 = 1
-                               AND S26.STUS_CODE_ID = 1
-                          ) H ON S26B.STK_CODE = H.STK_CODE
-          WHERE S08A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
-            AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
-            AND O1DA.MEM_CODE = #{userId})
+                                                NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+                                      FROM SYS0026M S26
+                                      WHERE 1 = 1
+                                       AND S26.STUS_CODE_ID = 1
+                                    ) H ON S26B.STK_CODE = H.STK_CODE
+           WHERE S08A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+           AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+           AND O1DA.MEM_CODE = #{userId})
     WHERE 1 = 1 AND rn = 1
   </select>
 
@@ -1625,19 +1657,19 @@
            WHERE S08A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
             AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
             AND O1DA.MEM_CODE = #{userId}
-    ) A LEFT JOIN SVC0006D S06A ON S06A.SCHDUL_ID = a.SCHDUL_ID  and S06A.RESULT_IS_CURR = 1
-        LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
-                               AND a.SRV_FILTER_STK_ID = S07A.BS_RESULT_PART_ID
+         ) A
+        LEFT JOIN SVC0006D S06A ON S06A.SCHDUL_ID = a.SCHDUL_ID  and S06A.RESULT_IS_CURR = 1
+        LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID AND a.SRV_FILTER_STK_ID = S07A.BS_RESULT_PART_ID
         LEFT OUTER JOIN ( SELECT S26.STK_CODE,
-                                 NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
-                          FROM SYS0026M S26
-                          WHERE 1 = 1
-                            AND S26.STUS_CODE_ID = 1
+                                               NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+                                    FROM SYS0026M S26
+                                    WHERE 1 = 1
+                                    AND S26.STUS_CODE_ID = 1
         ) H ON a.STK_CODE = H.STK_CODE
         <!--   20220914 CELESTE [S] Edit Customer Contact Info -->
         LEFT JOIN SAL0329D CUSTDT ON CUSTDT.ORDER_ID = S06A.SALES_ORD_ID AND CUSTDT.HS_NO = A.SERVICE_NO
-    WHERE 1 = 1
-      AND rn = 1
+        WHERE 1 = 1
+         AND rn = 1
   </select>
 
   <select id="heartServiceParts_b" parameterType="Map" resultType="egovMap">
@@ -1759,8 +1791,8 @@
            TO_CHAR(LPM) AS lpm,
            TO_CHAR(PRODCAT) AS prodcat,
            TO_CHAR(AS_UNMATCH_REASON) AS AS_UNMATCH_REASON
-           <!-- LATITUDE AS LATITUDE,
-           LONGITUDE AS LONGITUDE  -->
+           LATITUDE AS LATITUDE,
+           LONGITUDE AS LONGITUDE
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -2400,7 +2432,6 @@ SELECT MST.*
            Extent1.APPNT_DT,
            Extent1.APPNT_TM,
            Extent10.TYPE_ID as CUST_TYPE
-
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
