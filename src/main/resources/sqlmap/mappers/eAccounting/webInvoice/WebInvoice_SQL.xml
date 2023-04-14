@@ -819,7 +819,7 @@ SELECT T.APPV_PRCSS_NO
            WHERE <!-- T2.APPV_LINE_USER_ID = #{memCode} -->
            <!-- WHERE 1=1 -->
                  (T1.APPV_PRCSS_STUS = 'R' OR T1.APPV_PRCSS_STUS = 'P' OR T1.APPV_PRCSS_STUS = 'A' or T1.APPV_PRCSS_STUS = 'J')
-                 AND (T2.APPV_STUS = 'R' OR T2.APPV_STUS = 'A' OR T2.APPV_STUS = 'J' OR t2.appv_stus = 'T' )
+                 AND (T2.APPV_STUS = 'R' OR T2.APPV_STUS = 'A' OR T2.APPV_STUS = 'J')
                  <if test="apprGrp == null or apprGrp == ''">
                     AND T2.APPV_LINE_USER_ID = #{memCode}
                  </if>
