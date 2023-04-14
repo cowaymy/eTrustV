@@ -76,7 +76,7 @@
           ,A.NEW_HANDPHONE_TEL,
           A.NEW_HOME_TEL,
           A.NEW_OFFICE_TEL,
-          A.NEW_EMAIL
+          A.NEW_EMAIL,
           A.LATITUDE,
           A.LONGITUDE
           <!--  /*  20221108 CELESTE [E] Edit Customer Contact Info */ -->
