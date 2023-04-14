@@ -674,6 +674,13 @@ function fn_addCarMilleage(){
                 expGrp : "1"
         }
 
+			$.each(myFileCaches, function(n, v) {
+			     console.log("n : " + n + " v.file : " + v.file);
+			     if(n == (i+1)){
+			      formData.append(n, v.file);
+			     }
+			});
+
 			Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
 	            console.log(result);
 	            if(result.data.fileGroupKey){
