@@ -17,5 +17,7 @@ public interface CustomerScoreCardMapper {
    * @exception Exception
    */
   List<EgovMap> customerScoreCardList(Map<String, Object> params);
+  EgovMap getLatestBillNo(Map<String, Object> params);
+  String getMemType(Map<String, Object> params);
 
 }

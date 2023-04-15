@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.sales.customer.CustomerScoreCardService;
 import com.coway.trust.biz.sales.customer.Customer360ScoreCardService;
 import com.coway.trust.biz.sales.customer.CustomerVO;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.biz.sales.customer.Customer360VO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,7 +43,12 @@ public class CustomerScoreCardController {
 	 */
 	@RequestMapping(value = "/CustomerScoreCardList.do")
 	public String CustomerScoreCardList(@ModelAttribute("customerVO") CustomerVO customerVO,
-			@RequestParam Map<String, Object> params, ModelMap model) {
+			@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+		params.put("memId", sessionVO.getMemId());
+		String memType = customerScoreCardService.getMemType(params);
+		model.addAttribute("memType", memType);
+
 
 		return "sales/customer/CustomerScoreCardList";
 	}
@@ -55,8 +61,7 @@ public class CustomerScoreCardController {
 	 */
 	@RequestMapping(value = "/customerScoreCardList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> CustomerScoreCardJsonList(@RequestParam Map<String, Object> params,
-			HttpServletRequest request, ModelMap model) {
-
+			HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
 
 		List<EgovMap> customerScoreCardList = customerScoreCardService.customerScoreCardList(params);
 

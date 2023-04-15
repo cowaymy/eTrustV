@@ -8,21 +8,25 @@
         D1.ORD_NO AS ORD_NO
         , D1.APP_TYPE AS APP_TYPE_CODE
         , D1.PROMO_DESC AS PROMO_DESC
-        , D1.SALES_DT AS ORD_DT
+        , TO_DATE(D1.SALES_DT) AS ORD_DT
         , D1.APP_DT AS ORDER_CANCELLATION_DATE
         , D1.INSTALL_DT AS INS_DT
         , D1.STK_CODE AS PRODUCT_CODE
         , D1.STK_DESC AS PRODUCT_NAME
         , UPPER (D1.INST_ADD) AS INS_ADDR
         , D1.PAY_MODE AS PAY_MODE
-        , (CASE WHEN D1.CARD_TYPE IS NOT NULL THEN D1.CARD_TYPE || ' ('|| D1.VISA_TYPE || ')' ELSE '' END) AS CARD_TYPE
+        , (CASE WHEN D1.CARD_TYPE IS NOT NULL THEN D1.CARD_TYPE || ' ('|| D1.VISA_TYPE || ')' ELSE D1.PAY_MODE END) AS CARD_TYPE
         , D1.BILL_NO_MONTH AS BILL_NO_MONTH
         , D1.REN_STUS AS ORD_STUS_CODE
         , ROUND(TO_CHAR(D1.AGING_MTH),2) AS AGING_MONTH
         , D1.OUT_AMT AS OUT_AMT
         , D1.ROT_DATE AS ROT_DATE
         ,D1.SO_EXCHG_CRT_DT AS SO_EXCHG_CRT_DT
+        , D1.SALES_DT || <![CDATA[',']]> || D1.INSTALL_DT || <![CDATA[',']]> || D1.APP_DT AS COMBINE_DT
         --, D1.SRV_STUS AS MEM_STUS
+        , D1.RENT_INST_NO
+        , D1.MTH_RENT_AMT
+        , D1.SALES_ORD_ID
             FROM (
 
             WITH L38 AS
@@ -65,6 +69,13 @@
                 WHERE S.SALES_ORD_ID = D.SALES_ORD_ID AND S.APP_TYPE_ID = 66), 0) AGING_MTH
             , (CASE WHEN ROT.ROT_STUS = 5 THEN TO_CHAR(D.UPD_DT,'DD/MM/YYYY') ELSE '' END) AS ROT_DATE
             , (SELECT TO_CHAR(MAX(SO_EXCHG_CRT_DT),'DD/MM/YYYY') FROM SAL0004D WHERE SO_EXCHG_STUS_ID = 4 AND SO_ID = D.SALES_ORD_ID GROUP BY SO_ID) AS SO_EXCHG_CRT_DT
+            , (CASE
+                WHEN F.STUS_CODE_ID='TER' THEN 0
+                WHEN F.STUS_CODE_ID='WOF_1' THEN 0
+                ELSE NVL(s70.RENT_INST_NO,0)
+               END) AS RENT_INST_NO
+            , D.MTH_RENT_AMT
+            , D.SALES_ORD_ID
             FROM SAL0029D C
             JOIN SAL0001D D ON D.CUST_ID = C.CUST_ID
             JOIN SAL0002D E ON E.SALES_ORD_ID = D.SALES_ORD_ID
@@ -85,6 +96,7 @@
             LEFT JOIN SYS0013M SYC ON SYC.CODE_ID = CRC.CUST_CRC_TYPE_ID
             LEFT JOIN SAL0275M ROT ON ROT.ROT_ORD_NO = D.SALES_ORD_NO AND ROT.ROT_STUS = '5'
             LEFT JOIN L38 on  L38.SALES_ORD_ID = D.SALES_ORD_ID
+            LEFT JOIN SAL0070D s70 on s70.SALES_ORD_ID = d.SALES_ORD_ID AND EXTRACT(MONTH FROM S70.RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE) AND EXTRACT(YEAR FROM S70.RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
     	    WHERE 1=1
 
     		<if test="custId != null and custId != ''">
@@ -149,6 +161,26 @@
     		) D1
     		ORDER BY D1.ORD_NO
 	</select>
+
+	<select id="getLatestBillNo" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(MAX(RENT_INST_NO),0) AS LAST_RENT_INST_NO
+        FROM
+            PAY0022D
+        WHERE
+            RENT_SO_ID = #{salesOrdId}
+            AND RENT_AMT <![CDATA[ > ]]> 0
+            AND RENT_DOC_TYPE_ID != 160
+    </select>
+
+    <select id="getMemType" parameterType="Map"  resultType="String">
+        SELECT
+            MEM_TYPE
+        FROM
+            ORG0001D
+        WHERE
+            MEM_ID = #{memId}
+    </select>
 
 
 </mapper>

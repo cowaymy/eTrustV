@@ -5,7 +5,7 @@
 	//AUIGrid 생성 후 반환 ID
 	var custGridID;
 	var gridViewData = null;
-
+    var memType;
 	// popup 크기
 	var option = {
 		width : "1200px", // 창 가로 크기
@@ -18,7 +18,6 @@
 
 		/* alert("Hello World"); */
 		createAUIGrid();
-
 	});
 
 	function createAUIGrid() {
@@ -34,76 +33,72 @@
 			headerText : "<spring:message code='sales.AppType'/>",
 			dataField : "appTypeCode",
 			editable : false,
-		}, {
-            headerText : "<spring:message code='sales.promoDesc'/>",
-            dataField : "promoDesc",
+		},  {
+            headerText : "<spring:message code='sales.prod'/>",
+            dataField : "productName",
             editable : false,
         }, {
-			headerText : "<spring:message code='sales.cust.ordDt'/>",
-			dataField : "ordDt",
-			dataType : "date",
-			formatString : "dd/mm/yyyy",
-			editable : false,
-		}, {
-            headerText : "<spring:message code='sales.ordCanDt'/>",
-            dataField : "orderCancellationDate",
-            dataType : "date",
-            formatString : "dd/mm/yyyy",
+            headerText : "<spring:message code='sales.cust.RentalStatus'/>",
+            dataField : "ordStusCode",
+            editable : false,
+        }, {
+            headerText : "<spring:message code='sales.billNoMnth'/>",
+            dataField : "billNoMonth",
+            editable : false,
+        }, {
+            headerText : "<spring:message code='sales.cust.agingMonth'/>",
+            dataField : "agingMonth",
+            editable : false,
+        }, {
+            headerText : "<spring:message code='sales.cust.payMode'/>",
+            dataField : "cardType",
+            editable : false,
+        }, {
+            headerText : "<spring:message code='sales.cust.outAmt'/>",
+            dataField : "outAmt",
             editable : false,
             width : 100
-        } , {
-			headerText : "<spring:message code='sales.cust.insDt'/>",
-			dataField : "insDt",
-			dataType : "date",
-			formatString : "dd/mm/yyyy",
+        }, {
+            headerText : "<spring:message code='sales.cust.unbillAmt'/>",
+            dataField : "unbillAmt",
+            editable : false,
+            width : 100
+        }, {
+        	dataField : "combineDt",
+            visible: false
+        } ,{
+            dataField : "insDt",
+            visible: false
+        } ,{
+            dataField : "orderCancellationDate",
+            visible: false
+        }, {
+            dataField : "ordDt",
+            visible: false
+        },{
+			headerText : "<spring:message code='sales.cust.combineDt'/>",
+			dataField : "datecombine",
+			width:100,
 			editable : false,
-		}, {
-			headerText : "<spring:message code='sales.prod'/>",
-			dataField : "productName",
-			editable : false,
+			renderer:  {type : "TemplateRenderer",
+	            editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+	        },
+			labelFunction: function(rowIndex, columnIndex, value, headerText, item, dataField){
+			    var html='';
+			    console.log(item.ordDt);
+			    let str = item.combineDt;
+			    let res = str.replace(/,/g,"<br />");
+			    html += '<p > '+res+'</p>';
+
+			    console.log(html);
+			    return html;
+			}
 		}, {
 			headerText : "<spring:message code='sales.insAddr'/>",
 			dataField : "insAddr",
 			editable : false,
 			width : 200
-		}, {
-			headerText : "<spring:message code='sales.cust.payMode'/>",
-			dataField : "payMode",
-			editable : false,
-		}, {
-            headerText : "<spring:message code='sales.cust.cardType'/>",
-            dataField : "cardType",
-            editable : false,
-        },{
-            headerText : "<spring:message code='sales.billNoMnth'/>",
-            dataField : "billNoMonth",
-            editable : false,
-        },{
-            headerText : "<spring:message code='sales.cust.RentalStatus'/>",
-            dataField : "ordStusCode",
-            editable : false,
-        }, {
-			headerText : "<spring:message code='sales.cust.agingMonth'/>",
-			dataField : "agingMonth",
-			editable : false,
-		}, {
-			headerText : "<spring:message code='sales.cust.outAmt'/>",
-			dataField : "outAmt",
-			editable : false,
-			width : 100
-		}, {
-			headerText : "<spring:message code='sales.rotDt'/>",
-			dataField : "rotDate",
-			dataType : "date",
-            formatString : "dd/mm/yyyy",
-			editable : false,
-		} , {
-            headerText : "<spring:message code='sales.exchgDt'/>",
-            dataField : "soExchgCrtDt",
-            dataType : "date",
-            formatString : "dd/mm/yyyy",
-            editable : false,
-        }];
+		}];
 
 		// 그리드 속성 설정
 		var gridPros = {
@@ -125,6 +120,7 @@
 			//     selectionMode : "multipleCells",
 
 			headerHeight : 60,
+			rowHeight:50,
 
 			// 그룹핑 패널 사용
 			useGroupingPanel : false,
@@ -211,6 +207,7 @@
 	}
 	function fn_report(viewType){
 
+        memType="${memType}";
 	    $("#reportFileName").val("");
 	    $("#reportDownFileName").val("");
 	    $("#viewType").val("");
@@ -240,7 +237,13 @@
 	    }
 	    $("#reportDownFileName").val("CustomerScoreCardList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#form #viewType").val("PDF");
-        $("#form #reportFileName").val("/sales/CustomerScoreCardList.rpt");
+
+        if(memType==4){
+        	$("#form #reportFileName").val("/sales/CustomerScoreCardList.rpt");
+        }else{
+        	$("#form #reportFileName").val("/sales/CustomerScoreCardListOrg.rpt");
+        }
+
 
 	    $("#form #v_WhereSQL").val(v_WhereSQL);
 	    $("#form #V_CUST_ID").val(V_CUST_ID);

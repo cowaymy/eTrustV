@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.customer;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CustomerScoreCardService {
@@ -16,5 +18,6 @@ public interface CustomerScoreCardService {
    * @exception Exception
    */
   List<EgovMap> customerScoreCardList(Map<String, Object> params);
+  String getMemType(Map<String, Object> params);
 
 }
