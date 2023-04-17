@@ -27,8 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
+import com.coway.trust.biz.eAccounting.budget.BudgetService;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.FileVO;
@@ -57,6 +58,9 @@ public class StaffBusinessActivityController {
 
     @Autowired
     private WebInvoiceService webInvoiceService;
+
+    @Resource(name = "budgetService")
+	private BudgetService budgetService;
 
     @Autowired
     private WebInvoiceApplication webInvoiceApplication;
@@ -152,7 +156,82 @@ public class StaffBusinessActivityController {
 
 		List<EgovMap> itemList = staffBusinessActivityService.getRefDtlsGrid((String) params.get("clmNo"));
 
-		return ResponseEntity.ok(itemList);
+		//Start : Add Sufficient Flag for checking before submission - nora
+		Map<String, Object> itemMap = null;
+        List<EgovMap> repList = new ArrayList<EgovMap>();
+        float availableCm = 0;
+		if(itemList.size() > 0){
+			Map<String, Object> gridMap = null;
+
+			Map<String, Float> availableMap = new HashMap();
+
+			for(int i = 0; i < itemList.size(); i++){
+				gridMap = (Map<String, Object>) itemList.get(i);
+
+				float reqstAmt = Integer.valueOf(gridMap.get("totAmt").toString());
+				itemMap = new HashMap<String, Object>();
+				itemMap.put("stYearMonth", gridMap.get("entryDt").toString().substring(3));
+				itemMap.put("costCentr", gridMap.get("costCenter").toString());
+				itemMap.put("stBudgetCode", gridMap.get("budgetCode").toString());
+				itemMap.put("stGlAccCode", gridMap.get("glAccCode").toString());
+				String insuff = "";
+
+				EgovMap cntrl = new EgovMap();
+    			cntrl = (EgovMap) budgetService.checkBgtPlan(itemMap);
+					if(cntrl.get("cntrlType").toString().equals("Y")){
+						EgovMap item = new EgovMap();
+        				item = (EgovMap) budgetService.availableAmtCp(itemMap);
+        				LOGGER.debug("item {} " + item);
+
+						if(item != null){
+							int totalAvailable = Integer.valueOf(item.get("availableAmt").toString());
+        					int total =  Integer.valueOf(item.get("total").toString());
+        					int pending = Integer.valueOf(item.get("pendAppvAmt").toString());
+        					int consumed = Integer.valueOf(item.get("consumAppvAmt").toString());
+
+        					String key = item.get("budgetCode").toString() + item.get("glAccCode").toString();
+        					LOGGER.debug("Key: " + key);
+        					//availableMap.put(key, reqstAmt);
+        					float availableAmount = total - pending - consumed;
+        					LOGGER.debug("availableAmt: " + availableAmount);
+							if(availableAmount < reqstAmt){
+								insuff = "Y";
+							}else{
+								if(availableMap.containsKey(key)){
+									float amt = availableMap.get(key);
+									amt += reqstAmt;
+									LOGGER.debug("Amt: " + amt);
+									availableMap.replace(key, amt);
+								}else{
+									availableMap.put(key, reqstAmt);
+								}
+
+								if(availableMap.get(key) > totalAvailable){
+									LOGGER.debug("Insufficient");
+									insuff = "Y";
+								}else{
+									LOGGER.debug("Sufficient");
+									insuff = "N";
+								}
+
+//								insuff = "N";
+							}
+						}
+					}else{
+						insuff = "N";
+					}
+
+					gridMap.put("insufficient", insuff);
+					LOGGER.debug("gridMap.insufficienrt <> "+ gridMap.get("insufficient"));
+					LOGGER.debug("gridMap <> "+ gridMap);
+					repList.add((EgovMap) gridMap);
+
+
+			}
+		}
+		//End: Add Sufficient Flag for checking before submission - nora
+		LOGGER.debug("repList {} " + repList);
+		return ResponseEntity.ok(repList);
 	}
 
     /* Attachment Functions

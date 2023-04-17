@@ -246,7 +246,14 @@
         headerText : "Description",
         width : 150,
         width : "20%"
-    }];
+    },
+    {
+        dataField : "insufficient",
+        headerText : "Insufficient",
+        visible : false, // Color 칼럼은 숨긴채 출력시킴
+        editable : false
+    }
+    ];
 
     var settlementGridPros = {
         usePaging : true,
@@ -1012,9 +1019,11 @@
                     		clmNo : advGridClmNo,
                             appvPrcssNo : advAppvPrcssNo,
                             advType : advGridAdvType,
-                            appvPrcssStus : advGridAppvPrcssStus
+                            appvPrcssStus : advGridAppvPrcssStus,
+                            stYearMonth : $("#settlementKeyDate").val(),
+                            costCentr : $("#settlementCostCenter").val()
                     };
-                    Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetailsGrid.do", data2, function(result2) {
+                    Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetailsGrid.do", data2, function(result2) {//HERE
                     console.log(result2);
                     AUIGrid.setGridData(settlementGridId, result2);
                     });
@@ -1340,7 +1349,7 @@
         var gridData = AUIGrid.getOrgGridData(settlementGridId);
         obj.gridData = gridData;
         console.log(obj);
-
+        if(fn_checkSubmitRefund()){
         Common.ajax("POST", "/eAccounting/vendorAdvance/insertVendorAdvSettlement.do", obj, function(result) {
             console.log(result);
 
@@ -1368,7 +1377,29 @@
                 Common.alert(result.message);
             }
         });
+      }
     }
+
+    //Start : Check sufficient flag before settlement submission - nora
+    function fn_checkSubmitRefund(){
+        console.log("fn_checkSubmitRefund");
+        var length = AUIGrid.getRowCount(settlementGridId);
+           var suff = true;
+        for(var i = 0; i < length; i++){
+            console.log(AUIGrid.getCellValue(settlementGridId, i, "insufficient"))
+            if(AUIGrid.getCellValue(settlementGridId, i, "insufficient") == 'Y'){
+                var budgetCd = AUIGrid.getCellValue(settlementGridId, i, "budgetCode");
+                var glAcc = AUIGrid.getCellValue(settlementGridId, i, "glAccCode");
+                suff = false;
+                Common.alert("Insufficient Available Budget:\n\n [Budget Code: " + budgetCd + ", GL Acc Code: " + glAcc +"]" );
+                return suff;
+            }
+            continue;
+        }
+        return suff
+
+    }
+    //End : Check sufficient flag before settlement submission - nora
 
     function fn_updateVendorAdvReq(type) {
         // Vendor Advance Request Update - Claim Number Exist
@@ -1417,8 +1448,8 @@
         var gridData = GridCommon.getEditData(settlementGridId);
         obj.gridData = gridData;
         console.log(obj);
-
-        Common.ajax("POST", "/eAccounting/vendorAdvance/updateVendorAdvSettlement.do", obj, function(result) {
+        if(fn_checkSubmitRefund()){
+        Common.ajax("POST", "/eAccounting/vendorAdvance/updateVendorAdvSettlement.do", obj, function(result) {//HERE
             console.log(result);
 
             if(result.code == "00") {
@@ -1444,7 +1475,7 @@
                 Common.alert(result.message);
             }
         });
-
+       }
     }
 
     function fn_setGridData(gridId, data) {
@@ -1632,12 +1663,17 @@
                             if(parseFloat(finAvailable) < parseFloat(event.item.totalAmt)) {
                                 console.log("finAvailable < totAmt");
                                 Common.alert("Insufficient budget amount for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+                                console.log("Invc Dt:" + AUIGrid.getCellValue(settlementGridId, event.rowIndex, "invcDt"));
+                                //console.log("Invc Dt:" + AUIGrid.getCellValue(settlementGridId, event.rowIndex, "invcDt2"));
                                 AUIGrid.setCellValue(settlementGridId, event.rowIndex, "totalAmt", "0.00");
+                                AUIGrid.setCellValue(settlementGridId, event.rowIndex, "insufficient", "");
                                 $("#settlementTotalExp").val(AUIGrid.formatNumber((totAmt - event.item.totalAmt), "#,##0.00")); //deduct the totalAmt that has added but cannot be included due to exceeded budget
                                 $("#settlementTotAmt").val(AUIGrid.formatNumber(totAmt, "#,##0.00"));
                                 var settlementGridSettTotalAdv = parseFloat($("#settlementTotalAdv").val().replace(",", "")).toFixed(0);
                                 $("#settlementTotalBalance").val(settlementGridSettTotalAdv - totAmt + event.item.totalAmt); // add back the totalAmt that has deducted but cannot be included due to exceeded budget
                                 $("#settlementTotalBalance").val(AUIGrid.formatNumber($("#settlementTotalBalance").val(), "#,##0.00"));
+                            }else{
+                            	AUIGrid.setCellValue(settlementGridId, event.rowIndex, "insufficient", "N");
                             }
                         });
                         // availableAmtCp - End

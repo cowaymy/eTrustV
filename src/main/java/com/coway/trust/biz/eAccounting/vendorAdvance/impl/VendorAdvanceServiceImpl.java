@@ -437,8 +437,11 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 hm = (HashMap<String, Object>) map;
                 hm.put("clmNo", params.get("settlementNewClmNo"));
                 hm.put("advType", "6");
+                //LOGGER.debug("invcDt1 " + String.valueOf(hm.get("invcDt")));
+                //LOGGER.debug("invcDt2 " + hm.get("invcDt"));
                 hm.put("userId", sessionVO.getUserId());
-                String invcDt=(String) hm.get("invcDt");                //System.out.println("Invc date b4: "+invcDt);
+               // String invcDt=(String) hm.get("invcDt");                //System.out.println("Invc date b4: "+invcDt);
+                String invcDt = String.valueOf(hm.get("invcDt"));
                 try {
 					Date fixeddate=new SimpleDateFormat("yyyy/mm/dd").parse(invcDt);
 					String newDate=String.valueOf(dateFormat.format(fixeddate));

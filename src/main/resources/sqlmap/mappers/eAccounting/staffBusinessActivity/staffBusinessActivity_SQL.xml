@@ -859,7 +859,8 @@
                T1.CLAM_UN,
                T3.TOT_AMT AS ALL_TOT_AMT,
                T3.APPV_PRCSS_NO,
-               T1.SUPPLIER SUPPLIER_NAME
+               T1.SUPPLIER SUPPLIER_NAME,
+               TO_CHAR(T3.CRT_DT, 'DD/MM/YYYY') ENTRY_DT
         FROM   FCM0028D T1
                LEFT JOIN FCM0007C T2 ON T1.TAX_CODE = T2.TAX_CODE
                LEFT JOIN FCM0027M T3 ON T1.CLM_NO = T3.CLM_NO

@@ -271,6 +271,11 @@
 }, {
     dataField : "yN",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+},  {
+    dataField : "insufficient",
+    headerText : "Insufficient",
+    visible : false, // Color 칼럼은 숨긴채 출력시킴
+    editable : false
 }
 ];
 
@@ -1143,6 +1148,8 @@ var myGridPros = {
          if(fn_checkRefund()) {
              if(mode != "DRAFT") {
                  var formData = Common.getFormData("advRepayForm");
+
+                 if(fn_checkSubmitRefund()){
                  Common.ajaxFile("/eAccounting/staffBusinessActivity/attachmentUpload.do", formData, function(result) {
                     console.log(result);
 
@@ -1175,8 +1182,10 @@ var myGridPros = {
                         }
                     });
                  });
+                 }
              } else {
                  var formData = Common.getFormData("advRepayForm");
+                 if(fn_checkSubmitRefund()){
                  console.log($("#refAtchFileGrpId").val())
                  formData.append("atchFileGrpId", $("#refAtchFileGrpId").val());
                  formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -1217,7 +1226,7 @@ var myGridPros = {
                          }
                      });
                  });
-             }
+             }}
          }
      }
 
@@ -1242,6 +1251,27 @@ var myGridPros = {
              fn_searchAdv();
          })
      }
+
+   //Start : Check sufficient flag before settlement submission - nora
+     function fn_checkSubmitRefund(){
+    	 console.log("fn_checkSubmitRefund");
+    	 var length = AUIGrid.getRowCount(newGridID);
+    	    var suff = true;
+    	 for(var i = 0; i < length; i++){
+    		 console.log(AUIGrid.getCellValue(newGridID, i, "insufficient"))
+    		 if(AUIGrid.getCellValue(newGridID, i, "insufficient") == 'Y'){
+    			 var budgetCd = AUIGrid.getCellValue(newGridID, i, "budgetCode");
+    			 var glAcc = AUIGrid.getCellValue(newGridID, i, "glAccCode");
+    			 suff = false;
+    			 Common.alert("Insufficient Available Budget:\n\n [Budget Code: " + budgetCd + ", GL Acc Code: " + glAcc +"]" );
+    			 return suff;
+    		 }
+    		 continue;
+    	 }
+    	 return suff
+
+     }
+     //End : Check sufficient flag before settlement submission - nora
 
      function fn_checkRefund() {
          console.log("fn_checkRefund");
@@ -1757,7 +1787,7 @@ var myGridPros = {
     	                        stYearMonth : $("#refKeyDate").val().substring(3),
     	                        stBudgetCode : event.item.budgetCode,
     	                        stGlAccCode : event.item.glAccCode
-    	                    }
+    	                    }///HERE
 
     	                    var availableAmtCp = 0;
     	                    Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
@@ -1774,8 +1804,10 @@ var myGridPros = {
     	                                    console.log("else if :: result.totalAvailable < event.item.totAmt");
     	                                    Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
     	                                    console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+    	                                    console.log("Invc Date: " + AUIGrid.getCellValue(newGridID, event.rowIndex, "invcDt"));
     	                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
     	                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+    	                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "insufficient", "");
 
     	                                    var totAmt = fn_getTotalAmount();
     	                                    //$("#refBalAmt").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
@@ -1808,6 +1840,7 @@ var myGridPros = {
     	                                        console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
     	                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
     	                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+    	                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "insufficient", "");
 
     	                                        var totAmt = fn_getTotalAmount();
     	                                        totAmt = AUIGrid.formatNumber(totAmt, "#,##0.00");
@@ -1822,6 +1855,8 @@ var myGridPros = {
     	                                        //$("#refBalAmt").val(balanceAmt); //Celeste
 
 
+    	                                    }else{
+    	                                    	AUIGrid.setCellValue(newGridID, event.rowIndex, "insufficient", "N");
     	                                    }
     	                                }
     	                            });

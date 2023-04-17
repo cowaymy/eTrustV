@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.budget.BudgetService;
 import com.coway.trust.biz.eAccounting.vendorAdvance.VendorAdvanceService;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceApplication;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
@@ -55,6 +57,10 @@ public class VendorAdvanceController {
 
     @Autowired
     private VendorAdvanceService vendorAdvanceService;
+
+    @Resource(name = "budgetService")
+   	private BudgetService budgetService;
+
 
     @Autowired
     private WebInvoiceService webInvoiceService;
@@ -278,10 +284,11 @@ public class VendorAdvanceController {
         }
         else if("6".equals(params.get("advType").toString())) {
             List<EgovMap> settlementItems = vendorAdvanceService.selectVendorAdvanceItems(params.get("clmNo").toString());
-            for (int i=0;i<settlementItems.size();i++){
+            /*for (int i=0;i<settlementItems.size();i++){
             	SimpleDateFormat fixeddate=new SimpleDateFormat("yyyy/MM/dd");
 				settlementItems.get(i).put("invcDt",fixeddate.format(settlementItems.get(i).get("invcDt")));
             }
+            170423 */
             details.put("settlementItems", settlementItems);
         }
 
@@ -351,7 +358,84 @@ public class VendorAdvanceController {
         List<EgovMap> details = vendorAdvanceService.selectVendorAdvanceItems(params.get("clmNo").toString());
 
         LOGGER.debug("details =====================================>>  " + details);
-        return ResponseEntity.ok(details);
+
+        //Start : Add Sufficient Flag for checking before submission - nora
+        Map<String, Object> itemMap = null;
+        List<EgovMap> repList = new ArrayList<EgovMap>();
+        float availableCm = 0;
+		if(details.size() > 0){
+			Map<String, Object> gridMap = null;
+
+			Map<String, Float> availableMap = new HashMap();
+
+			for(int i = 0; i < details.size(); i++){
+				gridMap = (Map<String, Object>) details.get(i);
+
+				float reqstAmt = Integer.valueOf(gridMap.get("totalAmt").toString());
+				itemMap = new HashMap<String, Object>();
+				itemMap.put("stYearMonth", params.get("stYearMonth").toString().substring(3));
+				itemMap.put("costCentr", params.get("costCentr").toString());
+				itemMap.put("stBudgetCode", gridMap.get("budgetCode").toString());
+				itemMap.put("stGlAccCode", gridMap.get("glAccCode").toString());
+				String insuff = "";
+
+				EgovMap cntrl = new EgovMap();
+    			cntrl = (EgovMap) budgetService.checkBgtPlan(itemMap);
+					if(cntrl.get("cntrlType").toString().equals("Y")){
+						EgovMap item = new EgovMap();
+        				item = (EgovMap) budgetService.availableAmtCp(itemMap);
+        				LOGGER.debug("item {} " + item);
+
+						if(item != null){
+							int totalAvailable = Integer.valueOf(item.get("availableAmt").toString());
+        					int total =  Integer.valueOf(item.get("total").toString());
+        					int pending = Integer.valueOf(item.get("pendAppvAmt").toString());
+        					int consumed = Integer.valueOf(item.get("consumAppvAmt").toString());
+
+        					String key = item.get("budgetCode").toString() + item.get("glAccCode").toString();
+        					LOGGER.debug("Key: " + key);
+        					//availableMap.put(key, reqstAmt);
+        					float availableAmount = total - pending - consumed;
+        					LOGGER.debug("availableAmt: " + availableAmount);
+							if(availableAmount < reqstAmt){
+								insuff = "Y";
+							}else{
+								if(availableMap.containsKey(key)){
+									float amt = availableMap.get(key);
+									amt += reqstAmt;
+									LOGGER.debug("Amt: " + amt);
+									availableMap.replace(key, amt);
+								}else{
+									availableMap.put(key, reqstAmt);
+								}
+
+								if(availableMap.get(key) > totalAvailable){
+									LOGGER.debug("Insufficient");
+									insuff = "Y";
+								}else{
+									LOGGER.debug("Sufficient");
+									insuff = "N";
+								}
+
+//								insuff = "N";
+							}
+						}
+					}else{
+						insuff = "N";
+					}
+
+					gridMap.put("insufficient", insuff);
+					LOGGER.debug("gridMap.insufficienrt <> "+ gridMap.get("insufficient"));
+					LOGGER.debug("gridMap <> "+ gridMap);
+					repList.add((EgovMap) gridMap);
+
+
+			}
+		}
+		LOGGER.debug("repList {} " + repList);
+		//End : Add Sufficient Flag for checking before submission - nora
+
+        return ResponseEntity.ok(repList);
     }
 
     @RequestMapping(value = "/updateVendorAdvReq.do", method = RequestMethod.POST)
