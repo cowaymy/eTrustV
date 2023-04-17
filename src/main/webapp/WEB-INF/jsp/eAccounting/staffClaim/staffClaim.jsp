@@ -273,17 +273,7 @@ function fn_setEvent() {
 
 	        // 파일 수정이라면 수정하는 파일 아이디 보관
 	        if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
-	        	if(update.length > 0){
-	        		if(update[selectRowIdx]) {
-	        			update[selectRowIdx] = {atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId};
-	        		}
-	        		else{
-	                	update.push({atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId});
-	        		}
-	        	}
-	        	else{
-	            	update.push({atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId});
-	        	}
+            	update.push({selectRowIdx:selectRowIdx+1,atchFileGrpId:recentGridItem.atchFileGrpId,atchFileId:recentGridItem.atchFileId});
                 console.log(JSON.stringify(update));
             }
 
@@ -704,13 +694,29 @@ function fn_addCarMilleage(){
 function  fn_updateCarMilleage(){
     Common.showLoader();
     var formData = new FormData();
-    var updateLength = update.length;
-    $.each(myFileCaches, function(n, v) {
-    	if(n <= updateLength){
-        	console.log("n : " + n + " v.file : " + v.file);
-            formData.append(n, v.file);
+    var existingGridNewAttachmentAddArray = new Array();
+    var finalSelectedRow = 0;
+    $.each(update, function(n){
+    	if(finalSelectedRow < update[n].selectRowIdx){
+    		finalSelectedRow = update[n].selectRowIdx;
     	}
     });
+
+    $.each(myFileCaches, function(n, v) {
+    	n = parseInt(n);
+    	if(n <= finalSelectedRow){
+    		if (update.filter(function(e) { return e.selectRowIdx == n; }).length > 0) {
+                formData.append(n, v.file);
+    		}
+    		else{
+    			existingGridNewAttachmentAddArray.push(n);
+    		}
+    	}
+    	else{
+			existingGridNewAttachmentAddArray.push(n);
+    	}
+    });
+
 	console.log("Car Mileage Expense Update")
     formData.append("update", JSON.stringify(update));
     console.log(JSON.stringify(update));
@@ -772,7 +778,28 @@ function  fn_updateCarMilleage(){
                     AUIGrid.addRow(newGridID, data, "last");
         		});
             } else {
-            	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
+            	//new attachment upload to existing record with empty attachment
+            	if(existingGridNewAttachmentAddArray.filter(function(e) { return e == i+1; }).length > 0){
+            		var formDataAddToExist = new FormData();
+                    $.each(myFileCaches, function(n, v) {
+                    	console.log("n : " + n + " v.file : " + v.file);
+                    	if(n == (i+1)){
+                    		formDataAddToExist.append(n, v.file);
+                    	}
+                    });
+
+                	Common.ajaxFileNoSync("/eAccounting/staffClaim/attachFileUpload.do", formDataAddToExist, function(result) {
+                        console.log(result);
+                        if(result.data.fileGroupKey){
+                            data.atchFileGrpId = result.data.fileGroupKey
+                        }
+                    	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
+            		});
+            	}
+            	//update has been done above where attachment is replaced with existing atchGroupId and fileId
+            	else{
+                	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
+            	}
             }
         }
 
@@ -866,72 +893,169 @@ function fn_updateNormalExpenses(){
 
     $("#attachTd").html("");
     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
-
-    formData.append("atchFileGrpId", atchFileGrpId);
+	debugger;
     formData.append("update", JSON.stringify(update));
     console.log(JSON.stringify(update));
     formData.append("remove", JSON.stringify(remove));
     console.log(JSON.stringify(remove));
-    Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
-        console.log(result);
 
-        console.log(data);
+    if(atchFileGrpId){
+    	//update if existing atchFileGrpId exist
+    	formData.append("atchFileGrpId", atchFileGrpId);
+	    Common.ajaxFile("/eAccounting/staffClaim/attachFileUpdate.do", formData, function(result) {
+		        console.log(result);
 
-        if(data.gridData.add.length > 0) {
-            for(var i = 0; i < data.gridData.add.length; i++) {
-            	data.gridData.add[i].costCentr = data.costCentr;
-                data.gridData.add[i].costCentrName = data.costCentrName;
-                data.gridData.add[i].memAccId = data.memAccId;
-                data.gridData.add[i].bankCode = data.bankCode;
-                data.gridData.add[i].bankAccNo = data.bankAccNo;
-                data.gridData.add[i].clmMonth = data.clmMonth;
-                data.gridData.add[i].supplir = data.supplir;
-                data.gridData.add[i].supplirName = data.supplirName;
-                data.gridData.add[i].invcType = data.invcType;
-                data.gridData.add[i].invcTypeName = data.invcTypeName;
-                data.gridData.add[i].invcNo = data.invcNo;
-                data.gridData.add[i].invcDt = data.invcDt;
-                data.gridData.add[i].gstRgistNo = data.gstRgistNo;
-                data.gridData.add[i].cur = data.cur;
-                data.gridData.add[i].expDesc = data.expDesc;
-                data.gridData.add[i].atchFileGrpId = atchFileGrpId;
-                data.gridData.add[i].taxCode = "VB";
-                data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
-                AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
-            }
-        }
-        if(data.gridData.update.length > 0) {
-            for(var i = 0; i < data.gridData.update.length; i++) {
-            	data.gridData.update[i].costCentr = data.costCentr;
-                data.gridData.update[i].costCentrName = data.costCentrName;
-                data.gridData.update[i].memAccId = data.memAccId;
-                data.gridData.update[i].bankCode = data.bankCode;
-                data.gridData.update[i].bankAccNo = data.bankAccNo;
-                data.gridData.update[i].clmMonth = data.clmMonth;
-                data.gridData.update[i].supplir = data.supplir;
-                data.gridData.update[i].supplirName = data.supplirName;
-                data.gridData.update[i].invcType = data.invcType;
-                data.gridData.update[i].invcTypeName = data.invcTypeName;
-                data.gridData.update[i].invcNo = data.invcNo;
-                data.gridData.update[i].invcDt = data.invcDt;
-                data.gridData.update[i].gstRgistNo = data.gstRgistNo;
-                data.gridData.update[i].cur = data.cur;
-                data.gridData.update[i].expDesc = data.expDesc;
-                data.gridData.update[i].taxCode = "VB";
-                data.gridData.update[i].taxName = "OP (Purchase(0%):Out of scope)";
-                AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
-            }
-        }
-        if(data.gridData.remove.length > 0) {
-            for(var i = 0; i < data.gridData.remove.length; i++) {
-                AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
-            }
-        }
+		        console.log(data);
 
-        fn_getAllTotAmt();
+	        if(data.gridData.add.length > 0) {
+	            for(var i = 0; i < data.gridData.add.length; i++) {
+	            	data.gridData.add[i].costCentr = data.costCentr;
+	                data.gridData.add[i].costCentrName = data.costCentrName;
+	                data.gridData.add[i].memAccId = data.memAccId;
+	                data.gridData.add[i].bankCode = data.bankCode;
+	                data.gridData.add[i].bankAccNo = data.bankAccNo;
+	                data.gridData.add[i].clmMonth = data.clmMonth;
+	                data.gridData.add[i].supplir = data.supplir;
+	                data.gridData.add[i].supplirName = data.supplirName;
+	                data.gridData.add[i].invcType = data.invcType;
+	                data.gridData.add[i].invcTypeName = data.invcTypeName;
+	                data.gridData.add[i].invcNo = data.invcNo;
+	                data.gridData.add[i].invcDt = data.invcDt;
+	                data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+	                data.gridData.add[i].cur = data.cur;
+	                data.gridData.add[i].expDesc = data.expDesc;
+	                data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+	                data.gridData.add[i].taxCode = "VB";
+	                data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
+	                AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+	            }
+	        }
+	        if(data.gridData.update.length > 0) {
+	            for(var i = 0; i < data.gridData.update.length; i++) {
+	            	data.gridData.update[i].costCentr = data.costCentr;
+	                data.gridData.update[i].costCentrName = data.costCentrName;
+	                data.gridData.update[i].memAccId = data.memAccId;
+	                data.gridData.update[i].bankCode = data.bankCode;
+	                data.gridData.update[i].bankAccNo = data.bankAccNo;
+	                data.gridData.update[i].clmMonth = data.clmMonth;
+	                data.gridData.update[i].supplir = data.supplir;
+	                data.gridData.update[i].supplirName = data.supplirName;
+	                data.gridData.update[i].invcType = data.invcType;
+	                data.gridData.update[i].invcTypeName = data.invcTypeName;
+	                data.gridData.update[i].invcNo = data.invcNo;
+	                data.gridData.update[i].invcDt = data.invcDt;
+	                data.gridData.update[i].gstRgistNo = data.gstRgistNo;
+	                data.gridData.update[i].cur = data.cur;
+	                data.gridData.update[i].expDesc = data.expDesc;
+	                data.gridData.update[i].taxCode = "VB";
+	                data.gridData.update[i].taxName = "OP (Purchase(0%):Out of scope)";
+	                AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+	            }
+	        }
+	        if(data.gridData.remove.length > 0) {
+	            for(var i = 0; i < data.gridData.remove.length; i++) {
+	                AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+	            }
+	        }
 
-        clmSeq = 0;
-    });
+	        fn_getAllTotAmt();
+
+	        clmSeq = 0;
+	    });
+    }
+    else {
+    	//use to capture unchanged update data if exist so that able to handle upload attachment if no update is being done
+    	if(data.gridData.update.length == 0){
+    		var allGridData = GridCommon.getGridData(myGridID);
+    		if(allGridData && allGridData.all){
+    			var value = allGridData.all;
+
+        		if(data.gridData.add.length > 0){
+        			for(var i =0; i<data.gridData.add.length;i++){
+        				value = value.filter(function(val, index, a) {
+        				    return (val.clmSeq !== data.gridData.add[i].clmSeq);
+        				});
+            		}
+        		}
+
+        		if(data.gridData.remove.length > 0){
+        			for(var i =0; i<data.gridData.add.length;i++){
+        				value = value.filter(function(val, index, a) {
+        				    return (val.clmSeq !== data.gridData.add[i].clmSeq);
+        				});
+            		}
+        		}
+
+        		for(var i =0; i<value.length;i++){
+            		data.gridData.update.push(value[i]);
+        		}
+    		}
+    	}
+
+    	//upload file if existing record did not update attachment before
+    	Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
+            console.log(result);
+
+            data.atchFileGrpId = result.data.fileGroupKey;
+
+            if(data.gridData.add.length > 0) {
+	            for(var i = 0; i < data.gridData.add.length; i++) {
+	            	data.gridData.add[i].costCentr = data.costCentr;
+	                data.gridData.add[i].costCentrName = data.costCentrName;
+	                data.gridData.add[i].memAccId = data.memAccId;
+	                data.gridData.add[i].bankCode = data.bankCode;
+	                data.gridData.add[i].bankAccNo = data.bankAccNo;
+	                data.gridData.add[i].clmMonth = data.clmMonth;
+	                data.gridData.add[i].supplir = data.supplir;
+	                data.gridData.add[i].supplirName = data.supplirName;
+	                data.gridData.add[i].invcType = data.invcType;
+	                data.gridData.add[i].invcTypeName = data.invcTypeName;
+	                data.gridData.add[i].invcNo = data.invcNo;
+	                data.gridData.add[i].invcDt = data.invcDt;
+	                data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+	                data.gridData.add[i].cur = data.cur;
+	                data.gridData.add[i].expDesc = data.expDesc;
+	                data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+	                data.gridData.add[i].taxCode = "VB";
+	                data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
+	                data.gridData.add[i].atchFileGrpId = result.data.fileGroupKey;
+	                AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+	            }
+	        }
+	        if(data.gridData.update.length > 0) {
+	            for(var i = 0; i < data.gridData.update.length; i++) {
+	            	data.gridData.update[i].costCentr = data.costCentr;
+	                data.gridData.update[i].costCentrName = data.costCentrName;
+	                data.gridData.update[i].memAccId = data.memAccId;
+	                data.gridData.update[i].bankCode = data.bankCode;
+	                data.gridData.update[i].bankAccNo = data.bankAccNo;
+	                data.gridData.update[i].clmMonth = data.clmMonth;
+	                data.gridData.update[i].supplir = data.supplir;
+	                data.gridData.update[i].supplirName = data.supplirName;
+	                data.gridData.update[i].invcType = data.invcType;
+	                data.gridData.update[i].invcTypeName = data.invcTypeName;
+	                data.gridData.update[i].invcNo = data.invcNo;
+	                data.gridData.update[i].invcDt = data.invcDt;
+	                data.gridData.update[i].gstRgistNo = data.gstRgistNo;
+	                data.gridData.update[i].cur = data.cur;
+	                data.gridData.update[i].expDesc = data.expDesc;
+	                data.gridData.update[i].taxCode = "VB";
+	                data.gridData.update[i].taxName = "OP (Purchase(0%):Out of scope)";
+	                data.gridData.update[i].atchFileGrpId = result.data.fileGroupKey;
+	                AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+	            }
+	        }
+	        if(data.gridData.remove.length > 0) {
+	            for(var i = 0; i < data.gridData.remove.length; i++) {
+	                AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+	            }
+	        }
+
+	        fn_getAllTotAmt();
+
+	        clmSeq = 0;
+    	});
+    }
 }
 
 function fn_addRow() {
@@ -1241,7 +1365,7 @@ function fn_updateStaffClaimExp(st) {
 	    Common.alert('<spring:message code="pettyCashExp.clmMonth.msg" />');
 	      return false;
 	}
-
+	debugger;
     // row의 수가 0개 이상일때만 insert
     var gridDataList = AUIGrid.getOrgGridData(newGridID);
     if(gridDataList.length > 0){

@@ -502,6 +502,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
+       ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
     WHERE CLM_NO = #{clmNo}
     AND CLM_SEQ = #{clmSeq}
 </update>
