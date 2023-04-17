@@ -893,7 +893,7 @@ function fn_updateNormalExpenses(){
 
     $("#attachTd").html("");
     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
-	debugger;
+
     formData.append("update", JSON.stringify(update));
     console.log(JSON.stringify(update));
     formData.append("remove", JSON.stringify(remove));
@@ -1365,7 +1365,7 @@ function fn_updateStaffClaimExp(st) {
 	    Common.alert('<spring:message code="pettyCashExp.clmMonth.msg" />');
 	      return false;
 	}
-	debugger;
+
     // row의 수가 0개 이상일때만 insert
     var gridDataList = AUIGrid.getOrgGridData(newGridID);
     if(gridDataList.length > 0){
