@@ -778,7 +778,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             params.put("userId", userId);
             params.put("pErrcode", "");
             params.put("pErrmsg", "");
-            MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+            //MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
 
             if (!"000".equals(params.get("pErrcode"))) {
               String procTransactionId = transactionId;
