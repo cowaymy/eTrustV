@@ -603,7 +603,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                 }
 
                 // KR-OHK Barcode Save Start
-               /* if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
+                if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
                   Map<String, Object> setmap = new HashMap();
                   setmap.put("serialNo", params.get("serialNo"));
                   setmap.put("salesOrdId", params.get("hidSalesOrderId"));
@@ -624,7 +624,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
                   if (!"000".equals(errCode)) {
                     throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
                   }
-                }*/// KR-OHK Barcode Save Start
+                }// KR-OHK Barcode Save Start
 
                 String chksms = "";
                 if (CommonUtils.nvl(params.get("chkSms")).equals("on") || CommonUtils.nvl(params.get("chkSms")).equals("Y") ){
