@@ -175,7 +175,11 @@
                         </tr> --%>
                         <tr>
                             <th scope="row"><spring:message code="expense.Disable" /></th>
-                            <td><label><input type="checkbox" value="Y" id="disabFlag" name ="disabFlag"/><span></span></label></td>
+                            <%-- <td><label><span><input type="checkbox" value="Y" id="disabFlag" name ="disabFlag"
+                            <c:if test="${disabFlag eq 'Y'}">checked</c:if> /></span></label> --%>
+                            <td><label><span><input type="checkbox" value="Y" id="disabFlag" name ="disabFlag"
+                                <c:if test="${disabFlag eq 'Y'}">checked</c:if> /></span></label>
+                            </td>
                         </tr>
                         <!-- 20220408 - LaiKW - Added for Credit Card Allowance Limit control -->
                         <tr>

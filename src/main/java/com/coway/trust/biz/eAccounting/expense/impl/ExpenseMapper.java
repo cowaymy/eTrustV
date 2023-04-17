@@ -27,4 +27,7 @@ public interface ExpenseMapper {
 
 	List<EgovMap> selectCodeList( Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectExpenseListMain( Map<String, Object> params) throws Exception;
+
+
 }

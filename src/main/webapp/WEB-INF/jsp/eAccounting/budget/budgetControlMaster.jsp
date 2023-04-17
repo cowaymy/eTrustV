@@ -24,26 +24,59 @@ function fn_setCostCenter (str){
 }
 
 // 리스트 조회
-function fn_selectListAjax() {  
-   
+function fn_selectListAjax() {
+
     Common.ajax("GET", "/eAccounting/budget/selectBudgetControlList", $("#listSForm").serialize(), function(result) {
-            
+
         console.log("성공.");
         console.log(result);
 
         AUIGrid.setGridData(budgetMGrid, result);
-    }); 
+    });
 }
+
+//Budget Code Pop 호출
+function fn_budgetCodePop(){
+	var obj = {call : 'selectCodeList', costcenter : $("#costCentr").val()};
+    $("#budgetCode").val("");
+    $("#budgetCodeName").val("");
+    $("#pBudgetCode").val("");
+    $("#pBudgetCodeName").val("");
+
+    Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",obj, null, true, "budgetCodeSearchPop");
+}
+
+function  fn_setBudgetData(){
+    $("#budgetCode").val($("#pBudgetCode").val());
+    $("#budgetCodeName").val( $("#pBudgetCodeName").val());
+}
+
+//Gl Account Pop 호출
+function fn_glAccountSearchPop(){
+	var obj = {call : 'selectCodeList', costcenter : $("#costCentr").val(), budgetCode: $("#budgetCode").val()};
+    $("#glAccCode").val("");
+    $("#glAccCodeName").val("");
+    $("#pGlAccCode").val("");
+    $("#pGlAccCodeName").val("");
+    Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", obj, null, true, "glAccountSearchPop");
+}
+
+function fn_setGlData (){
+    $("#glAccCode").val($("#pGlAccCode").val());
+    $("#glAccCodeName").val( $("#pGlAccCodeName").val());
+}
+
+
 
 function fn_makeGrid(){
 
     var monPop = [];
-    
+
     monPop[0] = {dataField : "costCentr",
             headerText : '<spring:message code="budget.CostCenter" />',
             width : 100
     }
-    
+
     monPop.push({
                     dataField : "costCenterText",
                     headerText : '<spring:message code="budget.costCenterName" />',
@@ -74,8 +107,8 @@ function fn_makeGrid(){
                     headerText : '<spring:message code="budget.controlType" />',
                     editable : false
                 });
-      
-        
+
+
      var monOptions = {
             enableCellMerge : true,
             editable : true,
@@ -86,9 +119,9 @@ function fn_makeGrid(){
             pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
             showFooter : false
       };
-    
+
     budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", monPop, "", monOptions);
-    
+
 }
 </script>
 
@@ -116,7 +149,11 @@ function fn_makeGrid(){
 <!-- 팝업창에서 클릭한 정보를 TEXTBOX에 입력할 수 있도록 하는 ID값 -->
 <input type="hidden" id = "search_costCentr" name="search_costCentr" />
 <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
-    
+<input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
+<input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
+<input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
+<input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -128,10 +165,24 @@ function fn_makeGrid(){
 <tr>
     <th scope="row"><spring:message code="budget.CostCenter" /></th>
     <td>
-   
+
     <input type="text" id="costCentr" name="costCentr" title="" placeholder="" class="fl_left" />
     <a href="#" class="search_btn"  onclick="javascript:fn_costCenterSearchPop()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
+    <th scope="row"><spring:message code="expense.Activity" /></th>
+    <td>
+        <input type="text" id="budgetCode" name="budgetCode" title="" placeholder="" class="" />
+        <input type="hidden" id="budgetCodeName" name="budgetCodeName" title="" placeholder="" class=""  readonly="readonly" />
+        <a href="#" class="search_btn" onclick="javascript:fn_budgetCodePop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+</tr>
+<tr>
+     <th scope="row"><spring:message code="expense.GLAccount" /></th>
+                    <td colspan="2">
+                          <input type="text" id="glAccCode" name="glAccCode" title="" placeholder="" class="fl_left" />
+                          <input type="hidden" id="glAccCodeName" name="glAccCodeName" title="" placeholder="" class="" />
+                          <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+      </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -153,7 +204,7 @@ function fn_makeGrid(){
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-    
+
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="budgetMGrid" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->

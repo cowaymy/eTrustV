@@ -119,6 +119,7 @@ public class ExpenseController {
         model.addAttribute("budgetCodeName", params.get("popBudgetCodeName").toString());
         model.addAttribute("taxCode", params.get("popTaxCode").toString());
         model.addAttribute("cntrlCheck", params.get("popCntrlCheck").toString());
+        model.addAttribute("disabFlag", params.get("popDisablFlag").toString());
 
         return "eAccounting/expense/editExpenseTypePop";
     }
@@ -212,6 +213,20 @@ public class ExpenseController {
 
         List<EgovMap> codeList = expenseService.selectCodeList(params);
         return ResponseEntity.ok(codeList);
+    }
+
+    @RequestMapping(value = "/selectExpenseListMain", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectExpenseListMain (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+        List<EgovMap> expenseList = null;
+
+        String[] claimType = request.getParameterValues("claimType");
+        params.put("claimType", claimType);
+
+        LOGGER.debug("groupCd =====================================>>  " + params);
+
+        expenseList = expenseService.selectExpenseListMain(params);
+
+        return ResponseEntity.ok(expenseList);
     }
 }
 

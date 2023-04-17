@@ -21,6 +21,12 @@ WHERE 1=1
     <if test="costCentr != null and costCentr != '' ">
       AND COST_CENTR = #{costCentr}
     </if>
+     <if test="budgetCode != null and budgetCode != '' ">
+      AND BUDGET_CODE = #{budgetCode}
+    </if>
+     <if test="glAccCode != null and glAccCode != '' ">
+      AND GL_ACC_CODE = #{glAccCode}
+    </if>
   </select>
 
   <select id="selectBudgetSysMaintenanceList" parameterType="Map" resultType="egovMap">
@@ -1588,7 +1594,7 @@ WHERE 1=1
       AND F40.GL_ACC_CODE = #{glAccCode}
     </if>
     <if test="searchKey != null and searchKey != ''">
-      AND F40.NATURE_OF_EXP LIKE '%'|| #{searchKey} || '%'
+      AND UPPER(F40.NATURE_OF_EXP) LIKE '%'|| UPPER(#{searchKey}) || '%'
     </if>
     <if test="stusCodeId != null and stusCodeId != ''">
       AND F40.STUS_CODE_ID IN

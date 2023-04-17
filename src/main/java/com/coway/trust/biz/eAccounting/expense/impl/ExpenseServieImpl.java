@@ -31,6 +31,13 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 	}
 
 	@Override
+	public List<EgovMap> selectExpenseListMain (Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return expenseMapper.selectExpenseListMain(params);
+	}
+
+
+	@Override
 	public int insertExpenseInfo(List<Object> addList, Integer crtUserId) throws Exception {
 
 		int saveCnt = 0;

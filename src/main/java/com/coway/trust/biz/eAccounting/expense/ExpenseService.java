@@ -23,4 +23,6 @@ public interface ExpenseService {
 
 	List<EgovMap> selectCodeListWO( Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectExpenseListMain( Map<String, Object> params) throws Exception;
+
 }

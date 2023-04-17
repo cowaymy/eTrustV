@@ -73,7 +73,7 @@ function fn_reload(){
 // 리스트 조회.
 function fn_selectListAjax() {
 
-    Common.ajax("GET", "/eAccounting/expense/selectExpenseList?_cacheId=" + Math.random(), $("#listSForm").serialize(), function(result) {
+    Common.ajax("GET", "/eAccounting/expense/selectExpenseListMain?_cacheId=" + Math.random(), $("#listSForm").serialize(), function(result) {
 
          console.log("성공.");
          console.log( result);
@@ -108,6 +108,7 @@ function fn_expenseEdit(){
     $("#popGlAccCodeName").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "glAccCodeName"));
     $("#popTaxCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "taxCode"));
     $("#popCntrlCheck").val(AUIGrid.getCellValue(myGridID, first.rowIndex, "cntrlExp"));
+    $("#popDisablFlag").val(AUIGrid.getCellValue(myGridID, first.rowIndex, "disabFlag"));
 
    Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", $("#popSForm").serializeJSON(), null, true, "editExpenseTypePop");
 }
@@ -234,7 +235,7 @@ function createAUIGrid() {
             width : 100,
             editable : false
         },
-/*         {
+         /* {
             dataField : "disabFlag",
             headerText : 'Status',
             width : 100,
@@ -291,6 +292,7 @@ function createAUIGrid() {
 <input type="hidden" id="popBudgetCodeName" name="popBudgetCodeName"/>
 <input type="hidden" id="popTaxCode" name="popTaxCode"/>
 <input type="hidden" id="popCntrlCheck" name="popCntrlCheck"/>
+<input type="hidden" id="popDisablFlag" name="popDisablFlag"/>
 </form>
 
 
