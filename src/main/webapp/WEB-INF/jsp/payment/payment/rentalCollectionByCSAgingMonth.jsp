@@ -93,8 +93,9 @@ $(document).ready(function(){
 var columnLayout = [
       {dataField : "salesOrdId", editable : false, visible : false}
     , {dataField : "bsMonth", headerText : "CS Month", editable : false}
-    , {dataField : "renMem", headerText : "Rental Membership", editable : false, width : 150}
+ //   , {dataField : "renMem", headerText : "Rental Membership", editable : false, width : 150}
     , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
+    , {dataField : "jompay", headerText : "Jompay No", editable: false, width: 100}
     , {dataField : "codyCode", headerText : "HT Code", editable : false,width : 100}
     , {dataField : "codyName", headerText : "<spring:message code='pay.head.memberName'/>", editable : false,width : 150}
     , {dataField : "status", headerText : "Status", editable : false,width : 100}
@@ -103,6 +104,8 @@ var columnLayout = [
     , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}
     , {dataField : "telOffice", headerText : "<spring:message code='pay.head.telO'/>", editable : false,width : 100}
     , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false, width : 150}
+    , {dataField : "crc", headerText : "CRC(last 4-digit)", editable : false, width : 100}
+    , {dataField : "crcExpr", headerText : "CRC Exp Date", editable : false, width : 100}
     , {dataField : "monthType", headerText : "M2 Status", editable : false, width : 100}
     , {dataField : "thisMonth", headerText : "This Mth", editable : false, width : 150}
     , {dataField : "previousMonth", headerText : "Prev Mth", editable : false, width : 150}
@@ -205,12 +208,12 @@ var columnLayout = [
                         <th scope="row">Opening Aging</th>
                         <td><select id="cmbOpeningAging" name="cmbOpeningAging" class="w100p"></select></td>
                     </tr>
-                    <tr>
+<!--                     <tr>
                         <th scope="row">Rental Membership</th>
                         <td><input type="text" title="renMem" id="renMem" name="renMem" placeholder="Rental Membership" class="w100p" /></td>
                         <th scope="row"></th>
                         <td></td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
             <!-- table end -->
