@@ -106,18 +106,6 @@ function createAUIGrid() {
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
                                 }
                             },
-                            { dataField : "exTradeObligtPriod", headerText  : "Ex-trade Obliged <br> Period",  width  : 150 , dataType:"numeric", editable: false,
-                                labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
-                                    // logic processing
-                                    // Return value here, reprocessed or formatted as desired.
-                                    // The return value of the function is immediately printed in the cell.
-                                     if(item.obligtPriod != null) {
-                                            return item.obligtPriod - exTrade;
-                                       } else {
-                                            return "";
-                                       }
-                                 }
-                            },
                             { dataField : "rcoPriod", headerText  : "<spring:message code="sal.title.rcoPeriod" />",  width  : 80 , dataType:"numeric",
                                 editRenderer : {
                                     type : "InputEditRenderer",
@@ -131,6 +119,18 @@ function createAUIGrid() {
                                     onlyNumeric : true,
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
                                 }
+                            },
+                            { dataField : "exTradePackDur", headerText  : "Ex-trade Package <br> Duration",  width  : 150 , dataType:"numeric", editable: false,
+                                labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+                                    // logic processing
+                                    // Return value here, reprocessed or formatted as desired.
+                                    // The return value of the function is immediately printed in the cell.
+                                     if(item.srvCntrctPacDur != null) {
+                                            return item.srvCntrctPacDur - exTrade;
+                                       } else {
+                                            return "";
+                                       }
+                                 }
                             },
                             { dataField : "pacType", headerText  : "<spring:message code="sal.title.packType" />",  width  : 150 , editable       : true
                                 , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
