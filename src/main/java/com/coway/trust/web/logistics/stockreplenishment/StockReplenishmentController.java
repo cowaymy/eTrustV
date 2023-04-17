@@ -92,8 +92,8 @@ public class StockReplenishmentController {
 		    return ResponseEntity.ok(weekList);
 	    }
 
-	    @RequestMapping(value = "/selectSroForecastHistoryList.do", method = RequestMethod.GET)
-		public ResponseEntity<List<EgovMap>> selectSroForecastHistoryList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	    @RequestMapping(value = "/sroForecastHistoryList.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> sroForecastHistoryList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
 			String searchMatCode = request.getParameter("searchMatCode");
 			String[] searchType = request.getParameterValues("searchType");
@@ -126,7 +126,85 @@ public class StockReplenishmentController {
 			smap.put("searchCDC", searchCDC);
 			smap.put("searchStatus", searchStatus);
 
-	    	List<EgovMap> sroList = stockReplenishmentService.selectSroForecastHistoryList(smap);
+	    	List<EgovMap> sroList = stockReplenishmentService.selectSroCodyList(smap);
+
+		    return ResponseEntity.ok(sroList);
+	   }
+
+	    @RequestMapping(value = "/selectSroRdcList.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectSroRdcList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+			String searchMatCode = request.getParameter("searchMatCode");
+			String[] searchType = request.getParameterValues("searchType");
+			String[] searchCtgry = request.getParameterValues("searchCtgry");
+			String[] searchlocgb = request.getParameterValues("searchlocgb");
+			String[] searchLoc = request.getParameterValues("searchLoc");
+			String searchlocgrade = request.getParameter("searchlocgrade");
+			String searchBranch = request.getParameter("searchBranch");
+			String searchCDC = request.getParameter("searchCDC");
+			String searchYear = request.getParameter("searchYear");
+			String searchMonth = request.getParameter("searchMonth");
+			String searchWeek = request.getParameter("searchWeek");
+			String[] searchStatus = request.getParameterValues("searchStatus");
+			String sstocknm = request.getParameter("searchMatName");
+
+			Map<String, Object> smap = new HashMap();
+
+
+			smap.put("searchYear", searchYear);
+			smap.put("searchMonth", searchMonth);
+			smap.put("searchWeek", searchWeek);
+			smap.put("searchMatCode", searchMatCode);
+			smap.put("searchLoc", searchLoc);
+			smap.put("searchType", searchType);
+			smap.put("searchCtgry", searchCtgry);
+			smap.put("searchlocgb", searchlocgb);
+			smap.put("searchlocgrade", searchlocgrade);
+			smap.put("sstocknm", sstocknm);
+			smap.put("searchBranch", searchBranch);
+			smap.put("searchCDC", searchCDC);
+			smap.put("searchStatus", searchStatus);
+
+	    	List<EgovMap> sroList = stockReplenishmentService.selectSroRdcList(smap);
+
+		    return ResponseEntity.ok(sroList);
+	   }
+
+	    @RequestMapping(value = "/selectSroList.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectSroList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+			String searchMatCode = request.getParameter("searchMatCode");
+			String[] searchType = request.getParameterValues("searchType");
+			String[] searchCtgry = request.getParameterValues("searchCtgry");
+			String[] searchlocgb = request.getParameterValues("searchlocgb");
+			String[] searchLoc = request.getParameterValues("searchLoc");
+			String searchlocgrade = request.getParameter("searchlocgrade");
+			String searchBranch = request.getParameter("searchBranch");
+			String searchCDC = request.getParameter("searchCDC");
+			String searchYear = request.getParameter("searchYear");
+			String searchMonth = request.getParameter("searchMonth");
+			String searchWeek = request.getParameter("searchWeek");
+			String[] searchStatus = request.getParameterValues("searchStatus");
+			String sstocknm = request.getParameter("searchMatName");
+
+			Map<String, Object> smap = new HashMap();
+
+
+			smap.put("searchYear", searchYear);
+			smap.put("searchMonth", searchMonth);
+			smap.put("searchWeek", searchWeek);
+			smap.put("searchMatCode", searchMatCode);
+			smap.put("searchLoc", searchLoc);
+			smap.put("searchType", searchType);
+			smap.put("searchCtgry", searchCtgry);
+			smap.put("searchlocgb", searchlocgb);
+			smap.put("searchlocgrade", searchlocgrade);
+			smap.put("sstocknm", sstocknm);
+			smap.put("searchBranch", searchBranch);
+			smap.put("searchCDC", searchCDC);
+			smap.put("searchStatus", searchStatus);
+
+	    	List<EgovMap> sroList = stockReplenishmentService.selectSroList(smap);
 
 		    return ResponseEntity.ok(sroList);
 	   }

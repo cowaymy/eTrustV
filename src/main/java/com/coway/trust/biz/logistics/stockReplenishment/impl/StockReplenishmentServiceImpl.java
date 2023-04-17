@@ -32,9 +32,19 @@ public class StockReplenishmentServiceImpl implements StockReplenishmentService 
 	}
 
     @Override
-	public List<EgovMap> selectSroForecastHistoryList(Map<String, Object> params) {
-	    return stockReplenishmentMapper.selectSroForecastHistoryList(params);
+	public List<EgovMap> selectSroCodyList(Map<String, Object> params) {
+	    return stockReplenishmentMapper.selectSroCodyList(params);
 	}
+
+    @Override
+   	public List<EgovMap> selectSroRdcList(Map<String, Object> params) {
+   	    return stockReplenishmentMapper.selectSroRdcList(params);
+   	}
+
+    @Override
+   	public List<EgovMap> selectSroList(Map<String, Object> params) {
+   	    return stockReplenishmentMapper.selectSroList(params);
+   	}
 
     @Override
 	public List<EgovMap> selectSroSafetyLvlList(Map<String, Object> params) {

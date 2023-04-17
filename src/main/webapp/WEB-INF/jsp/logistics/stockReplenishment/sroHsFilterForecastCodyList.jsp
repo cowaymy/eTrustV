@@ -143,7 +143,7 @@
           width : 150
         },
         {
-          dataField : "sroCodyAvaQty",
+          dataField : "availableQty",
           headerText : "Available Q'ty",
           editable : false,
           width : 150
@@ -175,7 +175,7 @@
   function fn_searchSroForecastHistortList() {
 
         console.log($("#sroHsFilterForecastCodyForm").serialize());
-        Common.ajax("GET", "/logistics/stockReplenishment/selectSroForecastHistoryList.do", $("#sroHsFilterForecastCodyForm").serialize(), function(result) {
+        Common.ajax("GET", "/logistics/stockReplenishment/sroForecastHistoryList.do", $("#sroHsFilterForecastCodyForm").serialize(), function(result) {
         console.log(result);
           AUIGrid.setGridData(myGridID, result);
         });

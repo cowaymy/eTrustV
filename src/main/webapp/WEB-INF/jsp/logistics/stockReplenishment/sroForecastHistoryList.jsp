@@ -74,6 +74,12 @@
   function sroForecastHistoryGrid() {
     var columnLayout = [
         {
+           dataField : "sroNo",
+           headerText : "SRO No.",
+           editable : false,
+           width : 150
+         },
+        {
           dataField : "foreYyyy",
           headerText : "Year",
           editable : false,
@@ -143,7 +149,7 @@
   }
 
   function fn_searchSroForecastHistortList() {
-        Common.ajax("GET", "/logistics/stockReplenishment/selectSroForecastHistoryList.do", $("#sroForecastHistoryForm").serialize(), function(result) {
+        Common.ajax("GET", "/logistics/stockReplenishment/selectSroList.do", $("#sroForecastHistoryForm").serialize(), function(result) {
           AUIGrid.setGridData(myGridID, result);
         });
   }

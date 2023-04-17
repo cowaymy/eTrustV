@@ -153,7 +153,7 @@
   function fn_searchSroForecastHistortList() {
 
         console.log($("#sroStorageDeliveryForm").serialize());
-        Common.ajax("GET", "/logistics/stockReplenishment/selectSroForecastHistoryList.do", $("#sroStorageDeliveryForm").serialize(), function(result) {
+        Common.ajax("GET", "/logistics/stockReplenishment/sroForecastHistoryList.do", $("#sroStorageDeliveryForm").serialize(), function(result) {
         console.log(result);
           AUIGrid.setGridData(myGridID, result);
         });

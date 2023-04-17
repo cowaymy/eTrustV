@@ -13,7 +13,11 @@ public interface StockReplenishmentService {
 
 	List<EgovMap> selectWeekList(Map<String, Object> params);
 
-	List<EgovMap> selectSroForecastHistoryList(Map<String, Object> params);
+	List<EgovMap> selectSroCodyList(Map<String, Object> params);
+
+	List<EgovMap> selectSroRdcList(Map<String, Object> params);
+
+	List<EgovMap> selectSroList(Map<String, Object> params);
 
 	List<EgovMap> selectSroSafetyLvlList(Map<String, Object> params);
 
