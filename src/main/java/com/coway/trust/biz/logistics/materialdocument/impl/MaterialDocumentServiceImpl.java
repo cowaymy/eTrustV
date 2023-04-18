@@ -47,4 +47,10 @@ public class MaterialDocumentServiceImpl extends EgovAbstractServiceImpl impleme
 		// TODO Auto-generated method stub
 		return MaterialDocumentMapper.selectMaterialDocSerialList(params);
 	}
+
+	@Override
+	public List<EgovMap> MaterialDocSearchListUpTo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MaterialDocumentMapper.MaterialDocSearchListUpTo(params);
+	}
 }

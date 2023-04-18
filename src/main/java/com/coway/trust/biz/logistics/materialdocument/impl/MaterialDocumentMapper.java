@@ -17,4 +17,6 @@ public interface MaterialDocumentMapper {
 
 	// 20191122 KR-OHK Serial List Add
 	List<EgovMap> selectMaterialDocSerialList(Map<String, Object> params);
+
+	List<EgovMap> MaterialDocSearchListUpTo(Map<String, Object> params);
 }

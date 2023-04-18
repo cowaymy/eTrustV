@@ -387,9 +387,9 @@ function f_multiCombos() {
 		  $("#sIsHomeCare").val("false");
 	    }
 
-		AUIGrid.setGridData(detailGridID, []);
+   	    AUIGrid.setGridData(detailGridID, []);
 
-		var url = "/logistics/materialDoc/MaterialDocSearchList.do";
+		var url = "/logistics/materialDoc/MaterialDocSearchListUpTo.do";
 		var param = $('#searchForm').serialize();
 
 		if($("#PostingDt1").val() == null || $("#PostingDt1").val() == "" )
@@ -583,9 +583,7 @@ function f_multiCombos() {
     </form>
 
     </section><!-- search_table end -->
-
-    <h3 style="color: red;"><span class="must">*</span> Contains records start from 20210101.</h3>
-
+    <h3 style="color: red;"><span class="must">*</span> Contains only records from 20180101 until 20201231.</h3>
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">

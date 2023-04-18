@@ -166,5 +166,85 @@ public class MaterialdocumentController {
 	}
 
 
+	@RequestMapping(value = "/MaterialdocInsUpTo.do")
+	public String MaterialdocInsUpTo(Model model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return "logistics/MaterialDocument/materialDocumentList_upto";
+	}
+
+	@RequestMapping(value = "/htMaterialdocInsUpTo.do")
+	public String htMaterialdocInsUpTo(Model model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return "logistics/MaterialDocument/materialDocumentList_upto";
+	}
+
+	@RequestMapping(value = "/MaterialDocSearchListUpTo.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> MaterialDocSearchListUpTo(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception {
+
+		String[] trantype = request.getParameterValues("searchTrcType");
+		String[] movetype = request.getParameterValues("searchMoveType");
+		String searchMaterialDoc = request.getParameter("searchMaterialDoc");
+		String isHomeCare = request.getParameter("sIsHomeCare"); //Homecare - logistics page
+		String posdatefr = request.getParameter("PostingDt1");
+		String posdateto = request.getParameter("PostingDt2");
+		String crtdatefr = request.getParameter("CreateDt1");
+		String crtdateto = request.getParameter("CreateDt2");
+		String[] frloctype = request.getParameterValues("sfrLoctype");
+		String[] toloctype = request.getParameterValues("stoLoctype");
+		String frlocgrade = request.getParameter("sfrLocgrade");
+		String tolocgrade = request.getParameter("stoLocgrade");
+		String[] frloc = request.getParameterValues("sfrLoc");
+		String[] toloc = request.getParameterValues("stoLoc");
+		String materialcode = request.getParameter("searchMaterialCode");
+		String[] smattype = request.getParameterValues("smattype");
+		String[] smatcate = request.getParameterValues("smatcate");
+		String sdocno = request.getParameter("sdocno");
+		String sreqstno = request.getParameter("sreqstno");
+		String sdelvno = request.getParameter("sdelvno");
+		String sam = request.getParameter("sam");
+		String sordno = request.getParameter("sordno");
+		String mainloc = request.getParameter("mainloc").trim();
+		String ordno = request.getParameter("ordno");
+		String serialNo = request.getParameter("serialNo"); // 20191122 KR-OHK Serial No Add
+
+		logger.debug("mainloc trim@@@@@@@ : {}", mainloc);
+
+		Map<String, Object> pmap = new HashMap();
+		pmap.put("isHomeCare", isHomeCare); //Homecare - logistics page
+		pmap.put("trantype", trantype);
+		pmap.put("movetype", movetype);
+		pmap.put("matdoc", searchMaterialDoc);
+		pmap.put("posdatefr", posdatefr);
+		pmap.put("posdateto", posdateto);
+		pmap.put("crtdatefr", crtdatefr);
+		pmap.put("crtdateto", crtdateto);
+		pmap.put("frloctype", frloctype);
+		pmap.put("toloctype", toloctype);
+		pmap.put("frlocgrade", frlocgrade);
+		pmap.put("tolocgrade", tolocgrade);
+		pmap.put("frloc", frloc);
+		pmap.put("toloc", toloc);
+		pmap.put("materialcode", materialcode);
+		pmap.put("smattype", smattype);
+		pmap.put("smatcate", smatcate);
+		pmap.put("sdocno", sdocno);
+		pmap.put("sreqstno", sreqstno);
+		pmap.put("sdelvno", sdelvno);
+		pmap.put("sam", sam);
+		pmap.put("sordno", sordno);
+		pmap.put("mainloc", mainloc);
+		pmap.put("ordno", ordno);
+		pmap.put("serialNo", serialNo);
+
+		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchListUpTo(pmap);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
 
 }
