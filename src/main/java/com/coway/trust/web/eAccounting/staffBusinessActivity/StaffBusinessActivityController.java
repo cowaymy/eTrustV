@@ -168,7 +168,7 @@ public class StaffBusinessActivityController {
 			for(int i = 0; i < itemList.size(); i++){
 				gridMap = (Map<String, Object>) itemList.get(i);
 
-				float reqstAmt = Integer.valueOf(gridMap.get("totAmt").toString());
+				float reqstAmt = Float.valueOf(gridMap.get("totAmt").toString());
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("stYearMonth", gridMap.get("entryDt").toString().substring(3));
 				itemMap.put("costCentr", gridMap.get("costCenter").toString());

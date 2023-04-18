@@ -371,7 +371,7 @@ public class VendorAdvanceController {
 			for(int i = 0; i < details.size(); i++){
 				gridMap = (Map<String, Object>) details.get(i);
 
-				float reqstAmt = Integer.valueOf(gridMap.get("totalAmt").toString());
+				float reqstAmt = Float.valueOf(gridMap.get("totalAmt").toString());
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("stYearMonth", params.get("stYearMonth").toString().substring(3));
 				itemMap.put("costCentr", params.get("costCentr").toString());
