@@ -820,7 +820,8 @@
         AUIGrid.resize(settlementGridId, 963, $(".settlement_grid_wrap").innerHeight());
         fn_setSettlementGridEvent();
 
-        $("#settlementKeyDate").val(fn_getToday);
+        //$("#settlementKeyDate").val(fn_getToday); //comment due View Pop up should display Settlement Create Date - 180423
+
 
         if(advGridClmNo == "" || advGridClmNo == null) {
             Common.alert("No advance request selected for settlement.");
@@ -861,6 +862,7 @@
                         $("#settlementAdvRefdNo").val(advGridClmNo);
 
                         $("#settlementTotalAdv").val(result.data.totAmt);
+                        $("#settlementKeyDate").val(result.data.crtDt);
                         $("#settlementAdvNo").val(result.data.clmNo);
                         $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
                         $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.cur + ")");
@@ -885,7 +887,7 @@
                         // Settlement Claim Type + Draft = Allow continuation of editing settlement
                         $("#h1_settlement").text("Vendor Advance Settlement - Edit");
                         $("#settlementNewClmNo").val(advGridClmNo);
-
+                        $("#settlementKeyDate").val(fn_getToday);//here
                         AUIGrid.setProp(settlementGridId, {"editable" : "true"});
 
                         AUIGrid.bind(settlementGridId, "cellClick", function( event )
@@ -929,7 +931,7 @@
 
                         AUIGrid.setProp(settlementGridId, {"editable" : "false"});
 
-
+                        $("#settlementKeyDate").val(result.data.crtDt);
                         $("#eventStartDt").addClass("readonly");
                         $("#eventEndDt").addClass("readonly");
                         $("#settlementMode").addClass("readonly");
@@ -1015,12 +1017,13 @@
                             }
                         });
                     });
+                   // console.log("crtdt: " +result.data.crtDt );
                     var data2 = {
                     		clmNo : advGridClmNo,
                             appvPrcssNo : advAppvPrcssNo,
                             advType : advGridAdvType,
                             appvPrcssStus : advGridAppvPrcssStus,
-                            stYearMonth : $("#settlementKeyDate").val(),
+                            stYearMonth : result.data.crtDt,
                             costCentr : $("#settlementCostCenter").val()
                     };
                     Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetailsGrid.do", data2, function(result2) {//HERE
