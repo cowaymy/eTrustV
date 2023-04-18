@@ -387,10 +387,10 @@ public class VendorAdvanceController {
         				LOGGER.debug("item {} " + item);
 
 						if(item != null){
-							int totalAvailable = Integer.valueOf(item.get("availableAmt").toString());
-        					int total =  Integer.valueOf(item.get("total").toString());
-        					int pending = Integer.valueOf(item.get("pendAppvAmt").toString());
-        					int consumed = Integer.valueOf(item.get("consumAppvAmt").toString());
+							float totalAvailable = Float.valueOf(item.get("availableAmt").toString());
+        					float total =  Float.valueOf(item.get("total").toString());
+        					float pending = Float.valueOf(item.get("pendAppvAmt").toString());
+        					float consumed = Float.valueOf(item.get("consumAppvAmt").toString());
 
         					String key = item.get("budgetCode").toString() + item.get("glAccCode").toString();
         					LOGGER.debug("Key: " + key);
