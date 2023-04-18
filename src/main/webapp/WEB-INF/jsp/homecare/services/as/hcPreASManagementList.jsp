@@ -409,19 +409,20 @@
 
            var stus = AUIGrid.getCellValue(myGridID, selIdx, "stus");
 
-//            if( stus == "Active" || stus == "Pending" ){
+            if( stus == "Active" || stus == "Pending" ){
                param = {
-                       preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
+            		   preAsSeq : AUIGrid.getCellValue(myGridID, selIdx, "asCdSeq")
+                       /* preAsSalesOrderNo : AUIGrid.getCellValue(myGridID, selIdx, "salesOrderNo"),
                        preAsBranch : AUIGrid.getCellValue(myGridID, selIdx, "insBrnchCode"),
                        preAsCreator : AUIGrid.getCellValue(myGridID, selIdx, "creator"),
-                       preAsRecallDt : AUIGrid.getCellValue(myGridID, selIdx, "recallDt") == "-" ? null :  AUIGrid.getCellValue(myGridID, selIdx, "recallDt")
+                       preAsRecallDt : AUIGrid.getCellValue(myGridID, selIdx, "recallDt") == "-" ? null :  AUIGrid.getCellValue(myGridID, selIdx, "recallDt") */
                 }
 
                Common.popupDiv("/services/as/updPreASOrder.do", param, null  , true, '');
-//            }
-//            else{
-//                Common.alert("Update Status only allow in Active / Pending Status");
-//            }
+            }
+            else{
+                Common.alert("Update Status only allow in Active / Pending Status");
+            }
        }
        else{
            Common.alert('Pre Register AS Missing' + DEFAULT_DELIMITER + 'No Order Selected');
