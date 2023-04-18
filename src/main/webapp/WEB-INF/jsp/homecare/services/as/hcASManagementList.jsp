@@ -64,6 +64,8 @@ var branchDs = [];
         	doGetCombo('/homecare/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
         }); // INCHARGE CT
 
+        doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun : 'HC'}, '', 'asProduct', 'M', 'fn_setOptGrpClass');//product 생성 - Only Homecare
+
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
           var asid = AUIGrid.getCellValue(myGridID, event.rowIndex, "asId");
           var asNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "asNo");
@@ -81,6 +83,27 @@ var branchDs = [];
           Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
         });
       });
+
+  function fn_setOptGrpClass() {
+      $("optgroup").attr("class" , "optgroup_text");
+      fn_multiCombo();
+  }
+
+  function fn_disableGroupOption(){
+      $('.optgroup').children('input').attr("disabled","disabled");
+  }
+
+  function fn_multiCombo() {
+	  $('#asProduct').change(function(event) {
+          event.preventDefault();
+          fn_disableGroupOption();
+          $('#asProduct').next().find('.placeholder').text('');
+          $('#asProduct').next().find('.placeholder').text($("#product option:selected").text());
+      }).multipleSelect({
+          selectAll : true, // 전체선택
+          width : '100%'
+      });
+  }
 
   /* By KV - AS Mobile Failure Listing*/
   function fn_ASMobileFailureListing(){
@@ -141,6 +164,12 @@ var branchDs = [];
           headerText : "<spring:message code='service.grid.Status'/>",
           editable : false,
           width : 80
+        },
+        {
+            dataField : "bndlNo",
+            headerText : "BNDL No.",
+            editable : false,
+            width : 100
         },
         {
           dataField : "salesOrdNo",
@@ -1160,11 +1189,37 @@ var branchDs = [];
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
-      <td colspan="3">
+      <td>
         <input type="text" title="" placeholder="<spring:message code='service.grid.CustomerName'/>" class="w100p" id="custName" name="custName" /></td>
+      <th scope="row"><spring:message code='service.title.Product' /></th>
+      <td><select class="w100p" id="asProduct" name="asProduct"></select>
       <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>
       <td>
         <input type="text" title="" placeholder="<spring:message code='service.title.NRIC_CompanyNo'/>" class="w100p" id="nricNum" name="nricNum" /></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.grid.registerDt'/></th>
+      <td>
+        <div class="date_set w100p">
+	        <p>
+	        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtFrm" name="registerDtFrm" />
+	        </p> <span><spring:message code='pay.text.to'/></span> <p>
+	        <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtTo" name="registerDtTo" />
+	        </p>
+        </div>
+      </td>
+      <th scope="row"><spring:message code='service.grid.SettleDate'/></th>
+      <td>
+       <div class="date_set w100p">
+	        <p>
+	        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" />
+	        </p><span><spring:message code='pay.text.to'/></span><p>
+	        <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" />
+	        </p>
+       </div>
+      </td>
+      <th scope="row">Bundle Number</th>
+      <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
      </tr>
     </tbody>
    </table>

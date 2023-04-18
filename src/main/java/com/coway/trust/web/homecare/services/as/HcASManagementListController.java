@@ -201,6 +201,7 @@ public class HcASManagementListController {
 
     String[] asTypeList = request.getParameterValues("asType");
     String[] asStatusList = request.getParameterValues("asStatus");
+    String[] productList = request.getParameterValues("asProduct");
 
     String cmbbranchId = request.getParameter("cmbbranchId");
     String cmbctId = request.getParameter("cmbctId");
@@ -209,6 +210,7 @@ public class HcASManagementListController {
     params.put("asStatusList", asStatusList);
     params.put("cmbbranchId", cmbbranchId);
     params.put("cmbctId", cmbctId);
+    params.put("productList", productList);
 
     List<EgovMap> ASMList = hcASManagementListService.selectASManagementList(params);
 
