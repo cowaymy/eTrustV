@@ -129,7 +129,9 @@ public class PreASManagementListController {
 
   @RequestMapping(value = "/updPreASOrder.do")
 	public String updPreASOrder(@RequestParam Map<String, Object> params, ModelMap model) {
-	  	params.put("orderNum", params.get("preAsSalesOrderNo"));
+	  	if("".equals(params.get("orderNum"))  && params.get("orderNum")==null){
+	  		params.put("orderNum", params.get("preAsSalesOrderNo"));
+	  	}
 
 	    List<EgovMap> preasStat = PreASManagementListService.selectPreAsUpd();
 	    List<EgovMap> preAsList = PreASManagementListService.selectPreASManagementList(params);
