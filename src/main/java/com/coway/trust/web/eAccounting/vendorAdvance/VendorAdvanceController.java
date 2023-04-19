@@ -420,6 +420,9 @@ public class VendorAdvanceController {
 //								insuff = "N";
 							}
 						}
+						else{
+							insuff = "Y";
+						}
 					}else{
 						insuff = "N";
 					}

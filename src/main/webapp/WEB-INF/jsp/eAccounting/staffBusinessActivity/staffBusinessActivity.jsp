@@ -596,7 +596,7 @@ var myGridPros = {
                  $("#repayDraftClaimNo").text(claimNo);
                  $("#refClmNo").val(results.clmNo);
                  $("#advReqClmNo").val(results.advReqClmNo);
-                 $("#refKeyDate").val(results.entryDt);
+                 $("#refKeyDate").val(fn_getToday);
                  $("#refCostCenterCode").val(results.costCenter);
                  $("#costCenterName").val(results.costCenterNm);
                  $("#bankId").val(results.bankCode);
@@ -1359,7 +1359,7 @@ var myGridPros = {
                      checkRowFlg = false;
                      return checkRowFlg;
                  }
-                 var cmpBudgetCode = AUIGrid.getCellValue(newGridID, i, "budgetCode");
+               /*   var cmpBudgetCode = AUIGrid.getCellValue(newGridID, i, "budgetCode");
                  var data = {
                          costCentr : $("#refCostCenterCode").val(),
                          budgetCode : cmpBudgetCode
@@ -1371,7 +1371,7 @@ var myGridPros = {
                          checkRowFlg = false;
                          return checkRowFlg;
                      }
-                 });
+                 }); *///HIDE TEMP
              }
              return checkRowFlg;
          }
@@ -1381,6 +1381,24 @@ var myGridPros = {
              return checkRowFlg;
          }
          return checkRowFlg;
+     }
+
+     function fn_getToday() {
+         var today = new Date();
+         var dd = today.getDate();
+         var mm = today.getMonth() + 1;
+         var yyyy = today.getFullYear();
+
+         if(dd < 10) {
+             dd = "0" + dd;
+         }
+         if(mm < 10){
+             mm = "0" + mm
+         }
+
+         today = dd + "/" + mm + "/" + yyyy;
+
+         return today;
      }
 
     //Empty Validation checking
@@ -1874,6 +1892,8 @@ var myGridPros = {
     	                                }
     	                            });
     	                        }
+    	                        console.log("insufficient: " + AUIGrid.getCellValue(newGridID, event.rowIndex, "insufficient"));
+    	                        AUIGrid.setCellValue(newGridID, event.rowIndex, "insufficient", "N");
     	                    });
     	                }
 

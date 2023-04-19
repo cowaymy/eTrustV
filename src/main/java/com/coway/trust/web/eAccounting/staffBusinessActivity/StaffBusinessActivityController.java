@@ -216,6 +216,8 @@ public class StaffBusinessActivityController {
 
 //								insuff = "N";
 							}
+						}else{
+							insuff = "Y";
 						}
 					}else{
 						insuff = "N";
