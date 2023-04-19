@@ -499,6 +499,20 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }
+
+                var cmpBudgetCode = AUIGrid.getCellValue(newGridID, i, "budgetCode");
+                var data = {
+                        costCentr : $("#newCostCenter").val(),
+                        budgetCode : cmpBudgetCode
+                };
+                Common.ajaxSync("GET", "/eAccounting/webInvoice/selectBudgetCodeList", data, function(result) {
+                    console.log("bugetlength " + result.length);
+                    if(result.length != 1) {
+                        Common.alert("Budget Code not belongs to this month.");
+                        checkResult = false;
+                        return checkResult;
+                    }
+                });
 	        }
 	    }
 	//}

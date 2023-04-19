@@ -1378,6 +1378,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
          FROM FCM0104D T1
          LEFT JOIN FCM0010M T2
          ON T1.BUDGET_CODE = T2.BUDGET_CODE
+         JOIN FCM0101M T3 ON T1.BUDGET_CODE  = T3.BUDGET_CODE AND T1.COST_CENTR  = T3.COST_CENTR
+         AND BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') and LPAD(BUDGET_PLAN_MONTH, 2,0) = TO_CHAR(SYSDATE, 'MM')
          WHERE 1=1
         <!-- <![CDATA[
              AND START_DT <= SYSDATE
@@ -1390,6 +1392,9 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         </if>
         <if test="budgetCodeText != null and budgetCodeText != ''">
            AND T2.BUDGET_CODE_TEXT LIKE '%'|| #{budgetCodeText} || '%'
+        </if>
+        <if test="budgetCode != null and budgetCode != ''">
+           AND T2.BUDGET_CODE = #{budgetCode}
         </if>
 </select>
 

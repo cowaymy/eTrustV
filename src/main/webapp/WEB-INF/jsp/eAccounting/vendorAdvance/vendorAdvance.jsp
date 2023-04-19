@@ -1187,6 +1187,21 @@
     				Common.alert("Please choose a budget code.");
     				checkRowFlg = false;
     				return checkRowFlg;
+    			}else{
+    				var cmpBudgetCode = AUIGrid.getCellValue(settlementGridId, i, "budgetCode");
+    				var data = {
+    		                costCentr : $("#settlementCostCenter").val(),
+    		                budgetCode : cmpBudgetCode
+    		        };
+    				Common.ajaxSync("GET", "/eAccounting/webInvoice/selectBudgetCodeList", data, function(result) {
+    		            console.log("bugetlength " + result.length);
+    		            if(result.length != 1) {
+    		            	Common.alert("Budget Code not belongs to this month.");
+    		            	checkRowFlg = false;
+    		            	return checkRowFlg;
+    		            }
+    		        });
+    				return checkRowFlg;
     			}
     			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "glAccCode"))){
     				Common.alert("Please choose a GL code.");
