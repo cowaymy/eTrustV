@@ -1542,10 +1542,10 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
-        if (FormUtil.checkReqValue($("#asNotMatch"))) { // CT CODE
+        /* if (FormUtil.checkReqValue($("#asNotMatch"))) { // CT CODE
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='AS not match reason' htmlEscape='false'/> </br>";
             rtnValue = false;
-        }
+        } */
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
