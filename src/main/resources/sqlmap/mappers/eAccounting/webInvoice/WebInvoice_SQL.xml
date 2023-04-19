@@ -1373,21 +1373,17 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 </update>
 
 <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
-        SELECT T1.BUDGET_CODE
-                  ,T2.BUDGET_CODE_TEXT
-         FROM FCM0104D T1
-         LEFT JOIN FCM0010M T2
-         ON T1.BUDGET_CODE = T2.BUDGET_CODE
-         JOIN FCM0101M T3 ON T1.BUDGET_CODE  = T3.BUDGET_CODE AND T1.COST_CENTR  = T3.COST_CENTR
-         AND BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') and LPAD(BUDGET_PLAN_MONTH, 2,0) = TO_CHAR(SYSDATE, 'MM') AND T1.GL_ACC_CODE = T3.GL_ACC_CODE
-         WHERE 1=1
-        <!-- <![CDATA[
-             AND START_DT <= SYSDATE
-             AND END_DT  >= SYSDATE
-        ]]> -->
-        AND TO_CHAR(END_DT, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
-        AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
-        AND T1.CNTRL_TYPE = 'Y'
+		select
+		  T1.BUDGET_CODE
+		  ,T2.BUDGET_CODE_TEXT
+		from FCM0101M T1
+		LEFT JOIN FCM0010M T2 ON T1.BUDGET_CODE = T2.BUDGET_CODE
+		left join FCM0104D T3 ON T1.BUDGET_CODE  = T3.BUDGET_CODE AND T1.COST_CENTR  = T3.COST_CENTR AND T1.GL_ACC_CODE = T3.GL_ACC_CODE
+		where
+			1=1
+			AND BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') and LPAD(BUDGET_PLAN_MONTH, 2,0) = TO_CHAR(SYSDATE, 'MM')
+			AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
+			and NVL(T3.CNTRL_TYPE,'INVALID') <![CDATA[ <> ]]> 'INVALID'
         <if test="costCentr == 'G9901' or costCentr == 'g9901'">
            AND T2.BUDGET_CODE != '99999'
         </if>
