@@ -393,8 +393,25 @@ function fn_uploadAdjustment(){
         console.log("Result: " + JSON.stringify(result));
 
          if(result.code == '99'){
-            var msg = result.message;
-            Common.alert("Failed to upload: " + result.message);
+        	 if(result.dataList.length > 0){
+        		 var overbudget = "";
+                 var rtnBudgetCodeNo = "";
+                 console.log(result.dataList);
+                 var length = result.dataList.length;
+                 if(length > 0){
+                	 for(var i = 0; i < length; i++){
+                         rtnBudgetCodeNo += result.dataList[i].budgetDocNo + ",";
+                     }
+                 }
+                 console.log(" rtnBudgetCodeNo : "+ rtnBudgetCodeNo );
+                 rtnBudgetCodeNo = rtnBudgetCodeNo.slice(0, rtnBudgetCodeNo.length - 1);
+                 Common.alert("Upload Success: " + rtnBudgetCodeNo + "\n\n"+ result.message);
+                 hideViewPopup();
+        	 }else{
+        		 var msg = result.message;
+                 Common.alert("Error: " + result.message);
+        	 }
+
 
         }else{
             var rtnBudgetCodeNo = "";

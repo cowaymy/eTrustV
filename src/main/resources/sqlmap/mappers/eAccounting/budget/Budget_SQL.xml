@@ -1710,5 +1710,31 @@ WHERE 1=1
     ORDER BY S13.CODE_ID
   </select>
 
+<select id="selectBudgetPlan" parameterType="Map" resultType="int">
+    SELECT COUNT(-1) CNT
+    FROM FCM0101M
+    WHERE COST_CENTR = #{costCenter}
+    AND GL_ACC_CODE = #{glAccCode}
+    AND BUDGET_CODE= #{budgetCode}
+    AND BUDGET_PLAN_YEAR = SUBSTR(#{adjYearMonth}, 4,4)
+    AND BUDGET_PLAN_MONTH = TO_NUMBER(SUBSTR(#{adjYearMonth}, 0,2))
+  </select>
+
+  <delete id="removeAdjustmentD" parameterType="Map">
+    DELETE FROM FCM0103D WHERE BUDGET_DOC_NO = #{budgetDocNo}
+  </delete>
+
+  <delete id="removeAdjustmentM" parameterType="Map">
+    DELETE FROM FCM0102M WHERE BUDGET_DOC_NO = #{budgetDocNo}
+  </delete>
+
+  <select id="getBudgetDocNoFCM0039M" parameterType="Map" resultType="String">
+     SELECT DISTINCT BUDGET_DOC_NO
+                FROM FCM0039D
+                WHERE UPLOAD_NO = #{uploadAdjNo}
+                AND ADJ_NUMBER = #{adjNumber}
+                AND BUDGET_DOC_NO IS NOT NULL
+  </select>
+
 
 </mapper>

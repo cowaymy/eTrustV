@@ -554,12 +554,16 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
         Map<String, Object> reMap = new HashMap();
         Map<String, Object> updateMap = new HashMap();
+        Map<String, Object> testMap = new HashMap();
 
         reMap.put("uploadAdjNo", uploadAdjNo);
       	int compareKey = 1;
 
         List<EgovMap> uploadMasterList = budgetMapper.getUploadMasterList(reMap);
         List resultList = new ArrayList();
+
+        String failMsg = "";
+
       	List adjList = null;
       	int cnt = 0;
       	Logger.debug("uploadBudgetAdjustment :::: uploadMasterList {} ", uploadMasterList);
@@ -586,17 +590,30 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       					reMap.put("crtUserId", formData.get("crtUserId"));
       					reMap.put("updUserId", formData.get("updUserId"));
       					reMap.put("costCenter", reMap.get("costCentr"));
-      					if (checkPlanMaster(reMap) < 0) { // cnt > 0 mean budget adjustment already uploaded before
+      					if (checkPlanMaster(reMap) < 1) {
 
       						//List<EgovMap> list = selectBudgetAdjustmentConflict(reMap);
       					  // remove the data from FCM0039D
-      					  removeFCM0039D(reMap);
+      					  //removeFCM0039D(reMap);
 
-      					  formData.put("message", "Error. The budget code is not in yearly budget");
-      					  /*for(i = 0; i<list.size(); i++){
-      						  resultList.add(list.get(i));
-      					  }*/
-
+      						 String msgs = "";
+         					 String budgetCd = (String) reMap.get("budgetCode");
+         					 String glAccCode = (String) reMap.get("glAccCode");
+         					 String rs = "[" + budgetCd + "," + glAccCode + ", Adj No: " + compareKey +"] ";
+         					 failMsg += rs;
+         					 if(!reMap.get("budgetAdjType").equals("01")|| !reMap.get("budgetAdjType").equals("02")){
+         						 reMap.put("adjNumber", compareKey);
+         						 Logger.debug("adjNumber: " + reMap.get("adjNumber") );
+         						String budgetNo = budgetMapper.getBudgetDocNoFCM0039M(reMap);
+         						Logger.debug("Budget No: " + budgetNo);
+         						if(budgetNo != "" || budgetNo != null){
+         							budgetDocNoList.remove(budgetNo);
+         							removeAdjustmentD(reMap);
+         							removeAdjustmentM(reMap);
+         							i = uploadNewMasterList.size();
+         							Logger.debug("Current i: " + i);
+         						}
+         					 }
 
       					} else { // no conflict location can proceed
       						Logger.debug("uploadAdjNo :::: reMap {} ", reMap);
@@ -628,30 +645,22 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       						reMap.put("adjNumber", compareKey);
 
       						budgetMapper.updateFCM0039D(reMap);
-      					//}
-      						cnt++;
+
       				}
 
 
       					}
       					addTurn = 0;
       					Logger.debug("addTurn: " + addTurn);
-      					a += cnt;
+
       					Logger.debug("a is now >>> " + a);
-      				} else {
-      				  // remove the data from FCM0039D
-      				  removeFCM0039D(reMap);
-
-
-      				  formData.put("message", "Error. Please try again");
       				}
-      			//}
+
+
       			++compareKey;
       			Logger.debug("Current compareKey: " + compareKey);
             }
-            /*if (resultList.size() > 0){
-          	  formData.put("dataList", resultList);
-            }*/
+
 
           } else {
             // remove the data from LOG0112D
@@ -712,7 +721,9 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       				result.put("budgetDocNo", budgetDocNoList.get(i).toString());
       				result.put("resultAmtList", resultAmtList);
       				result.put("overbudget", overbudget);
-      				throw new ApplicationException("-1","Overbudget");
+      				String msgs = "Overbudget: " + budgetDocNoList.get(i).toString();
+      				formData.put("message", msgs);
+//      				throw new ApplicationException("-1","Overbudget");
       			}
 
 
@@ -724,7 +735,9 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
       			resultAddList.add(result);
       		}
-
+      	if(failMsg.length() > 0){
+      		formData.put("message", "Budget Code-GL Acc Code not in yearly plan: " + failMsg);
+      	}
       	//formData.put("budgetDocNoList", budgetDocNoList);
       	formData.put("resultList", resultAddList);
 
@@ -744,7 +757,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	}
 
     private int checkPlanMaster(Map<String, Object> reMap) throws Exception {
-        int resultCnt = budgetMapper.selectPlanMaster(reMap);
+        int resultCnt = budgetMapper.selectBudgetPlan(reMap);
 
         return resultCnt;
       }
@@ -793,4 +806,14 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		// TODO Auto-generated method stub
 		return budgetMapper.selectExpenseTyp();
 	}
+
+   private void removeAdjustmentD(Map<String, Object> reMap) {
+       // TODO Auto-generated method stub
+       budgetMapper.removeAdjustmentD(reMap);
+     }
+
+   private void removeAdjustmentM(Map<String, Object> reMap) {
+       // TODO Auto-generated method stub
+       budgetMapper.removeAdjustmentM(reMap);
+     }
 }

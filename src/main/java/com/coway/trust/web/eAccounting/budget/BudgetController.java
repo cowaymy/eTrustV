@@ -1174,6 +1174,8 @@ public class BudgetController {
                 	  adjYearMonth = "0" + adjYearMonth;
                   }else if(adjYearMonth.length() == 10){
                 	  adjYearMonth = adjYearMonth.substring(3);
+                  }else if(adjYearMonth.length() == 9){
+                	  adjYearMonth = adjYearMonth.substring(2);
                   }
 
               LOGGER.debug("AdYearMonth: " + adjYearMonth);

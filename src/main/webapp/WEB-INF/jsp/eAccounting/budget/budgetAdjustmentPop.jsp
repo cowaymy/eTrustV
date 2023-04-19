@@ -114,6 +114,33 @@ console.log("budgetAdjustmentPop.jsp");
         $("#sendAmount").val(str);
    });
 
+    $("#sendGlAccCode").blur(function(){
+    	if(!FormUtil.isEmpty($("#sendGlAccCode").val())){
+    		fn_checkBudget();
+    	}else{
+    		fn_emptyField("#sendGlAccCode");
+    	}
+
+    });
+
+    $("#sendBudgetCode").blur(function(){
+    	if(!FormUtil.isEmpty($("#sendBudgetCode").val())){
+    		fn_checkBudget();
+    	}else{
+    		fn_emptyField("#sendBudgetCode");
+    	}
+    });
+
+    $("#sendCostCenter").blur(function(){
+    	if(!FormUtil.isEmpty($("#sendCostCenter").val())){
+            fn_checkBudget();
+        }else{
+            fn_emptyField("#sendCostCenter");
+        }
+    });
+
+
+
     $("#sendAmount").blur(function () {
     	var str;
 
@@ -503,6 +530,13 @@ function fn_glAcc(str){
 	}
 }
 
+function fn_emptyField(str){
+	if(FormUtil.isEmpty($(str).val()) && !FormUtil.isEmpty($("#sendAmount").val())){
+		$("#sendAmount").val("");
+		$("#recvAmount").val("");
+	}
+}
+
 
  var budgetStr ;
 //Budget Code Pop 호출
@@ -519,6 +553,7 @@ function fn_pBudgetCodePop(str){
 
       $("#sendBudgetCode").val("");
       $("#sendBudgetCodeName").val("");
+      obj.costcenter = $("#sendCostCenter").val();
 
       if($("#pAdjustmentType").val() != "04"){
           if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
@@ -531,6 +566,8 @@ function fn_pBudgetCodePop(str){
    // add jgkim
       if("${mgrYn}" == "Y") {
           obj.call = 'budgetAdj';
+      }else{
+          obj.call = 'selectCodeList';
       }
   }else{
       $("#recvBudgetCode").val("");
@@ -592,7 +629,8 @@ function fn_pGlAccountSearchPop(str){
   if(glStr == "send") {
       $("#sendGlAccCode").val("");
       $("#sendGlAccCodeName").val("");
-
+      obj.costcenter = $("#sendCostCenter").val();
+      obj.budgetCode = $("#sendBudgetCode").val();
       if($("#pAdjustmentType").val() != "05") {
           obj.call = 'budgetAdj';
 
@@ -634,8 +672,9 @@ function fn_setPopGlData(){
     		  $("#recvGlAccCode").val($("#pGlAccCode").val());
               $("#recvGlAccCodeName").val( $("#pGlAccCodeName").val());
           }
-    	 fn_checkBudget();
+
       }
+      fn_checkBudget();
   }else{
       $("#recvGlAccCode").val($("#pGlAccCode").val());
       $("#recvGlAccCodeName").val( $("#pGlAccCodeName").val());

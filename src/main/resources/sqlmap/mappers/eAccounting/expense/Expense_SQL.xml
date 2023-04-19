@@ -110,12 +110,12 @@
               SELECT DISTINCT F10.BUDGET_CODE, F10.BUDGET_CODE_TEXT, F9.GL_ACC_CODE, F9.GL_ACC_DESC,
               TO_CHAR(F10.START_DT, 'DD-MM-YYYY') START_DT, TO_CHAR(F10.END_DT, 'DD-MM-YYYY') END_DT
               FROM FCM0010M F10
-              LEFT JOIN FCM0040D F40 ON F40.BUDGET_CODE = F10.BUDGET_CODE
-              LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F40.GL_ACC_CODE
-              LEFT JOIN FCM0104D F4 ON F4.BUDGET_CODE = F10.BUDGET_CODE AND F4.GL_ACC_CODE = F9.GL_ACC_CODE
-              WHERE F40.STUS_CODE_ID = 1
+              INNER JOIN FCM0101M F01 ON F01.BUDGET_CODE = F10.BUDGET_CODE
+              INNER JOIN FCM0104D F4 ON F4.BUDGET_CODE = F4.BUDGET_CODE AND F4.GL_ACC_CODE = F01.GL_ACC_CODE
+              INNER JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F4.GL_ACC_CODE
+              WHERE F01.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
 			 <if test="searchCostCenter != null and searchCostCenter != ''">
-                AND F4.COST_CENTR = #{searchCostCenter}
+                AND F01.COST_CENTR = #{searchCostCenter}
                 </if>
                 <if test="searchBudgetCode != null and searchBudgetCode != ''">
                 AND F10.BUDGET_CODE = #{searchBudgetCode}

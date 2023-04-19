@@ -116,4 +116,12 @@ public interface BudgetMapper {
 
 	List<EgovMap> selectExpenseTyp();
 
+	int selectBudgetPlan (Map<String, Object> params) throws Exception;
+
+	void removeAdjustmentD(Map<String, Object> reMap);
+
+	void removeAdjustmentM(Map<String, Object> reMap);
+
+	String getBudgetDocNoFCM0039M(Map<String, Object> reMap);
+
 }
