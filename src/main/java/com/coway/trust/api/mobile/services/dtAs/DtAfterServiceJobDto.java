@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.services.dtAs;
 
+import java.math.BigDecimal;
+
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 
@@ -252,6 +254,11 @@ public class DtAfterServiceJobDto {
 	private int totalAmount;
 
 	private String serialChk;
+
+	private BigDecimal latitude;
+
+  private BigDecimal longitude;
+
 	public String getSerialChk() {
 		return serialChk;
 	}
@@ -952,6 +959,21 @@ public class DtAfterServiceJobDto {
 		this.inhouserepairyn = inhouserepairyn;
 	}
 
+  public BigDecimal getLatitude(){
+    return latitude;
+  }
+
+  public void setLatitude(BigDecimal latitude){
+    this.latitude = latitude;
+  }
+
+  public BigDecimal getLongitude(){
+    return longitude;
+  }
+
+  public void setLongitude(BigDecimal longitude){
+     this.longitude = longitude;
+  }
 
 
 	public static DtAfterServiceJobDto create(EgovMap egovMap) {

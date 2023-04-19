@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.services.dtProductRetrun;
 
+import java.math.BigDecimal;
+
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 
@@ -220,6 +222,11 @@ public class DtProductRetrunJobDto {
 	private String fraProductName;
 
 	private String serialChk;
+
+	private BigDecimal latitude;
+
+  private BigDecimal longitude;
+
 	public String getSerialChk() {
 		return serialChk;
 	}
@@ -803,6 +810,21 @@ public class DtProductRetrunJobDto {
 		this.fraProductName = fraProductName;
 	}
 
+	public BigDecimal getLatitude(){
+    return latitude;
+  }
+
+  public void setLatitude(BigDecimal latitude){
+    this.latitude = latitude;
+  }
+
+  public BigDecimal getLongitude(){
+    return longitude;
+  }
+
+  public void setLongitude(BigDecimal longitude){
+     this.longitude = longitude;
+  }
 
 	public static DtProductRetrunJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, DtProductRetrunJobDto.class);
