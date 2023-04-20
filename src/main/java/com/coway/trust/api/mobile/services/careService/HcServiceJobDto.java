@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.services.careService;
 
+import java.math.BigDecimal;
+
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -224,6 +226,10 @@ public class HcServiceJobDto {
   private String disinfecServ;
 
   private String srvType;
+
+  private BigDecimal latitude;
+
+  private BigDecimal longitude;
 
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
@@ -839,4 +845,19 @@ public class HcServiceJobDto {
 	    this.srvType = srvType;
   }
 
+  public BigDecimal getLatitude(){
+    return latitude;
+  }
+
+  public void setLatitude(BigDecimal latitude){
+    this.latitude = latitude;
+  }
+
+  public BigDecimal getLongitude(){
+    return longitude;
+  }
+
+  public void setLongitude(BigDecimal longitude){
+     this.longitude = longitude;
+  }
 }

@@ -4867,7 +4867,9 @@ SELECT MST.*
            TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID,
            TO_CHAR (A.DISINF_SRV) AS DISINFEC_SERV,
            A.SRV_TYPE,
-           A.prodCat
+           A.prodCat,
+           A.LATITUDE,
+           A.LONGITUDE
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4934,7 +4936,9 @@ SELECT MST.*
                   SRV_PAC_ID,
                   DISINF_SRV,
                   SRV_TYPE,
-                  prodCat
+                  prodCat,
+                  LATITUDE,
+                  LONGITUDE
            FROM ( SELECT SRV_INFO.*, AD.DISINF_SRV AS DISINF_SRV, U.FAUCET_EXCH AS warranty ,U.SRV_CONFIG_ID FROM(
                                   SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
@@ -5016,7 +5020,9 @@ SELECT MST.*
                                    SAL.SRV_PAC_ID,
                        /*              AD.DISINF_SRV AS DISINF_SRV, */
                                    C.SRV_TYPE,
-                                   AD.CODE AS prodCat
+                                   AD.CODE AS prodCat,
+                                   Q.LATITUDE,
+                                   Q.LONGITUDE
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -5230,7 +5236,9 @@ SELECT MST.*
            HC_REF_PROD,
            TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID,
            TO_CHAR (A.DISINF_SRV) AS DISINFEC_SERV,
-           A.SRV_TYPE
+           A.SRV_TYPE,
+           A.LATITUDE,
+           A.LONGITUDE
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -5296,7 +5304,9 @@ SELECT MST.*
                   HC_REF_PROD,
                   SRV_PAC_ID,
                   DISINF_SRV,
-                  SRV_TYPE
+                  SRV_TYPE,
+                  LATITUDE,
+                  LONGITUDE
            FROM (
 
              SELECT
@@ -5382,7 +5392,9 @@ SELECT MST.*
                                    AC.CODE AS HC_REF_CAT,
                                    AB.STK_DESC AS HC_REF_PROD,
                                    SAL.SRV_PAC_ID,
-                                   C.SRV_TYPE
+                                   C.SRV_TYPE,
+                                   Q.LATITUDE,
+                                   Q.LONGITUDE
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -5512,7 +5524,7 @@ SELECT MST.*
                             srv_so_id,
                             faucet_exch
                         FROM
-                            sal0090d
+                            SAL0090D
                         WHERE
                             srv_stus_id = 1
                         GROUP BY
@@ -5522,10 +5534,10 @@ SELECT MST.*
                     JOIN (
                         SELECT
                             MAX(srv_config_id) AS srv_config_id2,
-                            srv_so_id          AS srv_so_id2,
+                            srv_so_id AS srv_so_id2,
                             disinf_srv
                         FROM
-                            sal0090d
+                            SAL0090D
                         WHERE
                             srv_stus_id = 1
                         GROUP BY
