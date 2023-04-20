@@ -1358,7 +1358,7 @@
                      TO_CHAR (D.STK_DESC) AS product_Name,
                      NVL (D.SERIAL_CHK, 'N') AS SERIAL_CHK,
                      NVL (FN_GET_COMMCD (10, C.APP_TYPE_ID), '') AS app_Type,
-                     NVL (K.INSTCT, '') AS instruction,
+                     NVL (R.SO_REQ_REM, '') AS instruction,
                      NVL (TO_CHAR (I.INSTALL_DT, 'YYYYMMDD'), '') AS installation_Date,
                      NVL (TO_CHAR (J.MEM_CODE), '') AS installed_By,
                      '' AS prev_Outstanding,
@@ -1391,7 +1391,7 @@
                      NVL (TO_CHAR (I.NEXT_CALL_DT, 'YYYYMMDD'), '') AS next_Call_Date,
                      NVL (TO_CHAR (I.NEXT_CALL_DT, 'HHMM'), '') AS next_Call_Time,
                      (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = C.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
-                     Q.PROMO_DESC AS SALES_PROMOTION
+                     '(' || Q.PROMO_CODE || ') ' || Q.PROMO_DESC AS SALES_PROMOTION
               FROM LOG0038D A
               INNER JOIN ORG0001D B ON A.CT_ID = B.MEM_ID
               INNER JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -1422,6 +1422,7 @@
               LEFT OUTER JOIN SAL0023D O ON K.ADD_ID = O.CUST_ADD_ID
               LEFT OUTER JOIN SYS0064M P ON O.AREA_ID = P.AREA_ID AND P.STATUS_ID = 1
               LEFT JOIN SAL0017D Q ON C.PROMO_ID = Q.PROMO_ID
+              LEFT JOIN SAL0020D R ON A.REF_ID = R.SO_REQ_ID AND A.SALES_ORD_ID = R.SO_REQ_SO_ID
               WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                 AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
                 AND B.MEM_CODE = #{userId}
