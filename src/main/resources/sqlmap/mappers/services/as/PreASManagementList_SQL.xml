@@ -62,10 +62,10 @@
 
         <if test="orderType != null and orderType != '' ">
               <if test="orderType == 'HA'">
-              AND Extent21.STK_CTGRY_ID NOT IN (5706,5707,7240,7177,7233)
+              AND Extent21.STK_CTGRY_ID NOT IN (5706,5707,7241,7177,7237)
               </if>
               <if test="orderType == 'HC'">
-              AND Extent21.STK_CTGRY_ID IN (5706,5707,7240,7177,7233)
+              AND Extent21.STK_CTGRY_ID IN (5706,5707,7241,7177,7237)
               </if>
         </if>
         <if test="asStatusList != null and asStatusList != '' ">
