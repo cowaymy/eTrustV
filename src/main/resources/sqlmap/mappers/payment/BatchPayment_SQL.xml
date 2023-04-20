@@ -24,7 +24,8 @@
 		       Project1.USERNAME1 USERNAME1  ,
 		       Project1.UPD_USER_ID UPD_USER_ID  ,
 		       Project1.BATCH_PAY_TYPE BATCH_PAY_TYPE  ,
-		       Project1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE
+		       Project1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+               CASE WHEN Project1.BATCH_IS_ADV = 1 THEN 'YES' ELSE 'NO' END AS BATCH_IS_ADV
 		  FROM ( SELECT Project1.BATCH_ID BATCH_ID  ,
 		                Project1.PAY_MODE_ID PAY_MODE_ID  ,
 		                Project1.BATCH_STUS_ID BATCH_STUS_ID  ,
@@ -39,6 +40,7 @@
 		                Project1.CNVR_USER_ID CNVR_USER_ID  ,
 		                Project1.BATCH_PAY_TYPE BATCH_PAY_TYPE  ,
 		                Project1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE  ,
+                        Project1.BATCH_IS_ADV ,
 		                Project1.CODE_NAME CODE_NAME  ,
 		                Project1.NAME NAME  ,
 		                Project1.USER_NAME USER_NAME  ,
@@ -61,6 +63,7 @@
 		                       Filter1.CNVR_USER_ID CNVR_USER_ID  ,
 		                       Filter1.BATCH_PAY_TYPE BATCH_PAY_TYPE  ,
 		                       Filter1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE  ,
+                               Filter1.BATCH_IS_ADV ,
 		                       Filter1.CODE_NAME CODE_NAME  ,
 		                       Filter1.NAME2 NAME  ,
 		                       Filter1.USERNAME2 USER_NAME  ,
@@ -88,6 +91,7 @@
 		                              Extent1.CNVR_USER_ID CNVR_USER_ID  ,
 		                              Extent1.BATCH_PAY_TYPE BATCH_PAY_TYPE  ,
 		                              Extent1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE  ,
+                                      Extent1.BATCH_IS_ADV ,
 		                              Extent2.CODE_NAME CODE_NAME  ,
 		                              Extent3.NAME NAME2  ,
 		                              Extent4.USER_NAME USERNAME2  ,
@@ -134,6 +138,9 @@
                                   </if>
 		                          <if test="creator != ''">
                                         AND Filter1.USERNAME2 = #{creator}
+                                  </if >
+                                  <if test="advanceSearch != '' and advanceSearch != null" >
+                                    AND Filter1.BATCH_IS_ADV  = #{advanceSearch}
                                   </if>
 		                          ) Project1 ) Project1
 		 WHERE  Project1.ROW_NUMBER > 0
@@ -151,6 +158,7 @@
 		       Limit1.CNFM_STUS_ID CNFM_STUS_ID  ,
 		       Limit1.NAME1 NAME1  ,
 		       Limit1.CNVR_USER_ID CNVR_USER_ID  ,
+               Limit1.BATCH_IS_ADV ,
 		       Limit1.C2 C2  ,
 		       TO_CHAR(Limit1.CNVR_DT , 'DD-MM-YYYY HH:MI:SS AM') AS CNVR_DT,
 		       TO_CHAR(Limit1.CRT_DT , 'DD-MM-YYYY HH:MI:SS AM') AS CRT_DT,
@@ -173,6 +181,7 @@
 		                Extent1.CNVR_DT CNVR_DT  ,
 		                Extent1.CNFM_USER_ID CNFM_USER_ID  ,
 		                Extent1.CNVR_USER_ID CNVR_USER_ID  ,
+                        CASE WHEN Extent1.BATCH_IS_ADV = 1 THEN 'YES' ELSE 'NO' END AS BATCH_IS_ADV ,
 		                Extent2.CODE_NAME CODE_NAME  ,
 		                Extent3.NAME NAME  ,
 		                Extent4.USER_NAME USER_NAME  ,
@@ -225,6 +234,7 @@
 		       Project1.USER_CLCTR_CODE USER_CLCTR_CODE,
 		       Project1.CARD_NO,
                Project1.APPROVAL_CODE
+               ,Project1.PAY_CHANNEL
 		  FROM ( SELECT Project1.DET_ID DET_ID  ,
 		                Project1.BATCH_ID BATCH_ID  ,
 		                Project1.DISAB DISAB  ,
@@ -251,6 +261,7 @@
 		                ROW_NUMBER() OVER ( ORDER BY Project1.DET_ID ASC  ) ROW_NUMBER,
 		                Project1.CARD_NO,
                         Project1.APPROVAL_CODE
+                        ,Project1.PAY_CHANNEL
 		         FROM ( SELECT Extent1.DET_ID DET_ID  ,
 		                       Extent1.BATCH_ID BATCH_ID  ,
 		                       Extent1.DISAB DISAB  ,
@@ -276,6 +287,7 @@
 		                       Extent2.CODE CODE,
 		                       Extent1.CARD_NO,
 		                       Extent1.APPROVAL_CODE
+                               ,Extent1.PAY_CHANNEL
 		                FROM PAY0043D Extent1
 		                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
 		                 WHERE  Extent1.BATCH_ID = #{batchId}
@@ -326,7 +338,9 @@
 		 BATCH_STUS_ID = '8',
 		 CNFM_STUS_ID = '8',
 		 UPD_USER_ID = #{userId},
-		 UPD_DT = SYSDATE
+		 UPD_DT = SYSDATE,
+         CNFM_DT = SYSDATE,
+         CNFM_USER_ID = #{userId}
 		 WHERE  BATCH_ID = #{batchId}
     </update>
 
@@ -422,6 +436,7 @@
 		BATCH_PAY_TYPE,
 		BATCH_PAY_REM,
 		BATCH_PAY_CUST_TYPE
+        ,BATCH_IS_ADV
 		) VALUES
 	    (
 		#{batchId},
@@ -439,6 +454,7 @@
 		#{paymentType},
 		#{paymentRemark},
 		#{paymentCustType}
+        , #{advance}
 		)
     </insert>
 
@@ -584,6 +600,7 @@
         CARD_NO,
         CARD_MODE_ID,
         APPROVAL_CODE
+        , PAY_CHANNEL
         )
      <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
         SELECT
@@ -637,15 +654,16 @@
         #{item.cardNo},
         #{item.cardModeId},
         #{item.approvalCode}
+        ,#{item.paymentChnnl}
         FROM DUAL
         </foreach>
     </insert>
 
     <resultMap id="confMap" type="egovMap"></resultMap>
     <update id="callCnvrBatchPay" statementType="CALLABLE" parameterType="Map">
-        {call SP_UPD_CNVR_BATCH_PAY(#{batchId},
-                                                        #{userId},
-                                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
+      {call SP_UPD_CNVR_BATCH_PAY(#{batchId},
+      #{userId},
+      #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
     </update>
 
     <update id="callBatchPayVerifyDet" statementType="CALLABLE" parameterType="Map">

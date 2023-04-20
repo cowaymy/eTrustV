@@ -210,4 +210,27 @@ public class AdvPaymentMatchController {
 
 	  }
 
+  @RequestMapping(value = "/selectAdvanceMatchList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectAdvanceMatchList(@RequestParam Map<String, Object> params,
+      ModelMap model) {
+
+    LOGGER.debug("==== selectAdvanceMatchList ===== params : {} ", params.get("batchId"));
+
+    List<EgovMap> keyInList = advPaymentMatchService.selectAdvanceMatchList(params);
+
+    return ResponseEntity.ok(keyInList);
+  }
+
+  @RequestMapping(value = "/saveAdvanceAutoMap.do", method = RequestMethod.POST)
+  public ResponseEntity<EgovMap> saveAdvanceAutoMap(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+
+    LOGGER.debug("==== saveAdvanceAutoMap ===== params : {} ", params.get("batchId"));
+
+    params.put("userId", sessionVO.getUserId());
+    EgovMap keyInList = advPaymentMatchService.saveAdvancePaymentMapping(params);
+
+    return ResponseEntity.ok(keyInList);
+
+  }
+
 }

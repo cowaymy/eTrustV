@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.payment.service.BatchPaymentService;
 import com.coway.trust.biz.payment.payment.service.BatchPaymentVO;
@@ -81,6 +83,8 @@ public class BatchPaymentController {
 				}
 			}
 		}
+
+		logger.debug("=======  selectBatchPaymentList =========== params {} "+params);
 
 		params.put("payMode", payMode);
 		params.put("confirmStatus", confirmStatusList);
@@ -239,6 +243,8 @@ public class BatchPaymentController {
 	public ResponseEntity<ReturnMessage> csvFileUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
 		ReturnMessage message = new ReturnMessage();
 
+		logger.debug(" ================ csvFileUpload ===================   "  );
+
 		String payModeId = request.getParameter("payModeId");
 		String cardModeIdEcom = batchPaymentService.selectBatchPayCardModeId("ECOM");
 		String cardModeIdPnp = batchPaymentService.selectBatchPayCardModeId("PNPRPS");
@@ -320,6 +326,13 @@ public class BatchPaymentController {
 			}else{
 				hm.put("advanceMonth", 0);
 			}
+
+			if(!vo.getPaymentChnnl().isEmpty()){
+			  hm.put("paymentChnnl", vo.getPaymentChnnl().trim());
+			} else{
+			  hm.put("paymentChnnl", "");
+			}
+
 			detailList.add(hm);
 		}
 
@@ -338,19 +351,21 @@ public class BatchPaymentController {
 		master.put("paymentRemark", "");
 		master.put("paymentCustType", 1368);
 		master.put("jomPay", request.getParameter("jomPay"));
+		master.put("advance", request.getParameter("advance"));
 
 
 
+		logger.debug(" ================ detailList ===================   " +detailList );
+		logger.debug(" ================ master ===================   " +master );
 
 		int result = batchPaymentService.saveBatchPaymentUpload(master, detailList);
-		if(result > 0){
-    		//File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
-    		//multipartFile.transferTo(file);
 
-    		message.setMessage("Batch payment item(s) successfully uploaded.<br />Batch ID : "+result);
-		}else{
-			message.setMessage("Failed to upload batch payment item(s). Please try again later.");
-		}
+    if (result > 0) {
+
+      message.setMessage("Batch payment item(s) successfully uploaded.<br />Batch ID : " + result);
+    } else {
+      message.setMessage("Failed to upload batch payment item(s). Please try again later.");
+    }
 
 
 		return ResponseEntity.ok(message);

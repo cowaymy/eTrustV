@@ -142,4 +142,15 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
     return advPaymentMatchMapper.saveJompayPaymentMapping(params);
   }
 
+  @Override
+  public List<EgovMap> selectAdvanceMatchList(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return advPaymentMatchMapper.selectAdvanceMatchList(params);
+  }
+
+  @Override
+  public EgovMap saveAdvancePaymentMapping(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return advPaymentMatchMapper.saveAdvancePaymentMapping(params);
+  }
 }

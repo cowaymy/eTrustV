@@ -11,6 +11,7 @@
 var advKeyInGridId;
 var bankStmtGridId;
 var jompayAutoMatchGridId;
+var advanceAutoMatchGridId;
 
 var selectedGridValue;
 
@@ -93,6 +94,19 @@ var jompayMatchLayout = [
      {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>" , width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
 ];
 
+var advanceMatchLayout = [
+    {dataField : "batchId",headerText : "<spring:message code='pay.head.batchId'/>",width : '5%' , editable : false},
+    {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : '10%' , editable : false},
+    {dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : '7%' , editable : false},
+    {dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : '13%' , editable : false},
+    {dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",width : '10%', editable : false},
+    {dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetails'/>",width : '10%' , editable : false},
+    {dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+    {dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.statementDate'/>",width : '10%' , editable : false},
+    {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : '13%' , editable : false},
+    {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>" , width : '10%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+   ];
 
 $(document).ready(function(){
 
@@ -108,7 +122,9 @@ $(document).ready(function(){
     advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros1);
     bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
     jompayAutoMatchGridId = GridCommon.createAUIGrid("jompay_grid_wrap", jompayMatchLayout,"",gridPros3);
-    AUIGrid.resize(jompayAutoMatchGridId,1120, 480);
+
+
+    advanceAutoMatchGridId = GridCommon.createAUIGrid("advance_grid_wrap", advanceMatchLayout,null,gridPros3);
 
 	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업
 	AUIGrid.bind(advKeyInGridId, "cellDoubleClick", function(event) {
@@ -478,6 +494,7 @@ function fn_saveDebtor(){
 
 function fn_jompayAutoMap(){
     $('#jompay_wrap').show();
+    AUIGrid.resize(jompayAutoMatchGridId,1120, 480);
 }
 
 function fn_searchJompayAutoMappingList(){
@@ -517,6 +534,44 @@ hideAutoMatchViewPopup=function(){
 	$('#jompay_wrap').hide();
 	$("#jompayForm")[0].reset();
 	AUIGrid.clearGridData(jompayAutoMatchGridId);
+
+	$('#advance_wrap').hide();
+    $("#advanceForm")[0].reset();
+    AUIGrid.clearGridData(advanceAutoMatchGridId);
+}
+
+function fn_advanceAutoMap(){
+    $('#advance_wrap').show();
+    AUIGrid.resize(advanceAutoMatchGridId);
+}
+
+function fn_saveAdvanceAutoMap(){
+    if(AUIGrid.getGridData(advanceAutoMatchGridId).length > 0){
+        Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
+            Common.ajax("POST", "/payment/saveAdvanceAutoMap.do", $("#advanceForm").serializeJSON(), function(result) {
+                Common.alert("<spring:message code='pay.alert.mappingSuccess'/>");
+            });
+        });
+    }else{
+        Common.alert("Please match with a Batch ID and Transaction Date");
+    }
+}
+
+function fn_searchAdvanceAutoMappingList(){
+
+    if(FormUtil.checkReqValue($("#batchId"))){
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Batch ID' htmlEscape='false'/>");
+        return;
+    }
+
+    if(FormUtil.checkReqValue($("#TransDateFr")) || FormUtil.checkReqValue($("#TransDateTo"))){
+        Common.alert("<spring:message code='pay.alert.inputTransactionDate'/>");
+        return;
+    }
+
+    Common.ajax("GET","/payment/selectAdvanceMatchList.do", $("#advanceForm").serializeJSON(), function(result){
+        AUIGrid.setGridData(advanceAutoMatchGridId, result);
+    });
 }
 
 function fn_advanceKeyinRaw(){
@@ -647,6 +702,7 @@ function fn_generateReport(){
                     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                     <li><p class="link_btn"><a href="javascript:fn_jompayAutoMap();"><spring:message code='pay.btn.jompayAutoMatch'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_advanceKeyinRaw();"><spring:message code='pay.btn.advanceKeyinRaw'/></a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_advanceAutoMap();"><spring:message code='pay.btn.advanceAutoMatch'/></a></p></li>
                     </c:if>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -899,3 +955,60 @@ function fn_generateReport(){
 </section>
 </section>
 </div>
+<!---------------------------------------------------------------
+    POP-UP (Advance Auto Mapping)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap size_big" id="advance_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>Advance Auto Mapping</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="javascript:fn_saveAdvanceAutoMap();"><spring:message code='pay.btn.match'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_searchAdvanceAutoMappingList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideAutoMatchViewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="advanceForm" id="advanceForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:200px" />
+                    <col style="width:*" />
+                    <col style="width:200px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='pay.head.batchId'/></th>
+                        <td><input type="text" id="batchId" name="batchId"  class="w100p"/></td>
+                        <th scope="row">Transaction Date</th>
+                        <td>
+                            <div class="date_set w100p">
+                            <p><input type="text" id="TransDateFr" name="TransDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="TransDateTo" name="TransDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                         </td>
+                    </tr>
+                    <tr>
+                      <td colspan='4'>
+                          <div id="advance_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+                      </td>
+                    </tr>
+                   </tbody>
+            </table>
+        </section>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->

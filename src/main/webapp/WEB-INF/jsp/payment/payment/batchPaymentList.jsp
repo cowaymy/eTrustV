@@ -19,6 +19,7 @@
 var myGridID;
 var batchInfoGridID;
 var batchConfGridID;
+var myUploadGridID;
 
 //Grid에서 선택된 RowID
 var selectedGridValue;
@@ -48,10 +49,24 @@ var gridPros2 = {
         }
 };
 
+var gridPros3 = {
+
+        // 편집 가능 여부 (기본값 : false)
+  //editable : false,
+  // 상태 칼럼 사용
+  showStateColumn : false,
+  // 기본 헤더 높이 지정
+  headerHeight : 35,
+
+  softRemoveRowMode:false
+
+}
+
 $(document).ready(function(){
 
 
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros3);
 
 	// Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){
@@ -61,6 +76,42 @@ $(document).ready(function(){
 	$("#payMode").multipleSelect("checkAll");
 	$("#confirmStatus").multipleSelect("setSelects", [44]);
 	$("#batchStatus").multipleSelect("setSelects", [1]);
+
+	$('#uploadfile').on('change', function(evt) {
+        if (!checkHTML5Brower()) {
+            // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
+            // 파일 내용 읽어 반환시켜 그리드에 적용.
+            commitFormSubmit();
+
+            //alert("브라우저가 HTML5 를 지원하지 않습니다.");
+        } else {
+            var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                return;
+            }
+
+            var reader = new FileReader();
+            //reader.readAsText(file); // 파일 내용 읽기
+            reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+            reader.onload = function(event) {
+                if (typeof event.target.result != "undefined") {
+                    // 그리드 CSV 데이터 적용시킴
+                    AUIGrid.setCsvGridData(myUploadGridID, event.target.result, false);
+
+                    //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(myUploadGridID,0);
+                } else {
+                    Common.alert("<spring:message code='pay.alert.noData'/>");
+                }
+            };
+
+            reader.onerror = function() {
+                Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
+            };
+        }
+
+    });
 
 });
 
@@ -91,16 +142,16 @@ var columnLayout = [
         headerText : "<spring:message code='pay.head.uploadBy'/>",
         editable : false
     }, {
-        dataField : "",
-        headerText : "<spring:message code='pay.head.uploadDate'/>",
+        dataField : "cnfmDt",
+        headerText : "<spring:message code='pay.head.confirmDate'/>/Deactivate Date",
         editable : false
     }, {
         dataField : "c1",
-        headerText : "<spring:message code='pay.head.confirmBy'/>",
+        headerText : "<spring:message code='pay.head.confirmBy'/>/Deactivated By",
         editable : false
     }, {
-        dataField : "",
-        headerText : "<spring:message code='pay.head.uploadDate'/>",
+        dataField : "cnvrDt",
+        headerText : "<spring:message code='pay.head.convertDate'/>",
         editable : false
     },{
         dataField : "c2",
@@ -116,7 +167,37 @@ var columnLayout = [
         headerText : "",
         editable : false,
         visible : false
+    },{
+        dataField : "batchIsAdv",
+        headerText : "<spring:message code='pay.head.advanceBatch'/>",
+        editable : false
     }];
+
+var uploadGridLayout = [
+                        {dataField : "0", headerText : "<spring:message code='pay.head.orderNo'/>", editable : true},
+                        {dataField : "1", headerText : "<spring:message code='pay.head.TRNo'/>", editable : true},
+                        {dataField : "2", headerText : "<spring:message code='pay.head.refNo'/>", editable : true},
+                        {dataField : "3", headerText : "<spring:message code='pay.head.Amount'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+                        {dataField : "4", headerText : "<spring:message code='pay.head.bankAcc'/>", editable : true},
+                        {dataField : "5", headerText : "<spring:message code='pay.head.chqNo'/>", editable : true},
+                        {dataField : "6", headerText : "<spring:message code='pay.head.issueBank'/>", editable : true},
+                        {dataField : "7", headerText : "<spring:message code='pay.head.runningNo'/>", editable : true},
+                        {dataField : "8", headerText : "<spring:message code='pay.head.eftNo'/>", editable : true},
+                        {dataField : "9", headerText : "<spring:message code='pay.head.refDateMonth'/>", editable : true},
+                        {dataField : "10", headerText : "<spring:message code='pay.head.refDateDay'/>", editable : true},
+                        {dataField : "11", headerText : "<spring:message code='pay.head.refDateYear'/>", editable : true},
+                        {dataField : "12", headerText : "<spring:message code='pay.head.bankChargeAmt'/>", editable : true},
+                        {dataField : "13", headerText : "<spring:message code='pay.head.bankChargeAcc'/>", editable : true},
+                        {dataField : "14", headerText : "<spring:message code='pay.head.trDate'/>", editable : true},
+                        {dataField : "15", headerText : "<spring:message code='sal.text.collectorCode'/>", editable : true},
+                        {dataField : "16", headerText : "<spring:message code='pay.head.payType'/>", editable : true},
+                        {dataField : "17", headerText : "<spring:message code='pay.head.advanceMonth'/>", editable : true},
+                        {dataField : "18", headerText : "<spring:message code='pay.head.remark'/>", editable : true},
+                        {dataField : "19", headerText : "<spring:message code='pay.head.crc.cardNo'/>", editable : true},
+                        {dataField : "20", headerText : "<spring:message code='pay.head.approvalCode'/>", editable : true},
+                        {dataField : "21", headerText : "<spring:message code='pay.head.cardMode'/>", editable : true},
+                        {dataField : "22", headerText : "<spring:message code='sal.title.text.paymentChnnl'/>", editable : true}
+                        ];
 
 
 //AUIGrid 칼럼 설정
@@ -184,6 +265,10 @@ var batchInfoLayout = [
     },{
         dataField : "userBcAcc",
         headerText : "<spring:message code='pay.head.bankChargeAcc'/>",
+        editable : false
+    },{
+        dataField : "payChannel",
+        headerText : "<spring:message code='sal.title.text.paymentChnnl'/>",
         editable : false
     }];
 
@@ -286,6 +371,11 @@ var batchInfoLayout = [
             headerText : "Approval Code",
             editable : false,
             width : 120
+        },{
+            dataField : "payChannel",
+            headerText : "<spring:message code='sal.title.text.paymentChnnl'/>",
+            editable : false,
+            width : 120
         }];
 
 
@@ -321,6 +411,7 @@ var batchInfoLayout = [
                 $('#txtUploadBy').text(result.batchPaymentView.userName);
                 $('#txtUploadAt').text(result.batchPaymentView.crtDt);
                 $('#txtConfirmBy').text(result.batchPaymentView.c1);
+                $('#txtBatchIsAdv').text(result.batchPaymentView.batchIsAdv);
 
                 if(confAtArray[2].substr(0,4) > 1900){
                 	$('#txtConfirmAt').text(result.batchPaymentView.cnfmDt);
@@ -385,7 +476,7 @@ var batchInfoLayout = [
                 AUIGrid.destroy(batchConfGridID);
                 batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros2);
                 AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
-                AUIGrid.resize(batchConfGridID,942, 280);
+                AUIGrid.resize(batchConfGridID,980, 280);
             }
     	});
     }
@@ -423,6 +514,7 @@ var batchInfoLayout = [
                     $('#txtUploadAt_conf').text(result.batchPaymentView.crtDt);
                     $('#txtConfirmBy_conf').text(result.batchPaymentView.c1);
                     $('#txtConvertBy_conf').text(result.batchPaymentView.c2);
+                    $('#txtBatchIsAdv_conf').text(result.batchPaymentView.batchIsAdv);
 
 
                     if(confAtArray[2].substr(0,4) > 1900){
@@ -495,7 +587,7 @@ var batchInfoLayout = [
     }
 
     function fn_deactivateBatch(){
-        Common.confirm("<spring:message code='pay.alert.wantToConfirmPayBatch'/>",function (){
+        Common.confirm("<spring:message code='pay.alert.deactivatePayBatch'/>",function (){
         	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             Common.ajax("GET","/payment/saveDeactivateBatch.do", {"batchId" : batchId}, function(result){
                 console.log(result);
@@ -508,17 +600,34 @@ var batchInfoLayout = [
 
     function fn_uploadPopup(){
     	$('#upload_popup_wrap').show();
+    	AUIGrid.resize(myUploadGridID);
     }
 
     function fn_uploadFile(){
 
         var formData = new FormData();
         var payModeId = $("#paymentMode option:selected").val();
+        var confirmMsg;
 
-        if(payModeId == ""){
-        	Common.alert("<spring:message code='pay.alert.selectPayMode'/>");
-        	return;
+        if(FormUtil.checkReqValue($("#paymentMode")) ){
+            Common.alert("<spring:message code='pay.alert.selectPayMode'/>");
+            return;
         }
+
+        if($("#advance").is(":checked")) {
+
+        	if(fn_validation()){
+        		formData.append("advance","1");
+        		confirmMsg = "<spring:message code='pay.alert.uploadAdvBatachPayment'/>";
+
+        	}
+        }
+        else {
+
+        	formData.append("advance","");
+        	confirmMsg = "<spring:message code='pay.alert.uploadBatachPayment'/>";
+        }
+
 
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("payModeId", payModeId);
@@ -526,11 +635,115 @@ var batchInfoLayout = [
         if($("#jomPay").is(":checked")) formData.append("jomPay","1");
         else  formData.append("jomPay","");
 
-        Common.ajaxFile("/payment/csvFileUpload.do", formData, function(result){
-            $('#paymentMode option[value=""]').attr('selected', 'selected');
+        Common.confirm(confirmMsg,function (){
+        	  Common.ajaxFile("/payment/csvFileUpload.do", formData, function(result){
+                  $('#paymentMode option[value=""]').attr('selected', 'selected');
 
-            Common.alert(result.message);
+                  //Common.alert(result.message);
+                  Common.alert(result.message, function (){
+                      hideViewPopup('#upload_wrap');
+                  });
+              });
+           /*  Common.ajax("POST", "/payment/csvAdvanceFileUpload.do", data,
+                    function(result) {
+                        var returnMsg = "<spring:message code='pay.alert.AdvBatchPaySuccess'/>";
+                        returnMsg +=  "<br><b> Batch ID : " + result.fBankJrnlId + "</b>";
+
+                        Common.alert(returnMsg, function (){
+                            hideViewPopup('#upload_wrap');
+                        });
+
+                    },
+                    function(jqXHR, textStatus, errorThrown) {
+                        try {
+                            console.log("status : " + jqXHR.status);
+                            console.log("code : " + jqXHR.responseJSON.code);
+                            console.log("message : " + jqXHR.responseJSON.message);
+                            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                        } catch (e) {
+                            console.log(e);
+                        }
+
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    }); */
         });
+    }
+
+    function fn_validation(){
+
+    	var data = GridCommon.getGridData(myUploadGridID);
+        //data.form = $("#uploadForm").serializeJSON();
+
+        var length = data.all.length;
+
+        if (length < 1) {
+            Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
+            return false;
+        }
+
+        if (length > 0) {
+            for (var i = 0; i < length - 1; i++) {
+                console.log("AUIGrid.getCellValue(myUploadGridID, i, 0 "+fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "0"))));
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "0")))) {
+                    var text = '<spring:message code="pay.head.orderNo"/>';
+                    Common.alert(text+ " is mandatory.");
+                    return false;
+                }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "2")))) {
+                     var text = '<spring:message code="pay.head.refNo"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "3")))) {
+                     var text = '<spring:message code="pay.head.Amount"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "4")))) {
+                     var text = '<spring:message code="pay.head.bankAcc"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "9")))) {
+                     var text = '<spring:message code="pay.head.refDateMonth"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "10")))) {
+                     var text = '<spring:message code="pay.head.refDateDay"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "11")))) {
+                     var text = '<spring:message code="pay.head.refDateYear"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "16")))) {
+                     var text = '<spring:message code="pay.head.payType"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "18")))) {
+                     var text = '<spring:message code="pay.head.remark"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+                 if (fn_checkMandatory((AUIGrid.getCellValue(myUploadGridID, i, "22")))) {
+                     var text = '<spring:message code="sal.title.text.paymentChnnl"/>';
+                     Common.alert(text+ " is mandatory.");
+                     return false;
+                 }
+            }
+        }
+        return true;
+    }
+
+    function fn_checkMandatory(objValue){
+
+        if (objValue == null || objValue == "" || objValue == "undefined") {
+            return true;
+        }
     }
 
     function onlyNumber(obj) {
@@ -558,6 +771,7 @@ var batchInfoLayout = [
             $('#totalItem_conf').text("");
             $('#totalValid_conf').text("");
             $('#totalInvalid_conf').text("");
+            $('#txtBatchIsAdv_conf').text("");
 
             $("#paymentInfo_conf").trigger("click");
 
@@ -577,6 +791,7 @@ var batchInfoLayout = [
             $('#totalItem').text("");
             $('#totalValid').text("");
             $('#totalInvalid').text("");
+            $('#txtBatchIsAdv').text("");
 
             $("#panymentInfo").trigger("click");
     	}
@@ -589,6 +804,80 @@ var batchInfoLayout = [
         $("#confirmStatus").multipleSelect("setSelects", [44]);
         $("#batchStatus").multipleSelect("setSelects", [1]);
     }
+
+  //HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
+    function checkHTML5Brower() {
+        var isCompatible = false;
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            isCompatible = true;
+        }
+
+        return isCompatible;
+    };
+
+    //HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
+    //서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
+    //즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
+    function commitFormSubmit() {
+
+        AUIGrid.showAjaxLoader(myUploadGridID);
+
+        // Submit 을 AJax 로 보내고 받음.
+        // ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
+        // 링크 : http://malsup.com/jquery/form/
+
+        $('#uploadForm').ajaxSubmit({
+            type : "json",
+            success : function(responseText, statusText) {
+                if(responseText != "error") {
+                    var csvText = responseText;
+
+                    // 기본 개행은 \r\n 으로 구분합니다.
+                    // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
+                    // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
+                    // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
+                    csvText = csvText.replace(/\r?\n/g, "\r\n")
+
+                    // 그리드 CSV 데이터 적용시킴
+                    AUIGrid.setCsvGridData(myUploadGridID, csvText);
+                    AUIGrid.removeAjaxLoader(myUploadGridID);
+
+                    //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                    AUIGrid.removeRow(myUploadGridID,0);
+                }
+            },
+            error : function(e) {
+                Common.alert("ajaxSubmit Error : " + e);
+            }
+        });
+
+    }
+
+    function uploadClear(){
+        //화면내 모든 form 객체 초기화
+        $("#uploadForm")[0].reset();
+
+        //그리드 초기화
+        AUIGrid.clearGridData(myUploadGridID);
+    }
+
+    hideViewPopup=function(val){
+        $(val).hide();
+
+        //업로드창이 닫히면 upload 화면도 reset한다.
+        if(val == '#upload_wrap'){
+            fn_uploadClear();
+        }
+    }
+
+    function fn_uploadClear(){
+        //화면내 모든 form 객체 초기화
+        $("#uploadForm")[0].reset();
+
+        //그리드 초기화
+        AUIGrid.clearGridData(myUploadGridID);
+    }
+
 </script>
 <!-- content start -->
 <section id="content">
@@ -661,8 +950,12 @@ var batchInfoLayout = [
 						    </select>
 					    </td>
 					    <th scope="row">Creator</th>
-					    <td><input type="text" id="creator" name="creator" title="" placeholder="OR No." class="w100p" /></td>
+					    <td><input type="text" id="creator" name="creator" title="" placeholder="Create User Name" class="w100p" /></td>
 					</tr>
+                  <tr>
+                  <th scope="row">Advance</th>
+                    <td colspan="5"><input type='checkbox' id='advanceSearch' name='advanceSearch' value='1'></td>
+                  </tr>
 				</tbody>
 			</table>
 			<!-- table end -->
@@ -694,7 +987,7 @@ var batchInfoLayout = [
     <!-- search_result end -->
 </section>
 <!-- content end -->
-<div id="view_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+<div id="view_popup_wrap" class="popup_wrap size_big" style="display:none;"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Batch Payment View</h1>
 		<ul class="right_opt">
@@ -747,12 +1040,16 @@ var batchInfoLayout = [
 						    </td>
 						</tr>
 						<tr>
+                            <th scope="row">Advance Batch</th>
+                            <td>
+                                <span id="txtBatchIsAdv"></span>
+                            </td>
 						    <th scope="row">Confirm By</th>
 						    <td>
 						        <span id="txtConfirmBy"></span>
 						    </td>
 						    <th scope="row">Confirm At</th>
-						    <td colspan="3">
+						    <td >
 						        <span id="txtConfirmAt"></span>
 						    </td>
 						</tr>
@@ -865,12 +1162,16 @@ var batchInfoLayout = [
 				        </td>
 				    </tr>
 				    <tr>
-				        <th scope="row">Confirm By</th>
+				        <th scope="row">Advance Batch</th>
+                           <td>
+                               <span id="txtBatchIsAdv_conf"></span>
+                           </td>
+                        <th scope="row">Confirm By</th>
 				        <td>
 				            <span id="txtConfirmBy_conf"></span>
 				        </td>
 				        <th scope="row">Confirm At</th>
-				        <td colspan="3">
+				        <td >
 				            <span id="txtConfirmAt_conf"></span>
 				        </td>
 				    </tr>
@@ -937,13 +1238,13 @@ var batchInfoLayout = [
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
-		<form action="#" method="post">
+		<form action="#" method="post" id="uploadForm">
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
-				    <col style="width:130px" />
+				    <col style="width:150px" />
 				    <col style="width:*" />
-				    <col style="width:130px" />
+				    <col style="width:150px" />
                     <col style="width:*" />
 				</colgroup>
 				<tbody>
@@ -960,25 +1261,38 @@ var batchInfoLayout = [
 					    </td>
 
 					       <th scope="row">JomPay</th>
-	                       <td>
+	                       <td >
 	                            <input type='checkbox' id ='jomPay' name='jomPay' value='1'>
 	                       </td>
+
                     </tr>
 					<tr>
 					    <th scope="row">File</th>
-					    <td colspan='3'>
+					    <td >
 					    <div class="auto_file"><!-- auto_file start -->
 					        <input type="file" title="file add" id="uploadfile" name="uploadfile" />
 					    </div><!-- auto_file end -->
 					    </td>
-					</tr>
+            <th scope="row">Advance</th>
+            <td><input type='checkbox' id='advance' name='advance' value='1'></td>
+          </tr>
 				</tbody>
 			</table><!-- table end -->
 		</form>
 		<ul class="center_btns mt20">
+            <li><p class="btn_blue2"><a href="javascript:uploadClear();"><spring:message code='sys.btn.clear'/></a></p></li>
 		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
             <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/BatchPaymentFormat.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
 		</ul>
+
+     <!-- search_result start -->
+        <section class="search_result">
+            <!-- grid_wrap start -->
+            <article id="grid_upload_wrap" class="grid_wrap"></article>
+            <!-- grid_wrap end -->
+        </section>
+        <!-- search_result end -->
+
 	</section>
 	<!-- pop_body end -->
 </div>
