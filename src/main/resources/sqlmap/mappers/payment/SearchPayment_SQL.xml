@@ -1927,7 +1927,7 @@
        <if test="cmbBsMonth != '' ">
            AND A.BS_MONTH = #{cmbBsMonth}
        </if>
-       <if test="renMem != '' ">
+       <if test="renMem != '' and renMem != null" >
            AND A.REN_MEM LIKE '%' || #{renMem} || '%'
        </if>
        <if test="memType != '' ">
