@@ -1359,6 +1359,7 @@
                      NVL (D.SERIAL_CHK, 'N') AS SERIAL_CHK,
                      NVL (FN_GET_COMMCD (10, C.APP_TYPE_ID), '') AS app_Type,
                      NVL (R.SO_REQ_REM, '') AS instruction,
+                     /*NVL (K.INSTCT, '') AS instruction,*/
                      NVL (TO_CHAR (I.INSTALL_DT, 'YYYYMMDD'), '') AS installation_Date,
                      NVL (TO_CHAR (J.MEM_CODE), '') AS installed_By,
                      '' AS prev_Outstanding,
@@ -1507,6 +1508,7 @@
          , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
          , LATITUDE AS LATITUDE
          , LONGITUDE AS LONGITUDE
+         , TO_CHAR(SALES_PROMT) AS sales_Promotion
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
