@@ -1390,7 +1390,8 @@
                      '' AS last_Payment_Date,
                      NVL (TO_CHAR (I.NEXT_CALL_DT, 'YYYYMMDD'), '') AS next_Call_Date,
                      NVL (TO_CHAR (I.NEXT_CALL_DT, 'HHMM'), '') AS next_Call_Time,
-                     (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = C.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO
+                     (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = C.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
+                     Q.PROMO_DESC AS SALES_PROMOTION
               FROM LOG0038D A
               INNER JOIN ORG0001D B ON A.CT_ID = B.MEM_ID
               INNER JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -1420,6 +1421,7 @@
               LEFT OUTER JOIN SAL0027D N ON K.CNT_ID = N.CUST_CNTC_ID
               LEFT OUTER JOIN SAL0023D O ON K.ADD_ID = O.CUST_ADD_ID
               LEFT OUTER JOIN SYS0064M P ON O.AREA_ID = P.AREA_ID AND P.STATUS_ID = 1
+              LEFT JOIN SAL0017D Q ON C.PROMO_ID = Q.PROMO_ID
               WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                 AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
                 AND B.MEM_CODE = #{userId}
