@@ -38,30 +38,30 @@ var branchDs = [];
 
   $(document).ready(
       function() {
-   	  if('${SESSION_INFO.isAC}' == 1){
-   	         if("${SESSION_INFO.memberLevel}" =="1"){
-   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
-   	         }else if("${SESSION_INFO.memberLevel}" =="2"){
-   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
-   	             $("#grpCode").val('${SESSION_INFO.groupCode}');
-   	         }else if("${SESSION_INFO.memberLevel}" =="3"){
-   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
-   	             $("#grpCode").val('${SESSION_INFO.groupCode}');
-   	             $("#deptCode").val('${SESSION_INFO.deptCode}');
-   	         }else if("${SESSION_INFO.memberLevel}" =="4"){
-   	             $("#orgCode").val('${SESSION_INFO.orgCode}');
-   	             $("#grpCode").val('${SESSION_INFO.groupCode}');
-   	             $("#deptCode").val('${SESSION_INFO.deptCode}');
-   	             //$("#memCode").val("${memCode}");
-   	         }
-   	     }
+      if('${SESSION_INFO.isAC}' == 1){
+             if("${SESSION_INFO.memberLevel}" =="1"){
+                 $("#orgCode").val('${SESSION_INFO.orgCode}');
+             }else if("${SESSION_INFO.memberLevel}" =="2"){
+                 $("#orgCode").val('${SESSION_INFO.orgCode}');
+                 $("#grpCode").val('${SESSION_INFO.groupCode}');
+             }else if("${SESSION_INFO.memberLevel}" =="3"){
+                 $("#orgCode").val('${SESSION_INFO.orgCode}');
+                 $("#grpCode").val('${SESSION_INFO.groupCode}');
+                 $("#deptCode").val('${SESSION_INFO.deptCode}');
+             }else if("${SESSION_INFO.memberLevel}" =="4"){
+                 $("#orgCode").val('${SESSION_INFO.orgCode}');
+                 $("#grpCode").val('${SESSION_INFO.groupCode}');
+                 $("#deptCode").val('${SESSION_INFO.deptCode}');
+                 //$("#memCode").val("${memCode}");
+             }
+         }
 
         asManagementGrid();
         //doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', ''); // DSC BRANCH
         doDefCombo(branchDs, '', 'cmbbranchId', 'S', '');   // Home Care Branch : 5743
 
         $("#cmbbranchId").change(function() {
-        	doGetCombo('/homecare/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
+            doGetCombo('/homecare/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', '');
         }); // INCHARGE CT
 
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun : 'HC'}, '', 'asProduct', 'M', 'fn_setOptGrpClass');//product 생성 - Only Homecare
@@ -94,7 +94,7 @@ var branchDs = [];
   }
 
   function fn_multiCombo() {
-	  $('#asProduct').change(function(event) {
+      $('#asProduct').change(function(event) {
           event.preventDefault();
           fn_disableGroupOption();
           $('#asProduct').next().find('.placeholder').text('');
@@ -107,7 +107,7 @@ var branchDs = [];
 
   /* By KV - AS Mobile Failure Listing*/
   function fn_ASMobileFailureListing(){
-	  var date = new Date();
+      var date = new Date();
       var month = date.getMonth() + 1;
       var day = date.getDate();
 
@@ -371,7 +371,7 @@ var branchDs = [];
   }
 
   function fn_newASPop() { // CREATE AS - 1
-	  Common.popupDiv("/homecare/services/as/hcASReceiveEntryPop.do", {in_ordNo : ""}, null, true, '_NewEntryPopDiv1', function(){$(".popup_wrap").css("width", '600px');});
+      Common.popupDiv("/homecare/services/as/hcASReceiveEntryPop.do", {in_ordNo : ""}, null, true, '_NewEntryPopDiv1', function(){$(".popup_wrap").css("width", '600px');});
   }
 
   function fn_viewASResultPop() { // VIEW RESULT
@@ -962,7 +962,6 @@ var branchDs = [];
     var AS_NO = selectedItems[0].item.asNo;
     var asStusId = selectedItems[0].item.code1;
     var asrId = selectedItems[0].item.asResultId;
-    var asrNo = selectedItems[0].item.c3;
     var asTotalAmt = selectedItems[0].item.c5;
     var date = new Date();
     var month = date.getMonth() + 1;
@@ -978,9 +977,8 @@ var branchDs = [];
       if (asTotalAmt <= 0) {
         Common.alert("<spring:message code='service.msg.asInvNoChr' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
-        $("#reportForm #V_SERVICENO").val(asrNo);
-        $("#reportForm #V_INVOICETYPE").val(118)
-        $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
+        $("#reportForm #V_RESULTID").val(asrId);
+        $("#reportForm #reportFileName").val('/homecare/hcASInvoice.rpt');
         $("#reportForm #viewType").val("PDF");
         $("#reportForm #reportDownFileName").val("ASInvoice_" + day + month + date.getFullYear());
 
@@ -1007,27 +1005,27 @@ var branchDs = [];
   }
 
   $(function(){
-	  $('#btnClear').click(function() {
+      $('#btnClear').click(function() {
           $('#ASForm').clearForm();
       });
   });
 
   $.fn.clearForm = function() {
-	    return this.each(function() {
-	        var type = this.type, tag = this.tagName.toLowerCase();
-	        if (tag === 'form'){
-	            return $(':input',this).clearForm();
-	        }
-  	        switch(type){
-  	            case 'select': this.selectedIndex = 0;
-  	                               break;
-      	        case 'checkbox':
-      	        case 'radio': this.checked = false;
-      	                          break;
-      	        default: this.value = '';
-      	    }
-	    });
-	};
+        return this.each(function() {
+            var type = this.type, tag = this.tagName.toLowerCase();
+            if (tag === 'form'){
+                return $(':input',this).clearForm();
+            }
+            switch(type){
+                case 'select': this.selectedIndex = 0;
+                                   break;
+                case 'checkbox':
+                case 'radio': this.checked = false;
+                                  break;
+                default: this.value = '';
+            }
+        });
+    };
 </script>
 <section id="content">
  <!-- content start -->
@@ -1203,21 +1201,21 @@ var branchDs = [];
       <th scope="row"><spring:message code='service.grid.registerDt'/></th>
       <td>
         <div class="date_set w100p">
-	        <p>
-	        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtFrm" name="registerDtFrm" />
-	        </p> <span><spring:message code='pay.text.to'/></span> <p>
-	        <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtTo" name="registerDtTo" />
-	        </p>
+            <p>
+            <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtFrm" name="registerDtFrm" />
+            </p> <span><spring:message code='pay.text.to'/></span> <p>
+            <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="registerDtTo" name="registerDtTo" />
+            </p>
         </div>
       </td>
       <th scope="row"><spring:message code='service.grid.SettleDate'/></th>
       <td>
        <div class="date_set w100p">
-	        <p>
-	        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" />
-	        </p><span><spring:message code='pay.text.to'/></span><p>
-	        <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" />
-	        </p>
+            <p>
+            <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" />
+            </p><span><spring:message code='pay.text.to'/></span><p>
+            <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" />
+            </p>
        </div>
       </td>
       <th scope="row">Bundle Number</th>
@@ -1305,8 +1303,7 @@ var branchDs = [];
 
   </form>
   <form action="#" id="reportForm" method="post">
-   <input type="hidden" id="V_SERVICENO" name="V_SERVICENO" />
-   <input type="hidden" id="V_INVOICETYPE" name="V_INVOICETYPE"/>
+   <input type="hidden" id="V_RESULTID" name="V_RESULTID" />
    <input type="hidden" id="reportFileName" name="reportFileName" />
    <input type="hidden" id="viewType" name="viewType" />
    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
