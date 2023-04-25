@@ -100,6 +100,9 @@ public class ProductRetrunJobDto {
   @ApiModelProperty(value = "")
   private String instruction;
 
+  @ApiModelProperty(value = "")
+  private String instructionIns;
+
   @ApiModelProperty(value = "YYYYMMDD")
   private String installationDate;
 
@@ -847,6 +850,14 @@ public class ProductRetrunJobDto {
 
   public void setSalesPromotion(String salesPromotion) {
     this.salesPromotion = salesPromotion;
+  }
+
+  public String getInstructionIns() {
+    return instructionIns;
+  }
+
+  public void setInstructionIns(String instructionIns) {
+    this.instructionIns = instructionIns;
   }
 
   public static ProductRetrunJobDto create(EgovMap egvoMap) {
