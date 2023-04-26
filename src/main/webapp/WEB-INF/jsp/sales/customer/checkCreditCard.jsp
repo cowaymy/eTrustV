@@ -22,7 +22,7 @@
                 style: 'left_style'
             }, {
                 dataField : "custCrcOwner",
-                headerText : "Customer Name",
+                headerText : "Name on Card",
                 editable : false,
                 style: 'left_style'
             }, {
