@@ -46,9 +46,17 @@ function createAUIGrid(ind) {
             unCheckValue : "Inactive",
             // 체크박스 disabled 함수
             disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-                if(item.appvPrcssStusCode == "A" || item.appvPrcssStusCode == "J")
-                    return true; // true 반환하면 disabled 시킴
-                return false;
+                if (item.appvPrcssStusCode == "A" || item.appvPrcssStusCode == "J"){
+                	return true;
+                }
+                else {
+                	if(item.appvLineSeq <= item.appvLinePrcssCnt){
+                		return true;
+                	}
+                	else{
+                        return false;
+                	}
+                }
             }
         }
     },{

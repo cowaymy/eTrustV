@@ -736,6 +736,7 @@ SELECT   T.CLM_NO
 /* webInvoiceMapper.selectApproveList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T.APPV_PRCSS_NO
+	  ,T.APPV_LINE_PRCSS_CNT
       ,T.APPV_LINE_SEQ
       ,T.CLM_NO
       ,T.REQST_USER_ID
@@ -760,6 +761,7 @@ SELECT T.APPV_PRCSS_NO
       ,T.CLAM_UN
       ,T.APPV_PRCSS_DT
   FROM (SELECT   T1.APPV_PRCSS_NO
+  				,T1.APPV_LINE_PRCSS_CNT
                 ,T2.APPV_LINE_SEQ
                 ,T1.APPV_REQ_KEY_NO AS CLM_NO
                 ,T1.REQST_USER_ID
@@ -834,7 +836,6 @@ SELECT T.APPV_PRCSS_NO
                         SELECT 'P0594' FROM DUAL
                         </if>
                     )
-                    AND  T2.APPV_LINE_SEQ > T1.APPV_LINE_PRCSS_CNT
                 </if>
         <!-- GROUP BY T1.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
