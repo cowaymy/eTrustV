@@ -834,9 +834,8 @@ SELECT T.APPV_PRCSS_NO
                         SELECT 'P0594' FROM DUAL
                         </if>
                     )
+                    AND  T2.APPV_LINE_SEQ > T1.APPV_LINE_PRCSS_CNT
                 </if>
-
-                 ORDER BY APPV_PRCSS_DT DESC
         <!-- GROUP BY T1.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
                 ,T1.APPV_REQ_KEY_NO
@@ -913,7 +912,6 @@ SELECT T.APPV_PRCSS_NO
         <if test="(appStartDt != null and appStartDt != '') or (appEndDt != null and appEndDt != '')">
             AND T.APPV_PRCSS_STUS_CODE = 'A'
         </if>
-        AND ROWNUM = 1
         ORDER BY T.APPV_PRCSS_NO, T.REQST_DT
 </select>
 
