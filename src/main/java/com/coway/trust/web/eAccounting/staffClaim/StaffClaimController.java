@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -337,16 +338,42 @@ public class StaffClaimController {
 		EgovMap info = staffClaimService.selectStaffClaimInfoForAppv(params);
 		List<EgovMap> itemGrp = staffClaimService.selectStaffClaimItemGrpForAppv(params);
 
+		List<String> atchFileGrpIds = new ArrayList<String>();
+
+		if(itemGrp.size() > 0){
+			List<String> atchFileGrpIdsTemp = new ArrayList<String>();
+			for(int i = 0; i < itemGrp.size(); i++){
+				EgovMap itemInfo = itemGrp.get(i);
+				if(itemInfo.get("atchFileGrpId") != null){
+					String atchFileGrpId = String.valueOf(itemInfo.get("atchFileGrpId"));
+					atchFileGrpIdsTemp.add(atchFileGrpId);
+				}
+			}
+
+			if(atchFileGrpIdsTemp.size() >0){
+				atchFileGrpIds = atchFileGrpIdsTemp.stream().distinct().collect(Collectors.toList());
+			}
+		}
+
+
 		info.put("itemGrp", itemGrp);
 
-		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
-		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
-		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
-		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
-		if(atchFileGrpId != "null") {
-			List<EgovMap> attachList = staffClaimService.selectAttachList(atchFileGrpId);
+		if(atchFileGrpIds.size() > 0) {
+			List<EgovMap> attachList = new ArrayList();
+			for(int i = 0; i < atchFileGrpIds.size(); i++){
+				attachList.addAll(staffClaimService.selectAttachList(atchFileGrpIds.get(i)));
+			}
 			info.put("attachList", attachList);
 		}
+
+//		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
+//		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+//		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+//		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+//		if(atchFileGrpId != "null") {
+//			List<EgovMap> attachList = staffClaimService.selectAttachList(atchFileGrpId);
+//			info.put("attachList", attachList);
+//		}
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
