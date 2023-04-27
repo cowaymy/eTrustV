@@ -1697,7 +1697,7 @@
                         // availableAmtCp - End
                     }
                     else{
-                        console.log("insufficient: " + AUIGrid.getValue(settlementGridId, event.rowIndex, "insufficient"));
+                        console.log("insufficient: " + AUIGrid.getCellValue(settlementGridId, event.rowIndex, "insufficient"));
                         AUIGrid.setCellValue(settlementGridId, event.rowIndex, "insufficient", "N");
                     }
                 });
