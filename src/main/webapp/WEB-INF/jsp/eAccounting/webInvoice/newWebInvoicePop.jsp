@@ -232,10 +232,17 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_approveLinePop() {
+
+	var length = AUIGrid.getGridData(newGridID).length;
 	var checkResult = fn_checkEmpty();
 
     if(!checkResult){
         return false;
+    }
+
+    if(length == 0){
+    	Common.alert("Unable to submit empty record");
+    	return false;
     }
 
     var data = {
