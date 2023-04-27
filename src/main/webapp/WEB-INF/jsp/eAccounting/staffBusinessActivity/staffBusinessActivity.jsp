@@ -1359,7 +1359,7 @@ var myGridPros = {
                      checkRowFlg = false;
                      return checkRowFlg;
                  }
-               /*   var cmpBudgetCode = AUIGrid.getCellValue(newGridID, i, "budgetCode");
+               var cmpBudgetCode = AUIGrid.getCellValue(newGridID, i, "budgetCode");
                  var data = {
                          costCentr : $("#refCostCenterCode").val(),
                          budgetCode : cmpBudgetCode
@@ -1371,7 +1371,7 @@ var myGridPros = {
                          checkRowFlg = false;
                          return checkRowFlg;
                      }
-                 }); *///HIDE TEMP
+                 })
              }
              return checkRowFlg;
          }

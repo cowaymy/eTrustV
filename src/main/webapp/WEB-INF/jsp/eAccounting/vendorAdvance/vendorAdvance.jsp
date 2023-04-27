@@ -1187,7 +1187,7 @@
     				Common.alert("Please choose a budget code.");
     				checkRowFlg = false;
     				return checkRowFlg;
-    			 }/* else{
+    			 }else{
     				var cmpBudgetCode = AUIGrid.getCellValue(settlementGridId, i, "budgetCode");
     				var data = {
     		                costCentr : $("#settlementCostCenter").val(),
@@ -1202,7 +1202,7 @@
     		            }
     		        });
     				return checkRowFlg;
-    			} */ //HIDE TEMP FOR HL
+    			}
     			if(FormUtil.isEmpty(AUIGrid.getCellValue(settlementGridId, i, "glAccCode"))){
     				Common.alert("Please choose a GL code.");
     				checkRowFlg = false;
