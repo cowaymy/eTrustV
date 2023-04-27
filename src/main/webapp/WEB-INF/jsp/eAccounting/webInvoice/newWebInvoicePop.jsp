@@ -280,9 +280,16 @@ function fn_approveLinePop() {
 }
 
 function fn_tempSave() {
+
+	var length = AUIGrid.getGridData(newGridID).length;
 	var checkResult = fn_checkEmpty();
 
     if(!checkResult){
+        return false;
+    }
+
+    if(length == 0){
+        Common.alert("Unable to submit empty record");
         return false;
     }
 
