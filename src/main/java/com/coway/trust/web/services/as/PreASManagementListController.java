@@ -129,7 +129,7 @@ public class PreASManagementListController {
 
   @RequestMapping(value = "/updPreASOrder.do")
 	public String updPreASOrder(@RequestParam Map<String, Object> params, ModelMap model) {
-	  	if("".equals(params.get("orderNum"))  && params.get("orderNum")==null){
+	  	if("".equals(params.get("orderNum"))  || params.get("orderNum")==null){
 	  		params.put("orderNum", params.get("preAsSalesOrderNo"));
 	  	}
 
