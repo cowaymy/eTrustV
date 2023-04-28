@@ -1508,7 +1508,7 @@
          , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
          , LATITUDE AS LATITUDE
          , LONGITUDE AS LONGITUDE
-         , TO_CHAR(SALES_PROMT) AS sales_Promotion
+     <!--   , TO_CHAR(SALES_PROMT) AS sales_Promotion -->
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
