@@ -85,19 +85,30 @@
 	        },
 			labelFunction: function(rowIndex, columnIndex, value, headerText, item, dataField){
 			    var html='';
-			    console.log(item.ordDt);
 			    let str = item.combineDt;
 			    let res = str.replace(/,/g,"<br />");
 			    html += '<p > '+res+'</p>';
-
-			    console.log(html);
 			    return html;
 			}
 		}, {
 			headerText : "<spring:message code='sales.insAddr'/>",
 			dataField : "insAddr",
 			editable : false,
-			width : 200
+			width : 200,
+			renderer:  {type : "TemplateRenderer",
+                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+            },
+            labelFunction: function(rowIndex, columnIndex, value, headerText, item, dataField){
+                var html='';
+                console.log(item.insArea);
+                console.log(item.insAddr);
+                if(item.memType==4){
+                	html = item.insAddr;
+                }else{
+                	html = item.insArea;
+                }
+                return html;
+            }
 		}];
 
 		// 그리드 속성 설정
@@ -325,7 +336,7 @@
 			</table>
 			<!-- table end -->
 
-
+            <input type="hidden" id="memType" name="memType" value="${memType}" />
 		</form>
 	</section>
 	<!-- search_table end -->
