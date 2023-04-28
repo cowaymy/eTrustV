@@ -27,6 +27,7 @@
         , D1.RENT_INST_NO
         , D1.MTH_RENT_AMT
         , D1.SALES_ORD_ID
+        , D1.INS_AREA
             FROM (
 
             WITH L38 AS
@@ -76,6 +77,7 @@
                END) AS RENT_INST_NO
             , D.MTH_RENT_AMT
             , D.SALES_ORD_ID
+            , B.AREA INS_AREA
             FROM SAL0029D C
             JOIN SAL0001D D ON D.CUST_ID = C.CUST_ID
             JOIN SAL0002D E ON E.SALES_ORD_ID = D.SALES_ORD_ID
