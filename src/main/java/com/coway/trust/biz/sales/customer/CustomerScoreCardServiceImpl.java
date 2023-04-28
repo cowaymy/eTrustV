@@ -42,15 +42,13 @@ public class CustomerScoreCardServiceImpl extends EgovAbstractServiceImpl implem
 
 		  currentInstallment = Integer.parseInt(String.valueOf(custOrder.get("rentInstNo")));
 		  rentalAmt = Double.parseDouble(String.valueOf(custOrder.get("mthRentAmt")));
-		  System.out.println(latestBill);
-		  System.out.println(currentInstallment);
-		  System.out.println(rentalAmt);
 		  if (currentInstallment > 0) {
 		      unbillCount = currentInstallment - latestBill;
 		      if (unbillCount > 0)
 		        unbillAmount = unbillCount * rentalAmt;
 		  }
 
+		  custOrder.put("memType", params.get("memType"));
 		  custOrder.put("unbillAmt",unbillAmount);
 
 	  }
