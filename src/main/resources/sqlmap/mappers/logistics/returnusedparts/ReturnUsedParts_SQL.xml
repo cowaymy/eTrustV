@@ -59,7 +59,11 @@
         l82.CRT_USER_ID,
         l82.UPD_DT,
         l82.UPD_USER_ID,
-        S26.SERIAL_CHK,
+        <!-- S26.SERIAL_CHK, -->
+        case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' then 'Y' else 'N' end
+                      when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+                      when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
+                      else 'N' end SERIAL_CHK,
         S26.STK_TYPE_ID,
         l82.STK_ID_NEW,
         o01.BRNCH,
@@ -81,6 +85,7 @@
         join SVC0007D s07 on s07.bs_result_id = s06.RESULT_ID and s07.BS_RESULT_PART_ID = l82.STK_ID
         left join sys0013m s13 on s13.code = to_char(s07.FILTER_SRL_UNMATCH_RSN) and s13.code_master_id='511'
         left join sys0038m s38 on s38.stus_code_id = l82.pend_scan
+        left join sys0028m s28 on s28.wh_loc_code = o01.MEM_code
 
         JOIN LOG0082M SM ON SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID) from LOG0082M aa where  aa.SVC_ORD_ID =  SM.SVC_ORD_ID) AND SM.SEQ = l82.SEQ
         left join ORG1001V o01v on o01v.MEM_ID = l82.MEM_ID
