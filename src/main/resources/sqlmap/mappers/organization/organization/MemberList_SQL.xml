@@ -1216,10 +1216,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                    Project1.C2 C2  ,
                    Project1.AG_EXPR_DT AG_EXPR_DT  ,
                    Project1.AG_CRT_DT AG_CRT_DT  ,
+                   Project1.AG_UPD_DT AG_UPD_DT  ,
                    Project1.MEM_CODE MEM_CODE
               FROM ( SELECT Extent1.AG_ID AG_ID  ,
                             TO_CHAR(Extent1.AG_EXPR_DT,'YYYY-MM-DD') AG_EXPR_DT  ,
                             TO_CHAR(Extent1.AG_CRT_DT,'YYYY-MM-DD') AG_CRT_DT  ,
+                            TO_CHAR(Extent1.AG_UPD_DT,'YYYY-MM-DD') AG_UPD_DT  ,
                             Extent2.MEM_CODE MEM_CODE  ,
                             'PA' C1,
                             'PA Renewal' C2
@@ -4101,6 +4103,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
              FROM ORG0001D O01D
              LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
              WHERE O01D.NRIC = #{nric}
+             AND O01D.MEM_TYPE NOT IN (4,5,6,6185)
              ORDER BY O01D.CRT_DT DESC
      </select>
 
