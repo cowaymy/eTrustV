@@ -406,8 +406,8 @@
         ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= REQST_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC
         <!-- Added by Hui Ding for displaying main sales order no in mdn search list, 2020-06-24 -->
         , l60.MAIN_ORD_NO
-        from log0059m l59
-        , log0060d_upto2020 l60
+        from LOG0203M l59
+        , LOG0204D l60
         , sys0026m s26
         , sys0028m f28
         , sys0028m t28
