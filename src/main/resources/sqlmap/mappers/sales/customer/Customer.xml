@@ -346,7 +346,8 @@
                     (
                     select CUST_ID, min(SALES_TIER_STUS) SALES_TIER_STUS from SAL0330D group by  cust_id
                     ) c on a.cust_id = c.cust_id
-                ) q1 left join SAL0332D q2 on q1.cust_id = q2.cust_id
+                ) q1
+                left join (select cust_id,sum(REWRD_POINT)REWRD_POINT from SAL0332D group by cust_id) q2 on q1.cust_id = q2.cust_id
                 group by q1.cust_id, q1.sales_tier_stus,q1.min_status
                 )
                 pivot
