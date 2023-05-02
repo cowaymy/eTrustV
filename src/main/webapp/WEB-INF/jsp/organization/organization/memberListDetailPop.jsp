@@ -533,12 +533,17 @@ function createAUIGrid3() {
         width : 130
     }, {
         dataField : "agCrtDt",
+        headerText : "Create Date",
+        editable : false,
+        width : 130
+    }, {
+        dataField : "agUpdDt",
         headerText : "Last Update",
         editable : false,
         width : 130
     }, {
         dataField : "memCode",
-        headerText : "updator",
+        headerText : "Creator",
         editable : false,
         width : 180
     }];
