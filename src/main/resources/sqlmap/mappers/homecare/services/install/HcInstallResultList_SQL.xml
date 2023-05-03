@@ -54,7 +54,7 @@
 	                  AT2.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME
 	                  ,HPDET.name HP_NAME
                       ,HPDET.TEL_MOBILE HP_CONTACT
-                      ,som.stus_code_id ord_stus_code_id
+                     ,exchg.SO_CUR_STUS_ID ord_stus_code_id
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -81,6 +81,8 @@
         LEFT JOIN SYS0071D AT2 ON AT.ATCH_FILE_ID = AT2.ATCH_FILE_ID
         LEFT JOIN ORG1001V V ON V.MEM_ID = MEM.MEM_ID
         LEFT JOIN ORG0001D HPDET ON HPDET.MEM_ID = SOM.MEM_ID
+        LEFT JOIN SAL0004D exchg ON exchg.SO_EXCHG_ID = ce.DOC_ID
+                             AND ce.TYPE_ID = 258
         WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                    WHERE AA.CODE = BB.CODE
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
