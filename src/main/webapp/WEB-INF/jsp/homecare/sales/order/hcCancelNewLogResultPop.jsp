@@ -51,6 +51,13 @@
 	    $("#m7").hide();   // RECALL DATE
 	    $("#m8").hide();   // APPOINTMENT SESSION
 	    $("#m9").hide();   // REMARK
+
+	    if("${SESSION_INFO.roleId}" != "212"){
+	        $("#deactPayModeYes").attr('disabled','disabled');
+	    }
+	    else {
+	        $("#deactPayModeYes").removeAttr("disabled");
+	    }
     });
 
     function cancelLogGrid() {
