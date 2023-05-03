@@ -86,6 +86,9 @@ public class SurveyServiceImpl implements SurveyService
       if(surveyTypeId != 0){
         List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터
 
+        // Remove last survey comment
+        formList.remove(formList.size()-1);
+
         formList.forEach(obj -> {
           Map<String, Object> map = (Map<String, Object>) obj;
 
