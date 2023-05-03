@@ -392,7 +392,7 @@
 			wrapSelectionMove : true,
 			showRowNumColumn : true,
 			rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-				if (item.appTypeId == "5764" && item.ordStusCodeId != "4") { // AUX가  아닌 경우 체크박스 disabeld 처리함
+				if (item.appTypeId == "5764" && !(item.ordStusCodeId == "25" && item.callTypeCode == "EXC")) { // AUX가  아닌 경우 체크박스 disabeld 처리함
 					return false; // false 반환하면 disabled 처리됨
 				}
 				return true;

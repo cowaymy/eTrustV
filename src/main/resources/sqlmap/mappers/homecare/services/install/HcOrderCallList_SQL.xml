@@ -408,7 +408,7 @@
 		, HMC.BNDL_NO
 		,
 		NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID <!-- Added by keyi  20210920-->
-		,sal.STUS_CODE_ID ord_STUS_CODE_ID
+		,vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID
 		FROM CCR1002V
 		vCallLogOrderCall
 		JOIN SYS0064M AREA ON AREA.AREA_ID =
