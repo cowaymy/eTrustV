@@ -118,11 +118,24 @@
           width : 170,
           editable : false
         }, {
-            dataField : "reqResnDesc",
-            headerText : "Product Return Reason",
-            width : 170,
-            editable : false
-          }, {
+            dataField : "",
+            headerText : "PR Note",
+            width : 150,
+            renderer : {
+                type : "ButtonRenderer",
+                labelText : "View",
+                onclick : function(rowIndex, columnIndex, value, item) {
+                  //console.log(item);
+                  fileDown(item);
+                }
+            }
+            , editable : false
+        },{
+          dataField : "reqResnDesc",
+          headerText : "Product Return Reason",
+          width : 170,
+          editable : false
+        }, {
           dataField : "reqStage",
           headerText : "<spring:message code='sal.title.text.requestStage' />",
           editable : false
@@ -209,7 +222,11 @@
                                "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
                              }
             }
-          } ];
+          },{
+              dataField : "resultRptEmailNo",
+              headerText : 'resultRptEmailNo',
+              width : 130
+          }];
 
     // 그리드 속성 설정
     var gridPros = {
@@ -242,7 +259,9 @@
       wrapSelectionMove : true,
 
       // 줄번호 칼럼 렌더러 출력
-      showRowNumColumn : false,
+      showRowNumColumn : true,
+
+      showRowCheckColumn : true,
 
       groupingMessage : "Here groupping"
     };
@@ -446,6 +465,107 @@
   function fn_excelDown() {
     GridCommon.exportTo("grid_wrap", "xlsx", "Order Cancellation Listing");
   }
+
+  function fileDown(item){
+      var V_WHERE = "";
+
+      var date = new Date();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      if(item.reqStusCode != "CC" && item.rsoStus != "COM" ){
+          Common.alert("PR Note only allowed for CONFIRM TO CANCEL and RSO COMPLETE status.");
+          return;
+      }
+
+      console.log("///V_WHERE");
+      console.log(item);
+      console.log("/////");
+
+      V_WHERE += item.reqId;
+
+      //SP_CR_GEN_PR_NOTES
+      $("#reportFormPRLst").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+
+      var option = {
+              isProcedure : true,
+      };
+
+      $("#reportFormPRLst #V_WHERE").val(V_WHERE);
+      $("#reportFormPRLst #reportFileName").val("/services/PRNoteDigitalization.rpt");
+      $("#reportFormPRLst #reportDownFileName").val("PRNoteDigitalization" + day + month + date.getFullYear());
+      $("#reportFormPRLst #viewType").val("PDF");
+
+      Common.report("reportFormPRLst", option);
+  }
+
+  function fn_sendEmail(){
+      var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+      if (selectedItems.length <= 0) {
+          Common.alert("<spring:message code='service.msg.NoRcd'/> ");
+          return;
+        }
+
+        if (selectedItems.length > 10) {
+          Common.alert("<b>Please select not more than 10 record<b>");
+          return;
+        }
+
+        var soReqIdArr = [];
+        var notSendArr = [];
+        var reqNoSendArr = [];
+        var emailArr = [];
+
+        for ( var i in selectedItems) {
+            var reqId = selectedItems[i].item.reqId;
+            var rsoStatus = selectedItems[i].item.rsoStus;
+            var callStatus = selectedItems[i].item.callStusCode;
+            var reqNo = selectedItems[i].item.reqNo;
+            var resultRepEmailNo = selectedItems[i].item.resultRepEmailNo;
+
+            if(callStatus != 'CC' && rsoStatus != 'COM'){
+                notSendArr.push(reqNo);
+            }else{
+            	soReqIdArr.push(reqId);
+            	reqNoSendArr.push(reqNo);
+            	emailArr.push(resultRepEmailNo);
+            }
+        }
+
+        var emailM = {
+        		soReqIdArr : soReqIdArr,
+        		reqNoSendArr : reqNoSendArr,
+        		emailArr : emailArr
+        }
+
+        if(soReqIdArr.length > 0){
+        	if(emailArr.length < 1){
+        		Common.ajax("POST", "/sales/order/prSendEmail.do", emailM, function(result) {
+                    console.log(result);
+                    if(result.code == '00') {
+                        Common.alert(result.message);
+                    }
+                });
+        	}else{
+        		 Common.alert("Email not sent because Customer email is empty");
+        	}
+        }
+        if(notSendArr.length > 0){
+            var notSendStr = notSendArr.join(',');
+            console.log(notSendStr);
+            Common.alert("Email not sent because status not Completed<br><b>" + notSendStr + "<b>");
+            //return;
+        }
+        console.log("===soReqIdArr===");
+        console.log(soReqIdArr);
+        console.log(notSendArr);
+        console.log(reqNoSendArr);
+
+  }
 </script>
 <section id="content">
  <!-- content start -->
@@ -524,6 +644,15 @@
    <input type="hidden" id="paramRsoStusId" name="paramRsoStusId">
    <input type="hidden" id="rcdTms" name="rcdTms">
   </form>
+
+  <form id='reportFormPRLst' method="post" name='reportFormPRLst' action="#">
+    <input type='hidden' id='reportFileName' name='reportFileName'/>
+    <input type='hidden' id='viewType' name='viewType'/>
+    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
+    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
+  </form>
+
+
   <form id="searchForm" name="searchForm" method="post">
    <table class="type1">
     <!-- table start -->
@@ -731,6 +860,11 @@
     </dl>
    </aside>
    <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+     <li><p class="btn_grid">
+       <a href="#" onClick="fn_sendEmail()">Send Email</a>
+      </p></li>
+    </c:if>
     <li><p class="btn_grid">
     <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
     </p></li>

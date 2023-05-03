@@ -158,6 +158,6 @@ public interface InstallationResultListService {
 
   List<EgovMap> getInstallDtPairByCtCode(Map<String, Object> params);
 
-  //void installationSendEmail(Map<String, Object> params);
+  ReturnMessage installationSendEmail(Map<String, Object> params);
 
 }

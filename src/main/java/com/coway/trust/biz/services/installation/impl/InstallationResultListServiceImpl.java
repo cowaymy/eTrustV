@@ -3900,26 +3900,29 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 		return smsResultValue;
 	}
 
-  	/*@SuppressWarnings("unchecked")
+  	@SuppressWarnings("unchecked")
 	@Override
-	public void installationSendEmail(Map<String, Object> params) {
+	public ReturnMessage installationSendEmail(Map<String, Object> params) {
 
-		logger.debug("params1111 : {}", params.toString());
-		logger.debug("installEntryId1111 : {}", params.get("installEntryId").toString());
+  		ReturnMessage message = new ReturnMessage();
 
-		params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
-	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
-	    params.put("V_WHERE", params.get("installEntryId").toString());// parameter
-	    params.put(REPORT_DOWN_FILE_NAME,  "InstallationNoteDigitalization_" + CommonUtils.getNowDate());
+  		List<Integer> installEntryIdArr = new ArrayList<Integer>();
+  		List<String> insNoSendArr = new ArrayList<String>();
+  		List<String> sentArr = new ArrayList<String>();
+  		List<String> notSentArr = new ArrayList<String>();
+  		List<String> emailArr = new ArrayList<String>();
+
+  		installEntryIdArr = (List<Integer>) params.get("installEntryIdArr");
+  		insNoSendArr = (List<String>) params.get("insNoSendArr");
+  		emailArr = (List<String>) params.get("emailArr");
+
+  		logger.debug("====ARR" + installEntryIdArr.toString());
+  		logger.debug("====ARR" + insNoSendArr.toString());
+  		logger.debug("====ARR" + emailArr.toString());
 
 	    String emailSubject = "COWAY: Congratulation For New Coway Product";
 
 	    List<String> emailNo = new ArrayList<String>();
-
-	    if (!"".equals(CommonUtils.nvl(params.get("resultReportEmailNo")))) {
-	        emailNo.add(CommonUtils.nvl(params.get("resultReportEmailNo")));
-	    }
-	    emailNo.add("keyi.por@coway.com.my"); //for self test only
 
 	    String content = "";
 	    content += "Dear Customer,\n\n";
@@ -3932,16 +3935,47 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 	    content += "Coway (Malaysia) Sdn Bhd\n\n";
 
 	    params.put(EMAIL_SUBJECT, emailSubject);
-	    params.put(EMAIL_TO, emailNo);
 	    params.put(EMAIL_TEXT, content);
 
-		try{
-			this.viewProcedure(null, null, params); //Included sending email
-		}catch(Exception e){
-			logger.debug(" Installation notes email result : {}", e.toString());
-			e.printStackTrace();
-		}
-	}*/
+	    params.put(REPORT_FILE_NAME, "/services/InstallationNoteDigitalization.rpt");// visualcut
+	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+	    params.put(REPORT_DOWN_FILE_NAME,  "InstallationNoteDigitalization_" + CommonUtils.getNowDate());
+
+  		for (int i = 0; i < installEntryIdArr.size(); i++) {
+
+  			int installEntryId = installEntryIdArr.get(i);
+  			String insNumSent = insNoSendArr.get(i);
+
+  			if (!"".equals(CommonUtils.nvl(emailArr.get(i)))) {
+		        emailNo.add(CommonUtils.nvl(emailArr.get(i)));
+		    }
+		    //emailNo.add("keyi.por@coway.com.my"); //for self test only
+
+  			params.put(EMAIL_TO, emailNo);
+  			params.put("V_WHERE", installEntryId);// parameter
+
+  			try{
+  				this.viewProcedure(null, null, params); //Included sending email
+  				sentArr.add(insNumSent);
+  			}catch(Exception e){
+  				notSentArr.add(insNumSent);
+  			}
+
+  			if(sentArr.size() > 0){
+  				message.setCode(AppConstants.SUCCESS);
+  			    message.setData(String.join(",",sentArr));
+  			    message.setMessage("Email sent for " + String.join(",",sentArr));
+  			}
+
+  			if(notSentArr.size() > 0){
+  				message.setCode("98");
+  		        message.setData(String.join(",",notSentArr));
+  		        message.setMessage("Email send failed for " + String.join(",",notSentArr));
+  			}
+  		}
+
+		return message;
+	}
 
   	@Override
     public List<EgovMap> selectWaterSrcType() {

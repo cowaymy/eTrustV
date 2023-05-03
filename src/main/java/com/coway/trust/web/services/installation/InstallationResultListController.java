@@ -1857,4 +1857,17 @@ public class InstallationResultListController {
     return ResponseEntity.ok(waterSrcType);
   }
 
+  @RequestMapping(value = "/insSendEmail.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> insSendEmail(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) throws Exception{
+    logger.debug("===========================/insSendEmail.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/insSendEmail.do===============================");
+
+    ReturnMessage message = new ReturnMessage();
+    message = installationResultListService.installationSendEmail(params);
+
+    return ResponseEntity.ok(message);
+  }
+
 }

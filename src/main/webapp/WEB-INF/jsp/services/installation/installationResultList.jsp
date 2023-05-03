@@ -333,6 +333,11 @@
         dataField : "state",
         headerText : '<spring:message code="sys.state" />',
         width : 130
+    },{
+        dataField : "resultRepEmailNo",
+        headerText : 'resultRepEmailNo',
+        width : 130,
+        visible: false
     }];
 
     var gridPros = {
@@ -608,7 +613,7 @@
       V_WHERE += item.installEntryId;
 
       console.log("///V_WHERE");
-      console.log(V_WHERE);
+      console.log(item);
       console.log("/////");
 
 	  //SP_CR_GEN_INST_NOTES
@@ -623,7 +628,71 @@
       $("#reportFormInstLst #reportDownFileName").val("InstallationNoteDigitalization" + day + month + date.getFullYear());
       $("#reportFormInstLst #viewType").val("PDF");
 
-      Common.report("reportFormInstLst", option);
+      //Common.report("reportFormInstLst", option);
+  }
+
+  function fn_sendEmail(){
+	  var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+	  if (selectedItems.length <= 0) {
+	      Common.alert("<spring:message code='service.msg.NoRcd'/> ");
+	      return;
+	    }
+
+	    if (selectedItems.length > 10) {
+	      Common.alert("<b>Please select not more than 10 record<b>");
+	      return;
+	    }
+
+	    var installEntryIdArr = [];
+	    var notSendArr = [];
+	    var insNoSendArr = [];
+	    var emailArr = [];
+
+	    for ( var i in selectedItems) {
+	    	var installEntryId = selectedItems[i].item.installEntryId;
+	    	var status = selectedItems[i].item.code1;
+	    	var installEntryNo = selectedItems[i].item.installEntryNo;
+	    	var resultRepEmailNo = selectedItems[i].item.resultRepEmailNo;
+
+	    	if(status != 'COM'){
+	    		notSendArr.push(installEntryNo);
+	    	}else{
+	            installEntryIdArr.push(installEntryId);
+	            insNoSendArr.push(installEntryNo);
+	            emailArr.push(resultRepEmailNo);
+	    	}
+	    }
+
+	    var emailM = {
+	    		installEntryIdArr : installEntryIdArr,
+	    		insNoSendArr : insNoSendArr,
+	    		emailArr : emailArr
+	    }
+
+	    if(installEntryIdArr.length > 0){
+	    	if(emailArr.length < 1){
+		    	Common.ajax("POST", "/services/insSendEmail.do", emailM, function(result) {
+		    		console.log(result);
+		    		if(result.code == '00') {
+		    			Common.alert(result.message);
+		    		}
+		    	});
+	    	}else{
+                Common.alert("Email not sent because Customer email is empty");
+            }
+        }
+	    if(notSendArr.length > 0){
+            var notSendStr = notSendArr.join(',');
+            console.log(notSendStr);
+            Common.alert("Email not sent because status not Completed<br><b>" + notSendStr + "<b>");
+            //return;
+        }
+	    console.log("===installEntryIdArr===");
+	    console.log(installEntryIdArr);
+	    console.log(notSendArr);
+	    console.log(insNoSendArr);
+
   }
 </script>
 <section id="content">
@@ -928,10 +997,14 @@
    <!-- link_btns_wrap end -->
    <br/>
    <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+     <li><p class="btn_grid">
+       <a href="#" onClick="fn_sendEmail()">Send Email</a>
+      </p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
      <li><p class="btn_grid">
-       <a href="#" onClick="fn_excelDown()"><spring:message
-         code='service.btn.Generate' /></a>
+       <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a>
       </p></li>
     </c:if>
     <!--  <li><p class="btn_grid"><a href="#">EDIT</a></p></li>

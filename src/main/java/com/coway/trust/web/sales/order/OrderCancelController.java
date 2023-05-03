@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -545,6 +546,19 @@ public class OrderCancelController {
   public ResponseEntity<EgovMap> select3MonthBlockList(@RequestParam Map<String, Object> params) {
     EgovMap select3MonthBlockList = orderCancelService.select3MonthBlockList(params);
     return ResponseEntity.ok(select3MonthBlockList);
+  }
+
+  @RequestMapping(value = "/prSendEmail.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> prSendEmail(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) throws Exception{
+    logger.debug("===========================/prSendEmail.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/prSendEmail.do===============================");
+
+    ReturnMessage message = new ReturnMessage();
+    message = orderCancelService.prSendEmail(params);
+
+    return ResponseEntity.ok(message);
   }
 
 }

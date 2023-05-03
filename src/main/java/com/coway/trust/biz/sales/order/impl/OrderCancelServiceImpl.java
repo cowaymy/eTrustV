@@ -1,23 +1,55 @@
 package com.coway.trust.biz.sales.order.impl;
 
+import static com.coway.trust.AppConstants.EMAIL_SUBJECT;
+import static com.coway.trust.AppConstants.EMAIL_TEXT;
+import static com.coway.trust.AppConstants.EMAIL_TO;
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+
+import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.ReportController;
+import com.coway.trust.web.common.ReportController.ViewType;
 import com.coway.trust.web.sales.SalesConstants;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
+import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -539,5 +571,174 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
   public EgovMap select3MonthBlockList(Map<String, Object> params) {
     return orderCancelMapper.select3MonthBlockList(params);
   }
+
+  @Autowired
+  private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private ReportBatchService reportBatchService;
+
+  @Value("${report.datasource.driver-class-name}")
+  private String reportDriverClass;
+
+  @Value("${report.datasource.url}")
+  private String reportUrl;
+
+  @Value("${report.datasource.username}")
+  private String reportUserName;
+
+  @Value("${report.datasource.password}")
+  private String reportPassword;
+
+  @Value("${report.file.path}")
+  private String reportFilePath;
+
+  private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
+	  	Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)), messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)), messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
+	    SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+	    String succYn = "E";
+	    Calendar startTime = Calendar.getInstance();
+	    Calendar endTime = null;
+
+	    String prodName;
+	    int maxLength = 0;
+	    String msg = "Completed";
+
+		String reportFile = (String) params.get(REPORT_FILE_NAME);
+	    String reportName = reportFilePath + reportFile;
+	    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+
+	    try {
+	      ReportAppSession ra = new ReportAppSession();
+	      ra.createService(REPORT_CLIENT_DOCUMENT);
+
+	      ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
+	      ra.initialize();
+	      ReportClientDocument clientDoc = new ReportClientDocument();
+	      clientDoc.setReportAppServer(ra.getReportAppServer());
+	      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+
+	      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
+
+	      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
+
+	      params.put("repProdName", prodName);
+
+	      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+	      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+	      ReportUtils.setReportParameter(params, paramController, fields);
+	      {
+	        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+	      }
+	    } catch (Exception ex) {
+	      logger.error(CommonUtils.printStackTraceToString(ex));
+	      throw new ApplicationException(ex);
+	    } finally {
+	      endTime = Calendar.getInstance();
+	      long tot = endTime.getTimeInMillis() - startTime.getTimeInMillis();
+	      logger.info("resultInfo : succYn={}, {}={}, {}={}, time={}~{}, total={}"
+	              , succYn
+	              , REPORT_FILE_NAME, params.get(REPORT_FILE_NAME)
+	              , REPORT_VIEW_TYPE, params.get(REPORT_VIEW_TYPE)
+	              , fmt.format(startTime.getTime()), fmt.format(endTime.getTime())
+	              , tot
+	      );
+
+	    }
+	  }
+
+  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
+	      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
+	      throws ReportSDKExceptionBase, IOException {
+
+	    switch (viewType) {
+	      case MAIL_PDF:
+	    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+	          break;
+
+	      default:
+	        throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
+	    }
+	  }
+
+
+  @SuppressWarnings("unchecked")
+	@Override
+	public ReturnMessage prSendEmail(Map<String, Object> params) {
+
+		ReturnMessage message = new ReturnMessage();
+
+		List<Integer> soReqIdArr = new ArrayList<Integer>();
+		List<String> reqNoSendArr = new ArrayList<String>();
+		List<String> sentArr = new ArrayList<String>();
+		List<String> notSentArr = new ArrayList<String>();
+		List<String> emailArr = new ArrayList<String>();
+
+		soReqIdArr = (List<Integer>) params.get("soReqIdArr");
+		reqNoSendArr = (List<String>) params.get("reqNoSendArr");
+		emailArr = (List<String>) params.get("emailArr");
+
+		logger.debug("====ARR" + soReqIdArr.toString());
+		logger.debug("====ARR" + reqNoSendArr.toString());
+		logger.debug("====ARR" + emailArr.toString());
+
+	    String emailSubject = "COWAY: Congratulation For New Coway Product";
+
+	    List<String> emailNo = new ArrayList<String>();
+
+	    String content = "";
+	    content += "Dear Customer,\n\n";
+	    content += "Congratulation for your New Coway Product !!\n\n";
+	    content += "Kindly refer an attachment for your Installation Notes.\n";
+	    content += "Your co-operation are highly appreciated.\n";
+	    content += "Thank You.\n\n\n";
+	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
+	    content += "Regards,\n\n";
+	    content += "Coway (Malaysia) Sdn Bhd\n\n";
+
+	    params.put(EMAIL_SUBJECT, emailSubject);
+	    params.put(EMAIL_TEXT, content);
+
+	    params.put(REPORT_FILE_NAME, "/services/PRNoteDigitalization.rpt");// visualcut
+	    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+	    params.put(REPORT_DOWN_FILE_NAME,  "PRNoteDigitalization_" + CommonUtils.getNowDate());
+
+		for (int i = 0; i < soReqIdArr.size(); i++) {
+
+			int soReqId = soReqIdArr.get(i);
+			String reqNoSent = reqNoSendArr.get(i);
+
+			if (!"".equals(CommonUtils.nvl(emailArr.get(i)))) {
+		        emailNo.add(CommonUtils.nvl(emailArr.get(i)));
+		    }
+		    //emailNo.add("keyi.por@coway.com.my"); //for self test only
+
+		    params.put(EMAIL_TO, emailNo);
+			params.put("V_WHERE", soReqId);// parameter
+
+			try{
+				this.viewProcedure(null, null, params); //Included sending email
+				sentArr.add(reqNoSent);
+			}catch(Exception e){
+				notSentArr.add(reqNoSent);
+			}
+
+			if(sentArr.size() > 0){
+				message.setCode(AppConstants.SUCCESS);
+			    message.setData(String.join(",",sentArr));
+			    message.setMessage("Email sent for " + String.join(",",sentArr));
+			}
+
+			if(notSentArr.size() > 0){
+				message.setCode("98");
+		        message.setData(String.join(",",notSentArr));
+		        message.setMessage("Email send failed for " + String.join(",",notSentArr));
+			}
+		}
+
+		return message;
+	}
 
 }

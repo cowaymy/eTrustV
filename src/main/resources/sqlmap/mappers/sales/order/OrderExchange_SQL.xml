@@ -157,7 +157,9 @@
 					              Extent15.PROMO_CODE PROMOCODE2  ,
 					              Extent15.PROMO_DESC PROMODESC2  ,
 					              Extent16.NAME NAME8 ,
-					              Extent11.STK_CTGRY_ID
+					              Extent11.STK_CTGRY_ID,
+
+					              CASE WHEN Extent19.RESULT_REP_EMAIL_NO IS NOT NULL THEN Extent19.RESULT_REP_EMAIL_NO ELSE Extent20.EMAIL END AS RESULT_REP_EMAIL_NO
 
 			             FROM SAL0004D Extent1
 				              JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID
@@ -175,6 +177,9 @@
 				              LEFT JOIN SYS0026M Extent14   ON Extent14.STK_ID = Extent1.SO_EXCHG_OLD_STK_ID
 				              LEFT JOIN SAL0017D Extent15   ON Extent15.PROMO_ID = Extent1.SO_EXCHG_OLD_PROMO_ID
 				              LEFT JOIN SAL0029D Extent16   ON Extent16.CUST_ID = Extent1.SO_EXCHG_OLD_CUST_ID
+				              LEFT JOIN SAL0046D Extent18  ON Extent18.SALES_ORD_ID = Extent2.SALES_ORD_ID
+                              LEFT JOIN SAL0047D Extent19 ON Extent18.INSTALL_ENTRY_ID = Extent19.ENTRY_ID
+                              LEFT JOIN SAL0027D Extent20 ON Extent20.CUST_CNTC_ID = Extent2.CUST_CNT_ID
 				             <![CDATA[
 			        WHERE  0 <> Extent1.SO_EXCHG_STUS_ID
 			                 AND 8 <> Extent1.SO_EXCHG_STUS_ID

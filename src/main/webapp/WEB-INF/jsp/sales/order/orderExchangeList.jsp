@@ -67,6 +67,19 @@
           headerText : '<spring:message code="sal.title.text.nricCompNo" />',
           width : 170,
           editable : false
+        },{
+            dataField : "",
+            headerText : "PEX Note",
+            width : 150,
+            renderer : {
+                type : "ButtonRenderer",
+                labelText : "View",
+                onclick : function(rowIndex, columnIndex, value, item) {
+                  //console.log(item);
+                  fileDown(item);
+                }
+            }
+            , editable : false
         }, {
           dataField : "soExchgCrtDt",
           headerText : '<spring:message code="sal.text.createDate" />',
@@ -172,6 +185,106 @@
       }
     });
   };
+
+  function fileDown(item){
+      var V_WHERE = "";
+
+      var date = new Date();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      if(item.code != "COM"){
+          Common.alert("PEX Note only allowed for COMPLETED installation.");
+          return;
+      }
+
+      V_WHERE += item.soId;
+
+      console.log("///V_WHERE");
+      console.log(item);
+      console.log("/////");
+
+      //SP_CR_GEN_PEX_NOTES
+      $("#reportFormPEXLst").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+
+      var option = {
+              isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+      };
+
+      $("#reportFormPEXLst #V_WHERE").val(V_WHERE);
+      $("#reportFormPEXLst #reportFileName").val("/services/PEXNoteDigitalization.rpt");
+      $("#reportFormPEXLst #reportDownFileName").val("PEXNoteDigitalization" + day + month + date.getFullYear());
+      $("#reportFormPEXLst #viewType").val("PDF");
+
+      //Common.report("reportFormPEXLst", option);
+  }
+
+  function fn_sendEmail(){
+      var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+      if (selectedItems.length <= 0) {
+          Common.alert("<spring:message code='service.msg.NoRcd'/> ");
+          return;
+        }
+
+        if (selectedItems.length > 10) {
+          Common.alert("<b>Please select not more than 10 record<b>");
+          return;
+        }
+
+        var soIdArr = [];
+        var notSendArr = [];
+        var salesOrdNoSendArr = [];
+        var emailArr = [];
+
+        for ( var i in selectedItems) {
+            var soId = selectedItems[i].item.soId;
+            var status = selectedItems[i].item.code;
+            var salesOrdNo = selectedItems[i].item.salesOrdNo;
+            var resultRepEmailNo = selectedItems[i].item.resultRepEmailNo;
+
+            if(status != 'COM'){
+                notSendArr.push(salesOrdNo);
+            }else{
+            	soIdArr.push(soId);
+                salesOrdNoSendArr.push(salesOrdNo);
+                emailArr.push(resultRepEmailNo);
+            }
+        }
+
+        var emailM = {
+        		soIdArr : soIdArr,
+        		salesOrdNoSendArr : salesOrdNoSendArr,
+                emailArr : emailArr
+        }
+
+        if(installEntryIdArr.length > 0){
+        	if(emailArr.length < 1){
+	            Common.ajax("POST", "/services/pexSendEmail.do", emailM, function(result) {
+	                console.log(result);
+	                if(result.code == '00') {
+	                    Common.alert(result.message);
+	                }
+	            });
+        	}else{
+                Common.alert("Email not sent because Customer email is empty");
+            }
+        }
+        if(notSendArr.length > 0){
+            var notSendStr = notSendArr.join(',');
+            console.log(notSendStr);
+            Common.alert("Email not sent because status not Completed<br><b>" + notSendStr + "<b>");
+            //return;
+        }
+        console.log("===installEntryIdArr===");
+        console.log(installEntryIdArr);
+        console.log(notSendArr);
+        console.log(insNoSendArr);
+
+  }
 </script>
 <section id="content">
   <!-- content start -->
@@ -203,6 +316,14 @@
       <!--     <input type="hidden" id="salesOrdNo" name="salesOrdNo"> -->
       <input type="hidden" id="salesOrderId" name="salesOrderId">
     </form>
+
+    <form id='reportFormPEXLst' method="post" name='reportFormPEXLst' action="#">
+	    <input type='hidden' id='reportFileName' name='reportFileName'/>
+	    <input type='hidden' id='viewType' name='viewType'/>
+	    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
+	    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
+    </form>
+
     <form id="searchForm" name="searchForm" method="post">
       <table class="type1">
         <!-- table start -->

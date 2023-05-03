@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderExchangeService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
@@ -193,5 +195,18 @@ public class OrderExchangeController {
     model.put("bfDay", bfDay);
     model.put("toDay", toDay);
     return "sales/order/orderExchangeRawData2Pop";
+  }
+
+  @RequestMapping(value = "/pexSendEmail.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> pexSendEmail(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) throws Exception{
+    logger.debug("===========================/pexSendEmail.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/pexSendEmail.do===============================");
+
+    ReturnMessage message = new ReturnMessage();
+    message = orderExchangeService.pexSendEmail(params);
+
+    return ResponseEntity.ok(message);
   }
 }
