@@ -1023,7 +1023,7 @@
                             appvPrcssNo : advAppvPrcssNo,
                             advType : advGridAdvType,
                             appvPrcssStus : advGridAppvPrcssStus,
-                            stYearMonth : result.data.crtDt,
+                            stYearMonth : $("#settlementKeyDate").val(),
                             costCentr : $("#settlementCostCenter").val()
                     };
                     Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetailsGrid.do", data2, function(result2) {//HERE

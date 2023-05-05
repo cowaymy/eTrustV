@@ -291,7 +291,7 @@ var myGridPros = {
     softRemoveRowMode : false,
     rowIdField : "clmSeq",
     headerHeight : 40,
-    height : 160,
+    //height : 160,
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells"
 };
@@ -578,10 +578,11 @@ var myGridPros = {
              $("#advRepayPop").show();
 
              $("#refAdvType option[value=4]").attr('selected', 'selected');
-
+             $("#refKeyDate").val(fn_getToday);
              var data = {
                      clmNo : claimNo,
-                     advType : advType
+                     advType : advType,
+                     entryDt : $("#refKeyDate").val()
              };
 
              console.log(data);

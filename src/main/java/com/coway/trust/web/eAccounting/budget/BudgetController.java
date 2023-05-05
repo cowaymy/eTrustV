@@ -1170,7 +1170,12 @@ public class BudgetController {
               String adjYearMonth = String.valueOf(gridMap.get("2")).trim().toUpperCase();
 
               if(adjYearMonth.length() == 6){
-            	  adjYearMonth = "0" + adjYearMonth.substring(0,1) + "/" + adjYearMonth.substring(2);
+            	  if(!adjYearMonth.startsWith("0")){
+            		 adjYearMonth = "0" + adjYearMonth.substring(0,1) + "/" + adjYearMonth.substring(2);
+            	  }else{
+            		  adjYearMonth = adjYearMonth.substring(0,2) + "/" + adjYearMonth.substring(2);
+            	  }
+
               }else if(adjYearMonth.length() == 5){
             	  adjYearMonth = "0" + adjYearMonth.substring(0,1) + "/" + adjYearMonth.substring(1);
               }

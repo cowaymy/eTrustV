@@ -170,7 +170,7 @@ public class StaffBusinessActivityController {
 
 				float reqstAmt = Float.valueOf(gridMap.get("totAmt").toString());
 				itemMap = new HashMap<String, Object>();
-				itemMap.put("stYearMonth", gridMap.get("entryDt").toString().substring(3));
+				itemMap.put("stYearMonth", params.get("entryDt").toString().substring(3));
 				itemMap.put("costCentr", gridMap.get("costCenter").toString());
 				itemMap.put("stBudgetCode", gridMap.get("budgetCode").toString());
 				itemMap.put("stGlAccCode", gridMap.get("glAccCode").toString());
