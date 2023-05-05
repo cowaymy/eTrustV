@@ -60,9 +60,9 @@
         l82.UPD_DT,
         l82.UPD_USER_ID,
         <!-- S26.SERIAL_CHK, -->
-        case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' and NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' then 'Y' else 'N' end
-                      when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y' and NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y'  then 'Y' else 'N' end
-                      when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' and NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' then 'Y' else 'N' end
+        case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' and NVL(s28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' then 'Y' else 'N' end
+                      when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y' and NVL(s28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y'  then 'Y' else 'N' end
+                      when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' and NVL(s28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' then 'Y' else 'N' end
                       else 'N' end SERIAL_CHK,
         S26.STK_TYPE_ID,
         l82.STK_ID_NEW,
