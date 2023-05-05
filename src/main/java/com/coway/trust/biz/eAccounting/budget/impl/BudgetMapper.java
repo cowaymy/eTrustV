@@ -100,7 +100,6 @@ public interface BudgetMapper {
 
 	List<EgovMap> getUploadNewMasterList(Map<String, Object> reMap);
 
-	String checkDuplicate(Map<String, Object> reMap);
 
 	public List<EgovMap> selectBudgetAdjustmentConflict(Map<String, Object> obj) ;
 
@@ -122,6 +121,15 @@ public interface BudgetMapper {
 
 	void removeAdjustmentM(Map<String, Object> reMap);
 
-	String getBudgetDocNoFCM0039M(Map<String, Object> reMap);
+	String getBudgetDocNoFCM0039D(Map<String, Object> reMap);
 
+	String getAdjNumber(Map<String, Object> reMap);
+
+	int getBudgetDocNoFCM0039D_1(Map<String, Object> reMap);
+
+	void removeFCM0039D_delete(Map<String, Object> reMap);
+
+	int getBudgetDocNoFCM0039D_2(Map<String, Object> reMap);
+
+	float checkUploadSum(Map<String, Object> reMap);
 }

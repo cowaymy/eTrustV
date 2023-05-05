@@ -563,6 +563,7 @@ function fn_pBudgetCodePop(str){
           }
       }
 
+      console.log("mgrYn:" + "${mgrYn}");
    // add jgkim
       if("${mgrYn}" == "Y") {
           obj.call = 'budgetAdj';
@@ -632,7 +633,7 @@ function fn_pGlAccountSearchPop(str){
       obj.costcenter = $("#sendCostCenter").val();
       obj.budgetCode = $("#sendBudgetCode").val();
       if($("#pAdjustmentType").val() != "05") {
-          obj.call = 'budgetAdj';
+       //   obj.call = 'budgetAdj';
 
           if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02") {
               $("#recvGlAccCode").val("");
@@ -640,8 +641,9 @@ function fn_pGlAccountSearchPop(str){
           }
       }
 
+      obj.call = 'selectCodeList';
    // add jgkim
-      if("${mgrYn}" == "Y") {
+       if("${mgrYn}" == "Y") {
           obj.call = 'budgetAdj';
       }
   } else {

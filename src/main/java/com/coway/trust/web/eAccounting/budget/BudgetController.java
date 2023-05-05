@@ -1169,14 +1169,11 @@ public class BudgetController {
               itemMap.put("costCentr", String.valueOf(gridMap.get("1")).trim().toUpperCase());
               String adjYearMonth = String.valueOf(gridMap.get("2")).trim().toUpperCase();
 
-                  if(adjYearMonth.length() == 8){
-                	  adjYearMonth = adjYearMonth.substring(2);
-                	  adjYearMonth = "0" + adjYearMonth;
-                  }else if(adjYearMonth.length() == 10){
-                	  adjYearMonth = adjYearMonth.substring(3);
-                  }else if(adjYearMonth.length() == 9){
-                	  adjYearMonth = adjYearMonth.substring(2);
-                  }
+              if(adjYearMonth.length() == 6){
+            	  adjYearMonth = "0" + adjYearMonth.substring(0,1) + "/" + adjYearMonth.substring(2);
+              }else if(adjYearMonth.length() == 5){
+            	  adjYearMonth = "0" + adjYearMonth.substring(0,1) + "/" + adjYearMonth.substring(1);
+              }
 
               LOGGER.debug("AdYearMonth: " + adjYearMonth);
               itemMap.put("adjYearMonth", adjYearMonth);

@@ -1612,7 +1612,7 @@ WHERE 1=1
   </select>
 
   <select id="selectUploadAdjNo" parameterType="String" resultType="String">
-    SELECT 'U' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(FCM0039M_UPLOAD_NO_SEQ.NEXTVAL, 8, 0) FROM DUAL
+    SELECT 'U' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(FCM0039D_UPLOAD_NO_SEQ.NEXTVAL, 8, 0) FROM DUAL
   </select>
 
   <select id="getUploadNewMasterList" parameterType="Map" resultType="egovMap">
@@ -1621,19 +1621,13 @@ WHERE 1=1
     FROM FCM0039D
     WHERE UPLOAD_NO = #{uploadAdjNo}
     AND ADJ_NUMBER = #{adjNumber}
+    ORDER BY BUDGET_GRP_SEQ ASC
   </select>
 
   <select id="getUploadMasterList" parameterType="Map" resultType="egovMap">
     SELECT * FROM FCM0039D WHERE UPLOAD_NO = #{uploadAdjNo}
   </select>
 
-  <select id="checkDuplicate" parameterType="String" resultType="String">
-    SELECT COUNT(BUDGET_DOC_NO) FROM FCM0102M WHERE BUDGET_DOC_NO = #{budgetDocNo}
-  </select>
-
-  <select id="selectBudgetAdjustmentConflict" parameterType="String" resultType="String">
-    SELECT COUNT(BUDGET_DOC_NO) FROM FCM0102M WHERE BUDGET_DOC_NO = #{budgetDocNo}
-  </select>
 
   <insert id="insertUploadAdjustmentT" parameterType="Map">
     INSERT INTO FCM0039D
@@ -1677,10 +1671,13 @@ WHERE 1=1
 
   <delete id="removeFCM0039D" parameterType="Map">
     DELETE FROM FCM0039D WHERE UPLOAD_NO = #{uploadAdjNo}
+    <if test="adjNumber != null and adjNumber != ''">
+    AND ADJ_NUMBER = #{adjNumber}
+    </if>
   </delete>
 
   <update id="updateFCM0039D" parameterType="Map">
-    UPDATE FCM0039D SET BUDGET_DOC_NO = #{budgetDocNo} WHERE UPLOAD_NO = #{uploadAdjNo} AND ADJ_NUMBER = #{adjNumber}
+    UPDATE FCM0039D SET BUDGET_DOC_NO = #{budgetDocNo} WHERE UPLOAD_NO = #{uploadAdjNo} AND ADJ_NUMBER = #{adjNumber} AND BUDGET_GRP_SEQ = #{budgetGrpSeq}
   </update>
 
   <update id="updateBudgetCode" parameterType="Map">
@@ -1728,12 +1725,46 @@ WHERE 1=1
     DELETE FROM FCM0102M WHERE BUDGET_DOC_NO = #{budgetDocNo}
   </delete>
 
-  <select id="getBudgetDocNoFCM0039M" parameterType="Map" resultType="String">
+  <select id="getBudgetDocNoFCM0039D" parameterType="Map" resultType="String">
      SELECT DISTINCT BUDGET_DOC_NO
                 FROM FCM0039D
                 WHERE UPLOAD_NO = #{uploadAdjNo}
                 AND ADJ_NUMBER = #{adjNumber}
                 AND BUDGET_DOC_NO IS NOT NULL
+  </select>
+
+<select id="getBudgetDocNoFCM0039D_1" parameterType="Map" resultType="Integer">
+     SELECT COUNT(BUDGET_DOC_NO)
+                FROM FCM0039D
+                WHERE UPLOAD_NO = #{uploadAdjNo}
+                AND ADJ_NUMBER = #{adjNumber}
+                AND BUDGET_DOC_NO IS NOT NULL
+  </select>
+
+  <select id="getAdjNumber" parameterType="String" resultType="String">
+     SELECT DISTINCT ADJ_NUMBER FROM FCM0039D WHERE BUDGET_DOC_NO = #{budgetDocNo}
+  </select>
+
+   <select id="getBudgetDocNoFCM0039D_2" parameterType="Map" resultType="Integer">
+     SELECT COUNT(BUDGET_DOC_NO) FROM FCM0039D WHERE BUDGET_DOC_NO = #{budgetDocNo}
+  </select>
+
+   <delete id="removeFCM0039D_delete" parameterType="Map">
+    DELETE FROM FCM0039D WHERE BUDGET_DOC_NO = #{budgetDocNo}
+  </delete>
+
+
+  <select id="checkUploadSum" parameterType="Map" resultType="Float">
+     SELECT NVL(SUM(ADJ_AMT), 0.0) ADJ_AMT FROM FCM0039D
+     WHERE UPLOAD_NO = #{uploadAdjNo}
+     AND ADJ_YEAR_MONTH = #{adjYearMonth}
+     AND BUDGET_CODE = #{budgetCode}
+     AND GL_ACC_CODE = #{glAccCode}
+     <![CDATA[
+     AND SIGNAL = '-'
+     AND ADJ_NUMBER <= #{adjNumber}
+     ]]>
+     ORDER BY ADJ_NUMBER
   </select>
 
 

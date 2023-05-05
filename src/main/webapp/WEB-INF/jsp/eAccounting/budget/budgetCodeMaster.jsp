@@ -305,17 +305,15 @@ function fn_clearField(val){
               <tr>
                   <th scope="row"><spring:message code="expense.Activity" /></th>
 				    <td colspan="2">
-				        <input type="text" id="budgetCode" name="budgetCode" title="" placeholder="" class="fl_left" readonly="readonly"/>
+				        <input type="text" id="budgetCode" name="budgetCode" title="" placeholder="" class="fl_left" />
 				        <input type="hidden" id="budgetCodeName" name="budgetCodeName" title="" placeholder="" class=""  readonly="readonly" />
 				        <a href="#" class="search_btn" onclick="javascript:fn_budgetCodePop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-				        <a href="#" class="search_btn" onclick="javascript:fn_clearField('budgetCode')"><img src="${pageContext.request.contextPath}/resources/images/common/icon_gabage_s.png" class="fl_right"/></a>
 				    </td>
                    <th scope="row"><spring:message code="expense.GLAccount" /></th>
 				    <td colspan="2">
-				          <input type="text" id="glAccCode" name="glAccCode" title="" placeholder="" class="fl_left" readonly="readonly"/>
+				          <input type="text" id="glAccCode" name="glAccCode" title="" placeholder="" class="fl_left">
 				          <input type="hidden" id="glAccCodeName" name="glAccCodeName" title="" placeholder="" class=""  readonly="readonly" />
 				          <a href="#" class="search_btn" onclick="javascript:fn_glAccountSearchPop();"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" class="fl_left"/></a>
-				           <a href="#" style="" class="search_btn" onclick="javascript:fn_clearField('glAccCode')"><img src="${pageContext.request.contextPath}/resources/images/common/icon_gabage_s.png" class="fl_right"/></a>
 				    </td>
                 </tr>
                 <tr>

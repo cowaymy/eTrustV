@@ -405,7 +405,7 @@ function fn_uploadAdjustment(){
                  }
                  console.log(" rtnBudgetCodeNo : "+ rtnBudgetCodeNo );
                  rtnBudgetCodeNo = rtnBudgetCodeNo.slice(0, rtnBudgetCodeNo.length - 1);
-                 Common.alert("Upload Success: " + rtnBudgetCodeNo + "\n\n"+ result.message);
+                 Common.alert("Upload Success: " + rtnBudgetCodeNo + "<br/>"+ result.message);
                  hideViewPopup();
         	 }else{
         		 var msg = result.message;
@@ -848,7 +848,7 @@ function fn_uploadClear(){
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
-     <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/eAccounting/BudgetAdjustment_Format1.csv">Template</a></p></li>
+     <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/eAccounting/AdjustmentBulkUpload_Format.csv">Template</a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentUpload();">Upload</a></p></li>
 	 </c:if>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetDelete();"><spring:message code="budget.Delete" /></a></p></li>

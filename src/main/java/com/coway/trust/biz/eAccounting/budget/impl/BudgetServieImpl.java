@@ -471,6 +471,10 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
 				budgetMapper.deleteAdjustmentM(deleteMap);
 				budgetMapper.deleteAdjustmentDByDocNo(deleteMap);
+				int cnt = budgetMapper.getBudgetDocNoFCM0039D_2(deleteMap);
+				if(cnt > 0){
+					budgetMapper.removeFCM0039D_delete(deleteMap);
+				}
 			}
 		}
 
@@ -534,6 +538,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
         String uploadAdjNo = budgetMapper.selectUploadAdjNo();
       	List budgetDocNoList = new ArrayList();
+      	List overBudgetList = new ArrayList();
 
       	Object  atchFileGrpId = formData.get("atchFileGrpId");
       	List<Object> resultAddList = new ArrayList();
@@ -555,6 +560,8 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
         Map<String, Object> reMap = new HashMap();
         Map<String, Object> updateMap = new HashMap();
         Map<String, Object> testMap = new HashMap();
+        Map<String, Object> deMap = new HashMap();
+
 
         reMap.put("uploadAdjNo", uploadAdjNo);
       	int compareKey = 1;
@@ -592,69 +599,122 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       					reMap.put("costCenter", reMap.get("costCentr"));
       					if (checkPlanMaster(reMap) < 1) {
 
-      						//List<EgovMap> list = selectBudgetAdjustmentConflict(reMap);
-      					  // remove the data from FCM0039D
-      					  //removeFCM0039D(reMap);
-
       						 String msgs = "";
          					 String budgetCd = (String) reMap.get("budgetCode");
          					 String glAccCode = (String) reMap.get("glAccCode");
-         					 String rs = "[" + budgetCd + "," + glAccCode + ", Adj No: " + compareKey +"] ";
+         					 String rs =  compareKey +",";
          					 failMsg += rs;
          					 if(!reMap.get("budgetAdjType").equals("01")|| !reMap.get("budgetAdjType").equals("02")){
          						 reMap.put("adjNumber", compareKey);
          						 Logger.debug("adjNumber: " + reMap.get("adjNumber") );
-         						String budgetNo = budgetMapper.getBudgetDocNoFCM0039M(reMap);
-         						Logger.debug("Budget No: " + budgetNo);
-         						if(budgetNo != "" || budgetNo != null){
+         						int count = budgetMapper.getBudgetDocNoFCM0039D_1(reMap);
+
+         						if(count > 0){
+         							String budgetNo = budgetMapper.getBudgetDocNoFCM0039D(reMap);
+         							Logger.debug("Budget Doc No: " + budgetNo);
+         							reMap.put("budgetDocNo", budgetNo);
          							budgetDocNoList.remove(budgetNo);
          							removeAdjustmentD(reMap);
          							removeAdjustmentM(reMap);
-         							i = uploadNewMasterList.size();
-         							Logger.debug("Current i: " + i);
          						}
+         						removeFCM0039D(reMap);
+     							i = uploadNewMasterList.size();
          					 }
 
-      					} else { // no conflict location can proceed
+      					} else {
       						Logger.debug("uploadAdjNo :::: reMap {} ", reMap);
+      						deMap.put("budgetPlanYear", reMap.get("adjYearMonth").toString().substring(3));
+      						String monthTemp = reMap.get("adjYearMonth").toString().substring(0,2);
+      						String month = "";
+      						if(monthTemp.length() == 2 && monthTemp.substring(0, 1).equals("0")){
+      							month = reMap.get("adjYearMonth").toString().substring(1,2);
+      						}else{
+      							month = reMap.get("adjYearMonth").toString().substring(0,2);
+      						}
+							deMap.put("budgetPlanMonth", month);
+							deMap.put("costCentr", reMap.get("costCentr"));
+							deMap.put("budgetCode", reMap.get("budgetCode"));
+							deMap.put("glAccCode", reMap.get("glAccCode"));
 
-      						((Map<String, Object>) reMap).put("userId", formData.get("updUserId"));
-      						addCnt++;
-      						addTurn++;
-
-      						if(addTurn == 1){
-      						//if(addTurn == 1 && CommonUtils.isEmpty(budgetDocNo)){
-
-      							((Map<String, Object>) reMap).put("atchFileGrpId", formData.get("atchFileGrpId"));
-
-      							//master table insert
-      							budgetMapper.insertAdjustmentM((Map<String, Object>) reMap);
-
-      							budgetDocNo = (String) ((Map<String, Object>) reMap).get("budgetDocNo");
-      							if(!budgetDocNoList.contains(budgetDocNo)){
-      								budgetDocNoList.add(budgetDocNo);
+							EgovMap availableAmtt = new EgovMap();
+							availableAmtt = budgetMapper.selectAvailableBudgetAmt(deMap);
+							if(!reMap.get("budgetAdjType").equals("01") && reMap.get("signal").equals("-") && Float.parseFloat(reMap.get("adjAmt").toString()) > Float.parseFloat(availableAmtt.get("availableAmt").toString())){
+								reMap.put("adjNumber", compareKey);
+								if(!overBudgetList.contains(compareKey)){
+									overBudgetList.add(compareKey);
       							}
 
-      						}
+								int count = budgetMapper.getBudgetDocNoFCM0039D_1(reMap);
 
-      						((Map<String, Object>) reMap).put("budgetDocNo", budgetDocNo);
+								if(count > 0){
+									String bdgDocNo = "";
+									bdgDocNo = budgetMapper.getBudgetDocNoFCM0039D(reMap);
+									reMap.put("budgetDocNo", bdgDocNo);
+				      				removeAdjustmentD(reMap);
+         							removeAdjustmentM(reMap);
+				      				budgetDocNoList.remove(bdgDocNo);
+								}
+								removeFCM0039D(reMap);
+								i = uploadNewMasterList.size();
 
-      						//detail table insert
-      						budgetMapper.insertAdjustmentD((Map<String, Object>) reMap);
+							}else{
+								reMap.put("adjNumber", compareKey);
+								float sumAdj = 0;
+								sumAdj = budgetMapper.checkUploadSum(reMap);
 
-      						reMap.put("adjNumber", compareKey);
+								if(sumAdj > Float.parseFloat(availableAmtt.get("availableAmt").toString())){
 
-      						budgetMapper.updateFCM0039D(reMap);
+									if(!overBudgetList.contains(compareKey)){
+										overBudgetList.add(compareKey);
+	      							}
 
-      				}
+									int count = budgetMapper.getBudgetDocNoFCM0039D_1(reMap);
 
+									if(count > 0){
+										String bdgDocNo = "";
+										bdgDocNo = budgetMapper.getBudgetDocNoFCM0039D(reMap);
+										reMap.put("budgetDocNo", bdgDocNo);
+					      				removeAdjustmentD(reMap);
+	         							removeAdjustmentM(reMap);
+					      				budgetDocNoList.remove(bdgDocNo);
+									}
+									removeFCM0039D(reMap);
+									i = uploadNewMasterList.size();
+								}else{
+              						((Map<String, Object>) reMap).put("userId", formData.get("updUserId"));
+              						addCnt++;
+              						addTurn++;
 
+              						if(addTurn == 1){
+
+              							((Map<String, Object>) reMap).put("atchFileGrpId", formData.get("atchFileGrpId"));
+
+              							//master table insert
+              							budgetMapper.insertAdjustmentM((Map<String, Object>) reMap);
+
+              							budgetDocNo = (String) ((Map<String, Object>) reMap).get("budgetDocNo");
+              							if(!budgetDocNoList.contains(budgetDocNo)){
+              								budgetDocNoList.add(budgetDocNo);
+              							}
+
+              						}
+
+              						((Map<String, Object>) reMap).put("budgetDocNo", budgetDocNo);
+
+              						//detail table insert
+              						budgetMapper.insertAdjustmentD((Map<String, Object>) reMap);
+
+              						reMap.put("adjNumber", compareKey);
+
+              						budgetMapper.updateFCM0039D(reMap);
+								}
+							}
       					}
-      					addTurn = 0;
-      					Logger.debug("addTurn: " + addTurn);
 
-      					Logger.debug("a is now >>> " + a);
       				}
+      					addTurn = 0;
+
+      			}
 
 
       			++compareKey;
@@ -675,7 +735,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       		EgovMap result = new EgovMap();
       		List resultAmtList = new ArrayList();
       		String overbudget="N"; //예산 사용 가능
-
+      		Map getMap = new HashMap<String, Object>();
       		//approval table insert
       		approvalMap.put("budgetDocNo", budgetDocNoList.get(i));
       		approvalMap.put("userId", formData.get("crtUserId"));
@@ -683,25 +743,6 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       		approvalMap.put("appvPrcssStus",  "R");
       		approvalMap.put("atchFileGrpId", atchFileGrpId);
 
-      		List<EgovMap> amtList = budgetMapper.selectAvailableAmtList(approvalMap);
-
-      			for(int j=0; j < amtList.size(); j++){
-      				EgovMap amtMap = amtList.get(j);
-
-      				if(  Float.parseFloat(amtMap.get("total").toString()) < 0 && Float.parseFloat(amtMap.get("total").toString())*-1 > Float.parseFloat(amtMap.get("availableAmt").toString())){
-
-      					Logger.debug(" total : " + amtMap.get("total").toString()  );
-      					Logger.debug(" availableAmt: " + amtMap.get("availableAmt").toString()  );
-
-      					overbudget = "Y";  //예산 초과
-      					amtMap.put("overbudget", overbudget);
-
-      					resultAmtList.add(amtMap);
-      					continue;
-      				}
-      			}
-
-      			if(overbudget.equals("N")){
       				budgetMapper.insertApprove(approvalMap);
       				budgetMapper.updateAdjustmentM(approvalMap);
 
@@ -715,30 +756,35 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       				ntf.put("userId", formData.get("crtUserId"));
 
       				webInvoiceMapper.insertNotification(ntf);
-      			}else{
-
-      				result.put("totCnt", addCnt);
-      				result.put("budgetDocNo", budgetDocNoList.get(i).toString());
-      				result.put("resultAmtList", resultAmtList);
-      				result.put("overbudget", overbudget);
-      				String msgs = "Overbudget: " + budgetDocNoList.get(i).toString();
-      				formData.put("message", msgs);
-//      				throw new ApplicationException("-1","Overbudget");
-      			}
 
 
-
+      			getMap.put("budgetDocNo", budgetDocNoList.get(i).toString());
+      			String str = budgetMapper.getAdjNumber(getMap);
+      			String outputDocNo = "[" + budgetDocNoList.get(i).toString() + ", Adj No:" + str + "]\n";
       			result.put("totCnt", addCnt);
-      			result.put("budgetDocNo", budgetDocNoList.get(i).toString());
+      			result.put("budgetDocNo", outputDocNo);
       			result.put("resultAmtList", resultAmtList);
       			result.put("overbudget", overbudget);
 
       			resultAddList.add(result);
       		}
+
+      	String res = "";
       	if(failMsg.length() > 0){
-      		formData.put("message", "Budget Code-GL Acc Code not in yearly plan: " + failMsg);
+      		failMsg = failMsg.substring(0, failMsg.length() - 1);
+      		res += "Budget Code-GL Acc Code not in yearly plan: \nAdj No:" + failMsg + "\n";
       	}
-      	//formData.put("budgetDocNoList", budgetDocNoList);
+
+      	if(overBudgetList.size() > 0){
+      		String overbdgt = "";
+      		for(int i = 0; i < overBudgetList.size(); i++){
+      			overbdgt += overBudgetList.get(i) + ",";
+      		}
+      		overbdgt = overbdgt.substring(0, overbdgt.length() - 1);
+      		res += "Overbudget:\nAdj No: " + overbdgt;
+      	}
+
+      	formData.put("message", res);
       	formData.put("resultList", resultAddList);
 
         return formData;
@@ -816,4 +862,10 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
        // TODO Auto-generated method stub
        budgetMapper.removeAdjustmentM(reMap);
      }
+
+   private void checkUploadSum(Map<String, Object> reMap) {
+       // TODO Auto-generated method stub
+       budgetMapper.checkUploadSum(reMap);
+     }
+
 }
