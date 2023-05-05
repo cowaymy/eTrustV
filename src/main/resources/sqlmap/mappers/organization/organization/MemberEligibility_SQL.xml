@@ -170,7 +170,7 @@
               O01D.MEM_CODE,
               O01D.MEM_TYPE, <!-- Check HP eligibility -->
               NVL(O01D.RANK, 0) AS RANK, <!-- Check HP eligibility -->
-              NVL(TO_CHAR(O01D.LAST_RANK_CHG_DT, 'YYYY-MM-DD'),'-') AS LAST_RANK_CHG_DT, <!-- Check HP eligibility -->
+              NVL(A.PV_YEAR || '-' || LPAD(A.PV_MONTH,'2',0),'-') AS LAST_RANK_CHG_DT, <!-- Check HP eligibility -->
               O01D.NRIC,
               NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYY-MM-DD'),'-') AS RESIGN_DT,
               O01D.STUS,
@@ -178,6 +178,21 @@
               O01D.TRM_REJOIN AS TRM_REJOIN
         FROM ORG0001D O01D
         LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
+        LEFT JOIN (
+            SELECT *
+	        FROM (
+	            SELECT B.*,
+	            ROW_NUMBER() OVER (
+	                PARTITION BY B.MEM_ID
+	                ORDER BY B.SALES_ORD_ID DESC
+	            ) ITM_ROWS
+	            FROM SAL0001D B
+	            JOIN ORG1001V EXTENT ON B.MEM_ID = EXTENT.MEM_ID
+	            WHERE B.PV_YEAR <![CDATA[ <> ]]> 0 AND B.PV_MONTH <![CDATA[ <> ]]> 0 AND B.STUS_CODE_ID = 4
+	                AND B.MEM_ID = #{memberID}
+	        )
+	        WHERE ITM_ROWS = 1
+        ) A ON A.MEM_ID = O01D.MEM_ID
         WHERE O01D.MEM_ID = #{memberID}
   </select>
 

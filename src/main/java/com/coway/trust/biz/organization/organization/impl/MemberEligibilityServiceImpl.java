@@ -190,6 +190,7 @@ public class MemberEligibilityServiceImpl extends EgovAbstractServiceImpl implem
     		            //Sleeping HP - 24 months
     				} else if(status.equals("1") && rank.equals("1366") && memType.equals("1")){
     					lastRankChgDt = memberInfo.get("lastRankChgDt").toString();
+
     					 try{
     						if(!lastRankChgDt.equals("-")){
     			          		// Today
@@ -197,9 +198,9 @@ public class MemberEligibilityServiceImpl extends EgovAbstractServiceImpl implem
 
     		        			// Current Date - 24 months
     		        			LocalDate lastRankChgDate = LocalDate.parse(lastRankChgDt);
-    		        			int lastRankChgDt_MonthsBetween = Months.monthsBetween(lastRankChgDate, now).getMonths();
+    		        			LocalDate eligibleToRejoinDt = lastRankChgDate.plusMonths(1).plusYears(2);
 
-    		        			if(lastRankChgDt_MonthsBetween >= 24){
+    		        			if( now.isEqual(eligibleToRejoinDt) || now.isAfter(eligibleToRejoinDt)){
     		        				lastRankChgDtFlg = "Y";
     							}else{
     								lastRankChgDtFlg = "N";
