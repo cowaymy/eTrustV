@@ -623,7 +623,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 
       					} else {
       						Logger.debug("uploadAdjNo :::: reMap {} ", reMap);
-      						deMap.put("budgetPlanYear", reMap.get("adjYearMonth").toString().substring(3));
+      						deMap.put("year", reMap.get("adjYearMonth").toString().substring(3));
       						String monthTemp = reMap.get("adjYearMonth").toString().substring(0,2);
       						String month = "";
       						if(monthTemp.length() == 2 && monthTemp.substring(0, 1).equals("0")){
@@ -631,13 +631,13 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       						}else{
       							month = reMap.get("adjYearMonth").toString().substring(0,2);
       						}
-							deMap.put("budgetPlanMonth", month);
+							deMap.put("month", month);
 							deMap.put("costCentr", reMap.get("costCentr"));
 							deMap.put("budgetCode", reMap.get("budgetCode"));
 							deMap.put("glAccCode", reMap.get("glAccCode"));
 
 							EgovMap availableAmtt = new EgovMap();
-							availableAmtt = budgetMapper.selectAvailableBudgetAmt(deMap);
+							availableAmtt = budgetMapper.getBudgetAmt(deMap);
 							if(!reMap.get("budgetAdjType").equals("01") && reMap.get("signal").equals("-") && Float.parseFloat(reMap.get("adjAmt").toString()) > Float.parseFloat(availableAmtt.get("availableAmt").toString())){
 								reMap.put("adjNumber", compareKey);
 								if(!overBudgetList.contains(compareKey)){
