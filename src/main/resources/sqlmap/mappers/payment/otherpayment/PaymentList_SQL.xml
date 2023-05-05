@@ -343,9 +343,9 @@
         SELECT
             COUNT(*)
         FROM (
-            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID = 1 AND GRP_SEQ = #{groupSeq}
+            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID IN (1, 5) AND GRP_SEQ = #{groupSeq}
             UNION ALL
-            SELECT FT_REQ_ID FROM PAY0260D WHERE FT_STUS_ID = 1 AND SRC_GRP_SEQ = #{groupSeq}
+            SELECT FT_REQ_ID FROM PAY0260D WHERE FT_STUS_ID IN (1, 5) AND SRC_GRP_SEQ = #{groupSeq}
         )
     </select>
 
