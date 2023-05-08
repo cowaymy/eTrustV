@@ -574,11 +574,11 @@ function fn_pBudgetCodePop(str){
       $("#recvBudgetCode").val("");
       $("#recvBudgetCodeName").val("");
       obj.costcenter = $("#recvCostCenter").val();
-      if($("#pAdjustmentType").val() == "04"){
-          obj.call = 'budgetAdj';
-      }else{
+     // if($("#pAdjustmentType").val() == "04"){
+         // obj.call = 'budgetAdj';
+    //  }else{
     	  obj.call = 'selectCodeList';
-      }
+    //  }
   }
 
   Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do", obj, null, true, "budgetCodeSearchPop");
@@ -602,16 +602,10 @@ function  fn_setPopBudgetData(){
   }else{
       $("#recvBudgetCode").val($("#pBudgetCode").val());
       $("#recvBudgetCodeName").val( $("#pBudgetCodeName").val());
-  }
-
-  if(!FormUtil.isEmpty($("#sendGlAccCode").val())) {
-      $("#sendGlAccCode").val("");
-      $("#sendGlAccCodeName").val("");
-      $("#sendAmount").val("");
-
-      $("#recvGlAccCode").val("");
-      $("#recvGlAccCodeName").val("");
-      $("#recvAmount").val("");
+      if($("#pAdjustmentType").val() == "07"){
+    	  $("#recvGlAccCode").val("");
+          $("#recvGlAccCodeName").val("");
+      }
   }
 
 }
