@@ -1718,6 +1718,7 @@
         LEFT JOIN SYS0047M s0047m
         ON s0047m.USER_ID = p0333m.UPT_BY
         WHERE s0001d.SALES_ORD_ID = #{salesOrderId}
+        AND p0333m.STUS_CODE_ID = 5
         ORDER BY p0333m.CRT_DT DESC)
         WHERE ROWNUM = 1
   </select>
