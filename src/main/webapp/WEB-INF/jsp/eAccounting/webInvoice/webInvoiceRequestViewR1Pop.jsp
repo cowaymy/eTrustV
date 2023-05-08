@@ -116,7 +116,7 @@ var myGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     headerHeight : 40,
-    height : 160,
+    //height : 160,
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells"
 };
@@ -718,7 +718,6 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
     <th scope="row"><spring:message code="webInvoice.requestDate" /></th>
     <td colspan="3" id="viewReqstDt"></td>
-    
 </tr>
 <tr>
     <th scope="row" id="viewMemAccNameTh"></th>

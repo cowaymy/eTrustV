@@ -89,7 +89,7 @@
     	    // 한 화면에 출력되는 행 개수 20(기본값:20)
     	    pageRowCount : 20,
     	    headerHeight : 40,
-    	    height : 160,
+    	  //  height : 160,
     	    // 셀 선택모드 (기본값: singleCell)
     	    selectionMode : "multipleCells"
     	};
@@ -194,8 +194,10 @@
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
             $("#settViewReq").hide();
             $("#settViewReqTotAmt").hide();
+            $("#setViewAdvOcc").show();
             $("#settViewBalAmt").hide();
             $("#settViewRefundMode").hide();
+            $("#viewRefundMode").hide();
             $("#settViewBankRef").hide();
             if(myGridData[0].advType == 5)
             {
@@ -351,7 +353,7 @@
 
 <!-- ************************************************************* LAYOUT ************************************************************* -->
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
     <h1 id="viewHeader"><spring:message code="approveView.title" /></h1>
@@ -442,7 +444,7 @@
 
                         <tr id="trvPeriod">
                             <th scope="row">Event Date</th>
-                            <td colspan=4>
+                            <td colspan=10>
                                 <span id="viewTrvPeriod"></span>
                             </td>
                         </tr>
@@ -454,29 +456,54 @@
                         </tr> -->
                         <tr>
                             <th scope="row">Remarks</th>
-                            <td colspan="4">
+                            <td colspan="10">
                                 <span id="viewTrvRem"></span>
                             </td>
                         </tr>
-                        <tr id=settViewReq>
-                        <th scope="row">Claim No for Advance Request</th>
-                        <td colspan=4><span id="viewAdvReqClmNo"> </span></td>
+                        <tr id="settViewReq">
+                        <th scope="row" >Claim No for Advance Request</th>
+                            <td colspan="4"><span id="viewAdvReqClmNo"></span></td>
+                        <th colspan="2">Advance Occassion</th>
+                            <td colspan="4"><select id="viewAdvOcc" name="viewAdvOcc"
+                             class="w100p" disabled="disabled">
+                                 <c:forEach var="list" items="${advOcc}" varStatus="status">
+                                     <option value="${list.code}">${list.codeName}</option>
+                                 </c:forEach>
+                         </select></td>
                     </tr>
-                    <tr id=settViewReqTotAmt>
-	                    <th scope="row">Advance Amount</th>
+                    <tr id="settViewReqTotAmt">
+	                    <th scope="row" >Advance Amount</th>
 	                        <td colspan=4><span id="viewAdvReqTotAmt"> </span></td>
+	                    <th colspan="2" id="settViewRefundMode">Refund Mode</th>
+                            <td colspan="4"><select id="viewRefundMode" name="viewRefundMode"
+                             class="w100p" disabled="disabled">
+                                <option value="CASH">Cash</option>
+                                <option value="OTRX">Online</option>
+                             </select>
+                             </td>
                     </tr>
                     <tr>
                             <th id=advAmtHeader scope="row">Advance Amount</th>
                             <td colspan="4">
                                 <span id="viewTrvTotAmt"></span>
                             </td>
+                            <th colspan="2" id="settViewBankRef">Bank Reference</th>
+                            <td colspan=4><span id="viewBankRef"></span></td>
                     </tr>
                     <tr id=settViewBalAmt>
                         <th scope="row">Balance Amount</th>
-                            <td colspan=4><span id="viewAdvSettBalAmt"></span></td>
+                            <td colspan=10><span id="viewAdvSettBalAmt"></span></td>
                     </tr>
-                    <tr>
+                       <tr id="setViewAdvOcc" style="display:none">
+                          <th scope="row" >Advance Occassion</th>
+                            <td colspan="4"><select id="viewAdvOcc" name="viewAdvOcc"
+                             class="w100p" disabled="disabled">
+                                 <c:forEach var="list" items="${advOcc}" varStatus="status">
+                                     <option value="${list.code}">${list.codeName}</option>
+                                 </c:forEach>
+                         </select></td>
+                    </tr>
+                     <%--<tr>
                          <th scope="row">Advance Occassion</th>
                          <td colspan=4><select id="viewAdvOcc" name="viewAdvOcc"
                              class="w100p" disabled="disabled">
@@ -484,20 +511,20 @@
                                      <option value="${list.code}">${list.codeName}</option>
                                  </c:forEach>
                          </select></td>
-                    </tr>
-                    <tr id="settViewRefundMode">
-                        <th scope="row">Refund Mode</th>
+                    </tr>--%>
+                   <!--  <tr id="settViewRefundMode">
+                        <th scope="row" id="settViewRefundMode">Refund Mode</th>
                             <td colspan=4><select id="viewRefundMode" name="viewRefundMode"
                              class="w100p" disabled="disabled">
                                 <option value="CASH">Cash</option>
                                 <option value="OTRX">Online</option>
                              </select>
                              </td>
-                    </tr>
-                    <tr id="settViewBankRef">
-                        <th scope="row">Bank Reference</th>
+                    </tr> -->
+                   <!--  <tr>
+                        <th scope="row" id="settViewBankRef">Bank Reference</th>
                             <td colspan=4><span id="viewBankRef"></span></td>
-                    </tr>
+                    </tr> -->
                     </table>
 
                 <!-- Travel Advance Division -->
