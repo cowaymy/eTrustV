@@ -5836,7 +5836,7 @@ SELECT MST.*
                                                                       AND FRA_ORD_NO IS NOT NULL ) -->
 
                   <choose>
-                        <when test='prodCat == 500001'>
+                        <when test='prodCat == "500001"'>
                             AND SAL0001D.SALES_ORD_NO = #{matOrdNo}
                         </when>
                         <otherwise>
