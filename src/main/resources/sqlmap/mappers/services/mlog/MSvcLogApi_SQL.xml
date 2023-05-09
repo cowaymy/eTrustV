@@ -5836,13 +5836,13 @@ SELECT MST.*
                                                                       AND FRA_ORD_NO IS NOT NULL ) -->
 
                   <choose>
-                        <when test='prodCat == "500001"'>
+                        <when test="prodCat == '500001'">
                             AND SAL0001D.SALES_ORD_NO = #{matOrdNo}
                         </when>
                         <otherwise>
                             AND SAL0001D.SALES_ORD_NO = (SELECT FRA_ORD_NO
                                                                     FROM HMC0011D
-                                                                  WHERE MAT_ORD_NO = #{matOrdNo}
+                                                                  WHERE MAT_ORD_NO = #{prodCat}
                                                                       AND FRA_ORD_NO IS NOT NULL )
                         </otherwise>
                     </choose>
