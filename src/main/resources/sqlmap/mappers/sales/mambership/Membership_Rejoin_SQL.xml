@@ -30,7 +30,8 @@
             T0.SVM_BY_OTHER ,
             T0.EXTRADE_BY_OWN ,
             T0.EXTRADE_BY_OTHER ,
-            T0.REJOIN_RATE_3M REJOIN_RATE,
+            <!-- T0.REJOIN_RATE_3M REJOIN_RATE, --> <!-- 20230508: Celeste commented due to rejoin % display enhancement -->
+            T0.REJOIN_RATE_1M REJOIN_RATE,
             T0.UPD_DT
         FROM SAL0259T T0
         LEFT JOIN SAL0259T T1 ON T1.MEM_CODE = T0.MEM_CODE
