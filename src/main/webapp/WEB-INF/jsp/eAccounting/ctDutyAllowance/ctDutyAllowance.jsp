@@ -94,7 +94,7 @@ var ctDutyClaimColumnLayout = [
     visible : false // Color 칼럼은 숨긴채 출력시킴
 },
 {
-    dataField : "curAppvUserId",
+    dataField : "reqstUserId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }
 ];
