@@ -47,13 +47,20 @@
                     <if test="branchId != null and branchId != '' ">
                     AND B.BRNCH_ID = #{branchId}
                     </if>
-                    AND A.KEY_IN_SCRN = 'ADV'
-            )
-        GROUP BY
-            A.GROUP_SEQ,
-            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
-            A.PAY_ITM_MODE_ID,
-            E.CODE
+                    <choose>
+                      <when test="advanceSearch != '' and advanceSearch != null">
+                        AND A.KEY_IN_SCRN = 'BAT'
+                      </when>
+                      <otherwise>
+                        AND A.KEY_IN_SCRN = 'ADV'
+                      </otherwise>
+                    </choose>
+  )
+  GROUP BY
+  A.GROUP_SEQ,
+  TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+  A.PAY_ITM_MODE_ID,
+  E.CODE
 
     </select>
 

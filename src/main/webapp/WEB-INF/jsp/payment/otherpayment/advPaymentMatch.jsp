@@ -677,8 +677,8 @@ function fn_generateReport(){
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"></th>
-                        <td></td>
+                         <th scope="row">Advance</th>
+                    <td><input type='checkbox' id='advanceSearch' name='advanceSearch' value='1'></td>
                         <th scope="row">Amount</th>
                         <td>
                             <input type="text" id="bnkCrAmt" name="bnkCrAmt"  class="w100p" />
