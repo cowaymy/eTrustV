@@ -245,7 +245,7 @@
             SUPPLIER SUPPLIER_NAME,
             'OP (Purchase(0%):Out of scope)' TAX_CODE,
             INVC_CUR CURRENCY,
-            AMT TOTAL_AMT,
+            NVL(AMT, 0) TOTAL_AMT,
             REM
         FROM FCM0028D
         WHERE CLM_NO = #{clmNo}
