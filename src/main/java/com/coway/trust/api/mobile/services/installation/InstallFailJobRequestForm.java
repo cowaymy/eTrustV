@@ -66,6 +66,8 @@ public class InstallFailJobRequestForm {
 
   private String custMobileNo;
 
+  private String productCat;
+
   public String getTurbLvl() {
 	return turbLvl;
 }
@@ -242,6 +244,14 @@ public String getFailDeptChk() {
   public void setResultIcMobileNo(String resultIcMobileNo) {
 	this.resultIcMobileNo = resultIcMobileNo;
   }
+
+ public String getProductCat() {
+	return productCat;
+ }
+
+ public void setProductCat(String productCat) {
+	this.productCat = productCat;
+ }
 
 public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
 
