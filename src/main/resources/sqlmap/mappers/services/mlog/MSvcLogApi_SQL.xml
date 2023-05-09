@@ -5830,10 +5830,24 @@ SELECT MST.*
                    AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
                    AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
                    AND ORG0001D.mem_code = #{userId}
-                   AND SAL0001D.SALES_ORD_NO = (SELECT FRA_ORD_NO
+<!--                    AND SAL0001D.SALES_ORD_NO = (SELECT FRA_ORD_NO
+                                                                    FROM HMC0011D
+                                                                  WHERE MAT_ORD_NO = #{matOrdNo}
+                                                                      AND FRA_ORD_NO IS NOT NULL ) -->
+
+                  <choose>
+                        <when test='prodCat == 500001'>
+                            AND SAL0001D.SALES_ORD_NO = #{matOrdNo}
+                        </when>
+                        <otherwise>
+                            AND SAL0001D.SALES_ORD_NO = (SELECT FRA_ORD_NO
                                                                     FROM HMC0011D
                                                                   WHERE MAT_ORD_NO = #{matOrdNo}
                                                                       AND FRA_ORD_NO IS NOT NULL )
+                        </otherwise>
+                    </choose>
+
+
             ) A
      WHERE rnum = 1
   </select>
