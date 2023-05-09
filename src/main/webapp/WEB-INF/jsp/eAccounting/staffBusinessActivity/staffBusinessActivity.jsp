@@ -2663,7 +2663,7 @@ var myGridPros = {
 							</select></td>
 							<th scope="row">Entry Date</th>
 							<td><input type="text" title="" placeholder="DD/MM/YYYY"
-								class="j_date w100p" id="refKeyDate" name="refKeyDate" readonly/>
+								class="w100p readonly" id="refKeyDate" name="refKeyDate" readonly/>
 							</td>
 						</tr>
 						<tr>
