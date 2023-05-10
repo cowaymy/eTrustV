@@ -984,7 +984,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	public Map<String, Object> hcInstallationSendHPSMS(Map<String, Object> installResult) {
 		Map<String, Object> smsResultValue = new HashMap<String, Object>();
 		String smsMessage = "";
-		String hpPhone = installResult.get("hpPhoneNo").toString();
+		String hpPhone = CommonUtils.nvl(installResult.get("hpPhoneNo").toString());
 		smsResultValue.put("smsLogStat", "0");//if success
 
 		logger.debug("================HPINSMS111================");
