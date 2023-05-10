@@ -257,6 +257,7 @@ WHERE 1=1
     SUM(M12) M12
     FROM (
     <if test='budgetPlan == "0" '>
+    <![CDATA[
       SELECT
       A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR,
       A.COST_CENTR ,
@@ -305,6 +306,7 @@ WHERE 1=1
       )
       )
       ) A
+       ]]>
       UNION ALL
     </if>
     SELECT
@@ -326,6 +328,7 @@ WHERE 1=1
     NVL(M12,0) M12
     FROM (
     <!-- DATE : 070423 -->
+    <![CDATA[
     SELECT *
     FROM (
     SELECT F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F1.GL_ACC_CODE, F1.BUDGET_CODE,
@@ -361,6 +364,7 @@ WHERE 1=1
     )
     ) A
     ) A
+     ]]>
     LEFT JOIN FCM0104D C
     ON A.COST_CENTR = C.COST_CENTR
     AND A.BUDGET_CODE = C.BUDGET_CODE
