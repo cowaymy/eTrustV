@@ -79,4 +79,6 @@ public interface HcInstallResultListMapper {
 	EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
 
 	EgovMap selectFailReason(Map<String, Object> params);
+
+	public EgovMap selectSubmitStatusOrd(Map<String, Object> params) throws Exception;
 }

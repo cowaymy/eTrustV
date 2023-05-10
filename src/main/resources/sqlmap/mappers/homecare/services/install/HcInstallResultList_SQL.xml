@@ -55,7 +55,7 @@
 	                  ,HPDET.name HP_NAME
                       ,HPDET.TEL_MOBILE HP_CONTACT
                      ,exchg.SO_CUR_STUS_ID ord_stus_code_id
-		FROM SAL0001D som
+        FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
 		LEFT JOIN SAL0046D IE ON IE.SALES_ORD_ID = som.SALES_ORD_ID and IE.CALL_ENTRY_ID <> 0 /*By KV - no need data which is call_entry_id = 0 */
@@ -267,13 +267,12 @@
 		   AND A.BNDL_ID = B.ORD_SEQ_NO
 		   AND A.SALES_ORD_NO = #{salesOrdNo} -->
 
-	SELECT B.FRA_ORD_NO AS SALES_ORD_NO,a.stus_code_id ord_stus_code_id
+	SELECT DISTINCT B.FRA_ORD_NO AS SALES_ORD_NO
           FROM SAL0001D a
              , HMC0011D B
          WHERE A.BNDL_ID IS NOT NULL
            AND A.BNDL_ID = B.ORD_SEQ_NO
            AND b.mat_ord_no =#{salesOrdNo}
-           and rownum =1
     </select>
 
     <select id="selectFrmInstNO" parameterType="Map" resultType="egovMap">
@@ -427,4 +426,8 @@
     FROM SYS0032M
     WHERE RESN_ID = #{failReasonCode}
   </select>
+
+  <select id="selectSubmitStatusOrd" parameterType="Map" resultType="egovMap">
+    select so_cur_stus_id from sal0004d where so_id = #{salesOrdNo}
+    </select>
 </mapper>
