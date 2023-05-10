@@ -88,7 +88,7 @@ var myColumnLayout = [ {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
     style : "aui-grid-user-custom-left",
-    width : 200
+    width : 300
 }
 ];
 
@@ -672,7 +672,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 }
 </script>
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="approveView.title" /></h1>

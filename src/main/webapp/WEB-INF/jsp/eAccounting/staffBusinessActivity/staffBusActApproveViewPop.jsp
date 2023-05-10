@@ -79,7 +79,7 @@
         dataField : "expDesc",
         headerText : '<spring:message code="newWebInvoice.description" />',
         style : "aui-grid-user-custom-left",
-        width : 200
+        width : 300
     }
     ];
 
