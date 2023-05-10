@@ -577,9 +577,12 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
         try{
-        	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
-        		smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
 
+        	logger.info("debuggg1:: " + (String.valueOf(params.get("hcInd"))));
+
+        	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
+        		logger.info("debuggg2::" );
+        		smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
         		EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
         		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
         		params.put("hpMemId",salesmanInfo.get("memId"));
@@ -590,8 +593,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         				+ "\n Failed Reason: " + params.get("resnDesc") ;
         		params.put("hpMsg",hpMsg);
 
+        		logger.info("debuggg3::" );
+
         		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
         	}else{
+        		logger.info("debuggg4::" );
         		smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
         	}
 
