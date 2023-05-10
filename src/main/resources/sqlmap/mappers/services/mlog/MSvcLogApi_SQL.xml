@@ -5830,9 +5830,10 @@ SELECT MST.*
                    AND CCR0007D.CALL_ENTRY_ID = SAL0046D.CALL_ENTRY_ID
                    AND CCR0006D.RESULT_ID = CCR0007D.CALL_RESULT_ID
                    AND ORG0001D.mem_code = #{userId}
-                   AND SAL0001D.SALES_ORD_NO = #{matOrdNo}
-
-
+                   AND SAL0001D.SALES_ORD_NO = (SELECT FRA_ORD_NO
+                                                                    FROM HMC0011D
+                                                                  WHERE MAT_ORD_NO = #{matOrdNo}
+                                                                      AND FRA_ORD_NO IS NOT NULL )
             ) A
      WHERE rnum = 1
   </select>
