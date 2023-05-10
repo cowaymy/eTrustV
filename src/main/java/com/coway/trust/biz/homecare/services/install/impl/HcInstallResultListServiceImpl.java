@@ -93,7 +93,9 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     oMap.put("salesOrdNo", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
     EgovMap hcOrder = hcInstallResultListMapper.selectFrmOrdNo(oMap);
 
-    if(hcOrder != null && hcOrder.get("ordStusCodeId").toString().equals("4")){
+    Map<String, Object> hcSubmitOrdStatus = hcInstallResultListMapper.selectSubmitStatusOrd(oMap);
+
+    if(hcOrder != null && hcSubmitOrdStatus != null && hcSubmitOrdStatus.get("soCurStusId").toString().equals("25")){
     	hcOrder = null;
     }
 
