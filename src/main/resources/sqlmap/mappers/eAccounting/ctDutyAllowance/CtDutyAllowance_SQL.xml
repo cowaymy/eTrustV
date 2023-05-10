@@ -79,6 +79,7 @@ FROM   (
                ,T6.BRNCH_ID
                ,T7.APPV_LINE_SEQ
                ,0 AS CUR_APPV_USER_ID
+               ,T9.USER_NAME AS REQST_USER_ID
         FROM   FCM0035M T1
                LEFT JOIN FCM0006M T2
                       ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
@@ -89,6 +90,7 @@ FROM   (
                LEFT JOIN FCM0005D T7
                       ON T7.APPV_PRCSS_NO = T4.APPV_PRCSS_NO AND T7.APPV_STUS in ('A','J')
                LEFT JOIN ORG0001D T8 ON T8.MEM_CODE = T7.APPV_LINE_USER_ID
+               JOIN SYS0047M T9 ON T9.HR_CODE = T1.MEM_ACC_ID
                WHERE 1=1
             AND T8.MEM_ID = #{apprvUserId}
           </if>
