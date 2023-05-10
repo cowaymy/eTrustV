@@ -132,8 +132,8 @@ $(document).ready(function(){
 	    , { dataField : "totalExpired", headerText : "<spring:message code='sal.title.totExp'/>", width : '8%' }
 	    , { dataField : "totalFreshExpired", headerText : "<spring:message code='sal.title.totFreshExp'/>", width : '11%' }
 	    , { dataField : "totalFreshExpiredLast", headerText : "<spring:message code='sal.title.totFreshExpLast'/>", width : '11%' }
-	    , { dataField : "totalFreshExpiredLast2", headerText : "<spring:message code='sal.title.totFreshExpLast2'/>", width : '11%' }
-	    , { dataField : "totalFreshExpired3m", headerText : "<spring:message code='sal.title.totFreshExpAvg'/>", width : '10%' }
+	   /*  , { dataField : "totalFreshExpiredLast2", headerText : "<spring:message code='sal.title.totFreshExpLast2'/>", width : '11%' }
+	    , { dataField : "totalFreshExpired3m", headerText : "<spring:message code='sal.title.totFreshExpAvg'/>", width : '10%' } */
 	    , { dataField : "svmByOwn", headerText : "<spring:message code='sal.title.svmOwn'/>", width : '8%' }
 	    , { dataField : "svmByOther", headerText : "<spring:message code='sal.title.svmOther'/>", width : '8%' }
 	    , { dataField : "extradeByOwn", headerText : "<spring:message code='sal.title.exTradeOwn'/>", width : '10%' }
