@@ -281,7 +281,7 @@
             </if>
              <if test="status != null and status != ''">
                 <if test="status == 1">
-                AND DISAB_FLAG = 'N' OR DISAB_FLAG IS NULL
+                AND (DISAB_FLAG = 'N' OR DISAB_FLAG IS NULL)
                 </if>
                 <if test="status == 8">
                 AND DISAB_FLAG = 'Y'
