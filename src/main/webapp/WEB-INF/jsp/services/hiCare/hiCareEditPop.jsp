@@ -73,7 +73,11 @@
 
 
     	 $("#_filterTxtBarcode").val('${headerDetail.filterSn}');
-         $("#_chgdt").val('${headerDetail.filterChgDt}');
+         $("#_chgdt").val('${headerDetail.filterChgDt}').val(new Date().toLocaleDateString('en-GB', {
+        	    day: '2-digit',
+        	    month: '2-digit',
+        	    year: 'numeric'
+        	}).split('/').join('/'));
     	 if(!($("#_filterTxtBarcode").val() == null || $("#_filterTxtBarcode").val()== "")){
     		 $("#_filterTxtBarcode").attr("disabled" , "disabled");
     		 $("#_chgdt").attr("disabled" , "disabled");
@@ -467,7 +471,7 @@
                 <p>
                  <input id="_chgdt" name="chgdt" type="text"
                   title="Filter Last Change Date" placeholder="DD/MM/YYYY"
-                  class="j_date">
+                  class="w100p readonly" readonly>
                 </p>
                </div>
            <!-- date_set end -->
