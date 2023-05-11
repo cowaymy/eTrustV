@@ -862,7 +862,7 @@
                         $("#settlementAdvRefdNo").val(advGridClmNo);
 
                         $("#settlementTotalAdv").val(result.data.totAmt);
-                        $("#settlementKeyDate").val(result.data.crtDt);
+                        $("#settlementKeyDate").val(fn_getToday);
                         $("#settlementAdvNo").val(result.data.clmNo);
                         $("#settlementTotalAdv").val(AUIGrid.formatNumber(Number(result.data.totAmt), "#,##0.00"));
                         $("#settlementTotalAdvHeader").text("Advance Amount (" + result.data.cur + ")");
