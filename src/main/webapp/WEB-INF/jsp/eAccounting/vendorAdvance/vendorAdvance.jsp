@@ -684,7 +684,7 @@
                     $("#reqSubmit").hide();
                     $("#rejectReasonRow").hide();
                     $("#finalAppvRow").hide();
-
+                    $("#keyDate").val(result.data.crtDt);
                     $("#keyDate").addClass("readonly");
                     $("#reqCostCenter").addClass("readonly");
                     $("#newMemAccId").addClass("readonly");
