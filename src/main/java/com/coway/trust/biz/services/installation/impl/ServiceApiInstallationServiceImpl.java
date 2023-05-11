@@ -345,7 +345,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       Map<String, Object> fraParam = new HashMap();
       fraParam.put("matOrdNo", params.get("salesOrderNo"));
       fraParam.put("userId", String.valueOf(params.get("userId")));
-      fraParam.put("prodCat", params.get("productCat"));
+      //fraParam.put("prodCat", params.get("productCat"));
       EgovMap fraInfo = MSvcLogApiService.getFraOrdInfo(fraParam);
       if (fraInfo != null) {
         fraParams.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
