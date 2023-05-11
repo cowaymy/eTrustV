@@ -221,7 +221,7 @@ WHERE 1=1
     )
   </update>
 
-  <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap">
+  <!-- <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap"> //HIDE FOR TESTING
     SELECT
     A.BUDGET_PLAN_YEAR ,
     A.COST_CENTR ,
@@ -327,12 +327,35 @@ WHERE 1=1
     NVL(M11,0) M11,
     NVL(M12,0) M12
     FROM (
-    <!-- DATE : 070423 -->
-    <![CDATA[
+    DATE : 070423
     SELECT * FROM FCM0001V_NR  A
+    <![CDATA[
+
+    SELECT *
+    FROM (
+    SELECT F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F1.GL_ACC_CODE, F1.BUDGET_CODE,
+    F1.PLAN_AMT, F1.CHNG_AMT,
+    (SUM(CASE WHEN F3.SIGNAL = '+' THEN F3.ADJ_AMT ELSE 0 END) - SUM(CASE WHEN F3.SIGNAL = '-' THEN F3.ADJ_AMT ELSE 0 END)) TOTAL
+    , SUM(F5.NET_AMT) APP_AMT_TOTAL
+    FROM FCM0101M F1
+    LEFT JOIN (SELECT F3.BUDGET_ADJ_YEAR, F3.BUDGET_ADJ_MONTH, F3.COST_CENTR, F3.BUDGET_CODE, F3.GL_ACC_CODE, F3.ADJ_AMT, F3.SIGNAL
+    FROM FCM0103D F3
+    LEFT JOIN FCM0102M F2 ON F2.BUDGET_DOC_NO = F3.BUDGET_DOC_NO
+    LEFT JOIN FCM0105M F5 ON F5.BUDGET_DOC_NO = F3.BUDGET_DOC_NO
+    WHERE F2.APPV_STUS = 'C'
+    AND F5.APPV_PRCSS_STUS = 'A') F3 ON F3.BUDGET_ADJ_YEAR = F1.BUDGET_PLAN_YEAR AND F3.BUDGET_ADJ_MONTH = F1.BUDGET_PLAN_YEAR
+    LEFT JOIN (SELECT F5.CRT_DT, F5.NET_AMT, F5.BUDGET_CODE, F5.COST_CENTR, F5.GL_ACC_CODE FROM FCM0015D F5
+    LEFT JOIN FCM0004M F4 ON F4.APPV_PRCSS_NO = F5.APPV_PRCSS_NO
+    WHERE F4.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')) F5
+    ON EXTRACT(YEAR FROM TO_DATE(F5.CRT_DT, 'DD/MM/YYYY')) = F1.BUDGET_PLAN_YEAR
+    AND EXTRACT (MONTH FROM TO_DATE(F5.CRT_DT, 'DD/MM/YYYY')) = F1.BUDGET_PLAN_MONTH
+    AND F5.COST_CENTR = F1.COST_CENTR AND F5.BUDGET_CODE = F1.BUDGET_CODE AND F5.GL_ACC_CODE = F1.GL_ACC_CODE
+    GROUP BY
+    F1.PLAN_AMT, F1.CHNG_AMT, F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR,
+    F1.GL_ACC_CODE, F1.BUDGET_CODE ) A
     PIVOT (MAX(
     CASE
-    WHEN '0'= #{budgetPlan} THEN AVAILABLE_AMT
+    WHEN '0'= #{budgetPlan} THEN NVL(PLAN_AMT,0) + NVL(CHNG_AMT,0) + NVL(TOTAL,0) - NVL(APP_AMT_TOTAL ,0)
     WHEN '1'= #{budgetPlan} THEN PLAN_AMT
     ELSE 0
     END)
@@ -349,9 +372,9 @@ WHERE 1=1
     AND A.BUDGET_CODE = C.BUDGET_CODE
     AND A.GL_ACC_CODE = C.GL_ACC_CODE
     WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
-    <!-- Default cost center values with cost center disabled on screen -->
+    Default cost center values with cost center disabled on screen
     <if test="stCostCentr == null or stCostCentr == '' ">
-       <!-- stCostCentr == null or stCostCentr == ''  -->
+       stCostCentr == null or stCostCentr == ''
       <if test="procFlg != null and procFlg != '' and procFlg == 1">
         AND A.COST_CENTR IN (<![CDATA[
         SELECT
@@ -365,11 +388,11 @@ WHERE 1=1
           AND STATUS = 1
         GROUP BY COST_CENTER
     ]]>)
-        <!-- <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")"> #{costCenterList} </foreach> -->
+        <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")"> #{costCenterList} </foreach>
       </if>
     </if>
     <if test="(costCentr == null or costCentr == '') and flg == 1">
-     <!--  (costCentr == null or costCentr == '') and flg == 1  -->
+      (costCentr == null or costCentr == '') and flg == 1
       <if test="stCostCentr != null and stCostCentr != '' and procFlg == 0">
         <if test="edCostCentr != null and edCostCentr != '' ">
           AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
@@ -382,7 +405,7 @@ WHERE 1=1
         AND A.COST_CENTR = ''
       </if>
     </if>
-    <!-- <if test="(stCostCentr != null and stCostCentr != '') and stCostCentr != costCentr and (costCentr != null or costCentr != '') and flg == 1 "> AND A.COST_CENTR = '' </if> -->
+    <if test="(stCostCentr != null and stCostCentr != '') and stCostCentr != costCentr and (costCentr != null or costCentr != '') and flg == 1 "> AND A.COST_CENTR = '' </if>
     <if test="(stCostCentr != null and stCostCentr != '') and flg == 0 ">
       <if test="(edCostCentr == null or edCostCentr == '') and procFlg == 0">
         AND A.COST_CENTR = #{stCostCentr}
@@ -414,6 +437,22 @@ WHERE 1=1
     A.BUDGET_CODE,
     CNTRL_TYPE
     ORDER BY COST_CENTR
+  </select>
+ -->
+<select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap">
+    SELECT * FROM FCM0001V_NR WHERE BUDGET_PLAN_YEAR = #{budgetPlanYear}
+    AND COST_CENTR IN (<![CDATA[
+        SELECT
+            COST_CENTER
+        FROM FCM0107M
+        WHERE USER_ID = #{userId}
+          AND SYSDATE >= VALID_DT_FR
+          AND SYSDATE <= VALID_DT_TO
+          AND MAIN_MODULE = #{mainMod}
+          AND SUB_MODULE = #{subMod}
+          AND STATUS = 1
+        GROUP BY COST_CENTER
+    ]]>)
   </select>
 
   <select id="selectAdjustmentCBG" parameterType="Map" resultType="egovMap">
