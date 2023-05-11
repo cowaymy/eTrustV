@@ -305,6 +305,7 @@ public class BudgetController {
 
 		budgetList = budgetService.selectMonthlyBudgetList(params);
 
+		LOGGER.debug("budgetList>> " + budgetList);
 		return ResponseEntity.ok(budgetList);
 
 	}
