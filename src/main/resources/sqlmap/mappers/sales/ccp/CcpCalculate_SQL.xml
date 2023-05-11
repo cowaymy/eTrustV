@@ -2092,6 +2092,20 @@ WHERE ROWNUM = 1
 	       </if>
 	       AND MEM_LVL = 4
 	    </where>
+	    UNION
+	    SELECT
+	       B.MEM_ID,
+	       C.MEM_TYPE,
+	       EXTRACT(MONTH FROM SYSDATE),
+	       EXTRACT(YEAR FROM SYSDATE)
+	    FROM ORG1001V B
+	    JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
+	    <where>
+           <if test="deptCode != '' and deptCode != null">
+               AND #{deptCode} IN (DEPT_CODE, GRP_CODE, ORG_CODE, TOP_ORG_CODE)
+           </if>
+           AND MEM_LVL = 4
+        </where>
     )
     SELECT
         A.TICKET_ID,
