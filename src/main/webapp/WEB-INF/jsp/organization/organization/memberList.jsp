@@ -1003,6 +1003,22 @@ function fn_genRawData() {
     Common.report("rawDataReport", option);
 }
 
+function fn_pushCU(){
+
+	let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
+
+	Common.ajax("GET","/organization/pushCU.do", {MemberID : memberId}, function(result) {
+		console.log(result);
+		if(result.status == 'true'){
+			Common.alert("Successfully push to CU.");
+		}else{
+			Common.alert("Request failed.");
+		}
+
+    });
+
+}
+
 $(function() {
     $('#hpYSListingBtn').click(function() {
         Common.popupDiv("/organization/HPYSListingPop.do", null, null, true);
@@ -1359,6 +1375,9 @@ function fn_socialMediaInfo(){
 </c:if>
  <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_genRawData()">Raw Data Download</a></p></li>
+</c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_pushCU()">Push to CU</a></p></li>
 </c:if>
 
 </ul>

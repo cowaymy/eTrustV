@@ -2942,5 +2942,11 @@ public class MemberListController {
   public ResponseEntity<BigDecimal> getOwnPurcOtstndInfo(@RequestParam Map<String, Object> params, ModelMap model) {
     return ResponseEntity.ok(memberListService.getOwnPurcOutsInfo(params));
   }
+
+  @RequestMapping(value = "/pushCU.do", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> pushCU(@RequestParam Map<String, Object> params) {
+    Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(params);
+    return ResponseEntity.ok(returnVal);
+  }
 }
 
