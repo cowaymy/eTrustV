@@ -19,4 +19,12 @@ public interface MobileLumpSumPaymentKeyInMapper {
     List<EgovMap> getLumpSumEnrollmentList(Map<String, Object> params);
     List<EgovMap> mobileSelectCashMatchingPayGroupList(Map<String, Object> params);
     int mobileUpdateCashMatchingData(Map<String, Object> params);
+    EgovMap selectLumpSumPaymentDetail(Map<String, Object> params);
+    EgovMap selectBankStatementInfo(Map<String, Object> params);
+    List<EgovMap> selectLumpSumPaymentSubDetail(Map<String, Object> params);
+    EgovMap selectOrderDetailInfo(Map<String, Object> params);
+    void updateApproveLumpSumPaymentInfo(Map<String, Object> params);
+    int updateRejectLumpSumPayment(Map<String, Object> params);
+    EgovMap getPay0024D(Map<String, Object> params);
+    EgovMap getServiceMembershipDetail(Map<String, Object> params);
 }

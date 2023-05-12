@@ -3,6 +3,12 @@ package com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+
+import com.coway.trust.cmmn.model.SessionVO;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface MobileLumpSumPaymentKeyInService {
@@ -19,4 +25,10 @@ public interface MobileLumpSumPaymentKeyInService {
 	int mobileUpdateCashMatchingData(Map<String, Object> params);
 
 	List<EgovMap> mobileSelectCashMatchingPayGroupList(Map<String, Object> params);
+
+	Map<String, Object> saveNormalPayment(Map<String, Object> params, SessionVO sessionVO);
+
+	List<EgovMap> savePaymentCard(Map<String, Object> params, SessionVO sessionVO);
+
+	List<EgovMap> rejectApproval(Map<String, Object> params, SessionVO sessionVO);
 }

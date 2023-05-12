@@ -1,10 +1,13 @@
 package com.coway.trust.web.payment.mobileLumpSumPayment.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +15,20 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.MobileLumpSumPaymentKeyInService;
 import com.coway.trust.biz.payment.mobilePaymentKeyIn.service.MobilePaymentKeyInService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -63,5 +72,54 @@ public class MobileLumpSumPaymentController {
 
 		List<EgovMap> resultList = mobileLumpSumPaymentKeyInService.getLumpSumEnrollmentList(params);
 	    return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/saveNormalPayment.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveNormalPayment(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		Map<String,Object> result =mobileLumpSumPaymentKeyInService.saveNormalPayment(params,sessionVO);
+		ReturnMessage message = new ReturnMessage();
+
+		if(result != null){
+		    message.setCode(AppConstants.SUCCESS);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+		else{
+		    message.setCode(AppConstants.FAIL);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+	    return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveCardPayment.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveCardPayment(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		List<EgovMap> result = mobileLumpSumPaymentKeyInService.savePaymentCard(params,sessionVO);
+		ReturnMessage message = new ReturnMessage();
+
+		if(result != null){
+		    message.setCode(AppConstants.SUCCESS);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+		else{
+		    message.setCode(AppConstants.FAIL);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+	    return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/rejectApproval.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> rejectApproval(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		List<EgovMap> result = mobileLumpSumPaymentKeyInService.rejectApproval(params,sessionVO);
+		ReturnMessage message = new ReturnMessage();
+
+		if(result != null){
+		    message.setCode(AppConstants.SUCCESS);
+		    message.setData(result);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+		else{
+		    message.setCode(AppConstants.FAIL);
+		    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+	    return ResponseEntity.ok(message);
 	}
 }

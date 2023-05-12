@@ -27,6 +27,7 @@ public class MobileLumpSumPaymentApiDto {
 	private String custCorpTypeCodeName;
 
 	//customer order search
+	private int srvMemId;
 	private int ordId;
 	private String ordNo;
 	private int ordPaymentTypeId;
@@ -72,6 +73,7 @@ public class MobileLumpSumPaymentApiDto {
 		params.put("custCorpTypeCodeName", vo.getCustCorpTypeCodeName());
 
 		//customer order search
+		params.put("srvMemId", vo.getSrvMemId());
 		params.put("ordId",vo.getOrdId());
 		params.put("ordNo",vo.getOrdNo());
 		params.put("payType",vo.getPayType());
@@ -324,5 +326,13 @@ public class MobileLumpSumPaymentApiDto {
 
 	public void setCrtDt(String crtDt) {
 		this.crtDt = crtDt;
+	}
+
+	public int getSrvMemId() {
+		return srvMemId;
+	}
+
+	public void setSrvMemId(int srvMemId) {
+		this.srvMemId = srvMemId;
 	}
 }

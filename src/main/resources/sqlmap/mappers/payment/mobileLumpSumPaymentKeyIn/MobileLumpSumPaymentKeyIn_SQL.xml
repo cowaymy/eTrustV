@@ -28,7 +28,7 @@
 	<select id="getCustomerOutstandingOrder" parameterType="Map" resultType="egovMap">
 		SELECT * FROM (
 
-<!-- 		RENTAL MEMBERSHIP(TOTAL) -->
+<!-- 		RENTAL MEMBERSHIP(TOTAL)
 		SELECT
 		    C.SALES_ORD_ID ORD_ID,
 		    C.SALES_ORD_NO ORD_NO,
@@ -65,10 +65,11 @@
 		    C.CUST_ID, D.NRIC, E.CODE_ID, E.CODE_NAME, F.CODE_NAME
 		HAVING NVL(ROUND(SUM(A.SRV_LDGR_AMT),2), 0.00) > 0
 
-		UNION
+		UNION -->
 
 <!-- 		OUTRIGHT MEMBERSHIP(TOTAL)   -->
 		 SELECT
+		 	A.SRV_MEM_ID,
 		    B.SALES_ORD_ID ORD_ID,
 		    B.SALES_ORD_NO ORD_NO,
 		    0 ORD_PAYMENT_TYPE_ID,
@@ -96,21 +97,24 @@
 	             </foreach>
 	       </if>
 		GROUP BY
-		    A.SRV_MEM_ID,
-		    A.SRV_MEM_NO,
-		    B.SALES_ORD_ID,
-		    B.SALES_ORD_NO,
-		    0,0,
-		    'OUTRIGHT MEMBERSHIP',
-		    D.SRV_MEM_DT_TM,
-		    B.CUST_ID,
-		    C.NRIC, E.CODE_ID, E.CODE_NAME
+		A.SRV_MEM_ID
+		B.SALES_ORD_ID,
+		B.SALES_ORD_NO,
+		0,
+		'',
+		'OUTRIGHT MEMBERSHIP',
+		0,
+		B.CUST_ID,
+		C.NRIC,
+		E.CODE_ID,
+		E.CODE_NAME
 		HAVING NVL(ROUND(SUM (D.SRV_MEM_AMT), 0), 0.00) > 0
 
 		UNION
 
 <!-- 		RENTAL OUTSTANDING(TOTAL) -->
 		 SELECT
+		 	 0 SRV_MEM_ID,
 		     D.ORD_ID ORD_ID,
 		     D.ORD_NO ORD_NO,
 		     0 ORD_PAYMENT_TYPE_ID,
@@ -149,6 +153,7 @@
 		JOIN PAY0022D E ON D.ORD_ID = E.RENT_SO_ID
 		WHERE 1=1
 		GROUP BY
+			0,
 		    D.ORD_ID, D.ORD_NO,
 		    0,'','',0,
 		    D.CUST_ID, D.NRIC,
@@ -160,6 +165,7 @@
 
 <!-- 		OUTRIGHT/OUTRIGHT PLUS OUTSTANDING(TOTAL) -->
 		SELECT
+		 	 0 SRV_MEM_ID,
 		     D.ORD_ID ORD_ID,
 		     D.ORD_NO ORD_NO,
 		     0 ORD_PAYMENT_TYPE_ID,
@@ -198,6 +204,7 @@
 		JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
 		WHERE 1=1
 		GROUP BY
+			0,
 		    D.ORD_ID, D.ORD_NO,
 		    0,'','',0,
 		    D.CUST_ID, D.NRIC,
@@ -209,6 +216,7 @@
 
 <!-- 		INSTALLMENT OUTSTANDING(TOTAL) -->
 		SELECT
+		 	 0 SRV_MEM_ID,
 		     D.ORD_ID ORD_ID,
 		     D.ORD_NO ORD_NO,
 		     0 ORD_PAYMENT_TYPE_ID,
@@ -247,6 +255,7 @@
 		JOIN PAY0010D E ON D.ORD_ID = E.INSTLMT_SO_ID
 		WHERE  1=1
 		GROUP BY
+			0,
 		    D.ORD_ID, D.ORD_NO,
 		    0,'','',0,
 		    D.CUST_ID, D.NRIC,
@@ -256,7 +265,10 @@
 
 		UNION
 
+
+		<!-- 		AS PAYMENT -->
 		SELECT
+		 	 0 SRV_MEM_ID,
 		     D.ORD_ID ORD_ID,
 		     D.ORD_NO ORD_NO,
 		     0 ORD_PAYMENT_TYPE_ID,
@@ -294,6 +306,7 @@
 		JOIN PAY0006D E ON D.ORD_NO =  E.AS_SO_NO
 		WHERE  1=1
 		GROUP BY
+			0,
 		    D.ORD_ID, D.ORD_NO,
 		    0,'','',0,
 		    D.CUST_ID, D.NRIC,
@@ -406,7 +419,8 @@
 		ORD_PAY_TYPE_ID,
 		PAY_TYPE,
 		PAY_AMT,
-		ORI_OUT_AMT
+		ORI_OUT_AMT,
+		SRV_MEM_ID
 		)
 		VALUES
 		(
@@ -417,7 +431,8 @@
 		#{ordPaymentTypeId},
 		#{payType},
 		#{inputOtstndAmt},
-		#{otstndAmt}
+		#{otstndAmt},
+		#{srvMemId}
 		)
 	</insert>
 
@@ -466,10 +481,11 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
         s0004m.NAME AS ISSUE_BANK_NAME,
         p0349m.CHEQUE_NO,
         p0349m.CHEQUE_DATE,
-        p0349m.CARD_NO,
+        CASE WHEN p0349m.CARD_NO IS NULL THEN ''
+        ELSE SUBSTR(p0349m.CARD_NO, 1, 6) || '******'  || SUBSTR(p0349m.CARD_NO, 13, 4) END AS CARD_NO,
         p0349m.APPROVAL_NO,
         p0349m.CRC_NAME,
-        p0349m.TRANSACTION_DATE,
+        TO_CHAR(p0349m.TRANSACTION_DATE,'DD/MM/YYYY') AS TRANSACTION_DATE,
         p0349m.EXPIRY_DATE,
         p0349m.CARD_MODE,
         s0013m1.CODE_NAME AS CARD_MODE_DESC,
@@ -624,4 +640,126 @@ SELECT p0349m.MOB_PAY_GROUP_NO,TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM'
 		UPD_BY = #{userId}
 		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
 	</update>
+
+	<select id="selectLumpSumPaymentDetail" parameterType="Map" resultType="egovMap">
+		SELECT p0349m.MOB_PAY_GROUP_NO,p0349m.TOT_PAY_AMT,p0349m.PAY_MODE,s0013m1.CODE_NAME AS PAY_MODE_NAME,
+        p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME , LISTAGG(p0350d.SALES_ORD_NO, ',') WITHIN GROUP (ORDER BY p0350d.SALES_ORD_NO) AS ORD_NO,TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+        s0029d.NAME, s0047m.USER_NAME AS CRT_MEM_CODE,
+        p0349m.SLIP_NO,p0349m.CHEQUE_NO
+        FROM PAY0349M p0349m
+		JOIN PAY0350D p0350d
+		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
+        LEFT JOIN SYS0013M s0013m1
+        ON s0013m1.CODE_ID = p0349m.PAY_MODE
+        LEFT JOIN SYS0038M s0038m
+        ON s0038m.STUS_CODE_ID = p0349m.PAY_STUS_ID
+        LEFT JOIN SAL0029D s0029d
+        ON s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0047M s0047m
+        ON p0349m.CRT_BY = s0047m.USER_ID
+        WHERE 1=1
+		AND A.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+        GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME
+        ORDER BY p0349m.CRT_DT DESC
+	</select>
+
+	  <select id="selectBankStatementInfo" parameterType="Map" resultType="egovMap">
+	    SELECT /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectBankStatementInfo] 20191021 - KR HAN */
+	               A.F_TRNSC_ID id,
+	               B.BANK_ID,
+	               C.NAME BANK,
+	               D.ACC_DESC BANK_ACC_NAME,
+	               E.ACC_ID AS BANK_ACC_ID,
+	               E.ACC_CODE BANK_ACC_CODE,
+	               E.ACC_DESC BANK_ACC_DESC,
+	               E.ACC_CODE || ' - ' ||  E.ACC_DESC AS CODE_NAME,
+	               TO_CHAR(A.F_TRNSC_DT, 'DD/MM/YYYY') TRNSC_DT,
+	               A.F_TRNSC_REF_CHQ_NO CHQ_NO,
+	               A.F_TRNSC_REF_VA_NO,
+	               A.F_TRNSC_REF3 REF3,
+	               A.F_TRNSC_REF1 REF1,
+	               A.F_TRNSC_REF4 REF4,
+	               A.F_TRNSC_REF2 REF2,
+	               A.F_TRNSC_REF6 REF6,
+	               A.F_TRNSC_REM TYPE,
+	               A.F_TRNSC_DEBT_AMT DEBT,
+	               A.F_TRNSC_CRDIT_AMT CRDIT,
+	               (CASE WHEN A.OTH_KEYIN_STUS_ID = 4 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
+	               A.OTH_KEYIN_MAPPING_DT,
+	               A.F_TRNSC_TELLER_ID,
+	               A.F_TRNSC_NEW_CHQ_NO
+	    FROM PAY0081D A
+	    JOIN PAY0079D B on A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+	    LEFT JOIN SYS0004M C on B.BANK_ID = C.BANK_ID
+	    LEFT JOIN SYS0001M D on B.F_BANK_JRNL_ACC_ID = D.ACC_ID
+	    LEFT JOIN SYS0001M E ON D.ACC_DESC = E.ACC_DESC AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CASH = 1
+	    WHERE A.F_TRNSC_REM IN ('ONL','CSH','CHQ')
+	    AND A.OTH_KEYIN_STUS_ID <![CDATA[ <> ]]> 4
+        AND A.F_TRNSC_ID = #{fTrnscId}
+  </select>
+
+  	<select id="selectLumpSumPaymentSubDetail" parameterType="Map" resultType="egovMap">
+		SELECT * FROM PAY0350D
+		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</select>
+
+	 <select id="selectOrderDetailInfo" parameterType="Map" resultType="egovMap">
+		SELECT * FROM SAL0001D
+		WHERE SALES_ORD_ID = #{salesOrdId}
+		AND ROWNUM = 1
+	</select>
+
+	<update id="updateApproveLumpSumPaymentInfo" parameterType="Map">
+		UPDATE PAY0349M SET
+		PAY_STUS_ID = 5,
+		UPD_DT = SYSDATE,
+		UPD_BY = #{userId}
+		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</update>
+
+	<update  id="updateRejectLumpSumPayment" parameterType="Map">
+		<if test="mobPayGroupNo != null and mobPayGroupNo != ''">
+			UPDATE PAY0349M SET
+			PAY_STUS_ID = 6,
+			UPD_DT = SYSDATE,
+			UPD_BY = #{userId},
+			REMARKS = #{remark}
+			WHERE 1=1
+	        AND MOB_PAY_GROUP_NO IN
+	        <foreach item="item" collection="mobPayGroupNo" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+         </if>
+	</update>
+
+	<select id="getPay0024D" parameterType="Map" resultType="egovMap">
+	    SELECT
+	        A.*,
+	        A.PACKAGE_CHARGE - A.PACKAGE_PAID PACKAGE_AMT,
+	        A.FILTER_CHARGE - A.FILTER_PAID FILTER_AMT
+	    FROM (
+	        SELECT
+	            SRV_MEM_ID,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END))
+	            + SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 157 THEN SRV_MEM_AMT ELSE 0 END ))
+	            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 155 THEN SRV_MEM_AMT ELSE 0 END ))AS PACKAGE_CHARGE,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_CHARGE,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+	            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID <![CDATA[ <> ]]> 542 THEN SRV_MEM_AMT ELSE 0 END)) AS PACKAGE_PAID,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+	            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_PAID
+	        FROM PAY0024D
+	        WHERE SRV_MEM_ID = #{srvMemId}
+	        GROUP BY SRV_MEM_ID
+	    ) A
+  	</select>
+
+  	<select id="getServiceMembershipDetail" parameterType="Map" resultType="egovMap">
+	    SELECT * FROM SAL0095D A
+	    INNER JOIN SAL0001D B
+	    ON A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
+	    INNER JOIN SAL0029D C
+	    ON B.CUST_ID = C.CUST_ID
+	    WHERE A.SRV_MEM_ID = #{srvMemId}
+  	</select>
 </mapper>

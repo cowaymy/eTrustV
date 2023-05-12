@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "MobileLumpSumPaymentOrderDetailsForm", description = "MobileLumpSumPaymentOrderDetailsForm")
 public class MobileLumpSumPaymentOrderDetailsForm {
+	private int srvMemId;
 	private int ordId;
 	private String ordNo;
 	private int ordPaymentTypeId;
@@ -81,5 +82,11 @@ public class MobileLumpSumPaymentOrderDetailsForm {
 	}
 	public void setPayType(String payType) {
 		this.payType = payType;
+	}
+	public int getSrvMemId() {
+		return srvMemId;
+	}
+	public void setSrvMemId(int srvMemId) {
+		this.srvMemId = srvMemId;
 	}
 }
