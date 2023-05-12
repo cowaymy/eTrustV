@@ -97,7 +97,7 @@
 	             </foreach>
 	       </if>
 		GROUP BY
-		A.SRV_MEM_ID
+		A.SRV_MEM_ID,
 		B.SALES_ORD_ID,
 		B.SALES_ORD_NO,
 		0,
