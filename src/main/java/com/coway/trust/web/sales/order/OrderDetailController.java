@@ -245,6 +245,9 @@ public class OrderDetailController {
       imgLst = orderDetailService.getInstImgByInst(params);
     }
 
+    String type = CommonUtils.nvl(params.get("type")).equals("preInstallation") ? "/file/fileDown.do" : "/file/fileDownWasMobile.do";
+
+    model.addAttribute("type", type);
     model.addAttribute("imgLst", imgLst);
     model.addAttribute("path", uploadDir);
 

@@ -634,7 +634,7 @@ var serialGubun = "1";
             <td colspan="">
                 <ul class="btns">
                   <li>
-                    <p class="btn_grid"><a href="#" onClick="{Common.popupDiv('/sales/order/getInstImg.do', { insNo : '${installResult.installEntryNo}' }, null , true);}"><spring:message code='sys.btn.view' /></a></p>
+                    <p class="btn_grid"><a href="#" onClick="{Common.popupDiv('/sales/order/getInstImg.do', { insNo : '${installResult.installEntryNo}'  , type : 'preInstallation' }, null , true);}"><spring:message code='sys.btn.view' /></a></p>
                    </li>
                </ul>
             </td>
