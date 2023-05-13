@@ -430,4 +430,51 @@
   <select id="selectSubmitStatusOrd" parameterType="Map" resultType="egovMap">
     select so_cur_stus_id from sal0004d where so_id = #{salesOrdNo}
     </select>
+
+       <select id="selectFailChild" parameterType="Map" resultType="egovMap">
+        SELECT
+                    EXTENT1.DEFECT_ID AS CODE_ID
+                 ,  EXTENT1.DEFECT_CODE || ' - ' || EXTENT1.DEFECT_DESC AS CODE_NAME
+        FROM SYS0100M EXTENT1
+        WHERE 1=1
+        AND DEFECT_STATUS =1
+         <choose>
+              <when test=' groupCode == 8000 '>
+                AND DEFECT_TYP = 'IFA'
+              </when>
+              <otherwise>
+                AND DEFECT_TYP = 'IFB'
+              </otherwise>
+        </choose>
+        ORDER BY DEFECT_CODE
+  </select>
+
+  <insert id="insertPreIns" parameterType="Map">
+    INSERT INTO SVC0136D VALUES (
+        #{insNo},
+        #{status},
+        #{failLoc},
+        #{failReason},
+        #{serial},
+        #{sirim},
+        #{attachment},
+        SYSDATE
+    )
+  </insert>
+
+  <select id="selectInstallationInfo" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+                A.INSTALL_ENTRY_NO,
+                A.INSTALL_DT,
+                B.SALES_ORD_NO,
+                B.SALES_DT,
+                C.MEM_CODE,
+                COUNT(D.INSTALL_ENTRY_NO) DUP_CHECK
+        FROM SAL0046D A
+        JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
+        LEFT JOIN SVC0136D D ON A.INSTALL_ENTRY_NO = D.INSTALL_ENTRY_NO
+        WHERE A.INSTALL_ENTRY_NO = #{insNo}
+        GROUP BY A.INSTALL_ENTRY_NO,  A.INSTALL_DT, B.SALES_ORD_NO, B.SALES_DT, C.MEM_CODE
+  </select>
 </mapper>

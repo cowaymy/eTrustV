@@ -81,4 +81,10 @@ public interface HcInstallResultListMapper {
 	EgovMap selectFailReason(Map<String, Object> params);
 
 	public EgovMap selectSubmitStatusOrd(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectFailChild(Map<String, Object> params);
+
+	void insertPreIns(Map<String, Object> params);
+
+	EgovMap selectInstallationInfo(Map<String, Object> params);
 }
