@@ -168,6 +168,28 @@
                     <div class="row">
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal"  style="width:100%;background:#4f90d6 !important;">Close</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="button" id="alertModalClick2" data-toggle="modal" data-target="#myModalAlert2" hidden />
+<div class="modal" id="myModalAlert2" >
+    <div class="modal-dialog">
+        <div class="modal-content" style="height:200px">
+            <div class="modal-header">
+                <h4 class="modal-title">System Information</h4>
+            </div>
+            <div class="modal-body" id="MsgAlert2" style="font-size:14px;"></div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                           <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" onclick="reload()" style="width:100%;background:#4f90d6 !important;">Close</button>
                           </div>
                     </div>
@@ -295,9 +317,20 @@
         const upload = document.createElement("input");
         upload.type = "file";
         upload.style.display="none";
+        upload.accept = "image/*";
 
         upload.onchange = (e) => {
-            image.src = URL.createObjectURL(e.target.files[0]);
+        	if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
+        		document.getElementById("MsgAlert").innerHTML =  "Only can upload images file with .png / .jpg";
+                $("#alertModalClick").click();
+        	}
+        	else if(e.target.files[0].size > 2048000){
+                document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
+                $("#alertModalClick").click();
+        	}
+        	else{
+                image.src = URL.createObjectURL(e.target.files[0]);
+        	}
         }
 
         el.appendChild(title);
@@ -443,12 +476,12 @@
             })
         })
         .then(() => {
-        	document.getElementById("MsgAlert").innerHTML =  "Pre-installation created! You may proceed to close this page";
-            $("#alertModalClick").click();
+        	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation created! You may proceed to close this page";
+            $("#alertModalClick2").click();
         })
         .catch(() => {
-        	document.getElementById("MsgAlert").innerHTML =  "Pre-installation insert failed!";
-        	$("#alertModalClick").click();
+        	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation insert failed!";
+        	$("#alertModalClick2").click();
         })
     }
 

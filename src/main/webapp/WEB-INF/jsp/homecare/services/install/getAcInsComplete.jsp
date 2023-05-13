@@ -357,9 +357,19 @@
 	    upload.type = "file";
         upload.style.display="none";
 
-	    upload.onchange = (e) => {
-	    	image.src = URL.createObjectURL(e.target.files[0])
-	    }
+        upload.onchange = (e) => {
+            if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
+                document.getElementById("MsgAlert").innerHTML =  "Only can upload images file with .png / .jpg";
+                $("#alertModalClick").click();
+            }
+            else if(e.target.files[0].size > 2048000){
+                document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
+                $("#alertModalClick").click();
+            }
+            else{
+                image.src = URL.createObjectURL(e.target.files[0]);
+            }
+        }
 
         el.appendChild(title);
         el.appendChild(photoDiv);
