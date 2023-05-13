@@ -319,6 +319,7 @@
         upload.style.display="none";
         upload.accept = "image/*";
 
+
         upload.onchange = (e) => {
         	if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
         		document.getElementById("MsgAlert").innerHTML =  "Only can upload images file with .png / .jpg";
