@@ -356,6 +356,7 @@
 	    const upload = document.createElement("input")
 	    upload.type = "file";
         upload.style.display="none";
+        upload.accept = ".jpeg,.png,.jpg";
 
         upload.onchange = (e) => {
             if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
@@ -491,11 +492,6 @@
             return false;
         }
 
-        if(sirimUploadInput.files[0].type !="image/jpeg" && sirimUploadInput.files[0].type !="image/png"){
-            document.getElementById("MsgAlert").innerHTML =  "Sirim image is required to complete pre-installation.";
-            $("#alertModalClick").click();
-            return false;
-        }
 
         if(!sirimUploadInput.files[0]){
              document.getElementById("MsgAlert").innerHTML =  "Sirim image is required to complete pre-installation.";
@@ -503,18 +499,26 @@
              return false;
         }
 
+        if(sirimUploadInput.files[0].type !="image/jpeg" && sirimUploadInput.files[0].type !="image/png"){
+            document.getElementById("MsgAlert").innerHTML =  "Sirim image is required to complete pre-installation.";
+            $("#alertModalClick").click();
+            return false;
+        }
+
         for(let i = 0; i < installUploadContainer.length; i++){
-        	if(installUploadContainer[i].files[0].type !="image/jpeg" && installUploadContainer[i].files[0].type !="image/png"){
-                document.getElementById("MsgAlert").innerHTML =  "Sirim image is required to complete pre-installation.";
-                $("#alertModalClick").click();
-                return false;
-            }
 
             if(!installUploadContainer[i].files[0]){
                 document.getElementById("MsgAlert").innerHTML =  "4 images are required to complete pre-installation.";
                 $("#alertModalClick").click();
                 return false;
             }
+
+        	if(installUploadContainer[i].files[0].type !="image/jpeg" && installUploadContainer[i].files[0].type !="image/png"){
+                document.getElementById("MsgAlert").innerHTML =  "4 images are required to complete pre-installation.";
+                $("#alertModalClick").click();
+                return false;
+            }
+
         }
 
         return true;

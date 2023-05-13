@@ -317,8 +317,7 @@
         const upload = document.createElement("input");
         upload.type = "file";
         upload.style.display="none";
-        upload.accept = "image/*";
-
+        upload.accept = ".jpeg,.png,.jpg";
 
         upload.onchange = (e) => {
         	if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
