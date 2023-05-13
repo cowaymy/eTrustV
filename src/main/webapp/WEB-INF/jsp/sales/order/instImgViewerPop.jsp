@@ -141,6 +141,9 @@ to {
 </style>
 
 <script type="text/javaScript">
+
+console.log("sdfsg")
+console.log("${type}")
   $(document).ready(function(){
     if ("${imgLst}".length <= 2) {
       $("#emtpyContainer").show();
@@ -149,8 +152,6 @@ to {
         $("#emtpyContainer").hide();
         $("#imgContainer").show();
     }
-
-
   });
 
   var slideIndex = 1;
@@ -218,13 +219,13 @@ to {
          <c:choose>
           <c:when test="${list.first}">
            <div class="slideshow-container">
-            <img src="/file/fileDownWasMobile.do?fileId=${list.atchFileId}" height="800"  style="width: 100%">
+            <img src="${type}" + "?fileId=${list.atchFileId}" height="800"  style="width: 100%">
             <div class="text">'${list.atchFileName}'</div>
            </div>
           </c:when>
           <c:otherwise>
            <div class="mySlides fade">
-            <img src="/file/fileDownWasMobile.do?fileId=${list.atchFileId}" height="800"  style="width: 100%">
+            <img src="${type}" + "?fileId=${list.atchFileId}" height="800"  style="width: 100%">
             <div class="text">'${list.atchFileName}'</div>
            </div>
           </c:otherwise>
