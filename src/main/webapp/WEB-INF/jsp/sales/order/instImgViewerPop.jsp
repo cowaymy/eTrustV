@@ -142,8 +142,6 @@ to {
 
 <script type="text/javaScript">
 
-console.log("sdfsg")
-console.log("${type}")
   $(document).ready(function(){
     if ("${imgLst}".length <= 2) {
       $("#emtpyContainer").show();
