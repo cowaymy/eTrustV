@@ -886,6 +886,7 @@
                         ,SESION_CODE
                         ,GRADE
                         ,SEGMENT_TYPE
+                        , INS_QR
     ) VALUES (#{installEntryId}
             , #{installEntryNo}
             , #{salesOrderId}
@@ -907,6 +908,7 @@
             ,#{CTSSessionCode}
             , #{stock}
             ,#{CTSSessionSegmentType}
+            , #{insQr}
     )
   </insert>
 

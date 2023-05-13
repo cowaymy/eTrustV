@@ -128,6 +128,7 @@
     function fn_addCallSave() {
     	console.log('${hcOrder.anoOrdNo}');
     	console.log("Form: " + $("#addCallForm #anoOrdNo").val());
+
         Common.ajax("POST", "/homecare/services/install/hcInsertCallResult.do", $("#addCallForm").serializeJSON(), function(result) {
         	Common.alert(result.message);
 

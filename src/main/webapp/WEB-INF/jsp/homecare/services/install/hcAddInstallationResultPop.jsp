@@ -9,6 +9,15 @@ var serialGubun = "1";
         var myGridID_view;
         var callType = "${callType.typeId}";
 
+        if("${installResult.preinstalltionStus}"){
+            $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
+            $("#addInstallForm #installStatus").val("${installResult.preinstalltionStus}");
+            $("#addInstallForm #failLocCde").val("${installResult.preinstallationFalLoc}");
+            $("#addInstallForm #failReasonCode").val("${installResult.preinstallationFalRsn}");
+            document.getElementById("preinstallationImg").style.display="";
+       }
+
+
         createInstallationViewAUIGrid();
         fn_viewInstallResultSearch();
 
@@ -967,6 +976,16 @@ var serialGubun = "1";
      <col style="width: *" />
     </colgroup>
     <tbody>
+    <tr id="preinstallationImg" style="display:none;">
+            <th scope="row">Pre-Installation Images:</th>
+            <td colspan="">
+                <ul class="btns">
+                  <li>
+                    <p class="btn_grid"><a href="#" onClick="{Common.popupDiv('/sales/order/getInstImg.do', { insNo : '${installResult.installEntryNo}' }, null , true);}"><spring:message code='sys.btn.view' /></a></p>
+                   </li>
+               </ul>
+            </td>
+     </tr>
      <tr>
       <th scope="row"><spring:message
         code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>

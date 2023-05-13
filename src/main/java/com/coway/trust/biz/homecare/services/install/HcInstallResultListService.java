@@ -112,4 +112,10 @@ public interface HcInstallResultListService {
 	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
 
 	public EgovMap selectFailReason(Map<String, Object> params);
+
+	List<EgovMap> selectFailChild(Map<String, Object> params);
+
+	void insertPreIns(Map<String, Object> p);
+
+	EgovMap selectInstallationInfo(Map<String, Object> params);
 }

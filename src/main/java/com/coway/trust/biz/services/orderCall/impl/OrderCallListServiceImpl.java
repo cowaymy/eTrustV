@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.orderCall.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,22 +11,24 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.util.EgovBasicLogger;
 import com.coway.trust.web.services.installation.InstallationResultListController;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -55,6 +58,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+  @Value("${etrust.base.url}")
+  private String etrustBaseUrl;
 
   @Override
   public List<EgovMap> selectOrderCall(Map<String, Object> params) {
@@ -672,7 +678,19 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
               // IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
               if (installMaster != null && Integer.compare(callEntId, 0) > 0) {
             	  // PRE INSERT INSTALL ENTRY
-                  installMaster.put("installEntryId",orderCallListMapper.installEntryIdSeq());
+            	  installMaster.put("installEntryId",orderCallListMapper.installEntryIdSeq());
+            	  logger.debug("##################### {}", params.get("productCat"));
+                  if ("ACI".equals(params.get("productCat"))) {
+                	  try{
+                			BitMatrix bitMatrix = new MultiFormatWriter().encode(etrustBaseUrl+"/homecare/services/install/getAcInstallationInfo.do?insNo="+docNo, BarcodeFormat.QR_CODE, 200, 200);
+
+                      		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                      		MatrixToImageWriter.writeToStream(bitMatrix, "png", bos);
+                      		installMaster.put("insQr", bos.toByteArray());
+                	  }catch(Exception e){
+                		  logger.debug("No Qr generated");
+                	  }
+                  }
             	  orderCallListMapper.insertInstallEntry(installMaster);
               }
 

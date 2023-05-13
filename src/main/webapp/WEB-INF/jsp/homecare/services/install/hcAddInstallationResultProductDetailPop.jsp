@@ -14,6 +14,14 @@ var serialGubun = "1";
   $(document).ready(
     function() {
 
+        if("${installResult.preinstalltionStus}"){
+            $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
+            $("#addInstallForm #installStatus").val("${installResult.preinstalltionStus}");
+            $("#addInstallForm #failLocCde").val("${installResult.preinstallationFalLoc}");
+            $("#addInstallForm #failReason").val("${installResult.preinstallationFalRsn}");
+            document.getElementById("preinstallationImg").style.display="";
+       }
+
     	$("#hpMsg").val("COWAY: Order No: " + "${installResult.salesOrdNo}" + " \nName: " + "${hpMember.name1}"
                 + " \nInstall Status: Completed");
 
@@ -621,6 +629,16 @@ var serialGubun = "1";
      <col style="width: *" />
     </colgroup>
     <tbody>
+     <tr id="preinstallationImg" style="display:none;">
+            <th scope="row">Pre-Installation Images:</th>
+            <td colspan="">
+                <ul class="btns">
+                  <li>
+                    <p class="btn_grid"><a href="#" onClick="{Common.popupDiv('/sales/order/getInstImg.do', { insNo : '${installResult.installEntryNo}' }, null , true);}"><spring:message code='sys.btn.view' /></a></p>
+                   </li>
+               </ul>
+            </td>
+     </tr>
      <tr>
         <th scope="row">Before Stock</th>
         <td colspan="3"><span><c:out value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>

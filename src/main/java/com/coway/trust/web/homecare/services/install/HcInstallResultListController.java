@@ -729,4 +729,63 @@ public class HcInstallResultListController {
 
 	    return ResponseEntity.ok(message);
 	  }
+
+
+    @RequestMapping(value = "/getAcInstallationInfo.do")
+	 public String getAcInstallationInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
+    	model.put("insNo", params.get("insNo"));
+    	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
+    	return "homecare/services/install/getAcInstallationInfo";
+	 }
+
+    @RequestMapping(value="/getAcInsFail.do")
+    public String getAcInsFail(@RequestParam Map<String, Object> params, ModelMap model) {
+    	model.put("insNo", params.get("insNo"));
+    	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
+    	return "homecare/services/install/getAcInsFail";
+    }
+
+    @RequestMapping(value = "/selectFailChild.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectFailChild(@RequestParam Map<String, Object> params, ModelMap model) {
+      List<EgovMap> selectFailChild = hcInstallResultListService.selectFailChild(params);
+      return ResponseEntity.ok(selectFailChild);
+    }
+
+    @RequestMapping(value="/insertPreInsFail.do", method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, Object>> insertPreInsFail(@RequestBody Map<String, Object> params) {
+    	params.put("status", 21);
+    	hcInstallResultListService.insertPreIns(params);
+    	return ResponseEntity.ok(new HashMap<String, Object>());
+    }
+
+    @RequestMapping(value="/insertPreInsCompleted.do", method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, Object>> insertPreInsCompleted(@RequestBody Map<String, Object> params) {
+    	params.put("status", 4);
+    	hcInstallResultListService.insertPreIns(params);
+    	return ResponseEntity.ok(new HashMap<String, Object>());
+    }
+
+    @RequestMapping(value="/getAcInsComplete.do")
+    public String getAcInsComplete(@RequestParam Map<String, Object> params, ModelMap model) {
+    	model.put("insNo", params.get("insNo"));
+    	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
+    	return "homecare/services/install/getAcInsComplete";
+    }
+
+    @RequestMapping(value="/uploadInsImage.do", method=RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> uploadInsImage(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params) throws Exception {
+    	List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, "/service/mobile/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    	List<String> seqs = new ArrayList<>();
+    	Set set = request.getFileMap().entrySet();
+        Iterator i = set.iterator();
+        params.put("userId", "349");
+
+         while(i.hasNext()) {
+             Map.Entry me = (Map.Entry)i.next();
+             String key = (String)me.getKey();
+             seqs.add(key);
+         }
+    	installationApplication.insertInstallationAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+    	return ResponseEntity.ok(params);
+    }
 }

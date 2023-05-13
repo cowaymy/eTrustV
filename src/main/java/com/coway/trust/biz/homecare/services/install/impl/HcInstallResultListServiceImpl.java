@@ -1069,5 +1069,19 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		return resultMap;
 	}
 
+	@Override
+	public List<EgovMap> selectFailChild(Map<String, Object> params) {
+	    return hcInstallResultListMapper.selectFailChild(params);
+	}
+
+	@Override
+	public void insertPreIns(Map<String, Object> p) {
+		hcInstallResultListMapper.insertPreIns(p);
+	}
+
+	@Override
+	public EgovMap selectInstallationInfo(Map<String, Object> params) {
+	    return hcInstallResultListMapper.selectInstallationInfo(params);
+	}
 
 }
