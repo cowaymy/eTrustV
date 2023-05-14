@@ -225,4 +225,8 @@ public interface OrderRegisterMapper {
   EgovMap getExTradeConfig();
 
   EgovMap getRentalPeriod(int salesOrdIdOld);
+
+  void insert_SAL0349D(Map<String, Object> params);
+
+ //int chkIsAcMainOrd(String salesOrdId);
 }

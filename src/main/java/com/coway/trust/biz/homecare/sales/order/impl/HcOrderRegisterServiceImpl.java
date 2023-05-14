@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -14,11 +16,13 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterServiceImpl;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.sales.order.HcOrderRegisterController;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -37,6 +41,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Service("hcOrderRegisterService")
 public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implements HcOrderRegisterService {
+    private static Logger logger = LoggerFactory.getLogger(HcOrderRegisterServiceImpl.class);
 
   	@Resource(name = "hcOrderRegisterMapper")
   	private HcOrderRegisterMapper hcOrderRegisterMapper;
@@ -169,10 +174,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 		//String ecommBndlId = null;
 		String ecommBndlId = orderVO.getSalesOrderMVO().geteCommBndlId() != null ? orderVO.getSalesOrderMVO().geteCommBndlId().toString() : null;
-		/*if(orderVO.getSalesOrderMVO().geteCommBndlId() != null)
-		{
-			ecommBndlId = orderVO.getSalesOrderMVO().geteCommBndlId().toString();
-		}*/
+
 		int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
 		int cntHcExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
 		String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
@@ -233,5 +235,81 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	public List<EgovMap> selectPromotionByFrame(Map<String, Object> params) {
 		return hcOrderRegisterMapper.selectPromotionByFrame(params);
 	}
+
+	@Override
+  public int chkPromoCboMst(Map<String, Object> params) {
+    /* CODE              DESCRIPTION
+     * ----------------------------------------
+     * 1                 IS NORMAL PROMOTION NO RELATED TO COMBO SET
+     * 2                 IS MASTER COMBO PACKAGE
+     * 3                 HAVE MASTER COMBO ORDER TO MAP
+     * 4                 PLEASE CREATE A MASTER COMBP TO MAP
+     * 99                SELECTED PROMOTION CODE ARE NOT FOR NEW SALES (FOR CANCELLATION)
+     */
+
+    // CHECK SELECTED PROMO. ARE USED FOR CANCELLATION
+
+    int canCnt = hcOrderRegisterMapper.chkPromoCboCan(params);
+
+    if (canCnt == 0) {
+        int mstCnt = hcOrderRegisterMapper.chkPromoCboMst(params);
+
+        int subCnt;
+        int canMapCnt;
+        int qtyHcAcCmbByGrpCnt; // check the homecare aic-con combo by group category
+        int cmbGrpMaxQty; // check maximum quantity
+        if (mstCnt > 0) {
+                // IS MASTER COMBO SELECTION
+               // PASS
+              return 2;
+        } else {
+              // MAYBE IS SUB COMBO OR NOT COMBO PACKAGE
+              subCnt = hcOrderRegisterMapper.chkPromoCboSub(params);
+
+              if (subCnt > 0) {
+                    // IS SUB COMBO
+                    // CHECK CUSTOMER HAVE ANY MASTER COMBO
+
+                    canMapCnt = hcOrderRegisterMapper.chkCanMapCnt(params);
+
+                    if (canMapCnt > 0) {
+                      qtyHcAcCmbByGrpCnt = hcOrderRegisterMapper.chkQtyHcAcCmbByGroup(params);
+                      cmbGrpMaxQty = hcOrderRegisterMapper.chkCmbGrpMaxQty(params);
+
+                      logger.info("[HcOrderRegisterServiceImpl] qtyHcAcCmbByGrpCnt > 0 :: {} " + qtyHcAcCmbByGrpCnt);
+                      logger.info("[HcOrderRegisterServiceImpl] cmbGrpMaxQty > 0 :: {} " + cmbGrpMaxQty);
+
+                      if(qtyHcAcCmbByGrpCnt != cmbGrpMaxQty) {
+                         // PASS
+                          return 3;
+                      }else{
+                           // FAIL
+                          return 4;
+                      }
+                    } else {
+                      // FAIL
+                      return 4;
+                    }
+              } else { // IS NORMAL PROMOTION
+                // PASS
+                return 1;
+              }
+        }
+    } else {
+         return 99;
+    }
+  }
+
+  @Override
+  public List<EgovMap> selectHcAcComboOrderJsonList(Map<String, Object> params) {
+    List<EgovMap> lst = hcOrderRegisterMapper.selectHcAcComboOrderJsonList(params);
+    return lst;
+  }
+
+  @Override
+  public List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params) {
+    List<EgovMap> lst = hcOrderRegisterMapper.selectHcAcComboOrderJsonList_2(params);
+    return lst;
+  }
 
 }

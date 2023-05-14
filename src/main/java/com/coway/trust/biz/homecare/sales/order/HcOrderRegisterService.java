@@ -61,4 +61,10 @@ public interface HcOrderRegisterService {
 	 */
 	public List<EgovMap> selectPromotionByFrame(@RequestParam Map<String, Object> params);
 
+	 int chkPromoCboMst(Map<String, Object> params);
+
+	List<EgovMap> selectHcAcComboOrderJsonList(Map<String, Object> params);
+
+	List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params);
+
 }

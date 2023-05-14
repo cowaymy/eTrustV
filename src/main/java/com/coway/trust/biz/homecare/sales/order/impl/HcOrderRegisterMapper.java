@@ -93,4 +93,14 @@ public interface HcOrderRegisterMapper {
 	public int getPrevOrdSeq(String bndlId);
 	public int getPrevOrdId(Map<String, Object> params);
 	public String getProductCategory(String product);
+
+	public int chkPromoCboCan(Map<String, Object> params);
+	public int chkPromoCboMst(Map<String, Object> params);
+	public int chkPromoCboSub(Map<String, Object> params);
+	public int chkCanMapCnt(Map<String, Object> params);
+  public int chkQtyHcAcCmbByGroup(Map<String, Object> params);
+	public int chkCmbGrpMaxQty(Map<String, Object> params);
+
+	public List<EgovMap> selectHcAcComboOrderJsonList(Map<String, Object> params);
+	public List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params);
 }

@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +50,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/homecare/sales/order")
 public class HcOrderRegisterController {
 
+  private static Logger logger = LoggerFactory.getLogger(HcOrderRegisterController.class);
+
 	@Resource(name = "hcOrderRegisterService")
 	private HcOrderRegisterService hcOrderRegisterService;
 
@@ -59,8 +64,8 @@ public class HcOrderRegisterController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-    @Resource(name = "preOrderService")
-    private PreOrderService preOrderService;
+  @Resource(name = "preOrderService")
+  private PreOrderService preOrderService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -118,11 +123,11 @@ public class HcOrderRegisterController {
     	model.put("bfDay", bfDay);
     	model.put("toDay", toDay);
 
-        model.put("codeList_10", codeList_10);
-        model.put("codeList_17", codeList_17);
-        model.put("codeList_19", codeList_19);
-        model.put("codeList_322", codeList_322);
-		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+      model.put("codeList_10", codeList_10);
+      model.put("codeList_17", codeList_17);
+      model.put("codeList_19", codeList_19);
+      model.put("codeList_322", codeList_322);
+		  model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		return "homecare/sales/order/hcOrderRegisterPop";
 	}
@@ -156,6 +161,69 @@ public class HcOrderRegisterController {
 	public String hcCnfmOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "homecare/sales/order/hcCnfmOrderDetailPop";
 	}
+
+	@RequestMapping(value = "/hcOrderComboSearchPop.do")
+  public String hcOrderComboSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    model.put("promoNo", params.get("promoNo"));
+    model.put("prod", params.get("prod"));
+    model.put("custId", params.get("custId"));
+    if (params.get("ord_id") != null) {
+      model.put("ordId", params.get("ord_id"));
+    } else {
+      model.put("ordId", "");
+    }
+
+    return "homecare/sales/order/hcOrderComboSearchPop";
+  }
+
+  @RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> chkPromoCboMst(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+
+    logger.info("==================/chkPromoCboMst.do=======================");
+    logger.info("[HcOrderRegisterController - chkPromoCboMst] params : {}", params);
+    logger.info("==================/chkPromoCboMst.do=======================");
+
+    int statCode = hcOrderRegisterService.chkPromoCboMst(params);
+
+    if (statCode == 1) {
+      message.setMessage("NORMAL PROMOTION[NOT COMBO]");
+    } else if (statCode == 2) {
+      message.setMessage("IS MASTER COMBO PACKAGE");
+    } else if (statCode == 3) {
+      message.setMessage("HAVE MASTER COMBO ORDER TO MAP");
+    } else if (statCode == 4) {
+      message.setMessage("PLEASE CREATE A MASTER COMBO TO MAP");
+    }
+
+    message.setCode(Integer.toString(statCode));
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/selectHcAcComboOrderJsonList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHcAcComboOrderJsonList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+    logger.debug("==================/selectHcAcComboOrderJsonList.do=======================");
+    logger.debug("[HcOrderRegisterController - selectHcAcComboOrderJsonList] params : {}", params);
+    logger.debug("==================/selectHcAcComboOrderJsonList.do=======================");
+
+    List<EgovMap> orderList = hcOrderRegisterService.selectHcAcComboOrderJsonList(params);
+
+    return ResponseEntity.ok(orderList);
+  }
+
+  @RequestMapping(value = "/selectHcAcComboOrderJsonList_2", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHcAcComboOrderJsonList_2(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+
+    logger.debug("==================/selectHcAcComboOrderJsonList_2.do=======================");
+    logger.debug("[HcOrderRegisterController - selectHcAcComboOrderJsonList_2]  params : {}", params);
+    logger.debug("==================/selectHcAcComboOrderJsonList_2.do=======================");
+
+    List<EgovMap> orderList = hcOrderRegisterService.selectHcAcComboOrderJsonList_2(params);
+
+    return ResponseEntity.ok(orderList);
+  }
 
 	/**
 	 * Homecare Register Order

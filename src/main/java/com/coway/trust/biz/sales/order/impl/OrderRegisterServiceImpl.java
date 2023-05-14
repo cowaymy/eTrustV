@@ -1897,9 +1897,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     // Set Sales_Order_ID - KR-SH
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
-
-    logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}" + salesOrdId);
-    logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdNo() : {}" + regOrderVO.getSalesOrderMVO().getSalesOrdNo());
   }
 
   private void doSaveOrder(OrderVO orderVO) {
@@ -1950,18 +1947,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     orderRegisterMapper.insertSalesOrderD(salesOrderDVO);
 
     // is Mattress
-   /* EgovMap stkMap = orderRegisterMapper.getCtgryId(salesOrderDVO.getItmStkId());
-    int ctgyId = CommonUtils.intNvl(stkMap.get("stkCtgryId"));
-
-    if(ctgyId == HomecareConstants.HC_CTGRY_ID.MAT
-        || (ctgyId == HomecareConstants.HC_CTGRY_ID.FRM && orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL)
-        || ctgyId == HomecareConstants.HC_CTGRY_ID.ACI
-        || ctgyId == HomecareConstants.HC_CTGRY_ID.MC ) { // Mattress Only
-    	salesOrderMVO.setSalesProdSz(CommonUtils.nvl(stkMap.get("stkSize")));
-    	orderRegisterMapper.insert_SAL0225D(salesOrderMVO);
-    } **/
-
-  // Homecare orders insert CS table automatically by Hui Ding, 17/03/2023
+   // Homecare orders insert CS table automatically by Hui Ding, 17/03/2023
     EgovMap stkMap = orderRegisterMapper.getCtgryCode(salesOrderDVO.getItmStkId());
     String catCode = CommonUtils.nvl(stkMap.get("stkCatCode"));
 
@@ -1973,6 +1959,34 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     	salesOrderMVO.setSalesProdSz(CommonUtils.nvl(stkMap.get("stkSize")));
     	orderRegisterMapper.insert_SAL0225D(salesOrderMVO);
+
+    	// Homecare Air Con Combo package orders by Fannie, 09/05/2023
+    	if(catCode.equalsIgnoreCase(HomecareConstants.HC_CTGRY_CD.ACI))
+    	{
+    	     Map<String, Object> acMap = new HashMap<String, Object>();
+    	     logger.info("[OrderRegisterServiceImpl - doSaveOrder - HC_CTGRY_CD.ACI ] getComboOrdBind :: " + salesOrderMVO.getComboOrdBind());
+
+    	     int packageBindingId = salesOrderMVO.getComboOrdBind();
+
+    	     if(packageBindingId > 0)
+    	     {
+    	           acMap.put("salesOrdId", salesOrderMVO.getComboOrdBind());
+    	           acMap.put("subSalesOrdId", salesOrderMVO.getSalesOrdId());
+
+    	     }else {
+    	          acMap.put("salesOrdId", salesOrderMVO.getSalesOrdId());
+    	          acMap.put("subSalesOrdId", salesOrderMVO.getSalesOrdId());
+    	     }
+
+    	     acMap.put("promoId", salesOrderMVO.getPromoId());
+    	     acMap.put("stkId", salesOrderDVO.getItmStkId());
+    	     acMap.put("custId", salesOrderMVO.getCustId());
+    	     acMap.put("crtUserId", salesOrderMVO.getCrtUserId());
+    	     acMap.put("updUserId", salesOrderMVO.getUpdUserId());
+
+    	     logger.info("[OrderRegisterServiceImpl - doSaveOrder - HC_CTGRY_CD.ACI ] acMap :: {} " + acMap);
+    	     orderRegisterMapper.insert_SAL0349D(acMap);
+    	}
     }
 
     // INSTALLATION

@@ -59,12 +59,12 @@
          doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
          doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
          doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
-//         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
-//         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp2', 'S'); //Discount period
+//       doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
+//       doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp2', 'S'); //Discount period
 
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
-      //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
+       //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
         fn_tabOnOffSet('REL_CER', 'HIDE');
 
         //Attach File
@@ -598,6 +598,10 @@
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
 
+        $('#OrdNoTagBtn').click(function() {
+            Common.popupDiv("/homecare/sales/order/hcOrderComboSearchPop.do", {promoNo:$("#ordPromo1").val(), prod:$("#ordProduct1").val(), custId : $('#hiddenCustId').val()}, null, true);
+        });
+
         $('#addCustBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
             Common.popupDiv("/sales/customer/customerRegistPop.do", {"callPrgm" : "ORD_REGISTER"}, null, true);
@@ -797,7 +801,6 @@
                 var promoIdVal2 = $("#ordPromo2").val();
                 var srvPacId       = appTypeVal == '66' ? $('#srvPacId').val() : 0;
 
-                alert("service "+srvPacId);
                 fn_loadProductPrice(appTypeVal, stkIdVal1, srvPacId, '1');
                 fn_loadProductPrice(appTypeVal, stkIdVal2, srvPacId, '2');
 
@@ -855,7 +858,7 @@
             var idx    = $("#appType option:selected").index();
             var selVal = $("#appType").val();
             var appSubType = '';
-console.log("idx:"+idx);
+            console.log("idx:"+idx);
             if(idx > 0) {
                 if(FormUtil.isEmpty($('#hiddenCustId').val())) {
                     $('#appType').val('');
@@ -1283,6 +1286,34 @@ console.log("idx:"+idx);
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
 
+            if(_tagNum == 1){
+                  // == CHECK COMBO PROMOTION HERE ==  ordProudct
+                  Common.ajax("POST", "/homecare/sales/order/chkPromoCboMst.do", { promoNo:$("#ordPromo"+_tagNum).val(), prod:$("#ordProduct"+_tagNum).val(), custId : $("#hiddenCustId").val()}, function(result) {
+
+                    if(result != null) {
+                        if (result.code == '3') {
+                              // PROCEED TO SELECT COMBO PROMOTION
+                              $('#trCboOrdNoTag').css("visibility","visible");
+                        } else if (result.code == '4') {
+                                // THERE HAVE NO ORDER TO TAG FOR COMBO PROMOTION
+                                 $('#trCboOrdNoTag').css("visibility","collapse");
+                                 $("#ordPromo"+_tagNum).prop("selectedIndex", 0);
+                                 Common.alert('<spring:message code="sal.alert.msg.cboNoOrdTag" />');
+                                 return false;
+                        } else if (result.code == '99') {
+                                Common.alert('<spring:message code="sal.alert.msg.promoCancalCode" />');
+                                $('#trCboOrdNoTag').css("visibility","collapse");
+                                $("#ordPromo"+_tagNum).prop("selectedIndex", 0);
+                                return false;
+                        } else {
+                          // DO NTH
+                              $('#trCboOrdNoTag').css("visibility","collapse");
+                        }
+                        $('#cboOrdNoTag').val("");
+                        $('#hiddenCboOrdNoTag').val("");
+                      }
+                  });
+            }
             fn_promoChg(_tagNum);
         });
 
@@ -1307,7 +1338,6 @@ console.log("idx:"+idx);
 
         var appTypeIdx  = $("#appType option:selected").index();
         var appTypeVal  = $("#appType").val();
-
         var stkIdIdx      = $("#ordProduct"+_tagNum+" option:selected").index();
         var stkIdVal      = $("#ordProduct"+_tagNum).val();
         var promoIdIdx = $("#ordPromo"+_tagNum+" option:selected").index();
@@ -1316,13 +1346,12 @@ console.log("idx:"+idx);
         var srvPacId  = appTypeVal == '66' ? $('#srvPacId').val() : 0;
 
         if(promoIdIdx > 0 && promoIdVal != '0') {
-            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
+        	if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
                 $('#trialNoChk').removeAttr("disabled");
             }
             fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId, _tagNum);
-
         } else {
-            fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
+             fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
         }
     }
 
@@ -1610,7 +1639,6 @@ console.log("idx:"+idx);
 
         if($('#rentPayMode').val() == '130') {
             vAdtPayMode = "REG";
-
         } else if($('#rentPayMode').val() == '131') {
             vAccNo = $('#hiddenRentPayCRCId').val().trim();
             vAccName = $('#rentPayCRCName').val().trim();
@@ -1629,36 +1657,36 @@ console.log("idx:"+idx);
             vAdtPayMode = "FPX";
         }
         var orderVO = {
-            custTypeId            : $('#typeId').val().trim(),
-            raceId                  : $('#raceId').val().trim(),
-            billGrp                  : $('input:radio[name="grpOpt"]:checked').val(),
+            custTypeId           : $('#typeId').val().trim(),
+            raceId                 : $('#raceId').val().trim(),
+            billGrp                 : $('input:radio[name="grpOpt"]:checked').val(),
             preOrdId              : '',
             matPreOrdId         : '${matPreOrdId}',
             fraPreOrdId           : '${fraPreOrdId}',
-            preOrderYN          : '${CONV_TO_ORD_YN}',
-            copyOrderBulkYN  : '${BULK_ORDER_YN}',
-            copyOrderChgYn   : "${COPY_CHANGE_YN}",
+            preOrderYN           : '${CONV_TO_ORD_YN}',
+            copyOrderBulkYN   : '${BULK_ORDER_YN}',
+            copyOrderChgYn    : "${COPY_CHANGE_YN}",
             copyQty               : $('#hiddenCopyQty').val(),
             ordSeqNo             : '${ordSeqNo}' > 0 ? '${ordSeqNo}' : $('#matBndlId').val(),
 
             salesOrderMVO1 : {
-                advBill                    : $('input:radio[name="advPay"]:checked').val(),
+                advBill                   : $('input:radio[name="advPay"]:checked').val(),
                 appTypeId              : $('#appType').val(),
-                srvPacId                  : $('#srvPacId').val(),
+                srvPacId                 : $('#srvPacId').val(),
                 bindingNo               : vBindingNo,
                 cnvrSchemeId          : vCnvrSchemeId,
-                custAddId                : $('#hiddenBillAddId').val().trim(),
-                custBillId                 : vCustBillId,
-                custCareCntId           : $('#srvCntcId').val().trim(),
-                custCntId                 : $('#hiddenCustCntcId').val().trim(),
-                custId                      : $('#hiddenCustId').val().trim(),
+                custAddId               : $('#hiddenBillAddId').val().trim(),
+                custBillId                : vCustBillId,
+                custCareCntId          : $('#srvCntcId').val().trim(),
+                custCntId                : $('#hiddenCustCntcId').val().trim(),
+                custId                     : $('#hiddenCustId').val().trim(),
                 custPoNo                 : $('#poNo').val().trim(),
                 defRentAmt              : vAppType == '66' ? $('#ordRentalFees1').val().trim() : 0,
                 deptCode                 : $('#departCd').val().trim(),
                 grpCode                   : $('#grpCd').val().trim(),
-                instPriod                   : $('#installDur').val().trim(),
+                instPriod                  : $('#installDur').val().trim(),
                 memId                     : $('#hiddenSalesmanId').val().trim(),
-                mthRentAmt              : $('#ordRentalFees1').val().trim(), //2017.10.12 ordRentalFees 또는 orgOrdRentalFees 아직 미결정 2017.10.14 ordRentalFees로 결정
+                mthRentAmt             : $('#ordRentalFees1').val().trim(), //2017.10.12 ordRentalFees 또는 orgOrdRentalFees 아직 미결정 2017.10.14 ordRentalFees로 결정
                 orgCode                   : $('#orgCd').val().trim(),
                 promoId                   : $('#ordPromo1').val(),
                 refNo                       : $('#refereNo').val().trim(),
@@ -1666,20 +1694,21 @@ console.log("idx:"+idx);
                 salesGmId                : $('#orgMemId').val().trim(),
                 salesHmId                : $('#departMemId').val().trim(),
                 salesOrdIdOld           : $('#txtOldOrderID').val(),
-                salesSmId                 : $('#grpMemId').val().trim(),
+                salesSmId                : $('#grpMemId').val().trim(),
                 totAmt                     : parseFloat(js.String.naNcheck($('#ordPrice1').val().trim())) + js.String.naNcheck(parseFloat($('#ordPrice2').val().trim())),
                 totPv                       : parseFloat(js.String.naNcheck($('#ordPv1').val().trim())) + js.String.naNcheck(parseFloat($('#ordPv2').val().trim())),
                 empChk                   : $('#empChk').val(),
                 exTrade                   : $('#exTrade').val(),
                 ecash                      : vECash,
-                promoDiscPeriodTp   : $('#promoDiscPeriodTp1').val(),
-                promoDiscPeriod      : $('#promoDiscPeriod1').val().trim(),
-                norAmt                   : $('#orgOrdPrice1').val().trim(),
-                norRntFee                : $('#orgOrdRentalFees1').val().trim(),
-                discRntFee               : $('#ordRentalFees1').val().trim(),
-                gstChk                    : $('#gstChk').val(),
-                corpCustType           : $('#corpCustType').val(),
-                agreementType        : $('#agreementType').val(),
+                promoDiscPeriodTp    : $('#promoDiscPeriodTp1').val(),
+                promoDiscPeriod        : $('#promoDiscPeriod1').val().trim(),
+                norAmt                     : $('#orgOrdPrice1').val().trim(),
+                norRntFee                 : $('#orgOrdRentalFees1').val().trim(),
+                discRntFee                : $('#ordRentalFees1').val().trim(),
+                gstChk                      : $('#gstChk').val(),
+                corpCustType             : $('#corpCustType').val(),
+                agreementType          : $('#agreementType').val(),
+                comboOrdBind           : $('#hiddenCboOrdNoTag').val(),
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
             },
             salesOrderMVO2 : {
@@ -1804,7 +1833,7 @@ console.log("idx:"+idx);
             },
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
-console.log(orderVO);
+         console.log(orderVO);
          Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
@@ -1895,7 +1924,6 @@ console.log(orderVO);
         } else if(srvPacIdx <= 0 || srvPacVal == "") {
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.plzSelPckgType" /><br>';
-
         } else {
             if(appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#installDur'))) {
@@ -1961,6 +1989,19 @@ console.log(orderVO);
                     msg += "* Please select the frame promotion code.<br>";
                 }
             }
+        }
+
+     // ADD COMBO PROMOTION CHECKING
+        if ($('#trCboOrdNoTag').css("visibility") == "visible") {
+          if ($('#cboOrdNoTag').val() == "" || $('#cboOrdNoTag').val() == null) {
+                isValid = false;
+                text = "<spring:message code='sal.title.text.cboBindOrdNo' />";
+                msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+          } else  if ($('#hiddenCboOrdNoTag').val() == "" || $('#hiddenCboOrdNoTag').val() == null) {
+                isValid = false;
+                text = "<spring:message code='sal.title.text.cboBindOrdNo' />";
+                msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+          }
         }
 
         // ADD ON COMPONENT CHECKING
@@ -2723,8 +2764,7 @@ console.log(orderVO);
         if(sofNo != null){
             Common.ajax("GET", "/sales/order/selectEKeyinSofCheck.do", {sofNo : sofNo}, function(result) {
                 if(result != null){
-                    Common.
-                    alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + ";" + result.ordStus +"' htmlEscape='false' argumentSeparator=';' />");
+                    Common.alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + ";" + result.ordStus +"' htmlEscape='false' argumentSeparator=';' />");
                 }
             });
        }
@@ -2791,6 +2831,7 @@ console.log(orderVO);
 
   function checkIfIsAcInstallationProductCategoryCode(stockIdVal){
 	  	Common.ajaxSync("GET", "/homecare/checkIfIsAcInstallationProductCategoryCode.do", {stkId: stockIdVal}, function(result) {
+
 	        if(result != null)
 	        {
 	        	var custAddId = $('#hiddenCustAddId').val();
@@ -2809,6 +2850,11 @@ console.log(orderVO);
 	    },  function(jqXHR, textStatus, errorThrown) {
 	        alert("Fail to check Air Conditioner. Please contact IT");
 	  });
+  }
+
+  function fn_setBindComboOrd(ordNo, ordId) {
+	    $('#cboOrdNoTag').val(ordNo);
+	    $('#hiddenCboOrdNoTag').val(ordId);
   }
 </script>
 
@@ -3164,6 +3210,16 @@ console.log(orderVO);
         <input id="departCd"       name="departCd"       type="text" placeholder="Department Code" class="w100p readonly" readonly />
         <input id="departMemId" name="departMemId" type="hidden" />
     </td>
+</tr>
+<tr id='trCboOrdNoTag' style='visibility:collapse'>
+    <th scope="row"><spring:message code="sal.title.text.cboBindOrdNo" /><span class="must">*</span></th>
+    <td>
+     <input id="cboOrdNoTag" name="cboOrdNoTag" type="text" title="" placeholder="" class="" disabled="disabled"/>
+     <input id="hiddenCboOrdNoTag" name="hiddenCboOrdNoTag" type="hidden"  />
+     <a id="OrdNoTagBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <!-- Display None(20200117 - KR-SH) -->

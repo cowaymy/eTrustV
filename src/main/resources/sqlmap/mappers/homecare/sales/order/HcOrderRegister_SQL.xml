@@ -214,4 +214,251 @@
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getProductCategory */
         SELECT STK_CTGRY_ID FROM SYS0026M WHERE STK_ID = #{product}
     </select>
+
+    <select id="chkPromoCboCan" parameterType="Map" resultType="int">
+    SELECT COUNT(*) FROM (
+      SELECT PROMO_CAN_ID
+      FROM SAL0252M
+      WHERE DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+
+      UNION
+
+      SELECT PROMO_CAN_ID
+      FROM SAL0253D
+      WHERE DISB = 0
+        AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+    ) WHERE PROMO_CAN_ID = #{promoNo}
+  </select>
+
+  <select id="chkPromoCboMst" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0252M
+    WHERE PROD_CDE = #{prod}
+      AND PROMO_ID = #{promoNo}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkPromoCboSub" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0253D
+    WHERE SUB_PROD_ID = #{prod}
+      AND SUB_PROMO_ID = #{promoNo}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkCanMapCnt" parameterType="Map" resultType="int">
+  SELECT COUNT(*)
+  FROM SAL0349D A
+  LEFT JOIN (
+               SELECT SALES_ORD_ID,
+                      PCKAGE_BINDING_NO,
+                      CUST_ID,
+                      PROMO_ID,
+                      STUS_CODE_ID
+                FROM SAL0001D
+                WHERE
+                PCKAGE_BINDING_NO IS NOT NULL
+                AND PROMO_ID IN (
+                                             SELECT PROMO_ID
+                                             FROM SAL0252M
+                                             WHERE CONF_ID IN (
+                                                                                SELECT CONF_ID
+                                                                                FROM SAL0252M
+                                                                                WHERE DISB = 0
+                                                                                AND PROD_CDE = #{prod}
+                                                                                AND PROMO_ID = #{promoNo}
+
+                                                                                UNION
+
+                                                                                SELECT CONF_ID
+                                                                                FROM SAL0253D
+                                                                                WHERE DISB = 0
+                                                                                AND SUB_PROD_ID = #{prod}
+                                                                                AND SUB_PROMO_ID = #{promoNo}
+                                                                           )
+                                          )
+          ) B ON B.SALES_ORD_ID = A.MAIN_ORD_ID AND B.CUST_ID = #{custId}
+   WHERE B.CUST_ID = #{custId}
+   AND B.STUS_CODE_ID IN (1, 4)
+  </select>
+
+  <select id="selectHcAcComboOrderJsonList" parameterType="Map" resultType="egovMap">
+          SELECT DISTINCT B1.ORD_NO,
+                     B1.ORD_ID,
+                     B1.REF_NO,
+                     B1.ORD_DT,
+                     B1.APP_TYPE,
+                     B1.PROD,
+                     B1.PROMO_CDE,
+                     B1.CUST_ID
+        FROM SAL0349D A1
+        LEFT JOIN (
+                            SELECT A.SALES_ORD_NO AS ORD_NO,
+                                       A.SALES_ORD_ID AS ORD_ID,
+                                       A.REF_NO AS REF_NO,
+                                       TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                                       G.CODE AS APP_TYPE,
+                                       D.STK_DESC AS PROD,
+                                       E.PROMO_CODE AS PROMO_CDE,
+                                       F.NAME AS CUST_ID
+                              FROM SAL0001D A
+                              LEFT JOIN (
+                                                  SELECT PCKAGE_BINDING_NO,
+                                                             CUST_ID,
+                                                             PROMO_ID
+                                                   FROM SAL0001D
+                                                   WHERE PCKAGE_BINDING_NO IS NOT NULL
+                                                   AND PROMO_ID IN (
+                                                                                    SELECT SUB_PROMO_ID
+                                                                                    FROM SAL0253D
+                                                                                    WHERE DISB = 0
+                                                                                    AND SUB_PROD_CAT = 'ACI'
+                                                                                    AND SUB_PROD_ID = #{prod}
+                                                                                    AND SUB_PROMO_ID = #{promoNo}
+                                                                                )
+                                              ) B ON B.PCKAGE_BINDING_NO = A.SALES_ORD_ID AND B.CUST_ID = #{custId}
+                              JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+                              JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+                              JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
+                              JOIN SAL0029D F ON A.CUST_ID = F.CUST_ID
+                              JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
+                              WHERE A.CUST_ID = #{custId}
+                              AND A.STUS_CODE_ID IN (1, 4)
+                              AND A.PROMO_ID IN (
+                                                                 SELECT PROMO_ID
+                                                                 FROM SAL0252M
+                                                                 WHERE CONF_ID IN (
+                                                                                                   SELECT CONF_ID
+                                                                                                   FROM SAL0253D
+                                                                                                   WHERE DISB = 0
+                                                                                                   AND SUB_PROD_CAT = 'ACI'
+                                                                                                   AND SUB_PROD_ID = #{prod}
+                                                                                                   AND SUB_PROMO_ID = #{promoNo}
+                                                                                               )
+                                                             )
+             ) B1 ON B1.ORD_ID = A1.MAIN_ORD_ID
+  </select>
+
+  <select id="selectHcAcComboOrderJsonList_2" parameterType="Map" resultType="egovMap">
+   SELECT *
+   FROM (
+             SELECT DISTINCT Y.ORD_NO,
+                             Z.MAIN_ORD_ID,
+                             Y.REF_NO,
+                             Y.ORD_DT,
+                             Y.APP_TYPE,
+                             Y.PROD,
+                             Y.PROMO_CDE,
+                             Y.CUST_ID,
+                             Y.SO_REQ_ID,
+                             Y.SO_REQ_STUS_ID
+              FROM SAL0349D Z
+              LEFT JOIN (
+                  SELECT DISTINCT A.SALES_ORD_NO AS ORD_NO,
+                                    A.SALES_ORD_ID AS ORD_ID,
+                                    A.REF_NO AS REF_NO,
+                                    TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                                    G.CODE AS APP_TYPE,
+                                    D.STK_DESC AS PROD,
+                                    E.PROMO_CODE AS PROMO_CDE,
+                                    F.NAME AS CUST_ID,
+                                    C.SO_REQ_ID,
+                                    C.SO_REQ_STUS_ID
+                    FROM SAL0001D A
+                    JOIN (
+                           SELECT PROD_CDE,
+                                      PROMO_ID
+                           FROM SAL0252M
+                           WHERE CONF_ID IN (
+                                              SELECT CONF_ID
+                                              FROM SAL0253D
+                                              WHERE SUB_PROMO_ID IN (
+                                                                      SELECT PROMO_ID
+                                                                      FROM SAL0001D
+                                                                      WHERE PCKAGE_BINDING_NO = #{ordIdPop_1}
+                                                                      AND CUST_ID = #{custId}
+                                                                    )
+                                            )
+                          ) B ON A.PROMO_ID = B.PROMO_ID AND A.CUST_ID = #{custId} AND STUS_CODE_ID <![CDATA[<>]]> 10
+                    LEFT JOIN SAL0020D C ON C.SO_REQ_SO_ID = A.SALES_ORD_ID AND C.SO_REQ_ID = FN_GET_SAL0020D_MAX_ID(A.SALES_ORD_ID, '1')
+                    JOIN SAL0002D H ON A.SALES_ORD_ID = H.SALES_ORD_ID
+                    JOIN SYS0026M D ON H.ITM_STK_ID = D.STK_ID
+                    JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
+                    JOIN SAL0029D F ON A.CUST_ID = F.CUST_ID
+                    JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
+                    WHERE A.SALES_ORD_ID NOT IN (
+                                                  SELECT A.SALES_ORD_ID
+                                                  FROM SAL0001D A
+                                                  JOIN SAL0001D B ON A.SALES_ORD_ID = B.PCKAGE_BINDING_NO
+                                                  WHERE A.CUST_ID = #{custId}
+                                                  AND A.STUS_CODE_ID <![CDATA[<>]]> 10
+                                                  AND A.PROMO_ID IN (
+                                                                        SELECT PROMO_ID
+                                                                        FROM SAL0252M
+                                                                        WHERE CONF_ID IN (
+                                                                                            SELECT CONF_ID
+                                                                                            FROM SAL0253D
+                                                                                            WHERE SUB_PROMO_ID IN (
+                                                                                                                    SELECT PROMO_ID
+                                                                                                                    FROM SAL0001D
+                                                                                                                    WHERE PCKAGE_BINDING_NO = #{ordIdPop_1}
+                                                                                                                    AND CUST_ID = 31
+                                                                                                                  )
+                                                                                          )
+                                                                       )
+                                               )
+            )Y ON Y.ORD_ID = Z.MAIN_ORD_ID
+   ) WHERE (SO_REQ_ID IS NULL OR (SO_REQ_ID IS NOT NULL AND SO_REQ_STUS_ID = 31))
+  </select>
+
+  <select id="chkCmbGrpMaxQty" parameterType="Map" resultType="int">
+    SELECT * FROM (
+          SELECT CASE WHEN (SELECT SUM(MAX_QTY) FROM SAL0253D WHERE SUB_PROD_ID = #{prod}) = PROD_MAX_LINK
+                     THEN 1
+                     ELSE 0 END AS MAX_QTY
+          FROM SAL0252M
+          WHERE DISB = 0
+          AND PROD_CDE = #{prod}
+          AND PROMO_ID = #{promoNo}
+          AND PROD_CAT =  'ACI'
+
+          UNION
+
+          SELECT MAX_QTY
+          FROM SAL0253D
+          WHERE SUB_PROMO_ID = #{promoNo}
+          AND SUB_PROD_ID = #{prod}
+          AND SUB_PROD_CAT = 'ACI'
+          AND DISB = 0
+    )
+  </select>
+
+  <select id="chkQtyHcAcCmbByGroup" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0349D A
+    LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
+    LEFT JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE A.COMBO_GRP IN (
+                                            SELECT * FROM (
+                                                   SELECT CASE WHEN (SELECT SUM(MAX_QTY) FROM SAL0253D WHERE SUB_PROD_ID = #{prod}) = PROD_MAX_LINK THEN 1
+                                                   ELSE 0 END AS COMBO_GRP
+                                                   FROM SAL0252M
+                                                   WHERE DISB = 0
+                                                   AND PROD_CDE = #{prod}
+                                                   AND PROMO_ID = #{promoNo}
+
+                                                   UNION
+
+                                                  SELECT COMBO_GRP
+                                                  FROM SAL0253D
+                                                  WHERE SUB_PROMO_ID = #{promoNo}
+                                                  AND SUB_PROD_ID = #{prod}
+                                            )
+                                         )
+     AND B.PROMO_ID = #{promoNo}
+     AND C.ITM_STK_ID = #{prod}
+  </select>
 </mapper>

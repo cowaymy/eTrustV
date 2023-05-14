@@ -3181,4 +3181,45 @@ WHERE
        FROM SAL0003D
        WHERE CNTRCT_SALES_ORD_ID = #{value}
   </select>
+
+ <insert id="insert_SAL0349D" parameterType="Map">
+    INSERT INTO SAL0349D (MAIN_ORD_ID
+                                      , SUB_ORD_ID
+                                      , COMBO_GRP
+                                      , REMARK
+                                      , DISB
+                                      , CRT_DT
+                                      , UPD_DT
+                                      , CRT_BY
+                                      , UPD_BY
+    ) VALUES (#{salesOrdId}
+                   , #{subSalesOrdId}
+                   <if test='salesOrdId == subSalesOrdId'>
+                   , 1
+                   </if>
+                   <if test='salesOrdId != subSalesOrdId'>
+                   ,(SELECT COMBO_GRP
+                      FROM SAL0253D
+                      WHERE SUB_PROMO_ID=(SELECT A.PROMO_ID
+                                                          FROM SAL0001D A
+                                                          LEFT JOIN SAL0002D B ON B.SALES_ORD_ID=A.SALES_ORD_ID
+                                                          WHERE A.SALES_ORD_ID=#{subSalesOrdId}
+                                                          AND A.CUST_ID=#{custId}
+                                                          AND A.PCKAGE_BINDING_NO IS NOT NULL)
+                         AND SUB_PROD_ID=(SELECT B.ITM_STK_ID
+                                                      FROM SAL0001D A
+                                                      LEFT JOIN SAL0002D B ON B.SALES_ORD_ID=A.SALES_ORD_ID
+                                                      WHERE A.SALES_ORD_ID=#{subSalesOrdId}
+                                                      AND A.CUST_ID=#{custId}
+                                                      AND A.PCKAGE_BINDING_NO IS NOT NULL)
+                         AND SUB_PROD_CAT='ACI'
+                         AND DISB=0)
+                   </if>
+                   , null
+                   , 0
+                   , SYSDATE
+                   , SYSDATE
+                   , #{crtUserId}
+                   , #{updUserId})
+  </insert>
 </mapper>
