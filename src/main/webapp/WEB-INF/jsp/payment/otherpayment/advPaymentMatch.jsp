@@ -96,13 +96,13 @@ var jompayMatchLayout = [
 
 var advanceMatchLayout = [
     {dataField : "batchId",headerText : "<spring:message code='pay.head.batchId'/>",width : '5%' , editable : false},
-    {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : '10%' , editable : false},
     {dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : '7%' , editable : false},
     {dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : '13%' , editable : false},
     {dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",width : '10%', editable : false},
     {dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetails'/>",width : '10%' , editable : false},
-    {dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+    {dataField : "payItmAmt",headerText : "<spring:message code='pay.head.amount'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
     {dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+    {dataField : "totAmt",headerText : "<spring:message code='pay.head.totalAmount'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
     {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.statementDate'/>",width : '10%' , editable : false},
     {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : '13%' , editable : false},
     {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>" , width : '10%' , editable : false, dataType:"numeric", formatString : "###0.00" },
