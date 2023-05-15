@@ -544,8 +544,8 @@
                     .then(r=> {
 
                     	if(r.code =="99"){
-                    	     document.getElementById("MsgAlert2").innerHTML =  "Pemasangan gagal untuk dihantar. Sila tukar gambar anda.";
-                             $("#alertModalClick2").click();
+                    	     document.getElementById("MsgAlert").innerHTML =  "Pemasangan gagal untuk dihantar. Sila tukar gambar anda.";
+                             $("#alertModalClick").click();
                              return;
                     	}
 
