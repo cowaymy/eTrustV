@@ -577,12 +577,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         Map<String, Object> smsResultValue = new HashMap<String, Object>();
 
         try{
-
-        	logger.info("debuggg1:: " + (String.valueOf(params.get("hcInd"))));
-
         	if(CommonUtils.nvl(String.valueOf(params.get("hcInd"))).equals("Y")){
-        		logger.info("debuggg2::" );
         		smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+
         		EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
         		params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
         		params.put("hpMemId",salesmanInfo.get("memId"));
@@ -593,11 +590,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         				+ "\n Failed Reason: " + params.get("resnDesc") ;
         		params.put("hpMsg",hpMsg);
 
-        		logger.info("debuggg3::" );
-
         		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
         	}else{
-        		logger.info("debuggg4::" );
         		smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
         	}
 
@@ -754,7 +748,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
           if (null != rtnValue) {
 
         	  Map<String, Object> smsResultValue = new HashMap<String, Object>();
-
+        	  
               try{
 	              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
 	              	logger.info("===DONE SEND TO CUST===");
@@ -770,7 +764,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
 	  	      	}
 
-            /*HashMap spMap = (HashMap) rtnValue.get("spMap");
+            HashMap spMap = (HashMap) rtnValue.get("spMap");
             if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
               rtnValue.put("logerr", "Y");
             }
@@ -813,7 +807,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               String procMsg = "Failed to Save";
               String errorMsg = "[API] " + errMsg;
               throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-            }*/
+            }
 
             ////
           }
