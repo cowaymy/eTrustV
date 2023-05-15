@@ -772,6 +772,12 @@ public class HcInstallResultListController {
     	return "homecare/services/install/getAcInsComplete";
     }
 
+    @RequestMapping(value = "/selectInstallationInfo.do", method = RequestMethod.GET)
+    public ResponseEntity <EgovMap> selectInstallationInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+      EgovMap selectInstallationInfo = hcInstallResultListService.selectInstallationInfo(params);
+      return ResponseEntity.ok(selectInstallationInfo);
+    }
+
     @RequestMapping(value="/uploadInsImage.do", method=RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> uploadInsImage(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params) throws Exception {
     	List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, "/service/mobile/installation", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
