@@ -310,7 +310,7 @@
         aElement.classList.add("btn-tag");
         aElement.classList.add("btn-rounded");
         aElement.classList.add("m-2");
-        aElement.innerText = "Photo";
+        aElement.innerText = "Foto";
 
         const image = document.createElement("img");
         image.style.width = "100%";
@@ -517,6 +517,12 @@
                        })
                        .then(d=>d.json())
                        .then(r=> {
+
+                           if(r.code =="99"){
+                               document.getElementById("MsgAlert2").innerHTML =  "Pemasangan gagal untuk dihantar. Sila tukar gambar anda.";
+                               $("#alertModalClick2").click();
+                               return;
+                           }
                            attachment = r.fileGroupKey;
                            insertPreInsFail();
                        });
