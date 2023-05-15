@@ -391,7 +391,6 @@
         aElement2.classList.add("btn-rounded");
         aElement2.classList.add("m-2");
         aElement2.innerText = "Camera";
-        aElement2.href = "#";
 
         const aElement3 = document.createElement("a");
         aElement3.classList.add("btn");
@@ -399,7 +398,6 @@
         aElement3.classList.add("btn-rounded");
         aElement3.classList.add("m-2");
         aElement3.innerText = "Capture";
-        aElement3.href = "#";
 
         openCamera.style.display = "none";
         screenshot.style.display = "none";
@@ -413,6 +411,7 @@
         aElement2.onclick = () => {
 		    navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
 		    .then(s => {
+		    	aElement.style.display = "none";
 		    	aElement2.style.display = "none";
 		    	aElement3.style.display = "";
 		    	image.style.display = "none";
@@ -426,6 +425,7 @@
 		        video.play();
 		        aElement3.onclick = () => {
 		        	aElement3.style.display = "none";
+		        	aElement.style.display = "";
 		        	aElement2.style.display = "";
 			        c.height = video.videoHeight;
 			        c.width = video.videoWidth;
@@ -499,26 +499,13 @@
              return false;
         }
 
-        if(sirimUploadInput.files[0].type !="image/jpeg" && sirimUploadInput.files[0].type !="image/png"){
-            document.getElementById("MsgAlert").innerHTML =  "Sirim image is required to complete pre-installation.";
-            $("#alertModalClick").click();
-            return false;
-        }
 
         for(let i = 0; i < installUploadContainer.length; i++){
-
             if(!installUploadContainer[i].files[0]){
                 document.getElementById("MsgAlert").innerHTML =  "4 images are required to complete pre-installation.";
                 $("#alertModalClick").click();
                 return false;
             }
-
-        	if(installUploadContainer[i].files[0].type !="image/jpeg" && installUploadContainer[i].files[0].type !="image/png"){
-                document.getElementById("MsgAlert").innerHTML =  "4 images are required to complete pre-installation.";
-                $("#alertModalClick").click();
-                return false;
-            }
-
         }
 
         return true;

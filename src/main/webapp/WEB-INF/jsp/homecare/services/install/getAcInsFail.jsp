@@ -352,7 +352,6 @@
         aElement2.classList.add("btn-rounded");
         aElement2.classList.add("m-2");
         aElement2.innerText = "Camera";
-        aElement2.href = "#";
 
         const aElement3 = document.createElement("a");
         aElement3.classList.add("btn");
@@ -360,7 +359,6 @@
         aElement3.classList.add("btn-rounded");
         aElement3.classList.add("m-2");
         aElement3.innerText = "Capture";
-        aElement3.href = "#";
 
         openCamera.style.display = "none";
         screenshot.style.display = "none";
@@ -375,6 +373,7 @@
         	e.preventDefault()
             navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
             .then(s => {
+            	aElement.style.display = "none";
             	aElement2.style.display = "none";
             	aElement3.style.display = "";
                 image.style.display = "none";
@@ -388,6 +387,7 @@
                 video.play();
                 aElement3.onclick = () => {
                 	aElement3.style.display = "none";
+                	aElement.style.display = "";
                     aElement2.style.display = "";
                     c.height = video.videoHeight;
                     c.width = video.videoWidth;
