@@ -78,29 +78,37 @@
 		    x.style.display = "none"
 	});
 
-	console.log("${installationInfo.dupCheck}");
-
     $("#salesDt").text($("#salesDt").text() + moment("${installationInfo.salesDt}").format("DD-MM-YYYY"))
     $("#doDt").text($("#doDt").text() + moment("${installationInfo.installDt}").format("DD-MM-YYYY"))
 
     $("#btnFail").click(e => {
     	e.preventDefault();
-    	 if("${installationInfo.dupCheck}" == "0") {
-    		 window.location = "/homecare/services/install/getAcInsFail.do?insNo=${insNo}";
-        }else{
-            document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
-            $("#alertModalClick").click();
-        }
+        fetch("/homecare/services/install/selectInstallationInfo.do?insNo=${insNo}")
+        .then(r => r.json())
+        .then(resp => {
+            if(!resp.dupCheck){
+                window.location = "/homecare/services/install/getAcInsFail.do?insNo=${insNo}";
+            }
+            else{
+                   document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
+                 $("#alertModalClick").click();
+            }
+        });
     })
 
      $("#btnComplete").click(e => {
         e.preventDefault();
-        if("${installationInfo.dupCheck}" == "0") {
-        	 window.location = "/homecare/services/install/getAcInsComplete.do?insNo=${insNo}";
-        }else{
-        	 document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
-             $("#alertModalClick").click();
-        }
+        fetch("/homecare/services/install/selectInstallationInfo.do?insNo=${insNo}")
+        .then(r => r.json())
+        .then(resp => {
+            if(!resp.dupCheck){
+            	window.location = "/homecare/services/install/getAcInsComplete.do?insNo=${insNo}";
+            }
+            else{
+            	   document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
+                 $("#alertModalClick").click();
+            }
+        });
     })
 </script>
 
