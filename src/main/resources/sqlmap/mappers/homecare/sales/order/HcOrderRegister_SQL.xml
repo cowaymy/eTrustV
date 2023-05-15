@@ -299,7 +299,8 @@
                SELECT Z.SALES_ORD_NO AS ORD_NO,
                       Z.SALES_ORD_ID AS ORD_ID,
                       Z.PCKAGE_BINDING_NO,
-                      Z.CUST_ID,
+                      F.NAME AS CUST_ID,
+                      F.CUST_ID AS CID,
                       Z.PROMO_ID,
                       Z.STUS_CODE_ID,
                       Z.REF_NO,
@@ -311,6 +312,7 @@
                 JOIN SAL0002D C ON Z.SALES_ORD_ID = C.SALES_ORD_ID
                 JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
                 JOIN SAL0017D E ON Z.PROMO_ID = E.PROMO_ID
+                JOIN SAL0029D F ON Z.CUST_ID = F.CUST_ID
                 JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND Z.APP_TYPE_ID = G.CODE_ID
                 WHERE
                 Z.PCKAGE_BINDING_NO IS NOT NULL
@@ -333,8 +335,8 @@
                                                                                 AND SUB_PROMO_ID =  #{promoNo}
                                                                            )
                                           )
-          ) B ON B.ORD_ID = A.MAIN_ORD_ID AND B.CUST_ID = #{custId}
-   WHERE B.CUST_ID = #{custId}
+          ) B ON B.ORD_ID = A.MAIN_ORD_ID AND B.CID = #{custId}
+   WHERE B.CID = #{custId}
    AND B.STUS_CODE_ID IN (1, 4)
   </select>
 
@@ -454,7 +456,20 @@
                                                   AND SUB_PROD_ID = #{prod}
                                             )
                                          )
-     AND B.PROMO_ID = #{promoNo}
-     AND C.ITM_STK_ID = #{prod}
+
+     <!-- AND B.PROMO_ID = #{promoNo}
+     AND C.ITM_STK_ID = #{prod} -->
+  </select>
+
+  <select id="chkQtyCmbOrd" parameterType="Map" resultType="int">
+
+      SELECT COUNT(*)
+      FROM SAL0349D A
+      JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
+      JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+      WHERE A.MAIN_ORD_ID = #{ordId}
+      AND A.DISB = 0
+      GROUP BY A.MAIN_ORD_ID
+
   </select>
 </mapper>

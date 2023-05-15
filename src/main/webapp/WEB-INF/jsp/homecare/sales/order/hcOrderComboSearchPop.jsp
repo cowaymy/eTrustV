@@ -8,8 +8,19 @@
 
       AUIGrid.bind(popOrderGridID, "cellDoubleClick",
         function(event) {
-          fn_setData(AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordNo"), AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordId"))
-          $('#custPopCloseBtn').click();
+    	  ordNo = AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordNo");
+          ordId =  AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordId");
+
+          Common.ajax("POST", "/homecare/sales/order/chkIsMaxCmbOrd.do", {promoNo : $('#promoNo').val(), prod : $('#prod').val(),
+                                     custId : $('#custId').val(), ordId : ordId}, function(result) {
+               if(result.code== "00"){
+            	   fn_setData(AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordNo"), AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordId"));
+            	   $('#custPopCloseBtn').click();
+               }else{
+            	   Common.alert('<spring:message code="sal.alert.msg.cboNoOrdTag" />');
+            	   return false;
+               }
+          });
       });
 
       fn_selectListAjaxPop();

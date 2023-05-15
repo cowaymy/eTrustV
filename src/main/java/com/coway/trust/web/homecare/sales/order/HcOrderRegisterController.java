@@ -225,6 +225,23 @@ public class HcOrderRegisterController {
     return ResponseEntity.ok(orderList);
   }
 
+  @RequestMapping(value = "/chkIsMaxCmbOrd.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> chkIsMaxCmbOrd(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+    ReturnMessage message = new ReturnMessage();
+
+    logger.debug("==================/chkIsMaxCmbOrd=======================");
+    logger.debug("[HcOrderRegisterController - chkIsMaxCmbOrd] params : {}", params);
+    logger.debug("==================/chkIsMaxCmbOrd=======================");
+
+    int qtyCmbOrd =  hcOrderRegisterService.chkQtyCmbOrd(params);
+
+    message.setCode(Integer.toString(qtyCmbOrd));
+
+    return ResponseEntity.ok(message);
+
+  }
+
 	/**
 	 * Homecare Register Order
 	 *

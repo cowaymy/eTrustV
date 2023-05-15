@@ -101,6 +101,8 @@ public interface HcOrderRegisterMapper {
   public int chkQtyHcAcCmbByGroup(Map<String, Object> params);
 	public int chkCmbGrpMaxQty(Map<String, Object> params);
 
+	public int chkQtyCmbOrd(Map<String, Object> params);
+
 	public List<EgovMap> selectHcAcComboOrderJsonList(Map<String, Object> params);
 	public List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params);
 }

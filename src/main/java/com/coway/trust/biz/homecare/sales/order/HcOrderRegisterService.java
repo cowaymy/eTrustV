@@ -67,4 +67,6 @@ public interface HcOrderRegisterService {
 
 	List<EgovMap> selectHcAcComboOrderJsonList_2(Map<String, Object> params);
 
+  int chkQtyCmbOrd(Map<String, Object> params);
+
 }
