@@ -286,68 +286,14 @@
   </select>
 
   <select id="selectHcAcComboOrderJsonList" parameterType="Map" resultType="egovMap">
-   <!--      SELECT DISTINCT B1.ORD_NO,
-                     B1.ORD_ID,
-                     B1.REF_NO,
-                     B1.ORD_DT,
-                     B1.APP_TYPE,
-                     B1.PROD,
-                     B1.PROMO_CDE,
-                     B1.CUST_ID
-        FROM SAL0349D A1
-        LEFT JOIN (
-                            SELECT A.SALES_ORD_NO AS ORD_NO,
-                                       A.SALES_ORD_ID AS ORD_ID,
-                                       A.REF_NO AS REF_NO,
-                                       TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
-                                       G.CODE AS APP_TYPE,
-                                       D.STK_DESC AS PROD,
-                                       E.PROMO_CODE AS PROMO_CDE,
-                                       F.NAME AS CUST_ID
-                              FROM SAL0001D A
-                              LEFT JOIN (
-                                                  SELECT PCKAGE_BINDING_NO,
-                                                             CUST_ID,
-                                                             PROMO_ID
-                                                   FROM SAL0001D
-                                                   WHERE PCKAGE_BINDING_NO IS NOT NULL
-                                                   AND PROMO_ID IN (
-                                                                                    SELECT SUB_PROMO_ID
-                                                                                    FROM SAL0253D
-                                                                                    WHERE DISB = 0
-                                                                                    AND SUB_PROD_CAT = 'ACI'
-                                                                                    AND SUB_PROD_ID = #{prod}
-                                                                                    AND SUB_PROMO_ID = #{promoNo}
-                                                                                )
-                                              ) B ON B.PCKAGE_BINDING_NO = A.SALES_ORD_ID AND B.CUST_ID = #{custId}
-                              JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-                              JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
-                              JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
-                              JOIN SAL0029D F ON A.CUST_ID = F.CUST_ID
-                              JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
-                              WHERE A.CUST_ID = #{custId}
-                              AND A.STUS_CODE_ID IN (1, 4)
-                              AND A.PROMO_ID IN (
-                                                                 SELECT PROMO_ID
-                                                                 FROM SAL0252M
-                                                                 WHERE CONF_ID IN (
-                                                                                                   SELECT CONF_ID
-                                                                                                   FROM SAL0253D
-                                                                                                   WHERE DISB = 0
-                                                                                                   AND SUB_PROD_CAT = 'ACI'
-                                                                                                   AND SUB_PROD_ID = #{prod}
-                                                                                                   AND SUB_PROMO_ID = #{promoNo}
-                                                                                               )
-                                                             )
-             ) B1 ON B1.ORD_ID = A1.MAIN_ORD_ID -->
-      SELECT DISTINCT B.ORD_NO,
-        B.ORD_ID,
-        B.REF_NO,
-        B.ORD_DT,
-        B.APP_TYPE,
-        B.PROD,
-        B.PROMO_CDE,
-        B.CUST_ID
+  SELECT DISTINCT B.ORD_NO,
+            B.ORD_ID,
+            B.REF_NO,
+            B.ORD_DT,
+            B.APP_TYPE,
+            B.PROD,
+            B.PROMO_CDE,
+            B.CUST_ID
   FROM SAL0349D A
   LEFT JOIN (
                SELECT Z.SALES_ORD_NO AS ORD_NO,
@@ -358,13 +304,14 @@
                       Z.STUS_CODE_ID,
                       Z.REF_NO,
                       TO_CHAR(Z.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
-                      Z.APP_TYPE_ID AS APP_TYPE,
+                      G.CODE AS APP_TYPE,
                       D.STK_DESC AS PROD,
                       E.PROMO_CODE AS PROMO_CDE
                 FROM SAL0001D Z
                 JOIN SAL0002D C ON Z.SALES_ORD_ID = C.SALES_ORD_ID
                 JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
                 JOIN SAL0017D E ON Z.PROMO_ID = E.PROMO_ID
+                JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND Z.APP_TYPE_ID = G.CODE_ID
                 WHERE
                 Z.PCKAGE_BINDING_NO IS NOT NULL
                 AND Z.PROMO_ID IN (
