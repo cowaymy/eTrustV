@@ -88,7 +88,7 @@
     	 if("${installationInfo.dupCheck}" == "0") {
     		 window.location = "/homecare/services/install/getAcInsFail.do?insNo=${insNo}";
         }else{
-            document.getElementById("MsgAlert").innerHTML =  "This order has been submitted.";
+            document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
             $("#alertModalClick").click();
         }
     })
@@ -98,7 +98,7 @@
         if("${installationInfo.dupCheck}" == "0") {
         	 window.location = "/homecare/services/install/getAcInsComplete.do?insNo=${insNo}";
         }else{
-        	 document.getElementById("MsgAlert").innerHTML =  "This order has been submitted.";
+        	 document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
              $("#alertModalClick").click();
         }
     })

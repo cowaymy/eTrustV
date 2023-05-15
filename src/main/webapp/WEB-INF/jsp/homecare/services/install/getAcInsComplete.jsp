@@ -514,53 +514,59 @@
 
     $("#btnSubmit").click(e => {
         e.preventDefault();
-        if(validationCheck()){
-	        const formData = new FormData();
-	        const container = new DataTransfer();
-	        const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
-	        const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
+        if("${installationInfo.dupCheck}" == "0") {
+	        if(validationCheck()){
+		        const formData = new FormData();
+		        const container = new DataTransfer();
+		        const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
+		        const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
 
-	        const insNo = "${insNo}", serial = $("#serialNo").text();
+		        const insNo = "${insNo}", serial = $("#serialNo").text();
 
-	        container.items.add(new File([sirimUploadInput.files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_1.png', {type: sirimUploadInput.files[0].type}))
+		        container.items.add(new File([sirimUploadInput.files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_1.png', {type: sirimUploadInput.files[0].type}))
 
-	        for(let i = 0; i < installUploadContainer.length; i++){
-	        	container.items.add(new File([installUploadContainer[i].files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_' + (i+2) +'.png', {type: sirimUploadInput.files[0].type}))
+		        for(let i = 0; i < installUploadContainer.length; i++){
+		        	container.items.add(new File([installUploadContainer[i].files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_' + (i+2) +'.png', {type: sirimUploadInput.files[0].type}))
+		        }
+
+		        $.each(container.files, function(n, v) {
+		                  formData.append(n, v);
+		        });
+
+		        fetch("/homecare/services/install/uploadInsImage.do", {
+		        	method: "POST",
+		            body: formData
+		        })
+		        .then(d=>d.json())
+		        .then(r=> {
+		        	const attachment = r.fileGroupKey;
+
+		            fetch("/homecare/services/install/insertPreInsCompleted.do", {
+		                method: "POST",
+		                headers: {
+		                    "Content-Type": "application/json"
+		                },
+		                body: JSON.stringify({
+		                    insNo,
+		                    serial,
+		                    attachment
+		                })
+		            })
+		            .then(() => {
+		            	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation created! You may proceed to close this page.";
+		                $("#alertModalClick2").click();
+		            })
+		            .catch(() => {
+		            	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation insert failed!";
+		                $("#alertModalClick2").click();
+		            })
+		        })
 	        }
+        }else{
+            document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
+            $("#alertModalClick").click();
+       }
 
-	        $.each(container.files, function(n, v) {
-	                  formData.append(n, v);
-	        });
-
-	        fetch("/homecare/services/install/uploadInsImage.do", {
-	        	method: "POST",
-	            body: formData
-	        })
-	        .then(d=>d.json())
-	        .then(r=> {
-	        	const attachment = r.fileGroupKey;
-
-	            fetch("/homecare/services/install/insertPreInsCompleted.do", {
-	                method: "POST",
-	                headers: {
-	                    "Content-Type": "application/json"
-	                },
-	                body: JSON.stringify({
-	                    insNo,
-	                    serial,
-	                    attachment
-	                })
-	            })
-	            .then(() => {
-	            	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation created! You may proceed to close this page.";
-	                $("#alertModalClick2").click();
-	            })
-	            .catch(() => {
-	            	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation insert failed!";
-	                $("#alertModalClick2").click();
-	            })
-	        })
-        }
     })
 
 </script>

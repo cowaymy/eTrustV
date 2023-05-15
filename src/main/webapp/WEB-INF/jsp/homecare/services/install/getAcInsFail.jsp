@@ -487,36 +487,41 @@
 
     $("#btnSubmit").click(e => {
     	e.preventDefault();
-        const formData = new FormData();
-        const container = new DataTransfer();
-    	const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
+    	if("${installationInfo.dupCheck}" == "0") {
+	        const formData = new FormData();
+	        const container = new DataTransfer();
+	    	const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
 
-    	let uploadFlag = false;
+	    	let uploadFlag = false;
 
-        for(let i = 0; i < installUploadContainer.length; i++){
-        	if(installUploadContainer[i].files[0]){
-        		uploadFlag=true;
-        		container.items.add(new File([installUploadContainer[i].files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_' + (i+1) +'.png', {type: installUploadContainer[i].files[0].type}))
-        	}
-        }
+	        for(let i = 0; i < installUploadContainer.length; i++){
+	        	if(installUploadContainer[i].files[0]){
+	        		uploadFlag=true;
+	        		container.items.add(new File([installUploadContainer[i].files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_' + (i+1) +'.png', {type: installUploadContainer[i].files[0].type}))
+	        	}
+	        }
 
-        if(uploadFlag){
-            $.each(container.files, function(n, v) {
-                formData.append(n, v);
-            });
+	        if(uploadFlag){
+	            $.each(container.files, function(n, v) {
+	                formData.append(n, v);
+	            });
 
-            fetch("/homecare/services/install/uploadInsImage.do", {
-                method: "POST",
-                body: formData
-            })
-            .then(d=>d.json())
-            .then(r=> {
-                attachment = r.fileGroupKey;
-                insertPreInsFail();
-            });
-        }else{
-        	insertPreInsFail();
-        }
+	            fetch("/homecare/services/install/uploadInsImage.do", {
+	                method: "POST",
+	                body: formData
+	            })
+	            .then(d=>d.json())
+	            .then(r=> {
+	                attachment = r.fileGroupKey;
+	                insertPreInsFail();
+	            });
+	        }else{
+	        	insertPreInsFail();
+	        }
+    	}else{
+            document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
+            $("#alertModalClick").click();
+       }
     })
 
 </script>
