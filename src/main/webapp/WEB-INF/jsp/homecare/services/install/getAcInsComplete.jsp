@@ -40,13 +40,18 @@
                         </div>
                         <div class="card-body m-4 mainBorderColor">
                         <form>
-						    <h2 id="serialNo"></h2>
+
 						    <div id="qr-reader"></div>
 						    <div id="qr-reader-results"></div>
+						     <h2 id="serialNo"></h2>
 						        <div class="form-group">
 						        <p class="btn btn-primary btn-block btn-lg" id="btnScanBarcode">
-						            <a href="javascript:void(0);" style="color: white">Imbas Kod Bar</a>
+						            <a href="javascript:void(0);" style="color: white">Imbas Kod Bar Dalaman</a>
 						        </p>
+						         <h2 id="serialNo2"></h2>
+						         <p class="btn btn-primary btn-block btn-lg" id="btnScanBarcodeOutdoor">
+                                    <a href="javascript:void(0);" style="color: white">Imbas Kod Bar Luaran</a>
+                                </p>
 						    </div>
                         </form>
                         </div>
@@ -416,6 +421,9 @@
 		    	aElement3.style.display = "";
 		    	image.style.display = "none";
 		    	const video = document.createElement("video");
+		    	video.autoplay = true;
+		    	video.playsInline = true;
+		    	video.muted = true;
                 video.style.width = "100%";
 		        const c = document.createElement("canvas")
 		        c.style.display = "none";
@@ -455,10 +463,10 @@
     }
 
 	let resultContainer = document.getElementById('qr-reader-results');
-	let html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 100, qrbox: window.innerWidth, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128] });
-	const serialNo = document.getElementById("serialNo")
+	let html5QrcodeScanner = new Html5Qrcode("qr-reader",{useBarCodeDetectorIfSupported : true});
+// 	const serialNo = document.getElementById("serialNo")
 	let serialObject = {};
-	onScanSuccess = (decodedText, decodedResult) => {
+	onScanSuccess = (decodedText, decodedResult, seq) => {
         //++countResults
         if(decodedText.length !=18){
         	return;
@@ -470,27 +478,42 @@
 
         serialObject[decodedText] +=1;
         if(serialObject[decodedText] > 2){
-        	serialNo.innerText = decodedText;
-        	html5QrcodeScanner.clear()
+        	seq.innerText = decodedText;
+        	html5QrcodeScanner.stop();
+        	html5QrcodeScanner.clear();
         }
 	}
 
 
 	$("#btnScanBarcode").click(e => {
 		e.preventDefault();
-	    html5QrcodeScanner.render(onScanSuccess);
+	    html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: window.innerWidth, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128]}
+	    , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo"))});
 	});
+
+   $("#btnScanBarcodeOutdoor").click(e => {
+        e.preventDefault();
+        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: window.innerWidth, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128]}
+        , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo2"))});
+    });
 
 	const validationCheck = (e) => {
         const serial = $("#serialNo").text();
+        const serial2 = $("#serialNo2").text();
         const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
         const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
 
         if(!serial.trim()){
-             document.getElementById("MsgAlert").innerHTML =  "Nombor Bersiri diperlukan.";
+             document.getElementById("MsgAlert").innerHTML =  "Nombor Bersiri Dalaman diperlukan.";
              $("#alertModalClick").click();
             return false;
         }
+
+        if(!serial2.trim()){
+            document.getElementById("MsgAlert").innerHTML =  "Nombor Bersiri Luaran diperlukan.";
+            $("#alertModalClick").click();
+           return false;
+       }
 
 
         if(!sirimUploadInput.files[0]){
@@ -524,7 +547,7 @@
                     const installUploadContainer = document.querySelectorAll("#installUploadContainer input");
                     const sirimUploadInput = document.querySelector("#sirimUploadContainer input");
 
-                    const insNo = "${insNo}", serial = $("#serialNo").text();
+                    const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text() ;
 
                     container.items.add(new File([sirimUploadInput.files[0]], 'MOBILE_SVC_${insNo}_' + moment().format("YYYYMMDD")  + '_1.png', {type: sirimUploadInput.files[0].type}))
 
@@ -559,6 +582,7 @@
                             body: JSON.stringify({
                                 insNo,
                                 serial,
+                                serial2,
                                 attachment
                             })
                         })
