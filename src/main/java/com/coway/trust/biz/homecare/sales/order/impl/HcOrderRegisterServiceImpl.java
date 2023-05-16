@@ -316,13 +316,12 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
   public int chkQtyCmbOrd(Map<String, Object> params) {
       logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] params :: {} " + params);
       int qtyCmbOrd = hcOrderRegisterMapper.chkQtyCmbOrd(params);
-
       logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] qtyCmbOrd :: " + qtyCmbOrd);
       if(qtyCmbOrd >= 5){
-        logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] qtyCmbOrd >= 5 " );
         return 99;
       }
-      return 00;
+
+      return 0;
   }
 
 }

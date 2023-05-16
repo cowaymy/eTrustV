@@ -235,11 +235,10 @@ public class HcOrderRegisterController {
     logger.debug("==================/chkIsMaxCmbOrd=======================");
 
     int qtyCmbOrd =  hcOrderRegisterService.chkQtyCmbOrd(params);
+    logger.info("[HcOrderRegisterController - chkIsMaxCmbOrd] qtyCmbOrd :: " + qtyCmbOrd );
 
     message.setCode(Integer.toString(qtyCmbOrd));
-
     return ResponseEntity.ok(message);
-
   }
 
 	/**
