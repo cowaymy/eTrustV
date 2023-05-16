@@ -219,7 +219,7 @@
       $("#reportFormPEXLst #reportDownFileName").val("PEXNoteDigitalization" + day + month + date.getFullYear());
       $("#reportFormPEXLst #viewType").val("PDF");
 
-      //Common.report("reportFormPEXLst", option);
+      Common.report("reportFormPEXLst", option);
   }
 
   function fn_sendEmail(){

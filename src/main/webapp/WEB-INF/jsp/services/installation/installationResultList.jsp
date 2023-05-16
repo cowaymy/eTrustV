@@ -628,7 +628,7 @@
       $("#reportFormInstLst #reportDownFileName").val("InstallationNoteDigitalization" + day + month + date.getFullYear());
       $("#reportFormInstLst #viewType").val("PDF");
 
-      //Common.report("reportFormInstLst", option);
+      Common.report("reportFormInstLst", option);
   }
 
   function fn_sendEmail(){
