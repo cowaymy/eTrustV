@@ -5613,6 +5613,7 @@ SELECT DISTINCT A.ORD_ID FROM (
     </select>
 
     <select id="selectOldContactDt" parameterType="Map" resultType="egovMap">
+        <!-- 20230305 Celeste: To change to update Installation Contact -->
         <!-- SELECT CUST.CUST_CNTC_ID,
         CUST.TEL_M1 OLD_HP_NO,
         CUST.TEL_O OLD_OFFICE_NO,
