@@ -76,6 +76,13 @@
             $("#cntrlFlag").val("N");
         }
 
+        if($("#disabFlagBox").prop("checked")) {
+            $("#disabFlag").val("Y");
+        } else {
+            $("#disabFlag").val("N");
+        }
+
+
         Common.ajax("POST", "/eAccounting/expense/updateExpenseInfo", $("#editForm").serializeJSON(), function(result)    {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 
@@ -129,6 +136,7 @@
                 <input type="hidden" id = "pClmType" name="pClmType" />
                 <input type="hidden" id = "pExpType" name="pExpType" />
                 <input type="hidden" id = "cntrlFlag" name="cntrlFlag" />
+                <input type="hidden" id = "disabFlag" name="disabFlag" />
 
                 <table class="type1"><!-- table start -->
                     <caption>table</caption>
@@ -177,7 +185,7 @@
                             <th scope="row"><spring:message code="expense.Disable" /></th>
                             <%-- <td><label><span><input type="checkbox" value="Y" id="disabFlag" name ="disabFlag"
                             <c:if test="${disabFlag eq 'Y'}">checked</c:if> /></span></label> --%>
-                            <td><label><span><input type="checkbox" value="Y" id="disabFlag" name ="disabFlag"
+                            <td><label><span><input type="checkbox" value="Y" id="disabFlagBox" name ="disabFlagBox"
                                 <c:if test="${disabFlag eq 'Y'}">checked</c:if> /></span></label>
                             </td>
                         </tr>
