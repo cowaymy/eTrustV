@@ -28,7 +28,8 @@
     CTRL_IS_CRC_NAME,
     Extent1.CTRL_REM,
     NVL(Extent1.CTRL_FAIL_SMS_IS_PUMP,0) AS CTRL_FAIL_SMS_IS_PUMP,
-    Extent1.CTRL_TOT_ITM,
+    <!-- Extent1.CTRL_TOT_ITM, -->
+    Extent7.TOT_ITM CTRL_TOT_ITM, <!--  Changed by Hui Ding for counting total item from unique account number -->
     Extent1.CTRL_TOT_SUCCES,
     Extent1.CTRL_TOT_FAIL,
     Extent1.CTRL_WAIT_SYNC,
@@ -49,6 +50,9 @@
     Extent6.CODE_NAME
     DDT_CHNL
     FROM PAY0041D Extent1
+    LEFT JOIN
+        (SELECT BANK_DTL_CTRL_ID, COUNT(1) AS TOT_ITM FROM PAY0287D D WHERE BANK_DTL_CTRL_ID = '14317' GROUP BY BANK_DTL_CTRL_ID) Extent7
+        ON Extent1.CTRL_ID = Extent7.BANK_DTL_CTRL_ID  <!--  Changed by Hui Ding for counting total item from unique account number -->
     JOIN SYS0038M Extent2 ON
     Extent2.STUS_CODE_ID = Extent1.CTRL_STUS_ID
     LEFT JOIN SYS0004M
