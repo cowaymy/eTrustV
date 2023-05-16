@@ -624,13 +624,13 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
       					} else {
       						Logger.debug("uploadAdjNo :::: reMap {} ", reMap);
       						deMap.put("year", reMap.get("adjYearMonth").toString().substring(3));
-      						String monthTemp = reMap.get("adjYearMonth").toString().substring(0,2);
-      						String month = "";
-      						if(monthTemp.length() == 2 && monthTemp.substring(0, 1).equals("0")){
+      						String month = reMap.get("adjYearMonth").toString().substring(0,2);
+      						//String month = "";
+      						/*if(monthTemp.length() == 2 && monthTemp.substring(0, 1).equals("0")){
       							month = reMap.get("adjYearMonth").toString().substring(1,2);
-      						}else{
-      							month = reMap.get("adjYearMonth").toString().substring(0,2);
-      						}
+      						}else{*/
+      						//	month = reMap.get("adjYearMonth").toString().substring(0,2);
+      						//}
 							deMap.put("month", month);
 							deMap.put("costCentr", reMap.get("costCentr"));
 							deMap.put("budgetCode", reMap.get("budgetCode"));
