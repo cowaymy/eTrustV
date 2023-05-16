@@ -314,14 +314,24 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
   @Override
   public int chkQtyCmbOrd(Map<String, Object> params) {
+       int qtyHcAcCmbByGrpCnt; // check the homecare aic-con combo by group category
+       int cmbGrpMaxQty; // check maximum quantity
+
       logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] params :: {} " + params);
       int qtyCmbOrd = hcOrderRegisterMapper.chkQtyCmbOrd(params);
       logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] qtyCmbOrd :: " + qtyCmbOrd);
+
+      qtyHcAcCmbByGrpCnt = hcOrderRegisterMapper.chkQtyHcAcCmbByGroup(params);
+      cmbGrpMaxQty = hcOrderRegisterMapper.chkCmbGrpMaxQty(params);
+      logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] qtyHcAcCmbByGrpCnt :: " + qtyHcAcCmbByGrpCnt);
+      logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] cmbGrpMaxQty :: " + cmbGrpMaxQty);
+
       if(qtyCmbOrd >= 5){
         return 99;
+      }else if(qtyHcAcCmbByGrpCnt == cmbGrpMaxQty){
+            logger.info("[HcOrderRegisterServiceImpl - chkQtyCmbOrd] qtyHcAcCmbByGrpCnt == cmbGrpMaxQty!! " );
+           return 99;
       }
-
       return 0;
-  }
-
+   }
 }

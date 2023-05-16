@@ -445,6 +445,7 @@
                                                    ELSE 0 END AS COMBO_GRP
                                                    FROM SAL0252M
                                                    WHERE DISB = 0
+                                                   AND PROD_CAT =  'ACI'
                                                    AND PROD_CDE = #{prod}
                                                    AND PROMO_ID = #{promoNo}
 
@@ -454,11 +455,14 @@
                                                   FROM SAL0253D
                                                   WHERE SUB_PROMO_ID = #{promoNo}
                                                   AND SUB_PROD_ID = #{prod}
+                                                  AND SUB_PROD_CAT = 'ACI'
+                                                  AND DISB = 0
                                             )
                                          )
-
-     <!-- AND B.PROMO_ID = #{promoNo}
-     AND C.ITM_STK_ID = #{prod} -->
+         AND DISB = 0
+     <if test = 'ordId != null and ordId !=0'>
+        AND A.MAIN_ORD_ID = #{ordId}
+     </if>
   </select>
 
   <select id="chkQtyCmbOrd" parameterType="Map" resultType="int">
