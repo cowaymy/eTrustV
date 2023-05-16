@@ -13,13 +13,12 @@
 
           Common.ajax("POST", "/homecare/sales/order/chkIsMaxCmbOrd.do", {promoNo : $('#promoNo').val(), prod : $('#prod').val(),
                                      custId : $('#custId').val(), ordId : ordId}, function(result) {
-              alert("Result >> " + JSON.stringify(result));
 
                if(result.code == "0"){
             	   fn_setData(AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordNo"), AUIGrid.getCellValue(popOrderGridID, event.rowIndex, "ordId"));
             	   $('#custPopCloseBtn').click();
                }else{
-            	   Common.alert('<spring:message code="sal.alert.msg.cboNoOrdTag" />');
+            	   Common.alert('<spring:message code="sal.alert.msg.maxOrdGrp" />');
             	   return false;
                }
           });
