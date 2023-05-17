@@ -44,7 +44,8 @@
 
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 	       var statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
-	       Common.popupDiv("/homecare/services/install/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
+	       Common.popupDiv("/homecare/services/install/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1")
+	    		   + "&salesOrderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
 	    });
 
 	    AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -167,6 +168,8 @@
 	        {dataField : "installEntryNo",   headerText : '<spring:message code="service.grid.InstallNo" />',        editable : false,     width : 130},
 	        {dataField : "salesOrdNo",       headerText : '<spring:message code="service.grid.OrderNo" />',        editable : false,     width : 110},
 	        {dataField : "c3",               headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
+	        {dataField : "delvryGr",headerText : 'Stock Out GR',width : 130}
+            ,{dataField : "returnGr",headerText : 'Stock Return GR',width : 130},
 	        {dataField : "stkDesc",          headerText : '<spring:message code="service.grid.Product" />',         editable : false,     style : "my-column aui-grid-user-custom-left",    width : 380},
 	        {dataField : "custId",           headerText : '<spring:message code="service.grid.CustomerId" />',    editable : false,     width : 100},
 	        {dataField : "custName",           headerText : '<spring:message code="service.title.CustomerName" />',    editable : false,     width : 100},
@@ -641,8 +644,22 @@
 	</tr>
      <tr>
       <th scope="row"><spring:message code='service.title.Product' /></th>
-      <td colspan="5"><select class="w100p" id="product"
+      <td ><select class="w100p" id="product"
        name="product"></select></td>
+       <th scope="row">Stock Out GR</th>
+     <td>
+          <select id="listDelvryGr" name="delvryGr" class="multy_select w100p" multiple="multiple">
+              <option value="Y">Yes</option>
+              <option value="N">No</option>
+          </select>
+     </td>
+     <th scope="row">Stock Return GR</th>
+     <td>
+          <select id="listReturnGr" name="returnGr" class="multy_select w100p" multiple="multiple">
+              <option value="Y">Yes</option>
+              <option value="N">No</option>
+          </select>
+     </td>
      </tr>
     </tbody>
    </table>

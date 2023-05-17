@@ -124,8 +124,20 @@
  </header>
  <!-- pop_header end -->
  <section class="pop_body">
+
+ <!------------------------------------------------------------------------------
+    Order Detail Page Include START
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Detail Page Include END
+------------------------------------------------------------------------------->
+<input type="hidden"
+     value="<c:out value="${installResult.installEntryId}"/>"
+     id="installEntryId" />
+
   <!-- pop_body start -->
-  <section class="tap_wrap">
+  <%-- <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
     <li><a href="#none" class="on"><spring:message
@@ -145,9 +157,7 @@
      </h2>
     </aside>
     <!-- title_line end -->
-    <input type="hidden"
-     value="<c:out value="${installResult.installEntryId}"/>"
-     id="installEntryId" />
+
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
@@ -520,7 +530,7 @@
     <!-- table end -->
    </article>
    <!-- tap_area end -->
-  </section>
+  </section> --%>
   <!-- tap_wrap end -->
   <aside class="title_line mt30">
    <!-- title_line start -->

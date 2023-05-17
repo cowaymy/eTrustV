@@ -128,6 +128,8 @@ public class HcInstallResultListController {
 		String[] appTypeList = request.getParameterValues("appType");
 		String[] dscCodeList = request.getParameterValues("dscCode"); /* dscCode- kv testing */
 		String[] productList = request.getParameterValues("product"); //added by frango
+		String[] delvryGrList = request.getParameterValues("delvryGr"); //
+		String[] returnGrList = request.getParameterValues("returnGr"); //
 
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
@@ -135,6 +137,8 @@ public class HcInstallResultListController {
 		/* KV- DSC Code */
 		params.put("dscCodeList", dscCodeList);
 		params.put("productList", productList); //added by frango
+		params.put("delvryGrList", delvryGrList);
+		params.put("returnGrList", returnGrList);
 
 		List<EgovMap> installationResultList = hcInstallResultListService.hcInstallationListSearch(params);
 
@@ -162,7 +166,7 @@ public class HcInstallResultListController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/installationResultDetailPop.do")
-	public String installationResultDetail(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String installationResultDetail(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
 		EgovMap callType = installationResultListService.selectCallType(params);
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 		EgovMap orderInfo = null;
@@ -173,12 +177,17 @@ public class HcInstallResultListController {
 			orderInfo = installationResultListService.getOrderInfo(params);
 		}
 
+		 Map<String, Object> orderParams = params;
+		 EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(orderParams, sessionVO);//
+
 		EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo);
 		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
 		EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
 		EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
 		EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
 		EgovMap hpMember = installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
+
+		model.addAttribute("orderDetail", orderDetail);
 
 		model.addAttribute("installResult", installResult);
 		model.addAttribute("orderInfo", orderInfo);
