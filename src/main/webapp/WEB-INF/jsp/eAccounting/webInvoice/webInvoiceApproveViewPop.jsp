@@ -18,7 +18,8 @@ var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;
 var myColumnLayout = [ {
     dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
+    headerText : '<spring:message code="newWebInvoice.seq" />',
+    width: 80
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -33,28 +34,34 @@ var myColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "glAccCode",
-    headerText : '<spring:message code="expense.GLAccount" />'
+    headerText : '<spring:message code="expense.GLAccount" />',
+    width: 100
 }, {
     dataField : "glAccCodeName",
     headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-    style : "aui-grid-user-custom-left"
+    style : "aui-grid-user-custom-left",
+    width: 120
 }, {
     dataField : "budgetCode",
-    headerText : '<spring:message code="approveView.budget" />'
+    headerText : '<spring:message code="approveView.budget" />',
+    width: 80
 }, {
     dataField : "budgetCodeName",
     headerText : '<spring:message code="approveView.budgetName" />',
-    style : "aui-grid-user-custom-left"
+    style : "aui-grid-user-custom-left",
+    width: 120
 },{
     dataField : "taxCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "taxName",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
-    style : "aui-grid-user-custom-left"
+    style : "aui-grid-user-custom-left",
+    width: 80
 }, {
     dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />'
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+    width: 80
 }, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
@@ -79,16 +86,17 @@ var myColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false//,
+    editable : false,//,
     /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
     }*/
+    width: 100
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
     style : "aui-grid-user-custom-left",
-    width : 300
+    width : 400
 }
 ];
 
