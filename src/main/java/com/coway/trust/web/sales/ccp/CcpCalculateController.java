@@ -526,7 +526,8 @@ public class CcpCalculateController {
 
 			LOGGER.info(" Message Contents : " + (String)params.get("hiddenUpdSmsMsg"));
 			LOGGER.info(" Mobile Phone Number : " + (String)params.get("hiddenSalesMobile"));
-			mobileNumList.add((String) params.get("hiddenSalesMobile"));
+			//mobileNumList.add((String) params.get("hiddenSalesMobile"));
+			mobileNumList.add("0175977998"); //For Testing purpose only
 
 			sms.setMessage((String) params.get("hiddenUpdSmsMsg"));
 			sms.setMobiles(mobileNumList);
