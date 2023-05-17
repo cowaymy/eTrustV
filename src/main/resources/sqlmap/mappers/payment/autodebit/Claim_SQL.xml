@@ -52,7 +52,7 @@
     FROM PAY0041D Extent1
     <!--  Changed by Hui Ding for counting total item from unique account number -->
     LEFT JOIN
-        (SELECT BANK_DTL_CTRL_ID, COUNT(1) AS TOT_ITM FROM PAY0287D D WHERE BANK_DTL_CTRL_ID = #{batchId} GROUP BY BANK_DTL_CTRL_ID) Extent7
+        (SELECT BANK_DTL_CTRL_ID, COUNT(1) AS TOT_ITM FROM PAY0287D D GROUP BY BANK_DTL_CTRL_ID) Extent7
         ON Extent1.CTRL_ID = Extent7.BANK_DTL_CTRL_ID
     JOIN SYS0038M Extent2 ON
     Extent2.STUS_CODE_ID = Extent1.CTRL_STUS_ID
