@@ -326,7 +326,7 @@
              , FILTER_SN
              , FILTER_NXT_CHG_DT
              , REASON
-             , REMARKS
+             , #{remarks}
              , ATCH_FILE_GRP_ID
              , IS_RETURN
              , OLD_FILTER_SN
