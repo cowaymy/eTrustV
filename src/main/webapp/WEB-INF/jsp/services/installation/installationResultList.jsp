@@ -336,8 +336,7 @@
     },{
         dataField : "resultRepEmailNo",
         headerText : 'resultRepEmailNo',
-        width : 130,
-        visible: false
+        width : 130
     }];
 
     var gridPros = {

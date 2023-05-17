@@ -223,8 +223,8 @@
                              }
             }
           },{
-              dataField : "resultRptEmailNo",
-              headerText : 'resultRptEmailNo',
+              dataField : "resultRepEmailNo",
+              headerText : 'resultRepEmailNo',
               width : 130
           }];
 

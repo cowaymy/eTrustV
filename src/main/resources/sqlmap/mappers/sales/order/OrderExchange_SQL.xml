@@ -83,7 +83,8 @@
 			            ELSE '' END UPD_USER_NAME  ,
 			       CASE WHEN ( Filter1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Filter1.SO_EXCHG_FORM_NO
 			            ELSE '-' END SO_EXCHG_FORM_NO ,
-                   Filter1.STK_CTGRY_ID
+                   Filter1.STK_CTGRY_ID,
+                   Filter1.RESULT_REP_EMAIL_NO
 
 			FROM ( SELECT Extent1.SO_EXCHG_ID ,
 					              Extent1.SO_ID ,

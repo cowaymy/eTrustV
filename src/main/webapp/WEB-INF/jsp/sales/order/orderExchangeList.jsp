@@ -105,6 +105,10 @@
         }, {
           dataField : "soId",
           visible : false
+        },{
+            dataField : "resultRepEmailNo",
+            headerText : 'resultRepEmailNo',
+            width : 130
         }];
 
     var gridPros = {
