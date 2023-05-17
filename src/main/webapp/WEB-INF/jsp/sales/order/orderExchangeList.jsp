@@ -266,7 +266,7 @@
         }
 
         if(installEntryIdArr.length > 0){
-        	if(emailArr.length < 1){
+        	if(emailArr.length >= 1){
 	            Common.ajax("POST", "/services/pexSendEmail.do", emailM, function(result) {
 	                console.log(result);
 	                if(result.code == '00') {
