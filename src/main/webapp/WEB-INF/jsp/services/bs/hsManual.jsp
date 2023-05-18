@@ -1730,7 +1730,7 @@
 								<dt>Link</dt>
 								<dd>
 									<ul class="btns">
-										<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+										<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 											<li><p class="link_btn type2">
 													<a href="#"
 														onclick="javascript:fn_hsCountForecastListing()">HS
