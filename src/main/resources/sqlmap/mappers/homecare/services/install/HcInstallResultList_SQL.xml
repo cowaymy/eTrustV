@@ -57,6 +57,10 @@
                      ,exchg.SO_CUR_STUS_ID ord_stus_code_id
                     ,delvrSts.DELVRY_GR_CMPLT delvry_gr
                     ,returnSts.DELVRY_GR_CMPLT return_gr
+                    , CASE
+                            WHEN PREINS.INSTALL_ENTRY_NO IS NOT NULL THEN 'Y'
+                            ELSE 'N'
+                       END PREINS_IND
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -108,6 +112,12 @@
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
           AND som.BNDL_ID IS NOT NULL
 		]]>
+		<if test='preinsChk != null and preinsChk == "Y"'>
+          AND PREINS.INSTALL_ENTRY_NO IS NOT NULL
+        </if>
+        <if test='preinsChk != null and preinsChk == "N"'>
+          AND PREINS.INSTALL_ENTRY_NO IS NULL
+        </if>
 		<if test="productList != null and productList != '' ">
 			AND STK.STK_ID IN
 			<foreach item="item" collection="productList" index="index"
@@ -492,7 +502,8 @@
         #{serial},
         #{sirim},
         #{attachment},
-        SYSDATE
+        SYSDATE,
+        #{serial2}
     )
   </insert>
 
@@ -503,12 +514,17 @@
                 B.SALES_ORD_NO,
                 B.SALES_DT,
                 C.MEM_CODE,
+                D.SERIAL_NO,
+                D.SERIAL_NO2,
+                D.FAL_LOC,
+                D.FAL_RSN,
+                D.STUS_CODE_ID,
                 COUNT(D.INSTALL_ENTRY_NO) DUP_CHECK
         FROM SAL0046D A
         JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
         JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
         LEFT JOIN SVC0136D D ON A.INSTALL_ENTRY_NO = D.INSTALL_ENTRY_NO
         WHERE A.INSTALL_ENTRY_NO = #{insNo}
-        GROUP BY A.INSTALL_ENTRY_NO,  A.INSTALL_DT, B.SALES_ORD_NO, B.SALES_DT, C.MEM_CODE
+        GROUP BY A.INSTALL_ENTRY_NO,  A.INSTALL_DT, B.SALES_ORD_NO, B.SALES_DT, C.MEM_CODE, D.SERIAL_NO, D.SERIAL_NO2, D.FAL_LOC,  D.FAL_RSN, D.STUS_CODE_ID
   </select>
 </mapper>
