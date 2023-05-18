@@ -4106,7 +4106,8 @@
         (SELECT SRV_FILTER_LAST_SERIAL
         FROM SAL0087D
         WHERE SRV_CONFIG_ID =
-        #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID})
+        #{SrvConfigID} and SRV_FILTER_STK_ID = #{BSResultPartID}
+         and SRV_FILTER_STUS_ID = 1)
 		where SRV_CONFIG_ID = #{SrvConfigID}
 		and SRV_FILTER_STUS_ID = 1
 		and
