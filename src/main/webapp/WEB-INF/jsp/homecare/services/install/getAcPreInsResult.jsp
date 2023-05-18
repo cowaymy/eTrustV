@@ -76,11 +76,16 @@
         $("#salesDt").text($("#salesDt").text() + moment("${installationInfo.salesDt}").format("DD-MM-YYYY"))
         $("#doDt").text($("#doDt").text() + moment("${installationInfo.installDt}").format("DD-MM-YYYY"))
         $("#failLoc").val("${installationInfo.falLoc}");
-        $("#location").text($("#failLoc option:selected").text());
-        doGetCombo('/services/selectFailChild.do', "${installationInfo.falLoc}", '','failReasonCode', 'S' , `(() => {
-            $("#failReasonCode").val("${installationInfo.falRsn}");
-            $("#reason").text($("#failReasonCode option:selected").text());
-        })`);
+         if(!$("#failLoc option:selected").val()){
+             $("#location").text("-");
+             $("#reason").text("-");
+         }else{
+	        $("#location").text($("#failLoc option:selected").text());
+	        doGetCombo('/services/selectFailChild.do', "${installationInfo.falLoc}", '','failReasonCode', 'S' , `(() => {
+	            $("#failReasonCode").val("${installationInfo.falRsn}");
+	            $("#reason").text($("#failReasonCode option:selected").text());
+	        })`);
+         }
 
         if("${installationInfo.stusCodeId}" == "4"){
         	showComplete();

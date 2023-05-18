@@ -325,150 +325,149 @@
 	}
 
 
-    const addImageUpload = (el, titleName) => {
-        //image upload
-        const title = document.createElement("h5");
-        title.innerHTML = "&nbsp;" + titleName + " : ";
+	  const addImageUpload = (el, titleName) => {
+	        //image upload
 
-        const photoDiv = document.createElement("div");
-        photoDiv.style.display = "flex";
+	        const title = document.createElement("h5");
+	        title.innerHTML = "&nbsp;" + titleName + " : ";
 
-        const aElement = document.createElement("a");
-        aElement.classList.add("btn");
-        aElement.classList.add("btn-tag");
-        aElement.classList.add("btn-rounded");
-        aElement.classList.add("m-2");
-        aElement.classList.add("foto");
-        aElement.style.display = "flex";
-        aElement.style.alignItems = "center";
-        aElement.innerText = "Foto";
+	        const photoDiv = document.createElement("div");
+	        photoDiv.style.display = "flex";
 
-        const imageCont = document.createElement("div");
-        imageCont.classList.add("p-2");
-        imageCont.style.border = "1px solid grey";
-        imageCont.style.display = "none";
+	        const aElement = document.createElement("a");
+	        aElement.classList.add("btn");
+	        aElement.classList.add("btn-tag");
+	        aElement.classList.add("btn-rounded");
+	        aElement.classList.add("m-2");
+	        aElement.classList.add("foto");
+	        aElement.style.display = "flex";
+	        aElement.style.alignItems = "center";
+	        aElement.innerText = "Foto";
 
-        const image = document.createElement("img");
-        image.style.width = "100%";
-        image.classList.add("install");
+	        const imageCont = document.createElement("div");
+	        imageCont.classList.add("p-2");
+	        imageCont.style.border = "1px solid grey";
+	        imageCont.style.display = "none";
 
-        const upload = document.createElement("input");
-        upload.type = "file";
-        upload.style.display="none";
-        upload.accept = ".jpeg,.png,.jpg";
+	        const image = document.createElement("img");
+	        image.style.width = "100%";
+	        image.classList.add("install");
 
-        upload.onchange = (e) => {
-        	if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
-        		if(!iOS){
-                    document.getElementById("MsgAlert").innerHTML =  "Hanya boleh memuat naik fail imej png dan jpeg";
-                    $("#alertModalClick").click();
-                }
-        	}
-        	else if(e.target.files[0].size > 2048000){
-                document.getElementById("MsgAlert").innerHTML =  "Tidak boleh memuat naik fail imej melebihi 2MB.";
-                $("#alertModalClick").click();
-        	}
-        	else{
-                image.src = URL.createObjectURL(e.target.files[0]);
-                imageCont.style.display = "";
-        	}
-        }
+	        const upload = document.createElement("input")
+	        upload.type = "file";
+	        upload.style.display="none";
+	        upload.accept = ".jpeg,.png,.jpg";
 
-        el.appendChild(title);
-        el.appendChild(photoDiv);
-        photoDiv.appendChild(aElement);
-        imageCont.appendChild(image);
-        el.appendChild(upload);
-        el.appendChild(imageCont);
+	        upload.onchange = (e) => {
+	            if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
+	                if(!iOS){
+	                    document.getElementById("MsgAlert").innerHTML =  "Hanya boleh memuat naik fail imej png dan jpeg";
+	                    $("#alertModalClick").click();
+	                }
+	            }
+	            else if(e.target.files[0].size > 2048000){
+	                document.getElementById("MsgAlert").innerHTML =  "Tidak boleh memuat naik fail imej melebihi 2MB.";
+	                $("#alertModalClick").click();
+	            }
+	            else{
+	                image.src = URL.createObjectURL(e.target.files[0]);
+	                imageCont.style.display = "";
+	            }
+	        }
 
-        aElement.onclick = () => {
-            upload.click();
-        }
-
-        //camera
-        const openCamera = document.createElement("button");
-        const screenshot = document.createElement("button");
-        const aElement2 = document.createElement("a");
-        aElement2.classList.add("btn");
-        aElement2.classList.add("btn-tag");
-        aElement2.classList.add("btn-rounded");
-        aElement2.style.display = "flex";
-        aElement2.style.alignItems = "center";
-        aElement2.classList.add("m-2");
-        aElement2.classList.add("kamera");
-        aElement2.innerText = "Kamera";
-
-        const aElement3 = document.createElement("a");
-        aElement3.classList.add("btn");
-        aElement3.classList.add("btn-tag");
-        aElement3.classList.add("btn-rounded");
-        aElement3.classList.add("m-2");
-        aElement3.style.display = "flex";
-        aElement3.style.alignItems = "center";
-        aElement3.classList.add("m-2");
-        aElement3.classList.add("tangkap");
-        aElement3.innerText = "Tangkap";
+	        el.appendChild(title);
+	        el.appendChild(photoDiv);
+	        photoDiv.appendChild(aElement);
+	        imageCont.appendChild(image);
+	        el.appendChild(upload);
+	        el.appendChild(imageCont)
 
 
-        openCamera.style.display = "none";
-        screenshot.style.display = "none";
-        aElement3.style.display = "none";
+	        aElement.onclick = () => {
+	            upload.click();
+	        }
 
-        el.insertBefore(openCamera, imageCont);
-        el.insertBefore(screenshot, imageCont);
-        photoDiv.appendChild(aElement2);
-        photoDiv.appendChild(aElement3);
+	        //camera
+	        const openCamera = document.createElement("button");
+	        const screenshot = document.createElement("button");
+	        const aElement2 = document.createElement("a");
+	        aElement2.classList.add("btn");
+	        aElement2.classList.add("btn-tag");
+	        aElement2.classList.add("btn-rounded");
+	        aElement2.style.display = "flex";
+	        aElement2.style.alignItems = "center";
+	        aElement2.classList.add("m-2");
+	        aElement2.classList.add("kamera");
+	        aElement2.innerText = "Kamera";
 
-        aElement2.onclick = () => {
-            navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
-            .then(s => {
-                aElement.style.display = "none";
-                aElement2.style.display = "none";
-                image.style.display = "none";
-                aElement3.style.display = "flex";
-                const video = document.createElement("video");
-                video.autoplay = true;
-                video.playsInline = true;
-                video.muted = true;
-                video.style.width = "100%";
-                video.style.position  = "absolute";
-                const vidCont = document.createElement("div")
-                vidCont.appendChild(video)
-                vidCont.style.position = "relative";
-                vidCont.style.overflow = "hidden";
-                const c = document.createElement("canvas")
-                c.style.display = "none";
-                el.appendChild(c);
-                video.srcObject = s;
-                video.addEventListener("loadedmetadata", () => {
-                    vidCont.style.height = video.clientHeight + 'px'
-                })
-                el.insertBefore(vidCont, image);
-                video.play();
-                aElement3.onclick = () => {
-                    aElement3.style.display = "none";
-                    aElement.style.display = "flex";
-                    aElement2.style.display = "flex";
-                    c.height = video.videoHeight;
-                    c.width = video.videoWidth;
-                    const ctx = c.getContext('2d');
-                    ctx.drawImage(video, 0, 0, c.width, c.height);
-                    image.src = c.toDataURL();
-                    c.toBlob(b => {
-                        const f = new File([b], 'upload.jpg');
-                        const container = new DataTransfer();
-                        container.items.add(f);
-                        upload.files = container.files;
-                        s.getTracks().forEach(t => t.stop());
-                        imageCont.style.display = "";
-                        c.remove();
-                        vidCont.remove()
-                    }, 'image/jpeg')
-                }
-            })
-        }
+	        const aElement3 = document.createElement("a");
+	        aElement3.classList.add("btn");
+	        aElement3.classList.add("btn-tag");
+	        aElement3.classList.add("btn-rounded");
+	        aElement3.style.display = "flex";
+	        aElement3.style.alignItems = "center";
+	        aElement3.classList.add("m-2");
+	        aElement3.classList.add("tangkap");
+	        aElement3.innerText = "Tangkap";
 
-    }
+	        openCamera.style.display = "none";
+	        screenshot.style.display = "none";
+	        aElement3.style.display = "none";
+
+	        el.insertBefore(openCamera, imageCont);
+	        el.insertBefore(screenshot, imageCont);
+
+	        photoDiv.appendChild(aElement2);
+	        photoDiv.appendChild(aElement3);
+
+	        aElement2.onclick = () => {
+	            navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
+	            .then(s => {
+	                aElement.style.display = "none";
+	                aElement2.style.display = "none";
+	                aElement3.style.display = "flex";
+	                const video = document.createElement("video");
+	                video.autoplay = true;
+	                video.playsInline = true;
+	                video.muted = true;
+	                video.style.width = "100%";
+	                video.style.position  = "absolute";
+	                const vidCont = document.createElement("div")
+	                vidCont.appendChild(video)
+	                vidCont.style.position = "relative";
+	                vidCont.style.overflow = "hidden";
+	                const c = document.createElement("canvas")
+	                c.style.display = "none";
+	                el.appendChild(c);
+	                video.srcObject = s;
+	                video.addEventListener("loadedmetadata", () => {
+	                    vidCont.style.height = video.clientHeight + 'px'
+	                })
+	                el.insertBefore(vidCont, imageCont);
+	                video.play();
+	                aElement3.onclick = () => {
+	                    aElement3.style.display = "none";
+	                    aElement.style.display = "flex";
+	                    aElement2.style.display = "flex";
+	                    c.height = video.videoHeight;
+	                    c.width = video.videoWidth;
+	                    const ctx = c.getContext('2d');
+	                    ctx.drawImage(video, 0, 0, c.width, c.height);
+	                    image.src = c.toDataURL();
+	                    c.toBlob(b => {
+	                        const f = new File([b], 'upload.jpg');
+	                        const container = new DataTransfer();
+	                        container.items.add(f);
+	                        upload.files = container.files;
+	                        s.getTracks().forEach(t => t.stop());
+	                        imageCont.style.display = "";
+	                        c.remove();
+	                        vidCont.remove()
+	                    }, 'image/jpeg')
+	                }
+	            })
+	        }
+	 }
 
     for (let i = 0; i < 4; i++) {
     	let titleName = "Attachment "+ (i+1);
