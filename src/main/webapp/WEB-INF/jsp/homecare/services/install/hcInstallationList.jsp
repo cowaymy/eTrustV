@@ -165,6 +165,7 @@
     function createInstallationListAUIGrid() {
 	    var columnLayout = [
 	        {dataField : "code",             headerText : '<spring:message code="service.grid.Type" />',             editable : false,     width : 80},
+	        {dataField : "preinsInd",   headerText : 'Pre-Installation Check',        editable : false,     width : 130},
 	        {dataField : "installEntryNo",   headerText : '<spring:message code="service.grid.InstallNo" />',        editable : false,     width : 130},
 	        {dataField : "salesOrdNo",       headerText : '<spring:message code="service.grid.OrderNo" />',        editable : false,     width : 110},
 	        {dataField : "c3",               headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
@@ -660,6 +661,20 @@
               <option value="N">No</option>
           </select>
      </td>
+     </tr>
+     <tr>
+           <th>Pre-Installation Check :</th>
+           <td>
+            <select id="preinsChk" name="preinsChk">
+                    <option value="">Select Option</option>
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+            </select>
+           </td>
+           <th></th>
+           <td></td>
+           <th></th>
+           <td></td>
      </tr>
     </tbody>
    </table>

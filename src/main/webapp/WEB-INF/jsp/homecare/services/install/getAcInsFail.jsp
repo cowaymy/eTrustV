@@ -19,11 +19,29 @@
       }
 
       .grid-item {
-        width: 50%
+        width: 50%;
       }
 
       .grid-item img {
-        width: 100%
+        width: 100%;
+      }
+
+     .foto:before {
+        content: url("data:image/svg+xml, %3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22currentColor%22%20class%3D%22bi%20bi-images%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M4.502%209a1.5%201.5%200%201%200%200-3%201.5%201.5%200%200%200%200%203z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M14.002%2013a2%202%200%200%201-2%202h-10a2%202%200%200%201-2-2V5A2%202%200%200%201%202%203a2%202%200%200%201%202-2h10a2%202%200%200%201%202%202v8a2%202%200%200%201-1.998%202zM14%202H4a1%201%200%200%200-1%201h9.002a2%202%200%200%201%202%202v7A1%201%200%200%200%2015%2011V3a1%201%200%200%200-1-1zM2.002%204a1%201%200%200%200-1%201v8l2.646-2.354a.5.5%200%200%201%20.63-.062l2.66%201.773%203.71-3.71a.5.5%200%200%201%20.577-.094l1.777%201.947V5a1%201%200%200%200-1-1h-10z%22%2F%3E%0A%3C%2Fsvg%3E");
+        margin-right: 10px;
+        transform: translate(0, 10%);
+      }
+
+      .kamera:before {
+        content: url("data:image/svg+xml, %3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22currentColor%22%20class%3D%22bi%20bi-camera%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M15%2012a1%201%200%200%201-1%201H2a1%201%200%200%201-1-1V6a1%201%200%200%201%201-1h1.172a3%203%200%200%200%202.12-.879l.83-.828A1%201%200%200%201%206.827%203h2.344a1%201%200%200%201%20.707.293l.828.828A3%203%200%200%200%2012.828%205H14a1%201%200%200%201%201%201v6zM2%204a2%202%200%200%200-2%202v6a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V6a2%202%200%200%200-2-2h-1.172a2%202%200%200%201-1.414-.586l-.828-.828A2%202%200%200%200%209.172%202H6.828a2%202%200%200%200-1.414.586l-.828.828A2%202%200%200%201%203.172%204H2z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M8%2011a2.5%202.5%200%201%201%200-5%202.5%202.5%200%200%201%200%205zm0%201a3.5%203.5%200%201%200%200-7%203.5%203.5%200%200%200%200%207zM3%206.5a.5.5%200%201%201-1%200%20.5.5%200%200%201%201%200z%22%2F%3E%0A%3C%2Fsvg%3E");
+        margin-right: 10px;
+        transform: translate(0, 10%);
+      }
+
+      .tangkap:before {
+         content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22currentColor%22%20class%3D%22bi%20bi-aspect-ratio%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M0%203.5A1.5%201.5%200%200%201%201.5%202h13A1.5%201.5%200%200%201%2016%203.5v9a1.5%201.5%200%200%201-1.5%201.5h-13A1.5%201.5%200%200%201%200%2012.5v-9zM1.5%203a.5.5%200%200%200-.5.5v9a.5.5%200%200%200%20.5.5h13a.5.5%200%200%200%20.5-.5v-9a.5.5%200%200%200-.5-.5h-13z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M2%204.5a.5.5%200%200%201%20.5-.5h3a.5.5%200%200%201%200%201H3v2.5a.5.5%200%200%201-1%200v-3zm12%207a.5.5%200%200%201-.5.5h-3a.5.5%200%200%201%200-1H13V8.5a.5.5%200%200%201%201%200v3z%22%2F%3E%0A%3C%2Fsvg%3E");
+         margin-right: 10px;
+         transform: translate(0, 10%);
       }
 </style>
 
@@ -204,7 +222,17 @@
 
 <script type="text/javaScript">
 
-     const reload = () => {window.location = "https://www.google.com";}
+	fetch("/homecare/services/install/selectInstallationInfo.do?insNo=${insNo}")
+	.then(r => r.json())
+	.then(resp => {
+	    if(resp.dupCheck){
+	        window.location = "/homecare/services/install/getAcPreInsResult.do?insNo=${insNo}";
+	    }
+	});
+
+     const iOS = /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+
+     const reload = () => {window.location = "/homecare/services/install/getAcPreInsResult.do?insNo=${insNo}";}
 
 	$("#salesDt").text($("#salesDt").text() + moment("${installationInfo.salesDt}").format("DD-MM-YYYY"));
 	$("#doDt").text($("#doDt").text() + moment("${installationInfo.installDt}").format("DD-MM-YYYY"));
@@ -304,13 +332,22 @@
         title.innerHTML = "&nbsp;" + titleName + " : ";
 
         const photoDiv = document.createElement("div");
+        photoDiv.style.display = "flex";
 
         const aElement = document.createElement("a");
         aElement.classList.add("btn");
         aElement.classList.add("btn-tag");
         aElement.classList.add("btn-rounded");
         aElement.classList.add("m-2");
+        aElement.classList.add("foto");
+        aElement.style.display = "flex";
+        aElement.style.alignItems = "center";
         aElement.innerText = "Foto";
+
+        const imageCont = document.createElement("div");
+        imageCont.classList.add("p-2");
+        imageCont.style.border = "1px solid grey";
+        imageCont.style.display = "none";
 
         const image = document.createElement("img");
         image.style.width = "100%";
@@ -323,8 +360,10 @@
 
         upload.onchange = (e) => {
         	if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
-        		document.getElementById("MsgAlert").innerHTML =  "Hanya boleh memuat naik fail imej png dan jpeg";
-                $("#alertModalClick").click();
+        		if(!iOS){
+                    document.getElementById("MsgAlert").innerHTML =  "Hanya boleh memuat naik fail imej png dan jpeg";
+                    $("#alertModalClick").click();
+                }
         	}
         	else if(e.target.files[0].size > 2048000){
                 document.getElementById("MsgAlert").innerHTML =  "Tidak boleh memuat naik fail imej melebihi 2MB.";
@@ -332,14 +371,16 @@
         	}
         	else{
                 image.src = URL.createObjectURL(e.target.files[0]);
+                imageCont.style.display = "";
         	}
         }
 
         el.appendChild(title);
         el.appendChild(photoDiv);
         photoDiv.appendChild(aElement);
+        imageCont.appendChild(image);
         el.appendChild(upload);
-        el.appendChild(image);
+        el.appendChild(imageCont);
 
         aElement.onclick = () => {
             upload.click();
@@ -352,7 +393,10 @@
         aElement2.classList.add("btn");
         aElement2.classList.add("btn-tag");
         aElement2.classList.add("btn-rounded");
+        aElement2.style.display = "flex";
+        aElement2.style.alignItems = "center";
         aElement2.classList.add("m-2");
+        aElement2.classList.add("kamera");
         aElement2.innerText = "Kamera";
 
         const aElement3 = document.createElement("a");
@@ -360,37 +404,52 @@
         aElement3.classList.add("btn-tag");
         aElement3.classList.add("btn-rounded");
         aElement3.classList.add("m-2");
+        aElement3.style.display = "flex";
+        aElement3.style.alignItems = "center";
+        aElement3.classList.add("m-2");
+        aElement3.classList.add("tangkap");
         aElement3.innerText = "Tangkap";
+
 
         openCamera.style.display = "none";
         screenshot.style.display = "none";
         aElement3.style.display = "none";
 
-        el.insertBefore(openCamera, image);
-        el.insertBefore(screenshot, image);
+        el.insertBefore(openCamera, imageCont);
+        el.insertBefore(screenshot, imageCont);
         photoDiv.appendChild(aElement2);
         photoDiv.appendChild(aElement3);
 
-        aElement2.onclick = (e) => {
-        	e.preventDefault()
+        aElement2.onclick = () => {
             navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
             .then(s => {
-            	aElement.style.display = "none";
-            	aElement2.style.display = "none";
-            	aElement3.style.display = "";
+                aElement.style.display = "none";
+                aElement2.style.display = "none";
                 image.style.display = "none";
+                aElement3.style.display = "flex";
                 const video = document.createElement("video");
+                video.autoplay = true;
+                video.playsInline = true;
+                video.muted = true;
                 video.style.width = "100%";
-                const c = document.createElement("canvas");
+                video.style.position  = "absolute";
+                const vidCont = document.createElement("div")
+                vidCont.appendChild(video)
+                vidCont.style.position = "relative";
+                vidCont.style.overflow = "hidden";
+                const c = document.createElement("canvas")
                 c.style.display = "none";
                 el.appendChild(c);
                 video.srcObject = s;
-                el.insertBefore(video, image);
+                video.addEventListener("loadedmetadata", () => {
+                    vidCont.style.height = video.clientHeight + 'px'
+                })
+                el.insertBefore(vidCont, image);
                 video.play();
                 aElement3.onclick = () => {
-                	aElement3.style.display = "none";
-                	aElement.style.display = "";
-                    aElement2.style.display = "";
+                    aElement3.style.display = "none";
+                    aElement.style.display = "flex";
+                    aElement2.style.display = "flex";
                     c.height = video.videoHeight;
                     c.width = video.videoWidth;
                     const ctx = c.getContext('2d');
@@ -402,9 +461,9 @@
                         container.items.add(f);
                         upload.files = container.files;
                         s.getTracks().forEach(t => t.stop());
-                        image.style.display = "";
-                        video.remove();
+                        imageCont.style.display = "";
                         c.remove();
+                        vidCont.remove()
                     }, 'image/jpeg')
                 }
             })
@@ -482,8 +541,8 @@
             $("#alertModalClick2").click();
         })
         .catch(() => {
-        	document.getElementById("MsgAlert2").innerHTML =  "Pemasangan gagal untuk dihantar.";
-        	$("#alertModalClick2").click();
+        	document.getElementById("MsgAlert").innerHTML =  "Pemasangan gagal untuk dihantar.";
+        	$("#alertModalClick").click();
         })
     }
 
@@ -531,8 +590,7 @@
                    }
             }
             else{
-                   document.getElementById("MsgAlert").innerHTML =  "Pesanan ini tidak dibenarkan untuk diserahkan lagi";
-                 $("#alertModalClick").click();
+            	window.location = "/homecare/services/install/getAcPreInsResult.do?insNo=${insNo}";
             }
         });
     })

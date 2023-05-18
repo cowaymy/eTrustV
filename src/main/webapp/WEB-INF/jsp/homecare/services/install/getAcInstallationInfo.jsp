@@ -30,7 +30,7 @@
 					                 <div class="col-6"><h5 id="salesDt"></h5></div>
 					            </div>
 					            <div class="row">
-					                 <div class="col-6"><h5>Tarikh Pemasangan: </h5></div>
+					                 <div class="col-6"><h5>Tarikh Temu Janji: </h5></div>
 					                 <div class="col-6"><h5 id="doDt"></h5></div>
 					            </div>
 			            </div>

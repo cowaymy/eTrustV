@@ -1,6 +1,7 @@
 package com.coway.trust.web.homecare.services.install;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,6 +141,7 @@ public class HcInstallResultListController {
 		params.put("delvryGrList", delvryGrList);
 		params.put("returnGrList", returnGrList);
 
+		logger.debug("==============> {} : " +params);
 		List<EgovMap> installationResultList = hcInstallResultListService.hcInstallationListSearch(params);
 
 		return ResponseEntity.ok(installationResultList);
@@ -744,14 +746,26 @@ public class HcInstallResultListController {
 	 public String getAcInstallationInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
-    	return "homecare/services/install/getAcInstallationInfo";
+
+    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0){
+    		return "homecare/services/install/getAcInstallationInfo";
+    	}
+    	else{
+    		return "homecare/services/install/getAcPreInsResult";
+    	}
 	 }
 
     @RequestMapping(value="/getAcInsFail.do")
     public String getAcInsFail(@RequestParam Map<String, Object> params, ModelMap model) {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
-    	return "homecare/services/install/getAcInsFail";
+
+    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0){
+    		return "homecare/services/install/getAcInsFail";
+    	}
+    	else{
+    		return "homecare/services/install/getAcPreInsResult";
+    	}
     }
 
     @RequestMapping(value = "/selectFailChild.do", method = RequestMethod.GET)
@@ -774,11 +788,24 @@ public class HcInstallResultListController {
     	return ResponseEntity.ok(new HashMap<String, Object>());
     }
 
+    @RequestMapping(value="/getAcPreInsResult.do")
+    public String getAcPreInsResult(@RequestParam Map<String, Object> params, ModelMap model) {
+    	model.put("insNo", params.get("insNo"));
+    	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
+    	return "homecare/services/install/getAcPreInsResult";
+    }
+
     @RequestMapping(value="/getAcInsComplete.do")
     public String getAcInsComplete(@RequestParam Map<String, Object> params, ModelMap model) {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
-    	return "homecare/services/install/getAcInsComplete";
+
+    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0){
+    		return "homecare/services/install/getAcInsComplete";
+    	}
+    	else{
+    		return "homecare/services/install/getAcPreInsResult";
+    	}
     }
 
     @RequestMapping(value = "/selectInstallationInfo.do", method = RequestMethod.GET)

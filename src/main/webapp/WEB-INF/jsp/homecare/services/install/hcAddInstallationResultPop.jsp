@@ -11,9 +11,13 @@ var serialGubun = "1";
 
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
+            $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
             $("#addInstallForm #installStatus").val("${installResult.preinstalltionStus}");
             $("#addInstallForm #failLocCde").val("${installResult.preinstallationFalLoc}");
-            $("#addInstallForm #failReasonCode").val("${installResult.preinstallationFalRsn}");
+            $("#failReasonCode").attr("disabled",false);
+            doGetCombo('/services/selectFailChild.do', "${installResult.preinstallationFalLoc}", '','failReasonCode', 'S' , `(() => {
+                $("#addInstallForm #failReasonCode").val("${installResult.preinstallationFalRsn}");
+            })`);
             document.getElementById("preinstallationImg").style.display="";
        }
 
