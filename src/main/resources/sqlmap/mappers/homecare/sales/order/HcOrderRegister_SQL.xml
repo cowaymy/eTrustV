@@ -466,7 +466,6 @@
   </select>
 
   <select id="chkQtyCmbOrd" parameterType="Map" resultType="int">
-
       SELECT COUNT(*)
       FROM SAL0349D A
       JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
@@ -474,6 +473,24 @@
       WHERE A.MAIN_ORD_ID = #{ordId}
       AND A.DISB = 0
       GROUP BY A.MAIN_ORD_ID
+  </select>
 
+  <select id="selectHcAcCmbOrderDtlList" parameterType="Map" resultType="egovMap">
+     SELECT A.SUB_ORD_ID AS ORD_ID,
+                B.SALES_ORD_NO AS ORD_NO,
+                A.COMBO_GRP,
+                G.CODE AS APP_TYPE,
+                D.STK_DESC AS PROD,
+                E.PROMO_CODE AS PROMO_CDE,
+                TO_CHAR(B.SALES_DT, 'DD/MM/YYYY') AS ORD_DT
+      FROM SAL0349D A
+      JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
+      JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+      JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+      JOIN SAL0017D E ON B.PROMO_ID = E.PROMO_ID
+      JOIN SAL0029D F ON B.CUST_ID = F.CUST_ID
+      JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND B.APP_TYPE_ID = G.CODE_ID
+      WHERE A.MAIN_ORD_ID = #{ordId}
+      AND A.DISB = 0
   </select>
 </mapper>

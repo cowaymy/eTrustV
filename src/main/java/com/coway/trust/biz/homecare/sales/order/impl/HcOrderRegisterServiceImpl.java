@@ -334,4 +334,10 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
       }
       return 0;
    }
+
+  @Override
+   public List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params) {
+    List<EgovMap> lst = hcOrderRegisterMapper.selectHcAcCmbOrderDtlList(params);
+    return lst;
+  }
 }

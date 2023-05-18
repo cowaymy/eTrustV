@@ -69,4 +69,6 @@ public interface HcOrderRegisterService {
 
   int chkQtyCmbOrd(Map<String, Object> params);
 
+  List<EgovMap> selectHcAcCmbOrderDtlList(Map<String, Object> params);
+
 }

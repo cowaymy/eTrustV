@@ -2,6 +2,62 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
   var popOrderGridID;
+  var cmbOrdDtlResultGridID;
+
+  var cmbOrdDtlLstGridPros = {
+          usePaging : true,
+          pageRowCount : 20,
+          editable : false,
+          fixedColumnCount : 1,
+          showStateColumn : false,
+          displayTreeOpen : false,
+          headerHeight : 30,
+          useGroupingPanel : false,
+          skipReadonlyColumns : true,
+          wrapSelectionMove : true,
+          showRowNumColumn : true,
+          noDataMessage : "No order found.",
+          groupingMessage : "Here groupping"
+    };
+
+  var colLayout = [
+               {
+                   dataField : "ordNo",
+                   headerText : "<spring:message code='sales.OrderNo'/>",
+                   width : 80,
+                   editable : false,
+                   style : 'left_style'
+               }, {
+                   dataField : "comboGrp",
+                   headerText : "<spring:message code='sal.title.text.group'/>",
+                   width : 100,
+                   editable : false,
+                   style : 'left_style'
+               }, {
+                 dataField : "ordDt",
+                 headerText : "<spring:message code='sales.ordDt'/>",
+                 width : 100,
+                 editable : false,
+                 style : 'left_style'
+               }, {
+                 dataField : "appType",
+                 headerText : "<spring:message code='sales.AppType'/>",
+                 width : 80,
+                 editable : false,
+                 style : 'left_style'
+               }, {
+                 dataField : "prod",
+                 headerText : "<spring:message code='sales.prod'/>",
+                 width : 200,
+                 editable : false,
+                 style : 'left_style'
+               }, {
+                 dataField : "promoCde",
+                 headerText : "<spring:message code='sales.promoCd'/>",
+                 width : 200,
+                 editable : false
+               }];
+
   $(document).ready(
     function() {
       createAUIGrid();
@@ -25,6 +81,7 @@
       });
 
       fn_selectListAjaxPop();
+
     });
 
   function fn_setData(ordNo, ordId) {
@@ -33,60 +90,86 @@
 
   function createAUIGrid() {
     //AUIGrid 칼럼 설정
-    var columnLayout = [ {
-      dataField : "ordNo",
-      headerText : "<spring:message code='sales.OrderNo'/>",
-      width : 80,
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "refNo",
-      headerText : "<spring:message code='sales.refNo2'/>",
-      width : 120,
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "ordDt",
-      headerText : "<spring:message code='sales.ordDt'/>",
-      width : 100,
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "appType",
-      headerText : "<spring:message code='sales.AppType'/>",
-      width : 80,
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "prod",
-      headerText : "<spring:message code='sales.prod'/>",
-      width : 170,
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "promoCde",
-      headerText : "<spring:message code='sales.promoCd'/>",
-      width : 300,
-      editable : false
-    }, {
-      dataField : "custId",
-      headerText : "<spring:message code='sales.cusName'/>",
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "maxLink",
-      headerText : "<spring:message code='sal.title.text.maxCboLinkage'/>",
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "cnt",
-      headerText : "<spring:message code='sal.title.text.crntCboLinkage'/>",
-      editable : false,
-      style : 'left_style'
-    }, {
-      dataField : "ordId",
-      visible : false
-    } ];
+    var columnLayout = [
+           {
+                  	dataField : "",
+                      headerText : "Combo Order List",
+                      width : 120,
+                      renderer : {
+                          type : "ButtonRenderer",
+                          labelText : "View",
+                          onclick : function(rowIndex, columnIndex, value, item) {
+                        	var ordNo = AUIGrid.getCellValue(popOrderGridID, rowIndex, "ordNo");
+                            var ordId =  AUIGrid.getCellValue(popOrderGridID, rowIndex, "ordId");
+
+                              Common.ajax("GET","/homecare/sales/order/selectHcAcCmbOrderDtlList",
+                                                  { promoNo : $('#promoNo').val(), prod : $('#prod').val(), custId : $('#custId').val(), ordId : ordId },
+                                                  function(result){
+                                                      AUIGrid.clearGridData(cmbOrdDtlResultGridID);
+                                                      AUIGrid.destroy(cmbOrdDtlResultGridID);
+                                                      cmbOrdDtlResultGridID = GridCommon.createAUIGrid("cmbOrdDtlResult_grid_wrap", colLayout, "ordId", cmbOrdDtlLstGridPros);
+                                                      AUIGrid.setGridData(cmbOrdDtlResultGridID, result);
+                                                  },
+                                                  function(jqXHR, textStatus, errorThrown) {
+                                                      try {
+                                                          console.log("status : " + jqXHR.status);
+                                                          console.log("code : " + jqXHR.responseJSON.code);
+                                                          console.log("message : " + jqXHR.responseJSON.message);
+                                                          console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                                                          Common.alert("Fail : " + jqXHR.responseJSON.message);
+                                                        } catch (e) {
+                                                             console.log(e);
+                                                        }
+                                                    });
+                          }
+                      }
+                    , editable : false
+
+                }, {
+                    dataField : "ordNo",
+                    headerText : "<spring:message code='sales.OrderNo'/>",
+                    width : 80,
+                    editable : false,
+                    style : 'left_style'
+                }, {
+                    dataField : "refNo",
+                    headerText : "<spring:message code='sales.refNo2'/>",
+                    width : 100,
+                    editable : false,
+                    style : 'left_style'
+                }, {
+                    dataField : "ordDt",
+                    headerText : "<spring:message code='sales.ordDt'/>",
+                    width : 100,
+                    editable : false,
+                    style : 'left_style'
+                }, {
+                    dataField : "appType",
+                    headerText : "<spring:message code='sales.AppType'/>",
+                    width : 80,
+                    editable : false,
+                    style : 'left_style'
+                }, {
+                  dataField : "prod",
+                  headerText : "<spring:message code='sales.prod'/>",
+                  width : 200,
+                  editable : false,
+                  style : 'left_style'
+                }, {
+                  dataField : "promoCde",
+                  headerText : "<spring:message code='sales.promoCd'/>",
+                  width : 200,
+                  editable : false
+                }, {
+                  dataField : "custId",
+                  headerText : "<spring:message code='sales.cusName'/>",
+                  editable : false,
+                  style : 'left_style'
+                }, {
+                  dataField : "ordId",
+                  visible : false
+                } ];
 
     var gridPros = {
       usePaging : true,
@@ -136,18 +219,20 @@
  <section class="pop_body">
   <!-- pop_body start -->
   <form id="popSearchComboForm" name="popSearchComboForm" action="#" method="post">
-   <input id="promoNo" name="promoNo" value="${promoNo}" type="hidden" />
-   <input id="prod" name="prod" value="${prod}" type="hidden" />
-   <input id="custId" name="custId" value="${custId}" type="hidden" />
-   <input id="ordIdPop_1" name="ordIdPop_1" value="${ordId}" type="hidden" />
-
+     <input id="promoNo" name="promoNo" value="${promoNo}" type="hidden" />
+     <input id="prod" name="prod" value="${prod}" type="hidden" />
+     <input id="custId" name="custId" value="${custId}" type="hidden" />
+     <input id="ordIdPop_1" name="ordIdPop_1" value="${ordId}" type="hidden" />
   </form>
-  <article class="grid_wrap mt30">
-   <!-- grid_wrap start -->
-   <div id="pop_ord_grid_wrap"
-    style="width: 100%; height: 480px; margin: 0 auto;"></div>
+
+  <article class="grid_wrap">
+      <div id="pop_ord_grid_wrap" style="width: 100%; height: 300px; margin: 0 auto;"></div>
   </article>
-  <!-- grid_wrap end -->
+
+   <article class="grid_wrap" >
+       <div id="cmbOrdDtlResult_grid_wrap" style="width: 100%; height: 200px; margin: 0 auto;"></div>
+   </article>
+
  </section>
  <!-- pop_body end -->
 </div>

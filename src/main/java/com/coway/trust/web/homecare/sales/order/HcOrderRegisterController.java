@@ -240,6 +240,18 @@ public class HcOrderRegisterController {
     message.setCode(Integer.toString(qtyCmbOrd));
     return ResponseEntity.ok(message);
   }
+  
+  @RequestMapping(value = "/selectHcAcCmbOrderDtlList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHcAcCmbOrderDtlList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+    logger.debug("==================/selectHcAcCmbOrderDtlList.do=======================");
+    logger.debug("[HcOrderRegisterController - selectHcAcCmbOrderDtlList] params : {}", params);
+    logger.debug("==================/selectHcAcCmbOrderDtlList.do=======================");
+
+    List<EgovMap> orderList = hcOrderRegisterService.selectHcAcCmbOrderDtlList(params);
+
+    return ResponseEntity.ok(orderList);
+  }
 
 	/**
 	 * Homecare Register Order
