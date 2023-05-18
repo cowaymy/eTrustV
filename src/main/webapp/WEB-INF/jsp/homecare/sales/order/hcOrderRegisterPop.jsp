@@ -1120,7 +1120,7 @@
                 return;
             }else{
                 let stkId   = $("#ordProduct"+_tagNum).val();
-                let pacId   = $('#srvPacId').val();
+                let pacId   = ( $('#srvPacId').val() || '${orderInfo.basicInfo.srvPacId}' );
                 let appTypeId = $("#appType").val();
 
                 Common.ajaxSync("GET", "/sales/productMgmt/selectProductDiscontinued.do", {stkId: stkId ,pacId: pacId, appTypeId: appTypeId}, function(result) {
@@ -1150,7 +1150,7 @@
             var stkIdVal      = $("#ordProduct"+_tagNum).val();
             var empChk     = $("#empChk").val();
             var exTrade      = $("#exTrade").val();
-            var srvPacId      = appTypeVal == '66' ? $('#srvPacId').val() : 0;
+            var srvPacId      = appTypeVal == '66' ? $('#srvPacId').val() ||  '${orderInfo.basicInfo.srvPacId}'  : 0;
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
                 /* if(_tagNum == '2') {
@@ -1343,7 +1343,7 @@
         var promoIdIdx = $("#ordPromo"+_tagNum+" option:selected").index();
         var promoIdVal = $("#ordPromo"+_tagNum).val();
 
-        var srvPacId  = appTypeVal == '66' ? $('#srvPacId').val() : 0;
+       var srvPacId  = appTypeVal == '66' ? $('#srvPacId').val() || '${orderInfo.basicInfo.srvPacId}': 0;
 
         if(promoIdIdx > 0 && promoIdVal != '0') {
         	if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
