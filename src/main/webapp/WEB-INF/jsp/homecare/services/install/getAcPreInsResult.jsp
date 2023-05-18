@@ -11,13 +11,13 @@
                 <div><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway.gif" alt="Coway"></div>
                 <div class="mt-5"></div>
         </div>
-        <div class="container-fluid" style="flex:2">
+        <div class="container-fluid" style="flex:2" >
                <div class="card mainBorderColor m-auto" style="max-width:576px">
                         <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
                             <h5 class="header">Butiran Pesanan</h5>
                         </div>
                         <div>
-                        <div class="card-body m-4 mainBorderColor">
+                        <div class="card-body m-4 mainBorderColor"  id="page1">
                                 <div class="row">
                                       <div class="col-12 font-italic"><h5 class="text-danger">Pesanan ini telah dihantarkan.</h5></div>
                                 </div>
@@ -53,9 +53,28 @@
                                     <div class="col-6"><h5>Sebab Gagal: </h5></div>
                                     <div class="col-6"><h5 id="reason"></h5></div>
                                 </div>
+                                <div class="row">
+                                     <div class="col-6"><h5>Catatan: </h5></div>
+                                     <div class="col-6"><h5>${installationInfo.remark}</h5></div>
+                                </div>
                         </div>
+
+                       <div class="card-body m-4 mainBorderColor" id="page2">
+                               <div class="row">
+                                     <div class="col-12"><h5>Pemasangan ini (${installationInfo.installEntryNo}) telah disiapkan.</h5></div>
+                               </div>
+                       </div>
+
+
+                       <div class="card-body m-4 mainBorderColor" id="page3">
+                               <div class="row">
+                                     <div class="col-12"><h5>Pemasangan ini (${installationInfo.installEntryNo}) telah gagal.</h5></div>
+                               </div>
+                       </div>
+
                  </div>
         </div>
+     </div>
 </div>
 
 <div style="display:none;">
@@ -87,11 +106,46 @@
 	        })`);
          }
 
-        if("${installationInfo.stusCodeId}" == "4"){
-        	showComplete();
-        }else{
-        	showFail();
+        const page1 = document.querySelector("#page1");
+        const page2 = document.querySelector("#page2");
+        const page3 = document.querySelector("#page3");
+
+        const openPage1 = () =>{
+            page1.style.display ="";
+            page2.style.display ="none";
+            page3.style.display ="none";
         }
+
+        const openPage2 = () =>{
+            page1.style.display ="none";
+            page2.style.display ="";
+            page3.style.display ="none";
+        }
+
+        const openPage3 = () =>{
+            page1.style.display ="none";
+            page2.style.display ="none";
+            page3.style.display ="";
+        }
+
+       console.log("${installationInfo.mainStus}");
+
+        if("${installationInfo.mainStus}" == "4"){
+        	openPage2();
+        }
+        else if("${installationInfo.mainStus}" == "21"){
+        	openPage3();
+        }else{
+	            if("${installationInfo.stusCodeId}" == "4"){
+	            	openPage1();
+	                showComplete();
+	            }else{
+	                openPage1();
+	                showFail();
+	            }
+        }
+
+
     });
 
     const complete = document.querySelectorAll('.complete');

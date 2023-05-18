@@ -156,6 +156,12 @@
                                      <div class="col-6"><h5>Tarikh Temu Janji: </h5></div>
                                      <div class="col-6"><h5 id="doDt"></h5></div>
                                 </div>
+                                <div class="row">
+                                     <div class="col-6"><h5>Catatan:</h5></div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-12"><textarea id="remark"  rows="4" cols="50"></textarea></div>
+                                </div>
                                 <div class="row" style="display:none;" id="completeTitle">
                                      <div class="col-6"><h4 class="text-danger">Lengkap: </h4></div>
                                 </div>
@@ -631,7 +637,7 @@
 
     let attachment = 0;
 	const insertPreInsComplete = () => {
-        const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text() ;
+        const insNo = "${insNo}", serial = $("#serialNo").text() ,  serial2 = $("#serialNo2").text() , remark = document.querySelector("#remark").value;
 
         fetch("/homecare/services/install/insertPreInsCompleted.do", {
             method: "POST",
@@ -642,7 +648,8 @@
                 insNo,
                 serial,
                 serial2,
-                attachment
+                attachment,
+                remark
             })
         })
         .then(() => {

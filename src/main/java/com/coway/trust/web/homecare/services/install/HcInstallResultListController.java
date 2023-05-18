@@ -747,7 +747,7 @@ public class HcInstallResultListController {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
 
-    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0){
+    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0 && ((BigDecimal) ((EgovMap)model.get("installationInfo")).get("mainStus")).compareTo(new BigDecimal("1")) == 0){
     		return "homecare/services/install/getAcInstallationInfo";
     	}
     	else{
@@ -760,7 +760,7 @@ public class HcInstallResultListController {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
 
-    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0){
+    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0 && ((BigDecimal) ((EgovMap)model.get("installationInfo")).get("mainStus")).compareTo(new BigDecimal("1")) == 0){
     		return "homecare/services/install/getAcInsFail";
     	}
     	else{
@@ -800,7 +800,7 @@ public class HcInstallResultListController {
     	model.put("insNo", params.get("insNo"));
     	model.put("installationInfo", hcInstallResultListService.selectInstallationInfo(params));
 
-    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0){
+    	if(((BigDecimal) ((EgovMap)model.get("installationInfo")).get("dupCheck")).compareTo(BigDecimal.ZERO) == 0 && ((BigDecimal) ((EgovMap)model.get("installationInfo")).get("mainStus")).compareTo(new BigDecimal("1")) == 0){
     		return "homecare/services/install/getAcInsComplete";
     	}
     	else{

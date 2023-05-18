@@ -141,7 +141,7 @@
                                      <div class="col-6"><h5 id="salesDt"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Tarikh Pemasangan: </h5></div>
+                                     <div class="col-6"><h5>Tarikh Temu Janji: </h5></div>
                                      <div class="col-6"><h5 id="doDt"></h5></div>
                                 </div>
                                 <div class="row">
@@ -151,6 +151,12 @@
                                 <div class="row">
                                      <div class="col-6"><h5>Sebab Gagal: </h5></div>
                                      <div class="col-6"><h5 id="reason"></h5></div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-6"><h5>Catatan:</h5></div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-12"><textarea id="remark"  rows="4" cols="50"></textarea></div>
                                 </div>
                                 <div class="row" style="display:none;" id="failTitle">
                                      <div class="col-6"><h4 class="text-danger">Gagal: </h4></div>
@@ -531,7 +537,7 @@
 
     let attachment = 0;
     const insertPreInsFail = () => {
-    	const insNo = "${insNo}", failLoc = document.querySelector("#failLoc").value, failReason = $("#failReason").val();
+    	const insNo = "${insNo}", failLoc = document.querySelector("#failLoc").value, failReason = $("#failReason").val() , remark = document.querySelector("#remark").value;
         fetch("/homecare/services/install/insertPreInsFail.do", {
             method: "POST",
             headers: {
@@ -541,7 +547,8 @@
                   insNo,
                   failLoc,
                   failReason,
-                  attachment
+                  attachment,
+                  remark
             })
         })
         .then(() => {

@@ -8,11 +8,12 @@ var serialGubun = "1";
     $(document).ready(function() {
         var myGridID_view;
         var callType = "${callType.typeId}";
-
+console.log("${installResult}")
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
             $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
             $("#addInstallForm #installStatus").val("${installResult.preinstalltionStus}");
+            $("#addInstallForm #remark").val("${installResult.preinstallationRemark}");
             $("#addInstallForm #failLocCde").val("${installResult.preinstallationFalLoc}");
             $("#failReasonCode").attr("disabled",false);
             doGetCombo('/services/selectFailChild.do', "${installResult.preinstallationFalLoc}", '','failReasonCode', 'S' , `(() => {

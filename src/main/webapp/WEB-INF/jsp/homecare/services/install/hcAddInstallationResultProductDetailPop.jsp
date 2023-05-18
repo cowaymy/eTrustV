@@ -18,6 +18,7 @@ var serialGubun = "1";
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
             $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
             $("#addInstallForm #installStatus").val("${installResult.preinstalltionStus}");
+            $("#addInstallForm #remark").val("${installResult.preinstallationRemark}");
             document.getElementById("preinstallationImg").style.display="";
        }
 
