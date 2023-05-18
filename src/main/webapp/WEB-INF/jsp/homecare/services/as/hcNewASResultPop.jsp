@@ -2178,7 +2178,8 @@
       ORD_ID : ord_id,
       S_DATE : vdte,
       OPTIONS : options,
-      TYPE : 'AS'
+      TYPE : 'AS',
+      PROD_CAT : '${orderDetail.basicInfo.ordCtgryCd}'
     }, null, true, '_doAllactionDiv');
   }
 
