@@ -221,238 +221,102 @@ WHERE 1=1
     )
   </update>
 
-  <!-- <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap"> //HIDE FOR TESTING
-    SELECT
-    A.BUDGET_PLAN_YEAR ,
-    A.COST_CENTR ,
-    (SELECT
-    B.COST_CENTER_TEXT
-    FROM FCM0008M B
-    WHERE B.COST_CENTER = A.COST_CENTR
-    ) COST_CENTER_TEXT ,
-    A.GL_ACC_CODE ,
-    (SELECT
-    B.GL_ACC_DESC
-    FROM FCM0009M B
-    WHERE B.GL_ACC_CODE = A.GL_ACC_CODE
-    ) GL_ACC_DESC ,
-    A.BUDGET_CODE ,
-    (SELECT
-    B.BUDGET_CODE_TEXT
-    FROM FCM0010M B
-    WHERE B.BUDGET_CODE = A.BUDGET_CODE
-    ) BUDGET_CODE_TEXT ,
-    CNTRL_TYPE,
-    SUM(M1) M1,
-    SUM(M2) M2,
-    SUM(M3) M3,
-    SUM(M4) M4,
-    SUM(M5) M5,
-    SUM(M6) M6,
-    SUM(M7) M7,
-    SUM(M8) M8,
-    SUM(M9) M9,
-    SUM(M10) M10,
-    SUM(M11) M11,
-    SUM(M12) M12
-    FROM (
-    <if test='budgetPlan == "0" '>
-    <![CDATA[
-      SELECT
-      A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR,
-      A.COST_CENTR ,
-      A.GL_ACC_CODE ,
-      A.BUDGET_CODE ,
-      NVL(M1,0) M1,
-      NVL(M2,0) M2,
-      NVL(M3,0) M3,
-      NVL(M4,0) M4,
-      NVL(M5,0) M5,
-      NVL(M6,0) M6 ,
-      NVL(M7,0) M7,
-      NVL(M8,0) M8,
-      NVL(M9,0) M9,
-      NVL(M10,0) M10,
-      NVL(M11,0) M11,
-      NVL(M12,0) M12
-      FROM (
-      SELECT *
-      FROM (
-      SELECT
-      SUM(CASE WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) - SUM( CASE WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL ,
-      A.COST_CENTR ,
-      A.BUDGET_CODE ,
-      A.GL_ACC_CODE ,
-      A.BUDGET_ADJ_YEAR ,
-      A.BUDGET_ADJ_MONTH
-      FROM FCM0103D A,
-      FCM0102M B,
-      FCM0105M C
-      WHERE A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
-      AND A.BUDGET_DOC_NO = C.BUDGET_DOC_NO
-      AND B.APPV_STUS = 'C'
-      AND C.APPV_PRCSS_STUS = 'A'
-      GROUP BY
-      A.BUDGET_ADJ_YEAR,
-      A.BUDGET_ADJ_MONTH ,
-      A.COST_CENTR ,
-      A.BUDGET_CODE,
-      A.GL_ACC_CODE
-      ) A
-      PIVOT (SUM(TOTAL)
-      FOR BUDGET_ADJ_MONTH IN (
-      '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
-      '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
-      )
-      )
-      ) A
-       ]]>
-      UNION ALL
-    </if>
-    SELECT
-    A.BUDGET_PLAN_YEAR ,
-    A.COST_CENTR ,
-    A.GL_ACC_CODE ,
-    A.BUDGET_CODE ,
-    NVL(M1,0) M1,
-    NVL(M2,0) M2,
-    NVL(M3,0) M3,
-    NVL(M4,0) M4,
-    NVL(M5,0) M5,
-    NVL(M6,0) M6,
-    NVL(M7,0) M7,
-    NVL(M8,0) M8,
-    NVL(M9,0) M9,
-    NVL(M10,0) M10,
-    NVL(M11,0) M11,
-    NVL(M12,0) M12
-    FROM (
-    DATE : 070423
-    SELECT * FROM FCM0001V_NR  A
-    <![CDATA[
 
-    SELECT *
-    FROM (
-    SELECT F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F1.GL_ACC_CODE, F1.BUDGET_CODE,
-    F1.PLAN_AMT, F1.CHNG_AMT,
-    (SUM(CASE WHEN F3.SIGNAL = '+' THEN F3.ADJ_AMT ELSE 0 END) - SUM(CASE WHEN F3.SIGNAL = '-' THEN F3.ADJ_AMT ELSE 0 END)) TOTAL
-    , SUM(F5.NET_AMT) APP_AMT_TOTAL
-    FROM FCM0101M F1
-    LEFT JOIN (SELECT F3.BUDGET_ADJ_YEAR, F3.BUDGET_ADJ_MONTH, F3.COST_CENTR, F3.BUDGET_CODE, F3.GL_ACC_CODE, F3.ADJ_AMT, F3.SIGNAL
-    FROM FCM0103D F3
-    LEFT JOIN FCM0102M F2 ON F2.BUDGET_DOC_NO = F3.BUDGET_DOC_NO
-    LEFT JOIN FCM0105M F5 ON F5.BUDGET_DOC_NO = F3.BUDGET_DOC_NO
-    WHERE F2.APPV_STUS = 'C'
-    AND F5.APPV_PRCSS_STUS = 'A') F3 ON F3.BUDGET_ADJ_YEAR = F1.BUDGET_PLAN_YEAR AND F3.BUDGET_ADJ_MONTH = F1.BUDGET_PLAN_YEAR
-    LEFT JOIN (SELECT F5.CRT_DT, F5.NET_AMT, F5.BUDGET_CODE, F5.COST_CENTR, F5.GL_ACC_CODE FROM FCM0015D F5
-    LEFT JOIN FCM0004M F4 ON F4.APPV_PRCSS_NO = F5.APPV_PRCSS_NO
-    WHERE F4.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')) F5
-    ON EXTRACT(YEAR FROM TO_DATE(F5.CRT_DT, 'DD/MM/YYYY')) = F1.BUDGET_PLAN_YEAR
-    AND EXTRACT (MONTH FROM TO_DATE(F5.CRT_DT, 'DD/MM/YYYY')) = F1.BUDGET_PLAN_MONTH
-    AND F5.COST_CENTR = F1.COST_CENTR AND F5.BUDGET_CODE = F1.BUDGET_CODE AND F5.GL_ACC_CODE = F1.GL_ACC_CODE
-    GROUP BY
-    F1.PLAN_AMT, F1.CHNG_AMT, F1.BUDGET_PLAN_MONTH, F1.BUDGET_PLAN_YEAR, F1.COST_CENTR,
-    F1.GL_ACC_CODE, F1.BUDGET_CODE ) A
-    PIVOT (MAX(
-    CASE
-    WHEN '0'= #{budgetPlan} THEN NVL(PLAN_AMT,0) + NVL(CHNG_AMT,0) + NVL(TOTAL,0) - NVL(APP_AMT_TOTAL ,0)
-    WHEN '1'= #{budgetPlan} THEN PLAN_AMT
-    ELSE 0
-    END)
-    FOR BUDGET_PLAN_MONTH IN (
-    '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6,
-    '7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12
-    )
-    )
-    ) A
-    ) A
-     ]]>
-    LEFT JOIN FCM0104D C
-    ON A.COST_CENTR = C.COST_CENTR
-    AND A.BUDGET_CODE = C.BUDGET_CODE
-    AND A.GL_ACC_CODE = C.GL_ACC_CODE
-    WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
-    Default cost center values with cost center disabled on screen
-    <if test="stCostCentr == null or stCostCentr == '' ">
-       stCostCentr == null or stCostCentr == ''
-      <if test="procFlg != null and procFlg != '' and procFlg == 1">
-        AND A.COST_CENTR IN (<![CDATA[
-        SELECT
-            COST_CENTER
-        FROM FCM0107M
-        WHERE USER_ID = #{userId}
-          AND SYSDATE >= VALID_DT_FR
-          AND SYSDATE <= VALID_DT_TO
-          AND MAIN_MODULE = #{mainMod}
-          AND SUB_MODULE = #{subMod}
-          AND STATUS = 1
-        GROUP BY COST_CENTER
-    ]]>)
-        <foreach item="item" collection="costCenterList" index="index" open="(" separator="," close=")"> #{costCenterList} </foreach>
-      </if>
-    </if>
-    <if test="(costCentr == null or costCentr == '') and flg == 1">
-      (costCentr == null or costCentr == '') and flg == 1
-      <if test="stCostCentr != null and stCostCentr != '' and procFlg == 0">
-        <if test="edCostCentr != null and edCostCentr != '' ">
-          AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
-        </if>
-        <if test="edCostCentr == null or edCostCentr == '' and procFlg == 0">
-          AND A.COST_CENTR = #{stCostCentr}
-        </if>
-      </if>
-      <if test="(stCostCentr == null or stCostCentr == '') and procFlg == 0">
-        AND A.COST_CENTR = ''
-      </if>
-    </if>
-    <if test="(stCostCentr != null and stCostCentr != '') and stCostCentr != costCentr and (costCentr != null or costCentr != '') and flg == 1 "> AND A.COST_CENTR = '' </if>
-    <if test="(stCostCentr != null and stCostCentr != '') and flg == 0 ">
-      <if test="(edCostCentr == null or edCostCentr == '') and procFlg == 0">
-        AND A.COST_CENTR = #{stCostCentr}
-      </if>
-      <if test="(edCostCentr != null and edCostCentr != '') and procFlg == 0">
-        AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
-      </if>
-    </if>
-    <if test="stGlAccCode != null and stGlAccCode != '' ">
-      <if test="edGlAccCode != null and edGlAccCode != ''">
-        AND A.GL_ACC_CODE BETWEEN #{stGlAccCode} AND #{edGlAccCode}
-      </if>
-      <if test="edGlAccCode == null or edGlAccCode == ''">
-        AND A.GL_ACC_CODE = #{stGlAccCode}
-      </if>
-    </if>
-    <if test="stBudgetCode != null and stBudgetCode != '' ">
-      <if test="edBudgetCode != null and edBudgetCode != '' ">
-        AND A.BUDGET_CODE BETWEEN #{stBudgetCode} AND #{edBudgetCode}
-      </if>
-      <if test="edBudgetCode == null or edBudgetCode == ''">
-        AND A.BUDGET_CODE = #{stBudgetCode}
-      </if>
-    </if>
-    GROUP BY
-    A.BUDGET_PLAN_YEAR,
-    A.COST_CENTR,
-    A.GL_ACC_CODE,
-    A.BUDGET_CODE,
-    CNTRL_TYPE
-    ORDER BY COST_CENTR
-  </select>
- -->
 <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap">
-    SELECT * FROM FCM0001V_NR WHERE BUDGET_PLAN_YEAR = #{budgetPlanYear}
-    AND COST_CENTR IN (<![CDATA[
-        SELECT
-            COST_CENTER
-        FROM FCM0107M
-        WHERE USER_ID = #{userId}
-          AND SYSDATE >= VALID_DT_FR
-          AND SYSDATE <= VALID_DT_TO
-          AND MAIN_MODULE = #{mainMod}
-          AND SUB_MODULE = #{subMod}
-          AND STATUS = 1
-        GROUP BY COST_CENTER
-    ]]>)
+	 <if test='budgetPlan == "0" '>
+	SELECT F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F8.COST_CENTER_TEXT,F1.BUDGET_CODE, F10.BUDGET_CODE_TEXT,
+	F1.GL_ACC_CODE, F9.GL_ACC_DESC,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '01', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M1,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '02', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M2,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '03', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M3,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '04', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M4,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '05', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M5,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '06', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M6,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '07', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M7,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '08', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M8,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '09', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M9,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '10', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M10,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '11', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M11,
+	(SELECT FN_GET_AVAILABLE_AMT(F1.BUDGET_PLAN_YEAR, '12', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M12
+
+	</if>
+	<if test='budgetPlan == "1" '>
+	SELECT  F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F8.COST_CENTER_TEXT,F1.BUDGET_CODE, F10.BUDGET_CODE_TEXT,
+	F9.GL_ACC_DESC,F1.GL_ACC_CODE,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '1', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M1,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '2', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M2,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '3', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M3,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '4', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M4,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '5', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M5,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '6', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M6,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '7', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M7,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '8', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M8,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '9', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M9,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '10', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M10,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '11', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M11,
+	(SELECT FN_GET_PLAN_AMT(F1.BUDGET_PLAN_YEAR, '12', F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE) FROM DUAL) M12
+	    </if>
+	    FROM FCM0101M F1
+	LEFT JOIN FCM0010M F10 ON F10.BUDGET_CODE = F1.BUDGET_CODE
+	LEFT JOIN FCM0008M F8 ON F8.COST_CENTER = F1.COST_CENTR
+	LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F1.GL_ACC_CODE
+	    WHERE F1.BUDGET_PLAN_YEAR = #{budgetPlanYear}
+	    <if test="stCostCentr == null or stCostCentr == '' ">
+	      <if test="procFlg != null and procFlg != '' and procFlg == 1">
+	        AND COST_CENTR IN (
+	        SELECT
+	            COST_CENTER
+	        FROM FCM0107M
+	        WHERE USER_ID = #{userId}
+	          AND SYSDATE <![CDATA[>=]]> VALID_DT_FR
+	          AND SYSDATE  <![CDATA[<=]]> VALID_DT_TO
+	          AND MAIN_MODULE = #{mainMod}
+	          AND SUB_MODULE = #{subMod}
+	          AND STATUS = 1
+	        GROUP BY COST_CENTER
+	    )
+	      </if>
+	    </if>
+	    <if test="(costCentr == null or costCentr == '') and flg == 1">
+	      <if test="stCostCentr != null and stCostCentr != '' and procFlg == 0">
+	        <if test="edCostCentr != null and edCostCentr != '' ">
+	          AND F1.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
+	        </if>
+	        <if test="edCostCentr == null or edCostCentr == '' and procFlg == 0">
+	          AND F1.COST_CENTR = #{stCostCentr}
+	        </if>
+	      </if>
+	      <if test="(stCostCentr == null or stCostCentr == '') and procFlg == 0">
+	        AND F1.COST_CENTR = ''
+	      </if>
+	    </if>
+	    <if test="(stCostCentr != null and stCostCentr != '') and flg == 0 ">
+	      <if test="(edCostCentr == null or edCostCentr == '') and procFlg == 0">
+	        AND F1.COST_CENTR = #{stCostCentr}
+	      </if>
+	      <if test="(edCostCentr != null and edCostCentr != '') and procFlg == 0">
+	        AND F1.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
+	      </if>
+	    </if>
+	    <if test="stGlAccCode != null and stGlAccCode != '' ">
+	      <if test="edGlAccCode != null and edGlAccCode != ''">
+	        AND F1.GL_ACC_CODE BETWEEN #{stGlAccCode} AND #{edGlAccCode}
+	      </if>
+	      <if test="edGlAccCode == null or edGlAccCode == ''">
+	        AND F1.GL_ACC_CODE = #{stGlAccCode}
+	      </if>
+	    </if>
+	    <if test="stBudgetCode != null and stBudgetCode != '' ">
+	      <if test="edBudgetCode != null and edBudgetCode != '' ">
+	        AND F1.BUDGET_CODE BETWEEN #{stBudgetCode} AND #{edBudgetCode}
+	      </if>
+	      <if test="edBudgetCode == null or edBudgetCode == ''">
+	        AND F1.BUDGET_CODE = #{stBudgetCode}
+	      </if>
+	    </if>
+	    GROUP BY F1.BUDGET_PLAN_YEAR, F1.COST_CENTR, F1.BUDGET_CODE, F1.GL_ACC_CODE, F8.COST_CENTER_TEXT,
+	    F10.BUDGET_CODE_TEXT, F9.GL_ACC_DESC
+	    ORDER BY F1.COST_CENTR
   </select>
 
   <select id="selectAdjustmentCBG" parameterType="Map" resultType="egovMap">
