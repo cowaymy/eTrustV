@@ -16,9 +16,8 @@ var serialGubun = "1";
 
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
+            $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
             $("#addInstallForm #installStatus").val("${installResult.preinstalltionStus}");
-            $("#addInstallForm #failLocCde").val("${installResult.preinstallationFalLoc}");
-            $("#addInstallForm #failReason").val("${installResult.preinstallationFalRsn}");
             document.getElementById("preinstallationImg").style.display="";
        }
 

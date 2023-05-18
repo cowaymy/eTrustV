@@ -60,9 +60,8 @@
 								<div class="form-outline col">
 								            <h5>&nbsp;Lokasi Gagal Pemasangan :</h5>
 								            <select class="form-control" id="failLoc">
-								                    <!--FAIL AT LOCATION-->
-								                    <option value="8000" selected>GAGAL DI LOKASI</option>
-								                      <!--FAIL BEFORE ARRIVE LOCATION-->
+								                    <option value="" selected>--Pilihan--</option>
+								                    <option value="8000">GAGAL DI LOKASI</option>
 								                    <option value="8100">GAGAL SEBELUM SAMPAI DI LOKASI</option>
 								            </select>
 								</div>
@@ -476,18 +475,22 @@
         addImageUpload(document.getElementById("installUploadContainer") , titleName)
     }
 
-    const failLoc = document.getElementById("failLoc")
-    const failReason = document.getElementById("failReason")
+    const failLoc = document.getElementById("failLoc");
+    const failReason = document.getElementById("failReason");
     getErrorCode = () => {
-    	fetch("/homecare/services/install/selectFailChild.do?groupCode=" + document.querySelector("#failLoc option:checked").value)
-    	.then(r => r.json())
-    	.then(d => {
-    		failReason.innerHTML = ""
-    		for(let i = 0; i < d.length; i++) {
-    			const {codeName, codeId} = d[i]
-    			failReason.innerHTML += "<option value=" + codeId + ">" + codeName + "</option>"
-    		}
-    	})
+	    	failReason.innerHTML = "";
+	        if(!document.querySelector("#failLoc option:checked").value){
+	            failReason.innerHTML += "<option value=''>--Pilih Sebab Gagal--</option>";
+	        }else{
+		    	fetch("/homecare/services/install/selectFailChild.do?groupCode=" + document.querySelector("#failLoc option:checked").value)
+		    	.then(r => r.json())
+		    	.then(d => {
+		    		for(let i = 0; i < d.length; i++) {
+		    			const {codeName, codeId} = d[i]
+		    			failReason.innerHTML += "<option value=" + codeId + ">" + codeName + "</option>"
+		    		}
+		    	})
+	        }
     }
     getErrorCode()
     failLoc.onchange = getErrorCode
@@ -515,8 +518,14 @@
 
     $("#btnNextPage3").click(e => {
         e.preventDefault()
-        $("#location").text($("#failLoc option:selected").text());
-        $("#reason").text($("#failReason option:selected").text());
+        if(!$("#failLoc option:selected").val()){
+       	    $("#location").text("-");
+            $("#reason").text("-");
+        }else{
+            $("#location").text($("#failLoc option:selected").text());
+            $("#reason").text($("#failReason option:selected").text());
+        }
+
         openPage3();
     })
 
@@ -541,6 +550,8 @@
             $("#alertModalClick2").click();
         })
         .catch(() => {
+            document.querySelector("#btnSubmit").style.display="";
+            document.querySelector("#btnBackPage2").style.display="";
         	document.getElementById("MsgAlert").innerHTML =  "Pemasangan gagal untuk dihantar.";
         	$("#alertModalClick").click();
         })
@@ -548,6 +559,8 @@
 
     $("#btnSubmit").click(e => {
     	e.preventDefault();
+        document.querySelector("#btnBackPage2").style.display="none";
+        document.querySelector("#btnSubmit").style.display="none";
         fetch("/homecare/services/install/selectInstallationInfo.do?insNo=${insNo}")
         .then(r => r.json())
         .then(resp => {

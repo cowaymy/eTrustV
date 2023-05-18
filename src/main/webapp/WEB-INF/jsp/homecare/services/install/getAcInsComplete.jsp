@@ -651,6 +651,7 @@
         })
         .catch(() => {
             document.querySelector("#btnSubmit").style.display="";
+            document.querySelector("#btnBackPage2").style.display="";
             document.getElementById("MsgAlert2").innerHTML =  "Pemasangan gagal untuk dihantar.";
             $("#alertModalClick2").click();
         })
@@ -658,6 +659,7 @@
 
     $("#btnSubmit").click(e => {
         e.preventDefault();
+        document.querySelector("#btnBackPage2").style.display="none";
         document.querySelector("#btnSubmit").style.display="none";
         fetch("/homecare/services/install/selectInstallationInfo.do?insNo=${insNo}")
         .then(r => r.json())
