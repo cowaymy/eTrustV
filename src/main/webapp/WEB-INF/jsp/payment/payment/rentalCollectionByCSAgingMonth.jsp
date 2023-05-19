@@ -87,6 +87,29 @@ $(document).ready(function(){
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
+    $("#btnRmdLtr").click(function(){
+
+        var gridObj = AUIGrid.getSelectedItems(myGridID);
+        var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+        var test = AUIGrid.getCellValue(myGridID,selIdx,"aging");
+
+        if(gridObj == null || gridObj.length <= 0) {
+            Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
+        }else{
+            if(test < 3 ){
+	        	Common.alert('* Allowed for Outstanding Month 3 & 4 only.');
+	        }else{
+	            $("#dataForm").show();
+	            var ordNo = gridObj[0].item.salesOrdNo;
+
+	            $("#dataForm #_ordNo").val(ordNo);
+	            $("#dataForm #downFileName").val("Reminder Letter - " + ordNo);
+
+	            fn_report();
+	        }
+        }
+    });
+
 });
 
 // AUIGrid 칼럼 설정
@@ -111,6 +134,7 @@ var columnLayout = [
     , {dataField : "previousMonth", headerText : "Prev Mth", editable : false, width : 150}
     , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
     , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
+    , {dataField : "aging", editable : false, visible: false}
     ];
 
     // ajax list 조회.
@@ -142,6 +166,16 @@ var columnLayout = [
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
         GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS (Aging Month)");
     }
+
+    function fn_report(){
+    	var option = {
+    			isProcedure : false
+    	};
+    	Common.report("dataForm",option);
+    }
+
+
+
 </script>
 
 <!-- content start -->
@@ -217,7 +251,50 @@ var columnLayout = [
                 </tbody>
             </table>
             <!-- table end -->
-        </form>
+
+
+<%--      <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+      <p class="show_btn"><a href="#"><img src = "${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show"</a></p>
+     <dl class="link_list">
+     <dt> Link </dt>
+     <dd>
+     <ul class="btns">
+     <li><p class="link_btn"><a href="#" id="btnRmdLtr">Reminder Letter</a></p></li>
+     </ul>
+
+     <ul class="btns">
+     </ul>
+     <p class = "hide_btn"><a href="#"><img src ="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide"</a></p>
+     </dd>
+     </dl>
+     </aside><!-- link_btns_wrap end --> --%>
+
+      <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+
+            <li><p class="link_btn"><a href="#" id="btnRmdLtr">Reminder Letter</a></p></li>
+
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+
+     </form>
+
+     <form id="dataForm">
+     <input type = "hidden" id ="fileName" name ="reportFileName" value="/sales/RemindLetter.rpt" />
+     <input type = "hidden" id ="viewType" name ="viewType" value="PDF" />
+     <input type = "hidden" id ="downFileName" name ="reportDownFileName" value="" />
+
+     <input type = "hidden" id ="_ordNo" name="@ordNo" />
+     </form>
     </section>
     <!-- search_table end -->
 
