@@ -518,7 +518,7 @@ public class CcpCalculateController {
         }
 
 		//Send SMS
-		int chkSms =  Integer.parseInt(String.valueOf(params.get("isChkSms")));
+		/*int chkSms =  Integer.parseInt(String.valueOf(params.get("isChkSms")));
 		String smsResultMSg = "";
 		List<String> mobileNumList = new ArrayList<String>();
 		if(chkSms > 0){
@@ -543,12 +543,12 @@ public class CcpCalculateController {
 				smsResultMSg += "Fail Reason : " + smsResult.getFailReason() + "</br>";
 			}
 
-		}
+		}*/
 		//Return MSG
 		ReturnMessage message = new ReturnMessage();
 
 	    message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(smsResultMSg));
+		//message.setMessage(messageAccessor.getMessage(smsResultMSg));
 
 		return ResponseEntity.ok(message);
 

@@ -451,7 +451,7 @@ function calSave(){
         var msg = "";
 
         msg += '<spring:message code="sal.alert.msg.successBr" />';
-        msg += result.message; //SMS Result
+        //msg += result.message; //SMS Result
 
         Common.alert(msg);
         //Btn Disabled
