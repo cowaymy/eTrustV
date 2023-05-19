@@ -73,8 +73,9 @@
               AND NVL(som.ECOMM_ORD_ID,0) > 0
            </if>
            <if test="keyInMonth != null and keyInMonth != ''">
-                AND EXTRACT(YEAR FROM som.SALES_DT) = EXTRACT(YEAR FROM TO_DATE(#{keyInMonth},'MM/YYYY'))
-                AND EXTRACT(MONTH FROM som.SALES_DT) = EXTRACT(MONTH FROM TO_DATE(#{keyInMonth},'MM/YYYY'))
+
+                AND KEYIN.MONTH = #{keyinMon}
+                AND KEYIN.YEAR = #{keyinYear}
            </if>
 
     )
