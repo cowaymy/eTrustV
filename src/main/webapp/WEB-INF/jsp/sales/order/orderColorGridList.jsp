@@ -902,9 +902,9 @@ console.log("searchColorGrid");
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" id="createStDate" name="createStDate" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create start Date" id="createStDate" name="createStDate" placeholder="DD/MM/YYYY" readonly="readonly" class="j_date" /></p>
     <span><spring:message code="sal.text.to" /></span>
-    <p><input type="text" title="Create end Date" id="createEnDate" name="createEnDate" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create end Date" id="createEnDate" name="createEnDate" placeholder="DD/MM/YYYY" readonly="readonly" class="j_date" /></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row"><spring:message code="sal.title.text.product" /></th>
