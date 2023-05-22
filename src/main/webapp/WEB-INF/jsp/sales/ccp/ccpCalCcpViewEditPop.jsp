@@ -456,7 +456,7 @@ function calSave(){
         msg += '<spring:message code="sal.alert.msg.successBr" />';
         //msg += result.message; //SMS Result
 
-        Common.alert(msg);
+        //Common.alert(msg);
         //Btn Disabled
         $("#_calBtnSave").css("display" , "none");
 
@@ -487,9 +487,8 @@ function calSave(){
         //experian
 
         //$("#_calSearch").click();
-
+        Common.alert(msg,window.close());
         fn_searchListAjax();
-        return;
     });
 
 }
