@@ -188,11 +188,11 @@
     }, {
         dataField : "invcNo",
         headerText : "Invoice No.",
-        width : "13%"
+        width : "8%"
     }, {
         dataField : "supplierName",
         headerText : "Supplier Name",
-        width : "15%"
+        width : "11%"
     }, {
         dataField : "taxCode",
         headerText : "Tax Code",
@@ -240,12 +240,12 @@
             autoThousandSeparator : true,
             allowPoint : true
         },
-        width : "15%"
+        width : "13%"
     }, {
         dataField : "rem",
         headerText : "Description",
         width : 150,
-        width : "20%"
+        width : "25%"
     },
     {
         dataField : "insufficient",
@@ -2276,7 +2276,7 @@
 *************** ADVANCE REQUEST - START ***************
 *******************************************************
 -->
-<div class="popup_wrap2" id="advReqPop" style="display:none;">
+<div class="popup_wrap size_big" id="advReqPop" style="display:none;">
     <header class="pop_header">
         <h1 id="h1_req">New Advance Request</h1>
         <ul class="right_opt">
@@ -2527,7 +2527,7 @@
 *************** ADVANCE SETTLEMENT - START ***************
 **********************************************************
 -->
-<div class="popup_wrap2" id="settlementPop" style="display:none;">
+<div class="popup_wrap size_big" id="settlementPop" style="display:none;">
     <header class="pop_header">
         <h1 id="h1_settlement">Vendor Advance Settlement</h1>
         <ul class="right_opt">
