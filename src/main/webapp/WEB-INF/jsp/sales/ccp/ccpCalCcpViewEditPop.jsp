@@ -488,7 +488,6 @@ function calSave(){
 
         Common.alert(msg);
         $("#popup_wrap").remove();
-        fn_searchListAjax();
         $("#_calSearch").click();
     });
 
