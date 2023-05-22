@@ -487,8 +487,9 @@ function calSave(){
         //experian
 
         //$("#_calSearch").click();
-        $("#_btnClose").click();
+
         fn_searchListAjax();
+        return;
     });
 
 }
