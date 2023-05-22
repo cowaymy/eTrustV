@@ -486,10 +486,10 @@ function calSave(){
         $("#_experianRisk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         //experian
 
-        //$("#_calSearch").click();
         Common.alert(msg);
         $("#popup_wrap").remove();
         fn_searchListAjax();
+        $("#_calSearch").click();
     });
 
 }
