@@ -184,9 +184,10 @@ function fn_searchListAjax(){
         $('#calCustName').val($('#calCustName').val().toUpperCase());
     }
 
-    Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
+    $("#_calSearch").click();
+    /* Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
         AUIGrid.setGridData(calGrid, result);
-    });
+    }); */
 
 }
 
