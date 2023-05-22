@@ -817,7 +817,7 @@
     function fn_repaymentPop() {
         console.log("fn_repaymentPop");
 
-        AUIGrid.resize(settlementGridId, 963, $(".settlement_grid_wrap").innerHeight());
+        AUIGrid.resize(settlementGridId, 1203, $(".settlement_grid_wrap").innerHeight());
         fn_setSettlementGridEvent();
 
         //$("#settlementKeyDate").val(fn_getToday); //comment due View Pop up should display Settlement Create Date - 180423
@@ -2082,8 +2082,8 @@
     top:20px;
     left:50%;
     z-index:1001;
-    margin-left:-500px;
-    width:1000px;
+    margin-left:-600px;
+    width:1200px;
     background:#fff;
     border:1px solid #ccc;
 }
@@ -2527,7 +2527,7 @@
 *************** ADVANCE SETTLEMENT - START ***************
 **********************************************************
 -->
-<div class="popup_wrap size_big" id="settlementPop" style="display:none;">
+<div  class="popup_wrap2" id="settlementPop" style="display:none;">
     <header class="pop_header">
         <h1 id="h1_settlement">Vendor Advance Settlement</h1>
         <ul class="right_opt">
