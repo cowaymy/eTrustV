@@ -563,7 +563,7 @@
     addImageUpload(document.getElementById("sirimUploadContainer"), "Sirim");
 
     for (let i = 0; i < 4; i++) {
-        let titleName = "Lampiran "+ (i+1);
+        let titleName = "Attachment "+ (i+1);
 	    addImageUpload(document.getElementById("installUploadContainer"), titleName);
     }
 
