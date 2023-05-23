@@ -163,6 +163,9 @@ $(document).ready(function() {
     $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
+    //CCP SMS Suspense
+    $("#_smsDiv").css("display" , "none");
+
     //SMS Checked
     // Consignment Change
     $("#_updSmsChk").change(function() {
@@ -451,9 +454,9 @@ function calSave(){
         var msg = "";
 
         msg += '<spring:message code="sal.alert.msg.successBr" />';
-        msg += result.message; //SMS Result
+        //msg += result.message; //SMS Result
 
-        Common.alert(msg);
+        //Common.alert(msg);
         //Btn Disabled
         $("#_calBtnSave").css("display" , "none");
 
@@ -483,6 +486,7 @@ function calSave(){
         $("#_experianRisk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         //experian
 
+        Common.alert(msg);
         $("#_calSearch").click();
     });
 
@@ -545,14 +549,16 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_letterOfUdt").attr("disabled" , false);
 
             // 20210617 - LaiKW- Uncommented allow SMS section
-            if(isAllowSendSMS() == true){
+            //20230519 - Keyi - CCP SMS Suspend
+            /* if(isAllowSendSMS() == true){
                 $("#_smsDiv").css("display" , "");
                 $("#_updSmsChk").prop('checked', true) ;
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
-            }
+            } */
 
-            if (expPrcss == 0){
+            //20230519 - Keyi CCP SMS Suspend
+            /* if (expPrcss == 0){
                 //sms  changed by Lee(2018/01/18)
                 if(ficoScre >= 350 && ficoScre <= 450){
                     if(isHold == 0){   ////on hold
@@ -605,7 +611,7 @@ function fn_ccpStatusChangeFunc(getVal){
                         }
                     }
                 }
-            }
+            } */
         }else if(getVal == '5'){  // APPROVE
 
              //field //FICO it doesn`t work
@@ -639,7 +645,8 @@ function fn_ccpStatusChangeFunc(getVal){
              });
 
              //sms Changed by Lee (2018/01/18)
-             if(isAllowSendSMS() == true){
+             //20230519 Keyi CCP SMS Suspend
+             /* if(isAllowSendSMS() == true){
                  if(isHold == 0){
                      $("#_smsDiv").css("display" , "");
                      $("#_updSmsMsg").attr("disabled" , false);
@@ -648,7 +655,7 @@ function fn_ccpStatusChangeFunc(getVal){
                      $("#_reasonCodeEdit").val('');
                      setSMSMessage('Approved' , ' ');
                  }
-             }
+             } */
         }else if(getVal == '6'){  //CANCEL
 
             //field
@@ -754,14 +761,16 @@ function  bind_RetrieveData(){
         $("#_letterOfUdt").attr("disabled" , false);
 
         // 20210617 - LaiKW - Uncommented
-        if(isAllowSendSMS() == true){
+        // 20230519 - Keyi - CCP SMS Suspend
+        /* if(isAllowSendSMS() == true){
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
-        }
+        } */
 
-        if (expPrcss == 0){
+        // 20230519 - Keyi - CCP SMS Suspend
+        /* if (expPrcss == 0){
             //sms  changed by Lee(2018/01/18)
 
             if(ficoScre >= 350 && ficoScre <= 450){
@@ -815,7 +824,7 @@ function  bind_RetrieveData(){
                     }
                 }
             }
-        }
+        } */
 
 
     }else if(ccpStus == "5"){
