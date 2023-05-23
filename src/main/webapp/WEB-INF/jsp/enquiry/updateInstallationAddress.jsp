@@ -8,14 +8,14 @@
 
 
 <script type="text/javaScript">
-   function resize(){
-	   document.getElementById("customerLogin").style.minHeight = screen.height  + 50 + "px";
-       document.getElementById("customerLogin").style.minWeight = screen.weight + 50 + "px";
-   }
+//    function resize(){
+// 	   document.getElementById("customerLogin").style.minHeight = screen.height  + 50 + "px";
+//        document.getElementById("customerLogin").style.minWeight = screen.weight + 50 + "px";
+//    }
 
-    window.addEventListener('resize', function(event){
-    	resize();
-	});
+//     window.addEventListener('resize', function(event){
+//     	resize();
+// 	});
 
     $(function(){
     	sessionStorage.setItem("cust", "0");
@@ -31,7 +31,7 @@
         	goNextPage();
         });
 
-    	resize();
+//     	resize();
 
         //hide footer
         let x = document.querySelector('.bottom_msg_box');
@@ -79,7 +79,7 @@
 </script>
 
 <body>
-<div class="login-box" id="customerLogin">
+<div class="login-box" id="customerLogin" style="min-height:100vh;">
     <div>
         <div class="row">
 
