@@ -19,7 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.project.CMS.CMSCntcCsvHandler;
+/*import com.coway.trust.api.project.CMS.CMSCntcCsvHandler;
+*/
 import com.coway.trust.biz.api.CMSApiService;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -123,8 +124,8 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
 
     private void createCsvFile(Map<String, Object> map) throws Exception {
         LOGGER.info("=============== createCsvFile ===============");
-        CMSCntcCsvHandler fileHandler = null;
-
+/*        CMSCntcCsvHandler fileHandler = null;
+*/
 //        String path = "/apps/apache/htdocs/resources/WebShare/CRT";
         String subPath = "/resources/WebShare/API/CMS";
         String file = "CMS_CONTACT_" + map.get("date").toString() + "_" + map.get("page") + ".csv";
@@ -133,8 +134,8 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
         map.put("file", file);
 
         try {
-            fileHandler = getCmsCntcCsvHandler(file, cntcCsvColumns, null, filePath, subPath + map.get("date").toString() + "/", map);
-
+/*            fileHandler = getCmsCntcCsvHandler(file, cntcCsvColumns, null, filePath, subPath + map.get("date").toString() + "/", map);
+*/
 /*            largeExcelService.downloadCmsCntcCsv(map, fileHandler);
 */
             map.put("fileDir", subPath + map.get("date").toString() + "/" + file);
@@ -143,22 +144,22 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
         } catch(Exception ex) {
             throw new ApplicationException(ex, AppConstants.FAIL);
         } finally {
-            if(fileHandler != null) {
+/*            if(fileHandler != null) {
                 try {
                     fileHandler.close();
                 } catch(Exception ex) {
                     LOGGER.error(ex.getMessage());
                 }
-            }
+            }*/
         }
     }
 
-    private CMSCntcCsvHandler getCmsCntcCsvHandler(String fileName, String[] columns, String[] titles, String path, String subPath, Map<String, Object> params) {
+/*    private CMSCntcCsvHandler getCmsCntcCsvHandler(String fileName, String[] columns, String[] titles, String path, String subPath, Map<String, Object> params) {
         FileInfoVO downloadVo = FormDef.getTextDownloadVO(fileName, columns, titles);
         downloadVo.setFilePath(path);
         downloadVo.setSubFilePath(subPath);
         return new CMSCntcCsvHandler(downloadVo, params);
-    }
+    }*/
 
     private void sshPushFile(Map<String, Object> map) {
         LOGGER.info("========== sshPushFile ==========");
