@@ -27,12 +27,15 @@ $(document).ready(function() {
 	doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCode', 'M' , 'f_multiCombo'); //Reason
 
 	//Search
+	/*
 	$("#_calSearch").click(function() {
 
 		Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
 			   AUIGrid.setGridData(calGrid, result);
 		   });
 	});
+	*/
+
 
 	//Edit
 	 // 셀 더블클릭 이벤트 바인딩
