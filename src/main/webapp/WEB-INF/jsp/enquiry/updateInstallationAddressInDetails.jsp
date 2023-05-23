@@ -186,7 +186,6 @@
     function fn_addrSearch(){
 
         if (FormUtil.isEmpty($("#mState").val())) {
-        	console.log("set place 4")
             document.getElementById("MsgAlert").innerHTML =  "Please select State.";
             $("#alertModalClick").click();
             return false;
@@ -482,12 +481,10 @@
 
              if(fn!=null){
                  $('#myModalAlert').on('hide.bs.modal', function (event) {
-                	 console.log("place 1")
                      fn();
                  })
              } else {
             	 $('#myModalAlert').on('hide.bs.modal', function (event) {
-            		 console.log("set place2")
                  })
              }
        };
@@ -525,7 +522,7 @@
        startCountdown(0,1);
        startCountdown(180,0);
        $('#myModalTac').modal({backdrop: 'static', keyboard: false});
-       $('#myModalAlert').on('hide.bs.modal', function (event) {console.log("set place 3")})
+       $('#myModalAlert').on('hide.bs.modal', function (event) {})
    }
 
 
