@@ -123,10 +123,11 @@ input[type=search] {
 }
 
 .modal {
-    height:auto !important;
+/*     height:auto !important; */
+    align-items: center;
     margin-top: 0;
     margin-bottom: 0;
-    top:30%;
+/*     top:30%; */
     flex-direction: column;
     justify-content: center;
     position: absolute;

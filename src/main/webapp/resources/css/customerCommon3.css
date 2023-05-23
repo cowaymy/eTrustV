@@ -67,7 +67,7 @@ btn {
 }
 
 .modal{
-    top:35%;
+/*     top:35%; */
 }
 
 
@@ -144,7 +144,7 @@ btn {
         margin-left: -10px !important;
     }
     .modal{
-        top:35%;
+/*         top:35%; */
     }
 
     #customerMagicAddress {
@@ -185,7 +185,9 @@ div {
 }
 
 #myModalTac {
-	top:25% !important;
+/* 	top:25% !important; */
+/* display: flex !important; */
+align-items: center;
 }
 
 pagination>li:first-child>a, .pagination>li:first-child>span {

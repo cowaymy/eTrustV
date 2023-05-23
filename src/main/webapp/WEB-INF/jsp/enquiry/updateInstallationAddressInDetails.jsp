@@ -16,6 +16,12 @@
        font-size:16px !important;
        line-height:1.5 !important;
     }
+
+
+    .myModalAlert{
+        width:100% !importanrt;
+    }
+
 </style>
 
 <script>
@@ -59,9 +65,8 @@
      fn_initAddress();
      CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , '', optionState);
 
-    //Enter Event
     $('#searchSt').keydown(function (event) {
-        if (event.which === 13) {    //enter
+        if (event.which === 13) {
             fn_addrSearch();
         }
     });
@@ -181,6 +186,7 @@
     function fn_addrSearch(){
 
         if (FormUtil.isEmpty($("#mState").val())) {
+        	console.log("set place 4")
             document.getElementById("MsgAlert").innerHTML =  "Please select State.";
             $("#alertModalClick").click();
             return false;
@@ -233,7 +239,6 @@
     }
 
     function fn_chkItemVal(){
-
         if(FormUtil.isEmpty($('#addrDtl').val())) {
              document.getElementById("MsgAlert").innerHTML = "Please Fill In Address 1*";
              $("#alertModalClick").click();
@@ -293,6 +298,57 @@
         document.querySelector(".modalCnt").style.wordSpacing = "5px";
     }
 
+    function rebindModal(){
+        $('#myModalConfirm').on('shown.bs.modal', function (e) {
+            setTimeout(() => {
+                e.stopImmediatePropagation()
+                let alertButton = document.querySelector("#myModalConfirm");
+                alertButton.style.display = "flex";
+                alertButton.style.alignItems = "center";
+                alertButton.style.width = "100%";
+                alertButton.style.justifyContent = "center";
+            }, 1)
+        });
+
+        $('#myModalTac').on('shown.bs.modal', function (e) {
+            setTimeout(() => {
+                e.stopImmediatePropagation()
+                let alertButton = document.querySelector("#myModalTac");
+                alertButton.style.display = "flex";
+                stylingCnt();
+            }, 1)
+        });
+
+        $('#myModalAlert2').on('shown.bs.modal', function (e) {
+            setTimeout(() => {
+                e.stopImmediatePropagation()
+                let alertButton = document.querySelector("#myModalAlert2");
+                alertButton.style.display = "flex";
+                stylingCnt();
+            }, 1)
+        });
+
+        $('#myModalComplete').on('shown.bs.modal', function (e) {
+            setTimeout(() => {
+                e.stopImmediatePropagation()
+                let alertButton = document.querySelector("#myModalComplete");
+                alertButton.style.display = "flex";
+                stylingCnt();
+            }, 1)
+        });
+
+        $('#myModalAlert').on('shown.bs.modal', function (e) {
+            setTimeout(() => {
+                e.stopImmediatePropagation()
+                let alertButton = document.querySelector("#myModalAlert");
+                alertButton.style.display = "flex";
+                alertButton.style.alignItems = "center";
+                alertButton.style.width = "100%";
+                alertButton.style.justifyContent = "center";
+            }, 1)
+        });
+    }
+
     $(function() {
 
          if(FormUtil.isEmpty('${SESSION_INFO.custId}')|| "${exception}" == "401") {
@@ -300,19 +356,7 @@
               window.top.location.href = '/enquiry/updateInstallationAddress.do';
          }
 
-
-         $('#myModalAlert2').on('shown.bs.modal', function (e) {
-             let alertButton = document.querySelector("#myModalAlert2");
-             alertButton.style.display = "flex";
-             stylingCnt();
-         });
-
-         $('#myModalComplete').on('shown.bs.modal', function (e) {
-             let alertButton = document.querySelector("#myModalAlert");
-             alertButton.style.display = "flex";
-             stylingCnt();
-         });
-
+        rebindModal();
         resize();
         let x = document.querySelector('.bottom_msg_box');
         x.style.display = "none";
@@ -329,14 +373,9 @@
         currentAddr.innerHTML += '${addrDtl}' + ' ' + '${street}' + ' ' + '${mailArea}' + ' ' + '${mailPostCode}' + ' ' + '${mailCity}' + ' ' + '${mailState}' + ' ' + '${mailCnty}';
 
         $('#btnUpdate').click(function(evt) {
+        	    evt.stopImmediatePropagation()
 
-	            var isVal = true;
-
-	            isVal = fn_chkItemVal();
-
-	            if(isVal == false){
-	                return;
-	            }else{
+	            if(fn_chkItemVal()){
 		                 let params = {
 		                		 custId : '${SESSION_INFO.custId}',
 		                		 orderNo:  '${orderNo}'
@@ -372,7 +411,7 @@
 
 
         $('#btnContinue').click(function(evt) {
-                    //console.log($("#tacForm").serializeJSON());
+
                     let param = {};
                     params = {
                             orderNo : "${orderNo}",
@@ -414,6 +453,7 @@
        });
 
        function getTacNo(){
+
     	   let paramsGetTac = {
     			   tacNo : $("#tacNo").val(),
     			   orderNo : "${orderNo}",
@@ -442,10 +482,12 @@
 
              if(fn!=null){
                  $('#myModalAlert').on('hide.bs.modal', function (event) {
+                	 console.log("place 1")
                      fn();
                  })
              } else {
             	 $('#myModalAlert').on('hide.bs.modal', function (event) {
+            		 console.log("set place2")
                  })
              }
        };
@@ -483,7 +525,7 @@
        startCountdown(0,1);
        startCountdown(180,0);
        $('#myModalTac').modal({backdrop: 'static', keyboard: false});
-       $('#myModalAlert').on('hide.bs.modal', function (event) {})
+       $('#myModalAlert').on('hide.bs.modal', function (event) {console.log("set place 3")})
    }
 
 
@@ -617,9 +659,6 @@
 
 </script>
 
-<style>
-
-</style>
 <%@ include file="/WEB-INF/jsp/enquiry/navigation.jsp" %>
 <div class="header22" id="updateDetails">
         <div class="pt-3"></div>
