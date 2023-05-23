@@ -47,21 +47,21 @@ $(document).ready(function() {
 
    /*  //to List
     $("#_btnList").click(function() {
-    	window.close();
+        window.close();
     }); */
 
     $("#_btnClose").click(function() {
-    	window.close();
-	});
+        window.close();
+    });
 
     var firstDateCalled = "${ccpInfoMap.firstCallDt}";
 
    if(firstDateCalled != null && firstDateCalled != '' && "${SESSION_INFO.roleId}" != "206"){
-    	$("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
+        $("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
         $("#firstCallDate").attr("class", "w100p readonly");
-    	$("#firstCallDate").attr("readonly", "readonly");
+        $("#firstCallDate").attr("readonly", "readonly");
     }else{
-    	$("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
+        $("#firstCallDate").val("${ccpInfoMap.firstCallDt}");
     }
 
     $("#custIsPayerValue").val("${ccpInfoMap.custIsPayer}");
@@ -98,15 +98,15 @@ $(document).ready(function() {
      $('#eResubmitTd').hide();
      console.log('${ccpEresubmitMap.salesOrdId}');
      if(!('${ccpEresubmitMap.salesOrdId}' == "" && '${ccpEresubmitMap.salesOrdId}' =="")){
-    	 var elements = document.getElementsByClassName("auto_file3");
-    	    for(var i = 0; i < elements.length; i++) {
-    	        elements[i].className = "auto_file3 auto_file2";
-    	    }
+         var elements = document.getElementsByClassName("auto_file3");
+            for(var i = 0; i < elements.length; i++) {
+                elements[i].className = "auto_file3 auto_file2";
+            }
 
-    	 $('#eResubmitAtch').show();
+         $('#eResubmitAtch').show();
          $('#eResubmitTh').show();
          $('#eResubmitTd').show();
-    	 if('${ccpEresubmitMap.atchFileGrpId}' != 0){
+         if('${ccpEresubmitMap.atchFileGrpId}' != 0){
              fn_loadAtchment('${ccpEresubmitMap.atchFileGrpId}');
          }
      }
@@ -163,9 +163,6 @@ $(document).ready(function() {
     $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
-    //CCP SMS Suspense
-    $("#_smsDiv").css("display" , "none");
-
     //SMS Checked
     // Consignment Change
     $("#_updSmsChk").change(function() {
@@ -173,14 +170,14 @@ $(document).ready(function() {
         $("#_updSmsMsg").val('');
         $("#_updSmsMsg").attr("disabled" , "disabled");
         if($("#_updSmsChk").is(":checked") == true){
-        	/* if(isAllowSendSMS() == true){
+            /* if(isAllowSendSMS() == true){
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage();
             } */
 
             var currStus = $("#_statusEdit").val();
             if(currStus != null && currStus != ''){
-            	fn_ccpStatusChangeFunc(currStus);
+                fn_ccpStatusChangeFunc(currStus);
             }
         }
     });
@@ -272,7 +269,7 @@ $(document).ready(function() {
         var callEntCount = 0;
 
         if(sst == 5495 || sst == 5496){
-        	callEntCount = 0;
+            callEntCount = 0;
         }
         else{
         Common.ajaxSync("GET", "/sales/ccp/countCallEntry", salData , function(result) {
@@ -454,9 +451,9 @@ function calSave(){
         var msg = "";
 
         msg += '<spring:message code="sal.alert.msg.successBr" />';
-        //msg += result.message; //SMS Result
+        msg += result.message; //SMS Result
 
-        //Common.alert(msg);
+        Common.alert(msg);
         //Btn Disabled
         $("#_calBtnSave").css("display" , "none");
 
@@ -486,8 +483,7 @@ function calSave(){
         $("#_experianRisk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         //experian
 
-        Common.alert(msg,$("#_calSearch").click());
-        //$("#_calSearch").click();
+        $("#_calSearch").click();
     });
 
 }
@@ -497,15 +493,15 @@ function calSave(){
 
 function fn_ccpStatusChangeFunc(getVal){
 
-	var isHold = $("#_onHoldCcp").is("checked") == true? 1 : 0;
-	var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
-	var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
+    var isHold = $("#_onHoldCcp").is("checked") == true? 1 : 0;
+    var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
+    var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
 
-	//experian
-	var experianScore = '${ccpInfoMap.ccpExperians}';
-	var experianRisk = '${ccpInfoMap.ccpExperianr}';
-	var experianbankrupt = '${ccpInfoMap.experianBankrupt}';
-	var expPrcss = '${ccpInfoMap.expPrcss}';
+    //experian
+    var experianScore = '${ccpInfoMap.ccpExperians}';
+    var experianRisk = '${ccpInfoMap.ccpExperianr}';
+    var experianbankrupt = '${ccpInfoMap.experianBankrupt}';
+    var expPrcss = '${ccpInfoMap.expPrcss}';
 
     //Init
     $("#_smsDiv").css("display" , "none");
@@ -549,17 +545,15 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_letterOfUdt").attr("disabled" , false);
 
             // 20210617 - LaiKW- Uncommented allow SMS section
-            //20230519 - Keyi - CCP SMS Suspend
-            /* if(isAllowSendSMS() == true){
+            if(isAllowSendSMS() == true){
                 $("#_smsDiv").css("display" , "");
                 $("#_updSmsChk").prop('checked', true) ;
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
-            } */
+            }
 
-            //20230519 - Keyi CCP SMS Suspend
-            /* if (expPrcss == 0){
-            	//sms  changed by Lee(2018/01/18)
+            if (expPrcss == 0){
+                //sms  changed by Lee(2018/01/18)
                 if(ficoScre >= 350 && ficoScre <= 450){
                     if(isHold == 0){   ////on hold
                         if(isAllowSendSMS() == true){
@@ -611,7 +605,7 @@ function fn_ccpStatusChangeFunc(getVal){
                         }
                     }
                 }
-            } */
+            }
         }else if(getVal == '5'){  // APPROVE
 
              //field //FICO it doesn`t work
@@ -645,17 +639,16 @@ function fn_ccpStatusChangeFunc(getVal){
              });
 
              //sms Changed by Lee (2018/01/18)
-             //20230519 Keyi CCP SMS Suspend
-             /* if(isAllowSendSMS() == true){
+             if(isAllowSendSMS() == true){
                  if(isHold == 0){
-                	 $("#_smsDiv").css("display" , "");
+                     $("#_smsDiv").css("display" , "");
                      $("#_updSmsMsg").attr("disabled" , false);
                      //$("#_updSmsChk").prop('checked', true) ;
                      $("#_updSmsChk").prop('checked', true) ;
                      $("#_reasonCodeEdit").val('');
                      setSMSMessage('Approved' , ' ');
                  }
-             } */
+             }
         }else if(getVal == '6'){  //CANCEL
 
             //field
@@ -699,7 +692,7 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
         score_group_style = "green_text";
         score_group_desc = "Good Score"
     }else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 3)){
-    	score_group_style = "black_text";
+        score_group_style = "black_text";
         score_group_desc = "Low Score";
     }else if(ccpFico == 9999 || ccpExperianr == 9999){
         score_group_style = "red_text";
@@ -761,17 +754,15 @@ function  bind_RetrieveData(){
         $("#_letterOfUdt").attr("disabled" , false);
 
         // 20210617 - LaiKW - Uncommented
-        // 20230519 - Keyi - CCP SMS Suspend
-        /* if(isAllowSendSMS() == true){
+        if(isAllowSendSMS() == true){
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
-        } */
+        }
 
-        // 20230519 - Keyi - CCP SMS Suspend
-        /* if (expPrcss == 0){
-        	//sms  changed by Lee(2018/01/18)
+        if (expPrcss == 0){
+            //sms  changed by Lee(2018/01/18)
 
             if(ficoScre >= 350 && ficoScre <= 450){
                 if(ccpHold == 0){   ////on hold
@@ -824,7 +815,7 @@ function  bind_RetrieveData(){
                     }
                 }
             }
-        } */
+        }
 
 
     }else if(ccpStus == "5"){
@@ -852,7 +843,7 @@ function  bind_RetrieveData(){
 
         //sms  changed by Lee(2018/01/18)
        /*  if(ficoScre >= 501 && ficoScre <= 850){
-        	if(ccpHold == 0){   ////on hold
+            if(ccpHold == 0){   ////on hold
                 if(isAllowSendSMS() == true){
                     $("#_smsDiv").css("display" , "");
                     $("#_updSmsChk").prop('checked', true) ;
@@ -861,7 +852,7 @@ function  bind_RetrieveData(){
                 }
             }
         }else if(ficoScre >= 451 && ficoScre <= 500){
-        	if(bankrupt == 0 && ccpHold == 0){
+            if(bankrupt == 0 && ccpHold == 0){
                 if(isAllowSendSMS() == true){
                     $("#_smsDiv").css("display" , "");
                     $("#_updSmsChk").prop('checked', true) ;
@@ -870,7 +861,7 @@ function  bind_RetrieveData(){
                 }
             }
         }else if(ficoScre == 0){
-        	if(bankrupt == 0 && ccpHold == 0){
+            if(bankrupt == 0 && ccpHold == 0){
                 if(isAllowSendSMS() == true){
                     $("#_smsDiv").css("display" , "");
                     $("#_updSmsChk").prop('checked', true) ;
@@ -971,7 +962,7 @@ function isAllowSendSMS(){
     var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
 
    // if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
-   	if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2 && salesmanMemTypeID != 7){
+    if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2 && salesmanMemTypeID != 7){
 
         Common.alert('<spring:message code="sal.alert.msg.notHpCody" />');
         return false;
@@ -1022,7 +1013,7 @@ function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
         async : false,
         contentType : "application/json;charset=UTF-8",
         beforeSend:function(){
-        	Common.showLoader();
+            Common.showLoader();
         },
         success : function(data) {
             var rData = data;
@@ -1032,7 +1023,7 @@ function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
             alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
         },
         complete: function(){
-        	Common.removeLoader();
+            Common.removeLoader();
         }
     });
 } ;
@@ -1115,63 +1106,63 @@ function chgTab(tabNm) {
 
 
  function fn_displayReport(viewType){
-	    var isRe = false;
-	    if (viewType == "FICO_VIEW"){
-	    	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
-	            console.log("result : " + result);
-	            console.log("content  :  " + JSON.stringify(result));
-	             if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
-	                 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
-	            }else{
-	                isRe  = true;
-	            }
-	        },'',{async : false});
-	    	if(isRe == true){
-	            Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
-	            return;
-	        }
-	    }else if(viewType == "EXPERIAN_VIEW"){
-	    	// Experian project
-	        Common.ajax("GET", "/sales/ccp/getResultRowForEXPERIANDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
-	            console.log("result : " + result);
-	            console.log("content  :  " + JSON.stringify(result));
-	             if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
-	                 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
-	            }else{
-	                isRe  = true;
-	            }
-	        },'',{async : false});
-	        if(isRe == true){
-	            Common.alert("No result from EXPERIAN");
-	            return;
-	        }
-	    }
+        var isRe = false;
+        if (viewType == "FICO_VIEW"){
+            Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
+                console.log("result : " + result);
+                console.log("content  :  " + JSON.stringify(result));
+                 if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+                     window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+                }else{
+                    isRe  = true;
+                }
+            },'',{async : false});
+            if(isRe == true){
+                Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
+                return;
+            }
+        }else if(viewType == "EXPERIAN_VIEW"){
+            // Experian project
+            Common.ajax("GET", "/sales/ccp/getResultRowForEXPERIANDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
+                console.log("result : " + result);
+                console.log("content  :  " + JSON.stringify(result));
+                 if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+                     window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+                }else{
+                    isRe  = true;
+                }
+            },'',{async : false});
+            if(isRe == true){
+                Common.alert("No result from EXPERIAN");
+                return;
+            }
+        }
  }
 
  function fn_suggestRem(text){
-	 var textarr = text.split('-');
-	 console.log("textarr  : " + JSON.stringify(textarr));
-	 var rtnStr = '';
-	 for (var idx = 0; idx < textarr.length; idx++) {
-		if(idx > 0){
-			rtnStr += textarr[idx];
-		}
-	}
+     var textarr = text.split('-');
+     console.log("textarr  : " + JSON.stringify(textarr));
+     var rtnStr = '';
+     for (var idx = 0; idx < textarr.length; idx++) {
+        if(idx > 0){
+            rtnStr += textarr[idx];
+        }
+    }
 
-	 return rtnStr;
+     return rtnStr;
  }
 
  function fn_chgFunFeedBack(val){
-	 var suggRem = fn_suggestRem($("#_reasonCodeEdit option:selected").text());
-	 //$("#_reasonCodeEdit").val(val);
-	 var ccpstus = $("#_ccpStusId").val();
-	 var rtnstr = '';
-	 if(ccpstus == 1){
-		 rtnstr = 'Pending';
-	 }else{
-		 rtnstr = 'Approved'
-	 }
-	  setSMSMessage(rtnstr , suggRem);
+     var suggRem = fn_suggestRem($("#_reasonCodeEdit option:selected").text());
+     //$("#_reasonCodeEdit").val(val);
+     var ccpstus = $("#_ccpStusId").val();
+     var rtnstr = '';
+     if(ccpstus == 1){
+         rtnstr = 'Pending';
+     }else{
+         rtnstr = 'Approved'
+     }
+      setSMSMessage(rtnstr , suggRem);
  }
 
  function fn_installationArea(){
@@ -1179,10 +1170,10 @@ function chgTab(tabNm) {
  }
 
  function fn_changeDetails(){
-	 $("#firstCallDateUpd").val($("#firstCallDate").val());
-	 console.log("HELLO : " + $("#firstCallDateUpd").val());
-	 console.log("HELLO2 : " + $("#firstCallDate").val());
-	}
+     $("#firstCallDateUpd").val($("#firstCallDate").val());
+     console.log("HELLO : " + $("#firstCallDateUpd").val());
+     console.log("HELLO2 : " + $("#firstCallDate").val());
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -1681,14 +1672,14 @@ function chgTab(tabNm) {
         <th scope="row">Failed Verification Reason</th>
     <td>
     <select class="w100p" id="failVeriReasonValue" name="failVeriReasonValue">
-	    <option value="" selected>Choose One</option>
-	        <option value="7219">SPONSOR</option>
-	        <option value="7220">RETURN TO SCORER</option>
-	        <option value="7221">UNREACHABLE</option>
-	        <option value="7222">CUSTOMER REQUEST CANCEL</option>
-	        <option value="7223">CUSTOMER CHANGE DETAILS</option>
-	        <option value="7230">REFUSAL ON VERIFICATION</option>
-	    </select>
+        <option value="" selected>Choose One</option>
+            <option value="7219">SPONSOR</option>
+            <option value="7220">RETURN TO SCORER</option>
+            <option value="7221">UNREACHABLE</option>
+            <option value="7222">CUSTOMER REQUEST CANCEL</option>
+            <option value="7223">CUSTOMER CHANGE DETAILS</option>
+            <option value="7230">REFUSAL ON VERIFICATION</option>
+        </select>
     </select>
     </td>
 </tr>
