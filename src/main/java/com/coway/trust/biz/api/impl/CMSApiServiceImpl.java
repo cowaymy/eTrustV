@@ -135,8 +135,8 @@ public class CMSApiServiceImpl extends EgovAbstractServiceImpl implements CMSApi
         try {
             fileHandler = getCmsCntcCsvHandler(file, cntcCsvColumns, null, filePath, subPath + map.get("date").toString() + "/", map);
 
-            largeExcelService.downloadCmsCntcCsv(map, fileHandler);
-
+/*            largeExcelService.downloadCmsCntcCsv(map, fileHandler);
+*/
             map.put("fileDir", subPath + map.get("date").toString() + "/" + file);
             sshPushFile(map);
 
