@@ -352,20 +352,28 @@ public class TagMgmtController {
 	  try{
 		    ReturnMessage message = new ReturnMessage();
 
-		    params.put("crtUserId", session.getUserId());
-			int result = tagMgmtService.insertInstallAddress(params);
-			int result2 = tagMgmtService.updateInstallInfo(params);
-			int result3 = tagMgmtService.updateRequestStatus(params);
+		    int result = 0, result2= 0 , result3=0;
 
-			if (result > 0 && result2 > 0 && result3 > 0) {
-		    	message.setCode(AppConstants.SUCCESS);
-		    	message.setMessage("Success to approve.");
-		    	setEmailData(params);
-			} else {
-				message.setMessage("Failed to approve this order number. Please try again later.");
-				message.setCode(AppConstants.FAIL);
-				throw new Error("Unable to update");
-			}
+		    List<Object> updateList = (List<Object>) params.get("param");
+
+		    for (int i = 0; i < updateList.size(); i++) {
+		    	Map<String, Object> insMap = (Map<String, Object>) updateList.get(i);
+		    	insMap.put("crtUserId", session.getUserId());
+		    	result = tagMgmtService.insertInstallAddress(insMap);
+		    	result2 = tagMgmtService.updateInstallInfo(insMap);
+		    	result3 = tagMgmtService.updateRequestStatus(insMap);
+
+				if (result > 0 && result2 > 0 && result3 > 0) {
+					setEmailData(insMap);
+			    }
+				else {
+    				message.setMessage("Failed to approve. Please try again later.");
+    				message.setCode(AppConstants.FAIL);
+    				throw new Error("Unable to update");
+				}
+		    }
+	    	message.setCode(AppConstants.SUCCESS);
+	    	message.setMessage("Success to approve.");
 			return ResponseEntity.ok(message);
 	  }
 	  catch(Exception e){

@@ -197,6 +197,9 @@ public class EnquiryServiceImpl implements EnquiryService {
 			return enquiryMapper.getEmailDetails(params);
 	  }
 
-
+     @Override
+	   public EgovMap getSubmissionTimes(Map<String, Object> params){
+			return enquiryMapper.getSubmissionTimes(params);
+	  }
 
 }

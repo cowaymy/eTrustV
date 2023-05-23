@@ -101,7 +101,9 @@
 	      skipReadonlyColumns : true,
 	      wrapSelectionMove : true,
 	      showRowNumColumn : true,
-	      editable : false
+	      editable : false,
+	      showRowCheckColumn : true
+
     };
 
     var excelGridPros = {
@@ -121,8 +123,9 @@
   }
 
   function confirmApproval(param){
+	  console.log("sdfsdf")
 	  console.log(param);
-	    Common.ajax("POST", "/services/tagMgmt/approveInstallationAddressRequest.do", param, function(result) {
+	    Common.ajax("POST", "/services/tagMgmt/approveInstallationAddressRequest.do", {param}, function(result) {
 	        Common.alert(result.message, fn_search);
 	    }, function(jqXHR, textStatus, errorThrown) {
 	        try {
@@ -144,27 +147,22 @@
       });
 
       $("#btnApproval").click(function() {
-    	    var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
 
-            if(selIdx > -1) {
+    	    let checkedItems = AUIGrid.getCheckedRowItemsAll(gridID);
 
-                var stus = AUIGrid.getCellValue(gridID, selIdx, "status");
-
-                if( stus == "Active" || stus =="Pending"){
-                    param = {
-                            salesOrderId : AUIGrid.getCellValue(gridID, selIdx, "salesOrdId")
-                          , custId : AUIGrid.getCellValue(gridID, selIdx, "custId")
-                          , requestId : AUIGrid.getCellValue(gridID, selIdx, "requestId")
-                  };
-                  var confirmApprovalMsg = "Are you sure want to update this order nunber : " + AUIGrid.getCellValue(gridID, selIdx, "orderNo") + "?";
-                  Common.confirm(confirmApprovalMsg, x=function() { confirmApproval(param)});
-                }
-                else{
-                	Common.alert('* Please check the status "ACT"/ "PENDING" status is only available.');
-                }
-            }else{
-                Common.alert('Update Installation Address' + DEFAULT_DELIMITER + 'No Order Selected');
-            }
+    	    if (checkedItems.length > 0) {
+    	    	for (let i = 0; i < checkedItems.length; i++) {
+    	    		if( checkedItems[i].status == "Active" || checkedItems[i].status =="Pending"){
+    	    			confirmApproval(checkedItems);
+    	    		}
+    	    		else{
+    	    		    Common.alert('* Please check the status "ACT"/ "PENDING" status is only available.');
+    	    		    return;
+    	    		}
+    	    	}
+    	    }else{
+    	    	   Common.alert('Update Installation Address' + DEFAULT_DELIMITER + 'No Order Selected');
+             }
       });
 
        //excel Download

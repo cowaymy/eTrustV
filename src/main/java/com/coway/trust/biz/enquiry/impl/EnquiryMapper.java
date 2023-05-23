@@ -42,4 +42,6 @@ public interface EnquiryMapper {
     void disabledPreviousRequest(Map<String, Object> params);
 
     EgovMap getEmailDetails(Map<String, Object> params);
+
+    EgovMap getSubmissionTimes(Map<String, Object> params);
 }

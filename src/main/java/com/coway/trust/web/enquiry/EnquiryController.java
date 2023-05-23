@@ -110,7 +110,7 @@ public class EnquiryController {
 		 	enquiryService.insertErrorLog(params);
 	 }
 
-	 @Transactional
+
 	 @RequestMapping(value = "/getCustomerLoginInfo.do")
 	  public ResponseEntity<ReturnMessage> getCustomerLoginInfo(@RequestParam Map<String, Object> params ) throws Exception{
 
@@ -199,6 +199,8 @@ public class EnquiryController {
     	    EgovMap getInfo = enquiryService.getCurrentPhoneNo(params);
 
     	    if(getInfo!=null && customerInfoList!=null){
+    	    	model.put("chkService", customerInfoList.get(0).get("chkService").toString());
+    	    	model.put("rentalStus", customerInfoList.get(0).get("rentalStus").toString());
         		model.put("orderNo", params.get("orderNo"));
         		model.put("orderId", customerInfoList.get(0).get("ordId").toString());
         		model.put("productDesc", customerInfoList.get(0).get("stkDesc").toString());
@@ -207,6 +209,8 @@ public class EnquiryController {
         		model.put("mailPostCode", customerInfoList.get(0).get("instPostcode").toString());
         		model.put("mailCity", customerInfoList.get(0).get("instCity").toString());
         		model.put("mailState", customerInfoList.get(0).get("instState").toString());
+        		model.put("mailCnty", customerInfoList.get(0).get("instCountry").toString());
+        		model.put("mailCnty", customerInfoList.get(0).get("instCountry").toString());
         		model.put("mailCnty", customerInfoList.get(0).get("instCountry").toString());
         		model.put("phoneNo", getInfo.get("phoneNo"));
         		model.put("exception", sessionVO.getCustId() == 0 ? "401" : params.get("exception"));
@@ -483,4 +487,9 @@ public class EnquiryController {
 		 	}
 	    }
 
+	 @RequestMapping(value = "/getSubmissionTimes.do", method = RequestMethod.GET)
+	 public ResponseEntity<EgovMap> getSubmissionTimes(@RequestParam Map<String, Object> params, ModelMap model) {
+	      EgovMap getSubmissionTimes = enquiryService.getSubmissionTimes(params);
+	      return ResponseEntity.ok(getSubmissionTimes);
+	 }
 }

@@ -9,16 +9,46 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon2.css"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
 
+<style>
+	.thClass{
+		vertical-align: middle;
+		text-align:center;
+		padding: 10px 0 !important;
+	}
+
+	th, td {
+	   line-height:1.5 !important;
+	   font-size: 16px !important;
+	}
+
+	.modalCnt {
+	   font-size:16px !important;
+	   line-height:1.5 !important;
+	}
+</style>
 
 <script>
+	function setModalContent(content){
+		return `<div class="row">
+				        <div class="col-sm-12 logo">
+				        <img src="${pageContext.request.contextPath}/resources/images/common/trueaddress_logo.png" alt="Coway">
+				      </div>
+				    </div>
+				    <div class="text-danger p-3 modalCnt">` + content + `</div>`;
+	}
+
+    let twoTimesSubmission = "Dear customer, you have submitted multiple submissions. Do you need further assistance? <br/><br/>  Our friendly staff is always ready to help. Kindly call Coway Careline at 1800-888-111. Thank you.";
+
+    let notREG = "Dear customer, the selected order number has a high outstanding bill. Please remit your payment in order to proceed for detail updates. <br/><br/> For more information, kindly call Coway Careline at 1800-888-111. Thank you";
+
+    let outOfWarranty = "Dear customer, kindly be informed that your product warranty has expired. <br/><br/> For more information, kindly call Coway Careline at 1800-888-111. Thank you."
+
     $(function() {
 
-    	  if(FormUtil.isEmpty('${SESSION_INFO.custId}') || "${exception}" == "401") {
+    	 if(FormUtil.isEmpty('${SESSION_INFO.custId}') || "${exception}" == "401") {
                 window.top.Common.showLoader();
                 window.top.location.href = '/enquiry/updateInstallationAddress.do';
-        }
-
-    	 document.getElementById("setHeight").style.minHeight = screen.height + "px";
+         }
 
          let x = document.querySelector('.bottom_msg_box');
          x.style.display = "none";
@@ -27,7 +57,45 @@
          totalCnt.setAttribute("data-to", '${totalCnt}');
 
          initialize();
-        });
+
+         $('#myModalAlert').on('shown.bs.modal', function (e) {
+        	 let alertButton = document.querySelector("#myModalAlert");
+        	 alertButton.style.display = "flex";
+             document.querySelector(".modal").style.flexDirection = "row";
+             document.querySelector(".modal-dialog").style.width = "90%";
+             document.querySelector(".modalCnt").style.border = "1px solid #ccc";
+             document.querySelector(".modalCnt").style.borderRadius = "25px";
+             document.querySelector(".modalCnt").style.wordSpacing = "5px";
+         });
+    });
+
+    function validate(order,chkService, stus){
+    	 Common.ajax("GET","/enquiry/getSubmissionTimes.do", {orderNo : order} , function (result, textStatus, jqXHR){
+    		 if(jqXHR.status == "200"){
+    			 if(result!=null && result.validChk > 3){
+                     document.getElementById("MsgAlert").innerHTML =  setModalContent(twoTimesSubmission);
+                     $("#alertModalClick").click();
+    		     }
+    		 }
+    	 });
+
+
+         if(stus =="SUS" || stus =="INV"){
+             document.getElementById("MsgAlert").innerHTML =  setModalContent(notREG);
+             $("#alertModalClick").click();
+             return;
+        }
+
+        if(!chkService){
+             document.getElementById("MsgAlert").innerHTML =  setModalContent(outOfWarranty);
+             $("#alertModalClick").click();
+             return;
+        }
+
+        goDetailsPage(order);
+    }
+
+
 
 
     function initialize(){
@@ -40,8 +108,7 @@
                 {
                     details.innerHTML +=
                         '<tr>'
-                    + '<td style="text-align:center;">' + result.data[i].salesOrdNo + '</td>'
-                    + '<td>' + result.data[i].stkDesc + '</td>'
+                    + '<td style="text-align:center;">' + result.data[i].salesOrdNo + ' <br/> ('+result.data[i].stkDesc +')</td>'
                     + '<td>'
                     + result.data[i].instAddrDtl + ' '
                     + result.data[i].instStreet + ' '
@@ -51,7 +118,7 @@
                     + result.data[i].instState + ' '
                     + result.data[i].instCountry
                     +'</td>'
-                    +'<td style="text-align:center;"><a href="../enquiry/updateInstallationAddressInDetails.do?orderNo='+result.data[i].salesOrdNo+'"><span class="material-symbols-outlined">edit</span></a></td>'
+                    +'<td style="text-align:center;"><a href="javascript:validate('+ result.data[i].salesOrdNo + ',' + result.data[i].chkService + ',' + `'`+ result.data[i].rentalStus + `'`+')"><span class="material-symbols-outlined">edit</span></a></td>'
                     + '</tr>';
                 }
             }
@@ -64,13 +131,10 @@
          $('#example_length').hide();
     }
 
-    function goDetailsPage(){
-        $("#mainPage").attr("target", "");
-        $("#mainPage").attr({
-            action: getContextPath() + "/enquiry/updateInstallationAddressInDetails.do",
-            method: "POST"
-        }).submit();
+    function goDetailsPage(order){
+    	window.location = "/enquiry/updateInstallationAddressInDetails.do?orderNo="+order;
     }
+
     (function ($) {
         $.fn.countTo = function (options) {
             options = options || {};
@@ -177,37 +241,39 @@
             <div class="counter">
       <i class="fa fa-lightbulb-o fa-2x"></i>
       <h2 class="timer count-title count-number" id="totalCnt" data-speed="1000"></h2>
-       <p class="count-text ">Total In Product</p>
+       <p class="count-text" style="line-height:1.5">Total In Product</p>
 </div>
 
-<section class="intro" style="font-size:30px!important">
-  <div class="bg-image h-100 pt-3" style="background-image: url(../resources/images/common/customerinfo2.jpg);">
-    <div class="mask d-flex align-items-center h-100">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12">
-            <div class="card mask-custom">
-              <div class="card-body" id="getHeight">
-                <div class="table-responsive">
-						<table id="example" class="table table-striped table-bordered" style="width:100%;">
-						        <thead>
-						            <tr>
-						                <th style="width:15%; vertical-align: middle; text-align:center;">Order No</th>
-						                <th style="width:25%; vertical-align: middle; text-align:center;">Products</th>
-						                <th style="width:40%; vertical-align: middle; text-align:center;">Current Installation Address</th>
-						                <th style="width:15%; vertical-align: middle; text-align:center;">Action</th>
-						            </tr>
-						        </thead>
-						        <tbody id ="details">
-						        </tbody>
-						  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-           <div id="setHeight"></div>
-        </div>
-      </div>
+  <div class="card pt-5" style="min-height: 100vh;background: rgba(134, 169, 191, 0.76)">
+     <div class="table-responsive">
+		<table id="example" class="table table-striped table-bordered" style="line-height:1.5 !important;">
+		        <thead>
+		            <tr>
+		                <th class="thClass" style="width:25%">Order</th>
+		                <th class="thClass" style="width:60%">Address</th>
+		                <th class="thClass"></th>
+		            </tr>
+		        </thead>
+		        <tbody id ="details"></tbody>
+		  </table>
     </div>
   </div>
-</section>
+
+<input type="button" id="alertModalClick" data-toggle="modal" data-target="#myModalAlert" hidden />
+<div class="modal" id="myModalAlert">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id="MsgAlert"></div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" style="width:100%;">Close</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -46,4 +46,6 @@ public interface EnquiryService {
 
 	EgovMap getEmailDetails(Map<String, Object> params);
 
+	EgovMap getSubmissionTimes(Map<String, Object> params);
+
 }

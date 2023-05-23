@@ -787,7 +787,7 @@
     SET ADD_ID = SAL0023D_CUST_ADD_ID_SEQ.CURRVAL
         , UPD_DT = SYSDATE
         , UPD_USER_ID = #{crtUserId}
-    WHERE SALES_ORD_ID = #{salesOrderId}
+    WHERE SALES_ORD_ID = #{salesOrdId}
   </update>
 
    <update id="updateRequestStatus" parameterType="Map" >

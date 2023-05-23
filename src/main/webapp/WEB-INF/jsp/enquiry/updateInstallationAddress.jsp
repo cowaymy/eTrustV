@@ -40,7 +40,6 @@
         $('#btnSubmit').click(function(evt) {
                  let param = {mobileNo : $("#mobileNo").val(),nricPass:$("#nricPass").val()};
                  Common.ajax("GET","/enquiry/getCustomerLoginInfo.do", param , function (result){
-                     console.log(result);
                      if(result.code =="00"){
                     	 document.getElementById("Msg").innerHTML =  result.message;
                     	 $("#successModalClick").click();
@@ -120,14 +119,13 @@
              </div>
 
             <div class="col-sm-6">
-                    <div style="height:180px"></div>
-                    <div class="row" style="margin-left:0 !important">
+                    <div style="height:160px"></div>
+                    <div class="row">
 			              <div class="col-sm-12 logo">
-			                      Coway Change <br>Your Life
+			                     <img src="${pageContext.request.contextPath}/resources/images/common/trueaddress_logo.png" alt="Coway">
 			              </div>
                     </div>
 
-                     <br>
                      <h3 class="header-title">LOGIN</h3>
 	                 <form class="login-form" id="loginForm" role="form">
 		                   <div class="form-group">

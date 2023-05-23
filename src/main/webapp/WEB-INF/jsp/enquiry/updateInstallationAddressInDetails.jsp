@@ -11,9 +11,33 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon3.css"/>
 
 
+<style>
+    .modalCnt {
+       font-size:16px !important;
+       line-height:1.5 !important;
+    }
+</style>
+
 <script>
     let interval;
     let areaJson;
+
+    function setModalContent(content){
+        return `<div class="row">
+                        <div class="col-sm-12 logo" style="display: flex; justify-content: center;">
+                        <img src="${pageContext.request.contextPath}/resources/images/common/trueaddress_logo.png" alt="Coway">
+                      </div>
+                    </div>
+                    <div class="text-danger p-3 modalCnt">` + content + `</div>`;
+    }
+
+    let twoTimesSubmission = "Dear customer, you have submitted multiple submissions. Do you need further assistance? <br/><br/>  Our friendly staff is always ready to help. Kindly call Coway Careline at 1800-888-111. Thank you.";
+
+    let notREG = "Dear customer, the selected order number has a high outstanding bill. Please remit your payment in order to proceed for detail updates. <br/><br/> For more information, kindly call Coway Careline at 1800-888-111. Thank you";
+
+    let outOfWarranty = "Dear customer, kindly be informed that your product warranty has expired. <br/><br/> For more information, kindly call Coway Careline at 1800-888-111. Thank you."
+
+    let completeSubmission = "Dear customer, your request has been received. <br/><br/>  It will be updated after the next working day. Thank you.";
 
     function resize(){
         $("#banner").width(screen.width + "px");
@@ -31,7 +55,7 @@
     let optionArea = {chooseMessage: "4. Area"};
 
     $(document).ready(function() {
-     //Filed Init
+
      fn_initAddress();
      CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , '', optionState);
 
@@ -233,6 +257,40 @@
             $("#alertModalClick").click();
             return false;
        }
+
+        Common.ajax("GET","/enquiry/getSubmissionTimes.do", {orderNo : '${orderNo}'} , function (result, textStatus, jqXHR){
+            if(jqXHR.status == "200"){
+                if(result!=null && result.validChk > 3){
+                    document.getElementById("MsgAlert2").innerHTML =  setModalContent(twoTimesSubmission);
+                    $("#alertModalClick2").click();
+                    return false;
+                }
+            }
+        });
+
+        if('${rentalStus}' =="SUS" || '${rentalStus}' =="INV"){
+            document.getElementById("MsgAlert2").innerHTML =  setModalContent(notREG);
+            $("#alertModalClick2").click();
+            return false;
+        }
+
+       if(!${chkService}){
+            document.getElementById("MsgAlert2").innerHTML =  setModalContent(outOfWarranty);
+            $("#alertModalClick2").click();
+            return false;
+       }
+        return true;
+
+    }
+
+    function stylingCnt(){
+        document.querySelector(".modal").style.flexDirection = "row";
+        document.querySelector(".modal-dialog").style.width = "90%";
+        document.querySelector(".modalCnt").style.display = "flex";
+        document.querySelector(".modalCnt").style.textAlign = "center";
+        document.querySelector(".modalCnt").style.border = "1px solid #ccc";
+        document.querySelector(".modalCnt").style.borderRadius = "25px";
+        document.querySelector(".modalCnt").style.wordSpacing = "5px";
     }
 
     $(function() {
@@ -241,6 +299,19 @@
               window.top.Common.showLoader();
               window.top.location.href = '/enquiry/updateInstallationAddress.do';
          }
+
+
+         $('#myModalAlert2').on('shown.bs.modal', function (e) {
+             let alertButton = document.querySelector("#myModalAlert2");
+             alertButton.style.display = "flex";
+             stylingCnt();
+         });
+
+         $('#myModalComplete').on('shown.bs.modal', function (e) {
+             let alertButton = document.querySelector("#myModalAlert");
+             alertButton.style.display = "flex";
+             stylingCnt();
+         });
 
         resize();
         let x = document.querySelector('.bottom_msg_box');
@@ -316,10 +387,9 @@
                     Common.ajax("GET","/enquiry/verifyTacNo.do", params , function (result){
                     	Common.showLoader();
                         if(result.code =="00"){
-
-                        	document.getElementById("MsgComplete").innerHTML = result.message;
-                        	Common.removeLoader();
-                            $("#completeModalClick").click();
+                        	 document.getElementById("MsgAlert2").innerHTML =  setModalContent(completeSubmission);
+                        	  Common.removeLoader();
+                             $("#alertModalClick2").click();
 
                             let counterClose = 5;
 
@@ -541,28 +611,25 @@
 	   fn_addMaddr($("#area").val(), $("#city").val(), $("#postcode").val(), $("#state").val(), $("#areaId").val(), $("#iso").val());
    }
 
+   function goPrevPage(){
+       window.location = "/enquiry/selectCustomerInfo.do";
+   }
+
 </script>
 
+<style>
 
+</style>
 <%@ include file="/WEB-INF/jsp/enquiry/navigation.jsp" %>
-
-<div id="updateDetails">
-      <div style="position:relative">
-        <img src="../resources/images/common/customerinfo4.jpg"  id="banner">
-        <div class="banner-caption">
-                <div class="container">
-		                <div class="row">
-		                    <div class="m-lg-5 col-sm-6" style="position:relative">
-		                         <br class="visible-xs">
-		                         <h3 class="fontSetting fontSize1">Update Installation Address</h3>
-		                         <p style="color: #60A4DA!important" class="fontSetting fontSize2">Unparalleled Customer Experience</p>
-		                         <p style="line-height:1.5" class="fontSetting fontSize3">With nationwide coverage, Coway's HEART Service is just one of the many reasons why we are the No.1 brand in wellness and healthy living.</p>
-		                        </div>
-		                </div>
-                </div>
-            </div>
-      </div>
+<div class="header22" id="updateDetails">
+        <div class="pt-3"></div>
+        <h3 class="fontSetting fontSize1 p-2">Update Installation Address</h3>
+        <p style="color: white!important" class="fontSetting fontSize2 p-2">Unparalleled Customer Experience</p>
+        <div class="p-2">
+            <p style="line-height:1.5" class="fontSetting fontSize3">With nationwide coverage, Coway's HEART Service is just one of the many reasons why we are the No.1 brand in wellness and healthy living.</p>
+        </div>
 </div>
+
 <br/>
 <div class="container" id="updateDetailsPage">
 <div class="row">
@@ -785,6 +852,26 @@
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                           <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal">Close</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="button" id="alertModalClick2" data-toggle="modal" data-target="#myModalAlert2" hidden />
+<div class="modal" id="myModalAlert2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id="MsgAlert2"></div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row">
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
+                          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" style="width:100%;" onclick="goPrevPage()">Close</button>
                           </div>
                     </div>
                 </div>

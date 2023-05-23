@@ -96,24 +96,24 @@ btn {
 }
 
 .fontSize2 {
-    font-size:20px;
+    font-size:28px;
 }
 
 .fontSize3 {
-    font-size:24px;
+    font-size:30px;
 }
 
 @media screen and (max-width:768px) {
     .fontSize1 {
-        font-size:20px;
+        font-size:25px;
     }
 
     .fontSize2 {
-        font-size:12px;
+        font-size:15px;
     }
 
     .fontSize3 {
-        font-size:15px;
+        font-size:18px;
     }
 
      #banner {
@@ -212,5 +212,13 @@ pagination>li:first-child>a, .pagination>li:first-child>span {
 
 .toggleColor2 {
     background-color: transparent !important;
+}
+
+.header22 {
+/*   background-color: #f1f1f1; */
+  padding: 30px;
+  text-align: center;
+  background-image:  url(../images/common/customerBackground.png);
+  background-color: rgba(134, 169, 191, 0.76);
 }
 

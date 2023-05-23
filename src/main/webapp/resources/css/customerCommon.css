@@ -27,7 +27,6 @@ body {
     font-size: 50px;
     text-align: center;
     color: #3BC3FF;
-    margin-bottom: 50px;
 }
 
 .logo .logo-font {
@@ -155,4 +154,6 @@ btn {
 /* 	padding-right: auto !important; */
     padding-right: 15px;
 }
+
+
 
