@@ -14,61 +14,61 @@
         <div class="container-fluid" style="flex:2" >
                <div class="card mainBorderColor m-auto" style="max-width:576px">
                         <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
-                            <h5 class="header">Butiran Pesanan</h5>
+                            <h5 class="header">Order Information</h5>
                         </div>
                         <div>
                         <div class="card-body m-4 mainBorderColor"  id="page1">
                                 <div class="row">
-                                      <div class="col-12 font-italic"><h5 class="text-danger">Pesanan ini telah dihantarkan.</h5></div>
+                                      <div class="col-12 font-italic"><h5 class="text-danger">This order has been submitted.</h5></div>
                                 </div>
                                 <div class="row">
-                                      <div class="col-6"><h4>Nombor Pemasangan: </h4></div>
+                                      <div class="col-6"><h4>Installation Note: </h4></div>
                                       <div class="col-6"><h4 class="font-weight-bold">${installationInfo.installEntryNo}</h4></div>
                                 </div>
                                 <div class="row">
-                                          <div class="col-6"><h5>Nombor Pesanan: </h5></div>
+                                          <div class="col-6"><h5>Order No: </h5></div>
                                           <div class="col-6"><h5>${installationInfo.salesOrdNo}</h5></div>
                                  </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Tarikh Pesanan: </h5></div>
+                                     <div class="col-6"><h5>Order Date: </h5></div>
                                      <div class="col-6"><h5 id="salesDt"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Tarikh Temu Janji: </h5></div>
+                                     <div class="col-6"><h5>Appointment Date: </h5></div>
                                      <div class="col-6"><h5 id="doDt"></h5></div>
                                 </div>
                                 <div class="row complete">
-                                     <div class="col-6"><h5>Imbas Kod Bar Dalaman: </h5></div>
+                                     <div class="col-6"><h5>Indoor Serial Number: </h5></div>
                                      <div class="col-6"><h5>${installationInfo.serialNo}</h5></div>
                                 </div>
                                 <div class="row complete">
-                                     <div class="col-6"><h5>Imbas Kod Bar Luaran: </h5></div>
+                                     <div class="col-6"><h5>Outdoor Serial Number: </h5></div>
                                      <div class="col-6"><h5>${installationInfo.serialNo2}</h5></div>
                                 </div>
                                 <div class="row fail">
-	                                <div class="col-6"><h5>Lokasi Gagal Pemasangan: </h5></div>
+	                                <div class="col-6"><h5>Fail Location: </h5></div>
 	                                <div class="col-6"><h5 id="location"></h5></div>
                                 </div>
                                 <div class="row fail">
-                                    <div class="col-6"><h5>Sebab Gagal: </h5></div>
+                                    <div class="col-6"><h5>Fail Reason: </h5></div>
                                     <div class="col-6"><h5 id="reason"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Catatan: </h5></div>
+                                     <div class="col-6"><h5>Remark: </h5></div>
                                      <div class="col-6"><h5>${installationInfo.remark}</h5></div>
                                 </div>
                         </div>
 
                        <div class="card-body m-4 mainBorderColor" id="page2">
                                <div class="row">
-                                     <div class="col-12"><h5>Pemasangan ini (${installationInfo.installEntryNo}) telah disiapkan.</h5></div>
+                                     <div class="col-12"><h5>This installation (${installationInfo.installEntryNo}) has been completed.</h5></div>
                                </div>
                        </div>
 
 
                        <div class="card-body m-4 mainBorderColor" id="page3">
                                <div class="row">
-                                     <div class="col-12"><h5>Pemasangan ini (${installationInfo.installEntryNo}) telah gagal.</h5></div>
+                                     <div class="col-12"><h5>This installation (${installationInfo.installEntryNo}) has been failed.</h5></div>
                                </div>
                        </div>
 
@@ -79,8 +79,8 @@
 
 <div style="display:none;">
       <select class="form-control" id="failLoc">
-              <option value="8000">GAGAL DI LOKASI</option>
-              <option value="8100">GAGAL SEBELUM SAMPAI DI LOKASI</option>
+              <option value="8000">FAILED AT LOCATION</option>
+              <option value="8100">FAIL BEFORE ARRIVE LOCATION</option>
       </select>
       <select class="w100p" id=failReasonCode name="failReasonCode">
       </select>

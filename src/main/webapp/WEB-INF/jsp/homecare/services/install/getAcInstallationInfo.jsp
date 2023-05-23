@@ -14,35 +14,35 @@
         <div class="container-fluid" style="flex:2">
 		       <div class="card mainBorderColor m-auto" style="max-width:576px">
 					    <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
-					        <h5 class="header">Butiran Pesanan</h5>
+					        <h5 class="header">Order Information</h5>
 					    </div>
 			            <div class="card-body m-4 mainBorderColor">
 							    <div class="row">
-							          <div class="col-6"><h4>Nombor Pemasangan: </h4></div>
+							          <div class="col-6"><h4>Installation Note: </h4></div>
 							          <div class="col-6"><h4 class="font-weight-bold">${installationInfo.installEntryNo}</h4></div>
 							    </div>
 								<div class="row">
-								          <div class="col-6"><h5>Nombor Pesanan: </h5></div>
+								          <div class="col-6"><h5>Order No: </h5></div>
 								          <div class="col-6"><h5>${installationInfo.salesOrdNo}</h5></div>
 								 </div>
 					            <div class="row">
-					                 <div class="col-6"><h5>Tarikh Pesanan: </h5></div>
+					                 <div class="col-6"><h5>Order Date: </h5></div>
 					                 <div class="col-6"><h5 id="salesDt"></h5></div>
 					            </div>
 					            <div class="row">
-					                 <div class="col-6"><h5>Tarikh Temu Janji: </h5></div>
+					                 <div class="col-6"><h5>Appointment Date: </h5></div>
 					                 <div class="col-6"><h5 id="doDt"></h5></div>
 					            </div>
 			            </div>
 				        <div class="row justify-content-center mt-3">
 				              <div class="col-5">
 				                    <div class="form-group">
-				                         <p class="btn btn-primary btn-block btn-lg"  id="btnComplete" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Selesai</a></p>
+				                         <p class="btn btn-primary btn-block btn-lg"  id="btnComplete" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Completed</a></p>
 				                    </div>
 				              </div>
 				              <div class="col-5">
 				                    <div class="form-group">
-				                         <p class="btn btn-danger btn-block btn-lg"  id="btnFail" ><a href="javascript:void(0);" style="color:white">Gagal</a></p>
+				                         <p class="btn btn-danger btn-block btn-lg"  id="btnFail" ><a href="javascript:void(0);" style="color:white">Failed</a></p>
 				                    </div>
 				              </div>
 				          </div>
@@ -90,7 +90,7 @@
                 window.location = "/homecare/services/install/getAcInsFail.do?insNo=${insNo}";
             }
             else{
-                   document.getElementById("MsgAlert").innerHTML =  "Pesanan ini tidak dibenarkan untuk diserahkan lagi";
+                   document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
                  $("#alertModalClick").click();
             }
         });
@@ -105,7 +105,7 @@
             	window.location = "/homecare/services/install/getAcInsComplete.do?insNo=${insNo}";
             }
             else{
-            	   document.getElementById("MsgAlert").innerHTML =  "Pesanan ini tidak dibenarkan untuk diserahkan lagi";
+            	   document.getElementById("MsgAlert").innerHTML =  "This order is not allowed to submit again.";
                  $("#alertModalClick").click();
             }
         });

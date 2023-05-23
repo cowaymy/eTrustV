@@ -52,21 +52,21 @@
         <div class="container-fluid" style="flex:2">
                <div class="card mainBorderColor m-auto" style="max-width:576px">
                         <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
-                            <h5 class="header">Pilih Sebab Gagal</h5>
+                            <h5 class="header">Choose Failed Reason</h5>
                         </div>
                         <div class="card-body m-4 mainBorderColor">
                         <form>
 
 								<div class="form-outline col">
-								            <h5>&nbsp;Lokasi Gagal Pemasangan :</h5>
+								            <h5>&nbsp;Failed Location :</h5>
 								            <select class="form-control" id="failLoc">
-								                    <option value="" selected>--Pilihan--</option>
-								                    <option value="8000">GAGAL DI LOKASI</option>
-								                    <option value="8100">GAGAL SEBELUM SAMPAI DI LOKASI</option>
+								                    <option value="" selected>--Select Options--</option>
+								                    <option value="8000">FAIL AT LOCATION</option>
+								                    <option value="8100">FAIL BEFORE ARRIVE LOCATION</option>
 								            </select>
 								</div>
 								<div class="form-outline mt-3 col">
-								            <h5>&nbsp;Sebab Gagal :</h5>
+								            <h5>&nbsp;Failed Reason :</h5>
 								            <select class="form-control" id="failReason"></select>
 								</div>
                         </form>
@@ -74,12 +74,12 @@
                         <div class="row justify-content-center mt-3">
                                <div class="col-5">
                                     <div class="form-group">
-                                         <p class="btn btn-primary btn-block btn-lg"  id="btnBackMain" style="background:#B1D4E7  !important"><a href="javascript:void(0);" style="color:white">Kembali</a></p>
+                                         <p class="btn btn-primary btn-block btn-lg"  id="btnBackMain" style="background:#B1D4E7  !important"><a href="javascript:void(0);" style="color:white">Back</a></p>
                                     </div>
                               </div>
                               <div class="col-5">
                                     <div class="form-group">
-                                         <p class="btn btn-primary btn-block btn-lg"  id="btnNextPage2" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Seterusnya</a></p>
+                                         <p class="btn btn-primary btn-block btn-lg"  id="btnNextPage2" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Next</a></p>
                                     </div>
                               </div>
                         </div>
@@ -94,7 +94,7 @@
         <div class="container-fluid" style="flex:2">
                <div class="card mainBorderColor m-auto" style="max-width:576px">
                         <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
-                            <h5 class="header">Foto Diperlukan</h5>
+                            <h5 class="header">Required Photos</h5>
                         </div>
                         <div class="card-body m-4 mainBorderColor">
                         <form>
@@ -104,12 +104,12 @@
                         <div class="row justify-content-center mt-3">
                                <div class="col-5">
                                     <div class="form-group">
-                                         <p class="btn btn-primary btn-block btn-lg"  id="btnBackPage1" style="background:#B1D4E7  !important"><a href="javascript:void(0);" style="color:white">Kembali</a></p>
+                                         <p class="btn btn-primary btn-block btn-lg"  id="btnBackPage1" style="background:#B1D4E7  !important"><a href="javascript:void(0);" style="color:white">Back</a></p>
                                     </div>
                               </div>
                               <div class="col-5">
                                     <div class="form-group">
-                                         <p class="btn btn-primary btn-block btn-lg"  id="btnNextPage3" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Seterusnya</a></p>
+                                         <p class="btn btn-primary btn-block btn-lg"  id="btnNextPage3" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Next</a></p>
                                     </div>
                               </div>
                         </div>
@@ -125,41 +125,41 @@
         <div class="container-fluid" style="flex:2">
                <div class="card mainBorderColor m-auto" style="max-width:576px">
                         <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
-                            <h5 class="header">Pengesahan</h5>
+                            <h5 class="header">Verification</h5>
                         </div>
                         <div class="card-body m-4 mainBorderColor">
                                 <div class="row">
-                                      <div class="col-6"><h4>Nombor Pemasangan: </h4></div>
+                                      <div class="col-6"><h4>Installation Note: </h4></div>
                                       <div class="col-6"><h4 class="font-weight-bold">${installationInfo.installEntryNo}</h4></div>
                                 </div>
                                 <div class="row">
-                                          <div class="col-6"><h5>Nombor Pesanan: </h5></div>
+                                          <div class="col-6"><h5>Order No: </h5></div>
                                           <div class="col-6"><h5>${installationInfo.salesOrdNo}</h5></div>
                                  </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Tarikh Pesanan: </h5></div>
+                                     <div class="col-6"><h5>Order Date: </h5></div>
                                      <div class="col-6"><h5 id="salesDt"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Tarikh Temu Janji: </h5></div>
+                                     <div class="col-6"><h5>Appointment Date: </h5></div>
                                      <div class="col-6"><h5 id="doDt"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Lokasi Gagal: </h5></div>
+                                     <div class="col-6"><h5>Failed Location: </h5></div>
                                      <div class="col-6"><h5 id="location"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Sebab Gagal: </h5></div>
+                                     <div class="col-6"><h5>Failed Reason: </h5></div>
                                      <div class="col-6"><h5 id="reason"></h5></div>
                                 </div>
                                 <div class="row">
-                                     <div class="col-6"><h5>Catatan:</h5></div>
+                                     <div class="col-6"><h5>Remark:</h5></div>
                                 </div>
                                 <div class="row">
                                      <div class="col-12"><textarea id="remark"  rows="4" cols="50"></textarea></div>
                                 </div>
                                 <div class="row" style="display:none;" id="failTitle">
-                                     <div class="col-6"><h4 class="text-danger">Gagal: </h4></div>
+                                     <div class="col-6"><h4 class="text-danger">Failed: </h4></div>
                                 </div>
                                 <div id="displayUploadContainer"></div>
 
@@ -167,12 +167,12 @@
                         <div class="row justify-content-center mt-3">
                                <div class="col-5">
                                     <div class="form-group">
-                                         <p class="btn btn-primary btn-block btn-lg"  id="btnBackPage2" style="background:#B1D4E7  !important"><a href="javascript:void(0);" style="color:white">Kembali</a></p>
+                                         <p class="btn btn-primary btn-block btn-lg"  id="btnBackPage2" style="background:#B1D4E7  !important"><a href="javascript:void(0);" style="color:white">Back</a></p>
                                     </div>
                               </div>
                               <div class="col-5">
                                     <div class="form-group">
-                                         <p class="btn btn-primary btn-block btn-lg"  id="btnSubmit" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Hantar</a></p>
+                                         <p class="btn btn-primary btn-block btn-lg"  id="btnSubmit" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Submit</a></p>
                                     </div>
                               </div>
                         </div>
@@ -185,7 +185,7 @@
     <div class="modal-dialog">
         <div class="modal-content" style="height:200px">
             <div class="modal-header">
-                <h4 class="modal-title">Maklumat Sistem</h4>
+                <h4 class="modal-title">System Information</h4>
             </div>
             <div class="modal-body" id="MsgAlert" style="font-size:14px;"></div>
             <div class="modal-footer">
@@ -193,7 +193,7 @@
                     <div class="row">
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal"  style="width:100%;background:#4f90d6 !important;">Tutup</button>
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal"  style="width:100%;background:#4f90d6 !important;">Close</button>
                           </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
     <div class="modal-dialog">
         <div class="modal-content" style="height:200px">
             <div class="modal-header">
-                <h4 class="modal-title">Maklumat Sistem</h4>
+                <h4 class="modal-title">System Information</h4>
             </div>
             <div class="modal-body" id="MsgAlert2" style="font-size:14px;"></div>
             <div class="modal-footer">
@@ -215,7 +215,7 @@
                     <div class="row">
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12"></div>
                           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" onclick="reload()" style="width:100%;background:#4f90d6 !important;">Tutup</button>
+                          <button type="button" class="btn btn-primary btn-block float-right" data-dismiss="modal" onclick="reload()" style="width:100%;background:#4f90d6 !important;">Close</button>
                           </div>
                     </div>
                 </div>
@@ -348,7 +348,7 @@
 	        aElement.classList.add("foto");
 	        aElement.style.display = "flex";
 	        aElement.style.alignItems = "center";
-	        aElement.innerText = "Foto";
+	        aElement.innerText = "Photo";
 
 	        const imageCont = document.createElement("div");
 	        imageCont.classList.add("p-2");
@@ -367,12 +367,12 @@
 	        upload.onchange = (e) => {
 	            if(e.target.files[0].type !="image/jpeg" && e.target.files[0].type !="image/png"){
 	                if(!iOS){
-	                    document.getElementById("MsgAlert").innerHTML =  "Hanya boleh memuat naik fail imej png dan jpeg";
+	                    document.getElementById("MsgAlert").innerHTML =  "Only can upload images file with .png / .jpg";
 	                    $("#alertModalClick").click();
 	                }
 	            }
 	            else if(e.target.files[0].size > 2048000){
-	                document.getElementById("MsgAlert").innerHTML =  "Tidak boleh memuat naik fail imej melebihi 2MB.";
+	                document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
 	                $("#alertModalClick").click();
 	            }
 	            else{
@@ -404,7 +404,7 @@
 	        aElement2.style.alignItems = "center";
 	        aElement2.classList.add("m-2");
 	        aElement2.classList.add("kamera");
-	        aElement2.innerText = "Kamera";
+	        aElement2.innerText = "Camera";
 
 	        const aElement3 = document.createElement("a");
 	        aElement3.classList.add("btn");
@@ -414,7 +414,7 @@
 	        aElement3.style.alignItems = "center";
 	        aElement3.classList.add("m-2");
 	        aElement3.classList.add("tangkap");
-	        aElement3.innerText = "Tangkap";
+	        aElement3.innerText = "Capture";
 
 	        openCamera.style.display = "none";
 	        screenshot.style.display = "none";
@@ -485,7 +485,7 @@
     getErrorCode = () => {
 	    	failReason.innerHTML = "";
 	        if(!document.querySelector("#failLoc option:checked").value){
-	            failReason.innerHTML += "<option value=''>--Pilih Sebab Gagal--</option>";
+	            failReason.innerHTML += "<option value=''>--Select Reason--</option>";
 	        }else{
 		    	fetch("/homecare/services/install/selectFailChild.do?groupCode=" + document.querySelector("#failLoc option:checked").value)
 		    	.then(r => r.json())
@@ -552,13 +552,13 @@
             })
         })
         .then(() => {
-        	document.getElementById("MsgAlert2").innerHTML =  "Pemasangan telah lengkap. Sila tutup paparan ini.";
+        	document.getElementById("MsgAlert2").innerHTML =  "Pre-installation created! You may proceed to close this page.";
             $("#alertModalClick2").click();
         })
         .catch(() => {
             document.querySelector("#btnSubmit").style.display="";
             document.querySelector("#btnBackPage2").style.display="";
-        	document.getElementById("MsgAlert").innerHTML =  "Pemasangan gagal untuk dihantar.";
+        	document.getElementById("MsgAlert").innerHTML =  "Pre-installation insert failed!";
         	$("#alertModalClick").click();
         })
     }
@@ -597,7 +597,7 @@
                        .then(r=> {
 
                            if(r.code =="99"){
-                               document.getElementById("MsgAlert").innerHTML =  "Pemasangan gagal untuk dihantar. Sila tukar gambar anda.";
+                               document.getElementById("MsgAlert").innerHTML =  "Pre-Installation is failed to submit. Please upload another image.";
                                $("#alertModalClick").click();
                                return;
                            }
