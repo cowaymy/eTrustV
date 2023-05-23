@@ -158,16 +158,21 @@
         UPDATE FCM0001M
             SET
             <if test ="disabFlag != null and disabFlag != '' ">
+             <if test="disabFlag == 'Y'.toString()">
                 DISAB_FLAG = #{disabFlag}
               , DISAB_USER_ID = #{userId}
               , DISAB_DT = SYSDATE
+             </if>
+             <if test="disabFlag == 'N'.toString()">
+                DISAB_FLAG = ''
+              , DISAB_USER_ID = NULL
+              , DISAB_DT = NULL
+             </if>
             </if>
-            <if test ="disabFlag == null or disabFlag == '' ">
-                GL_ACC_CODE = #{glAccCode}
+              , GL_ACC_CODE = #{glAccCode}
               , GL_ACC_CODE_NAME = #{glAccCodeName}
               , BUDGET_CODE = #{budgetCode}
               , BUDGET_CODE_NAME = #{budgetCodeName}
-            </if>
             <if test="cntrlFlag != null and cntrlFlag != '' ">
               , CNTRL_EXP = #{cntrlFlag}
             </if>
