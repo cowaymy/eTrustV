@@ -52,7 +52,6 @@ $(document).ready(function() {
 
     $("#_btnClose").click(function() {
     	window.close();
-    	$("#_calSearch").click();
 	});
 
     var firstDateCalled = "${ccpInfoMap.firstCallDt}";
@@ -487,8 +486,8 @@ function calSave(){
         $("#_experianRisk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         //experian
 
-        Common.alert(msg);
-        $("#_calSearch").click();
+        Common.alert(msg,$("#_calSearch").click());
+        //$("#_calSearch").click();
     });
 
 }
