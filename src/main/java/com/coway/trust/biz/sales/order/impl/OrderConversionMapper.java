@@ -87,9 +87,6 @@ public interface OrderConversionMapper {
 
 	List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params);
 
-	List<EgovMap> selectOrdPayCnvrList(Map<String, Object> params);
-
-   	int countPaymodeCnvrExcelList(Map<String, Object> params);
-
+	List<EgovMap> paymodeCnvrOrdListRpt(Map<String, Object> params);
 
 }

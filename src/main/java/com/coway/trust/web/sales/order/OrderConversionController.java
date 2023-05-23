@@ -1,12 +1,10 @@
 package com.coway.trust.web.sales.order;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.sales.customer.CustomerVO;
 import com.coway.trust.biz.sales.order.OrderConversionService;
 import com.coway.trust.biz.sales.pst.PSTRequestDOVO;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.web.common.excel.download.ExcelDownloadFormDef;
-import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
-import com.coway.trust.web.common.excel.download.ExcelDownloadVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -51,9 +44,6 @@ public class OrderConversionController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
-
-	@Autowired
-	private LargeExcelService largeExcelService;
 
 	/**
 	 * 화면 호출. orderConversionList
@@ -363,58 +353,9 @@ public class OrderConversionController {
 	@RequestMapping(value = "/paymodeCnvrOrdListRpt.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> paymodeCnvrOrdListRpt(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 
-		List<EgovMap> conversionList = orderConversionService.selectOrdPayCnvrList(params);
+		List<EgovMap> conversionList = orderConversionService.paymodeCnvrOrdListRpt(params);
 
 		return ResponseEntity.ok(conversionList);
 	}
-
-	private ExcelDownloadHandler getExcelDownloadHandler(HttpServletResponse response, String fileName,
-			String[] columns, String[] titles) {
-		ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(fileName, columns, titles);
-		return new ExcelDownloadHandler(excelDownloadVO, response);
-	}
-
-	@RequestMapping(value = "/paymodeCnvrOrdListRpt2.do")
-	public void paymodeCnvrOrdListRpt2(@RequestParam Map<String, Object>params, HttpServletRequest request, HttpServletResponse response) {
-
-		ExcelDownloadHandler downloadHandler = null;
-
-		try {
-
-	        Map<String, Object> map = new HashMap<String, Object>();
-			map.put("createStDate", request.getParameter("createStDate") == null ? "01/01/1900" :  request.getParameter("createStDate"));
-			map.put("createEnDate", request.getParameter("createEnDate") == null ? "01/01/1900" :  request.getParameter("createEnDate"));
-
-			String[] columns;
-	        String[] titles;
-
-	        columns = new String[] { "salesOrdNo","crtDt","oldPmode","newPmode","remark","reqdesc","creator","saleskeyinbranch","platform"};
-			titles = new String[] {"ORDERNO","DATE","OLDPAYMODE","NEWPAYMODE","REMARKS","REQDESC","CREATOR", "SALESKEYINBRANCH", "PLATFORM"};
-
-			downloadHandler = getExcelDownloadHandler(response, "OrderListReport.xlsx", columns, titles);
-
-			largeExcelService.downloadOrdPayCnvrList(map, downloadHandler);
-
-		} catch (Exception ex) {
-			throw new ApplicationException(ex, AppConstants.FAIL);
-		} finally {
-			if (downloadHandler != null) {
-				try {
-					downloadHandler.close();
-				} catch (Exception ex) {
-					logger.info(ex.getMessage());
-				}
-			}
-		}
-	}
-
-	@RequestMapping(value = "/countPaymodeCnvrExcelList.do", method = RequestMethod.GET)
-	public ResponseEntity<Integer> countPaymodeCnvrExcelList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-
-		int cnt = orderConversionService.countPaymodeCnvrExcelList(params);
-		return ResponseEntity.ok(cnt);
-	}
-
-
 
 }

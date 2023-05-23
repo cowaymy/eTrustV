@@ -337,13 +337,7 @@ public List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params) {
 	return orderConversionMapper.paymodeConversionViewItmList(params);
 }
 
-public List<EgovMap> selectOrdPayCnvrList(Map<String, Object> params) {
-	return orderConversionMapper.selectOrdPayCnvrList(params);
-}
-
-@Override
-public int countPaymodeCnvrExcelList(Map<String, Object> params) {
-	// TODO Auto-generated method stub
-	return orderConversionMapper.countPaymodeCnvrExcelList(params);
+public List<EgovMap> paymodeCnvrOrdListRpt(Map<String, Object> params) {
+	return orderConversionMapper.paymodeCnvrOrdListRpt(params);
 }
 }

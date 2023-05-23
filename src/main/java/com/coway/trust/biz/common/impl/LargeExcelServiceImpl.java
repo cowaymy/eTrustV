@@ -387,9 +387,4 @@ public class LargeExcelServiceImpl implements LargeExcelService {
     public void downloadCmsCntcCsv(Object parameter, CMSCntcCsvHandler cmsCntcCsvHandler) {
         this.downLoad(LargeExcelQuery.CMS_CNTC_API.getQueryId(), parameter, cmsCntcCsvHandler);
     }
-
-    @Override
-    public void downloadOrdPayCnvrList(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
-        this.downLoad(LargeExcelQuery.PAY_CNVR_LIST.getQueryId(), parameter, excelDownloadHandler);
-    }
 }

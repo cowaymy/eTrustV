@@ -194,13 +194,14 @@
     }
 
     function fn_genOrdListRpt(){
+
     	console.log(excelGridID);
 
-        var msg = "";
+    	var msg = "";
 
-        var morgrid;
+    	var morgrid;
 
-          if(FormUtil.isEmpty($('#createStDate').val()) || FormUtil.isEmpty($('#createEnDate').val())) {
+    	  if(FormUtil.isEmpty($('#createStDate').val()) || FormUtil.isEmpty($('#createEnDate').val())) {
               msg += 'Please fill in create date';
               Common.alert(msg);
           }
@@ -210,32 +211,25 @@
 
               var diffDay = fn_diffDate($('#createStDate').val(), $('#createEnDate').val());
 
-              if(diffDay > 91 || diffDay < 0) {
-                  msg += 'Create date must be within 3 months';
+              if(diffDay > 181 || diffDay < 0) {
+                  msg += 'Create date must be within 6 months';
                   Common.alert(msg);
               }
               else {
+                  Common.ajax("GET", "/sales/order/paymodeCnvrOrdListRpt.do", $("#searchForm").serialize(), function(result) {
+                	  console.log(result);
+                       AUIGrid.setGridData(excelGridID, result);
+                       if(result.length > -1){
+                    	   fn_excelDown();
+                       }
 
-            	  Common.ajax("GET", "/sales/order/countPaymodeCnvrExcelList.do", $("#searchForm").serialize(), function(result) {
-                      var cnt = result;
-                      if(cnt > 0){
-                          Common.showLoader();
-                          $.fileDownload("/sales/order/paymodeCnvrOrdListRpt2.do?createStDate=" + $('#createStDate').val() + "&createEnDate="+$('#createEnDate').val())
-                          .done(function () {
-                              Common.alert("<spring:message code='pay.alert.fileDownSuceess'/>");
-                              Common.removeLoader();
-                          })
-                          .fail(function () {
-                              Common.alert("<spring:message code='pay.alert.fileDownFailed'/>");
-                              Common.removeLoader();
-                          });
-                      }
-                      else{
-                          Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
-                      }
+                       console.log(excelGridID);
                   });
-            	  }
+
+
               }
+          }
+
     }
 
     function fn_excelDown(){
