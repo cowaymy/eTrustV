@@ -52,6 +52,7 @@ $(document).ready(function() {
 
     $("#_btnClose").click(function() {
     	window.close();
+    	$("#_calSearch").click();
 	});
 
     var firstDateCalled = "${ccpInfoMap.firstCallDt}";
