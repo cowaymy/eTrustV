@@ -169,4 +169,7 @@ public interface LargeExcelService {
   void downloadCreditCardFileHSBC(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler);
 
   void downloadCmsCntcCsv(Object parameter, CMSCntcCsvHandler cmsCntcCsvHandler);
+
+  void downloadOrdPayCnvrList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+
 }

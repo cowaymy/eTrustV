@@ -27,7 +27,8 @@ public enum LargeExcelQuery {
 	, MONTHLY_BILL_RAW("selectMonthlyRawData")
 
     // LaiKW - 20220418 - Added for CMS API
-    , CMS_CNTC_API("selectCmsCntcByPaging");
+    , CMS_CNTC_API("selectCmsCntcByPaging")
+    , PAY_CNVR_LIST("selectOrdPayCnvrList");
 
 
 	private final String queryId;
