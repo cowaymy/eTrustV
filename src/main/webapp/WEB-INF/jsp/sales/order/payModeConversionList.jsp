@@ -210,8 +210,8 @@
 
               var diffDay = fn_diffDate($('#createStDate').val(), $('#createEnDate').val());
 
-              if(diffDay > 181 || diffDay < 0) {
-                  msg += 'Create date must be within 6 months';
+              if(diffDay > 91 || diffDay < 0) {
+                  msg += 'Create date must be within 3 months';
                   Common.alert(msg);
               }
               else {
