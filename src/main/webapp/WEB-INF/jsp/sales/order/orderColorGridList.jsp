@@ -546,7 +546,7 @@ console.log("searchColorGrid");
 	        }
 
 	        if ($("#keyInMonth").val() == ""){
-	        	 if( $("#createStDate").val()  ==""  ||    $("#createEnDate").val()  ==""  ){
+	        	 if( ($("#createStDate").val()  ==""  ||    $("#createEnDate").val()  =="" ) &&   $("#netSalesMonth").val() ==""  ){
                      isValid = false;
                  }
 	        }else{
