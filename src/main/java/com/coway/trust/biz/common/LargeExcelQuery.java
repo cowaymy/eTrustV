@@ -25,9 +25,10 @@ public enum LargeExcelQuery {
 	, DAILY_COLLECTION_RAW("selectDailyCollectionData")
 	, CREDITCARD_DETAIL_PAGING("selectCreditCardDetailByIdPaging")
 	, MONTHLY_BILL_RAW("selectMonthlyRawData")
+	, PAY_CNVR_LIST("selectOrdPayCnvrList");
 
-    // LaiKW - 20220418 - Added for CMS API
-    , CMS_CNTC_API("selectCmsCntcByPaging");
+/*    // LaiKW - 20220418 - Added for CMS API
+    , CMS_CNTC_API("selectCmsCntcByPaging");*/
 
 
 	private final String queryId;

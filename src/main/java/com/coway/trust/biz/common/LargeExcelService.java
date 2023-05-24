@@ -166,4 +166,7 @@ public interface LargeExcelService {
   void downLoadClaimFileGeneral(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler);
 
   void downloadCreditCardFileHSBC(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler);
+
+  void downloadOrdPayCnvrList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+
 }
