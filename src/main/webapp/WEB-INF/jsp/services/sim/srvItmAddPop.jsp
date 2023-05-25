@@ -115,9 +115,7 @@
             dataField : "crtBy",
             headerText : "<spring:message code='service.grid.CrtBy'/>",
             editable : false,
-            width : 100,
-            dataType : "date",
-            formatString : "dd/mm/yyyy"
+            width : 100
           }
       ];
 
