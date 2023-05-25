@@ -520,6 +520,11 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
         vendorAdvanceMapper.insertRejectM(params);
         // Insert FCM0028D
         vendorAdvanceMapper.insertRejectD(params);
+
+        params.put("clmNo", params.get("newClmNo"));
+
+        vendorAdvanceMapper.updateAdvReqRefd(params);
+
     }
 
     @Override

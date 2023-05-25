@@ -966,6 +966,11 @@
     </insert>
 
     <insert id="insertRejectM" parameterType="Map">
+	    <selectKey order="AFTER" keyProperty="settlementAdvRefdNo" resultType="string">
+		    SELECT MAIN_REQ_NO
+			FROM FCM0027M
+	        WHERE CLM_NO = #{clmNo}
+		</selectKey>
         INSERT INTO FCM0027M (
             CLM_NO,
             ADV_TYPE,
