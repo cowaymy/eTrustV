@@ -56,7 +56,7 @@
                         <div style="transform:translate(0%,-50%);" class="d-flex justify-content-center">
                             <h5 class="header">Scan Serial Number</h5>
                         </div>
-                        <div class="card-body m-4 mainBorderColor">
+                        <div class="card-body m-4 mainBorderColor"">
                         <form>
                            <div class="form-outline mb-3">
                                  <h5>&nbsp;Choose:</h5>
@@ -573,7 +573,7 @@
     }
 
 	let resultContainer = document.getElementById('qr-reader-results');
-	let html5QrcodeScanner = new Html5Qrcode("qr-reader",{useBarCodeDetectorIfSupported : true});
+	let html5QrcodeScanner = new Html5Qrcode("qr-reader");
 
 	let serialObject = {};
 	onScanSuccess = (decodedText, decodedResult, seq) => {
@@ -596,13 +596,13 @@
 
     $("#btnScanBarcode").click(e => {
         e.preventDefault();
-        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: window.innerWidth, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128]}
+        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: 1000, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
         , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo"))});
     });
 
    $("#btnScanBarcodeOutdoor").click(e => {
         e.preventDefault();
-        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: window.innerWidth, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128]}
+        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: 1000, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
         , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo2"))});
     });
 
