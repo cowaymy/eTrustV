@@ -37,12 +37,12 @@
 				        <div class="row justify-content-center mt-3">
 				              <div class="col-5">
 				                    <div class="form-group">
-				                         <p class="btn btn-primary btn-block btn-lg"  id="btnComplete" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Completed</a></p>
+				                         <p class="btn btn-primary btn-block btn-lg"  id="btnComplete" style="background:#4f90d6 !important"><a href="javascript:void(0);" style="color:white">Complete</a></p>
 				                    </div>
 				              </div>
 				              <div class="col-5">
 				                    <div class="form-group">
-				                         <p class="btn btn-danger btn-block btn-lg"  id="btnFail" ><a href="javascript:void(0);" style="color:white">Failed</a></p>
+				                         <p class="btn btn-danger btn-block btn-lg"  id="btnFail" ><a href="javascript:void(0);" style="color:white">Fail</a></p>
 				                    </div>
 				              </div>
 				          </div>
