@@ -85,10 +85,10 @@ $(document).ready(function() {
 });
 
 function loadThirdPartyCustData(){
-	var custData = ${thirdPartyCustomerInfo};
-	if(custData != null && custData != ""){
-		loadThirdPartyPopData(custData);
-	}
+    var custData =`${thirdPartyCustomerInfo}`;
+    if(custData != null && custData != ""){
+        loadThirdPartyPopData(JSON.parse(custData));
+    }
 }
 
 function loadThirdPartyPopData(custData){
