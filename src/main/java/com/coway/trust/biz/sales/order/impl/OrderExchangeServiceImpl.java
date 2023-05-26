@@ -378,13 +378,17 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 
 	    String content = "";
 	    content += "Dear Customer,\n\n";
-	    content += "Congratulation for your New Coway Product !!\n\n";
-	    content += "Kindly refer an attachment for your Installation Notes.\n";
-	    content += "Your co-operation are highly appreciated.\n";
+	    content += "CYour product Exchange is successful.\n\n";
+	    content += "Kindly refer an attachment for your Exchange Notes.\n";
+	    content += "Thank you for your continue support to Coway.\n";
+	    content += "If you need assistance may contact our Coway Careline \n\n";
+	    content += "1-800-88-8111\n";
+	    content += "9am - 8pm (Mon-Fri)\n";
+	    content += "9am - 4pm (Weekends & Public Holidays)\n\n";
 	    content += "Thank You.\n\n\n";
-	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
 	    content += "Regards,\n\n";
 	    content += "Coway (Malaysia) Sdn Bhd\n\n";
+	    content += "This is system generated email, please do not reply to this email.\n\n";
 
 	    params.put(EMAIL_SUBJECT, emailSubject);
 	    params.put(EMAIL_TEXT, content);
@@ -395,7 +399,7 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 
 		for (int i = 0; i < soIdArr.size(); i++) {
 
-			int soReqId = soIdArr.get(i);
+			int soId = soIdArr.get(i);
 			String reqNoSent = ordNoSendArr.get(i);
 
 			if (!"".equals(CommonUtils.nvl(emailArr.get(i)))) {
@@ -404,11 +408,13 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 		    //emailNo.add("keyi.por@coway.com.my"); //for self test only
 
 		    params.put(EMAIL_TO, emailNo);
-			params.put("V_WHERE", soReqId);// parameter
+			params.put("V_WHERE", soId);// parameter
+			params.put("soReqId", soId);
 
 			try{
 				this.viewProcedure(null, null, params); //Included sending email
 				sentArr.add(reqNoSent);
+				orderExchangeMapper.updateEmailSentCount(params);
 			}catch(Exception e){
 				notSentArr.add(reqNoSent);
 			}

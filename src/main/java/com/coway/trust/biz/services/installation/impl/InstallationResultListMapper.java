@@ -322,4 +322,7 @@ public interface InstallationResultListMapper {
 
  List<EgovMap> getInstallDtPairByCtCode(Map<String, Object> params);
 
+ void updateEmailSentCount(Map<String, Object> params);
+
+
 }

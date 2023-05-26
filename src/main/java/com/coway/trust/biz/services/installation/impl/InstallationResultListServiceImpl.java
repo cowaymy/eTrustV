@@ -3926,13 +3926,16 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 	    String content = "";
 	    content += "Dear Customer,\n\n";
-	    content += "Congratulation for your New Coway Product !!\n\n";
+	    content += "Thank you for choosing Coway \n\n";
 	    content += "Kindly refer an attachment for your Installation Notes.\n";
-	    content += "Your co-operation are highly appreciated.\n";
+	    content += "If you need assistance may contact our Coway Careline \n\n";
+	    content += "1-800-88-8111\n";
+	    content += "9am - 8pm (Mon-Fri)\n";
+	    content += "9am - 4pm (Weekends & Public Holidays)\n\n";
 	    content += "Thank You.\n\n\n";
-	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
 	    content += "Regards,\n\n";
 	    content += "Coway (Malaysia) Sdn Bhd\n\n";
+	    content += "This is system generated email, please do not reply to this email.\n\n";
 
 	    params.put(EMAIL_SUBJECT, emailSubject);
 	    params.put(EMAIL_TEXT, content);
@@ -3953,10 +3956,12 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
   			params.put(EMAIL_TO, emailNo);
   			params.put("V_WHERE", installEntryId);// parameter
+  			params.put("installEntryId", installEntryId);
 
   			try{
   				this.viewProcedure(null, null, params); //Included sending email
   				sentArr.add(insNumSent);
+  				installationResultListMapper.updateEmailSentCount(params);
   			}catch(Exception e){
   				notSentArr.add(insNumSent);
   			}

@@ -109,6 +109,10 @@
             dataField : "resultRepEmailNo",
             headerText : 'resultRepEmailNo',
             width : 130
+        },{
+            dataField : "emailSentCount",
+            headerText : 'emailSentCount',
+            width : 130
         }];
 
     var gridPros = {
@@ -243,15 +247,33 @@
         var notSendArr = [];
         var salesOrdNoSendArr = [];
         var emailArr = [];
+        var soIdCountArr = [];
+        var salesOrdNoCountSendArr = [];
+        var emailCountArr = [];
 
         for ( var i in selectedItems) {
             var soId = selectedItems[i].item.soId;
             var status = selectedItems[i].item.code;
             var salesOrdNo = selectedItems[i].item.salesOrdNo;
             var resultRepEmailNo = selectedItems[i].item.resultRepEmailNo;
+            var emailSentCount = selectedItems[i].item.emailSentCount;
 
             if(status != 'COM'){
                 notSendArr.push(salesOrdNo);
+                Common.alert("Email only send for Complete PR");
+                return;
+            }
+
+            if(resultRepEmailNo == null){
+                notSendArr.push(salesOrdNo);
+                Common.alert(notSendArr.join(',') + " has empty customer email");
+                return;
+            }
+
+            if(emailSentCount > 0){
+            	soIdCountArr.push(soId);
+            	salesOrdNoCountSendArr.push(salesOrdNo);
+                emailCountArr.push(resultRepEmailNo);
             }else{
             	soIdArr.push(soId);
                 salesOrdNoSendArr.push(salesOrdNo);
@@ -262,33 +284,61 @@
         var emailM = {
         		soIdArr : soIdArr,
         		salesOrdNoSendArr : salesOrdNoSendArr,
-                emailArr : emailArr
+                emailArr : emailArr,
+                salesOrdNoCountSendArr : salesOrdNoCountSendArr,
+                soIdCountArr : soIdCountArr,
+                emailCountArr : emailCountArr
         }
 
-        if(installEntryIdArr.length > 0){
-        	if(emailArr.length >= 1){
-	            Common.ajax("POST", "/services/pexSendEmail.do", emailM, function(result) {
-	                console.log(result);
-	                if(result.code == '00') {
-	                    Common.alert(result.message);
-	                }
-	            });
-        	}else{
-                Common.alert("Email not sent because Customer email is empty");
+        if(emailCountArr.length > 0){
+            Common.confirmCustomizingButton(emailCountArr.join(',') + "Cancellation Notes has been sent 1 time <br> ",
+            		"Yes", "No", fn_pexSendEmail, fn_popClose);
+        }
+        else{
+        	fn_pexSendEmail(emailM);
+        }
+
+        function fn_pexSendEmail(emailM){
+
+            var idArr = [];
+            var noArr = [];
+            var emailArr = [];
+
+            if(emailM.emailCountArr.length > 0){
+                idArr = emailM.soIdArr.concat(emailM.soIdCountArr);
+                noArr = emailM.salesOrdNoSendArr.concat(emailM.salesOrdNoCountSendArr);
+                emailArr = emailM.emailArr.concat(emailM.emailCountArr);
+            }else{
+                idArr = emailM.soIdArr;
+                noArr = emailM.salesOrdNoSendArr;
+                emailArr = emailM.emailArr;
+            }
+
+            var sendEmailM = {
+                    soIdArr : idArr,
+                    salesOrdNoSendArr : noArr,
+                    emailArr : emailArr,
+            }
+
+            if(idArr.length > 0){
+                if(emailArr.length >= 1){
+                    Common.ajax("POST", "/services/pexSendEmail.do", sendEmailM, function(result) {
+                        console.log(result);
+                        if(result.code == '00') {
+                            Common.alert(result.message);
+                        }
+                    });
+                }else{
+                    Common.alert("Email not sent because Customer email is empty");
+                }
             }
         }
-        if(notSendArr.length > 0){
-            var notSendStr = notSendArr.join(',');
-            console.log(notSendStr);
-            Common.alert("Email not sent because status not Completed<br><b>" + notSendStr + "<b>");
-            //return;
-        }
-        console.log("===installEntryIdArr===");
-        console.log(installEntryIdArr);
-        console.log(notSendArr);
-        console.log(insNoSendArr);
 
+        function fn_popClose(){
+            return;
+         }
   }
+
 </script>
 <section id="content">
   <!-- content start -->

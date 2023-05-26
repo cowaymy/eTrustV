@@ -242,7 +242,8 @@
 						F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
 						F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
 
-                        CASE WHEN rer.RESULT_RPT_EMAIL_NO IS NOT NULL THEN rer.RESULT_RPT_EMAIL_NO ELSE cust.EMAIL END AS RESULT_REP_EMAIL_NO
+                        CASE WHEN rer.RESULT_RPT_EMAIL_NO IS NOT NULL THEN rer.RESULT_RPT_EMAIL_NO ELSE cust.EMAIL END AS RESULT_REP_EMAIL_NO,
+                        r.EMAIL_SENT_COUNT
 
 						from SAL0020D r
 						JOIN SAL0001D som ON som.SALES_ORD_ID = r.SO_REQ_SO_ID AND r.SO_REQ_STUS_ID <> 8
@@ -1744,5 +1745,10 @@
          WHERE SALES_ORD_ID = #{salesOrdId}
     </update>
 
+<update id="updateEmailSentCount" parameterType="Map">
+    UPDATE SAL0020D
+       SET EMAIL_SENT_COUNT = EMAIL_SENT_COUNT + 1
+     WHERE SO_REQ_ID = #{soReqId}
+</update>
 
 </mapper>

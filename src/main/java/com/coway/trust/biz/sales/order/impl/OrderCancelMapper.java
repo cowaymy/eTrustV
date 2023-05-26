@@ -249,4 +249,6 @@ List<EgovMap> rsoStatus(Map<String, Object> params);
 
   void updateECashInfo(SalesOrderMVO salesOrderMVO);
 
+  void updateEmailSentCount(Map<String, Object> params);
+
 }

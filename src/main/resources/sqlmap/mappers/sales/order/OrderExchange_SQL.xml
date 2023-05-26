@@ -160,7 +160,8 @@
 					              Extent16.NAME NAME8 ,
 					              Extent11.STK_CTGRY_ID,
 
-					              CASE WHEN Extent19.RESULT_REP_EMAIL_NO IS NOT NULL THEN Extent19.RESULT_REP_EMAIL_NO ELSE Extent3.EMAIL END AS RESULT_REP_EMAIL_NO
+					              CASE WHEN Extent18.RESULT_RPT_EMAIL_NO IS NOT NULL THEN Extent18.RESULT_RPT_EMAIL_NO ELSE Extent3.EMAIL END AS RESULT_REP_EMAIL_NO,
+					              Extent1.EMAIL_SENT_COUNT
 
 			             FROM SAL0004D Extent1
 				              JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID
@@ -902,5 +903,11 @@
                    STUS_CODE_ID = #{stusCodeId}
          WHERE STK_RETN_ID = #{stkRetnId}
     </update>
+
+    <update id="updateEmailSentCount" parameterType="Map">
+	    UPDATE SAL0004D
+	       SET EMAIL_SENT_COUNT = EMAIL_SENT_COUNT + 1
+	     WHERE SO_ID = #{soId}
+	</update>
 
 </mapper>

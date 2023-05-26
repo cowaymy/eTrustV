@@ -226,6 +226,10 @@
               dataField : "resultRepEmailNo",
               headerText : 'resultRepEmailNo',
               width : 130
+          },{
+              dataField : "emailSentCount",
+              headerText : 'emailSentCount',
+              width : 130
           }];
 
     // 그리드 속성 설정
@@ -505,6 +509,10 @@
   function fn_sendEmail(){
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
+      console.log("11111====")
+      console.log(selectedItems);
+      console.log("11111====")
+
       if (selectedItems.length <= 0) {
           Common.alert("<spring:message code='service.msg.NoRcd'/> ");
           return;
@@ -520,15 +528,34 @@
         var reqNoSendArr = [];
         var emailArr = [];
 
+        var soReqIdCountArr = [];
+        var reqNoCountSendArr = [];
+        var emailCountArr = [];
+
         for ( var i in selectedItems) {
             var reqId = selectedItems[i].item.reqId;
             var rsoStatus = selectedItems[i].item.rsoStus;
             var callStatus = selectedItems[i].item.callStusCode;
             var reqNo = selectedItems[i].item.reqNo;
             var resultRepEmailNo = selectedItems[i].item.resultRepEmailNo;
+            var emailSentCount = selectedItems[i].item.emailSentCount;
 
             if(callStatus != 'CC' && rsoStatus != 'COM'){
                 notSendArr.push(reqNo);
+                Common.alert("Email only send for RSO Complete cancellation");
+                return;
+            }
+
+            if(resultRepEmailNo == null){
+                notSendArr.push(reqNo);
+                Common.alert(notSendArr.join(',') + " has empty customer email");
+                return;
+            }
+
+            if(emailSentCount > 0){
+            	soReqIdCountArr.push(reqId);
+            	reqNoCountSendArr.push(reqNo);
+            	emailCountArr.push(resultRepEmailNo);
             }else{
             	soReqIdArr.push(reqId);
             	reqNoSendArr.push(reqNo);
@@ -539,33 +566,62 @@
         var emailM = {
         		soReqIdArr : soReqIdArr,
         		reqNoSendArr : reqNoSendArr,
-        		emailArr : emailArr
+        		emailArr : emailArr,
+        		reqNoCountSendArr : reqNoCountSendArr,
+                soReqIdCountArr : soReqIdCountArr,
+                emailCountArr : emailCountArr
         }
 
-        if(soReqIdArr.length > 0){
-        	if(emailArr.length >= 1){
-        		Common.ajax("POST", "/sales/order/prSendEmail.do", emailM, function(result) {
-                    console.log(result);
-                    if(result.code == '00') {
-                        Common.alert(result.message);
-                    }
-                });
-        	}else{
-        		 Common.alert("Email not sent because Customer email is empty");
-        	}
+        if(emailCountArr.length > 0){
+            Common.confirmCustomizingButton(reqNoCountSendArr.join(',') + " Cancellation Notes has been sent 1 time <br> Do you want to send the email again? ",
+            		"Yes", "No", fn_canSendEmail, fn_popClose);
         }
-        if(notSendArr.length > 0){
-            var notSendStr = notSendArr.join(',');
-            console.log(notSendStr);
-            Common.alert("Email not sent because status not Completed<br><b>" + notSendStr + "<b>");
-            //return;
+        else{
+        	fn_canSendEmail(emailM);
         }
-        console.log("===soReqIdArr===");
-        console.log(soReqIdArr);
-        console.log(notSendArr);
-        console.log(reqNoSendArr);
 
+        function fn_canSendEmail(emailM){
+
+            var idArr = [];
+            var noArr = [];
+            var emailArr = [];
+
+            if(emailM.emailCountArr.length > 0){
+                idArr = emailM.soReqIdArr.concat(emailM.soReqIdCountArr);
+                noArr = emailM.reqNoSendArr.concat(emailM.reqNoCountSendArr);
+                emailArr = emailM.emailArr.concat(emailM.emailCountArr);
+            }else{
+                idArr = emailM.soReqIdArr;
+                noArr = emailM.reqNoSendArr;
+                emailArr = emailM.emailArr;
+            }
+
+            var sendEmailM = {
+                    soReqIdArr : idArr,
+                    reqNoSendArr : noArr,
+                    emailArr : emailArr
+            }
+
+            if(idArr.length > 0){
+                if(emailArr.length >= 1){
+                    Common.ajax("POST", "/sales/order/prSendEmail.do", sendEmailM, function(result) {
+                        console.log(result);
+                        if(result.code == '00') {
+                            Common.alert(result.message);
+                        }
+                    });
+                }else{
+                     Common.alert("Email not sent because Customer email is empty");
+                }
+            }
+        }
+
+        function fn_popClose(){
+            return;
+         }
   }
+
+
 </script>
 <section id="content">
  <!-- content start -->

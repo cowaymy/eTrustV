@@ -337,6 +337,10 @@
         dataField : "resultRepEmailNo",
         headerText : 'resultRepEmailNo',
         width : 130
+    },{
+        dataField : "emailSentCount",
+        headerText : 'emailSentCount',
+        width : 130
     }];
 
     var gridPros = {
@@ -647,15 +651,34 @@
 	    var notSendArr = [];
 	    var insNoSendArr = [];
 	    var emailArr = [];
+	    var countArr = [];
+	    var emailNoCountArr = [];
+	    var emailIdCountArr = [];
+	    var emailCountArr = [];
 
 	    for ( var i in selectedItems) {
 	    	var installEntryId = selectedItems[i].item.installEntryId;
 	    	var status = selectedItems[i].item.code1;
 	    	var installEntryNo = selectedItems[i].item.installEntryNo;
 	    	var resultRepEmailNo = selectedItems[i].item.resultRepEmailNo;
+	    	var emailSentCount = selectedItems[i].item.emailSentCount;
 
 	    	if(status != 'COM'){
 	    		notSendArr.push(installEntryNo);
+	    		Common.alert("Email only send for Complete Installation");
+	    		return;
+	    	}
+
+	    	if(resultRepEmailNo == null){
+                notSendArr.push(installEntryNo);
+                Common.alert(notSendArr.join(',') + " has empty customer email");
+                return;
+            }
+
+	    	if(emailSentCount > 0){
+	    		emailNoCountArr.push(installEntryNo);
+	    		emailIdCountArr.push(installEntryId);
+	            emailCountArr.push(resultRepEmailNo);
 	    	}else{
 	            installEntryIdArr.push(installEntryId);
 	            insNoSendArr.push(installEntryNo);
@@ -666,33 +689,66 @@
 	    var emailM = {
 	    		installEntryIdArr : installEntryIdArr,
 	    		insNoSendArr : insNoSendArr,
-	    		emailArr : emailArr
+	    		emailArr : emailArr,
+	    		emailNoCountArr : emailNoCountArr,
+	    		emailIdCountArr : emailIdCountArr,
+	    		emailCountArr : emailCountArr
 	    }
 
-	    if(installEntryIdArr.length > 0){
-	    	if(emailArr.length >= 1){
-		    	Common.ajax("POST", "/services/insSendEmail.do", emailM, function(result) {
-		    		console.log(result);
-		    		if(result.code == '00') {
-		    			Common.alert(result.message);
-		    		}
-		    	});
-	    	}else{
-                Common.alert("Email not sent because Customer email is empty");
-            }
-        }
-	    if(notSendArr.length > 0){
-            var notSendStr = notSendArr.join(',');
-            console.log(notSendStr);
-            Common.alert("Email not sent because status not Completed<br><b>" + notSendStr + "<b>");
-            //return;
-        }
-	    console.log("===installEntryIdArr===");
-	    console.log(installEntryIdArr);
-	    console.log(notSendArr);
-	    console.log(insNoSendArr);
+	    if(emailCountArr.length > 0){
+	        Common.confirmCustomizingButton(emailNoCountArr.join(',') + " Installation Notes has been sent 1 time <br> Do you want to send the email again?",
+	        		"Yes", "No", fn_insSendEmail, fn_popClose);
+	    }
+	    else{
+	    	fn_insSendEmail(emailM);
+	    }
 
+	    function fn_insSendEmail(){
+
+	        var idArr = [];
+	        var noArr = [];
+	        var emailArr = [];
+
+	        console.log(emailM);
+
+	        if(emailM.emailCountArr.length > 0){
+	            idArr = emailM.installEntryIdArr.concat(emailM.emailIdCountArr);
+	            noArr = emailM.insNoSendArr.concat(emailM.emailNoCountArr);
+	            emailArr = emailM.emailArr.concat(emailM.emailCountArr);
+	        }else{
+	            idArr = emailM.installEntryIdArr;
+	            noArr = emailM.insNoSendArr;
+	            emailArr = emailM.emailArr;
+	        }
+
+	        var sendEmailM = {
+	                installEntryIdArr : idArr,
+	                insNoSendArr : noArr,
+	                emailArr : emailArr,
+	        }
+
+	        if(idArr.length > 0){
+	            if(emailArr.length >= 1){
+	                Common.ajax("POST", "/services/insSendEmail.do", sendEmailM, function(result) {
+	                    console.log(result);
+	                    if(result.code == '00') {
+	                        Common.alert(result.message);
+	                    }
+	                });
+	            }else{
+	                Common.alert("Email not sent because Customer email is empty");
+	            }
+	        }
+	    }
+
+	    function fn_popClose(){
+	       return;
+	    }
   }
+
+
+
+
 </script>
 <section id="content">
  <!-- content start -->

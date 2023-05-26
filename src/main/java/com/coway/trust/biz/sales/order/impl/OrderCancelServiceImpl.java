@@ -690,13 +690,14 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
 	    String content = "";
 	    content += "Dear Customer,\n\n";
-	    content += "Congratulation for your New Coway Product !!\n\n";
-	    content += "Kindly refer an attachment for your Installation Notes.\n";
-	    content += "Your co-operation are highly appreciated.\n";
+	    content += "Your Product Cancellation have successful.\n\n";
+	    content += "Kindly refer an attachment for your Cancellation Notes.\n";
+	    content += "We look forward to serve you better.\n";
 	    content += "Thank You.\n\n\n";
-	    content += "Should you have any inquiry, please do not hestitate to contact me.\n\n";
 	    content += "Regards,\n\n";
 	    content += "Coway (Malaysia) Sdn Bhd\n\n";
+	    content += "This is system generated email, please do not reply to this email.\n\n";
+
 
 	    params.put(EMAIL_SUBJECT, emailSubject);
 	    params.put(EMAIL_TEXT, content);
@@ -717,10 +718,12 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
 		    params.put(EMAIL_TO, emailNo);
 			params.put("V_WHERE", soReqId);// parameter
+			params.put("soReqId", soReqId);
 
 			try{
 				this.viewProcedure(null, null, params); //Included sending email
 				sentArr.add(reqNoSent);
+				orderCancelMapper.updateEmailSentCount(params);
 			}catch(Exception e){
 				notSentArr.add(reqNoSent);
 			}
