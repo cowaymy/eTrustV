@@ -684,7 +684,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 		logger.debug("====ARR" + reqNoSendArr.toString());
 		logger.debug("====ARR" + emailArr.toString());
 
-	    String emailSubject = "COWAY: Congratulation For New Coway Product";
+	    String emailSubject = "COWAY: Product Cancellation";
 
 	    List<String> emailNo = new ArrayList<String>();
 

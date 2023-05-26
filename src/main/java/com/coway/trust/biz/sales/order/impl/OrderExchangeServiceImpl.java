@@ -372,7 +372,7 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 		logger.debug("====ARR" + ordNoSendArr.toString());
 		logger.debug("====ARR" + emailArr.toString());
 
-	    String emailSubject = "COWAY: Congratulation For New Coway Product";
+	    String emailSubject = "COWAY: Product Return";
 
 	    List<String> emailNo = new ArrayList<String>();
 

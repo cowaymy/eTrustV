@@ -3920,7 +3920,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   		logger.debug("====ARR" + insNoSendArr.toString());
   		logger.debug("====ARR" + emailArr.toString());
 
-	    String emailSubject = "COWAY: Congratulation For New Coway Product";
+	    String emailSubject = "COWAY: New Installation";
 
 	    List<String> emailNo = new ArrayList<String>();
 
