@@ -183,6 +183,8 @@
             ON SYS0092M.NTF_KEY = a.CLM_NO
         LEFT JOIN FCM0019M b
             ON SYS0092M.NTF_KEY = b.CLM_NO
+        LEFT JOIN PAY0344M D
+            ON SYS0092M.NTF_KEY = D.REQ_ID
         WHERE
         <if test="apprGrp == null or apprGrp == '' ">
            NTF_USER_ID = #{userId}
@@ -204,10 +206,12 @@
         ]]>
         </if>
         <if test="clmType != null and clmType != ''">
-             AND SYS0092M.NTF_TYPE IN
+              AND NTF_TYPE  IN (SELECT * FROM (SELECT NTF_TYPE FROM SYS0092M WHERE SYS0092M.NTF_TYPE IN
          <foreach item="item" collection="clmType" index="index" open="(" separator="," close=")">
              #{item}
          </foreach>
+                UNION
+                  SELECT NTF_TYPE FROM SYS0092M WHERE SYS0092M.NTF_TYPE IN (SELECT NTF_TYPE FROM SYS0092M WHERE NTF_TYPE IN ('DCF', 'FT', 'REF'))))
         </if>
         ORDER BY SYS0092M.CRT_DT DESC
     </select>

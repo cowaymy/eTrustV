@@ -1,27 +1,51 @@
 package com.coway.trust.web.payment.otherpayment.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.payment.otherpayment.service.PaymentListService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.EgovFormBasedFileVo;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -31,8 +55,17 @@ public class PaymentListController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentListController.class);
 
+	@Value("${web.resource.upload.file}")
+    private String uploadDir;
+
 	@Resource(name = "paymentListService")
 	private PaymentListService paymentListService;
+
+	@Autowired
+	private WebInvoiceService webInvoiceService;
+
+	@Autowired
+    private MessageSourceAccessor messageAccessor;
 
 	/******************************************************
 	 *  Payment List
@@ -506,4 +539,365 @@ public class PaymentListController {
 
 	}
 
+	/* ********** 20230306 CELESTE - REQUEST REFUND [S] ********** */
+
+	@RequestMapping(value="/validRefund" ,  method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> validRefund(@RequestParam Map<String, Object> params){
+
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		//CHECK OR NO TYPE THAT ALLOW TO PERFORM REFUND
+		String[] groupSeqList = params.get("groupSeqList").toString().replace("\"","").split(",");
+		params.put("selectedGroupSeqList", groupSeqList);
+		int invalidTypeCount = paymentListService.invalidRefund(params);
+		int invalidStatus = paymentListService.invalidStatus(params);
+		List<EgovMap> invalidTypeList = paymentListService.selectInvalidRefundType(params);
+		LOGGER.debug("invalidTypeList: " + invalidTypeList);
+
+		if(invalidTypeCount > 0) {
+			returnMap.put("error", "Refund is invalid for " + invalidTypeList);
+		}
+		else if(invalidStatus > 0) {
+			returnMap.put("error", "Payment has Active or Completed Refund request.");
+		}
+		else {
+			returnMap.put("success", true);
+		}
+
+		//CHECK RESERVE STATUS - BLOCK WHN STATUS = 1 OR 5
+		List<String> revStusList = Arrays.asList(params.get("revStusList").toString().replace("\"", "").split(","));
+		List<String> rfStusList = Arrays.asList(params.get("rfStusList").toString().replace("\"", "").split(","));
+		//boolean invalidStatusCount = false;
+
+		if(revStusList.contains("1") || revStusList.contains("5")) {
+			returnMap.put("error",  "Payment Group Number has been Requested or Approved. Please reselect before request for Refund.");
+		}
+		else {
+			//CHECK REFUND STATUS - BLOCK WHEN STATUS = 1 OR 5
+			if(rfStusList.contains("1") || rfStusList.contains("5")) {
+				returnMap.put("error", "This has already been Refund processing Requested / Approved. ");
+			}
+			else {
+				returnMap.put("success", true);
+			}
+		}
+
+		//CHECK TRANSACTION ID IS NOT EMPTY AND HAS BEEN RECONCILE
+		List<String> trxIdList = Arrays.asList(params.get("bankStateIdList").toString().replace("\"", "").split(","));
+		List<String> trxDtList = Arrays.asList(params.get("bankStateMappingDt").toString().replace("\"", "").split(","));
+		if(trxIdList.contains("0") || trxIdList.contains(null)) {
+//		if(trxIdList.contains("0") || trxIdList.contains(null) || trxDtList.contains("0") || trxDtList.contains(null)) {
+			returnMap.put("error", "Empty Bank Statement ID record(s) are not allow for Refund. Please reselect before request for Refund. ");
+		}
+		else {
+			returnMap.put("success",  true);
+		}
+
+		return ResponseEntity.ok(returnMap);
+	}
+
+	@RequestMapping(value = "/initRequestRefundPop.do")
+	public String initRequestRefundPop(@RequestParam Map<String, Object> params, ModelMap model) throws IOException {
+
+		LOGGER.debug("params: " + params);
+
+		// Convert string to List<Map<String, Object>> - using JACKSON
+		/*ObjectMapper mapper = new ObjectMapper();
+		List<Map<String, Object>> selectedOrder2 = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});*/
+
+		/*List<String> groupSeq = Arrays.asList(params.get("groupSeqList").toString().replace("\"", "").split(","));
+		List<String> trxId= Arrays.asList(params.get("bankStateIdList").toString().replace("\"", "").split(","));
+		List<String> appTypeId= Arrays.asList(params.get("appTypeIdList").toString().replace("\"", "").split(","));*/
+
+		model.put("groupSeq", params.get("groupSeqList").toString().replace("\"", ""));
+		model.put("payId", params.get("payIdList").toString().replace("\"", ""));
+		model.put("appTypeId", params.get("appTypeIdList").toString().replace("\"", ""));
+
+		return "payment/otherpayment/requestRefundPop";
+	}
+
+	/* 	private static class Item {
+        private int groupSeq;
+        private int payId;
+    } */
+
+	 /* @RequestMapping(value = "/initRequestRefundPop.do")
+	public String initRequestRefundPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		LOGGER.debug("params: " + params);
+
+		Pattern pattern = Pattern.compile("\\[.*?\\]");
+        Matcher matcher = pattern.matcher((CharSequence) params.get("data"));
+        String json = "";
+        if (matcher.find()) {
+            json = matcher.group();
+        }
+
+		Gson gson = new Gson();
+        Item[] items = gson.fromJson(json, Item[].class);
+
+        // Extract the seq and payId values from each item in the array
+        List<Integer> seqList = new ArrayList<>();
+        List<Integer> payIdList = new ArrayList<>();
+        for (Item item : items) {
+            seqList.add(item.groupSeq);
+            payIdList.add(item.payId);
+        }
+
+        // Print the results
+        System.out.println("seqList: " + seqList);
+        System.out.println("payIdList: " + payIdList);
+
+        params.put("groupSeq", seqList);
+        params.put("payId", payIdList);
+
+        float totalAmt = 0;
+
+         LOGGER.debug("params: " + params);
+		 List<EgovMap> resultList = paymentListService.selectRefundOldData(params);
+		 for(int i =0; i < resultList.size(); i++){
+			 totalAmt += Float.parseFloat(resultList.get(i).get("totAmt").toString());
+		 }
+
+		 LOGGER.debug("TotalAmt" + totalAmt);
+		 model.addAttribute("oldAmt", totalAmt);
+		 model.addAttribute("resultList", new Gson().toJson(resultList));
+
+		return "payment/otherpayment/requestRefundPop";
+	}*/
+
+	@RequestMapping(value = "/selectRefundOldData.do")
+	public ResponseEntity<List<EgovMap>> selectRefundOldData(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+
+		String[] groupSeq = params.get("groupSeq").toString().replace("\"","").split(",");
+		String[] payId = params.get("payId").toString().replace("\"","").split(",");
+		String[] appTypeId = params.get("appTypeId").toString().replace("\"","").split(",");
+
+		params.put("groupSeq", groupSeq);
+		params.put("payId", payId);
+		params.put("appTypeId", appTypeId);
+		List<EgovMap> resultList = paymentListService.selectRefundOldData(params);
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/requestRefund", method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> requestRefund(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) throws Exception {
+
+		//List<EgovFormBasedFileVo> attchList = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "Billing & Collection" + File.separator + "paymentList", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+        //LOGGER.debug("attchList.size : {}", attchList.size());
+
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // Get Grid Data
+		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // Get form object data
+		List<Object> apprList = params.get("apprGridList"); // Get form object data of Approval
+
+		LOGGER.debug("gridList : {} ", gridList);
+		LOGGER.debug("formList : {} ", formList);
+		LOGGER.debug("apprGridList : {} ", apprList);
+
+		Map<String, Object> formInfo = new HashMap<String, Object> ();
+
+		if(formList.size() > 0){
+    		for(Object obj : formList){
+    			Map<String, Object> map = (Map<String, Object>) obj;
+    			formInfo.put((String)map.get("name"), map.get("value"));
+    		}
+    	}
+
+        /*if (attchList.size() > 0) {
+    		formInfo.put(CommonConstants.USER_ID, sessionVO.getUserId());
+    		formInfo.put("attachmentList", attchList);
+        	//paymentListService.insertAttachment(FileVO.createList(attchList), FileType.WEB_DIRECT_RESOURCE, formInfo);
+        	formInfo.put("fileGroupKey", params.get("fileGroupKey"));
+        }*/
+
+		//User ID setting
+		formInfo.put("userId", sessionVO.getUserId());
+		formInfo.put("userName", sessionVO.getUserName());
+		formInfo.put("branch", sessionVO.getUserBranchId());
+		LOGGER.debug("formInfo : {} ", formInfo);
+		LOGGER.debug("gridList : {} ", gridList);
+		EgovMap resultMap = new EgovMap();
+		// Save
+		resultMap = paymentListService.requestRefund(formInfo, gridList, apprList);
+		// Return query results.
+    	return ResponseEntity.ok(resultMap);
+	}
+
+	  @RequestMapping(value = "/requestApprovalLineCreatePop.do")
+	  public String requestApprovalLineCreatePop(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		  return "payment/otherpayment/requestApprovalLineCreatePop";
+	  }
+
+	@RequestMapping(value = "/requestRefundUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> requestRefundUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		LOGGER.debug("params =====================================>>  " + params);
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "payment" + File.separator + "paymentList", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+		params.put("userId", sessionVO.getUserId());
+		if(list.size() > 0) {
+			paymentListService.insertAttachment(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+			List<EgovMap> fileInfo = webInvoiceService.selectAttachList(params.get("fileGroupKey").toString());
+			if(fileInfo != null){
+				params.put("atchFileId", fileInfo.get(0).get("atchFileId"));
+			}
+		}
+		params.put("attachFiles", list);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
+	}
+
+	/******************************************************
+	 * Payment List - Confirm Refund
+	 *****************************************************/
+	/**
+	 * Payment List - Confirm Refund
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initConfirmRefund.do")
+	public String initConfirmRefund(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		if(params.containsKey("clmNo")){
+			model.put("reqNo", params.get("clmNo").toString());
+		}
+
+		return "payment/otherpayment/confirmRefund";
+	}
+
+	@RequestMapping(value = "/selectRequestRefundList.do")
+	public ResponseEntity<List<EgovMap>> selectRequestRefundList(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		LOGGER.debug("params : {} ", params);
+
+		//조회.
+		params.put("memCode", sessionVO.getUserMemCode());
+		List<EgovMap> resultList = paymentListService.selectRequestRefundList(params);
+
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/initConfirmRefundPop.do")
+	public String initConfirmRefundPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.put("groupSeq", params.get("groupSeq").toString().replace("\"", ""));
+		model.put("reqId", params.get("reqId").toString().replace("\"", ""));
+		model.put("refStusId", params.get("refStusId").toString().replace("\"", ""));
+		model.put("salesOrdNo", params.get("salesOrdNo").toString().replace("\"", ""));
+		model.put("appvStus", params.get("appvStus"));
+
+		LOGGER.debug("payment List params : {} ", params);
+
+		return "payment/otherpayment/confirmRefundPop";
+	}
+
+	@RequestMapping(value = "/selectRequestRefundByGroupSeq.do")
+	public ResponseEntity<List<EgovMap>> selectRequestRefundByGroupSeq(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+
+		String[] groupSeq = params.get("groupSeq").toString().replace("\"","").split(",");
+
+		params.put("groupSeq", groupSeq);
+
+		//조회.
+		List<EgovMap> resultList = paymentListService.selectRequestRefundByGroupSeq(params);
+
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/selectReqRefundInfo.do")
+	public ResponseEntity<EgovMap> selectReqRefundInfo(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+
+		String[] reqNo = params.get("reqNo").toString().replace("\"","").split(",");
+
+		params.put("reqNo", reqNo);
+
+		//조회.
+		EgovMap resultMap = paymentListService.selectReqRefundInfo(params);
+
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	//Refund Approval
+	@RequestMapping(value = "/approvalRefund.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approvalRefund(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		LOGGER.debug("params : {} ", params);
+		//EgovMap resultList;
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		// 저장
+		params.put("userId", sessionVO.getUserId());
+		params.put("memCode", sessionVO.getUserMemCode());
+/*		String[] groupSeq = params.get("groupSeq").toString().replace("\"","").split(",");
+		params.put("groupSeq", groupSeq);*/
+
+		Map<String, Object> result = paymentListService.approvalRefund(params);
+
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+
+		if (result.get("success").toString().equals("success")) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(result.get("msg").toString());
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage((String) result.get("error"));
+		}
+
+		//return ResponseEntity.ok(message);
+//		return ResponseEntity.ok(returnMap);
+
+		return ResponseEntity.ok(message);
+
+	}
+
+	@RequestMapping(value = "/rejectRefund.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> rejectRefund(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		LOGGER.debug("params : {} ", params);
+		// 저장
+
+/*		List<Object> oldInfoGridList = (List<Object>) params.get("oldInfoGridList");
+		for (int i = 0; i < oldInfoGridList.size(); i++) {
+			Map<String, Object> oldInfoDet = (Map<String, Object>) oldInfoGridList.get(i);
+			String appvPrcssNo = (String) oldInfoDet.get("appvPrcssNo");
+
+			Map<String, Object> appvParam = new HashMap<String, Object>();
+			appvParam.put("appvPrcssNo", appvPrcssNo);
+
+			List<EgovMap> appvLineInfo = paymentListService.selectReqRefundApprovalItem(appvParam);
+			List<String> appvLineUserId = new ArrayList<>();
+            for(int a = 0; a < appvLineInfo.size(); a++) {
+                EgovMap info = appvLineInfo.get(a);
+                appvLineUserId.add(info.get("appvLineUserId").toString());
+            }
+		}*/
+
+		params.put("userName",sessionVO.getUserName());
+		params.put("userId", sessionVO.getUserId());
+		paymentListService.rejectRefund(params);
+
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
+
+	}
+	/* ********** 20230306 CELESTE - REQUEST REFUND [E] ********** */
 }

@@ -11,6 +11,7 @@
 <script type="text/javaScript">
 	//AUIGrid 그리드 객체
 	var myGridID;
+	var gridDataLength = 0;
 
 	//Grid에서 선택된 RowID
 	var selectedGridValue;
@@ -24,7 +25,9 @@
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
 
-	        softRemoveRowMode:false
+	        softRemoveRowMode:false,
+
+	        showRowCheckColumn : true
 
 	};
 
@@ -69,8 +72,101 @@
 		    selectedGridValue = event.rowIndex;
 	    });
 
+	    AUIGrid.bind(myGridID, "cellClick", function( event ){
+            var item = event.item, rowIdField, rowId, rowOrNo;
+
+            rowIdField = AUIGrid.getProp(event.pid, "rowIdField");
+            rowId = item[rowIdField];
+
+            // check if already checked
+            if(AUIGrid.isCheckedRowById(event.pid, rowId)) {
+                // Add extra checkbox unchecked
+                AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+
+            } else {
+                // add extra checkbox check
+                AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+            }
+        });
+
+        AUIGrid.bind(myGridID, "rowCheckClick", function(event) {
+           var item = event.item, rowIdField, rowId, rowOrNo;
+
+           // check if already checked
+            if(AUIGrid.isCheckedRowById(event.pid, rowId)) {
+                // Add extra checkbox unchecked
+                AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+            } else {
+                // add extra checkbox check
+                AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+            }
+         });
+
+         AUIGrid.bind(myGridID, "rowAllChkClick", function(event) {
+               var item = event.item, rowIdField, rowId, rowOrNo;
+
+                // check if already checked
+                 if(AUIGrid.isCheckedRowById(event.pid, rowId)) {
+                     // Add extra checkbox unchecked
+                     AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+                 } else {
+                     // add extra checkbox check
+                     AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+                 }
+          });
+
+	    /* AUIGrid.bind(myGridID, "ready", function(event) {
+	        gridDataLength = AUIGrid.getGridData(myGridID).length; // 그리드 전체 행수 보관
+	    });
+
+	    AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
+	    AUIGrid.bind(myGridID, "cellEditEnd", function(event) {
+
+	        // isActive 칼럼 수정 완료 한 경우
+	        if(event.dataField == "isActive") {
+
+	            // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+	            var activeItems = AUIGrid.getItemsByValue(myGridID, "isActive", "Active");
+
+	            // 헤더 체크 박스 전체 체크 일치시킴.
+	            if(activeItems.length != gridDataLength) {
+	                document.getElementById("allCheckbox").checked = false;
+	            } else if(activeItems.length == gridDataLength) {
+	                 document.getElementById("allCheckbox").checked = true;
+	            }
+	        }
+	    }); */
+
 	});
 
+
+	/* function headerClickHandler(event) {
+
+	    // isActive 칼럼 클릭 한 경우
+	    if(event.dataField == "isActive") {
+	        if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+	            var  isChecked = document.getElementById("allCheckbox").checked;
+	            checkAll(isChecked);
+	        }
+	        return false;
+	    }
+	}
+
+	// 전체 체크 설정, 전체 체크 해제 하기
+	function checkAll(isChecked) {
+
+	     var idx = AUIGrid.getRowCount(myGridID);
+
+	    // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
+	    if(isChecked) {
+	        AUIGrid.updateAllToValue(myGridID, "isActive", "Active");
+	    } else {
+	        AUIGrid.updateAllToValue(myGridID, "isActive", "Inactive");
+	    }
+
+	    // 헤더 체크 박스 일치시킴.
+	    document.getElementById("allCheckbox").checked = isChecked;
+	} */
     // ajax list 조회.
     function searchList(){
 
@@ -205,6 +301,68 @@
         }
 	}
 
+    function fn_requestRefundPop(){
+
+        var selectedItem = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+        if (selectedItem.length > 0){
+            var refGroupSeqList = [];
+            var refPayIdList = [];
+            var refRevStusList = [];
+            var refFtStusList = [];
+            var refBankStateIdList = [];
+            var refBankStateMappingDtList = [];
+            var refAppType = [];
+
+            for(var i = 0; i< selectedItem.length; i++){
+            	refGroupSeqList.push(selectedItem[i].groupSeq);
+            	refPayIdList.push(selectedItem[i].payId);
+            	refRevStusList.push(selectedItem[i].revStusId);
+            	refFtStusList.push(selectedItem[i].ftStusId);
+            	refBankStateIdList.push(selectedItem[i].bankStateMappingId == null ? 0 : selectedItem[i].bankStateMappingId);
+            	refBankStateMappingDtList.push(selectedItem[i].bankStateMappingDt == null ? 0 : selectedItem[i].bankStateMappingDt);
+            	//refAppType.push(selectedItem[i].appType);
+
+            	var appTypeId;
+                if(selectedItem[i].appType == 'RENTAL'){
+                    appTypeId = 1;
+                }else if(selectedItem[i].appType == 'OUT') {
+                    appTypeId = 2;
+                }else if(selectedItem[i].appType == 'MEMBERSHIP') {
+                    appTypeId = 3;
+                }else if(selectedItem[i].appType == 'AS' || selectedItem[i].appType == 'HP') {
+                    appTypeId = 4;
+                }else if(selectedItem[i].appType == 'OUT_MEM') {
+                    appTypeId = 5;
+                }
+
+                refAppType.push(appTypeId);
+
+            }
+
+            var selectedOrder = {
+            		"groupSeqList" : JSON.stringify(refGroupSeqList.join()),
+            		"payIdList" : JSON.stringify(refPayIdList.join()),
+            		"revStusList" : JSON.stringify(refRevStusList.join()),
+            		"rfStusList" : JSON.stringify(refFtStusList.join()),
+            		"bankStateIdList" : JSON.stringify(refBankStateIdList.join()),
+            		"bankStateMappingDt" : JSON.stringify(refBankStateMappingDtList.join()),
+            		"appTypeIdList" : JSON.stringify(refAppType.join())
+            };
+
+            Common.ajax("GET","/payment/validRefund", selectedOrder, function(result){
+            	if(result.error) {
+            		Common.alert(result.error);
+            	}
+            	else if (result.success) {
+            		Common.popupDiv('/payment/initRequestRefundPop.do', selectedOrder, null , true ,'_requestRefundPop');
+            	}
+            });
+        }
+        else{
+        	Common.alert('No Payment List selected.');
+        }
+    }
 </script>
 <!-- content start -->
 <section id="content">
@@ -229,6 +387,7 @@
     <section class="search_table">
         <!-- search_table start -->
         <form id="searchForm" action="#" method="post">
+         <input type="hidden" name="data" id="data" />
             <input type="hidden" name="ordId" id="ordId" />
             <table class="type1">
                 <caption>table</caption>
@@ -247,6 +406,15 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
+                        <!-- Celeste DCF SCR [s] -->
+                        <th scope="row">Bank  State ID</th>
+                        <td>
+                            <input type="text" id="bankStateId" name="bankStateId" class="" />
+                             <p class="btn_sky">
+                                 <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
+                             </p>
+                        </td>
+                        <!-- Celeste DCF SCR [s] -->
                         <th scope="row">OR No</th>
                         <td>
                             <input type="text" id="orNo" name="orNo" class="w100p" />
@@ -273,15 +441,19 @@
                             </div>
                             <!-- date_set end -->
                         </td>
-
+                        <th scope="row">Transaction ID </th>
+                        <!-- <td colspan="3"> --> <!-- celeste - 2023/02/27 commented for better UI -->
+                        <td>
+                            <input type="text" id="trxId" name="trxId" class="w100p" />
+                        </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <th scope="row">Transaction ID </th>
                         <td colspan="3">
                             <input type="text" id="trxId" name="trxId" class="" />
                          </td>
-                    </tr>
+                    </tr> -->
 
                 </tbody>
             </table>
@@ -301,6 +473,7 @@
 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();" id="btnrequestDCF"><spring:message code='pay.btn.requestDcf'/></a></p></li>
 				</c:if>
 					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>

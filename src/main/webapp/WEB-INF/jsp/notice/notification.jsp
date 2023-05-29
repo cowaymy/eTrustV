@@ -124,10 +124,12 @@ $(document).ready(function() {
 
             var ntfType = event.item.ntfType;
 
-            if(ntfType != "Budget") {
+            if(ntfType != "Budget" && ntfType != "REF") {
                 url += "webInvoice/webInvoiceApprove.do";
             } else if(ntfType == "Budget") {
                 url += "budget/budgetApprove.do";
+            } else if(ntfType == "REF") {
+                url = getContextPath() +  "/payment/initConfirmRefund.do";
             }
 
             Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {
@@ -158,6 +160,8 @@ $(document).ready(function() {
 
             } else if(ntfType == "Budget") {
                 url += "budget/budgetAdjustmentList.do";
+            } else if(ntfType == "REF") {
+            	url = getContextPath() +  "/payment/initConfirmRefund.do";
             }
 
             Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {

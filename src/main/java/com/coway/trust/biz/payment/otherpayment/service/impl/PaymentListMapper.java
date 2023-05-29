@@ -168,6 +168,39 @@ public interface PaymentListMapper {
 	void approvalFT(Map<String, Object> params);
 
 
+	/* CELESTE 20230306 [S] */
+	List<EgovMap> selectRefundOldData(Map<String, Object> params);
+	int invalidRefund(Map<String, Object> params);
+	List<EgovMap> selectInvalidRefundType(Map<String, Object> params);
+	int refundChecking(Map<String, Object> params);
+	int getNextSeq();
+	int invalidStatus(Map<String, Object> params);
+	void requestRefundM(Map<String, Object> params);
+	void requestRefundDOld(Map<String, Object> params);
+	void requestRefundDNew(Map<String, Object> params);
+	int insertFileGroup(Map<String, Object> params);
+	int insertFileDetail(Map<String, Object> params);
+	void insertApproveMaster(Map<String, Object> params);
+	void insertApproveDetail(Map<String, Object> params);
+	String getNextApprSeq();
+	EgovMap getNtfUser(Map<String, Object> params);
+	void insertNotification(Map<String, Object> params);
+	List<EgovMap> selectRequestRefundList(Map<String, Object> params);
+	List<EgovMap> selectRequestRefundByGroupSeq(Map<String, Object> params);
+	EgovMap selectRequestRefundAppvDetails(Map<String, Object> params);
+	EgovMap selectReqRefundInfo(Map<String, Object> params);
+	List<EgovMap> selectReqRefundApprovalItem(Map<String, Object> params);
+	int refundDuplicates(Map<String, Object> params);
+	Map<String, Object> approvalRefund(Map<String, Object> params);
+	int selectAppvLineCnt(String appvPrcssNo);
+	int selectAppvLinePrcssCnt(String appvPrcssNo);
+	void updateStatusRefundM(Map<String, Object> params);
+	void updateStatusRefundD(Map<String, Object> params);
+	void updateLastAppvLine(Map<String, Object> params);
+	String selectRefundReqId(String appvPrcssNo);
+	String getSalesOrdId(String salesOrdNo);
+	/* CELESTE 20230306 [E] */
+
 
 
 }

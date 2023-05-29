@@ -3,6 +3,9 @@ package com.coway.trust.biz.payment.otherpayment.service;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface PaymentListService
@@ -135,6 +138,20 @@ public interface PaymentListService
 	 */
     int approvalFT(Map<String, Object> params);
 
+    /* CELESTE 20230306 [S] */
+    void insertAttachment(List<FileVO> list, FileType type, Map<String, Object> params);
+    List<EgovMap> selectRefundOldData(Map<String, Object> params);
+    int invalidRefund(Map<String, Object> params);
+    int invalidStatus(Map<String, Object> params);
+    List<EgovMap> selectInvalidRefundType(Map<String, Object> params);
+    EgovMap requestRefund(Map<String, Object> paramMap, List<Object> paramList, List<Object> apprList );
+    List<EgovMap> selectRequestRefundList(Map<String, Object> params);
+    List<EgovMap> selectRequestRefundByGroupSeq(Map<String, Object> params);
+    EgovMap selectReqRefundInfo(Map<String, Object> params);
+    List<EgovMap> selectReqRefundApprovalItem(Map<String, Object> params);
+    Map<String, Object> approvalRefund(Map<String, Object> params);
+    void rejectRefund(Map<String, Object> params);
+    /* CELESTE 20230306 [E] */
 
 
 
