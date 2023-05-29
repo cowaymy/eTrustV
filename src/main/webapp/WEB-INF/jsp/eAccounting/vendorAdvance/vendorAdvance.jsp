@@ -1136,7 +1136,11 @@
                 return flag;
             }
             else{
-            	if($("#eventStartDt").val() > $("#eventEndDt").val()){
+            	//moment("#eventStartDt", "DD/MM/YYYY").isAfter(moment("#eventEndDt", "DD/MM/YYYY"));
+            	//Wawa 29/5/23 comparing date
+            	console.log($("#eventStartDt").val());
+            	console.log($("#eventEndDt").val());
+            	if(moment($("#eventStartDt").val(), "DD/MM/YYYY").isAfter(moment($("#eventEndDt").val(), "DD/MM/YYYY"))){
             		Common.alert("Event Date invalid. Please choose again.");
             		flag = false;
             		return flag;
