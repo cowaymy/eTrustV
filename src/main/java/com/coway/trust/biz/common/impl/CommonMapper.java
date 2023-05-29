@@ -276,4 +276,6 @@ public interface CommonMapper {
 
 	List<EgovMap> selectMemTypeCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectReasonCodeId(Map<String, Object> params);
+
 }

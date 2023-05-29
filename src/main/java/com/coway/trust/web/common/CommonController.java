@@ -535,4 +535,14 @@ public class CommonController {
 
 		return ResponseEntity.ok(codeList);
 	}
+
+
+	@RequestMapping(value = "/selectReasonCodeId.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectReasonCodeId(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("groupCode : {}", params);
+
+		List<EgovMap> codeList = commonService.selectReasonCodeId(params);
+		return ResponseEntity.ok(codeList);
+	}
 }

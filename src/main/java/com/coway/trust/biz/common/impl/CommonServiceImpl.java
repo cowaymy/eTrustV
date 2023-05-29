@@ -1835,4 +1835,9 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> selectMemTypeCodeList(Map<String, Object> params) {
 		return commonMapper.selectMemTypeCodeList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectReasonCodeId(Map<String, Object> params) {
+		return commonMapper.selectReasonCodeId(params);
+	}
 }
