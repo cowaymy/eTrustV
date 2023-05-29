@@ -360,7 +360,8 @@
 		       Extent1.CNVR_USER_ID CNVR_USER_ID  ,
 		       Extent1.BATCH_PAY_TYPE BATCH_PAY_TYPE  ,
 		       Extent1.BATCH_PAY_REM BATCH_PAY_REM  ,
-		       Extent1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE
+		       Extent1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+               NVL (Extent1.BATCH_IS_ADV, 0) BATCH_IS_ADV
 		  FROM PAY0044D Extent1
 		 WHERE  Extent1.BATCH_ID = #{batchId}
 		 AND ROWNUM <![CDATA[ <= ]]> 1
@@ -677,5 +678,12 @@
         WHERE  CODE_MASTER_ID = '130'
                     AND CODE = #{cardModeCode}
     </select>
+
+  <resultMap id="confAdvMap" type="egovMap"></resultMap>
+  <update id="callCnvrAdvBatchPay" statementType="CALLABLE" parameterType="Map">
+    {call SP_UPD_CNVR_ADV_BATCH_PAY(#{batchId},
+    #{userId},
+    #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confAdvMap} )}
+  </update>
 
 </mapper>

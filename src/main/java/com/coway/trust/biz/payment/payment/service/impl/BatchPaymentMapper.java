@@ -133,4 +133,6 @@ public interface BatchPaymentMapper {
 
 	String selectBatchPayCardModeId(String cardModeCode);
 
+  void callCnvrAdvBatchPay(Map<String, Object> params);
+
 }

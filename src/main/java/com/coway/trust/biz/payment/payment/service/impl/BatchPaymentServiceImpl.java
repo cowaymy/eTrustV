@@ -64,34 +64,44 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		return batchPaymentMapper.updRemoveItem(params);
 	}
 
-	@Override
-	public int saveConfirmBatch(Map<String, Object> params) {
-		EgovMap  paymentMs = batchPaymentMapper.selectBatchPaymentMs(params);
-		int insResult = 0;
-		int callResult = -1;
-		int returnResult = 0;
+  @Override
+  public int saveConfirmBatch(Map<String, Object> params) {
+    EgovMap paymentMs = batchPaymentMapper.selectBatchPaymentMs(params);
+    int insResult = 0;
+    int callResult = -1;
+    int returnResult = 0;
 
-		if(paymentMs != null){
-			if(String.valueOf(paymentMs.get("batchStusId")).equals("1") && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")){
+    if (paymentMs != null) {
+      if (String.valueOf(paymentMs.get("batchPayType")).equals("96")
+          || String.valueOf(paymentMs.get("batchPayType")).equals("97")) {
+        // CALL PROCEDURE
 
-				insResult = batchPaymentMapper.saveConfirmBatch(params);
+        if (String.valueOf(paymentMs.get("batchIsAdv")).equals("1")) {
+          batchPaymentMapper.callCnvrAdvBatchPay(params);
+        } else {
+          batchPaymentMapper.callCnvrBatchPay(params);
+        }
 
-				if(String.valueOf(paymentMs.get("batchPayType")).equals("96") || String.valueOf(paymentMs.get("batchPayType")).equals("97")){
-					//CALL PROCEDURE
-					batchPaymentMapper.callCnvrBatchPay(params);
-					callResult=Integer.parseInt(String.valueOf(params.get("p1")));
-				}
-			}
-		}
+        callResult = Integer.parseInt(String.valueOf(params.get("p1")));
+      }
+      if (callResult > -1) {
+        if (String.valueOf(paymentMs.get("batchStusId")).equals("1")
+            && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")) {
 
-		if(insResult > 0 && callResult > -1){
-			returnResult = 1;
-		}else{
-			returnResult = 0;
-		}
+          insResult = batchPaymentMapper.saveConfirmBatch(params);
 
-		return returnResult;
-	}
+        }
+      }
+    }
+
+    if (insResult > 0 && callResult > -1) {
+      returnResult = 1;
+    } else {
+      returnResult = 0;
+    }
+
+    return returnResult;
+  }
 
 	@Override
 	public EgovMap selectBatchPaymentDs(Map<String, Object> params) {
@@ -136,8 +146,8 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
         detailList.get(i).put("detId", detailSeq);
         detailList.get(i).put("batchId", mastetSeq);
         detailList.get(i).put("jomPay", master.get("jomPay"));
-        logger.debug("detId ::" + detailSeq);
-        logger.debug("detailList {}",detailList.get(i));
+        logger.debug("========= detId :: " + detailSeq);
+        logger.debug("============= detailList {}  ",detailList.get(i));
         //batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
          buLit.add(detailList.get(i));
       }
