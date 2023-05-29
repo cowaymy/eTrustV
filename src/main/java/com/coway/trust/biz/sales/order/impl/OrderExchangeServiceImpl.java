@@ -374,7 +374,7 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 
 	    String content = "";
 	    content += "Dear Customer,\n\n";
-	    content += "CYour product Exchange is successful.\n\n";
+	    content += "Your product Exchange is successful.\n\n";
 	    content += "Kindly refer an attachment for your Exchange Notes.\n";
 	    content += "Thank you for your continue support to Coway.\n";
 	    content += "If you need assistance may contact our Coway Careline \n\n";
@@ -405,7 +405,7 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 
 		    params.put(EMAIL_TO, emailNo);
 			params.put("V_WHERE", soId);// parameter
-			params.put("soReqId", soId);
+			params.put("soId", soId);
 
 			try{
 				this.viewProcedure(null, null, params); //Included sending email

@@ -293,7 +293,7 @@
         }
 
         if(emailCountArr.length > 0){
-            Common.confirmCustomizingButton(emailCountArr.join(',') + "Cancellation Notes has been sent 1 time <br> ",
+            Common.confirmCustomizingButton("Order No " + salesOrdNoCountSendArr.join(',') + " PEX Notes has been sent 1 time <br> Do you want to send the email again?",
             		"Yes", "No", fn_pexSendEmail, fn_popClose);
         }
         else{
