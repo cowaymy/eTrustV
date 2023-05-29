@@ -62,6 +62,8 @@
                             ELSE 'N'
                        END PREINS_IND
                      , PREINS.REMARK PREINS_REMARK
+                     , MA.AREA_ID
+                     , TO_CHAR(CE.UPD_DT, 'DD-MM-YYYY') LAST_UPD_CALL_LOG_DT
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
