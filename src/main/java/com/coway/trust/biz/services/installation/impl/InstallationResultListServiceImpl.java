@@ -3916,10 +3916,6 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
   		insNoSendArr = (List<String>) params.get("insNoSendArr");
   		emailArr = (List<String>) params.get("emailArr");
 
-  		logger.debug("====ARR" + installEntryIdArr.toString());
-  		logger.debug("====ARR" + insNoSendArr.toString());
-  		logger.debug("====ARR" + emailArr.toString());
-
 	    String emailSubject = "COWAY: New Installation";
 
 	    List<String> emailNo = new ArrayList<String>();

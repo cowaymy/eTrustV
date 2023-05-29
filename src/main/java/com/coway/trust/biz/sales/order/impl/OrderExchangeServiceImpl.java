@@ -364,13 +364,9 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 		List<String> notSentArr = new ArrayList<String>();
 		List<String> emailArr = new ArrayList<String>();
 
-		soIdArr = (List<Integer>) params.get("soReqIdArr");
-		ordNoSendArr = (List<String>) params.get("reqNoSendArr");
+		soIdArr = (List<Integer>) params.get("soIdArr");
+		ordNoSendArr = (List<String>) params.get("salesOrdNoSendArr");
 		emailArr = (List<String>) params.get("emailArr");
-
-		logger.debug("====ARR" + soIdArr.toString());
-		logger.debug("====ARR" + ordNoSendArr.toString());
-		logger.debug("====ARR" + emailArr.toString());
 
 	    String emailSubject = "COWAY: Product Return";
 
@@ -422,13 +418,13 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 			if(sentArr.size() > 0){
 				message.setCode(AppConstants.SUCCESS);
 			    message.setData(String.join(",",sentArr));
-			    message.setMessage("Email sent for " + String.join(",",sentArr));
+			    message.setMessage("Email sent for Order no " + String.join(",",sentArr));
 			}
 
 			if(notSentArr.size() > 0){
 				message.setCode("98");
 		        message.setData(String.join(",",notSentArr));
-		        message.setMessage("Email send failed for " + String.join(",",notSentArr));
+		        message.setMessage("Email send failed for Order no " + String.join(",",notSentArr));
 			}
 		}
 

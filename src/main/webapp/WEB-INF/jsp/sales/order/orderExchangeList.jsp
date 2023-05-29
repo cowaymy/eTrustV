@@ -128,6 +128,8 @@
       skipReadonlyColumns : true,
       wrapSelectionMove : true,
       showRowNumColumn : false,
+      showRowCheckColumn : true,
+      showRowAllCheckBox : true,
       groupingMessage : "Here groupping"
     };
 
@@ -322,7 +324,7 @@
 
             if(idArr.length > 0){
                 if(emailArr.length >= 1){
-                    Common.ajax("POST", "/services/pexSendEmail.do", sendEmailM, function(result) {
+                    Common.ajax("POST", "/sales/order/pexSendEmail.do", sendEmailM, function(result) {
                         console.log(result);
                         if(result.code == '00') {
                             Common.alert(result.message);

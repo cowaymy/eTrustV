@@ -680,10 +680,6 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 		reqNoSendArr = (List<String>) params.get("reqNoSendArr");
 		emailArr = (List<String>) params.get("emailArr");
 
-		logger.debug("====ARR" + soReqIdArr.toString());
-		logger.debug("====ARR" + reqNoSendArr.toString());
-		logger.debug("====ARR" + emailArr.toString());
-
 	    String emailSubject = "COWAY: Product Cancellation";
 
 	    List<String> emailNo = new ArrayList<String>();
