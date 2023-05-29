@@ -215,7 +215,12 @@ var branchDs = [];
       $("#installationNoteForm #V_ORDERBYSQL").val(orderBySql);
       $("#installationNoteForm #V_SELECTSQL").val(SelectSql);
       $("#installationNoteForm #V_FULLSQL").val(FullSql);
-      $("#installationNoteForm #reportFileName").val('/homecare/hcInstallationNote_WithOldOrderNo.rpt');
+      if($("#reportType").val()=="1"){
+    	  $("#installationNoteForm #reportFileName").val('/homecare/hcInstallationNote_WithOldOrderNo.rpt');
+      }else{
+    	  $("#installationNoteForm #reportFileName").val('/homecare/hcInstallationNote_WithOldOrderNo2.rpt');
+      }
+
       $("#installationNoteForm #viewType").val("PDF");
       $("#installationNoteForm #reportDownFileName").val("InstallationNote_" + day + month + date.getFullYear());
 
@@ -397,6 +402,17 @@ var branchDs = [];
       <td>
         <input type="text" title="" placeholder="Bundle No" class="w100p" id="sBndlNo" name="sBndlNo" />
       </td>
+     </tr>
+     <tr>
+     <th>Report Type<span name="m5" id="m5" class="must">*</span></th>
+     <td>
+            <select class="form-control" id="reportType">
+                   <option value="1" selected>Without Template</option>
+                   <option value="2">With Template</option>
+             </select>
+     </td>
+     <th></th>
+     <td></td>
      </tr>
     </tbody>
    </table>
