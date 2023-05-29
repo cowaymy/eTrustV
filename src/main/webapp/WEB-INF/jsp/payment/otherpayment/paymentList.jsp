@@ -406,7 +406,7 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
-                        <!-- Celeste DCF SCR [s] -->
+                        <%-- <!-- Celeste DCF SCR [s] -->
                         <th scope="row">Bank  State ID</th>
                         <td>
                             <input type="text" id="bankStateId" name="bankStateId" class="" />
@@ -414,7 +414,7 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
-                        <!-- Celeste DCF SCR [s] -->
+                        <!-- Celeste DCF SCR [s] --> --%>
                         <th scope="row">OR No</th>
                         <td>
                             <input type="text" id="orNo" name="orNo" class="w100p" />
@@ -441,19 +441,19 @@
                             </div>
                             <!-- date_set end -->
                         </td>
-                        <th scope="row">Transaction ID </th>
-                        <!-- <td colspan="3"> --> <!-- celeste - 2023/02/27 commented for better UI -->
+                        <!-- <th scope="row">Transaction ID </th>
+                        <td colspan="3"> celeste - 2023/02/27 commented for better UI
                         <td>
                             <input type="text" id="trxId" name="trxId" class="w100p" />
                         </td>
-                    </tr>
+                    </tr> -->
 
-                    <!-- <tr>
+                    <tr>
                         <th scope="row">Transaction ID </th>
                         <td colspan="3">
                             <input type="text" id="trxId" name="trxId" class="" />
                          </td>
-                    </tr> -->
+                    </tr>
 
                 </tbody>
             </table>
