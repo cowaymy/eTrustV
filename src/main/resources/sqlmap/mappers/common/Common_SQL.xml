@@ -2105,4 +2105,22 @@
         </if>
     </select>
 
+    <select id="selectReasonCodeId" resultType="egovMap">
+        SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID = #{typeId}
+                         AND 1 = T1.STUS_CODE_ID
+                    ) T
+             ) TT ORDER BY CODE_ID
+    </select>
+
 </mapper>
