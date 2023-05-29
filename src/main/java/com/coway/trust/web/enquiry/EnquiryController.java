@@ -82,7 +82,7 @@ public class EnquiryController {
 	 @Autowired
 	 private MessageSourceAccessor messageAccessor;
 
-	 @RequestMapping(value = "/updateInstallationAddress.do")
+	 @RequestMapping(value = "/trueaddress.do")
 	 public String updateInstallationAddressHomePage(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO, HttpServletRequest request) throws Exception  {
 		 model.addAttribute("exception", params.get("exception"));
 		 return "enquiry/updateInstallationAddress";

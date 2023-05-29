@@ -23,7 +23,7 @@
             Common.alert("<spring:message code='sys.msg.session.expired'/>");
             if(window.top.location.href.indexOf("login.do")<0){
                 window.top.Common.showLoader();
-                window.top.location.href = '/enquiry/updateInstallationAddress.do';
+                window.top.location.href = '/enquiry/trueaddress.do';
             }
         }
 

@@ -352,7 +352,7 @@
 
          if(FormUtil.isEmpty('${SESSION_INFO.custId}')|| "${exception}" == "401") {
               window.top.Common.showLoader();
-              window.top.location.href = '/enquiry/updateInstallationAddress.do';
+              window.top.location.href = '/enquiry/trueaddress.do';
          }
 
         rebindModal();

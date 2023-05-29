@@ -52,7 +52,7 @@ public class AppConstants {
 	public static final String REDIRECT_LOGIN = "redirect:/login/login.do";
 	public static final String REDIRECT_MOBILE_LOGIN = "redirect:/mobileWeb/login.do";
 	public static final String REDIRECT_UNAUTHORIZED = "redirect:/common/unauthorized.do";
-	public static final String REDIRECT_CUSTOMER_LOGIN = "redirect:/enquiry/updateInstallationAddress.do";
+	public static final String REDIRECT_CUSTOMER_LOGIN = "redirect:/enquiry/trueaddress.do";
 	public static final String CUSTOMER_WEB = "/enquiry";
 	/**
 	 * ajax return code
