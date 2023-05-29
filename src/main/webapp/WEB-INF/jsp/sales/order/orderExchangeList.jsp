@@ -474,19 +474,22 @@
     </form>
   </section>
   <!-- search_table end -->
-  <section class="search_result">
-    <!-- search_result start
 
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+  <section class="search_result">
+   <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+     <li><p class="btn_grid">
+       <a href="#" onClick="fn_sendEmail()">Send Email</a>
+      </p></li>
+    </c:if>
+    <!--  <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
--->
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
+   </ul>
     <article class="grid_wrap">
       <!-- grid_wrap start -->
       <div id="list_grid_wrap" style="width: 100%;
