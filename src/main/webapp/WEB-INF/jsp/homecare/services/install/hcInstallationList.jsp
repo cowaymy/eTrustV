@@ -652,6 +652,7 @@
           <select id="listDelvryGr" name="delvryGr" class="multy_select w100p" multiple="multiple">
               <option value="Y">Yes</option>
               <option value="N">No</option>
+              <option value="B">Blank</option>
           </select>
      </td>
      <th scope="row">Stock Return GR</th>
@@ -659,6 +660,7 @@
           <select id="listReturnGr" name="returnGr" class="multy_select w100p" multiple="multiple">
               <option value="Y">Yes</option>
               <option value="N">No</option>
+              <option value="B">Blank</option>
           </select>
      </td>
      </tr>

@@ -91,13 +91,14 @@
                   A.SVC_WEEK,
                   A.DT_SUB_GRP AS CT_SUB_GRP,
                   A.LT_SUB_GRP AS LT_SUB_GRP,
+                  A.AC_SUB_GRP AS AC_SUB_GRP,
                   (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 6666) AS NO_SVC_CNT
 
          FROM ORG0019M A
          INNER JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID AND A.AVAIL_FLAG = 'Y'
-        WHERE A.BRNCH_TYPE = #{branchTypeId}
+        WHERE A.BRNCH_TYPE in ('5754','43')
         <if test="dscCode != null and dscCode != ''">
-            AND  B.DT_BRNCH_CODE = #{dscCode}
+            AND  (B.DT_BRNCH_CODE = #{dscCode} OR B.AC_BRNCH_CODE = #{dscCode})
 		</if>
 		<if test="areaId != null and areaId != ''">
             AND  B.AREA_ID = #{areaId}

@@ -55,8 +55,8 @@
 	                  ,HPDET.name HP_NAME
                       ,HPDET.TEL_MOBILE HP_CONTACT
                      ,exchg.SO_CUR_STUS_ID ord_stus_code_id
-                    ,NVL(delvrSts.DELVRY_GR_CMPLT,'N') delvry_gr
-                    ,NVL(returnSts.DELVRY_GR_CMPLT,'N') return_gr
+                    ,delvrSts.DELVRY_GR_CMPLT delvry_gr
+                    ,returnSts.DELVRY_GR_CMPLT return_gr
                     , CASE
                             WHEN PREINS.INSTALL_ENTRY_NO IS NOT NULL THEN 'Y'
                             ELSE 'N'
@@ -92,21 +92,23 @@
         LEFT JOIN SAL0004D exchg ON exchg.SO_EXCHG_ID = ce.DOC_ID
                              AND ce.TYPE_ID = 258
                LEFT JOIN (
-          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
           FROM LOG0047M GI
           LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
           LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
           LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
           WHERE GI.TRNSC_TYPE_DTL = 'UM03' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
           GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
       ) DELVRSTS ON DELVRSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
       LEFT JOIN(
-          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
           FROM LOG0047M GI
           LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
           LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
           LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
           WHERE GI.TRNSC_TYPE_DTL = 'UM93' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
           GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
       ) RETURNSTS ON RETURNSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
         WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
@@ -222,14 +224,14 @@
            AND V.ORG_CODE = #{orgCode}
            </if>
          <if test="delvryGrList != null and delvryGrList != '' ">
-            AND NVL(delvrSts.DELVRY_GR_CMPLT,'N') IN
+            AND NVL(delvrSts.DELVRY_GR_CMPLT,'B') IN
             <foreach item="item" collection="delvryGrList" index="index"
               open="(" separator="," close=")">
               #{item}
             </foreach>
         </if>
         <if test="returnGrList != null and returnGrList != '' ">
-            AND NVL(returnSts.DELVRY_GR_CMPLT,'N') IN
+            AND NVL(returnSts.DELVRY_GR_CMPLT,'B') IN
             <foreach item="item" collection="returnGrList" index="index"
               open="(" separator="," close=")">
               #{item}

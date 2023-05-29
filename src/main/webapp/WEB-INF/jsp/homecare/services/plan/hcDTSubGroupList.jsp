@@ -104,8 +104,9 @@
                     }
                 }
             },
-            {dataField : "ctSubGrp",              headerText : "Sub Group",               width :130},
-            {dataField : "ctBrnchCode",         headerText : "ctBrnchCode",             width :0}
+            {dataField : "ctSubGrp",              headerText : "DT Sub Group",               width :130},
+            {dataField : "ctBrnchCode",         headerText : "ctBrnchCode",             width :0},
+            {dataField : "acSubGrp",              headerText : "AC Sub Group",               width :130}
         ];
 
 	    myGridID2 = AUIGrid.create("#grid_wrap_dtaAreaSubGroup", columnLayout, gridPros);
