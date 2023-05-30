@@ -385,4 +385,6 @@ public interface MemberListMapper {
 	List<EgovMap> selectMemberWorkingHistory(Map<String, Object> params);
 
 	List<EgovMap> selectHpRegistrationOption(Map<String, Object> params);
+
+	int selectCntMemSameEmail(Map<String, Object> params);
 }

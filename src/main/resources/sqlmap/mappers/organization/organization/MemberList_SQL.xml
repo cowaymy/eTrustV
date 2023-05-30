@@ -6003,4 +6003,12 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
             FROM SYS0013M
         WHERE CODE_MASTER_ID=543 AND DISAB <![CDATA[ <> ]]> 1
       </select>
+
+      <select id="selectCntMemSameEmail" parameterType="Map" resultType="int">
+      SELECT
+        COUNT(*)
+      FROM
+      ORG0001D
+      WHERE EMAIL = #{email}
+      </select>
 </mapper>

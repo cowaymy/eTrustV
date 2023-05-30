@@ -2985,4 +2985,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public List<EgovMap> selectHpRegistrationOption(Map<String, Object> params) {
         return memberListMapper.selectHpRegistrationOption(params);
     }
+
+	// To get count of duplicated members with same email
+	@Override
+	public int selectCntMemSameEmail(Map<String, Object> params) {
+	    return memberListMapper.selectCntMemSameEmail(params);
+	}
 }

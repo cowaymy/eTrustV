@@ -712,6 +712,10 @@ function createAUIGrid() {
             headerText : "Group Code",
             editable : false,
             width : 130
+        },
+        {
+            dataField : "email",
+            visible : false
         }
 
         /* this is for put EDIT button in grid ,
@@ -1006,17 +1010,22 @@ function fn_genRawData() {
 function fn_pushCU(){
 
 	let memberId = AUIGrid.getCellValue(myGridID, selRowIndex, "memberid");
-
-	Common.ajax("GET","/organization/pushCU.do", {MemberID : memberId}, function(result) {
-		console.log(result);
-		if(result.status == 'true'){
-			Common.alert("Successfully push to CU.");
-		}else{
-			Common.alert("Request failed.");
-		}
-
+	var memEmail = AUIGrid.getCellValue(myGridID, selRowIndex, "email");
+	Common.ajax("GET","/organization/selectCntMemSameEmail.do", {email : memEmail}, function(cnt) {
+        if(cnt > 1){
+            Common.alert("Failed request. Duplicate email");
+        }
+        else {
+            Common.ajax("GET","/organization/pushCU.do", {MemberID : memberId}, function(result) {
+                console.log(result);
+                if(result.status == 'true'){
+                    Common.alert("Successfully push to CU.");
+                }else{
+                    Common.alert("Failed Request. Invalid parameter");
+                }
+            });
+        }
     });
-
 }
 
 $(function() {
@@ -1627,7 +1636,7 @@ function fn_socialMediaInfo(){
 <article class="grid_wrap">
     <!-- grid_wrap start -->
     <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-    <div id="excel_list_grid_wrap" style="display: none;"></div>
+    <div id="excel_list_grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

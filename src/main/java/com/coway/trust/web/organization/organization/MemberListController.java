@@ -2948,5 +2948,12 @@ public class MemberListController {
     Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(params);
     return ResponseEntity.ok(returnVal);
   }
+
+	@RequestMapping(value = "/selectCntMemSameEmail.do", method = RequestMethod.GET)
+	public ResponseEntity<Integer> selectCntMemSameEmail(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		int cnt = memberListService.selectCntMemSameEmail(params);
+		return ResponseEntity.ok(cnt);
+	}
 }
 

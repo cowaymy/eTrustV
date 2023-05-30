@@ -278,4 +278,6 @@ public interface MemberListService {
 	List<EgovMap> selectHpRegistrationOption(Map<String, Object> params);
 
 	BigDecimal getOwnPurcOutsInfo(Map<String, Object> params);
+
+	int selectCntMemSameEmail(Map<String, Object> params);
 }
