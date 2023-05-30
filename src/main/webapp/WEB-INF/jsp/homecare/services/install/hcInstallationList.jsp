@@ -205,8 +205,8 @@
 	        {dataField : "telM1",headerText : '<spring:message code="service.title.MobileNo" />',width : 130},
 	        {dataField : "telO",headerText : '<spring:message code="service.title.ResidenceNo" />',width : 130},
 	        {dataField : "telR",headerText : '<spring:message code="service.title.OfficeNo" />',width : 130},
-	        {dataField : "areaId",headerText : 'Area ID',width : 130},
-	        {dataField : "lastUpdCallLogDt",headerText : 'Last Updated Call Log Date',width : 200},
+	        /* {dataField : "areaId",headerText : 'Area ID',width : 130},
+	        {dataField : "lastUpdCallLogDt",headerText : 'Last Updated Call Log Date',width : 200}, */
 	        {dataField : "hpName",headerText : '<spring:message code="sal.text.salPersonName" />',width : 150},
 	        {dataField : "hpContact",headerText : '<spring:message code="sal.text.salPersonPhone" />',width : 150},
 	        {dataField : "remark",headerText : '<spring:message code="service.title.Remark" />',width : 500},
