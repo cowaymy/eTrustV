@@ -297,10 +297,10 @@
             		"Yes", "No", fn_pexSendEmail, fn_popClose);
         }
         else{
-        	fn_pexSendEmail(emailM);
+        	fn_pexSendEmail();
         }
 
-        function fn_pexSendEmail(emailM){
+        function fn_pexSendEmail(){
 
             var idArr = [];
             var noArr = [];

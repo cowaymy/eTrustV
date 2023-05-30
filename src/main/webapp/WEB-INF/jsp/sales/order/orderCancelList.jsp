@@ -577,10 +577,10 @@
             		"Yes", "No", fn_canSendEmail, fn_popClose);
         }
         else{
-        	fn_canSendEmail(emailM);
+        	fn_canSendEmail();
         }
 
-        function fn_canSendEmail(emailM){
+        function fn_canSendEmail(){
 
             var idArr = [];
             var noArr = [];

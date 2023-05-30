@@ -700,7 +700,7 @@
 	        		"Yes", "No", fn_insSendEmail, fn_popClose);
 	    }
 	    else{
-	    	fn_insSendEmail(emailM);
+	    	fn_insSendEmail();
 	    }
 
 	    function fn_insSendEmail(){
