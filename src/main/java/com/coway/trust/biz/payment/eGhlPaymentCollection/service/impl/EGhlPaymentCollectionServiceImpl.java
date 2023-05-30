@@ -89,7 +89,7 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 					  if(productTypeName.toUpperCase() == "OUTRIGHT MEMBERSHIP"){
 						  productTypeCode = "SVMOUT";
 					  }
-					  else{
+					  else if(productTypeName.toUpperCase() == "RENTAL MEMBERSHIP"){
 						  productTypeCode = "SVMREN";
 					  }
 					  newDetailParam.put("productTypeCode", productTypeCode);
