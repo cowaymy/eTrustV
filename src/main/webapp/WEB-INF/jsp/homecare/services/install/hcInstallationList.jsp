@@ -649,7 +649,7 @@
       <th scope="row"><spring:message code='service.title.Product' /></th>
       <td ><select class="w100p" id="product"
        name="product"></select></td>
-       <th scope="row">Stock Out GR</th>
+       <!-- <th scope="row">Stock Out GR</th>
      <td>
           <select id="listDelvryGr" name="delvryGr" class="multy_select w100p" multiple="multiple">
               <option value="Y">Yes</option>
@@ -664,7 +664,7 @@
               <option value="N">No</option>
               <option value="B">Blank</option>
           </select>
-     </td>
+     </td> -->
      </tr>
      <tr>
            <th>Pre-Installation Check :</th>
