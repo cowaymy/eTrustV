@@ -203,6 +203,7 @@
 	function createAllactionAUIGrid() {
 	    var columnLayout = [
             {dataField : "reMemCode",          headerText : "DT",            width : 150,          editable : false,          cellMerge : true},
+            {dataField : "name",                   headerText : "Name",          width : 150,          editable : false},
 	        {dataField : "cDate",                   headerText : "Date",          width : 150,          editable : false},
 	        {headerText : "Summary",
 	            children : [

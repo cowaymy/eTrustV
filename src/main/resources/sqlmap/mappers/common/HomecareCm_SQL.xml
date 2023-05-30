@@ -6,7 +6,7 @@
     <select id="selectHomecareBranchCd"  parameterType="Map" resultType="egovMap">
         /* com.coway.trust.biz.common.impl.HomecareCmMapper.selectHomecareBranchCd */
         SELECT CODE CODE_ID,
-                   CODE CODE_NAME
+        CODE || ' - '|| NAME  CODE_NAME
         FROM SYS0005M
         <where>
             <!-- <if test="brnchType != null and brnchType != ''">
@@ -19,8 +19,8 @@
                 #{item}
             </foreach>
         </if>
+        AND STUS_ID = 1
         </where>
-        GROUP BY CODE
         ORDER BY CODE
 	</select>
 

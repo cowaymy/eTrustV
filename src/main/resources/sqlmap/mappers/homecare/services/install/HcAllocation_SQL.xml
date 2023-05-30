@@ -7,6 +7,7 @@
         SELECT CT
              , DECODE (#{repla}, 'true', RE_MEM_CODE||'(REP)' , RE_MEM_CODE) AS RE_MEM_CODE
 			 , MEM_CODE
+			 , NAME
 			 , C_DATE
 			 , D_DATE
 			 , ASCNT ||'-'|| C_AS_SUM_CNT   AS ASCNT
@@ -22,6 +23,7 @@
 					, (SELECT DECODE (A.TRNSPRT, '254' , MEM_CODE||'(M)' , MEM_CODE) AS TR
 					     FROM ORG0001D A  WHERE  #{ct} = A.MEM_ID ) AS RE_MEM_CODE
 					, (SELECT MEM_CODE  FROM ORG0001D A  WHERE   #{ct} = A.MEM_ID ) AS MEM_CODE
+					, (SELECT NAME FROM ORG0001D A  WHERE  #{ct} = A.MEM_ID ) AS NAME
 					, TO_CHAR (TO_DATE(#{cDate},'YYYY-MM-DD'),'DD/MM/YYYY') AS D_DATE
 					, (SELECT COUNT (*) CNT FROM SAL0046D AA
 					                           , SAL0001D BB
