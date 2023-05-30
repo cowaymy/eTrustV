@@ -4,26 +4,26 @@
 <script type="text/javaScript">
 
     //AUIGrid 생성 후 반환 ID
-    var inchargeGridID; 
+    var inchargeGridID;
     var callResultGridID;
     var callLogGirdID;
-    
+
     $(document).ready(function(){
-        
+
  //       createInchargeGrid();
         createCallResultGrid();
         createcallLogGird();
-        
+
         //Call Ajax
- //       fn_getInchargeAjax(); 
+ //       fn_getInchargeAjax();
         fn_getCallResultAjax();
         fn_getCallLogAjax();
     });
-    
-    
+
+
     function createCallResultGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var callResultColumnLayout = [{
@@ -53,21 +53,21 @@
             }, {
                 dataField : "callCrtDt",
                 headerText : '<spring:message code="sal.title.text.keyAt" />',
-                dataType : "date", 
+                dataType : "date",
                 formatString : "dd/mm/yyyy",
                 width : 120,
                 editable : false
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : true, 
+            showStateColumn : true,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -81,13 +81,13 @@
             showRowNumColumn : true,
             groupingMessage : "Here groupping"
         };
-        
+
         callResultGridID = GridCommon.createAUIGrid("#callResult_grid_wrap", callResultColumnLayout, gridPros);
     }
-    
+
     function createcallLogGird() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var callLogColumnLayout = [{
@@ -127,21 +127,21 @@
             },{
                 dataField : "callCrtDt",
                 headerText : '<spring:message code="sal.text.createDate" />',
-                dataType : "date", 
+                dataType : "date",
                 formatString : "dd/mm/yyyy",
                 width : 120,
                 editable : false
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : true, 
+            showStateColumn : true,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -155,31 +155,31 @@
             showRowNumColumn : true,
             groupingMessage : "Here groupping"
         };
-        
+
         callLogGirdID = GridCommon.createAUIGrid("#callLog_grid_wrap", callLogColumnLayout, gridPros);
     }
-    
+
     // contact Ajax
 //    function fn_getInchargeAjax(){
 //        Common.ajax("GET", "/sales/order/inchargePersonList.do",$("#getParamForm").serialize(), function(result) {
 //            AUIGrid.setGridData(inchargeGridID, result);
 //        });
 //    }
-    
+
  // contact Ajax
     function fn_getCallResultAjax(){
         Common.ajax("GET", "/sales/order/suspendCallResultList.do",$("#getParamForm").serialize(), function(result) {
             AUIGrid.setGridData(callResultGridID, result);
         });
     }
- 
+
  // contact Ajax
     function fn_getCallLogAjax(){
         Common.ajax("GET", "/sales/order/callResultLogList.do",$("#getParamForm").serialize(), function(result) {
             AUIGrid.setGridData(callLogGirdID, result);
         });
     }
- 
+
   //resize func (tab click)
     function fn_resizefunc(gridName){ //
         if(gridName == '#callResult_grid_wrap'){
@@ -188,28 +188,28 @@
         	AUIGrid.resize(gridName, 950, 300);
         }
    }
-  
+
   function fn_saveSuspendResult(){
 	  var time = new Date();
 	  var day = time.getDate();
-	  
+
 //	  if( day >= 26 || day == 1){
 //		  Common.alert("This action is not allowed within 26 to 1 next month.");
 //		  return false;
 //	  }
-	  
+
 	  if(document.statusForm.newSuspResultStus.value == ""){
 		  Common.alert('<spring:message code="sal.alert.msg.plzSelTheStatus" />');
 		  return false;
 	  }
-	  
+
 	  if(document.statusForm.newSuspResultRem.value == ""){
           Common.alert('<spring:message code="sal.alert.msg.plzKeyInTheRem" />');
           return false;
       }
-	  
+
 	    Common.ajax("GET", "/sales/order/newSuspendResult.do", $("#statusForm").serializeJSON(), function(result) {
-	    	Common.alert(result.msg, fn_reloadPage);
+	    	Common.alert(result.msg, fn_closePop);
 	    }, function(jqXHR, textStatus, errorThrown) {
 	            try {
 	                console.log("status : " + jqXHR.status);
@@ -224,7 +224,11 @@
 	                alert("Saving data prepration failed.");
 	            }
 	            alert("Fail : " + jqXHR.responseJSON.message);
-	    }); 
+	    });
+	}
+
+    function fn_closePop() {
+	  $("#_close").click();
 	}
 
 	function fn_reloadPage(){
@@ -233,25 +237,25 @@
 	    Common.popupDiv('/sales/order/orderSuspendNewResultPop.do', $('#detailForm').serializeJSON(), null , true, '_editDiv2');
 	    $("#_close").click();
 	}
-	
+
 	//그리드 속성 설정
     var gridPros = {
         usePaging           : true,         //페이징 사용
-        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-        editable            : false,            
-        fixedColumnCount    : 0,            
-        showStateColumn     : true,             
-        displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
-        headerHeight        : 30,       
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+        editable            : false,
+        fixedColumnCount    : 0,
+        showStateColumn     : true,
+        displayTreeOpen     : false,
+        selectionMode       : "singleRow",  //"multipleCells",
+        headerHeight        : 30,
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
         noDataMessage       : "No order found.",
         groupingMessage     : "Here groupping"
     };
-        
+
     function chgGridTab(tabNm) {
         switch(tabNm) {
             case 'custInfo' :
@@ -370,7 +374,7 @@
 
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start 
+<article class="tap_area"><!-- tap_area start
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -484,11 +488,11 @@
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/discountList.jsp" %>
 
-    </section><!-- tap_wrap end --> 
+    </section><!-- tap_wrap end -->
 
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start 
+<article class="tap_area"><!-- tap_area start
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
