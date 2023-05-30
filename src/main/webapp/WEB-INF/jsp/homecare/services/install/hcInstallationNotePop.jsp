@@ -408,7 +408,7 @@ var branchDs = [];
      <td>
             <select class="form-control" id="reportType">
                    <option value="1" selected>Without Template</option>
-                   <option value="2">With Template</option>
+                   <option value="2">With template (A4)</option>
              </select>
      </td>
      <th></th>
