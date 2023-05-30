@@ -84,7 +84,15 @@ public class EGhlPaymentCollectionServiceImpl extends EgovAbstractServiceImpl im
 				  }
 
 				  if(svmBillChecked){
-					  newDetailParam.put("productTypeCode", "SVM");
+					  String productTypeName = detail.get("membership").toString();
+					  String productTypeCode = "SVM";
+					  if(productTypeName.toUpperCase() == "OUTRIGHT MEMBERSHIP"){
+						  productTypeCode = "SVMOUT";
+					  }
+					  else{
+						  productTypeCode = "SVMREN";
+					  }
+					  newDetailParam.put("productTypeCode", productTypeCode);
 					  newDetailParam.put("productTypeName", detail.get("membership").toString());
 					  newDetailParam.put("amount", Double.parseDouble(detail.get("membershipOutstandingAmount").toString()));
 
