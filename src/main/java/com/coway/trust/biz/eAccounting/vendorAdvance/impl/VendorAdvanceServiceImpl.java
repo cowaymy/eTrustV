@@ -404,7 +404,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 delCnt += vendorAdvanceMapper.deleteAdvDet_FCM28D(hm);
             }
         }
-        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/mm/yyyy");
+        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/yyyy");
         int addCnt = 0;
         if(addList.size() > 0) {
             Map hm = null;
@@ -418,7 +418,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 hm.put("userId", sessionVO.getUserId());
                 String invcDt=(String) hm.get("invcDt");
                 try {
-					Date fixeddate=new SimpleDateFormat("yyyy/mm/dd").parse(invcDt);
+					Date fixeddate=new SimpleDateFormat("yyyy/MM/dd").parse(invcDt);
 	                hm.put("invcDt", String.valueOf(dateFormat.format(fixeddate)));
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -442,13 +442,20 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
                 hm.put("userId", sessionVO.getUserId());
                // String invcDt=(String) hm.get("invcDt");                //System.out.println("Invc date b4: "+invcDt);
                 String invcDt = String.valueOf(hm.get("invcDt"));
+
+                boolean isValidFormat = invcDt.matches("\\d{2}/\\d{2}/\\d{4}");
+                if(isValidFormat){
+					hm.put("invcDt", invcDt);
+                }else{
+
                 try {
-					Date fixeddate=new SimpleDateFormat("yyyy/mm/dd").parse(invcDt);
-					String newDate=String.valueOf(dateFormat.format(fixeddate));
+                	Date fixeddate = new SimpleDateFormat("yyyy/MM/dd").parse(invcDt);
+                	String newDate = dateFormat.format(fixeddate);
 	                hm.put("invcDt", newDate);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+             }
                 hm.put("amt",hm.get("totalAmt"));
                 hm.put("netAmt",hm.get("totalAmt"));
                 LOGGER.debug("hm----->" + hm);
