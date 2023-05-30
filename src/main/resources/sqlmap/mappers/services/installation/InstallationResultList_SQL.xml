@@ -163,8 +163,6 @@
                            THEN IR.ALLOW_COMM
                            ELSE 0 END AS ALLOW_COMMISION
                     , I.INSTCT || DBMS_LOB.SUBSTR(CR.CALL_REM, DBMS_LOB.GETLENGTH(CR.CALL_REM), 1) AS REMARK
-                    , CASE WHEN IE.RESULT_RPT_EMAIL_NO IS NOT NULL THEN IE.RESULT_RPT_EMAIL_NO ELSE CUST.EMAIL END AS RESULT_REP_EMAIL_NO
-                    , IE.EMAIL_SENT_COUNT
       FROM SAL0001D som
       JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
       JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -518,6 +516,12 @@
          , Extent1.APPNT_DT
          , Extent1.APPNT_TM
          , Extent2.RESULT_ID
+         , Extent20.STUS_CODE_ID PREINSTALLTION_STUS
+         , Extent20.FAL_LOC PREINSTALLATION_FAL_LOC
+         , Extent20.FAL_RSN PREINSTALLATION_FAL_RSN
+         , Extent20.SERIAL_NO PREINSTALLATION_SERIAL_NO
+         , Extent20.SERIAL_NO2 PREINSTALLATION_SERIAL_NO2
+         , Extent20.REMARK PREINSTALLATION_REMARK
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -540,6 +544,7 @@
     JOIN SYS0064M Extent18 ON Extent17.AREA_ID = Extent18.AREA_ID
     JOIN ORG0001D CTCODE ON Extent1.CT_ID = CTCODE.MEM_ID
     LEFT JOIN SYS0028M Extent19 ON CTCODE.MEM_CODE = Extent19.WH_LOC_CODE
+    LEFT JOIN SVC0136D Extent20 ON Extent20.INSTALL_ENTRY_NO = Extent1.INSTALL_ENTRY_NO
     WHERE Extent1.INSTALL_ENTRY_ID = #{installEntryId}
       AND ROWNUM = 1
 
@@ -3586,9 +3591,9 @@
       <if test="prodCat != '' and prodCat != null">
             AND STK_CTGRY_ID IN
             <foreach item="item" collection="prodCat" index="index"
-		        open="(" separator="," close=")">
-		        #{item}
-		      </foreach>
+                open="(" separator="," close=")">
+                #{item}
+              </foreach>
       </if>
     ORDER BY STK_CODE
            , STK_DESC
@@ -4973,17 +4978,17 @@
   /* [com.coway.trust.biz.services.installation.impl.InstallationResultListMapper.selectDelvryGrCmpltYn] 20191223 - KR OHK*/
   SELECT DELVRY_GR_CMPLT
     FROM (SELECT NVL(L54.DELVRY_GR_CMPLT, 'N') DELVRY_GR_CMPLT
-	            FROM LOG0047M L47,
-		                LOG0048D L48,
-		                LOG0054M L54,
-		                LOG0055D L55
-	          WHERE L47.REQST_NO = L48.REQST_NO
-	              AND L48.REQST_NO = L55.REQST_NO
-	              AND L48.REQST_NO_ITM = L55.REQST_NO_ITM
-	              AND L55.DELVRY_NO = L54.DELVRY_NO
-	              AND L47.TRNSC_TYPE_DTL = 'UM03'
-	              AND L47.REF_DOC_NO = #{installEntryNo}
-	          ORDER BY L54.DELVRY_NO DESC)
+                FROM LOG0047M L47,
+                        LOG0048D L48,
+                        LOG0054M L54,
+                        LOG0055D L55
+              WHERE L47.REQST_NO = L48.REQST_NO
+                  AND L48.REQST_NO = L55.REQST_NO
+                  AND L48.REQST_NO_ITM = L55.REQST_NO_ITM
+                  AND L55.DELVRY_NO = L54.DELVRY_NO
+                  AND L47.TRNSC_TYPE_DTL = 'UM03'
+                  AND L47.REF_DOC_NO = #{installEntryNo}
+              ORDER BY L54.DELVRY_NO DESC)
    WHERE ROWNUM = 1
   </select>
 
@@ -5431,25 +5436,25 @@ AND J.CODE IN ('COM','FAL','CAN')
 
     <!-- SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C.code_name
         FROM LOG0043M B1 JOIN LOG0044D B2 ON B1.BOM = B2.BOM
-	       JOIN SYS0026M S ON B2.BOM_COMPNT = S.STK_CODE
-	       JOIN SYS0013M C on S.stk_type_id = C.code_id
-	   WHERE B1.MATRL_NO = #{stkCode}
-	       AND S.STK_TYPE_ID = 63 AND S.STUS_CODE_ID = 1
-	UNION
-	SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
-	   FROM SYS0026M S JOIN SYS0013M C ON S.STK_CODE = C.CODE
-	   JOIN SYS0013M C1 on S.stk_type_id = C1.code_id
-	WHERE C.CODE_MASTER_ID = #{groupCode}
-	   AND C.DISAB <![CDATA[<>]]> 1
-	   AND S.STUS_CODE_ID =1
-	ORDER BY CODE_NAME, STK_ID -->
+           JOIN SYS0026M S ON B2.BOM_COMPNT = S.STK_CODE
+           JOIN SYS0013M C on S.stk_type_id = C.code_id
+       WHERE B1.MATRL_NO = #{stkCode}
+           AND S.STK_TYPE_ID = 63 AND S.STUS_CODE_ID = 1
+    UNION
+    SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
+       FROM SYS0026M S JOIN SYS0013M C ON S.STK_CODE = C.CODE
+       JOIN SYS0013M C1 on S.stk_type_id = C1.code_id
+    WHERE C.CODE_MASTER_ID = #{groupCode}
+       AND C.DISAB <![CDATA[<>]]> 1
+       AND S.STUS_CODE_ID =1
+    ORDER BY CODE_NAME, STK_ID -->
 
-	SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
-	   FROM SYS0013M C JOIN SYS0026M S ON C.CODE = S.STK_CODE
-	   JOIN SYS0013M C1 ON S.STK_TYPE_ID = C1.CODE_ID
-	 WHERE C.CODE_MASTER_ID = #{groupCode}
-	   AND C.DISAB <![CDATA[<>]]> 1
-	   AND S.STUS_CODE_ID =1
+    SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
+       FROM SYS0013M C JOIN SYS0026M S ON C.CODE = S.STK_CODE
+       JOIN SYS0013M C1 ON S.STK_TYPE_ID = C1.CODE_ID
+     WHERE C.CODE_MASTER_ID = #{groupCode}
+       AND C.DISAB <![CDATA[<>]]> 1
+       AND S.STUS_CODE_ID =1
        ORDER BY CODE_NAME, STK_ID
 </select>
 
@@ -5485,11 +5490,11 @@ AND J.CODE IN ('COM','FAL','CAN')
 </select>
 
     <select id="selectWaterSrcType" parameterType="Map" resultType="egovMap">
-	      SELECT Extent1.CODE_ID
-	           , Extent1.CODE
-	           , Extent1.CODE_NAME
-	      FROM SYS0013M Extent1
-	      WHERE CODE_MASTER_ID = 501
+          SELECT Extent1.CODE_ID
+               , Extent1.CODE
+               , Extent1.CODE_NAME
+          FROM SYS0013M Extent1
+          WHERE CODE_MASTER_ID = 501
     </select>
 
 <select id="getInstallDtPairByCtCode" parameterType="Map" resultType="egovMap">
@@ -5499,11 +5504,5 @@ AND J.CODE IN ('COM','FAL','CAN')
     AND ORG.MEM_CODE <![CDATA[<>]]> #{ctMemCode}
     AND ORG.BRNCH IN (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{ctMemCode})
 </select>
-
-<update id="updateEmailSentCount" parameterType="Map">
-    UPDATE sal0046d
-       SET EMAIL_SENT_COUNT = EMAIL_SENT_COUNT + 1
-     WHERE INSTALL_ENTRY_ID = #{installEntryId}
-</update>
 
 </mapper>
