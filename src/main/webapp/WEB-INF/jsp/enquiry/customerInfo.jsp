@@ -72,27 +72,30 @@
     function validate(order,chkService, stus){
     	 Common.ajax("GET","/enquiry/getSubmissionTimes.do", {orderNo : order} , function (result, textStatus, jqXHR){
     		 if(jqXHR.status == "200"){
-    			 if(result!=null && result.validChk > 3){
+    			 if(result!=null && result.validChk > 1){
                      document.getElementById("MsgAlert").innerHTML =  setModalContent(twoTimesSubmission);
                      $("#alertModalClick").click();
+                     return;
     		     }
+                 else if(stus =="SUS" || stus =="INV"){
+                     document.getElementById("MsgAlert").innerHTML =  setModalContent(notREG);
+                     $("#alertModalClick").click();
+                     return;
+	            }else if(!chkService){
+	                 document.getElementById("MsgAlert").innerHTML =  setModalContent(outOfWarranty);
+	                 $("#alertModalClick").click();
+	                 return;
+	            }else{
+	                goDetailsPage(order);
+	            }
     		 }
+
     	 });
 
 
-         if(stus =="SUS" || stus =="INV"){
-             document.getElementById("MsgAlert").innerHTML =  setModalContent(notREG);
-             $("#alertModalClick").click();
-             return;
-        }
 
-        if(!chkService){
-             document.getElementById("MsgAlert").innerHTML =  setModalContent(outOfWarranty);
-             $("#alertModalClick").click();
-             return;
-        }
 
-        goDetailsPage(order);
+
     }
 
 

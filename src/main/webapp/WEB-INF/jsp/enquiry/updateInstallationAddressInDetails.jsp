@@ -264,7 +264,7 @@
 
         Common.ajax("GET","/enquiry/getSubmissionTimes.do", {orderNo : '${orderNo}'} , function (result, textStatus, jqXHR){
             if(jqXHR.status == "200"){
-                if(result!=null && result.validChk > 3){
+                if(result!=null && result.validChk > 1){
                     document.getElementById("MsgAlert2").innerHTML =  setModalContent(twoTimesSubmission);
                     $("#alertModalClick2").click();
                     return false;
