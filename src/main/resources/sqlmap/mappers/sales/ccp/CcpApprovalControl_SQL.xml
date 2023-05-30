@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpApprovalControlMapper">
+
+
+<select id="selectProductControlList" parameterType="Map" resultType="egovMap">
+    SELECT
+        T2.CODE_NAME STK_CTGRY
+        , T1.STK_ID
+        , T1.STK_DESC
+        , NVL(T3.HIGH_SCORE,0) HIGH_SCORE
+        , NVL(T3.LOW_SCORE,0) LOW_SCORE
+        , NVL(T3.NO_SCORE_NOCCRIS,0) NO_SCORE_NOCCRIS
+        , NVL(T3.NO_SCORE_INSUFF_CCRIS,0) NO_SCORE_INSUFF_CCRIS
+        , NVL(T3.CHS_GREEN,0) CHS_GREEN
+        , NVL(T3.CHS_YELLOW,0) CHS_YELLOW
+        , CASE WHEN 0 IN (NVL(T3.HIGH_SCORE,0)
+                        , NVL(T3.LOW_SCORE,0)
+                        , NVL(T3.NO_SCORE_NOCCRIS,0)
+                        , NVL(T3.NO_SCORE_INSUFF_CCRIS,0)
+                        , NVL(T3.CHS_GREEN,0)
+                        , NVL(T3.CHS_YELLOW,0)) THEN 0 ELSE 1 END FUNC_YN
+        , t3.upd_user_id
+        , T3.UPD_DT
+    FROM SYS0026M T1
+    JOIN SYS0013M T2 ON T2.CODE_ID = T1.STK_CTGRY_ID
+    LEFT JOIN GBSLCVD.SAL0350D T3 ON T3.STK_ID = T1.STK_ID
+    WHERE
+    T1.STUS_CODE_ID = 1
+    AND T1.STK_TYPE_ID = 61
+    AND T1.STK_CTGRY_ID NOT IN (59,400,924)
+    AND T1.ALLOW_SALES = 1
+    ORDER BY T1.STK_CTGRY_ID, T1.STK_CODE
+</select>
+
+<update id="updateProductControl" parameterType="Map">
+    MERGE INTO SAL0350D D
+    USING (
+        SELECT
+              #{stkId} STK_ID
+            , #{highScore} HIGH_SCORE
+            , #{lowScore} LOW_SCORE
+            , #{noScoreNoccris} NO_SCORE_NOCCRIS
+            , #{noScoreInsuffCcris} NO_SCORE_INSUFF_CCRIS
+            , #{chsGreen} CHS_GREEN
+            , #{chsYellow} CHS_YELLOW
+            , SYSDATE UPD_DT
+            , #{userId} UPD_USER_ID
+        FROM DUAL
+    ) S ON (s.STK_ID = D.STK_ID)
+    WHEN MATCHED THEN UPDATE SET D.HIGH_SCORE = S.HIGH_SCORE,
+                                 D.LOW_SCORE  = S.LOW_SCORE,
+                                 D.NO_SCORE_NOCCRIS = S.NO_SCORE_NOCCRIS,
+                                 D.NO_SCORE_INSUFF_CCRIS = S.NO_SCORE_INSUFF_CCRIS,
+                                 D.CHS_GREEN = S.CHS_GREEN,
+                                 D.CHS_YELLOW = S.CHS_YELLOW,
+                                 D.UPD_DT = S.UPD_DT,
+                                 D.UPD_USER_ID = S.UPD_USER_ID
+    WHEN NOT MATCHED THEN
+    INSERT (  STK_ID
+            , HIGH_SCORE
+            , LOW_SCORE
+            , NO_SCORE_NOCCRIS
+            , NO_SCORE_INSUFF_CCRIS
+            , CHS_GREEN
+            , CHS_YELLOW
+            , STUS_CODE_ID
+            , CRT_USER_ID
+            , CRT_DT
+            , UPD_USER_ID
+            , UPD_DT )
+    VALUES (  S.STK_ID
+            , S.HIGH_SCORE
+            , S.LOW_SCORE
+            , S.NO_SCORE_NOCCRIS
+            , S.NO_SCORE_INSUFF_CCRIS
+            , S.CHS_GREEN
+            , S.CHS_YELLOW
+            , 1
+            , S.UPD_USER_ID
+            , S.UPD_DT
+            , S.UPD_USER_ID
+            , S.UPD_DT)
+
+</update>
+
+
+<resultMap type="egovMap" id="chsControlListClobMap">
+    <result property="CCP_REM" column="CCP_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+<select id="selectChsControlList" parameterType="Map" resultType="egovMap" resultMap="chsControlListClobMap">
+  SELECT
+    REMARK_ID, CHS_RSN, UPD_ID, UPD_DT, IS_AUTO, CCP_REM
+  FROM SAL0344D
+  WHERE
+  CHS_RSN
+  IN (
+      'DEFAULT'
+      ,'EXCEED_AGE'
+      ,'EXCEED_15'
+      ,'CREDIT_SCORE'
+      ,'CURRENT_OS'
+      ,'PAYMENT_MODE'
+      ,'OWN_PURCHASE'
+      ,'REN_STATUS'
+      ,'TERMINATE_OS'
+      ,'AVERAGE_OS'
+  )
+  AND STUS = 1
+  ORDER BY CHS_RSN
+</select>
+
+<update id="updateChsControl" parameterType="Map">
+    UPDATE SAL0344D
+        SET UPD_ID = #{userId}, UPD_DT = SYSDATE, IS_AUTO = #{isAuto}, CCP_REM = #{ccpRem}
+    WHERE CHS_RSN = #{chsRsn}
+</update>
+
+<select id="selectScoreRangeControlList" parameterType="Map" resultType="egovMap">
+    SELECT *
+    FROM SAL0351D
+    WHERE STUS_CODE_ID = 1 ORDER BY SCORE_RANGE_ID
+</select>
+
+<update id="updateScoreRangeControl" parameterType="Map">
+    UPDATE SAL0351D
+        SET START_SCORE = #{startScore},  END_SCORE = #{endScore}, UPD_USER_ID = #{userId}, UPD_DT = SYSDATE
+    WHERE SCORE_RANGE_ID = #{scoreRangeId}
+</update>
+
+
+</mapper>
