@@ -112,10 +112,6 @@ function createAUIGrid() {
         headerText : "Status",
         editable : false
     },{
-        dataField : "payId",
-        headerText : "WOR",
-        editable : false
-    },{
         dataField : "paymentLink",
         headerText : "Link",
         editable : false,
