@@ -374,6 +374,62 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 		return fileList;
 	}
 
+	public static List<EgovFormBasedFileVo> getUploadExcelFilesRVO(MultipartFile mFile, String uploadDir, String subPath) throws IOException {
+		List<EgovFormBasedFileVo> fileList = new ArrayList<>();
+		long maxFileSize = AppConstants.UPLOAD_EXCEL_MAX_SIZE;
+
+		if (mFile.getSize() > maxFileSize) {
+			throw new ApplicationException(AppConstants.FAIL,
+					CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class).getMessage(
+							AppConstants.MSG_FILE_MAX_LIMT,
+							new Object[] { CommonUtils.formatFileSize(maxFileSize) }));
+		}
+
+		EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
+
+		String tmp = mFile.getOriginalFilename();
+
+		if (tmp.lastIndexOf("\\") >= 0) {
+			tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
+		}
+
+		String blackUploadPath = EgovWebUtil.filePathBlackList(uploadDir);
+		String blackSubPath = EgovWebUtil.filePathBlackList(subPath);
+
+		vo.setFileName(tmp);
+		vo.setContentType(mFile.getContentType());
+		vo.setServerPath(blackUploadPath);
+		vo.setServerSubPath(blackSubPath);
+
+		String physicalName = UUIDGenerator.get().toUpperCase();
+		vo.setSize(mFile.getSize());
+		vo.setExtension(FilenameUtils.getExtension(tmp).toLowerCase());
+		vo.setPhysicalName(physicalName + "." + vo.getExtension());
+
+		if (mFile.getSize() > 0) {
+			InputStream is = null;
+			File f;
+			try {
+				is = mFile.getInputStream();
+
+				if (MimeTypeUtil.isNotAllowFile(is)) {
+					throw new ApplicationException(AppConstants.FAIL,
+							mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
+				}
+				f = new File(EgovWebUtil.filePathBlackList(
+						blackUploadPath + SEPERATOR + blackSubPath + SEPERATOR + vo.getPhysicalName()));
+				EgovFormBasedFileUtil.saveFile(is, f);
+			} finally {
+				if (is != null) {
+					is.close();
+				}
+			}
+
+			fileList.add(vo);
+		}
+		return fileList;
+	}
+
 	public static List<EgovFormBasedFileVo> uploadFilesNewName(HttpServletRequest request, String uploadPath, String subPath,
 			final long maxFileSize, boolean addExtension, String tempFileName) throws Exception {
 		List<EgovFormBasedFileVo> list = new ArrayList<>();
