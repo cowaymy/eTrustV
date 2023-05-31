@@ -169,8 +169,8 @@
 	        {dataField : "installEntryNo",   headerText : '<spring:message code="service.grid.InstallNo" />',        editable : false,     width : 130},
 	        {dataField : "salesOrdNo",       headerText : '<spring:message code="service.grid.OrderNo" />',        editable : false,     width : 110},
 	        {dataField : "c3",               headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
-	        ,{dataField : "delvryGr",headerText : 'Stock Out GR',width : 130}
-            ,{dataField : "returnGr",headerText : 'Stock Return GR',width : 130},
+	        {dataField : "delvryGr",headerText : 'Stock Out GR',width : 130},
+            {dataField : "returnGr",headerText : 'Stock Return GR',width : 130},
 	        {dataField : "stkDesc",          headerText : '<spring:message code="service.grid.Product" />',         editable : false,     style : "my-column aui-grid-user-custom-left",    width : 380},
 	        {dataField : "custId",           headerText : '<spring:message code="service.grid.CustomerId" />',    editable : false,     width : 100},
 	        {dataField : "custName",           headerText : '<spring:message code="service.title.CustomerName" />',    editable : false,     width : 100},
