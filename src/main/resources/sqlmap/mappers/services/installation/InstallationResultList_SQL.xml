@@ -163,6 +163,8 @@
                            THEN IR.ALLOW_COMM
                            ELSE 0 END AS ALLOW_COMMISION
                     , I.INSTCT || DBMS_LOB.SUBSTR(CR.CALL_REM, DBMS_LOB.GETLENGTH(CR.CALL_REM), 1) AS REMARK
+                    , CASE WHEN IE.RESULT_RPT_EMAIL_NO IS NOT NULL THEN IE.RESULT_RPT_EMAIL_NO ELSE CUST.EMAIL END AS RESULT_REP_EMAIL_NO
+                    , IE.EMAIL_SENT_COUNT
       FROM SAL0001D som
       JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
       JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -5504,5 +5506,11 @@ AND J.CODE IN ('COM','FAL','CAN')
     AND ORG.MEM_CODE <![CDATA[<>]]> #{ctMemCode}
     AND ORG.BRNCH IN (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{ctMemCode})
 </select>
+
+<update id="updateEmailSentCount" parameterType="Map">
+    UPDATE sal0046d
+       SET EMAIL_SENT_COUNT = EMAIL_SENT_COUNT + 1
+     WHERE INSTALL_ENTRY_ID = #{installEntryId}
+</update>
 
 </mapper>
