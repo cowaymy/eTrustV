@@ -169,8 +169,8 @@
 	        {dataField : "installEntryNo",   headerText : '<spring:message code="service.grid.InstallNo" />',        editable : false,     width : 130},
 	        {dataField : "salesOrdNo",       headerText : '<spring:message code="service.grid.OrderNo" />',        editable : false,     width : 110},
 	        {dataField : "c3",               headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
-	        //,{dataField : "delvryGr",headerText : 'Stock Out GR',width : 130}
-            //,{dataField : "returnGr",headerText : 'Stock Return GR',width : 130},
+	        ,{dataField : "delvryGr",headerText : 'Stock Out GR',width : 130}
+            ,{dataField : "returnGr",headerText : 'Stock Return GR',width : 130},
 	        {dataField : "stkDesc",          headerText : '<spring:message code="service.grid.Product" />',         editable : false,     style : "my-column aui-grid-user-custom-left",    width : 380},
 	        {dataField : "custId",           headerText : '<spring:message code="service.grid.CustomerId" />',    editable : false,     width : 100},
 	        {dataField : "custName",           headerText : '<spring:message code="service.title.CustomerName" />',    editable : false,     width : 100},
@@ -205,8 +205,8 @@
 	        {dataField : "telM1",headerText : '<spring:message code="service.title.MobileNo" />',width : 130},
 	        {dataField : "telO",headerText : '<spring:message code="service.title.ResidenceNo" />',width : 130},
 	        {dataField : "telR",headerText : '<spring:message code="service.title.OfficeNo" />',width : 130},
-	        /* {dataField : "areaId",headerText : 'Area ID',width : 130},
-	        {dataField : "lastUpdCallLogDt",headerText : 'Last Updated Call Log Date',width : 200}, */
+	        {dataField : "areaId",headerText : 'Area ID',width : 130},
+	        {dataField : "lastUpdCallLogDt",headerText : 'Last Updated Call Log Date',width : 200},
 	        {dataField : "hpName",headerText : '<spring:message code="sal.text.salPersonName" />',width : 150},
 	        {dataField : "hpContact",headerText : '<spring:message code="sal.text.salPersonPhone" />',width : 150},
 	        {dataField : "remark",headerText : '<spring:message code="service.title.Remark" />',width : 500},
@@ -649,7 +649,7 @@
       <th scope="row"><spring:message code='service.title.Product' /></th>
       <td ><select class="w100p" id="product"
        name="product"></select></td>
-       <!-- <th scope="row">Stock Out GR</th>
+       <th scope="row">Stock Out GR</th>
      <td>
           <select id="listDelvryGr" name="delvryGr" class="multy_select w100p" multiple="multiple">
               <option value="Y">Yes</option>
@@ -664,7 +664,7 @@
               <option value="N">No</option>
               <option value="B">Blank</option>
           </select>
-     </td> -->
+     </td>
      </tr>
      <tr>
            <th>Pre-Installation Check :</th>
