@@ -163,6 +163,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
   @Override
   public void saveCancel(Map<String, Object> params) {
+    logger.info("[OrderCancelServiceImpl - saveCancel] param :: {} " + params);
 
     Map<String, Object> salesReqCancelParam = new HashMap<String, Object>();
 
@@ -181,11 +182,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
     saveParam.put("callSmsRem", "");
     saveParam.put("salesOrdId", params.get("paramOrdId"));
 
-    int status = CommonUtils.intNvl(params.get("addStatus")); // recall,
-                                                                     // calcel,
-                                                                     // reversal
-                                                                     // cancel,
-                                                                     // continuerental
+    int status = CommonUtils.intNvl(params.get("addStatus")); // recall, calcel, reversal, cancel, continuerental
     int appTypeId = CommonUtils.intNvl(params.get("appTypeId"));
     logger.info("####################### appTypeId ######## " + appTypeId);
     int reqStageId = CommonUtils.intNvl(params.get("reqStageId")); // before , after install
@@ -330,6 +327,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
             // DO NOTHING (IS NOT A COMBO PACKAGE)
           }
         }
+
         logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
       }
 
@@ -339,16 +337,17 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       } else {
         saveParam.put("prgrsId", 13);
         saveParam.put("isLok", 0);
+        logger.info("[OrderCancelServiceImpl - saveCancel > updateCancelSAL0349D] saveParam :: {} " + saveParam);
+        orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table sal0349d disb = 1 for Air Con Bulk promotion package
       }
       saveParam.put("refId", 0);
-
       orderInvestMapper.insertSalesOrdLog(saveParam); // SalesOrderLog
+
       logger.info("####################### Confirm To Cancel save END!! #####################");
 
     } else if (status == 31 || status == 105) { // Reversal Of Cancellation or
                                                 // Continue Rental
-      logger.info(
-          "####################### Reversal Of Cancellation or Continue Rental save Start!! #####################");
+      logger.info("####################### Reversal Of Cancellation or Continue Rental save Start!! #####################");
       // 해야함
       if (reqStageId == 24) {
         saveParam.put("callDt", params.get("addCallRecallDt"));
@@ -371,8 +370,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
         saveParam.put("getCallEntryIdMaxSeq", getCallEntryIdMaxSeq);
         saveParam.put("salesOrdId", params.get("paramOrdId"));
         EgovMap getSOReqPrevCallEntryID = orderCancelMapper.newSearchCancelSAL0020D(saveParam);
-        logger.info("#####--------------------- callEntryId ###############"
-            + getSOReqPrevCallEntryID.get("soReqPrevCallEntryId"));
+        logger.info("#####--------------------- callEntryId ###############" + getSOReqPrevCallEntryID.get("soReqPrevCallEntryId"));
         saveParam.put("callEntryId", getSOReqPrevCallEntryID.get("soReqPrevCallEntryId"));
         EgovMap getTypeId = orderSuspensionMapper.newSuspendSearch2(saveParam);
         saveParam.put("typeId", getTypeId.get("typeId"));

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderCancelService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.OrderListService;
+import com.coway.trust.biz.sales.order.impl.OrderCancelMapper;
+import com.coway.trust.biz.sales.order.impl.OrderListServiceImpl;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -38,13 +42,18 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("hcOrderCancelService")
 public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements HcOrderCancelService {
 
-  	@Resource(name = "hcOrderCancelMapper")
-  	private HcOrderCancelMapper hcOrderCancelMapper;
+  private static Logger logger = LoggerFactory.getLogger(HcOrderCancelServiceImpl.class);
 
-  	@Resource(name = "orderCancelService")
+  @Resource(name = "hcOrderCancelMapper")
+  private HcOrderCancelMapper hcOrderCancelMapper;
+
+  @Resource(name = "orderCancelMapper")
+  private OrderCancelMapper orderCancelMapper;
+
+  @Resource(name = "orderCancelService")
 	private OrderCancelService orderCancelService;
 
-  	@Resource(name = "hcOrderListService")
+  @Resource(name = "hcOrderListService")
 	private HcOrderListService hcOrderListService;
 
   	@Resource(name = "orderListService")
@@ -136,7 +145,6 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		ReturnMessage message = new ReturnMessage();
 		params.put("userId", sessionVO.getUserId());
 		params.put("brnchId", sessionVO.getUserBranchId());
-
 		params.put("srvOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));   // Matress OrderId
 
 		// return - Matress Product
@@ -168,6 +176,12 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 			/*if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnFra.get("rtnCode")))) { // return Fail
 				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnFra.get("message")));
 			}*/
+		}
+
+	// update the aircond bulk promotion disb = 1 when PR result status is completed
+		if(params.get("hidInstallStatusCodeId") == "4" && params.get("hidCategoryId") == "7237" ){
+    		logger.info("[OrderCancelServiceImpl - insertProductReturnResultSerial > updateCancelSAL0349D] saveParam :: {} " + params);
+        orderCancelMapper.updateCancelSAL0349D(params);
 		}
 
 		message.setCode(AppConstants.SUCCESS);

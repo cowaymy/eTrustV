@@ -234,8 +234,9 @@ public interface OrderCancelMapper {
 
   EgovMap select3MonthBlockList(Map<String, Object> params);
 
-List<EgovMap> productRetReason(Map<String, Object> params);
-List<EgovMap> rsoStatus(Map<String, Object> params);
+  List<EgovMap> productRetReason(Map<String, Object> params);
+
+  List<EgovMap> rsoStatus(Map<String, Object> params);
 
   int crtSeqSAL0346D();
 
@@ -250,5 +251,7 @@ List<EgovMap> rsoStatus(Map<String, Object> params);
   void updateECashInfo(SalesOrderMVO salesOrderMVO);
 
   void updateEmailSentCount(Map<String, Object> params);
+
+  void updateCancelSAL0349D(Map<String, Object> params);
 
 }

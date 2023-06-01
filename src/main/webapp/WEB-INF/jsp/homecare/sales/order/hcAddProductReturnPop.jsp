@@ -556,7 +556,7 @@
     </section><!-- tap_wrap end -->
 
 <aside class="title_line mt30"><!-- title_line start -->
-<h2>View Product Retrurn Result</h2>
+<h2>View Product Return Result</h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

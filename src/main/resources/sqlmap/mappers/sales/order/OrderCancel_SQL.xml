@@ -1753,4 +1753,11 @@
      WHERE SO_REQ_ID = #{soReqId}
 </update>
 
+   <update id="updateCancelSAL0349D" parameterType="Map">
+        UPDATE SAL0349D SET UPD_DT = SYSDATE,
+                            UPD_BY = #{userId},
+                            DISB = 1
+        WHERE SUB_ORD_ID = #{salesOrdId}
+   </update>
+
 </mapper>
