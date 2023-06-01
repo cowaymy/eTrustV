@@ -61,47 +61,50 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Override
 	public int updRemoveItem(Map<String, Object> params) {
+		//if is eghl record, possible have multiple order tie into one batchId
+		this.removeEGHLBatchOrderRecord(params);
 		return batchPaymentMapper.updRemoveItem(params);
 	}
 
-  @Override
-  public int saveConfirmBatch(Map<String, Object> params) {
-    EgovMap paymentMs = batchPaymentMapper.selectBatchPaymentMs(params);
-    int insResult = 0;
-    int callResult = -1;
-    int returnResult = 0;
+	@Override
+	public int saveConfirmBatch(Map<String, Object> params) {
+		EgovMap  paymentMs = batchPaymentMapper.selectBatchPaymentMs(params);
+		int insResult = 0;
+		int callResult = -1;
+		int returnResult = 0;
 
-    if (paymentMs != null) {
-      if (String.valueOf(paymentMs.get("batchPayType")).equals("96")
-          || String.valueOf(paymentMs.get("batchPayType")).equals("97")) {
-        // CALL PROCEDURE
+	    if (paymentMs != null) {
+	        if (String.valueOf(paymentMs.get("batchPayType")).equals("96")
+	            || String.valueOf(paymentMs.get("batchPayType")).equals("97")) {
+	          // CALL PROCEDURE
 
-        if (String.valueOf(paymentMs.get("batchIsAdv")).equals("1")) {
-          batchPaymentMapper.callCnvrAdvBatchPay(params);
-        } else {
-          batchPaymentMapper.callCnvrBatchPay(params);
-        }
+	          if (String.valueOf(paymentMs.get("batchIsAdv")).equals("1")) {
+	            batchPaymentMapper.callCnvrAdvBatchPay(params);
+	          } else {
+	            batchPaymentMapper.callCnvrBatchPay(params);
+	          }
 
-        callResult = Integer.parseInt(String.valueOf(params.get("p1")));
-      }
-      if (callResult > -1) {
-        if (String.valueOf(paymentMs.get("batchStusId")).equals("1")
-            && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")) {
+	          callResult = Integer.parseInt(String.valueOf(params.get("p1")));
+	        }
+	        if (callResult > -1) {
+	          if (String.valueOf(paymentMs.get("batchStusId")).equals("1")
+	              && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")) {
 
-          insResult = batchPaymentMapper.saveConfirmBatch(params);
+	            insResult = batchPaymentMapper.saveConfirmBatch(params);
 
-        }
-      }
-    }
+	          }
+	        }
+	      }
 
-    if (insResult > 0 && callResult > -1) {
-      returnResult = 1;
-    } else {
-      returnResult = 0;
-    }
+		if(insResult > 0 && callResult > -1){
+			//for eghl record checking and update
+			returnResult = 1;
+		}else{
+			returnResult = 0;
+		}
 
-    return returnResult;
-  }
+		return returnResult;
+	}
 
 	@Override
 	public EgovMap selectBatchPaymentDs(Map<String, Object> params) {
@@ -169,4 +172,13 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		return batchPaymentMapper.selectBatchPayCardModeId(cardModeCode);
 	}
 
+	@Override
+	public int removeEGHLBatchOrderRecord(Map<String, Object> params) {
+		int count = batchPaymentMapper.checkIfIsEGHLRecord(params);
+
+		if(count > 0){
+			batchPaymentMapper.removeEGHLBatchOrderRecord(params);
+		}
+		return 1;
+	}
 }

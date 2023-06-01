@@ -392,7 +392,12 @@
   A.GROUP_SEQ,
   A.PAY_ITM_MODE_ID,
   E.CODE AS PAY_ITM_MODE_NM,
+  <if test="advType == 1">
   NVL(SUM (A.PAY_ITM_AMT),0) TOT_AMT,
+  </if>
+  <if test="advType == 2">
+  NVL(SUM (A.PAY_ITM_AMT),0) - NVL(SUM (C.PAY_ITM_BANK_CHRG_AMT),0) TOT_AMT,
+  </if>
   NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
   C.PAY_ITM_REF_NO AS REF_DTL,
   MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
@@ -462,7 +467,7 @@
 <resultMap id="resultAdvanceMap" type="egovMap" />
   <select id="saveAdvancePaymentMapping" statementType="CALLABLE" parameterType="Map">
     {
-    call SP_INST_ADV_MAPPING(#{batchId},#{TransDateFr},#{TransDateTo}, #{userId})
+    call SP_INST_ADV_MAPPING(#{batchId},#{TransDateFr},#{TransDateTo}, #{userId},#{advType})
     }
   </select>
 

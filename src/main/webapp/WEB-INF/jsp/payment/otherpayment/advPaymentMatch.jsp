@@ -569,6 +569,11 @@ function fn_searchAdvanceAutoMappingList(){
         return;
     }
 
+    if(FormUtil.checkReqValue($("#advType"))){
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Advance Type' htmlEscape='false'/>");
+        return;
+    }
+
     Common.ajax("GET","/payment/selectAdvanceMatchList.do", $("#advanceForm").serializeJSON(), function(result){
         AUIGrid.setGridData(advanceAutoMatchGridId, result);
     });
@@ -998,6 +1003,17 @@ function fn_generateReport(){
                             <p><input type="text" id="TransDateTo" name="TransDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             </div>
                          </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Advance Type</th>
+                      <td>
+                   		<select id="advType" name="advType"  class="w100p">
+                             <option value="" selected>Select A Type</option>
+                             <option value="1">IPAY88</option>
+                             <option value="2">EGHL</option>
+                         </select>
+                      </td>
+                      <td></td>
                     </tr>
                     <tr>
                       <td colspan='4'>

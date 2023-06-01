@@ -132,7 +132,10 @@ public interface BatchPaymentMapper {
 	void callBatchPayVerifyDet(Map<String, Object> params);
 
 	String selectBatchPayCardModeId(String cardModeCode);
+	
+    void callCnvrAdvBatchPay(Map<String, Object> params);
 
-  void callCnvrAdvBatchPay(Map<String, Object> params);
+	int checkIfIsEGHLRecord(Map<String, Object> params);
+	int removeEGHLBatchOrderRecord(Map<String, Object> params);
 
 }

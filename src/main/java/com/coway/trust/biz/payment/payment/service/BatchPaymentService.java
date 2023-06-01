@@ -82,4 +82,6 @@ public interface BatchPaymentService
     int saveBatchPaymentUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
 
 	String selectBatchPayCardModeId(String cardModeCode);
+
+	int removeEGHLBatchOrderRecord(Map<String, Object> params);
 }

@@ -411,6 +411,20 @@
 		 AND ROWNUM <![CDATA[ <= ]]> 1
     </select>
 
+    <select id="checkIfIsEGHLRecord" parameterType="Map" resultType="int">
+    	SELECT COUNT(*) FROM PAY0043D WHERE DET_ID = #{detId} AND PAY_CHANNEL = 'EGHL'
+    </select>
+
+    <update id="removeEGHLBatchOrderRecord" parameterType="Map">
+    	UPDATE PAY0043D
+	    SET
+	    DISAB = '1',
+	    UPD_USER_ID = #{userId},
+	    UPD_DT = SYSDATE
+	    WHERE BATCH_ID = #{batchId}
+	    AND USER_REF_NO = #{userRefNo}
+    </update>
+
     <select id="getPAY0044DSEQ" resultType="int">
         SELECT PAY0044D_SEQ.NEXTVAL FROM DUAL
     </select>

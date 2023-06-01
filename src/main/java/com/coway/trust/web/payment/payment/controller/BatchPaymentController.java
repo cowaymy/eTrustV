@@ -160,6 +160,8 @@ public class BatchPaymentController {
 		int result = 0;
 
 		if(paymentDs != null){
+			params.put("batchId",paymentDs.get("batchId").toString());
+			params.put("userRefNo",paymentDs.get("userRefNo").toString());
 			result = batchPaymentService.updRemoveItem(params);
 		}
 

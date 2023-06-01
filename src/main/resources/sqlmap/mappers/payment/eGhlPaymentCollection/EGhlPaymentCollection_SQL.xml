@@ -265,7 +265,6 @@
 	                      ELSE 44 END
 	               ELSE A.STATUS_CODE_ID END STATUS_CODE_ID,
 	           A.PAY_NO,
-	           A.PAY_ID,
 	           A.PAYMENT_LINK
 	       FROM PAY0336M A
 	       JOIN PAY0337D B ON B.ID = A.ID
