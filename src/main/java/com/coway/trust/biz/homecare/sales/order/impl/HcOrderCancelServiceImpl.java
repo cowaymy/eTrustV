@@ -180,7 +180,6 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 
 	// update the aircond bulk promotion disb = 1 when PR result status is completed
 		if(params.get("hidInstallStatusCodeId") == "4" && params.get("hidCategoryId") == "7237" ){
-    		logger.info("[OrderCancelServiceImpl - insertProductReturnResultSerial > updateCancelSAL0349D] saveParam :: {} " + params);
         orderCancelMapper.updateCancelSAL0349D(params);
 		}
 

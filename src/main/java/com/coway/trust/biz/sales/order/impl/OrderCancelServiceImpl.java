@@ -337,7 +337,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       } else {
         saveParam.put("prgrsId", 13);
         saveParam.put("isLok", 0);
-        logger.info("[OrderCancelServiceImpl - saveCancel > updateCancelSAL0349D] saveParam :: {} " + saveParam);
+
         orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table sal0349d disb = 1 for Air Con Bulk promotion package
       }
       saveParam.put("refId", 0);
