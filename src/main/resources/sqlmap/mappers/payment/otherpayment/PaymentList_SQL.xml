@@ -343,9 +343,13 @@
         SELECT
             COUNT(*)
         FROM (
-            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID IN (1,5) AND GRP_SEQ = #{groupSeq} AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ = #{groupSeq} AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)) = 0
+            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID IN (1,5) AND GRP_SEQ = #{groupSeq}
+            AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ = #{groupSeq} AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)) = 0
             UNION ALL
             SELECT FT_REQ_ID FROM PAY0260D WHERE FT_STUS_ID IN (1,5) AND SRC_GRP_SEQ = #{groupSeq}
+            <if test="payId == null or payId == ''">
+	            AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ = #{groupSeq} AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)) = 0
+            </if>
             <if test="payId != null and payId != ''">
                 AND SRC_PAY_ID = #{payId}
             </if>
