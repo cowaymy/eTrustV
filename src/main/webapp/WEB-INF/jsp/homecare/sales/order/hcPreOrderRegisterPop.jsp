@@ -168,6 +168,11 @@
     }
 
     $(function(){
+
+    	$('#btnRltdNoEKeyIn').click(function() {
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
+      });
+
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
             if(fn_isExistESalesNo() == 'true') return false;
@@ -1161,6 +1166,7 @@
         var vIs3rdParty   = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId    = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
+        var vBusType = $('#txtBusType').val();
 
         var orderVO = {
             sofNo                      : $('#sofNo').val().trim(),
@@ -1222,7 +1228,10 @@
             custBillCustCareCntId   : $("#hiddenBPCareId").val(),
             corpCustType             : $('#corpCustType').val(),
             agreementType          : $('#agreementType').val(),
-            receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
+            receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val(),
+            salesOrdIdOld          : $('#txtOldOrderID').val(),
+            relatedNo               : $('#relatedNo').val(),
+            busType                  : vBusType
         };
 
         var formData = new FormData();
@@ -1828,7 +1837,7 @@
                     $('#salesmanCd').val("${SESSION_INFO.userName}");
                     $('#salesmanCd').change();
                 }
-                $('#appType').val("66");
+                //$('#appType').val("66");--close it, as logically cannot force to rental only
           //     $('#appType').prop("disabled", true);
 
                 if($('#ordProduct1').val() == null){
@@ -1911,8 +1920,10 @@
     }
 
     function fn_clearAddCpnt() {
-        $('#trCpntId').css("visibility","collapse");
-        $('#compType option').remove();
+        $('#trCpntId1').css("visibility","collapse");
+        $('#compType1 option').remove();
+        $('#trCpntId2').css("visibility","collapse");
+        $('#compType2 option').remove();
     }
 
     function fn_loadProductComponent(appTyp, stkId, tagNum) {
@@ -1988,8 +1999,10 @@
 
     $('#exTrade').change(function() {
 
-
+        fn_clearAddCpnt();
             if($('#exTrade').val()=='1'){
+            	$('#btnRltdNoEKeyIn').removeClass("blind");
+
                 var todayDD = Number(TODAY_DD.substr(0, 2));
                 var todayYY = Number(TODAY_DD.substr(6, 4));
 
@@ -2005,7 +2018,14 @@
                      Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                      return;
                  }
+           }else{
+        	   $('#txtOldOrderID').val('');
+               $('#txtBusType').val('');
+        	   $('#relatedNo').val('');
+               $('#btnRltdNoEKeyIn').addClass("blind");
            }
+            $('#ordProduct1').val('');
+            $('#ordProduct2').val('');
 
     });
 
@@ -2395,8 +2415,11 @@
 	<tbody>
 		<tr>
 		    <th scope="row">Ex-Trade/Related No</th>
-		    <td><p><select id="exTrade" name="exTrade" class="w100p" disabled></select></p>
-		        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+		    <td><p><select id="exTrade" name="exTrade" class="w100p" disabled></select></p><!-- extrade disabled as homecare not allow extrade currently -->
+		        <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+                <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='' type="hidden" />
+                <input id="txtBusType"  name="txtBusType" type="hidden" />
 		</tr>
 		<tr>
 		    <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>

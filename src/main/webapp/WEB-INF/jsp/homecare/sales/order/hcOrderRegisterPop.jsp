@@ -1079,7 +1079,7 @@
                 $('#ordProduct2').prop("disabled", true);
             }
 
-            debugger;
+            //debugger;
             if($('#ordProduct1 option').length < 2 && $('#ordProduct2 option').length >= 2){
             	$('#btnMatRltdNo').removeClass("blind");
             	MAT_TAG = 'Y';
@@ -1237,6 +1237,8 @@
 
             } else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                 $('#txtOldOrderID').val('');
+                 $('#txtBusType').val('');
                 $('#relatedNo').val('');
                 $('#btnRltdNo').addClass("blind");
             }
@@ -1480,7 +1482,7 @@
                         console.log('!@#### ordSaveBtn click START 11111');
                         $('#txtOldOrderID').val();
                         $('#relatedNo').val();
-                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                        Common.popupDiv("/homecare/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
 
                     } else {
                     	fn_popOrderDetail();
@@ -1611,6 +1613,7 @@
         var vAppType    = $('#appType').val();
         var vCustBillId = $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0;
         var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
+        var vBusType = $('#txtBusType').val();
         var vCnvrSchemeId;
 
         if($('#trialNoChk').is(":checked")) {
@@ -1674,6 +1677,7 @@
                 appTypeId              : $('#appType').val(),
                 srvPacId                 : $('#srvPacId').val(),
                 bindingNo               : vBindingNo,
+                busType                  : vBusType,
                 cnvrSchemeId          : vCnvrSchemeId,
                 custAddId               : $('#hiddenBillAddId').val().trim(),
                 custBillId                : vCustBillId,
@@ -1965,7 +1969,7 @@
 
         const ordProd1 = $("#ordProduct1");
         const ordProd2 = $("#ordProduct2");
-        debugger;
+        //debugger;
         if((ordProd1.find("option").length > 1 && ordProd1.find("option:selected").index() <= 0) || (ordProd2.find("option").length > 1 && ordProd2.find("option:selected").index() <= 0)){
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
@@ -3133,7 +3137,7 @@
     </td>
     <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" /></th>
     <td>
-        <span style="width:43%;"><select id="exTrade" name="exTrade" class="w100p"></select></span>
+        <span style="width:43%;"><select id="exTrade" name="exTrade" class="w100p" disabled></select></span><!-- extrade disabled as homecare not allow extrade currently -->
         <span style="width:45%;"><input id="relatedNo" name="relatedNo" type="text" placeholder="Related Number" class="w100p readonly" readonly /></span>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
@@ -3204,6 +3208,7 @@
     <td>
 	    <select id="ordPromo1"     name="ordPromo1"    data-ref='ordProduct1' class="w100p" disabled></select>
 	    <input id="txtOldOrderID"  name="txtOldOrderID" data-ref='ordProduct1' type="hidden" />
+	    <input id="txtBusType"  name="txtBusType" type="hidden" />
     </td>
     <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
     <td>

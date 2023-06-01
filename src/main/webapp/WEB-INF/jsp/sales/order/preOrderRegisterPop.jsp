@@ -72,6 +72,9 @@
         doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
         doDefCombo(branchCdList_1, '', 'keyinBrnchId', 'S', '');    // Branch Code
         doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
+
+      //special - extrade whether need product return
+        $('#isReturnExtrade').prop("checked", true);
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
@@ -485,6 +488,8 @@
                 $('#relatedNo').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
+            $('#isReturnExtrade').prop("checked", true);
+            $('#isReturnExtrade').attr("disabled",true);
             $('#ordProudct').val('');
             $('#speclInstct').val('');
 
@@ -1407,6 +1412,10 @@
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
+        var vIsReturnExtrade = 0;
+        if($('#isReturnExtrade').is(":checked")) {
+            vIsReturnExtrade = 1;
+        }
         console.log("service :: " + $("#hiddenBPCareId").val());
         var orderVO = {
             sofNo                : $('#sofNo').val().trim(),
@@ -1464,6 +1473,7 @@
             agreementType         : $('#agreementType').val(),
             salesOrdIdOld          : $('#txtOldOrderID').val(),
             relatedNo               : $('#relatedNo').val(),
+            isExtradePR         : vIsReturnExtrade,
             receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
         };
 
@@ -1739,6 +1749,8 @@
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
+        $('#isReturnExtrade').prop("checked", true);
+        $('#isReturnExtrade').attr("disabled",true);
       //$('#trialNoChk').prop("checked", false);
       //$('#trialNo').val('');
         $('#ordPrice').val('');
@@ -2641,7 +2653,8 @@
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
     <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly/></p>
-        </td>
+        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+    </td>
 </tr>
 <tr>
     <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>

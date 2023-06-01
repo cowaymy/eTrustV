@@ -341,6 +341,12 @@
                 width : 80,
                 editable : false,
                 style: 'left_style'
+            }, {
+                dataField : "isExtradePr",
+                headerText : "With / Without PR",
+                width : 100,
+                editable : false,
+                style: 'left_style'
             }]; //added by keyi 20211105
 
      // 그리드 속성 설정
@@ -486,6 +492,12 @@
                headerText : "State",
                width : 80,
                editable : false,
+               }, {
+                   dataField : "isExtradePr",
+                   headerText : "With / Without PR",
+                   width : 100,
+                   editable : false,
+                   style: 'left_style'
                }];
 
 
@@ -1021,9 +1033,12 @@ console.log("searchColorGrid");
     </td>
     <th scope="row">Key-in Month</th>
     <td><input type="text" title="기준년월" id="keyInMonth" name="keyInMonth" placeholder="MM/YYYY" class="j_date2 w100p" /></td>
-    <th scope="row"></th>
-    <td></td>
- </tr>
+    <th scope="row">With / Without PR</th>
+    <td><select class="w100p" id="isExtradePr" name="isExtradePr">
+        <option value="0">Choose One</option>
+        <option value="1">Yes</option>
+        <option value="2">No</option></td>
+</tr>
 <tr>
     <th scope="row" colspan="6" ><spaxn class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
 </tr>

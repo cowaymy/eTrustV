@@ -151,6 +151,10 @@ public class PreOrderVO implements Serializable {
 
     private int receivingMarketingMsgStatus;
 
+    private int isExtradePR;
+
+    private String busType;
+
     // 20191210 - KR-SH 추가
     private int preOrdId1;
     private int preOrdId2;
@@ -960,6 +964,22 @@ public class PreOrderVO implements Serializable {
 
 	public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
 		this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
+	}
+
+	public String getBusType() {
+		return busType;
+	}
+
+	public void setBusType(String bustype) {
+		this.busType = bustype;
+	}
+
+	public int getIsExtradePR() {
+		return isExtradePR;
+	}
+
+	public void setIsExtradePR(int isExtradePR) {
+		this.isExtradePR = isExtradePR;
 	}
 
 }

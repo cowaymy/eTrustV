@@ -473,6 +473,8 @@ var userType = "${userType}";
                 $('#relatedNo').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
+            $('#isReturnExtrade').prop("checked", true);
+            $('#isReturnExtrade').attr("disabled",true);
             $('#ordProudct').val('');
             $('#speclInstct').val('');
 
@@ -1381,6 +1383,10 @@ var userType = "${userType}";
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
+        var vIsReturnExtrade = 0;
+        if($('#isReturnExtrade').is(":checked")) {
+            vIsReturnExtrade = 1;
+        }
 
         var orderVO = {
 
@@ -1441,6 +1447,7 @@ var userType = "${userType}";
                 agreementType         : $('#agreementType').val(),
                 salesOrdIdOld          : $('#txtOldOrderID').val(),
                 relatedNo               : $('#relatedNo').val(),
+                isExtradePR         : vIsReturnExtrade,
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
             };
 
@@ -1759,6 +1766,8 @@ var userType = "${userType}";
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
+        $('#isReturnExtrade').prop("checked", true);
+        $('#isReturnExtrade').attr("disabled",true);
       //$('#trialNoChk').prop("checked", false);
       //$('#trialNo').val('');
         $('#ordPrice').val('');
@@ -2059,6 +2068,9 @@ var userType = "${userType}";
 
         $('#relatedNo').val('${preOrderInfo.relatedNo}');
         $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
+        if('${preOrderInfo.isExtradePr}' == 1){
+            $("#isReturnExtrade").prop("checked", true);
+        }
         $('#ordRentalFees').val('${preOrderInfo.mthRentAmt}');
         $('#promoDiscPeriodTp').val('${preOrderInfo.promoDiscPeriodTp}');
         $('#promoDiscPeriod').val('${preOrderInfo.promoDiscPeriod}');
@@ -2906,7 +2918,10 @@ var userType = "${userType}";
     <th scope="row">Ex-Trade/Related No</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
         <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        </td>
+
 </tr>
 <tr>
     <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>

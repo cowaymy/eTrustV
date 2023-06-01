@@ -159,6 +159,10 @@ public class SalesOrderMVO implements Serializable {
 
   private int receivingMarketingMsgStatus;
 
+  private String busType;
+
+  private int isExtradePR;
+
   public String getSalesProdSz() {
 	return salesProdSz;
 }
@@ -737,6 +741,22 @@ public int getReceivingMarketingMsgStatus() {
 
 public void setReceivingMarketingMsgStatus(int receivingMarketingMsgStatus) {
 	this.receivingMarketingMsgStatus = receivingMarketingMsgStatus;
+}
+
+public String getBusType() {
+	return busType;
+}
+
+public void setBusType(String bustype) {
+	this.busType = bustype;
+}
+
+public int getIsExtradePR() {
+	return isExtradePR;
+}
+
+public void setIsExtradePR(int isExtradePR) {
+	this.isExtradePR = isExtradePR;
 }
 
 }

@@ -302,7 +302,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   public EgovMap checkOldOrderId(Map<String, Object> params) {
 
     int getOldOrderID = 0;
-    int custId = 0, promoId = 0;
+    int custId = 0, promoId = 0 ,extradeWoutPRCnt =0;
     String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
 
     logger.info("!@#### custId:" + (String) params.get("custId"));
@@ -464,6 +464,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                   isInValid = "InValid";
                 }
 
+                //special - extrade whether need product return
+                //old order which fall under rental type, 61-66 months after starter package and AP type.
+                extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
+
                 ROOT_STATE = "ROOT_4";
 
                 txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
@@ -510,6 +514,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     RESULT.put("MSG", msg);
     RESULT.put("OLD_ORDER_ID", getOldOrderID);
     RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
+    RESULT.put("EXTR_OPT_FLAG", extradeWoutPRCnt);
+
 
     return RESULT;
   }

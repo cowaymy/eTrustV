@@ -116,6 +116,13 @@ public class OrderColorGridController {
 			params.put("neoProStus", "");
 		}
 
+		int isExtradePr = Integer.parseInt(params.get("isExtradePr").toString());
+		if(isExtradePr == 1)
+		{
+			params.put("isExtradePR", "Y");
+		}else if(isExtradePr == 2){
+			params.put("isExtradePR", "N");
+		}
 
 		params.put("cmbAppTypeList", cmbAppTypeList);
 		params.put("cmbCorpTypeId", cmbCorpTypeId);

@@ -1,6 +1,10 @@
 package com.coway.trust.web.homecare.sales.order;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -22,8 +26,10 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderRequestService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -66,6 +72,12 @@ public class HcOrderRegisterController {
 
   @Resource(name = "preOrderService")
   private PreOrderService preOrderService;
+
+    @Resource(name = "orderRegisterService")
+  	private OrderRegisterService orderRegisterService;
+
+    @Resource(name = "hcOrderRequestService")
+	private HcOrderRequestService hcOrderRequestService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -270,34 +282,54 @@ public class HcOrderRegisterController {
 		String appTypeName = HomecareConstants.cnvAppTypeName(orderVO.getSalesOrderMVO1().getAppTypeId());
 		// Registe Homecare Order
 		hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
+
+		String openExTrade = "N"; //set 'N' as currently not open extrade for homecare
 		// Ex-Trade : 1
-		/*if (orderVO.getSalesOrderMVO().getExTrade() == 1 && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getBindingNo())) {
-			logger.debug("@#### Order Cancel START");
-			String nowDate = CommonUtils.getDateToFormat("dd/MM/yyyy");
+		if(openExTrade.equals("Y")){
+			if (orderVO.getSalesOrderMVO().getExTrade() == 1 && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getBindingNo())) {
+				//logger.debug("@#### Order Cancel START");
+				String nowDate = "";
+				Date date = new Date();
+		        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
+		        nowDate = df.format(date);
 
-			logger.debug("@#### nowDate:" + nowDate);
+				//logger.debug("@#### nowDate:" + nowDate);
 
-			Map<String, Object> cParam = new HashMap<String, Object>();
+				Map<String, Object> cParam = new HashMap();
+				boolean isHc = String.valueOf(orderVO.getSalesOrderMVO1().getBusType()).equals("HOMECARE") ? true : false;
 
-			cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
+				cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
 
-			EgovMap rMap = orderRegisterService.selectOldOrderId(cParam);
+				EgovMap rMap = null;
+				if(isHc){
+					Map<String, Object> hcParam = new HashMap();
+					hcParam.put("ordNo", orderVO.getSalesOrderMVO().getBindingNo());
+					rMap = hcOrderListService.selectHcOrderInfo(hcParam);
+					cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
+					cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
+					cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
+				}else{
+					rMap = orderRegisterService.selectOldOrderId(cParam);
+					cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
+				}
 
-			cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
-			cParam.put("cmbRequestor", "527");
-			cParam.put("dpCallLogDate", nowDate);
-			cParam.put("cmbReason", "1993");
-			cParam.put("txtRemark", "Auto Cancellation for Ex-Trade");
-			cParam.put("txtTotalAmount", "0");
-			cParam.put("txtPenaltyCharge", "0");
-			cParam.put("txtObPeriod", "0");
-			cParam.put("txtCurrentOutstanding", "0");
-			cParam.put("txtTotalUseMth", "0");
-			cParam.put("txtPenaltyAdj", "0");
+//				cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
+//				cParam.put("salesAnoOrdId", String.valueOf(rMap.get("salesOrdId")));
+//				cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("salesOrdId")));
+				cParam.put("cmbRequestor", "527");
+				cParam.put("dpCallLogDate", nowDate);
+				cParam.put("cmbReason", "1993");
+				cParam.put("txtRemark", "Auto Cancellation for Ex-Trade");
+				cParam.put("txtTotalAmount", "0");
+				cParam.put("txtPenaltyCharge", "0");
+				cParam.put("txtObPeriod", "0");
+				cParam.put("txtCurrentOutstanding", "0");
+				cParam.put("txtTotalUseMth", "0");
+				cParam.put("txtPenaltyAdj", "0");
 
-			orderRequestService.requestCancelOrder(cParam, sessionVO);
-		}*/
-
+				hcOrderRequestService.hcRequestCancelOrder(cParam, sessionVO);
+			}
+		}
 		String msg = "";
 		HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
 
@@ -440,4 +472,28 @@ public class HcOrderRegisterController {
 
 		return "homecare/sales/order/hcOrderRegisterPop";
 	}
+
+	@RequestMapping(value = "/oldOrderPop.do")
+	  public String oldOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		Map<String, Object> cParam = new HashMap();
+
+		boolean isHc = String.valueOf(params.get("busType")).equals("HOMECARE") ? true : false;
+
+		cParam.put("ordNo", params.get("salesOrdNo"));
+
+		EgovMap rMap = null;
+		String bundleId = "";
+		String anoOrderNo = "";
+		if(isHc){
+			rMap = hcOrderListService.selectHcOrderInfo(cParam);
+			bundleId = rMap.get("bndlNo").toString();
+			anoOrderNo = rMap.get("anoOrdNo").toString();
+		}
+
+		model.put("bundleId", bundleId);
+		model.put("anoOrderNo", anoOrderNo);
+
+	    return "homecare/sales/order/oldOrderPop";
+	  }
 }

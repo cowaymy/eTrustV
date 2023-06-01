@@ -37,6 +37,9 @@
 
         fn_selectDocSubmissionList();
 
+        //special - extrade whether need product return
+        $('#isReturnExtrade').prop("checked", true);
+
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
       //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
@@ -1213,6 +1216,8 @@
 
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
+            $('#isReturnExtrade').prop("checked", true);
+            $('#isReturnExtrade').attr("disabled",true);
 
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
@@ -1239,9 +1244,13 @@
             }
             else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                $('#txtOldOrderID').val('');
+                 $('#txtBusType').val('');
                 $('#relatedNo').val('');
                 $('#btnRltdNo').addClass("blind");
             }
+            $('#isReturnExtrade').prop("checked", true);
+            $('#isReturnExtrade').attr("disabled",true);
             $('#ordProudct').val('');
             $('#speclInstct').val('');
 
@@ -1485,7 +1494,7 @@
 	                                        console.log('!@#### ordSaveBtn click START 11111');
 	                                        $('#txtOldOrderID').val();
 	                                        $('#relatedNo').val();
-	                                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+	                                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
 	                                    }
 	                                    else{
 	                                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1498,7 +1507,7 @@
 	                                 console.log('!@#### ordSaveBtn click START 11111');
 	                                 $('#txtOldOrderID').val();
 	                                 $('#relatedNo').val();
-	                                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+	                                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
 	                             }
 	                             else{
 	                             Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1523,7 +1532,7 @@
                         console.log('!@#### ordSaveBtn click START 11111');
                         $('#txtOldOrderID').val();
                         $('#relatedNo').val();
-                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val(),busType:$('#txtBusType').val()}, null, true);
                     }
                     else {
                         console.log('!@#### ordSaveBtn click START 22222');
@@ -1669,6 +1678,10 @@ console.log("vBindingNo" + vBindingNo);
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
+        var vIsReturnExtrade = 0;
+        if($('#isReturnExtrade').is(":checked")) {
+        	vIsReturnExtrade = 1;
+        }
 
         //----------------------------------------------------------------------
         // rentPaySetVO
@@ -1721,6 +1734,8 @@ console.log("vBindingNo" + vBindingNo);
                 appTypeId               : $('#appType').val(),
                 srvPacId                : $('#srvPacId').val(),
                 bindingNo               : vBindingNo,
+                busType                  : $('#txtBusType').val(),
+                isExtradePR             : vIsReturnExtrade,
                 cnvrSchemeId            : vCnvrSchemeId,
                 custAddId               : $('#hiddenBillAddId').val().trim(),
                 custBillId              : vCustBillId,
@@ -2638,6 +2653,8 @@ console.log("vBindingNo" + vBindingNo);
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
+        $('#isReturnExtrade').prop("checked", true);
+        $('#isReturnExtrade').attr("disabled",true);
         $('#trialNoChk').prop("checked", false);
         $('#trialNo').val('');
         $('#ordPrice').val('');
@@ -3135,7 +3152,9 @@ console.log("vBindingNo" + vBindingNo);
     </td>
     <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" /></th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
-        <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+        <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <a><input id="isReturnExtrade" name="isReturnExtrade" type="checkbox" disabled/> Return ex-trade product</a>
+        </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.instDuration" /><span class="must">*</span></th>
@@ -3177,6 +3196,7 @@ console.log("vBindingNo" + vBindingNo);
     <td>
     <select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
+    <input id="txtBusType"  name="txtBusType" type="hidden" />
     </td>
     <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
     <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>

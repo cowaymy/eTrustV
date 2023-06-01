@@ -228,5 +228,6 @@ public interface OrderRegisterMapper {
 
   void insert_SAL0349D(Map<String, Object> params);
 
+  int chkCanExtradeWoutPR(int ordId);
  //int chkIsAcMainOrd(String salesOrdId);
 }

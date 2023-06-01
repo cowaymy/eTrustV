@@ -28,24 +28,15 @@
         console.log('param salesOrdId:'+$('#relatedNo').val());
         console.log('param custId:'+$('#custId').val());
 
-        Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : $('#rwOldOrder').val(), custId : $('#custId').val(), promoId : $('#ordPromo').val(), exTrade : $('#exTrade').val()}, function(RESULT) {
+        Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : $('#rwOldOrder').val(), custId : $('#custId').val(), promoId : $('#ordPromo1').val(), exTrade : $('#exTrade').val()}, function(RESULT) {
             console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
             console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
             console.log('RESULT MSG         :'+RESULT.msg);
             console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
             console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
-            //busType = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType");
-            console.log('RESULT EXTR_OPT_FLAG:'+RESULT.extrOptFlag);
 
             $('#txtOldOrderID').val(RESULT.oldOrderId);
             $('#relatedNo').val($('#rwOldOrder').val());
-            //$('#txtBusType').val($('#txtBusType').val());
-
-            if(RESULT.extrOptFlag == '1'){
-            	$('#isReturnExtrade').attr("disabled",false);
-            }else{
-            	$('#isReturnExtrade').attr("disabled",true);
-            }
 
             if(RESULT.rootState == 'ROOT_1') {
                 $('#rwOldOrder').clearForm();
@@ -118,8 +109,8 @@
 
 	  $(document).ready(function(){
 	        $('#rwOldOrder').val($('#relatedNo').val());
-	        //console.log("${bundleId}");
-	        //console.log("${anoOrderNo}");
+	        $('#rwBndlNo').val("${bundleId}");
+	        $('#rwAnoOrderNo').val("${anoOrderNo}");
 	        // $('#btnRWok').click();
 	    });
 
@@ -147,10 +138,22 @@
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row">Bundle Number</th>
+    <td>
+    <input id="rwBndlNo" name="rwBndlNo" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
 	<th scope="row">Order No.</th>
 	<td>
 	<input id="rwOldOrder" name="rwOldOrder" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
 	</td>
+</tr>
+<tr>
+    <th scope="row">Aux Order No.</th>
+    <td>
+    <input id="rwAnoOrderNo" name="rwAnoOrderNo" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

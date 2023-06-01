@@ -110,6 +110,9 @@
                 $('#empChk').val('${preOrderInfo.empChk}');
                 $('#gstChk').val('${preOrderInfo.gstChk}');
                 $('#exTrade').val('${preOrderInfo.exTrade}');
+                $('#relatedNo').val('${preOrderInfo.relatedNo}');
+                $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
+                $('#txtBusType').val('${preOrderInfo.busType}');
                 $('#installDur').val('${preOrderInfo.instPriod}');
                 $('#poNo').val('${preOrderInfo.custPoNo}');
                 $('#refereNo').val('${preOrderInfo.sofNo}');

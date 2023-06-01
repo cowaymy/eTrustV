@@ -34,12 +34,15 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderRequestService;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.OrderRequestService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -74,6 +77,12 @@ public class OrderRegisterController {
 
   @Resource(name = "preOrderService")
   private PreOrderService preOrderService;
+
+  @Resource(name = "hcOrderListService")
+	private HcOrderListService hcOrderListService;
+
+  @Resource(name = "hcOrderRequestService")
+	private HcOrderRequestService hcOrderRequestService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -151,6 +160,23 @@ public class OrderRegisterController {
 
   @RequestMapping(value = "/oldOrderPop.do")
   public String oldOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  boolean isHc = String.valueOf(params.get("busType")).equals("HOMECARE") ? true : false;
+  	Map<String, Object> cParam = new HashMap();
+
+	cParam.put("ordNo", params.get("salesOrdNo"));
+
+	EgovMap rMap = null;
+	String bundleId = "";
+	String anoOrderNo = "";
+	if(isHc){
+		rMap = hcOrderListService.selectHcOrderInfo(cParam);
+		bundleId = rMap.get("bndlNo").toString();
+		anoOrderNo = rMap.get("anoOrdNo").toString();
+	}
+
+	model.put("bundleId", bundleId);
+	model.put("anoOrderNo", anoOrderNo);
+
     return "sales/order/oldOrderPop";
   }
 
@@ -414,8 +440,11 @@ public class OrderRegisterController {
     logger.info("orderVO : {}" + orderVO.getASEntryVO());
 
     // Ex-Trade : 1
+    int isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR();
     if (orderVO.getSalesOrderMVO().getExTrade() == 1
-        && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getSalesOrdIdOld())) {
+        && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getSalesOrdIdOld())
+        && isExtradePR == 1
+    		) {
       logger.debug("@#### Order Cancel START");
       logger.debug("######### " + orderVO.getSalesOrderMVO().getSalesOrdIdOld());
       logger.debug("######### " + orderVO.getSalesOrderMVO().getExTrade());
@@ -446,6 +475,38 @@ public class OrderRegisterController {
       cParam.put("txtPenaltyAdj", "0");
 
       orderRequestService.requestCancelOrder(cParam, sessionVO);
+
+
+      String openExTrade = "N"; //set 'N' as currently not open extrade for homecare
+      if(openExTrade.equals("Y")){
+    	  boolean isHc = String.valueOf(orderVO.getSalesOrderMVO().getBusType()).equals("HOMECARE") ? true : false;
+
+          if(isHc){
+            Map<String, Object> hcParam = new HashMap();
+            hcParam.put("ordNo", orderVO.getSalesOrderMVO().getBindingNo());
+            rMap = hcOrderListService.selectHcOrderInfo(hcParam);
+            cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
+            cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
+            cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
+          }
+
+          String salesAnoOrdId = CommonUtils.nvl(cParam.get("salesAnoOrdId"));
+    	  String salesOrdCtgryCd = CommonUtils.nvl(cParam.get("salesOrdCtgryCd"));
+
+          if(("MAT".equals(salesOrdCtgryCd) || "ACI".equals(salesOrdCtgryCd)) && CommonUtils.isNotEmpty(salesAnoOrdId)) {
+    			// 유효성 체크
+        	  cParam.put("salesOrdId", salesAnoOrdId);
+        	  cParam.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
+    			ReturnMessage rtnVaild = hcOrderRequestService.validOCRStus(cParam);
+
+    			if(CommonUtils.nvl(rtnVaild.getCode()).equals(AppConstants.SUCCESS)) {
+    				// 같이 주문된 주문 취소요청한다.
+    				orderRequestService.requestCancelOrder(cParam, sessionVO);
+    			} else {
+    				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnVaild.getMessage()));
+    			}
+    		}
+      }
     }
 
     String msg = "", appTypeName = "";

@@ -5,6 +5,7 @@
 
     //AUIGrid 생성 후 반환 ID
     var prevOrdNoGridID;
+    var busType;
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
@@ -29,9 +30,17 @@
                 console.log('RESULT MSG         :'+RESULT.msg);
                 console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
                 console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
+                console.log("buss type" + AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType"));
+                busType = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "busType");
+                console.log('RESULT EXTR_OPT_FLAG:'+RESULT.extrOptFlag);
 
                 //$('#txtOldOrderID').val(RESULT.oldOrderId);
                // $('#relatedNo').val($('#rwOldOrder').val());
+                if(RESULT.extrOptFlag == '1'){
+                    $('#isReturnExtrade').attr("disabled",false);
+                }else{
+                    $('#isReturnExtrade').attr("disabled",true);
+                }
 
                 if(RESULT.rootState == 'ROOT_1') {
                     //$('#rwOldOrder').clearForm();
@@ -101,6 +110,7 @@
           , { headerText : "Product Name", dataField : "stkDesc"}
           , { headerText : "Promo Id",     dataField : "promoId", visible  : false }
           , { headerText : "Order Id",     dataField : "salesOrdId" , visible  : false}
+          , { headerText : "Business Type",     dataField : "busType" , visible  : false}
 //           , { headerText : "Stock Id",     dataField : "stkId" , visible  : false}  // Used for exTrade Neo to NeoPlus
             ];
 
@@ -144,6 +154,8 @@
         console.log('btnHidden_Valid_Click CALL START');
         console.log('isInValid :'+isInValid);
 
+
+        $('#txtBusType').val(busType);
         if(isInValid == 'InValid') {
 
 

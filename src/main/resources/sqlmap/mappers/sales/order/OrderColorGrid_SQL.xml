@@ -28,7 +28,11 @@
            som.ex_trade,
            som.pckage_binding_no,
            som.BNDL_ID,
-           NVL(KEYIN.MONTH || '/' || KEYIN.YEAR, '-') AS key_in_month
+           NVL(KEYIN.MONTH || '/' || KEYIN.YEAR, '-') AS key_in_month,
+           CASE
+           WHEN SOM.EX_TRADE = 1 AND som.EX_TRADE_PR IS NULL THEN 'Y'
+           WHEN SOM.EX_TRADE = 1 THEN CASE WHEN som.EX_TRADE_PR= '1' THEN 'Y' ELSE 'N' END
+           END IS_EXTRADE_PR
            FROM SAL0001D som
            JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
            LEFT JOIN SAL0340D KEYIN ON (CAST(som.SALES_DT AS TIMESTAMP) <![CDATA[>=]]> CAST(KEYIN.KEYIN_START_DT AS TIMESTAMP))
@@ -116,7 +120,8 @@
 	        D1.BNDL_ID,
 	        D1.CCP_STUS,
 	        D1.CCP_REMARK,
-	        D1.KEY_IN_MONTH
+	        D1.KEY_IN_MONTH,
+	        D1.IS_EXTRADE_PR
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
                            F1.ORD_NO ,
                            F1.APP_TYPE_CODE ,
@@ -167,7 +172,8 @@
                            ELSE ''
                            END CCP_STUS,
                            F1.CCP_REMARK,
-                           F1.KEY_IN_MONTH
+                           F1.KEY_IN_MONTH,
+                           F1.IS_EXTRADE_PR
                 FROM ( SELECT E1.ORD_ID OrderID1 ,
                            E1.ORD_NO ,
                            E1.ORD_DT ,
@@ -204,7 +210,8 @@
                            E1.BNDL_ID,
                            E1.CCP_STUS_ID,
                            E1.CCP_REMARK,
-                           E1.KEY_IN_MONTH
+                           E1.KEY_IN_MONTH,
+                           E1.IS_EXTRADE_PR
                       FROM (
                       SELECT * FROM (
                       SELECT som.SALES_ORD_ID ORD_ID,
@@ -271,7 +278,8 @@
                             som.BNDL_ID,
                             CCP.CCP_STUS_ID,
                             CCPRESN.RESN_DESC AS CCP_REMARK,
-                            som.key_in_month
+                            som.key_in_month,
+                            som.IS_EXTRADE_PR
                       FROM som
                             JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                             JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
@@ -415,6 +423,9 @@
                                     AND CCP.CCP_STUS_ID = 6
                                 </if>
                               </if>
+                              <if test="isExtradePR != null and isExtradePR != ''">
+                               AND som.IS_EXTRADE_PR = #{isExtradePR}
+                           </if>
                             ) E
                             WHERE 1=1
                             <if test="cmbSalesType != null and cmbSalesType != ''">
