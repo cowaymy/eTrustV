@@ -67,12 +67,8 @@
 
 	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
-		// Master Grid 셀 클릭시 이벤트
 	    AUIGrid.bind(myGridID, "cellClick", function( event ){
 		    selectedGridValue = event.rowIndex;
-	    });
-
-	    AUIGrid.bind(myGridID, "cellClick", function( event ){
             var item = event.item, rowIdField, rowId, rowOrNo;
 
             rowIdField = AUIGrid.getProp(event.pid, "rowIdField");
