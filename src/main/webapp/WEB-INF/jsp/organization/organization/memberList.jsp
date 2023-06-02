@@ -1636,7 +1636,7 @@ function fn_socialMediaInfo(){
 <article class="grid_wrap">
     <!-- grid_wrap start -->
     <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-    <div id="excel_list_grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    <div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
