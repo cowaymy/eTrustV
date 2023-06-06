@@ -109,7 +109,7 @@ console.log("accept");
                 Common.ajax("GET", "/organization/updateHpCfm.do", {choice:"Y"}, function(result) {
                     if(result.message == "success.") {
                         var successMsg = "Thank you for signing up as Coway Malaysia Health Planner. <br /><br />" +
-                                                  "Kindly proceed to make payment of RM120 and supporting documents within 7 days from application date to complete your Health Planner registration. <br /><br />"+
+                                                  "Kindly proceed to make payment for the registration and supporting documents within 7 days from application date to complete your Health Planner registration. <br /><br />"+
                                                   "Thank you.";
 
                         // Redirect to login page

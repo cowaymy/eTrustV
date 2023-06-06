@@ -2238,7 +2238,7 @@ function fn_eHPmarritalCallBack(){
             </tr>
 
             <tr>
-                <th scope="row">Payment RM120</th>
+                <th scope="row">Payment</th>
                 <td >
                     <div class="auto_file2">
                         <input type="file" title="file add" id="paymentFile" accept="image/jpg, image/jpeg, image/png, application/pdf"/>

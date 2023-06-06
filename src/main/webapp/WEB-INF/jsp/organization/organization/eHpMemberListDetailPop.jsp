@@ -1305,7 +1305,7 @@ function fn_selectFailedRemarkList() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Payment RM120</th>
+    <th scope="row">Payment</th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="paymentFile" accept="image/*"/>
