@@ -111,10 +111,10 @@ $(document).ready(function(){
                 var isValid = true;
                 var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}.|\\":<>\?]/);
 
-                if('${result.nation}' == '1')
+                if('${result.nation}' == '1' && ic.length == 12)
 	                $("#basicDob").val(nricToDob(ic));
 
-                if('${result.nation}' == '1')
+                if('${result.nation}' == '1' && ic.length == 12)
                     $("#basicGender").val(nricToGender(ic));
 
 
@@ -635,6 +635,15 @@ $(document).ready(function(){
                 <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
             </c:when>
              <c:when test="${SESSION_INFO.roleId == '97'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
+             <c:when test="${SESSION_INFO.roleId == '212'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
+             <c:when test="${SESSION_INFO.roleId == '343'}">
+                <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
+            </c:when>
+             <c:when test="${SESSION_INFO.roleId == '344'}">
                 <select class="w100p" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
             </c:when>
             <c:otherwise>
