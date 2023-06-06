@@ -33,7 +33,7 @@
           FROM SAL0029D T1
          WHERE 1 = 1
 
-         <if test='basicNric != null and basicNric !=0 and basicNric !=""'>
+         <if test='basicNric != null  and basicNric != "0".toString() and basicNric !=""'>
            AND T1.NRIC = #{basicNric}
            AND T1.NRIC not in (#{basicNricOld})
            AND T1.STUS_CODE_ID = 1
@@ -1810,7 +1810,8 @@
       <!-- DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), -->
       GENDER = #{basicGender},
       RACE_ID = #{basicRaceId},
-      DOB = TO_DATE(#{basicDob}, 'DD/MM/YYYY')
+      DOB = TO_DATE(#{basicDob}, 'DD/MM/YYYY'),
+      NATION = #{basicCmdNationTypeId}
     </if>
 
     <if test="basicTypeId == 965">
