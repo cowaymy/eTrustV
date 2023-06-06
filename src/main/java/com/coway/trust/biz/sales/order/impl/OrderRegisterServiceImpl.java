@@ -1991,7 +1991,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     	     acMap.put("updUserId", salesOrderMVO.getUpdUserId());
 
     	     logger.info("[OrderRegisterServiceImpl - doSaveOrder - HC_CTGRY_CD.ACI ] acMap :: {} " + acMap);
-    	     orderRegisterMapper.insert_SAL0349D(acMap);
+    	     int mstOrdCmb = orderRegisterMapper.chkPromoCboMst(acMap);
+    	     int subOrdCmb = orderRegisterMapper.chkPromoCboSub(acMap);
+
+    	     if(mstOrdCmb > 0 && subOrdCmb > 0){
+    	         orderRegisterMapper.insert_SAL0349D(acMap);
+    	    }
     	}
     }
 
