@@ -387,4 +387,8 @@ public interface MemberListMapper {
 	List<EgovMap> selectHpRegistrationOption(Map<String, Object> params);
 
 	int selectCntMemSameEmail(Map<String, Object> params);
+
+	String selectHpRegOptionId(Map<String, Object> params);
+
+	int selectRegisPrice(String regOptionId);
 }

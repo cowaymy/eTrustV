@@ -6011,4 +6011,18 @@ MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
       ORG0001D
       WHERE EMAIL = #{email}
       </select>
+
+     <select id="selectHpRegOptionId" parameterType="Map" resultType="String">
+        SELECT APLICNT_REG_OPT
+        FROM ORG0003D A
+        JOIN ORG0001D B ON A.APLCTN_ID = B.APLICNT_ID
+        WHERE MEM_ID = #{memberId}
+     </select>
+
+     <select id="selectRegisPrice" parameterType="String" resultType="int">
+        SELECT CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'HP_REG_PRC'
+        AND CODE = #{regOptionId}
+     </select>
 </mapper>

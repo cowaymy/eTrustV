@@ -2054,6 +2054,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				 //20-10-2021 - HLTANG - close for LMS project start
 
 
+				//20230602 - CELESTE - CHANGE ON REGISTRATION FEES [S]
+				String regOptionId = memberListMapper.selectHpRegOptionId(memOrg);
+				int regPrice = memberListMapper.selectRegisPrice(regOptionId);
+
+
+				//20230602 - CELESTE - CHANGE ON REGISTRATION FEES [E]
 				EgovMap selectHpBillNo = null;
 				String hpBillNo="";
 				EgovMap selectInvoiceNo = null;
@@ -2074,7 +2080,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				Date startDay    = sfd.parse(startDateString);
 				Date endDay      = sfd.parse(endDateString);
 
-				if(currentDay.before(startDay) || currentDay.after(endDay)){
+				if(regPrice != 0){
+					if(currentDay.before(startDay) || currentDay.after(endDay)){
+
     					selectHpBillNo = getDocNo("5");
     					logger.debug("selectHpBillNo : {}",selectHpBillNo);
     					hpBillNo=(String)selectHpBillNo.get("docNo");
@@ -2099,7 +2107,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     					accBill.put("billPayTypeId", 224);
     					accBill.put("billMemberShipNo", "");
     					accBill.put("billDate", new Date());
-    					accBill.put("billAmt", 120);
+    					//accBill.put("billAmt", 120);
+    					accBill.put("billAmt", regPrice);
     					accBill.put("billRemark", "");
     					accBill.put("billIsPaid", false);
     					accBill.put("billIsComm", true);
@@ -2125,11 +2134,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	    			accOrderBill.put("accBillScheduleId", 0);
     	    			accOrderBill.put("accBillSchedulePeriod", 0);
     	    			accOrderBill.put("accBillAdjustmentId", 0);
-    	    			accOrderBill.put("accBillScheduleAmount", 120);
+    	    			//accOrderBill.put("accBillScheduleAmount", 120);
+    	    			accOrderBill.put("accBillScheduleAmount", regPrice);
     	    			accOrderBill.put("accBillAdjustmentAmount", 0);
     	    			//accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 120 - ((120) * 100 / (double)106))); -- without GST 6% edited by TPY 24/05/2018
     	    			accOrderBill.put("accBillTaxesAmount",0);
-    	    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)120));
+    	    			//accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)120));
+    	    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)regPrice));
     	    			accOrderBill.put("accBillStatus", 1);
     	    			accOrderBill.put("accBillRemark",memberCode);
     	    			accOrderBill.put("accBillCreateAt", new Date());
@@ -2189,9 +2200,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	    					InvMISC.put("taxInvoiceRemark","");
     	    					//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
     	    					//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
-    	    					InvMISC.put("taxInvoiceCharges",120);
+    	    					//InvMISC.put("taxInvoiceCharges",120);
+    	    					InvMISC.put("taxInvoiceCharges",regPrice);
     	    					InvMISC.put("taxInvoiceTaxes",0);
-    	    					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
+    	    					//InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
+    	    					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)regPrice));
     	    					InvMISC.put("taxInvoiceCreated",new Date());
     	    					InvMISC.put("areaId",selectMiscList.get("areaId"));
     	    					InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
@@ -2218,8 +2231,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	    					//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
     	    					InvMISCD.put("invoiceItemGSTRate",0);
     	    					InvMISCD.put("invoiceItemGSTTaxes",0);
-    	    					InvMISCD.put("invoiceItemCharges",120);
-    	    					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
+    	    					//InvMISCD.put("invoiceItemCharges",120);
+    	    					InvMISCD.put("invoiceItemCharges",regPrice);
+    	    					//InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
+    	    					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)regPrice));
     	    					InvMISCD.put("invoiceItemAdd1","");
     	    					InvMISCD.put("invoiceItemAdd2","");
     	    					InvMISCD.put("invoiceItemAdd3","");
@@ -2239,6 +2254,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	    					memberListMapper.updateBillRem(accOrderBill);
     	    				}
 	    				} //20-10-2021 - HLTANG - close for LMS project end
+				}
+
 
 	    				params.put("updUserId", sessionVO.getUserId());
 
