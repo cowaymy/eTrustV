@@ -176,6 +176,7 @@
     	//grid 생성
         CTMonthCalGrid();
         $("#calYear").text(curYear);
+        console.log("homecare : " + '${params.isHomecare}');
 
         // 달력을 조회한다.
         fn_selectYearCalendar($("#calYear").text());
@@ -373,6 +374,18 @@
 	                    <td><input type="text" id="ctSubGrp" name="ctSubGrp" class="w100p" value="${params.ctSubGrp}" disabled /></td>
 	                </tr>
                 </tbody>
+                 <c:if test="${params.isHomecare ==  'Y'}">
+                <tbody>
+                    <tr>
+                       <th scope="row"></th>
+                        <td></td>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row">AC Sub Group</th>
+                        <td><input type="text" id="ctSubGrp" name="ctSubGrp" class="w100p" value="${params.acSubGrp}" disabled /></td>
+                    </tr>
+                </tbody>
+               </c:if>
             </table>
             <!-- table end -->
         </form>

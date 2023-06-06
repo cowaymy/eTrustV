@@ -70,7 +70,7 @@
                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
                         return subListAC;
-                    }, keyField : "AcSubGrp", valueField : "codeName"
+                    }, keyField : "acSubGrp", valueField : "codeName"
                 }
             }
         ];
@@ -170,7 +170,9 @@
             "area" : AUIGrid.getCellValue(myGridID2, rowIndex, "area"),
             "areaID" : AUIGrid.getCellValue(myGridID2, rowIndex, "areaId"),
             "ctSubGrp" : AUIGrid.getCellValue(myGridID2, rowIndex, "ctSubGrp"),
-            "subGrpType" : 6666
+            "acSubGrp" : AUIGrid.getCellValue(myGridID2, rowIndex, "acSubGrp"),
+            "subGrpType" : 6666,
+            "isHomecare" : "Y"
         };
 
         // 년 달력 팝업 창 호출
