@@ -11,7 +11,7 @@
 <script type="text/javaScript">
 	//AUIGrid 그리드 객체
 	var myGridID;
-	var gridDataLength = 0;
+	//var gridDataLength = 0;
 
 	//Grid에서 선택된 RowID
 	var selectedGridValue;
@@ -27,7 +27,7 @@
 
 	        softRemoveRowMode:false,
 
-	        showRowCheckColumn : true
+	        //showRowCheckColumn : true
 
 	};
 
@@ -69,7 +69,7 @@
 
 	    AUIGrid.bind(myGridID, "cellClick", function( event ){
 		    selectedGridValue = event.rowIndex;
-            var item = event.item, rowIdField, rowId, rowOrNo;
+            /*var item = event.item, rowIdField, rowId, rowOrNo;
 
             rowIdField = AUIGrid.getProp(event.pid, "rowIdField");
             rowId = item[rowIdField];
@@ -82,10 +82,10 @@
             } else {
                 // add extra checkbox check
                 AUIGrid.addCheckedRowsByIds(event.pid, rowId);
-            }
+            }*/
         });
 
-        AUIGrid.bind(myGridID, "rowCheckClick", function(event) {
+        /*AUIGrid.bind(myGridID, "rowCheckClick", function(event) {
            var item = event.item, rowIdField, rowId, rowOrNo;
 
            // check if already checked
@@ -109,7 +109,7 @@
                      // add extra checkbox check
                      AUIGrid.addCheckedRowsByIds(event.pid, rowId);
                  }
-          });
+          });*/
 
 	    /* AUIGrid.bind(myGridID, "ready", function(event) {
 	        gridDataLength = AUIGrid.getGridData(myGridID).length; // 그리드 전체 행수 보관
@@ -297,7 +297,7 @@
         }
 	}
 
-    function fn_requestRefundPop(){
+    /*function fn_requestRefundPop(){
 
         var selectedItem = AUIGrid.getCheckedRowItemsAll(myGridID);
 
@@ -358,7 +358,7 @@
         else{
         	Common.alert('No Payment List selected.');
         }
-    }
+    }*/
 </script>
 <!-- content start -->
 <section id="content">
@@ -402,7 +402,7 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
-                        <%-- <!-- Celeste DCF SCR [s] -->
+                        <!--<%-- <!-- Celeste DCF SCR [s] -->
                         <th scope="row">Bank  State ID</th>
                         <td>
                             <input type="text" id="bankStateId" name="bankStateId" class="" />
@@ -410,7 +410,7 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
-                        <!-- Celeste DCF SCR [s] --> --%>
+                        <!-- Celeste DCF SCR [s] --> --%>-->
                         <th scope="row">OR No</th>
                         <td>
                             <input type="text" id="orNo" name="orNo" class="w100p" />
@@ -462,7 +462,7 @@
 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();" id="btnrequestDCF"><spring:message code='pay.btn.requestDcf'/></a></p></li>
 				</c:if>
 					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>
+					<!--<li><p class="link_btn"><a href="javascript:fn_requestRefundPop();" id="btnrequestRefund"><spring:message code='pay.btn.requestRefund'/></a></p></li>-->
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
