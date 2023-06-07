@@ -548,6 +548,22 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_summon").attr("disabled" , false);
             $("#_letterOfUdt").attr("disabled" , false);
 
+            if (expPrcss == 0){
+            	if(ficoScre >= 350 && ficoScre <= 450){
+                    if(isHold == 0){   ////on hold
+                    	$("#_reasonCodeEdit").val("2177");
+                    }
+            	}else if(ficoScre >= 451 && ficoScre <= 500){
+                    if(bankrupt == 1 && isHold == 0){
+                    	$("#_reasonCodeEdit").val("1872");
+                    }
+            	}else if(ficoScre == 0){
+                    if(bankrupt == 1 && isHold == 0){
+                    	$("#_reasonCodeEdit").val("1872");
+                    }
+            	}
+            }
+
             // 20210617 - LaiKW- Uncommented allow SMS section
             //20230519 - Keyi - CCP SMS Suspend
             /* if(isAllowSendSMS() == true){
@@ -643,6 +659,9 @@ function fn_ccpStatusChangeFunc(getVal){
                  $("#_experianRisk").attr("disabled" , false);
                  //experian
              });
+
+             //CCP Feedback Code not sync (20230607)
+             $("#_reasonCodeEdit").val('');
 
              //sms Changed by Lee (2018/01/18)
              //20230519 Keyi CCP SMS Suspend
@@ -759,6 +778,24 @@ function  bind_RetrieveData(){
         $("#_onHoldCcp").attr("disabled" , false);
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
+
+        //CCP Feedback Code not sync (20230607)
+        if (expPrcss == 0){
+        	if(ficoScre >= 350 && ficoScre <= 450){
+                if(ccpHold == 0){////on hold
+                    $("#_reasonCodeEdit").val("2177");
+                }
+            }else if(ficoScre >= 451 && ficoScre <= 500){
+                if(bankrupt == 1 && ccpHold == 0){
+                     $("#_reasonCodeEdit").val("1872");
+                }
+            }else if(ficoScre == 0){
+                if(bankrupt == 1 && ccpHold == 0){
+                        $("#_reasonCodeEdit").val("1872");
+                }
+            }
+        }
+
 
         // 20210617 - LaiKW - Uncommented
         // 20230519 - Keyi - CCP SMS Suspend
