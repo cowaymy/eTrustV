@@ -365,6 +365,11 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		// Call Procedure
 		CTSubGroupListMapper.saveAllSubGroupServiceDayList(params);
 
+		if(params.get("paramAcSubGrp") != null && !params.get("paramAcSubGrp") .toString().isEmpty()){
+			params.put("paramCtSubGrp", params.get("paramAcSubGrp"));
+			CTSubGroupListMapper.saveAllSubGroupServiceDayList(params);
+		}
+
 		message.setCode(CommonUtils.nvl(params.get("pErrcode")));
 		message.setMessage(CommonUtils.nvl(params.get("pErrmsg")));
 
