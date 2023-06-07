@@ -445,8 +445,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 		try{
 		  //SMS for OrderCall Appointment
-		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", Janji temu anda utk Pemasangan Produk ditetapkan pada " + params.get("appDate").toString()
-		    		+ ". Sebarang pertanyaan, sila hubungi 1800-888-111.";
+		    smsMessage = "COWAY: Order " + params.get("salesOrdNo").toString() + ", janji temu anda utk pemasangan produk akan ditetapkan. Sebarang pertanyaan, sila hubungi 1800-888-111.";
 
 		    params.put("chkSMS", CommonUtils.nvl(params.get("chkSMS"))); //to prevent untick SMS
 
