@@ -466,7 +466,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
                 //special - extrade whether need product return
                 //old order which fall under rental type, 61-66 months after starter package and AP type.
-                extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
+//                extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
 
                 ROOT_STATE = "ROOT_4";
 
