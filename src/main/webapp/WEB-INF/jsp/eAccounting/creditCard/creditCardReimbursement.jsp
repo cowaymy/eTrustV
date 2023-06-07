@@ -942,7 +942,7 @@ function fn_checkCreditLimit(v) {
 	        var planAmt = 0;
 	        if(result.length > 0)
 	        {
-	            planAmt = result[0].availableAmt;
+	            planAmt = parseFloat(result[0].availableAmt) + parseFloat(result[0].adjAmt);
 	        }
 // 	        if($("#cardControlYN").val() == "Y")
 // 	        {
