@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
+
 <script type="text/javaScript">
 
     // AUIGrid 생성 후 반환 ID
@@ -10,6 +11,10 @@
     var spareGrid;
     var serviceGrid;
     var imgGrid;
+
+    var stkId2;
+    var typeId2;
+    var editYN = "N";
 
     var priceHistoryGrid;
 
@@ -188,7 +193,7 @@
                           {dataField:    "cdate",headerText :"<spring:message code='log.head.cdate'/>"        ,width:120, visible : false},
                           {dataField:    "cuser",headerText :"<spring:message code='log.head.cuser'/>"        ,width:120 , visible : false}];
 
-    var pricehiscolumn=[
+   /*  var pricehiscolumn=[
                         {dataField:    "rowNo"   ,headerText:    "SeqNo"     ,width:    "10%"    , visible : true},
                         {dataField:    "mrental"   ,headerText:    "<spring:message code='log.head.monthlyrental'/>"        ,width:    "10%"    , visible : true},
                         {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "10%"    , visible : true},
@@ -200,7 +205,19 @@
                         {dataField:    "crtDt"   ,headerText:    "CREATE Date"     ,width:    "10%"    , visible : true},
                         {dataField:    "crtUserId"   ,headerText:    " CREATE User"     ,width:    "10%"    , visible : true}
                                ];
+ */
 
+	 var pricehiscolumn2=[
+	                      {dataField:    "rowNo"   ,headerText:    "SeqNo"     ,width:    "10%"    , visible : true},
+	                      {dataField:    "amt"   ,headerText:    "Price (RM)"        ,width:    "10%"    , visible : true},
+	                      {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "15%"    , visible : true},
+	                      {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "15%"    , visible : true},
+	                      {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "18%"    , visible : true},
+	                      {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "10%"    , visible : true},
+	                      {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "18%"    , visible : true},
+	                      {dataField:    "crtDt"   ,headerText:    "Create Date"     ,width:    "10%"    , visible : true},
+	                      {dataField:    "crtUserId"   ,headerText:    "Create User"     ,width:    "10%"    , visible : true}
+                      ];
  // 그리드 속성 설정
     var gridPros = {
         // 페이지 설정
@@ -304,7 +321,7 @@
             $("#stock_info_edit").text("EDIT");
         });
 
-        $("#price_info").click(function(){
+      /*   $("#price_info").click(function(){
 			doGetComboData('/stock/selectCodeList.do', '', '', 'srvPacId', 'S'); // Rental (367) & Outright (368) & Outright plus(370) packages
 
             if($("#price_info_div").css("display") == "none"){
@@ -337,9 +354,9 @@
             }
             $(this).find("a").attr("class","on");
             $("#price_info_edit").text("EDIT");
-        });
+        }); */
 
-        $('#srvPacId').change(function() {
+     /*    $('#srvPacId').change(function() {
 			 var srvPacId = $("#srvPacId :selected").val();
 			 var obj = document.getElementById("srvPacId");
 			 var srvPacVal = obj.options[obj.selectedIndex].text;
@@ -369,7 +386,7 @@
              }
              $(this).find("a").attr("class","on");
              $("#price_info_edit").text("EDIT");
-        });
+        }); */
 
         $("#filter_info").click(function(){
             f_removeclass();
@@ -495,7 +512,30 @@
             }
         });
 
-        $("#price_info_edit").click(function(){
+        $("#editPrice").click(function(){
+        	var checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+        	if(checkedItems.length <= 0){
+        		Common.alert("<b><spring:message code='service.msg.NoRcd'/></b>");
+        		return false;
+        	}
+
+        	if(checkedItems.length > 1){
+        		Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+        		return false;
+        	}
+        	editYN = 'N';
+        	fn_makeDisabled("all");
+        	$("#editPrice_popup").show();
+        	CommonCombo.make("exPkgCombo", "/stock/selectCodeList2.do", '', '', '');
+        	stkId2 = checkedItems[0].item.stkid;
+        	typeId2 = checkedItems[0].item.stktypeid;
+        	priceHistoryGrid = AUIGrid.create("#priceInfo_grid_wrap", pricehiscolumn2, subgridpros2);
+
+        });
+
+
+   /*      $("#price_info_edit").click(function(){
 
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
 			var srvPacId = $("#srvPacId :selected").val();
@@ -522,7 +562,7 @@
                     //$("#stock_info_edit").text("EDIT");
                 }
             }
-        });
+        }); */
 
         //
         $("#service_info_edit").click(function(){
@@ -755,8 +795,8 @@
             Common.alert(data.message);
             if (v == "stockInfo") {
                 $("#stock_info_edit").text("EDIT");
-            } else if (v == "priceForm") {
-                $("#price_info_edit").text("EDIT");
+         /*    } else if (v == "priceForm") {
+                $("#price_info_edit").text("EDIT"); */
             } else if(f == "filter_info"){
                 $("#filter_info_edit").text("EDIT");
                 colShowHide(filterGrid,"",false);
@@ -844,7 +884,7 @@
                         $("#stock_commisssion").hide();
                     }
                     $("#stock_info_div").show();
-                    $("#price_info_div").hide();
+                  //  $("#price_info_div").hide();
                     $("#filter_info_div").hide();
                     $("#service_info_div").hide();
                     $("#service_point_div").hide();
@@ -877,9 +917,192 @@
     function imgAUIGrid(stockimgcolumn) {
         imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
     }
-    function priceHistoryAUIGrid(pricehiscolumn) {
+   /*  function priceHistoryAUIGrid(pricehiscolumn) {
         priceHistoryGrid = AUIGrid.create("#priceHistory_div", pricehiscolumn, subgridpros2);
+    } */
+
+    function fn_makeDisabled(w){
+    	if(w == "all"){
+    		if(editYN == 'N'){
+                $("#exPrice").prop("disabled", true);
+                $("#exNormalPrice").prop("disabled", true);
+                $("#exPV").prop("disabled", true);
+                $("#exRentalDeposit").prop("disabled", true);
+                $("#exCost").prop("disabled", true);
+                $("#exTradePv").prop("disabled", true);
+                $("#exPenalty").prop("disabled", true);
+             //   $("#exValidFr").prop("disabled", true);
+            }
+    	}else if(w == "R"){
+    		$("#exPrice").prop("disabled", false);
+            $("#exNormalPrice").prop("disabled", true);
+            $("#exPV").prop("disabled", false);
+            $("#exRentalDeposit").prop("disabled", false);
+            $("#exCost").prop("disabled", false);
+            $("#exTradePv").prop("disabled", false);
+            $("#exPenalty").prop("disabled", false);
+          //  $("#exValidFr").prop("disabled", false);
+    	}else if(w == "O"){
+    		$("#exPrice").prop("disabled", true);
+            $("#exNormalPrice").prop("disabled", false);
+            $("#exPV").prop("disabled", false);
+            $("#exRentalDeposit").prop("disabled", true);
+            $("#exCost").prop("disabled", false);
+            $("#exTradePv").prop("disabled", false);
+            $("#exPenalty").prop("disabled", false);
+          //  $("#exValidFr").prop("disabled", false);
+    	}
+
     }
+
+    function fn_getPriceInfo(){
+        var srvPacId = $("#exPkgCombo :selected").val();
+        var obj = document.getElementById("exPkgCombo");
+        var srvPacVal = obj.options[obj.selectedIndex].text;
+        var appTypeId ="";
+       if(srvPacVal.includes("Rental")){
+           appTypeId = "66";
+           if(editYN == "Y"){
+        	   if(typeId2 == '61'){
+        		   fn_makeDisabled("R");
+        	   }else if(typeId2 == "63"){
+        		   fn_makeDisabled("O");
+        	   }
+
+           }
+       }else if(srvPacVal.includes("Outright Plus")){
+           appTypeId = "1412";
+       }else{
+           appTypeId = "67";
+           if(editYN == "Y"){
+        	   fn_makeDisabled("O");
+           }
+       }
+
+        var url = "/stock/editPriceInfo.do";
+        var param = {
+                stkid : stkId2,
+                srvpacid: srvPacId,
+                appTypeId : appTypeId,
+                typeId : typeId2,
+        };
+
+         Common.ajax("GET" , url , param , function(result){
+             console.log(result.data);
+             console.log(result.data2);
+             if(result.data.length > 0){
+                  AUIGrid.setGridData(priceHistoryGrid, result.data2);
+                  $("#exPrice").val(result.data[0].mrental);
+                  $("#exPV").val(result.data[0].pricepv);
+                  $("#exRentalDeposit").val(result.data[0].pricerpf);
+                  $("#exPenalty").val(result.data[0].penalty);
+                  $("#exCost").val(result.data[0].pricecost);
+                  $("#exTradePv").val(result.data[0].tradeinpv);
+                  $("#exNormalPrice").val(result.data[0].amt);
+             }else{
+                 $("#exPrice").empty();
+                 $("#exPV").empty();
+                 $("#exRentalDeposit").empty();
+                 $("#exPenalty").empty();
+                 $("#exCost").empty();
+                 $("#exTradePv").empty();
+                 $("#exNormalPrice").empty();
+
+             }
+
+        });
+
+  }
+
+    function fn_editPriceInfo(){
+        editYN = "Y";
+        var srvPacId = $("#exPkgCombo :selected").val();
+        var obj = document.getElementById("exPkgCombo");
+        var srvPacVal = obj.options[obj.selectedIndex].text;
+        var appTypeId ="";
+       if(srvPacVal.includes("Rental")){
+           appTypeId = "66";
+       }else if(srvPacVal.includes("Outright Plus")){
+           appTypeId = "1412";
+       }else{
+           appTypeId = "67";
+       }
+
+       if(appTypeId == "66"){
+    	   if(typeId2 == "61"){
+    		   fn_makeDisabled("R");
+    	   } else if (typeId2 == "63"){
+    		   fn_makeDisabled("O");
+    	   }
+       }else if(appTypeId == "67" || appTypeId == "1412"){
+    	   fn_makeDisabled("O");
+       }
+    }
+
+    function fn_cancel(){
+    	fn_getPriceInfo();
+    	editYN = "N";
+    	fn_makeDisabled("all");
+    }
+
+    function fn_close(){
+    	$("#editPrice_popup").hide();
+    	$("#editForm")[0].reset();
+    	AUIGrid.destroy(priceHistoryGrid);
+    }
+
+    function fn_save(){
+        if(editYN == "Y"){
+            Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_updatePrice);
+        }else{
+            Common.alert("No changes have been made!");
+        }
+
+ }
+    function fn_updatePrice(){
+
+
+        var srvPacId = $("#exPkgCombo :selected").val();
+        var obj = document.getElementById("exPkgCombo");
+        var srvPacVal = obj.options[obj.selectedIndex].text;
+        var appTypeId ="";
+       if(srvPacVal.includes("Rental")){
+           appTypeId = "66";
+       }else if(srvPacVal.includes("Outright Plus")){
+           appTypeId = "1412";
+       }else{
+           appTypeId = "67";
+       }
+
+       var param = {
+                stockId : stkId2,
+                srvPackageId: srvPacId,
+                appTypeId : appTypeId,
+                priceTypeid : typeId2,
+                typeId : typeId2,
+                dCost : $("#exCost").val(),
+                dPV : $("#exPV").val(),
+                dRentalDeposit : $("#exRentalDeposit").val(),
+                dTradeInPV : $("#exTradePv").val(),
+                dMonthlyRental : $("#exPrice").val(),
+                dNormalPrice : $("#exNormalPrice").val(),
+                dPenaltyCharge  : $("#exPenalty").val()
+        };
+       console.log("priceTypeId: " + typeId2);
+       console.log(param);
+ Common.ajaxSync("POST", "/stock/modifyPriceInfo.do", param,
+          function(result) {
+           console.log("성공." + JSON.stringify(result));
+           console.log("data : " + result.data);
+           fn_getPriceInfo();
+          }, function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+          });
+
+}
 
     function getSampleListAjax() {
 
@@ -1038,7 +1261,7 @@
             $("#typeid").val(data[0].typeid);
             $("#stock_info_edit").text("SAVE");
 
-        } else if (v == 'P') {
+            /* }  else if (v == 'P') {
             $("#txtCost").empty();
             $("#txtNormalPrice").empty();
             $("#txtPV").empty();
@@ -1067,9 +1290,9 @@
             }
             destory(priceHistoryGrid);
             priceHistoryAUIGrid(pricehiscolumn);
-            AUIGrid.setGridData(priceHistoryGrid, data2);
+            AUIGrid.setGridData(priceHistoryGrid, data2); */
 
-        } else if (v == 'EP') {
+        /* } else if (v == 'EP') {
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             var typeid = "";
             for (i = 0; i < selectedItems.length; i++) {
@@ -1138,7 +1361,7 @@
 
             destory(priceHistoryGrid);
             priceHistoryAUIGrid(pricehiscolumn);
-            AUIGrid.setGridData(priceHistoryGrid, data2);
+            AUIGrid.setGridData(priceHistoryGrid, data2); */
 
         } else if (v == 'F') {
             destory(filterGrid);
@@ -1285,8 +1508,8 @@
         $("#txtRentalDeposit").text("");
         $("#txtPenaltyCharge").text("");
         $("#txtTradeInPV").text("");
-        destory(priceHistoryGrid);
-        priceHistoryAUIGrid(pricehiscolumn);
+       // destory(priceHistoryGrid);
+       // priceHistoryAUIGrid(pricehiscolumn);
         $("#txtStkSize").text();
         $("#cbIsSmo").prop("checked", false);
         $("#cbIsSerialReplc").prop("checked", false);
@@ -1607,6 +1830,7 @@
         <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
+            <li><p class="btn_grid"><a id="editPrice">Price</a></p></li>
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
    </c:if>
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
@@ -1622,7 +1846,7 @@
 
             <ul class="tap_type1">
                 <li id="stock_info"><a href="#"> Stock info </a></li>
-                <li id="price_info"><a href="#"> Price & Value Information</a></li>
+               <!--  <li id="price_info"><a href="#"> Price & Value Information</a></li>-->
                 <li id="filter_info"><a href="#"> Filter Info</a></li>
                 <li id="spare_info"><a href="#"> Spare Part Info</a></li>
                 <li id="service_info"><a href="#">Service Charge Info</a></li>
@@ -1702,7 +1926,7 @@
                 </form>
             </article>
 
-            <article class="tap_area" id="price_info_div" style="display:none;">
+ <%--            <article class="tap_area" id="price_info_div" style="display:none;">
                 <div class="divine_auto"><!-- divine_auto start -->
                     <div style="width:50%;">
                 <aside class="title_line"><!-- title_line start -->
@@ -1787,7 +2011,7 @@
                 </div>
 
                 </div><!-- divine_auto end -->
-            </article>
+            </article> --%>
 
             <article class="tap_area" id="filter_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
@@ -2236,4 +2460,111 @@
     </section><!-- content end -->
 </div>
 
+<div id="editPrice_popup" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Price & Value Information</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a id = "fclose" onclick="javascript:fn_close();"><spring:message code="expense.CLOSE" /></a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+
+    <section class="pop_body" style="min-height: auto"><!-- pop_body start -->
+    <aside class="title_line"><!-- title_line start -->
+		<h4>Price & Value Configuration</h3>
+		<ul class="right_btns">
+		    <li><p class="btn_blue fl_right"><a id="price_info_edit" onclick="javascript:fn_editPriceInfo();">EDIT</a></p></li>
+		</ul>
+		</aside><!-- title_line end -->
+       <%--  <ul class="right_opt">
+                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                    <li><p class="btn_blue fl_right"><a id="price_info_edit" onclick="javascript:fn_editPriceInfo();">EDIT</a></p></li>
+                    </c:if>
+                </ul> --%>
+        <section class="search_table"><!-- search_table start -->
+            <form action="#" method="post" id="editForm" name="editForm">
+                <input type="hidden" name="srvPackageId" id="srvPackageId" value=""/>
+                <input type="hidden" name="appTypeId" id="appTypeId"/>
+
+
+
+                <table class="type1"><!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                    </colgroup>
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">Package</th>
+                            <td>
+                            <select class="w100p" id="exPkgCombo" name="exPkgCombo" onchange="javascript:fn_getPriceInfo();">
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Monthly Rental</th>
+                            <td>
+                               <input type="text" id = "exPrice" name="exPrice" disabled = "disabled"/>
+                            </td>
+                             <th scope="row">Cost (RM)</th>
+                            <td>
+                                <input type="text" id = "exCost" name="exCost" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Point of Value (PV)</th>
+                            <td>
+                                <input type="text" id = "exPV" name="exPV" disabled = "disabled"/>
+                            </td>
+                              <th scope="row">Trade In PV</th>
+                            <td>
+                                <input type="text" id = "exTradePv" name="exTradePv" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rental Deposit (RM)</th>
+                            <td>
+                                <input type="text" id = "exRentalDeposit" name="exRentalDeposit" disabled = "disabled"/>
+                            </td>
+                            <th scope="row">Penalty Charges (RM)</th>
+                            <td>
+                                <input type="text" id = "exPenalty" name="exPenalty" disabled = "disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Normal Price (RM)</th>
+                            <td>
+                                <input type="text" id = "exNormalPrice" name="exNormalPrice" disabled = "disabled"/>
+                            </td>
+                            <td></td>
+                            <td></td>
+
+                           <!--  <th scope="row">Valid From</th>
+                            <td>
+                                <input type="text" id = "exValidFr" name="exValidFr" class = "j_date" placeholder="DD/MM/YYYY" disabled = "disabled"/>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table><!-- table end -->
+            </form>
+        </section><!-- search_table end -->
+        <section class="search_result"><!-- search_result start -->
+	<aside class="title_line"><!-- title_line start -->
+	        <h4>Price & Value History</h3>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap" id="priceInfo_grid_wrap"><!-- grid_wrap start -->
+        </article><!-- grid_wrap end -->
+
+        </section><!-- search_result end -->
+
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();"><spring:message code="expense.SAVE" /></a></p></li>
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_cancel();">CANCEL</a></p></li>
+        </ul>
+    </section><!-- pop_body end -->
+
+</div>
 

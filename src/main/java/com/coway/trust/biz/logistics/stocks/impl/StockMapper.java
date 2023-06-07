@@ -63,6 +63,11 @@ public interface StockMapper {
 
 	List<EgovMap> selectCodeList();
 
+	List<EgovMap> selectCodeList2();
+
+	List<EgovMap> selectPriceInfo2(Map<String, Object> params);
+
+	List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> param);
 
 	// Added by Hui Ding, 2020-06-22
 	EgovMap selectStkCatType(Map<String, Object> params);
@@ -98,6 +103,5 @@ public interface StockMapper {
 	void insertBLMaster83M(Map<String, Object> map);
 	void insertBLMaster84D(Map<String, Object> map);
 	void updateITF160Status(Map<String, Object> map);*/
-
 
 }

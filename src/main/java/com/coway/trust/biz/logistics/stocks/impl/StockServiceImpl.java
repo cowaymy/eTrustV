@@ -359,4 +359,146 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		// TODO Auto-generated method stub
 		stockMapper.modifyEosEomInfo(params);
 	}
+
+	@Override
+	 public List<EgovMap> selectCodeList2(){
+
+	   return stockMapper.selectCodeList2();
+	 }
+
+	@Override
+	public void updatePriceInfo2(Map<String, Object> params) {
+    logger.debug("[updatePriceInfo2] START ===== params========" + params);
+    // TODO Auto-generated method stub
+    Map<String, Object> smap = new HashMap<>();
+    Map<String, Object> smap2 = new HashMap<>();
+
+    boolean isEmptyPriceInfo = false;
+
+    smap.put("srvpacid", params.get("srvPackageId"));
+    smap2.put("srvpacid", params.get("srvPackageId"));
+
+    smap.put("typeId", params.get("priceTypeid"));
+    smap2.put("typeId", params.get("priceTypeid"));
+
+
+    smap.put("crtUserId", params.get("upd_user"));
+    smap2.put("crtUserId", params.get("upd_user"));
+
+    smap.put("upd_user", params.get("upd_user"));
+    smap2.put("upd_user", params.get("upd_user"));
+
+    if (params.get("priceTypeid") != null) {
+    	if ("61".equals(params.get("priceTypeid").toString())){
+
+        //outright or outright plus package
+        smap.put("stockId", params.get("stockId"));
+        smap.put("amt", params.get("dNormalPrice"));
+        smap.put("appTypeId", "67");
+        smap.put("pricecharges", 0);
+        smap.put("pricecosting", params.get("dCost"));
+        smap.put("statuscodeid", 1);
+        smap.put("pricepv", params.get("dPV"));
+        smap.put("tradeinpv", params.get("dTradeInPV"));
+        smap.put("srvpacid", params.get("srvPackageId"));
+        smap.put("pricerpf", params.get("dRentalDeposit"));
+
+        //rental package
+        smap2.put("stockId", params.get("stockId"));
+        smap2.put("amt", params.get("dMonthlyRental"));
+        smap2.put("appTypeId", "66");
+        smap2.put("pricecharges", 0);
+        smap2.put("pricecosting", params.get("dCost"));
+        smap2.put("statuscodeid", 1);
+        smap2.put("pricepv", params.get("dPV"));
+        smap2.put("tradeinpv", params.get("dTradeInPV"));
+        smap2.put("pricerpf", params.get("dRentalDeposit"));
+        smap2.put("srvpacid", params.get("srvPackageId"));
+
+        List<EgovMap> info = null;
+        if(params.get("appTypeId").toString().equals("66")){
+        	info = stockMapper.selectPriceInfo2(smap2);
+        }else if(params.get("appTypeId").toString().equals("67")){
+        	info = stockMapper.selectPriceInfo2(smap);
+        }
+        logger.debug("info >>>> " + info);
+       String pricecost, amt ,pricepv, mrental, pricerpf, penalty, tradeinpv;
+
+       if (info != null || !info.isEmpty()){
+           for(Object obj: info){
+               pricecost = (String) ((Map<String, Object>) obj).get("pricecost").toString();
+               amt = (String) ((Map<String, Object>) obj).get("amt").toString();
+               pricepv = (String) ((Map<String, Object>) obj).get("pricepv").toString();
+               mrental = (String) ((Map<String, Object>) obj).get("mrental").toString();
+               pricerpf = (String) ((Map<String, Object>) obj).get("pricerpf").toString();
+               penalty = (String) ((Map<String, Object>) obj).get("penalty").toString();
+               tradeinpv = (String) ((Map<String, Object>) obj).get("tradeinpv").toString();
+
+               if(pricecost.equals("0") && amt.equals("0") && pricepv.equals("0") && mrental.equals("0") && pricerpf.equals("0") && penalty.equals("0") && tradeinpv.equals("0")){
+                    int pac_id = stockMapper.selectPacId();
+                    smap.put("pac_id", pac_id);
+                    smap2.put("pac_id", pac_id);
+                    isEmptyPriceInfo = true;
+               }
+           }
+        }
+
+
+        if(isEmptyPriceInfo == false){
+			if(params.get("appTypeId").toString().equals("66")){
+				 stockMapper.updateSalePriceInfo(smap2);
+			}else if(params.get("appTypeId").toString().equals("67")){
+				stockMapper.updateSalePriceInfo(smap);
+			}
+        }else{
+			if(params.get("appTypeId").toString().equals("66")){
+				 stockMapper.insertSalePriceInfo(smap2);
+			}else if(params.get("appTypeId").toString().equals("67")){
+				stockMapper.insertSalePriceInfo(smap);
+			}
+        }
+
+		if(params.get("appTypeId").equals("66")){
+			stockMapper.insertSalePriceInfoHistory(smap2);
+		}else if(params.get("appTypeId").equals("67")){
+			stockMapper.insertSalePriceInfoHistory(smap);
+		}
+
+
+
+    } else {
+        smap.put("priceTypeid", params.get("priceTypeid"));
+        smap.put("stockId", params.get("stockId"));
+        smap.put("amt", params.get("dNormalPrice"));
+        smap.put("appTypeId", params.get("appTypeId"));
+        smap.put("pricecharges", params.get("dPenaltyCharge"));
+        smap.put("pricecosting", params.get("dCost"));
+        smap.put("statuscodeid", 1);
+
+        if(isEmptyPriceInfo == false){
+            stockMapper.updateSalePriceInfo(smap);
+        }else{
+            stockMapper.insertSalePriceInfo(smap);
+        }
+
+        stockMapper.insertSalePriceInfoHistory(smap);
+
+      }
+    }
+    logger.debug("[updatePriceInfo2] END ");
+  }
+
+	@Override
+	public List<EgovMap> selectPriceInfo2(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMapper.selectPriceInfo2(params);
+
+	}
+
+
+	@Override
+	public List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMapper.selectPriceHistoryInfo2(params);
+	}
 }

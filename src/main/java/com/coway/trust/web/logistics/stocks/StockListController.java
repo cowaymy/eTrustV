@@ -239,7 +239,8 @@ public class StockListController {
 		map.put("msg", retMsg);
 
 		stock.updateStockPriceInfo(params);
-		stock.updatePriceInfo(params);
+//		stock.updatePriceInfo(params);
+		stock.updatePriceInfo2(params);
 
 		return ResponseEntity.ok(map);
 	}
@@ -494,4 +495,52 @@ public class StockListController {
 
 			return ResponseEntity.ok(map);
 	  }
+
+      @RequestMapping(value = "/editPriceInfo.do", method = RequestMethod.GET)
+  	public ResponseEntity<Map> selectEditPriceInfo(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+  			throws Exception {
+  		String stkid = CommonUtils.nvl(request.getParameter("stkid"));
+  		String typeid = CommonUtils.nvl(request.getParameter("typeId"));
+  		String srvpacid = CommonUtils.nvl(request.getParameter("srvpacid"));
+  		String appTypeId = CommonUtils.nvl(request.getParameter("appTypeId"));
+
+  		logger.debug("typeId: " + typeid);
+  		Map<String, Object> smap = new HashMap();
+  		smap.put("stockId", stkid);
+  		smap.put("typeId", typeid);
+  		smap.put("srvpacid", srvpacid);
+  		smap.put("appTypeId", appTypeId);
+
+  		if(!"".equals(String.valueOf(srvpacid)) && srvpacid!=null){
+  			smap.put("srvPackageId", srvpacid);
+  		}
+  		else{
+  			smap.put("srvPackageId", "0");
+  		}
+
+  		if(!"".equals(appTypeId) && appTypeId!=null){
+			stock.updateStockPriceInfo(smap);
+		}
+
+  		List<EgovMap> info = stock.selectPriceInfo2(smap);
+  		logger.debug("Info >>> " + info);
+  		List<EgovMap> infoHistory = stock.selectPriceHistoryInfo2(smap);
+
+  		Map<String, Object> map = new HashMap();
+  		map.put("data", info);
+  		map.put("data2", infoHistory);
+
+  		return ResponseEntity.ok(map);
+  	}
+
+
+      @RequestMapping(value = "/selectCodeList2.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCodeList2() {
+
+	    List<EgovMap> codeList = stock.selectCodeList2();
+
+	    return ResponseEntity.ok(codeList);
+	  }
+
+
 }

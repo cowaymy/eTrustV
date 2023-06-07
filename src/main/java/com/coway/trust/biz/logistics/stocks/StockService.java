@@ -59,4 +59,12 @@ public interface StockService {
 	void modifyEosEomInfo(Map<String, Object> params);
 
 	List<EgovMap> getEosEomInfo(Map<String, Object> params);
+
+	List<EgovMap> selectCodeList2();
+
+	void updatePriceInfo2(Map<String, Object> params);
+
+	List<EgovMap> selectPriceInfo2(Map<String, Object> params);
+
+	List<EgovMap> selectPriceHistoryInfo2(Map<String, Object> params);
 }

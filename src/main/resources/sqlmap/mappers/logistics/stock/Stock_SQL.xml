@@ -501,19 +501,19 @@
         <update id="updateSalePriceInfo" parameterType="Map">
            update SAL0016M
 		   set UPD_DT      = SYSDATE
-		   <if test="apptypeid !=null and apptypeid == '69'">
+		   <if test="appTypeId !=null and appTypeId == '69'">
 		     , AMT         = TO_NUMBER (replace(#{amt},',', ''))
 		     , PRC_CHRG    = #{pricecharges}
 		     , PRC_COSTING = #{pricecosting}
 			</if>
-			<if test="apptypeid !=null and apptypeid == '66'">
+			<if test="appTypeId !=null and appTypeId == '66'">
 		      ,  AMT         = TO_NUMBER (replace(#{amt},',', ''))
 		      ,  PRC_RPF     = #{pricerpf}
 		      ,  PRC_PV      = #{pricepv}
 		      ,  TRADE_IN_PV = #{tradeinpv}
 		      ,  PRC_COSTING = #{pricecosting}
 			 </if>
-			 <if test="apptypeid !=null and apptypeid == '67'">
+			 <if test="appTypeId !=null and appTypeId == '67'">
 		       ,  AMT         = TO_NUMBER (replace(#{amt},',', ''))
 		       ,  PRC_PV      = #{pricepv}
 		       ,  TRADE_IN_PV = #{tradeinpv}
@@ -522,7 +522,7 @@
 		     ,  UPD_USER_ID = #{upd_user}
 			 where PRC_ID      =  (SELECT PRC_ID FROM SAL0016M
 		                           WHERE STK_ID = #{stockId}
-		                           AND APP_TYPE_ID = #{apptypeid}
+		                           AND APP_TYPE_ID = #{appTypeId}
 		                           AND MEM_PAC_ID = #{srvpacid})
         </update>
 
@@ -783,7 +783,7 @@
         WHERE PRC_ID = (SELECT PRC_ID
                         FROM SAL0016M
                         WHERE STK_ID = #{stockId}
-                        AND APP_TYPE_ID = #{apptypeid}
+                        AND APP_TYPE_ID = #{appTypeId}
                         AND MEM_PAC_ID = #{srvpacid})
         </insert>
          <select id="selectStockCommisionSetting" parameterType="Map" resultType="egovMap">
@@ -1016,4 +1016,114 @@
          WHERE STK_ID = #{stockId}
     </update>
 
+<select id="selectCodeList2" parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID ,
+    CODE ,
+    CASE WHEN CODE_MASTER_ID = 367 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 66 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
+            WHEN CODE_MASTER_ID = 368 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 67 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
+            WHEN CODE_MASTER_ID = 370 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 1412 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
+     ELSE NULL END AS CODE_NAME,
+    DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION,
+    CASE WHEN CODE_MASTER_ID = 367 THEN 66
+    WHEN CODE_MASTER_ID = 368 THEN 67
+    WHEN CODE_MASTER_ID = 370 THEN 1412
+    ELSE NULL END AS APPTYPEID
+    FROM SYS0013M
+    WHERE DISAB = 0
+    AND CODE_MASTER_ID IN (367,368,370)
+
+  </select>
+
+  <select id="selectPriceInfo2" parameterType="Map" resultType="egovMap">
+   SELECT
+   <if test="typeId !=null and typeId == '61'">
+                <if test="appTypeId !=null and appTypeId == '66'">
+                    0 PRICECOST,
+				    0 AMT,
+				    NVL(PRC_PV, 0) PRICEPV,
+				    NVL(AMT, 0) MRENTAL,
+				    NVL(PRC_RPF, 0) PRICERPF,
+				    0 PENALTY,
+				    0 TRADEINPV
+                </if>
+                <if test="appTypeId !=null and appTypeId == '67'">
+				    NVL(PRC_COSTING, 0) PRICECOST,
+				    NVL(AMT, 0) AMT,
+				    NVL(PRC_PV, 0) PRICEPV,
+				    0 MRENTAL,
+				    0 PRICERPF,
+				    0 PENALTY,
+				    NVL(TRADE_IN_PV, 0) TRADEINPV
+                </if>
+                <if test="appTypeId !=null and appTypeId == '1412'">
+                    NVL(PRC_COSTING, 0) PRICECOST,
+                    NVL(AMT, 0) AMT,
+                    NVL(PRC_PV, 0) PRICEPV,
+                    0 MRENTAL,
+                    0 PRICERPF,
+                    0 PENALTY,
+                    NVL(TRADE_IN_PV, 0) TRADEINPV
+                </if>
+
+    </if>
+    <if test="typeId !=null and typeId != '61'">
+                    NVL(PRC_COSTING, 0) PRICECOST,
+				    NVL(AMT, 0) AMT,
+				    0 PRICEPV,
+				    0 MRENTAL,
+				    0 PRICERPF,
+				    NVL(PRC_CHRG, 0) PENALTY,
+				    0 TRADEINPV
+    </if>
+    FROM SAL0016M
+                    WHERE STK_ID = #{stockId}
+                    AND MEM_PAC_ID = #{srvpacid}
+                    AND APP_TYPE_ID = #{appTypeId}
+                    ORDER BY UPD_DT DESC
+
+  </select>
+
+   <select id="selectPriceHistoryInfo2" parameterType="Map" resultType="egovMap">
+	    SELECT
+	    ROW_NO,
+	    PRC_ID,
+	    MEM_PAC_ID,
+	    STK_ID,
+	    UOM_ID,
+	    UOM_CONV,
+	    APP_TYPE_ID,
+	    NVL(PRIOD, 0) PRIOD,
+	    STUS_CODE_ID,
+	    CRT_USER_ID,
+	    TO_CHAR(CRT_DT, 'YYYY/MM/DD') CRT_DT,
+	    <if test="typeId !=null and typeId == '61'">
+	        NVL(PRC_COSTING, 0) PRICECOST,
+		    NVL(AMT, 0) AMT,
+		    NVL(PRC_PV, 0) PRICEPV,
+		    NVL(AMT, 0) MRENTAL,
+		    NVL(PRC_RPF, 0) PRICERPF,
+		    0 PENALTY,
+		    NVL(TRADE_IN_PV, 0) TRADEINPV
+	    </if>
+	    <if test="typeId !=null and typeId != '61'">
+		    NVL(PRC_COSTING, 0) PRICECOST,
+		    NVL(AMT, 0) AMT,
+		    0 PRICEPV,
+		    0 MRENTAL,
+		    0 PRICERPF,
+		    NVL(PRC_CHRG, 0) PENALTY,
+		    0 TRADEINPV
+	    </if>
+
+	    FROM LOG0058D
+	    WHERE 1=1
+	    AND APP_TYPE_ID = #{appTypeId}
+	    AND STK_ID = #{stockId}
+	    AND MEM_PAC_ID = #{srvpacid}
+	    <if test="typeId !=null and typeId != '61'">
+	    AND STUS_CODE_ID = 1
+	    </if>
+	    ORDER BY ROW_NO DESC
+
+   </select>
 </mapper>
