@@ -952,9 +952,9 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 				 logger.debug("================HCINSMS================");
 
 			    	if(installResult.get("installStatus").toString().equals("4")){ //COMPLETE
-				    	smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , Pemasangan telah diselesaikan oleh Technician pada " + installResult.get("installDate").toString() + " . Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns" ;
+				    	smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() + " , pemasangan telah diselesaikan oleh Technician. Sila nilaikan kualiti perkhidmatan di bit.ly/CowayHCIns" ;
 			    	}else{ //FAIL
-			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , Janji temu anda utk Pemasangan Produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
+			    	      smsMessage = "COWAY: Order " + installResult.get("salesOrderNo").toString() +" , janji temu anda utk pemasangan produk TIDAK BERJAYA. Sebarang pertanyaan, sila hubungi 1800-888-111.";
 			    	}
 			    }
 		 }
