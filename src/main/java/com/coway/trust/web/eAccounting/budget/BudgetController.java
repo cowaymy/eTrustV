@@ -342,6 +342,37 @@ public class BudgetController {
 
 	}
 
+		@RequestMapping(value = "/selectAdjustmentCBGCostCenter.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectAdjustmentCBGCostCenter (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+			List<EgovMap> info = null;
+
+//			params.put("costCentr", sessionVO.getCostCentr());
+
+			params.put("mainMod", "E-ACCOUNTING");
+	        params.put("subMod", "BUDGET");
+	        params.put("userId", sessionVO.getUserId());
+
+	        List<EgovMap> permissions = null;
+	        permissions = budgetService.getListPermAppr(params);
+	        int procFlg = 0;
+
+	        if(permissions.size() == 0)
+	        {
+	            procFlg = 1;
+	            params.put("procFlg", procFlg);
+	        }
+
+	        params.put("procFlg", procFlg);
+
+			LOGGER.debug("params =====================================>>  " + params);
+
+			info = budgetService.selectAdjustmentCBGCostCenter(params);
+
+			return ResponseEntity.ok(info);
+
+		}
+
 	@RequestMapping(value = "/availableBudgetDisplayPop.do")
 	public String availableBudgetDisplay (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
