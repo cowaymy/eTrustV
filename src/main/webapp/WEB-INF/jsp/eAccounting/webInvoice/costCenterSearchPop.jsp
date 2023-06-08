@@ -24,7 +24,7 @@ var costCenterColumnLayout = [ {
 
 //그리드 속성 설정
 var costCenterGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -36,23 +36,23 @@ var costCenterGridID;
 
 $(document).ready(function () {
 	costCenterGridID = AUIGrid.create("#costCenter_grid_wrap", costCenterColumnLayout, costCenterGridPros);
-	
+
 	AUIGrid.bind(costCenterGridID, "cellDoubleClick", function( event ) {
 		$("#search_costCentr").val(event.item.costCenter);
 		$("#search_costCentrName").val(event.item.costCenterText);
-		
+
 		if("${pop}" == "pop") {
 			fn_setPopCostCenter();
 		} else {
 			fn_setCostCenter();
 		}
-        
+
          $("#costCenterSearchPop").remove();
 	});
-	
+
 	// add jgkim
 	if("${call}" == "budgetAdj") {
-		$("#search_btn").click(fn_selectAdjustmentCBG);
+		$("#search_btn").click(fn_selectAdjustmentCBGCostCenter);
 	} else {
 		$("#search_btn").click(fn_selectCostCenter);
 	}
@@ -65,10 +65,10 @@ function fn_selectCostCenter() {
 }
 
 // add jgkim
-function fn_selectAdjustmentCBG() {
-    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#form_costCenter").serializeJSON(), function(result) {
+function fn_selectAdjustmentCBGCostCenter() {
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBGCostCenter.do?_cacheId=" + Math.random(), $("#form_costCenter").serializeJSON(), function(result) {
     	console.log(result);
-        AUIGrid.setGridData(costCenterGridID, result[0]);
+        AUIGrid.setGridData(costCenterGridID, result);
     });
 }
 </script>
