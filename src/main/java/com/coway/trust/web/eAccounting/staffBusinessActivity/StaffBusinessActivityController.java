@@ -808,7 +808,7 @@ public class StaffBusinessActivityController {
             model.addAttribute("type", params.get("type"));
         }
 
-        List<EgovMap> advOcc = staffBusinessActivityService.selectAdvOccasions(params);
+        List<EgovMap> advOcc = staffBusinessActivityService.selectAdvOccasions2(params);
         model.put("advOcc", advOcc);
 
         return "eAccounting/staffBusinessActivity/staffBusActApproveViewPop";
