@@ -2311,6 +2311,14 @@ WHERE ROWNUM = 1
           UPD_USER_ID = 349
       WHERE SALES_ORD_ID = #{saveOrdId}
       AND STUS_CODE_ID IN (1, 19)  -- ONLY FOR CALL LOG THAT ACTIVE AND RECALL
-    </update>
+</update>
+
+<update id="inactiveRentalAgreement" parameterType="Map">
+      UPDATE SAL0306D SET GOV_AG_ITM_STUS_ID = #{callStusId},  -- 8
+          GOV_AG_ITM_UPD_DT = SYSDATE,
+          GOV_AG_ITM_UPD_USER_ID = 349
+      WHERE GOV_AG_ITM_SALES_ORD_ID = #{saveOrdId}
+      AND GOV_AG_ITM_STUS_ID IN (1)  -- ONLY FOR AGREEMENT THAT ACTIVE
+</update>
 
 </mapper>
