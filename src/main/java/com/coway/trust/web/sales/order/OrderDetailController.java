@@ -254,6 +254,27 @@ public class OrderDetailController {
     return "sales/order/instImgViewerPop";
   }
 
+  @RequestMapping(value = "/getHsImg.do")
+  public String getHsImg(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
+
+	    logger.debug("======================================================");
+	    logger.debug("= PARAMS : " + params.toString());
+	    logger.debug("======================================================");
+
+    // GET IMAGE PATH
+    List<EgovMap> imgLst = orderDetailService.getHsImg(params);
+    logger.info("[OrderDetailController - getHsImg] imgLst :: {} " + imgLst);
+
+    //String serialized = gson.toJson(imgLst);
+    //JsonArray convertedArray = new Gson().fromJson(serialized, JsonArray.class);
+    model.addAttribute("imgLst", imgLst);
+    //model.addAttribute("imgLstArr", convertedArray);
+    model.addAttribute("path", uploadDir);
+
+    return "sales/order/hsImgViewerPop";
+  }
+
   @RequestMapping(value = "/selectGSTRebateList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectGSTRebateList(@RequestParam Map<String, Object> params, ModelMap model) {
 
