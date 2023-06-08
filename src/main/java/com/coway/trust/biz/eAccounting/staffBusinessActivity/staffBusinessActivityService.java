@@ -19,6 +19,8 @@ public interface staffBusinessActivityService {
 
     List<EgovMap> selectAdvOccasions(Map<String, Object> params);
 
+    List<EgovMap> selectAdvOccasions2(Map<String, Object> params);
+
     String selectNextClmNo(Map<String, Object> params);
 
     void insertRequest(Map<String, Object> params);
