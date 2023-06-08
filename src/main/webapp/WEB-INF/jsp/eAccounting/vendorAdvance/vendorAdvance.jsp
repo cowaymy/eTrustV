@@ -2662,7 +2662,7 @@
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
                             <td colspan="3">
-                                <textarea cols="20" rows="5" id="settlementRem" name="settlementRem" maxlength="200" placeholder="Enter up to 200 characters"></textarea></td>
+                                <textarea cols="20" rows="5" id="settlementRem" name="settlementRem" maxlength="100" placeholder="Enter up to 100 characters"></textarea></td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
