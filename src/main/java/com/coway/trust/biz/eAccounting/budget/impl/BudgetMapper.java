@@ -132,4 +132,6 @@ public interface BudgetMapper {
 	int getBudgetDocNoFCM0039D_2(Map<String, Object> reMap);
 
 	float checkUploadSum(Map<String, Object> reMap);
+
+	List<EgovMap> selectAdjustmentCBGCostCenter(Map<String, Object> params);
 }
