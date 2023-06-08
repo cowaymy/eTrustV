@@ -261,7 +261,7 @@
     </select>
 
 
-    <select id="selectAdvOccasions" parameterType="Map" resultType="egovMap">
+    <select id="selectAdvOccasions2" parameterType="Map" resultType="egovMap">
         SELECT B.CODE_ID CODE, B.CODE_DESC CODE_NAME
         FROM FCM0027M A
         JOIN SYS0013M B ON B.CODE_ID = A.ADV_OCC
