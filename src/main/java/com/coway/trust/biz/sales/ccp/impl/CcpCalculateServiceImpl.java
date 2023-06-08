@@ -1332,6 +1332,10 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
   		// inactive current call log to avoid duplicate call log
         params.put("callStusId" , 8);
         ccpCalculateMapper.inactiveCallLog(params);
+
+        ccpCalculateMapper.inactiveRentalAgreement(params);
+
+
   	}
 
   	@Override
