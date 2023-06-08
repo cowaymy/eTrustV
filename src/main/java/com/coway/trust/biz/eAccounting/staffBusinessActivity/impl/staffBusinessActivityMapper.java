@@ -19,6 +19,8 @@ public interface staffBusinessActivityMapper {
 
     List<EgovMap> selectAdvOccasions(Map<String, Object> params);
 
+    List<EgovMap> selectAdvOccasions2(Map<String, Object> params);
+
     int selectNextClmSeq(String clmNo);
 
     EgovMap selectClamUn(Map<String, Object> params);
