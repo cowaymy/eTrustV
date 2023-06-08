@@ -164,4 +164,6 @@ public interface CcpCalculateMapper {
 	List<EgovMap> selectTicketLogs(Map<String, Object> params) throws Exception;
 
 	void inactiveCallLog(Map<String, Object>params) throws Exception;
+
+	void inactiveRentalAgreement(Map<String, Object>params) throws Exception;
 }
