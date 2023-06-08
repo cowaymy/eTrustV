@@ -1571,6 +1571,16 @@
     ) ORDER BY ATCH_FILE_ID
   </select>
 
+
+  <select id="getHsImg" parameterType="Map" resultType="egovMap">
+    SELECT ATCH_FILE_ID AS ATCH_FILE_ID,
+               FILE_SUB_PATH || '/' || PHYSICL_FILE_NAME AS ACT_FL_NM,
+               ATCH_FILE_NAME
+    FROM SYS0071D
+    WHERE SUBSTR(SYS0071D.ATCH_FILE_NAME, 12, 10) =  #{hsNo}
+    ORDER BY ATCH_FILE_ID
+  </select>
+
   <select id="selectGSTRebateList" parameterType="Map" resultType="egovMap">
     SELECT T1.ORD_ID
              , T2.SALES_ORD_NO
