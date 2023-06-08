@@ -64,6 +64,10 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
 		return staffBusinessActivityMapper.selectAdvOccasions(params);
 	}
 
+	public List<EgovMap> selectAdvOccasions2(Map<String, Object> params) {
+		return staffBusinessActivityMapper.selectAdvOccasions2(params);
+	}
+
     @Override
     public String selectNextClmNo(Map<String, Object> params) {
         return staffBusinessActivityMapper.selectNextClmNo(params);
