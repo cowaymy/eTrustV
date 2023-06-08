@@ -1094,6 +1094,8 @@
           function(result) {
            console.log("성공." + JSON.stringify(result));
            console.log("data : " + result.data);
+           editYN = "N";
+           fn_makeDisabled("all");
            fn_getPriceInfo();
           }, function(jqXHR, textStatus, errorThrown) {
             try {
