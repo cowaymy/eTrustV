@@ -73,11 +73,17 @@
 
 
     	 $("#_filterTxtBarcode").val('${headerDetail.filterSn}');
-         $("#_chgdt").val('${headerDetail.filterChgDt}').val(new Date().toLocaleDateString('en-GB', {
-        	    day: '2-digit',
-        	    month: '2-digit',
-        	    year: 'numeric'
-        	}).split('/').join('/'));
+    	 var filterChgDt=$("#filterChgDt").html();
+    	 if(filterChgDt){
+    		 $("#_chgdt").val('${headerDetail.filterChgDt}');
+    	 }else{
+    		 $("#_chgdt").val('${headerDetail.filterChgDt}').val(new Date().toLocaleDateString('en-GB', {
+                 day: '2-digit',
+                 month: '2-digit',
+                 year: 'numeric'
+             }).split('/').join('/'));
+    	 }
+
     	 if(!($("#_filterTxtBarcode").val() == null || $("#_filterTxtBarcode").val()== "")){
     		 $("#_filterTxtBarcode").attr("disabled" , "disabled");
     		 $("#_chgdt").attr("disabled" , "disabled");
