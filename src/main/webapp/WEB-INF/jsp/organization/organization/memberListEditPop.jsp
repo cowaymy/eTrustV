@@ -981,7 +981,7 @@ function fn_setMemInfo(data){
 
 	    // Cody organization & trainee check for invalid empty email - Enhancement Cody Support : Mandatory Email Address Key In
 	    if("${memType}" == "2" || "${memType}" == "5") {
-	    
+
           $('#emailLbl').append("<span class='must'>*</span>");
 	    }
 
@@ -2296,7 +2296,7 @@ function fn_removeFile(name){
                              <tr>
                                 <th scope="row">Income Tax No</th>
                                 <td colspan="5">
-                                <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13"
+                                <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="14"
                                 onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;" value="<c:out value="${memberView.incTax}"/>"/>
                                 </td>
                             </tr>
