@@ -82,4 +82,6 @@ public interface BudgetService {
 
 	List<EgovMap> selectExpenseTyp();
 
+	List<EgovMap> selectAdjustmentCBGCostCenter( Map<String, Object> params) throws Exception;
+
 }
