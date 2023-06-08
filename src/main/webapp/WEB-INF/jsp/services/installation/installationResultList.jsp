@@ -621,6 +621,9 @@
 
 	  //SP_CR_GEN_INST_NOTES
       $("#reportFormInstLst").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+      $("#reportFormInstLst").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');
+      $("#reportFormInstLst").append('<input type="hidden" id="viewType" name="viewType"  /> ');
+      $("#reportFormInstLst").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName"  /> ');
 
       var option = {
               isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -791,9 +794,6 @@
  <section class="search_table">
   <!-- search_table start -->
   <form id='reportFormInstLst' method="post" name='reportFormInstLst' action="#">
-    <input type='hidden' id='reportFileName' name='reportFileName'/>
-    <input type='hidden' id='viewType' name='viewType'/>
-    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
     <input type='hidden' id='V_TEMP' name='V_TEMP'/>
   </form>
 

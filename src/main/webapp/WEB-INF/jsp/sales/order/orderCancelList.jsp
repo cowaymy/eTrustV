@@ -493,6 +493,9 @@
 
       //SP_CR_GEN_PR_NOTES
       $("#reportFormPRLst").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+      $("#reportFormPRLst").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');
+      $("#reportFormPRLst").append('<input type="hidden" id="viewType" name="viewType"  /> ');
+      $("#reportFormPRLst").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName"  /> ');
 
       var option = {
               isProcedure : true,
@@ -702,9 +705,6 @@
   </form>
 
   <form id='reportFormPRLst' method="post" name='reportFormPRLst' action="#">
-    <input type='hidden' id='reportFileName' name='reportFileName'/>
-    <input type='hidden' id='viewType' name='viewType'/>
-    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
     <input type='hidden' id='V_TEMP' name='V_TEMP'/>
   </form>
 

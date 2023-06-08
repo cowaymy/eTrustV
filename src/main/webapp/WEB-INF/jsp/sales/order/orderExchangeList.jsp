@@ -219,6 +219,9 @@
 
       //SP_CR_GEN_PEX_NOTES
       $("#reportFormPEXLst").append('<input type="hidden" id="V_WHERE" name="V_WHERE"  /> ');
+      $("#reportFormPEXLst").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');
+      $("#reportFormPEXLst").append('<input type="hidden" id="viewType" name="viewType"  /> ');
+      $("#reportFormPEXLst").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName"  /> ');
 
       var option = {
               isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -374,9 +377,6 @@
     </form>
 
     <form id='reportFormPEXLst' method="post" name='reportFormPEXLst' action="#">
-	    <input type='hidden' id='reportFileName' name='reportFileName'/>
-	    <input type='hidden' id='viewType' name='viewType'/>
-	    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
 	    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
     </form>
 
