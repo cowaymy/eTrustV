@@ -153,10 +153,10 @@
 			</foreach>
 		</if>
 		<if test="installNo != null and installNo != ''">
-            AND ( (TO_NUMBER(INSTR(UPPER(IE.INSTALL_ENTRY_NO), UPPER(LTRIM(RTRIM(#{installNo})))),99999)) > 0 )
+		    AND IE.INSTALL_ENTRY_NO = #{installNo}
 		</if>
 		<if test="orderNo != null and orderNo != ''">
-            AND ( (TO_NUMBER(INSTR(UPPER(SOM.SALES_ORD_NO), UPPER(LTRIM(RTRIM(#{orderNo})))),99999)) > 0 )
+		    AND SOM.SALES_ORD_NO = #{orderNo}
 		</if>
 		<if test="orderRefNo != null and orderRefNo != ''">
             AND SOM.REF_NO = #{orderRefNo}
