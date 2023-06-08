@@ -1235,7 +1235,8 @@ SELECT
         0 SO_EXCHG_UNDER_FREE_AS_ID,
         ROT_OLD_CUST_ID SO_EXCHG_OLD_CUST_ID,
         ROT_NEW_CUST_ID SO_EXCHG_NW_CUST_ID,
-        '' SO_EXCHG_FORM_NO
+        '' SO_EXCHG_FORM_NO,
+        0 EMAIL_SENT_COUNT
         FROM SAL0276D
         WHERE ROT_ID = #{rotId}
     </insert>
