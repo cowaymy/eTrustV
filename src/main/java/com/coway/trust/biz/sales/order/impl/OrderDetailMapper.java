@@ -102,6 +102,8 @@ public interface OrderDetailMapper {
 
   List<EgovMap> getInstImg(Map<String, Object> params);
 
+  List<EgovMap> getHsImg(Map<String, Object> params);
+
   List<EgovMap> getInstImgByInst(Map<String, Object> params);
 
   List<EgovMap> selectGSTRebateList(Map<String, Object> params);
