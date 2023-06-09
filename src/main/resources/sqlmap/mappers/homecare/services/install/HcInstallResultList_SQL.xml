@@ -5,6 +5,58 @@
     <!-- Select Homecare Installation List -->
 	<select id="hcInstallationListSearch" parameterType="Map" resultType="egovMap">
 	   /* com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.hcInstallationListSearch */
+	        WITH HC_INS AS (
+                  SELECT
+                        DISTINCT INSTALL_ENTRY_NO
+                  FROM SAL0046D A
+                  JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                  WHERE B.BNDL_ID IS NOT NULL
+
+                  <if test="installNo != null and installNo != ''">
+                  AND A.INSTALL_ENTRY_NO = #{installNo}
+                 </if>
+
+                 <if test="orderNo != null and orderNo != ''">
+                  AND B.SALES_ORD_NO = #{orderNo}
+                 </if>
+
+                 <if test="orderRefNo != null and orderRefNo != ''">
+                  AND B.REF_NO = #{orderRefNo}
+                </if>
+
+                <if test="poNo != null and poNo != ''">
+                  AND B.CUST_PO_NO = #{poNo}
+                </if>
+
+                <if test="instalStrlDate != '' and installEndDate == '' ">
+                 <![CDATA[ AND A.INSTALL_DT  >= TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="installEndDate != '' and instalStrlDate == '' ">
+                    <![CDATA[ AND A.INSTALL_DT <=  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="instalStrlDate != '' and installEndDate != '' ">
+                    <![CDATA[ AND A.INSTALL_DT  between TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') and  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="startDate != '' and endDate == '' ">
+                    <![CDATA[ AND  A.APPNT_DT  >= TO_DATE(#{startDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="endDate != '' and startDate == '' ">
+                    <![CDATA[  AND A.APPNT_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="startDate != '' and endDate != '' ">
+                    <![CDATA[  AND A.APPNT_DT between TO_DATE(#{startDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="orderDate != null and orderDate != ''">
+                    AND B.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
+                </if>
+
+          )
 		<![CDATA[
 		SELECT DISTINCT CD1.CODE
 		              , IE.INSTALL_ENTRY_NO
@@ -93,9 +145,10 @@
         LEFT JOIN ORG0001D HPDET ON HPDET.MEM_ID = SOM.MEM_ID
         LEFT JOIN SAL0004D exchg ON exchg.SO_EXCHG_ID = ce.DOC_ID
                              AND ce.TYPE_ID = 258
-               LEFT JOIN (
+        LEFT JOIN (
           SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
           FROM LOG0047M GI
+          JOIN HC_INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
           LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
           LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
           LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
@@ -106,6 +159,7 @@
       LEFT JOIN(
           SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
           FROM LOG0047M GI
+          JOIN HC_INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
           LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
           LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE
           LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO
