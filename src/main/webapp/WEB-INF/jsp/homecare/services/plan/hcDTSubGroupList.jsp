@@ -106,7 +106,8 @@
             },
             {dataField : "ctSubGrp",              headerText : "DT Sub Group",               width :130},
             {dataField : "ctBrnchCode",         headerText : "ctBrnchCode",             width :0},
-            {dataField : "acSubGrp",              headerText : "AC Sub Group",               width :130}
+            {dataField : "acSubGrp",              headerText : "AC Sub Group",               width :130},
+            {dataField : "brnchType", width : 0, visible:false}
         ];
 
 	    myGridID2 = AUIGrid.create("#grid_wrap_dtaAreaSubGroup", columnLayout, gridPros);
@@ -166,12 +167,13 @@
 
 	// no Service Count Cell Click Event
 	function fn_noSvcCntCellClick(rowIndex){
+		var vSubgrpType = AUIGrid.getCellValue(myGridID2, rowIndex, "brnchType") == '43' ? 7321 : 6666;
 		var jsonObj=  {
             "area" : AUIGrid.getCellValue(myGridID2, rowIndex, "area"),
             "areaID" : AUIGrid.getCellValue(myGridID2, rowIndex, "areaId"),
             "ctSubGrp" : AUIGrid.getCellValue(myGridID2, rowIndex, "ctSubGrp"),
             "acSubGrp" : AUIGrid.getCellValue(myGridID2, rowIndex, "acSubGrp"),
-            "subGrpType" : 6666,
+            "subGrpType" : vSubgrpType,
             "isHomecare" : "Y"
         };
 

@@ -92,13 +92,21 @@
                   A.DT_SUB_GRP AS CT_SUB_GRP,
                   A.LT_SUB_GRP AS LT_SUB_GRP,
                   A.AC_SUB_GRP AS AC_SUB_GRP,
-                  (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 6666) AS NO_SVC_CNT
+                  CASE
+					WHEN (A.AC_SUB_GRP IS NOT NULL) THEN (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 7321)
+					ELSE (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 6666)
+					END NO_SVC_CNT
+				,A.BRNCH_TYPE
 
-         FROM ORG0019M A
+         FROM (SELECT AA.* FROM ORG0019M AA
+            JOIN (SELECT AREA_ID,BRNCH_TYPE,MAX(REQST_NO)REQST_NO FROM ORG0019M WHERE AVAIL_FLAG = 'Y'
+            GROUP BY AREA_ID,BRNCH_TYPE) BB
+            ON BB.AREA_ID = AA.AREA_ID AND BB.BRNCH_TYPE = AA.BRNCH_TYPE AND BB.REQST_NO = AA.REQST_NO)  A
          INNER JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID AND A.AVAIL_FLAG = 'Y'
         WHERE A.BRNCH_TYPE in ('5754','43')
         <if test="dscCode != null and dscCode != ''">
             AND  (B.DT_BRNCH_CODE = #{dscCode} OR B.AC_BRNCH_CODE = #{dscCode})
+            AND  (A.DT_BRNCH_CODE = #{dscCode} OR A.AC_BRNCH_CODE = #{dscCode})
 		</if>
 		<if test="areaId != null and areaId != ''">
             AND  B.AREA_ID = #{areaId}

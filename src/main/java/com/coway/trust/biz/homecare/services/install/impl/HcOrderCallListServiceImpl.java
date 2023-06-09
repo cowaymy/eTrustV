@@ -20,6 +20,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.services.install.HcOrderCallListService;
+import com.coway.trust.biz.organization.organization.BranchListService;
 import com.coway.trust.biz.organization.organization.impl.AllocationMapper;
 import com.coway.trust.biz.organization.organization.orgUts.VComparator;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
@@ -55,6 +56,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Resource(name = "hcAllocationMapper")
 	private HcAllocationMapper hcAllocationMapper;
+
+	@Resource(name = "branchListService")
+	private BranchListService branchListService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -344,7 +348,11 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
                     noSvcListMap.put("isVact", CommonUtils.nvl(e.get("isVact")));
                     noSvcListMap.put("vactReplCt", CommonUtils.nvl(e.get("vactReplCt")));
                     noSvcListMap.put("ordId", params.get("ORD_ID"));
-                    noSvcListMap.put("prdType", 6666); // Homecare
+
+                    EgovMap branchDetail = branchListService.getBranchDetailPop(noSvcListMap);
+                    String vPrdType = branchDetail.get("typeId").toString().equals("43") ? "7321" : "6666";
+
+                    noSvcListMap.put("prdType", vPrdType); // Homecare
 
     				try {
     					int vm = allocationMapper.isMergeNosvcDay(noSvcListMap);
