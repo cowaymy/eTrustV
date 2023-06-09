@@ -1044,7 +1044,7 @@
 				    NVL(AMT, 0) MRENTAL,
 				    NVL(PRC_RPF, 0) PRICERPF,
 				    0 PENALTY,
-				    0 TRADEINPV
+				    NVL(TRADE_IN_PV, 0) TRADEINPV
                 </if>
                 <if test="appTypeId !=null and appTypeId == '67'">
 				    NVL(PRC_COSTING, 0) PRICECOST,
@@ -1069,11 +1069,11 @@
     <if test="typeId !=null and typeId != '61'">
                     NVL(PRC_COSTING, 0) PRICECOST,
 				    NVL(AMT, 0) AMT,
-				    0 PRICEPV,
+				    NVL(PRC_PV, 0) PRICEPV,
 				    0 MRENTAL,
-				    0 PRICERPF,
+				    NVL(PRC_RPF, 0) PRICERPF,
 				    NVL(PRC_CHRG, 0) PENALTY,
-				    0 TRADEINPV
+				    NVL(TRADE_IN_PV, 0) TRADEINPV
     </if>
     FROM SAL0016M
                     WHERE STK_ID = #{stockId}
