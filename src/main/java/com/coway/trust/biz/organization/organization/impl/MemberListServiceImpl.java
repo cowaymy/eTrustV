@@ -349,16 +349,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	//lmsMemberListInsert(memMap);
             }
 
-          //after success register in eTrust, create info in keycloak
-            try{
-            	Map<String,Object> ssoParams = new HashMap<String, Object>();
-          	    ssoParams.put("memCode", memCode);
-          	    ssoParams.put("trainType", String.valueOf(params.get("traineeType1")));
-          	    ssoLoginService.ssoCreateUser(ssoParams);
-            }catch(Exception ex) {
-    			throw ex;
-            }
-
             return memCode;
         }
 
@@ -1743,23 +1733,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			throw new RuntimeException(e1);
 		}
 
-		try{
-			//after success register in eTrust, deactivate old account in keycloak
-			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-			ssoParamsOldMem.put("memCode", oldMemCode);
-			//ssoParamsOldMem.put("enabled", "false");
-			ssoLoginService.ssoDeleteUserStatus(ssoParamsOldMem);
-			//create new account in keycloak
-	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
-	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
-	     	ssoLoginService.ssoCreateUser(ssoParams);
-
-			//hltang 202209 -> for sso login purpose
-			//resultValue.put("oldMemCode", oldMemCode);
-		}catch(Exception ex) {
-			throw ex;
-//			throw new RuntimeException(ex);
-        }
+		//hltang 202209 -> for sso login purpose
+		resultValue.put("oldMemCode", oldMemCode);
 
         return resultValue;
     }
@@ -2315,15 +2290,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 	    					throw new RuntimeException(e1);
 	    				}
-
-	    				//after success register in eTrust, create info in keycloak
-	    				try{
-	    					Map<String,Object> ssoParams = new HashMap<String, Object>();
-		    		     	ssoParams.put("memCode", resultValue.get("memCode"));
-		    		     	ssoLoginService.ssoCreateUser(ssoParams);
-	    				}catch(Exception ex) {
-	    					throw ex;
-	    		        }
 			}
 
 		} else {
