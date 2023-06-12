@@ -26,4 +26,6 @@ public interface SsoLoginService {
 	Map<String, Object> userActivateDeactivate(Map<String, Object> params);
 	Map<String, Object> userDelete(Map<String, Object> params);
 	Map<String, Object> userInfoUpdate(Map<String, Object> params);
+
+	void rtnRespMsg(Map<String, Object> params);
 }

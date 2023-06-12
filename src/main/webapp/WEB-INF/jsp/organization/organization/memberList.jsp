@@ -201,11 +201,14 @@ function fn_requestVacationPop(){
 
         console.log("traineeType :: " + traineeType);
 
-     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
+     Common.ajax("POST", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
          console.log("성공.");
          console.log("result1111.");
 
-         if(result !="" ){
+         if(result.message.code =="99" ) {
+        	 Common.alert(result.message.message);
+         }
+         else {
 
         	    var telMobile = result.telMobile;
         	    var sms;

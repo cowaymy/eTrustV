@@ -359,7 +359,12 @@ function fn_updateUserPasswd(){
                     "userPasswd" : $("#passwdEditForm #userPasswdConfirm").val(),
                     "userDfltPassWd" : $("#passwdEditForm #userPasswdConfirm").val()} ,
                 function(data, textStatus, jqXHR){ // Success
-                    Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
+                    	if(data.code == '99'){
+                    		Common.alert(data.message,removePopupCallback);
+                    	}else{
+                    		Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
+                    	}
+
                 },
                 function(jqXHR, textStatus, errorThrown){ // Error
                     Common.alert("Fail : " + jqXHR.responseJSON.message);

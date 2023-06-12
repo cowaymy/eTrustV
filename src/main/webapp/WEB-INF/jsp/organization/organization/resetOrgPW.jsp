@@ -48,7 +48,11 @@
                     console.log(result);
 
                     if(result.code != "00") {
-                        Common.alert("Password update failed!");
+                    	if(result.code == "98"){
+                            Common.alert(result.message);
+                        }else{
+                        	Common.alert("Password update failed!");
+                        }
                     } else {
                         Common.alert("Successfully updated password.");
                         $("#popup_wrap").remove();

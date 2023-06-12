@@ -46,6 +46,7 @@ import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
@@ -84,6 +85,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Autowired
     private LMSApiService lmsApiService;
+
+	@Resource(name = "ssoLoginService")
+	  private SsoLoginService ssoLoginService;
 	/*@Value("${lms.api.username}")
 	private String LMSApiUser;
 
@@ -322,13 +326,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
             //202210 - hltang - SSO Login
             // SP_DAY_USER_CRT 프로시저 호출
-            /*Map<String, Object> userPram = new HashMap<String, Object>();
+            Map<String, Object> userPram = new HashMap<String, Object>();
             userPram.put("IN_MEMCODE", memCode);
             userPram.put("IN_TRAINTYPE", params.get("memberType"));
             logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>" + userPram.toString());
             memberListMapper.SP_DAY_USER_CRT(userPram);
             userPram.put("P_STATUS", userPram.get("p1"));
-            logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" + userPram);*/
+            logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" + userPram);
 
             if(memCode !=null && !memCode.isEmpty()){
             	String memid = memberListMapper.getUserID(memCode);
@@ -343,6 +347,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					throw new RuntimeException(e1);
 				}
             	//lmsMemberListInsert(memMap);
+            }
+
+          //after success register in eTrust, create info in keycloak
+            try{
+            	Map<String,Object> ssoParams = new HashMap<String, Object>();
+          	    ssoParams.put("memCode", memCode);
+          	    ssoParams.put("trainType", String.valueOf(params.get("traineeType1")));
+          	    ssoLoginService.ssoCreateUser(ssoParams);
+            }catch(Exception ex) {
+    			throw ex;
             }
 
             return memCode;
@@ -1684,6 +1698,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             // SP_DAY_USER_CRT 프로시저 호출
             Map<String, Object> userPram = new HashMap<String, Object>();
             userPram.put("IN_MEMCODE", resultValue.get("memCode"));
+            userPram.put("IN_TRAINTYPE", params.get("traineeType"));
             logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>" + userPram.toString());
             memberListMapper.SP_DAY_USER_CRT(userPram);
             userPram.put("P_STATUS", userPram.get("p1"));
@@ -1728,8 +1743,24 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			throw new RuntimeException(e1);
 		}
 
-		//hltang 202209 -> for sso login purpose
-		//resultValue.put("oldMemCode", oldMemCode);
+		try{
+			//after success register in eTrust, deactivate old account in keycloak
+			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+			ssoParamsOldMem.put("memCode", oldMemCode);
+			//ssoParamsOldMem.put("enabled", "false");
+			ssoLoginService.ssoDeleteUserStatus(ssoParamsOldMem);
+			//create new account in keycloak
+	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
+	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
+	     	ssoLoginService.ssoCreateUser(ssoParams);
+
+			//hltang 202209 -> for sso login purpose
+			//resultValue.put("oldMemCode", oldMemCode);
+		}catch(Exception ex) {
+			throw ex;
+//			throw new RuntimeException(ex);
+        }
+
         return resultValue;
     }
 
@@ -2284,6 +2315,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 	    					throw new RuntimeException(e1);
 	    				}
+
+	    				//after success register in eTrust, create info in keycloak
+	    				try{
+	    					Map<String,Object> ssoParams = new HashMap<String, Object>();
+		    		     	ssoParams.put("memCode", resultValue.get("memCode"));
+		    		     	ssoLoginService.ssoCreateUser(ssoParams);
+	    				}catch(Exception ex) {
+	    					throw ex;
+	    		        }
 			}
 
 		} else {
@@ -2829,6 +2869,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	public int updateOrgUserPW(Map<String, Object> params) {
+
+		try{
+			Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+	  		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
+	  		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
+	  		Map<String,Object> returnSsoParams = ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+		}catch(Exception ex) {
+			throw ex;
+        }
+
 	    return memberListMapper.updateOrgUserPW(params);
 	}
 

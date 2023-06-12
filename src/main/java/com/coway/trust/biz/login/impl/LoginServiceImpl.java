@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.cmmn.model.LoginSubAuthVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -61,6 +64,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
     private FileMapper fileMapper;
+
+	@Resource(name = "ssoLoginService")
+	private SsoLoginService ssoLoginService;
 
 	@Override
 	public LoginVO getLoginInfo(Map<String, Object> params) {
@@ -143,6 +149,19 @@ public class LoginServiceImpl implements LoginService {
 		loginMapper.updatePassWord(params);
 		// }
 
+		//ssoLogin
+		try{
+			if(params.get("userTypeId").toString().equals("1") || params.get("userTypeId").toString().equals("2") || params.get("userTypeId").toString().equals("3")
+					|| params.get("userTypeId").toString().equals("7")  || params.get("userTypeId").toString().equals("5")){
+				//update password in keycloak
+				Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+				ssoParamsOldMem.put("memCode", params.get("userName"));
+				ssoParamsOldMem.put("password", params.get("newPasswordConfirmTxt"));
+				ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+			}
+		}catch(Exception ex) {
+			throw ex;
+        }
 		return saveCnt;
 	}
 

@@ -3,13 +3,18 @@ package com.coway.trust.biz.common.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.UserManagementService;
+import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -25,6 +30,9 @@ public class UserManagementServiceImpl implements UserManagementService {
 	private UserManagementMapper userManagementMapper;
 	@Autowired
 	private LoginMapper loginMapper;
+
+	@Resource(name = "ssoLoginService")
+	private SsoLoginService ssoLoginService;
 
 	@Override
 	public List<EgovMap> selectUserList(Map<String, Object> params) {
@@ -106,6 +114,22 @@ public class UserManagementServiceImpl implements UserManagementService {
 		params.put("userUpdUserId", loginId);
 
 		userManagementMapper.saveUserManagementList(params);
+
+		try{
+			//update password in keycloak
+			if(params.get("userType") != null){
+				if(params.get("userType").toString().equals("1") || params.get("userType").toString().toString().equals("2") || params.get("userType").toString().toString().equals("3")
+						|| params.get("userType").toString().toString().equals("5") || params.get("userType").toString().toString().equals("7")){
+					Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
+					ssoParamsOldMem.put("memCode", params.get("username"));
+					ssoParamsOldMem.put("password", params.get("userPasswd"));
+					ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
+				}
+			}
+		}catch(Exception ex) {
+			throw ex;
+        }
+
 		// Added to reset fail login attempt. Hui Ding, 18/03/2022
 		loginMapper.resetLoginFailAttempt(Integer.valueOf(params.get("userId").toString()));
 	}

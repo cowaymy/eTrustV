@@ -39,7 +39,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.project.LMS.LMSApiRespForm;
@@ -54,6 +57,7 @@ import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.LoginSubAuthVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -85,6 +89,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	@Autowired
     private FileMapper fileMapper;
 
+	@Autowired
+    private MessageSourceAccessor messageAccessor;
+
 	@Resource(name = "CommonApiMapper")
 	  private CommonApiMapper commonApiMapper;
 
@@ -109,10 +116,13 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 	private String ssoMasterPasswd;
 
 	@Override
-	public Map<String, Object> ssoCreateUser(Map<String, Object> params)  {
+	public Map<String, Object> ssoCreateUser(Map<String, Object> params)   {
 		LOGGER.debug("ssoCreateUser");
 
 		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(params) ;
+		if(adminAccessTokenMap.get("status").toString().equals(AppConstants.FAIL)){
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
 		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
 
 		Map<String, Object> userParams = new HashMap<String, Object>();
@@ -127,6 +137,12 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		userInfo.put("userFullName", userLoginVO.getUserFullname());
 		Map<String,Object> userCreationMap = userCreation(userInfo) ;
 
+		Map<String,Object> userActiveMap = new HashMap<String, Object>();
+		if(userCreationMap.get("status").toString().equals(AppConstants.FAIL)){
+//			userActiveMap.put("status", AppConstants.FAIL);
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
+
 		return userCreationMap;
 	}
 
@@ -135,6 +151,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		LOGGER.debug("ssoUpdateUserStatus");
 
 		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(params) ;
+		if(adminAccessTokenMap.get("status").toString().equals(AppConstants.FAIL)){
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
 		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
 
 		Map<String, Object> usernameParams = new HashMap<String, Object>();
@@ -142,9 +161,15 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		usernameParams.put("username", params.get("memCode").toString());
 		Map<String,Object> userIdMap = getUserId(usernameParams) ;
 
-		usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
-		usernameParams.put("enabled", params.get("enabled").toString());
-		Map<String,Object> userActiveMap = userActivateDeactivate(usernameParams) ;
+		Map<String,Object> userActiveMap = new HashMap<String, Object>();
+		if(userIdMap.get("status").toString().equals(AppConstants.FAIL)){
+			userActiveMap.put("status", AppConstants.FAIL);
+		}else{
+			usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
+			usernameParams.put("enabled", params.get("enabled").toString());
+			userActiveMap = userActivateDeactivate(usernameParams) ;
+		}
+
 		return userActiveMap;
 
 	}
@@ -154,6 +179,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		LOGGER.debug("ssoDeleteUserStatus");
 
 		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(params) ;
+		if(adminAccessTokenMap.get("status").toString().equals(AppConstants.FAIL)){
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
 		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
 
 		Map<String, Object> usernameParams = new HashMap<String, Object>();
@@ -161,8 +189,14 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		usernameParams.put("username", params.get("memCode").toString());
 		Map<String,Object> userIdMap = getUserId(usernameParams) ;
 
-		usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
-		Map<String,Object> userActiveMap = userDelete(usernameParams) ;
+		Map<String,Object> userActiveMap = new HashMap<String, Object>();
+		if(userIdMap.get("status").toString().equals(AppConstants.FAIL)){
+			userActiveMap.put("status", AppConstants.FAIL);
+		}else{
+			usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
+			userActiveMap = userDelete(usernameParams) ;
+		}
+
 		return userActiveMap;
 
 	}
@@ -172,6 +206,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		LOGGER.debug("ssoUpdateUserStatus");
 
 		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(params) ;
+		if(adminAccessTokenMap.get("status").toString().equals(AppConstants.FAIL)){
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
 		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
 
 		Map<String, Object> usernameParams = new HashMap<String, Object>();
@@ -180,8 +217,13 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		usernameParams.put("username", params.get("memCode").toString().trim());
 		Map<String,Object> userIdMap = getUserId(usernameParams) ;
 
-		usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
-		Map<String,Object> userActiveMap = userInfoUpdate(usernameParams) ;
+		Map<String,Object> userActiveMap = new HashMap<String, Object>();
+		if(userIdMap.get("status").toString().equals(AppConstants.FAIL)){
+			userActiveMap.put("status", AppConstants.FAIL);
+		}else{
+			usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
+			userActiveMap = userInfoUpdate(usernameParams) ;
+		}
 
 		return userActiveMap;
 	}
@@ -191,6 +233,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		LOGGER.debug("ssoUpdateUserStatus");
 
 		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(params) ;
+		if(adminAccessTokenMap.get("status").toString().equals(AppConstants.FAIL)){
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
 		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
 
 		Map<String, Object> usernameParams = new HashMap<String, Object>();
@@ -198,9 +243,14 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		usernameParams.put("username", params.get("memCode").toString());
 		Map<String,Object> userIdMap = getUserId(usernameParams) ;
 
-		usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
-		usernameParams.put("userPass", params.get("password").toString());
-		Map<String,Object> userActiveMap = userResetPassword(usernameParams) ;
+		Map<String,Object> userActiveMap = new HashMap<String, Object>();
+		if(userIdMap.get("status").toString().equals(AppConstants.FAIL)){
+			userActiveMap.put("status", AppConstants.FAIL);
+		}else{
+			usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
+			usernameParams.put("userPass", params.get("password").toString());
+			userActiveMap = userResetPassword(usernameParams) ;
+		}
 
 		return userActiveMap;
 	}
@@ -214,6 +264,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 
 		//get Admin access token
 		Map<String,Object> adminAccessTokenMap = getAdminAccessToken(null) ;
+		if(adminAccessTokenMap.get("status").toString().equals(AppConstants.FAIL)){
+			throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("member.msg.ssoErr"));
+		}
 		String adminAccessToken = adminAccessTokenMap.get("adminAccessToken").toString();
 
 		//admin create normal user
@@ -373,6 +426,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		}catch(Exception e){
 			LOGGER.error("Timeout:");
 			LOGGER.error("[keycloak] - Caught Exception: " + e);
+			returnParams.put("status", AppConstants.FAIL);
 //			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
 //			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
 //			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
@@ -514,6 +568,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		}catch(Exception e){
 			LOGGER.error("Timeout:");
 			LOGGER.error("[keycloak] - Caught Exception: " + e);
+			returnParams.put("status", AppConstants.FAIL);
 //			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
 //			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
 //			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
@@ -650,6 +705,7 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		}catch(Exception e){
 			LOGGER.error("Timeout:");
 			LOGGER.error("[keycloak] - Caught Exception: " + e);
+			returnParams.put("status", AppConstants.FAIL);
 //			resultValue.put("status", AppConstants.RESPONSE_CODE_TIMEOUT);
 //			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
 //			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_TIMEOUT));
@@ -1207,7 +1263,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 		}
     }
 
-	private void rtnRespMsg(Map<String, Object> param) {
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Override
+	public void rtnRespMsg(Map<String, Object> param) {
 
 	    EgovMap data = new EgovMap();
 	    Map<String, Object> params = new HashMap<>();

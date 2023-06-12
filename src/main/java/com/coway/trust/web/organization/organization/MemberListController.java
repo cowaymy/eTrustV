@@ -882,9 +882,9 @@ public class MemberListController {
 	}
 
 
-
-	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+	@Transactional
+	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>>  traineeUpdate(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
@@ -906,7 +906,7 @@ public class MemberListController {
 //    	     	Map<String,Object> ssoParams = new HashMap<String, Object>();
 //    	     	ssoParams.put("memCode", resultValue.get("memCode").toString());
 //    	     	ssoLoginService.ssoCreateUser(ssoParams);
-//    			//message.setMessage((String)resultValue.get("memCode"));
+    			//message.setMessage((String)resultValue.get("memCode"));
 
     			trInfo.put("memCode", (String)resultValue.get("memCode"));
     		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
@@ -916,6 +916,7 @@ public class MemberListController {
 		} catch (Exception e){
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(e.getMessage());
+			trInfo.put("message", message);
 		}
 
 		return ResponseEntity.ok(trInfo);
@@ -1161,20 +1162,20 @@ public class MemberListController {
             	}
 
             	//SSO Login member edit
-//            	if(formMap.containsKey("memberNmUpd") ||  formMap.containsKey("emailUpd") ){
-//            		/*logger.debug("memberNm " + formMap.get("memberNmUpd").toString());
-//            		logger.debug("email " + formMap.get("emailUpd").toString());*/
-//            		Map<String,Object> ssoParamsMem = new HashMap<String, Object>();
-//            		ssoParamsMem.put("memCode", memCode);
-//            		if(formMap.get("memberNmUpd") != null){
-//            			ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
-//            		}
-//            		if(formMap.get("emailUpd") != null){
-//            			ssoParamsMem.put("email", formMap.get("emailUpd").toString());
-//            		}
-//
-//              		ssoLoginService.ssoUpdateUserInfo(ssoParamsMem);
-//            	}
+            	if(formMap.containsKey("memberNmUpd") ||  formMap.containsKey("emailUpd") ){
+            		/*logger.debug("memberNm " + formMap.get("memberNmUpd").toString());
+            		logger.debug("email " + formMap.get("emailUpd").toString());*/
+            		Map<String,Object> ssoParamsMem = new HashMap<String, Object>();
+            		ssoParamsMem.put("memCode", memCode);
+            		if(formMap.get("memberNmUpd") != null){
+            			ssoParamsMem.put("firstName", formMap.get("memberNmUpd").toString());
+            		}
+            		if(formMap.get("emailUpd") != null){
+            			ssoParamsMem.put("email", formMap.get("emailUpd").toString());
+            		}
+
+              		ssoLoginService.ssoUpdateUserInfo(ssoParamsMem);
+            	}
 
             }
 
@@ -1310,9 +1311,9 @@ public class MemberListController {
 
     			} else {
     				//after success register in eTrust, create info in keycloak
-    		     	/*Map<String,Object> ssoParams = new HashMap<String, Object>();
-    		     	ssoParams.put("memCode", resultValue.get("memCode").toString());
-    		     	ssoLoginService.ssoCreateUser(ssoParams);*/
+//    		     	Map<String,Object> ssoParams = new HashMap<String, Object>();
+//    		     	ssoParams.put("memCode", resultValue.get("memCode").toString());
+//    		     	ssoLoginService.ssoCreateUser(ssoParams);
 
     				message.setMessage((String)resultValue.get("memCode"));
     				// doc UPdate
@@ -2427,18 +2428,13 @@ public class MemberListController {
 
         //logger.debug("params {}", params);
 
+    	params.put("userTypeId",sessionVO.getUserTypeId());
+		params.put("userName",sessionVO.getUserName());
         params.put("userID", sessionVO.getUserId());
         int cnt = memberListService.updateOrgUserPW(params);
 
         // add to reset login fail attempt. Hui Ding, 18/03/2022
         loginService.resetLoginFailAttempt(Integer.valueOf(params.get("updUserId").toString()));
-
-
-        //update password in keycloak
-  		Map<String,Object> ssoParamsOldMem = new HashMap<String, Object>();
-  		ssoParamsOldMem.put("memCode", params.get("memberCode").toString());
-  		ssoParamsOldMem.put("password", params.get("userPasswd").toString());
-  		ssoLoginService.ssoUpdateUserPassword(ssoParamsOldMem);
 
         ReturnMessage message = new ReturnMessage();
         if(cnt > 0) {
