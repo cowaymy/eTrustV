@@ -11,9 +11,9 @@
            som.APP_TYPE_ID,
            som.STUS_CODE_ID ,
            mo.TOP_ORG_CODE,
-           mo.ORG_CODE,
-           mo.GRP_CODE,
-           mo.DEPT_CODE,
+           som.ORG_CODE,
+           som.GRP_CODE,
+           som.DEPT_CODE,
            mo.MEM_CODE,
            som.PV_MONTH,
            som.PV_YEAR,
@@ -40,16 +40,16 @@
            WHERE (som.STUS_CODE_ID  <![CDATA[<> ]]> 8)  AND som.APP_TYPE_ID <![CDATA[<> ]]> 5764
 
            <if test="orgCode != null and orgCode != ''">
-               AND NVL (mo.ORG_CODE, '') = #{orgCode}
+               AND NVL (som.ORG_CODE, '') = #{orgCode}
            </if>
            <if test="grpCode != null and grpCode != ''">
-               AND NVL (mo.GRP_CODE, '') = #{grpCode}
+               AND NVL (som.GRP_CODE, '') = #{grpCode}
            </if>
            <if test="deptCode != null and deptCode != ''">
-               AND NVL (mo.DEPT_CODE, '') = #{deptCode}
+               AND NVL (som.DEPT_CODE, '') = #{deptCode}
            </if>
            <if test="memID!= null and memID != ''" >
-               AND NVL (mo.MEM_ID, '') = #{memID}
+               AND NVL (som.MEM_ID, '') = #{memID}
            </if>
            <if test="ordNo != null and ordNo != ''">
                AND som.SALES_ORD_NO = #{ordNo}
