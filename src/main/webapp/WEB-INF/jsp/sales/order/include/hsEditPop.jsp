@@ -395,18 +395,6 @@ var myDetailGridData = null;
      <th scope="row">Distance</th>
     <td><span><c:out value="${basicinfo.distance}"/></span></td>
 </tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.instImg" /></th>
-      <td colspan="7">
-        <ul class="btns">
-            <li>
-                <p class="btn_grid">
-                    <a href="#" onClick="{Common.popupDiv('/sales/order/getHsImg.do', { hsNo : '${basicinfo.no}' }, null , true);}"><spring:message code='sys.btn.view' /></a>
-                </p>
-            </li>
-        </ul>
-      </td>
-</tr>
 
 
 </tbody>
