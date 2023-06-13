@@ -1118,7 +1118,7 @@ public class MemberListController {
         // hp가아닐때
         if (!formMap.get("memberType").toString().equals("2803")) {
             // LaiKW - Comment from here (New)
-            if(formMap.containsKey("selectBranchUpd") || formMap.containsKey("convStaffFlgUpd")) {
+            if(formMap.containsKey("selectBranchUpd") || formMap.containsKey("convStaffFlgUpd") || formMap.containsKey("emailUpd")) {
                 // Update SYS0047M - Branch/HR Code
                 u1 = memberListService.memberListUpdate_SYS47(formMap);
 
