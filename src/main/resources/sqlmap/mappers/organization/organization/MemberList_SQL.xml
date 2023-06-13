@@ -5146,6 +5146,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           <if test="selectBranchUpd != null and selectBranchUpd != '' ">
               , USER_BRNCH_ID = #{selectBranchUpd}
           </if>
+          <if test="emailUpd != null and emailUpd != '' ">
+          , USER_EMAIL = #{emailUpd}
+          </if>
           <if test="convStaffFlgUpd != null and convStaffFlgUpd != '' ">
               , HR_CODE = #{memberCodeUpd}
           </if>
