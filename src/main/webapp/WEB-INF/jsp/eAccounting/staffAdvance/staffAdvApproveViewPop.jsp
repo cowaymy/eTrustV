@@ -14,7 +14,7 @@
 <script type="text/javascript">
     console.log("staffAdvanceApproveViewPop");
     var myGridID;
-    var myGridData = $.parseJSON('${appvInfoAndItems}');
+    var myGridData = ${appvInfoAndItems};
     var attachList = null;
 
     $(document).ready(function () {
