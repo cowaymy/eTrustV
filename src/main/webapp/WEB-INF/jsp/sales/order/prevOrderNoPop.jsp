@@ -40,6 +40,7 @@
                     $('#isReturnExtrade').attr("disabled",false);
                 }else{
                     $('#isReturnExtrade').attr("disabled",true);
+                    $('#isReturnExtrade').prop("checked", true);
                 }
 
                 if(RESULT.rootState == 'ROOT_1') {
