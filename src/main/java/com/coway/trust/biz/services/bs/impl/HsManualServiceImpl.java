@@ -23,7 +23,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.payment.invoice.service.impl.InvoiceAdjMapper;
-import com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -3639,9 +3638,120 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
       insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
 
+      //param not exist in  care service
+//      insertHsResultfinal.put("instChklstCheckBox", params.get("instChklstCheckBox"));
+//      insertHsResultfinal.put("codeFailRemark", params.get("codeFailRemark"));
+//      insertHsResultfinal.put("voucherRedemption", params.get("voucherRedemption"));
+//      insertHsResultfinal.put("switchChkLst", params.get("switchChkLst"));
+
       logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
       hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT
                                                                // SVC0006D
+
+      //Filter Change Code start
+      List<EgovMap> qryUsedFilter = hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
+
+      logger.debug("= LOOP ITEM : {}", docType.size());
+
+      for (int i = 0; i < docType.size(); i++) {
+        Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
+
+            docSub.put("bsResultId", nextSeq);
+            docSub.put("bsResultPartId", docSub.get("stkId"));
+            docSub.put("bsResultPartDesc", docSub.get("stkDesc"));
+            docSub.put("bsResultPartQty", docSub.get("name"));
+            docSub.put("bsResultRem", "");
+            docSub.put("bsResultCrtUserId", sessionVO.getUserId());
+            docSub.put("bsResultFilterClm", docSub.get("name"));
+            //docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
+            String srcform = params.get("srcform") == null ? "" : params.get("srcform").toString();
+            if(srcform.equals("WEB")){
+            	docSub.put("filterBarcdNewSerialNo",docSub.get("serialNo"));
+            }else{
+            	docSub.put("oldSerialNo", docSub.get("filterBarcdSerialNoOld"));
+            	docSub.put("serialNo", docSub.get("filterBarcdNewSerialNo"));
+            	docSub.put("filterSerialUnmatchReason", docSub.get("filterSerialUnmatchReason"));
+            }
+
+            EgovMap docSub2 = new EgovMap();
+            Map<String, Object> docSub3 = (Map<String, Object>) docType.get(i);
+            int custId = hsManualMapper.selectCustomer(params);
+            int codyId = hsManualMapper.selectCody(params);
+            params.put("bsResultId", nextSeq);
+
+            docSub2.put("hsNo", LOG_SVC0008D_NO);
+            docSub2.put("custId", custId);
+            docSub2.put("bsResultPartId", docSub3.get("stkId"));
+            docSub2.put("bsResultPartQty", docSub3.get("name"));
+            docSub2.put("serialNo", docSub3.get("serialNo"));
+            docSub2.put("bsCodyId", codyId);
+            docSub2.put("bsResultId", nextSeq);
+            docSub2.put("oldSerialNo", docSub3.get("filterBarcdSerialNoOld"));
+
+            String vstkId = String.valueOf(docSub.get("stkId"));
+            String filterBarcdSerialNoOld = String.valueOf(docSub.get("filterBarcdSerialNoOld"));
+            String filterBarcdNewSerialNo = String.valueOf(docSub.get("filterBarcdNewSerialNo"));
+            String filterBarcdNewSerialNoWeb = String.valueOf(docSub.get("serialNo"));
+            logger.debug("= STOCK ID : {}", vstkId);
+            logger.debug("= filterBarcdSerialNoOld : {}", filterBarcdSerialNoOld);
+            logger.debug("= filterBarcdNewSerialNo : {}", filterBarcdNewSerialNo);
+
+            if (!"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null) {
+              logger.debug("= INSERT SVC0007D VIA docSub: {}", docSub);
+              hsManualMapper.insertHsResultD(docSub); // INSERT SVC0007D
+              logger.debug("= INSERT LOG0082M VIA docSub2: {}", docSub2);
+              hsManualMapper.insertUsedFilter(docSub2); // INSERT LOG0082M
+
+              docSub.put("hidOrdId", params.get("hidSalesOrdId"));
+
+              String filterLastserial = "";
+
+              if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
+                filterLastserial = hsManualMapper.select0087DFilter(docSub);
+              } else {
+                filterLastserial = hsManualMapper.select0087DFilter2(docSub);
+              }
+
+              docSub.put("prvSerialNo", CommonUtils.nvl(filterLastserial));
+              docSub.put("lastSerialNo", CommonUtils.nvl(docSub.get("serialNo")));
+              docSub.put("settleDate", params.get("settleDate"));
+              docSub.put("hidCodyId", params.get("hidCodyId"));
+              params.put("srvConfigId", docSub.get("srvConfigId"));
+
+              if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
+                hsManualMapper.updateHsFilterSiriNo(docSub); // UPDATE SAL0087D
+              } else {
+
+                hsManualMapper.updateHsFilterSiriNo2(docSub); // UPDATE SAL0087D
+              }
+
+              //April 2022 start - HLTANG - filter barcode scanner - update log0100m after serial has been used
+              if (!"".equals(filterBarcdNewSerialNo) && !("null").equals(filterBarcdNewSerialNo) && filterBarcdNewSerialNo != null) {
+            	  Map<String, Object> filter = new HashMap<String, Object>();
+            	  filter.put("serialNo", filterBarcdNewSerialNo);
+            	  filter.put("salesOrdId", params.get("hidSalesOrdId"));
+            	  if(srcform.equals("WEB")){
+            		  filter.put("serviceNo", params.get("hidSalesOrdCd"));
+            	  }else{
+            		  filter.put("serviceNo", params.get("serviceNo"));
+            	  }
+            	  int LocationID_Rev = 0;
+                  if (Integer.parseInt(params.get("hidCodyId").toString()) != 0) {
+                	  filter.put("codyId", params.get("hidCodyId"));
+                	  LocationID_Rev = hsManualMapper.getMobileWarehouseByMemID(filter);
+                  }
+
+                  filter.put("lastLocId", LocationID_Rev);
+                  int filterCnt = hsManualMapper.selectFilterSerial(filter);
+            	  if (filterCnt == 0) {
+          	        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "HS Result Error : Cody did not have this serial on hand "+ filter.get("serialNo").toString());
+          	      }
+
+            	  hsManualMapper.updateHsFilterSerial(filter);
+              }
+              //April 2022 end - HLTANG
+            }
+          }
 
       hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
     }
@@ -3665,11 +3775,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     if (srvConfiguration.size() > 0) {
       // COMPLETE
       if (getHsResultMList.get("resultStusCodeId").toString().equals("4")) {
-        EgovMap insertHsSrvConfigM = new EgovMap();
-        insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
-        insertHsSrvConfigM.put("srvRem", params.get("instruction"));
-        insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
-        insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
+/**
+ * Frango check did not use insertHsSrvConfigM anymore
+ * **/
+//        EgovMap insertHsSrvConfigM = new EgovMap();
+//        insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
+//        insertHsSrvConfigM.put("srvRem", params.get("instruction"));
+//        insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
+//        insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
 
         EgovMap callMas = new EgovMap();
         callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
@@ -3681,8 +3794,41 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       }
     }
 
+    // LOGISTICS CALL
+    Map<String, Object> logPram = null;
+    if (Integer.parseInt(params.get("cmbStatusType").toString()) == 4) { // COMPLETED
+      logPram = new HashMap<String, Object>();
+      logPram.put("ORD_ID", LOG_SVC0008D_NO);
+      logPram.put("RETYPE", "COMPLET");
+      logPram.put("P_TYPE", "OD05");
+      logPram.put("P_PRGNM", "HSCOM");
+      logPram.put("USERID", sessionVO.getUserId());
+
+      logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
+
+      logger.debug("= HSCOM params ===>" +params);
+
+      // KR-OHK Serial check add start
+//      if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
+//        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+//      } else {
+//        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+//      }
+//      logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
+
+      if (!"000".equals(logPram.get("p1"))) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1") + ":" + "HS Result Error");
+      }
+      // KR-OHK Serial check add end
+
+      logPram.put("P_RESULT_TYPE", "HS");
+      logPram.put("P_RESULT_MSG", logPram.get("p1"));
+    }
+
+
     Map<String, Object> resultValue = new HashMap<String, Object>();
     resultValue.put("resultId", params.get("hidSalesOrdCd"));
+    resultValue.put("spMap", logPram);
     resultValue.put("resultDocNo", docNo);
 
     return resultValue;

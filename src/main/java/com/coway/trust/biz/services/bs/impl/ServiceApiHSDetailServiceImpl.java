@@ -379,6 +379,81 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
           String userId = MSvcLogApiService.getUseridToMemid(params);
           sessionVO.setUserId(Integer.parseInt(userId));
 
+       // UPDATE FAUCET EXCHANGE
+//          if (params.get("faucetExch") != null) {
+//            if ("1".equals(CommonUtils.nvl(params.get("faucetExch").toString()))) {
+//              int cnt = MSvcLogApiService.updFctExch(params);
+//
+//              if (cnt < 1) {
+//                String procTransactionId = transactionId;
+//                String procName = "HeartService";
+//                String procKey = serviceNo;
+//                String procMsg = "[SAL0090D] UPDATE FAIL";
+//                String errorMsg = "[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.";
+//                throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+//              }
+//            }
+//          }
+
+          for (int x = 0; x < paramsDetailList.size(); x++) {
+
+                Map<String, Object> paramsDetail = (Map<String, Object>) paramsDetailList.get(x);
+                String filterCode = paramsDetail.get("filterCode").toString();
+
+    			// CHECKING STOCK
+    			if (!("".equals(CommonUtils.nvl(filterCode)))) {
+    				Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+    				locInfoEntry.put("CT_CODE", CommonUtils.nvl(insApiresult.get("userId").toString()));
+    				locInfoEntry.put("STK_CODE", CommonUtils.nvl(filterCode));
+
+    				EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+
+    				logger.debug("LOC. INFO. : {}" + locInfo);
+    				if (locInfo != null) {
+    					if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+    						// FAIL Cody NOT ENOUGH STOCK
+    						MSvcLogApiService.updateErrStatus(transactionId);
+
+    						Map<String, Object> m = new HashMap();
+    						m.put("APP_TYPE", "HS");
+    						m.put("SVC_NO", serviceNo);
+    						m.put("ERR_CODE", "03");
+    						m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+    						m.put("TRNSC_ID", transactionId);
+
+    						MSvcLogApiService.insert_SVC0066T(m);
+
+    						String procTransactionId = transactionId;
+    						String procName = "HeartService";
+    						String procKey = serviceNo;
+    						String procMsg = "PRODUCT STOCK UNAVAILABLE";
+    						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
+    						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    					}
+    				}
+    				else {
+    					// FAIL CT NOT ENOUGH STOCK
+    					MSvcLogApiService.updateErrStatus(transactionId);
+
+    					Map<String, Object> m = new HashMap();
+    					m.put("APP_TYPE", "HS");
+    					m.put("SVC_NO", serviceNo);
+    					m.put("ERR_CODE", "03");
+    					m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. ");
+    					m.put("TRNSC_ID", transactionId);
+
+    					MSvcLogApiService.insert_SVC0066T(m);
+
+    					String procTransactionId = transactionId;
+    					String procName = "HeartService";
+    					String procKey = serviceNo;
+    					String procMsg = "PRODUCT STOCK UNAVAILABLE";
+    					String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + filterCode + "] IS UNAVAILABLE. ";
+    					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    				}
+    			}
+          }
+
           Map<String, Object> getHsBasic = MSvcLogApiService.getHtBasic(params);
           if (getHsBasic == null) {
             String procTransactionId = transactionId;
@@ -421,6 +496,14 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
           params.put("sgnDt", insApiresult.get("signData"));
           params.put("stage", "API");
 
+          //params.put("hidSerialRequireChkYn", String.valueOf(insApiresult.get("serialRequireChkYn")));
+          //params.put("instChklstCheckBox", String.valueOf(insApiresult.get("hsChkLst")));/////////////////////////////////////////////hsChklst
+          //params.put("switchChkLst", String.valueOf(insApiresult.get("switchChkLst")));
+          //params.put("instruction", String.valueOf(insApiresult.get("instruction")));///////////////////////////////////////////// job instruction
+          //params.put("codeFailRemark", String.valueOf(insApiresult.get("codeFailRemark"))); // Barcode Reason Enhancement
+          //params.put("voucherRedemption", String.valueOf(insApiresult.get("voucherRedemption")));
+
+
           logger.debug("### CS PARAM : " + params.toString());
 
           Map rtnValue = hsManualService.addIHtResult(params, paramsDetailList, sessionVO);
@@ -431,6 +514,12 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
           }
 
           if (null != rtnValue) {
+        	  HashMap spMap = (HashMap) rtnValue.get("spMap");
+              logger.debug("spMap :" + spMap.toString());
+              if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+                rtnValue.put("logerr", "Y");
+              }
+
             // 홈케어 주문일 경우만 호출
             if ("Y".equals(String.valueOf(insApiresult.get("homeCareOrderYn")))) {
               params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
@@ -454,8 +543,30 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
                 throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
               }
 
+              spMap.put("pErrcode", "");
+              spMap.put("pErrmsg", "");
+              servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+              String errCode = (String) spMap.get("pErrcode");
+              String errMsg = (String) spMap.get("pErrmsg");
+
+              // pErrcode : 000 = Success, others = Fail
+              if (!"000".equals(errCode)) {
+                String procTransactionId = transactionId;
+                String procName = "HeartService";
+                String procKey = serviceNo;
+                String procMsg = "Failed to Save";
+                String errorMsg = "[API] ERROR CODE : " + errCode + ", MSG : " + errMsg;
+                throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+              }
+
+              logger.debug("### HT SP_SVC_LOGISTIC_REQUEST_SERIAL params  : " + spMap.toString());
+
               // ONGHC - START INSERT SVC0115D FOR HC BARCODE MATCHING PURPOSE..
               MSvcLogApiService.insertSVC0115D(params);
+            } else {
+                // SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+                servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
             }
           }
         } catch (Exception e) {
