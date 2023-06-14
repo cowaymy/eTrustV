@@ -560,7 +560,7 @@
                               ,sysdate
                               ,sysdate
                               ,1
-                              ,NVL(#{apptypeid},69)
+                              ,NVL(#{appTypeId},69)
                               ,0
                               ,NVL(#{pricerpf},0)
                               ,NVL(#{pricepv},0)
