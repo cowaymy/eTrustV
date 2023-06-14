@@ -6,7 +6,7 @@
   <select id="updateBarcodeChange"  statementType="CALLABLE" parameterType="Map">
       /* [com.coway.trust.biz.logistics.serialChange.impl.SerialChangeMapper.updateBarcodeChange] KR_HAN */
            { call SP_SVC_BARCODE_CHANGE
-                   (#{pSerialNo}, #{pBeforeSerialNo}, #{pSalesOrdId}, #{pItmCode}, #{pRefDocNo}, #{pCallGbn}, #{pMobileYn}, #{pUserId}
+                   (#{pSerialNo}, NVL(#{pBeforeSerialNo},'-'), #{pSalesOrdId}, #{pItmCode}, #{pRefDocNo}, #{pCallGbn}, #{pMobileYn}, #{pUserId}
 					, #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
 					, #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
                     )
