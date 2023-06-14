@@ -16,10 +16,10 @@
 function fn_saveSerialNoModify(){
 
 	// 유효성 체크
-	if( $("#bSerialNo").val().length != 18 ){
+	/* if( $("#bSerialNo").val().length != 18 ){
 		Common.alert("Please, check the Serial No.");
 		return false;
-	}
+	} */
 
 	/* if( $("#beforeSerialNo").val() == $("#pSerialNo").val() ){
 		Common.alert("Same as the previous Serial No.");
