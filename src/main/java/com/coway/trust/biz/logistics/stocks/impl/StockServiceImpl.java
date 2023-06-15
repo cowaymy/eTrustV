@@ -447,8 +447,6 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
                 	   }else if(sm == 0){
                 		   pac_id = stockMapper.selectPacId();
                 		   isEmptyPriceInfo = true;
-                	   }else{
-                		   break;
                 	   }
                    }else if(params.get("appTypeId").toString().equals("67")){
                 	   if( sm2 == 1){
@@ -456,14 +454,17 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
                 	   }else if(sm2 == 0){
                 		   pac_id = stockMapper.selectPacId();
                 		   isEmptyPriceInfo = true;
-                	   }else{
-                		   break;
                 	   }
                    }
             	   logger.debug("pacid ===== " + pac_id);
                   //  int pac_id = stockMapper.selectPacId();
-                    smap.put("pac_id", pac_id);
-                    smap2.put("pac_id", pac_id);
+            	   if(pac_id != 0){
+            		   smap.put("pac_id", pac_id);
+                       smap2.put("pac_id", pac_id);
+            	   }else{
+            		  break;
+            	   }
+
 
                }
            }
