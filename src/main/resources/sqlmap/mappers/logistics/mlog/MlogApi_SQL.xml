@@ -461,54 +461,56 @@
   </select>
 
   <select id="getUsedPartsList" parameterType="Map" resultType="egovMap">
-    SELECT l82.SVC_ORD_ID service_no,
-               l82.STK_ID parts_Id,
-               s26.STK_CODE parts_Code,
-               s26.STK_DESC parts_Name,
-               s29.NAME cust_Name,
-               l82.QTY used_Qty,
-               s01.SALES_ORD_NO,
-               ( SELECT CODE_NAME
-                 FROM SYS0013M
-                 WHERE CODE_ID=s26.UOM) currency,
-               l82.OLD_SERIAL serial_No
-    FROM log0082m l82,
-             SVC0008D s08,
-             org0001d o01,
-             sys0026m s26,
-             sal0029d s29,
-             sal0001d s01
-    WHERE 1 = 1
-        AND s08.cody_id = o01.mem_id
-        AND l82.STK_ID=s26.STK_ID
-        AND o01.mem_code = #{userId}
-        AND l82.svc_ord_id = s08.no
-        AND l82.CUST_ID=s29.CUST_ID
-        AND s08.SALES_ORD_ID = s01.SALES_ORD_ID
+    SELECT * FROM (
+      SELECT ROW_NUMBER() OVER (PARTITION BY l82.SVC_ORD_ID, l82.STK_ID ORDER BY l82.SEQ DESC) AS RN,
+                 L82.SVC_ORD_ID SERVICE_NO,
+                 L82.STK_ID PARTS_ID,
+                 S26.STK_CODE PARTS_CODE,
+                 S26.STK_DESC PARTS_NAME,
+                 S29.NAME CUST_NAME,
+                 L82.QTY USED_QTY,
+                 S01.SALES_ORD_NO,
+                 ( SELECT CODE_NAME
+                   FROM SYS0013M
+                   WHERE CODE_ID=s26.UOM) CURRENCY,
+                 L82.OLD_SERIAL SERAIL_NO
+      FROM LOG0082M L82,
+               SVC0008D S08,
+               ORG0001D O01,
+               SYS0026M S26,
+               SAL0029D S29,
+               SAL0001d S01
+      WHERE 1 = 1
+          AND S08.CODY_ID = O01.MEM_ID
+          AND L82.STK_ID = S26.STK_ID
+          AND O01.MEM_CODE = #{userId}
+          AND L82.SVC_ORD_ID = S08.NO
+          AND L82.CUST_ID = S29.CUST_ID
+          AND S08.SALES_ORD_ID = S01.SALES_ORD_ID
 
        <if test="searchType == 1 ">
-         and nvl(l82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'N'
+         AND NVL(L82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'N'
        </if>
 
         <if test="searchType == 2 ">
-          and nvl(l82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'Y'
+          AND NVL(L82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'Y'
         </if>
 
         <if test="search2Type == 1 ">
           <if test="search2Inp !=null and search2Inp !=''">
-            and s01.SALES_ORD_NO = #{search2Inp}
+            AND S01.SALES_ORD_NO = #{search2Inp}
           </if>
         </if>
 
         <if test="search2Type == 2 ">
           <if test="search2Inp !=null and search2Inp !=''">
-            and s26.STK_CODE = #{search2Inp}
+            AND S26.STK_CODE = #{search2Inp}
           </if>
         </if>
 
          <if test="search2Type == 3 ">
           <if test="search2Inp !=null and search2Inp !=''">
-            and l82.SVC_ORD_ID = #{search2Inp}
+            AND L82.SVC_ORD_ID = #{search2Inp}
           </if>
         </if>
 
@@ -523,9 +525,11 @@
         <if test="searchSerialNo !=null and searchSerialNo !=''">
           AND l82.OLD_SERIAL = #{searchSerialNo}
         </if>
-    ORDER BY s01.SALES_ORD_NO,
-                   l82.SVC_ORD_ID,
-                   s26.STK_DESC
+
+    ) WHERE RN = '1'
+      ORDER BY SALES_ORD_NO,
+                     SERVICE_NO,
+                     PARTS_CODE
   </select>
 
   <select id="StockReceiveList" parameterType="Map" resultType="egovMap">
