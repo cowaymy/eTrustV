@@ -21,6 +21,7 @@
     var BEFORE_DD = "${bfDay}";
     var blockDtFrom = "${hsBlockDtFrom}";
     var blockDtTo = "${hsBlockDtTo}";
+    var stockIdVal ='';
 
     //파일 저장 캐시
     var myFileCaches = {};
@@ -467,7 +468,7 @@
 
             //check main aircon only ajax
             if(_tagNum == "1"){
-                var stockIdVal = $("#ordProduct"+_tagNum).val();
+                stockIdVal = $("#ordProduct"+_tagNum).val();
                 if(!FormUtil.isEmpty(stockIdVal)){
                 	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
                 }
@@ -1744,6 +1745,13 @@
                 } else {
                     $("#gstChk").val('0').removeAttr("disabled");
                 } */
+
+                // Checking DT branch for AC after load installation address
+                console.log('stockIdVal2 ::: ' + stockIdVal)
+                if(!FormUtil.isEmpty(stockIdVal)){
+                    checkIfIsAcInstallationProductCategoryCode(stockIdVal);
+                    //console.log(':::checkIfIsAcInstallationProductCategoryCode:::')
+                }
             }
         });
     }
