@@ -646,6 +646,36 @@
          <select id="selectPacId" parameterType="Map" resultType="Integer">
             SELECT NVL(MAX(PRC_ID),0)+1 FROM SAL0016M
          </select>
+
+          <select id="selectExistPacId" parameterType="Map" resultType="Integer">
+            SELECT NVL(PRC_ID, 0) FROM SAL0016M
+            WHERE 1 = 1
+            <if test="stockId != null and stockId != ''">
+              AND STK_ID = #{stockId}
+            </if>
+            <if test="srvpacid != null and srvpacid != ''">
+               AND MEM_PAC_ID = #{srvpacid}
+            </if>
+             <if test="appTypeId != null and appTypeId != ''">
+               AND APP_TYPE_ID = #{appTypeId}
+            </if>
+         </select>
+
+          <select id="chcekCountPacId" parameterType="Map" resultType="Integer">
+            SELECT COUNT(1) FROM SAL0016M
+            WHERE 1=1
+            <if test="stockId != null and stockId != ''">
+              AND STK_ID = #{stockId}
+            </if>
+            <if test="srvpacid != null and srvpacid != ''">
+               AND MEM_PAC_ID = #{srvpacid}
+            </if>
+             <if test="appTypeId != null and appTypeId != ''">
+                AND APP_TYPE_ID = #{appTypeId}
+            </if>
+         </select>
+
+
          <select id="selectBomId" parameterType="Map" resultType="Integer">
             SELECT NVL(MAX(BOM_ID),0)+1 FROM LOG0001M
          </select>
@@ -1038,7 +1068,7 @@
    SELECT
    <if test="typeId !=null and typeId == '61'">
                 <if test="appTypeId !=null and appTypeId == '66'">
-                    0 PRICECOST,
+                    NVL(PRC_COSTING, 0) PRICECOST,
 				    0 AMT,
 				    NVL(PRC_PV, 0) PRICEPV,
 				    NVL(AMT, 0) MRENTAL,

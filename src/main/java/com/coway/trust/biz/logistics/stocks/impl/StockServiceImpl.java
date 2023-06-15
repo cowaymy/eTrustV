@@ -435,10 +435,36 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
                tradeinpv = (String) ((Map<String, Object>) obj).get("tradeinpv").toString();
 
                if(pricecost.equals("0") && amt.equals("0") && pricepv.equals("0") && mrental.equals("0") && pricerpf.equals("0") && penalty.equals("0") && tradeinpv.equals("0")){
-                    int pac_id = stockMapper.selectPacId();
+            	   int pac_id = 0;
+
+            	   int sm = stockMapper.chcekCountPacId(smap2);
+            	   int sm2 = stockMapper.chcekCountPacId(smap);
+            	   logger.debug("sm ====== " + sm);
+            	   logger.debug("sm2 ===== " + sm2);
+            	   if(params.get("appTypeId").toString().equals("66")){
+            		   if( sm == 1){
+                		   pac_id = stockMapper.selectExistPacId(smap2);
+                	   }else if(sm == 0){
+                		   pac_id = stockMapper.selectPacId();
+                		   isEmptyPriceInfo = true;
+                	   }else{
+                		   break;
+                	   }
+                   }else if(params.get("appTypeId").toString().equals("67")){
+                	   if( sm2 == 1){
+                		   pac_id = stockMapper.selectExistPacId(smap);
+                	   }else if(sm2 == 0){
+                		   pac_id = stockMapper.selectPacId();
+                		   isEmptyPriceInfo = true;
+                	   }else{
+                		   break;
+                	   }
+                   }
+            	   logger.debug("pacid ===== " + pac_id);
+                  //  int pac_id = stockMapper.selectPacId();
                     smap.put("pac_id", pac_id);
                     smap2.put("pac_id", pac_id);
-                    isEmptyPriceInfo = true;
+
                }
            }
         }
