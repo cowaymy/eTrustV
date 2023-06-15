@@ -16,6 +16,7 @@
     var bulkOrderYn  = "${BULK_ORDER_YN}";
     var preOrdId = '${matPreOrdId}';
     var rcdTms  = "${preOrderInfo.updDt}";
+    var stockIdVal ='';
 
     var LoginRoleID = "${SESSION_INFO.roleId}";
 
@@ -301,6 +302,7 @@
                     } else {
                         $("#validAreaIdYN").val("Y");
                     }
+
                 } else {
                     Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
                     return false;
@@ -349,6 +351,12 @@
                         $('#pBtnCal').addClass("blind");
                         fn_tabOnOffSet('REL_CER', 'HIDE');
                     }
+                }
+                // Checking DT branch for AC after load installation address
+                console.log('stockIdVal2 ::: ' + stockIdVal)
+                if(!FormUtil.isEmpty(stockIdVal)){
+                    checkIfIsAcInstallationProductCategoryCode(stockIdVal);
+                    //console.log(':::checkIfIsAcInstallationProductCategoryCode:::')
                 }
             }
         });
@@ -1109,7 +1117,8 @@
 
             //check main aircon only ajax
             if(_tagNum == "1"){
-                var stockIdVal = $("#ordProduct"+_tagNum).val();
+                stockIdVal = $("#ordProduct"+_tagNum).val();
+                //
                 if(!FormUtil.isEmpty(stockIdVal)){
                 	checkIfIsAcInstallationProductCategoryCode(stockIdVal);
                 }
