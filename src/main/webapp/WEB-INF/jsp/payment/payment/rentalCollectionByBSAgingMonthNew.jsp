@@ -20,6 +20,7 @@ var isPaid = [{"codeId":"1","codeName":"Full Paid"},{"codeId":"2","codeName":"Pa
 //var bsMonth = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
 var bsMonth = [{"codeId":"","codeName":"All"},{"codeId":"Yes","codeName":"Yes"},{"codeId":"No","codeName":"No"}];
 var openingAging = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
+var rentalPeriod = [{"codeId":"","codeName":"Choose One"},{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
 
 
 $(document).ready(function(){
@@ -79,6 +80,7 @@ $(document).ready(function(){
 	doDefCombo(outStandMonth, '0', 'cmbOutstandMonth', 'S', '');
 	doDefCombo(bsMonth, '', 'cmbBsMonth', 'S', '');
 	doDefCombo(openingAging, '', 'cmbOpeningAging', 'S', '');
+	doDefCombo(rentalPeriod, '', 'renPrd', 'S', '');
 
     var gridPros = {
             // 편집 가능 여부 (기본값 : false)
@@ -89,14 +91,44 @@ $(document).ready(function(){
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
+    $("#btnRmdLtr").click(function(){
+
+        var gridObj = AUIGrid.getSelectedItems(myGridID);
+        var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+        var test = AUIGrid.getCellValue(myGridID,selIdx,"aging");
+
+        if(gridObj == null || gridObj.length <= 0) {
+            Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
+        }else{
+            if(test < 3 ){
+                Common.alert('* Allowed for Outstanding Month 3 & 4 only.');
+            }else{
+                $("#dataForm").show();
+                var ordNo = gridObj[0].item.salesOrdNo;
+
+                $("#dataForm #_ordNo").val(ordNo);
+                $("#dataForm #downFileName").val("Reminder Letter - " + ordNo);
+
+                fn_report();
+            }
+        }
+    });
+
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+    	  var gridObj = AUIGrid.getSelectedItems(myGridID);
+    	  var orderid = gridObj[0].item.salesOrdId;
+          $("#ledgerForm #ordId").val(orderid);
+          Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+    });
+
 });
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
       {dataField : "salesOrdId", editable : false, visible : false}
     , {dataField : "bsMonth", headerText : "<spring:message code='sal.title.bsMonth'/>", editable : false}
-    , {dataField : "renMem", headerText : "Rental Membership", editable : false, width : 150}
     , {dataField : "salesOrdNo", headerText : "<spring:message code='pay.head.orderNO'/>", editable : false, width : 100}
+    , {dataField : "jompay", headerText : "Jompay No", editable: false, width: 100}
     , {dataField : "codyCode", headerText : "Cody Code", editable : false,width : 100}
     , {dataField : "codyName", headerText : "<spring:message code='pay.head.memberName'/>", editable : false,width : 150}
     , {dataField : "custName", headerText : "<spring:message code='pay.head.custName'/>", editable : false,width : 150 }
@@ -104,9 +136,14 @@ var columnLayout = [
     , {dataField : "telHome", headerText : "<spring:message code='pay.head.telR'/>", editable : false,width : 100}
     , {dataField : "telOffice", headerText : "<spring:message code='pay.head.telO'/>", editable : false,width : 100}
     , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false}
+    , {dataField : "crc", headerText : "CRC(last 4-digit)", editable : false, width : 100}
+    , {dataField : "crcExpr", headerText : "CRC Exp Date", editable : false, width : 100}
     , {dataField : "monthType", headerText :"M2 Status", editable : false , width : 100}
+    , {dataField : "thisMonth", headerText : "This Mth", editable : false, width : 150}
+    , {dataField : "previousMonth", headerText : "Prev Mth", editable : false, width : 150}
     , {dataField : "target", headerText : "Target", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
     , {dataField : "collection", headerText : "Collection", editable : false, width : 100, dataType : "numeric", formatString : "#,##0.##"}
+    , {dataField : "aging", editable : false, visible: false}
     ];
 
     // ajax list 조회.
@@ -138,6 +175,14 @@ var columnLayout = [
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
         GridCommon.exportTo("grid_wrap", "xlsx", "RC by HS (Aging Month)");
     }
+
+    function fn_report(){
+        var option = {
+                isProcedure : false
+        };
+        Common.report("dataForm",option);
+    }
+
 </script>
 
 <!-- content start -->
@@ -207,12 +252,38 @@ var columnLayout = [
                     <tr>
                         <th scope="row">Rental Membership</th>
                         <td><input type="text" title="renMem" id="renMem" name="renMem" placeholder="Rental Membership" class="w100p" /></td>
-                        <th scope="row"></th>
-                        <td></td>
+                        <th scope="row">Over Rental Period</th>
+                        <td> <select id="renPrd" name="renPrd" class="w100p" ></select></td>
                     </tr>
                 </tbody>
             </table>
             <!-- table end -->
+
+      <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+
+            <li><p class="link_btn"><a href="#" id="btnRmdLtr">Reminder Letter</a></p></li>
+
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+
+     </form>
+
+     <form id="dataForm">
+     <input type = "hidden" id ="fileName" name ="reportFileName" value="/sales/CodyRemindLetter.rpt" />
+     <input type = "hidden" id ="viewType" name ="viewType" value="PDF" />
+     <input type = "hidden" id ="downFileName" name ="reportDownFileName" value="" />
+
+     <input type = "hidden" id ="_ordNo" name="@ordNo" />
         </form>
     </section>
     <!-- search_table end -->

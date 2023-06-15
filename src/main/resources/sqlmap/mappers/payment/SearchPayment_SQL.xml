@@ -1889,6 +1889,7 @@
         LEFT JOIN SAL0024D JOMPAY ON JOMPAY.CUST_BILL_ID = SOM.CUST_BILL_ID
         LEFT JOIN SAL0074D PAYMODE ON PAYMODE.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0028D CARD ON CARD.CUST_CRC_ID = PAYMODE.CUST_CRC_ID
+        LEFT JOIN SAL0003D PRD ON PRD.CNTRCT_SALES_ORD_ID = SOM.SALES_ORD_ID
         WHERE 1=1
         <if test="orgCode != '' ">
            AND A.ORG_CODE = #{orgCode}
@@ -1935,6 +1936,14 @@
        <if test="memType != '' ">
            AND A.MEM_TYPE = #{memType}
        </if>
+       <if test="renPrd != '' and renPrd != 0 ">
+		       <if test = "renPrd == 1 ">
+		       AND PRD.CNTRCT_OBLIGT_PRIOD <![CDATA[ >= ]]>60
+		       </if>
+		       <if test ="renPrd == 2">
+		       AND PRD.CNTRCT_OBLIGT_PRIOD <![CDATA[ < ]]> 60
+		       </if>
+        </if>
     </select>
 
         <select id="searchRCByOrganizationList" parameterType="rentalCollectionByOrganizationVO" resultType="egovMap">
