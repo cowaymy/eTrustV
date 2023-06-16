@@ -707,4 +707,19 @@ public class HiCareController {
 		return "commission/commissionNonIncentiveUploadSamplePop";
 	}
 
+ 	@RequestMapping(value = "/hiCareFilterForecastListPop.do")
+	public String hiCareFilterForecastListPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+ 		model.addAttribute("params", params);
+
+ 		params.put("memberLevel", sessionVO.getMemberLevel());
+ 	    params.put("userName", sessionVO.getUserName());
+ 	    params.put("userType", sessionVO.getUserTypeId());
+ 	    List<EgovMap> modelList = hiCareService.selectModelCode();
+ 		List<EgovMap> branchList = hsManualService.selectBranchList(params);
+
+ 		model.addAttribute("branchList", branchList);
+ 		model.addAttribute("modelList", modelList);
+
+ 	    return "services/hiCare/filterForecastListingPop";
+	}
 }

@@ -333,6 +333,10 @@
 	  $('#btnFilterListing').click(function() {
           Common.popupDiv("/services/hiCare/hiCareFilterListingPop.do", null, null, true);
       });
+
+	   $('#btnFilterForecastListing').click(function() {
+	          Common.popupDiv("/services/hiCare/hiCareFilterForecastListPop.do", null, null, true);
+	      });
   });
 </script>
 <section id="content">
@@ -448,6 +452,9 @@
                 </p></li>
                 <li><p class="link_btn type2">
                     <a href="#" id="btnFilterListing">Sediment Filter List</a>
+                </p></li>
+                 <li><p class="link_btn type2">
+                    <a href="#" id="btnFilterForecastListing">Sediment Filter List</a>
                 </p></li>
             </c:if>
             </ul>
