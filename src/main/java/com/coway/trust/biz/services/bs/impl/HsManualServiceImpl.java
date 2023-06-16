@@ -3807,14 +3807,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
 
       logger.debug("= HSCOM params ===>" +params);
+      logger.debug("= HSCOM params ===>" +params.get("hidSerialRequireChkYn").toString());
 
       // KR-OHK Serial check add start
-//      if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
-//        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
-//      } else {
-//        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-//      }
-//      logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
+      if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
+        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+      } else {
+        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+      }
+      logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
 
       if (!"000".equals(logPram.get("p1"))) {
         throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1") + ":" + "HS Result Error");
