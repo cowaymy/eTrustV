@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.impl.CommonServiceImpl;
 import com.coway.trust.biz.logistics.stocks.StockService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -373,6 +374,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
     Map<String, Object> smap = new HashMap<>();
     Map<String, Object> smap2 = new HashMap<>();
 
+    String msgf = "";
     boolean isEmptyPriceInfo = false;
 
     smap.put("srvpacid", params.get("srvPackageId"));
@@ -462,7 +464,8 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
             		   smap.put("pac_id", pac_id);
                        smap2.put("pac_id", pac_id);
             	   }else{
-            		  break;
+            		  msgf = "Error! Multiple Price ID found for this material under this package.";
+            		  throw new ApplicationException("-1",msgf);
             	   }
 
 
