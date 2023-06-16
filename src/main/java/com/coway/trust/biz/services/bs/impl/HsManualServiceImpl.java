@@ -3637,10 +3637,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       insertHsResultfinal.put("resultRptEmailNo", params.get("resultRptEmailNo"));
       insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
       insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
+      insertHsResultfinal.put("codeFailRemark", params.get("codeFailRemark"));
 
       //param not exist in  care service
 //      insertHsResultfinal.put("instChklstCheckBox", params.get("instChklstCheckBox"));
-//      insertHsResultfinal.put("codeFailRemark", params.get("codeFailRemark"));
 //      insertHsResultfinal.put("voucherRedemption", params.get("voucherRedemption"));
 //      insertHsResultfinal.put("switchChkLst", params.get("switchChkLst"));
 

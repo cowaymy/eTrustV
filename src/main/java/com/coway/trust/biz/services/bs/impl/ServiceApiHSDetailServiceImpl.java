@@ -496,11 +496,11 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
           params.put("sgnDt", insApiresult.get("signData"));
           params.put("stage", "API");
 
-          //params.put("hidSerialRequireChkYn", String.valueOf(insApiresult.get("serialRequireChkYn")));
+          params.put("hidSerialRequireChkYn", String.valueOf(insApiresult.get("serialRequireChkYn")));
           //params.put("instChklstCheckBox", String.valueOf(insApiresult.get("hsChkLst")));/////////////////////////////////////////////hsChklst
           //params.put("switchChkLst", String.valueOf(insApiresult.get("switchChkLst")));
-          //params.put("instruction", String.valueOf(insApiresult.get("instruction")));///////////////////////////////////////////// job instruction
-          //params.put("codeFailRemark", String.valueOf(insApiresult.get("codeFailRemark"))); // Barcode Reason Enhancement
+          params.put("instruction", String.valueOf(insApiresult.get("instruction")));///////////////////////////////////////////// job instruction
+          params.put("codeFailRemark", String.valueOf(insApiresult.get("codeFailRemark"))); // Barcode Reason Enhancement
           //params.put("voucherRedemption", String.valueOf(insApiresult.get("voucherRedemption")));
 
 
