@@ -8,7 +8,6 @@ var serialGubun = "1";
     $(document).ready(function() {
         var myGridID_view;
         var callType = "${callType.typeId}";
-console.log("${installResult}")
         if("${installResult.preinstalltionStus}"){
             $("#addInstallForm #serialNo").val("${installResult.preinstallationSerialNo}");
             $("#addInstallForm #frmSerialNo").val("${installResult.preinstallationSerialNo2}");
