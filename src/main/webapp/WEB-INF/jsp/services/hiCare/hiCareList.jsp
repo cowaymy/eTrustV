@@ -454,7 +454,7 @@
                     <a href="#" id="btnFilterListing">Sediment Filter List</a>
                 </p></li>
                  <li><p class="link_btn type2">
-                    <a href="#" id="btnFilterForecastListing">Sediment Filter List</a>
+                    <a href="#" id="btnFilterForecastListing">Sediment Forecast Filter List</a>
                 </p></li>
             </c:if>
             </ul>
