@@ -364,6 +364,8 @@ public class HsManualController {
     params.put("groupCode", "511");
     model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
 
+    model.addAttribute("serialEditBtnAccess", params.get("serialEditBtnAccess"));
+
     return "services/bs/hsDetailPop";
 
   }
@@ -402,6 +404,8 @@ public class HsManualController {
     model.addAttribute("ROW", params.get("ROW"));
     params.put("groupCode", "511");
     model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
+    model.addAttribute("serialEditBtnAccess", params.get("serialEditBtnAccess"));
+
     return "services/bs/hsEditPop";
 
   }

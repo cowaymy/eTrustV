@@ -416,7 +416,9 @@
 
     // KR-OHK Serial Check
     if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
-        $("#btnSerialEdit").attr("style", "");
+    	if ("${serialEditBtnAccess}" == "Y") {
+    		$("#btnSerialEdit").attr("style", "");
+    	}
     }
 
     // Added for displaying instruction remarks. By Hui Ding, 2020-10-09

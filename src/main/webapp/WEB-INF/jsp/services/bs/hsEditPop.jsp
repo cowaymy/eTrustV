@@ -478,7 +478,9 @@ var myDetailGridData = null;
 
  // KR-OHK Serial Check
     if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
-        $("#btnSerialEdit").attr("style", "");
+    	if ("${serialEditBtnAccess}" == "Y") {
+    		$("#btnSerialEdit").attr("style", "");
+    	}
     }
 
     var statusCd = "${basicinfo.stusCodeId}";

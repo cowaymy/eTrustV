@@ -449,8 +449,7 @@
 				salesOrdId = rowItem.salesOrdId;
 
 				if (hsStuscd == 4) {
-					Common
-							.alert("already has result. Result entry is disallowed.");
+					Common.alert("already has result. Result entry is disallowed.");
 					return;
 				}
 			}
@@ -458,7 +457,7 @@
 
 		Common.popupDiv(
 				"/services/bs/selectHsInitDetailPop.do?isPop=true&schdulId="
-						+ schdulId + "&salesOrdId=" + salesOrdId, null, null,
+						+ schdulId + "&salesOrdId=" + salesOrdId+ "&serialEditBtnAccess=" + $("#serialEditBtnAccess").val(), null, null,
 				true, '_hsDetailPopDiv');
 		//Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
 	}
@@ -960,8 +959,7 @@
 	  });
 	 */
 
-	$(document).ready(
-			function() {
+	$(document).ready(function() {
 				doDefCombo(StatusTypeData, '', 'cmbStatusType', 'S', '');
 
 				$('#myBSMonth').val(
@@ -1031,6 +1029,11 @@
 				 */
 
 				fn_checkRadioButton();
+
+				 if ("${PAGE_AUTH.funcUserDefine10}" == "Y") {
+					 $("#serialEditBtnAccess").val("Y");
+			     }
+
 
 				AUIGrid.bind(myGridID, "cellClick", function(event) {
 					schdulId = AUIGrid.getCellValue(myGridID, event.rowIndex,
@@ -1520,11 +1523,11 @@
 	<!-- Manual branch -->
 	<input type="hidden" id="memId1" name="memId1">
 	<!-- Manual branch -->
-	<input type="hidden" id="memberLevel" name="memberLevel"
-		value="${memberLevel}">
+	<input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}">
 	<!-- Manual branch -->
 	<input type="hidden" id="userName" name="userName" value="${userName}">
 	<input type="hidden" id="userType" name="userType" value="${userType}">
+	<input type="hidden" id="serialEditBtnAccess" name="serialEditBtnAccess" value="">
 </form>
 <form id='reportFormHSLst' method="post" name='reportFormHSLst'
 	action="#">
