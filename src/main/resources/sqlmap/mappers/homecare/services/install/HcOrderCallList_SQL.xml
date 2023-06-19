@@ -425,9 +425,7 @@
 		</if>
 		JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = vCallLogOrderCall.BNDL_ID
 		<!-- Added by Wawa  20230619-->
-        JOIN ccr0006d callog on callog.CALL_ENTRY_ID = (
-                select CALL_ENTRY_ID from (SELECT ROW_NUMBER() OVER (PARTITION BY sales_ord_id order by CALL_ENTRY_ID  asc) R, A.CALL_ENTRY_ID FROM ccr0006d A where sales_ord_id = vcalllogordercall.sales_ord_id ) WHERE R = 1
-            )
+        JOIN CCR0006D callog ON callog.call_entry_id  = (SELECT MIN(CALL_ENTRY_ID) FROM CCR0006D WHERE CCR0006D.SALES_ORD_ID = vcalllogordercall.SALES_ORD_ID GROUP BY CCR0006D.SALES_ORD_ID)
 		)
 		Extent1
 		WHERE 1 = 1
