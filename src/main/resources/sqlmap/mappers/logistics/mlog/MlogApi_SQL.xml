@@ -527,6 +527,7 @@
         </if>
 
     ) WHERE RN = '1'
+      AND USED_QTY > 0
       ORDER BY SALES_ORD_NO,
                      SERVICE_NO,
                      PARTS_CODE
