@@ -249,8 +249,7 @@
 	</select>
 
 	<!-- Search Order Call List -->
-	<select id="searchHcOrderCallList" parameterType="Map"
-		resultType="egovMap">
+	<select id="searchHcOrderCallList" parameterType="Map" resultType="egovMap">
 		/*
 		com.coway.trust.biz.homecare.services.install.impl.HcOrderCallListMapper.searchHcOrderCallList
 		*/
@@ -265,7 +264,8 @@
 		, Extent1.APP_TYPE_NAME
 		, Extent1.CALL_STUS_ID
 		,
-		Extent1.CALL_STUS_CODE
+		Extent1.CALL_STUS_CODE,
+		extent1.ORDER_KEY_IN_DATE <!-- Added by Wawa  20230619-->
 		, Extent1.PRODUCT_CODE
 		, Extent1.PRODUCT_NAME
 		,
@@ -327,8 +327,8 @@
 		,
 		Extent1.BNDL_NO
 		, Extent1.VRIFY_FLG
-		 ,Extent1.ord_STUS_CODE_ID
-
+		 ,Extent1.ord_STUS_CODE_ID,
+        extent1.CALL_LOG_ENTRY_DATE<!-- Added by Wawa  20230619-->
 		FROM ( SELECT
 		vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
 		,
@@ -352,6 +352,7 @@
 		,
 		vCallLogOrderCall.PRODUCT_ID PRODUCT_ID
 		,
+		TO_CHAR(sal.SALES_DT,'DD/MM/YYYY') ORDER_KEY_IN_DATE ,  <!-- Added by Wawa  20230619-->
 		vCallLogOrderCall.PRODUCT_CODE || ' - ' ||
 		vCallLogOrderCall.PRODUCT_NAME PRODUCT_CODE
 		,
@@ -408,13 +409,11 @@
 		, HMC.BNDL_NO
 		,
 		NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID <!-- Added by keyi  20210920-->
-		,vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID
-		FROM CCR1002V
-		vCallLogOrderCall
-		JOIN SYS0064M AREA ON AREA.AREA_ID =
-		vcalllogordercall.INSTALL_AREA_ID
-		JOIN SYS0005M DSC ON DSC.BRNCH_ID =
-		vcalllogordercall.DSC_BRNCH_ID
+		,vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID,
+        TO_CHAR(callog.ori_call_dt,'DD/MM/YYYY') call_log_entry_date  <!-- Added by Wawa  20230619-->
+		FROM CCR1002V vCallLogOrderCall
+		JOIN SYS0064M AREA ON AREA.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
+		JOIN SYS0005M DSC ON DSC.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
 		JOIN
 		sal0001d sal ON sal.SALES_ORD_NO = vcalllogordercall.SALES_ORD_NO
 		<if test="branchTypeList != null and branchTypeList != ''">
@@ -425,6 +424,10 @@
 	        </foreach>
 		</if>
 		JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = vCallLogOrderCall.BNDL_ID
+		<!-- Added by Wawa  20230619-->
+        JOIN ccr0006d callog on callog.CALL_ENTRY_ID = (
+                select CALL_ENTRY_ID from (SELECT ROW_NUMBER() OVER (PARTITION BY sales_ord_id order by CALL_ENTRY_ID  asc) R, A.CALL_ENTRY_ID FROM ccr0006d A where sales_ord_id = vcalllogordercall.sales_ord_id ) WHERE R = 1
+            )
 		)
 		Extent1
 		WHERE 1 = 1
