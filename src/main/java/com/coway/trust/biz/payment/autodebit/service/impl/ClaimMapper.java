@@ -293,7 +293,6 @@ public interface ClaimMapper {
 
   List<EgovMap> selectVRescueBulkList(Map<String, Object> params);
   List<EgovMap> selectVRescueBulkDetails(Map<String, Object> params);
-
   /**
    * Auto Debit - vRescue Bulk Upload De Flag
    *
@@ -305,5 +304,5 @@ public interface ClaimMapper {
   List<EgovMap> selectRentPayIdByBchId(Map<String, Object> params);
 
   String selectvRescueBatchNo(int params);
-
+  List<EgovMap> selectUnableBulkUploadList(Map<String, Object> params);
 }

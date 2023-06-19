@@ -2111,6 +2111,8 @@ public class ClaimController {
           downloadHandler = getTextDownloadGeneralHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
           largeExcelService.downLoadClaimFileGeneral(claimMap, downloadHandler);
           downloadHandler.writeFooter();
+
+          LOGGER.debug(">>>>>>>>>>>>>>>>>> claimMap test: " + claimMap);
         }
       }
     } catch (Exception ex) {
@@ -3093,23 +3095,32 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 		  params.put("userId", sessionVO.getUserId());
 	      LOGGER.debug("params =====================================>>  " + params);
-		  int result = claimService.saveVRescueBulkConfirm(params);
-
 		  ReturnMessage message = new ReturnMessage();
-	      if(result == 1){
 
-				message.setCode(AppConstants.SUCCESS);
-				message.setData("");
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-	      }
-
-	      else{
+	  	  List<EgovMap> unableUploadList = claimService.selectUnableBulkUploadList(params);
+	  	  if(unableUploadList.size() > 0){
 				message.setCode(AppConstants.FAIL);
 				message.setData("");
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-	      }
+				message.setMessage("Kindly upload orders with REG paymode and in CAN status only");
+	  	  }
+
+	  	  else {
+	  		  int result = claimService.saveVRescueBulkConfirm(params);
+
+		      if(result == 1){
+
+					message.setCode(AppConstants.SUCCESS);
+					message.setData("");
+					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		      }
+
+		      else{
+					message.setCode(AppConstants.FAIL);
+					message.setData("");
+					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		      }
+	  	  }
 
 	      return ResponseEntity.ok(message);
-
 		}
 }

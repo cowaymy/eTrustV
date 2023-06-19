@@ -1525,7 +1525,7 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
   </update>
 
   <!-- Update master batch -->
-      <update id="updateVRescueBulkMByBchId" parameterType="Map">
+   <update id="updateVRescueBulkMByBchId" parameterType="Map">
     UPDATE
     SAL0347D SET BATCH_STUS = 4
     , UPD_DT = SYSDATE
@@ -1533,5 +1533,20 @@ SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
     #{userId}
     WHERE BATCH_ID = #{batchId}
   </update>
+
+    <select id="selectUnableBulkUploadList" parameterType="Map" resultType="egovMap">
+    SELECT B.SALES_ORD_NO, C.MODE_ID, B.STUS_CODE_ID FROM SAL0348D A
+    JOIN SAL0001D B ON B.SALES_ORD_NO = A.ORD_NO
+    JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE A.BATCH_ID = #{batchId}
+    AND C.MODE_ID NOT IN (130)
+    UNION
+    SELECT E.SALES_ORD_NO, F.MODE_ID, E.STUS_CODE_ID FROM SAL0348D D
+    JOIN SAL0001D E ON E.SALES_ORD_NO = D.ORD_NO
+    JOIN SAL0074D F ON F.SALES_ORD_ID = E.SALES_ORD_ID
+    WHERE D.BATCH_ID = #{batchId}
+    AND F.MODE_ID IN (130)
+    AND E.STUS_CODE_ID <![CDATA[ <> ]]> '10'
+    </select>
 
 </mapper>
