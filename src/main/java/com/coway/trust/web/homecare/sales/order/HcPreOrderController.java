@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcPreOrderService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.common.SalesCommonService;
@@ -57,6 +58,9 @@ public class HcPreOrderController {
 
     @Resource(name = "preOrderService")
     private PreOrderService preOrderService;
+
+    @Resource(name = "hcOrderListService")
+    private HcOrderListService hcOrderListService;
 
     /**
      * Homecare Pre OrderList 화면 호출
@@ -102,6 +106,9 @@ public class HcPreOrderController {
         params.put("groupCode", 8);
         List<EgovMap> codeList_8 = commonService.selectCodeList(params);
 
+        //product
+        List<EgovMap> productList_1 = hcOrderListService.selectProductCodeList();
+
         model.put("fromDay", CommonUtils.getAddDay(toDay, -1, SalesConstants.DEFAULT_DATE_FORMAT1));
         model.put("toDay", toDay);
         model.put("isAdmin", "true");
@@ -115,6 +122,7 @@ public class HcPreOrderController {
 
         model.put("branchCdList", branchCdList);
         model.put("codeList_8", codeList_8);
+        model.put("productList_1", productList_1);
 
         return "homecare/sales/order/hcPreOrderList";
     }
@@ -135,11 +143,15 @@ public class HcPreOrderController {
 		String[] arrPreOrdStusId 	= request.getParameterValues("_stusId");    		// Pre-Order Status
 		String[] arrKeyinBrnchId 	= request.getParameterValues("_brnchId");   	// Key-In Branch
 		String[] arrCustType     	= request.getParameterValues("_typeId");    		// Customer Type
+		String[] arrOrdProudctList    	= request.getParameterValues("ProudctList");    		// Product
+		String[] arrDtBranch    	= request.getParameterValues("dscBrnchId");			// DT Branch
 
 		if(arrAppType      != null && !CommonUtils.containsEmpty(arrAppType))       	params.put("arrAppType", arrAppType);
 		if(arrPreOrdStusId != null && !CommonUtils.containsEmpty(arrPreOrdStusId)) 	params.put("arrPreOrdStusId", arrPreOrdStusId);
 		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) 	params.put("arrKeyinBrnchId", arrKeyinBrnchId);
 		if(arrCustType      != null && !CommonUtils.containsEmpty(arrCustType))      	params.put("arrCustType", arrCustType);
+		if(arrOrdProudctList      != null && !CommonUtils.containsEmpty(arrOrdProudctList))      	params.put("arrOrdProudctList", arrOrdProudctList);
+		if(arrDtBranch      != null && !CommonUtils.containsEmpty(arrDtBranch))      	params.put("arrDtBranch", arrDtBranch);
 
 		List<EgovMap> result = hcPreOrderService.selectHcPreOrderList(params);
 
