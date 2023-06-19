@@ -15,7 +15,11 @@
     var recentGridItem = null;
     var selectRowIdx;
     var popupObj;
-
+/*     var ProudctList = [];
+    <c:forEach var="obj" items="${productList_1}">
+    productList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+ */
     var brnchType = "${branchType}";
     var memTypeFiltered = false;
     if (brnchType == 45) {
@@ -35,6 +39,11 @@
     var codeList_8 = [];
     <c:forEach var="obj" items="${codeList_8}">
     codeList_8.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var productList = [];
+    <c:forEach var="obj" items="${productList_1}">
+    productList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
     </c:forEach>
 
     $(document).ready(function(){
@@ -114,7 +123,11 @@
         } else {
             doDefCombo(memTypeData, '', 'memType', 'S', '');
         }
-        doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
+       // doDefCombo(productList, '' ,'_ordProudctList', 'M', 'fn_multiCombo');
+       //doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', '_ordProudctList', 'S', 'fn_multiCombo2');
+       doDefCombo(productList, '' ,'_ordProudctList', 'M', 'fn_multiCombo2');
+ //       doGetComboAndGroup2 ('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', '_ordProudctList', 'S','fn_multiCombo2', 'fn_setOptGrpClass');
+         doGetComboSepa('/homecare/selectHomecareDscBranchList.do',  '', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo2'); //Branch Code
 //         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
 //         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
 //         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
@@ -129,6 +142,25 @@
         });
 
     });
+
+    function fn_multiCombo2(){
+            $('#listDscBrnchId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+
+            $('#_ordProudctList').change(function() {
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '100%'
+            });
+
+           $('#_ordProudctList').multipleSelect("checkAll");
+           $('#listDscBrnchId').multipleSelect("checkAll");
+    }
+
 
     function fn_statusCodeSearch(){
         Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : CATE_ID, parmDisab : 0}, function(result) {
@@ -239,6 +271,7 @@
           , {headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width : '10%' }
           , {headerText : "Application Type",        dataField : "appType",    editable : false, width : 80  }
           , {headerText : "eKey-in Time",          dataField : "requestTm",    editable : false, width : '8%'}
+          , { headerText : "DT Branch",  dataField : "dtBranch",  editable : false, width : '10%' }
           , {headerText : "Product",                 dataField : "product",        editable : false, width : '12%'}
           , {headerText : "Customer Name",     dataField : "custNm",         editable : false, width : '15%'}
           , {headerText : "Creator",                  dataField : "crtName",       editable : false, width : '8%'}
@@ -536,6 +569,14 @@
             width: '100%'
         });
         $('#_typeId').multipleSelect("checkAll");
+/*
+        $('#_ordProudctList').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+        $("#_ordProudctList").multipleSelect("checkAll"); */
 
     }
 
@@ -694,7 +735,7 @@
         </div>
     </td>
     <th scope="row"><spring:message code="sal.text.product" /></th>
-    <td><select id="ordProudctList" name="ordProudctList" class="w100p" ></select>
+    <td><select id="_ordProudctList" name="ProudctList" class="w100p"></select></select>
 </tr>
 <tr>
     <th scope="row">Org Code</th>
@@ -709,8 +750,10 @@
     <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td><select id="memType" name="memType" class="w100p" ></select>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">DT Branch</th>
+     <td><select id="listDscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select></td>
+</tr>
+
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>
