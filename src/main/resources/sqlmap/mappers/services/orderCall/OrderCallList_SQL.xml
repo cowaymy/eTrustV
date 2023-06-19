@@ -56,7 +56,10 @@
                    THEN Extent1.PRODUCT_ID
                  ELSE 0
             END C4
-          , Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK
+          , Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK,
+          <!-- Added by Wawa  20230619-->
+          extent1.order_key_in_date,
+          extent1.call_log_entry_date
      FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                    , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
                    , vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -100,7 +103,9 @@
                    , area.area
                    , area.postcode
                    , dsc.CODE DSC_CODE
-                   , NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID
+                   , NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
+                   TO_CHAR(sal.sales_dt,'DD/MM/YYYY') order_key_in_date,
+                   TO_CHAR(callog.ori_call_dt,'DD/MM/YYYY') call_log_entry_date
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
@@ -108,6 +113,10 @@
            <if test="branchTypeId != null and branchTypeId != ''">
                AND dsc.TYPE_ID = #{branchTypeId}
            </if>
+           <!-- Added by Wawa  20230619-->
+           JOIN ccr0006d callog on callog.CALL_ENTRY_ID = (
+                select CALL_ENTRY_ID from (SELECT ROW_NUMBER() OVER (PARTITION BY sales_ord_id order by CALL_ENTRY_ID  asc) R, A.CALL_ENTRY_ID FROM ccr0006d A where sales_ord_id = vcalllogordercall.sales_ord_id ) WHERE R = 1
+            )
            WHERE vCallLogOrderCall.BNDL_ID IS NULL
             ) Extent1
      WHERE  1=1
