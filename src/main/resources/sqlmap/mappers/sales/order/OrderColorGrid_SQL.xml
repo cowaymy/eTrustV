@@ -40,7 +40,7 @@
                                         AND (CAST(som.SALES_DT AS TIMESTAMP)　<![CDATA[<]]> CAST(KEYIN.KEYIN_END_DT + INTERVAL '1' DAY AS TIMESTAMP))
            WHERE (som.STUS_CODE_ID  <![CDATA[<> ]]> 8)  AND som.APP_TYPE_ID <![CDATA[<> ]]> 5764
 
-           <if test="memLvl == 1 and orgCode != null and orgCode != ''" >
+           <if test="orgCode != null and orgCode != ''" >
 	           <if test="memLvl == 1 or memLvl == null or memLvl == ''">
 	                   AND NVL (som.ORG_CODE, '') = #{orgCode}
 	           </if>
