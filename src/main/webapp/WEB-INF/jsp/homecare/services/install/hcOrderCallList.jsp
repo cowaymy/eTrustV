@@ -293,6 +293,17 @@
 			editable : false,
 			width : 90
 		}, {
+            dataField : "orderKeyInDate",
+            headerText : 'Order key in date',
+            editable : false,
+            width : 120
+        },
+        {
+            dataField : "callLogEntryDate",
+            headerText : 'Call Log Entry Date',
+            editable : false,
+            width : 120
+        },{
 			dataField : "callLogDt",
 			headerText : '<spring:message code="service.grid.Date" />',
 			editable : false,
