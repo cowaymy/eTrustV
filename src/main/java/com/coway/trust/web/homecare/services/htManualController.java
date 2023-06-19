@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.homecare.sales.htOrderDetailService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
@@ -55,6 +56,9 @@ public class htManualController {
 
   @Resource(name = "hcOrderListService")
   private HcOrderListService hcOrderListService;
+
+  @Resource(name = "commonService")
+  private CommonService commonService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -397,6 +401,8 @@ public class htManualController {
     model.addAttribute("orderDetail", orderDetail);
     model.addAttribute("failReasonList", failReasonList);
     // model.addAttribute("serMemList", serMemList);
+    params.put("groupCode", "511");
+    model.addAttribute("unmatchRsnList", commonService.selectCodeList(params));
 
     return "homecare/services/htDetailPop";
 
@@ -541,13 +547,31 @@ public class htManualController {
 
     if (null != resultValue && status == 4) {
 
-      msg = "Complete to Add a HS Order : " + resultValue.get("resultId");
+      HashMap spMap = (HashMap) resultValue.get("spMap");
 
+      logger.debug("spMap :========>" + spMap.toString());
+
+      if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+
+        resultValue.put("logerr", "Y");
+        msg = "Logistics call Error.";
+      } else {
+
+        msg = "Complete to Add a HS Order : " + resultValue.get("resultId");
+      }
+
+      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
     } else if (null != resultValue && (status == 21 || status == 10)) {
 
       msg = "Complete to Add a HS Order : " + resultValue.get("resultId");
 
     }
+
+// Not Applicable for Care Service
+// Added to update only "Has Return" flag
+//    if (updList != null) {
+//        hsManualService.UpdateIsReturn(formMap, updList, sessionVO);
+//    }
 
     message.setMessage(msg);
     return ResponseEntity.ok(message);
