@@ -43,6 +43,8 @@
 
         $("#orgCode").val($("#orgCode").val().trim());
 
+        $("#memLvl").val("${SESSION_INFO.memberLevel}");
+
          if($("#memType").val() == 1 || $("#memType").val() == 2 || $("#memType").val() == 7){
         	if("${SESSION_INFO.memberLevel}" =="0"){
 
@@ -866,6 +868,7 @@ console.log("searchColorGrid");
     <input type="hidden" name="memCode" id="memCode" />
     <input type="hidden" name="keyinMon" id="keyinMon" />
     <input type="hidden" name="keyinYear" id="keyinYear" />
+    <input type="hidden" name="memLvl" id="memLvl"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
