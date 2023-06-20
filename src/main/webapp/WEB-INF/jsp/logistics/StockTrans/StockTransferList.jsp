@@ -163,7 +163,7 @@ $(document).ready(function(){
 
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'US':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    //doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
