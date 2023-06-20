@@ -431,9 +431,15 @@
   E.CODE
   ) M
   JOIN PAY0043D P43 ON P43.USER_REF_NO = M.REF_DTL
-  WHERE
+  WHERE 1=1
   <if test="batchId != null or batchId != ' ' ">
-    P43.BATCH_ID = #{batchId}
+    AND P43.BATCH_ID = #{batchId}
+  </if>
+  <if test="advType == 1">
+  	AND P43.PAY_CHANNEL = 'IPAY88'
+  </if>
+  <if test="advType == 2">
+  	AND P43.PAY_CHANNEL = 'EGHL'
   </if>
   ) adv
   JOIN
