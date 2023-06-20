@@ -2930,11 +2930,11 @@
       </if>
 
       <if test="search2 != null and search2 != '' ">
-        AND ( DEFECT_DESC LIKE UPPER(#{search2}) )
+        AND ( UPPER(DEFECT_DESC) LIKE UPPER(#{search2}) )
       </if>
 
       <if test="search3 != null and search3 != '' ">
-        AND ( DEFECT_RMK LIKE UPPER(#{search3}) )
+        AND ( UPPER(DEFECT_RMK) LIKE UPPER(#{search3}) )
       </if>
 
 	  <if test="search4 != null and search4 != '' ">
