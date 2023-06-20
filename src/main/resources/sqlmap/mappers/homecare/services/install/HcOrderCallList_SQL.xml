@@ -410,7 +410,7 @@
 		,
 		NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID <!-- Added by keyi  20210920-->
 		,vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID,
-        TO_CHAR(callog.ori_call_dt,'DD/MM/YYYY') call_log_entry_date  <!-- Added by Wawa  20230619-->
+        TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date  <!-- Added by Wawa  20230619-->
 		FROM CCR1002V vCallLogOrderCall
 		JOIN SYS0064M AREA ON AREA.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
 		JOIN SYS0005M DSC ON DSC.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
