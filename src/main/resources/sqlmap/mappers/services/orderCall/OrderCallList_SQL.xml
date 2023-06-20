@@ -105,7 +105,7 @@
                    , dsc.CODE DSC_CODE
                    , NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
                    TO_CHAR(sal.sales_dt,'DD/MM/YYYY') order_key_in_date,
-                   TO_CHAR(callog.ori_call_dt,'DD/MM/YYYY') call_log_entry_date
+                   TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
