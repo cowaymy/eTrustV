@@ -122,8 +122,7 @@
         ]]>
     </select>
 
-    <select id="selectMemberList" parameterType="Map" resultType="egovMap">
-
+<select id="selectMemberList_BK" parameterType="Map" resultType="egovMap">
  <![CDATA[
 SELECT row_number,
   Project1.MEM_ID MemberID,
@@ -300,6 +299,9 @@ FROM (
                   <if test="deptCode != null and deptCode != '' ">
                   AND EXTENT.DEPT_CODE = #{deptCode}
                   </if>
+                  <if test="deptCode != null and deptCode != '' ">
+                  AND EXTENT.DEPT_CODE = #{deptCode}
+                  </if>
                   <![CDATA[
                   )
                   WHERE ITM_ROWS = 1
@@ -350,7 +352,10 @@ FROM (
                             <![CDATA[  AND TO_DATE(Extent4.CRT_DT)  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                          </if>
                          <if test="contact != null and contact != ''">
-                            AND (( Extent4.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent4.TEL_MOBILE = #{contact} OR Extent4.TEL_HUSE = #{contact} OR Extent4.TEL_OFFICE = #{contact})
+                            AND (    ( Extent4.TEL_HUSE LIKE '%' || #{contact}|| '%' )
+                                  OR ( Extent4.TEL_OFFICE LIKE '%' || #{contact}|| '%' )
+                                  OR ( Extent4.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) )
+                                  AND ( Extent4.TEL_MOBILE = #{contact} OR Extent4.TEL_HUSE = #{contact} OR Extent4.TEL_OFFICE = #{contact})
                          </if>
                          <if test="sponsor != null and sponsor != ''">
                             AND   UPPER(Extent4.SPONS_CODE) LIKE UPPER('%' || #{sponsor} || '%')
@@ -478,6 +483,198 @@ FROM (
                   WHERE Project1.row_number   <![CDATA[ > ]]> 0
                   ORDER BY Project1.MEM_CODE ASC
     </select>
+
+<select id="selectMemberList" parameterType="Map" resultType="egovMap">
+ <![CDATA[
+          SELECT
+          Extent1.MEM_ID MemberID,
+          Extent1.MEM_CODE MemberCode,
+          Extent1.MEM_TYPE MemberType,
+          Extent1.NAME Name,
+          Extent1.NRIC NRIC,
+          Extent1.STUS Status,
+          TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY') Updated,
+          Extent2.CODE_NAME CodeName,
+          Extent3.NAME as status_name,
+          Extent1.brnch as brnch_id,
+          Extent5.ct_sub_grp,
+          extent1.TRAINEE_TYPE,
+          Extend6.MEM_ORG_DESC position_name,
+          CASE Extend8.COURS_TEST_RESULT
+                WHEN 'P' THEN 'Pass'
+                WHEN 'F' THEN 'Fail'
+                WHEN 'AB' THEN 'Absent'
+                ELSE ''
+          END TEST_RESULT,
+          Extent9.USER_NAME as approved_by,
+          Extent10.CODE as branch,
+          TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') CRT_DT,
+          CASE WHEN (Extent1.AREA_ID IS NOT NULL OR Extent1.ADDR_DTL IS NOT NULL) THEN
+                            (Extent1.ADDR_DTL || ' ' ||
+                            CASE WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.POSTCODE IS NOT NULL THEN  Extent11.POSTCODE || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.CITY IS NOT NULL THEN  Extent11.CITY || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.STATE IS NOT NULL THEN  Extent11.STATE || ', ' ELSE '' END ||
+                            Extent11.COUNTRY)
+                        ELSE Extent1.ADDR1 || ', ' || Extent1.ADDR2 || ', ' ||
+                            (CASE WHEN Extent1.ADDR3 IS NULL THEN '' ELSE Extent1.ADDR3 || ', ' END) ||
+                            (CASE WHEN Extent1.ADDR4 IS NULL THEN '' ELSE Extent1.ADDR4 || ', ' END) ||
+                            Extent1.POSTCODE || ' ' ||Extent15.AREA_NAME || ', ' || Extent14.NAME || ', ' || Extent13.NAME
+                        END
+          AS ADDRESS,
+          Extent12.GRP_CODE,
+          B.PV_YEAR || '/' || TO_CHAR(B.PV_MONTH, '00') LAST_ACT_DT,
+          /*vaccination information */
+          V.VACCINE_STATUS,
+          V.REASON_ID,
+          DECODE(Extent16.HP_CODE,NULL,'No','Yes') NEO_PRO_STATUS,
+          extent17.code_name HP_TYPE,
+          Extent1.ATCH_FILE_GRP_ID,
+          Extent1.UNIFORM_SIZE,
+          Extent1.MUSLIMAH_SCARFT,
+          Extent1.INNER_TYPE,
+          Extent1.EMRGCY_CNTC_NAME,
+          Extent1.EMRGCY_CNTC_NO,
+          Extent1.EMRGCY_CNTC_INIT,
+          Extent1.TRM_REJOIN,
+          Extent1.EMAIL
+          FROM ORG0001D Extent1
+            JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID
+            JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID
+            LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID
+            LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID = Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL = Extent5.MEM_LVL
+            LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
+            LEFT JOIN SYS0005M Extent10 ON Extent1.BRNCH = Extent10.BRNCH_ID
+            LEFT JOIN SYS0064M Extent11 ON Extent1.AREA_ID = Extent11.AREA_ID
+            LEFT JOIN ORG1001V Extent12 ON Extent1.MEM_ID = Extent12.MEM_ID
+            LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
+            LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
+            LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
+            LEFT JOIN ORG0040D V ON V.MEM_ID = Extent1.MEM_ID
+            /* Vaccination info */
+            LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE = Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
+            LEFT JOIN SYS0013M Extent17 ON Extent1.rank = Extent17.code_id
+            LEFT JOIN (
+                SELECT *
+                FROM (
+                    SELECT B.*,
+                      ROW_NUMBER() OVER (
+                        PARTITION BY B.MEM_ID
+                        ORDER BY B.SALES_ORD_ID DESC
+                      ) ITM_ROWS
+                    FROM SAL0001D B
+                    JOIN ORG1001V EXTENT ON B.MEM_ID = EXTENT.MEM_ID
+                    WHERE B.PV_YEAR <> 0 AND B.PV_MONTH <> 0 AND B.STUS_CODE_ID = 4
+                    ]]>
+            <if test="orgCode != null and orgCode != '' ">
+              AND EXTENT.ORG_CODE = #{orgCode}
+            </if>
+            <if test="grpCode != null and grpCode != '' ">
+              AND EXTENT.GRP_CODE = #{grpCode}
+            </if>
+            <if test="deptCode != null and deptCode != '' ">
+              AND EXTENT.DEPT_CODE = #{deptCode}
+            </if>
+            <if test="code != null and code != ''">
+              AND EXTENT.MEM_CODE in ( select /*+precompute_subquery*/ mem_code from ORG0001D where mem_code LIKE '%' || #{code} || '%' )
+            </if>
+            )
+              WHERE ITM_ROWS = 1
+            ) B ON Extent1.MEM_ID = B.MEM_ID
+              LEFT JOIN (
+              SELECT *
+              FROM (
+              SELECT A.*,
+              ROW_NUMBER() OVER (
+              PARTITION BY COURS_MEM_ID
+              ORDER BY COURS_ITM_ID DESC
+              ) ITM_ROWS
+              FROM MSC0009D A
+              left join MSC0008d b on b.cours_id = a.cours_id
+              WHERE COURS_MEM_STUS_ID <![CDATA[  <>  ]]>
+              8
+              AND b.cours_stus_id not in (3,8)
+              )
+  WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
+  WHERE 1=1
+  <if test="memTypeCom != null and memTypeCom != ''">
+    AND Extent1.MEM_TYPE = #{memTypeCom}
+  </if>
+  <if test="code != null and code != ''">
+    AND Extent1.MEM_CODE in ( select /*+precompute_subquery*/ mem_code from ORG0001D where mem_code LIKE '%' || #{code} || '%')
+  </if>
+  <if test="name != null and name != ''">
+    AND Extent1.NAME in ( select /*+precompute_subquery*/ NAME from ORG0001D where UPPER(name) LIKE UPPER('%' || #{name} || '%'))
+  </if>
+  <if test="icNum != null and icNum != ''">
+    AND Extent1.NRIC LIKE '%' || #{icNum} || '%'
+  </if>
+  <if test="birth != null and birth != ''">
+    AND Extent1.DOB = TO_DATE(#{birth}, 'DD/MM/YYYY')
+  </if>
+  <if test="nation != null and nation != ''">
+    AND Extent1.NATION = #{nation}
+  </if>
+  <if test="race != null and race != ''">
+    AND Extent1.RACE = #{race}
+  </if>
+  <if test="status != null and status != ''">
+    <if test="status == 'Rejoin'">
+      AND Extent1.STUS = 3 AND Extent1.TRM_REJOIN = 1
+    </if>
+    <if test="status != 'Rejoin'">
+      AND Extent1.STUS = #{status}
+    </if>
+  </if>
+  <if test="keyUser != null and keyUser != ''">
+    AND Extent1.CRT_USER_ID = #{keyUser}
+  </if>
+  <if test="keyBranch != null and keyBranch != ''">
+    AND TO_NUMBER(Extent1.BRNCH,99999.99) = #{keyBranch}
+  </if>
+
+  <if test="createDate != '' and endDate != '' ">
+    AND TO_DATE(Extent1.CRT_DT) between TO_DATE(#{createDate}, 'DD/MM/YYYY') and TO_DATE(#{endDate}, 'DD/MM/YYYY')
+  </if>
+  <if test="contact != null and contact != ''">
+    AND ((Extent1.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.TEL_MOBILE = #{contact} OR Extent1.TEL_HUSE = #{contact} OR Extent1.TEL_OFFICE = #{contact})
+  </if>
+  <if test="sponsor != null and sponsor != ''">
+    AND UPPER(Extent1.SPONS_CODE) LIKE UPPER('%' || #{sponsor} || '%')
+  </if>
+  <if test="position != null and position != ''">
+    AND Extent5.MEM_LVL= #{position}
+  </if>
+  <if test="orgCode != null and orgCode != '' ">
+    AND EXTENT12.ORG_CODE = #{orgCode}
+  </if>
+  <if test="grpCode != null and grpCode != '' ">
+    AND EXTENT12.GRP_CODE = #{grpCode}
+  </if>
+  <if test="deptCode != null and deptCode != '' ">
+    AND EXTENT12.DEPT_CODE = #{deptCode}
+  </if>
+  <if test="sessionTypeID != 4 and sessionTypeID != 6">
+    <choose>
+      <when test="memberLevel == 1">
+        AND extent12.ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+      </when>
+      <when test="memberLevel == 2">
+        AND extent12.GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
+      </when>
+      <when test="memberLevel == 3">
+        AND extent12.DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+      </when>
+      <when test="memberLevel == 4">
+        <if test="code == null or code == ''">
+          AND Extent1.MEM_CODE = #{userName}
+        </if>
+      </when>
+    </choose>
+  </if>
+  ORDER BY Extent1.MEM_CODE ASC
+</select>
 
 <!-- CYC select HP Applicant -->
 <select id="selectHPApplicantList" parameterType="Map" resultType="egovMap">
