@@ -1826,109 +1826,106 @@
     </form>
 
     </section><!-- search_table end -->
-
     <!-- data body start -->
-    <section class="search_result"><!-- search_result start -->
-        <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
-            <li><p class="btn_grid"><a id="editPrice">Price</a></p></li>
-            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-   </c:if>
-<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
-            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_grid"><a id="stockIns">New</a></p></li>
-    </c:if>
-<!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()">Add</p></li> -->
+    <section class="search_result">
+      <!-- search_result start -->
+      <ul class="right_btns">
+        <li><p class="btn_grid">
+            <a id="editPrice">Price</a>
+          </p></li>
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+          <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
+          <li><p class="btn_grid">
+              <a id="download"><spring:message code='sys.btn.excel.dw' /></a>
+            </p></li>
+        </c:if>
+        <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
+        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+          <li><p class="btn_grid">
+              <a id="stockIns">New</a>
+            </p></li>
+        </c:if>
+        <!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()">Add</p></li> -->
+      </ul>
+      <div id="grid_wrap" class="mt10" style="height: 450px"></div>
+      <section id="subDiv" style="display: none;" class="tap_wrap">
+        <!-- tap_wrap start -->
+        <ul class="tap_type1">
+          <li id="stock_info"><a href="#"> Stock info </a></li>
+          <!--  <li id="price_info"><a href="#"> Price & Value Information</a></li>-->
+          <li id="filter_info"><a href="#"> Filter Info</a></li>
+          <li id="spare_info"><a href="#"> Spare Part Info</a></li>
+          <li id="service_info"><a href="#">Service Charge Info</a></li>
+          <li id="service_point"><a href="#">Service Point</a></li>
+          <li id="stock_image"><a href="#">Stock Image</a></li>
+          <li id="stock_commisssion"><a href="#">Stock Commission Setting</a></li>
+          <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            <li id="eos_eom_info"><a href="#">EOS / EOM Date</a></li>
+          </c:if>
         </ul>
-
-        <div id="grid_wrap" class="mt10" style="height:450px"></div>
-
-        <section id="subDiv" style="display:none;" class="tap_wrap"><!-- tap_wrap start -->
-
-            <ul class="tap_type1">
-                <li id="stock_info"><a href="#"> Stock info </a></li>
-               <!--  <li id="price_info"><a href="#"> Price & Value Information</a></li>-->
-                <li id="filter_info"><a href="#"> Filter Info</a></li>
-                <li id="spare_info"><a href="#"> Spare Part Info</a></li>
-                <li id="service_info"><a href="#">Service Charge Info</a></li>
-                <li id="service_point"><a href="#">Service Point</a></li>
-                <li id="stock_image"><a href="#">Stock Image</a></li>
-                <li id="stock_commisssion"><a href="#">Stock Commission Setting</a></li>
-                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-                    <li id="eos_eom_info"><a href="#">EOS / EOM Date</a></li>
-                </c:if>
+        <article class="tap_area" id="stock_info_div" style="display: none;">
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h3>Stock Information</h3>
+            <ul class="left_opt">
+              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_blue">
+                    <a id="stock_info_edit">EDIT</a>
+                  </p></li>
+              </c:if>
             </ul>
-            <article class="tap_area" id="stock_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Stock Information</h3>
-                <ul class="left_opt">
-                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                    <li><p class="btn_blue"><a id="stock_info_edit">EDIT</a></p></li>
-                </c:if>
-                </ul>
-                </aside>
-                <form id="stockInfo" name="stockInfo" method="post">
-                <table class="type1">
-                    <caption>search table</caption>
-                    <colgroup>
-                        <col style="width:150px" />
-                        <col style="width:*" />
-                        <col style="width:160px" />
-                        <col style="width:*" />
-                        <col style="width:160px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th scope="row">Material Type</th>
-                        <td ID="txtStockType"></td>
-                        <th scope="row">Status</th>
-                        <td ID="txtStatus"></td>
-                        <td colspan="2">
-                            <label><input type="checkbox" id="cbSirim"/><span>Sirim Certificate</span></label>
-                            <label><input type="checkbox" id="cbNCV" /><span>NCV</span></label>
-                            <label><input type="checkbox" id="cbSerial" /><span>Serial</span></label>
-                            <label><input type="checkbox" id="cbStockAudit" /><span><spring:message code='log.head.stockAudit'/></span></label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Material Code</th>
-                        <td ID="txtStockCode"></td>
-                        <th scope="row">UOM</th>
-                        <td id="txtUOM"></td>
-                        <th scope="row">Old Mat.</th>
-                        <td id="txtoldmat"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Material Name</th>
-                        <td colspan="3" id="txtStockName"></td>
-                        <th scope="row">Category</th>
-                        <td ID="txtCategory"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Net Weight (KG)</th>
-                        <td ID="txtNetWeight"></td>
-                        <th scope="row">Gross Weight (KG)</th>
-                        <td ID="txtGrossWeight"></td>
-
-                        <th scope="row">Measurement CBM</th>
-                        <td ID="txtMeasurement"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Mattress Size</th>
-                        <td id="txtStkSize"></td>
-                        <td colspan="4">
-                            <label><input type="checkbox" id="cbIsSmo"/><span>Create Return SMO</span></label>
-                            <label><input type="checkbox" id="cbIsSerialReplc" /><span>Serial Replace</span></label>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                </form>
-            </article>
-
- <%--            <article class="tap_area" id="price_info_div" style="display:none;">
+          </aside>
+          <form id="stockInfo" name="stockInfo" method="post">
+            <table class="type1">
+              <caption>search table</caption>
+              <colgroup>
+                <col style="width: 150px" />
+                <col style="width: *" />
+                <col style="width: 160px" />
+                <col style="width: *" />
+                <col style="width: 160px" />
+                <col style="width: *" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">Material Type</th>
+                  <td ID="txtStockType"></td>
+                  <th scope="row">Status</th>
+                  <td ID="txtStatus"></td>
+                  <td colspan="2"><label><input type="checkbox" id="cbSirim" /><span>Sirim Certificate</span></label> <label><input type="checkbox" id="cbNCV" /><span>NCV</span></label> <label><input type="checkbox" id="cbSerial" /><span>Serial</span></label> <label><input type="checkbox" id="cbStockAudit" /><span><spring:message code='log.head.stockAudit' /></span></label></td>
+                </tr>
+                <tr>
+                  <th scope="row">Material Code</th>
+                  <td ID="txtStockCode"></td>
+                  <th scope="row">UOM</th>
+                  <td id="txtUOM"></td>
+                  <th scope="row">Old Mat.</th>
+                  <td id="txtoldmat"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Material Name</th>
+                  <td colspan="3" id="txtStockName"></td>
+                  <th scope="row">Category</th>
+                  <td ID="txtCategory"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Net Weight (KG)</th>
+                  <td ID="txtNetWeight"></td>
+                  <th scope="row">Gross Weight (KG)</th>
+                  <td ID="txtGrossWeight"></td>
+                  <th scope="row">Measurement CBM</th>
+                  <td ID="txtMeasurement"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Mattress Size</th>
+                  <td id="txtStkSize"></td>
+                  <td colspan="4"><label><input type="checkbox" id="cbIsSmo" /><span>Create Return SMO</span></label> <label><input type="checkbox" id="cbIsSerialReplc" /><span>Serial Replace</span></label></td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </article>
+        <%--            <article class="tap_area" id="price_info_div" style="display:none;">
                 <div class="divine_auto"><!-- divine_auto start -->
                     <div style="width:50%;">
                 <aside class="title_line"><!-- title_line start -->
@@ -2014,239 +2011,253 @@
 
                 </div><!-- divine_auto end -->
             </article> --%>
-
-            <article class="tap_area" id="filter_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                    <h3 id="filterTab">Stock's Filter List</h3>
-                    <!-- <ul class="left_opt">
+        <article class="tap_area" id="filter_info_div" style="display: none;">
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h3 id="filterTab">Stock's Filter List</h3>
+            <!-- <ul class="left_opt">
                     <li><p class="btn_blue"><a id="filter_info_edit">EDIT</a></p></li>
                     </ul> -->
-                </aside>
-                <div id="filter_grid" style="width:100%;">
-                </div>
-            </article>
-            <article class="tap_area" id="spare_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                    <h3>Stock's Spare Part List</h3>
-                   <!--  <ul class="left_opt">
+          </aside>
+          <div id="filter_grid" style="width: 100%;"></div>
+        </article>
+        <article class="tap_area" id="spare_info_div" style="display: none;">
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h3>Stock's Spare Part List</h3>
+            <!--  <ul class="left_opt">
                     <li><p class="btn_blue"><a id="spare_info_edit">EDIT</a></p></li>
                     </ul> -->
-                </aside>
-                <div id="spare_grid" style="width:100%;"></div>
-            </article>
-            <article class="tap_area" id="service_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Service Charge Information List</h3>
-                <ul class="left_opt">
-                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                    <li><p class="btn_blue"><a id="service_info_edit">EDIT</a></p></li>
-                    </c:if>
-                </ul>
-                </aside>
-                <div id="service_grid" style="width:100%;"></div>
-            </article>
-            <!-- service_point -->
-            <article class="tap_area" id="service_point_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Service Point</h3>
-                <ul class="left_opt">
-                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                    <li><p class="btn_blue"><a id="service_point_edit">EDIT</a></p></li>
-                     </c:if>
-                </ul>
-                </aside>
-                <form id="servicepoint" name="servicepoint" method="post">
-                <table class="type1">
-                    <caption>search table</caption>
-                    <colgroup>
-                        <col style="width:200px" />
-                        <col style="width:*" />
-                        <col style="width:200px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th scope="row">A/S</th>
-                        <td ID="as"></td>
-                        <th scope="row">OS_A/S</th>
-                        <td ID="osas"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">H/S</th>
-                        <td ID="hs"></td>
-                        <th scope="row">OS_H/S</th>
-                        <td id="oshs"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">INSTALLATION</th>
-                        <td id="install"></td>
-                        <th scope="row">OS_INSTALLATION</th>
-                        <td ID="osinstall"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                </form>
-            </article>
-            <!-- service_point -->
-            <article class="tap_area" id="stock_img_td" style="display:none;">
-                <table class="type1">
-                    <caption>search table</caption>
-                    <colgroup>
-                        <col style="width:69%" />
-                        <col style="width:1%" />
-                        <col style="width:30%" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <td  style="text-align: left;">
-                            <div id="stock_img_div" style="width:100%;"></div></td>
-                        <td >&nbsp;</td>
-                        <td id="imgShow"></td>
-                    </tr>
-                </table>
-            </article>
-             <article class="tap_area" id="stock_commisssion_div" style="display:none;">
-                 <div class="divine_auto"><!-- divine_auto start -->
-                 <div style="width:50%;">
-                 <aside class="title_line">
+          </aside>
+          <div id="spare_grid" style="width: 100%;"></div>
+        </article>
+        <article class="tap_area" id="service_info_div" style="display: none;">
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h3>Service Charge Information List</h3>
+            <ul class="left_opt">
+              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_blue">
+                    <a id="service_info_edit">EDIT</a>
+                  </p></li>
+              </c:if>
+            </ul>
+          </aside>
+          <div id="service_grid" style="width: 100%;"></div>
+        </article>
+        <!-- service_point -->
+        <article class="tap_area" id="service_point_div" style="display: none;">
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h3>Service Point</h3>
+            <ul class="left_opt">
+              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_blue">
+                    <a id="service_point_edit">EDIT</a>
+                  </p></li>
+              </c:if>
+            </ul>
+          </aside>
+          <form id="servicepoint" name="servicepoint" method="post">
+            <table class="type1">
+              <caption>search table</caption>
+              <colgroup>
+                <col style="width: 200px" />
+                <col style="width: *" />
+                <col style="width: 200px" />
+                <col style="width: *" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">A/S</th>
+                  <td ID="as"></td>
+                  <th scope="row">OS_A/S</th>
+                  <td ID="osas"></td>
+                </tr>
+                <tr>
+                  <th scope="row">H/S</th>
+                  <td ID="hs"></td>
+                  <th scope="row">OS_H/S</th>
+                  <td id="oshs"></td>
+                </tr>
+                <tr>
+                  <th scope="row">INSTALLATION</th>
+                  <td id="install"></td>
+                  <th scope="row">OS_INSTALLATION</th>
+                  <td ID="osinstall"></td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </article>
+        <!-- service_point -->
+        <article class="tap_area" id="stock_img_td" style="display: none;">
+          <table class="type1">
+            <caption>search table</caption>
+            <colgroup>
+              <col style="width: 69%" />
+              <col style="width: 1%" />
+              <col style="width: 30%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <td style="text-align: left;">
+                  <div id="stock_img_div" style="width: 100%;"></div>
+                </td>
+                <td>&nbsp;</td>
+                <td id="imgShow"></td>
+              </tr>
+          </table>
+        </article>
+        <article class="tap_area" id="stock_commisssion_div" style="display: none;">
+          <div class="divine_auto">
+            <!-- divine_auto start -->
+            <div style="width: 50%;">
+              <aside class="title_line">
                 <!-- <h3>Stock Information</h3> -->
                 <ul class="right_opt">
-                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                    <li><p class="btn_blue"><a id="stock_comm_edit" style="display: none;"><spring:message code='sys.btn.save' /></a></p></li>
-                    </c:if>
+                  <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                    <li><p class="btn_blue">
+                        <a id="stock_comm_edit" style="display: none;"><spring:message code='sys.btn.save' /></a>
+                      </p></li>
+                  </c:if>
                 </ul>
-                </aside>
-                <form id='commForm' name='commForm' method='post'>
+              </aside>
+              <form id='commForm' name='commForm' method='post'>
                 <!-- <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/> -->
-
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Stock Information</h3>
-                </aside><!-- title_line end -->
-
-                    <table class="type1">
-                        <caption>search table</caption>
-                        <colgroup>
-                            <col style="width: 150px" />
-                            <col style="width: *" />
-                            <col style="width: 160px" />
-                            <col style="width: *" />
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Stock Code</th>
-                                <td ID="txtStckCd"></td>
-                                <th scope="row">Category</th>
-                                <td ID="txtStckCtgry"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Stock Name</th>
-                                <td ID="txtStckNm" colspan="3"></td>
-                            </tr>
-                        </tbody>
-                        </table>
-
-                        <aside class="title_line"><!-- title_line start -->
-                        <h3>Commission Setting - Installation</h3>
-                        </aside><!-- title_line end -->
-
-                        <table class="type1">
-                        <caption>search table</caption>
-                        <colgroup>
-                            <col style="width: 150px" />
-                            <col style="width: *" />
-                            <col style="width: 160px" />
-                            <col style="width: *" />
-                        </colgroup>
-                        <tbody>
-                         <tr>
-                             <th scope="row">Rate</th>
-                             <td ID="txtRate_install"></td>
-                             <th scope="row">Outsource Rate</th>
-                             <td ID="txtOutRate_install"></td>
-                         </tr>
-                         </tbody>
-                        </table>
-
-                        <aside class="title_line"><!-- title_line start -->
-                        <h3>Commission Setting - Before Service (BS)</h3>
-                        </aside><!-- title_line end -->
-
-                        <table class="type1">
-                        <caption>search table</caption>
-                        <colgroup>
-                            <col style="width: 150px" />
-                            <col style="width: *" />
-                            <col style="width: 160px" />
-                            <col style="width: *" />
-                        </colgroup>
-                        <tbody>
-                         <tr>
-                             <th scope="row">Rate</th>
-                             <td ID="txtRate_bs"></td>
-                             <th scope="row">Outsource Rate</th>
-                             <td ID="txtOutRate_bs"></td>
-                         </tr>
-                         </tbody>
-                        </table>
-
-                        <aside class="title_line"><!-- title_line start -->
-                        <h3>Commission Setting - After Service (AS)</h3>
-                        </aside><!-- title_line end -->
-
-                        <table class="type1">
-                        <caption>search table</caption>
-                        <colgroup>
-                            <col style="width: 150px" />
-                            <col style="width: *" />
-                            <col style="width: 160px" />
-                            <col style="width: *" />
-                        </colgroup>
-                        <tbody>
-                         <tr>
-                             <th scope="row">Rate</th>
-                             <td ID="txtRate_as"></td>
-                             <th scope="row">Outsource Rate</th>
-                             <td ID="txtOutRate_as"></td>
-                         </tr>
-                         </tbody>
-                         </table>
-                </form>
-
-                </div>
-                </div><!-- divine_auto end -->
-             </article>
-
-              <article class="tap_area" id="eos_eom_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                <h3>EOS / EOM Date</h3>
-                <ul class="left_opt">
-                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                    <li><p class="btn_blue"><a id="eos_eom_info_edit">EDIT</a></p></li>
-                </c:if>
-                </ul>
+                <aside class="title_line">
+                  <!-- title_line start -->
+                  <h3>Stock Information</h3>
                 </aside>
-                <form id="eosEomInfo" name="eosEomInfo" method="post">
+                <!-- title_line end -->
                 <table class="type1">
-                    <caption>search table</caption>
-                    <colgroup>
-                        <col style="width:150px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
+                  <caption>search table</caption>
+                  <colgroup>
+                    <col style="width: 150px" />
+                    <col style="width: *" />
+                    <col style="width: 160px" />
+                    <col style="width: *" />
+                  </colgroup>
+                  <tbody>
                     <tr>
-                        <th scope="row">End of Sales</th>
-                        <td ID="eOSDate"></td>
+                      <th scope="row">Stock Code</th>
+                      <td ID="txtStckCd"></td>
+                      <th scope="row">Category</th>
+                      <td ID="txtStckCtgry"></td>
                     </tr>
                     <tr>
-                        <th scope="row">End of Membership</th>
-                        <td ID="eOMDate"></td>
+                      <th scope="row">Stock Name</th>
+                      <td ID="txtStckNm" colspan="3"></td>
                     </tr>
-                    </tbody>
+                  </tbody>
                 </table>
-                </form>
-            </article>
-        </section><!--  tab -->
-    </section><!-- data body end -->
+                <aside class="title_line">
+                  <!-- title_line start -->
+                  <h3>Commission Setting - Installation</h3>
+                </aside>
+                <!-- title_line end -->
+                <table class="type1">
+                  <caption>search table</caption>
+                  <colgroup>
+                    <col style="width: 150px" />
+                    <col style="width: *" />
+                    <col style="width: 160px" />
+                    <col style="width: *" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Rate</th>
+                      <td ID="txtRate_install"></td>
+                      <th scope="row">Outsource Rate</th>
+                      <td ID="txtOutRate_install"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <aside class="title_line">
+                  <!-- title_line start -->
+                  <h3>Commission Setting - Before Service (BS)</h3>
+                </aside>
+                <!-- title_line end -->
+                <table class="type1">
+                  <caption>search table</caption>
+                  <colgroup>
+                    <col style="width: 150px" />
+                    <col style="width: *" />
+                    <col style="width: 160px" />
+                    <col style="width: *" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Rate</th>
+                      <td ID="txtRate_bs"></td>
+                      <th scope="row">Outsource Rate</th>
+                      <td ID="txtOutRate_bs"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <aside class="title_line">
+                  <!-- title_line start -->
+                  <h3>Commission Setting - After Service (AS)</h3>
+                </aside>
+                <!-- title_line end -->
+                <table class="type1">
+                  <caption>search table</caption>
+                  <colgroup>
+                    <col style="width: 150px" />
+                    <col style="width: *" />
+                    <col style="width: 160px" />
+                    <col style="width: *" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Rate</th>
+                      <td ID="txtRate_as"></td>
+                      <th scope="row">Outsource Rate</th>
+                      <td ID="txtOutRate_as"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+          </div>
+          <!-- divine_auto end -->
+        </article>
+        <article class="tap_area" id="eos_eom_info_div" style="display: none;">
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h3>EOS / EOM Date</h3>
+            <ul class="left_opt">
+              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_blue">
+                    <a id="eos_eom_info_edit">EDIT</a>
+                  </p></li>
+              </c:if>
+            </ul>
+          </aside>
+          <form id="eosEomInfo" name="eosEomInfo" method="post">
+            <table class="type1">
+              <caption>search table</caption>
+              <colgroup>
+                <col style="width: 150px" />
+                <col style="width: *" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th scope="row">End of Sales</th>
+                  <td ID="eOSDate"></td>
+                </tr>
+                <tr>
+                  <th scope="row">End of Membership</th>
+                  <td ID="eOMDate"></td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </article>
+      </section>
+      <!--  tab -->
+    </section>
+    <!-- data body end -->
 
 
 <!-- registr filter-->
@@ -2473,9 +2484,11 @@
     <section class="pop_body" style="min-height: auto"><!-- pop_body start -->
     <aside class="title_line"><!-- title_line start -->
 		<h4>Price & Value Configuration</h3>
-		<ul class="right_btns">
+     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <ul class="right_btns">
 		    <li><p class="btn_blue fl_right"><a id="price_info_edit" onclick="javascript:fn_editPriceInfo();">EDIT</a></p></li>
 		</ul>
+     </c:if>
 		</aside><!-- title_line end -->
        <%--  <ul class="right_opt">
                     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
@@ -2561,12 +2574,17 @@
         </article><!-- grid_wrap end -->
 
         </section><!-- search_result end -->
-
-        <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();"><spring:message code="expense.SAVE" /></a></p></li>
-            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_cancel();">CANCEL</a></p></li>
-        </ul>
-    </section><!-- pop_body end -->
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+      <ul class="center_btns">
+        <li><p class="btn_blue2 big">
+            <a href="#" onclick="javascript:fn_save();"><spring:message code="expense.SAVE" /></a>
+          </p></li>
+        <li><p class="btn_blue2 big">
+            <a href="#" onclick="javascript:fn_cancel();">CANCEL</a>
+          </p></li>
+      </ul>
+    </c:if>
+  </section><!-- pop_body end -->
 
 </div>
 
