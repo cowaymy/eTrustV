@@ -70,6 +70,12 @@
     LEFT JOIN ORG0001D T17 ON T17.MEM_CODE = T7.USER_NAME
     LEFT JOIN SYS0005M T18 ON T18.BRNCH_ID = T17.BRNCH
     LEFT JOIN SYS0105M T19 ON T1.DSC_BRNCH_ID = T19.BRNCH_ID
+     <if test='arrDtBranch != null and arrDtBranch != ""'>
+           AND T19.BRNCH_ID IN
+            <foreach item="item" collection="arrDtBranch" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+         </if>
 
        WHERE 1=1
         <if test='_memCode != null and _memCode != ""'>
@@ -139,12 +145,12 @@
         <if test='memType != null and memType != ""'>
             AND T7.USER_TYPE_ID = #{memType}
         </if>
-        <if test='arrDtBranch != null and arrDtBranch != ""'>
+       <!--  <if test='arrDtBranch != null and arrDtBranch != ""'>
            AND T19.BRNCH_ID IN
             <foreach item="item" collection="arrDtBranch" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
-         </if>
+         </if>-->
        ORDER BY T1.PRE_ORD_ID ASC
     </select>
 
