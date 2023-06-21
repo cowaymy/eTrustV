@@ -42,6 +42,7 @@ public class UserProfileApiDto {
     params.put("memEmail", vo.getMemEmail());
     params.put("brnchAddr", vo.getBrnchAddr());
     params.put("userRole", vo.getUserRole());
+    params.put("agExprDt", vo.getAgExprDt());
     return params;
   }
 
@@ -60,6 +61,7 @@ public class UserProfileApiDto {
   private String memEmail;
   private String brnchAddr;
   private String userRole;
+  private String agExprDt;
 
   public String getMemCode() {
     return memCode;
@@ -179,5 +181,13 @@ public class UserProfileApiDto {
 
   public void setUserRole(String userRole) {
     this.userRole = userRole;
+  }
+
+  public String getAgExprDt() {
+    return agExprDt;
+  }
+
+  public void setAgExprDt(String agExprDt) {
+    this.agExprDt = agExprDt;
   }
 }
