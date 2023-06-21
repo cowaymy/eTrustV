@@ -32,13 +32,13 @@
 
 	var movpathdata = [ {
 		"codeId" : "02",
-		"codeName" : "RDC to CT/Cody/DT"
+		"codeName" : "RDC to CT/Cody/DT/HT"
 	}, {
 		"codeId" : "CT",
-		"codeName" : "CT/Cody/DT to CT/Cody/DT"
+		"codeName" : "CT/Cody/DT/HT to CT/Cody/DT/HT"
 	}, {
 		"codeId" : "CTOR",
-		"codeName" : "CT/Cody/DT to RDC/DT"
+		"codeName" : "CT/Cody/DT/HT to RDC/DT"
 	} ];
 
 	var rescolumnLayout = [ {
