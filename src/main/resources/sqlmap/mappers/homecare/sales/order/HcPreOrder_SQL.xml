@@ -69,7 +69,7 @@
     LEFT JOIN HMC0011D T16 ON ORD_SEQ_NO = T1.BNDL_ID
     LEFT JOIN ORG0001D T17 ON T17.MEM_CODE = T7.USER_NAME
     LEFT JOIN SYS0005M T18 ON T18.BRNCH_ID = T17.BRNCH
-    LEFT JOIN SYS0105M T19 ON T1.DSC_BRNCH_ID = T19.BRNCH_ID
+    LEFT JOIN SYS0005M T19 ON T1.DSC_BRNCH_ID = T19.BRNCH_ID
      <if test='arrDtBranch != null and arrDtBranch != ""'>
            AND T19.BRNCH_ID IN
             <foreach item="item" collection="arrDtBranch" index="index" open="(" separator="," close=")">
