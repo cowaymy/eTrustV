@@ -595,7 +595,8 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 
         EgovMap callMas = new EgovMap();
         callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
-        callMas.put("hcTypeNo", params.get("hidSalesOrdCd"));
+        // Edited to capture HS no (both request from Web or Mobile). Hui Ding, 22/06/2023
+        callMas.put("hcTypeNo", (params.get("hidSalesOrdCd") == null ? params.get("serviceNo") : params.get("hidSalesOrdCd")));
         // callMas.put("hcTypeNo", params.get("serviceNo") );
         callMas.put("crtUserId", sessionVO.getUserId());
         callMas.put("updUserId", sessionVO.getUserId());
