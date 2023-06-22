@@ -1388,7 +1388,7 @@ function fn_socialMediaInfo(){
  <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_genRawData()">Raw Data Download</a></p></li>
 </c:if>
- <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
+ <c:if test="${PAGE_AUTH.funcUserDefine18 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_pushCU()">Push to CU</a></p></li>
 </c:if>
 
