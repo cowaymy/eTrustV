@@ -250,6 +250,9 @@ public class SsoLoginServiceImpl implements SsoLoginService {
 			usernameParams.put("keycloakUserId", userIdMap.get("keycloakUserId").toString());
 			usernameParams.put("userPass", params.get("password").toString());
 			userActiveMap = userResetPassword(usernameParams) ;
+
+			usernameParams.put("enabled", "true");
+			userActiveMap = userActivateDeactivate(usernameParams) ;
 		}
 
 		return userActiveMap;
