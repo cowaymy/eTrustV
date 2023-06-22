@@ -22,7 +22,7 @@ var gridPros = {
 };
 
 //AUIGrid 칼럼 설정
-var estmHisPopColumnLayout = [ 
+var estmHisPopColumnLayout = [
     {
         dataField : "refNo",
         headerText : "<spring:message code='pay.head.refNo'/>",
@@ -62,18 +62,18 @@ $(function(){
 });
 
 function changeBillingInfo(custBillId){
-	
+
 	Common.ajax("GET","/payment/selectChangeBillType.do", {"custBillId":custBillId}, function(result){
 		console.log(result);
         $('#changeTypeForm #custTypeId').val(result.data.basicInfo.typeId);//hidden
         $('#changeBill_grpNo').text(result.data.basicInfo.custBillGrpNo);
         $('#changeBill_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeBill_ordGrp').css("color","red");
         $('#changeBill_remark').text(result.data.basicInfo.custBillRem);
-        
+
         var isPost = result.data.basicInfo.custBillIsPost;
         var isSms = result.data.basicInfo.custBillIsSms;
         var isEstm = result.data.basicInfo.custBillIsEstm;
-        
+
         if(isPost == 1 && isSms == 1 && isEstm == 1){
         	$("#changePop_estm").prop('checked', true);
         	$("#changePop_estm").prop('disabled', false);
@@ -101,11 +101,11 @@ function changeBillingInfo(custBillId){
         	$("#changePop_estm").prop('checked', true);
         	$("#changePop_post").prop('checked', false);
         }
-        
-        AUIGrid.destroy(estmHisPopGridID); 
+
+        AUIGrid.destroy(estmHisPopGridID);
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
         AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
-        AUIGrid.resize(estmHisPopGridID,935,300); 
+        AUIGrid.resize(estmHisPopGridID,935,300);
     });
 }
 
@@ -125,25 +125,25 @@ function fn_changeBillSave(){
     }else{
     	isPost = 0;
     }
-    
+
     if($("#changePop_sms").is(":checked")){
         isSms = 1;
     }else{
     	isSms = 0;
     }
-    
+
     if($("#changePop_estm").is(":checked")){
-    	
+
     	if(custBillEmail == ''){
     		Common.alert("* Please request new email.");
     		return;
     	}
-    	
+
     	isEstm = 1;
     }else{
     	isEstm = 0;
     }
-    
+
     if($("#changePop_post").is(":checked") == false && $("#changePop_sms").is(":checked") == false && $("#changePop_estm").is(":checked") == false ){
         valid = false;
         message += "<spring:message code='pay.alert.selectBillingType'/>";
@@ -153,20 +153,20 @@ function fn_changeBillSave(){
         valid = false;
         message += "<spring:message code='pay.alert.smsNotAllow.'/>";
     }
-    
+
     if($.trim(reasonUpd) ==""){
         valid = false;
         message += "<spring:message code='pay.alert.reasonToUpdate'/>";
-        
+
     }else{
         if ($.trim(reasonUpd).length > 200){
             valid = false;
             message += "<spring:message code='pay.alert.than200Characters'/>";
         }
     }
-    
+
     if(valid){
-        
+
         Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : isPost, "sms" : isSms, "estm" : isEstm, "custBillEmail" :custBillEmail}, function(result){
             console.log(result);
             Common.alert(result.message);
@@ -187,24 +187,31 @@ function fn_newReqSave(){
     var custBillId = $("#changeTypeForm #custBillId").val();
     var valid = true;
     var message = "";
-    
-    if($.trim(reqEmail) == ""){
-        valid = false;
-        message += "<spring:message code='pay.alert.emailAddress.'/>";
-    }else{
-        if(FormUtil.checkEmail($.trim(reqEmail)) == true){
-            valid = false;
-            message += "<spring:message code='pay.alert.invalidEmail'/>"; 
-         }
-    }
-    
-    if($.trim(reqAdditionalEmail) != ""){
-    	if(FormUtil.checkEmail($.trim(reqAdditionalEmail)) == true){
-            valid = false;
-            message += "<spring:message code='pay.alert.invalidAddEmail'/>"; 
-        }
-    }
-    
+
+    if ($.trim(reqEmail) === "") {
+    	  valid = false;
+    	  message += "<spring:message code='pay.alert.emailAddress.'/>";
+    	} else {
+    	  // Regular expression pattern to validate email address
+    	  var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    	  if (!pattern.test($.trim(reqEmail))) {
+    	    valid = false;
+    	    message += "<spring:message code='pay.alert.invalidEmail'/>";
+    	  }
+    	}
+
+    	if ($.trim(reqAdditionalEmail) !== "") {
+    	  // Regular expression pattern to validate email address
+    	  var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    	  if (!pattern.test($.trim(reqAdditionalEmail))) {
+    	    valid = false;
+    	    message += "<spring:message code='pay.alert.invalidAddEmail'/>";
+    	  }
+    	}
+
+
     if($.trim(reasonUpd) ==""){
         valid = false;
         message += "<spring:message code='pay.alert.reasonToUpdate'/>";
@@ -214,7 +221,7 @@ function fn_newReqSave(){
             message += "<spring:message code='pay.alert.than200Characters'/>";
         }
     }
-    
+
     if(valid){
         Common.ajax("GET","/payment/saveNewReq.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqEmail" : reqEmail, "reqAdditionalEmail" : reqAdditionalEmail}, function(result){
             console.log(result);
@@ -230,7 +237,7 @@ function fn_newReqSave(){
             	searchList();
             }
         });
-        
+
     }else{
         Common.alert(message);
     }
