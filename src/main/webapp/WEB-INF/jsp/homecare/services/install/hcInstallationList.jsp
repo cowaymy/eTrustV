@@ -670,9 +670,10 @@
            <th>Pre-Installation Check :</th>
            <td>
             <select id="preinsChk" name="preinsChk">
-                    <option value="">Select Option</option>
+                    <option>Select Option</option>
                     <option value="Y">Y</option>
                     <option value="N">N</option>
+                    <option value="B">Blank</option>
             </select>
            </td>
            <th></th>

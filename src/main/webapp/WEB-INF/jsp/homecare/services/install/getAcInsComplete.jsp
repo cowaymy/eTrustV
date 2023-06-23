@@ -562,9 +562,9 @@
 
     addImageUpload(document.getElementById("sirimUploadContainer"), "Sirim");
 
-    for (let i = 0; i < 4; i++) {
-        let titleName = "Attachment "+ (i+1);
-	    addImageUpload(document.getElementById("installUploadContainer"), titleName);
+    for (let i = 0; i < 5; i++) {
+        let titleName = ['Installation Note (Indoor)','Indoor unit (After install)','Outdoor unit (After install)','Gas Pressure (After install)','Additional'];
+	    addImageUpload(document.getElementById("installUploadContainer"), titleName[i]);
     }
 
     for (let i = 0; i < 2; i++) {
