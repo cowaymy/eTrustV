@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.sales.mambership;
 
@@ -34,69 +34,98 @@ public class PayMembershipController {
 	private static Logger logger = LoggerFactory.getLogger(PayMembershipController.class);
 
 	@Resource(name = "membershipQuotationService")
-	private MembershipQuotationService membershipQuotationService;      		
+	private MembershipQuotationService membershipQuotationService;
 
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
-	
+
 	@Resource(name = "membershipRentalService")
-	private MembershipRentalService  membershipRentalService;   
-	
+	private MembershipRentalService  membershipRentalService;
+
 	@Resource(name = "payPopService")
-	private PayPopService  payPopService;   
-	
-	
+	private PayPopService  payPopService;
+
+
 	@RequestMapping(value = "/quotationListPop.do")
 	public String quotationListPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		logger.debug("params ======================================>>> " + params);
 
 		params.put("L_ORD_NO", params.get("ordNo"));
-		
+
 		List<EgovMap>  list = membershipQuotationService.quotationList(params);
 
 		model.addAttribute("quotationList",  new Gson().toJson(list));
-		
+
 		return "sales/payPop/payQuotationListPop";
-	} 
-	
+	}
+
 	@RequestMapping(value = "/membershipListPop.do")
 	public String membershipListPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		logger.debug("params ======================================>>> " + params);
-		
+
 		params.put("ORD_NO", params.get("ordNo"));
-		
+
 		List<EgovMap>  list = membershipService.selectMembershipList(params);
-		
+
 		model.addAttribute("membershipList",  new Gson().toJson(list));
-		
+
 		return "sales/payPop/membershipListPop";
-	} 
-	
+	}
+
 	@RequestMapping(value = "/rentalMembershipListPop.do")
 	public String rentalMembershipListPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		logger.debug("params ======================================>>> " + params);
-		
+
 		params.put("orderNo", params.get("ordNo"));
 
 		List<EgovMap> list = membershipRentalService.selectList(params);
-		
+
 		model.addAttribute("rentalList",  new Gson().toJson(list));
-		
+
 		return "sales/payPop/rentalMembershipListPop";
-	} 
-	
+	}
+
 	@RequestMapping(value = "/transferHistoryListPop.do")
 	public String transferHistoryList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		logger.debug("params ======================================>>> " + params);
-				
+
 		List<EgovMap> list = payPopService.selectTransferHistoryList(params);
-		
+
 		model.addAttribute("transferList",  new Gson().toJson(list));
-		
+
 		return "sales/payPop/transferHistoryListPop";
-	} 
+	}
+
+	@RequestMapping(value = "/viewHPCodyList.do")
+	public String viewHPCodyList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("params ======================================>>> " + params);
+		EgovMap orderDetail = new EgovMap();
+		orderDetail = payPopService.selectHPCodyList(params);
+		model.addAttribute("orderDetail", orderDetail);
+
+		return "sales/payPop/hpCodyListPop";
+	}
+
+	@RequestMapping(value = "/viewGroupOrdList.do")
+	public String viewGroupOrdList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("params ======================================>>> " + params);
+		model.put("ordNo", params.get("ordNo"));
+
+		return "sales/payPop/groupOrdListPop";
+	}
+
+	@RequestMapping(value = "/viewBillScheduleList.do")
+	public String viewBillScheduleList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("params ======================================>>> " + params);
+		model.put("ordId", params.get("ordId"));
+
+		return "sales/payPop/billScheduleListPop";
+	}
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.mambership;
 
@@ -15,14 +15,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  */
 public interface PayPopService {
-	
+
 	/**
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectTransferHistoryList(Map<String, Object> params);
 
-	
+	EgovMap selectHPCodyList(Map<String, Object> params);
+
+
 }
-  

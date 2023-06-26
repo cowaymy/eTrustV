@@ -4,47 +4,49 @@
 <script type="text/javaScript">
 
 
-	//Grid Properties 설정 : 마스터 그리드용 
+	//Grid Properties 설정 : 마스터 그리드용
 	var gridProsMaster = {
 	        editable : false,                 // 편집 가능 여부 (기본값 : false)
 	        showStateColumn : false,     // 상태 칼럼 사용
 	        showRowNumColumn : false,
 	        usePaging : false
 	};
-	
-	var gridPros = {            
+
+	var gridPros = {
 	        editable : false,                 // 편집 가능 여부 (기본값 : false)
 	        showStateColumn : false     // 상태 칼럼 사용
 	};
-	
+
 	var myGridID,subGridID;
-   
+
     $(document).ready(function(){
-        
+
     	// Order 정보 (Master Grid) 그리드 생성
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridProsMaster);
-        
+
         fn_getOrderListAjax(1);
-        
+
         // Master Grid 셀 클릭시 이벤트
-        AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        AUIGrid.bind(myGridID, "cellClick", function( event ){
             selectedGridValue = event.rowIndex;
-            AUIGrid.destroy(subGridID); 
+            AUIGrid.destroy(subGridID);
             // Payment (Slave Grid) 그리드 생성
             subGridID = GridCommon.createAUIGrid("grid_sub_wrap", slaveColumnLayout,null,gridPros);
             $("#payId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "payId"));
             $("#salesOrdId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "salesOrdId"));
-            
+
             fn_getPaymentListAjax();
         });
     });
-    
+
     // AUIGrid 칼럼 설정
     var columnLayout = [
         { dataField:"payDt" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false  , visible:false, dataType : "date", formatString : "dd-mm-yyyy"},
         { dataField:"payTypeId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false ,visible:false},
         {dataField:"rnum", headerText:"<spring:message code='pay.head.no'/>", width : 80,editable : false },
+        { dataField:"revReceiptNo", headerText : '<spring:message code="sal.title.reverseFor" />', width : 100 },
         { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false },
+        { dataField:"crcStateId" ,headerText:"CRC State ID",editable : false , width : 80,editable : false},
         { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
         { dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
         { dataField:"payId" ,headerText:"<spring:message code='pay.head.pid'/>" ,editable : false },
@@ -64,7 +66,7 @@
         { dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.salesOrdId'/>" ,editable : false, visible : true}
         ];
 
-    var slaveColumnLayout = [ 
+    var slaveColumnLayout = [
         { dataField:"payId" ,headerText:"<spring:message code='pay.head.payId'/>",editable : false ,visible : false },
         { dataField:"payItmId" ,headerText:"<spring:message code='pay.head.itemId'/>",editable : false ,visible : false },
         { dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false },
@@ -75,7 +77,7 @@
         { dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.ccExpiryDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
         { dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
         { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },
-        { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},                   
+        { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
         { dataField:"c8" ,headerText:"<spring:message code='pay.head.crcMode'/>" ,editable : false },
         { dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
         { dataField:"c3" ,headerText:"<spring:message code='pay.head.accountCode'/>" ,editable : false },
@@ -86,24 +88,24 @@
         { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false },
         { dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
         ];
-    
+
     function fn_getOrderListAjax(goPage) {
-        
+
         //페이징 변수 세팅
-        $("#pageNo").val(goPage);   
+        $("#pageNo").val(goPage);
         AUIGrid.destroy(subGridID);//subGrid 초기화
         Common.ajax("GET", "/payment/selectOrderList", $("#masterForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result.resultList);
-            
+
             //전체건수 세팅
             _totalRowCount = result.totalRowCount;
-            
+
             //페이징 처리를 위한 옵션 설정
             var pagingPros = {
                     // 1페이지에서 보여줄 행의 수
                     rowCount : $("#rowCount").val()
             };
-            
+
             GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
         });
     }
@@ -112,22 +114,22 @@
     function moveToPage(goPage){
       //페이징 변수 세팅
       $("#pageNo").val(goPage);
-      
-      Common.ajax("GET", "/payment/selectOrderListPaging.do", $("#masterForm").serialize(), function(result) {        
+
+      Common.ajax("GET", "/payment/selectOrderListPaging.do", $("#masterForm").serialize(), function(result) {
           AUIGrid.setGridData(myGridID, result.resultList);
-          
+
           //페이징 처리를 위한 옵션 설정
           var pagingPros = {
                   // 1페이지에서 보여줄 행의 수
                   rowCount : $("#rowCount").val()
           };
-          
-          GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
-      });    
+
+          GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+      });
     }
 
     //상세 그리드 (Payment) 리스트 조회.
-    function fn_getPaymentListAjax() {        
+    function fn_getPaymentListAjax() {
         Common.ajax("GET", "/payment/selectPaymentList", $("#detailForm").serialize(), function(result) {
             AUIGrid.setGridData(subGridID, result);
         });
@@ -148,7 +150,7 @@
 	        <article id="grid_wrap" class="grid_wrap"></article>
 	        <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 	        <!-- grid_wrap end -->
-	        
+
 	        <!-- grid_wrap start -->
 	        <article id="grid_sub_wrap" class="grid_wrap mt10"></article>
 	        <!-- grid_wrap end -->
@@ -163,6 +165,5 @@
     <form name="detailForm" id="detailForm"  method="post">
 	    <input type="hidden" name="payId" id="payId" />
 	    <input type="hidden" name="salesOrdId" id="salesOrdId" />
-    </form> 
+    </form>
 </div>
-        

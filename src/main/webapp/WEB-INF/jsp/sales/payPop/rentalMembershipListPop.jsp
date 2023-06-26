@@ -9,23 +9,27 @@ var  gridID;
 var  rentalList;
 
 $(document).ready(function(){
-	
-	  
+
+
     if('${rentalList}'=='' || '${rentalList}' == null){
     }else{
-    	rentalList = JSON.parse('${rentalList}');      
+    	rentalList = JSON.parse('${rentalList}');
         console.log(rentalList);
-    }   
-    
-	
+    }
+
+
     //AUIGrid 그리드를 생성합니다.
     createAUIGrid();
+
+    AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+        fn_goLEDGER();
+    });
 
 });
 
 
 function createAUIGrid() {
-        
+
         var columnLayout = [
                             { dataField : "srvCntrctRefNo", headerText  : "Membership<br/>No.",    width : 100,  editable : false},
                             { dataField : "salesOrdNo", headerText  : "Order No.",width : 80,  editable: false },
@@ -39,20 +43,28 @@ function createAUIGrid() {
                             { dataField : "name",      headerText  : "Customer Name",   width          : 150,    editable       : false },
                             { dataField : "srvCntrctCrtDt",     headerText  : "Created",    width          : 90,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
                             { dataField : "userName",     headerText  : "Creator",    width : 100,       editable  : false}
-                               
+
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,  headerHeight        : 30, showRowNumColumn : true};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,  headerHeight        : 30, showRowNumColumn : true};
+
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
-        
+
         if(rentalList != '' ){
             AUIGrid.setGridData(gridID, rentalList);
-        } 
+        }
     }
 
+
+function fn_goLEDGER(){
+
+    var selectedItems = AUIGrid.getSelectedItems(gridID);
+    var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId+"&srvCntrctOrdId="+selectedItems[0].item.srvCntrctOrdId;
+    Common.popupDiv("/sales/membershipRental/mRLedgerPop.do"+pram ,null, null , true , '_LedgerDiv1');
+}
+
 </script>
- 
+
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1>Rental Membership</h1>
