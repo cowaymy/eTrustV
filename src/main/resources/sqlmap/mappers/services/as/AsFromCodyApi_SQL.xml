@@ -94,11 +94,19 @@
         AND B.USER_ID = #{userId}
 
         <if test="fromDate != null and fromDate != '' ">
-          AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate},   'YYYYMMDD'),'YYYY-MM-DD')
+          AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate}, 'YYYYMMDD'),'YYYY-MM-DD')
         </if>
 
         <if test="toDate != null and toDate != '' ">
-          AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
+          AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate}, 'YYYYMMDD'),'YYYY-MM-DD')
+        </if>
+
+        <if test="salesOrderNo != null and salesOrderNo != '' ">
+          AND A.SALES_ORDER_NO = #{salesOrderNo}
+        </if>
+
+        <if test="stus != null and stus != '' ">
+          AND A.STUS = #{stus}
         </if>
 
     ORDER BY A.CRT_DT DESC
