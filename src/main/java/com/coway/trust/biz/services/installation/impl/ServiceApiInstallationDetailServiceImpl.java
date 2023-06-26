@@ -747,23 +747,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
           if (null != rtnValue) {
 
-        	  Map<String, Object> smsResultValue = new HashMap<String, Object>();
-        	  
-              try{
-	              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
-	              	logger.info("===DONE SEND TO CUST===");
-	              	EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
-	              	params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-	              	params.put("hpMemId",salesmanInfo.get("memId"));
-	        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "Install Status: Completed" ;
-	        		params.put("hpMsg",hpMsg);
-	        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
-	        		logger.info("===DONE SEND TO HP===");
-	  	      	}catch (Exception e){
-	  	      		logger.info("===smsResultValue===" + smsResultValue.toString());
-	  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
-	  	      	}
-
             HashMap spMap = (HashMap) rtnValue.get("spMap");
             if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
               rtnValue.put("logerr", "Y");
@@ -809,7 +792,22 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
             }
 
-            ////
+            /*Map<String, Object> smsResultValue = new HashMap<String, Object>();
+
+            try{
+              	smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
+              	logger.info("===DONE SEND TO CUST===");
+              	EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
+              	params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
+              	params.put("hpMemId",salesmanInfo.get("memId"));
+        		String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "Install Status: Completed" ;
+        		params.put("hpMsg",hpMsg);
+        		smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
+        		logger.info("===DONE SEND TO HP===");
+  	      	}catch (Exception e){
+  	      		logger.info("===smsResultValue===" + smsResultValue.toString());
+  	      		logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
+  	      	}*/
           }
         } catch (Exception e) {
           String procTransactionId = transactionId;
