@@ -83,9 +83,11 @@
     SELECT A.REG_ID AS USER_ID,
                A.SALES_ORDER_NO AS SALES_ORDER_NO,
                A.PROD_CAT AS PROD_CAT,
-               C.CODE AS STUS,
+               C.NAME AS STUS,
                TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') AS CRT_DT,
-               A.APPV_REMARK AS REMARK
+               A.APPV_REMARK AS REMARK,
+               A.PRODUCT_NAME AS PRODUCT_NAME,
+               A.CUST_NAME AS CUST_NAME
     FROM SVC0130D A
     JOIN SYS0047M B on A.REG_ID = B.USER_NAME
     JOIN SYS0038M C on C.STUS_CODE_ID = A.STUS
