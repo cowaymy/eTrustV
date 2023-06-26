@@ -939,6 +939,7 @@ var batchInfoLayout = [
 						    <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
 						        <option value="44">Pending</option>
 						        <option value="77">Confirm</option>
+                                <option value="8">Inactive</option>
 						    </select>
 					    </td>
 					    <th scope="row">Batch Status</th>
