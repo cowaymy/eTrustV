@@ -440,10 +440,10 @@ public class OrderRegisterController {
     logger.info("orderVO : {}" + orderVO.getASEntryVO());
 
     // Ex-Trade : 1
-    int isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR();
+    String isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR().toString();
     if (orderVO.getSalesOrderMVO().getExTrade() == 1
         && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getSalesOrdIdOld())
-        && isExtradePR == 1
+        && isExtradePR.equals("1")
     		) {
       logger.debug("@#### Order Cancel START");
       logger.debug("######### " + orderVO.getSalesOrderMVO().getSalesOrdIdOld());

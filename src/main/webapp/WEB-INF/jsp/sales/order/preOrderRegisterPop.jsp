@@ -74,7 +74,7 @@
         doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
 
       //special - extrade whether need product return
-        $('#isReturnExtrade').prop("checked", true);
+        //$('#isReturnExtrade').prop("checked", true);
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
@@ -460,12 +460,15 @@
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
             $('#relatedNo').val("");
+            $('#isReturnExtrade').prop("checked", false);
 
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNoEKeyIn').removeClass("blind");
 
                 if($('#exTrade').val()=='1'){
+                	$('#isReturnExtrade').prop("checked", true);
+
                     var todayDD = Number(TODAY_DD.substr(0, 2));
                     var todayYY = Number(TODAY_DD.substr(6, 4));
 
@@ -488,7 +491,7 @@
                 $('#relatedNo').val('');
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
-            $('#isReturnExtrade').prop("checked", true);
+
             $('#isReturnExtrade').attr("disabled",true);
             $('#ordProudct').val('');
             $('#speclInstct').val('');
@@ -1412,9 +1415,13 @@
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
-        var vIsReturnExtrade = 0;
-        if($('#isReturnExtrade').is(":checked")) {
-            vIsReturnExtrade = 1;
+        var vIsReturnExtrade = "";
+        if($('#exTrade').val() == 1){
+            if($('#isReturnExtrade').is(":checked")) {
+                vIsReturnExtrade = 1;
+            }else{
+                vIsReturnExtrade = 0;
+            }
         }
         console.log("service :: " + $("#hiddenBPCareId").val());
         var orderVO = {
@@ -1749,7 +1756,7 @@
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
-        $('#isReturnExtrade').prop("checked", true);
+        //$('#isReturnExtrade').prop("checked", true);
         $('#isReturnExtrade').attr("disabled",true);
       //$('#trialNoChk').prop("checked", false);
       //$('#trialNo').val('');

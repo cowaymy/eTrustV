@@ -1383,9 +1383,13 @@ var userType = "${userType}";
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
-        var vIsReturnExtrade = 0;
-        if($('#isReturnExtrade').is(":checked")) {
-            vIsReturnExtrade = 1;
+        var vIsReturnExtrade = "";
+        if($('#exTrade').val() == 1){
+        	if($('#isReturnExtrade').is(":checked")) {
+                vIsReturnExtrade = 1;
+            }else{
+                vIsReturnExtrade = 0;
+            }
         }
 
         var orderVO = {

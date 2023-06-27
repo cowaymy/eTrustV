@@ -151,7 +151,7 @@ public class PreOrderVO implements Serializable {
 
     private int receivingMarketingMsgStatus;
 
-    private int isExtradePR;
+    private String isExtradePR;
 
     private String busType;
 
@@ -974,11 +974,11 @@ public class PreOrderVO implements Serializable {
 		this.busType = bustype;
 	}
 
-	public int getIsExtradePR() {
+	public String getIsExtradePR() {
 		return isExtradePR;
 	}
 
-	public void setIsExtradePR(int isExtradePR) {
+	public void setIsExtradePR(String isExtradePR) {
 		this.isExtradePR = isExtradePR;
 	}
 

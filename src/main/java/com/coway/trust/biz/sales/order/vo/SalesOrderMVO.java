@@ -161,7 +161,7 @@ public class SalesOrderMVO implements Serializable {
 
   private String busType;
 
-  private int isExtradePR;
+  private String isExtradePR;
 
   public String getSalesProdSz() {
 	return salesProdSz;
@@ -751,11 +751,11 @@ public void setBusType(String bustype) {
 	this.busType = bustype;
 }
 
-public int getIsExtradePR() {
+public String getIsExtradePR() {
 	return isExtradePR;
 }
 
-public void setIsExtradePR(int isExtradePR) {
+public void setIsExtradePR(String isExtradePR) {
 	this.isExtradePR = isExtradePR;
 }
 

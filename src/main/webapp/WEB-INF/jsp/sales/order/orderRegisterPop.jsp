@@ -38,7 +38,7 @@
         fn_selectDocSubmissionList();
 
         //special - extrade whether need product return
-        $('#isReturnExtrade').prop("checked", true);
+        //$('#isReturnExtrade').prop("checked", true);
 
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
@@ -1216,7 +1216,8 @@
 
             $('#ordPromo option').remove();
             fn_clearAddCpnt();
-            $('#isReturnExtrade').prop("checked", true);
+
+            $('#isReturnExtrade').prop("checked", false);
             $('#isReturnExtrade').attr("disabled",true);
 
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
@@ -1224,6 +1225,7 @@
                 $('#btnRltdNo').removeClass("blind");
 
                 if($('#exTrade').val()=='1'){
+                	$('#isReturnExtrade').prop("checked", true);
                     var todayDD = Number(TODAY_DD.substr(0, 2));
                     var todayYY = Number(TODAY_DD.substr(6, 4));
 
@@ -1248,8 +1250,8 @@
                  $('#txtBusType').val('');
                 $('#relatedNo').val('');
                 $('#btnRltdNo').addClass("blind");
+                $('#isReturnExtrade').prop("checked", false);
             }
-            $('#isReturnExtrade').prop("checked", true);
             $('#isReturnExtrade').attr("disabled",true);
             $('#ordProudct').val('');
             $('#speclInstct').val('');
@@ -1678,9 +1680,13 @@ console.log("vBindingNo" + vBindingNo);
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
-        var vIsReturnExtrade = 0;
-        if($('#isReturnExtrade').is(":checked")) {
-        	vIsReturnExtrade = 1;
+        var vIsReturnExtrade = "";
+        if($('#exTrade').val() == 1){
+            if($('#isReturnExtrade').is(":checked")) {
+                vIsReturnExtrade = 1;
+            }else{
+                vIsReturnExtrade = 0;
+            }
         }
 
         //----------------------------------------------------------------------
@@ -2653,7 +2659,7 @@ console.log("vBindingNo" + vBindingNo);
         $('#ordProudct').val('');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
-        $('#isReturnExtrade').prop("checked", true);
+        //$('#isReturnExtrade').prop("checked", true);
         $('#isReturnExtrade').attr("disabled",true);
         $('#trialNoChk').prop("checked", false);
         $('#trialNo').val('');
