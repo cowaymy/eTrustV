@@ -1058,6 +1058,12 @@ SELECT A.CUST_ID AS CUST_ID
     WHERE TOKEN_ID = #{token}
   </select>
 
+   <select id="checkTNA" parameterType="String" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM PAY0318D
+    WHERE TOKEN_ID = (SELECT CUST_CRC_TOKEN FROM SAL0028D WHERE CUST_CRC_ID = #{param})
+  </select>
+
   <insert id="insertSAL0258D" parameterType="Map">
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0258D] 20191214 - KR JAEMAJEM */
     INSERT INTO SAL0258D ( TKN_ID
