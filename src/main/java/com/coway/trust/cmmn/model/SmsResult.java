@@ -12,6 +12,7 @@ public class SmsResult {
 	private String msgId;
 	private List<Map<String, String>> failReason = new ArrayList<>();
 	private int smsId;
+	private int status;
 
 	public int getReqCount() {
 		return reqCount;
@@ -71,5 +72,13 @@ public class SmsResult {
 
 	public int getSmsId() {
 	    return smsId;
+	}
+
+	public void setSmsStatus(int status) {
+	    this.status = status;
+	}
+
+	public int getSmsStatus() {
+	    return status;
 	}
 }

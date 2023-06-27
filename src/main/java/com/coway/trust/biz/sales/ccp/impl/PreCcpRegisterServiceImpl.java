@@ -38,6 +38,8 @@ import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import com.coway.trust.cmmn.model.SessionVO;
+
 
 @Service("preCcpRegisterService")
 public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implements PreCcpRegisterService {
@@ -46,6 +48,7 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Resource(name = "preCcpRegisterMapper")
 	private PreCcpRegisterMapper preCcpRegisterMapper;
+
 
 	@Override
 	@Transactional
@@ -107,4 +110,56 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	    int result= preCcpRegisterMapper.insertRemarkRequest(params);
 	    return result;
 	}
+
+	@Override
+	public EgovMap chkDuplicated(Map<String, Object> params) {
+		return preCcpRegisterMapper.chkDuplicated(params);
+	}
+
+	@Override
+	public EgovMap getRegisteredCust(Map<String, Object> params) {
+		return preCcpRegisterMapper.getRegisteredCust(params);
+	}
+
+	@Override
+	public List<EgovMap> selectSmsConsentHistory(Map<String, Object> params){
+		return preCcpRegisterMapper.selectSmsConsentHistory(params);
+	}
+
+	@Override
+	public void updateSmsCount(Map<String, Object> params){
+		preCcpRegisterMapper.updateSmsCount(params);
+	}
+
+	@Override
+	public EgovMap chkSendSmsValidTime(Map<String, Object> params) {
+		return preCcpRegisterMapper.chkSendSmsValidTime(params);
+	}
+
+	@Override
+	public int resetSmsConsent(){
+		return preCcpRegisterMapper.resetSmsConsent();
+	}
+
+	@Override
+	public EgovMap chkSmsResetFlag(){
+		return preCcpRegisterMapper.chkSmsResetFlag();
+	}
+
+	@Override
+	public void updateResetFlag(Map<String, Object> params){
+		preCcpRegisterMapper.updateResetFlag(params);
+	}
+
+	@Override
+	public EgovMap getCustInfo(Map<String, Object> params){
+		return preCcpRegisterMapper.getCustInfo(params);
+	}
+
+	@Override
+	public void insertSmsHistory(Map<String, Object> params){
+		preCcpRegisterMapper.insertSmsHistory(params);
+	}
+
+
 }

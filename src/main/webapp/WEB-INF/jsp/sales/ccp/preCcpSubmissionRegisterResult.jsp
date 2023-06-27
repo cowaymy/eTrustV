@@ -1,17 +1,11 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<script type="text/javaScript" language="javascript">
-   function fn_reload(){
-       location.reload();
-   }
-</script>
-
 <div id="popup_wrap_result" class="popup_wrap">
   <header class="pop_header">
         <h1>Pre-CCP Register Result</h1>
          <ul class="right_opt">
-                <li><p class="btn_blue2"><a id="btnPopResultClose" href="fn_reload()"><spring:message code="sal.btn.close" /></a></p></li>
+                <li><p class="btn_blue2"><a id="btnPopResultClose"  javascript:void(0);><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
   </header>
 
@@ -37,9 +31,19 @@
 
                      <tr>
                        <th scope="row">CHS Status</th>
-                       <td>${chsRemark}</td>
+                       <td>${preccpResult.result}</td>
                      </tr>
            </tbody>
       </table>
 </section>
 </div>
+
+<script>
+
+$(function(){
+       document.getElementById('btnPopResultClose').onclick = (event) => {
+            location.reload();
+       }
+});
+
+</script>

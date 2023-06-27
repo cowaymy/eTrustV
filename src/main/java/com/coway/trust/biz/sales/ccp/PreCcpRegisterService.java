@@ -31,4 +31,26 @@ public interface PreCcpRegisterService {
 	int editRemarkRequest(Map<String, Object> params) throws Exception;
 
 	int insertRemarkRequest(Map<String, Object> params) ;
+
+	EgovMap chkDuplicated(Map<String, Object> params);
+
+	EgovMap getRegisteredCust(Map<String, Object> params);
+
+	List <EgovMap> selectSmsConsentHistory(Map<String, Object> params);
+
+	void updateSmsCount(Map<String, Object> params);
+
+	EgovMap chkSendSmsValidTime(Map<String, Object> params);
+
+	int resetSmsConsent();
+
+	EgovMap chkSmsResetFlag();
+
+	void updateResetFlag(Map<String, Object> params);
+
+	EgovMap getCustInfo(Map<String, Object> params);
+
+	void insertSmsHistory(Map<String, Object> params);
+
+
 }

@@ -17,6 +17,8 @@
 			, CHS_RSN
 			, DISAB
 			, TYPE_ID
+			, UPD_DT
+			, UPD_ID
 	    )
 	    VALUES
 	    (
@@ -32,6 +34,8 @@
 	        , #{chsRsn}
 	        , 0
 	        , #{customerType}
+	        , SYSDATE
+            , #{userId}
 	    )
 </insert>
 
@@ -176,6 +180,118 @@
              349,
              SYSDATE
          )
+</insert>
+
+
+<select id="chkDuplicated" parameterType="Map" resultType="egovMap">
+         SELECT
+                COUNT(*) AS chk_Duplicated
+         FROM SAL0343D
+         WHERE (CUST_MOBILENO = #{customerMobileNo} OR CUST_EMAIL = #{customerEmailAddr})
+</select>
+
+<select id="getRegisteredCust" parameterType="Map" resultType="egovMap">
+         SELECT *
+         FROM SAL0343D
+         WHERE CUST_IC= #{customerNric}
+         AND ROWNUM=1
+</select>
+
+<select id="selectSmsConsentHistory" resultType="egovMap">
+		SELECT
+			  A.PRECCP_SEQ
+			, A.CUST_NAME
+			, A.SMS_COUNT
+			, NVL(A.SMS_CONSENT,0) SMS_CONSENT
+			, TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
+			, CASE WHEN F.MEM_ID IS NULL THEN D.MEM_CODE ELSE F.MEM_CODE  END MEM_CODE
+			, CASE WHEN F.MEM_ID IS NULL THEN E.DEPT_CODE ELSE F.DEPT_CODE  END DEPT_CODE
+			, CASE WHEN F.MEM_ID IS NULL THEN E.GRP_CODE ELSE F.GRP_CODE  END GRP_CODE
+			, CASE WHEN F.MEM_ID IS NULL THEN E.ORG_CODE ELSE F.ORG_CODE  END ORG_CODE
+		FROM SAL0343D A
+		JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
+		JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
+		JOIN ORG1001V E ON D.MEM_ID = E.MEM_ID
+		LEFT JOIN ORG1002V F ON D.MEM_ID = F.MEM_ID AND HIST_YEAR = TO_CHAR(A.CRT_DT, 'YYYY') AND HIST_MONTH = TO_CHAR(A.CRT_DT, 'MM')
+		WHERE A.TYPE_ID = 7290
+		AND A.CRT_ID = #{userId}
+		ORDER BY 1 DESC
+</select>
+
+<update id="updateSmsCount" parameterType="Map">
+        UPDATE
+                  SAL0343D
+        SET
+                  SMS_COUNT = NVL(SMS_COUNT,0) +1
+                , UPD_ID = #{userId}
+                , UPD_DT = SYSDATE
+        WHERE PRECCP_SEQ = #{preccpSeq}
+</update>
+
+<select id="chkSendSmsValidTime" parameterType="Map" resultType="egovMap">
+         SELECT
+              ROUND((SYSDATE - UPD_DT)* 1440) AS chk_Time
+         FROM SAL0343D
+         WHERE PRECCP_SEQ = #{preccpSeq}
+</select>
+
+<update id="resetSmsConsent">
+		UPDATE
+		       SAL0343D
+		SET
+		       SMS_COUNT = 0
+		     , UPD_DT = SYSDATE
+		WHERE
+		TYPE_ID = 7290
+		AND NVL(SMS_CONSENT,0) = 0
+		AND TRUNC(SYSDATE) > TRUNC(UPD_DT)
+</update>
+
+
+<select id="chkSmsResetFlag" resultType="egovMap">
+        SELECT
+                CODE RESET_FLAG
+              , CASE WHEN TRUNC(SYSDATE) > TRUNC(UPD_DT) THEN 1 ELSE 0 END CHK_DATE
+        FROM SYS0094M
+        WHERE IND ='PRECCP_IND'
+</select>
+
+<update id="updateResetFlag">
+        UPDATE
+                SYS0094M
+        SET
+                CODE = #{flag}
+              , UPD_DT = SYSDATE
+        WHERE IND ='PRECCP_IND'
+</update>
+
+<select id="getCustInfo" resultType="egovMap">
+        SELECT
+              NVL(A.SMS_COUNT,0) SMS_COUNT,
+              A.*
+        FROM SAL0343D A
+        WHERE PRECCP_SEQ = #{preccpSeq}
+</select>
+
+<insert id="insertSmsHistory">
+		 INSERT INTO SAL0353D (
+				  ID
+				, SMS_ID
+				, PRECCP_SEQ
+				, STATUS
+				, FAIL_REASON
+				, CRT_USER_ID
+				, CRT_DT
+		 )
+		 VALUES(
+			      SAL0353D_ID_SEQ.NEXTVAL,
+			      #{smsId},
+			      #{preccpSeq},
+			      #{statusId},
+			      #{failRsn},
+			      #{userId},
+			      SYSDATE
+		 )
 </insert>
 
 </mapper>

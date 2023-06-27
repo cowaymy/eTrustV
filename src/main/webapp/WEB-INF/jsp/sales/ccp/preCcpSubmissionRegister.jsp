@@ -9,7 +9,7 @@
 	          $(this).val($(this).val().toUpperCase());
 	       });
 
-	       $("#customerNric").unbind().bind("change keyup ", function(e) {
+	       $("#customerNricReg").unbind().bind("change keyup ", function(e) {
 	    	   $(this).val($(this).val().replace(/[\D]/g,"").trim());
 	       });
 
@@ -17,35 +17,46 @@
                $(this).val($(this).val().replace(/[\D]/g,"").trim());
            });
 
-          $('#btnSave').click(function (e){
-              if (validateUpdForm()){
-                   Common.ajax("POST", "/sales/ccp/submitPreCcpSubmission.do", $("#preCcpRegisterForm").serializeJSON() , function(result) {
-                       if(result.code =="00"){
-                    	   Common.showLoader();
-                    	   Common.popupDiv("/sales/ccp/preCcpSubmissionRegisterResult.do", result.data, ()=>{Common.removeLoader()}, true, '');
-                    	   $("#btnPopClose").click();
-                       }
-                       else{
-                    	   Common.alert(result.message);
-                       }
-                   }, function(jqXHR, textStatus, errorThrown) {
-                       try {
-                           console.log("status : " + jqXHR.status);
-                           console.log("code : " + jqXHR.responseJSON.code);
-                           console.log("message : " + jqXHR.responseJSON.message);
-                           console.log("detailMessage : "+ jqXHR.responseJSON.detailMessage);
-                           Common.alert("Fail: " + jqXHR.responseJSON.message);
-                       } catch (e) {
-                           console.log(e);
-                           Common.alert("Fail: " + e);
-                       }
-                   });
-              }
-          });
+	       $('#btnCancel').click(function (e){
+	    	   $("#btnPopClose").click();
+	       });
+
+	        document.getElementById('btnSave').onclick = (event) => {
+	        	if (validateUpdForm2()){
+	                event.preventDefault()
+	                Common.showLoader()
+		            fetch("/sales/ccp/submitPreCcpSubmission.do" ,
+		            {
+		            	 method: "POST",
+		            	 headers: {
+		            		    "Content-Type": "application/json",
+		            	  },
+		            	 body: JSON.stringify($("#preCcpRegisterForm").serializeJSON()),
+		            })
+	                .then(r => {
+	                	   return r.json()
+	                }).then(
+		                data => {
+		                	Common.removeLoader()
+		                	if(data.code == "99"){
+		                		Common.alert(data.message,fn_reload);
+		                	}else{
+	                          if(data.data !=null){
+                                   Common.popupDiv("/sales/ccp/preCcpSubmissionRegisterResult.do", data.data, null, true);
+		                      }
+		                      else{
+		                    	   Common.alert("Fail check in Pre-CCP register. Kindly contact system administrator or respective department.",reload)
+		                      }
+		                	}
+		                }
+	                )
+	        	}
+	        }
+
    });
 
 
-   function validateUpdForm() {
+   function validateUpdForm2() {
 
 	       if (FormUtil.isEmpty($("#customerName").val())) {
 	           Common.alert("Please key in Customer Name.");
@@ -58,7 +69,7 @@
                }
 	       }
 
-	       if (FormUtil.isEmpty($("#customerNric").val())) {
+	       if (FormUtil.isEmpty($("#customerNricReg").val())) {
 	           Common.alert("Please choose Customer NRIC.");
 	           return false;
 	       }
@@ -102,7 +113,7 @@
    }
 
    function checkAge() {
-	   let dob = $("#customerNric").val().substring(0, 2);
+	   let dob = $("#customerNricReg").val().substring(0, 2);
 	   let dobYear = (dob >=50 ? '19' : '20') + dob ;
 	   let ageValid =  (new Date()).getFullYear() - dobYear;
 
@@ -141,7 +152,7 @@
 
 				         <tr>
 				           <th scope="row">NRIC</th>
-				           <td><input type="text" class="w100p" id="customerNric" name="customerNric" maxlength=12/></td>
+				           <td><input type="text" class="w100p" id="customerNricReg" name="customerNric" maxlength=12/></td>
 				         </tr>
 
 				         <tr>
