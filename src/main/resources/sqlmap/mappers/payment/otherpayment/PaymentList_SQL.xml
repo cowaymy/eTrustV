@@ -1091,7 +1091,7 @@
 <!--         AND (APPRDT.APPV_STUS = 'R' OR APPRDT.APPV_STUS = 'A' OR APPRDT.APPV_STUS = 'J') -->
 <!-- <!--            <if test="salesOrdNo != null and salesOrdNo != '' "> -->
 <!--                 AND APPRDT.APPV_LINE_USER_ID = #{memCode} -->
-<!--             </if> --> -->
+<!--             </if> -->
 <!--            <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' "> -->
 <!--                 AND A.CRT_DT <![CDATA[   >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY') -->
 <!--                 AND A.CRT_DT <![CDATA[   < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1 -->
@@ -1164,7 +1164,7 @@
 <!--             A.TOT_AMT, -->
 <!--             DET.REQ_ID -->
 <!-- <!--             APPVM.APPV_PRCSS_NO, -->
-<!--             APPVD.APPV_LINE_SEQ --> -->
+<!--             APPVD.APPV_LINE_SEQ -->
 <!--         FROM -->
 <!--             PAY0252T A -->
 <!--             JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID -->
@@ -1176,7 +1176,7 @@
 <!--             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID -->
 <!--             JOIN PAY0345d DET ON DET.GROUP_SEQ = A.GROUP_SEQ -->
 <!-- <!--             JOIN PAY0347M APPVM ON DET.REQ_ID = APPVM.REQ_ID -->
-<!--             JOIN PAY0348D APPVD ON APPVD.APPV_PRCSS_NO = APPVM.APPV_PRCSS_NO --> -->
+<!--             JOIN PAY0348D APPVD ON APPVD.APPV_PRCSS_NO = APPVM.APPV_PRCSS_NO -->
 <!--         WHERE -->
 <!--             A.GROUP_SEQ IN -->
 <!--             <foreach item="item" collection="groupSeq" index="index" -->
@@ -1205,7 +1205,7 @@
 <!--             A.TOT_AMT, -->
 <!--             DET.REQ_ID -->
 <!--             APPVM.APPV_PRCSS_NO,
-<!--             APPVD.APPV_LINE_SEQ --> -->
+<!--             APPVD.APPV_LINE_SEQ -->
 <!--         ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC -->
 
 <!--     </select> -->
