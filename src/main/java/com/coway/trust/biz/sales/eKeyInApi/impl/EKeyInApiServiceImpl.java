@@ -55,21 +55,22 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @History
  *
  *          <pre>
- * Date             Author          Description
- * -------------    -----------     -------------
- * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
- * 2020. 03. 23     MY-ONGHC    Amend saveTokenizationProcess
- * 2020. 03. 26     MY-ONGHC    Amend selectOrderInfo's Promotion Listing
- *                                           Restructure Messy Code
- * 2020. 03. 27     MY-ONGHC    Amend saveAddNewAddress to add userNm param
- * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo and insertEkeyIn to remove SOF checking
- * 2020. 03. 31     MY-ONGHC    Amend saveAddNewAddress and saveAddNewContact to check existing MAIN record exist before.
- * 2020. 04. 01     MY-ONGHC    Amend selectOrderInfo to solve promotion issue
- * 2020. 04. 03     MY-ONGHC    Amend selectItmStkChangeInfo
- * 2020. 04. 08.    MY-ONGHC    Add selectCpntLst to Retrieve Component List
- *                                          Add selectPromoByCpntId
- * 2020. 04. 10     MY-ONGHC   Revert selectExistSofNo and insertEkeyIn to remove SOF checking
- * 2020. 08. 19     MY-ONGHC   Amend insertEkeyIn to Support Multiple Payment Method
+ *          Date Author Description
+ *          ------------- ----------- -------------
+ *          2019. 12. 09. KR-JAEMJAEM:) First creation
+ *          2020. 03. 23 MY-ONGHC Amend saveTokenizationProcess
+ *          2020. 03. 26 MY-ONGHC Amend selectOrderInfo's Promotion Listing
+ *          Restructure Messy Code
+ *          2020. 03. 27 MY-ONGHC Amend saveAddNewAddress to add userNm param
+ *          2020. 03. 30 MY-ONGHC Amend selectExistSofNo and insertEkeyIn to remove SOF checking
+ *          2020. 03. 31 MY-ONGHC Amend saveAddNewAddress and saveAddNewContact to check existing MAIN record exist before.
+ *          2020. 04. 01 MY-ONGHC Amend selectOrderInfo to solve promotion issue
+ *          2020. 04. 03 MY-ONGHC Amend selectItmStkChangeInfo
+ *          2020. 04. 08. MY-ONGHC Add selectCpntLst to Retrieve Component List
+ *          Add selectPromoByCpntId
+ *          2020. 04. 10 MY-ONGHC Revert selectExistSofNo and insertEkeyIn to remove SOF checking
+ *          2020. 08. 19 MY-ONGHC Amend insertEkeyIn to Support Multiple Payment Method
+ *          2023. 06. 27 MY-ONGHC Add checkTNA for Validate Card Validity bt crcID
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -178,7 +179,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             frameItmStkId = frame.getItmStkId();
             frame.setStkCtgryId(5707);
             frame.setItmStkId(mattressItmStkId); // mattress itmStkId -> frame
-                                                                  // itmStkId select
+                                                 // itmStkId select
 
             if (masterAppTyp != 0) {
               frame.setAppTypeId(masterAppTyp);
@@ -200,10 +201,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
     if (CommonUtils.isNotEmpty(selecteKeyInDetail.getAtchFileGrpId()) && selecteKeyInDetail.getAtchFileGrpId() > 0) {
       param.setAtchFileGrpId(selecteKeyInDetail.getAtchFileGrpId());
-      List<EgovMap> selecteKeyInDetailAttachment = eKeyInApiMapper
-          .selecteKeyInDetailAttachment(EKeyInApiForm.createMap(param));
-      List<EKeyInApiDto> attachment = selecteKeyInDetailAttachment.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EgovMap> selecteKeyInDetailAttachment = eKeyInApiMapper.selecteKeyInDetailAttachment(EKeyInApiForm.createMap(param));
+      List<EKeyInApiDto> attachment = selecteKeyInDetailAttachment.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selecteKeyInDetail.setAttachment(attachment);
     }
     return selecteKeyInDetail;
@@ -226,14 +225,12 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         param.setItmStkId(selectData.getItmStkId());
       }
       List<EgovMap> selecteOrderProduct1 = selecteOrderProduct1(param);
-      List<EKeyInApiDto> productList = selecteOrderProduct1.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> productList = selecteOrderProduct1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selectData.setProductList(productList);
     } else {
       param.setAppTypeId(selectData.getAppTypeId());
       List<EgovMap> selecteOrderPackType2 = selecteOrderPackType2(param);
-      List<EKeyInApiDto> packTypeList = selecteOrderPackType2.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> packTypeList = selecteOrderPackType2.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selectData.setPackTypeList(packTypeList);
 
       param.setSrvCntrctPacId(selectData.getSrvPacId());
@@ -241,8 +238,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         param.setStkCtgryId(selectData.getStkCtgryId());
       }
       List<EgovMap> selecteOrderProduct2 = selecteOrderProduct2(param);
-      List<EKeyInApiDto> productList = selecteOrderProduct2.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> productList = selecteOrderProduct2.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selectData.setProductList(productList);
     }
 
@@ -258,13 +254,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     param.setPromoDt(selectData.getReqstDt());
     if ((yyyy == 2019 && mm >= 7) || (yyyy >= 2020)) {
       List<EgovMap> selectPromotionByAppTypeStockESales = selectPromotionByAppTypeStockESales(param);
-      List<EKeyInApiDto> promotionList = selectPromotionByAppTypeStockESales.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> promotionList = selectPromotionByAppTypeStockESales.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selectData.setPromotionList(promotionList);
     } else {
       List<EgovMap> selectPromotionByAppTypeStock = selectPromotionByAppTypeStock(param);
-      List<EKeyInApiDto> promotionList = selectPromotionByAppTypeStock.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> promotionList = selectPromotionByAppTypeStock.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selectData.setPromotionList(promotionList);
     }
 
@@ -520,7 +514,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "srvPacId value does not exist.");
     }
 
-    //EgovMap selectItmStkPrice = eKeyInApiMapper.selectItmStkPrice(EKeyInApiForm.createMap(param));
+    // EgovMap selectItmStkPrice = eKeyInApiMapper.selectItmStkPrice(EKeyInApiForm.createMap(param));
     EgovMap selectItmStkPrice = null;
 
     if ("66".equals(CommonUtils.nvl(param.getAppTypeId()))) { // FOR RENTAL
@@ -547,21 +541,22 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
     // List<EgovMap> promotionList = selectPromotionByAppTypeStock(param);
     List<EgovMap> promotionList = selectPromotionByAppTypeStockESales(param);
-    List<EKeyInApiDto> promotionListDto = promotionList.stream().map(r -> EKeyInApiDto.create(r))
-        .collect(Collectors.toList());
+    List<EKeyInApiDto> promotionListDto = promotionList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
     selectItmStkPrice.setPromotionList(promotionListDto);
 
     if (CommonUtils.isNotEmpty(param.getGu()) && param.getGu().equals("MATTRESS")) {
       param.setStkCtgryId(5707);
 
-      //check aircon type category
-      /*int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
-      if(result == 1){
-          param.setGu("");
-      }
-      else{
-          param.setGu("MATTRESS");
-      }*/
+      // check aircon type category
+      /*
+       * int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+       * if(result == 1){
+       * param.setGu("");
+       * }
+       * else{
+       * param.setGu("MATTRESS");
+       * }
+       */
       param.setSrvCntrctPacId(param.getSrvPacId());
       List<EgovMap> selecteOrderProduct1 = null;
 
@@ -603,7 +598,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     BigDecimal orderRentalFeesPromo = BigDecimal.ZERO;
     // BigDecimal normalRentalFees = BigDecimal.ZERO;
     BigDecimal quotaStus = BigDecimal.ZERO;
-
 
     Map<String, Object> createParam = EKeyInApiForm.createMap(param);
 
@@ -655,8 +649,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       if (null != priceInfo) {
         orderPricePromo = (BigDecimal) priceInfo.get("promoItmPrc");
         orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
-        orderRentalFeesPromo = ((BigDecimal) priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0
-            ? (BigDecimal) priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+        orderRentalFeesPromo = ((BigDecimal) priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal) priceInfo.get("promoItmRental") : BigDecimal.ZERO;
         quotaStus = (BigDecimal) priceInfo.get("quotaStus");
 
         priceInfo.put("totAmt", orderPricePromo);
@@ -760,8 +753,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "Cust ID value does not exist.");
     }
     List<EgovMap> selectAnotherCard = eKeyInApiMapper.selectAnotherCard(EKeyInApiForm.createMap(param));
-    List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r))
-        .collect(Collectors.toList());
+    List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
     for (EKeyInApiDto data : selectAnotherCardList) {
       data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
     }
@@ -771,19 +763,17 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   @Override
   public EKeyInApiDto selectNewCardInfo() throws Exception {
     /*
-      EKeyInApiDto selectNewCardInfo = EKeyInApiDto.create(eKeyInApiMapper.selectParamVal());
-
-    if (CommonUtils.isEmpty(selectNewCardInfo.getParamVal())) {
-      throw new ApplicationException(AppConstants.FAIL, "paramVal value does not exist.");
-    }
-    selectNewCardInfo
-        .setParamVal("-----BEGIN PUBLIC KEY-----" + selectNewCardInfo.getParamVal() + "-----END PUBLIC KEY-----");*/
-
+     * EKeyInApiDto selectNewCardInfo = EKeyInApiDto.create(eKeyInApiMapper.selectParamVal());
+     * if (CommonUtils.isEmpty(selectNewCardInfo.getParamVal())) {
+     * throw new ApplicationException(AppConstants.FAIL, "paramVal value does not exist.");
+     * }
+     * selectNewCardInfo
+     * .setParamVal("-----BEGIN PUBLIC KEY-----" + selectNewCardInfo.getParamVal() + "-----END PUBLIC KEY-----");
+     */
 
     EKeyInApiDto selectNewCardInfo = new EKeyInApiDto();
     List<EgovMap> selectBankList = eKeyInApiMapper.selectBankList();
-    selectNewCardInfo
-        .setBankList(selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    selectNewCardInfo.setBankList(selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
     return selectNewCardInfo;
   }
 
@@ -894,9 +884,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     String urlReq = selectTokenSettings.getTknzUrl();
     String merchantId = selectTokenSettings.getTknzMerchantId();
     String verfKey = selectTokenSettings.getTknzVerfKey();
-    if (CommonUtils.isEmpty(selectTokenSettings.getTknzUrl())
-        || CommonUtils.isEmpty(selectTokenSettings.getTknzMerchantId())
-        || CommonUtils.isEmpty(selectTokenSettings.getTknzVerfKey())) {
+    if (CommonUtils.isEmpty(selectTokenSettings.getTknzUrl()) || CommonUtils.isEmpty(selectTokenSettings.getTknzMerchantId()) || CommonUtils.isEmpty(selectTokenSettings.getTknzVerfKey())) {
       throw new ApplicationException(AppConstants.FAIL, "selectTokenSettings value does not exist.");
     }
 
@@ -1176,8 +1164,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         selectParam.setCustId(param.getCustId());
         selectParam.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
         List<EgovMap> selectAnotherCard = eKeyInApiMapper.selectAnotherCard(EKeyInApiForm.createMap(selectParam));
-        List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r))
-            .collect(Collectors.toList());
+        List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
         if (selectAnotherCardList.size() != 1) {
           throw new ApplicationException(AppConstants.FAIL, "Error");
         }
@@ -1227,7 +1214,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     Map<String, Object> params = new HashMap<String, Object>();
     params.put("userId", loginVO.getUserId());
     if (!CommonUtils.isEmpty(param.getNric())) {
-        params.put("nric", param.getNric());
+      params.put("nric", param.getNric());
     }
 
     EgovMap selectCheckRc = eKeyInApiMapper.selectCheckRc(params);
@@ -1242,24 +1229,19 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   @Override
   public EKeyInApiDto selectExistSofNo(EKeyInApiForm param) throws Exception {
     if (null == param) {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getTypeId())) {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Error Encounter. Please Contact System Administrator [selectExistSofNo : Type ID Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : Type ID Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getNric())) {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Error Encounter. Please Contact System Administrator [selectExistSofNo : NRIC Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : NRIC Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getSofNo())) {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Error Encounter. Please Contact System Administrator [selectExistSofNo : SOF Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : SOF Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getUserNm())) {
-      throw new ApplicationException(AppConstants.FAIL,
-          "Error Encounter. Please Contact System Administrator [selectExistSofNo : User Name Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : User Name Missing]. ");
     }
 
     EKeyInApiDto rtn = new EKeyInApiDto();
@@ -1277,8 +1259,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         param.setStusCodeId(9);
         List<EgovMap> selectAnotherContact = eKeyInApiMapper.selectAnotherContact(EKeyInApiForm.createMap(param));
         if (selectAnotherContact.size() > 1) {
-          throw new ApplicationException(AppConstants.FAIL,
-              "Please Check on Customer's Contact Detail. MAIN Record found " + selectAnotherContact.size() + "");
+          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Contact Detail. MAIN Record found " + selectAnotherContact.size() + "");
         }
         if (selectAnotherContact.size() == 1) {
           rtn.setSelectAnotherContactMain(EKeyInApiDto.create(selectAnotherContact.get(0)));
@@ -1286,8 +1267,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
         List<EgovMap> selectAnotherAddress = eKeyInApiMapper.selectAnotherAddress(EKeyInApiForm.createMap(param));
         if (selectAnotherAddress.size() == 0) {
-          throw new ApplicationException(AppConstants.FAIL,
-              "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherAddress.size() + "");
+          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherAddress.size() + "");
         }
         // if( selectAnotherAddress.size() == 1 ){
         rtn.setSelectAnotherAddressMain(EKeyInApiDto.create(selectAnotherAddress.get(0)));
@@ -1642,10 +1622,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       }
     }
 
-    if ("68".equals(CommonUtils.nvl(param.getAppTypeId()))){
-    	if (CommonUtils.isEmpty(param.getInstPriod())){
-    		 throw new ApplicationException(AppConstants.FAIL, "Installment Duration does not exist.");
-    	}
+    if ("68".equals(CommonUtils.nvl(param.getAppTypeId()))) {
+      if (CommonUtils.isEmpty(param.getInstPriod())) {
+        throw new ApplicationException(AppConstants.FAIL, "Installment Duration does not exist.");
+      }
     }
 
     if (CommonUtils.isEmpty(param.getRentPayCustId()) || param.getRentPayCustId() <= 0) {
@@ -2003,11 +1983,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       }
     }
 
-    /*if ("68".equals(CommonUtils.nvl(param.getAppTypeId()))) {
-    	if (CommonUtils.isEmpty(param.getInstPriod())) {
-            throw new ApplicationException(AppConstants.FAIL, "Installment Period does not exist.");
-          }
-    }*/
+    /*
+     * if ("68".equals(CommonUtils.nvl(param.getAppTypeId()))) {
+     * if (CommonUtils.isEmpty(param.getInstPriod())) {
+     * throw new ApplicationException(AppConstants.FAIL, "Installment Period does not exist.");
+     * }
+     * }
+     */
 
     // if (CommonUtils.isEmpty(param.getRentPayCustId()) ||
     // param.getRentPayCustId() <= 0) {
@@ -2099,7 +2081,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("custPoNo", null);
     // sal0213M.put("appTypeId", param.getAppTypeId());
     sal0213M.put("srvPacId", param.getSrvPacId());
-    //sal0213M.put("instPriod", CommonUtils.intNvl(param.getInstPriod()));
+    // sal0213M.put("instPriod", CommonUtils.intNvl(param.getInstPriod()));
     // sal0213M.put("custId", param.getCustId());
     // sal0213M.put("empChk", 0);
     // sal0213M.put("gstChk", 0);
@@ -2154,7 +2136,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("updDt", );
     // sal0213M.put("salesOrdId", null);
     // sal0213M.put("onHold", 0);
-     sal0213M.put("cpntId", param.getCpntCode());
+    sal0213M.put("cpntId", param.getCpntCode());
     // sal0213M.put("corpCustType", 0);
     // sal0213M.put("agreementType", 0);
     // sal0213M.put("bndlId", null);
@@ -2201,8 +2183,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       Map<String, Object> selectParam = new HashMap<String, Object>();
       selectParam.put("preOrdId", param.getPreOrdId());
       List<EgovMap> selecteKeyInDetailOrderHomecare = eKeyInApiMapper.selecteKeyInDetailOrderHomecare(selectParam);
-      List<EKeyInApiDto> homecareList = selecteKeyInDetailOrderHomecare.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> homecareList = selecteKeyInDetailOrderHomecare.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       if (homecareList.size() != 1) {
         throw new ApplicationException(AppConstants.FAIL, " HomeCare information is missing.");
       }
@@ -2272,6 +2253,77 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public EKeyInApiDto getTokenId(EKeyInApiDto param) throws Exception {
+    Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+    loginInfoMap.put("_USER_ID", param.getRegId());
+    LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+    if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
+      throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+    }
+
+    int tknId = eKeyInApiMapper.selectTokenID();
+    if (CommonUtils.isEmpty(tknId) || tknId <= 0) {
+      throw new ApplicationException(AppConstants.FAIL, "TokenID is null.");
+    }
+
+    String r1 = "";
+    String r2 = "";
+    String r3 = "";
+    if (param.getNric().length() < 12) {
+      r1 = StringUtils.leftPad(param.getNric(), 12, "0");
+    } else {
+      r1 = param.getNric().substring(param.getNric().length() - 12);
+    }
+
+    if (Integer.toString(param.getCustId()).length() < 10) {
+      r2 = StringUtils.leftPad(Integer.toString(param.getCustId()), 12, "0");
+      r3 = StringUtils.leftPad("", 12, "0");
+    }
+
+    String refNo = r1 + r2 + r3 + tknId;
+
+    Map<String, Object> sal0257D = new HashMap<String, Object>();
+    sal0257D.put("tknId", tknId);
+    sal0257D.put("refNo", refNo);
+    sal0257D.put("crtUserId", loginVO.getUserId());
+    sal0257D.put("updUserId", loginVO.getUserId());
+    int saveCnt = eKeyInApiMapper.insertSAL0257D(sal0257D);
+    if (saveCnt != 1) {
+      throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+    }
+
+    EKeyInApiDto rtn = new EKeyInApiDto();
+    rtn.setTknId(tknId);
+    rtn.setRefNo(refNo);
+
+    return rtn;
+  }
+
+  @Override
+  public EKeyInApiDto saveTokenNumber(EKeyInApiDto param) throws Exception {
+    int saveCnt = 0;
+    String crcCheck = "";
+    // String stus = "1";
+    String errorDesc = "";
+
+    EKeyInApiDto rtnDto = new EKeyInApiDto();
+
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("refNo", param.getRefNo());
+
+    EKeyInApiDto sal0257Dtoken = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
+
+    // Check token availability in SAL0257D
+    if (CommonUtils.isEmpty(sal0257Dtoken)) {
+      // Token does not exist
+      logger.debug("sal0257Dtoken is null");
+      // stus = "21";
+      saveCnt = eKeyInApiMapper.updateStagingF(params);
+      if (saveCnt != 1) {
+        throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
+      }
+      throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
+    } else {
+      // Token Exist
       Map<String, Object> loginInfoMap = new HashMap<String, Object>();
       loginInfoMap.put("_USER_ID", param.getRegId());
       LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
@@ -2279,190 +2331,125 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
       }
 
-      int tknId = eKeyInApiMapper.selectTokenID();
-      if (CommonUtils.isEmpty(tknId) || tknId <= 0) {
-        throw new ApplicationException(AppConstants.FAIL, "TokenID is null.");
+      String maskPan = sal0257Dtoken.getCustOriCrcNo();
+      String custCrcTypeId = "0";
+      String custCrcTypeName = "";
+      if (maskPan.startsWith("4")) {
+        custCrcTypeId = "112";
+        custCrcTypeName = "Visa Card";
+      } else if (maskPan.startsWith("5")) {
+        custCrcTypeId = "111";
+        custCrcTypeName = "Master Card";
       }
 
-      String r1 = "";
-      String r2 = "";
-      String r3 = "";
-      if (param.getNric().length() < 12) {
-        r1 = StringUtils.leftPad(param.getNric(), 12, "0");
+      // Park duplicate card checking 1-1 relation
+      Map<String, Object> checkCrc = new HashMap<>();
+      checkCrc.put("token", sal0257Dtoken.getToken());
+
+      // Count if token exist
+      int step1 = (Integer) eKeyInApiMapper.selectCheckCRC1(checkCrc);
+      logger.debug("step1 :: " + Integer.toString(step1));
+      if (step1 > 0) {
+        // Count distinct NRIC
+        int step2 = (Integer) eKeyInApiMapper.selectCheckCRC2(checkCrc);
+        logger.debug("step2 :: " + Integer.toString(step2));
+        if (step2 >= 1) {
+          crcCheck = "2";
+          checkCrc.put("step", "3");
+          checkCrc.put("nric", param.getNric());
+          // Count distinct NRIC by registered CID's NRIC
+          int step3 = (Integer) eKeyInApiMapper.selectCheckCRC2(checkCrc);
+          logger.debug("step3 :: " + Integer.toString(step3));
+          if (step3 == 1) {
+            errorDesc = "This bank card has been registered under current customer.</br>Please select registered card.";
+            // stus = "0";
+          } else {
+            errorDesc = "This bank card is used by another customer.";
+            // stus = "0";
+          }
+        }
       } else {
-        r1 = param.getNric().substring(param.getNric().length() - 12);
+        crcCheck = "0";
       }
 
-      if (Integer.toString(param.getCustId()).length() < 10) {
-          r2 = StringUtils.leftPad(Integer.toString(param.getCustId()), 12, "0");
-          r3 = StringUtils.leftPad("", 12, "0");
+      // check if credit card is being blocked
+      int checkCreditCardValid = eKeyInApiMapper.checkCreditCardValidity(sal0257Dtoken.getToken());
+      if (checkCreditCardValid > 0) {
+        crcCheck = "2";
+        errorDesc = "This card has marked as \"Transaction Not Allowed\". Kindly change a new card";
       }
 
-      String refNo = r1 + r2 + r3 + tknId;
+      logger.debug("crcCheck :: " + crcCheck);
+      // If card/token not duplicated
+      if (crcCheck == "0") {
+        Map<String, Object> sal0028D = new HashMap<String, Object>();
+        sal0028D.put("custId", param.getCustId());
+        sal0028D.put("custCrcNo", sal0257Dtoken.getCustOriCrcNo());
+        sal0028D.put("custOriCrcNo", sal0257Dtoken.getCustOriCrcNo());
+        sal0028D.put("custEncryptCrcNo", "");
+        sal0028D.put("custCrcOwner", param.getCustCrcOwner());
+        sal0028D.put("custCrcTypeId", custCrcTypeId);
+        sal0028D.put("custCrcBankId", param.getCustCrcBankId());
+        sal0028D.put("custCrcStusId", 1);
+        sal0028D.put("custCrcRem", param.getCustCrcRem());
+        sal0028D.put("custCrcExpr", sal0257Dtoken.getCustCrcExpr());
+        sal0028D.put("custCrcIdOld", 0);
+        sal0028D.put("soId", 0);
+        sal0028D.put("custCrcIdcm", 0);
+        sal0028D.put("custCrcUpdUserId", loginVO.getUserId());
+        sal0028D.put("custCrcCrtUserId", loginVO.getUserId());
+        sal0028D.put("cardTypeId", param.getCardTypeId());
+        sal0028D.put("custCrcToken", sal0257Dtoken.getToken());
 
-      Map<String, Object> sal0257D = new HashMap<String, Object>();
-      sal0257D.put("tknId", tknId);
-      sal0257D.put("refNo", refNo);
-      sal0257D.put("crtUserId", loginVO.getUserId());
-      sal0257D.put("updUserId", loginVO.getUserId());
-      int saveCnt = eKeyInApiMapper.insertSAL0257D(sal0257D);
-      if (saveCnt != 1) {
-        throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+        saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
+        if (saveCnt != 1) {
+          logger.error("===== insertSAL0028D :: fail =====");
+          throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+        }
+
+        if (CommonUtils.isEmpty(sal0028D.get("custCrcId"))) {
+          logger.error("===== custCrcId value does not exist. =====");
+          throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
+        }
+
+        params.put("updUserId", loginVO.getUserId());
+        params.put("custCrcId", sal0028D.get("custCrcId"));
+        saveCnt = eKeyInApiMapper.updateCustCrcIdSAL0257D(params);
+        if (saveCnt != 1) {
+          logger.error("updateCustCrcIdSAL0257D :: failed");
+          throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+        }
+
+        rtnDto.setCustOriCrcNo(sal0257Dtoken.getCustOriCrcNo());
+        rtnDto.setCustCrcTypeId(Integer.parseInt(custCrcTypeId));
+        rtnDto.setCustCrcOwner(param.getCustCrcOwner());
+        rtnDto.setCustCrcExpr(sal0257Dtoken.getCustCrcExpr());
+        rtnDto.setCustCrcBankId(param.getCustCrcBankId());
+        rtnDto.setCardTypeId(param.getCardTypeId());
+        rtnDto.setCardTypeIdName(custCrcTypeName);
+        rtnDto.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
       }
+    }
 
-      EKeyInApiDto rtn = new EKeyInApiDto();
-      rtn.setTknId(tknId);
-      rtn.setRefNo(refNo);
+    // rtnDto.setStus(stus);
+    rtnDto.setCrcCheck(crcCheck);
+    rtnDto.setErrorDesc(errorDesc);
 
-      return rtn;
+    return rtnDto;
   }
 
   @Override
-  public EKeyInApiDto saveTokenNumber(EKeyInApiDto param) throws Exception {
-      int saveCnt = 0;
-      String crcCheck = "";
-//      String stus = "1";
-      String errorDesc = "";
-
-      EKeyInApiDto rtnDto = new EKeyInApiDto();
-
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put("refNo", param.getRefNo());
-
-      EKeyInApiDto sal0257Dtoken = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
-
-      // Check token availability in SAL0257D
-      if(CommonUtils.isEmpty(sal0257Dtoken)) {
-          // Token does not exist
-          logger.debug("sal0257Dtoken is null");
-//          stus = "21";
-          saveCnt = eKeyInApiMapper.updateStagingF(params);
-          if(saveCnt != 1) {
-              throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
-          }
-          throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
-      } else {
-          // Token Exist
-          Map<String, Object> loginInfoMap = new HashMap<String, Object>();
-          loginInfoMap.put("_USER_ID", param.getRegId());
-          LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
-          if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
-            throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
-          }
-
-          String maskPan = sal0257Dtoken.getCustOriCrcNo();
-          String custCrcTypeId = "0";
-          String custCrcTypeName = "";
-          if(maskPan.startsWith("4")) {
-              custCrcTypeId = "112";
-              custCrcTypeName = "Visa Card";
-          } else if(maskPan.startsWith("5")) {
-              custCrcTypeId = "111";
-              custCrcTypeName = "Master Card";
-          }
-
-          // Park duplicate card checking 1-1 relation
-          Map<String, Object> checkCrc = new HashMap<>();
-          checkCrc.put("token", sal0257Dtoken.getToken());
-
-          // Count if token exist
-          int step1 = (Integer) eKeyInApiMapper.selectCheckCRC1(checkCrc);
-          logger.debug("step1 :: " + Integer.toString(step1));
-          if(step1 > 0) {
-              // Count distinct NRIC
-              int step2 = (Integer) eKeyInApiMapper.selectCheckCRC2(checkCrc);
-              logger.debug("step2 :: " + Integer.toString(step2));
-              if(step2 >= 1) {
-                  crcCheck = "2";
-                  checkCrc.put("step", "3");
-                  checkCrc.put("nric", param.getNric());
-                  // Count distinct NRIC by registered CID's NRIC
-                  int step3 = (Integer) eKeyInApiMapper.selectCheckCRC2(checkCrc);
-                  logger.debug("step3 :: " + Integer.toString(step3));
-                  if(step3 == 1) {
-                      errorDesc = "This bank card has been registered under current customer.</br>Please select registered card.";
-//                      stus = "0";
-                  } else {
-                      errorDesc = "This bank card is used by another customer.";
-//                      stus = "0";
-                  }
-              }
-          } else {
-              crcCheck = "0";
-          }
-
-          //check if credit card is being blocked
-          int checkCreditCardValid = eKeyInApiMapper.checkCreditCardValidity(sal0257Dtoken.getToken());
-          if(checkCreditCardValid > 0){
-              crcCheck = "2";
-              errorDesc = "This card has marked as \"Transaction Not Allowed\". Kindly change a new card";
-          }
-
-          logger.debug("crcCheck :: " + crcCheck);
-          // If card/token not duplicated
-          if(crcCheck == "0") {
-              Map<String, Object> sal0028D = new HashMap<String, Object>();
-              sal0028D.put("custId", param.getCustId());
-              sal0028D.put("custCrcNo", sal0257Dtoken.getCustOriCrcNo());
-              sal0028D.put("custOriCrcNo", sal0257Dtoken.getCustOriCrcNo());
-              sal0028D.put("custEncryptCrcNo", "");
-              sal0028D.put("custCrcOwner", param.getCustCrcOwner());
-              sal0028D.put("custCrcTypeId", custCrcTypeId);
-              sal0028D.put("custCrcBankId", param.getCustCrcBankId());
-              sal0028D.put("custCrcStusId", 1);
-              sal0028D.put("custCrcRem", param.getCustCrcRem());
-              sal0028D.put("custCrcExpr", sal0257Dtoken.getCustCrcExpr());
-              sal0028D.put("custCrcIdOld", 0);
-              sal0028D.put("soId", 0);
-              sal0028D.put("custCrcIdcm", 0);
-              sal0028D.put("custCrcUpdUserId", loginVO.getUserId());
-              sal0028D.put("custCrcCrtUserId", loginVO.getUserId());
-              sal0028D.put("cardTypeId", param.getCardTypeId());
-              sal0028D.put("custCrcToken", sal0257Dtoken.getToken());
-
-              saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
-              if(saveCnt != 1) {
-                  logger.error("===== insertSAL0028D :: fail =====");
-                  throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
-              }
-
-              if(CommonUtils.isEmpty(sal0028D.get("custCrcId"))) {
-                  logger.error("===== custCrcId value does not exist. =====");
-                  throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
-              }
-
-              params.put("updUserId", loginVO.getUserId());
-              params.put("custCrcId", sal0028D.get("custCrcId"));
-              saveCnt = eKeyInApiMapper.updateCustCrcIdSAL0257D(params);
-              if(saveCnt != 1) {
-                  logger.error("updateCustCrcIdSAL0257D :: failed");
-                  throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
-              }
-
-              rtnDto.setCustOriCrcNo(sal0257Dtoken.getCustOriCrcNo());
-              rtnDto.setCustCrcTypeId(Integer.parseInt(custCrcTypeId));
-              rtnDto.setCustCrcOwner(param.getCustCrcOwner());
-              rtnDto.setCustCrcExpr(sal0257Dtoken.getCustCrcExpr());
-              rtnDto.setCustCrcBankId(param.getCustCrcBankId());
-              rtnDto.setCardTypeId(param.getCardTypeId());
-              rtnDto.setCardTypeIdName(custCrcTypeName);
-              rtnDto.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
-          }
-      }
-
-//      rtnDto.setStus(stus);
-      rtnDto.setCrcCheck(crcCheck);
-      rtnDto.setErrorDesc(errorDesc);
-
-      return rtnDto;
+  public EKeyInApiDto checkIfIsAcInstallationProductCategoryCode(EKeyInApiForm param) {
+    // TODO Auto-generated method stub
+    EKeyInApiDto rtnDto = new EKeyInApiDto();
+    int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
+    rtnDto.setIsHcAcInstallationFlag(result);
+    return rtnDto;
   }
 
-	@Override
-	public EKeyInApiDto checkIfIsAcInstallationProductCategoryCode(EKeyInApiForm param) {
-		// TODO Auto-generated method stub
-	      EKeyInApiDto rtnDto = new EKeyInApiDto();
-		int result = homecareCmMapper.checkIfIsAcInstallationProductCategoryCode(String.valueOf(param.getItmStkId()));
-		rtnDto.setIsHcAcInstallationFlag(result);
-		return rtnDto;
-	}
+  @Override
+  public int checkTNA(String param) {
+    int result = eKeyInApiMapper.checkTNA(param);
+    return result;
+  }
 }
