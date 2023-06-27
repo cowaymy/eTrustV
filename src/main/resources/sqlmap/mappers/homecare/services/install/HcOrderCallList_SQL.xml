@@ -253,188 +253,116 @@
 		/*
 		com.coway.trust.biz.homecare.services.install.impl.HcOrderCallListMapper.searchHcOrderCallList
 		*/
-		SELECT Extent1.CALL_ENTRY_ID
-		, Extent1.CALL_TYPE_ID
-		,
-		Extent1.CALL_TYPE_CODE
-		, Extent1.SALES_ORD_ID
-		, Extent1.SALES_ORD_NO
-		,
-		Extent1.APP_TYPE_ID
-		, Extent1.APP_TYPE_NAME
-		, Extent1.CALL_STUS_ID
-		,
-		Extent1.CALL_STUS_CODE,
-		extent1.ORDER_KEY_IN_DATE <!-- Added by Wawa  20230619-->
-		, Extent1.PRODUCT_CODE
-		, Extent1.PRODUCT_NAME
-		,
-		Extent1.CUST_NAME
-		, Extent1.CUST_IC
-		, Extent1.INSTALL_AREA_ID
-		,
-		Extent1.INSTALL_AREA_NAME
-		, Extent1.STATE
-		, Extent1.AREA
-		,
-		Extent1.DSC_BRNCH_ID
-		, Extent1.PO_NO
-		, Extent1.INSTALL_TEL_M
-		,
-		Extent1.INSTALL_TEL_O
-		, Extent1.INSTALL_TEL_R
-		, Extent1.INSTALL_TEL_F
-		,
-		Extent1.DOC_ID
-		, Extent1.IS_WAIT_CANCL
-		, Extent1.CRT_USER_ID_ID
-		,
-		Extent1.CRT_USER_ID
-		, Extent1.CRT_DT
-		, Extent1.CALL_TYPE_NAME
-		,
-		Extent1.RCD_TMS
-		, Extent1.POSTCODE
-		, Extent1.DSC_CODE
-		,
-		Extent1.CALL_LOG_DT
-		, Extent1.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
-		, Extent1.PROMO_ID <!-- Added by keyi  20210920-->
-		,
-		Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK <!-- Added by keyi  20210920-->
-		, CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
-		THEN
-		Extent1.APP_TYPE_ID
-		ELSE 0
-		END C1
-		, CASE WHEN ( Extent1.CUST_ID IS
-		NOT
-		NULL )
-		THEN Extent1.CUST_ID
-		ELSE 0
-		END C2
-		, CASE WHEN (
-		Extent1.SALES_ORD_DT IS NOT NULL )
-		THEN Extent1.SALES_ORD_DT
-		ELSE
-		TO_DATE('1900-01-01','YYYY-MM-DD')
-		END C3
-		, CASE WHEN (
-		Extent1.PRODUCT_ID IS NOT NULL )
-		THEN Extent1.PRODUCT_ID
-		ELSE 0
-		END C4
-		,
-		Extent1.BNDL_NO
+		SELECT
+          Extent1.CALL_ENTRY_ID
+          , Extent1.CALL_TYPE_ID
+	      , Extent1.CALL_TYPE_CODE
+		  , Extent1.SALES_ORD_ID
+		  , Extent1.SALES_ORD_NO
+		  , Extent1.APP_TYPE_ID
+		  , Extent1.APP_TYPE_NAME
+		  , Extent1.CALL_STUS_ID
+		  , Extent1.CALL_STUS_CODE
+		  , Extent1.PRODUCT_CODE
+		  , Extent1.PRODUCT_NAME
+		  , Extent1.CUST_NAME
+		  , Extent1.CUST_IC
+		  , Extent1.INSTALL_AREA_ID
+		  , Extent1.INSTALL_AREA_NAME
+		  , Extent1.STATE
+		  , Extent1.AREA
+		  , Extent1.DSC_BRNCH_ID
+		  , Extent1.PO_NO
+		  , Extent1.INSTALL_TEL_M
+		  , Extent1.INSTALL_TEL_O
+		  , Extent1.INSTALL_TEL_R
+		  , Extent1.INSTALL_TEL_F
+		  , Extent1.DOC_ID
+		  , Extent1.IS_WAIT_CANCL
+		  , Extent1.CRT_USER_ID_ID
+          , Extent1.CRT_USER_ID
+		  , Extent1.CRT_DT
+		  , Extent1.CALL_TYPE_NAME
+		  , Extent1.RCD_TMS
+		  , Extent1.POSTCODE
+		  , Extent1.DSC_CODE
+		  , Extent1.CALL_LOG_DT
+		  , Extent1.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
+		  , Extent1.PROMO_ID <!-- Added by keyi  20210920-->
+		  , Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK <!-- Added by keyi  20210920-->
+		, CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID ELSE 0 END C1
+		, CASE WHEN ( Extent1.CUST_ID IS NOT NULL ) THEN Extent1.CUST_ID ELSE 0 END C2
+		, CASE WHEN ( Extent1.SALES_ORD_DT IS NOT NULL ) THEN Extent1.SALES_ORD_DT ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END C3
+		, CASE WHEN ( Extent1.PRODUCT_ID IS NOT NULL ) THEN Extent1.PRODUCT_ID ELSE 0 END C4
+		, Extent1.BNDL_NO
 		, Extent1.VRIFY_FLG
-		 ,Extent1.ord_STUS_CODE_ID,
-        extent1.CALL_LOG_ENTRY_DATE<!-- Added by Wawa  20230619-->
-		FROM ( SELECT
-		vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
-		,
-		vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
-		,
-		vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
-		,
-		vCallLogOrderCall.SALES_ORD_ID SALES_ORD_ID
-		,
-		vCallLogOrderCall.SALES_ORD_NO SALES_ORD_NO
-		,
-		vCallLogOrderCall.APP_TYPE_ID APP_TYPE_ID
-		,
-		vCallLogOrderCall.APPTYPENAME APP_TYPE_NAME
-		,
-		vCallLogOrderCall.SALES_ORD_DT SALES_ORD_DT
-		,
-		vCallLogOrderCall.CALL_STUS_ID CALL_STUS_ID
-		,
-		vCallLogOrderCall.CALL_STUS_CODE CALL_STUS_CODE
-		,
-		vCallLogOrderCall.PRODUCT_ID PRODUCT_ID
-		,
-		TO_CHAR(sal.SALES_DT,'DD/MM/YYYY') ORDER_KEY_IN_DATE ,  <!-- Added by Wawa  20230619-->
-		vCallLogOrderCall.PRODUCT_CODE || ' - ' ||
-		vCallLogOrderCall.PRODUCT_NAME PRODUCT_CODE
-		,
-		vCallLogOrderCall.PRODUCT_NAME PRODUCT_NAME
-		, vCallLogOrderCall.CUST_ID
-		CUST_ID
-		, vCallLogOrderCall.CUST_NAME CUST_NAME
-		,
-		vCallLogOrderCall.CUST_IC CUST_IC
-		, vCallLogOrderCall.INSTALL_AREA_ID
-		INSTALL_AREA_ID
-		, vCallLogOrderCall.INSTALL_AREA_NAME INSTALL_AREA_NAME
-		, vCallLogOrderCall.CALL_LOG_DT CALL_LOG_DT
-		,
-		vCallLogOrderCall.DSC_BRNCH_ID DSC_BRNCH_ID
-		, vCallLogOrderCall.PO_NO
-		PO_NO
-		, vCallLogOrderCall.INSTALL_TEL_M INSTALL_TEL_M
-		,
-		vCallLogOrderCall.INSTALL_TEL_O INSTALL_TEL_O
-		,
-		vCallLogOrderCall.INSTALL_TEL_R INSTALL_TEL_R
-		,
-		vCallLogOrderCall.INSTALL_TEL_F INSTALL_TEL_F
-		,
-		vCallLogOrderCall.DOC_ID DOC_ID
-		, vCallLogOrderCall.IS_WAIT_CANCL
-		IS_WAIT_CANCL
-		, vCallLogOrderCall.CRT_USER_ID CRT_USER_ID_ID
-		,
-		vCallLogOrderCall.CRT_USER_ID CRT_USER_ID
-		, vCallLogOrderCall.CRT_DT
-		CRT_DT
-		, vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME
-		,
-		vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID
-		,
-		vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE
-		,
-		vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC
-		,
-		vCallLogOrderCall.RCD_TMS RCD_TMS
-		, vCallLogOrderCall.UPD_DT UPD_DT
-		,
-		vCallLogOrderCall.PROMO_ID <!-- Added by keyi  20210920-->
-		,
-		vCallLogOrderCall.VRIFY_FLG VRIFY_FLG
-		,
-		AREA.STATE
-		, AREA.AREA
-		,
-		AREA.POSTCODE
-		, DSC.CODE DSC_CODE
-		, HMC.BNDL_NO
-		,
-		NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID <!-- Added by keyi  20210920-->
-		,vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID,
-        TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date  <!-- Added by Wawa  20230619-->
+		, Extent1.ord_STUS_CODE_ID
+        , Extent1.CALL_LOG_ENTRY_DATE<!-- Added by Wawa  20230619-->
+		FROM (
+            SELECT
+		      vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
+		      , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
+		      , vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
+		      , vCallLogOrderCall.SALES_ORD_ID SALES_ORD_ID
+		      , vCallLogOrderCall.SALES_ORD_NO SALES_ORD_NO
+		      , vCallLogOrderCall.APP_TYPE_ID APP_TYPE_ID
+		      , vCallLogOrderCall.APPTYPENAME APP_TYPE_NAME
+		      , vCallLogOrderCall.SALES_ORD_DT SALES_ORD_DT
+		      , vCallLogOrderCall.CALL_STUS_ID CALL_STUS_ID
+		      , vCallLogOrderCall.CALL_STUS_CODE CALL_STUS_CODE
+		      , vCallLogOrderCall.PRODUCT_ID PRODUCT_ID
+		      , vCallLogOrderCall.PRODUCT_CODE || ' - ' || vCallLogOrderCall.PRODUCT_NAME PRODUCT_CODE
+		      , vCallLogOrderCall.PRODUCT_NAME PRODUCT_NAME
+		      , vCallLogOrderCall.CUST_ID CUST_ID
+		      , vCallLogOrderCall.CUST_NAME CUST_NAME
+		      , vCallLogOrderCall.CUST_IC CUST_IC
+		      , vCallLogOrderCall.INSTALL_AREA_ID INSTALL_AREA_ID
+		      , vCallLogOrderCall.INSTALL_AREA_NAME INSTALL_AREA_NAME
+		      , vCallLogOrderCall.CALL_LOG_DT CALL_LOG_DT
+		      , vCallLogOrderCall.DSC_BRNCH_ID DSC_BRNCH_ID
+		      , vCallLogOrderCall.PO_NO PO_NO
+		      , vCallLogOrderCall.INSTALL_TEL_M INSTALL_TEL_M
+		      , vCallLogOrderCall.INSTALL_TEL_O INSTALL_TEL_O
+		      , vCallLogOrderCall.INSTALL_TEL_R INSTALL_TEL_R
+		      , vCallLogOrderCall.INSTALL_TEL_F INSTALL_TEL_F
+		      , vCallLogOrderCall.DOC_ID DOC_ID
+		      , vCallLogOrderCall.IS_WAIT_CANCL IS_WAIT_CANCL
+		      , vCallLogOrderCall.CRT_USER_ID CRT_USER_ID_ID
+		      , vCallLogOrderCall.CRT_USER_ID CRT_USER_ID
+		      , vCallLogOrderCall.CRT_DT CRT_DT
+		      , vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME
+		      , vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID
+		      , vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE
+		      , vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC
+		      , vCallLogOrderCall.RCD_TMS RCD_TMS
+		      , vCallLogOrderCall.UPD_DT UPD_DT
+		      , vCallLogOrderCall.PROMO_ID <!-- Added by keyi  20210920-->
+		      , vCallLogOrderCall.VRIFY_FLG VRIFY_FLG
+              , vCallLogOrderCall.STATE
+		      , vCallLogOrderCall.AREA
+		      , vCallLogOrderCall.POSTCODE
+		      , vCallLogOrderCall.DSC_CODE
+		      , vCallLogOrderCall.BNDL_NO
+		      , vCallLogOrderCall.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
+		      , vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID
+              , TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date  <!-- Added by Wawa  20230619-->
 		FROM CCR1002V vCallLogOrderCall
-		JOIN SYS0064M AREA ON AREA.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
-		JOIN SYS0005M DSC ON DSC.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
-		JOIN
-		sal0001d sal ON sal.SALES_ORD_NO = vcalllogordercall.SALES_ORD_NO
-		<if test="branchTypeList != null and branchTypeList != ''">
-		      AND dsc.TYPE_ID IN
-			<foreach item="item" collection="branchTypeList" index="index"
-                open="(" separator="," close=")">
-                #{item}
-	        </foreach>
-		</if>
-		JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = vCallLogOrderCall.BNDL_ID
 		<!-- Added by Wawa  20230619-->
         JOIN CCR0006D callog ON callog.call_entry_id  = (SELECT MIN(CALL_ENTRY_ID) FROM CCR0006D WHERE CCR0006D.SALES_ORD_ID = vcalllogordercall.SALES_ORD_ID GROUP BY CCR0006D.SALES_ORD_ID)
-		)
+	       WHERE  1 =1
+           <if test="branchTypeList != null and branchTypeList != ''">
+                AND vCallLogOrderCall.DSC_TYPE_ID IN
+              <foreach item="item" collection="branchTypeList" index="index"
+                  open="(" separator="," close=")">
+                  #{item}
+              </foreach>
+          </if>
+        )
 		Extent1
 		WHERE 1 = 1
 		<if test="orderNo != null and orderNo != '' ">
 			AND (Extent1.SALES_ORD_NO = #{orderNo} )
 		</if>
-<!-- 		<if test="product != null and product != '' "> -->
-<!-- 			AND (Extent1.PRODUCT_ID = #{product} ) -->
-<!-- 		</if> -->
 		<if test="productList != null and productList != '' ">
 			AND Extent1.PRODUCT_ID IN
 			<foreach item="item" collection="productList" index="index"
@@ -459,8 +387,7 @@
 			AND (Extent1.CUST_IC = #{nricNo} )
 		</if>
 		<if test="contactNo != null and contactNo != '' ">
-			AND ((Extent1.INSTALL_TEL_F LIKE '%' || #{contactNo}
-			||'%') OR
+			AND ((Extent1.INSTALL_TEL_F LIKE '%' || #{contactNo} ||'%') OR
 			(Extent1.INSTALL_TEL_M LIKE '%' || #{contactNo} || '%') OR
 			(Extent1.INSTALL_TEL_O LIKE '%' || #{contactNo} || '%') OR
 			(Extent1.INSTALL_TEL_R LIKE '%' || #{contactNo} || '%'))
@@ -496,26 +423,17 @@
                 #{item}
             </foreach>
         </if>
-		<!-- <if test="DSCCode != null and DSCCode != '' ">
-			AND Extent1.DSC_BRNCH_ID = #{DSCCode}
-		</if> -->
-		<if test="createDate != '' and endDate == '' ">
-	      <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
+		<if test="createDate != '' ">
+	      <![CDATA[ AND Extent1.SALES_ORD_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
 		</if>
-		<if test="endDate != '' and createDate == '' ">
-	      <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) <= TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+		<if test="endDate != '' ">
+	      <![CDATA[ AND Extent1.SALES_ORD_DT <= TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
 		</if>
-		<if test="createDate != '' and endDate != '' ">
-	      <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) BETWEEN TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+		<if test="callStrDate != '' ">
+	      <![CDATA[ AND Extent1.CALL_LOG_DT >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
 		</if>
-		<if test="callStrDate != '' and callEndDate == '' ">
-	      <![CDATA[ AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY') >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
-		</if>
-		<if test="callEndDate != '' and callStrDate == '' ">
-	      <![CDATA[ AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY') <= TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
-		</if>
-		<if test="callStrDate != '' and callEndDate != '' ">
-	      <![CDATA[ AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY') BETWEEN TO_DATE(#{callStrDate}, 'DD/MM/YYYY') AND TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+		<if test="callEndDate != '' ">
+	      <![CDATA[ AND Extent1.CALL_LOG_DT <= TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
 		</if>
 		<if test="ordStatus != '' and ordStatus != '' ">
 			AND TRIM(UPPER(Extent1.STATE)) = TRIM(UPPER(#{ordStatus}))

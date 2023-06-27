@@ -293,19 +293,25 @@
 			editable : false,
 			width : 90
 		}, {
-            dataField : "orderKeyInDate",
+            dataField : "c3",
             headerText : 'Order key in date',
+            dataType: "date",
+            formatString: "dd/mm/yyyy",
             editable : false,
             width : 120
         },
         {
             dataField : "callLogEntryDate",
             headerText : 'Call Log Entry Date',
+            dataType: "date",
+            formatString: "dd/mm/yyyy",
             editable : false,
             width : 120
         },{
 			dataField : "callLogDt",
 			headerText : '<spring:message code="service.grid.Date" />',
+			dataType: "date",
+            formatString: "dd/mm/yyyy",
 			editable : false,
 			width : 130
 		}, {

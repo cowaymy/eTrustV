@@ -58,7 +58,6 @@
             END C4
           , Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK,
           <!-- Added by Wawa  20230619-->
-          extent1.order_key_in_date,
           extent1.call_log_entry_date
      FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                    , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
@@ -98,18 +97,15 @@
                    , vCallLogOrderCall.RCD_TMS RCD_TMS
                    , vCallLogOrderCall.UPD_DT UPD_DT
                    , vCallLogOrderCall.PROMO_ID
-                   , area.state
-                   , area.city
-                   , area.area
-                   , area.postcode
-                   , dsc.CODE DSC_CODE
-                   , NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
-                   TO_CHAR(sal.sales_dt,'DD/MM/YYYY') order_key_in_date,
+                   , vcalllogordercall.state
+                   , vcalllogordercall.city
+                   , vcalllogordercall.area
+                   , vcalllogordercall.postcode
+                   , vcalllogordercall.DSC_CODE DSC_CODE
+                   , vcalllogordercall.ECOMM_ORD_ID ECOMM_ORD_ID,
                    TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date
             FROM CCR1002V vCallLogOrderCall
-            JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
-            JOIN sal0001d sal ON sal.SALES_ORD_NO = vcalllogordercall.SALES_ORD_NO
            <if test="branchTypeId != null and branchTypeId != ''">
                AND dsc.TYPE_ID = #{branchTypeId}
            </if>
@@ -190,23 +186,17 @@
         #{item}
       </foreach>
     </if>
-    <if test="createDate != '' and endDate == '' ">
-      <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
+    <if test="createDate != '' ">
+      <![CDATA[ AND Extent1.SALES_ORD_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
     </if>
-    <if test="endDate != '' and createDate == '' ">
-      <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) <= TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+    <if test="endDate != '' ">
+      <![CDATA[ AND Extent1.SALES_ORD_DT <= TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
     </if>
-    <if test="createDate != '' and endDate != '' ">
-        AND Extent1.SALES_ORD_DT BETWEEN TO_DATE(#{createDate} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE(#{endDate} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    <if test="callStrDate != '' ">
+      <![CDATA[ AND Extent1.CALL_LOG_DT >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
     </if>
-    <if test="callStrDate != '' and callEndDate == '' ">
-      <![CDATA[ AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY') >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
-    </if>
-    <if test="callEndDate != '' and callStrDate == '' ">
-      <![CDATA[ AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY') <= TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
-    </if>
-    <if test="callStrDate != '' and callEndDate != '' ">
-      <![CDATA[ AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY') BETWEEN TO_DATE(#{callStrDate}, 'DD/MM/YYYY') AND TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+    <if test="callEndDate != '' ">
+      <![CDATA[ AND Extent1.CALL_LOG_DT <= TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
     </if>
     <if test="ordStatus != '' and ordStatus != '' ">
       AND TRIM(UPPER(Extent1.STATE)) = TRIM(UPPER(#{ordStatus}))
