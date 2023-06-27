@@ -1058,7 +1058,7 @@ SELECT A.CUST_ID AS CUST_ID
     WHERE TOKEN_ID = #{token}
   </select>
 
-   <select id="checkTNA" parameterType="String" resultType="int">
+   <select id="checkTNA" parameterType="String" resultType="egovMap">
     SELECT COUNT(*) COUNT
     FROM PAY0318D
     WHERE TOKEN_ID = (SELECT CUST_CRC_TOKEN FROM SAL0028D WHERE CUST_CRC_ID = #{param})
