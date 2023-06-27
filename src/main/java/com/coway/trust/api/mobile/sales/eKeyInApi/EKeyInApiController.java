@@ -430,7 +430,8 @@ public class EKeyInApiController {
 
   @ApiOperation(value = "CHECK CARD TNA", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkTNA", method = RequestMethod.GET)
-  public ResponseEntity<Integer> checkTNA (@ModelAttribute String param) throws Exception {
+  public ResponseEntity<Integer> checkTNA (@RequestParam String param) throws Exception {
+    LOGGER.debug("checkTNA    값 : {}", param);
     return ResponseEntity.ok(eKeyInApiService.checkTNA(param));
   }
 }
