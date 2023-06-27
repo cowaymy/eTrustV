@@ -249,8 +249,8 @@ public class LoginController {
 			SessionVO sessionVO) {
 		LOGGER.debug("savePassWordReset: " + params.toString());
 
-		params.put("userTypeId",sessionVO.getUserTypeId());
-		params.put("userName",sessionVO.getUserName());
+//		params.put("userTypeId",sessionVO.getUserTypeId());
+//		params.put("userName",sessionVO.getUserName());
 		int cnt = loginService.updatePassWord(params, sessionVO.getUserId());
 
 		params.put("userId", sessionVO.getUserName());
@@ -466,20 +466,20 @@ public class LoginController {
 
 							switch (cMth) {
 							case 1:
-								if (cnfmDate.compareTo(janRe) < 0) {
-									params.put("roleId", item1.get("roleType"));
-									params.put("popType", "A");
-								} else {
+//								if (cnfmDate.compareTo(janRe) < 0) { // SCR REQUEST TO DISABLE MANAGER AGREEMENT RENEWAL POP OUT JAN
+//									params.put("roleId", item1.get("roleType"));
+//									params.put("popType", "A");
+//								} else {
 									params.put("popType", "M");
-								}
+//								}
 								break;
 							case 2:
-								if (cnfmDate.compareTo(julRe) < 0) {
-									params.put("roleId", item1.get("roleType"));
-									params.put("popType", "A");
-								} else {
+//								if (cnfmDate.compareTo(julRe) < 0) { // SCR REQUEST TO DISABLE MANAGER AGREEMENT RENEWAL POP OUT JULY
+//									params.put("roleId", item1.get("roleType"));
+//									params.put("popType", "A");
+//								} else {
 									params.put("popType", "M");
-								}
+//								}
 								break;
 							default:
 								params.put("popType", "M");
