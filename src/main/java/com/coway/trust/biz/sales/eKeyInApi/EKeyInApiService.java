@@ -16,11 +16,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @History
  *
  *          <pre>
- * Date             Author          Description
- * -------------    -----------     -------------
- * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
- * 2020. 04. 08.    MY-ONGHC         Add selectCpntLst to Retrieve Component List
- *                                               Add selectPromoByCpntId
+ *          Date Author Description
+ *          ------------- ----------- -------------
+ *          2019. 12. 09. KR-JAEMJAEM:) First creation
+ *          2020. 04. 08. MY-ONGHC Add selectCpntLst to Retrieve Component List
+ *          Add selectPromoByCpntId
+ *          2023. 06. 27. MY-ONGHC Add checkTNA for Validate Card Validity bt crcID
  *          </pre>
  */
 public interface EKeyInApiService {
@@ -93,4 +94,5 @@ public interface EKeyInApiService {
 
   EKeyInApiDto checkIfIsAcInstallationProductCategoryCode(EKeyInApiForm param);
 
+  int checkTNA(String param) throws Exception;
 }
