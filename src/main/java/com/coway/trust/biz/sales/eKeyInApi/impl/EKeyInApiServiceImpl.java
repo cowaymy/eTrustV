@@ -2448,10 +2448,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   }
 
   @Override
-  public int checkTNA(String param) {
-    logger.debug("checkTNA param    값 : {}", param);
-    int result = eKeyInApiMapper.checkTNA(param);
-    logger.debug("checkTNA    값 : {}", result);
-    return result;
+  public EgovMap checkTNA(String param) {
+    return eKeyInApiMapper.checkTNA(param);
   }
 }
