@@ -145,5 +145,5 @@ public interface EKeyInApiMapper {
 
   int checkCreditCardValidity(String token);
 
-  int checkTNA(String token);
+  int checkTNA(String param);
 }
