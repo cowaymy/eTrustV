@@ -26,7 +26,7 @@
                 FROM PAY0252T
          )
         SELECT
-            CASE WHEN SUBSTR(PAY.OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
 			pay.TRX_DT,
 			pay.TRX_AMT,
@@ -79,14 +79,12 @@
 			pay.ALLOW_COMM,
 			pay.ADV_MONTH,
 			pay.TR_ISSU_DT,
-			pay.BATCH_PAY_ID,
-			DECODE(J.PAY_ID, NULL, '', J.OR_NO) AS REV_RECEIPT_NO
+			pay.BATCH_PAY_ID
 	    FROM
 	        PAY1001V pay
             LEFT JOIN  H ON pay.PAY_ID = H.PAY_ID
             LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
             LEFT JOIN  I ON pay.MTCH_ID = I.PAY_ID
-            LEFT JOIN PAY0064D J ON J.PAY_ID = PAY.MTCH_ID AND 101 = J.TYPE_ID
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
@@ -1891,7 +1889,10 @@
         LEFT JOIN SAL0024D JOMPAY ON JOMPAY.CUST_BILL_ID = SOM.CUST_BILL_ID
         LEFT JOIN SAL0074D PAYMODE ON PAYMODE.SALES_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN SAL0028D CARD ON CARD.CUST_CRC_ID = PAYMODE.CUST_CRC_ID
-        LEFT JOIN SAL0003D PRD ON PRD.CNTRCT_SALES_ORD_ID = SOM.SALES_ORD_ID
+        LEFT JOIN (
+                 SELECT *
+                         FROM SAL0095D A JOIN SAL0081D B ON A.SRV_MEM_PAC_ID = B.SRV_CNTRCT_PAC_ID
+                       ) MEMSHIP ON MEMSHIP.SRV_SALES_ORD_ID = A.SALES_ORD_ID
         WHERE 1=1
         <if test="orgCode != '' ">
            AND A.ORG_CODE = #{orgCode}
@@ -1940,12 +1941,13 @@
        </if>
        <if test="renPrd != '' and renPrd != 0 ">
 		       <if test = "renPrd == 1 ">
-		       AND PRD.CNTRCT_OBLIGT_PRIOD <![CDATA[ >= ]]>60
+		       AND MEMSHIP.SRV_EXPR_DT <![CDATA[ >= ]]> SYSDATE
 		       </if>
 		       <if test ="renPrd == 2">
-		       AND PRD.CNTRCT_OBLIGT_PRIOD <![CDATA[ < ]]> 60
+		       AND MEMSHIP.SRV_EXPR_DT <![CDATA[ < ]]>  SYSDATE
 		       </if>
-        </if>
+           AND MEMSHIP.SRV_CNTRCT_PAC_ID =2
+       </if>
     </select>
 
         <select id="searchRCByOrganizationList" parameterType="rentalCollectionByOrganizationVO" resultType="egovMap">

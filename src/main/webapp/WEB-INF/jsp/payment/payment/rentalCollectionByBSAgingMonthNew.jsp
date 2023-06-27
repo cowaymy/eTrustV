@@ -20,7 +20,7 @@ var isPaid = [{"codeId":"1","codeName":"Full Paid"},{"codeId":"2","codeName":"Pa
 //var bsMonth = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
 var bsMonth = [{"codeId":"","codeName":"All"},{"codeId":"Yes","codeName":"Yes"},{"codeId":"No","codeName":"No"}];
 var openingAging = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"1"},{"codeId":"2","codeName":"2"},{"codeId":"3","codeName":"3"},{"codeId":"4","codeName":"4"}];
-var rentalPeriod = [{"codeId":"","codeName":"Choose One"},{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
+var rentalPeriod = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"Yes"},{"codeId":"2","codeName":"No"}];
 
 
 $(document).ready(function(){
