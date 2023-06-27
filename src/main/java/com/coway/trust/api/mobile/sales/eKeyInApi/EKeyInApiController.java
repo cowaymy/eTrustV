@@ -50,11 +50,12 @@ import springfox.documentation.annotations.ApiIgnore;
  * @HistoryselectAnotherContact
  *
  *                              <pre>
- * Date             Author          Description
- * -------------    -----------     -------------
- * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
- * 2020. 04. 08.    MY-ONGHC         Add selectCpntLst to Retrieve Component List
- *                                               Add selectPromoByCpntId
+ *                              Date Author Description
+ *                              ------------- ----------- -------------
+ *                              2019. 12. 09. KR-JAEMJAEM:) First creation
+ *                              2020. 04. 08. MY-ONGHC Add selectCpntLst to Retrieve Component List
+ *                              Add selectPromoByCpntId
+ *                              2023. 06. 27. MY-ONGHC Add checkTNA for Validate Card Validity bt crcID
  *                              </pre>
  */
 @Api(value = "EKeyInListApiController", description = "EKeyInListApiController")
@@ -103,22 +104,19 @@ public class EKeyInApiController {
         LOGGER.debug("selecteOrderPackType1    값 : {}", selecteOrderPackType1.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selecteOrderPackType1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selecteOrderPackType1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selecteOrderPackType2", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selecteOrderPackType2", method = RequestMethod.GET)
-  public ResponseEntity<List<EKeyInApiDto>> selecteOrderPackType2(@ModelAttribute EKeyInApiForm param)
-      throws Exception {
+  public ResponseEntity<List<EKeyInApiDto>> selecteOrderPackType2(@ModelAttribute EKeyInApiForm param) throws Exception {
     List<EgovMap> selecteOrderPackType2 = eKeyInApiService.selecteOrderPackType2(param);
     if (LOGGER.isDebugEnabled()) {
       for (int i = 0; i < selecteOrderPackType2.size(); i++) {
         LOGGER.debug("selecteOrderPackType2    값 : {}", selecteOrderPackType2.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selecteOrderPackType2.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selecteOrderPackType2.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selecteOrderProduct1", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -130,8 +128,7 @@ public class EKeyInApiController {
         LOGGER.debug("selecteOrderProduct1    값 : {}", selecteOrderProduct1.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selecteOrderProduct1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selecteOrderProduct1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selecteOrderProduct2", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -143,36 +140,31 @@ public class EKeyInApiController {
         LOGGER.debug("selecteOrderProduct2    값 : {}", selecteOrderProduct2.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selecteOrderProduct2.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selecteOrderProduct2.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selectPromotionByAppTypeStockESales", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectPromotionByAppTypeStockESales", method = RequestMethod.GET)
-  public ResponseEntity<List<EKeyInApiDto>> selectPromotionByAppTypeStockESales(@ModelAttribute EKeyInApiForm param)
-      throws Exception {
+  public ResponseEntity<List<EKeyInApiDto>> selectPromotionByAppTypeStockESales(@ModelAttribute EKeyInApiForm param) throws Exception {
     List<EgovMap> selectPromotionByAppTypeStockESales = eKeyInApiService.selectPromotionByAppTypeStockESales(param);
     if (LOGGER.isDebugEnabled()) {
       for (int i = 0; i < selectPromotionByAppTypeStockESales.size(); i++) {
         LOGGER.debug("selectPromotionByAppTypeStockESales    값 : {}", selectPromotionByAppTypeStockESales.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selectPromotionByAppTypeStockESales.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selectPromotionByAppTypeStockESales.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selectPromotionByAppTypeStock", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectPromotionByAppTypeStock", method = RequestMethod.GET)
-  public ResponseEntity<List<EKeyInApiDto>> selectPromotionByAppTypeStock(@ModelAttribute EKeyInApiForm param)
-      throws Exception {
+  public ResponseEntity<List<EKeyInApiDto>> selectPromotionByAppTypeStock(@ModelAttribute EKeyInApiForm param) throws Exception {
     List<EgovMap> selectPromotionByAppTypeStock = eKeyInApiService.selectPromotionByAppTypeStock(param);
     if (LOGGER.isDebugEnabled()) {
       for (int i = 0; i < selectPromotionByAppTypeStock.size(); i++) {
         LOGGER.debug("selectPromotionByAppTypeStock    값 : {}", selectPromotionByAppTypeStock.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selectPromotionByAppTypeStock.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selectPromotionByAppTypeStock.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selectBankList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -196,8 +188,7 @@ public class EKeyInApiController {
         LOGGER.debug("selectAnotherContact    값 : {}", selectAnotherContact.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selectAnotherContact.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selectAnotherContact.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "saveAddNewContact", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -233,8 +224,7 @@ public class EKeyInApiController {
         LOGGER.debug("selectAnotherAddress    값 : {}", selectAnotherAddress.get(i));
       }
     }
-    return ResponseEntity
-        .ok(selectAnotherAddress.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+    return ResponseEntity.ok(selectAnotherAddress.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "saveAddNewAddress", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -281,10 +271,8 @@ public class EKeyInApiController {
 
   @ApiOperation(value = "insertUploadFileSal0500", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @RequestMapping(value = "/insertUploadFileSal0500", method = RequestMethod.POST)
-  public ResponseEntity<FileDto> insertUploadFileSal0500(@ApiIgnore MultipartHttpServletRequest request,
-      @ModelAttribute EKeyInApiDto param) throws Exception {
-    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(),
-        AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+  public ResponseEntity<FileDto> insertUploadFileSal0500(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute EKeyInApiDto param) throws Exception {
+    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
     int fileGroupKey = eKeyInApiService.insertUploadFileSal0500(FileVO.createList(list), param);
     FileDto fileDto = FileDto.create(list, fileGroupKey);
     return ResponseEntity.ok(fileDto);
@@ -292,10 +280,8 @@ public class EKeyInApiController {
 
   @ApiOperation(value = "updateUploadFileSal0500", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @RequestMapping(value = "/updateUploadFileSal0500", method = RequestMethod.POST)
-  public ResponseEntity<FileDto> updateUploadFileSal0500(@ApiIgnore MultipartHttpServletRequest request,
-      @ModelAttribute EKeyInApiDto param) throws Exception {
-    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(),
-        AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+  public ResponseEntity<FileDto> updateUploadFileSal0500(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute EKeyInApiDto param) throws Exception {
+    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
     int fileGroupKey = eKeyInApiService.updateUploadFileSal0500(FileVO.createList(list), param);
     FileDto fileDto = FileDto.create(list, fileGroupKey);
@@ -321,8 +307,7 @@ public class EKeyInApiController {
   }
 
   @RequestMapping(value = "/fileDownMobilEkeyin.do")
-  public void fileDownMobilEkeyin(@RequestParam Map<String, Object> params, HttpServletRequest request,
-      HttpServletResponse response) throws Exception {
+  public void fileDownMobilEkeyin(@RequestParam Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
     EKeyInApiDto selectAttachmentImgFile = eKeyInApiService.selectAttachmentImgFile(params);
 
     if (LOGGER.isDebugEnabled()) {
@@ -331,8 +316,7 @@ public class EKeyInApiController {
       LOGGER.debug("::::: getPhysiclFileName : " + selectAttachmentImgFile.getPhysiclFileName());
     }
 
-    File uFile = new File(webUploadDir + selectAttachmentImgFile.getFileSubPath() + File.separator
-        + selectAttachmentImgFile.getPhysiclFileName());
+    File uFile = new File(webUploadDir + selectAttachmentImgFile.getFileSubPath() + File.separator + selectAttachmentImgFile.getPhysiclFileName());
     long fSize = uFile.length();
 
     if (fSize > 0) {
@@ -356,8 +340,7 @@ public class EKeyInApiController {
         EgovResourceCloseHelper.close(in, out);
       }
     } else {
-      throw new FileDownException(AppConstants.FAIL,
-          "Could not get file name : " + selectAttachmentImgFile.getAtchFileName());
+      throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + selectAttachmentImgFile.getAtchFileName());
     }
   }
 
@@ -375,8 +358,7 @@ public class EKeyInApiController {
     return "Firefox";
   }
 
-  private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response)
-      throws Exception {
+  private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
     String browser = getBrowser(request);
 
     String dispositionPrefix = "attachment; filename=";
@@ -446,4 +428,9 @@ public class EKeyInApiController {
     return ResponseEntity.ok(eKeyInApiService.checkIfIsAcInstallationProductCategoryCode(param));
   }
 
+  @ApiOperation(value = "CHECK CARD TNA", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/checkTNA", method = RequestMethod.GET)
+  public ResponseEntity<Integer> checkTNA (@ModelAttribute String param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.checkTNA(param));
+  }
 }
