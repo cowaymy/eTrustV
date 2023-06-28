@@ -201,52 +201,55 @@ function fn_requestVacationPop(){
 
         console.log("traineeType :: " + traineeType);
 
-        Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
-            console.log("성공.");
-            console.log("result1111.");
+     Common.ajax("POST", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
+         console.log("성공.");
+         console.log("result1111.");
 
-            if(result !="" ){
+         if(result.message.code =="99" ) {
+        	 Common.alert(result.message.message);
+         }
+         else {
 
-                   var telMobile = result.telMobile;
-                   var sms;
+        	    var telMobile = result.telMobile;
+        	    var sms;
 
-                //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
-                    if ( traineeType == 2) {
-                       Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.memCode);
-                       sms = 'Your Cody Code: ' + result.memCode + ' is created. PW: Last 6 digits of your NRIC No. Kindly login to e-Trust for activation & confirm Bank acc. no. in 2 days. TQ';
-                   }
+             //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
+                 if ( traineeType == 2) {
+                    Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your Cody Code: ' + result.memCode + ' is created. PW: Last 6 digits of your NRIC No. Kindly login to e-Trust for activation & confirm Bank acc. no. in 2 days. TQ';
+                }
 
-                   if ( traineeType == 3) {
-                       Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.memCode);
-                   }
+                if ( traineeType == 3) {
+                    Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.memCode);
+                }
 
-                   if ( traineeType == 7) { // ADDED HOMECARE -- BY TOMMY
-                       Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.memCode);
-                       sms = 'Your HT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
-                   }
+                if ( traineeType == 7) { // ADDED HOMECARE -- BY TOMMY
+                    Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your HT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                }
 
-                   if ( traineeType == 5758) { // ADDED HOMECARE DELIVERY TECHNICIAN -- BY TOMMY
-                       Common.alert(" DT  registration has been completed. "+membercode+" to "+ result.memCode);
-                       sms = 'Your DT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
-                   }
+                if ( traineeType == 5758) { // ADDED HOMECARE DELIVERY TECHNICIAN -- BY TOMMY
+                    Common.alert(" DT  registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your DT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                }
 
-                   if ( traineeType == 6672) { // ADDED LOGISTIC TECHNICIAN - BY KEYI
-                       Common.alert(" LT  registration has been completed. "+membercode+" to "+ result.memCode);
-                       sms = 'Your LT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
-                   }
+                if ( traineeType == 6672) { // ADDED LOGISTIC TECHNICIAN - BY KEYI
+                    Common.alert(" LT  registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your LT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                }
 
-                   if(telMobile != "") {
-                       Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo : telMobile, msg : sms} , function(result) {
-                           console.log("sms.");
-                           console.log( result);
-                       });
-                   }
-                 fn_memberListSearch();
-            }
-        });
-       }else {
-           Common.alert("Only available to entry with Confirm Member Registration in Case of Trainee Type");
-       }
+                if(telMobile != "") {
+                    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo : telMobile, msg : sms} , function(result) {
+                        console.log("sms.");
+                        console.log( result);
+                    });
+                }
+              fn_memberListSearch();
+         }
+     });
+    }else {
+        Common.alert("Only available to entry with Confirm Member Registration in Case of Trainee Type");
+    }
 }
 
 function fn_clickHpApproval(){
