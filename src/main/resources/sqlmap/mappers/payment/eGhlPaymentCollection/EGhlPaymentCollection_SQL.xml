@@ -162,7 +162,7 @@
 	                       </if>
 			        )D
 			        JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
-			        WHERE  D.TYPE_ID IN (67, 1412)
+			        WHERE  D.TYPE_ID IN (67, 1412) <!--  remove 1412 for outplus order -->
 			        GROUP BY
 			            D.ORD_ID, D.ORD_NO, D.TYPE_ID,
 			            0,'',
@@ -254,6 +254,7 @@
 	           A.ID,
 	           A.CUST_ID,
 	           B.SALES_ORD_NO ORD_NO,
+               B.PRODUCT_TYPE_CODE PAY_TYPE,
 	           TO_CHAR(B.AMOUNT, 'FM9,990.00') AMOUNT,
 	           TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH12:MI:SS AM') CRT_DT,
 	           C.USER_NAME CRT_USERNAME,
@@ -265,11 +266,13 @@
 	                      ELSE 44 END
 	               ELSE A.STATUS_CODE_ID END STATUS_CODE_ID,
 	           A.PAY_NO,
-	           A.PAYMENT_LINK
+	           A.PAYMENT_LINK,
+	           G.PAY_RECEIPT
 	       FROM PAY0336M A
 	       JOIN PAY0337D B ON B.ID = A.ID
 	       LEFT JOIN SYS0047M C ON C.USER_ID = A.CRT_BY
 	       LEFT JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+	       LEFT JOIN PAY0352D G ON G.DETAIL_ID = B.DETAIL_ID
 	       WHERE 1=1
 	       <if test='trxDtFrom != null and trxDtTo != null'>
 	          <if test='trxDtFrom != "" and trxDtTo != ""'>

@@ -103,13 +103,21 @@ function createAUIGrid() {
         dataField : "ordNo",
         headerText : "Order No.",
         editable : false,
-    }, {
+    },{
+        dataField : "payType",
+        headerText : "Pay Type",
+        editable : false
+    },{
         dataField : "amount",
         headerText : "Amount (RM)",
         editable : false,
     },{
         dataField : "status",
         headerText : "Status",
+        editable : false
+    },{
+        dataField : "payReceipt",
+        headerText : "Pay Receipt",
         editable : false
     },{
         dataField : "paymentLink",
