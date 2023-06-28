@@ -153,6 +153,10 @@ function fn_reqstSubmit() {
             }
         }
     }
+    if(length < 4){
+    	Common.alert("Please select at least 4 approvers. ");
+        checkMemCode = false;
+    }
     console.log(checkMemCode);
     if(checkMemCode) {
         Common.confirm("Are you sure you want to submit this request?", fn_submitRefund);

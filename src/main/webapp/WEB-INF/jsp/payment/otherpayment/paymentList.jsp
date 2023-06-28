@@ -51,7 +51,10 @@
 		{dataField : "ftStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
 		{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false},
 		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : false}
+		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : true},
+		{dataField : "payData",headerText : "Pay Data",width : 110,editable : false, visible : true},
+		{dataField : "orType",headerText : "OR Type",width : 110,editable : false, visible : true},
+		{dataField : "bankAcc",headerText : "Bank Acc Code",width : 110,editable : false, visible : true}
 	];
 
 
@@ -299,16 +302,25 @@
 
     function fn_requestRefundPop(){
 
+    	var data = {};
         var selectedItem = AUIGrid.getCheckedRowItemsAll(myGridID);
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
-        if (selectedItem.length > 0){
-            var refGroupSeqList = [];
+         if (selectedItem.length > 0){
+        	 data = selectedItem;
+        	 /*var refGroupSeqList = [];
             var refPayIdList = [];
             var refRevStusList = [];
             var refFtStusList = [];
             var refBankStateIdList = [];
             var refBankStateMappingDtList = [];
+            var refCrcStateIdList = [];
+            var refCrcStateMappingDtList = [];
             var refAppType = [];
+            var refPayDataList = [];
+            var refOrTypeList = [];
+            var refPayItmModeIdList = [];
+            var refPayItmBankAccIdList = [];
 
             for(var i = 0; i< selectedItem.length; i++){
             	refGroupSeqList.push(selectedItem[i].groupSeq);
@@ -317,6 +329,12 @@
             	refFtStusList.push(selectedItem[i].ftStusId);
             	refBankStateIdList.push(selectedItem[i].bankStateMappingId == null ? 0 : selectedItem[i].bankStateMappingId);
             	refBankStateMappingDtList.push(selectedItem[i].bankStateMappingDt == null ? 0 : selectedItem[i].bankStateMappingDt);
+            	refCrcStateIdList.push(selectedItem[i].crcStateMappingId == null ? 0 : selectedItem[i].crcStateMappingId);
+                refCrcStateMappingDtList.push(selectedItem[i].crcStateMappingDt == null ? 0 : selectedItem[i].crcStateMapping);
+                refPayDataList.push(selectedItem[i].payData == null ? 0 : selectedItem[i].payData);
+                refOrTypeList.push(selectedItem[i].orType == null ? 0 : selectedItem[i].orType);
+                refPayItmModeIdList.push(selectedItem[i].payItmModeId == null ? 0 : selectedItem[i].payItmModeId);
+                refPayItmBankAccIdList.push(selectedItem[i].payItmBankAccId == null ? 0 : selectedItem[i].payItmBankAccId);
             	//refAppType.push(selectedItem[i].appType);
 
             	var appTypeId;
@@ -335,18 +353,59 @@
                 refAppType.push(appTypeId);
 
             }
-
-            var selectedOrder = {
+ */
+            /* var selectedOrder = {
             		"groupSeqList" : JSON.stringify(refGroupSeqList.join()),
             		"payIdList" : JSON.stringify(refPayIdList.join()),
             		"revStusList" : JSON.stringify(refRevStusList.join()),
             		"rfStusList" : JSON.stringify(refFtStusList.join()),
             		"bankStateIdList" : JSON.stringify(refBankStateIdList.join()),
             		"bankStateMappingDt" : JSON.stringify(refBankStateMappingDtList.join()),
-            		"appTypeIdList" : JSON.stringify(refAppType.join())
+            		"appTypeIdList" : JSON.stringify(refAppType.join()),
+            		"crcStateIdList" : JSON.stringify(refCrcStateIdList.join()),
+                    "crcStateMappingDt" : JSON.stringify(refCrcStateMappingDtList.join()),
+                    "payDataList" : JSON.stringify(refPayDataList.join()),
+                    "orTypeList" : JSON.stringify(refOrTypeList.join()),
+                    "payItmModeIdList" : JSON.stringify(refPayItmModeIdList.join()),
+                    "payItmBankAccIdList" : JSON.stringify(refPayItmBankAccIdList.join())
             };
 
-            Common.ajax("GET","/payment/validRefund", selectedOrder, function(result){
+            */
+
+            var refGroupSeqList = [];
+            var refPayIdList = [];
+            var refAppType = [];
+
+            for(var i = 0; i< selectedItem.length; i++){
+                refGroupSeqList.push(selectedItem[i].groupSeq);
+                refPayIdList.push(selectedItem[i].payId);
+
+                var appTypeId;
+                if(selectedItem[i].appType == 'RENTAL'){
+                    appTypeId = 1;
+                }else if(selectedItem[i].appType == 'OUT') {
+                    appTypeId = 2;
+                }else if(selectedItem[i].appType == 'MEMBERSHIP') {
+                    appTypeId = 3;
+                }else if(selectedItem[i].appType == 'AS' || selectedItem[i].appType == 'HP') {
+                    appTypeId = 4;
+                }else if(selectedItem[i].appType == 'OUT_MEM') {
+                    appTypeId = 5;
+                }
+
+                refAppType.push(appTypeId);
+            }
+
+
+            var selectedOrder = {
+                    "groupSeqList" : JSON.stringify(refGroupSeqList.join()),
+                    "payIdList" : JSON.stringify(refPayIdList.join()),
+                    "appTypeIdList" : JSON.stringify(refAppType.join())
+            };
+
+            debugger;
+
+            Common.ajax("POST","/payment/validRefund", {selectedOrder : JSON.stringify(AUIGrid.getCheckedRowItemsAll(myGridID))}, function(result){
             	if(result.error) {
             		Common.alert(result.error);
             	}

@@ -171,7 +171,7 @@ public interface PaymentListMapper {
 	/* CELESTE 20230306 [S] */
 	List<EgovMap> selectRefundOldData(Map<String, Object> params);
 	int invalidRefund(Map<String, Object> params);
-	List<EgovMap> selectInvalidRefundType(Map<String, Object> params);
+	List<EgovMap> selectInvalidORType(Map<String, Object> params);
 	int refundChecking(Map<String, Object> params);
 	int getNextSeq();
 	int invalidStatus(Map<String, Object> params);
@@ -199,6 +199,9 @@ public interface PaymentListMapper {
 	void updateLastAppvLine(Map<String, Object> params);
 	String selectRefundReqId(String appvPrcssNo);
 	String getSalesOrdId(String salesOrdNo);
+	List<EgovMap> selectAttachList(String atchFileGrpId);
+	EgovMap selectAttachmentInfo(Map<String, Object> params);
+	String selectAllowFlg (Map<String, Object> params);
 	/* CELESTE 20230306 [E] */
 
 

@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 var myRequestRefundGridID;
-
+var attachList = null;
 //Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
@@ -69,13 +69,51 @@ function searchReqRefundInfo(){
 	console.log("searchReqRefundInfo");
 	Common.ajax("POST","/payment/selectReqRefundInfo.do",$("#_refundSearchForm").serializeJSON(), function(result){
 		console.log(result);
+		$("#refundType").val(result.reqRefundInfo.refundType);
+		if(result.reqRefundInfo.newPayType == "107"){
+			$("#crcSec").show();
+		}
+		else{
+			$("#onlineSec").show();
+		}
+		$("#beneficiaryName").val(result.reqRefundInfo.cardHolder);
+		$("#bankAccNo").val(result.reqRefundInfo.bankAcc);
+		$("#bankName").val(result.reqRefundInfo.issueBankName);
+		$("#crcCardNo").val(result.reqRefundInfo.cardNo);
+		$("#cardIssueBank").val(result.reqRefundInfo.issueBankName);
+		$("#apprNo").val(result.reqRefundInfo.cardApprovalNo);
+
+		attachList = result.attachList;
+        console.log(attachList);
+        if(attachList) {
+            if(attachList.length > 0) {
+                for(var i = 0; i < attachList.length; i++) {
+                    /* result.data.itemGrp[i].atchFileId = attachList[i].atchFileId;
+                    result.data.itemGrp[i].atchFileName = attachList[i].atchFileName;
+                    var str = attachList[i].atchFileName.split(".");
+                    result.data.itemGrp[i].fileExtsn = str[1];
+                    result.data.itemGrp[i].fileCnt = 1; */
+                    $("#attachment").val(attachList[i].atchFileName);
+                }
+
+            }
+            $("#attachment").dblclick(function() {
+                var oriFileName = $(this).val();
+                var fileGrpId;
+                var fileId;
+                for(var i = 0; i < attachList.length; i++) {
+                    if(attachList[i].atchFileName == oriFileName) {
+                        fileGrpId = attachList[i].atchFileGrpId;
+                        fileId = attachList[i].atchFileId;
+                    }
+                }
+                fn_atchViewDown(fileGrpId, fileId);
+            });
+        }
 		$("#requestor").val(result.reqRefundInfo.reqstUserId);
 		$("#reqReason").val(result.reqRefundInfo.resnDesc);
 		$("#reqDate").val(result.reqRefundInfo.refCrtDt);
 		$("#reqRemark").val(result.approvalRemark);
-		/* if($("#appvStus").val() == "A" ||  $("#appvStus").val() == "J" ){
-
-		} */
 	});
 }
 
@@ -184,6 +222,29 @@ function fn_reject(){
 	});
 }
 
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/payment/getAttachmentInfo1.do", data, function(result) {
+        console.log(result);
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
 
 </script>
 
@@ -211,6 +272,9 @@ function fn_reject(){
 				<input id="appvStus" name="appvStus" value="${appvStus}" type="hidden" />
 				<input id="reqId" name="reqId" type="hidden" />
 
+				<aside class="title_line"><!-- title_line start -->
+				<h1 id="headerConfirmRefundLbl">Refund Information</h1>
+				</aside>
 				<table class="type1"><!-- table start -->
 					<caption>table</caption>
 					<colgroup>
@@ -220,6 +284,79 @@ function fn_reject(){
 						<col style="width:*" />
 					</colgroup>
 					<tbody>
+					   <tr>
+					       <th>Refund Type</th>
+					       <td colspan="3">
+					           <input id="refundType" name="refundType" type="text" class="readonly w100p" readonly/>
+					       </td>
+					   </tr>
+					   <tbody id="onlineSec" style="display: none;">
+						   <tr>
+						       <th>Beneficiary Name</th>
+						       <td colspan="3">
+						           <input id="beneficiaryName" name="beneficiaryName" type="text" class="readonly w100p" readonly/>
+						       </td>
+						   </tr>
+						   <tr>
+						       <th>Bank Account No.</th>
+						       <td colspan="3">
+						           <input id="bankAccNo" name="bankAccNo" type="text" class="readonly w100p" readonly/>
+						       </td>
+						   </tr>
+						   <tr>
+						       <th>Bank Name</th>
+						       <td colspan="3">
+						           <input id="bankName" name="bankName" type="text" class="readonly w100p" readonly/>
+						       </td>
+						   </tr>
+                       </tbody>
+					   <tbody id="crcSec" style="display: none;">
+					       <tr>
+                           <th>Credit Card No.</th>
+                           <td colspan="3">
+                               <input id="crcCardNo" name="crcCardNo" type="text" class="readonly w100p" readonly/>
+                           </td>
+                       </tr>
+
+                       <tr>
+                           <th>Card Issue Bank</th>
+                           <td colspan="3">
+                               <input id="cardIssueBank" name="cardIssueBank" type="text" class="readonly w100p" readonly/>
+                           </td>
+                       </tr>
+                       <tr>
+                           <th>Appr No.</th>
+                           <td colspan="3">
+                               <input id="apprNo" name="apprNo" type="text" class="readonly w100p" readonly/>
+                           </td>
+                       </tr>
+					   </tbody>
+					   <tr>
+					       <th>Reason</th>
+					       <td colspan="3">
+					           <input id="reqReason" name="reqReason" type="text" class="readonly w100p" readonly/>
+					       </td>
+					   </tr>
+					   <tr>
+					       <th>Attachement</th>
+					       <td colspan="3">
+					           <input id="attachment" name="attachment" type="text" class="readonly w100p" readonly/>
+					       </td>
+					   </tr>
+					   <tr>
+                            <th scope="row">Request Remark</th>
+                            <td colspan="3">
+                                <textarea id="reqRemark" name="reqRemark"  cols="15" rows="3" placeholder="" class="readonly" readonly></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" id="remarkLbl">Remark<span class='must'>*</span></th>
+                            <td colspan="3">
+                                <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>
+                            </td>
+                        </tr>
+					</tbody>
+					<!-- <tbody>
 						<tr>
 							<th scope="row">Requestor</th>
 							<td>
@@ -254,7 +391,7 @@ function fn_reject(){
 					            <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>
 							</td>
 						</tr>
-					</tbody>
+					</tbody> -->
 				</table>
 			</form>
 		</section>

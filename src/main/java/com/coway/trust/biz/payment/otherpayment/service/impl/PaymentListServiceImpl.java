@@ -386,8 +386,9 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	}
 
 	@Override
-	public List<EgovMap> selectInvalidRefundType(Map<String, Object> params) {
-		return paymentListMapper.selectInvalidRefundType(params);
+	public List<EgovMap> selectInvalidORType(Map<String, Object> params) {
+		params.put("ind", params.get("type"));
+		return paymentListMapper.selectInvalidORType(params);
 	}
 
 	@Override
@@ -403,7 +404,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		String[] payId = paramMap.get("payId").toString().replace("\"","").split(",");
 		String[] appTypeId = paramMap.get("appTypeId").toString().replace("\"","").split(",");
 
-		paramMap.put("selectedGroupSeqList", groupSeq);
+		paramMap.put("groupSeq", groupSeq);
 		paramMap.put("payId", payId);
 		paramMap.put("appTypeId", appTypeId);
 
@@ -411,7 +412,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		String userName = paramMap.get("userName").toString();
 
     	int count = paymentListMapper.invalidRefund(paramMap);
-    	List<EgovMap> invalidTypeList = paymentListMapper.selectInvalidRefundType(paramMap);
+    	List<EgovMap> invalidTypeList = paymentListMapper.selectInvalidORType(paramMap);
 
     	if (count > 0) {
     		returnMap.put("error", "Refund Invalid for " + invalidTypeList);
@@ -587,6 +588,13 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		String reqstUserFullName = (String) reqRefundInfo.get("userFullName");
 		String reqstDt = (String) reqRefundInfo.get("refCrtDt");
 		String approvalRemark = " [" + reqstDt + "], [Raised by: " + reqstUserFullName + "]: " + reqRefundInfo.get("reqRemark");
+		String atchFileGrpId = reqRefundInfo.get("atchFileGrpId").toString();
+		String atchFileId = reqRefundInfo.get("atchFileId").toString();
+
+		if(atchFileGrpId != null) {
+			List<EgovMap> attachList = paymentListMapper.selectAttachList(atchFileGrpId);
+			returnMap.put("attachList", attachList);
+		}
 
 		for(int i = 0; i < reqRefundApprovalItem.size(); i++) {
 			EgovMap appvLine = reqRefundApprovalItem.get(i);
@@ -748,6 +756,17 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 			ntf.put("userId", ntfDtls.get("userId"));
 			paymentListMapper.insertNotification(ntf);
 		}
+	}
+
+	@Override
+	public EgovMap selectAttachmentInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return paymentListMapper.selectAttachmentInfo(params);
+	}
+
+	@Override
+	public String selectAllowFlg(Map<String, Object> params) {
+		return paymentListMapper.selectAllowFlg(params);
 	}
 	/* CELESTE 20230306 [E] */
 

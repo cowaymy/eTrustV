@@ -13,6 +13,7 @@ var cifId = 0;
 var cifFileName = "";
 var requestType = "REF";
 var myFileCaches = {};
+var oldAmt = 0;
 
 //Grid Properties 설정
 var gridPros = {
@@ -120,7 +121,7 @@ function fn_RefundClear(){
 function validateSave(refMode, reasonCd){
 	var validFlg = true;
 
-	if(reasonCd != "3519" && reasonCd != "3520") { //reasonCd that
+	if(reasonCd != "3519" && reasonCd != "3520") { //reasonCd that is not allow for partial refund
 		if( Number($("#oldAmt").val()) <= 0 ){
 	        Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
 	        return validFlg = false;
@@ -128,22 +129,55 @@ function validateSave(refMode, reasonCd){
 	}
 
 	if(refMode != null && refMode != "" && refMode != "0" && refMode == "107"){ //CreditCard Mode
-
+		if($("#keyInCardNo1").val() == "" || $("#keyInCardNo2").val() == "" || $("#keyInCardNo3").val() == "" || $("#keyInCardNo4").val() == ""){
+			Common.alert("Credit Card No. incomplete. Please enter a valid credit card number. ");
+			return validFlg = false;
+		}
+        if($("#apprNo").val() == "" || $("#apprNo").val() == null){
+        	Common.alert("Please key in Appr No.");
+            return validFlg = false;
+        }
+	}else if(refMode != null && refMode != "" && refMode != "0" && refMode == "108"){
+		if($("#bankAccNo").val() == "" || $("#bankAccNo").val() == null){
+			Common.alert("Please key in Bank Account No.");
+            return validFlg = false;
+		}
+		if($("#beneficiaryName").val() == "" || $("#beneficiaryName").val() == null){
+			Common.alert("Please key in Beneficiary Name.");
+            return validFlg = false;
+		}
 	}
 
-	if ($("#newReason option:selected").index() <= 0) {
+	if ($("#newReason").val() == null || $("#newReason").val() == "" || $("#newReason option:selected").index() <= 0) {
         Common.alert("<spring:message code='pay.alert.noReasonSelected'/>");
-        return validGlFlg = false;
+        return validFlg = false;
     }
-
-
-    if( FormUtil.byteLength($("#newRemark").val()) > 3000 ){
+    if(refMode == "" || refMode == null){
+        Common.alert("Please select a Refund Mode.");
+        return validFlg = false;
+    }
+    if($("#issueBank").val() == "" || $("#issueBank").val() == null){
+        Common.alert("Please select an Issue Bank.");
+        return validFlg = false;
+    }
+    if($("#newRemark").val() == null || $("#newRemark").val() == "" || FormUtil.byteLength($("#newRemark").val()) > 3000 ){
         Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
         return validFlg = false;
     }
-    if( FormUtil.byteLength($("#newAttach").val().trim()) == null){
-        Common.alert("Attachement cannot be empty");
+    if($("#newAttach").val() == "" || FormUtil.byteLength($("#newAttach").val().trim()) == null){
+        Common.alert("Attachement cannot be empty.");
         return validFlg = false;
+    }
+    if($("#newAttach").val() == "" || FormUtil.byteLength($("#newAttach").val().trim()) == null){
+        Common.alert("Attachement cannot be empty.");
+        return validFlg = false;
+    }
+    else {
+    	var str = $("#newAttach").val().split(".");
+        if(str[1] != "zip"){
+        	Common.alert("Please attach zip file only.");
+        	return validFlg = false;
+        }
     }
     return validFlg;
 }
@@ -202,6 +236,7 @@ function calculateOldAmt(){
 	}
 
 	$("#oldAmt").val(totalAmt.toFixed(2));
+	oldAmt = $("#oldAmt").val();
 	// $("#newAmt").val(totalAmt.toFixed(2));
 
 }
@@ -369,7 +404,7 @@ function closeApproveLine(){
 				            </td>
 							<th scope="row">Appr No.<span class="must">*</span></th>
 							<td colspan="3">
-								 <input type="text" name="apprNo" id=""apprNo"" title="" placeholder="" class="w100p"/>
+								 <input type="text" name="apprNo" id="apprNo" title="" placeholder="" class="w100p"/>
 							</td>
 						</tr>
 						<tr>
@@ -382,7 +417,7 @@ function closeApproveLine(){
                             <th scope="row">Attachment<span class="must">*</span></th>
                             <td colspan="7" id="newAttachRef">
                                 <div class="auto_file2">
-                                    <input type="file" title="file add" id="newAttach" /> <!-- accept="application/pdf" -->
+                                    <input type="file" title="file add" id="newAttach" accept=".zip" /> <!-- accept="application/pdf" -->
                                 <label style="width:100%">
                                 <input type='text' class='input_text' readonly='readonly' style='width:300px'/>
                                 <span class='label_text'><a href='#'>Upload</a></span>

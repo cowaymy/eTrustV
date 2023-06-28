@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +44,9 @@ import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -541,10 +544,132 @@ public class PaymentListController {
 
 	/* ********** 20230306 CELESTE - REQUEST REFUND [S] ********** */
 
-	@RequestMapping(value="/validRefund" ,  method = RequestMethod.GET)
+	@RequestMapping(value="/validRefund" ,  method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> validRefund(@RequestBody Map<String, Object> params) throws IOException {
+
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		LOGGER.debug("params Parameters: " + params);
+
+		/*List<Object> selectedGridList = (List<Object>)params.get("data");*/
+		ObjectMapper mapper = new ObjectMapper();
+		List<Map<String, Object>> selectedOrder = mapper.readValue(params.get("selectedOrder").toString(), new TypeReference<List<Map<String, Object>>>(){});
+
+		LOGGER.debug("selectedGridList Parameters: " + selectedOrder);
+
+		int[] groupSeq = null;
+		String[] revStusId = null;
+		String[] ftStusId = null;
+
+		if(selectedOrder.size() > 0){
+			groupSeq = new int[selectedOrder.size()];
+			revStusId = new String[selectedOrder.size()];
+			ftStusId = new String[selectedOrder.size()];
+			for(int i = 0; selectedOrder.size() > i; i++){
+				groupSeq[i] = Integer.parseInt(selectedOrder.get(i).get("groupSeq").toString());
+				revStusId[i] = selectedOrder.get(i).get("revStusId").toString();
+				ftStusId[i] = selectedOrder.get(i).get("ftStusId").toString();
+			}
+			params.put("groupSeq", groupSeq);
+			params.put("type", "REF");
+
+			for(Map<String,Object> map : selectedOrder) {
+			    Map<String,Object> tempMap = new LinkedHashMap<String,Object>(map);
+			    map.clear();
+			    map.put("type","REF");
+			    map.putAll(tempMap);
+			}
+		}
+
+		LOGGER.debug("selectedGridList: " + selectedOrder);
+		LOGGER.debug("params: " + params);
+		LOGGER.debug("groupSeq: " + groupSeq);
+
+		int invalidTypeCount = paymentListService.invalidRefund(params);
+		int invalidStatus = paymentListService.invalidStatus(params);
+		List<EgovMap> invalidTypeList = paymentListService.selectInvalidORType(params);
+
+		if(invalidTypeCount > 0) {
+			returnMap.put("error", "Refund is invalid for " + invalidTypeList);
+		}
+		else if(invalidStatus > 0) {
+			returnMap.put("error", "Payment has Active or Completed Refund request.");
+		}
+		else {
+			String allowFlgYN = validateAction(selectedOrder);
+			if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("N")){
+				returnMap.put("error", "Not Allow to proceed with Refund. Please reselect. ");
+			}
+			else if(allowFlgYN != null && allowFlgYN != "" && allowFlgYN.equals("Y")){
+				returnMap.put("success", true);
+			}
+		}
+
+		return ResponseEntity.ok(returnMap);
+	}
+
+	public String validateAction(@RequestParam List<Map<String, Object>> selectedOrder){
+
+		//Map<String, Object> returnMap = new HashMap<String, Object>();
+		// 20230627 - ADD IN NEW CHECKING INCLUSIVE OF OR_TYPE/MODE_ID/BANK_CODE/BANK_STATEMENT/2018[S]
+		String allowFlg = null;
+		if(selectedOrder.size() > 0 ){
+			for(int i = 0; selectedOrder.size() > i; i++){
+				Map<String, Object> validationParams = new HashMap<String, Object>();
+				validationParams.put("orType", selectedOrder.get(i).get("orType"));
+				validationParams.put("payItmModeId", selectedOrder.get(i).get("payItmModeId"));
+				validationParams.put("type", selectedOrder.get(i).get("type"));
+
+				if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) < 2018){
+					validationParams.put("bankAcc", "ETC");
+					validationParams.put("bkCrcFlg", "N");
+					allowFlg = paymentListService.selectAllowFlg(validationParams);
+
+					if(allowFlg == null){
+						allowFlg = "N";
+						//returnMap.put("error", "Not Allow to proceed with Refund. Please reselect. ");
+						break;
+					}
+					/*else if(allowFlg != null && allowFlg != "" && allowFlg.equals("Y")){
+						returnMap.put("success", true);
+					}*/
+				}
+				else {
+					validationParams.put("bankAcc", selectedOrder.get(i).get("bankAcc"));
+
+					if((selectedOrder.get(i).get("bankStateMappingId") != null && selectedOrder.get(i).get("bankStateMappingId") != "") || (selectedOrder.get(i).get("crcStateMappingId") != null && selectedOrder.get(i).get("crcStateMappingId") != "")){
+						validationParams.put("bkCrcFlg", "Y");
+					}
+					else
+					{
+						validationParams.put("bkCrcFlg", "N");
+					}
+
+					allowFlg = paymentListService.selectAllowFlg(validationParams);
+					if(allowFlg == null){
+						allowFlg = "N";
+						//returnMap.put("error", "Not Allow to proceed with Refund. Please reselect. ");
+						break;
+					}else if(allowFlg.equals("N")){
+						break;
+					}
+/*					else if(allowFlg != null && allowFlg != "" && allowFlg.equals("Y")){
+						returnMap.put("success", true);
+					}*/
+				}
+
+			}
+		}
+
+		return allowFlg;
+	}
+
+	/*@RequestMapping(value="/validRefund" ,  method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> validRefund(@RequestParam Map<String, Object> params){
 
 		Map<String, Object> returnMap = new HashMap<String, Object>();
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		LOGGER.debug("validRefund Parameters: " + params);
+		LOGGER.debug("list Parameters: " + list);
 
 		//CHECK OR NO TYPE THAT ALLOW TO PERFORM REFUND
 		String[] groupSeqList = params.get("groupSeqList").toString().replace("\"","").split(",");
@@ -582,19 +707,72 @@ public class PaymentListController {
 			}
 		}
 
+		// CHECK TRANSACTION DATE : BEFORE 2018 + CSH/CHQ/ONL + BOR/WOR --> ALLOW TO REFUND
+		String[] payDataList = params.get("payDataList").toString().replace("\"", "").split(",");
+		String[] orTypeList = params.get("orTypeList").toString().replace("\"", "").split(",");
+		String[] payItmModeIdList = params.get("payItmModeIdList").toString().replace("\"", "").split(",");
+
+		Map<String, Object> validationParams = new HashMap<String, Object>();
+		int yearParam = 2018;
+		String allowRef = "N";
+
+		if(payDataList.length != 0){
+			for(int i=0; i<payDataList.length; i++){
+				if(yearParam > Integer.parseInt(payDataList[i])) {
+					validationParams.put("bankAccId", "ETC");
+				}
+				else {
+					validationParams.put("bankAccId", payItmModeIdList[i]);
+				}
+			}
+		}
+
+		if(orTypeList.length != 0){
+			for(int i=0; i<orTypeList.length; i++){
+				validationParams.put("orType", orTypeList[i]);
+			}
+		}
+
+		if(payItmModeIdList.length != 0){
+			for(int i=0; i<payItmModeIdList.length; i++){
+				validationParams.put("payItemModeId", payItmModeIdList[i]);
+			}
+		}
+
+		List<String> payDataListStr = Arrays.asList(payDataList.toString().replace("\"", "").split(","));
+		List<String> orTypeListStr = Arrays.asList(params.get("orTypeList").toString().replace("\"", "").split(","));
+		List<String> payItmModeIdListStr = Arrays.asList(params.get("payItmModeIdList").toString().replace("\"", "").split(","));
+
 		//CHECK TRANSACTION ID IS NOT EMPTY AND HAS BEEN RECONCILE
 		List<String> trxIdList = Arrays.asList(params.get("bankStateIdList").toString().replace("\"", "").split(","));
 		List<String> trxDtList = Arrays.asList(params.get("bankStateMappingDt").toString().replace("\"", "").split(","));
-		if(trxIdList.contains("0") || trxIdList.contains(null)) {
+		List<String> crcIdList = Arrays.asList(params.get("crcStateIdList").toString().replace("\"", "").split(","));
+		List<String> crcDtList = Arrays.asList(params.get("crcStateMappingDt").toString().replace("\"", "").split(","));
+		if((trxIdList.contains("0") || trxIdList.contains(null)) && (crcIdList.contains("0") || crcIdList.contains(null))) {
 //		if(trxIdList.contains("0") || trxIdList.contains(null) || trxDtList.contains("0") || trxDtList.contains(null)) {
-			returnMap.put("error", "Empty Bank Statement ID record(s) are not allow for Refund. Please reselect before request for Refund. ");
+			returnMap.put("error", "Empty Statement ID record(s) are not allow for Refund. Please reselect before request for Refund. ");
 		}
 		else {
 			returnMap.put("success",  true);
 		}
 
+		//CHECK RESERVE STATUS - BLOCK WHN STATUS = 1 OR 5
+		String[] activeStatus = {"1", "5"};
+
+		if(Arrays.asList(revStusId).containsAll(Arrays.asList(activeStatus))){
+			returnMap.put("error",  "Payment Group Number has been Requested or Approved. Please reselect before request for Refund.");
+		}
+		else {
+			if(Arrays.asList(ftStusId).containsAll(Arrays.asList(activeStatus))) {
+				returnMap.put("error", "This has already been Refund processing Requested / Approved. ");
+			}
+			else {
+				returnMap.put("success", true);
+			}
+		}
+
 		return ResponseEntity.ok(returnMap);
-	}
+	}*/
 
 	@RequestMapping(value = "/initRequestRefundPop.do")
 	public String initRequestRefundPop(@RequestParam Map<String, Object> params, ModelMap model) throws IOException {
@@ -898,6 +1076,16 @@ public class PaymentListController {
 
 		return ResponseEntity.ok(message);
 
+	}
+
+	@RequestMapping(value = "/getAttachmentInfo1.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getAttachmentInfo1(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		Map<String, Object> fileInfo = webInvoiceService.selectAttachmentInfo(params);
+
+		return ResponseEntity.ok(fileInfo);
 	}
 	/* ********** 20230306 CELESTE - REQUEST REFUND [E] ********** */
 }

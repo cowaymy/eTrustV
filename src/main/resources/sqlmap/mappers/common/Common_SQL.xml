@@ -951,6 +951,19 @@
             AND CODE_NAME = #{codeName}
         </if>
 
+        <if test="flg != null and flg !='' and flg == 'NOTI'">
+            UNION ALL
+
+            SELECT
+			CODE_ID ,
+			CODE ,
+			CODE_NAME ,
+			DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+			FROM SYS0013M
+			WHERE DISAB = 0
+			AND CODE_MASTER_ID = 556
+        </if>
+
 
 
         <choose>

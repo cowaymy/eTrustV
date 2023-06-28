@@ -100,7 +100,7 @@ $(document).ready(function() {
 
     $("#markBtn").click(fn_markReadUnread);
 
-    CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+    CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE', flg: 'NOTI'}, "", {
         id: "code",
         name: "codeName",
         type:"M"
