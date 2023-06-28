@@ -249,8 +249,8 @@ public class LoginController {
 			SessionVO sessionVO) {
 		LOGGER.debug("savePassWordReset: " + params.toString());
 
-//		params.put("userTypeId",sessionVO.getUserTypeId());
-//		params.put("userName",sessionVO.getUserName());
+		params.put("userTypeId",sessionVO.getUserTypeId());
+		params.put("userName",sessionVO.getUserName());
 		int cnt = loginService.updatePassWord(params, sessionVO.getUserId());
 
 		params.put("userId", sessionVO.getUserName());
