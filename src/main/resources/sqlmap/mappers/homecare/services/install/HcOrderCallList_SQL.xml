@@ -350,6 +350,7 @@
 		<!-- Added by Wawa  20230619-->
         JOIN CCR0006D callog ON callog.call_entry_id  = (SELECT MIN(CALL_ENTRY_ID) FROM CCR0006D WHERE CCR0006D.SALES_ORD_ID = vcalllogordercall.SALES_ORD_ID GROUP BY CCR0006D.SALES_ORD_ID)
 	       WHERE  1 =1
+	       AND vCallLogOrderCall.BNDL_NO is not null
            <if test="branchTypeList != null and branchTypeList != ''">
                 AND vCallLogOrderCall.DSC_TYPE_ID IN
               <foreach item="item" collection="branchTypeList" index="index"
