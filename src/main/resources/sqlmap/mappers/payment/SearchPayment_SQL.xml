@@ -26,7 +26,7 @@
                 FROM PAY0252T
          )
         SELECT
-            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            CASE WHEN SUBSTR(PAY.OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
 			pay.TRX_DT,
 			pay.TRX_AMT,
@@ -79,12 +79,14 @@
 			pay.ALLOW_COMM,
 			pay.ADV_MONTH,
 			pay.TR_ISSU_DT,
-			pay.BATCH_PAY_ID
+			pay.BATCH_PAY_ID,
+			DECODE(J.PAY_ID, NULL, '', J.OR_NO) AS REV_RECEIPT_NO
 	    FROM
 	        PAY1001V pay
             LEFT JOIN  H ON pay.PAY_ID = H.PAY_ID
             LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
             LEFT JOIN  I ON pay.MTCH_ID = I.PAY_ID
+            LEFT JOIN PAY0064D J ON J.PAY_ID = PAY.MTCH_ID AND 101 = J.TYPE_ID
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
