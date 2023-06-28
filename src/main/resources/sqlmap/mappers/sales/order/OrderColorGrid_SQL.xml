@@ -11,9 +11,9 @@
            som.APP_TYPE_ID,
            som.STUS_CODE_ID ,
            mo.TOP_ORG_CODE,
-           CASE WHEN mo2.MEM_ID IS NULL THEN mo.ORG_CODE ELSE mo2.LAST_ORG_CODE END ORG_CODE,
-           CASE WHEN mo2.MEM_ID IS NULL THEN mo.GRP_CODE ELSE mo2.LAST_GRP_CODE END GRP_CODE,
-           CASE WHEN mo2.MEM_ID IS NULL THEN mo.DEPT_CODE ELSE mo2.LAST_DEPT_CODE END DEPT_CODE,
+           SOM.ORG_CODE ,
+           SOM.GRP_CODE,
+           SOM.DEPT_CODE,
            mo.MEM_CODE,
            som.PV_MONTH,
            som.PV_YEAR,
@@ -35,7 +35,6 @@
            END IS_EXTRADE_PR
            FROM SAL0001D som
            JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
-           LEFT JOIN ORG0006D mo2 ON mo2.MEM_ID = som.MEM_ID AND mo2.HIST_YEAR = som.PV_YEAR AND mo2.HIST_MONTH = som.PV_MONTH
            LEFT JOIN SAL0340D KEYIN ON (CAST(som.SALES_DT AS TIMESTAMP) <![CDATA[>=]]> CAST(KEYIN.KEYIN_START_DT AS TIMESTAMP))
                                         AND (CAST(som.SALES_DT AS TIMESTAMP)　<![CDATA[<]]> CAST(KEYIN.KEYIN_END_DT + INTERVAL '1' DAY AS TIMESTAMP))
            WHERE (som.STUS_CODE_ID  <![CDATA[<> ]]> 8)  AND som.APP_TYPE_ID <![CDATA[<> ]]> 5764
