@@ -572,7 +572,7 @@
                 $('#billMthdEstm').prop("checked", true);
                 $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdEmail2').removeAttr("disabled");
-                $('#billMthdEmailTxt1').removeAttr("disabled");
+                //$('#billMthdEmailTxt1').removeAttr("disabled");
                 $('#billMthdEmailTxt2').removeAttr("disabled");
 
                 if($("#corpTypeId").val() == 1151 || $("#corpTypeId").val() ==1154 || $("#corpTypeId").val() == 1333){
@@ -599,7 +599,7 @@
                     $('#billMthdEstm').prop("checked", true);
                     $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
-                    $('#billMthdEmailTxt1').removeAttr("disabled");
+                    //$('#billMthdEmailTxt1').removeAttr("disabled");
                     $('#billMthdEmailTxt2').removeAttr("disabled");
                     $('#billMthdPost').removeAttr("disabled");
                 }
@@ -789,7 +789,7 @@
             $('#spEmail2').text("");
             $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
             $('#billMthdEmail2').prop("checked", false).prop("disabled", true);
-            $('#billMthdEmailTxt1').val("").prop("disabled", true);
+            //$('#billMthdEmailTxt1').val("").prop("disabled", true);
             $('#billMthdEmailTxt2').val("").prop("disabled", true);
 
             if($("#billMthdEstm").is(":checked")) {
@@ -798,7 +798,7 @@
                 $('#spEmail2').text("*");
                 $('#billMthdEmail1').removeAttr("disabled").prop("checked", true);
                 $('#billMthdEmail2').removeAttr("disabled");
-                $('#billMthdEmailTxt1').removeAttr("disabled").val($('#custCntcEmail').val().trim());
+                //$('#billMthdEmailTxt1').removeAttr("disabled").val($('#custCntcEmail').val().trim());
                 $('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
             }
         });
@@ -1909,12 +1909,17 @@ console.log("vBindingNo" + vBindingNo);
 
         if($('#appType').val() == '1412' && $('#typeId').val() == '965') {
             isValid = false;
-            msg = '<spring:message code="sal.alert.msg.plzSelIndvCustOutP" />';
+            msg = '<spring:message code="sal.alert.msg.plzSelEmpl" />';
         }
 
         if($("#empChk option:selected").index() <=0) {
             isValid = false;
-            msg = 'test';
+            msg = '<spring:message code="sal.alert.msg.plzSelIndvCustOutP" />';
+        }
+
+        if(FormUtil.checkReqValue($('#email'))) {
+            isValid = false;
+            msg += '<spring:message code="sal.alert.msg.plzKeyInEmailAddr" />';
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -2201,6 +2206,11 @@ console.log("vBindingNo" + vBindingNo);
                                 isValid = false;
                                 msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
                             }
+                        }
+
+                        if(FormUtil.checkReqValue($('#billMthdEmailTxt1'))) {
+                            isValid = false;
+                            msg += '* <spring:message code="sal.alert.msg.plzKeyInEmailAddr" /><br>';
                         }
                     }
                 }
@@ -2974,7 +2984,7 @@ console.log("vBindingNo" + vBindingNo);
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><input id="email" name="email" type="text" title="" placeholder="Email Address" class="w100p" readonly/></td>
+    <td><input id="email" name="email" type="text" title="" placeholder="Email Address" class="w100p"/></td>
     <th scope="row"><spring:message code="sal.text.indutryCd" /></th>
     <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="Industry Code" class="w100p" readonly/></td>
 </tr>
@@ -3548,7 +3558,7 @@ console.log("vBindingNo" + vBindingNo);
     <label><input id="billMthdEmail2" name="billMthdEmail2" type="checkbox" disabled/><span><spring:message code="sal.text.email" /> 2</span></label>
     </td>
     <th scope="row"><spring:message code="sal.title.text.eamilOne" /><span id="spEmail1" class="must">*</span></th>
-    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
+    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" title="" placeholder="Email Address" class="w100p" /></td>
 </tr>
 <tr>
     <td></td>
