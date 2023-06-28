@@ -1939,7 +1939,7 @@
        <if test="memType != '' ">
            AND A.MEM_TYPE = #{memType}
        </if>
-       <if test="renPrd != '' and renPrd != 0 ">
+       <if test="renPrd != '' and renPrd != 0  and renPrd != null">
 		       <if test = "renPrd == 1 ">
 		       AND MEMSHIP.SRV_EXPR_DT <![CDATA[ >= ]]> SYSDATE
 		       </if>
