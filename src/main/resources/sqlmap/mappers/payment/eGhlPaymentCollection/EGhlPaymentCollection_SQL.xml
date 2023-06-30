@@ -255,7 +255,7 @@
 	           A.CUST_ID,
 	           B.SALES_ORD_NO ORD_NO,
                B.PRODUCT_TYPE_CODE PAY_TYPE,
-	           TO_CHAR(B.AMOUNT, 'FM9,990.00') AMOUNT,
+	           TO_CHAR(B.AMOUNT, 'FM99,990.00') AMOUNT,
 	           TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH12:MI:SS AM') CRT_DT,
 	           C.USER_NAME CRT_USERNAME,
 	           CASE
