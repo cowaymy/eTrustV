@@ -76,14 +76,15 @@ public class BatchPaymentController {
 			}
 		}
 
-		if(batchStatus.length > 0){
-			for(int i=0 ; i < batchStatus.length; i++){
-				if(batchStatus[i].toString().equals("8")){
-					confirmStatusList.add("8");
-				}
-			}
-		}
 
+//		if(batchStatus.length > 0){
+//			for(int i=0 ; i < batchStatus.length; i++){
+//				if(batchStatus[i].toString().equals("8")){
+////					confirmStatusList.add("8");
+//				}
+//			}
+//		}
+		logger.debug(confirmStatusList.toString());
 		logger.debug("=======  selectBatchPaymentList =========== params {} "+params);
 
 		params.put("payMode", payMode);
