@@ -9,6 +9,30 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
+      #sirimUploadContainer {
+        margin-bottom: 30px;
+      }
+
+      #installUploadContainer > h5 {
+        margin-top: 30px;
+      }
+
+      #qr-reader-cont {
+        position: fixed !important;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        display: none;
+        z-index: 100;
+        align-items: center;
+        background: rgba(0,0,0,0.5);
+      }
+
+      #qr-reader {
+        width: 100%;
+      }
+
       .btn-tag {
         background-color: #ECEFF1;
         text-transform: capitalize !important;
@@ -41,7 +65,7 @@
       }
 
       .tangkap:before {
-         content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22currentColor%22%20class%3D%22bi%20bi-aspect-ratio%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M0%203.5A1.5%201.5%200%200%201%201.5%202h13A1.5%201.5%200%200%201%2016%203.5v9a1.5%201.5%200%200%201-1.5%201.5h-13A1.5%201.5%200%200%201%200%2012.5v-9zM1.5%203a.5.5%200%200%200-.5.5v9a.5.5%200%200%200%20.5.5h13a.5.5%200%200%200%20.5-.5v-9a.5.5%200%200%200-.5-.5h-13z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M2%204.5a.5.5%200%200%201%20.5-.5h3a.5.5%200%200%201%200%201H3v2.5a.5.5%200%200%201-1%200v-3zm12%207a.5.5%200%200%201-.5.5h-3a.5.5%200%200%201%200-1H13V8.5a.5.5%200%200%201%201%200v3z%22%2F%3E%0A%3C%2Fsvg%3E");
+         content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%23ffffff%22%20class%3D%22bi%20bi-aspect-ratio%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M0%203.5A1.5%201.5%200%200%201%201.5%202h13A1.5%201.5%200%200%201%2016%203.5v9a1.5%201.5%200%200%201-1.5%201.5h-13A1.5%201.5%200%200%201%200%2012.5v-9zM1.5%203a.5.5%200%200%200-.5.5v9a.5.5%200%200%200%20.5.5h13a.5.5%200%200%200%20.5-.5v-9a.5.5%200%200%200-.5-.5h-13z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M2%204.5a.5.5%200%200%201%20.5-.5h3a.5.5%200%200%201%200%201H3v2.5a.5.5%200%200%201-1%200v-3zm12%207a.5.5%200%200%201-.5.5h-3a.5.5%200%200%201%200-1H13V8.5a.5.5%200%200%201%201%200v3z%22%2F%3E%0A%3C%2Fsvg%3E");
          margin-right: 10px;
          transform: translate(0, 10%);
       }
@@ -66,7 +90,9 @@
                                  </select>
                             </div>
                             <div id="barcodeSection">
-							    <div id="qr-reader"></div>
+                                <div id="qr-reader-cont">
+								    <div id="qr-reader"></div>
+                                </div>
 							    <div id="qr-reader-results"></div>
 							    <h2 id="serialNo"></h2>
 							     <div class="form-group">
@@ -499,6 +525,9 @@
         aElement3.style.alignItems = "center";
         aElement3.classList.add("m-2");
         aElement3.classList.add("tangkap");
+        aElement3.classList.add("bg-danger");
+        aElement3.classList.add("text-light");
+        aElement3.classList.add("p-3");
         aElement3.innerText = "Capture";
 
         openCamera.style.display = "none";
@@ -574,9 +603,19 @@
 
 	let resultContainer = document.getElementById('qr-reader-results');
 	let html5QrcodeScanner = new Html5Qrcode("qr-reader");
+	document.getElementById("qr-reader-cont").onclick = function(e) {
+	    if (e.target == this) {
+	    	this.style.display = 'none'
+	    	html5QrcodeScanner.stop()
+	    	.then(() => {
+	            html5QrcodeScanner.clear();
+	    	})
+	    }
+	}
 
 	let serialObject = {};
 	onScanSuccess = (decodedText, decodedResult, seq) => {
+		document.getElementById("qr-reader-cont").style.display = "none"
         //++countResults
         if(decodedText.length !=18){
         	return;
@@ -596,13 +635,15 @@
 
     $("#btnScanBarcode").click(e => {
         e.preventDefault();
-        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: 1000, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
+        document.getElementById("qr-reader-cont").style.display = 'flex'
+        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
         , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo"))});
     });
 
    $("#btnScanBarcodeOutdoor").click(e => {
         e.preventDefault();
-        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, qrbox: 1000, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
+        document.getElementById("qr-reader-cont").style.display = 'flex'
+        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
         , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo2"))});
     });
 

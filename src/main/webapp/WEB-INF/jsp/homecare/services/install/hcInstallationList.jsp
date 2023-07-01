@@ -226,6 +226,7 @@
 	      independentAllCheckBox : true,
 	      showRowAllCheckBox : true,
 	      editable : false,
+	      wordWrap: true,
 	      rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
 	          if(item.appTypeId == "5764" && !(item.ordStusCodeId == "25" && item.code == "EXC")) { // AUX가  아닌 경우 체크박스 disabeld 처리함
 	              return false; // false 반환하면 disabled 처리됨
@@ -461,6 +462,38 @@
             }
           });
       }
+
+    function fn_pdfDown(){
+    	 let installEntryNoList = AUIGrid.getGridData(myGridID).map(d => d.installEntryNo);
+
+    	 const reportFormInstLst = document.getElementById("reportFormInstLst");
+
+    	 if(installEntryNoList.length){
+
+    	     document.querySelectorAll(".reportInput").forEach(e=>e.remove());
+
+    		 document.querySelectorAll("#searchForm input.forPdf").forEach(e => {
+	    			 reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="`+e.value+`" name="`+e.name+`"/>`;
+    		 });
+
+    		 document.querySelectorAll("#searchForm select.forPdf").forEach(e=> {
+    				 if(e.name == "type"){
+                         reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="` + ($("#"+e.id).val() ? $("#"+e.id).val() : '') + `" name="`+e.name+`2"/>`;
+    				 }else{
+	 	    			 reportFormInstLst.innerHTML += `<input class="reportInput" type="hidden" value="` + ($("#"+e.id).val() ? $("#"+e.id).val() : '') + `" name="`+e.name+`"/>`;
+    				 }
+    	     });
+
+	         $("#reportFormInstLst #reportFileName").val('/homecare/preInsQr.rpt');
+	         $("#reportFormInstLst #viewType").val("PDF");
+	         $("#reportFormInstLst #reportDownFileName").val("preInstallationQrListing_" + moment().format("YYYYMMDD"));
+
+	         Common.report("reportFormInstLst", { isProcedure : true});
+    	 }else{
+    		 Common.alert("Not allow to generate report with empty listing.")
+    	 }
+    }
+
 </script>
 <section id="content">
  <!-- content start -->
@@ -505,12 +538,13 @@
     <input type='hidden' id='viewType' name='viewType'/>
     <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
     <input type='hidden' id='V_TEMP' name='V_TEMP'/>
+    <input type="hidden" id="preInsQrParams" name="preInsQrParams">
   </form>
 
   <form action="#" method="post" id="searchForm">
-  <input type="hidden" id="orgCode" name="orgCode" value="" />
-  <input type="hidden" id="grpCode" name="grpCode" value="" />
-  <input type="hidden" id="deptCode" name="deptCode" value="" />
+  <input type="hidden" class="forPdf" id="orgCode" name="orgCode" value="" />
+  <input type="hidden" class="forPdf" id="grpCode" name="grpCode" value="" />
+  <input type="hidden" class="forPdf" id="deptCode" name="deptCode" value="" />
 
 
    <table class="type1">
@@ -527,7 +561,7 @@
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.title.Type' /></th>
-      <td><select class="multy_select w100p" multiple="multiple"
+      <td><select class="multy_select w100p forPdf" multiple="multiple"
        id="type" name="type">
        <c:forEach var="list" items="${instTypeList }" varStatus="status">
          <option value="${list.codeId}">${list.codeName}</option>
@@ -537,7 +571,7 @@
       </select></td>
       <th scope="row"><spring:message
         code='service.title.InstallNo' /></th>
-      <td><input type="text" class="w100p" title="Install No." placeholder="Install No."
+      <td><input type="text" class="w100p forPdf" title="Install No." placeholder="Install No."
        id="installNo" name="installNo" /></td>
       <th scope="row"><spring:message
         code='service.title.AppointmentDate' /></th>
@@ -546,13 +580,13 @@
         <!-- date_set start -->
         <p>
          <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_dateHc" id="startDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc forPdf" id="startDate"
           name="startDate" />
         </p>
         <span>To</span>
         <p>
          <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_dateHc" id="endDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc forPdf" id="endDate"
           name="endDate" />
         </p>
        </div>
@@ -567,38 +601,38 @@
         <!-- date_set start -->
         <p>
          <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_dateHc" id="instalStrlDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc forPdf" id="instalStrlDate"
           name="instalStrlDate" />
         </p>
         <span>To</span>
         <p>
          <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_dateHc" id="installEndDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc forPdf" id="installEndDate"
           name="installEndDate" />
         </p>
        </div>
        <!-- date_set end -->
       </td>
       <th scope="row"><spring:message code='service.title.OrderNo' /></th>
-      <td><input type="text" class="w100p" title="Order No." placeholder="Order No."
+      <td><input type="text" class="w100p forPdf" title="Order No." placeholder="Order No."
        id="orderNo" name="orderNo" /></td>
       <th scope="row"><spring:message
         code='service.title.OrderRefNo' /></th>
-      <td><input type="text" class="w100p" title="Order Ref. No." placeholder="Order Ref. No."
+      <td><input type="text" class="w100p forPdf" title="Order Ref. No." placeholder="Order Ref. No."
        id="orderRefNo" name="orderRefNo" /></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.PONo' /></th>
-      <td><input type="text" class="w100p" title="PO No." placeholder="PO No."
+      <td><input type="text" class="w100p forPdf" title="PO No." placeholder="PO No."
        id="poNo" name="poNo" /></td>
       <th scope="row"><spring:message
         code='service.title.OrderDate' /></th>
       <td><input type="text" title="Create start Date"
-       placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="orderDate"
+       placeholder="DD/MM/YYYY" class="j_dateHc w100p forPdf" id="orderDate"
        name="orderDate" /></td>
       <th scope="row"><spring:message
         code='service.title.ApplicationType' /></th>
-      <td><select class="multy_select w100p" multiple="multiple"
+      <td><select class="multy_select w100p forPdf" multiple="multiple"
        id="appType" name="appType">
         <c:forEach var="list" items="${appTypeList }" varStatus="status">
          <option value="${list.codeId}">${list.codeName}</option>
@@ -608,7 +642,7 @@
      <tr>
       <th scope="row"><spring:message
         code='service.title.InstallationStatus' /></th>
-      <td><select class="multy_select w100p" multiple="multiple"
+      <td><select class="multy_select w100p forPdf" multiple="multiple"
        id="installStatus" name="installStatus">
         <c:forEach var="list" items="${installStatus }"
          varStatus="status">
@@ -616,42 +650,42 @@
         </c:forEach>
       </select></td>
       <th scope="row">DT Code</th>
-      <td><input type="text" class="w100p" title="DT Code" placeholder="DT Code" id="ctCode" name="ctCode" /></td>
+      <td><input type="text" class="w100p forPdf" title="DT Code" placeholder="DT Code" id="ctCode" name="ctCode" /></td>
       <th scope="row">DT Branch</th>
       <td>
-        <select class="multy_select w100p" multiple="multiple" id="dscCode" name="dscCode">
+        <select class="multy_select w100p forPdf" multiple="multiple" id="dscCode" name="dscCode">
       </select>
       </td>
      </tr>
      <tr>
       <th scope="row"><spring:message
         code='service.title.CustomerID' /></th>
-      <td><input type="text" class="w100p" title="Customer ID" placeholder="Customer ID"
+      <td><input type="text" class="w100p forPdf" title="Customer ID" placeholder="Customer ID"
        id="customerId" name="customerId" /></td>
       <th scope="row"><spring:message
         code='service.title.CustomerName' /></th>
-      <td><input type="text" class="w100p" title="Customer Name" placeholder="Customer Name"
+      <td><input type="text" class="w100p forPdf" title="Customer Name" placeholder="Customer Name"
        id="customerName" name="customerName" /></td>
       <th scope="row"><spring:message
         code='service.title.CustomerIC_CompanyNo' /></th>
-      <td><input type="text" class="w100p" title="NRIC/BRIC" placeholder="NRIC/BRIC"
+      <td><input type="text" class="w100p forPdf" title="NRIC/BRIC" placeholder="NRIC/BRIC"
        id="customerIc" name="customerIc" /></td>
      </tr>
 	<tr>
         <th scope="row"><spring:message code='service.title.SIRIMNo' /></th>
-        <td><input type="text" class="w100p" title="SIRIM No." placeholder="SIRIM No." id="sirimNo" name="sirimNo" /></td>
+        <td><input type="text" class="w100p forPdf" title="SIRIM No." placeholder="SIRIM No." id="sirimNo" name="sirimNo" /></td>
 	    <th scope="row"><spring:message code='service.title.SerialNo' /></th>
-	    <td><input type="text" class="w100p" title="Serial No." placeholder="Serial No." id="serialNo" name="serialNo" /></td>
+	    <td><input type="text" class="w100p forPdf" title="Serial No." placeholder="Serial No." id="serialNo" name="serialNo" /></td>
 	    <th scope="row">Bundle No</th>
-        <td><input type="text" class="w100p" title="Bundle No." placeholder="Bundle No." id="bndlNo" name="bndlNo" /></td>
+        <td><input type="text" class="w100p forPdf" title="Bundle No." placeholder="Bundle No." id="bndlNo" name="bndlNo" /></td>
 	</tr>
      <tr>
       <th scope="row"><spring:message code='service.title.Product' /></th>
-      <td ><select class="w100p" id="product"
+      <td ><select class="w100p forPdf" id="product"
        name="product"></select></td>
        <th scope="row">Stock Out GR</th>
      <td>
-          <select id="listDelvryGr" name="delvryGr" class="multy_select w100p" multiple="multiple">
+          <select id="listDelvryGr" name="delvryGr" class="multy_select w100p forPdf" multiple="multiple">
               <option value="Y">Yes</option>
               <option value="N">No</option>
               <option value="B">Blank</option>
@@ -659,7 +693,7 @@
      </td>
      <th scope="row">Stock Return GR</th>
      <td>
-          <select id="listReturnGr" name="returnGr" class="multy_select w100p" multiple="multiple">
+          <select id="listReturnGr" name="returnGr" class="multy_select w100p forPdf" multiple="multiple">
               <option value="Y">Yes</option>
               <option value="N">No</option>
               <option value="B">Blank</option>
@@ -669,11 +703,10 @@
      <tr>
            <th>Pre-Installation Check :</th>
            <td>
-            <select id="preinsChk" name="preinsChk">
-                    <option>Select Option</option>
-                    <option value="Y">Y</option>
-                    <option value="N">N</option>
-                    <option value="B">Blank</option>
+            <select id="preinsChk" name="preinsChk" class="multy_select w100p forPdf" multiple="multiple">
+                    <option value="4">Pre-Com</option>
+                    <option value="21">Pre-Fail</option>
+                    <option value="0">Blank</option>
             </select>
            </td>
            <th></th>
@@ -771,10 +804,15 @@
    <br/>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-     <li><p class="btn_grid">
-       <a href="#none" onClick="fn_excelDown()"><spring:message
-         code='service.btn.Generate' /></a>
-      </p></li>
+	     <li>
+	            <p class="btn_grid">
+	                <a href="#none" onClick="fn_pdfDown()">Pre-Installation QR Code</a>
+	            </p>
+	     </li>
+	     <li><p class="btn_grid">
+	                <a href="#none" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a>
+	           </p>
+	     </li>
     </c:if>
    </ul>
    <article class="grid_wrap">

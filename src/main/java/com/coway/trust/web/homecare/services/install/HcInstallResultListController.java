@@ -131,6 +131,7 @@ public class HcInstallResultListController {
 		String[] productList = request.getParameterValues("product"); //added by frango
 		String[] delvryGrList = request.getParameterValues("delvryGr"); //
 		String[] returnGrList = request.getParameterValues("returnGr"); //
+		String[] preinsChkList = request.getParameterValues("preinsChk");
 
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
@@ -140,8 +141,8 @@ public class HcInstallResultListController {
 		params.put("productList", productList); //added by frango
 		params.put("delvryGrList", delvryGrList);
 		params.put("returnGrList", returnGrList);
+		params.put("preinsChkList", preinsChkList);
 
-		logger.debug("==============> {} : " +params);
 		List<EgovMap> installationResultList = hcInstallResultListService.hcInstallationListSearch(params);
 
 		return ResponseEntity.ok(installationResultList);

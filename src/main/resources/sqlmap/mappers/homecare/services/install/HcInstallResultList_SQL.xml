@@ -110,8 +110,8 @@
                     ,delvrSts.DELVRY_GR_CMPLT delvry_gr
                     ,returnSts.DELVRY_GR_CMPLT return_gr
                     ,  CASE
-                            WHEN PREINS.STUS_CODE_ID = 4 THEN 'Y'
-                            WHEN PREINS.STUS_CODE_ID = 21 THEN 'N'
+                            WHEN PREINS.STUS_CODE_ID = 4 THEN 'Pre-Com'
+                            WHEN PREINS.STUS_CODE_ID = 21 THEN 'Pre-Fail'
                             ELSE ''
                        END PREINS_IND
                      , PREINS.REMARK PREINS_REMARK
@@ -173,14 +173,18 @@
                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
           AND som.BNDL_ID IS NOT NULL
 		]]>
-		<if test='preinsChk != null and preinsChk == "Y"'>
-          AND PREINS.STUS_CODE_ID = 4
+		<if test="preinsChkList != null and preinsChkList != '' ">
+		    AND NVL(PREINS.STUS_CODE_ID,'0') IN
+		     <foreach item="item" collection="preinsChkList" index="index" open="(" separator="," close=")">
+              #{item}
+            </foreach>
         </if>
-        <if test='preinsChk != null and preinsChk == "N"'>
-          AND PREINS.STUS_CODE_ID = 21
-        </if>
-        <if test='preinsChk != null and preinsChk == "B"'>
-          AND PREINS.STUS_CODE_ID IS NULL
+        <if test="productList != null and productList != '' ">
+            AND STK.STK_ID IN
+            <foreach item="item" collection="productList" index="index"
+              open="(" separator="," close=")">
+              #{item}
+            </foreach>
         </if>
 		<if test="productList != null and productList != '' ">
 			AND STK.STK_ID IN
@@ -268,9 +272,6 @@
         <if test="orderDate != null and orderDate != ''">
             AND SOM.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
 		</if>
-<!-- 		<if test="product != null and product != ''"> -->
-<!--             AND STK.STK_ID = #{product} -->
-<!--         </if> -->
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}
         </if>
