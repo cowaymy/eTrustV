@@ -42,7 +42,6 @@
                     COUNT(CUST_ID) CUST_ID
            FROM SAL0335D
            WHERE CUST_ID = #{custId}
-<!--            AND LOGIN_IND = 1 -->
     </select>
 
 
@@ -55,17 +54,17 @@
 
 
     <select id="selectCustomerInfoList"  parameterType="Map" resultType="egovMap">
-            SELECT
+                SELECT
                              som.*
 			               , pd.STK_DESC
                            , CASE WHEN TRUNC(SYSDATE) BETWEEN srv.SRV_PRD_START_DT AND srv.SRV_PRD_EXPR_DT THEN 1 ELSE 0 END CHK_SERVICE
-                           , rs.STUS_CODE_ID RENTAL_STUS
+                           , NVL(rs.STUS_CODE_ID,'0') RENTAL_STUS
 		        FROM  SAL1010V som
 		        join sal0002d sod on som.ord_id = sod.sales_ord_id
 		        JOIN SYS0026M pd ON sod.ITM_STK_ID = pd.STK_ID
-		        JOIN SAL0090D config on config.srv_so_id = som.ORD_ID
-                JOIN SAL0088D srv on config.SRV_CONFIG_ID = srv.SRV_CONFIG_ID
-                JOIN SAL0071D rs on rs.SALES_ORD_ID = som.ORD_ID
+		        LEFT JOIN SAL0090D config on config.srv_so_id = som.ORD_ID
+                LEFT JOIN SAL0088D srv on config.SRV_CONFIG_ID = srv.SRV_CONFIG_ID
+                LEFT JOIN SAL0071D rs on rs.SALES_ORD_ID = som.ORD_ID
 		    WHERE som.STUS_CODE_ID = 4
             AND som.CUST_ID = #{custId}
 		    <if test="orderNo != null and orderNo != ''">

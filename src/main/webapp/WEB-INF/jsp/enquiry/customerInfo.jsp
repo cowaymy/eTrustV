@@ -69,7 +69,7 @@
          });
     });
 
-    function validate(order,chkService, stus){
+    function validate(order,chkService, stus,appType){
     	 Common.ajax("GET","/enquiry/getSubmissionTimes.do", {orderNo : order} , function (result, textStatus, jqXHR){
     		 if(jqXHR.status == "200"){
     			 if(result!=null && result.validChk > 1){
@@ -77,7 +77,7 @@
                      $("#alertModalClick").click();
                      return;
     		     }
-                 else if(stus =="SUS" || stus =="INV"){
+                 else if(appType =="REN" && (stus =="SUS" || stus =="INV")){
                      document.getElementById("MsgAlert").innerHTML =  setModalContent(notREG);
                      $("#alertModalClick").click();
                      return;
@@ -121,7 +121,7 @@
                     + result.data[i].instState + ' '
                     + result.data[i].instCountry
                     +'</td>'
-                    +'<td style="text-align:center;"><a href="javascript:validate('+ result.data[i].salesOrdNo + ',' + result.data[i].chkService + ',' + `'`+ result.data[i].rentalStus + `'`+')"><span class="material-symbols-outlined">edit</span></a></td>'
+                    +'<td style="text-align:center;"><a href="javascript:validate('+ result.data[i].salesOrdNo + ',' + result.data[i].chkService + ',' + `'`+ result.data[i].rentalStus + `'`+ `,'`+ result.data[i].appType + `'`+')"><span class="material-symbols-outlined">edit</span></a></td>'
                     + '</tr>';
                 }
             }
