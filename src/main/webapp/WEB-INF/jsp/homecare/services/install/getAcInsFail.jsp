@@ -7,6 +7,26 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon.css"/>
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <style>
+      #sirimUploadContainer {
+        margin-bottom: 30px;
+      }
+
+      #installUploadContainer > h5:not(:first-child) {
+        margin-top: 30px;
+      }
+
+      #qr-reader-cont {
+        position: fixed !important;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        display: none;
+        z-index: 100;
+        align-items: center;
+        background: rgba(0,0,0,0.5);
+      }
+
       .btn-tag {
         background-color: #ECEFF1;
         text-transform: capitalize !important;
@@ -39,7 +59,7 @@
       }
 
       .tangkap:before {
-         content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22currentColor%22%20class%3D%22bi%20bi-aspect-ratio%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M0%203.5A1.5%201.5%200%200%201%201.5%202h13A1.5%201.5%200%200%201%2016%203.5v9a1.5%201.5%200%200%201-1.5%201.5h-13A1.5%201.5%200%200%201%200%2012.5v-9zM1.5%203a.5.5%200%200%200-.5.5v9a.5.5%200%200%200%20.5.5h13a.5.5%200%200%200%20.5-.5v-9a.5.5%200%200%200-.5-.5h-13z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M2%204.5a.5.5%200%200%201%20.5-.5h3a.5.5%200%200%201%200%201H3v2.5a.5.5%200%200%201-1%200v-3zm12%207a.5.5%200%200%201-.5.5h-3a.5.5%200%200%201%200-1H13V8.5a.5.5%200%200%201%201%200v3z%22%2F%3E%0A%3C%2Fsvg%3E");
+         content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%23ffffff%22%20class%3D%22bi%20bi-aspect-ratio%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cpath%20d%3D%22M0%203.5A1.5%201.5%200%200%201%201.5%202h13A1.5%201.5%200%200%201%2016%203.5v9a1.5%201.5%200%200%201-1.5%201.5h-13A1.5%201.5%200%200%201%200%2012.5v-9zM1.5%203a.5.5%200%200%200-.5.5v9a.5.5%200%200%200%20.5.5h13a.5.5%200%200%200%20.5-.5v-9a.5.5%200%200%200-.5-.5h-13z%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M2%204.5a.5.5%200%200%201%20.5-.5h3a.5.5%200%200%201%200%201H3v2.5a.5.5%200%200%201-1%200v-3zm12%207a.5.5%200%200%201-.5.5h-3a.5.5%200%200%201%200-1H13V8.5a.5.5%200%200%201%201%200v3z%22%2F%3E%0A%3C%2Fsvg%3E");
          margin-right: 10px;
          transform: translate(0, 10%);
       }
@@ -371,13 +391,27 @@
 	                    $("#alertModalClick").click();
 	                }
 	            }
-	            else if(e.target.files[0].size > 2048000){
-	                document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
-	                $("#alertModalClick").click();
-	            }
 	            else{
-	                image.src = URL.createObjectURL(e.target.files[0]);
-	                imageCont.style.display = "";
+	                createImageBitmap(e.target.files[0]).then((imageBit) => {
+	                    const canvas = document.createElement("canvas")
+	                    canvas.width = imageBit.width
+	                    canvas.height = imageBit.height
+	                    const ctx = canvas.getContext('2d')
+	                    ctx.drawImage(imageBit, 0, 0)
+	                    canvas.toBlob((b) => {
+	                        const f = new File([b], 'upload.jpg');
+	                        if(f.size > 2048000){
+	                            document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
+	                            $("#alertModalClick").click();
+	                            return
+	                        }
+	                        const container = new DataTransfer();
+	                        container.items.add(f);
+	                        image.src = URL.createObjectURL(e.target.files[0]);
+	                        e.target.files = container.files;
+	                        imageCont.style.display = "";
+	                    }, e.target.files[0].type, 0.5)
+	                })
 	            }
 	        }
 
@@ -414,6 +448,9 @@
 	        aElement3.style.alignItems = "center";
 	        aElement3.classList.add("m-2");
 	        aElement3.classList.add("tangkap");
+	        aElement3.classList.add("bg-danger");
+	        aElement3.classList.add("text-light");
+	        aElement3.classList.add("p-3");
 	        aElement3.innerText = "Capture";
 
 	        openCamera.style.display = "none";
@@ -469,7 +506,7 @@
 	                        imageCont.style.display = "";
 	                        c.remove();
 	                        vidCont.remove()
-	                    }, 'image/jpeg')
+	                    }, 'image/jpeg', 0.5)
 	                }
 	            })
 	        }

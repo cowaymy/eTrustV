@@ -482,13 +482,28 @@
 	                $("#alertModalClick").click();
             	}
             }
-            else if(e.target.files[0].size > 2048000){
-                document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
-                $("#alertModalClick").click();
-            }
             else{
-                image.src = URL.createObjectURL(e.target.files[0]);
-                imageCont.style.display = "";
+            	createImageBitmap(e.target.files[0]).then((imageBit) => {
+            		const canvas = document.createElement("canvas")
+            		canvas.width = imageBit.width
+            		canvas.height = imageBit.height
+            		const ctx = canvas.getContext('2d')
+            		ctx.drawImage(imageBit, 0, 0)
+            		canvas.toBlob((b) => {
+		            	const f = new File([b], 'upload.jpg');
+		            	if(f.size > 2048000){
+		                    document.getElementById("MsgAlert").innerHTML =  "Cannot upload the image more than 2MB.";
+		                    $("#alertModalClick").click();
+		                    return
+		                }
+		                const container = new DataTransfer();
+		                container.items.add(f);
+		                image.src = URL.createObjectURL(e.target.files[0]);
+		                e.target.files = container.files;
+		                imageCont.style.display = "";
+            		}, e.target.files[0].type, 0.5)
+            	})
+
             }
         }
 
@@ -583,7 +598,7 @@
                         imageCont.style.display = "";
                         c.remove();
                         vidCont.remove()
-			        }, 'image/jpeg')
+			        }, 'image/jpeg', 0.5)
 			    }
 		    })
 	    }
