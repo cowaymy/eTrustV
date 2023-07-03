@@ -54,7 +54,7 @@
 
 
     <select id="selectCustomerInfoList"  parameterType="Map" resultType="egovMap">
-                SELECT
+                SELECT DISTINCT
                              som.*
 			               , pd.STK_DESC
                            , CASE WHEN TRUNC(SYSDATE) BETWEEN srv.SRV_PRD_START_DT AND srv.SRV_PRD_EXPR_DT THEN 1 ELSE 0 END CHK_SERVICE
