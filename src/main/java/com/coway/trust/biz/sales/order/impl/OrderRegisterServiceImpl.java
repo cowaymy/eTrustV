@@ -1994,7 +1994,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     	     int mstOrdCmb = orderRegisterMapper.chkPromoCboMst(acMap);
     	     int subOrdCmb = orderRegisterMapper.chkPromoCboSub(acMap);
 
-    	     if(mstOrdCmb > 0 && subOrdCmb > 0){
+    	     if(mstOrdCmb > 0 || subOrdCmb > 0){
     	         orderRegisterMapper.insert_SAL0349D(acMap);
     	    }
     	}
