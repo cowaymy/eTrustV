@@ -1984,8 +1984,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     	          acMap.put("subSalesOrdId", salesOrderMVO.getSalesOrdId());
     	     }
 
-    	     acMap.put("promoId", salesOrderMVO.getPromoId());
-    	     acMap.put("stkId", salesOrderDVO.getItmStkId());
+    	     acMap.put("promoNo", salesOrderMVO.getPromoId());
+    	     acMap.put("prod", salesOrderDVO.getItmStkId());
     	     acMap.put("custId", salesOrderMVO.getCustId());
     	     acMap.put("crtUserId", salesOrderMVO.getCrtUserId());
     	     acMap.put("updUserId", salesOrderMVO.getUpdUserId());
@@ -1994,7 +1994,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     	     int mstOrdCmb = orderRegisterMapper.chkPromoCboMst(acMap);
     	     int subOrdCmb = orderRegisterMapper.chkPromoCboSub(acMap);
 
-    	     if(mstOrdCmb > 0 || subOrdCmb > 0){
+    	     if(mstOrdCmb > 0 && subOrdCmb > 0){
     	         orderRegisterMapper.insert_SAL0349D(acMap);
     	    }
     	}
