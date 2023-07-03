@@ -115,7 +115,7 @@
                     + result.data[i].instState + ' '
                     + result.data[i].instCountry
                     +'</td>'
-                    +'<td style="text-align:center;"><a href="javascript:validate('+ result.data[i].salesOrdNo + ',' + result.data[i].chkService + ',' + `'`+ result.data[i].rentalStus + `'`+ `,'`+ result.data[i].appType + `'`+')"><span class="material-symbols-outlined">edit</span></a></td>'
+                    +'<td style="text-align:center;"><a href="javascript:validate('+ `'`+ result.data[i].salesOrdNo + `',` + result.data[i].chkService + ',' + `'`+ result.data[i].rentalStus + `'`+ `,'`+ result.data[i].appType + `'`+')"><span class="material-symbols-outlined">edit</span></a></td>'
                     + '</tr>';
                 }
             }
