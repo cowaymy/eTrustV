@@ -17,7 +17,6 @@
        line-height:1.5 !important;
     }
 
-
     .myModalAlert{
         width:100% !importanrt;
     }
@@ -37,11 +36,11 @@
                     <div class="text-danger p-3 modalCnt">` + content + `</div>`;
     }
 
-    let twoTimesSubmission = "Dear customer, you have submitted multiple submissions. Do you need further assistance? <br/><br/>  Our friendly staff is always ready to help. Kindly call Coway Careline at 1800-888-111. Thank you.";
+    let twoTimesSubmission = "Dear customer, you have submitted multiple submissions. Do you need further assistance? <br/><br/>  For more information, kindly reach our support team on Livechat. Thank you.";
 
-    let notREG = "Dear customer, the selected order number has a high outstanding bill. Please remit your payment in order to proceed for detail updates. <br/><br/> For more information, kindly call Coway Careline at 1800-888-111. Thank you";
+    let notREG = "Dear customer, the selected order number has a high outstanding bill. Please remit your payment in order to proceed for detail updates. <br/><br/> For more information, kindly reach our support team on Livechat. Thank you";
 
-    let outOfWarranty = "Dear customer, kindly be informed that your product warranty has expired. <br/><br/> For more information, kindly call Coway Careline at 1800-888-111. Thank you."
+    let outOfWarranty = "Dear customer, kindly be informed that your product warranty has expired. <br/><br/> For more information, kindly reach our support team on Livechat. Thank you."
 
     let completeSubmission = "Dear customer, your request has been received. <br/><br/>  It will be updated after the next working day. Thank you.";
 
