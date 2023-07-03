@@ -969,7 +969,7 @@ function SearchListAjax(obj){
      <th scope="row">Distance</th>
     <td><span><c:out value="${basicinfo.distance}"/></span></td>
 </tr>
-<%-- <tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.hsImg" /></th>
       <td colspan="7">
         <ul class="btns">
@@ -980,7 +980,7 @@ function SearchListAjax(obj){
             </li>
         </ul>
       </td>
-</tr> --%>
+</tr>
 
 </tbody>
 </table><!-- table end -->
