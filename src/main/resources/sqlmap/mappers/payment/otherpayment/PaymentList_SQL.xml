@@ -25,7 +25,7 @@
             PAY_ITM_REF_DT,
             PAY_ITM_BANK_ACC_ID,
             BANK_ACC
-            , EXTRACT(YEAR FROM PAY_DATA) AS PAY_DATA
+            , EXTRACT(YEAR FROM TRX_DT) AS PAY_DATA
             , REGEXP_REPLACE(OR_NO, '[^A-Za-z]') OR_TYPE
         FROM (
             SELECT
@@ -50,7 +50,7 @@
 				PAY_ITM_REF_DT,
 				PAY_ITM_BANK_ACC_ID,
 				BANK_ACC,
-				PAY_DATA,
+				TRX_DT,
                 ROW_NUMBER() OVER (PARTITION BY OR_NO ORDER BY CASE WHEN STUS = 6 THEN -1 ELSE STUS END DESC) R
             FROM (
 		        SELECT
@@ -94,7 +94,7 @@
 		            A.TOT_AMT,
 		            D.PAY_ITM_BANK_ACC_ID,
                     NVL(L.ACC_CODE,0) BANK_ACC
-                    , C.PAY_DATA
+                    , M.TRX_DT
 		        FROM
 		            PAY0252T A
 		            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
@@ -118,6 +118,7 @@
 		            LEFT JOIN SAL0225D I2 ON H.BILL_SO_ID = I2.SRV_ORD_ID
 		            LEFT JOIN SYS0005M J ON C.BRNCH_ID = J.BRNCH_ID
 		            LEFT JOIN SYS0001M L ON D.PAY_ITM_BANK_ACC_ID = L.ACC_ID
+		            JOIN PAY0069D M ON M.TRX_ID = C.TRX_ID
 		        WHERE
 		            A.GROUP_SEQ IN (
 		                SELECT
@@ -202,7 +203,7 @@
 		            K.STUS,
 		            D.PAY_ITM_BANK_ACC_ID,
                     L.ACC_CODE
-                    ,C.PAY_DATA
+                    ,M.TRX_DT
 		        ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
 		    ) GRP
 	    ) WHERE R = 1

@@ -619,7 +619,7 @@ public class PaymentListController {
 				validationParams.put("payItmModeId", selectedOrder.get(i).get("payItmModeId"));
 				validationParams.put("type", selectedOrder.get(i).get("type"));
 
-				if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) < 2018){
+				/*if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) < 2018){
 					validationParams.put("bankAcc", "ETC");
 					validationParams.put("bkCrcFlg", "N");
 					allowFlg = paymentListService.selectAllowFlg(validationParams);
@@ -629,39 +629,50 @@ public class PaymentListController {
 						//returnMap.put("error", "Not Allow to proceed with Refund. Please reselect. ");
 						break;
 					}
-					/*else if(allowFlg != null && allowFlg != "" && allowFlg.equals("Y")){
-						returnMap.put("success", true);
-					}*/
+					//else if(allowFlg != null && allowFlg != "" && allowFlg.equals("Y")){
+						//returnMap.put("success", true);
+					}
+				} */
+				if(selectedOrder.get(i).containsKey("payData")){
+					if(Integer.parseInt(selectedOrder.get(i).get("payData").toString()) >= 2018) {
+						validationParams.put("bankAcc", selectedOrder.get(i).get("bankAcc"));
+
+						if((selectedOrder.get(i).get("bankStateMappingId") != null && selectedOrder.get(i).get("bankStateMappingId") != "") || (selectedOrder.get(i).get("crcStateMappingId") != null && selectedOrder.get(i).get("crcStateMappingId") != "")){
+							if((selectedOrder.get(i).get("bankStateMappingDt") != null && selectedOrder.get(i).get("bankStateMappingDt") != "") || (selectedOrder.get(i).get("crcStateMappingDt") != null && selectedOrder.get(i).get("crcStateMappingDt") != "")){
+								validationParams.put("bkCrcFlg", "Y");
+							}
+							else{ //not allow to proceed if statement mapping date is empty but statement mapping id is not null
+								allowFlg = "N";
+								break;
+							}
+						}
+						else
+						{
+							validationParams.put("bkCrcFlg", "N");
+						}
+
+						allowFlg = paymentListService.selectAllowFlg(validationParams);
+						if(allowFlg == null){
+							allowFlg = "N";
+							break;
+						}else if(allowFlg.equals("N")){
+							break;
+						}
+					}
+					else{
+						allowFlg = "Y"; //payment before 2018 no need to do validation checking, allow to proceed.
+					}
 				}
-				else {
-					validationParams.put("bankAcc", selectedOrder.get(i).get("bankAcc"));
-
-					if((selectedOrder.get(i).get("bankStateMappingId") != null && selectedOrder.get(i).get("bankStateMappingId") != "") || (selectedOrder.get(i).get("crcStateMappingId") != null && selectedOrder.get(i).get("crcStateMappingId") != "")){
-						validationParams.put("bkCrcFlg", "Y");
-					}
-					else
-					{
-						validationParams.put("bkCrcFlg", "N");
-					}
-
-					allowFlg = paymentListService.selectAllowFlg(validationParams);
-					if(allowFlg == null){
-						allowFlg = "N";
-						//returnMap.put("error", "Not Allow to proceed with Refund. Please reselect. ");
-						break;
-					}else if(allowFlg.equals("N")){
-						break;
-					}
-/*					else if(allowFlg != null && allowFlg != "" && allowFlg.equals("Y")){
-						returnMap.put("success", true);
-					}*/
+				else{
+					allowFlg = "N";
+					break;
 				}
-
 			}
 		}
 
 		return allowFlg;
 	}
+	// 20230627 - ADD IN NEW CHECKING INCLUSIVE OF OR_TYPE/MODE_ID/BANK_CODE/BANK_STATEMENT/2018[E]
 
 	/*@RequestMapping(value="/validRefund" ,  method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> validRefund(@RequestParam Map<String, Object> params){
