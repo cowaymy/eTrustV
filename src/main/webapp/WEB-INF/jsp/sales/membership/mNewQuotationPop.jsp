@@ -1114,7 +1114,20 @@ $(document).ready(function(){
 	}
 
 	function fn_save() {
+		    var rtnVAL = false;
             var billMonth = getOrderCurrentBillMonth();
+
+            Common.ajaxSync("GET", "/sales/membership/mActiveQuoOrder", {
+                ORD_NO : $("#ORD_NO").val()
+            }, function(result) {
+                console.log(result);
+
+                if (result.length > 0) {
+                    rtnVAL = true;
+                    Common.alert(" <b><spring:message code="sal.alert.msg.hasActQuotation" />[" + result[0].srvMemQuotNo + "]</b>");
+                    return true;
+                }
+            })
 
 	         if (fn_validRequiredField_Save() == false)
 	             return;
@@ -1123,6 +1136,8 @@ $(document).ready(function(){
 	                 fn_unconfirmSalesPerson();
 	             }
 	         }
+
+	         return rtnVAL;
 	}
 
 	function fn_validRequiredField_Save() {
