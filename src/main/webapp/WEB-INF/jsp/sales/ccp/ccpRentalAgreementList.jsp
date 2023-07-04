@@ -423,7 +423,7 @@ function popup(location){
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('summary')"><spring:message code="sal.title.text.summary" /></a></p></li>
         </c:if>
-        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('agmActive')"><spring:message code="sal.title.text.agmActiveListingRaw" /></a></p></li>
         </c:if>
         <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
