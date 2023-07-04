@@ -190,7 +190,7 @@
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
             $("#viewTrvDays").text();
             $("#viewTrvRem").text(myGridData[0].rem);
-            $("#viewTrvTotAmt").text(myGridData[0].currency + " " + AUIGrid.formatNumber(myGridData[0].advAmt - myGridData[0].totAmt, "#,##0.00"));
+            $("#viewTrvTotAmt").text(myGridData[0].currency + " " + AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
             $("#settViewReq").hide();
             $("#settViewReqTotAmt").hide();
