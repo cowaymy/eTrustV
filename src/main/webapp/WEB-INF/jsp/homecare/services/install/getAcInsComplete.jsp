@@ -7,6 +7,8 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/customerCommon.css"/>
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
+<!-- loading ZXingBrowser via UNPKG -->
+<script type="text/javascript" src="https://unpkg.com/@zxing/browser@latest"></script>
 
 <style>
       #sirimUploadContainer {
@@ -17,7 +19,7 @@
         margin-top: 30px;
       }
 
-      #qr-reader-cont {
+      #qr-reader-cont, #qr-reader-cont2 {
         position: fixed !important;
         width: 100vw;
         height: 100vh;
@@ -29,8 +31,9 @@
         background: rgba(0,0,0,0.5);
       }
 
-      #qr-reader {
+      #qr-reader,  #qr-reader2{
         width: 100%;
+        text-align: center;
       }
 
       .btn-tag {
@@ -90,8 +93,13 @@
                                  </select>
                             </div>
                             <div id="barcodeSection">
+
                                 <div id="qr-reader-cont">
 								    <div id="qr-reader"></div>
+                                </div>
+
+                                <div id="qr-reader-cont2">
+                                    <div id="qr-reader2"><video></video></div>
                                 </div>
 							    <div id="qr-reader-results"></div>
 							    <h2 id="serialNo"></h2>
@@ -618,48 +626,60 @@
 
 	let resultContainer = document.getElementById('qr-reader-results');
 	let html5QrcodeScanner = new Html5Qrcode("qr-reader");
-	document.getElementById("qr-reader-cont").onclick = function(e) {
-	    if (e.target == this) {
-	    	this.style.display = 'none'
-	    	html5QrcodeScanner.stop()
-	    	.then(() => {
-	            html5QrcodeScanner.clear();
-	    	})
-	    }
-	}
 
 	let serialObject = {};
-	onScanSuccess = (decodedText, decodedResult, seq) => {
-		document.getElementById("qr-reader-cont").style.display = "none"
+	onScanSuccess = (decodedText, seq , callback) => {
+		document.getElementById("qr-reader-cont").style.display = "none";
+		document.getElementById("qr-reader-cont2").style.display = "none";
         //++countResults
         if(decodedText.length !=18){
         	return;
         }
 
-        if(!serialObject[decodedText]){
-        	serialObject[decodedText] =0;
-        }
-
-        serialObject[decodedText] +=1;
-        if(serialObject[decodedText] > 2){
-        	seq.innerText = decodedText;
-        	html5QrcodeScanner.stop();
-        	html5QrcodeScanner.clear();
-        }
+        seq.innerText = decodedText;
+        callback();
 	}
 
     $("#btnScanBarcode").click(e => {
         e.preventDefault();
-        document.getElementById("qr-reader-cont").style.display = 'flex'
-        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
-        , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo"))});
+        document.getElementById("qr-reader-cont2").style.display = 'flex'
+        const videoElement = document.querySelector("#qr-reader-cont2 video");
+        navigator.mediaDevices.getUserMedia({video : {
+            facingMode: "environment",
+            zoom: 3
+         }}).then(e => {
+
+               let devideId = e.getTracks()[0].getSettings().deviceId;
+
+               const codeReader = new ZXingBrowser.BrowserMultiFormatReader(null, {delayBetweenScanAttempts: 1, delayBetweenScanSuccess: 1});
+               codeReader.decodeFromVideoDevice(devideId, videoElement, (result,error, controls)=>{
+					document.getElementById("qr-reader-cont2").onclick = function(e) {
+				    	this.style.display = 'none'
+				    		controls.stop()
+					}
+            	   if(result){
+            		   onScanSuccess(result.text, document.querySelector("#serialNo"), () => {controls.stop()})
+            	   }
+               })
+         });
     });
 
    $("#btnScanBarcodeOutdoor").click(e => {
         e.preventDefault();
         document.getElementById("qr-reader-cont").style.display = 'flex'
-        html5QrcodeScanner.start({facingMode: 'environment'},  {fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}}
-        , (decodedText , decodedResult) => {onScanSuccess(decodedText, decodedResult, document.querySelector("#serialNo2"))});
+       	document.getElementById("qr-reader-cont").onclick = function(e) {
+           this.style.display = 'none'
+        	   html5QrcodeScanner.stop()
+        }
+        html5QrcodeScanner.start(
+        		{facingMode: 'environment'},
+        		{fps: 200, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128], videoConstraints: {resizeMode: 'crop-and-scale', frameRate: 60, facingMode: 'environment'}},
+        		(decodedText , decodedResult) => {
+        			onScanSuccess(decodedText,  document.querySelector("#serialNo2"), () => {
+        				html5QrcodeScanner.stop()
+        			})
+        		}
+        );
     });
 
 	const validationCheck = (e) => {
