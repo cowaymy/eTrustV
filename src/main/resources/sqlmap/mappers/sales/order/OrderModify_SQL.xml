@@ -586,7 +586,7 @@
     <![CDATA[
         SELECT SOM.SALES_ORD_ID SALES_ORD_ID,
                    SOM.SALES_ORD_NO SALES_ORD_NO,
-                   SM.STUS_CODE_ID STUS_CODE_ID,
+                   NVL(SM.STUS_CODE_ID, 0) STUS_CODE_ID,
                    RPS.MODE_ID MODE_ID
         FROM SAL0001D SOM
         LEFT JOIN (select * from SAL0046D SM
