@@ -41,10 +41,7 @@
                 F.MEM_ACC_NAME PAYEE_NAME,
                 A.COST_CENTER,
                 A.COST_CENTER_NM,
-                CASE WHEN A.ADV_TYPE = '4' THEN(
-                    NVL((SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = A.MAIN_REQ_NO),0)
-                )
-                ELSE A.TOT_AMT END as AMT,
+               (SELECT SUM(APPV_AMT) FROM FCM0015D WHERE APPV_PRCSS_NO = B.APPV_PRCSS_NO) AS AMT,
                 B.APPV_PRCSS_NO,
                 B.APPV_PRCSS_DT APPV_DT,
                 A.ADV_REFD_DT RQST_DT,
