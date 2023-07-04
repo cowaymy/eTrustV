@@ -551,7 +551,8 @@ var myGridPros = {
 
                  $("#refClmNo").val(claimNo);
                  $("#advReqClmNo").val(claimNo);
-                 $("#refKeyDate").val(result.entryDt);
+                 $("#refKeyDate").val(fn_getToday); //Wawa take by today date
+                 //$("#refKeyDate").val(result.entryDt); --
                  $("#refCostCenterCode").val(result.costCenter);
                  $("#refCreateUsername").val(result.crtUserNm);
                  $("#refPayeeCode").val(result.payeeCode);
