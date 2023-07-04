@@ -145,7 +145,6 @@ function fn_reqstSubmit() {
     var checkMemCode = true;
 
     if(length > 0) {
-    	debugger;
         for(var i = 0; i < length; i++) {
             if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
                 Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
@@ -159,13 +158,11 @@ function fn_reqstSubmit() {
     }
     console.log(checkMemCode);
     if(checkMemCode) {
-        Common.confirm("Are you sure you want to submit this request?", fn_submitRefund);
+        Common.confirm("Are you sure you want to submit this request?", fn_submitNewAdjustmentWithApprovalLine);
     }
 }
 
 function fn_approveLineSubmit() {
-    /* var adjGridList;
-    adjGridList = AUIGrid.getOrgGridData(allowanceAdjGridID); */
     console.log("data" + data);
     var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
     var obj = {
@@ -178,96 +175,28 @@ function fn_approveLineSubmit() {
         if(resultFinAppr.code == "99") {
             Common.alert("Please select the relevant final approver.");
         } else {
-//             if(isBulk == "true"){
-//                 fn_bulkApprovalLineSubmission();
-//             }
-//             else{
-                fn_approvalLineSubmission();
-//             }
+        	fn_approvalLineSubmission();
         }
     });
 }
 function fn_approvalLineSubmission(){
-//     //if new approval submit
-//     if(isNew == "true"){
         fn_submitNewAdjustmentWithApprovalLine();
-//     }
-//     //edit approval submit
-//     else {
-//         var formData = Common.getFormData("adjForm");
-//          formData.append("atchFileGrpId", $("#atchFileGrpId").val());
-//          formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-//          formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-
-//          if(fileClick > 0) {
-//              Common.ajaxFile("/eAccounting/creditCard/adjFileUpdate.do"), formData, function(result) {
-//                  if(result.code == "00") {
-//                      //fn_editRequest(val);
-//                      fn_submitEditAdjustmentWithApprovalLine();
-//                  } else {
-//                      Common.alert("File update failed");
-//                  }
-//              }
-//          } else {
-//              fn_submitEditAdjustmentWithApprovalLine();
-//          }
-//     }
 }
 
-// function fn_submitEditAdjustmentWithApprovalLine(){
-//     console.log($("#adjForm").serializeJSON());
-//     var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
-//      var obj = {
-//                 apprGridList : apprGridList,
-//                 //Final Approval type for crc adjustment
-//                 clmType: "B3",
-//                 editData: $("#adjForm").serializeJSON()
-//         };
-
-//         Common.ajaxSync("POST", "/eAccounting/creditCard/submitEditAdjustmentWithApprovalLine.do", obj, function (result3) {
-//          console.log(result3);
-
-//          if(result3.code == "00") {
-//              Common.alert("Allowance adjustment submitted document number : " + result3.data);
-//             $("#crcApprovalLineCreatePop").remove();
-//             $("#approveLineSearchPop").remove();
-//             $("#crcAdjustmentPop").remove();
-//          } else {
-//              Common.alert("Allowance adjustment fail to submit");
-//          }
-//      });
-//      //refresh grid list
-//      fn_listAdjPln();
-// }
-
 function fn_submitNewAdjustmentWithApprovalLine(){
-    //Submit button clicked, foward to approval line page
-    var adjGridList = AUIGrid.getOrgGridData(allowanceAdjGridID);
-    var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
-    var obj = {
-            adjGridList: adjGridList,
-            apprGridList : apprGridList,
-//             //Final Approval type for crc adjustment
-//             clmType: "B3"
-    };
-
-    if(adjGridList.length > 0){
-        Common.ajaxSync("POST", "/eAccounting/creditCard/submitNewAdjustmentWithApprovalLine.do", obj, function (result3) {
-            console.log(result3);
-
-            if(result3.code == "00") {
-                Common.alert("Allowance adjustment submitted document number : " + result3.data);
-                $("#crcApprovalLineCreatePop").remove();
-                $("#approveLineSearchPop").remove();
-                $("#crcAdjustmentPop").remove();
-            } else {
-                Common.alert("Allowance adjustment fail to submit");
-            }
-        });
-
-        //refresh grid list
-        fn_listAdjPln();
-    }
+	switch(requestType){
+		case "DCF" :
+			fn_submitRequestDCF();
+			break;
+		case "FT" :
+            fn_submitRequestFT();
+            break;
+		case "REF" :
+            fn_submitRequestREF();
+            break;
+		default:
+			break;
+	}
 }
 
 
@@ -294,9 +223,6 @@ function fn_submitRefund(){
      console.log("data: " + data);
 
 	var formData = new FormData();
-/*     formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-    formData.append("atchFileGroupId", atchFileGroupId); */
     formData.append("atchFileGroupId", atchFileGroupId);
     $.each(myFileCaches, function(n, v) {
     	formData.append(n, v.file);
@@ -327,6 +253,37 @@ function fn_submitRefund(){
             });
         }
 	});
+}
+
+	function fn_submitRequestDCF(){
+	     var formData = new FormData();
+	     $.each(myFileCaches, function(n, v) {
+	         formData.append(n, v.file);
+	     });
+
+	      formData.append("dcfInfo", JSON.stringify($("#_dcfSearchForm").serializeJSON()));
+	      formData.append("oldRequestDcfGrid", JSON.stringify(AUIGrid.getGridData(myRequestDCFGridID)));
+	      formData.append("newRequestDcfGrid", JSON.stringify(AUIGrid.getGridData(myRequestNewDCFGridID)));
+	      formData.append("cashPayInfoForm", JSON.stringify($("#cashPayInfoForm").serializeJSON()));
+	      formData.append("chequePayInfoForm", JSON.stringify($("#chequePayInfoForm").serializeJSON()));
+	      formData.append("onlinePayInfoForm", JSON.stringify($("#onlinePayInfoForm").serializeJSON()));
+	      formData.append("creditPayInfoForm", JSON.stringify($("#creditPayInfoForm").serializeJSON()));
+	      formData.append("apprGridList", JSON.stringify(AUIGrid.getGridData(approveLineGridID)));
+
+	     Common.ajaxFile("/payment/requestDcfFileUpdate.do", formData, function(result){
+	         if(result.code == 99){
+	             Common.alert("Submit DCF Request Failed" + DEFAULT_DELIMITER + result.message);
+	             $("#_requestApprovalLineCreatePop").remove();
+
+	         }else{
+
+	             Common.alert(result.message, function(){
+	                 $("#_requestApprovalLineCreatePop").remove();
+	                 $("#_requestDCFPop").remove();
+	                 searchList();
+	             });
+	         }
+	    });
 
 }
 </script>

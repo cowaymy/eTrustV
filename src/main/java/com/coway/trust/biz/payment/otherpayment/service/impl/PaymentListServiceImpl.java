@@ -1,9 +1,16 @@
 package com.coway.trust.biz.payment.otherpayment.service.impl;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +27,11 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.otherpayment.service.PaymentListService;
 import com.coway.trust.web.payment.otherpayment.controller.PaymentListController;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -770,4 +782,563 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	}
 	/* CELESTE 20230306 [E] */
 
+	/* BOI DCF*/
+	@Override
+	public EgovMap selectReqDcfNewInfo(Map<String, Object> params) {
+		return paymentListMapper.selectReqDcfNewInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectReqDcfNewAppv(Map<String, Object> params) {
+		return paymentListMapper.selectReqDcfNewAppv(params);
+	}
+
+	@Override
+	public List<EgovMap> selectRequestNewDCFByGroupSeq(Map<String, Object> params) {
+		return paymentListMapper.selectRequestNewDCFByGroupSeq(params);
+	}
+
+	@Override
+	public EgovMap requestDCF2(Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException {
+
+		EgovMap returnMap = new EgovMap();
+
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> dcfInfoResult = mapper.readValue(params.get("dcfInfo").toString(), new TypeReference<Map<String, Object>>(){});
+		List<Map<String, Object>> oldRequestDcfGridResult = mapper.readValue(params.get("oldRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
+    	List<Map<String, Object>> newRequestDcfGridResult = mapper.readValue(params.get("newRequestDcfGrid").toString(), new TypeReference<List<Map<String, Object>>>(){});
+    	Map<String, Object> cashPayInfoFormResult = mapper.readValue(params.get("cashPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+    	Map<String, Object> chequePayInfoFormResult = mapper.readValue(params.get("chequePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+    	Map<String, Object> creditPayInfoFormResult = mapper.readValue(params.get("creditPayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+    	Map<String, Object> onlinePayInfoFormResult = mapper.readValue(params.get("onlinePayInfoForm").toString(), new TypeReference<Map<String, Object>>(){});
+    	List<Map<String, Object>> apprGridListResult = mapper.readValue(params.get("apprGridList").toString(), new TypeReference<List<Map<String, Object>>>(){});
+
+		//	REQUEST DCF INFO
+    	int isRekeyIn = Integer.parseInt(dcfInfoResult.get("rekeyStus").toString());
+    	if(isRekeyIn == 1){
+    		int payType = Integer.parseInt(dcfInfoResult.get("payType").toString());
+    		dcfInfoResult.put("newPayType", payType);
+
+    		// Saving criteria follow Manual Key-In - CommonPaymentController - saveNormalPayment (105, 106, 108 Cash, Cheque, Online) - with Transaction ID
+    		// Saving criteria follow Advance Key-In - AdvPaymentController - saveAdvPayment (105, 106, 108 Cash, Cheque, Online) - without Transaction ID
+			// Saving criteria follow Credit Card Key-In - CommonPaymentController - savePayment (107 Credit card)
+    		if(payType == 105 ){ // Cash
+
+    			dcfInfoResult.put("bankChargeAmt", 0); // WILL HAVE NO AMOUNT, COZ UI DONT HAVE THIS FIELD
+    			dcfInfoResult.put("slipNo", cashPayInfoFormResult.get("cashSlipNo"));
+    			dcfInfoResult.put("bankType", cashPayInfoFormResult.get("cashBankType"));
+    			dcfInfoResult.put("bankAcc", cashPayInfoFormResult.get("cashBankAcc"));
+    			dcfInfoResult.put("vaAcc", cashPayInfoFormResult.get("cashVAAcc"));
+    			dcfInfoResult.put("trxDate", cashPayInfoFormResult.get("cashTrxDate"));
+    			dcfInfoResult.put("trxId", cashPayInfoFormResult.get("cashTrxId"));
+    			dcfInfoResult.put("payItemIsLock", false);
+    			dcfInfoResult.put("payItemIsThirdParty", false);
+    			dcfInfoResult.put("payItemStatusId", 1);
+    			dcfInfoResult.put("isFundTransfer", false);
+     			dcfInfoResult.put("skipRecon", false);
+     			dcfInfoResult.put("payItemCardTypeId", 0);
+     			dcfInfoResult.put("payRoute", "WEB");
+
+ 				// IF TRX_ID IS NOT NULL, SAME PROCESS WITH MANUAL KEY IN;
+     			// ELSE SAME PROCESS WITH ADVANCE KEY IN
+     			dcfInfoResult.put("keyInScrn", (cashPayInfoFormResult.get("cashTrxId") != null && !cashPayInfoFormResult.get("cashTrxId").toString().isEmpty())? "NOR" : "ADV");
+
+    		}else if(payType == 106){ // Cheque
+
+    			dcfInfoResult.put("bankChargeAmt", 0);
+    			dcfInfoResult.put("chqNo", chequePayInfoFormResult.get("chequeSlipNo"));
+    			dcfInfoResult.put("bankType", chequePayInfoFormResult.get("chequeBankType"));
+    			dcfInfoResult.put("bankAcc", chequePayInfoFormResult.get("chequeBankAcc"));
+    			dcfInfoResult.put("vaAcc", chequePayInfoFormResult.get("chequeVAAcc"));
+    			dcfInfoResult.put("trxDate", chequePayInfoFormResult.get("chequeTrxDate"));
+    			dcfInfoResult.put("trxId", chequePayInfoFormResult.get("chequeTrxId"));
+    			dcfInfoResult.put("payItemIsLock", false);
+    			dcfInfoResult.put("payItemIsThirdParty", false);
+    			dcfInfoResult.put("payItemStatusId", 1);
+    			dcfInfoResult.put("isFundTransfer", false);
+     			dcfInfoResult.put("skipRecon", false);
+     			dcfInfoResult.put("payItemCardTypeId", 0);
+     			dcfInfoResult.put("payRoute", "WEB");
+
+     			// IF TRX_ID IS NOT NULL, SAME PROCESS WITH MANUAL KEY IN;
+     			// ELSE SAME PROCESS WITH ADVANCE KEY IN
+     			dcfInfoResult.put("keyInScrn", (chequePayInfoFormResult.get("chequeTrxId") != null && !chequePayInfoFormResult.get("chequeTrxId").toString().isEmpty()) ? "NOR" : "ADV");
+
+    		}else if(payType == 108){ // Online
+
+    		     dcfInfoResult.put("bankChargeAmt", onlinePayInfoFormResult.get("onlineBankChgAmt") != null ? onlinePayInfoFormResult.get("onlineBankChgAmt") : 0);
+    		     dcfInfoResult.put("bankType", onlinePayInfoFormResult.get("onlineBankType"));
+    		     dcfInfoResult.put("bankAcc", onlinePayInfoFormResult.get("onlineBankAcc") != null ? onlinePayInfoFormResult.get("onlineBankAcc") : 0);
+    		     dcfInfoResult.put("vaAcc", onlinePayInfoFormResult.get("onlineVAAcc"));
+    		     dcfInfoResult.put("trxDate", onlinePayInfoFormResult.get("onlineTrxDate"));
+     			dcfInfoResult.put("eft", onlinePayInfoFormResult.get("onlineEFT"));
+    		     dcfInfoResult.put("trxId", onlinePayInfoFormResult.get("onlineTrxId"));
+    		     dcfInfoResult.put("payItemIsLock", false);
+    		     dcfInfoResult.put("payItemIsThirdParty", false);
+    		     dcfInfoResult.put("payItemStatusId", 1);
+    		     dcfInfoResult.put("isFundTransfer", false);
+    		     dcfInfoResult.put("skipRecon", false);
+    		     dcfInfoResult.put("payItemCardTypeId", 0);
+    		     dcfInfoResult.put("payRoute", "WEB");
+
+    		    // IF TRX_ID IS NOT NULL, SAME PROCESS WITH MANUAL KEY IN;
+      			// ELSE SAME PROCESS WITH ADVANCE KEY IN
+      			dcfInfoResult.put("keyInScrn", (onlinePayInfoFormResult.get("onlineTrxId") != null && !onlinePayInfoFormResult.get("onlineTrxId").toString().isEmpty()) ? "NOR" : "ADV");
+
+    		} else if(payType == 107){ // Credit card
+
+    			 String cardNo = creditPayInfoFormResult.get("creditCardNo1").toString() + creditPayInfoFormResult.get("creditCardNo2").toString() + creditPayInfoFormResult.get("creditCardNo3").toString() + creditPayInfoFormResult.get("creditCardNo4").toString();
+
+    			 dcfInfoResult.put("cardMode", creditPayInfoFormResult.get("creditCardMode"));
+    			 dcfInfoResult.put("issueBank", creditPayInfoFormResult.get("creditIssueBank"));
+    			 dcfInfoResult.put("trxDate", creditPayInfoFormResult.get("creditTrxDate"));
+    			 dcfInfoResult.put("cardNo", cardNo);
+    			 dcfInfoResult.put("cardType", creditPayInfoFormResult.get("creditCardType"));
+    			 dcfInfoResult.put("cardBrand", creditPayInfoFormResult.get("creditCardBrand"));
+    			 dcfInfoResult.put("cardApprovalNo", creditPayInfoFormResult.get("creditApprNo"));
+    			 dcfInfoResult.put("expDt", creditPayInfoFormResult.get("creditExpiryMonth") + "/" + creditPayInfoFormResult.get("creditExpiryYear"));
+    			 dcfInfoResult.put("tenure", creditPayInfoFormResult.get("creditTenure"));
+    			 dcfInfoResult.put("cardHolder", creditPayInfoFormResult.get("creditCardHolderName"));
+    			 dcfInfoResult.put("merchantBank", creditPayInfoFormResult.get("creditMerchantBank"));
+    			 dcfInfoResult.put("isOnline", "1299".equals(String.valueOf(creditPayInfoFormResult.get("creditCardMode"))) ? 0 : 1);
+    			 dcfInfoResult.put("payItemIsLock", 0);
+    			 dcfInfoResult.put("payItemIsThirdParty", 0);
+    			 dcfInfoResult.put("payItemStatusId", 1);
+    			 dcfInfoResult.put("isFundTransfer", 0);
+    			 dcfInfoResult.put("skipRecon", 0);
+    			 dcfInfoResult.put("payItemCardTypeId", creditPayInfoFormResult.get("creditCardType"));
+    			 dcfInfoResult.put("payItmCardMode", creditPayInfoFormResult.get("creditCardMode"));
+    			 dcfInfoResult.put("payRoute", "WEB");
+          		 dcfInfoResult.put("keyInScrn", "CRC");
+    		}
+    	}
+
+    	int keyInBranch = Integer.parseInt(params.get("keyInBranch").toString());
+    	int userId = Integer.parseInt(params.get("userId").toString());
+
+    	// GET PAY0344M SEQ
+    	int nextSeq = paymentListMapper.getNextSeq();
+
+    	// INSERT DCF REQUEST TO PAY0344M
+    	dcfInfoResult.put("nextSeq", nextSeq);
+    	dcfInfoResult.put("atchGrpId", params.get("fileGroupKey"));
+    	dcfInfoResult.put("atchFileId", params.get("atchFileId"));
+    	dcfInfoResult.put("keyInBranch", keyInBranch);
+    	dcfInfoResult.put("userId", userId);
+    	paymentListMapper.requestDcfInfo(dcfInfoResult);
+
+
+		//DCF REQUEST AND INSERT TO PAY0345D
+		Map<String, Object> oldRequestDcfGridList = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		if(oldRequestDcfGridResult.size() > 0 ){
+			for(int i = 0 ; i < oldRequestDcfGridResult.size() ; i++){
+				oldRequestDcfGridList = oldRequestDcfGridResult.get(i);
+
+				Date requestDate = null;
+				Timestamp timestamp = null;
+				if(oldRequestDcfGridResult.get(i).get("payItmRefDt").toString().contains("/")){
+					try {
+						// convert string to datetime
+						requestDate = dateFormat.parse((String) oldRequestDcfGridResult.get(i).get("payItmRefDt"));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else{
+					//if frontend pass date value in timestamp format
+                	timestamp = new Timestamp(Long.parseLong(oldRequestDcfGridResult.get(i).get("payItmRefDt").toString()));
+                    requestDate = new Date(timestamp.getTime());
+                }
+
+				oldRequestDcfGridList.put("nextSeq", nextSeq);
+				oldRequestDcfGridList.put("trxDt", requestDate);
+				oldRequestDcfGridList.put("userId", userId);
+
+				paymentListMapper.insertOldDcf(oldRequestDcfGridList);
+			}
+		}
+
+		//INSERT PAY0346D IF REKEYSTUS = 1
+		if(isRekeyIn == 1){
+			Map<String, Object> newRequestDcfGridList= null;
+
+			if(newRequestDcfGridResult.size() > 0 ){
+			  for (int i = 0; i < newRequestDcfGridResult.size() ; i++) {
+				  newRequestDcfGridList = newRequestDcfGridResult.get(i);
+
+				  newRequestDcfGridList.put("nextSeq", nextSeq);
+				  newRequestDcfGridList.put("userId", userId);
+				  paymentListMapper.insertNewDcf(newRequestDcfGridList);
+		      }
+			}
+		}
+
+
+		// GET PAY0347M SEQ
+    	String nextApprSeq = paymentListMapper.getNextApprSeq();
+
+		//APPROVAL AND INSERT TO PAY0347M AND PAY0348D
+    	if(apprGridListResult.size() > 0) {
+
+    		EgovMap apprGridMasList = new EgovMap();
+    		apprGridMasList.put("nextApprSeq", nextApprSeq);
+    		apprGridMasList.put("nextSeq", nextSeq);
+    		apprGridMasList.put("appvLineCnt", apprGridListResult.size());
+    		apprGridMasList.put("userId", userId);
+    		apprGridMasList.put("userName", params.get("userName").toString());
+
+			LOGGER.debug("insertDcfApprMas =====================================>>  " + apprGridMasList);
+			paymentListMapper.insertDcfApprMas(apprGridMasList);
+
+    		Map<String, Object> apprGridDetList = null;
+        	//APPROVAL DETAIL
+			for(int i = 0 ; i < apprGridListResult.size() ; i++){
+				apprGridDetList = apprGridListResult.get(i);
+				apprGridDetList.put("nextApprSeq", nextApprSeq);
+				apprGridDetList.put("userId", userId);
+
+    			paymentListMapper.insertDcfApprDet(apprGridDetList);
+			}
+		}
+
+    	//Send notification
+    	EgovMap dcfNoti = new EgovMap();
+//    	int nextNotiSeq = paymentListMapper.getNextNotiSeq();
+
+    	dcfNoti.put("memCode", apprGridListResult.get(0).get("memCode").toString());
+    	EgovMap userIdNoti = paymentListMapper.getNtfUser(dcfNoti);
+
+//    	dcfNoti.put("nextNotiSeq", nextNotiSeq);
+//    	dcfNoti.put("key", nextSeq);
+//    	dcfNoti.put("keyStus", "R");
+//    	dcfNoti.put("rem", dcfInfoResult.get("remark"));
+//    	dcfNoti.put("userNameNoti", userIdNoti.get("userName"));
+//    	dcfNoti.put("userIdNoti", userIdNoti.get("userId"));
+//     	paymentListMapper.insertDcfNoti(dcfNoti);
+
+    	dcfNoti.put("code", "DCF");
+    	dcfNoti.put("codeName", "Data Change Request");
+    	dcfNoti.put("refundReqId", nextSeq); // key
+    	dcfNoti.put("appvStus", "R"); // keyStus
+    	dcfNoti.put("rejctResn", dcfInfoResult.get("remark")); // rem
+		dcfNoti.put("reqstUserId", userIdNoti.get("userName")); // userNameNoti
+		dcfNoti.put("userId", userIdNoti.get("userId")); // userIdNoti
+
+		paymentListMapper.insertNotification(dcfNoti);
+
+		//Group Payment 정보 수정
+		params.put("revStusId", "1");
+
+		String[] groupSeqList = dcfInfoResult.get("groupSeq").toString().split(",");
+		params.put("groupSeq",groupSeqList);
+
+		paymentListMapper.updateGroupPaymentRevStatus(params);
+
+    	returnMap.put("reqId", nextSeq);
+		return returnMap;
+	}
+
+	@Override
+	public void rejectNewDCF(Map<String, Object> params) {
+
+		//DCF Reject 처리
+		EgovMap data = paymentListMapper.selectDcfInfo(params);
+
+		int appvLineCnt = Integer.parseInt(data.get("appvLineCnt").toString());
+		int appvLinePrcssCnt = Integer.parseInt(data.get("appvLinePrcssCnt").toString()) + 1;
+
+		//Update PAY0347M
+		params.put("dcfStusId", "J");
+ 		params.put("appvLinePrcssCnt", appvLinePrcssCnt);
+		paymentListMapper.updateStatusNewDCF(params);
+
+ 		//Update PAY0348D
+ 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
+		params.put("appvStus", "J");
+ 		params.put("rejctResn", params.get("remark").toString());
+ 		paymentListMapper.updateStatusNewDCFDet(params);
+
+ 		//Send Notification
+		EgovMap dcfNoti = new EgovMap();
+//    	int nextNotiSeq = paymentListMapper.getNextNotiSeq();
+
+//		dcfNoti.put("userNameNoti", data.get("reqUserName"));
+//    	dcfNoti.put("userIdNoti", data.get("reqUserId"));
+//    	dcfNoti.put("nextNotiSeq", nextNotiSeq);
+//    	dcfNoti.put("key", params.get("reqNo"));
+//    	dcfNoti.put("keyStus", "J");
+//    	dcfNoti.put("rem", params.get("remark").toString());
+//     	paymentListMapper.insertDcfNoti(dcfNoti);
+
+     	dcfNoti.put("code", "DCF");
+    	dcfNoti.put("codeName", "Data Change Request");
+    	dcfNoti.put("refundReqId", params.get("reqNo")); // key
+    	dcfNoti.put("appvStus", "J"); // keyStus
+    	dcfNoti.put("rejctResn", params.get("remark").toString()); // rem
+		dcfNoti.put("reqstUserId", data.get("reqUserName")); // userNameNoti
+		dcfNoti.put("userId", data.get("reqUserId")); // userIdNoti
+
+		paymentListMapper.insertNotification(dcfNoti);
+
+		//Group Payment 정보 수정
+		params.put("revStusId", "6");
+		paymentListMapper.rejectGroupPaymentRevStatus(params);
+
+	}
+
+	@Override
+	public Map<String, Object> approvalNewDCF(Map<String, Object> params){
+		//Approval DCF 처리 프로시저 호출
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		//LOGGER.debug("returnMap : {} ", returnMap);
+		int count = paymentListMapper.dcfDuplicates2(params);
+		if (count > 0) {
+			returnMap.put("error", "DCF has already been approved before.");
+			return returnMap;
+		}
+
+		EgovMap data = paymentListMapper.selectDcfInfo(params);
+
+		int appvLineCnt = Integer.parseInt(data.get("appvLineCnt").toString());
+		int appvLinePrcssCnt = Integer.parseInt(data.get("appvLinePrcssCnt").toString()) + 1;
+
+		if(appvLineCnt == appvLinePrcssCnt){
+			int dcfCount = paymentListMapper.selectDcfCount(params);
+			int dcfMaxCount = paymentListMapper.getDcfMaxCount();
+
+			if(dcfCount < dcfMaxCount){
+    			// LAST APPROVER APPROVE AND START TO GENERATE ROR AND WOR
+    			// GENERATE ROR (Rekey In = No / Yes) --  refer to previous confirm dcf process
+				List<String> rorList = new ArrayList<>();
+				List<String> worList = new ArrayList<>();
+
+				paymentListMapper.approvalNewDCF(params);
+
+				if(!params.get("p2").toString().equals("1")){
+					returnMap.put("error", "DCF failed submission");
+
+				}else{
+
+					List<Object> ror= (List<Object>) params.get("p1");
+					for (Object obj : ror) {
+				         Map<String, Object> map = (Map<String, Object>) obj;
+				         rorList.add((String) map.get("orNo"));
+				    }
+
+    				//GET DATA FROM PAY0344M
+    				EgovMap payInfo = paymentListMapper.getPayInfo(params);
+    				int isRekeyIn = Integer.parseInt(payInfo.get("isRekeyIn").toString());
+
+    				// GENERATE WOR (Rekey In = Yes)
+    				if(isRekeyIn == 1){
+    					// GET PAY0240T NEXT SEQ
+    					int nextTmpSeq = commonPaymentMapper.getPayTempSEQ();
+    					payInfo.put("nextTmpSeq", nextTmpSeq);
+
+    					//GET DATA FROM PAY0346D
+    					List<EgovMap> newDcfInfo = paymentListMapper.getNewDcfInfo(params);
+
+    					Map<String, Object> dcf = null;
+    					Map<String, Object> procedureInfo = new HashMap<String, Object>();
+
+    					// CHECK PAY TYPE = CASH, CHEQUE, ONLINE OR CREDIT CARD
+    					if(payInfo.get("newPayType").toString().equals("107")){ // Credit card
+
+    						// Saving criteria follow Credit Card Key-In - CommonPaymentController - savePayment [insertTmpPaymentInfo] (107 Credit card)
+    						//INSERT DATA FROM PAY0344M TO PAY0240T
+    						paymentListMapper.insertTmpPaymentInfo(payInfo);
+
+    						if(newDcfInfo.size() > 0){
+    							for(int i = 0; i < newDcfInfo.size() ; i++){
+    								dcf = newDcfInfo.get(i);
+    								dcf.put("nextTmpSeq", nextTmpSeq);
+
+    								//INSERT DATA FROM PAY0346D TO PAY0241T
+    								paymentListMapper.insertTmpBillingInfo(dcf);
+
+    								if("CARE_SRVC".equals(String.valueOf(dcf.get("appType")))){
+    									dcf.put("userId", params.get("userId"));
+    									commonPaymentMapper.updateCareSalesMStatus(dcf);
+    								}
+    							}
+    						}
+
+    						 procedureInfo.put("reqNo", params.get("reqNo"));
+    						 procedureInfo.put("seq", nextTmpSeq);
+    						 procedureInfo.put("userid", params.get("userid"));
+    						 procedureInfo.put("keyInPayRoute", payInfo.get("payRoute"));
+    						 procedureInfo.put("keyInScrn", payInfo.get("keyInScrn"));
+
+    						 paymentListMapper.processPayment(procedureInfo);
+
+    						 List<EgovMap> wor = paymentListMapper.selectProcessPaymentResult(procedureInfo);
+
+    						 for (Object obj : wor) {
+    							 Map<String, Object> map = (Map<String, Object>) obj;
+						         worList.add((String) map.get("orNo"));
+    						 }
+
+    					}else{ // Cash, Cheque and Online
+
+    						// refer to manual key in for cash, cheque and online process (insertTmpNormalPaymentInfo)
+    						// Saving criteria follow Manual Key-In - CommonPaymentController - saveNormalPayment (105, 106, 108 Cash, Cheque, Online) - with Transaction ID
+    			    		// Saving criteria follow Advance Key-In - AdvPaymentController - saveAdvPayment (105, 106, 108 Cash, Cheque, Online) - without Transaction ID
+    						// INSERT DATA FROM PAY0344M TO PAY0240T (TRX_ID FIELD IN CASH, CHEQUE AND ONLINE IS OPTIONAL)
+    					    if(payInfo.containsKey("trxId")){
+
+    						    String bankStateId = payInfo.get("trxId").toString();
+
+    					    	paymentListMapper.insertTmpNormalPaymentInfo(payInfo);
+
+    					    	if(newDcfInfo.size() > 0){
+    								for(int i = 0 ; i < newDcfInfo.size(); i++){
+
+    									dcf = newDcfInfo.get(i);
+    									dcf.put("nextTmpSeq", nextTmpSeq);
+
+    									//INSERT DATA FROM PAY0346D TO PAY0241T
+    									paymentListMapper.insertTmpBillingInfo(dcf);
+
+    									if("CARE_SRVC".equals(String.valueOf(dcf.get("appType")))){
+    										dcf.put("userId", params.get("userId"));
+    										commonPaymentMapper.updateCareSalesMStatus(dcf);
+    									}
+
+    									procedureInfo.put("appType", dcf.get("appType"));
+    								}
+    							}
+
+    					    	procedureInfo.put("reqNo", params.get("reqNo"));
+    					    	procedureInfo.put("seq", nextTmpSeq);
+    						    procedureInfo.put("userid", params.get("userId"));
+    						    procedureInfo.put("key", bankStateId);
+    						    procedureInfo.put("keyInPayRoute", payInfo.get("payRoute"));
+    						    procedureInfo.put("keyInScrn", payInfo.get("keyInScrn"));
+
+    						    paymentListMapper.processNormalPayment(procedureInfo);
+
+    					    }else{
+
+    					    	if("105".equals(String.valueOf(payInfo.get("newPayType"))) || "106".equals(String.valueOf(payInfo.get("newPayType")))){
+    					    		paymentListMapper.insertTmpPaymentNoTrxIdInfo(payInfo);
+
+    					    	}else if("108".equals(String.valueOf(payInfo.get("newPayType")))){
+    					    		paymentListMapper.insertTmpPaymentOnlineInfo(payInfo);
+    					    	}
+
+    					    	if(newDcfInfo.size() > 0){
+    								for(int i = 0 ; i < newDcfInfo.size(); i++){
+
+    									dcf = newDcfInfo.get(i);
+    									dcf.put("nextTmpSeq", nextTmpSeq);
+
+    									//INSERT DATA FROM PAY0346D TO PAY0241T
+    									paymentListMapper.insertTmpBillingInfo(dcf);
+    								}
+    							}
+
+    					    	procedureInfo.put("reqNo", params.get("reqNo"));
+    					    	procedureInfo.put("seq", nextTmpSeq);
+    						    procedureInfo.put("userid", params.get("userId"));
+    						    procedureInfo.put("keyInPayRoute", payInfo.get("payRoute"));
+    						    procedureInfo.put("keyInScrn", payInfo.get("keyInScrn"));
+
+    					    	//payment 처리 프로시저 호출
+    						    paymentListMapper.processPayment(procedureInfo);
+    					    }
+
+    					    List<EgovMap> wor = paymentListMapper.selectProcessPaymentResult(procedureInfo);
+
+    					    for (Object obj : wor) {
+    					    	Map<String, Object> map = (Map<String, Object>) obj;
+    					    	worList.add((String) map.get("orNo"));
+					    	}
+    					}
+					}
+				}
+
+				if(!returnMap.containsKey("error")){
+					//Update PAY0348D
+			 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
+					params.put("appvStus", "A");
+					params.put("appvResn", params.get("remark").toString());
+					paymentListMapper.updateStatusNewDCFDet(params);
+
+    				//Update final status in PAY0347M
+    				params.put("dcfStusId", "A");
+    		 		params.put("appvLinePrcssCnt", appvLinePrcssCnt);
+    				paymentListMapper.updateStatusNewDCF(params);
+
+    				if(rorList.size() > 0){
+        				returnMap.put("rorList", rorList);
+    				}
+
+    				if(worList.size() > 0){
+    					returnMap.put("worList", worList);
+    				}
+				}
+			}
+
+		}else{
+
+			//Update PAY0347M
+			params.put("dcfStusId", "P");
+			params.put("appvLinePrcssCnt", appvLinePrcssCnt);
+			paymentListMapper.updateStatusNewDCF(params);
+
+			//Update PAY0348D
+	 		params.put("appvPrcssNo", data.get("appvPrcssNo").toString());
+			params.put("appvStus", "A");
+			params.put("appvResn", params.get("remark").toString());
+			paymentListMapper.updateStatusNewDCFDet(params);
+
+			EgovMap dcfNoti = new EgovMap();
+//	    	int nextNotiSeq = paymentListMapper.getNextNotiSeq();
+	    	dcfNoti = paymentListMapper.selectDcfAppvInfo(params);
+
+	    	//Update next approval info
+	    	dcfNoti.put("appvStus", "R");
+	    	dcfNoti.put("userMemCode", dcfNoti.get("memCode"));
+			dcfNoti.put("appvLineSeq", appvLinePrcssCnt + 1); // seems like not using this part, please double check this
+			paymentListMapper.updateStatusNewDCFDet(dcfNoti);
+
+			//Send Notification
+	    	EgovMap userIdNoti = paymentListMapper.getNtfUser(dcfNoti);
+
+//	    	dcfNoti.put("nextNotiSeq", nextNotiSeq);
+//	    	dcfNoti.put("key", params.get("reqNo"));
+//	    	dcfNoti.put("keyStus", "R");
+//	    	dcfNoti.put("userNameNoti", userIdNoti.get("userName"));
+//	    	dcfNoti.put("userIdNoti", userIdNoti.get("userId"));
+
+		 	dcfNoti.put("code", "DCF");
+	    	dcfNoti.put("codeName", "Data Change Request");
+	    	dcfNoti.put("refundReqId", params.get("reqNo")); // key
+	    	dcfNoti.put("appvStus", "R"); // keyStus
+	    	dcfNoti.put("rejctResn", dcfNoti.get("rem")); // rem
+			dcfNoti.put("reqstUserId", userIdNoti.get("userName")); // userNameNoti
+			dcfNoti.put("userId", userIdNoti.get("userId")); // userIdNoti
+			paymentListMapper.insertNotification(dcfNoti);
+
+
+
+			returnMap.put("nextAppv", "Approved Successfully </br> Notification has been set to next Approver.");
+		}
+
+		return returnMap;
+	}
+
+	public void insertRequestDcfAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileService.insertFiles(list, type, (Integer) params.get("userId"));
+		params.put("fileGroupKey", fileGroupKey);
+	}
+
+	@Override
+	public Integer checkBankStateMapStus(Map<String, Object> params) {
+		return paymentListMapper.checkBankStateMapStus(params);
+	}
+	/* [END] BOI DCF*/
 }

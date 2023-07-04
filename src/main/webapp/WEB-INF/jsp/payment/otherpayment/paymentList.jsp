@@ -51,10 +51,10 @@
 		{dataField : "ftStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
 		{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false},
 		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : true},
-		{dataField : "payData",headerText : "Pay Data",width : 110,editable : false, visible : true},
-		{dataField : "orType",headerText : "OR Type",width : 110,editable : false, visible : true},
-		{dataField : "bankAcc",headerText : "Bank Acc Code",width : 110,editable : false, visible : true}
+		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : false},
+		{dataField : "payData",headerText : "Pay Data",width : 110,editable : false, visible : false},
+		{dataField : "orType",headerText : "OR Type",width : 110,editable : false, visible : false},
+		{dataField : "bankAcc",headerText : "Bank Acc Code",width : 110,editable : false, visible : false}
 	];
 
 
@@ -114,58 +114,8 @@
                  }
           });
 
-	    /* AUIGrid.bind(myGridID, "ready", function(event) {
-	        gridDataLength = AUIGrid.getGridData(myGridID).length; // 그리드 전체 행수 보관
-	    });
-
-	    AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
-	    AUIGrid.bind(myGridID, "cellEditEnd", function(event) {
-
-	        // isActive 칼럼 수정 완료 한 경우
-	        if(event.dataField == "isActive") {
-
-	            // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
-	            var activeItems = AUIGrid.getItemsByValue(myGridID, "isActive", "Active");
-
-	            // 헤더 체크 박스 전체 체크 일치시킴.
-	            if(activeItems.length != gridDataLength) {
-	                document.getElementById("allCheckbox").checked = false;
-	            } else if(activeItems.length == gridDataLength) {
-	                 document.getElementById("allCheckbox").checked = true;
-	            }
-	        }
-	    }); */
-
 	});
 
-
-	/* function headerClickHandler(event) {
-
-	    // isActive 칼럼 클릭 한 경우
-	    if(event.dataField == "isActive") {
-	        if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
-	            var  isChecked = document.getElementById("allCheckbox").checked;
-	            checkAll(isChecked);
-	        }
-	        return false;
-	    }
-	}
-
-	// 전체 체크 설정, 전체 체크 해제 하기
-	function checkAll(isChecked) {
-
-	     var idx = AUIGrid.getRowCount(myGridID);
-
-	    // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
-	    if(isChecked) {
-	        AUIGrid.updateAllToValue(myGridID, "isActive", "Active");
-	    } else {
-	        AUIGrid.updateAllToValue(myGridID, "isActive", "Inactive");
-	    }
-
-	    // 헤더 체크 박스 일치시킴.
-	    document.getElementById("allCheckbox").checked = isChecked;
-	} */
     // ajax list 조회.
     function searchList(){
 
@@ -210,38 +160,41 @@
 
 	//Request DCF 팝업
 	function fn_requestDCFPop(){
-		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+	    var selectedItem = AUIGrid.getCheckedRowItemsAll(myGridID);
 
-		if (selectedItem[0] > -1){
-			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
-			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
-			const revStusNm = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusNm");
-			let data = AUIGrid.getOrgGridData(myGridID).filter(r => r.groupSeq == groupSeq);
-		    let ftStus = data.map(d => d.ftStusId);
-		    fetch("/payment/validDCF?groupSeq=" + groupSeq)
-		    .then(resp => resp.json()).then(d => {
-		    	if (d.error) {
-		    		Common.alert(d.error)
-		    	} else if (d.success) {
-		    		if (revStusNm == "Refund") {
-		    			Common.alert("<b>This has already been refunded. </b>");
-		    		} else if (revStusId == 1) {
-						Common.alert("<spring:message code='pay.alert.groupNumberRequested' arguments='"+groupSeq+"' htmlEscape='false'/>");
-					} else if (revStusId == 5) {
-						Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
-					} else {
-						if (!(ftStus.filter(s => s == 1).length)) {
-							Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
-						}else{
-		                    Common.alert("<b>This has already been Fund Transfer processing Requested/Approved. </b>");
-		                }
-					}
-		    	}
-		    })
-		}else{
-             Common.alert('No Payment List selected.');
-        }
-	}
+	    if(selectedItem.length > 0){
+            var groupSeqList = [];
+//             var revStusList = [];
+//             var ftStusList = [];
+//             var trxList= [];
+
+            for(var i = 0 ; i < selectedItem.length ; i++){
+            	groupSeqList.push(selectedItem[i].groupSeq);
+//             	revStusList.push(selectedItem[i].revStusId);
+//             	ftStusList.push(selectedItem[i].ftStusId);
+//             	trxList.push(selectedItem[i].bankStateMappingId == null ? 0 : selectedItem[i].bankStateMappingId);
+            }
+
+//             var selectedOrder = {
+//             	"groupSeqList" : JSON.stringify(groupSeqList.join()),
+//             	"revStusList" : JSON.stringify(revStusList.join()),
+//             	"ftStusList" : JSON.stringify(ftStusList.join()),
+//             	"trxList" : JSON.stringify(trxList.join())
+//             };
+
+//            Common.ajax("GET","/payment/validDCF2", selectedOrder, function(result){
+           Common.ajax("POST","/payment/validDCF2", {selectedOrder : JSON.stringify(selectedItem)}, function(result){
+                if(result.error){
+                	Common.alert(result.error);
+                }else if(result.success){
+                	 Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeqList" : JSON.stringify(groupSeqList.join())}, null , true ,'_requestDCFPop');
+                }
+            });
+
+	    }else{
+	    	Common.alert('No Payment List selected.');
+	    }
+     }
 
 
 	//Request Fund Transfer 팝업
@@ -496,11 +449,14 @@
                             </div>
                             <!-- date_set end -->
                         </td>
-                        <!-- <th scope="row">Transaction ID </th>
-                        <td colspan="3"> celeste - 2023/02/27 commented for better UI
-                        <td>
-                            <input type="text" id="trxId" name="trxId" class="w100p" />
-                        </td>-->
+
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Transaction ID </th>
+                        <td colspan="3">
+                            <input type="text" id="trxId" name="trxId" class="" />
+                         </td>
                     </tr>
 
                 </tbody>

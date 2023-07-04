@@ -24,7 +24,10 @@
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
 
-	        softRemoveRowMode:false
+	        softRemoveRowMode:false,
+
+	        showRowCheckColumn: true,
+	        showRowAllCheckBox : false,
 
 	};
 
@@ -36,6 +39,8 @@
 	// AUIGrid 칼럼 설정
 	var columnLayout = [
         {dataField : "dcfReqId",headerText : "<spring:message code='pay.head.dcfRequestNo'/>",width : 135 , editable : false},
+        {dataField : "reqType",headerText : "Request Type",width : 135 , editable : false, visible : false},
+        {dataField : "dcfReqIdType",headerText : "Request ID and Type",width : 135 , editable : false, visible : false},
         {dataField : "grpSeq",headerText : "<spring:message code='pay.head.paymentGroupSeq'/>",width : 165 , editable : false},
         {dataField : "salesOrdNo",headerText : "Sales<br/>Order",width : 110 , editable : false},
         {dataField : "dcfResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 250 , editable : false},
@@ -44,7 +49,8 @@
         {dataField : "dcfCrtDt",headerText : "<spring:message code='pay.head.requestDate'/>",width : 110 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
         {dataField : "dcfStusId",headerText : "<spring:message code='pay.head.statusId'/>",width : 100 , editable : false, visible : false},
         {dataField : "dcfStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 110 , editable : false},
-        {dataField : "dcfAppvUserNm",headerText : "Approval",width : 110 , editable : false}
+        {dataField : "dcfAppvUserNm",headerText : "Approval",width : 110 , editable : false},
+        {dataField : "appvStus",headerText : "Approval Status",width : 110 , editable : false, visible:false}
 	];
 
 
@@ -62,7 +68,15 @@
 
 		// Master Grid 셀 클릭시 이벤트
 	    AUIGrid.bind(confirmDCFGridID, "cellClick", function( event ){
-		    selectedGridValue = event.rowIndex;
+		    var dcfReqIdType = AUIGrid.getCellValue(confirmDCFGridID, event.rowIndex, "dcfReqIdType");
+
+            AUIGrid.setCheckedRowsByValue(confirmDCFGridID, "dcfReqIdType", dcfReqIdType);
+	    });
+
+	    AUIGrid.bind(confirmDCFGridID, "rowCheckClick", function( event ) {
+	        var dcfReqIdType = AUIGrid.getCellValue(confirmDCFGridID, event.rowIndex, "dcfReqIdType");
+
+           	AUIGrid.setCheckedRowsByValue(confirmDCFGridID, "dcfReqIdType", dcfReqIdType);
 	    });
 
 	});
@@ -92,21 +106,56 @@
     }
 
 
-	//Request DCF 팝업
-	function fn_confirmDCFPop(){
-		var selectedItem = AUIGrid.getSelectedIndex(confirmDCFGridID);
+    //Request DCF 팝업
+    function fn_confirmDCFPop(){
+        var selectedItem = AUIGrid.getCheckedRowItemsAll(confirmDCFGridID);
+        console.log(selectedItem);
 
-		if (selectedItem[0] > -1){
-			var groupSeq = AUIGrid.getCellValue(confirmDCFGridID, selectedGridValue, "grpSeq");
-			var dcfReqId = AUIGrid.getCellValue(confirmDCFGridID, selectedGridValue, "dcfReqId");
-			var dcfStusId = AUIGrid.getCellValue(confirmDCFGridID, selectedGridValue, "dcfStusId");
+        if (selectedItem.length > 0){
+            var groupSeqList = [];
+            var dcfStusIdList = null;
+            var dcfReqIdList = null;
+            var dcfReqTypeList = null;
 
-			Common.popupDiv('/payment/initConfirmDCFPop.do', {"groupSeq" : groupSeq, "reqNo" : dcfReqId, "dcfStusId" : dcfStusId}, null , true ,'_confirmDCFPop');
+            for(var i = 0 ; i < selectedItem.length ; i++){
+                groupSeqList.push(selectedItem[i].grpSeq);
 
-		}else{
+                if (selectedItem[0].dcfReqId != selectedItem[i].dcfReqId){
+                	Common.alert("Please select same DCF request no");
+	                 break;
+                }
+
+                if (selectedItem[0].reqType != selectedItem[i].reqType){
+                	Common.alert("Please select same DCF request type");
+	                 break;
+                }
+
+                if (selectedItem[0].appvStus != selectedItem[i].appvStus){
+                	Common.alert("These dcf contain approved or rejected DCF");
+	                 break;
+                }
+            }
+            dcfReqIdList = selectedItem[0].dcfReqId;
+            dcfReqTypeList = selectedItem[0].reqType;
+            dcfStusIdList = selectedItem[0].appvStus;
+
+            var selectedDCF = {
+               "groupSeqList" : JSON.stringify(groupSeqList.join()),
+               "dcfReqIdList" : JSON.stringify(dcfReqIdList),
+               "dcfStusIdList" : JSON.stringify(dcfStusIdList),
+               "dcfReqTypeList" : JSON.stringify(dcfReqTypeList),
+            };
+
+            if(dcfReqTypeList == '-'){
+                Common.popupDiv('/payment/initConfirmDCFPop.do', selectedDCF, null , true ,'_confirmDCFPop');
+            }else {
+            	Common.popupDiv('/payment/initConfirmNewDCFPop.do', selectedDCF, null , true ,'_confirmNewDCFPop');
+            }
+
+        }else{
              Common.alert("<spring:message code='pay.alert.noDcf'/>");
         }
-	}
+    }
 
 	function fn_genDCFRawPop() {
 	    doGetCombo('/common/selectCodeList.do', '392' , ''   , 'cmbReason' , 'S', '');
@@ -221,7 +270,7 @@
                     <tr>
 						<th scope="row">DCF Request No</th>
                         <td>
-                            <input type="text" id="reqNo" name="reqNo" class="w100p" />
+                            <input type="text" id="reqNo" name="reqNo" class="w100p" value="${reqNo}"/>
                         </td>
 
 					    <th scope="row">Request Date</th>

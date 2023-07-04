@@ -1,10 +1,13 @@
 package com.coway.trust.biz.payment.otherpayment.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -155,6 +158,14 @@ public interface PaymentListService
     String selectAllowFlg(Map<String, Object> params);
     /* CELESTE 20230306 [E] */
 
-
-
+    /* BOI DCF*/
+    EgovMap selectReqDcfNewInfo(Map<String, Object> params);
+    List<EgovMap> selectReqDcfNewAppv(Map<String, Object> params);
+    List<EgovMap> selectRequestNewDCFByGroupSeq(Map<String, Object> params);
+    void rejectNewDCF(Map<String, Object> params);
+    Map<String, Object> approvalNewDCF(Map<String, Object> params);
+    void insertRequestDcfAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
+    EgovMap requestDCF2(Map<String, Object> params) throws JsonParseException, JsonMappingException, IOException;
+    Integer checkBankStateMapStus(Map<String, Object> params);
+    /* [END] BOI DCF*/
 }

@@ -204,6 +204,36 @@ public interface PaymentListMapper {
 	String selectAllowFlg (Map<String, Object> params);
 	/* CELESTE 20230306 [E] */
 
-
-
+	/* BOI DCF*/
+	EgovMap selectReqDcfNewInfo(Map<String, Object> params);
+    List<EgovMap> selectReqDcfNewAppv(Map<String, Object> params);
+    List<EgovMap> selectRequestNewDCFByGroupSeq(Map<String, Object> params);
+	EgovMap selectDcfInfo(Map<String, Object> params);
+	int selectDcfCount(Map<String, Object> params);
+	int getDcfMaxCount();
+	void updateStatusNewDCF(Map<String, Object> params);
+	void updateStatusNewDCFDet(Map<String, Object> params);
+	EgovMap selectDcfAppvInfo(Map<String, Object> params);
+	int dcfDuplicates2(Map<String, Object> params);
+	Map<String, Object> approvalNewDCF(Map<String, Object> params);
+	void updateFinalDcfStus(Map<String, Object> params);
+	void requestDcfInfo(Map<String, Object> params);
+	void insertOldDcf(Map<String, Object> params);
+	void insertNewDcf(Map<String, Object> params);
+	void insertDcfApprMas(EgovMap params);
+	void insertDcfApprDet(Map<String, Object> params);
+//	int getNextNotiSeq();
+	void insertDcfNoti(Map<String, Object> params);
+	EgovMap getPayInfo(Map<String, Object> params);
+	List<EgovMap> getNewDcfInfo(Map<String, Object> params);
+	void insertTmpPaymentInfo(Map<String, Object>params);
+	int insertTmpNormalPaymentInfo(Map<String, Object>params);
+	void insertTmpPaymentNoTrxIdInfo(Map<String, Object> params);
+	void insertTmpPaymentOnlineInfo(Map<String, Object> params);
+	void insertTmpBillingInfo(Map<String, Object> params);
+	int processPayment(Map<String, Object> params);
+	void processNormalPayment(Map<String, Object> params);
+	List<EgovMap> selectProcessPaymentResult(Map<String, Object> params);
+    int checkBankStateMapStus(Map<String, Object> params);
+    /* [END] BOI DCF*/
 }
